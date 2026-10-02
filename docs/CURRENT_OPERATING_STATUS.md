@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-02 for the 2024 Open Hand Monk level 19 tranche. Main baseline: `40477cf6179ee5235ce11349cf8e764ba6c90276`.
+Recorded 2026-10-02 for the 2024 Open Hand Monk level 20 tranche. Main baseline: `d8df3cfbb2bd8f97131833331641ad21abaaaaa9`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -33,9 +33,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
-| 2024 | Monk (Open Hand) | 1–18 |
+| 2024 | Monk (Open Hand) | 1–19 |
 
-2024 public-ready hero slots on current main: **138 / 240**.
+2024 public-ready hero slots on current main: **139 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -45,9 +45,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 138 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 18 on main; this tranche advances level 19.
+**2024 canonical pregens are 139 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 19 on main; this tranche advances level 20.
 
-Active implementation lane: **2024 Open Hand Monk level 19.** Canonical Epic Boon is **Boon of Irresistible Offense** with +1 Dexterity (20→21, cap 30), universal B/P/S Resistance bypass, and natural-20 extra damage equal to Dexterity score using the attack's damage type. No new engine mechanic is required.
+Active implementation lane: **2024 Open Hand Monk level 20.** Body and Mind raises Dexterity **21→25** and Wisdom **14→18**, with both maximums set to 25. Shared derived-stat logic updates all affected combat values; inherited Boon of Irresistible Offense natural-20 damage rises to the current Dexterity score of **25**. No new engine mechanic is required.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -79,8 +79,9 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - The same tranche closes the pre-existing 2014 Quivering Palm harmless-end gap through the same universal mark-replacement parameter; 2014 remains Action-only for detonation.
 - Level 18 adds **Superior Defense** through the universal start-turn timed self-buff path. It spends 3 Focus Points at the start of the Monk's turn, grants resistance to every damage type except Force for 10 rounds, and ends early if the Monk is Incapacitated. Unarmored Movement rises to +30 feet (60-foot Speed), Focus Points advance to 18, and HP to 147. Start-turn activation is explicitly excluded from the free opening-buff path and does not spend an Action or Bonus Action.
 - Level 19 selects **Boon of Irresistible Offense**, the recommended Monk Epic Boon. Dexterity rises **20→21** with a maximum of 30; B/P/S damage ignores Resistance through the existing universal bypass grant; a natural-20 attack adds **21** damage of the attack's type through the existing universal natural-20 rider. Focus Points advance to 19 and HP to 155.
-- This tranche raises the 2024 public-ready target to **139 / 240**.
-- Next exact level after level 19 certification is **Monk 20**; audit Body and Mind only after level 19 is merged.
+- Level 20 adds **Body and Mind** through normal ability-score progression: Dexterity **21→25** and Wisdom **14→18**, both capped at 25. This raises AC to **21**, HP to **163**, Initiative and Unarmed Strike attack bonus to **+13**, Unarmed Strike damage bonus to **+7**, Monk save DCs to **18**, Wholeness of Body to **1d12+4**, and inherited Boon of Irresistible Offense natural-20 damage to **25**.
+- This tranche completes the 2024 Open Hand Monk at **20 / 20** and raises the 2024 public-ready target to **140 / 240**.
+- After Monk 20 certification, re-anchor on `main` and advance the next incomplete 2024 canonical class. Do not start monster completion until all 240 pregen slots are certified.
 
 ### Druid spell-selection policy
 
