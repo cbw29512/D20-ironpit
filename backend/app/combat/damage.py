@@ -79,6 +79,7 @@ def resolve_weapon_damage(
         weapon = attack.weapon
         qualifiers = sorted(attack_damage_source_qualifiers(attacker, attack), key=lambda item: item.value)
         selected_damage_type = choose_attack_damage_type(
+            attacker,
             attack,
             target,
             source_qualifiers=set(qualifiers),
