@@ -17,6 +17,7 @@ from app.domain.actions import HealingAction
 from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.on_hit_save_riders import ResourceBackedOnHitSaveRider
+from app.domain.progression_primitives import EndTurnConditionRemovalGrant
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +56,15 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
             progression_features=ProgressionCombatFeatures(
                 evasion=level >= 7,
                 evasion_disabled_while_incapacitated=level >= 7,
+                end_turn_condition_removal=(
+                    EndTurnConditionRemovalGrant(
+                        source_id="self-restoration",
+                        source_name="Self-Restoration",
+                        condition_ids=["charmed", "frightened", "poisoned"],
+                        max_conditions=1,
+                    )
+                    if level >= 10 else None
+                ),
                 martial_arts_bonus_attack=True,
                 martial_arts_die_size=8 if level >= 5 else 6,
                 resource_backed_on_hit_save_rider=(
