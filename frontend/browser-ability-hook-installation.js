@@ -8,6 +8,7 @@
     const installers = [
       ["Rage", window.IRON_PIT_BROWSER_RAGE?.installAbilityHooks],
       ["Support", window.IRON_PIT_BROWSER_SUPPORT?.installAbilityHooks],
+      ["Start-turn Timed Self Buffs", window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS?.installAbilityHooks],
       ["Resource Conversion", window.IRON_PIT_BROWSER_RESOURCE_CONVERSION?.installAbilityHooks],
       ["Steady Aim", window.IRON_PIT_BROWSER_STATIONARY_ATTACK_ADVANTAGE?.installAbilityHooks],
       ["Bonus Attacks", window.IRON_PIT_BROWSER_BONUS_ATTACKS?.installAbilityHooks],

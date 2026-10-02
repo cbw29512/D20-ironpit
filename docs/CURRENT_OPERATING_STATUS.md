@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-02 for the 2024 Open Hand Monk level 17 tranche. Main baseline: `99839f044a2b2a53369e18e80ec3c748899ffbec`.
+Recorded 2026-10-02 for the 2024 Open Hand Monk level 18 tranche. Main baseline: `ae7422787209e4ea970c2869a60ec79620a9f658`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -33,9 +33,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
-| 2024 | Monk (Open Hand) | 1–17 |
+| 2024 | Monk (Open Hand) | 1–18 |
 
-2024 public-ready hero slots in this level-16 tranche: **136 / 240**.
+2024 public-ready hero slots on current main: **137 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -45,9 +45,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 137 / 240 in this tranche.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is advanced through level 17 here.
+**2024 canonical pregens are 137 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 17 on main; this tranche advances level 18.
 
-Active implementation lane: **2024 Open Hand Monk level 17.** Quivering Palm extends the universal hit-armed deferred-save effect with typed failed-save damage, half damage on success, harmless mark replacement, and optional Attack-action slot activation. No Monk-named resolver is added.
+Active implementation lane: **2024 Open Hand Monk level 18.** Superior Defense uses the universal start-turn timed self-buff path: spend 3 Focus Points at the start of the Monk's turn for 10 rounds of resistance to every damage type except Force, ending early on Incapacitation. No Monk-named resolver is added.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -77,7 +77,8 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 16 uses the repeatable **Ability Score Improvement** feat for **+2 Wisdom (12→14)**. Shared derived-stat logic raises AC to 17, Wisdom save/skills, Stunning Strike and Deflect Attacks redirect DCs to 15, and Wholeness of Body healing to 1d10+2; Focus Points advance to 16 and HP to 131.
 - Level 17 adds **Quivering Palm** through the universal deferred-save effect engine. An Unarmed Strike hit may spend 4 Focus Points to arm one target; an existing mark can end harmlessly before a different target is armed. Detonation uses the Monk Constitution-save DC and deals 10d12 Force damage on failure or half on success. Arena selection prefers replacing one legal Attack-action attack over spending the entire Action, while retaining the full-Action fallback when no Attack slot is legal. The Martial Arts die advances to d12, Proficiency Bonus to +6, Focus Points to 17, HP to 139, Initiative/attack bonus to +11, and Monk save DC to 16.
 - The same tranche closes the pre-existing 2014 Quivering Palm harmless-end gap through the same universal mark-replacement parameter; 2014 remains Action-only for detonation.
-- Next exact level after level 17 certification is **Monk 18**; audit Superior Defense against existing timed self-buff and typed damage-resistance primitives before adding engine behavior.
+- Level 18 adds **Superior Defense** through the universal start-turn timed self-buff path. It spends 3 Focus Points at the start of the Monk's turn, grants resistance to every damage type except Force for 10 rounds, and ends early if the Monk is Incapacitated. Unarmored Movement rises to +30 feet (60-foot Speed), Focus Points advance to 18, and HP to 147. Start-turn activation is explicitly excluded from the free opening-buff path and does not spend an Action or Bonus Action.
+- Next exact level after level 18 certification is **Monk 19**; select and audit the canonical Epic Boon only after level 18 is merged.
 
 ### Druid spell-selection policy
 

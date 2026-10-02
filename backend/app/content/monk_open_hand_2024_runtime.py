@@ -11,6 +11,7 @@ from app.content.monk_open_hand_2024_actions import (
     build_monk_tactical_actions,
 )
 from app.content.monk_open_hand_2024_attacks import build_kael_extra_attack_2024, build_kael_unarmed_attack_2024
+from app.content.monk_open_hand_2024_buffs import build_monk_2024_timed_self_buffs
 from app.content.monk_open_hand_2024_profile import build_kael_stillwater_2024_profile
 from app.content.monk_open_hand_2024_progression import build_monk_2024_progression
 from app.content.monk_open_hand_2024_resources import build_monk_initiative_refills, build_monk_resources
@@ -25,8 +26,8 @@ logger = logging.getLogger(__name__)
 def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
     """Build the certified persistent 2024 Open Hand Monk using shared combat primitives."""
     try:
-        if level not in set(range(1, 18)):
-            raise ValueError("The current 2024 Monk runtime tranche supports levels 1-17 only.")
+        if level not in set(range(1, 19)):
+            raise ValueError("The current 2024 Monk runtime tranche supports levels 1-18 only.")
         profile = build_kael_stillwater_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -53,7 +54,7 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
             armor_class=10 + dexterity + wisdom,
             max_hp=(8 + constitution) + (5 + constitution) * (level - 1),
             speed_ft=30 + (
-                25 if level >= 14 else 20 if level >= 10 else 15 if level >= 6 else 10 if level >= 2 else 0
+                30 if level >= 18 else 25 if level >= 14 else 20 if level >= 10 else 15 if level >= 6 else 10 if level >= 2 else 0
             ),
             initiative_bonus=dexterity + pb,
             starts_with_heroic_inspiration=True,
@@ -63,6 +64,7 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
             bonus_attack_grants=build_monk_bonus_attacks(level, unarmed, pb, wisdom),
             bonus_tactical_action_grants=build_monk_tactical_actions(level),
             attack_damage_reduction_reaction=build_monk_attack_damage_reduction(level, pb, wisdom),
+            timed_self_buff_actions=build_monk_2024_timed_self_buffs(level),
             healing_actions=(
                 [HealingAction(
                     id="wholeness-of-body",

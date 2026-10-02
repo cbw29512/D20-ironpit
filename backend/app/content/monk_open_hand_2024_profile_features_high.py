@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.content.monk_open_hand_2024_profile_features_endgame import build_monk_2024_endgame_feature_audits
 from app.domain.character_builds import FeatureAudit
 
 logger = logging.getLogger(__name__)
@@ -169,21 +170,7 @@ def build_monk_2024_high_level_feature_audits(level: int) -> list[FeatureAudit]:
                     ),
                 )
             )
-        if level >= 17:
-            audits.append(
-                _feature(
-                    "quivering-palm",
-                    "Quivering Palm",
-                    "subclass",
-                    notes=(
-                        "Reuses the universal deferred-save effect: an Unarmed Strike hit may spend 4 Focus Points "
-                        "to arm one target; the vibrations can be ended harmlessly, or detonated by an Action or by "
-                        "replacing one Attack-action attack. The target makes a Constitution save against the Monk DC, "
-                        "taking 10d12 Force damage on failure or half on success. Same-plane and multi-day duration "
-                        "qualifiers are inherently satisfied within a standard Iron Pit match."
-                    ),
-                )
-            )
+        audits.extend(build_monk_2024_endgame_feature_audits(level))
         return audits
     except Exception:
         logger.exception("Failed to compile high-level 2024 Monk feature audits at level %s.", level)

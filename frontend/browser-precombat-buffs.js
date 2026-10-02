@@ -8,6 +8,7 @@
   function timedChoice(member) {
     try {
       const choices = (member.state.template.timed_self_buff_actions || []).filter((action) => {
+        if ((action.activationTiming || "action") !== "action") return false;
         if (T().active(member, action)) return false;
         if (action.resourceId == null) return true;
         return (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1);
