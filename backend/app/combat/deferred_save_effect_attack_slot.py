@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.attack_action_choices import slot_has_legal_choice
 from app.combat.deferred_save_effect import (
     deferred_save_effect_candidate,
     resolve_deferred_save_effect,
@@ -10,6 +11,22 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
 logger = logging.getLogger(__name__)
+
+
+def prefer_deferred_effect_attack_slot(
+    actor: EncounterCombatant,
+    setup: EncounterSetup,
+) -> bool:
+    """Prefer the Attack-slot path when source data permits it and a slot is legal."""
+    try:
+        rule = actor.state.template.progression_features.deferred_save_effect
+        definition = actor.state.template.attack_action
+        if rule is None or not rule.allow_attack_slot_activation or definition is None:
+            return False
+        return any(slot_has_legal_choice(actor, setup, slot) for slot in definition.slots)
+    except Exception as exc:
+        logger.exception("Failed deferred-effect attack-slot preference for %s.", actor.combatant_id)
+        raise RuntimeError("Deferred effect attack-slot preference failed.") from exc
 
 
 def resolve_deferred_effect_attack_slot(
