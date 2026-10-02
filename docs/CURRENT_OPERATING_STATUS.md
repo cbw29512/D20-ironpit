@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-02 for the 2024 Open Hand Monk level 13 tranche. Main baseline: `96c412c56f81f748a3b9855f958a3e0b41ddabd3`.
+Recorded 2026-10-02 for the 2024 Open Hand Monk level 14 tranche. Main baseline: `6999d806c80b7ad70f62905b89b4033304778ba1`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -33,9 +33,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
-| 2024 | Monk (Open Hand) | 1–11 |
+| 2024 | Monk (Open Hand) | 1–14 |
 
-2024 public-ready hero slots on current main: **131 / 240**.
+2024 public-ready hero slots in this level-14 tranche: **134 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -45,9 +45,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 131 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 11 on main; this tranche advances level 12.
+**2024 canonical pregens are 134 / 240 in this tranche.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is advanced through level 14 here.
 
-Active implementation lane: **2024 Open Hand Monk level 12.** Apply the canonical Open Hand unarmed-offense Ability Score Improvement as **+2 Wisdom (10→12)** after Dexterity is capped at 20. Propagate the Wisdom modifier through Unarmored Defense, Monk save DCs, Wisdom skills, and Wholeness of Body, then certify the exact head.
+Active implementation lane: **2024 Open Hand Monk level 14.** Disciplined Survivor reuses the universal saving-throw proficiency grant plus the universal failed-save reroll. Level 14 grants proficiency in all saves, spends 1 Focus Point after a failed save to reroll it, and must use the replacement roll. No Monk-specific resolver is added.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -72,7 +72,8 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 11 advances Martial Arts to **d10**, Focus Points to **11**, and HP to **91**. The tranche also corrects prior 2024 Monk healing-die drift by deriving Uncanny Metabolism and Wholeness of Body from the same Martial Arts die rule. **Fleet Step** uses the universal Bonus Action follow-up tactical grant. After another eligible Bonus Action, arena automation immediately takes the resource-free Dash form of Step of the Wind; it does not invent retreat or kiting behavior.
 - Level 12 uses the repeatable **Ability Score Improvement** feat for **+2 Wisdom (10→12)**, following the Open Hand unarmed-offense specialization priority of Dexterity → Wisdom → Constitution. This raises AC to 16, Stunning Strike DC to 13, Wisdom skills by 1, and Wholeness of Body healing to 1d10+1 while Focus Points advance to 12.
 - Level 13 adds **Deflect Energy**, widening Deflect Attacks from Bludgeoning/Piercing/Slashing to attacks dealing any damage type. Proficiency Bonus advances to +5, Focus Points to 13, HP to 107, Initiative/Unarmed Strike attack bonus to +10, and Stunning Strike DC to 14. The same tranche closes the existing RAW redirect gap: when Deflect Attacks reduces an attack to 0 damage, the Monk can spend 1 Focus Point to force the printed Dexterity save and deal two Martial Arts dice plus Dexterity modifier on a failure through a universal zero-damage redirect primitive with Python/browser parity.
-- Next exact level after level 13 certification is **Monk 14**; audit Disciplined Survivor against existing saving-throw proficiency and failed-save reroll primitives before adding any engine behavior.
+- Level 14 adds **Disciplined Survivor** by reusing universal saving-throw proficiency grants and the shared failed-save reroll. Constitution, Intelligence, Wisdom, and Charisma join Kael's existing Strength/Dexterity save proficiencies; a failed save may spend 1 Focus Point to reroll and must use the replacement result. Unarmored Movement rises to +25 feet (55-foot Speed), Focus Points to 14, and HP to 115.
+- Next exact level after level 14 certification is **Monk 15**; audit Perfect Focus against the existing initiative resource-refill primitive and the Uncanny Metabolism interaction before adding engine behavior.
 
 ### Druid spell-selection policy
 
