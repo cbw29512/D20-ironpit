@@ -23,7 +23,6 @@ from app.domain.models import BattleEvent, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
 
-
 def resolve_attack_action(
     sequence: int, round_number: int, attacker: EncounterCombatant,
     setup: EncounterSetup, dice: DiceProvider,
