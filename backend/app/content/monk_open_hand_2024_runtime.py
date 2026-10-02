@@ -15,6 +15,7 @@ from app.content.monk_open_hand_2024_profile import build_kael_stillwater_2024_p
 from app.content.monk_open_hand_2024_resources import build_monk_initiative_refills, build_monk_resources
 from app.content.monk_2024_resource_rules import monk_martial_arts_die
 from app.domain.actions import HealingAction
+from app.domain.bonus_action_follow_up import BonusActionFollowUpTacticalGrant
 from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.on_hit_save_riders import ResourceBackedOnHitSaveRider
@@ -57,6 +58,21 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
             progression_features=ProgressionCombatFeatures(
                 evasion=level >= 7,
                 evasion_disabled_while_incapacitated=level >= 7,
+                bonus_action_follow_up_tactical_grants=(
+                    [
+                        BonusActionFollowUpTacticalGrant(
+                            source_id="fleet-step",
+                            source_name="Fleet Step",
+                            tactical_grant_id="step-of-the-wind-dash",
+                            excluded_trigger_ids=[
+                                "step-of-the-wind-dash",
+                                "step-of-the-wind-focus",
+                                "fleet-step",
+                            ],
+                        )
+                    ]
+                    if level >= 11 else []
+                ),
                 end_turn_condition_removal=(
                     EndTurnConditionRemovalGrant(
                         source_id="self-restoration",
