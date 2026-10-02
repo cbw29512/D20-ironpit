@@ -102,11 +102,10 @@ def build_monk_2024_high_level_feature_audits(level: int) -> list[FeatureAudit]:
                     "fleet-step",
                     "Fleet Step",
                     "subclass",
-                    automated=False,
                     notes=(
-                        "RAW permits Step of the Wind immediately after a different Bonus Action. "
-                        "Current deterministic arena tactics do not perform post-Bonus-Action repositioning or kiting, "
-                        "so this optional follow-up is deliberately unselected rather than approximated."
+                        "Uses the universal Bonus Action follow-up tactical grant. After a different Bonus Action, "
+                        "arena automation takes the resource-free Dash form of Step of the Wind immediately; "
+                        "it does not invent retreat or kiting behavior."
                     ),
                 )
             )
