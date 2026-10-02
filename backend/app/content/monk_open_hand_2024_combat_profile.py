@@ -55,11 +55,11 @@ def _row(level: int, abilities: AbilityScores, focus_points: int) -> PregenComba
         raise
 
 
-def build_kael_2024_combat_profiles(max_level: int = 19) -> list[PregenCombatProfile]:
+def build_kael_2024_combat_profiles(max_level: int = 20) -> list[PregenCombatProfile]:
     """Return independent combat fingerprints for certified 2024 Kael levels."""
     try:
-        if max_level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19}:
-            raise ValueError("The current 2024 Kael combat fingerprint covers levels 1-19 only.")
+        if max_level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}:
+            raise ValueError("The current 2024 Kael combat fingerprint covers levels 1-20 only.")
         base = AbilityScores(
             strength=13,
             dexterity=17,
@@ -73,6 +73,7 @@ def build_kael_2024_combat_profiles(max_level: int = 19) -> list[PregenCombatPro
         level_twelve = level_eight.model_copy(update={"wisdom": 12})
         level_sixteen = level_twelve.model_copy(update={"wisdom": 14})
         level_nineteen = level_sixteen.model_copy(update={"dexterity": 21})
+        level_twenty = level_nineteen.model_copy(update={"dexterity": 25, "wisdom": 18})
         rows = [_row(1, base, 0)]
         if max_level >= 2:
             rows.append(_row(2, base, 2))
@@ -110,6 +111,8 @@ def build_kael_2024_combat_profiles(max_level: int = 19) -> list[PregenCombatPro
             rows.append(_row(18, level_sixteen, 18))
         if max_level >= 19:
             rows.append(_row(19, level_nineteen, 19))
+        if max_level >= 20:
+            rows.append(_row(20, level_twenty, 20))
         return rows
     except Exception:
         logger.exception("Failed to build 2024 Kael combat fingerprints through level %s.", max_level)
