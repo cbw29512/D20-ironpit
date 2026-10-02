@@ -185,6 +185,15 @@ class ResourceBackedOnHitExile(BaseModel):
     return_damage_excluded_creature_types: list[str] = Field(default_factory=list)
 
 
+class EndTurnConditionRemovalGrant(BaseModel):
+    """Automatically remove the first active condition from a declared priority list."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    condition_ids: list[str] = Field(min_length=1)
+    max_conditions: int = Field(default=1, ge=1, le=20)
+
+
 class DelayedResourceRefill(BaseModel):
     """Automatically arm a source-owned timer when declared resources are below maximum."""
 
