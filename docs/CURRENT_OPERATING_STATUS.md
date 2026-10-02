@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-02 for the 2024 Open Hand Monk level 11 tranche. Main baseline: `e5f13acbf942436b56bbd09d3c25ff5d113449f2`.
+Recorded 2026-10-02 for the 2024 Open Hand Monk level 12 tranche. Main baseline: `cd61a29883dc41c805194e4b51e135c2491d1086`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -33,9 +33,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
-| 2024 | Monk (Open Hand) | 1–10 |
+| 2024 | Monk (Open Hand) | 1–11 |
 
-2024 public-ready hero slots on current main: **130 / 240**.
+2024 public-ready hero slots on current main: **131 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -45,9 +45,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 130 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 10 on main; this tranche advances level 11.
+**2024 canonical pregens are 131 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 11 on main; this tranche advances level 12.
 
-Active implementation lane: **2024 Open Hand Monk level 11.** Martial Arts advances to d10 and Focus Points to 11. The shared Martial Arts die rule now drives Unarmed Strike, Uncanny Metabolism, Wholeness of Body, and Heightened Focus Patient Defense. Fleet Step uses the universal Bonus Action follow-up tactical grant to take the resource-free Dash form of Step of the Wind immediately after another eligible Bonus Action.
+Active implementation lane: **2024 Open Hand Monk level 12.** Apply the canonical Open Hand unarmed-offense Ability Score Improvement as **+2 Wisdom (10→12)** after Dexterity is capped at 20. Propagate the Wisdom modifier through Unarmored Defense, Monk save DCs, Wisdom skills, and Wholeness of Body, then certify the exact head.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -70,7 +70,8 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 9 adds **Acrobatic Movement**. RAW permits movement along vertical surfaces and across liquids while unarmored and not wielding a Shield; the current Iron Pit battlefield has no vertical-surface or liquid-terrain state, so the feature is source-audited as arena-neutral rather than approximated. Proficiency Bonus advances to +4 and Focus Points to 9.
 - Level 10 increases Unarmored Movement to +20 feet and Focus Points to 10. **Heightened Focus** upgrades Flurry of Blows to three Unarmed Strikes and Focus-backed Patient Defense to grant 2d8 Temporary HP through universal mechanics. The optional Step of the Wind ally-transport choice remains deliberately unselected by arena automation. **Self-Restoration** binds to the generic end-turn condition-removal primitive with deterministic priority **Charmed → Frightened → Poisoned**.
 - Level 11 advances Martial Arts to **d10**, Focus Points to **11**, and HP to **91**. The tranche also corrects prior 2024 Monk healing-die drift by deriving Uncanny Metabolism and Wholeness of Body from the same Martial Arts die rule. **Fleet Step** uses the universal Bonus Action follow-up tactical grant. After another eligible Bonus Action, arena automation immediately takes the resource-free Dash form of Step of the Wind; it does not invent retreat or kiting behavior.
-- Next exact level after level 11 certification is **Monk 12**; apply the canonical combat ASI only after level 11 is merged.
+- Level 12 uses the repeatable **Ability Score Improvement** feat for **+2 Wisdom (10→12)**, following the Open Hand unarmed-offense specialization priority of Dexterity → Wisdom → Constitution. This raises AC to 16, Stunning Strike DC to 13, Wisdom skills by 1, and Wholeness of Body healing to 1d10+1 while Focus Points advance to 12.
+- Next exact level after level 12 certification is **Monk 13**; audit Deflect Energy and any noncombat class delta before adding engine behavior.
 
 ### Druid spell-selection policy
 
