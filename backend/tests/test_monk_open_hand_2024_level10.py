@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+from app.combat.condition_lifecycle import resolve_target_condition_timing
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.tactical_actions import resolve_defensive_tactical_grant
+from app.combat.timed_conditions import apply_timed_condition
 from app.content.monk_open_hand_2024_combat_profile import build_kael_2024_combat_profiles
 from app.content.monk_open_hand_2024_profile import build_kael_stillwater_2024_profile
 from app.content.monk_open_hand_2024_runtime import build_kael_stillwater_2024
 from app.domain.encounters import EncounterCombatant
+from app.domain.progression_primitives import EndTurnConditionRemovalGrant
 
 
 def test_2024_open_hand_monk_level10_heightened_focus_and_progression() -> None:
@@ -61,3 +64,39 @@ def test_level10_self_restoration_remains_explicitly_uncertified_pending_policy(
 
     assert audits["heightened-focus"].automated is True
     assert audits["self-restoration"].automated is False
+
+
+def test_generic_end_turn_condition_removal_uses_declared_priority() -> None:
+    template = build_kael_stillwater_2024(10)
+    features = template.progression_features.model_copy(update={
+        "end_turn_condition_removal": EndTurnConditionRemovalGrant(
+            source_id="test-restoration",
+            source_name="Test Restoration",
+            condition_ids=["charmed", "frightened", "poisoned"],
+        ),
+    })
+    template = template.model_copy(update={"progression_features": features})
+    state = build_combatant_state(template)
+    member = EncounterCombatant(
+        combatant_id="kael",
+        side="heroes",
+        position_ft=0,
+        state=state,
+    )
+    apply_timed_condition(state, "poisoned", "poison-source", use_default_poison_recovery=False)
+    apply_timed_condition(state, "charmed", "charm-source", use_default_poison_recovery=False)
+
+    events, sequence = resolve_target_condition_timing(
+        1,
+        1,
+        member,
+        "target_turn_end",
+        FixedDiceProvider([1]),
+    )
+
+    assert sequence == 2
+    assert len(events) == 1
+    assert events[0].feature_id == "test-restoration"
+    assert events[0].removed_condition_ids == ["charmed"]
+    assert "charmed" not in state.active_effect_ids
+    assert "poisoned" in state.active_effect_ids
