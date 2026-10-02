@@ -612,6 +612,23 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                 "reductionDiceSize": template.attack_damage_reduction_reaction.reduction_dice_size,
                 "reductionAbility": template.attack_damage_reduction_reaction.reduction_ability,
                 "addLevel": template.attack_damage_reduction_reaction.add_level,
+                **(
+                    {"zeroDamageRedirect": {
+                        "sourceId": template.attack_damage_reduction_reaction.zero_damage_redirect.source_id,
+                        "sourceName": template.attack_damage_reduction_reaction.zero_damage_redirect.source_name,
+                        "resourceId": template.attack_damage_reduction_reaction.zero_damage_redirect.resource_id,
+                        "resourceCost": template.attack_damage_reduction_reaction.zero_damage_redirect.resource_cost,
+                        "meleeRangeFt": template.attack_damage_reduction_reaction.zero_damage_redirect.melee_range_ft,
+                        "rangedRangeFt": template.attack_damage_reduction_reaction.zero_damage_redirect.ranged_range_ft,
+                        "saveAbility": template.attack_damage_reduction_reaction.zero_damage_redirect.save_ability,
+                        "saveDc": template.attack_damage_reduction_reaction.zero_damage_redirect.save_dc,
+                        "damageDiceCount": template.attack_damage_reduction_reaction.zero_damage_redirect.damage_dice_count,
+                        "damageDiceSize": template.attack_damage_reduction_reaction.zero_damage_redirect.damage_dice_size,
+                        "damageBonusAbility": template.attack_damage_reduction_reaction.zero_damage_redirect.damage_bonus_ability,
+                        "requiresSight": template.attack_damage_reduction_reaction.zero_damage_redirect.requires_sight,
+                        "requiresClearLine": template.attack_damage_reduction_reaction.zero_damage_redirect.requires_clear_line,
+                    }} if template.attack_damage_reduction_reaction.zero_damage_redirect else {}
+                ),
             }
             if template.attack_damage_reduction_reaction else None
         ),
