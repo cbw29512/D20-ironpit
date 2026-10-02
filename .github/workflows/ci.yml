@@ -443,6 +443,7 @@ jobs:
           node frontend/browser-pooled-healing.test.cjs
           node frontend/browser-outgoing-healing-maximize.test.cjs
           node frontend/browser-once-per-turn-hit-damage.test.cjs
+          node frontend/browser-post-hit-damage.test.cjs
           node frontend/browser-persistent-spell-attacks.test.cjs
           node frontend/browser-persistent-hazards.test.cjs
           node frontend/browser-turn-undead-2014.test.cjs
