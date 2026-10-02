@@ -57,6 +57,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "inflict-wounds-l9",
         "bless",
         "shield-of-faith",
+        "divine-favor",
         "aid",
         "shatter",
         "thunderwave",
@@ -231,6 +232,25 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         assert len(spell.modifier_effects) == 1
         assert spell.modifier_effects[0].kind == "armor-class"
         assert spell.modifier_effects[0].flat_bonus == 2
+
+    if "divine-favor" in defenses:
+        spell = defenses["divine-favor"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.duration_minutes,
+            spell.target_policy,
+            spell.concentration,
+        ) == (1, "bonus_action", 0, 1, "self", False)
+        assert len(spell.modifier_effects) == 1
+        modifier = spell.modifier_effects[0]
+        assert (
+            modifier.kind,
+            modifier.dice_count,
+            modifier.dice_size,
+            modifier.damage_type,
+        ) == ("bonus-damage", 1, 4, "radiant")
 
 
     if "thunderclap" in spell_saves:
