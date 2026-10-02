@@ -4,6 +4,7 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const DMR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
+  const DE = () => window.IRON_PIT_BROWSER_DEFERRED_ATTACK_SLOT;
   const D = () => window.IRON_PIT_DICE;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const MK = () => window.IRON_PIT_BROWSER_MONK_2014;
@@ -82,6 +83,11 @@
       if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
       const data = slotData(slots[index]);
       const splitThis = index > 0 && rangedSplit && !rangedSplitUsed && F().flexibleSlotHasBoth(member, data.attackIds);
+      const deferred = DE()?.resolve(sequence, round, member, setup) || null;
+      if (deferred) {
+        events.push(deferred); sequence += 1; openingFeature = null;
+        continue;
+      }
       const choice = attackChoice(member, setup, data, splitThis);
       if (choice) {
         if (splitThis && choice.attack.kind === "ranged") rangedSplitUsed = true;
