@@ -66,6 +66,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             "damageBonus": attack.damage_bonus, "damageType": weapon.damage_type.value,
             "reach": weapon.reach_ft, "animation": weapon.animation,
         }
+        if weapon.damage_type_choices:
+            row["damageTypeChoices"] = [item.value for item in weapon.damage_type_choices]
         if attack.damage_source_qualifiers:
             row["damageSourceQualifiers"] = [_value(item) for item in attack.damage_source_qualifiers]
         if attack.attack_ability is not None:
