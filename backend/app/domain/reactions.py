@@ -21,6 +21,26 @@ class RedirectAttackReaction(BaseModel):
     ally_max_size: CreatureSize = CreatureSize.MEDIUM
 
 
+class ZeroDamageSaveRedirect(BaseModel):
+    """Optional save-damage follow-up after a reduction reaction zeroes an attack."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    resource_id: str = Field(min_length=1)
+    resource_cost: int = Field(default=1, ge=1, le=20)
+    melee_range_ft: int = Field(default=5, ge=1, le=120)
+    ranged_range_ft: int = Field(default=60, ge=1, le=600)
+    save_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
+    save_dc: int = Field(ge=1, le=40)
+    damage_dice_count: int = Field(ge=1, le=20)
+    damage_dice_size: int = Field(ge=2, le=100)
+    damage_bonus_ability: Literal[
+        "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"
+    ] | None = None
+    requires_sight: bool = True
+    requires_clear_line: bool = True
+
+
 class AttackDamageReductionReaction(BaseModel):
     """Universal Reaction that reduces damage from one qualifying attack hit."""
 
@@ -34,6 +54,7 @@ class AttackDamageReductionReaction(BaseModel):
         "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"
     ] | None = None
     add_level: bool = False
+    zero_damage_redirect: ZeroDamageSaveRedirect | None = None
 
 
 class DamageReactionAttack(BaseModel):
