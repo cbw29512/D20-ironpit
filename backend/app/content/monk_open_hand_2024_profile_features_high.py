@@ -90,10 +90,9 @@ def build_monk_2024_high_level_feature_audits(level: int) -> list[FeatureAudit]:
                     "self-restoration",
                     "Self-Restoration",
                     "class",
-                    automated=False,
                     notes=(
-                        "End-turn removal of one active Charmed, Frightened, or Poisoned condition requires "
-                        "a deterministic choice policy when more than one eligible condition is active."
+                        "Uses the universal end-turn condition-removal primitive. "
+                        "Arena priority is Charmed, then Frightened, then Poisoned when multiple eligible conditions are active."
                     ),
                 ),
             ])
