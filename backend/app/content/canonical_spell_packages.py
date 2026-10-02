@@ -58,6 +58,11 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
     "paladin": (
         _spell("cure-wounds", "Cure Wounds", "healing", "healing"),
         _spell("divine-favor", "Divine Favor", "damage", "modifier-stack", "bonus-damage"),
+        _spell("bless", "Bless", "buff", "modifier-stack", "concentration", min_character_level=2),
+        _spell(
+            "divine-smite", "Divine Smite", "damage", "post-hit-resource-damage",
+            min_character_level=2, always_prepared_from_level=2,
+        ),
     ),
     "ranger": (
         _spell("cure-wounds", "Cure Wounds", "healing", "healing"),
