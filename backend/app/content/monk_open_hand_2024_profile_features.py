@@ -56,7 +56,7 @@ def build_monk_2024_feature_audits(level: int) -> list[FeatureAudit]:
                     "Unarmored Movement",
                     "class",
                     notes=(
-                        f"Adds {15 if level >= 6 else 10} feet to Speed while unarmored and not wielding a Shield."
+                        f"Adds {25 if level >= 14 else 20 if level >= 10 else 15 if level >= 6 else 10} feet to Speed while unarmored and not wielding a Shield."
                     ),
                 ),
                 _feature(
