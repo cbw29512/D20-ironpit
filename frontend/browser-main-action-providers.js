@@ -83,6 +83,12 @@
           if (member.state.template.deferred_save_effect) throw new Error("Deferred-effect runtime is not loaded.");
           return null;
         }
+        const rule = member.state.template.deferred_save_effect || null;
+        if (rule?.allow_attack_slot_activation) {
+          const attacks = M();
+          if (!attacks) throw new Error("Attack/Multiattack runtime is not loaded for deferred-effect selection.");
+          if (attacks.legalChoiceAvailable(member, setup)) return null;
+        }
         const target = runtime.candidate(member, setup);
         return target ? { payload: { targetId: target.combatant_id } } : null;
       },
