@@ -36,7 +36,7 @@ def build_aurelia_2024_combat_profiles() -> list[PregenCombatProfile]:
             ),
             attacks=(
                 AttackExpectation("longsword", "strength", 1, 8, "slashing", mastery_property="Sap"),
-                AttackExpectation("javelin", "strength", 1, 6, "piercing", reach_ft=0, normal_range_ft=30, long_range_ft=120, mastery_property="Slow"),
+                AttackExpectation("javelin", "strength", 1, 6, "piercing", normal_range_ft=30, long_range_ft=120, mastery_property="Slow"),
             ),
             weapon_masteries=("longsword", "javelin"),
             resources=(("lay-on-hands", 5), ("spell-slot-1", 2)),
