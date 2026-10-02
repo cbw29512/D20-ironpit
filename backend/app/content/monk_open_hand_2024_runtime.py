@@ -13,6 +13,7 @@ from app.content.monk_open_hand_2024_actions import (
 from app.content.monk_open_hand_2024_attacks import build_kael_extra_attack_2024, build_kael_unarmed_attack_2024
 from app.content.monk_open_hand_2024_profile import build_kael_stillwater_2024_profile
 from app.content.monk_open_hand_2024_resources import build_monk_initiative_refills, build_monk_resources
+from app.content.monk_2024_resource_rules import monk_martial_arts_die
 from app.domain.actions import HealingAction
 from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import ProgressionCombatFeatures
@@ -25,8 +26,8 @@ logger = logging.getLogger(__name__)
 def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
     """Build the certified persistent 2024 Open Hand Monk using shared combat primitives."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}:
-            raise ValueError("The current 2024 Monk runtime tranche supports levels 1-10 only.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}:
+            raise ValueError("The current 2024 Monk runtime tranche supports levels 1-11 only.")
         profile = build_kael_stillwater_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -66,7 +67,7 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
                     if level >= 10 else None
                 ),
                 martial_arts_bonus_attack=True,
-                martial_arts_die_size=8 if level >= 5 else 6,
+                martial_arts_die_size=monk_martial_arts_die(level),
                 resource_backed_on_hit_save_rider=(
                     ResourceBackedOnHitSaveRider(
                         source_id="stunning-strike",
@@ -98,7 +99,7 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
                     range_ft=0,
                     target_mode="self",
                     dice_count=1,
-                    dice_size=8,
+                    dice_size=monk_martial_arts_die(level),
                     healing_bonus=max(0, wisdom),
                     resource_id="wholeness-of-body",
                     resource_cost=1,
