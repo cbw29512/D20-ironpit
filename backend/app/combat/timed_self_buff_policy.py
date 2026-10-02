@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Literal
 
 from app.combat.action_economy import is_available
 from app.combat.condition_rules import has_condition
@@ -100,6 +101,8 @@ def _hostile_aura_is_relevant(
 def choose_timed_self_buff_action(
     member: EncounterCombatant,
     setup: EncounterSetup | None = None,
+    *,
+    activation_timing: Literal["action", "start_turn"] = "action",
 ) -> TimedSelfBuffAction | None:
     """Choose the highest-priority legal inactive tactically relevant self-buff."""
     try:
@@ -107,7 +110,11 @@ def choose_timed_self_buff_action(
         for action in member.state.template.timed_self_buff_actions:
             resource = timed_self_buff_resource(member, action)
             if (
-                is_available(member.state, action.action_cost)
+                action.activation_timing == activation_timing
+                and (
+                    activation_timing == "start_turn"
+                    or is_available(member.state, action.action_cost)
+                )
                 and (
                     action.resource_id is None
                     or (
