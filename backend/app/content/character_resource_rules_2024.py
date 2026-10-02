@@ -110,6 +110,9 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         ("focus-points", "Focus Points", monk_focus_points),
         ("uncanny-metabolism", "Uncanny Metabolism", uncanny_metabolism_uses),
     ),
+    "paladin": (
+        ("lay-on-hands", "Lay On Hands", lambda level: 5 * level),
+    ),
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),
 }
