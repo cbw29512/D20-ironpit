@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
-from app.combat.condition_rules import can_see
+from app.combat.condition_rules import can_see, is_incapacitated
 from app.domain.models import CombatantState, DamageRollComponent
 
 
@@ -34,7 +34,9 @@ def evasion_damage(
     total: int,
 ) -> int:
     """Apply Evasion only to Dexterity saves that normally deal half damage on success."""
-    enabled = state.template.progression_features.evasion
-    if not enabled or ability != "dexterity" or success_damage != "half":
+    features = state.template.progression_features
+    enabled = features.evasion
+    disabled = features.evasion_disabled_while_incapacitated and is_incapacitated(state)
+    if not enabled or disabled or ability != "dexterity" or success_damage != "half":
         return total // 2 if succeeded and success_damage == "half" else total
     return 0 if succeeded else total // 2
