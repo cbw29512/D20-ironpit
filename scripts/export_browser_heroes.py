@@ -601,6 +601,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             template.progression_features.resource_backed_on_hit_save_rider.model_dump(mode="json")
             if template.progression_features.resource_backed_on_hit_save_rider else None
         ),
+        "resource_backed_post_hit_damage": (
+            template.progression_features.resource_backed_post_hit_damage.model_dump(mode="json")
+            if template.progression_features.resource_backed_post_hit_damage else None
+        ),
         "attackDamageReductionReaction": (
             {
                 "sourceId": template.attack_damage_reduction_reaction.source_id,
