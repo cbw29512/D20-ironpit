@@ -5,7 +5,6 @@ import logging
 from app.combat.damage_reaction_events import damage_event_chain
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
-from app.combat.resource_backed_on_hit_save import resolve_resource_backed_on_hit_save
 from app.combat.saving_throws import resolve_save_action
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, SavingThrowAction, WeaponAttack
@@ -37,33 +36,8 @@ def resolve_attack_event_chain(
             setup,
             **attack_options,
         )
-        next_sequence = sequence + 1
-        prefix = [event]
-        if event.hit:
-            actual_target = next(
-                (
-                    member
-                    for member in [*setup.heroes, *setup.monsters]
-                    if member.combatant_id == event.target_id
-                ),
-                target,
-            )
-            rider = resolve_resource_backed_on_hit_save(
-                next_sequence,
-                round_number,
-                attacker,
-                actual_target,
-                attack,
-                dice,
-                attack_options.get("turn_key") or f"{round_number}:{attacker.combatant_id}",
-                affected_states=[member.state for member in [*setup.heroes, *setup.monsters]],
-                setup=setup,
-            )
-            if rider is not None:
-                prefix.append(rider.event)
-                next_sequence += 1
-        reactions, final_sequence = damage_event_chain(
-            next_sequence,
+        return damage_event_chain(
+            sequence + 1,
             round_number,
             attacker,
             event,
@@ -71,7 +45,6 @@ def resolve_attack_event_chain(
             dice,
             turn_key=attack_options.get("turn_key"),
         )
-        return [*prefix, *reactions[1:]], final_sequence
     except ValueError:
         raise
     except Exception as exc:

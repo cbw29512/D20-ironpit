@@ -37,6 +37,12 @@
           useDefaultPoisonRecovery: false,
         });
         if (effect) applied.push(effect);
+        const concentration = window.IRON_PIT_BROWSER_CONCENTRATION;
+        if (target.state.concentration && !concentration) {
+          throw new Error("Hit-save incapacitation requires the Concentration runtime.");
+        }
+        concentration?.endIfIncapacitated(target.state,
+          setup ? [...setup.heroes, ...setup.monsters].map((entry) => entry.state) : [target.state]);
       }
 
       if (save.succeeded) {
@@ -88,5 +94,24 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_RESOURCE_HIT_SAVE = { resolve };
+  function resolveEvent(sequence, round, member, event, setup, turnKey) {
+    const rider = member.state.template.resource_backed_on_hit_save_rider;
+    if (!rider || !event.hit) return { events: [], sequence };
+    if (!event.attack_id) throw new Error("Hit rider requires the resolved attack identity.");
+    if (!rider.trigger_attack_ids.includes(event.attack_id)) return { events: [], sequence };
+    if (!turnKey) throw new Error("Hit rider requires the authoritative active turn key.");
+    const target = [...setup.heroes, ...setup.monsters]
+      .find((entry) => entry.combatant_id === event.target_id);
+    if (!target) throw new Error("Hit rider target is absent from the encounter.");
+    const speedBefore = M().effectiveSpeed(target.state);
+    const result = resolve(sequence, round, member, target, { id: event.attack_id }, turnKey, setup);
+    if (turnKey === `${round}:${target.combatant_id}`) {
+      const delta = M().effectiveSpeed(target.state) - speedBefore;
+      target.state.movement_remaining_ft = Math.max(0,
+        target.state.movement_remaining_ft + delta * (1 + (target.state.dash_uses_this_turn || 0)));
+    }
+    return result ? { events: [result], sequence: sequence + 1 } : { events: [], sequence };
+  }
+
+  window.IRON_PIT_BROWSER_RESOURCE_HIT_SAVE = { resolve, resolveEvent };
 })();

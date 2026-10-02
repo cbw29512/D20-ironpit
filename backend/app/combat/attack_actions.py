@@ -14,7 +14,6 @@ from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.light_attack_resolution import resolve_light_extra_attack
 from app.combat.opening_burst import opening_feature_id
 from app.combat.pit_policy import flexible_slot_has_both
-from app.combat.resource_backed_on_hit_save import resolve_resource_backed_on_hit_save
 from app.combat.saving_throws import resolve_save_action
 from app.combat.stunning_strike_2014 import resolve_stunning_strike
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -86,20 +85,6 @@ def resolve_attack_action(
                 sequence += 1
                 if event.hit:
                     actual_target = _event_target(event, setup) or target
-                    rider = resolve_resource_backed_on_hit_save(
-                        sequence,
-                        round_number,
-                        attacker,
-                        actual_target,
-                        attack,
-                        dice,
-                        turn_key,
-                        affected_states=affected_states,
-                        setup=setup,
-                    )
-                    if rider is not None:
-                        events.append(rider.event)
-                        sequence += 1
                     stun = resolve_stunning_strike(
                         sequence,
                         round_number,

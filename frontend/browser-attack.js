@@ -191,7 +191,7 @@
       hp_before: hpBefore, hp_after: actualTarget.state.current_hp, temporary_hp_before: temporaryHpBefore, temporary_hp_after: actualTarget.state.temporary_hp,
       death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
       death_save_successes: actualTarget.state.death_save_successes, death_save_failures: actualTarget.state.death_save_failures,
-      is_stable: actualTarget.state.is_stable, is_dead: actualTarget.state.is_dead, weapon_id: attack.id, projectile: attack.projectile || null,
+      is_stable: actualTarget.state.is_stable, is_dead: actualTarget.state.is_dead, attack_id: attack.id, weapon_id: attack.id, projectile: attack.projectile || null,
       feature_id: d20Override.featureId || override.featureId || extra.featureId || (recklessStarted ? "reckless-attack" : null), concentration_ended_effect_id: concentrationBefore && !actualTarget.state.concentration ? concentrationBefore : null,
       resource_remaining: exileApplied?.resourceRemaining ?? deferredEffectArmed?.resourceRemaining ?? null,
       animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description: description + survivalLog + (window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT?.consumeLog(actualTarget.state) || "") };

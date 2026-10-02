@@ -88,7 +88,14 @@
       if (triggeringEvent.actor_id !== source.combatant_id) {
         throw new Error("Damage reaction source must match the triggering event actor.");
       }
-      const sourceTrigger = resolveSourceZeroHpTrigger(sequence, round, source, triggeringEvent, setup);
+      const hitRuntime = window.IRON_PIT_BROWSER_RESOURCE_HIT_SAVE;
+      if (source.state.template.resource_backed_on_hit_save_rider && !hitRuntime?.resolveEvent) {
+        throw new Error("Declared hit rider requires the hit-save runtime.");
+      }
+      const hit = hitRuntime?.resolveEvent(sequence, round, source, triggeringEvent, setup, turnKey)
+        || { events: [], sequence };
+      const sourceTrigger = resolveSourceZeroHpTrigger(hit.sequence, round, source, triggeringEvent, setup);
+      sourceTrigger.events.unshift(...hit.events);
       sequence = sourceTrigger.sequence;
       const appliedDamage = appliedDamageTotal(triggeringEvent);
       const damageTrigger = T()?.resolve(sequence, round, source, triggeringEvent, appliedDamage)

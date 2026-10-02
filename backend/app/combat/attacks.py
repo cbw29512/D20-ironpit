@@ -183,7 +183,7 @@ def resolve_attack(
             temporary_hp_before=temporary_hp_before, temporary_hp_after=actual_defender.temporary_hp,
             death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
             death_save_successes=actual_defender.death_save_successes, death_save_failures=actual_defender.death_save_failures,
-            is_stable=actual_defender.is_stable, is_dead=actual_defender.is_dead, weapon_id=weapon.id, projectile=weapon.projectile,
+            is_stable=actual_defender.is_stable, is_dead=actual_defender.is_dead, attack_id=attack.id, weapon_id=weapon.id, projectile=weapon.projectile,
             feature_id=d20_override_feature_id or miss_override_feature_id or outcome_adjustment_feature_id or feature_id, concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
             resource_remaining=(
                 exile_applied[1] if exile_applied is not None

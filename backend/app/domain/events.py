@@ -28,6 +28,7 @@ class BattleEvent(BaseModel):
     actor_name: str
     target_id: str | None = None
     target_name: str | None = None
+    attack_id: str | None = None
     attack_name: str | None = None
     target_ac: int | None = Field(default=None, ge=0)
     attack_roll: DiceRoll | None = None

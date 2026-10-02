@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-01 for the 2024 Open Hand Monk level 4 tranche after the completed Circle of the Land Druid progression.
+Recorded 2026-10-02 while auditing PR #485 (2024 Open Hand Monk level 5). Main baseline: `57073d0ffd8b93183fae5fa18d633b2f8b882148`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -47,7 +47,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2024 canonical pregens are 124 / 240 on this exact tranche.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 4.
 
-Active implementation lane: **2024 Open Hand Monk level 4. Certify and merge the exact-head level 4 tranche, then advance the same persistent Kael Stillwater build to level 5 using universal mechanics before adding any Monk-named resolver.**
+Active implementation lane: **Finish PR #485: 2024 Open Hand Monk level 5.** Its candidate manifest is **125 / 240**, but the main baseline above remains **124 / 240** until the reviewed exact head passes all CI and merges. Review found missing Opportunity Attack bindings, browser event ordering and Concentration cleanup, and off-turn Speed-budget integration. See `docs/audits/2024-monk5-hit-rider-integration.md`. Complete this tranche before advancing to Monk 6.
+
+Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
 ### 2024 Monk lane
 
@@ -61,7 +63,7 @@ Active implementation lane: **2024 Open Hand Monk level 4. Certify and merge the
 - Level 3 selects Warrior of the Open Hand. Canonical arena automation selects Open Hand Technique's Topple option on Flurry hits and composes the shared Dexterity-save-to-Prone attack rider; no Open-Hand-named resolver is added for 2024.
 - Level 4 uses the repeatable **Ability Score Improvement** feat for **+2 Dexterity (17→19)**. Shared derived-stat logic updates AC, Initiative, Unarmed Strike attack/damage, Dexterity save/skills, and Deflect Attacks reduction; Focus Points advance to 4.
 - **Slow Fall** is source-audited but arena-neutral because the standard Iron Pit battlefield has no falling hazard. No Monk-named resolver or ordinary attack-damage reduction is created for it.
-- Next exact level is **Monk 5**. Re-audit Extra Attack and Stunning Strike against the shared attack-action and saving-throw/resource primitives before implementation.
+- Current exact level is **Monk 5**, PR #485. Extra Attack and Stunning Strike use shared attack-action, resource-backed hit-save, timed-condition and modifier primitives. After its corrected exact head is green and merged, audit Monk 6.
 
 ### Druid spell-selection policy
 

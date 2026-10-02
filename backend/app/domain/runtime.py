@@ -122,6 +122,7 @@ class CombatantState(BaseModel):
     turn_terminated: bool = False
     turn_termination_reason: str | None = None
     heroic_inspiration: bool = False
+    dash_uses_this_turn: int = Field(default=0, ge=0)
     movement_remaining_ft: int = Field(default=0, ge=0)
     resources: list[ResourceState] = Field(default_factory=list)
     active_effect_ids: list[str] = Field(default_factory=list)

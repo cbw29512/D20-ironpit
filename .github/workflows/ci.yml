@@ -352,6 +352,7 @@ jobs:
           node frontend/browser-bonus-action-hooks.test.cjs
           node frontend/browser-bonus-attacks.test.cjs
           node frontend/browser-resource-hit-save.test.cjs
+          node frontend/browser-hit-rider-integration.test.cjs
           node frontend/browser-attack-damage-reduction.test.cjs
           node frontend/browser-tactical-actions.test.cjs
           node frontend/browser-persistent-rage-2024.test.cjs

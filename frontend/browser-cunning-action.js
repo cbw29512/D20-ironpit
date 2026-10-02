@@ -27,6 +27,7 @@
     if (!needsDash(member, setup, turnKey)) return null;
     E().spend(member.state, "bonus_action");
     member.state.movement_remaining_ft += M().effectiveSpeed(member.state);
+    member.state.dash_uses_this_turn = (member.state.dash_uses_this_turn || 0) + 1;
     return {
       sequence, round_number: round, event_type: "feature",
       actor_id: member.combatant_id, actor_name: member.state.template.name,

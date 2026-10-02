@@ -101,6 +101,7 @@ function monk() {
   assert.equal(event.feature_id, "step-of-the-wind-dash");
   assert.equal(event.movement_ft, 40);
   assert.equal(actor.state.movement_remaining_ft, 80);
+  assert.equal(actor.state.dash_uses_this_turn, 1);
   assert.equal(actor.state.resources["focus-points"], 2);
   assert.equal(actor.state.bonus_action_available, false);
 }
