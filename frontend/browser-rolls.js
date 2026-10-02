@@ -85,7 +85,32 @@
     };
   }
 
+  function chooseDamageType(attacker, attack, target, qualifiers) {
+    try {
+      const options = [attack.damageType, ...(attack.damageTypeChoices || [])];
+      if (!target || options.length <= 1) return attack.damageType;
+      const bypass = new Set(
+        (attacker.template.damage_resistance_bypass_grants || []).flatMap((grant) => grant.damage_types || []),
+      );
+      return options
+        .map((damageType, index) => ({
+          damageType,
+          index,
+          score: window.IRON_PIT_BROWSER_ATTACK.adjustedDamage(
+            target, 1000, damageType, true, qualifiers, bypass.has(damageType),
+          ),
+        }))
+        .sort((left, right) => right.score - left.score || left.index - right.index)[0].damageType;
+    } catch (error) {
+      console.error("Browser attack damage type choice failed", { attack: attack?.id, error });
+      throw error;
+    }
+  }
+
   function weaponDamage(attacker, attack, critical, mode, turnKey, bonusDamage = null, target = null, sneakAllyAvailable = false) {
+    const qualifiers = window.IRON_PIT_BROWSER_MODIFIERS?.damageSourceQualifiers?.(attacker, attack)
+      || new Set(["attack", "weapon", attack.kind, ...(attack.damageSourceQualifiers || [])]);
+    const selectedDamageType = chooseDamageType(attacker, attack, target, [...qualifiers]);
     const conditional = attack.conditionalDamage || null;
     const replacement = conditional?.mode === "replace_weapon" && conditionalActive(conditional, attacker, target, mode)
       ? conditional : null;
@@ -105,7 +130,7 @@
         attacker.feature_last_turn_keys["savage-attacker"] = turnKey;
       }
     }
-    const components = [{ source: attack.name, damage_type: replacement?.damageType || attack.damageType, ...rolled }];
+    const components = [{ source: attack.name, damage_type: replacement?.damageType || selectedDamageType, ...rolled }];
     const brutal = critical && attack.kind === "melee" ? attacker.template.brutal_critical_dice || 0 : 0;
     if (brutal) components.push(damageComponent({ source: "Brutal Critical", diceCount: brutal, diceSize: attack.diceSize, damageBonus: 0, damageType: attack.damageType }, false));
     for (const extra of attack.onHitDamage || []) components.push(damageComponent(extra, critical));
@@ -114,7 +139,7 @@
       const count = baseCount * (critical ? 2 : 1);
       const rolls = dice().rollMany(count, sides);
       components.push({
-        source: "Advantage bonus damage", damage_type: attack.damageType,
+        source: "Advantage bonus damage", damage_type: selectedDamageType,
         notation: `${count}d${sides}+0`, rolls, modifier: 0, total: rolls.reduce((a, b) => a + b, 0),
       });
     }
@@ -134,8 +159,6 @@
     );
     if (brutalStrike) components.push(bonusComponent(brutalStrike, critical));
     if (bonusDamage) components.push(bonusComponent(bonusDamage, critical));
-    const qualifiers = window.IRON_PIT_BROWSER_MODIFIERS?.damageSourceQualifiers?.(attacker, attack)
-      || new Set(["attack", "weapon", attack.kind, ...(attack.damageSourceQualifiers || [])]);
     const qualifiedComponents = components.map((item) => ({ ...item, source_qualifiers: [...qualifiers] }));
     const total = qualifiedComponents.reduce((sum, item) => sum + item.total, 0);
     return {
@@ -149,5 +172,5 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_ROLLS = { attackMode, d20, modeFromSources, weaponDamage };
+  window.IRON_PIT_BROWSER_ROLLS = { attackMode, chooseDamageType, d20, modeFromSources, weaponDamage };
 })();
