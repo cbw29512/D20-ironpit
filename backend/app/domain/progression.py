@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.bonus_action_follow_up import BonusActionFollowUpTacticalGrant
 from app.domain.character_builds import AbilityName
 from app.domain.debuffs import DebuffCounter
+from app.domain.deferred_save_effect import DeferredSaveEffect
 from app.domain.area_spell_protection import AreaSpellAllyProtectionGrant
 from app.domain.alternate_spell_casts import AlternateSpellCastGrant
 from app.domain.spell_damage_maximizers import SpellDamageMaximizerGrant
@@ -18,7 +19,6 @@ from app.domain.on_hit_save_riders import ResourceBackedOnHitSaveRider
 from app.domain.progression_primitives import (
     AbilityCheckMinimum,
     AbilityScaledDamageRider,
-    DeferredSaveEffect,
     DamageResistanceBypassGrant,
     EffectBoundSurvivalSave,
     FailedD20TestOverrideGrant,
