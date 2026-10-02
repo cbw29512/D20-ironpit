@@ -7,8 +7,10 @@ from app.domain.bonus_action_follow_up import BonusActionFollowUpTacticalGrant
 from app.domain.end_turn_condition_removal import EndTurnConditionRemovalGrant
 from app.domain.on_hit_save_riders import ResourceBackedOnHitSaveRider
 from app.domain.progression import (
+    DamageResistanceBypassGrant,
     DeferredSaveEffect,
     FailedSaveRerollGrant,
+    NaturalTwentyAttackDamageGrant,
     ProgressionCombatFeatures,
     SavingThrowProficiencyGrant,
 )
@@ -25,6 +27,23 @@ def build_monk_2024_progression(
     """Bind 2024 Monk features to existing universal progression primitives."""
     try:
         return ProgressionCombatFeatures(
+            damage_resistance_bypass_grants=(
+                [DamageResistanceBypassGrant(
+                    source_id="boon-irresistible-offense",
+                    source_name="Boon of Irresistible Offense",
+                    damage_types=["bludgeoning", "piercing", "slashing"],
+                )]
+                if level >= 19 else []
+            ),
+            natural_twenty_attack_damage_grants=(
+                [NaturalTwentyAttackDamageGrant(
+                    source_id="boon-irresistible-offense",
+                    source_name="Boon of Irresistible Offense",
+                    ability="dexterity",
+                    damage_type_source="attack",
+                )]
+                if level >= 19 else []
+            ),
             evasion=level >= 7,
             evasion_disabled_while_incapacitated=level >= 7,
             bonus_action_follow_up_tactical_grants=(
