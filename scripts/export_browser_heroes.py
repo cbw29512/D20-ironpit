@@ -510,6 +510,21 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             "wearing_metal_armor": template.wearing_metal_armor,
         "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
         "timed_self_buff_actions": [_timed_self_buff(item) for item in template.timed_self_buff_actions],
+        "attack_action_weapon_buffs": [
+            {
+                "id": item.id,
+                "name": item.name,
+                "resourceId": item.resource_id,
+                "resourceCost": item.resource_cost,
+                "weaponId": item.weapon_id,
+                "durationRounds": item.duration_rounds,
+                "attackRollBonus": item.attack_roll_bonus,
+                "damageTypeChoice": item.damage_type_choice.value if item.damage_type_choice is not None else None,
+                "sourceIsMagical": item.source_is_magical,
+                "animation": item.animation,
+            }
+            for item in template.attack_action_weapon_buffs
+        ],
         "traits": [item.value for item in template.combat_traits], "resources": {item.id: item.max_uses for item in template.resources},
         "rage_damage_bonus": template.rage_damage_bonus, "wearing_heavy_armor": template.wearing_heavy_armor,
         "wearing_metal_armor": template.wearing_metal_armor,
