@@ -1,13 +1,11 @@
 (() => {
   "use strict";
-
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const O = () => window.IRON_PIT_BROWSER_ATTACK_OUTCOME;
   const OUT = () => window.IRON_PIT_BROWSER_DEFERRED_SAVE_OUTCOMES;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const members = (setup) => [...setup.heroes, ...setup.monsters];
   const ruleFor = (state) => state.template?.deferred_save_effect || null;
-
   function arm(state, targetState, targetId, attack, round) {
     try {
       const rule = ruleFor(state);
@@ -36,7 +34,6 @@
       throw error;
     }
   }
-
   function cleanup(setup) {
     try {
       const byId = new Map(members(setup).map((item) => [item.combatant_id, item]));
@@ -51,7 +48,6 @@
       throw error;
     }
   }
-
   function candidate(actor, setup, options = {}) {
     try {
       const rule = ruleFor(actor.state);
@@ -69,7 +65,6 @@
       throw error;
     }
   }
-
   function resolve(sequence, round, actor, setup, expectedTargetId = null, options = {}) {
     try {
       const spendAction = options.spendAction !== false;
@@ -81,14 +76,12 @@
       const rule = ruleFor(actor.state);
       if (!rule) throw new Error("Deferred-effect candidate exists without immutable source data.");
       if (!OUT()) throw new Error("Deferred save outcome runtime is not loaded.");
-
       const hpBefore = target.state.current_hp;
       const tempBefore = target.state.temporary_hp;
       const deathSuccessBefore = target.state.death_save_successes;
       const deathFailureBefore = target.state.death_save_failures;
       const save = V().resolveSavingThrow(target.state, rule.save_ability, rule.save_dc);
       const outcome = OUT().resolve(target.state, rule, save.succeeded, members(setup).map((item) => item.state));
-
       if (spendAction) E().spend(actor.state, "action");
       actor.state.deferred_effects = actor.state.deferred_effects.filter(
         (item) => !(item.source_id === rule.source_id && item.target_id === target.combatant_id),
@@ -126,7 +119,6 @@
       throw error;
     }
   }
-
   function installAbilityHooks() {
     try {
       const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
@@ -151,6 +143,5 @@
       throw error;
     }
   }
-
   window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT = { arm, candidate, cleanup, resolve, installAbilityHooks };
 })();
