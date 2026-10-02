@@ -198,6 +198,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("uncanny-dodge")
     if features.evasion:
         mechanics.add("evasion")
+    if features.evasion_disabled_while_incapacitated:
+        mechanics.add("evasion-disabled-while-incapacitated")
     if features.survivor_heal_amount:
         mechanics.add("survivor")
     if features.bloodied_start_turn_heal_amount:
