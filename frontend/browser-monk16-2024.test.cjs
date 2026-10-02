@@ -28,6 +28,6 @@ assert.equal(l16.skill_bonuses.insight, 7);
 assert.equal(l16.skill_bonuses.perception, 7);
 assert.equal(l16.resource_backed_on_hit_save_rider.save_dc, 15);
 assert.equal(l16.healingActions[0].healingBonus, 2);
-assert.equal(l16.attack_damage_reduction_reaction.zeroDamageRedirect.saveDc, 15);
+assert.equal(l16.attackDamageReductionReaction.zeroDamageRedirect.saveDc, 15);
 
 console.log("2024 Monk 16 Wisdom ASI browser parity passed.");
