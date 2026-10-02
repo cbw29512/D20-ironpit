@@ -17,6 +17,7 @@ from app.domain.progression_primitives import (
     AbilityCheckMinimum,
     AbilityScaledDamageRider,
     DeferredSaveEffect,
+    EndTurnConditionRemovalGrant,
     DamageResistanceBypassGrant,
     EffectBoundSurvivalSave,
     FailedD20TestOverrideGrant,
@@ -103,6 +104,7 @@ class ProgressionCombatFeatures(BaseModel):
     resource_backed_on_hit_save_rider: ResourceBackedOnHitSaveRider | None = None
     resource_backed_on_hit_save_rider: ResourceBackedOnHitSaveRider | None = None
     delayed_resource_refill: DelayedResourceRefill | None = None
+    end_turn_condition_removal: EndTurnConditionRemovalGrant | None = None
     deferred_save_effect: DeferredSaveEffect | None = None
     area_spell_ally_protection: AreaSpellAllyProtectionGrant | None = None
     alternate_spell_cast_grants: list[AlternateSpellCastGrant] = Field(default_factory=list)
