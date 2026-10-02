@@ -62,6 +62,8 @@ load("browser-tactical-actions.js");
 load("browser-2014-monk.js");
 load("browser-targeted-concentration-damage.js");
 load("browser-persistent-spell-attacks.js");
+load("browser-timed-self-buff-policy.js");
+load("browser-timed-self-buffs.js");
 load("browser-ability-hook-installation.js");
 
 const H = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
@@ -273,6 +275,7 @@ for (const htmlPath of [path.join(__dirname, "index.html"), path.join(__dirname,
   assert.ok(html.indexOf("browser-ability-hooks.js") < html.indexOf("browser-rage.js"));
   assert.ok(html.indexOf("browser-support.js") < html.indexOf("browser-steady-aim.js"));
   assert.ok(html.indexOf("browser-steady-aim.js") < html.indexOf("browser-ability-hook-installation.js"));
+  assert.ok(html.indexOf("browser-timed-self-buffs.js") < html.indexOf("browser-ability-hook-installation.js"));
   assert.ok(html.indexOf("browser-ability-hook-installation.js") < html.indexOf("browser-turn.js"));
 }
 
