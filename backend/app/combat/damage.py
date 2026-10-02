@@ -12,6 +12,7 @@ from app.combat.divine_smite_2014 import divine_smite_bonus_damage
 from app.combat.frenzy import frenzy_bonus_damage
 from app.combat.modifier_stack import attack_damage_source_qualifiers, bonus_damage_modifiers
 from app.combat.once_per_turn_hit_damage import once_per_turn_weapon_hit_bonus_damages
+from app.combat.post_hit_damage import post_hit_resource_bonus_damage
 from app.combat.savage_attacker import roll_weapon_component
 from app.combat.sneak_attack import sneak_attack_bonus_damage
 from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
@@ -135,6 +136,11 @@ def resolve_weapon_damage(
             critical=critical,
         )
         _append_bonus_component(components, dice, divine_smite_bonus_damage(attacker, target, attack), critical=critical)
+        _append_bonus_component(
+            components, dice,
+            post_hit_resource_bonus_damage(attacker, target, attack, turn_key),
+            critical=critical,
+        )
         for rider_damage in once_per_turn_weapon_hit_bonus_damages(attacker, attack, turn_key, target):
             _append_bonus_component(
                 components, dice, rider_damage, critical=critical,
