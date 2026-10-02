@@ -9,17 +9,22 @@ logger = logging.getLogger(__name__)
 
 
 def choose_attack_damage_type(
+    attacker: CombatantState,
     attack: WeaponAttack,
     target: CombatantState | None,
     *,
     source_qualifiers: set | None = None,
-    ignored_resistance_types: set[DamageType] | None = None,
 ) -> DamageType:
     """Choose the most effective legal damage type for one attack without source-name branching."""
     try:
         options = [attack.weapon.damage_type, *attack.weapon.damage_type_choices]
         if not options or target is None:
             return attack.weapon.damage_type
+        ignored_resistance_types = {
+            damage_type
+            for grant in attacker.template.progression_features.damage_resistance_bypass_grants
+            for damage_type in grant.damage_types
+        }
         scored = [
             (
                 adjusted_damage_amount(
@@ -27,7 +32,7 @@ def choose_attack_damage_type(
                     damage_type,
                     target,
                     source_qualifiers=source_qualifiers or set(),
-                    ignored_resistance_types=ignored_resistance_types or set(),
+                    ignored_resistance_types=ignored_resistance_types,
                 ),
                 -index,
                 damage_type,
