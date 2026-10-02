@@ -90,13 +90,32 @@
         throw new Error("Damage reaction source must match the triggering event actor.");
       }
       const hitRuntime = window.IRON_PIT_BROWSER_RESOURCE_HIT_SAVE;
+      const damageRuntime = window.IRON_PIT_BROWSER_POST_HIT_DAMAGE;
       if (source.state.template.resource_backed_on_hit_save_rider && !hitRuntime?.resolveEvent) {
         throw new Error("Declared hit rider requires the hit-save runtime.");
       }
-      const hit = hitRuntime?.resolveEvent(sequence, round, source, triggeringEvent, setup, turnKey)
-        || { events: [], sequence };
+      if (source.state.template.resource_backed_post_hit_damage && !damageRuntime?.resolve) {
+        throw new Error("Declared post-hit damage requires the post-hit damage runtime.");
+      }
+      const hitEvents = [];
+      let hitSequence = sequence;
+      if (triggeringEvent.hit && triggeringEvent.attack_id && source.state.template.resource_backed_post_hit_damage) {
+        const target = memberById(setup, triggeringEvent.target_id);
+        if (!target) throw new Error("Post-hit damage target is absent from the encounter.");
+        const damageEvent = damageRuntime.resolve(
+          hitSequence, round, source, target, triggeringEvent.attack_id,
+          Boolean(triggeringEvent.critical), setup, turnKey,
+        );
+        if (damageEvent) {
+          hitEvents.push(damageEvent);
+          hitSequence += 1;
+        }
+      }
+      const hit = hitRuntime?.resolveEvent(hitSequence, round, source, triggeringEvent, setup, turnKey)
+        || { events: [], sequence: hitSequence };
+      hitEvents.push(...hit.events);
       const sourceTrigger = resolveSourceZeroHpTrigger(hit.sequence, round, source, triggeringEvent, setup);
-      sourceTrigger.events.unshift(...hit.events);
+      sourceTrigger.events.unshift(...hitEvents);
       sequence = sourceTrigger.sequence;
       const appliedDamage = appliedDamageTotal(triggeringEvent);
       const damageTrigger = T()?.resolve(sequence, round, source, triggeringEvent, appliedDamage)
