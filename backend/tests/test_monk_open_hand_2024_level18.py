@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.damage_defenses import adjusted_damage_amount
+from app.combat.precombat_buffs import choose_opening_buff
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
 from app.combat.start_turn_timed_self_buffs import resolve_start_turn_timed_self_buff
 from app.combat.state import begin_turn, build_combatant_state
@@ -72,6 +73,7 @@ def test_superior_defense_activates_at_turn_start_without_spending_action_econom
 
     event = resolve_start_turn_timed_self_buff(1, 1, monk, setup)
 
+    assert choose_opening_buff(monk, setup) is None
     assert event is not None
     assert event.feature_id == "superior-defense"
     assert event.resource_remaining == 15
