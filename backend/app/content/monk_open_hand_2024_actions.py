@@ -97,7 +97,11 @@ def build_monk_tactical_actions(level: int) -> list[BonusActionTacticalGrant]:
         raise
 
 
-def build_monk_attack_damage_reduction(level: int) -> AttackDamageReductionReaction | None:
+def build_monk_attack_damage_reduction(
+    level: int,
+    proficiency_bonus: int,
+    wisdom_modifier: int,
+) -> AttackDamageReductionReaction | None:
     try:
         if level < 3:
             return None
@@ -121,7 +125,7 @@ def build_monk_attack_damage_reduction(level: int) -> AttackDamageReductionReact
                 melee_range_ft=5,
                 ranged_range_ft=60,
                 save_ability="dexterity",
-                save_dc=8 + ((level - 1) // 4 + 2) + wisdom_modifier,
+                save_dc=8 + proficiency_bonus + wisdom_modifier,
                 damage_dice_count=2,
                 damage_dice_size=monk_martial_arts_die(level),
                 damage_bonus_ability="dexterity",
