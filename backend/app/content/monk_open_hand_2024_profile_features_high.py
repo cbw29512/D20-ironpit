@@ -133,6 +133,18 @@ def build_monk_2024_high_level_feature_audits(level: int) -> list[FeatureAudit]:
                     ),
                 )
             )
+        if level >= 14:
+            audits.append(
+                _feature(
+                    "disciplined-survivor",
+                    "Disciplined Survivor",
+                    "class",
+                    notes=(
+                        "Reuses universal saving-throw proficiency grants plus the shared failed-save reroll. "
+                        "A failed save may spend 1 Focus Point; the replacement roll is mandatory."
+                    ),
+                )
+            )
         return audits
     except Exception:
         logger.exception("Failed to compile high-level 2024 Monk feature audits at level %s.", level)
