@@ -332,6 +332,7 @@ def _healing(action: Any) -> dict[str, Any]:
     try:
         return {
             "id": action.id, "name": action.name, "actionCost": action.action_cost,
+        "activationTiming": action.activation_timing,
             "range": action.range_ft, "targetMode": action.target_mode, "maxTargets": action.max_targets,
             "areaRadiusFt": action.area_radius_ft, "diceCount": action.dice_count, "diceSize": action.dice_size,
             "healingBonus": action.healing_bonus, "restoreToEffectiveMax": action.restore_to_effective_max,
