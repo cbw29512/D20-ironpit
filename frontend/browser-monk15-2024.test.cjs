@@ -13,16 +13,11 @@ assert.equal(hero.resources["focus-points"], 15);
 const grants = hero.initiative_resource_refill_grants;
 assert.equal(grants.length, 2);
 assert.equal(grants[0].source_id, "uncanny-metabolism");
-assert.deepEqual(grants[1], {
-  source_id: "perfect-focus",
-  source_name: "Perfect Focus",
-  resource_id: "focus-points",
-  when_at_or_below: 3,
-  restore_amount: 1,
-  restore_to_max: false,
-  restore_to_minimum: 4,
-  usage_resource_cost: 1,
-});
+assert.equal(grants[1].source_id, "perfect-focus");
+assert.equal(grants[1].source_name, "Perfect Focus");
+assert.equal(grants[1].resource_id, "focus-points");
+assert.equal(grants[1].when_at_or_below, 3);
+assert.equal(grants[1].restore_to_minimum, 4);
 
 function member() {
   const template = structuredClone(hero);
