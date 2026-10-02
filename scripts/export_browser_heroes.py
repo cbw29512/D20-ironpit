@@ -301,6 +301,7 @@ def _d20_bonus_die_action(action: Any) -> dict[str, Any]:
     try:
         return {
             "id": action.id, "name": action.name, "actionCost": action.action_cost,
+        "activationTiming": action.activation_timing,
             "range": action.range_ft, "targetMode": action.target_mode,
             "resourceId": action.resource_id, "resourceCost": action.resource_cost,
             "diceCount": action.dice_count, "diceSize": action.dice_size,
