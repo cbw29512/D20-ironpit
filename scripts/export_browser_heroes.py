@@ -796,6 +796,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                 "resourceId": item.resource_id, "resourceCost": item.resource_cost,
                 "priority": item.priority, "usePolicy": item.use_policy,
                 "jumpDistanceMultiplier": item.jump_distance_multiplier,
+                "temporaryHpDiceCount": item.temporary_hp_dice_count,
+                "temporaryHpDiceSize": item.temporary_hp_dice_size,
             }
             for item in template.bonus_tactical_action_grants
         ]
