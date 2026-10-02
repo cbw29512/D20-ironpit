@@ -51,7 +51,8 @@ def test_empowered_strikes_chooses_effective_legal_damage_type() -> None:
             update={"damage_immunities": [DamageType.BLUDGEONING]}
         )
         target_state = build_combatant_state(target)
-        chosen = choose_attack_damage_type(monk.weapon_attack, target_state)
+        monk_state = build_combatant_state(monk)
+        chosen = choose_attack_damage_type(monk_state, monk.weapon_attack, target_state)
         assert chosen == DamageType.FORCE
 
         force_immune = target.model_copy(
@@ -61,6 +62,7 @@ def test_empowered_strikes_chooses_effective_legal_damage_type() -> None:
             }
         )
         chosen_normal = choose_attack_damage_type(
+            monk_state,
             monk.weapon_attack,
             build_combatant_state(force_immune),
         )
