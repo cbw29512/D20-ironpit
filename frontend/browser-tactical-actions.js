@@ -2,6 +2,7 @@
   "use strict";
 
   const D = () => window.IRON_PIT_BROWSER_DODGE;
+  const Dice = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
@@ -86,6 +87,17 @@
         if (typeof D()?.applyEffect !== "function") throw new Error("Tactical Dodge requires browser-dodge.js.");
         D().applyEffect(member.state);
       }
+      const temporaryHpBefore = member.state.temporary_hp || 0;
+      let temporaryHpAfter = temporaryHpBefore;
+      if ((grant.temporaryHpDiceCount || 0) > 0) {
+        if (!Dice()?.roll) throw new Error("Tactical Temporary HP requires the browser dice API.");
+        if (!S()?.grantTemporaryHp) throw new Error("Tactical Temporary HP requires browser-state.js.");
+        let amount = 0;
+        for (let index = 0; index < grant.temporaryHpDiceCount; index += 1) {
+          amount += Dice().roll(grant.temporaryHpDiceSize);
+        }
+        temporaryHpAfter = S().grantTemporaryHp(member.state, amount);
+      }
       return {
         sequence,
         round_number: round,
@@ -95,6 +107,8 @@
         feature_id: grant.id,
         resource_remaining: remaining,
         movement_ft: movement,
+        temporary_hp_before: temporaryHpBefore,
+        temporary_hp_after: temporaryHpAfter,
         applied_condition_ids: effects.includes("dodge") ? ["dodge"] : [],
         animation: effects.includes("dash") ? "movement" : "dodge",
         description: `${member.state.template.name} uses ${grant.name}: ${effects.map((item) => item[0].toUpperCase() + item.slice(1)).join(", ")}.`,
