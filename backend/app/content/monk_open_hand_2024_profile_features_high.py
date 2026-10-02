@@ -109,6 +109,18 @@ def build_monk_2024_high_level_feature_audits(level: int) -> list[FeatureAudit]:
                     ),
                 )
             )
+        if level >= 12:
+            audits.append(
+                _feature(
+                    "ability-score-improvement-l12",
+                    "Ability Score Improvement (+2 Wisdom)",
+                    "feat",
+                    notes=(
+                        "Canonical Open Hand unarmed-offense specialization raises Wisdom 10 to 12 after Dexterity "
+                        "is capped at 20, updating Unarmored Defense, Monk save DCs, Wisdom skills, and Wholeness of Body."
+                    ),
+                )
+            )
         return audits
     except Exception:
         logger.exception("Failed to compile high-level 2024 Monk feature audits at level %s.", level)
