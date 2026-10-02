@@ -184,6 +184,19 @@ def build_monk_2024_high_level_feature_audits(level: int) -> list[FeatureAudit]:
                     ),
                 )
             )
+        if level >= 18:
+            audits.append(
+                _feature(
+                    "superior-defense",
+                    "Superior Defense",
+                    "class",
+                    notes=(
+                        "Uses the universal start-turn timed self-buff path: spend 3 Focus Points at the start "
+                        "of the Monk's turn for 10 rounds of resistance to every damage type except Force. "
+                        "The shared source-bound lifecycle ends the effect early if the Monk is Incapacitated."
+                    ),
+                )
+            )
         return audits
     except Exception:
         logger.exception("Failed to compile high-level 2024 Monk feature audits at level %s.", level)
