@@ -17,7 +17,7 @@ from app.domain.actions import HealingAction
 from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.on_hit_save_riders import ResourceBackedOnHitSaveRider
-from app.domain.progression_primitives import EndTurnConditionRemovalGrant
+from app.domain.end_turn_condition_removal import EndTurnConditionRemovalGrant
 
 logger = logging.getLogger(__name__)
 
