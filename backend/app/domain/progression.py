@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field, model_validator
 
+from app.domain.bonus_action_follow_up import BonusActionFollowUpTacticalGrant
 from app.domain.character_builds import AbilityName
 from app.domain.debuffs import DebuffCounter
 from app.domain.area_spell_protection import AreaSpellAllyProtectionGrant
@@ -105,6 +106,7 @@ class ProgressionCombatFeatures(BaseModel):
     resource_backed_on_hit_save_rider: ResourceBackedOnHitSaveRider | None = None
     delayed_resource_refill: DelayedResourceRefill | None = None
     end_turn_condition_removal: EndTurnConditionRemovalGrant | None = None
+    bonus_action_follow_up_tactical_grants: list[BonusActionFollowUpTacticalGrant] = Field(default_factory=list)
     deferred_save_effect: DeferredSaveEffect | None = None
     area_spell_ally_protection: AreaSpellAllyProtectionGrant | None = None
     alternate_spell_cast_grants: list[AlternateSpellCastGrant] = Field(default_factory=list)
