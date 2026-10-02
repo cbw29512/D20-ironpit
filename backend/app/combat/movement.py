@@ -59,6 +59,7 @@ def take_dash(
         speed = effective_speed(mover)
         mover.action_available = False
         mover.movement_remaining_ft += speed
+        mover.dash_uses_this_turn += 1
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,

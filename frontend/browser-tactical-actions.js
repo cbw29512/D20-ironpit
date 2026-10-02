@@ -79,6 +79,7 @@
       if (effects.includes("dash")) {
         movement = M().effectiveSpeed(member.state);
         member.state.movement_remaining_ft += movement;
+        member.state.dash_uses_this_turn = (member.state.dash_uses_this_turn || 0) + 1;
       }
       if (effects.includes("disengage")) member.state.disengaged_this_turn = true;
       if (effects.includes("dodge")) {

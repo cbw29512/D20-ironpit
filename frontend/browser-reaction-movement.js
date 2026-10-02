@@ -71,6 +71,7 @@
             return { events, sequence, movement: lastMovement };
           }
         }
+        if (stepCost > mover.state.movement_remaining_ft) break;
         const beforeDistance = S().distance(mover, target);
         mover.state.position = { ...destination };
         mover.state.movement_remaining_ft -= stepCost;

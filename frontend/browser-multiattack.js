@@ -98,12 +98,16 @@
           if (member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
           continue;
         }
-        if (event.hit && MK()?.resolveStunning) {
-          const stun = MK().resolveStunning(sequence, round, member, eventTarget(event, choice.target, setup), choice.attack);
-          if (stun) { events.push(stun); sequence += 1; }
+        events.push(event);
+        if (event.hit) {
+          const actualTarget = eventTarget(event, choice.target, setup);
+          if (MK()?.resolveStunning) {
+            const stun = MK().resolveStunning(sequence, round, member, actualTarget, choice.attack);
+            if (stun) { events.push(stun); sequence += 1; }
+          }
         }
         const chain = DMR()?.chain(sequence, round, member, event, setup, turnKey) || { events: [event], sequence };
-        events.push(...chain.events); sequence = chain.sequence;
+        events.push(...chain.events.slice(1)); sequence = chain.sequence;
         if (member.state.turn_terminated || member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
         const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
         events.push(...cleave.events); sequence = cleave.sequence;

@@ -6,7 +6,7 @@
     "armor-class", "armor-class-minimum", "attack-roll-flat", "saving-throw-flat", "condition-immunity", ...DIE_KINDS,
     "saving-throw-advantage", "d20-test-advantage", "saving-throw-disadvantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
     "attacks-against-disadvantage", "next-attack-against-advantage", "next-incoming-attack-roll-flat", "targeting-save-gate", "speed", "debuff-counter",
-    "zero-hp-replacement", "opportunity-attack-suppressed", "damage-source-qualifier", "invisibility-benefits-suppressed",
+    "zero-hp-replacement", "opportunity-attack-suppressed", "damage-source-qualifier", "invisibility-benefits-suppressed", "speed-multiplier",
   ]);
   const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
   const D = () => window.IRON_PIT_DICE, X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
@@ -38,6 +38,9 @@
       throw new Error("Only saving-throw Advantage can require magical-effect context.");
     }
     if (item.kind === "speed" && !(item.flat_bonus || 0)) throw new Error("Speed modifiers require a nonzero flat bonus.");
+    if (item.kind === "speed-multiplier") {
+      if ((item.flat_bonus || 0) !== 0 || !(item.multiplier > 0) || item.multiplier === 1) throw new Error("Speed multiplier requires a non-1 multiplier and no flat bonus.");
+    } else if (item.multiplier != null && item.multiplier !== 1) throw new Error(`${item.kind} does not accept a multiplier.`);
     if (item.kind === "next-attack-against-advantage" && !item.target_id) throw new Error("Target-scoped attack Advantage requires a target id.");
     if (item.consume_on_attack_against && item.kind !== "attacks-against-advantage") throw new Error("Only defender-wide attack Advantage can use consume_on_attack_against.");
     if (item.consume_on_saving_throw && item.kind !== "saving-throw-disadvantage") throw new Error("Only saving-throw Disadvantage can use consume_on_saving_throw.");
@@ -144,7 +147,10 @@
           : (item.flat_bonus || 0)
       ), 0);
     const base = Math.max(0, state.template.speed_ft + speedDelta);
-    return X()?.effectiveSpeed(state, base) ?? base;
+    const multiplier = (state.active_modifiers || []).filter((item) => item.kind === "speed-multiplier")
+      .reduce((value, item) => value * (item.multiplier ?? 1), 1);
+    const adjusted = Math.max(0, Math.trunc(base * multiplier));
+    return X()?.effectiveSpeed(state, adjusted) ?? adjusted;
   };
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;
   const d20TestAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "d20-test-advantage").length;

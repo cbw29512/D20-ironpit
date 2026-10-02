@@ -57,6 +57,7 @@ def grant_dash_movement(mover: EncounterCombatant) -> int:
     try:
         speed = effective_speed(mover.state)
         mover.state.movement_remaining_ft += speed
+        mover.state.dash_uses_this_turn += 1
         return speed
     except Exception as exc:
         logger.exception("Failed to grant Dash movement for %s.", mover.combatant_id)

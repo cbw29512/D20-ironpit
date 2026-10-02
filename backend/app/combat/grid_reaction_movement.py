@@ -93,6 +93,8 @@ def move_toward_on_grid(
                 if mover.state.is_dead or mover.state.is_unconscious or speed_is_zero(mover.state) or newly_prone:
                     return events, sequence, last_movement
 
+            if step_cost > mover.state.movement_remaining_ft:
+                break
             before_distance = footprint_distance_ft(
                 before_position,
                 mover.state.template.size,

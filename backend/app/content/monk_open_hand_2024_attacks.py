@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.character_math import proficiency_bonus
+from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.character_builds import AbilityScores
 from app.domain.models import DamageType, Weapon, WeaponAttack, WeaponAttackKind
 
@@ -12,15 +13,15 @@ logger = logging.getLogger(__name__)
 def build_kael_unarmed_attack_2024(level: int, scores: AbilityScores) -> WeaponAttack:
     """Build Kael's 2024 Dexterity-based Unarmed Strike using the current Martial Arts die."""
     try:
-        if level not in {1, 2, 3, 4}:
-            raise ValueError("The current 2024 Monk attack tranche supports levels 1-4 only.")
+        if level not in {1, 2, 3, 4, 5}:
+            raise ValueError("The current 2024 Monk attack tranche supports levels 1-5 only.")
         dexterity = scores.modifier("dexterity")
         weapon = Weapon(
             id="unarmed-strike",
             name="Unarmed Strike",
             attack_kind=WeaponAttackKind.MELEE,
             dice_count=1,
-            dice_size=6,
+            dice_size=8 if level >= 5 else 6,
             damage_type=DamageType.BLUDGEONING,
             animation="strike",
             reach_ft=5,
@@ -35,4 +36,23 @@ def build_kael_unarmed_attack_2024(level: int, scores: AbilityScores) -> WeaponA
         )
     except Exception:
         logger.exception("Failed to build 2024 Kael unarmed attack at level %s.", level)
+        raise
+
+
+def build_kael_extra_attack_2024(level: int, attack_id: str) -> AttackActionDefinition | None:
+    """Reuse the shared Attack-action slot model for 2024 Extra Attack."""
+    try:
+        if level < 5:
+            return None
+        return AttackActionDefinition(
+            id="extra-attack",
+            name="Extra Attack",
+            slots=[
+                AttackActionSlot(attack_ids=[attack_id]),
+                AttackActionSlot(attack_ids=[attack_id]),
+            ],
+            is_attack_action=True,
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Kael Extra Attack at level %s.", level)
         raise

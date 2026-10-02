@@ -126,7 +126,12 @@ def effective_speed(state: CombatantState) -> int:
         )
     )
     base = max(0, state.template.speed_ft + speed_delta)
-    return speed_after_exhaustion(state, base)
+    multiplier = 1.0
+    for item in state.active_modifiers:
+        if item.kind is ModifierKind.SPEED_MULTIPLIER:
+            multiplier *= item.multiplier
+    adjusted = max(0, int(base * multiplier))
+    return speed_after_exhaustion(state, adjusted)
 
 
 def d20_test_advantage_sources(state: CombatantState) -> int:

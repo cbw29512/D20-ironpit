@@ -68,6 +68,7 @@ def begin_turn(state: CombatantState) -> list[tuple[str, str, int]]:
         state.turn_terminated = False
         state.turn_termination_reason = None
         state.disengaged_this_turn = False
+        state.dash_uses_this_turn = 0
         incapacitated = is_incapacitated(state)
         state.action_available = not incapacitated and not suppresses_action(state)
         state.bonus_action_available = not incapacitated and not suppresses_bonus_action(state)

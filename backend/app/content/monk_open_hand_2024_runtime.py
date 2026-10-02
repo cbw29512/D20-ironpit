@@ -10,11 +10,12 @@ from app.content.monk_open_hand_2024_actions import (
     build_monk_bonus_attacks,
     build_monk_tactical_actions,
 )
-from app.content.monk_open_hand_2024_attacks import build_kael_unarmed_attack_2024
+from app.content.monk_open_hand_2024_attacks import build_kael_extra_attack_2024, build_kael_unarmed_attack_2024
 from app.content.monk_open_hand_2024_profile import build_kael_stillwater_2024_profile
 from app.content.monk_open_hand_2024_resources import build_monk_initiative_refills, build_monk_resources
 from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import ProgressionCombatFeatures
+from app.domain.on_hit_save_riders import ResourceBackedOnHitSaveRider
 
 logger = logging.getLogger(__name__)
 
@@ -22,8 +23,8 @@ logger = logging.getLogger(__name__)
 def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
     """Build the certified persistent 2024 Open Hand Monk using shared combat primitives."""
     try:
-        if level not in {1, 2, 3, 4}:
-            raise ValueError("The current 2024 Monk runtime tranche supports levels 1-4 only.")
+        if level not in {1, 2, 3, 4, 5}:
+            raise ValueError("The current 2024 Monk runtime tranche supports levels 1-5 only.")
         profile = build_kael_stillwater_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -52,9 +53,27 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
             starts_with_heroic_inspiration=True,
             progression_features=ProgressionCombatFeatures(
                 martial_arts_bonus_attack=True,
-                martial_arts_die_size=6,
+                martial_arts_die_size=8 if level >= 5 else 6,
+                resource_backed_on_hit_save_rider=(
+                    ResourceBackedOnHitSaveRider(
+                        source_id="stunning-strike",
+                        source_name="Stunning Strike",
+                        trigger_attack_ids=[unarmed.id],
+                        resource_id="focus-points",
+                        resource_cost=1,
+                        save_ability="constitution",
+                        save_dc=8 + pb + wisdom,
+                        once_per_turn=True,
+                        failed_condition_id="stunned",
+                        failed_condition_expiry_timing="source_turn_start",
+                        successful_save_speed_multiplier=0.5,
+                        successful_save_next_attack_advantage=True,
+                    )
+                    if level >= 5 else None
+                ),
             ),
             weapon_attack=unarmed,
+            attack_action=build_kael_extra_attack_2024(level, unarmed.id),
             bonus_attack_grants=build_monk_bonus_attacks(level, unarmed, pb, wisdom),
             bonus_tactical_action_grants=build_monk_tactical_actions(level),
             attack_damage_reduction_reaction=build_monk_attack_damage_reduction(level),
