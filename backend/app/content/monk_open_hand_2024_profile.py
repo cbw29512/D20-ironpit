@@ -17,8 +17,8 @@ logger = logging.getLogger(__name__)
 def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
     """Compile the legal persistent 2024 Kael progression through the current level."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19}:
-            raise ValueError("The current 2024 Monk profile tranche supports levels 1-19 only.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}:
+            raise ValueError("The current 2024 Monk profile tranche supports levels 1-20 only.")
         hero = HERO_BY_CLASS["monk"]
         base = canonical_base_ability_scores("monk")
         background_allowed = ["dexterity", "constitution", "intelligence"]
@@ -37,6 +37,13 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
             advancement.append(AbilityIncrease(ability="wisdom", amount=2))
         if level >= 19:
             advancement.append(AbilityIncrease(ability="dexterity", amount=1))
+        if level >= 20:
+            advancement.extend([
+                AbilityIncrease(ability="dexterity", amount=2),
+                AbilityIncrease(ability="dexterity", amount=2),
+                AbilityIncrease(ability="wisdom", amount=2),
+                AbilityIncrease(ability="wisdom", amount=2),
+            ])
         values = base.model_dump()
         for increase in [*background, *advancement]:
             values[increase.ability] += increase.amount
@@ -63,7 +70,11 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
             background_increases=background,
             advancement_increases=advancement,
             final_ability_scores=final,
-            ability_score_maximums={"dexterity": 30} if level >= 19 else {},
+            ability_score_maximums=(
+                {"dexterity": 25, "wisdom": 25}
+                if level >= 20
+                else {"dexterity": 30} if level >= 19 else {}
+            ),
             class_equipment_option="package",
             class_equipment=["Spear", "5 Daggers", "Woodcarver's Tools", "Explorer's Pack", "11 GP"],
             background_equipment_option="package",
@@ -86,6 +97,10 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
                 *(
                     ["Basic Rules 2024: Monk Level 19 — Epic Boon; Feats — Boon of Irresistible Offense (+1 Dexterity)"]
                     if level >= 19 else []
+                ),
+                *(
+                    ["Basic Rules 2024: Monk Level 20 — Body and Mind (+4 Dexterity, +4 Wisdom; maximum 25)"]
+                    if level >= 20 else []
                 ),
                 *(
                     ["Basic Rules 2024: Monk Level 4 — Ability Score Improvement and Slow Fall; Feats — Ability Score Improvement (+2 Dexterity)"]
