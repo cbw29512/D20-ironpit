@@ -130,7 +130,9 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
             resources=_resources(level),
             source=(
                 f"D&D Beyond Basic Rules 2024: Paladin {level}, Human, Soldier, "
-                "Cure Wounds, Divine Favor, Bless, Divine Smite, Longsword, Javelin"
+                "Cure Wounds, Divine Favor, "
+                + ("Bless, Divine Smite, " if level >= 2 else "")
+                + "Longsword, Javelin"
             ),
         )
     except Exception:
