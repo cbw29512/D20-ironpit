@@ -22,6 +22,8 @@ class BonusActionTacticalGrant(BaseModel):
     priority: int = Field(default=100, ge=0, le=1000)
     use_policy: TacticalUsePolicy = "manual"
     jump_distance_multiplier: int = Field(default=1, ge=1, le=4)
+    temporary_hp_dice_count: int = Field(default=0, ge=0, le=20)
+    temporary_hp_dice_size: int = Field(default=0, ge=0, le=100)
 
     @model_validator(mode="after")
     def validate_effects(self) -> "BonusActionTacticalGrant":
@@ -32,6 +34,9 @@ class BonusActionTacticalGrant(BaseModel):
                 raise ValueError("Enable-offense tactical grants must include Dash.")
             if self.use_policy == "defensive-fallback" and "dodge" not in self.effects:
                 raise ValueError("Defensive tactical grants must include Dodge.")
+            has_temp_hp = self.temporary_hp_dice_count > 0 or self.temporary_hp_dice_size > 0
+            if has_temp_hp and not (self.temporary_hp_dice_count > 0 and self.temporary_hp_dice_size >= 2):
+                raise ValueError("Temporary HP dice require both a positive count and a die size of at least 2.")
             return self
         except ValueError:
             logger.exception("Invalid Bonus Action tactical grant %s.", self.id)
