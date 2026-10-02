@@ -8,6 +8,7 @@ from app.domain.actions import AttackActionDefinition, ConditionName, ConditionR
 from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.bonus_attacks import BonusAttackGrant
 from app.domain.area_weapon_attacks import AreaWeaponAttackAction
+from app.domain.attack_action_weapon_buffs import AttackActionWeaponBuff
 from app.domain.character_builds import AbilityScores
 from app.domain.damage_sources import ConditionalDamageDefense
 from app.domain.effect_removal import EffectRemovalAction
@@ -85,6 +86,7 @@ class CombatantTemplate(BaseModel):
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
     attack_action: AttackActionDefinition | None = None
+    attack_action_weapon_buffs: list[AttackActionWeaponBuff] = Field(default_factory=list)
     bonus_attack_grants: list[BonusAttackGrant] = Field(default_factory=list)
     bonus_tactical_action_grants: list[BonusActionTacticalGrant] = Field(default_factory=list)
     area_weapon_attack_actions: list[AreaWeaponAttackAction] = Field(default_factory=list)
