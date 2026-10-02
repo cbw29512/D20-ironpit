@@ -117,6 +117,21 @@ def build_monk_2024_feature_audits(level: int) -> list[FeatureAudit]:
                     ),
                 ),
             ])
+        if level >= 6:
+            audits.extend([
+                _feature(
+                    "empowered-strikes",
+                    "Empowered Strikes",
+                    "class",
+                    notes="Uses the universal attack damage-type choice primitive: Force or the strike's normal damage type.",
+                ),
+                _feature(
+                    "wholeness-of-body",
+                    "Wholeness of Body",
+                    "subclass",
+                    notes="Uses the shared limited-use Bonus Action self-healing action with the Martial Arts die.",
+                ),
+            ])
         audits.extend([
             _feature(
                 "alert",
