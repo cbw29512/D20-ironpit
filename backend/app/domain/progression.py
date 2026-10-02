@@ -16,6 +16,7 @@ from app.domain.d20_outcome_adjustments import ResourceBackedD20OutcomeAdjustmen
 from app.domain.end_turn_condition_removal import EndTurnConditionRemovalGrant
 from app.domain.healing_riders import OutgoingHealingDiceMaximizer
 from app.domain.on_hit_save_riders import ResourceBackedOnHitSaveRider
+from app.domain.post_hit_damage import ResourceBackedPostHitDamage
 from app.domain.progression_primitives import (
     AbilityCheckMinimum,
     AbilityScaledDamageRider,
@@ -103,7 +104,7 @@ class ProgressionCombatFeatures(BaseModel):
     selectable_damage_resistance: SelectableDamageResistance | None = None
     resource_backed_on_hit_exile: ResourceBackedOnHitExile | None = None
     resource_backed_on_hit_save_rider: ResourceBackedOnHitSaveRider | None = None
-    resource_backed_on_hit_save_rider: ResourceBackedOnHitSaveRider | None = None
+    resource_backed_post_hit_damage: ResourceBackedPostHitDamage | None = None
     delayed_resource_refill: DelayedResourceRefill | None = None
     end_turn_condition_removal: EndTurnConditionRemovalGrant | None = None
     bonus_action_follow_up_tactical_grants: list[BonusActionFollowUpTacticalGrant] = Field(default_factory=list)
