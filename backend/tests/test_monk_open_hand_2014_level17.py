@@ -83,6 +83,8 @@ def test_level17_snapshot_binds_quivering_palm_to_universal_deferred_effect() ->
     assert rule.failure_sets_zero_hp is True
     assert (rule.success_damage_dice_count, rule.success_damage_dice_size) == (10, 10)
     assert rule.success_damage_type == "necrotic"
+    assert rule.allow_harmless_end_on_rearm is True
+    assert rule.allow_attack_slot_activation is False
     assert rule.max_active_targets == 1
     assert hero.weapon_attack.weapon.dice_size == 10
     assert next(item for item in hero.resources if item.id == "ki").max_uses == 17
