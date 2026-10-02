@@ -33,7 +33,7 @@ def build_monk_initiative_refills(level: int) -> list[InitiativeResourceRefillGr
     try:
         if level < 2:
             return []
-        return [
+        grants = [
             InitiativeResourceRefillGrant(
                 source_id="uncanny-metabolism",
                 source_name="Uncanny Metabolism",
@@ -49,6 +49,17 @@ def build_monk_initiative_refills(level: int) -> list[InitiativeResourceRefillGr
                 ),
             )
         ]
+        if level >= 15:
+            grants.append(
+                InitiativeResourceRefillGrant(
+                    source_id="perfect-focus",
+                    source_name="Perfect Focus",
+                    resource_id="focus-points",
+                    when_at_or_below=3,
+                    restore_to_minimum=4,
+                )
+            )
+        return grants
     except Exception:
         logger.exception("Failed to build 2024 Monk initiative refills at level %s.", level)
         raise

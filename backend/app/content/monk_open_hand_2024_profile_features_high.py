@@ -145,6 +145,18 @@ def build_monk_2024_high_level_feature_audits(level: int) -> list[FeatureAudit]:
                     ),
                 )
             )
+        if level >= 15:
+            audits.append(
+                _feature(
+                    "perfect-focus",
+                    "Perfect Focus",
+                    "class",
+                    notes=(
+                        "Reuses the universal initiative resource-refill primitive. Uncanny Metabolism resolves first; "
+                        "when it is not used and Focus Points are 3 or fewer, Perfect Focus restores the total to 4."
+                    ),
+                )
+            )
         return audits
     except Exception:
         logger.exception("Failed to compile high-level 2024 Monk feature audits at level %s.", level)
