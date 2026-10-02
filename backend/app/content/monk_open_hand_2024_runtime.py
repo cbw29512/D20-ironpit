@@ -19,6 +19,7 @@ from app.domain.bonus_action_follow_up import BonusActionFollowUpTacticalGrant
 from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.on_hit_save_riders import ResourceBackedOnHitSaveRider
+from app.domain.bonus_action_follow_up import BonusActionFollowUpTacticalGrant
 from app.domain.end_turn_condition_removal import EndTurnConditionRemovalGrant
 
 logger = logging.getLogger(__name__)
@@ -66,6 +67,15 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
                         max_conditions=1,
                     )
                     if level >= 10 else None
+                ),
+                bonus_action_follow_up_tactical_grants=(
+                    [BonusActionFollowUpTacticalGrant(
+                        source_id="fleet-step",
+                        source_name="Fleet Step",
+                        tactical_grant_id="step-of-the-wind-dash",
+                        excluded_trigger_ids=["step-of-the-wind-dash", "step-of-the-wind-disengage"],
+                    )]
+                    if level >= 11 else []
                 ),
                 bonus_action_follow_up_tactical_grants=(
                     [
