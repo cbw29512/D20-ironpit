@@ -1,32 +1,28 @@
 (() => {
   "use strict";
-
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
-  const V = () => window.IRON_PIT_BROWSER_SAVES;
-  const A = () => window.IRON_PIT_BROWSER_ATTACK;
-  const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
-  const D = () => window.IRON_PIT_DICE;
   const O = () => window.IRON_PIT_BROWSER_ATTACK_OUTCOME;
+  const OUT = () => window.IRON_PIT_BROWSER_DEFERRED_SAVE_OUTCOMES;
+  const V = () => window.IRON_PIT_BROWSER_SAVES;
   const members = (setup) => [...setup.heroes, ...setup.monsters];
   const ruleFor = (state) => state.template?.deferred_save_effect || null;
-
   function arm(state, targetState, targetId, attack, round) {
     try {
       const rule = ruleFor(state);
       if (!rule || !(rule.trigger_weapon_ids || []).includes(attack.weaponId)) return null;
       if (targetState.is_dead || !targetState.is_alive || targetState.current_hp <= 0) return null;
       const active = (state.deferred_effects || []).filter((item) => item.source_id === rule.source_id);
-      if (active.length >= (rule.max_active_targets || 1)) return null;
+      if (active.some((item) => item.target_id === targetId)) return null;
+      if (active.length >= (rule.max_active_targets || 1)) {
+        if (!rule.allow_harmless_end_on_rearm) return null;
+        state.deferred_effects = (state.deferred_effects || []).filter((item) => item.source_id !== rule.source_id);
+      }
       const cost = rule.resource_cost || 1;
       const uses = state.resources?.[rule.resource_id];
       if (uses == null) throw new Error(`Deferred effect ${rule.source_id} references missing resource ${rule.resource_id}.`);
       if (uses < cost) return null;
       state.resources[rule.resource_id] -= cost;
-      state.deferred_effects.push({
-        source_id: rule.source_id,
-        target_id: targetId,
-        armed_round: round,
-      });
+      state.deferred_effects.push({ source_id: rule.source_id, target_id: targetId, armed_round: round });
       return {
         sourceId: rule.source_id,
         sourceName: rule.source_name,
@@ -39,12 +35,10 @@
       throw error;
     }
   }
-
   function cleanup(setup) {
     try {
-      const all = members(setup);
-      const byId = new Map(all.map((item) => [item.combatant_id, item]));
-      for (const source of all) {
+      const byId = new Map(members(setup).map((item) => [item.combatant_id, item]));
+      for (const source of members(setup)) {
         source.state.deferred_effects = (source.state.deferred_effects || []).filter((mark) => {
           const target = byId.get(mark.target_id) || null;
           return Boolean(target && target.state.is_alive && !target.state.is_dead && target.state.current_hp > 0);
@@ -55,11 +49,11 @@
       throw error;
     }
   }
-
-  function candidate(actor, setup) {
+  function candidate(actor, setup, options = {}) {
     try {
       const rule = ruleFor(actor.state);
-      if (!rule || !E().available(actor.state, "action")) return null;
+      const requireAction = options.requireAction !== false;
+      if (!rule || (requireAction && !E().available(actor.state, "action"))) return null;
       const byId = new Map(members(setup).map((item) => [item.combatant_id, item]));
       for (const mark of actor.state.deferred_effects || []) {
         if (mark.source_id !== rule.source_id) continue;
@@ -72,55 +66,24 @@
       throw error;
     }
   }
-
-  function resolve(sequence, round, actor, setup, expectedTargetId = null) {
+  function resolve(sequence, round, actor, setup, expectedTargetId = null, options = {}) {
     try {
-      const target = candidate(actor, setup);
+      const spendAction = options.spendAction !== false;
+      const target = candidate(actor, setup, { requireAction: spendAction });
       if (!target) return null;
       if (expectedTargetId && target.combatant_id !== expectedTargetId) {
         throw new Error("Deferred-effect candidate target changed before resolution.");
       }
       const rule = ruleFor(actor.state);
       if (!rule) throw new Error("Deferred-effect candidate exists without immutable source data.");
-
+      if (!OUT()) throw new Error("Deferred save outcome runtime is not loaded.");
       const hpBefore = target.state.current_hp;
       const tempBefore = target.state.temporary_hp;
       const deathSuccessBefore = target.state.death_save_successes;
       const deathFailureBefore = target.state.death_save_failures;
       const save = V().resolveSavingThrow(target.state, rule.save_ability, rule.save_dc);
-      const affectedStates = members(setup).map((item) => item.state);
-      let damageRoll = null;
-      let damageComponents = [];
-
-      if (save.succeeded && (rule.success_damage_dice_count || 0) > 0) {
-        if (!rule.success_damage_type) throw new Error(`Deferred effect ${rule.source_id} has damage dice without a type.`);
-        const rolls = Array.from(
-          { length: rule.success_damage_dice_count },
-          () => D().roll(rule.success_damage_dice_size),
-        );
-        const rawTotal = rolls.reduce((sum, value) => sum + value, 0);
-        const applied = A().adjustedDamage(target.state, rawTotal, rule.success_damage_type);
-        damageComponents = [{
-          source: rule.source_name,
-          notation: `${rule.success_damage_dice_count}d${rule.success_damage_dice_size}`,
-          rolls,
-          modifier: 0,
-          damage_type: rule.success_damage_type,
-          total: rawTotal,
-          applied_total: applied,
-        }];
-        damageRoll = {
-          notation: damageComponents[0].notation,
-          rolls,
-          modifier: 0,
-          total: applied,
-        };
-        A().applyDamage(target.state, applied, false, [rule.success_damage_type], affectedStates);
-      } else if (!save.succeeded && rule.failure_sets_zero_hp) {
-        Z().reduceToZero(target.state, affectedStates);
-      }
-
-      E().spend(actor.state, "action");
+      const outcome = OUT().resolve(target.state, rule, save.succeeded, members(setup).map((item) => item.state));
+      if (spendAction) E().spend(actor.state, "action");
       actor.state.deferred_effects = actor.state.deferred_effects.filter(
         (item) => !(item.source_id === rule.source_id && item.target_id === target.combatant_id),
       );
@@ -136,8 +99,8 @@
         save_ability: rule.save_ability,
         save_dc: rule.save_dc,
         save_succeeded: save.succeeded,
-        damage_roll: damageRoll,
-        damage_components: damageComponents,
+        damage_roll: outcome.damageRoll,
+        damage_components: outcome.damageComponents,
         hp_before: hpBefore,
         hp_after: target.state.current_hp,
         temporary_hp_before: tempBefore,
@@ -157,7 +120,6 @@
       throw error;
     }
   }
-
   function installAbilityHooks() {
     try {
       const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
@@ -171,13 +133,7 @@
         appliesTo: (member) => Boolean(ruleFor(member.state)),
         resolve: (ctx) => {
           const outcome = O().requireOutcome(ctx);
-          const armed = arm(
-            ctx.member.state,
-            ctx.target.state,
-            ctx.target.combatant_id,
-            ctx.attack,
-            ctx.round,
-          );
+          const armed = arm(ctx.member.state, ctx.target.state, ctx.target.combatant_id, ctx.attack, ctx.round);
           if (!armed) return null;
           outcome.deferredEffectArmed = armed;
           return O().noEventResult(ctx.sequence);
@@ -188,12 +144,5 @@
       throw error;
     }
   }
-
-  window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT = {
-    arm,
-    candidate,
-    cleanup,
-    resolve,
-    installAbilityHooks,
-  };
+  window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT = { arm, candidate, cleanup, resolve, installAbilityHooks };
 })();

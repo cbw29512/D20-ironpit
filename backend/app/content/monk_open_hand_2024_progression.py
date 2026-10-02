@@ -7,6 +7,7 @@ from app.domain.bonus_action_follow_up import BonusActionFollowUpTacticalGrant
 from app.domain.end_turn_condition_removal import EndTurnConditionRemovalGrant
 from app.domain.on_hit_save_riders import ResourceBackedOnHitSaveRider
 from app.domain.progression import (
+    DeferredSaveEffect,
     FailedSaveRerollGrant,
     ProgressionCombatFeatures,
     SavingThrowProficiencyGrant,
@@ -88,6 +89,25 @@ def build_monk_2024_progression(
                     )
                 ]
                 if level >= 14 else []
+            ),
+            deferred_save_effect=(
+                DeferredSaveEffect(
+                    source_id="quivering-palm",
+                    source_name="Quivering Palm",
+                    trigger_weapon_ids=["unarmed-strike"],
+                    resource_id="focus-points",
+                    resource_cost=4,
+                    save_ability="constitution",
+                    save_dc=8 + proficiency_bonus + wisdom_modifier,
+                    failure_damage_dice_count=10,
+                    failure_damage_dice_size=12,
+                    failure_damage_type="force",
+                    success_damage_from_failure="half",
+                    allow_attack_slot_activation=True,
+                    allow_harmless_end_on_rearm=True,
+                    max_active_targets=1,
+                )
+                if level >= 17 else None
             ),
         )
     except Exception:

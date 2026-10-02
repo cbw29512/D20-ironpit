@@ -435,3 +435,17 @@ a bonus. Fresh fight states reset the clock; immutable templates never own it.
 Python: runtime schema, encounter/duel engines and saving_throw_rolls. Browser:
 browser-state, browser-engine and browser-saving-throws. Existing shared
 Concentration/damage and bonus-die resolvers remain the only resolution paths.
+
+
+## Deferred save-effect activation variants
+
+Deferred save effects remain one source-agnostic capability with immutable source parameters and fresh per-fight marks.
+
+- A qualifying hit may arm one or more targets subject to the declared maximum and resource cost.
+- Source data may permit an existing mark to end harmlessly when a different target is armed; re-hitting the already marked target never spends the arming resource again.
+- Outcome data may express zero-HP replacement, success-only typed damage, or failed-save typed damage with optional half damage on success. Damage still routes through the shared typed-defense pipeline before HP mutation.
+- The normal activation path may spend the combatant's Action.
+- Source data may additionally permit activation by replacing one legal Attack-action slot. The Attack action is still spent once, the deferred effect consumes exactly one slot, and remaining legal slots continue normally.
+- Arena candidate selection prefers the Attack-slot path over the full-Action path when both are legal because it preserves the source's remaining Attack-action slots. The full-Action path remains available when no Attack slot is legal.
+- Python and browser use the same mark lifecycle, resource spending, save, damage, harmless-end, and activation-choice parameters.
+- Source names remain audit/player-facing metadata. The deferred-effect runtime never branches on a class, subclass, hero, monster, or feature name.

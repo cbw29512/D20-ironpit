@@ -5,10 +5,12 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_action_choices import attack_choice, save_choice, slot_has_legal_choice, use_ranged_split
+from app.combat.attack_action_event_target import event_target
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.cleave import resolve_cleave_extra_attack
 from app.combat.condition_rules import is_incapacitated
 from app.combat.damage_reaction_events import resolve_damage_event_reactions
+from app.combat.deferred_save_effect_attack_slot import resolve_deferred_effect_attack_slot
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.light_attack_resolution import resolve_light_extra_attack
@@ -20,22 +22,6 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
-
-
-def _event_target(event: BattleEvent, setup: EncounterSetup) -> EncounterCombatant | None:
-    try:
-        return next(
-            (
-                member
-                for member in [*setup.heroes, *setup.monsters]
-                if member.combatant_id == event.target_id
-            ),
-            None,
-        )
-    except Exception:
-        logger.exception("Failed to resolve event target %s.", event.target_id)
-        raise
-
 
 def resolve_attack_action(
     sequence: int, round_number: int, attacker: EncounterCombatant,
@@ -68,6 +54,18 @@ def resolve_attack_action(
                 and not ranged_split_used
                 and flexible_slot_has_both(attacker, slot.attack_ids)
             )
+            deferred = resolve_deferred_effect_attack_slot(
+                sequence,
+                round_number,
+                attacker,
+                setup,
+                dice,
+            )
+            if deferred is not None:
+                events.append(deferred)
+                sequence += 1
+                opening_feature = None
+                continue
             chosen_attack = attack_choice(attacker, setup, slot, ranged_backline=split_this_slot)
             if chosen_attack is not None:
                 target, attack, distance = chosen_attack
@@ -84,7 +82,7 @@ def resolve_attack_action(
                 events.append(event)
                 sequence += 1
                 if event.hit:
-                    actual_target = _event_target(event, setup) or target
+                    actual_target = event_target(event, setup) or target
                     stun = resolve_stunning_strike(
                         sequence,
                         round_number,

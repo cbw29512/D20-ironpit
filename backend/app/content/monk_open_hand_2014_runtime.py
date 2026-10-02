@@ -161,6 +161,7 @@ def build_kael_stillwater_2014(level: int) -> CombatantTemplate:
                     success_damage_dice_count=10,
                     success_damage_dice_size=10,
                     success_damage_type="necrotic",
+                    allow_harmless_end_on_rearm=True,
                     max_active_targets=1,
                 )
                 if level >= 17 else None

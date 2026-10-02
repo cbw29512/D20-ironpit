@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-02 for the 2024 Open Hand Monk level 16 tranche. Main baseline: `ecf60b5d5d16039b2747bafd5ebba14d96b938cf`.
+Recorded 2026-10-02 for the 2024 Open Hand Monk level 17 tranche. Main baseline: `99839f044a2b2a53369e18e80ec3c748899ffbec`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -33,7 +33,7 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
-| 2024 | Monk (Open Hand) | 1–16 |
+| 2024 | Monk (Open Hand) | 1–17 |
 
 2024 public-ready hero slots in this level-16 tranche: **136 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
@@ -45,9 +45,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 136 / 240 in this tranche.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is advanced through level 16 here.
+**2024 canonical pregens are 137 / 240 in this tranche.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is advanced through level 17 here.
 
-Active implementation lane: **2024 Open Hand Monk level 16.** Apply the canonical repeatable Ability Score Improvement as +2 Wisdom (12→14) after Dexterity is capped at 20, and propagate it through AC, saves, Monk DCs, Wisdom skills, and Wholeness of Body.
+Active implementation lane: **2024 Open Hand Monk level 17.** Quivering Palm extends the universal hit-armed deferred-save effect with typed failed-save damage, half damage on success, harmless mark replacement, and optional Attack-action slot activation. No Monk-named resolver is added.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -75,7 +75,9 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 14 adds **Disciplined Survivor** by reusing universal saving-throw proficiency grants and the shared failed-save reroll. Constitution, Intelligence, Wisdom, and Charisma join Kael's existing Strength/Dexterity save proficiencies; a failed save may spend 1 Focus Point to reroll and must use the replacement result. Unarmored Movement rises to +25 feet (55-foot Speed), Focus Points to 14, and HP to 115.
 - Level 15 adds **Perfect Focus** through the universal initiative resource-refill primitive. Uncanny Metabolism resolves first; if it is unavailable/not used and Focus Points are 3 or fewer, Perfect Focus restores the total to 4. Focus Points advance to 15 and HP to 123.
 - Level 16 uses the repeatable **Ability Score Improvement** feat for **+2 Wisdom (12→14)**. Shared derived-stat logic raises AC to 17, Wisdom save/skills, Stunning Strike and Deflect Attacks redirect DCs to 15, and Wholeness of Body healing to 1d10+2; Focus Points advance to 16 and HP to 131.
-- Next exact level after level 16 certification is **Monk 17**; audit the 2024 Warrior of the Open Hand subclass feature against existing universal mechanics before adding engine behavior.
+- Level 17 adds **Quivering Palm** through the universal deferred-save effect engine. An Unarmed Strike hit may spend 4 Focus Points to arm one target; an existing mark can end harmlessly before a different target is armed. Detonation uses the Monk Constitution-save DC and deals 10d12 Force damage on failure or half on success. Arena selection prefers replacing one legal Attack-action attack over spending the entire Action, while retaining the full-Action fallback when no Attack slot is legal. The Martial Arts die advances to d12, Proficiency Bonus to +6, Focus Points to 17, HP to 139, Initiative/attack bonus to +11, and Monk save DC to 16.
+- The same tranche closes the pre-existing 2014 Quivering Palm harmless-end gap through the same universal mark-replacement parameter; 2014 remains Action-only for detonation.
+- Next exact level after level 17 certification is **Monk 18**; audit Superior Defense against existing timed self-buff and typed damage-resistance primitives before adding engine behavior.
 
 ### Druid spell-selection policy
 

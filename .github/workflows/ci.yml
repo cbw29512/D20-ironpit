@@ -148,6 +148,9 @@ jobs:
           grep -q 'browser-hp-threshold-condition.js' index.html
           grep -q 'browser-main-action-providers.js' index.html
           grep -q 'browser-attack-outcome.js' index.html
+          grep -q 'browser-deferred-main-action-provider.js' index.html
+          grep -q 'browser-deferred-save-effect-outcomes.js' index.html
+          grep -q 'browser-deferred-save-effect-attack-slot.js' index.html
           grep -q 'browser-attack-outcome-hook-installation.js' index.html
           grep -q 'browser-bonus-attacks.js' index.html
           grep -q 'browser-resource-hit-save.js' index.html
@@ -254,6 +257,9 @@ jobs:
           grep -q 'browser-hp-threshold-condition.js' frontend/index.html
           grep -q 'browser-main-action-providers.js' frontend/index.html
           grep -q 'browser-attack-outcome.js' frontend/index.html
+          grep -q 'browser-deferred-main-action-provider.js' frontend/index.html
+          grep -q 'browser-deferred-save-effect-outcomes.js' frontend/index.html
+          grep -q 'browser-deferred-save-effect-attack-slot.js' frontend/index.html
           grep -q 'browser-attack-outcome-hook-installation.js' frontend/index.html
           grep -q 'browser-bonus-attacks.js' frontend/index.html
           grep -q 'browser-resource-hit-save.js' frontend/index.html
@@ -361,6 +367,7 @@ jobs:
           node frontend/browser-monk14-2024.test.cjs
           node frontend/browser-monk15-2024.test.cjs
           node frontend/browser-monk16-2024.test.cjs
+          node frontend/browser-monk17-2024.test.cjs
           node frontend/browser-tactical-actions.test.cjs
           node frontend/browser-persistent-rage-2024.test.cjs
           node frontend/browser-turn-start-resource-refill.test.cjs
@@ -368,6 +375,7 @@ jobs:
           node frontend/browser-bonus-save-action.test.cjs
           node frontend/browser-attack-outcome-hooks.test.cjs
           node frontend/browser-deferred-save-effect.test.cjs
+          node frontend/browser-deferred-save-effect-2024.test.cjs
           node frontend/browser-2014-monk-level19.test.cjs
           node frontend/browser-2014-monk-level20.test.cjs
           node frontend/browser-initiative-resource-refill.test.cjs
