@@ -16,7 +16,7 @@ from app.content.level_resources import (
     fighter_2014_second_wind_uses,
 )
 from app.content.ranger_2014_resource_audit import ranger_2014_spell_slot_resources
-from app.content.spell_slot_progression import FULL_CASTER_CLASSES, spell_slot_resources
+from app.content.spell_slot_progression import FULL_CASTER_CLASSES, HALF_CASTER_CLASSES, spell_slot_resources
 from app.content.warlock_2014_resource_audit import warlock_2014_resources
 from app.domain.character_builds import CharacterBuildProfile
 
@@ -108,7 +108,7 @@ def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
         *species_rules.get(profile.species_id, ()),
     ]
     resolved = {resource_id: resolver(profile.level) for resource_id, _name, resolver in rules}
-    if profile.ruleset == "2024" and profile.class_id in FULL_CASTER_CLASSES:
+    if profile.ruleset == "2024" and profile.class_id in {*FULL_CASTER_CLASSES, *HALF_CASTER_CLASSES}:
         resolved.update(spell_slot_resources(profile.class_id, profile.level))
     if profile.ruleset == "2014" and profile.class_id in {"bard", "cleric", "druid", "sorcerer", "wizard"}:
         resolved.update(spell_slot_resources(profile.class_id, profile.level))
