@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 from app.combat.deferred_save_effect import arm_deferred_save_effect
-from app.combat.deferred_save_effect_attack_slot import resolve_deferred_effect_attack_slot
+from app.combat.deferred_save_effect_attack_slot import (
+    prefer_deferred_effect_attack_slot,
+    resolve_deferred_effect_attack_slot,
+)
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.content.certified_heroes import build_certified_hero_registry
@@ -100,6 +103,7 @@ def test_2024_quivering_palm_attack_slot_deals_full_or_half_force_damage() -> No
     )
     assert armed is not None
     assert armed.resource_remaining == 13
+    assert prefer_deferred_effect_attack_slot(monk, setup) is True
     monk.state.action_available = False
     failed = resolve_deferred_effect_attack_slot(
         1, 1, monk, setup, FixedDiceProvider([1, *([12] * 10)]),
