@@ -168,4 +168,25 @@ const ctx = (actor) => ({
   assert.equal(resolved.events[0].feature_id, "dodge");
 }
 
+
+{
+  const actor = member("2024");
+  actor.state.template.spellEnabled = false;
+  actor.state.template.areaEnabled = false;
+  actor.state.template.standardEnabled = false;
+  actor.state.template.saving_throw_actions = [];
+  actor.state.template.deferred_save_effect = { allow_attack_slot_activation: true };
+  window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT = {
+    candidate: () => target,
+    resolve: () => ({ event_type: "feature", feature_id: "quivering-palm" }),
+  };
+  const candidates = S.discoverCandidates("normalPostMove", ctx(actor));
+  assert.equal(candidates.some((item) => item.providerId === "deferred-effect"), false);
+  assert.equal(S.selectCandidate("normalPostMove", candidates).providerId, "attack-action");
+
+  actor.state.template.attackActionEnabled = false;
+  const fallback = S.discoverCandidates("normalPostMove", ctx(actor));
+  assert.equal(fallback.some((item) => item.providerId === "deferred-effect"), true);
+}
+
 console.log("Browser Main Action provider registration/discovery parity passed.");
