@@ -24,7 +24,7 @@ def build_monk_bonus_attacks(
                 id="flurry-of-blows",
                 name="Flurry of Blows",
                 attack_ids=[unarmed.id],
-                attack_count=2,
+                attack_count=3 if level >= 10 else 2,
                 resource_id="focus-points",
                 resource_cost=1,
                 priority=80,
@@ -77,6 +77,8 @@ def build_monk_tactical_actions(level: int) -> list[BonusActionTacticalGrant]:
                 resource_cost=1,
                 priority=90,
                 use_policy="defensive-fallback",
+                temporary_hp_dice_count=2 if level >= 10 else 0,
+                temporary_hp_dice_size=8 if level >= 10 else 0,
             ),
             BonusActionTacticalGrant(
                 id="step-of-the-wind-focus",
