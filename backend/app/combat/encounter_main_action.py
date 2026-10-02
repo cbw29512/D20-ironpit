@@ -8,6 +8,7 @@ from app.combat.attack_actions import resolve_attack_action
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.dodge import resolve_dodge_action
 from app.combat.deferred_save_effect import resolve_deferred_save_effect
+from app.combat.deferred_save_effect_attack_slot import prefer_deferred_effect_attack_slot
 from app.combat.encounter_turn_support import finish_turn, resolve_area_save_turn, save_choice
 from app.combat.intimidating_presence_2014 import resolve_intimidating_presence
 from app.combat.hp_threshold_turn import resolve_hp_threshold_turn
@@ -34,7 +35,9 @@ def resolve_post_move_action(events, sequence, round_number, attacker, target, s
         if presence is not None:
             events.append(presence); sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-        deferred = resolve_deferred_save_effect(sequence, round_number, attacker, setup, dice)
+        deferred = None if prefer_deferred_effect_attack_slot(attacker, setup) else resolve_deferred_save_effect(
+            sequence, round_number, attacker, setup, dice,
+        )
         if deferred is not None:
             events.append(deferred); sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
