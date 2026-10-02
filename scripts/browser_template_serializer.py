@@ -794,6 +794,23 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 "reductionDiceSize": rule.reduction_dice_size,
                 "reductionAbility": rule.reduction_ability,
                 "addLevel": rule.add_level,
+                **(
+                    {"zeroDamageRedirect": {
+                        "sourceId": rule.zero_damage_redirect.source_id,
+                        "sourceName": rule.zero_damage_redirect.source_name,
+                        "resourceId": rule.zero_damage_redirect.resource_id,
+                        "resourceCost": rule.zero_damage_redirect.resource_cost,
+                        "meleeRangeFt": rule.zero_damage_redirect.melee_range_ft,
+                        "rangedRangeFt": rule.zero_damage_redirect.ranged_range_ft,
+                        "saveAbility": rule.zero_damage_redirect.save_ability,
+                        "saveDc": rule.zero_damage_redirect.save_dc,
+                        "damageDiceCount": rule.zero_damage_redirect.damage_dice_count,
+                        "damageDiceSize": rule.zero_damage_redirect.damage_dice_size,
+                        "damageBonusAbility": rule.zero_damage_redirect.damage_bonus_ability,
+                        "requiresSight": rule.zero_damage_redirect.requires_sight,
+                        "requiresClearLine": rule.zero_damage_redirect.requires_clear_line,
+                    }} if rule.zero_damage_redirect else {}
+                ),
             }
         if template.parry_reaction:
             row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}
