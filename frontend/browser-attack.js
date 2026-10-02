@@ -187,6 +187,7 @@
       target_id: actualTarget.combatant_id, target_name: actualTarget.state.template.name, attack_name: attack.name, target_ac: targetAc,
       attack_roll: resolvedAttackRoll, saving_throw_roll: attackSave?.saveRoll || topple.saveRoll, save_ability: attackSave?.saveAbility || (topple.saveDc === null ? null : "constitution"), save_dc: attackSave?.saveDc || topple.saveDc, save_succeeded: attackSave?.saveSucceeded ?? topple.saveSucceeded,
       damage_roll: damageRoll, damage_components: damageComponents, applied_condition_ids: [...new Set(applied)], hit, critical,
+      damage_reduction_zeroed_attack: Boolean(outcome.damageReductionReaction?.damageReductionZeroedAttack),
       turn_terminated: naturalOneEndsTurn, turn_termination_reason: naturalOneEndsTurn ? "iron-pit-natural-1-attack" : null,
       hp_before: hpBefore, hp_after: actualTarget.state.current_hp, temporary_hp_before: temporaryHpBefore, temporary_hp_after: actualTarget.state.temporary_hp,
       death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
