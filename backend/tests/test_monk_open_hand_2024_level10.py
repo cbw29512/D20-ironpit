@@ -9,7 +9,6 @@ from app.content.monk_open_hand_2024_combat_profile import build_kael_2024_comba
 from app.content.monk_open_hand_2024_profile import build_kael_stillwater_2024_profile
 from app.content.monk_open_hand_2024_runtime import build_kael_stillwater_2024
 from app.domain.encounters import EncounterCombatant
-from app.domain.progression_primitives import EndTurnConditionRemovalGrant
 
 
 def test_2024_open_hand_monk_level10_heightened_focus_and_progression() -> None:
