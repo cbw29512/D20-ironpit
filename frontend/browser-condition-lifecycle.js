@@ -44,7 +44,31 @@
         });
       }
     }
-    if (timing === "target_turn_end") M()?.expireTargetTurn(target.state);
+    if (timing === "target_turn_end") {
+      const grant = target.state.template.end_turn_condition_removal || null;
+      if (grant) {
+        const removed = [];
+        for (const conditionId of grant.condition_ids || []) {
+          if (!(target.state.active_effect_ids || []).includes(conditionId)) continue;
+          target.state.active_effect_ids = target.state.active_effect_ids.filter((item) => item !== conditionId);
+          target.state.timed_effects = target.state.timed_effects.filter((item) => item.effect_id !== conditionId);
+          removed.push(conditionId);
+          if (removed.length >= (grant.max_conditions || 1)) break;
+        }
+        if (removed.length) {
+          events.push({
+            sequence: sequence++, round_number: round, event_type: "feature",
+            actor_id: target.combatant_id, actor_name: target.state.template.name,
+            target_id: target.combatant_id, target_name: target.state.template.name,
+            removed_condition_ids: removed, feature_id: grant.source_id,
+            animation: "condition-ended",
+            description: target.state.template.name + " uses " + grant.source_name + "; "
+              + removed.map(label).join(", ") + " ends.",
+          });
+        }
+      }
+      M()?.expireTargetTurn(target.state);
+    }
     return { events, sequence };
   }
 
