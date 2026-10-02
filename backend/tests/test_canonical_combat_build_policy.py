@@ -28,9 +28,16 @@ def test_canonical_base_array_is_always_legal_15_14_13_10_10_10() -> None:
 
 
 def test_weapon_first_builds_dump_all_three_mental_scores_to_ten() -> None:
-    for class_id in ("barbarian", "fighter", "monk", "paladin", "ranger", "rogue"):
+    for class_id in ("barbarian", "fighter", "monk", "ranger", "rogue"):
         scores = canonical_base_ability_scores(class_id)
         assert (scores.intelligence, scores.wisdom, scores.charisma) == (10, 10, 10)
+
+
+def test_paladin_hybrid_policy_preserves_charisma() -> None:
+    assert canonical_base_ability_scores("paladin") == AbilityScores(
+        strength=15, charisma=14, constitution=13,
+        dexterity=10, intelligence=10, wisdom=10,
+    )
 
 
 def test_primary_casters_dump_all_three_physical_scores_to_ten() -> None:

@@ -41,6 +41,7 @@ from app.content.certified_druid_2024 import CERTIFIED_DRUID_2024
 from app.content.certified_hero_progression_model import CertifiedHeroProgression
 from app.content.certified_hero_progressions_2014 import CERTIFIED_HERO_PROGRESSIONS_2014
 from app.content.certified_monk_2024 import CERTIFIED_MONK_2024
+from app.content.certified_paladin_2024 import CERTIFIED_PALADIN_2024
 from app.content.fighter_asi_progression_profile import build_karnok_stoneward_level6_profile, build_karnok_stoneward_level8_profile, build_karnok_stoneward_level12_profile
 from app.content.fighter_champion_progression_profile import build_karnok_stoneward_level7_profile
 from app.content.fighter_endgame_profile import build_karnok_stoneward_level18_profile
@@ -114,6 +115,7 @@ CERTIFIED_HERO_PROGRESSIONS_2024: tuple[CertifiedHeroProgression, ...] = (
     CERTIFIED_BARD_2024,
     CERTIFIED_DRUID_2024,
     CERTIFIED_MONK_2024,
+    CERTIFIED_PALADIN_2024,
     CertifiedHeroProgression(
         class_id="cleric", ruleset="2024", template_builder=build_seraphine_dawnshield_level,
         profile_builders=(

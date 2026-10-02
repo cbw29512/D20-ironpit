@@ -97,6 +97,12 @@ _WEAPONS = {
         animation="projectile", normal_range_ft=20, long_range_ft=60,
         projectile="handaxe", mastery_property="Vex", light=True,
     ),
+    "javelin": Weapon(
+        id="javelin", name="Javelin", attack_kind=WeaponAttackKind.RANGED,
+        dice_count=1, dice_size=6, damage_type=DamageType.PIERCING,
+        animation="projectile", normal_range_ft=30, long_range_ft=120,
+        projectile="javelin", mastery_property="Slow",
+    ),
     "longbow": _ranged(
         "longbow", "Longbow", 8, 150, 600, "Slow",
         heavy=True, two_handed=True,
