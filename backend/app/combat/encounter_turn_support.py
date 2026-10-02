@@ -39,7 +39,7 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
             sequence, round_number, attacker, setup, dice, turn_key,
         )
         events.extend(bonus_attack_events)
-        defensive = resolve_defensive_tactical_grant(sequence, round_number, attacker)
+        defensive = resolve_defensive_tactical_grant(sequence, round_number, attacker, dice)
         if defensive is not None:
             events.append(defensive)
             sequence += 1
