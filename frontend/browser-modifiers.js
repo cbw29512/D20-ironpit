@@ -6,7 +6,7 @@
     "armor-class", "armor-class-minimum", "attack-roll-flat", "saving-throw-flat", "condition-immunity", ...DIE_KINDS,
     "saving-throw-advantage", "d20-test-advantage", "saving-throw-disadvantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
     "attacks-against-disadvantage", "next-attack-against-advantage", "next-incoming-attack-roll-flat", "targeting-save-gate", "speed", "debuff-counter",
-    "zero-hp-replacement", "opportunity-attack-suppressed", "damage-source-qualifier", "invisibility-benefits-suppressed", "speed-multiplier",
+    "zero-hp-replacement", "opportunity-attack-suppressed", "damage-source-qualifier", "weapon-damage-type-choice", "invisibility-benefits-suppressed", "speed-multiplier",
   ]);
   const HIT_KINDS = new Set(["attacks-against-advantage", "speed"]);
   const D = () => window.IRON_PIT_DICE, X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
@@ -19,12 +19,14 @@
     if (item.kind === "armor-class-minimum") {
       if (!(item.minimum_value > 0) || (item.flat_bonus || 0)) throw new Error("Minimum AC requires a positive minimum and no flat bonus.");
     } else if (item.minimum_value) throw new Error(`${item.kind} does not accept a minimum value.`);
-    if (item.kind === "bonus-damage" ? !item.damage_type : item.damage_type) throw new Error(`Invalid damage type for ${item.kind}.`);
+    const damageTypeKinds = new Set(["bonus-damage", "weapon-damage-type-choice"]);
+    if (damageTypeKinds.has(item.kind) ? !item.damage_type : item.damage_type) throw new Error(`Invalid damage type for ${item.kind}.`);
     if (new Set(["attacks-against-advantage", "next-attack-against-advantage"]).has(item.kind) && (item.flat_bonus || 0)) throw new Error("Attack Advantage does not accept a flat bonus.");
     if (item.kind === "attack-roll-flat" && (!(item.flat_bonus || 0) || !item.weapon_id)) throw new Error("Flat attack modifiers require a bonus and weapon id.");
     if (item.kind === "next-incoming-attack-roll-flat" && !(item.flat_bonus || 0)) throw new Error("Next incoming attack-roll flat modifiers require a nonzero bonus.");
-    if (!new Set(["attack-roll-flat", "damage-source-qualifier"]).has(item.kind) && item.weapon_id) throw new Error(item.kind + " does not accept a weapon id.");
+    if (!new Set(["attack-roll-flat", "damage-source-qualifier", "weapon-damage-type-choice"]).has(item.kind) && item.weapon_id) throw new Error(item.kind + " does not accept a weapon id.");
     if (item.kind === "damage-source-qualifier" && (!item.weapon_id || !item.source_qualifier)) throw new Error("Damage source qualifier modifiers require a weapon id and qualifier.");
+    if (item.kind === "weapon-damage-type-choice" && !item.weapon_id) throw new Error("Weapon damage-type choice modifiers require a weapon id.");
     if (item.kind !== "damage-source-qualifier" && item.source_qualifier) throw new Error(item.kind + " does not accept a source qualifier.");
     if (item.kind === "saving-throw-flat" && !(item.flat_bonus || 0)) throw new Error("Flat saving-throw modifiers require a nonzero bonus.");
     if (item.kind === "condition-immunity" && !item.condition_id) throw new Error("Condition-immunity modifiers require a condition id.");
