@@ -34,6 +34,8 @@ def arm_deferred_save_effect(
         if defender.is_dead or not defender.is_alive or defender.current_hp <= 0:
             return None
         active = [item for item in attacker.deferred_effects if item.source_id == rule.source_id]
+        if any(item.target_id == target_id for item in active):
+            return None
         if len(active) >= rule.max_active_targets:
             if not rule.allow_harmless_end_on_rearm:
                 return None
