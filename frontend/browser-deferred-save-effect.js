@@ -14,7 +14,10 @@
       if (!rule || !(rule.trigger_weapon_ids || []).includes(attack.weaponId)) return null;
       if (targetState.is_dead || !targetState.is_alive || targetState.current_hp <= 0) return null;
       const active = (state.deferred_effects || []).filter((item) => item.source_id === rule.source_id);
-      if (active.length >= (rule.max_active_targets || 1)) return null;
+      if (active.length >= (rule.max_active_targets || 1)) {
+        if (!rule.allow_harmless_end_on_rearm) return null;
+        state.deferred_effects = (state.deferred_effects || []).filter((item) => item.source_id !== rule.source_id);
+      }
       const cost = rule.resource_cost || 1;
       const uses = state.resources?.[rule.resource_id];
       if (uses == null) throw new Error(`Deferred effect ${rule.source_id} references missing resource ${rule.resource_id}.`);
