@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-02 for the 2024 Open Hand Monk level 7 tranche. Main baseline: `5e4ec92d535d7e324924e2ad593d37da277c5685`.
+Recorded 2026-10-02 for the 2024 Open Hand Monk level 8 tranche. Main baseline: `5e4ec92d535d7e324924e2ad593d37da277c5685`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -35,7 +35,7 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Druid (Land) | 1–20 |
 | 2024 | Monk (Open Hand) | 1–5 |
 
-2024 public-ready hero slots on this tranche: **127 / 240**.
+2024 public-ready hero slots on this tranche: **128 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -45,9 +45,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 125 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 6 on main; this tranche advances level 7.
+**2024 canonical pregens are 125 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 7 on main; this tranche advances level 8.
 
-Active implementation lane: **2024 Open Hand Monk level 7.** Reuse the shared Evasion save-damage transform with the 2024 Incapacitated qualifier, advance Focus Points to 7, preserve 2014 Evasion behavior, certify the exact head, then advance to Monk 8.
+Active implementation lane: **2024 Open Hand Monk level 8.** Apply the repeatable Ability Score Improvement feat as +1 Dexterity and +1 Constitution, advance Focus Points to 8, reuse shared derived-stat math, certify the exact head, then advance to Monk 9.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -66,7 +66,8 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 5 is merged. Extra Attack and Stunning Strike use shared attack-action, resource-backed hit-save, timed-condition and modifier primitives.
 - Level 6 adds Empowered Strikes through a universal attack damage-type choice and Wholeness of Body through shared limited-use Bonus Action healing. Unarmored Movement increases to +15 feet (45-foot Speed for Kael).
 - Level 7 adds Evasion through the shared Dexterity-save half-damage transform. The 2024 binding disables Evasion while Incapacitated; 2014 behavior remains isolated.
-- Next exact level after level 7 certification is **Monk 8**; apply the canonical ASI/feat policy and reuse derived-stat progression.
+- Level 8 uses the repeatable **Ability Score Improvement** feat for **+1 Dexterity (19→20) and +1 Constitution (15→16)**. Shared derived-stat logic updates AC, HP, Initiative, attack/damage, Dexterity save, and Dexterity skills.
+- Next exact level after level 8 certification is **Monk 9**; audit Acrobatic Movement against the arena movement contract before adding engine behavior.
 
 ### Druid spell-selection policy
 
