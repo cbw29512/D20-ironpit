@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-02 for the 2024 Open Hand Monk level 20 tranche. Main baseline: `d8df3cfbb2bd8f97131833331641ad21abaaaaa9`.
+Recorded 2026-10-02 for the 2024 Devotion Paladin level 2 tranche. Main baseline: `2bb7bfd39738b29cfa6a7aff89fd96ea95fb5d76`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -33,9 +33,10 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
-| 2024 | Monk (Open Hand) | 1–19 |
+| 2024 | Monk (Open Hand) | 1–20 |
+| 2024 | Paladin (Devotion) | 1 |
 
-2024 public-ready hero slots on current main: **139 / 240**.
+2024 public-ready hero slots on current main: **141 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -45,11 +46,25 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 139 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 19 on main; this tranche advances level 20.
+**2024 canonical pregens are 141 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 1 on main; this tranche advances level 2.
 
-Active implementation lane: **2024 Open Hand Monk level 20.** Body and Mind raises Dexterity **21→25** and Wisdom **14→18**, with both maximums set to 25. Shared derived-stat logic updates all affected combat values; inherited Boon of Irresistible Offense natural-20 damage rises to the current Dexterity score of **25**. No new engine mechanic is required.
+Active implementation lane: **2024 Devotion Paladin level 2.** Defense reuses the armored AC style model. Paladin's Smite always prepares Divine Smite and grants one free cast per Long Rest. Divine Smite binds a universal hit-confirmed resource-backed damage primitive that spends its Bonus Action/payment only after a qualifying hit, while adding its Radiant dice to the same attack damage resolution before defenses and HP mutation.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
+
+### 2024 Paladin lane
+
+- Aurelia Brightshield remains the persistent canonical Paladin and remains Human.
+- Level 1 uses Soldier, Savage Attacker, Human Resourceful/Skillful/Versatile, Longsword Sap, Javelin Slow, Bonus Action Lay On Hands, and level-1 Spellcasting.
+- The canonical Paladin stat priority is Strength → Charisma → Constitution so the 2024 progression does not sacrifice its spellcasting/aura ability merely because it is weapon-forward.
+- Level 1 prepares Cure Wounds and Divine Favor under the damage/healing-first policy. Divine Favor is explicitly 2024 edition data and does not require Concentration.
+- Level 2 selects the Defense Fighting Style feat, raising armored AC by 1.
+- Level 2 Paladin's Smite always prepares Divine Smite and grants one free cast per Long Rest. The free cast is a generic finite resource; later casts use legal spell slots.
+- Divine Smite uses the universal hit-confirmed resource-backed damage primitive: the hit is established first, Bonus Action/payment legality is checked, then Smite dice are added to the triggering attack's damage components before typed defenses, Temporary HP, HP mutation, Concentration, and damage-triggered reactions resolve.
+- Divine Smite starts at 2d8 Radiant, gains +1d8 per higher-level slot, gains +1d8 against Fiends/Undead, and its attack damage dice double on a Critical Hit through the shared critical-damage path.
+- Javelin attacks do not trigger the canonical Smite binding because Aurelia's runtime javelin profile is Ranged; Longsword is the qualifying melee attack in the current loadout.
+- Level 2 ordinary preparation adds certified 2024 Bless; unsupported smite variants are not approximated merely to fill prepared-spell slots.
+- This tranche targets **142 / 240** 2024 public-ready hero slots.
 
 ### 2024 Monk lane
 
