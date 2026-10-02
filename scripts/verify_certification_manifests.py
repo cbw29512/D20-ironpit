@@ -108,6 +108,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add(features.delayed_resource_refill.source_id)
     if features.end_turn_condition_removal:
         mechanics.add(features.end_turn_condition_removal.source_id)
+    if features.bonus_action_follow_up_tactical_grants:
+        mechanics.update(rule.source_id for rule in features.bonus_action_follow_up_tactical_grants)
     if features.area_spell_ally_protection:
         mechanics.add(features.area_spell_ally_protection.source_id)
     if features.alternate_spell_cast_grants:
