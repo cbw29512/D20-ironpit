@@ -9,6 +9,7 @@ from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.cleave import resolve_cleave_extra_attack
 from app.combat.condition_rules import is_incapacitated
 from app.combat.damage_reaction_events import resolve_damage_event_reactions
+from app.combat.deferred_save_effect_attack_slot import resolve_deferred_effect_attack_slot
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.light_attack_resolution import resolve_light_extra_attack
@@ -68,6 +69,18 @@ def resolve_attack_action(
                 and not ranged_split_used
                 and flexible_slot_has_both(attacker, slot.attack_ids)
             )
+            deferred = resolve_deferred_effect_attack_slot(
+                sequence,
+                round_number,
+                attacker,
+                setup,
+                dice,
+            )
+            if deferred is not None:
+                events.append(deferred)
+                sequence += 1
+                opening_feature = None
+                continue
             chosen_attack = attack_choice(attacker, setup, slot, ranged_backline=split_this_slot)
             if chosen_attack is not None:
                 target, attack, distance = chosen_attack
