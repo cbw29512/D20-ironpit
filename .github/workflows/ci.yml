@@ -357,6 +357,7 @@ jobs:
           node frontend/browser-hit-rider-integration.test.cjs
           node frontend/browser-attack-damage-reduction.test.cjs
           node frontend/browser-attack-damage-redirect.test.cjs
+          node frontend/browser-monk13-2024.test.cjs
           node frontend/browser-tactical-actions.test.cjs
           node frontend/browser-persistent-rage-2024.test.cjs
           node frontend/browser-turn-start-resource-refill.test.cjs
