@@ -73,6 +73,30 @@ def build_monk_2024_high_level_feature_audits(level: int) -> list[FeatureAudit]:
                     ),
                 )
             )
+        if level >= 10:
+            audits.extend([
+                _feature(
+                    "heightened-focus",
+                    "Heightened Focus",
+                    "class",
+                    notes=(
+                        "Flurry of Blows makes three Unarmed Strikes. Focus-backed Patient Defense grants "
+                        "2d8 Temporary HP through the shared tactical-action Temporary HP rider. "
+                        "The optional Step of the Wind ally-transport choice remains deliberately unselected "
+                        "by current arena automation."
+                    ),
+                ),
+                _feature(
+                    "self-restoration",
+                    "Self-Restoration",
+                    "class",
+                    automated=False,
+                    notes=(
+                        "End-turn removal of one active Charmed, Frightened, or Poisoned condition requires "
+                        "a deterministic choice policy when more than one eligible condition is active."
+                    ),
+                ),
+            ])
         return audits
     except Exception:
         logger.exception("Failed to compile high-level 2024 Monk feature audits at level %s.", level)
