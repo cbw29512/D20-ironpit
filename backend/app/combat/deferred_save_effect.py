@@ -35,7 +35,11 @@ def arm_deferred_save_effect(
             return None
         active = [item for item in attacker.deferred_effects if item.source_id == rule.source_id]
         if len(active) >= rule.max_active_targets:
-            return None
+            if not rule.allow_harmless_end_on_rearm:
+                return None
+            attacker.deferred_effects = [
+                item for item in attacker.deferred_effects if item.source_id != rule.source_id
+            ]
         resource = next((item for item in attacker.resources if item.id == rule.resource_id), None)
         if resource is None:
             raise ValueError(
