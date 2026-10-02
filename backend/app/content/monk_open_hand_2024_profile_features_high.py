@@ -157,6 +157,18 @@ def build_monk_2024_high_level_feature_audits(level: int) -> list[FeatureAudit]:
                     ),
                 )
             )
+        if level >= 16:
+            audits.append(
+                _feature(
+                    "ability-score-improvement-l16",
+                    "Ability Score Improvement (+2 Wisdom)",
+                    "feat",
+                    notes=(
+                        "Canonical unarmed-offense progression raises Wisdom 12 to 14 after Dexterity is capped at 20; "
+                        "shared derived-stat logic updates AC, Monk save DCs, Wisdom saves/skills, and Wholeness of Body."
+                    ),
+                )
+            )
         return audits
     except Exception:
         logger.exception("Failed to compile high-level 2024 Monk feature audits at level %s.", level)
