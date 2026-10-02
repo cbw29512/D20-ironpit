@@ -158,6 +158,21 @@ def build_monk_2024_feature_audits(level: int) -> list[FeatureAudit]:
                     ),
                 )
             )
+        if level >= 9:
+            audits.append(
+                _feature(
+                    "acrobatic-movement",
+                    "Acrobatic Movement",
+                    "class",
+                    combat_relevant=False,
+                    automated=False,
+                    notes=(
+                        "RAW permits movement along vertical surfaces and across liquids while unarmored and "
+                        "not wielding a Shield. The standard Iron Pit battlefield currently has no vertical-surface "
+                        "or liquid-terrain state, so the feature is arena-neutral rather than approximated."
+                    ),
+                )
+            )
         audits.extend([
             _feature(
                 "alert",
