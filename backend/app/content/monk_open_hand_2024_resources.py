@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.content.monk_2024_resource_rules import monk_focus_points
+from app.content.monk_2024_resource_rules import monk_focus_points, monk_martial_arts_die
 from app.domain.initiative_resources import InitiativeHealingRider, InitiativeResourceRefillGrant
 from app.domain.models import ResourceDefinition
 
@@ -44,7 +44,7 @@ def build_monk_initiative_refills(level: int) -> list[InitiativeResourceRefillGr
                 usage_resource_cost=1,
                 healing_rider=InitiativeHealingRider(
                     dice_count=1,
-                    dice_size=6,
+                    dice_size=monk_martial_arts_die(level),
                     healing_bonus=level,
                 ),
             )
