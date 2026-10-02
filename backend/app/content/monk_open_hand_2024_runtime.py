@@ -16,6 +16,7 @@ from app.content.monk_open_hand_2024_resources import build_monk_initiative_refi
 from app.content.monk_2024_resource_rules import monk_martial_arts_die
 from app.domain.actions import HealingAction
 from app.domain.bonus_action_follow_up import BonusActionFollowUpTacticalGrant
+from app.domain.bonus_action_follow_up import BonusActionFollowUpTacticalGrant
 from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.on_hit_save_riders import ResourceBackedOnHitSaveRider
@@ -81,6 +82,17 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
                         max_conditions=1,
                     )
                     if level >= 10 else None
+                ),
+                bonus_action_follow_up_tactical_grants=(
+                    [
+                        BonusActionFollowUpTacticalGrant(
+                            source_id="fleet-step",
+                            source_name="Fleet Step",
+                            tactical_grant_id="step-of-the-wind-dash",
+                            excluded_trigger_ids=["step-of-the-wind-dash"],
+                        )
+                    ]
+                    if level >= 11 else []
                 ),
                 martial_arts_bonus_attack=True,
                 martial_arts_die_size=monk_martial_arts_die(level),
