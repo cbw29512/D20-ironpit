@@ -47,7 +47,7 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2024 canonical pregens are 129 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 9 on main; this tranche advances level 10.
 
-Active implementation lane: **2024 Open Hand Monk level 10.** Heightened Focus is implemented through shared bonus-attack and tactical Temporary HP mechanics. Self-Restoration now has a universal end-turn condition-removal primitive; Kael's deterministic priority order remains an owner policy decision before level 10 can be certified.
+Active implementation lane: **2024 Open Hand Monk level 10.** Heightened Focus is implemented through shared bonus-attack and tactical Temporary HP mechanics. Self-Restoration uses the universal end-turn condition-removal primitive with owner-approved priority **Charmed → Frightened → Poisoned**. Complete generated parity and exact-head certification, then advance to Monk 11.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -68,7 +68,7 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 7 adds Evasion through the shared Dexterity-save half-damage transform. The 2024 binding disables Evasion while Incapacitated; 2014 behavior remains isolated.
 - Level 8 uses the repeatable **Ability Score Improvement** feat for **+1 Dexterity (19→20) and +1 Constitution (15→16)**. Shared derived-stat logic updates AC, HP, Initiative, attack/damage, Dexterity save, and Dexterity skills.
 - Level 9 adds **Acrobatic Movement**. RAW permits movement along vertical surfaces and across liquids while unarmored and not wielding a Shield; the current Iron Pit battlefield has no vertical-surface or liquid-terrain state, so the feature is source-audited as arena-neutral rather than approximated. Proficiency Bonus advances to +4 and Focus Points to 9.
-- Level 10 increases Unarmored Movement to +20 feet and Focus Points to 10. **Heightened Focus** upgrades Flurry of Blows to three Unarmed Strikes and Focus-backed Patient Defense to grant 2d8 Temporary HP through universal mechanics. The optional Step of the Wind ally-transport choice remains deliberately unselected by arena automation. **Self-Restoration** binds to a generic end-turn condition-removal primitive once the deterministic Charmed/Frightened/Poisoned priority is chosen.
+- Level 10 increases Unarmored Movement to +20 feet and Focus Points to 10. **Heightened Focus** upgrades Flurry of Blows to three Unarmed Strikes and Focus-backed Patient Defense to grant 2d8 Temporary HP through universal mechanics. The optional Step of the Wind ally-transport choice remains deliberately unselected by arena automation. **Self-Restoration** binds to the generic end-turn condition-removal primitive with deterministic priority **Charmed → Frightened → Poisoned**.
 - Next exact level after level 10 certification is **Monk 11**; audit Fleet Step and Quivering Palm only after level 10 is merged.
 
 ### Druid spell-selection policy
