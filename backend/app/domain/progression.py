@@ -11,6 +11,7 @@ from app.domain.spell_damage_maximizers import SpellDamageMaximizerGrant
 
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
 from app.domain.d20_outcome_adjustments import ResourceBackedD20OutcomeAdjustment
+from app.domain.end_turn_condition_removal import EndTurnConditionRemovalGrant
 from app.domain.healing_riders import OutgoingHealingDiceMaximizer
 from app.domain.on_hit_save_riders import ResourceBackedOnHitSaveRider
 from app.domain.progression_primitives import (
@@ -103,6 +104,7 @@ class ProgressionCombatFeatures(BaseModel):
     resource_backed_on_hit_save_rider: ResourceBackedOnHitSaveRider | None = None
     resource_backed_on_hit_save_rider: ResourceBackedOnHitSaveRider | None = None
     delayed_resource_refill: DelayedResourceRefill | None = None
+    end_turn_condition_removal: EndTurnConditionRemovalGrant | None = None
     deferred_save_effect: DeferredSaveEffect | None = None
     area_spell_ally_protection: AreaSpellAllyProtectionGrant | None = None
     alternate_spell_cast_grants: list[AlternateSpellCastGrant] = Field(default_factory=list)

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.condition_removal import remove_condition
 from app.combat.modifier_stack import expire_target_turn_modifiers
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import remove_effect_group
@@ -95,6 +96,34 @@ def resolve_target_condition_timing(
                     ))
                     sequence += 1
         if timing == "target_turn_end":
+            grant = target.state.template.progression_features.end_turn_condition_removal
+            if grant is not None:
+                removed: list[str] = []
+                for condition_id in grant.condition_ids:
+                    if condition_id not in target.state.active_effect_ids:
+                        continue
+                    remove_condition(target, condition_id)
+                    removed.append(condition_id)
+                    if len(removed) >= grant.max_conditions:
+                        break
+                if removed:
+                    events.append(BattleEvent(
+                        sequence=sequence,
+                        round_number=round_number,
+                        event_type="feature",
+                        actor_id=target.combatant_id,
+                        actor_name=target.state.template.name,
+                        target_id=target.combatant_id,
+                        target_name=target.state.template.name,
+                        removed_condition_ids=removed,
+                        feature_id=grant.source_id,
+                        animation="condition-ended",
+                        description=(
+                            f"{target.state.template.name} uses {grant.source_name}; "
+                            f"{', '.join(item.replace('_', ' ').title() for item in removed)} ends."
+                        ),
+                    ))
+                    sequence += 1
             expire_target_turn_modifiers(target.state)
         return events, sequence
     except (TypeError, ValueError):

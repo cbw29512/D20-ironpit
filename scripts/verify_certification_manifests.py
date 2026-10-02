@@ -106,6 +106,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add(features.resource_backed_on_hit_save_rider.source_id)
     if features.delayed_resource_refill:
         mechanics.add(features.delayed_resource_refill.source_id)
+    if features.end_turn_condition_removal:
+        mechanics.add(features.end_turn_condition_removal.source_id)
     if features.area_spell_ally_protection:
         mechanics.add(features.area_spell_ally_protection.source_id)
     if features.alternate_spell_cast_grants:

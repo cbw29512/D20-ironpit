@@ -634,6 +634,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["source_damage_temporary_hp"] = progression.source_damage_temporary_hp.model_dump(mode="json")
     if progression.delayed_resource_refill is not None:
         row["delayed_resource_refill"] = progression.delayed_resource_refill.model_dump(mode="json")
+    if progression.end_turn_condition_removal is not None:
+        row["end_turn_condition_removal"] = progression.end_turn_condition_removal.model_dump(mode="json")
     if template.unlimited_resource_ids:
         row["unlimited_resources"] = list(template.unlimited_resource_ids)
     if template.initiative_resource_refill_grants:
@@ -796,6 +798,13 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                 "resourceId": item.resource_id, "resourceCost": item.resource_cost,
                 "priority": item.priority, "usePolicy": item.use_policy,
                 "jumpDistanceMultiplier": item.jump_distance_multiplier,
+                **(
+                    {
+                        "temporaryHpDiceCount": item.temporary_hp_dice_count,
+                        "temporaryHpDiceSize": item.temporary_hp_dice_size,
+                    }
+                    if item.temporary_hp_dice_count else {}
+                ),
             }
             for item in template.bonus_tactical_action_grants
         ]

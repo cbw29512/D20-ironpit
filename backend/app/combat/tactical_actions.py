@@ -4,12 +4,14 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.condition_rules import is_incapacitated
+from app.combat.dice import DiceProvider
 from app.combat.dodge import DODGE_EFFECT_ID, apply_dodge_effect
 from app.combat.encounter_movement import grant_dash_movement
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.modifier_stack import effective_speed
 from app.combat.offensive_ranges import offensive_ranges_for_target
 from app.combat.resources import action_resource_available, spend_action_resource
+from app.combat.temporary_hp import grant_temporary_hit_points
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 from app.domain.tactical_actions import BonusActionTacticalGrant
@@ -70,7 +72,11 @@ def choose_offensive_dash_grant(
         raise RuntimeError("Tactical Dash choice could not be resolved.") from exc
 
 def resolve_bonus_tactical_grant(
-    sequence: int, round_number: int, member: EncounterCombatant, grant: BonusActionTacticalGrant,
+    sequence: int,
+    round_number: int,
+    member: EncounterCombatant,
+    grant: BonusActionTacticalGrant,
+    dice: DiceProvider | None = None,
 ) -> BattleEvent:
     """Resolve one declared Bonus Action by composing standard tactical effects."""
     try:
@@ -85,7 +91,16 @@ def resolve_bonus_tactical_grant(
             member.state.disengaged_this_turn = True
         if "dodge" in grant.effects:
             apply_dodge_effect(member.state)
+        temporary_hp_before = member.state.temporary_hp
+        temporary_hp_after = temporary_hp_before
+        if grant.temporary_hp_dice_count:
+            if dice is None:
+                raise ValueError(f"{grant.name} Temporary HP requires a dice provider.")
+            temporary_hp = sum(dice.roll(grant.temporary_hp_dice_size) for _ in range(grant.temporary_hp_dice_count))
+            temporary_hp_after = grant_temporary_hit_points(member.state, temporary_hp)
         labels = ", ".join(effect.title() for effect in grant.effects)
+        if grant.temporary_hp_dice_count:
+            labels = f"{labels}, {grant.temporary_hp_dice_count}d{grant.temporary_hp_dice_size} Temporary HP"
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
@@ -95,6 +110,8 @@ def resolve_bonus_tactical_grant(
             feature_id=grant.id,
             resource_remaining=remaining,
             movement_ft=movement,
+            temporary_hp_before=temporary_hp_before if grant.temporary_hp_dice_count else None,
+            temporary_hp_after=temporary_hp_after if grant.temporary_hp_dice_count else None,
             applied_condition_ids=[DODGE_EFFECT_ID] if "dodge" in grant.effects else [],
             animation="movement" if "dash" in grant.effects else "dodge",
             description=f"{member.state.template.name} uses {grant.name}: {labels}.",
@@ -117,7 +134,10 @@ def use_offensive_dash(
         raise RuntimeError("Offensive tactical Dash could not be resolved.") from exc
 
 def resolve_defensive_tactical_grant(
-    sequence: int, round_number: int, member: EncounterCombatant,
+    sequence: int,
+    round_number: int,
+    member: EncounterCombatant,
+    dice: DiceProvider | None = None,
 ) -> BattleEvent | None:
     """Use a declared defensive Bonus Action only when no earlier Bonus Action claimed the turn."""
     try:
@@ -136,7 +156,7 @@ def resolve_defensive_tactical_grant(
         if not candidates:
             return None
         grant = min(candidates, key=lambda item: (item.priority, item.id))
-        return resolve_bonus_tactical_grant(sequence, round_number, member, grant)
+        return resolve_bonus_tactical_grant(sequence, round_number, member, grant, dice)
     except Exception as exc:
         logger.exception("Failed defensive tactical grant for %s.", member.combatant_id)
         raise RuntimeError("Defensive tactical grant could not be resolved.") from exc
