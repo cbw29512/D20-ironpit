@@ -138,6 +138,7 @@ class DeferredSaveEffect(BaseModel):
     success_damage_dice_size: int = Field(default=10, ge=2, le=100)
     success_damage_type: str | None = None
     allow_attack_slot_activation: bool = False
+    allow_harmless_end_on_rearm: bool = False
     max_active_targets: int = Field(default=1, ge=1, le=20)
 
 
