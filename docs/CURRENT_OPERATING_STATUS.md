@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-02 for the 2024 Open Hand Monk level 12 tranche. Main baseline: `cd61a29883dc41c805194e4b51e135c2491d1086`.
+Recorded 2026-10-02 for the 2024 Open Hand Monk level 13 tranche. Main baseline: `96c412c56f81f748a3b9855f958a3e0b41ddabd3`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -71,7 +71,8 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 10 increases Unarmored Movement to +20 feet and Focus Points to 10. **Heightened Focus** upgrades Flurry of Blows to three Unarmed Strikes and Focus-backed Patient Defense to grant 2d8 Temporary HP through universal mechanics. The optional Step of the Wind ally-transport choice remains deliberately unselected by arena automation. **Self-Restoration** binds to the generic end-turn condition-removal primitive with deterministic priority **Charmed → Frightened → Poisoned**.
 - Level 11 advances Martial Arts to **d10**, Focus Points to **11**, and HP to **91**. The tranche also corrects prior 2024 Monk healing-die drift by deriving Uncanny Metabolism and Wholeness of Body from the same Martial Arts die rule. **Fleet Step** uses the universal Bonus Action follow-up tactical grant. After another eligible Bonus Action, arena automation immediately takes the resource-free Dash form of Step of the Wind; it does not invent retreat or kiting behavior.
 - Level 12 uses the repeatable **Ability Score Improvement** feat for **+2 Wisdom (10→12)**, following the Open Hand unarmed-offense specialization priority of Dexterity → Wisdom → Constitution. This raises AC to 16, Stunning Strike DC to 13, Wisdom skills by 1, and Wholeness of Body healing to 1d10+1 while Focus Points advance to 12.
-- Next exact level after level 12 certification is **Monk 13**; audit Deflect Energy and any noncombat class delta before adding engine behavior.
+- Level 13 adds **Deflect Energy**, widening Deflect Attacks from Bludgeoning/Piercing/Slashing to attacks dealing any damage type. Proficiency Bonus advances to +5, Focus Points to 13, HP to 107, Initiative/Unarmed Strike attack bonus to +10, and Stunning Strike DC to 14. The same tranche closes the existing RAW redirect gap: when Deflect Attacks reduces an attack to 0 damage, the Monk can spend 1 Focus Point to force the printed Dexterity save and deal two Martial Arts dice plus Dexterity modifier on a failure through a universal zero-damage redirect primitive with Python/browser parity.
+- Next exact level after level 13 certification is **Monk 14**; audit Disciplined Survivor against existing saving-throw proficiency and failed-save reroll primitives before adding any engine behavior.
 
 ### Druid spell-selection policy
 
