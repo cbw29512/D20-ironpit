@@ -17,13 +17,20 @@ logger = logging.getLogger(__name__)
 def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
     """Compile the legal persistent 2024 Kael progression through the current level."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7}:
-            raise ValueError("The current 2024 Monk profile tranche supports levels 1-7 only.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8}:
+            raise ValueError("The current 2024 Monk profile tranche supports levels 1-8 only.")
         hero = HERO_BY_CLASS["monk"]
         base = canonical_base_ability_scores("monk")
         background_allowed = ["dexterity", "constitution", "intelligence"]
         background = canonical_background_increases("monk", background_allowed)
-        advancement = [AbilityIncrease(ability="dexterity", amount=2)] if level >= 4 else []
+        advancement: list[AbilityIncrease] = []
+        if level >= 4:
+            advancement.append(AbilityIncrease(ability="dexterity", amount=2))
+        if level >= 8:
+            advancement.extend([
+                AbilityIncrease(ability="dexterity", amount=1),
+                AbilityIncrease(ability="constitution", amount=1),
+            ])
         values = base.model_dump()
         for increase in [*background, *advancement]:
             values[increase.ability] += increase.amount
@@ -70,6 +77,10 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
                 *(
                     ["Basic Rules 2024: Monk Level 4 — Ability Score Improvement and Slow Fall; Feats — Ability Score Improvement (+2 Dexterity)"]
                     if level >= 4 else []
+                ),
+                *(
+                    ["Basic Rules 2024: Monk Level 8 — Ability Score Improvement; Feats — Ability Score Improvement (+1 Dexterity, +1 Constitution)"]
+                    if level >= 8 else []
                 ),
                 "Basic Rules 2024: Character Origins — Criminal and Human",
                 "Basic Rules 2024: Feats — Alert and Skilled",
