@@ -20,7 +20,7 @@ def _row(level: int, abilities: AbilityScores, focus_points: int) -> PregenComba
             save_proficiencies=("strength", "dexterity"),
             armor_class=10 + dexterity,
             max_hp=10 + 7 * (level - 1),
-            speed_ft=30 if level == 1 else 40,
+            speed_ft=30 if level == 1 else 45 if level >= 6 else 40,
             initiative_bonus=dexterity + proficiency,
             skill_bonuses=(
                 ("athletics", 1),
@@ -36,7 +36,11 @@ def _row(level: int, abilities: AbilityScores, focus_points: int) -> PregenComba
             attacks=(AttackExpectation("unarmed-strike", "dexterity", 1, 8 if level >= 5 else 6, "bludgeoning"),),
             weapon_masteries=(),
             resources=(
-                (("focus-points", focus_points), ("uncanny-metabolism", 1))
+                (
+                    ("focus-points", focus_points),
+                    ("uncanny-metabolism", 1),
+                    *((("wholeness-of-body", 1),) if level >= 6 else ()),
+                )
                 if focus_points else ()
             ),
         )
@@ -45,11 +49,11 @@ def _row(level: int, abilities: AbilityScores, focus_points: int) -> PregenComba
         raise
 
 
-def build_kael_2024_combat_profiles(max_level: int = 5) -> list[PregenCombatProfile]:
+def build_kael_2024_combat_profiles(max_level: int = 6) -> list[PregenCombatProfile]:
     """Return independent combat fingerprints for certified 2024 Kael levels."""
     try:
-        if max_level not in {1, 2, 3, 4, 5}:
-            raise ValueError("The current 2024 Kael combat fingerprint covers levels 1-5 only.")
+        if max_level not in {1, 2, 3, 4, 5, 6}:
+            raise ValueError("The current 2024 Kael combat fingerprint covers levels 1-6 only.")
         base = AbilityScores(
             strength=13,
             dexterity=17,
@@ -68,6 +72,8 @@ def build_kael_2024_combat_profiles(max_level: int = 5) -> list[PregenCombatProf
             rows.append(_row(4, level_four, 4))
         if max_level >= 5:
             rows.append(_row(5, level_four, 5))
+        if max_level >= 6:
+            rows.append(_row(6, level_four, 6))
         return rows
     except Exception:
         logger.exception("Failed to build 2024 Kael combat fingerprints through level %s.", max_level)

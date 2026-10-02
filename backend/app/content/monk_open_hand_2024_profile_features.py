@@ -54,7 +54,9 @@ def build_monk_2024_feature_audits(level: int) -> list[FeatureAudit]:
                     "unarmored-movement",
                     "Unarmored Movement",
                     "class",
-                    notes="Adds 10 feet to Speed while unarmored and not wielding a Shield.",
+                    notes=(
+                        f"Adds {15 if level >= 6 else 10} feet to Speed while unarmored and not wielding a Shield."
+                    ),
                 ),
                 _feature(
                     "uncanny-metabolism",
@@ -115,6 +117,21 @@ def build_monk_2024_feature_audits(level: int) -> list[FeatureAudit]:
                         "Failure applies Stunned until the start of Kael's next turn; success halves Speed "
                         "and grants Advantage on the next attack against the target before then."
                     ),
+                ),
+            ])
+        if level >= 6:
+            audits.extend([
+                _feature(
+                    "empowered-strikes",
+                    "Empowered Strikes",
+                    "class",
+                    notes="Uses the universal attack damage-type choice primitive: Force or the strike's normal damage type.",
+                ),
+                _feature(
+                    "wholeness-of-body",
+                    "Wholeness of Body",
+                    "subclass",
+                    notes="Uses the shared limited-use Bonus Action self-healing action with the Martial Arts die.",
                 ),
             ])
         audits.extend([

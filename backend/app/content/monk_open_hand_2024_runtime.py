@@ -13,6 +13,7 @@ from app.content.monk_open_hand_2024_actions import (
 from app.content.monk_open_hand_2024_attacks import build_kael_extra_attack_2024, build_kael_unarmed_attack_2024
 from app.content.monk_open_hand_2024_profile import build_kael_stillwater_2024_profile
 from app.content.monk_open_hand_2024_resources import build_monk_initiative_refills, build_monk_resources
+from app.domain.actions import HealingAction
 from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.on_hit_save_riders import ResourceBackedOnHitSaveRider
@@ -23,8 +24,8 @@ logger = logging.getLogger(__name__)
 def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
     """Build the certified persistent 2024 Open Hand Monk using shared combat primitives."""
     try:
-        if level not in {1, 2, 3, 4, 5}:
-            raise ValueError("The current 2024 Monk runtime tranche supports levels 1-5 only.")
+        if level not in {1, 2, 3, 4, 5, 6}:
+            raise ValueError("The current 2024 Monk runtime tranche supports levels 1-6 only.")
         profile = build_kael_stillwater_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -48,7 +49,7 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
             ability_scores=scores,
             armor_class=10 + dexterity + wisdom,
             max_hp=(8 + constitution) + (5 + constitution) * (level - 1),
-            speed_ft=30 + (10 if level >= 2 else 0),
+            speed_ft=30 + (15 if level >= 6 else 10 if level >= 2 else 0),
             initiative_bonus=dexterity + pb,
             starts_with_heroic_inspiration=True,
             progression_features=ProgressionCombatFeatures(
@@ -77,6 +78,22 @@ def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
             bonus_attack_grants=build_monk_bonus_attacks(level, unarmed, pb, wisdom),
             bonus_tactical_action_grants=build_monk_tactical_actions(level),
             attack_damage_reduction_reaction=build_monk_attack_damage_reduction(level),
+            healing_actions=(
+                [HealingAction(
+                    id="wholeness-of-body",
+                    name="Wholeness of Body",
+                    action_cost="bonus_action",
+                    range_ft=0,
+                    target_mode="self",
+                    dice_count=1,
+                    dice_size=8,
+                    healing_bonus=max(0, wisdom),
+                    resource_id="wholeness-of-body",
+                    resource_cost=1,
+                    animation="healing",
+                )]
+                if level >= 6 else []
+            ),
             resources=build_monk_resources(level),
             initiative_resource_refill_grants=build_monk_initiative_refills(level),
             saving_throw_bonuses={

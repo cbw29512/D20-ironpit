@@ -67,6 +67,15 @@ def _berserker_intimidating_presence(level: int) -> int:
         raise ValueError(f"Failed to resolve 2024 Berserker Intimidating Presence uses for level {level}.") from exc
 
 
+def _open_hand_wholeness_of_body(level: int) -> int:
+    try:
+        # Kael's canonical Wisdom modifier is +0 at the current level-6 tranche,
+        # so RAW's minimum of one use applies. Later ASI changes must update this rule.
+        return 1 if level >= 6 else 0
+    except Exception as exc:
+        raise ValueError(f"Failed to resolve 2024 Wholeness of Body uses for level {level}.") from exc
+
+
 CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
     "barbarian": (
         ("rage", "Rage", barbarian_rage_uses),
@@ -108,6 +117,9 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
 SUBCLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
     "path-berserker": (
         ("intimidating-presence", "Intimidating Presence", _berserker_intimidating_presence),
+    ),
+    "warrior-of-the-open-hand": (
+        ("wholeness-of-body", "Wholeness of Body", _open_hand_wholeness_of_body),
     ),
     "circle-land": (
         (

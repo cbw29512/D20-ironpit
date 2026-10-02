@@ -13,10 +13,17 @@ def build_monk_resources(level: int) -> list[ResourceDefinition]:
     try:
         if level < 2:
             return []
-        return [
+        resources = [
             ResourceDefinition(id="focus-points", name="Focus Points", max_uses=monk_focus_points(level)),
             ResourceDefinition(id="uncanny-metabolism", name="Uncanny Metabolism", max_uses=1),
         ]
+        if level >= 6:
+            resources.append(ResourceDefinition(
+                id="wholeness-of-body",
+                name="Wholeness of Body",
+                max_uses=1,
+            ))
+        return resources
     except Exception:
         logger.exception("Failed to build 2024 Monk resources at level %s.", level)
         raise
