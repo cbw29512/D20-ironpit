@@ -146,6 +146,18 @@ def build_monk_2024_feature_audits(level: int) -> list[FeatureAudit]:
                     ),
                 )
             )
+        if level >= 8:
+            audits.append(
+                _feature(
+                    "ability-score-improvement-l8",
+                    "Ability Score Improvement (+1 Dexterity, +1 Constitution)",
+                    "feat",
+                    notes=(
+                        "Canonical unarmed-offense progression raises Dexterity 19 to 20 and Constitution 15 to 16; "
+                        "shared derived-stat logic updates AC, Initiative, attacks, Dexterity save/skills, and hit points."
+                    ),
+                )
+            )
         audits.extend([
             _feature(
                 "alert",
