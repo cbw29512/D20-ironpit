@@ -92,11 +92,13 @@ def cleanup_deferred_effects(setup: EncounterSetup) -> None:
 def deferred_save_effect_candidate(
     actor: EncounterCombatant,
     setup: EncounterSetup,
+    *,
+    require_action: bool = True,
 ) -> EncounterCombatant | None:
-    """Return the first living marked target when the deferred Action is legal."""
+    """Return the first living marked target when the requested activation path is legal."""
     try:
         rule = actor.state.template.progression_features.deferred_save_effect
-        if rule is None or not is_available(actor.state, "action"):
+        if rule is None or (require_action and not is_available(actor.state, "action")):
             return None
         members = [*setup.heroes, *setup.monsters]
         by_id = {member.combatant_id: member for member in members}
@@ -118,10 +120,12 @@ def resolve_deferred_save_effect(
     actor: EncounterCombatant,
     setup: EncounterSetup,
     dice,
+    *,
+    spend_action: bool = True,
 ) -> BattleEvent | None:
     """Resolve an armed effect through shared save, typed damage, and zero-HP lifecycles."""
     try:
-        target = deferred_save_effect_candidate(actor, setup)
+        target = deferred_save_effect_candidate(actor, setup, require_action=spend_action)
         if target is None:
             return None
         rule = actor.state.template.progression_features.deferred_save_effect
@@ -142,7 +146,8 @@ def resolve_deferred_save_effect(
             affected,
         )
 
-        spend(actor.state, "action")
+        if spend_action:
+            spend(actor.state, "action")
         actor.state.deferred_effects = [
             item for item in actor.state.deferred_effects
             if not (item.source_id == rule.source_id and item.target_id == target.combatant_id)
