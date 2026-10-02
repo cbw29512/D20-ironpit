@@ -40,6 +40,7 @@ const setup = { heroes: [hero], monsters: [target] };
 S.beginTurn(hero.state);
 const beforeAction = hero.state.action_available;
 const beforeBonus = hero.state.bonus_action_available;
+assert.equal(window.IRON_PIT_BROWSER_PRECOMBAT_BUFFS.choose(hero, setup), null);
 const choice = B.choose(hero, setup, "start_turn");
 assert.ok(choice);
 assert.equal(choice.id, "superior-defense");
