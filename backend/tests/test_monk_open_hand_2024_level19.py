@@ -63,7 +63,7 @@ def test_2024_open_hand_monk_level19_binds_irresistible_offense() -> None:
         (item.source_id, item.ability, item.damage_type_source)
         for item in features.natural_twenty_attack_damage_grants
     ] == [("boon-irresistible-offense", "dexterity", "attack")]
-    assert registry := build_certified_hero_registry()
+    registry = build_certified_hero_registry()
     assert registry[("monk", 19, "canonical")] == ("Kael Stillwater", "kael-stillwater-l19")
 
 
