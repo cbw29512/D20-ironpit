@@ -80,4 +80,29 @@ window.IRON_PIT_DICE = {
   assert.equal(target.state.active_effect_ids.includes("frightened"), false);
 }
 
+
+{
+  const target = member("end-turn-removal-target");
+  target.state.template.end_turn_condition_removal = {
+    source_id: "test-restoration",
+    source_name: "Test Restoration",
+    condition_ids: ["charmed", "frightened", "poisoned"],
+    max_conditions: 1,
+  };
+  T.apply(target.state, "poisoned", "poison-source", {
+    sourceEffectId: "poison-test",
+    useDefaultPoisonRecovery: false,
+  });
+  T.apply(target.state, "charmed", "charm-source", {
+    sourceEffectId: "charm-test",
+    useDefaultPoisonRecovery: false,
+  });
+  const result = L.resolveTargetTiming(1, 6, target, "target_turn_end");
+  assert.equal(result.events.length, 1);
+  assert.equal(result.events[0].feature_id, "test-restoration");
+  assert.deepEqual(result.events[0].removed_condition_ids, ["charmed"]);
+  assert.equal(target.state.active_effect_ids.includes("charmed"), false);
+  assert.equal(target.state.active_effect_ids.includes("poisoned"), true);
+}
+
 console.log("Browser condition lifecycle regressions passed.");
