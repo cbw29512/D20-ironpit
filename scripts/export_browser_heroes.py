@@ -634,6 +634,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["source_damage_temporary_hp"] = progression.source_damage_temporary_hp.model_dump(mode="json")
     if progression.delayed_resource_refill is not None:
         row["delayed_resource_refill"] = progression.delayed_resource_refill.model_dump(mode="json")
+    if progression.end_turn_condition_removal is not None:
+        row["end_turn_condition_removal"] = progression.end_turn_condition_removal.model_dump(mode="json")
     if template.unlimited_resource_ids:
         row["unlimited_resources"] = list(template.unlimited_resource_ids)
     if template.initiative_resource_refill_grants:
