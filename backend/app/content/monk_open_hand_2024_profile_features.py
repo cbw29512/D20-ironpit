@@ -134,6 +134,18 @@ def build_monk_2024_feature_audits(level: int) -> list[FeatureAudit]:
                     notes="Uses the shared limited-use Bonus Action self-healing action with the Martial Arts die.",
                 ),
             ])
+        if level >= 7:
+            audits.append(
+                _feature(
+                    "evasion",
+                    "Evasion",
+                    "class",
+                    notes=(
+                        "Uses the shared Dexterity-save half-damage transform. "
+                        "The 2024 binding disables Evasion while Incapacitated."
+                    ),
+                )
+            )
         audits.extend([
             _feature(
                 "alert",
