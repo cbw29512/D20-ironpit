@@ -12,6 +12,7 @@
       if (!rule || !(rule.trigger_weapon_ids || []).includes(attack.weaponId)) return null;
       if (targetState.is_dead || !targetState.is_alive || targetState.current_hp <= 0) return null;
       const active = (state.deferred_effects || []).filter((item) => item.source_id === rule.source_id);
+      if (active.some((item) => item.target_id === targetId)) return null;
       if (active.length >= (rule.max_active_targets || 1)) {
         if (!rule.allow_harmless_end_on_rearm) return null;
         state.deferred_effects = (state.deferred_effects || []).filter((item) => item.source_id !== rule.source_id);
