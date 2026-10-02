@@ -6,6 +6,7 @@ from app.combat.resources import resource_available
 
 from app.combat.area_save_actions import choose_area_save, resolve_area_save
 from app.combat.barbarian import finalize_rage_turn
+from app.combat.bonus_action_follow_up import resolve_bonus_action_follow_up
 from app.combat.bonus_attacks import resolve_bonus_attack_grant
 from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
@@ -39,10 +40,33 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
             sequence, round_number, attacker, setup, dice, turn_key,
         )
         events.extend(bonus_attack_events)
+        if bonus_attack_events:
+            follow_up = resolve_bonus_action_follow_up(
+                sequence,
+                round_number,
+                attacker,
+                bonus_attack_events[-1].feature_id,
+                turn_key,
+                dice,
+            )
+            if follow_up is not None:
+                events.append(follow_up)
+                sequence += 1
         defensive = resolve_defensive_tactical_grant(sequence, round_number, attacker, dice)
         if defensive is not None:
             events.append(defensive)
             sequence += 1
+            follow_up = resolve_bonus_action_follow_up(
+                sequence,
+                round_number,
+                attacker,
+                defensive.feature_id,
+                turn_key,
+                dice,
+            )
+            if follow_up is not None:
+                events.append(follow_up)
+                sequence += 1
         monk_events, sequence = resolve_monk_bonus_attacks(
             sequence,
             round_number,
@@ -71,19 +95,35 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
 def resolve_support_actions(sequence, round_number, member, setup, dice, turn_key):
     try:
         events: list[BattleEvent] = []
+        bonus_before = member.state.bonus_action_available
         healing_events, sequence = resolve_healing_support(
             sequence, round_number, member, setup, dice, turn_key, downed_only=True,
         )
         events.extend(healing_events)
+        if bonus_before and not member.state.bonus_action_available and healing_events:
+            follow_up = resolve_bonus_action_follow_up(
+                sequence, round_number, member, healing_events[-1].feature_id, turn_key, dice,
+            )
+            if follow_up is not None:
+                events.append(follow_up)
+                sequence += 1
         removal_choice = choose_condition_removal_action(member, setup, turn_key)
         if removal_choice is not None:
             action, target, conditions = removal_choice
             events.append(resolve_condition_removal(sequence, round_number, member, target, action, conditions, turn_key))
             sequence += 1
+        bonus_before = member.state.bonus_action_available
         healing_events, sequence = resolve_healing_support(
             sequence, round_number, member, setup, dice, turn_key,
         )
         events.extend(healing_events)
+        if bonus_before and not member.state.bonus_action_available and healing_events:
+            follow_up = resolve_bonus_action_follow_up(
+                sequence, round_number, member, healing_events[-1].feature_id, turn_key, dice,
+            )
+            if follow_up is not None:
+                events.append(follow_up)
+                sequence += 1
         effect_choice = choose_effect_removal_action(member, setup, turn_key)
         if effect_choice is not None:
             action, effect = effect_choice

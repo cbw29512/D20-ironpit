@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.content.monk_2024_resource_rules import monk_martial_arts_die
 from app.domain.bonus_attacks import BonusAttackGrant
 from app.domain.models import DamageType, WeaponAttack
 from app.domain.reactions import AttackDamageReductionReaction
@@ -78,7 +79,7 @@ def build_monk_tactical_actions(level: int) -> list[BonusActionTacticalGrant]:
                 priority=90,
                 use_policy="defensive-fallback",
                 temporary_hp_dice_count=2 if level >= 10 else 0,
-                temporary_hp_dice_size=8 if level >= 10 else 0,
+                temporary_hp_dice_size=monk_martial_arts_die(level) if level >= 10 else 0,
             ),
             BonusActionTacticalGrant(
                 id="step-of-the-wind-focus",

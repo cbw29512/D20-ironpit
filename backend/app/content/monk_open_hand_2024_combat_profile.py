@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.content.monk_2024_resource_rules import monk_martial_arts_die
 from app.content.pregen_combat_profiles import AttackExpectation, PregenCombatProfile
 from app.domain.character_builds import AbilityScores
 
@@ -34,7 +35,7 @@ def _row(level: int, abilities: AbilityScores, focus_points: int) -> PregenComba
                 ("sleight-of-hand", dexterity + proficiency),
                 ("stealth", dexterity + proficiency),
             ),
-            attacks=(AttackExpectation("unarmed-strike", "dexterity", 1, 8 if level >= 5 else 6, "bludgeoning"),),
+            attacks=(AttackExpectation("unarmed-strike", "dexterity", 1, monk_martial_arts_die(level), "bludgeoning"),),
             weapon_masteries=(),
             resources=(
                 (
@@ -50,11 +51,11 @@ def _row(level: int, abilities: AbilityScores, focus_points: int) -> PregenComba
         raise
 
 
-def build_kael_2024_combat_profiles(max_level: int = 10) -> list[PregenCombatProfile]:
+def build_kael_2024_combat_profiles(max_level: int = 11) -> list[PregenCombatProfile]:
     """Return independent combat fingerprints for certified 2024 Kael levels."""
     try:
-        if max_level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}:
-            raise ValueError("The current 2024 Kael combat fingerprint covers levels 1-10 only.")
+        if max_level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}:
+            raise ValueError("The current 2024 Kael combat fingerprint covers levels 1-11 only.")
         base = AbilityScores(
             strength=13,
             dexterity=17,
@@ -84,6 +85,8 @@ def build_kael_2024_combat_profiles(max_level: int = 10) -> list[PregenCombatPro
             rows.append(_row(9, level_eight, 9))
         if max_level >= 10:
             rows.append(_row(10, level_eight, 10))
+        if max_level >= 11:
+            rows.append(_row(11, level_eight, 11))
         return rows
     except Exception:
         logger.exception("Failed to build 2024 Kael combat fingerprints through level %s.", max_level)

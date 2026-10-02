@@ -81,7 +81,7 @@ def build_monk_2024_high_level_feature_audits(level: int) -> list[FeatureAudit]:
                     "class",
                     notes=(
                         "Flurry of Blows makes three Unarmed Strikes. Focus-backed Patient Defense grants "
-                        "2d8 Temporary HP through the shared tactical-action Temporary HP rider. "
+                        "two Martial Arts dice of Temporary HP through the shared tactical-action Temporary HP rider. "
                         "The optional Step of the Wind ally-transport choice remains deliberately unselected "
                         "by current arena automation."
                     ),
@@ -96,6 +96,19 @@ def build_monk_2024_high_level_feature_audits(level: int) -> list[FeatureAudit]:
                     ),
                 ),
             ])
+        if level >= 11:
+            audits.append(
+                _feature(
+                    "fleet-step",
+                    "Fleet Step",
+                    "subclass",
+                    notes=(
+                        "Uses the universal Bonus Action follow-up tactical grant. After a different Bonus Action, "
+                        "arena automation takes the resource-free Dash form of Step of the Wind immediately; "
+                        "it does not invent retreat or kiting behavior."
+                    ),
+                )
+            )
         return audits
     except Exception:
         logger.exception("Failed to compile high-level 2024 Monk feature audits at level %s.", level)
