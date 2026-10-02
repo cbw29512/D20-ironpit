@@ -107,8 +107,10 @@
         feature_id: grant.id,
         resource_remaining: remaining,
         movement_ft: movement,
-        temporary_hp_before: temporaryHpBefore,
-        temporary_hp_after: temporaryHpAfter,
+        ...((grant.temporaryHpDiceCount || 0) > 0 ? {
+          temporary_hp_before: temporaryHpBefore,
+          temporary_hp_after: temporaryHpAfter,
+        } : {}),
         applied_condition_ids: effects.includes("dodge") ? ["dodge"] : [],
         animation: effects.includes("dash") ? "movement" : "dodge",
         description: `${member.state.template.name} uses ${grant.name}: ${effects.map((item) => item[0].toUpperCase() + item.slice(1)).join(", ")}.`,
