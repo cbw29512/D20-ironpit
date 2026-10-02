@@ -53,6 +53,12 @@ def test_2024_monk_level_five_snapshot_extra_attack_and_fingerprint() -> None:
         assert monk.weapon_attack.weapon.dice_size == 8
         assert monk.progression_features.martial_arts_die_size == 8
         assert resources == {"focus-points": 5, "uncanny-metabolism": 1}
+        metabolism = next(
+            item for item in monk.initiative_resource_refill_grants
+            if item.source_id == "uncanny-metabolism"
+        )
+        assert metabolism.healing_rider is not None
+        assert metabolism.healing_rider.dice_size == 8
         assert monk.attack_action is not None
         assert monk.attack_action.is_attack_action is True
         assert [slot.attack_ids for slot in monk.attack_action.slots] == [
