@@ -25,7 +25,7 @@ CANONICAL_STAT_PRIORITIES: dict[str, CanonicalStatPriority] = {
     "druid": CanonicalStatPriority("caster", "wisdom", "charisma", "intelligence"),
     "fighter": CanonicalStatPriority("melee", "strength", "constitution", "dexterity"),
     "monk": CanonicalStatPriority("melee", "dexterity", "constitution", "strength"),
-    "paladin": CanonicalStatPriority("melee", "strength", "constitution", "dexterity"),
+    "paladin": CanonicalStatPriority("melee", "strength", "charisma", "constitution"),
     "ranger": CanonicalStatPriority("ranged", "dexterity", "constitution", "strength"),
     "rogue": CanonicalStatPriority("ranged", "dexterity", "constitution", "strength"),
     "sorcerer": CanonicalStatPriority("caster", "charisma", "wisdom", "intelligence"),
