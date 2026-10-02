@@ -4,6 +4,7 @@ import logging
 
 from app.combat.damage_defenses import adjusted_damage_amount
 from app.domain.models import CombatantState, DamageType, WeaponAttack
+from app.domain.modifiers import ModifierKind
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +19,14 @@ def choose_attack_damage_type(
     """Choose the most effective legal damage type for one attack without source-name branching."""
     try:
         options = [attack.weapon.damage_type, *attack.weapon.damage_type_choices]
+        options.extend(
+            item.damage_type
+            for item in attacker.active_modifiers
+            if item.kind is ModifierKind.WEAPON_DAMAGE_TYPE_CHOICE
+            and item.weapon_id == attack.weapon.id
+            and item.damage_type is not None
+        )
+        options = list(dict.fromkeys(options))
         if not options or target is None:
             return attack.weapon.damage_type
         ignored_resistance_types = {
