@@ -33,7 +33,12 @@ window.IRON_PIT_BROWSER_OFFENSIVE_RANGES = {
 };
 window.IRON_PIT_BROWSER_STATE = {
   distance: (member, target) => Math.abs(member.position_ft - target.position_ft),
+  grantTemporaryHp: (state, amount) => {
+    state.temporary_hp = Math.max(state.temporary_hp || 0, amount);
+    return state.temporary_hp;
+  },
 };
+window.IRON_PIT_DICE = { roll: () => 4 };
 
 load("browser-action-economy.js");
 load("browser-ability-hooks.js");
@@ -115,6 +120,18 @@ function monk() {
   assert.equal(actor.state.disengaged_this_turn, true);
   assert.ok(actor.state.active_effect_ids.includes("dodge"));
   assert.equal(actor.state.bonus_action_available, false);
+}
+
+{
+  const actor = monk();
+  actor.state.temporary_hp = 0;
+  const grant = actor.state.template.bonusTacticalActionGrants[1];
+  grant.temporaryHpDiceCount = 2;
+  grant.temporaryHpDiceSize = 8;
+  const event = window.IRON_PIT_BROWSER_TACTICAL_ACTIONS.resolve(1, 1, actor, grant);
+  assert.equal(event.temporary_hp_before, 0);
+  assert.equal(event.temporary_hp_after, 8);
+  assert.equal(actor.state.temporary_hp, 8);
 }
 
 {
