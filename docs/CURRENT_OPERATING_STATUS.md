@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-02 for the 2024 Open Hand Monk level 10 tranche. Main baseline: `dc953d79eb0de9cc5fcd42cdbc952bdf8d7beabc`.
+Recorded 2026-10-02 for the 2024 Open Hand Monk level 11 tranche. Main baseline: `e5f13acbf942436b56bbd09d3c25ff5d113449f2`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -33,9 +33,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Fighter (Champion) | 1–20 |
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
-| 2024 | Monk (Open Hand) | 1–9 |
+| 2024 | Monk (Open Hand) | 1–10 |
 
-2024 public-ready hero slots on this tranche: **129 / 240**.
+2024 public-ready hero slots on current main: **130 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -45,9 +45,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 129 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 9 on main; this tranche advances level 10.
+**2024 canonical pregens are 130 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, and Circle of the Land Druid are complete at levels 1–20; Open Hand Monk is certified through level 10 on main; this tranche advances level 11.
 
-Active implementation lane: **2024 Open Hand Monk level 10.** Heightened Focus is implemented through shared bonus-attack and tactical Temporary HP mechanics. Self-Restoration uses the universal end-turn condition-removal primitive with owner-approved priority **Charmed → Frightened → Poisoned**. Complete generated parity and exact-head certification, then advance to Monk 11.
+Active implementation lane: **2024 Open Hand Monk level 11.** Martial Arts advances to d10 and Focus Points to 11. The shared Martial Arts die rule now drives Unarmed Strike, Uncanny Metabolism, Wholeness of Body, and Heightened Focus Patient Defense. Fleet Step is source-audited; current deterministic arena tactics deliberately do not perform post-Bonus-Action repositioning/kiting.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -69,7 +69,8 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 8 uses the repeatable **Ability Score Improvement** feat for **+1 Dexterity (19→20) and +1 Constitution (15→16)**. Shared derived-stat logic updates AC, HP, Initiative, attack/damage, Dexterity save, and Dexterity skills.
 - Level 9 adds **Acrobatic Movement**. RAW permits movement along vertical surfaces and across liquids while unarmored and not wielding a Shield; the current Iron Pit battlefield has no vertical-surface or liquid-terrain state, so the feature is source-audited as arena-neutral rather than approximated. Proficiency Bonus advances to +4 and Focus Points to 9.
 - Level 10 increases Unarmored Movement to +20 feet and Focus Points to 10. **Heightened Focus** upgrades Flurry of Blows to three Unarmed Strikes and Focus-backed Patient Defense to grant 2d8 Temporary HP through universal mechanics. The optional Step of the Wind ally-transport choice remains deliberately unselected by arena automation. **Self-Restoration** binds to the generic end-turn condition-removal primitive with deterministic priority **Charmed → Frightened → Poisoned**.
-- Next exact level after level 10 certification is **Monk 11**; audit Fleet Step and Quivering Palm only after level 10 is merged.
+- Level 11 advances Martial Arts to **d10**, Focus Points to **11**, and HP to **91**. The tranche also corrects prior 2024 Monk healing-die drift by deriving Uncanny Metabolism and Wholeness of Body from the same Martial Arts die rule. **Fleet Step** is a legal optional follow-up use of Step of the Wind after another Bonus Action; current deterministic arena tactics do not perform post-Bonus-Action repositioning or kiting, so that optional tactic is deliberately unselected rather than approximated.
+- Next exact level after level 11 certification is **Monk 12**; apply the canonical combat ASI only after level 11 is merged.
 
 ### Druid spell-selection policy
 
