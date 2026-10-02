@@ -152,6 +152,7 @@ jobs:
           grep -q 'browser-bonus-attacks.js' index.html
           grep -q 'browser-resource-hit-save.js' index.html
           grep -q 'browser-tactical-actions.js' index.html
+          grep -q 'browser-bonus-action-follow-up.js' index.html
           grep -q 'browser-attack-damage-reduction.js' index.html
           grep -q 'browser-ability-hook-installation.js' index.html
           grep -q 'browser-reactions.js' index.html
@@ -257,6 +258,7 @@ jobs:
           grep -q 'browser-bonus-attacks.js' frontend/index.html
           grep -q 'browser-resource-hit-save.js' frontend/index.html
           grep -q 'browser-tactical-actions.js' frontend/index.html
+          grep -q 'browser-bonus-action-follow-up.js' frontend/index.html
           grep -q 'browser-attack-damage-reduction.js' frontend/index.html
           grep -q 'browser-ability-hook-installation.js' frontend/index.html
           grep -q 'browser-reactions.js' frontend/index.html
