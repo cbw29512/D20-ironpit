@@ -60,6 +60,17 @@ def build_monk_2024_endgame_feature_audits(level: int) -> list[FeatureAudit]:
                     "grant, and adds Dexterity-score damage using the attack's damage type on a natural 20."
                 ),
             ))
+        if level >= 20:
+            audits.append(_feature(
+                "body-and-mind",
+                "Body and Mind",
+                "class",
+                (
+                    "Uses normal ability-score progression: Dexterity 21 to 25 and Wisdom 14 to 18, with both "
+                    "maximums set to 25. Shared derived-stat math updates AC, attacks, initiative, Monk save DCs, "
+                    "saving throws, skills, healing, Deflect Attacks redirect DC, and inherited boon damage."
+                ),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to compile endgame 2024 Monk feature audits at level %s.", level)
