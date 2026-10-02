@@ -24,8 +24,8 @@ logger = logging.getLogger(__name__)
 def build_kael_stillwater_2024(level: int = 1) -> CombatantTemplate:
     """Build the certified persistent 2024 Open Hand Monk using shared combat primitives."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8}:
-            raise ValueError("The current 2024 Monk runtime tranche supports levels 1-8 only.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9}:
+            raise ValueError("The current 2024 Monk runtime tranche supports levels 1-9 only.")
         profile = build_kael_stillwater_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:

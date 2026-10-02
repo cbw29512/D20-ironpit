@@ -17,8 +17,8 @@ logger = logging.getLogger(__name__)
 def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
     """Compile the legal persistent 2024 Kael progression through the current level."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8}:
-            raise ValueError("The current 2024 Monk profile tranche supports levels 1-8 only.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9}:
+            raise ValueError("The current 2024 Monk profile tranche supports levels 1-9 only.")
         hero = HERO_BY_CLASS["monk"]
         base = canonical_base_ability_scores("monk")
         background_allowed = ["dexterity", "constitution", "intelligence"]
@@ -71,7 +71,7 @@ def build_kael_stillwater_2024_profile(level: int = 1) -> CharacterBuildProfile:
             combat_loadout_kind="unarmed",
             feature_audits=build_monk_2024_feature_audits(level),
             source_references=[
-                "Basic Rules 2024: Monk — Martial Arts, Monk's Focus, Unarmored Movement, Uncanny Metabolism, Deflect Attacks, Extra Attack, Stunning Strike, Empowered Strikes, Evasion",
+                "Basic Rules 2024: Monk — Martial Arts, Monk's Focus, Unarmored Movement, Uncanny Metabolism, Deflect Attacks, Extra Attack, Stunning Strike, Empowered Strikes, Evasion, Acrobatic Movement",
                 *(["Basic Rules 2024: Warrior of the Open Hand — Open Hand Technique"] if level >= 3 else []),
                 *(["Basic Rules 2024: Warrior of the Open Hand — Wholeness of Body"] if level >= 6 else []),
                 *(

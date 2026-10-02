@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.content.monk_open_hand_2024_profile_features_high import build_monk_2024_high_level_feature_audits
 from app.domain.character_builds import FeatureAudit
 
 logger = logging.getLogger(__name__)
@@ -134,30 +135,7 @@ def build_monk_2024_feature_audits(level: int) -> list[FeatureAudit]:
                     notes="Uses the shared limited-use Bonus Action self-healing action with the Martial Arts die.",
                 ),
             ])
-        if level >= 7:
-            audits.append(
-                _feature(
-                    "evasion",
-                    "Evasion",
-                    "class",
-                    notes=(
-                        "Uses the shared Dexterity-save half-damage transform. "
-                        "The 2024 binding disables Evasion while Incapacitated."
-                    ),
-                )
-            )
-        if level >= 8:
-            audits.append(
-                _feature(
-                    "ability-score-improvement-l8",
-                    "Ability Score Improvement (+1 Dexterity, +1 Constitution)",
-                    "feat",
-                    notes=(
-                        "Canonical unarmed-offense progression raises Dexterity 19 to 20 and Constitution 15 to 16; "
-                        "shared derived-stat logic updates AC, Initiative, attacks, Dexterity save/skills, and hit points."
-                    ),
-                )
-            )
+        audits.extend(build_monk_2024_high_level_feature_audits(level))
         audits.extend([
             _feature(
                 "alert",
