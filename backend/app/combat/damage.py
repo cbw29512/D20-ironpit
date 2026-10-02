@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.attack_damage_type_choice import choose_attack_damage_type
 from app.combat.barbarian import rage_damage_bonus
 from app.combat.brutal_critical import brutal_critical_bonus_damage
 from app.combat.brutal_strike import brutal_strike_bonus_damage
@@ -76,6 +77,12 @@ def resolve_weapon_damage(
     """Resolve weapon dice or fixed damage plus certified hit-specific riders."""
     try:
         weapon = attack.weapon
+        qualifiers = sorted(attack_damage_source_qualifiers(attacker, attack), key=lambda item: item.value)
+        selected_damage_type = choose_attack_damage_type(
+            attack,
+            target,
+            source_qualifiers=set(qualifiers),
+        )
         replacement = active_replacement_damage(attacker, target, attack, attack_mode)
         if replacement is not None:
             components = [roll_damage_component(
@@ -83,12 +90,12 @@ def resolve_weapon_damage(
                 replacement.damage_bonus, replacement.damage_type, critical,
             )]
         elif attack.fixed_damage is not None:
-            components = [fixed_damage_component(weapon.name, attack.fixed_damage, weapon.damage_type)]
+            components = [fixed_damage_component(weapon.name, attack.fixed_damage, selected_damage_type)]
         else:
             weapon_modifier = attack.damage_bonus + rage_damage_bonus(attacker, attack)
             components = [roll_weapon_component(
                 attacker, dice, source=weapon.name, dice_count=weapon.dice_count,
-                dice_size=weapon.dice_size, modifier=weapon_modifier, damage_type=weapon.damage_type,
+                dice_size=weapon.dice_size, modifier=weapon_modifier, damage_type=selected_damage_type,
                 critical=critical, turn_key=turn_key, damage_die_minimum=attack.damage_die_minimum,
             )]
 
@@ -142,7 +149,6 @@ def resolve_weapon_damage(
                 critical,
             ))
         _append_bonus_component(components, dice, bonus_damage, critical=critical)
-        qualifiers = sorted(attack_damage_source_qualifiers(attacker, attack), key=lambda item: item.value)
         components = [
             component.model_copy(update={"source_qualifiers": qualifiers})
             for component in components
