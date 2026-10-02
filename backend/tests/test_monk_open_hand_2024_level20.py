@@ -38,7 +38,8 @@ def test_2024_open_hand_monk_level20_body_and_mind_progression() -> None:
 
     redirect = template.attack_damage_reduction_reaction
     assert redirect is not None
-    assert redirect.redirect_save_dc == 18
+    assert redirect.zero_damage_redirect is not None
+    assert redirect.zero_damage_redirect.save_dc == 18
 
     wholeness = next(item for item in template.healing_actions if item.id == "wholeness-of-body")
     assert (wholeness.dice_size, wholeness.healing_bonus) == (12, 4)
