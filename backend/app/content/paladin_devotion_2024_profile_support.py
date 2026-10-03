@@ -58,12 +58,18 @@ def paladin_2024_source_references(level: int) -> list[str]:
                 "Basic Rules 2024: Paladin level 8 — Ability Score Improvement; "
                 "Feats — Ability Score Improvement (+1 Strength, +1 Charisma)"
             )
+        if level >= 9:
+            references.extend([
+                "Basic Rules 2024: Paladin level 9 — Abjure Foes",
+                "Basic Rules 2024: Oath of Devotion level 9 — Beacon of Hope and Dispel Magic",
+            ])
         references.extend([
             "Basic Rules 2024: Character Origins — Human and Soldier",
             (
                 "Basic Rules 2024: Spells — Cure Wounds, Divine Favor, Bless, Divine Smite, "
                 "Searing Smite, Thunderous Smite, Shining Smite, Find Steed, Aid, Zone of Truth, "
-                "Protection from Evil and Good, Shield of Faith, Lesser Restoration"
+                "Protection from Evil and Good, Shield of Faith, Lesser Restoration, "
+                "Aura of Vitality, Blinding Smite, Beacon of Hope, Dispel Magic"
             ),
             (
                 "Basic Rules 2024: Equipment — Chain Mail, Shield, Longsword, Javelin, "
