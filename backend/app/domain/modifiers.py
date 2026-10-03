@@ -13,9 +13,11 @@ from app.domain.damage_sources import DamageSourceQualifier
 class ModifierKind(StrEnum):
     ARMOR_CLASS = "armor-class"
     ARMOR_CLASS_MINIMUM = "armor-class-minimum"
+    COVER_ARMOR_CLASS = "cover-armor-class"
     ATTACK_ROLL_FLAT = "attack-roll-flat"
     ATTACK_ROLL_BONUS_DIE = "attack-roll-bonus-die"
     SAVING_THROW_FLAT = "saving-throw-flat"
+    COVER_SAVING_THROW_FLAT = "cover-saving-throw-flat"
     SAVING_THROW_BONUS_DIE = "saving-throw-bonus-die"
     SAVING_THROW_ADVANTAGE = "saving-throw-advantage"
     D20_TEST_ADVANTAGE = "d20-test-advantage"
@@ -119,7 +121,7 @@ class CombatModifier(BaseModel):
             raise ValueError("Weapon damage-type choice modifiers require a weapon id.")
         if self.kind is not ModifierKind.DAMAGE_SOURCE_QUALIFIER and self.source_qualifier is not None:
             raise ValueError(f"{self.kind.value} does not accept a source qualifier.")
-        if self.kind is ModifierKind.SAVING_THROW_FLAT and self.flat_bonus == 0:
+        if self.kind in {ModifierKind.SAVING_THROW_FLAT, ModifierKind.COVER_SAVING_THROW_FLAT} and self.flat_bonus == 0:
             raise ValueError("Flat saving-throw modifiers require a nonzero bonus.")
         if self.kind is ModifierKind.CONDITION_IMMUNITY and self.condition_id is None:
             raise ValueError("Condition-immunity modifiers require a condition id.")
@@ -159,6 +161,7 @@ class CombatModifier(BaseModel):
         if self.kind not in {
             ModifierKind.SAVING_THROW_ADVANTAGE,
             ModifierKind.SAVING_THROW_FLAT,
+            ModifierKind.COVER_SAVING_THROW_FLAT,
             ModifierKind.TARGETING_SAVE_GATE,
         } and self.save_ability:
             raise ValueError(f"{self.kind.value} does not accept a save ability.")
