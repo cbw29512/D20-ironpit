@@ -160,7 +160,6 @@
   const d20TestAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "d20-test-advantage").length;
   const nextAttackAgainstAdvantage = (state, targetId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "next-attack-against-advantage" && item.target_id === targetId).length;
-
   function consumeAttacksAgainstAdvantage(state) {
     const before = state.active_modifiers.length;
     state.active_modifiers = state.active_modifiers.filter((item) => !(item.kind === "attacks-against-advantage" && item.consume_on_attack_against));
