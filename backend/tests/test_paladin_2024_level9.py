@@ -86,6 +86,7 @@ def test_2024_paladin_level_nine_progression_is_raw_ready() -> None:
 
     beacon = next(action for action in hero.defensive_spell_actions if action.id == "beacon-of-hope")
     assert (beacon.level, beacon.range_ft, beacon.concentration) == (3, 30, True)
+    assert beacon.target_all_legal is True
     dispel = next(action for action in hero.effect_removal_actions if action.id == "dispel-magic")
     assert (dispel.level, dispel.range_ft, dispel.casting_ability) == (3, 120, "charisma")
 
