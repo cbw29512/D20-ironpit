@@ -43,18 +43,15 @@
     if (item.kind === "speed-multiplier") {
       if ((item.flat_bonus || 0) !== 0 || !(item.multiplier > 0) || item.multiplier === 1) throw new Error("Speed multiplier requires a non-1 multiplier and no flat bonus.");
     } else if (item.multiplier != null && item.multiplier !== 1) throw new Error(`${item.kind} does not accept a multiplier.`);
-    if (item.non_stacking_group != null) {
-      if (!new Set(["armor-class", "saving-throw-flat"]).has(item.kind)) throw new Error("Non-stacking groups support AC and saving-throw flat benefits only.");
-      if (!((item.flat_bonus || 0) > 0) || !String(item.non_stacking_group).trim()) throw new Error("Non-stacking grouped benefits require a positive bonus and group.");
-      item.non_stacking_group = String(item.non_stacking_group).trim().toLowerCase();
-    }
+    if (item.non_stacking_group != null && !new Set(["armor-class", "saving-throw-flat"]).has(item.kind)) throw new Error("Non-stacking groups support AC and saving-throw flat benefits only.");
+    if (item.non_stacking_group != null && (!((item.flat_bonus || 0) > 0) || !String(item.non_stacking_group).trim())) throw new Error("Non-stacking grouped benefits require a positive bonus and group.");
+    if (item.non_stacking_group != null) item.non_stacking_group = String(item.non_stacking_group).trim().toLowerCase();
     if (item.kind === "next-attack-against-advantage" && !item.target_id) throw new Error("Target-scoped attack Advantage requires a target id.");
     if (item.consume_on_attack_against && item.kind !== "attacks-against-advantage") throw new Error("Only defender-wide attack Advantage can use consume_on_attack_against.");
     if (item.consume_on_saving_throw && item.kind !== "saving-throw-disadvantage") throw new Error("Only saving-throw Disadvantage can use consume_on_saving_throw.");
     if (item.expires_source_turn_end_round != null && item.expires_source_turn_end_round < 1) throw new Error("Modifier expiry round must be positive.");
     return item;
   }
-
   function add(state, modifier) {
     validate(modifier);
     const existing = (state.active_modifiers || []).find((item) => item.id === modifier.id);
@@ -64,7 +61,6 @@
     }
     state.active_modifiers.push({ ...modifier });
   }
-
   function removeSource(states, sourceId, effectId, concentrationOnly = false) {
     let removed = 0;
     for (const state of states || []) {
@@ -75,7 +71,6 @@
     }
     return removed;
   }
-
   function expireSourceTurnStart(states, sourceId) {
     let removed = 0;
     for (const state of states || []) {
@@ -85,7 +80,6 @@
     }
     return removed;
   }
-
   function expireSourceTurn(states, sourceId, round) {
     let removed = 0;
     for (const state of states || []) {
@@ -96,13 +90,11 @@
     }
     return removed;
   }
-
   function expireTargetTurn(state) {
     const before = state.active_modifiers.length;
     state.active_modifiers = state.active_modifiers.filter((item) => !item.expires_at_end_of_target_turn);
     return before - state.active_modifiers.length;
   }
-
   function applyHitEffects(state, sourceId, attack) {
     for (const [index, effect] of (attack.onHitModifiers || []).entries()) {
       if (!HIT_KINDS.has(effect.kind)) throw new Error(`Unsupported on-hit modifier kind: ${effect.kind}.`);
@@ -117,12 +109,10 @@
   }
 
   function nonStackingFlat(items) {
-    let ungrouped = 0;
-    const grouped = new Map();
-    for (const item of items) {
-      if (!item.non_stacking_group) { ungrouped += item.flat_bonus || 0; continue; }
-      grouped.set(item.non_stacking_group, Math.max(grouped.get(item.non_stacking_group) || 0, item.flat_bonus || 0));
-    }
+    let ungrouped = 0; const grouped = new Map();
+    for (const item of items) item.non_stacking_group
+      ? grouped.set(item.non_stacking_group, Math.max(grouped.get(item.non_stacking_group) || 0, item.flat_bonus || 0))
+      : ungrouped += item.flat_bonus || 0;
     return ungrouped + [...grouped.values()].reduce((sum, value) => sum + value, 0);
   }
   const flat = (state, kind) => nonStackingFlat((state.active_modifiers || []).filter((item) => item.kind === kind));
