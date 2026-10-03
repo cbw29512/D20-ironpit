@@ -166,7 +166,7 @@ function setup(sourceTemplate, targetPosition = 5) {
     friendly_saving_throw_aura: protectionAura(4, 30),
     aura_of_devotion_2014: true,
     aura_of_courage_2014: true,
-    friendly_condition_immunity_auras: conditionAuras(),
+    friendly_condition_immunity_auras: conditionAuras(30),
   }), 25);
   A.sync(battle);
   assert.equal(M.savingThrowFlat(ally.state), 4);
