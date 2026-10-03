@@ -42,7 +42,7 @@ def _level_seven() -> list[FeatureAudit]:
                    "Aura of Protection's 10-foot Emanation, inactive while the source is Incapacitated."),
         ),
         paladin_2024_feature(
-            "lesser-restoration", "Lesser Restoration", "spell", combat=True, automated=True,
+            "lesser-restoration", "Lesser Restoration", "class", combat=True, automated=True,
             notes=("Seventh ordinary preparation reuses the certified 2024 universal "
                    "condition-removal action."),
         ),
