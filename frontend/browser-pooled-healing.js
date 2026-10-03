@@ -20,6 +20,18 @@
     }
   }
 
+  function bindAction(healer, target, action) {
+    try {
+      if (!action.healingFromResourcePool) return action;
+      const amount = Math.min(healer.state.resources[action.resourceId] || 0, capacity(target, 1, 1));
+      if (amount <= 0) throw new Error("Pool healing requires available points and missing HP.");
+      return { ...action, healingBonus: amount, resourceCost: amount };
+    } catch (error) {
+      console.error("Failed to bind healing pool", { action: action.id, healer: healer.combatant_id, target: target.combatant_id, error });
+      throw error;
+    }
+  }
+
   function resolve(targets, pool, numerator, denominator) {
     try {
       if (!Number.isInteger(pool) || pool <= 0) {
@@ -51,5 +63,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_POOLED_HEALING = { capacity, resolve };
+  window.IRON_PIT_BROWSER_POOLED_HEALING = { bindAction, capacity, resolve };
 })();

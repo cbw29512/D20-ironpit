@@ -30,10 +30,10 @@ from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
 
 def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
-    """Build certified 2024 Aurelia through Paladin level 13."""
+    """Build certified 2024 Aurelia through Paladin level 14."""
     try:
-        if level not in range(1, 14):
-            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-13 only.")
+        if level not in range(1, 15):
+            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-14 only.")
         profile = build_aurelia_brightshield_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -58,15 +58,17 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                     id="lay-on-hands-heal", name="Lay On Hands", action_cost="bonus_action",
                     range_ft=5, target_mode="self_or_ally", dice_count=0,
                     healing_bonus=5 * level, resource_id="lay-on-hands",
-                    resource_cost=5 * level, animation="healing",
+                    resource_cost=5 * level, healing_from_resource_pool=True, animation="healing",
                 ),
                 build_cure_wounds(charisma),
             ],
             condition_removal_actions=[
                 ConditionRemovalAction(
-                    id="lay-on-hands-poison", name="Lay On Hands", action_cost="bonus_action",
-                    range_ft=5, target_mode="self_or_ally", removable_conditions=["poisoned"],
-                    max_conditions_per_use=1, resource_costs_per_condition={"lay-on-hands": 5},
+                    id="lay-on-hands-poison", name="Lay On Hands (Restoring Touch)" if level >= 14 else "Lay On Hands",
+                    action_cost="bonus_action", range_ft=5, target_mode="self_or_ally",
+                    removable_conditions=["poisoned", *(["blinded", "charmed", "deafened",
+                        "frightened", "paralyzed", "stunned"] if level >= 14 else [])],
+                    max_conditions_per_use=7 if level >= 14 else 1, resource_costs_per_condition={"lay-on-hands": 5},
                 ),
                 *([LESSER_RESTORATION.model_copy(deep=True)] if level >= 7 else []),
             ],
@@ -123,6 +125,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                 + ("Freedom of Movement, Guardian of Faith (arena-unavailable summon), "
                    "Staggering Smite (fail-closed pending shared atomic post-hit save/condition choice), "
                    if level >= 13 else "")
+                + ("Restoring Touch, " if level >= 14 else "")
                 + "Longsword, Javelin"
             ),
         )

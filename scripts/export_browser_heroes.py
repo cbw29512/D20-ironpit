@@ -11,9 +11,9 @@ from app.content.class_spell_progression import CASTING_ABILITIES
 from app.domain.models import CombatantTemplate, WeaponAttack
 
 try:
-    from scripts.browser_template_serializer import persistent_barrier_row, persistent_beneficial_zone_row
+    from scripts.browser_template_serializer import _healing, _removal, persistent_barrier_row, persistent_beneficial_zone_row
 except ModuleNotFoundError:
-    from browser_template_serializer import persistent_barrier_row, persistent_beneficial_zone_row
+    from browser_template_serializer import _healing, _removal, persistent_barrier_row, persistent_beneficial_zone_row
 
 logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parents[1]
@@ -274,23 +274,6 @@ def _defense(action: Any) -> dict[str, Any]:
     return row
 
 
-def _healing(action: Any) -> dict[str, Any]:
-    try:
-        return {"id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
-                "targetMode": action.target_mode, "maxTargets": action.max_targets, "areaRadiusFt": action.area_radius_ft,
-                "diceCount": action.dice_count, "diceSize": action.dice_size,
-                "healingBonus": action.healing_bonus, "restoreToEffectiveMax": action.restore_to_effective_max,
-                "percentileSuccessMax": action.percentile_success_max, "resourceId": action.resource_id,
-                "resourceCost": action.resource_cost, "excludedCreatureTypes": list(action.excluded_creature_types),
-                "removableConditions": list(action.removable_conditions),
-                "proneReactionStand": action.prone_reaction_stand,
-                "secondaryTargetWithinFt": action.secondary_target_within_ft,
-                "animation": action.animation}
-    except Exception:
-        logger.exception("Failed to serialize healing action %s.", action.id)
-        raise
-
-
 def _targeted_concentration_damage(action: Any) -> dict[str, Any]:
     return {
         "id": action.id, "name": action.name, "level": action.level,
@@ -397,16 +380,6 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["concentration"] = True
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
-    return row
-
-
-def _removal(action: Any) -> dict[str, Any]:
-    row = {"id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
-           "targetMode": action.target_mode, "removableConditions": list(action.removable_conditions),
-           "maxConditionsPerUse": action.max_conditions_per_use, "resourceCosts": dict(action.resource_costs),
-           "resourceCostsPerCondition": dict(action.resource_costs_per_condition),
-           "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation}
-    if action.reaction_trigger: row["reactionTrigger"] = action.reaction_trigger
     return row
 
 

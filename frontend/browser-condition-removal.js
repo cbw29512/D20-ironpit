@@ -9,15 +9,22 @@
     deafened: 3, grappled: 3, prone: 4, exhaustion: 4,
   };
 
-  const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
+  const distance = (a, b) => window.IRON_PIT_BROWSER_STATE.distance(a, b);
   const allies = (member, setup) => member.side === "heroes" ? setup.heroes : setup.monsters;
 
   function targetAllowed(remover, target, action) {
-    if (!target.state.is_alive || target.state.is_dead || target.side !== remover.side) return false;
-    if (distance(remover, target) > action.range) return false;
-    if (action.targetMode === "self") return target.combatant_id === remover.combatant_id;
-    if (action.targetMode === "ally") return target.combatant_id !== remover.combatant_id;
-    return true;
+    try {
+      if (!target.state.is_alive || target.state.is_dead || target.side !== remover.side) return false;
+      const type = String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase();
+      if ((action.excludedCreatureTypes || []).some(kind => kind.toLowerCase() === type)) return false;
+      if (distance(remover, target) > action.range) return false;
+      if (action.targetMode === "self") return target.combatant_id === remover.combatant_id;
+      if (action.targetMode === "ally") return target.combatant_id !== remover.combatant_id;
+      return true;
+    } catch (error) {
+      console.error("Failed removal target legality", { remover: remover.combatant_id, target: target.combatant_id, action: action.id, error });
+      throw error;
+    }
   }
 
   function costs(action, count) {
@@ -40,7 +47,7 @@
 
   function removable(target, action) {
     const allowed = new Set(action.removableConditions || []);
-    return target.state.active_effect_ids
+    return [...new Set(target.state.active_effect_ids)]
       .filter((id) => allowed.has(id) && effectAllows(target, id, action.id))
       .sort((a, b) => (PRIORITY[a] ?? 9) - (PRIORITY[b] ?? 9) || a.localeCompare(b));
   }
@@ -78,33 +85,58 @@
   }
 
   function removeCondition(target, id) {
-    target.state.active_effect_ids = target.state.active_effect_ids.filter((item) => item !== id);
-    target.state.timed_effects = target.state.timed_effects.filter((item) => item.effect_id !== id);
-    if (id === "grappled") target.state.grapple_sources = [];
+    try {
+      const T = window.IRON_PIT_BROWSER_TIMED;
+      for (const effect of [...target.state.timed_effects]) {
+        if (effect.effect_id !== id) continue;
+        const siblings = target.state.timed_effects.some((item) => item.source_id === effect.source_id
+          && item.source_effect_id === effect.source_effect_id && item.effect_id !== id);
+        if (effect.source_effect_id && !siblings) T.removeGroup(target.state, effect);
+        else T.removeEffect(target.state, effect);
+      }
+      target.state.active_effect_ids = target.state.active_effect_ids.filter((item) => item !== id);
+      if (id === "grappled") target.state.grapple_sources = [];
+    } catch (error) {
+      console.error("Failed to end condition", { target: target.combatant_id, id, error });
+      throw error;
+    }
   }
 
   function resolve(sequence, round, remover, target, action, conditionIds, turnKey) {
-    if (action.actionCost === "reaction") throw new Error("Reaction cleansing requires a matching trigger.");
-    if (!targetAllowed(remover, target, action) || !conditionIds?.length) throw new Error("Illegal condition-removal target.");
-    if (!slotAvailable(remover, action, turnKey)) throw new Error("A spell slot was already expended to cast a spell this turn.");
-    const legal = new Set(affordable(remover, target, action));
-    if (conditionIds.some((id) => !legal.has(id))) throw new Error("Condition-removal action cannot remove this effect.");
-    E().spend(remover.state, action.actionCost);
-    if (action.expendsSpellSlot) P().markSlotSpellCast(remover.state, turnKey);
-    Object.entries(costs(action, conditionIds.length)).forEach(([id, cost]) => {
-      if ((remover.state.resources[id] || 0) < cost) throw new Error(`Required resource ${id} is unavailable.`);
-      remover.state.resources[id] -= cost;
-    });
-    conditionIds.forEach((id) => removeCondition(target, id));
-    const names = conditionIds.map((id) => id.replaceAll("_", " ").toUpperCase()).join(", ");
-    return {
-      sequence, round_number: round, event_type: "feature",
-      actor_id: remover.combatant_id, actor_name: remover.state.template.name,
-      target_id: target.combatant_id, target_name: target.state.template.name,
-      removed_condition_ids: [...conditionIds], feature_id: action.id,
-      animation: action.animation || "condition-removal",
-      description: `${remover.state.template.name} uses ${action.name} on ${target.state.template.name}; ${names} ends.`,
-    };
+    try {
+      if (action.actionCost === "reaction") throw new Error("Reaction cleansing requires a matching trigger.");
+      if (!targetAllowed(remover, target, action) || !conditionIds?.length) throw new Error("Illegal condition-removal target.");
+      if (!slotAvailable(remover, action, turnKey)) throw new Error("A spell slot was already expended to cast a spell this turn.");
+      if (new Set(conditionIds).size !== conditionIds.length || conditionIds.length > (action.maxConditionsPerUse || 1)) {
+        throw new Error("Condition-removal request exceeds its distinct-condition limit.");
+      }
+      const legal = new Set(removable(target, action));
+      if (conditionIds.some((id) => !legal.has(id))) throw new Error("Condition-removal action cannot remove this effect.");
+      if (!E().available(remover.state, action.actionCost) || !resourcesAvailable(remover, action, conditionIds.length)) {
+        throw new Error("Condition-removal economy or resources are unavailable.");
+      }
+      E().spend(remover.state, action.actionCost);
+      if (action.expendsSpellSlot) P().markSlotSpellCast(remover.state, turnKey);
+      const payments = Object.entries(costs(action, conditionIds.length));
+      payments.forEach(([id, cost]) => {
+        if ((remover.state.resources[id] || 0) < cost) throw new Error(`Required resource ${id} is unavailable.`);
+        remover.state.resources[id] -= cost;
+      });
+      conditionIds.forEach((id) => removeCondition(target, id));
+      const names = conditionIds.map((id) => id.replaceAll("_", " ").toUpperCase()).join(", ");
+      return {
+        sequence, round_number: round, event_type: "feature",
+        actor_id: remover.combatant_id, actor_name: remover.state.template.name,
+        target_id: target.combatant_id, target_name: target.state.template.name,
+        removed_condition_ids: [...conditionIds], feature_id: action.id,
+        resource_remaining: payments.length === 1 ? remover.state.resources[payments[0][0]] : null,
+        animation: action.animation || "condition-removal",
+        description: `${remover.state.template.name} uses ${action.name} on ${target.state.template.name}; ${names} ends.`,
+      };
+    } catch (error) {
+      console.error("Condition removal rejected or failed", { remover: remover.combatant_id, target: target.combatant_id, action: action.id, error });
+      throw error;
+    }
   }
 
   function chooseReaction(remover, setup, trigger, affectedTarget, turnKey) {

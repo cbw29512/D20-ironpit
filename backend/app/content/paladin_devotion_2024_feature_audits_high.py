@@ -56,6 +56,14 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
                            "and arena-unavailable under the no-summons contract."),
                 ),
             ])
+        if level >= 14:
+            audits.append(paladin_2024_feature(
+                "restoring-touch", "Restoring Touch", "class", combat=True, automated=True,
+                notes=("Reuses the universal multi-condition removal action as one Bonus Action "
+                       "Lay On Hands use. Each Blinded, Charmed, Deafened, Frightened, Paralyzed, "
+                       "or Stunned condition costs five pool points; Poisoned can be removed "
+                       "in the same use. Arena AI selects removal without optional HP healing."),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build later 2024 Paladin feature audits at level %s.", level)

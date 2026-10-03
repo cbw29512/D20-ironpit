@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.encounter_targeting import combatant_distance
 from app.combat.action_economy import spend
 from app.combat.friendly_area import best_friendly_area_placement
 from app.combat.healing_policy import healing_rider_worthwhile, resource_available, slot_heal, target_allowed
@@ -36,7 +37,7 @@ def choose_group_healing_targets(
         primary = worthwhile[0]
         linked = [
             target for target in worthwhile[1:]
-            if abs(target.position_ft - primary.position_ft) <= action.secondary_target_within_ft
+            if combatant_distance(target, primary) <= action.secondary_target_within_ft
         ]
         worthwhile = [primary, *linked]
     if action.area_radius_ft is not None:
@@ -72,7 +73,7 @@ def resolve_group_healing(
     if action.secondary_target_within_ft is not None and len(targets) > 1:
         primary = targets[0]
         if any(
-            abs(target.position_ft - primary.position_ft) > action.secondary_target_within_ft
+            combatant_distance(target, primary) > action.secondary_target_within_ft
             for target in targets[1:]
         ):
             raise ValueError("Group healing secondary targets violate linked-target distance.")

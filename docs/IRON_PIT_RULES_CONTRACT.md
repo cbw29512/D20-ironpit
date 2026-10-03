@@ -635,3 +635,9 @@ Before calling a tranche certified:
 9. Netlify is used only for deliberate production hosting checkpoints, not routine development.
 
 Machine-readable counts live in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`. Never hand-edit counts to match a desired status claim.
+
+### 2024 Restoring Touch and Lay On Hands pool allocation
+
+At Paladin 14, Restoring Touch can remove Blinded, Charmed, Deafened, Frightened, Paralyzed, and Stunned when Lay On Hands is used. Each removed condition costs five healing-pool points, and those points do not restore HP. Ordinary Poisoned removal can share that activation. Arena AI selects the legal removal-only option and declines optional simultaneous HP restoration.
+
+Lay On Hands healing in both editions uses the remaining finite pool, spending only the chosen useful HP allocation up to the target's missing effective HP. Condition removal never makes remaining pool points unusable. Action cost remains Action in 2014 and Bonus Action in 2024. Live battlefield footprint distance governs touch range in both editions. The 2014 feature has no effect on Undead or Constructs; the 2024 feature has no such exclusion. These source restrictions are declarative target parameters for both healing and condition removal.

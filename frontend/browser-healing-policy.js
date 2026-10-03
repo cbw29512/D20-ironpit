@@ -6,7 +6,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const A = () => window.IRON_PIT_BROWSER_SPELL_AREA;
   const bloodied = (state) => state.current_hp * 2 <= S().effectiveMaxHp(state);
-  const distance = (a, b) => Math.abs(a.position_ft - b.position_ft);
+  const distance = (a, b) => S().distance(a, b);
   const swarm = (state) => state.template.traits?.includes("swarm");
   const slotHeal = (action) => Boolean(action.resourceId?.startsWith("spell-slot-"));
 
@@ -18,7 +18,7 @@
   function resourceAvailable(member, action, turnKey = null) {
     if (!action.resourceId) return true;
     if (slotHeal(action) && (!turnKey || !C().slotSpellAvailable(member.state, turnKey))) return false;
-    return (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1);
+    return (member.state.resources[action.resourceId] || 0) >= (action.healingFromResourcePool ? 1 : (action.resourceCost || 1));
   }
 
   function riderWorthwhile(target, action) {

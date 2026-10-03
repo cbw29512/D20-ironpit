@@ -24,6 +24,7 @@ window.IRON_PIT_BROWSER_SPELLCASTING = {
 };
 window.IRON_PIT_BROWSER_STATE = {
   effectiveMaxHp: (state) => state.template.max_hp,
+  distance: (a, b) => Math.abs(a.position_ft - b.position_ft),
 };
 window.IRON_PIT_BROWSER_SPELL_AREA = { bestFriendlyPlacement: () => null };
 window.IRON_PIT_DICE = {
@@ -32,6 +33,8 @@ window.IRON_PIT_DICE = {
 };
 
 for (const file of [
+  "browser-state.js",
+  "browser-timed-conditions.js",
   "browser-condition-removal.js",
   "browser-healing-policy.js",
   "browser-healing-resolution.js",
