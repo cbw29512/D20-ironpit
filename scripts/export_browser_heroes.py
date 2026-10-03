@@ -564,6 +564,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             progression.friendly_saving_throw_aura.model_dump(mode="json")
             if progression.friendly_saving_throw_aura else None
         ),
+        "friendly_defensive_auras": [
+            item.model_dump(mode="json")
+            for item in progression.friendly_defensive_auras
+        ],
         "friendly_condition_immunity_auras": [
             item.model_dump(mode="json")
             for item in progression.friendly_condition_immunity_auras
