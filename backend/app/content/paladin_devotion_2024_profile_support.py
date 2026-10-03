@@ -70,6 +70,11 @@ def paladin_2024_source_references(level: int) -> list[str]:
                 "Basic Rules 2024: Paladin level 11 — Radiant Strikes and third Channel Divinity use",
                 "Basic Rules 2024: Spells — Crusader\'s Mantle",
             ])
+        if level >= 12:
+            references.append(
+                "Basic Rules 2024: Paladin level 12 — Ability Score Improvement; "
+                "Feats — Ability Score Improvement (+2 Charisma)"
+            )
         references.extend([
             "Basic Rules 2024: Character Origins — Human and Soldier",
             (

@@ -351,6 +351,7 @@ jobs:
           for file in frontend/*.js; do node --check "$file"; done
       - name: Run browser combat regressions
         run: |
+          node frontend/browser-paladin-2024-level12.test.cjs
           node frontend/browser-ability-hooks.test.cjs
           node frontend/browser-recharge.test.cjs
           node frontend/browser-turn-start-hooks.test.cjs
