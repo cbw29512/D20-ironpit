@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-03 for the 2024 Devotion Paladin level 10 tranche. Main baseline: `79fa778eb5a9551f6f8fcd7426ad06e1defe82a6`.
+Recorded 2026-10-03 for the 2024 Devotion Paladin level 11 tranche. Main baseline: `0f4fc9a9170a2571866eae5b6233edbc21016891`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -34,9 +34,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
 | 2024 | Monk (Open Hand) | 1–20 |
-| 2024 | Paladin (Devotion) | 1–9 |
+| 2024 | Paladin (Devotion) | 1–10 |
 
-2024 public-ready hero slots on current main: **149 / 240**.
+2024 public-ready hero slots on current main: **150 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -46,9 +46,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 149 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 9 on main; this tranche advances level 10.
+**2024 canonical pregens are 150 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 10 on main; this tranche advances level 11.
 
-Active implementation lane: **2024 Devotion Paladin level 10.** Aura of Courage reuses the universal friendly condition-immunity aura already used by Aura of Devotion. Aurelia and same-side allies inside the live 10-foot Aura of Protection Emanation are immune to Frightened, and an already-active Frightened condition is suppressed only while the creature remains inside the aura. The aura is inactive while Aurelia is Incapacitated. No new combat primitive is required.
+Active implementation lane: **2024 Devotion Paladin level 11.** Radiant Strikes reuses generic on-hit damage: each qualifying Melee-weapon hit adds 1d8 Radiant damage with normal critical doubling. Channel Divinity advances to three uses, third-level slots to three, HP to 92, and Lay On Hands to 55. The tenth ordinary preparation is damage-first Crusader's Mantle, retained fail-closed until Iron Pit has an exact live Concentration-based friendly weapon-damage aura.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -78,7 +78,8 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 8 uses **Ability Score Improvement** for **+1 Strength / +1 Charisma** (Strength 19→20, Charisma 14→15). Shared derived-stat logic raises Longsword/Javelin attack to +8, damage to +5, Athletics to +8, and Charisma skills by 1; Aura of Protection remains +2 because Charisma 15 still has a +2 modifier. HP advances to **68** and Lay On Hands to **40**; prepared spells and slots remain unchanged.
 - Level 9 advances Proficiency Bonus to **+4**, HP to **76**, Lay On Hands to **45**, and spell slots to **4 first / 3 second / 2 third**. **Abjure Foes** targets up to Charisma modifier creatures (currently 2) within 60 feet that Aurelia can see; failed Wisdom saves become Frightened for up to 1 minute or until damaged and use the universal single-activity turn rule. **Beacon of Hope** and **Dispel Magic** are always prepared Oath spells with explicit 2024 fingerprints; Dispel Magic uses Charisma. Ordinary preparations advance to nine with **Aura of Vitality** and **Blinding Smite** under the damage/healing-first policy, both fail-closed pending exact shared lifecycle support.
 - Level 10 adds **Aura of Courage** through the existing universal friendly condition-immunity aura. Aurelia and allies inside the live 10-foot Aura of Protection Emanation are immune to **Frightened**; an already-active Frightened condition is suppressed while inside the aura and resumes outside it if its source duration has not ended. The aura shuts down while Aurelia is Incapacitated. HP advances to **84** and Lay On Hands to **50**; prepared spells and slots remain unchanged.
-- This tranche targets **150 / 240** 2024 public-ready hero slots.
+- Level 11 adds **Radiant Strikes** through generic on-hit damage: Aurelia's qualifying Melee-weapon hit adds **1d8 Radiant**, with normal critical doubling and no resource spend. Channel Divinity advances to **3**, third-level slots to **3**, HP to **92**, and Lay On Hands to **55**. The tenth ordinary preparation is **Crusader's Mantle** under the damage-first policy and remains fail-closed pending an exact live friendly weapon-damage aura.
+- This tranche targets **151 / 240** 2024 public-ready hero slots.
 
 ### 2024 Monk lane
 
