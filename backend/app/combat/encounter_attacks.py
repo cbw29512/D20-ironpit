@@ -9,6 +9,7 @@ from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.frenzy import mark_reckless_use_while_raging
 from app.combat.reckless_attack import activate_reckless_attack
+from app.combat.post_hit_self_buffs import apply_triggered_post_hit_self_buff
 from app.combat.redirect_attack import select_redirect_ally, swap_redirect_positions
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -80,6 +81,11 @@ def resolve_encounter_attack(
             event.feature_id = "reckless-attack"
     if redirect is not None and event.target_id == redirect.combatant_id:
         swap_redirect_positions(target, redirect)
+    post_hit_buff = apply_triggered_post_hit_self_buff(
+        sequence, round_number, attacker, setup, event,
+    )
+    if post_hit_buff is not None:
+        event.description += f" {post_hit_buff} activates."
     effect_target = redirect if redirect is not None and event.target_id == redirect.combatant_id else target
     brutal_effects = apply_brutal_strike_effects(
         attacker, effect_target, setup, turn_key,
