@@ -10,6 +10,7 @@ from app.domain.modifiers import CombatModifier, ModifierKind
 
 logger = logging.getLogger(__name__)
 _PREFIX = "friendly-save-aura:"
+_COVER_PREFIX = "friendly-cover-aura:"
 _CONDITION_PREFIX = "friendly-condition-aura:"
 _ABILITIES = ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma")
 
@@ -53,7 +54,8 @@ def _clear(setup: EncounterSetup) -> None:
     for member in _members(setup):
         member.state.active_modifiers = [
             item for item in member.state.active_modifiers
-            if not item.id.startswith(_PREFIX) and not item.id.startswith(_CONDITION_PREFIX)
+            if not item.id.startswith(_PREFIX) and not item.id.startswith(_COVER_PREFIX)
+            and not item.id.startswith(_CONDITION_PREFIX)
         ]
 
 
@@ -65,33 +67,52 @@ def sync_friendly_save_auras(setup: EncounterSetup) -> None:
         for source in all_members:
             actions = [
                 action for action in source.state.template.timed_self_buff_actions
-                if action.friendly_save_advantage_aura is not None and _active(source, action.id)
+                if (
+                    action.friendly_save_advantage_aura is not None
+                    or action.friendly_cover_aura is not None
+                )
+                and _active(source, action.id)
             ]
             if not actions:
                 continue
             allies = setup.heroes if source.side == "heroes" else setup.monsters
             for action in actions:
-                aura = action.friendly_save_advantage_aura
-                if aura is None:
-                    continue
+                save_aura = action.friendly_save_advantage_aura
+                cover_aura = action.friendly_cover_aura
                 for target in allies:
                     if target.state.is_dead or not target.state.is_alive:
                         continue
-                    if combatant_distance(source, target) > aura.radius_ft:
-                        continue
-                    if aura.requires_hearing and has_condition(target.state, "deafened"):
-                        continue
-                    for ability in _ABILITIES:
-                        for tag in aura.required_effect_tags:
-                            add_modifier(target.state, CombatModifier(
-                                id=f"{_PREFIX}{source.combatant_id}:{action.id}:{target.combatant_id}:{ability}:{tag}",
-                                source_id=source.combatant_id,
-                                source_effect_id=action.id,
-                                source_name=action.name,
-                                kind=ModifierKind.SAVING_THROW_ADVANTAGE,
-                                save_ability=ability,
-                                required_effect_tags=[tag],
-                            ))
+                    if save_aura is not None and combatant_distance(source, target) <= save_aura.radius_ft:
+                        if not (save_aura.requires_hearing and has_condition(target.state, "deafened")):
+                            for ability in _ABILITIES:
+                                for tag in save_aura.required_effect_tags:
+                                    add_modifier(target.state, CombatModifier(
+                                        id=f"{_PREFIX}{source.combatant_id}:{action.id}:{target.combatant_id}:{ability}:{tag}",
+                                        source_id=source.combatant_id,
+                                        source_effect_id=action.id,
+                                        source_name=action.name,
+                                        kind=ModifierKind.SAVING_THROW_ADVANTAGE,
+                                        save_ability=ability,
+                                        required_effect_tags=[tag],
+                                    ))
+                    if cover_aura is not None and combatant_distance(source, target) <= cover_aura.radius_ft:
+                        add_modifier(target.state, CombatModifier(
+                            id=f"{_COVER_PREFIX}{source.combatant_id}:{action.id}:{target.combatant_id}:ac",
+                            source_id=source.combatant_id,
+                            source_effect_id=action.id,
+                            source_name=action.name,
+                            kind=ModifierKind.COVER_ARMOR_CLASS,
+                            flat_bonus=cover_aura.cover_bonus,
+                        ))
+                        add_modifier(target.state, CombatModifier(
+                            id=f"{_COVER_PREFIX}{source.combatant_id}:{action.id}:{target.combatant_id}:dex",
+                            source_id=source.combatant_id,
+                            source_effect_id=action.id,
+                            source_name=action.name,
+                            kind=ModifierKind.COVER_SAVING_THROW_FLAT,
+                            flat_bonus=cover_aura.cover_bonus,
+                            save_ability="dexterity",
+                        ))
 
         for target in all_members:
             allies = setup.heroes if target.side == "heroes" else setup.monsters
