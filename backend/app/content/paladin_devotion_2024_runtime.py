@@ -4,7 +4,7 @@ import logging
 
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
-from app.content.cleric_life_domain import AID
+from app.content.cleric_life_domain import AID, LESSER_RESTORATION
 from app.content.healing_spell_effects import build_cure_wounds
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.paladin_devotion_2024_profile import build_aurelia_brightshield_2024_profile
@@ -28,10 +28,10 @@ from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
 
 def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
-    """Build certified 2024 Aurelia through Paladin level 6."""
+    """Build certified 2024 Aurelia through Paladin level 7."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6}:
-            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-6 only.")
+        if level not in {1, 2, 3, 4, 5, 6, 7}:
+            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-7 only.")
         profile = build_aurelia_brightshield_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -59,11 +59,14 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                 ),
                 build_cure_wounds(charisma),
             ],
-            condition_removal_actions=[ConditionRemovalAction(
-                id="lay-on-hands-poison", name="Lay On Hands", action_cost="bonus_action",
-                range_ft=5, target_mode="self_or_ally", removable_conditions=["poisoned"],
-                max_conditions_per_use=1, resource_costs_per_condition={"lay-on-hands": 5},
-            )],
+            condition_removal_actions=[
+                ConditionRemovalAction(
+                    id="lay-on-hands-poison", name="Lay On Hands", action_cost="bonus_action",
+                    range_ft=5, target_mode="self_or_ally", removable_conditions=["poisoned"],
+                    max_conditions_per_use=1, resource_costs_per_condition={"lay-on-hands": 5},
+                ),
+                *([LESSER_RESTORATION.model_copy(deep=True)] if level >= 7 else []),
+            ],
             defensive_spell_actions=[
                 divine_favor_2024(),
                 *([BLESS.model_copy(deep=True)] if level >= 2 else []),
@@ -107,6 +110,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                     "Aid, Zone of Truth, Find Steed (arena-unavailable summon), "
                     if level >= 5 else ""
                 )
+                + ("Lesser Restoration, Aura of Devotion, " if level >= 7 else "")
                 + "Longsword, Javelin"
             ),
         )
