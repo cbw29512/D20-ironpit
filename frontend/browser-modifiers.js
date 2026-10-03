@@ -171,7 +171,6 @@
     state.active_modifiers = state.active_modifiers.filter((item) => !(item.kind === "next-attack-against-advantage" && item.target_id === targetId));
     return before - state.active_modifiers.length;
   }
-
   function applyD20Bonus(state, kind, roll) {
     if (!new Set(["attack-roll-bonus-die", "saving-throw-bonus-die"]).has(kind)) throw new Error(`${kind} is not a D20 bonus modifier.`);
     const modifiers = (state.active_modifiers || []).filter((item) => item.kind === kind);
@@ -188,7 +187,6 @@
       rolls: [...roll.rolls, ...bonusRolls], bonus_dice: bonusDice, modifier: (roll.modifier || 0) + exhaustion,
       total: roll.total + exhaustion + bonusRolls.reduce((a, b) => a + b, 0) };
   }
-
   const bonusDamage = (state, targetId) => (state.active_modifiers || []).filter((item) => item.kind === "bonus-damage"
     && (!item.target_id || item.target_id === targetId));
 
