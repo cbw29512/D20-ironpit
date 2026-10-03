@@ -7,9 +7,41 @@ from app.combat.resources import resource_available, spend_resource
 from app.combat.spellcasting import legal_slot_levels, mark_slot_spell_cast
 from app.content.monster_creature_types import base_creature_type
 from app.domain.models import CombatantState, DamageType, WeaponAttack
+from app.domain.runtime import TimedEffect
 from app.domain.post_hit_damage import ResourceBackedPostHitDamage
 
 logger = logging.getLogger(__name__)
+
+
+def _activate_on_use_self_effect(state: CombatantState, rule: ResourceBackedPostHitDamage, turn_key: str) -> None:
+    if rule.on_use_self_effect_id is None:
+        return
+    try:
+        round_text, source_id = turn_key.split(":", 1)
+        round_number = int(round_text)
+        if not source_id:
+            raise ValueError("Timed self-effect activation requires a source id in the turn key.")
+        state.timed_effects = [
+            effect for effect in state.timed_effects
+            if not (
+                effect.source_id == source_id
+                and effect.source_effect_id == rule.on_use_self_effect_id
+            )
+        ]
+        state.timed_effects.append(TimedEffect(
+            effect_id=rule.on_use_self_effect_id,
+            source_id=source_id,
+            source_effect_id=rule.on_use_self_effect_id,
+            applied_round=round_number,
+            expiry_timing="source_turn_start",
+        ))
+    except (TypeError, ValueError):
+        raise
+    except Exception as exc:
+        logger.exception("Failed to activate post-hit timed self effect %s.", rule.on_use_self_effect_id)
+        raise RuntimeError("Post-hit timed self effect could not be activated.") from exc
+
+
 BonusDamageSpec = tuple[str, int, int, int, DamageType]
 
 
@@ -62,6 +94,7 @@ def post_hit_resource_bonus_damage(
         if expends_slot:
             mark_slot_spell_cast(attacker, turn_key)
         spend_resource(attacker, resource_id, 1)
+        _activate_on_use_self_effect(attacker, rule, turn_key)
 
         count = rule.base_dice_count + rule.dice_per_slot_above * (
             slot_level - rule.printed_spell_level
