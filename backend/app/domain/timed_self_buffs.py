@@ -35,6 +35,13 @@ class TimedHostileConditionAura(BaseModel):
     source_is_magical: bool = True
 
 
+class TimedFriendlyCoverAura(BaseModel):
+    """Live friendly aura that grants one non-stacking cover benefit."""
+
+    radius_ft: int = Field(ge=1, le=120)
+    cover_bonus: Literal[2, 5]
+
+
 class TimedFriendlySaveAura(BaseModel):
     """Live friendly aura that grants save Advantage for matching effect tags."""
 
@@ -67,6 +74,7 @@ class TimedSelfBuffAction(BaseModel):
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
     movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
     friendly_save_advantage_aura: TimedFriendlySaveAura | None = None
+    friendly_cover_aura: TimedFriendlyCoverAura | None = None
     hostile_start_turn_condition_aura: TimedHostileConditionAura | None = None
     start_turn_emanation_damage: TimedEmanationDamage | None = None
     concentration: bool = False
@@ -110,6 +118,7 @@ class TimedSelfBuffAction(BaseModel):
                 or self.saving_throw_advantage_grants
                 or self.movement_mode_grants
                 or self.friendly_save_advantage_aura is not None
+                or self.friendly_cover_aura is not None
                 or self.hostile_start_turn_condition_aura is not None
                 or self.start_turn_emanation_damage is not None
             ):
