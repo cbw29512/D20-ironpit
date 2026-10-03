@@ -241,3 +241,6 @@ Thalen Greenbough remains the persistent canonical Druid and preserves the Land-
 - Level 19 advances to 98 HP, two level-6 slots, and 21 prepared spells. Thalen legally selects **Boon of Fate** rather than the recommended Boon of Dimensional Travel, raising Intelligence 13→14 and reusing the universal 2d4 D20 outcome-adjustment plus Initiative refill. **Regenerate** is the healing-priority prepared choice; its 1-minute casting time means Arena AI does not select it in a standard match.
 - Level 20 advances to 103 HP, two level-7 slots, and 22 prepared spells. **Archdruid** reuses initiative resource refill for Evergreen Wild Shape and universal resource conversion for Nature Magician's 1–4 Wild Shape → level 2/4/6/8 spell-slot exchanges; Longevity is arena-neutral. **Ice Storm** is the damage-priority prepared choice but remains arena-out-of-scope until temporary area Difficult Terrain can be represented exactly.
 - Call Lightning remains unbound until its fixed storm-cloud footprint can be represented exactly by a universal persistent-area spell primitive; it is not approximated.
+
+
+Certification checkpoint: Paladin 16 exact-head rerun.
