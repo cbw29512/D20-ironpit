@@ -3,6 +3,7 @@
 
   const PREFIX = "friendly-save-aura:";
   const CONDITION_PREFIX = "friendly-condition-aura:";
+  const DEFENSE_PREFIX = "friendly-defense-aura:";
   const ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"];
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
@@ -45,7 +46,8 @@
     for (const member of members(setup)) {
       member.state.active_modifiers = (member.state.active_modifiers || [])
         .filter((item) => !String(item.id || "").startsWith(PREFIX)
-          && !String(item.id || "").startsWith(CONDITION_PREFIX));
+          && !String(item.id || "").startsWith(CONDITION_PREFIX)
+          && !String(item.id || "").startsWith(DEFENSE_PREFIX));
     }
   }
 
@@ -84,16 +86,10 @@
 
       for (const target of allMembers) {
         const allies = target.side === "heroes" ? setup.heroes : setup.monsters;
-        const candidates = [];
         for (const source of allies) {
           const aura = source.state.template.friendly_saving_throw_aura;
           if (!aura || !passiveActive(source, aura)) continue;
           if (S().distance(source, target) > aura.radius_ft) continue;
-          candidates.push([aura.flat_bonus, source.combatant_id, source, aura]);
-        }
-        candidates.sort((a, b) => b[0] - a[0] || b[1].localeCompare(a[1]));
-        if (candidates.length) {
-          const [, , source, aura] = candidates[0];
           M().add(target.state, {
             id: `${PREFIX}flat:${source.combatant_id}:${aura.source_id}:${target.combatant_id}`,
             source_id: source.combatant_id,
@@ -101,7 +97,35 @@
             source_name: aura.source_name,
             kind: "saving-throw-flat",
             flat_bonus: aura.flat_bonus,
+            non_stacking_group: aura.non_stacking_group || null,
           });
+        }
+
+        for (const source of allies) {
+          for (const aura of source.state.template.friendly_defensive_auras || []) {
+            if (!passiveActive(source, aura)) continue;
+            const active = (source.state.timed_effects || []).some((effect) =>
+              effect.source_id === source.combatant_id
+              && effect.source_effect_id === aura.required_source_effect_id);
+            if (!active || S().distance(source, target) > aura.radius_ft) continue;
+            if (aura.armor_class_bonus) {
+              M().add(target.state, {
+                id: `${DEFENSE_PREFIX}${source.combatant_id}:${aura.source_id}:${target.combatant_id}:ac`,
+                source_id: source.combatant_id, source_effect_id: aura.source_id,
+                source_name: aura.source_name, kind: "armor-class",
+                flat_bonus: aura.armor_class_bonus, non_stacking_group: aura.non_stacking_group,
+              });
+            }
+            for (const ability of aura.saving_throw_abilities || []) {
+              M().add(target.state, {
+                id: `${DEFENSE_PREFIX}${source.combatant_id}:${aura.source_id}:${target.combatant_id}:save:${ability}`,
+                source_id: source.combatant_id, source_effect_id: aura.source_id,
+                source_name: aura.source_name, kind: "saving-throw-flat",
+                flat_bonus: aura.saving_throw_bonus, save_ability: ability,
+                non_stacking_group: aura.non_stacking_group,
+              });
+            }
+          }
         }
 
         for (const source of allies) {
