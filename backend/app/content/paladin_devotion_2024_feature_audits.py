@@ -113,6 +113,17 @@ def build_paladin_2024_feature_audits(level: int) -> list[FeatureAudit]:
             audits.extend(_level_six())
         if level >= 7:
             audits.extend(_level_seven())
+        if level >= 8:
+            audits.append(paladin_2024_feature(
+                "ability-score-improvement-l8",
+                "Ability Score Improvement (+1 Strength, +1 Charisma)",
+                "feat",
+                combat=True,
+                automated=True,
+                notes=("Canonical sword-and-shield progression caps Strength 19 to 20 and "
+                       "raises Charisma 14 to 15; shared derived-stat logic updates weapon "
+                       "attack/damage, Athletics, Charisma skills, spellcasting, and aura bonus."),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Paladin feature audits at level %s.", level)
