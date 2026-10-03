@@ -12,6 +12,7 @@ def primary_attack_save_fields(
     cunning_strike_obscure: Any,
     cunning_strike: Any,
     topple: Any,
+    post_hit_save: Any = None,
 ) -> tuple[Any, str | None, int | None, bool | None]:
     """Choose the primary save evidence exposed on the attack event."""
     try:
@@ -31,6 +32,13 @@ def primary_attack_save_fields(
                 "dexterity",
                 cunning_strike.save_dc,
                 cunning_strike.save_succeeded,
+            )
+        if post_hit_save and post_hit_save.save_dc is not None:
+            return (
+                post_hit_save.save_roll,
+                post_hit_save.save_ability,
+                post_hit_save.save_dc,
+                post_hit_save.save_succeeded,
             )
         return (
             topple.save_roll if topple else None,
@@ -74,6 +82,7 @@ def build_attack_description(
     damage_outcome: str | None,
     applied_conditions: list[str],
     deferred_effect_armed: Any = None,
+    post_hit_save: Any = None,
 ) -> str:
     """Build player-facing attack text from already-resolved generic mechanics."""
     try:
@@ -115,12 +124,15 @@ def build_attack_description(
             ("Devious Strike Obscure", cunning_strike_obscure),
             ("Cunning Strike Trip", cunning_strike),
             ("Topple", topple),
+            ("", post_hit_save),
         ):
             if resolution and resolution.save_dc is not None:
                 ability = getattr(resolution, "save_ability", None)
                 prefix = label or (ability.title() if ability else "")
                 succeeded = "succeeds" if resolution.save_succeeded else "fails"
                 description += f" {prefix} save DC {resolution.save_dc}: {actual_defender_name} {succeeded}."
+        if post_hit_save and post_hit_save.pushed_ft:
+            description += f" {actual_defender_name} is pushed {post_hit_save.pushed_ft} feet."
 
         if damage_outcome == "relentless_endurance":
             description += f" {actual_defender_name} uses Relentless Endurance and remains at 1 HP."

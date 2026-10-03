@@ -36,32 +36,45 @@ def _payment(
     return f"spell-slot-{level}", level, True
 
 
+def _candidate_rules(attacker: CombatantState) -> list[ResourceBackedPostHitDamage]:
+    features = attacker.template.progression_features
+    if features.post_hit_damage_options:
+        return list(features.post_hit_damage_options)
+    single = features.resource_backed_post_hit_damage
+    return [single] if single is not None else []
+
+
 def post_hit_resource_bonus_damage(
     attacker: CombatantState,
     target: CombatantState | None,
     attack: WeaponAttack,
     turn_key: str | None,
 ) -> BonusDamageSpec | None:
-    """Pay for and return damage that becomes part of a confirmed attack hit."""
+    """Pay for the first legal post-hit option and fold its damage into the hit."""
     try:
-        rule = attacker.template.progression_features.resource_backed_post_hit_damage
-        if rule is None or attack.id not in rule.trigger_attack_ids:
-            return None
+        attacker.pending_post_hit_failed_save = None
         if target is None or target.current_hp <= 0 or target.is_dead or not target.is_alive:
             return None
         if not turn_key:
             raise ValueError("Post-hit resource damage requires the active turn key.")
-        if not is_available(attacker, rule.action_cost):
+        chosen: tuple[ResourceBackedPostHitDamage, tuple[str, int, bool]] | None = None
+        for rule in _candidate_rules(attacker):
+            if attack.id not in rule.trigger_attack_ids or not is_available(attacker, rule.action_cost):
+                continue
+            payment = _payment(attacker, rule, turn_key)
+            if payment is None:
+                continue
+            chosen = (rule, payment)
+            break
+        if chosen is None:
             return None
-        payment = _payment(attacker, rule, turn_key)
-        if payment is None:
-            return None
-        resource_id, slot_level, expends_slot = payment
-
+        rule, (resource_id, slot_level, expends_slot) = chosen
         spend(attacker, rule.action_cost)
         if expends_slot:
             mark_slot_spell_cast(attacker, turn_key)
         spend_resource(attacker, resource_id, 1)
+        if rule.failed_save is not None:
+            attacker.pending_post_hit_failed_save = rule.failed_save
 
         count = rule.base_dice_count + rule.dice_per_slot_above * (
             slot_level - rule.printed_spell_level

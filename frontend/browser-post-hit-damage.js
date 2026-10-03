@@ -23,31 +23,48 @@
     return String(raw || "").split(" (", 1)[0].trim().toLowerCase();
   }
 
+  function candidateRules(attacker) {
+    const options = attacker?.template?.post_hit_damage_options;
+    if (options && options.length) return options;
+    const single = attacker?.template?.resource_backed_post_hit_damage;
+    return single ? [single] : [];
+  }
+
   function bonusDamage(attacker, attack, turnKey, target = null) {
     try {
-      const rule = attacker?.template?.resource_backed_post_hit_damage;
-      if (!rule || !(rule.trigger_attack_ids || []).includes(attack?.id)) return null;
+      if (!attacker) return null;
+      attacker.pending_post_hit_failed_save = null;
       if (!target || target.current_hp <= 0 || target.is_dead || !target.is_alive) return null;
       if (!turnKey) throw new Error("Post-hit resource damage requires the active turn key.");
-      if (!E().available(attacker, rule.action_cost)) return null;
-      const paid = payment(attacker, rule, turnKey);
-      if (!paid) return null;
+      let chosen = null;
+      for (const rule of candidateRules(attacker)) {
+        if (!(rule.trigger_attack_ids || []).includes(attack?.id)) continue;
+        if (!E().available(attacker, rule.action_cost)) continue;
+        const paid = payment(attacker, rule, turnKey);
+        if (!paid) continue;
+        chosen = { rule, paid };
+        break;
+      }
+      if (!chosen) return null;
 
-      E().spend(attacker, rule.action_cost);
-      if (paid.expendsSlot) S().markSlotSpellCast(attacker, turnKey);
-      R().spend(attacker, paid.resourceId, 1);
+      E().spend(attacker, chosen.rule.action_cost);
+      if (chosen.paid.expendsSlot) S().markSlotSpellCast(attacker, turnKey);
+      R().spend(attacker, chosen.paid.resourceId, 1);
+      attacker.pending_post_hit_failed_save = chosen.rule.failed_save
+        ? { ...chosen.rule.failed_save, sourceName: chosen.rule.source_name }
+        : null;
 
-      let count = rule.base_dice_count
-        + rule.dice_per_slot_above * (paid.slotLevel - rule.printed_spell_level);
-      if ((rule.bonus_target_creature_types || []).includes(baseCreatureType(target.template.creature_type))) {
-        count += rule.bonus_target_dice_count || 0;
+      let count = chosen.rule.base_dice_count
+        + chosen.rule.dice_per_slot_above * (chosen.paid.slotLevel - chosen.rule.printed_spell_level);
+      if ((chosen.rule.bonus_target_creature_types || []).includes(baseCreatureType(target.template.creature_type))) {
+        count += chosen.rule.bonus_target_dice_count || 0;
       }
       return {
-        source: rule.source_name,
+        source: chosen.rule.source_name,
         diceCount: count,
-        diceSize: rule.dice_size,
+        diceSize: chosen.rule.dice_size,
         damageBonus: 0,
-        damageType: rule.damage_type,
+        damageType: chosen.rule.damage_type,
       };
     } catch (error) {
       console.error("Browser post-hit resource damage failed", { combatant: attacker?.template?.name, error });

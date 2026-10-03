@@ -13,6 +13,7 @@ from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
 from app.domain.movement import MovementModeGrant
 from app.domain.persistent_spell_attacks import PersistentSpellAttackState
+from app.domain.post_hit_damage import PostHitFailedSave
 from app.domain.replacement_forms import ReplacementFormState
 
 TimedTurnBehavior = Literal["normal", "forced_retreat"]
@@ -144,6 +145,7 @@ class CombatantState(BaseModel):
     feature_last_turn_keys: dict[str, str] = Field(default_factory=dict)
     feature_use_counts: dict[str, int] = Field(default_factory=dict)
     spell_slot_expended_turn_key: str | None = None
+    pending_post_hit_failed_save: PostHitFailedSave | None = None
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
     active_conditional_damage_defenses: list[ConditionalDamageDefense] = Field(default_factory=list)
     rage_expires_round: int | None = Field(default=None, ge=1)

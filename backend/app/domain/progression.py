@@ -109,6 +109,7 @@ class ProgressionCombatFeatures(BaseModel):
     resource_backed_on_hit_exile: ResourceBackedOnHitExile | None = None
     resource_backed_on_hit_save_rider: ResourceBackedOnHitSaveRider | None = None
     resource_backed_post_hit_damage: ResourceBackedPostHitDamage | None = None
+    post_hit_damage_options: list[ResourceBackedPostHitDamage] = Field(default_factory=list)
     delayed_resource_refill: DelayedResourceRefill | None = None
     end_turn_condition_removal: EndTurnConditionRemovalGrant | None = None
     bonus_action_follow_up_tactical_grants: list[BonusActionFollowUpTacticalGrant] = Field(default_factory=list)

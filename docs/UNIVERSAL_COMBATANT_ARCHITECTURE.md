@@ -471,3 +471,15 @@ Passive friendly condition-immunity auras declare source id/name, live radius, o
 - 2024 Aura of Devotion binds Charmed immunity inside its 10-foot Aura of Protection Emanation and is inactive while the source is Incapacitated.
 - Leaving the radius or disabling the source removes the aura-owned modifier on the next synchronization; innate condition immunity remains untouched.
 - Python and browser runtimes consume the same declarative grant. Source names are player/audit metadata only.
+
+## Competing post-hit damage options
+
+A confirmed hit may pay for one resource-backed post-hit damage option and fold that damage into the attack before defenses, Temporary HP, Hit Points, and damage-triggered reactions.
+
+- `post_hit_damage_options` is an ordered list of competing options. The first option that matches the attack, can pay its action cost, and has a legal resource claims the window. Later options do not fire.
+- When that list is empty, the singular `resource_backed_post_hit_damage` field remains the only option. Existing Divine Smite bindings stay on that field until a content tranche moves them.
+- An option may declare `failed_save`: save ability, spellcasting ability used for DC 8 + proficiency + modifier, a 5-foot push, and/or one universal condition. The save is rolled only after the attack damage has been applied, and only if the target is still alive.
+- A failed save applies the condition unless the target is immune, then pushes through the universal forced-movement primitive. A successful save keeps the damage and does not push or apply the condition.
+- The same Bonus Action or other declared action cost cannot pay a second post-hit option on that hit.
+- Python and browser consume the same declarative option. Source names stay player/audit metadata.
+

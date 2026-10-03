@@ -634,6 +634,10 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["resource_backed_on_hit_save_rider"] = features.resource_backed_on_hit_save_rider.model_dump(mode="json")
     if features.resource_backed_post_hit_damage:
         row["resource_backed_post_hit_damage"] = features.resource_backed_post_hit_damage.model_dump(mode="json")
+    if features.post_hit_damage_options:
+        row["post_hit_damage_options"] = [
+            item.model_dump(mode="json") for item in features.post_hit_damage_options
+        ]
     if features.delayed_resource_refill:
         row["delayed_resource_refill"] = features.delayed_resource_refill.model_dump(mode="json")
     if features.opening_targeting_ward:

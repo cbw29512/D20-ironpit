@@ -176,6 +176,7 @@ Immediate examples:
 
 - **Nature's Ward (Druid 10):** 2024 Arid grants Poisoned immunity and Fire resistance. Bind those to generic condition-immunity and damage-resistance data; do not carry forward the 2014 feature by name.
 - **Mindless Rage:** preserve the 2014 vs 2024 difference for already-active Charm/Frighten while migrating it to shared condition/debuff semantics in a dedicated tranche.
+- **Post-hit failed save:** competing `post_hit_damage_options` can fold damage into a confirmed hit and then force a save, push, and/or condition. The singular Divine Smite field is unchanged when the list is empty. Thunderous Smite stays unbound until a Paladin content tranche orders it against Divine Smite.
 
 ## CI / spend
 

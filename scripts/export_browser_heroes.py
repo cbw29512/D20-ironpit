@@ -679,6 +679,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["source_damage_temporary_hp"] = progression.source_damage_temporary_hp.model_dump(mode="json")
     if progression.delayed_resource_refill is not None:
         row["delayed_resource_refill"] = progression.delayed_resource_refill.model_dump(mode="json")
+    if progression.post_hit_damage_options:
+        row["post_hit_damage_options"] = [
+            item.model_dump(mode="json") for item in progression.post_hit_damage_options
+        ]
     if progression.end_turn_condition_removal is not None:
         row["end_turn_condition_removal"] = progression.end_turn_condition_removal.model_dump(mode="json")
     if progression.bonus_action_follow_up_tactical_grants:

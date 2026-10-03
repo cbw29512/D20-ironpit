@@ -13,11 +13,13 @@ from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.exile import apply_on_hit_exile
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
+from app.combat.post_hit_failed_save import resolve_post_hit_failed_save
 from app.combat.sap import apply_weapon_sap
 from app.combat.studied_attacks import apply_studied_attack_miss
 from app.combat.tactical_master import apply_tactical_master_sap
 from app.combat.topple import resolve_topple_hit
 from app.combat.vex import apply_vex_mastery
+from app.domain.encounters import EncounterSetup
 from app.domain.models import CombatantState, RollMode, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -45,6 +47,7 @@ class AttackEffectResolution:
     damage_reduction_zeroed_attack: bool = False
     deferred_effect_armed: Any = None
     exile_applied: Any = None
+    post_hit_save: Any = None
 
 
 def resolve_attack_effects(
@@ -66,11 +69,13 @@ def resolve_attack_effects(
     sneak_attack_ally_available: bool,
     brutal_strike_disadvantage: int,
     natural_roll: int | None = None,
+    setup: EncounterSetup | None = None,
 ) -> AttackEffectResolution:
     """Resolve shared on-hit/on-miss effects after the final attack outcome is known."""
     try:
         result = AttackEffectResolution()
         if not hit:
+            attacker.pending_post_hit_failed_save = None
             graze = resolve_graze_miss(attacker, defender, attack, dice, affected_states)
             if graze is not None:
                 result.damage_roll, result.damage_components, result.damage_outcome = graze
@@ -125,6 +130,13 @@ def resolve_attack_effects(
         result.topple = resolve_topple_hit(attacker, defender, attack, dice)
         if result.topple.applied and "prone" not in result.applied_conditions:
             result.applied_conditions.append("prone")
+        result.post_hit_save = resolve_post_hit_failed_save(attacker, defender, dice, setup)
+        if (
+            result.post_hit_save is not None
+            and result.post_hit_save.applied_condition
+            and result.post_hit_save.applied_condition not in result.applied_conditions
+        ):
+            result.applied_conditions.append(result.post_hit_save.applied_condition)
         result.weapon_sap_applied = apply_weapon_sap(
             attacker, attacker_event_id, defender, attack, round_number,
         )

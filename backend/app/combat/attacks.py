@@ -121,6 +121,7 @@ def resolve_attack(
             sneak_attack_ally_available=sneak_attack_ally_available,
             brutal_strike_disadvantage=brutal_strike_disadvantage,
             natural_roll=natural,
+            setup=reaction_setup,
         )
         damage_roll, damage_components, damage_outcome = effects.damage_roll, effects.damage_components, effects.damage_outcome
         applied_conditions, save_damage, on_hit_save = effects.applied_conditions, effects.save_damage, effects.on_hit_save
@@ -156,6 +157,7 @@ def resolve_attack(
             cunning_strike_obscure=cunning_strike_obscure,
             cunning_strike=cunning_strike,
             topple=topple,
+            post_hit_save=effects.post_hit_save,
             damage_outcome=damage_outcome,
             applied_conditions=applied_conditions,
             deferred_effect_armed=deferred_effect_armed,
@@ -171,6 +173,7 @@ def resolve_attack(
             description += f" {actual_defender.template.name} is Banished until the source-relative return point."
         save_roll, save_ability, save_dc, save_succeeded = primary_attack_save_fields(
             save_damage, on_hit_save, cunning_strike_obscure, cunning_strike, topple,
+            effects.post_hit_save,
         )
         return BattleEvent(
             sequence=sequence, round_number=round_number, event_type="attack", actor_id=attacker_event_id, actor_name=attacker.template.name,

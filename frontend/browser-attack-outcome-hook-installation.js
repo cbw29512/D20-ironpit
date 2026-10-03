@@ -15,6 +15,9 @@
     if (window.IRON_PIT_BROWSER_EXILE?.installAbilityHooks) {
       installers.push(["Exile", window.IRON_PIT_BROWSER_EXILE.installAbilityHooks]);
     }
+    if (window.IRON_PIT_BROWSER_POST_HIT_SAVE?.installAbilityHooks) {
+      installers.push(["Post-hit failed save", window.IRON_PIT_BROWSER_POST_HIT_SAVE.installAbilityHooks]);
+    }
     if (window.IRON_PIT_BROWSER_DELAYED_RESOURCE_REFILL?.installAbilityHooks) {
       installers.push(["Delayed resource refill", window.IRON_PIT_BROWSER_DELAYED_RESOURCE_REFILL.installAbilityHooks]);
     }
