@@ -63,6 +63,8 @@ def paladin_2024_source_references(level: int) -> list[str]:
                 "Basic Rules 2024: Paladin level 9 — Abjure Foes",
                 "Basic Rules 2024: Oath of Devotion level 9 — Beacon of Hope and Dispel Magic",
             ])
+        if level >= 10:
+            references.append("Basic Rules 2024: Paladin level 10 — Aura of Courage")
         references.extend([
             "Basic Rules 2024: Character Origins — Human and Soldier",
             (
