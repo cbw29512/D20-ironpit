@@ -451,12 +451,23 @@ Deferred save effects remain one source-agnostic capability with immutable sourc
 - Source names remain audit/player-facing metadata. The deferred-effect runtime never branches on a class, subclass, hero, monster, or feature name.
 
 
-## Universal friendly saving-throw aura
+## Universal friendly auras
 
-Passive and timed ally save auras share the same live-position synchronization layer.
+Passive and timed ally auras share the same live-position synchronization layer.
+
+### Saving-throw auras
 
 - Passive flat-bonus auras declare source id/name, radius, flat bonus, and source-state deactivation rules.
 - The runtime recomputes eligible same-side recipients from current grid positions whenever aura state is synchronized; recipients are never snapshotted.
 - Overlapping flat-bonus auras use only the strongest eligible bonus.
 - Source-specific lifecycle differences are parameters. For example, 2014 Aura of Protection is inactive while its source is unconscious, while 2024 Aura of Protection is inactive while its source is Incapacitated.
 - Python and browser runtimes must consume the same declarative aura data. Ability names remain display/audit metadata and do not select resolver behavior.
+
+### Condition-immunity auras
+
+Passive friendly condition-immunity auras declare source id/name, live radius, one universal condition id, and source-state deactivation rules. The synchronization layer recomputes same-side recipients from current positions and installs the existing generic `condition-immunity` modifier; it does not create a feature-specific condition resolver.
+
+- 2014 Aura of Devotion binds Charmed immunity and 2014 Aura of Courage binds Frightened immunity with the printed unconscious-only shutdown behavior.
+- 2024 Aura of Devotion binds Charmed immunity inside its 10-foot Aura of Protection Emanation and is inactive while the source is Incapacitated.
+- Leaving the radius or disabling the source removes the aura-owned modifier on the next synchronization; innate condition immunity remains untouched.
+- Python and browser runtimes consume the same declarative grant. Source names are player/audit metadata only.
