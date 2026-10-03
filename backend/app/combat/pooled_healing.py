@@ -5,8 +5,24 @@ import logging
 from app.combat.hit_points import effective_max_hp
 from app.combat.zero_hp import restore_hit_points
 from app.domain.encounters import EncounterCombatant
+from app.domain.actions import HealingAction
 
 logger = logging.getLogger(__name__)
+
+
+def bind_pool_healing_action(healer: EncounterCombatant, target: EncounterCombatant, action: HealingAction) -> HealingAction:
+    """Select the useful finite-pool allocation without mutating source or fight state."""
+    try:
+        if not action.healing_from_resource_pool:
+            return action
+        resource = next((item for item in healer.state.resources if item.id == action.resource_id), None)
+        amount = min(resource.current_uses if resource else 0, pooled_healing_capacity(target, 1, 1))
+        if amount <= 0:
+            raise ValueError("Pool healing requires available points and missing HP.")
+        return action.model_copy(update={"healing_bonus": amount, "resource_cost": amount})
+    except Exception:
+        logger.exception("Failed to bind healing pool %s for %s -> %s.", action.id, healer.combatant_id, target.combatant_id)
+        raise
 
 
 def pooled_healing_capacity(

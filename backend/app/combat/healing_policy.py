@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.action_economy import is_available
 from app.combat.bloodied import is_bloodied
 from app.combat.defensive_modifier_rules import healing_is_maximized
+from app.combat.encounter_targeting import combatant_distance
 from app.combat.hit_points import effective_max_hp
 from app.combat.spellcasting import slot_spell_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -35,7 +36,7 @@ def resource_available(
     if slot_heal(action) and (turn_key is None or not slot_spell_available(member.state, turn_key)):
         return False
     resource = next((item for item in member.state.resources if item.id == action.resource_id), None)
-    return resource is not None and resource.current_uses >= action.resource_cost
+    return resource is not None and resource.current_uses >= (1 if action.healing_from_resource_pool else action.resource_cost)
 
 
 def healing_rider_worthwhile(target: EncounterCombatant, action: HealingAction) -> bool:
@@ -67,7 +68,7 @@ def target_allowed(
         return False
     if CombatTrait.SWARM in target.state.template.combat_traits:
         return False
-    if action.area_radius_ft is None and abs(healer.position_ft - target.position_ft) > action.range_ft:
+    if action.area_radius_ft is None and combatant_distance(healer, target) > action.range_ft:
         return False
     if action.target_mode == "self":
         return target.combatant_id == healer.combatant_id

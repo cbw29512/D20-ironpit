@@ -345,6 +345,7 @@ def _healing(action: Any) -> dict[str, Any]:
             "range": action.range_ft, "targetMode": action.target_mode, "maxTargets": action.max_targets,
             "areaRadiusFt": action.area_radius_ft, "diceCount": action.dice_count, "diceSize": action.dice_size,
             "healingBonus": action.healing_bonus, "restoreToEffectiveMax": action.restore_to_effective_max,
+            "healingFromResourcePool": action.healing_from_resource_pool,
             "percentileSuccessMax": action.percentile_success_max, "resourceId": action.resource_id,
             "resourceCost": action.resource_cost, "excludedCreatureTypes": list(action.excluded_creature_types),
             "removableConditions": list(action.removable_conditions),
@@ -578,6 +579,7 @@ def _removal(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
         "targetMode": action.target_mode, "removableConditions": list(action.removable_conditions),
+        "excludedCreatureTypes": list(action.excluded_creature_types),
         "maxConditionsPerUse": action.max_conditions_per_use, "resourceCosts": dict(action.resource_costs),
         "resourceCostsPerCondition": dict(action.resource_costs_per_condition),
         "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,

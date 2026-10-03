@@ -3,7 +3,9 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available
+from app.combat.encounter_targeting import combatant_distance as distance
 from app.combat.spellcasting import slot_spell_available
+from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import ConditionRemovalAction
 
@@ -19,21 +21,22 @@ CONDITION_PRIORITY = {
 }
 
 
-def distance(a: EncounterCombatant, b: EncounterCombatant) -> int:
-    return abs(a.position_ft - b.position_ft)
-
-
 def target_allowed(remover: EncounterCombatant, target: EncounterCombatant, action: ConditionRemovalAction) -> bool:
-    if target.state.is_dead or not target.state.is_alive or target.side != remover.side:
-        return False
-    if distance(remover, target) > action.range_ft:
-        return False
-    if action.target_mode == "self":
-        return target.combatant_id == remover.combatant_id
-    if action.target_mode == "ally":
-        return target.combatant_id != remover.combatant_id
-    return True
-
+    try:
+        if target.state.is_dead or not target.state.is_alive or target.side != remover.side:
+            return False
+        if any(is_creature_type(target.state.template, kind) for kind in action.excluded_creature_types):
+            return False
+        if distance(remover, target) > action.range_ft:
+            return False
+        if action.target_mode == "self":
+            return target.combatant_id == remover.combatant_id
+        if action.target_mode == "ally":
+            return target.combatant_id != remover.combatant_id
+        return True
+    except Exception:
+        logger.exception("Failed removal target legality %s -> %s (%s).", remover.combatant_id, target.combatant_id, action.id)
+        raise
 
 def resource(member: EncounterCombatant, resource_id: str):
     return next((item for item in member.state.resources if item.id == resource_id), None)
@@ -62,15 +65,18 @@ def _effect_allows_removal(target: EncounterCombatant, condition_id: str, action
 
 
 def removable(target: EncounterCombatant, action: ConditionRemovalAction) -> list[str]:
-    allowed = set(action.removable_conditions)
-    return sorted(
-        (
-            effect for effect in target.state.active_effect_ids
-            if effect in allowed and _effect_allows_removal(target, effect, action.id)
-        ),
-        key=lambda effect: (CONDITION_PRIORITY.get(effect, 9), effect),
-    )
-
+    try:
+        allowed = set(action.removable_conditions)
+        return sorted(
+            (
+                effect for effect in set(target.state.active_effect_ids)
+                if effect in allowed and _effect_allows_removal(target, effect, action.id)
+            ),
+            key=lambda effect: (CONDITION_PRIORITY.get(effect, 9), effect),
+        )
+    except Exception:
+        logger.exception("Failed removal eligibility for %s (%s).", target.combatant_id, action.id)
+        raise
 
 def affordable_conditions(remover: EncounterCombatant, target: EncounterCombatant, action: ConditionRemovalAction) -> list[str]:
     result = removable(target, action)[: action.max_conditions_per_use]

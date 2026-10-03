@@ -21,6 +21,7 @@ const load = (name) => vm.runInThisContext(
   fs.readFileSync(`frontend/${name}`, "utf8"),
   { filename: name },
 );
+load("browser-state.js");
 load("browser-healing-policy.js");
 load("browser-healing.js");
 load("browser-group-healing.js");

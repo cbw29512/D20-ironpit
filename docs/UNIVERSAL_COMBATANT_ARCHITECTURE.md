@@ -480,3 +480,10 @@ A source may declare a normal `SavingThrowAction` with `max_targets > 1`. The sh
 ## Single-activity timed turn behavior
 
 A timed effect may declare `turn_behavior="single_activity"`. On each affected turn, the first voluntary category actually used—movement, Action, or Bonus Action—becomes that turn's sole voluntary category. Choosing movement removes Action and Bonus Action availability; choosing an Action removes Bonus Action availability and voluntary movement; choosing a Bonus Action removes Action availability and voluntary movement. Reactions are not affected. Multiple attacks that belong to one Attack action remain inside the chosen Action, but an effect that grants an additional Action cannot bypass the single-Action limit. The claim resets at the start of each turn and disappears when the owning timed-effect group expires or is removed.
+
+
+## Finite healing pools and named condition removal
+
+`HealingAction.healing_from_resource_pool` binds a fixed, single-target resource pool to the existing pooled-healing capacity calculation. Resolution makes a temporary action allocation of the lesser of current pool points and missing effective HP; resource cost equals that allocation. Immutable action data and resource maximum stay unchanged. Both 2014 and 2024 Lay On Hands bind this parameter with their own Action or Bonus Action cost.
+
+Condition-removal requests validate distinct condition ids, source-specific restrictions, maximum count, actual requested affordability, action economy, and live footprint distance before spending anything. Arena priority selects a useful subset but never limits which affordable legal subset the resolver accepts. Removal ends the requested condition instances through the timed lifecycle, preserves other conditions from the same source group, and removes group-owned modifiers when no sibling remains. Heroes and monsters share the same selector, resolver, lifecycle, and fresh-state reset. Restoring Touch widens the existing Lay On Hands removal data; Arena AI selects removal without optional simultaneous HP healing.

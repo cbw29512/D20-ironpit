@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-03 for the 2024 Devotion Paladin level 13 tranche. Main baseline: `b056b1442bbfcb85afebd8c5a2c5645befbd77dc`.
+Recorded 2026-10-03 for the 2024 Devotion Paladin level 14 tranche. Main baseline: `1878e42dee065ef5e95aadf72a9aafadc8f12e4f`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -34,9 +34,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
 | 2024 | Monk (Open Hand) | 1–20 |
-| 2024 | Paladin (Devotion) | 1–12 |
+| 2024 | Paladin (Devotion) | 1–13 |
 
-2024 public-ready hero slots on current main: **152 / 240**.
+2024 public-ready hero slots on current main: **153 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -46,9 +46,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 152 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 12 on main; this tranche advances level 13.
+**2024 canonical pregens are 153 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 13 on main; this tranche advances level 14.
 
-Active implementation lane: **2024 Devotion Paladin level 13.** Proficiency Bonus advances to +5, HP to 108, Lay On Hands to 65, slots to 4/3/3/1, and ordinary preparations to eleven. Oath spells add the certified 2024 Freedom of Movement binding plus Guardian of Faith source metadata under the no-summons contract. Staggering Smite is the damage-first preparation and remains fail-closed pending a shared atomic post-hit spell damage/save/condition choice. No new engine primitive is required for the executable level delta.
+Active implementation lane: **2024 Devotion Paladin level 14.** HP advances to 116 and Lay On Hands to 70; Proficiency Bonus +5, slots 4/3/3/1, and eleven ordinary preparations remain unchanged. Restoring Touch binds the existing multi-condition removal action: one Bonus Action, five pool points per condition, no HP restoration from those points. Arena AI selects the legal removal-only use and declines optional simultaneous healing. The touched-engine audit fixes live grid range, atomic removal validation, source-owned cleanup, and finite Lay On Hands healing allocations in both editions.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -81,7 +81,8 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 11 adds **Radiant Strikes** through generic on-hit damage: Aurelia's qualifying Melee-weapon hit adds **1d8 Radiant**, with normal critical doubling and no resource spend, including the thrown Javelin because it is a printed Melee weapon. Channel Divinity advances to **3**, third-level slots to **3**, HP to **92**, and Lay On Hands to **55**. The tenth ordinary preparation is **Crusader's Mantle** under the damage-first policy and remains fail-closed pending an exact live friendly weapon-damage aura.
 - Level 12 takes **Ability Score Improvement (+2 Charisma)** through the existing cumulative ability-increase schema. Charisma rises **15→17**, Aura of Protection and Sacred Weapon become **+3**, Abjure Foes becomes **DC 15 / three targets**, HP rises to **100**, and Lay On Hands to **60**. Slots and the ten ordinary preparations are unchanged.
 - Level 13 advances Proficiency Bonus to **+5**, HP to **108**, Lay On Hands to **65**, slots to **4/3/3/1**, and ordinary preparations to **eleven**. The attacks become **+10**, Charisma saves/skills **+8**, and Abjure Foes **DC 16 / three targets**. Oath spells always prepare **Freedom of Movement** and **Guardian of Faith**; only Freedom of Movement executes, using the certified 2024 shared binding including Swim Speed and five-foot nonmagical escape costs. Guardian of Faith remains arena-unavailable under the no-summons contract. The new ordinary preparation **Staggering Smite** remains fail-closed pending an exact atomic post-hit spell damage/save/condition choice alongside Divine Smite.
-- This tranche targets **153 / 240** 2024 public-ready hero slots.
+- Level 14 adds **Restoring Touch** through the existing condition-removal action. Blinded, Charmed, Deafened, Frightened, Paralyzed, and Stunned cost **five Lay On Hands points each**; Poisoned can be removed in the same Bonus Action. Removal does not restore HP. The remaining pool remains available for later healing through the shared divisible-pool allocation.
+- This tranche targets **154 / 240** 2024 public-ready hero slots.
 
 ### 2024 Monk lane
 

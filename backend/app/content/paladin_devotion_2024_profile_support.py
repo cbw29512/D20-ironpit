@@ -81,6 +81,8 @@ def paladin_2024_source_references(level: int) -> list[str]:
                 "Basic Rules 2024: Oath of Devotion level 13 — Freedom of Movement and Guardian of Faith",
                 "Basic Rules 2024: Spells — Staggering Smite",
             ])
+        if level >= 14:
+            references.append("Basic Rules 2024: Paladin level 14 — Restoring Touch")
         references.extend([
             "Basic Rules 2024: Character Origins — Human and Soldier",
             (

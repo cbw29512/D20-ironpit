@@ -85,7 +85,8 @@ def build_paladin_healing_actions_2014(level: int, charisma_modifier: int) -> li
     actions = [HealingAction(
         id="lay-on-hands-heal", name="Lay on Hands", action_cost="action", range_ft=5,
         target_mode="self_or_ally", dice_count=0, healing_bonus=5 * level,
-        resource_id="lay-on-hands", resource_cost=5 * level, animation="healing",
+        resource_id="lay-on-hands", resource_cost=5 * level, healing_from_resource_pool=True,
+        excluded_creature_types=["undead", "construct"], animation="healing",
     )]
     if level >= 2:
         actions.append(HealingAction(
@@ -100,7 +101,8 @@ def build_paladin_condition_removal_actions_2014(level: int) -> list[ConditionRe
     actions = [ConditionRemovalAction(
         id="lay-on-hands-poison", name="Lay on Hands", action_cost="action", range_ft=5,
         target_mode="self_or_ally", removable_conditions=["poisoned"], max_conditions_per_use=1,
-        resource_costs_per_condition={"lay-on-hands": 5}, animation="condition-removal",
+        resource_costs_per_condition={"lay-on-hands": 5},
+        excluded_creature_types=["undead", "construct"], animation="condition-removal",
     )]
     if level >= 5:
         actions.append(lesser_restoration_2014())
