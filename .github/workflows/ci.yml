@@ -439,6 +439,7 @@ jobs:
           node frontend/browser-debuff-counters.test.cjs
           node frontend/browser-bonus-damage-modifiers.test.cjs
           node frontend/browser-damage-type-choice.test.cjs
+          node frontend/browser-attack-action-weapon-buffs.test.cjs
           node frontend/browser-action-healing.test.cjs
           node frontend/browser-healing-creature-type-exclusions.test.cjs
           node frontend/browser-group-healing-area.test.cjs
