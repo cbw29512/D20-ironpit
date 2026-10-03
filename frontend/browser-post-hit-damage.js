@@ -55,5 +55,56 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_POST_HIT_DAMAGE = { bonusDamage };
+  function activateTriggeredBuff(ctx) {
+    try {
+      const rule = ctx.member?.state?.template?.resource_backed_post_hit_damage;
+      const actionId = rule?.post_hit_self_buff_action_id;
+      if (!actionId) return null;
+      const outcome = window.IRON_PIT_BROWSER_ATTACK_OUTCOME.requireOutcome(ctx);
+      if (!(outcome.damageComponents || []).some((component) => component.source === rule.source_name)) return null;
+      const action = (ctx.member.state.template.timed_self_buff_actions || [])
+        .find((item) => item.id === actionId);
+      if (!action) throw new Error(`Post-hit buff action ${actionId} is not declared.`);
+      const timed = window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS;
+      if (!timed) throw new Error("Timed self-buff runtime is not loaded.");
+      if (!timed.active(ctx.member, action)) {
+        timed.resolve(ctx.sequence, ctx.round, ctx.member, action, {
+          spendActionCost: false,
+          affectedStates: [...ctx.setup.heroes, ...ctx.setup.monsters].map((entry) => entry.state),
+        });
+      }
+      window.IRON_PIT_BROWSER_FRIENDLY_SAVE_AURAS?.sync(ctx.setup);
+      outcome.postHitSelfBuffApplied = { sourceId: action.id, sourceName: action.name };
+      return window.IRON_PIT_BROWSER_ATTACK_OUTCOME.noEventResult(ctx.sequence);
+    } catch (error) {
+      console.error("Browser triggered post-hit self-buff failed", {
+        combatant: ctx?.member?.combatant_id, error,
+      });
+      throw error;
+    }
+  }
+
+  function installAbilityHooks() {
+    try {
+      const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+      if (!hooks) throw new Error("Post-hit self-buff hook requires browser-ability-hooks.js.");
+      const phase = hooks.PHASES.ON_HIT;
+      const id = "resource-backed-post-hit-self-buff";
+      if (hooks.abilitiesFor(phase).some((item) => item.id === id)) return;
+      hooks.registerAbility(phase, {
+        id, priority: 70, rulesets: ["2014", "2024"],
+        appliesTo: (member) => Boolean(
+          member.state.template.resource_backed_post_hit_damage?.post_hit_self_buff_action_id
+        ),
+        resolve: activateTriggeredBuff,
+      });
+    } catch (error) {
+      console.error("Post-hit self-buff hook installation failed", { error });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_POST_HIT_DAMAGE = { activateTriggeredBuff, bonusDamage, installAbilityHooks };
+  if (window.IRON_PIT_BROWSER_ABILITY_HOOKS) installAbilityHooks();
+  else (window.IRON_PIT_PENDING_ABILITY_HOOK_INSTALLERS ||= []).push(installAbilityHooks);
 })();
