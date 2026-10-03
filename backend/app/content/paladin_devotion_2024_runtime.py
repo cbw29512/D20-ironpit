@@ -18,6 +18,7 @@ from app.content.paladin_devotion_2024_support import (
 from app.content.spell_effects import BLESS
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot, ConditionRemovalAction, HealingAction
+from app.domain.friendly_save_auras import FriendlySavingThrowAuraGrant
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.post_hit_damage import ResourceBackedPostHitDamage
 from app.domain.progression import ProgressionCombatFeatures
@@ -52,6 +53,16 @@ def _attack_action(level: int) -> AttackActionDefinition | None:
 
 def _progression(level: int) -> ProgressionCombatFeatures:
     return ProgressionCombatFeatures(
+        friendly_saving_throw_aura=(
+            FriendlySavingThrowAuraGrant(
+                source_id="aura-of-protection-2024",
+                source_name="Aura of Protection",
+                radius_ft=10,
+                flat_bonus=max(1, 2),
+                inactive_while_incapacitated=True,
+            )
+            if level >= 6 else None
+        ),
         resource_backed_post_hit_damage=(
             ResourceBackedPostHitDamage(
                 source_id="divine-smite-2024", source_name="Divine Smite",
@@ -96,10 +107,10 @@ def _resources(level: int) -> list[ResourceDefinition]:
     return resources
 
 def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
-    """Build certified 2024 Aurelia through Paladin level 5."""
+    """Build certified 2024 Aurelia through Paladin level 6."""
     try:
-        if level not in {1, 2, 3, 4, 5}:
-            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-5 only.")
+        if level not in {1, 2, 3, 4, 5, 6}:
+            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-6 only.")
         profile = build_aurelia_brightshield_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
