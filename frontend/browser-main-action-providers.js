@@ -20,23 +20,20 @@
   const CH = () => window.IRON_PIT_BROWSER_CHARGE;
   const SP = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
   const SR = () => window.IRON_PIT_BROWSER_SPELL_RESOLUTION;
+  const MS = () => window.IRON_PIT_BROWSER_MULTI_SAVE_PROVIDER;
 
   const BOTH = Object.freeze(["2014", "2024"]);
   function saveChoice(member, setup) {
     if (!E().available(member.state, "action")) return null;
-    const orderedTargets = F().targetOrder(member, setup);
-    for (const action of member.state.template.saving_throw_actions || []) {
-      if ((action.actionCost || "action") !== "action" || (action.maxTargets || 1) <= 1) continue;
-      if (action.resourceId && !R().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
-      const targets = orderedTargets.filter((target) => {
-        const distance = F().saveDistance(member, target, action.range);
-        return V().legalAction(action, target, distance)
-          && (!action.requiresTargetSight || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(member.state, target.state));
-      }).slice(0, action.maxTargets);
-      if (targets.length) return { targets, action };
+    const actions = member.state.template.saving_throw_actions || [];
+    if (actions.some((action) => (action.maxTargets || 1) > 1)) {
+      const runtime = MS();
+      if (!runtime) throw new Error("Capped multi-target save runtime is not loaded.");
+      const selected = runtime.choose(member, setup);
+      if (selected) return selected;
     }
-    for (const target of orderedTargets) {
-      for (const action of member.state.template.saving_throw_actions || []) {
+    for (const target of F().targetOrder(member, setup)) {
+      for (const action of actions) {
         if ((action.actionCost || "action") !== "action" || (action.maxTargets || 1) > 1) continue;
         if (action.resourceId && !R().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
         const distance = F().saveDistance(member, target, action.range);
@@ -44,39 +41,6 @@
       }
     }
     return null;
-  }
-
-  function resolveMultiSave(sequence, round, member, setup, action, targets) {
-    if (!targets.length || targets.length > (action.maxTargets || 1)) {
-      throw new Error("Multi-target save selection violates its declared target cap.");
-    }
-    if (!E().available(member.state, action.actionCost || "action")) throw new Error(`${action.name} Action is unavailable.`);
-    if (action.resourceId && !R().available(member.state, action.resourceId, action.resourceCost || 1)) {
-      throw new Error(`${action.name} resource is unavailable.`);
-    }
-    for (const target of targets) {
-      const distance = F().saveDistance(member, target, action.range);
-      if (!V().legalAction(action, target, distance)
-        || (action.requiresTargetSight && !window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(member.state, target.state))) {
-        throw new Error(`${action.name} has an illegal selected target.`);
-      }
-    }
-    const remaining = action.resourceId ? R().spend(member.state, action.resourceId, action.resourceCost || 1) : null;
-    E().spend(member.state, action.actionCost || "action");
-    const events = [];
-    for (const target of targets) {
-      const distance = F().saveDistance(member, target, action.range);
-      const event = V().resolveAction(sequence, round, member, target, action, distance, {
-        setup, spendAction: false, checkResource: false, spendResource: false, resourceRemaining: remaining,
-      });
-      if (DR()) {
-        const chain = DR().chain(sequence + 1, round, member, event, setup);
-        events.push(...chain.events); sequence = chain.sequence;
-      } else {
-        events.push(event); sequence += 1;
-      }
-    }
-    return { events, sequence };
   }
 
   const memberById = (setup, id) => [...setup.heroes, ...setup.monsters]
@@ -184,7 +148,9 @@
         if (Array.isArray(candidate.payload.targetIds)) {
           const targets = candidate.payload.targetIds.map((id) => memberById(setup, id));
           if (targets.some((target) => !target)) throw new Error("Multi-save candidate target is unavailable.");
-          return resolveMultiSave(sequence, round, member, setup, action, targets);
+          const runtime = MS();
+          if (!runtime) throw new Error("Capped multi-target save runtime is not loaded.");
+          return runtime.resolve(sequence, round, member, setup, action, targets);
         }
         const target = memberById(setup, candidate.payload.targetId);
         if (!target) throw new Error("Save-action candidate target is unavailable.");
