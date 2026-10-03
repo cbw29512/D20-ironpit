@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.action_economy import claim_voluntary_activity, voluntary_activity_available
 from app.combat.damage_reaction_events import damage_event_chain
 from app.combat.dice import DiceProvider
 from app.combat.encounter_movement import move_toward_combatant
@@ -107,6 +108,8 @@ def move_toward_with_reactions(
                 turn_key=turn_key,
             )
 
+        if not voluntary_activity_available(mover.state, "movement"):
+            return [], sequence, None
         proposed_position, moved = _proposed_position(mover, target, desired_distance_ft)
         if moved <= 0 or _approaches_fear_source(mover, target, setup, proposed_position):
             return [], sequence, None
@@ -132,6 +135,7 @@ def move_toward_with_reactions(
                 if mover.state.is_dead or mover.state.is_unconscious or speed_is_zero(mover.state) or newly_prone:
                     return events, sequence, None
 
+        claim_voluntary_activity(mover.state, "movement")
         movement = move_toward_combatant(
             sequence, round_number, mover, target, desired_distance_ft,
         )
