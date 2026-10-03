@@ -81,11 +81,10 @@
     if (slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
     if ((spell.targetPolicy || "self") === "self") return [member];
     const side = member.side === "heroes" ? setup.heroes : setup.monsters;
-    const count = spell.targetCount || 1;
-    return side.filter((target) => target.state.is_alive && !target.state.is_dead
+    const legal = side.filter((target) => target.state.is_alive && !target.state.is_dead
         && Math.abs(member.position_ft - target.position_ft) <= (spell.range || 0))
-      .sort((a, b) => comparePriority(friendlyBuffPriority(member, a, setup), friendlyBuffPriority(member, b, setup)))
-      .slice(0, count);
+      .sort((a, b) => comparePriority(friendlyBuffPriority(member, a, setup), friendlyBuffPriority(member, b, setup)));
+    return spell.targetAllLegal === true ? legal : legal.slice(0, spell.targetCount || 1);
   }
 
   function modifierDetail(effect) {
