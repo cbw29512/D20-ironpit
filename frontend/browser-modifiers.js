@@ -128,13 +128,9 @@
   }
   const savingThrowFlat = (state, ability = null) => {
     const eligible = (item) => !item.save_ability || !ability || item.save_ability === ability;
-    const stacking = (state.active_modifiers || [])
-      .filter((item) => item.kind === "saving-throw-flat" && eligible(item))
-      .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
-    const cover = Math.max(0, ...(state.active_modifiers || [])
-      .filter((item) => item.kind === "cover-saving-throw-flat" && eligible(item))
-      .map((item) => item.flat_bonus || 0));
-    return stacking + cover;
+    const matching = (state.active_modifiers || []).filter(eligible);
+    return matching.filter((item) => item.kind === "saving-throw-flat").reduce((sum, item) => sum + (item.flat_bonus || 0), 0)
+      + Math.max(0, ...matching.filter((item) => item.kind === "cover-saving-throw-flat").map((item) => item.flat_bonus || 0));
   };
   function damageSourceQualifiers(state, attack) {
     const qualifiers = new Set(["attack", "weapon", attack.kind, ...(attack.damageSourceQualifiers || [])]);
