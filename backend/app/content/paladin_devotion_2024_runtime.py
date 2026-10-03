@@ -8,6 +8,7 @@ from app.content.cleric_life_domain import AID, LESSER_RESTORATION
 from app.content.healing_spell_effects import build_cure_wounds
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.paladin_devotion_2024_profile import build_aurelia_brightshield_2024_profile
+from app.content.paladin_devotion_2024_level9 import abjure_foes_2024, beacon_of_hope_2024, dispel_magic_2024_paladin
 from app.content.paladin_devotion_2024_resources import build_paladin_2024_resources
 from app.content.paladin_devotion_2024_runtime_support import (
     build_paladin_2024_attack,
@@ -28,10 +29,10 @@ from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
 
 def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
-    """Build certified 2024 Aurelia through Paladin level 8."""
+    """Build certified 2024 Aurelia through Paladin level 9."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8}:
-            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-8 only.")
+        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9}:
+            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-9 only.")
         profile = build_aurelia_brightshield_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -50,6 +51,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
             weapon_attack=build_paladin_2024_attack("longsword", strength, level),
             alternate_weapon_attacks=[build_paladin_2024_attack("javelin", strength, level)],
             attack_action=build_paladin_2024_attack_action(level),
+            saving_throw_actions=[abjure_foes_2024(8 + pb + charisma, charisma)] if level >= 9 else [],
             healing_actions=[
                 HealingAction(
                     id="lay-on-hands-heal", name="Lay On Hands", action_cost="bonus_action",
@@ -75,7 +77,9 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                     if level >= 3 else []
                 ),
                 *([AID.model_copy(deep=True)] if level >= 5 else []),
+                *([beacon_of_hope_2024()] if level >= 9 else []),
             ],
+            effect_removal_actions=[dispel_magic_2024_paladin()] if level >= 9 else [],
             attack_action_weapon_buffs=[
                 sacred_weapon_2024(charisma)
             ] if level >= 3 else [],
@@ -111,6 +115,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                     if level >= 5 else ""
                 )
                 + ("Lesser Restoration, Aura of Devotion, " if level >= 7 else "")
+                + ("Abjure Foes, Aura of Vitality, Blinding Smite, Beacon of Hope, Dispel Magic, " if level >= 9 else "")
                 + "Longsword, Javelin"
             ),
         )
