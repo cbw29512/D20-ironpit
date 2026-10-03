@@ -46,8 +46,7 @@ def _sanctuary_action() -> PersistentBeneficialZoneAction:
         move_action_cost="bonus_action",
         move_distance_ft=60,
         move_range_ft=120,
-        armor_class_bonus=2,
-        saving_throw_bonus=2,
+        cover_bonus=2,
         saving_throw_abilities=["dexterity"],
         ally_damage_resistances=["fire"],
         include_source_for_defense=True,
@@ -69,6 +68,7 @@ def test_persistent_beneficial_zone_separates_source_data_from_runtime_state() -
         expires_round=11,
         length_ft=action.length_ft,
         armor_class_bonus=action.armor_class_bonus,
+        cover_bonus=action.cover_bonus,
         saving_throw_bonus=action.saving_throw_bonus,
         saving_throw_abilities=action.saving_throw_abilities,
         ally_damage_resistances=action.ally_damage_resistances,
@@ -78,8 +78,9 @@ def test_persistent_beneficial_zone_separates_source_data_from_runtime_state() -
     )
 
     assert state.position == GridPosition(x=4, y=4)
-    assert state.armor_class_bonus == 2
-    assert state.saving_throw_bonus == 2
+    assert state.armor_class_bonus == 0
+    assert state.cover_bonus == 2
+    assert state.saving_throw_bonus == 0
     assert state.saving_throw_abilities == ["dexterity"]
     assert state.ally_damage_resistances == ["fire"]
 
