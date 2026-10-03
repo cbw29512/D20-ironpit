@@ -78,8 +78,6 @@ source.state.active_effect_ids = ["incapacitated"];
 A.sync(setup);
 assert.equal(D.saveAdvantage(ally.state, "wisdom", { effectTags: ["charmed"] }), 0);
 
-console.log("Browser friendly save-aura regressions passed.");
-
 
 source.state.active_effect_ids = [];
 source.state.timed_effects = [];
@@ -128,3 +126,5 @@ assert.equal(
   ally.state.active_modifiers.find((item) => item.kind === "saving-throw-flat")?.flat_bonus,
   3,
 );
+
+console.log("Browser friendly save-aura regressions passed.");
