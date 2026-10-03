@@ -46,6 +46,7 @@ def build_spell_modifier(
         replacement_hp=effect.replacement_hp,
         prevents_instant_death=effect.prevents_instant_death,
         source_creature_types=list(effect.source_creature_types),
+        required_effect_tags=list(effect.required_effect_tags),
         bypass_attacker_senses=list(effect.bypass_attacker_senses),
         save_ability=effect.save_ability,
         save_dc=effect.save_dc,
