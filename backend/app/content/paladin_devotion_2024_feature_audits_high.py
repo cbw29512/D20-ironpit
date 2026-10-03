@@ -74,15 +74,6 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
                        "Aura of Protection until the start of Aurelia's next turn. Cover uses "
                        "the strongest cover source rather than stacking. No Paladin-specific resolver."),
             ))
-        if level >= 15:
-            audits.append(paladin_2024_feature(
-                "smite-of-protection", "Smite of Protection", "subclass",
-                combat=True, automated=True,
-                notes=("Divine Smite triggers the universal timed source-centered friendly cover aura. "
-                       "Aurelia and allies currently inside Aura of Protection gain Half Cover (+2 AC "
-                       "and +2 Dexterity saves) until the start of Aurelia's next turn. Cover sources "
-                       "use the strongest cover benefit rather than stacking."),
-            ))
         return audits
     except Exception:
         logger.exception("Failed to build later 2024 Paladin feature audits at level %s.", level)
