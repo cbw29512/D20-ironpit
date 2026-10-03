@@ -3,7 +3,7 @@
 
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "bonus-damage"]);
   const KINDS = new Set([
-    "armor-class", "armor-class-minimum", "attack-roll-flat", "saving-throw-flat", "condition-immunity", ...DIE_KINDS,
+    "armor-class", "armor-class-minimum", "cover-armor-class", "attack-roll-flat", "saving-throw-flat", "cover-saving-throw-flat", "condition-immunity", ...DIE_KINDS,
     "saving-throw-advantage", "d20-test-advantage", "saving-throw-disadvantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
     "attacks-against-disadvantage", "next-attack-against-advantage", "next-incoming-attack-roll-flat", "targeting-save-gate", "speed", "debuff-counter",
     "zero-hp-replacement", "opportunity-attack-suppressed", "damage-source-qualifier", "weapon-damage-type-choice", "invisibility-benefits-suppressed", "speed-multiplier",
@@ -28,7 +28,7 @@
     if (item.kind === "damage-source-qualifier" && (!item.weapon_id || !item.source_qualifier)) throw new Error("Damage source qualifier modifiers require a weapon id and qualifier.");
     if (item.kind === "weapon-damage-type-choice" && !item.weapon_id) throw new Error("Weapon damage-type choice modifiers require a weapon id.");
     if (item.kind !== "damage-source-qualifier" && item.source_qualifier) throw new Error(item.kind + " does not accept a source qualifier.");
-    if (item.kind === "saving-throw-flat" && !(item.flat_bonus || 0)) throw new Error("Flat saving-throw modifiers require a nonzero bonus.");
+    if (new Set(["saving-throw-flat", "cover-saving-throw-flat"]).has(item.kind) && !(item.flat_bonus || 0)) throw new Error("Flat saving-throw modifiers require a nonzero bonus.");
     if (item.kind === "condition-immunity" && !item.condition_id) throw new Error("Condition-immunity modifiers require a condition id.");
     if (item.kind !== "condition-immunity" && item.condition_id) throw new Error(`${item.kind} does not accept a condition id.`);
     if (item.kind === "debuff-counter" && !item.debuff_counter) throw new Error("Debuff-counter modifiers require a counter definition.");
@@ -126,10 +126,16 @@
     ));
     return before - state.active_modifiers.length;
   }
-  const savingThrowFlat = (state, ability = null) => (state.active_modifiers || [])
-    .filter((item) => item.kind === "saving-throw-flat"
-      && (!item.save_ability || !ability || item.save_ability === ability))
-    .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
+  const savingThrowFlat = (state, ability = null) => {
+    const eligible = (item) => !item.save_ability || !ability || item.save_ability === ability;
+    const stacking = (state.active_modifiers || [])
+      .filter((item) => item.kind === "saving-throw-flat" && eligible(item))
+      .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
+    const cover = Math.max(0, ...(state.active_modifiers || [])
+      .filter((item) => item.kind === "cover-saving-throw-flat" && eligible(item))
+      .map((item) => item.flat_bonus || 0));
+    return stacking + cover;
+  };
   function damageSourceQualifiers(state, attack) {
     const qualifiers = new Set(["attack", "weapon", attack.kind, ...(attack.damageSourceQualifiers || [])]);
     for (const item of state.active_modifiers || []) {
@@ -139,7 +145,7 @@
     }
     return qualifiers;
   }
-  const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"), ...(state.active_modifiers || []).filter((item) => item.kind === "armor-class-minimum").map((item) => item.minimum_value || 0));
+  const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class") + Math.max(0, ...(state.active_modifiers || []).filter((item) => item.kind === "cover-armor-class").map((item) => item.flat_bonus || 0)), ...(state.active_modifiers || []).filter((item) => item.kind === "armor-class-minimum").map((item) => item.minimum_value || 0));
   const effectiveSpeed = (state) => {
     const speedDelta = (state.active_modifiers || []).filter((item) => item.kind === "speed")
       .reduce((sum, item) => sum + (
