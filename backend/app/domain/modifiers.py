@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.combatants import DamageType
 from app.domain.debuffs import DebuffCounter
 from app.domain.damage_sources import DamageSourceQualifier
+from app.domain.non_stacking_benefits import normalize_non_stacking_group
 
 
 class ModifierKind(StrEnum):
@@ -185,14 +186,7 @@ class CombatModifier(BaseModel):
                 raise ValueError("Speed multipliers require a non-1 multiplier and no flat bonus.")
         elif self.multiplier != 1.0:
             raise ValueError(f"{self.kind.value} does not accept a multiplier.")
-        if self.non_stacking_group is not None and self.kind not in {
-            ModifierKind.ARMOR_CLASS, ModifierKind.SAVING_THROW_FLAT,
-        }:
-            raise ValueError("Non-stacking groups support AC and saving-throw flat benefits only.")
-        if self.non_stacking_group is not None:
-            if self.flat_bonus <= 0:
-                raise ValueError("Non-stacking grouped benefits require a positive flat bonus.")
-            self.non_stacking_group = self.non_stacking_group.strip().casefold()
+        self.non_stacking_group = normalize_non_stacking_group(self.kind, self.flat_bonus, self.non_stacking_group)
         if self.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and self.target_id is None:
             raise ValueError("Target-scoped attack Advantage requires a target id.")
         return self
