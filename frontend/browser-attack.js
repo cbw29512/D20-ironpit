@@ -179,6 +179,7 @@
     if (vexApplied) description += ` Vex primes the next attack against ${actualTarget.state.template.name}.`;
     if (deferredEffectArmed) description += ` ${deferredEffectArmed.sourceName} is armed on ${actualTarget.state.template.name}; ${deferredEffectArmed.resourceRemaining} uses remain.`;
     if (exileApplied) description += ` ${actualTarget.state.template.name} is Banished by ${exileApplied.sourceName} until the source-relative return point.`;
+    if (outcome.postHitSelfBuffApplied) description += ` ${outcome.postHitSelfBuffApplied.sourceName} activates.`;
     if (attackSave) description += ` ${attackSave.saveAbility} save DC ${attackSave.saveDc}: ${actualTarget.state.template.name} ${attackSave.saveSucceeded ? "succeeds" : "fails"}.`; if (topple.saveDc !== null) description += ` Topple save DC ${topple.saveDc}: ${actualTarget.state.template.name} ${topple.saveSucceeded ? "succeeds" : "fails"}.`;
     if (damageOutcome === "relentless_endurance") description += ` ${actualTarget.state.template.name} uses Relentless Endurance and remains at 1 HP.`;
     if (damageOutcome === "undead_fortitude") description += ` ${actualTarget.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
