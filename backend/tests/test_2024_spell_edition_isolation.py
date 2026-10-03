@@ -58,6 +58,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "bless",
         "shield-of-faith",
         "divine-favor",
+        "protection-from-evil-and-good",
         "aid",
         "shatter",
         "thunderwave",
@@ -251,6 +252,44 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             modifier.dice_size,
             modifier.damage_type,
         ) == ("bonus-damage", 1, 4, "radiant")
+
+
+    if "protection-from-evil-and-good" in defenses:
+        spell = defenses["protection-from-evil-and-good"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.duration_minutes,
+            spell.target_policy,
+            spell.target_count,
+            spell.concentration,
+        ) == (1, "action", 5, 10, "friendly", 1, True)
+        protected = {"aberration", "celestial", "elemental", "fey", "fiend", "undead"}
+        attack_penalties = [
+            item for item in spell.modifier_effects
+            if item.kind == "attacks-against-disadvantage"
+        ]
+        assert len(attack_penalties) == 1
+        assert set(attack_penalties[0].source_creature_types) == protected
+        immunities = {
+            item.condition_id: set(item.source_creature_types)
+            for item in spell.modifier_effects
+            if item.kind == "condition-immunity"
+        }
+        assert immunities == {"charmed": protected, "frightened": protected}
+        save_advantage = [
+            item for item in spell.modifier_effects
+            if item.kind == "saving-throw-advantage"
+        ]
+        assert len(save_advantage) == 12
+        assert {item.save_ability for item in save_advantage} == {
+            "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",
+        }
+        assert {tuple(item.required_effect_tags) for item in save_advantage} == {
+            ("charm",), ("fear",),
+        }
+        assert all(set(item.source_creature_types) == protected for item in save_advantage)
 
 
     if "thunderclap" in spell_saves:
