@@ -58,3 +58,19 @@ def paladin_2024_level5_audits() -> list[FeatureAudit]:
             ),
         ),
     ]
+
+
+def paladin_2024_level6_audits() -> list[FeatureAudit]:
+    return [
+        paladin_2024_feature(
+            "aura-of-protection",
+            "Aura of Protection",
+            "class",
+            combat=True,
+            automated=True,
+            notes=(
+                "Universal friendly saving-throw aura: 10-foot Emanation, "
+                "Charisma-modifier flat save bonus, inactive while the source is Incapacitated."
+            ),
+        ),
+    ]
