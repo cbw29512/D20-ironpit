@@ -143,6 +143,18 @@ def build_paladin_2024_feature_audits(level: int) -> list[FeatureAudit]:
             ))
         if level >= 9:
             audits.extend(_level_nine())
+        if level >= 10:
+            audits.append(paladin_2024_feature(
+                "aura-of-courage",
+                "Aura of Courage",
+                "class",
+                combat=True,
+                automated=True,
+                notes=("Reuses the universal friendly condition-immunity aura. "
+                       "Aurelia and allies inside Aura of Protection are immune to Frightened; "
+                       "an existing Frightened condition is suppressed while the creature remains "
+                       "inside the aura, and the aura is inactive while Aurelia is Incapacitated."),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Paladin feature audits at level %s.", level)
