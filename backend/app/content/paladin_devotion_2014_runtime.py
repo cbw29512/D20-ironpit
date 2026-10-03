@@ -133,6 +133,7 @@ def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
                         radius_ft=aura_radius,
                         flat_bonus=max(1, aura_bonus),
                         inactive_while_unconscious=True,
+                        non_stacking_group="aura-of-protection",
                     )
                     if level >= 6 else None
                 ),
