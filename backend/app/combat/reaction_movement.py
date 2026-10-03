@@ -108,7 +108,7 @@ def move_toward_with_reactions(
                 turn_key=turn_key,
             )
 
-        if not voluntary_activity_available(mover.state, "movement"):
+        if movement_source == "speed" and not voluntary_activity_available(mover.state, "movement"):
             return [], sequence, None
         proposed_position, moved = _proposed_position(mover, target, desired_distance_ft)
         if moved <= 0 or _approaches_fear_source(mover, target, setup, proposed_position):
@@ -135,7 +135,8 @@ def move_toward_with_reactions(
                 if mover.state.is_dead or mover.state.is_unconscious or speed_is_zero(mover.state) or newly_prone:
                     return events, sequence, None
 
-        claim_voluntary_activity(mover.state, "movement")
+        if movement_source == "speed":
+            claim_voluntary_activity(mover.state, "movement")
         movement = move_toward_combatant(
             sequence, round_number, mover, target, desired_distance_ft,
         )
