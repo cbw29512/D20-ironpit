@@ -40,6 +40,10 @@ PALADIN_SPELLS = (
         spell_level=4, min_character_level=13,
     ),
     _spell(
+        "death-ward", "Death Ward", "buff", "zero-hp-replacement", "instant-death-prevention",
+        spell_level=4, min_character_level=15,
+    ),
+    _spell(
         "divine-smite", "Divine Smite", "damage", "post-hit-resource-damage",
         min_character_level=2, always_prepared_from_level=2,
     ),
