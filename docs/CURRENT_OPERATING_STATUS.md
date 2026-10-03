@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-03 for the 2024 Devotion Paladin level 8 tranche. Main baseline: `007814e2262ed6e473c2ea023cfb999437857ee2`.
+Recorded 2026-10-03 for the 2024 Devotion Paladin level 9 tranche. Main baseline: `67bdd670e6265e1657f11aff5c6df38dc1c14845`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -34,9 +34,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
 | 2024 | Monk (Open Hand) | 1–20 |
-| 2024 | Paladin (Devotion) | 1–7 |
+| 2024 | Paladin (Devotion) | 1–8 |
 
-2024 public-ready hero slots on current main: **147 / 240**.
+2024 public-ready hero slots on current main: **148 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -46,9 +46,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 147 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 7 on main; this tranche advances level 8.
+**2024 canonical pregens are 148 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 8 on main; this tranche advances level 9.
 
-Active implementation lane: **2024 Devotion Paladin level 8.** The repeatable Ability Score Improvement feat raises Strength 19→20 and Charisma 14→15, preserving the locked Strength → Charisma → Constitution combat priority. Shared derived-stat logic updates weapon attack/damage, Athletics, Charisma skills, spellcasting, and aura values. Prepared spells and spell slots remain unchanged from level 7.
+Active implementation lane: **2024 Devotion Paladin level 9.** Proficiency Bonus advances to +4, HP to 76, Lay On Hands to 45, and spell slots to 4/3/2. Abjure Foes uses a source-neutral capped multi-target saving-throw action plus the universal Frightened/timed-effect lifecycle; the only new turn rule is a generic single-activity behavior that limits an affected target to movement, one Action, or one Bonus Action while preserving Reactions. Oath spells add explicit 2024 Beacon of Hope and Charisma-based Dispel Magic. Ordinary preparations advance to nine with damage/healing-first Aura of Vitality and Blinding Smite retained fail-closed until their exact recurring-heal/post-hit lifecycles are supported.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -76,7 +76,8 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 7 adds **Aura of Devotion** through the generic friendly condition-immunity aura wrapper. It grants **Charmed immunity** to Aurelia and allies inside the live 10-foot Emanation and shuts down while Aurelia is Incapacitated. The same tranche migrates 2014 Aura of Devotion/Courage onto the wrapper instead of retaining a Paladin-specific resolver.
 - Level 7 ordinary preparation adds **Lesser Restoration**, reusing the certified 2024 condition-removal action. Spell slots advance to **4 first-level / 3 second-level**, Lay On Hands to **35**, and HP to **60**.
 - Level 8 uses **Ability Score Improvement** for **+1 Strength / +1 Charisma** (Strength 19→20, Charisma 14→15). Shared derived-stat logic raises Longsword/Javelin attack to +8, damage to +5, Athletics to +8, and Charisma skills by 1; Aura of Protection remains +2 because Charisma 15 still has a +2 modifier. HP advances to **68** and Lay On Hands to **40**; prepared spells and slots remain unchanged.
-- This tranche targets **148 / 240** 2024 public-ready hero slots.
+- Level 9 advances Proficiency Bonus to **+4**, HP to **76**, Lay On Hands to **45**, and spell slots to **4 first / 3 second / 2 third**. **Abjure Foes** targets up to Charisma modifier creatures (currently 2) within 60 feet that Aurelia can see; failed Wisdom saves become Frightened for up to 1 minute or until damaged and use the universal single-activity turn rule. **Beacon of Hope** and **Dispel Magic** are always prepared Oath spells with explicit 2024 fingerprints; Dispel Magic uses Charisma. Ordinary preparations advance to nine with **Aura of Vitality** and **Blinding Smite** under the damage/healing-first policy, both fail-closed pending exact shared lifecycle support.
+- This tranche targets **149 / 240** 2024 public-ready hero slots.
 
 ### 2024 Monk lane
 
