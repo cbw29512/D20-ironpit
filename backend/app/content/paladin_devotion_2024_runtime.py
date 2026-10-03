@@ -29,10 +29,10 @@ from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
 
 def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
-    """Build certified 2024 Aurelia through Paladin level 11."""
+    """Build certified 2024 Aurelia through Paladin level 12."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}:
-            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-11 only.")
+        if level not in range(1, 13):
+            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-12 only.")
         profile = build_aurelia_brightshield_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:

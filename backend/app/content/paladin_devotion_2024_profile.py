@@ -13,10 +13,10 @@ logger = logging.getLogger(__name__)
 
 
 def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildProfile:
-    """Compile Aurelia's legal 2024 Devotion Paladin progression through level 11."""
+    """Compile Aurelia's legal 2024 Devotion Paladin progression through level 12."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}:
-            raise ValueError("The current 2024 Paladin profile tranche supports levels 1-11 only.")
+        if level not in range(1, 13):
+            raise ValueError("The current 2024 Paladin profile tranche supports levels 1-12 only.")
         hero = HERO_BY_CLASS["paladin"]
         base, allowed, background, advancement, final = (
             build_paladin_2024_ability_progression(level)

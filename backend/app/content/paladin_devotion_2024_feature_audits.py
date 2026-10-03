@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import logging
 
+from app.content.paladin_devotion_2024_feature_audits_high import build_paladin_2024_high_feature_audits
 from app.content.paladin_devotion_2024_profile_support import paladin_2024_feature
 from app.domain.character_builds import FeatureAudit
 
 logger = logging.getLogger(__name__)
-
 
 def _level_five() -> list[FeatureAudit]:
     return [
@@ -99,7 +99,7 @@ def build_paladin_2024_feature_audits(level: int) -> list[FeatureAudit]:
         if level >= 3:
             audits.extend([
                 paladin_2024_feature("channel-divinity", "Channel Divinity", "class", combat=True, automated=True,
-                                     notes="Two source-owned uses feed universal Channel Divinity consumers."),
+                                     notes=("Three" if level >= 11 else "Two") + " source-owned uses feed universal Channel Divinity consumers."),
                 paladin_2024_feature(
                     "divine-sense", "Divine Sense", "class", combat=False, automated=False,
                     notes=("Arena state already exposes combatant creature type and position; "
@@ -143,30 +143,7 @@ def build_paladin_2024_feature_audits(level: int) -> list[FeatureAudit]:
             ))
         if level >= 9:
             audits.extend(_level_nine())
-        if level >= 10:
-            audits.append(paladin_2024_feature(
-                "aura-of-courage",
-                "Aura of Courage",
-                "class",
-                combat=True,
-                automated=True,
-                notes=("Reuses the universal friendly condition-immunity aura. "
-                       "Aurelia and allies inside Aura of Protection are immune to Frightened; "
-                       "an existing Frightened condition is suppressed while the creature remains "
-                       "inside the aura, and the aura is inactive while Aurelia is Incapacitated."),
-            ))
-        if level >= 11:
-            audits.extend([
-                paladin_2024_feature(
-                    "radiant-strikes",
-                    "Radiant Strikes",
-                    "class",
-                    combat=True,
-                    automated=True,
-                    notes=("Reuses generic on-hit damage. Each qualifying Melee-weapon hit "
-                           "adds 1d8 Radiant damage and doubles that damage die on a Critical Hit."),
-                ),
-            ])
+        audits.extend(build_paladin_2024_high_feature_audits(level))
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Paladin feature audits at level %s.", level)
