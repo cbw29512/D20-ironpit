@@ -10,6 +10,7 @@ from app.domain.modifiers import CombatModifier, ModifierKind
 
 logger = logging.getLogger(__name__)
 _PREFIX = "friendly-save-aura:"
+_CONDITION_PREFIX = "friendly-condition-aura:"
 _ABILITIES = ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma")
 
 
@@ -52,7 +53,7 @@ def _clear(setup: EncounterSetup) -> None:
     for member in _members(setup):
         member.state.active_modifiers = [
             item for item in member.state.active_modifiers
-            if not item.id.startswith(_PREFIX)
+            if not item.id.startswith(_PREFIX) and not item.id.startswith(_CONDITION_PREFIX)
         ]
 
 
@@ -112,6 +113,26 @@ def sync_friendly_save_auras(setup: EncounterSetup) -> None:
                     kind=ModifierKind.SAVING_THROW_FLAT,
                     flat_bonus=aura.flat_bonus,
                 ))
+
+            for source in allies:
+                for aura in source.state.template.progression_features.friendly_condition_immunity_auras:
+                    if not _passive_active(source, aura):
+                        continue
+                    if combatant_distance(source, target) > aura.radius_ft:
+                        continue
+                    if aura.condition_id in target.state.template.condition_immunities:
+                        continue
+                    add_modifier(target.state, CombatModifier(
+                        id=(
+                            f"{_CONDITION_PREFIX}{source.combatant_id}:"
+                            f"{aura.source_id}:{target.combatant_id}:{aura.condition_id}"
+                        ),
+                        source_id=source.combatant_id,
+                        source_effect_id=aura.source_id,
+                        source_name=aura.source_name,
+                        kind=ModifierKind.CONDITION_IMMUNITY,
+                        condition_id=aura.condition_id,
+                    ))
     except Exception:
         logger.exception("Failed to synchronize friendly save auras.")
         raise
