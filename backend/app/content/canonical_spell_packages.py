@@ -68,6 +68,10 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
             min_character_level=4,
         ),
         _spell(
+            "shining-smite", "Shining Smite", "damage", "arena-out-of-scope",
+            spell_level=2, min_character_level=5,
+        ),
+        _spell(
             "divine-smite", "Divine Smite", "damage", "post-hit-resource-damage",
             min_character_level=2, always_prepared_from_level=2,
         ),
@@ -78,6 +82,18 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
         _spell(
             "shield-of-faith", "Shield of Faith", "buff", "modifier-stack", "concentration",
             min_character_level=3, always_prepared_from_level=3,
+        ),
+        _spell(
+            "find-steed", "Find Steed", "summon", "arena-unavailable-summon",
+            spell_level=2, min_character_level=5, always_prepared_from_level=5,
+        ),
+        _spell(
+            "aid", "Aid", "buff", "modifier-stack",
+            spell_level=2, min_character_level=5, always_prepared_from_level=5,
+        ),
+        _spell(
+            "zone-of-truth", "Zone of Truth", "control", "arena-out-of-scope",
+            spell_level=2, min_character_level=5, always_prepared_from_level=5,
         ),
     ),
     "ranger": (
