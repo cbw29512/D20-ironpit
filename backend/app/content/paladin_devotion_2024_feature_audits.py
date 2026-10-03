@@ -63,13 +63,6 @@ def _level_nine() -> list[FeatureAudit]:
             notes=("Beacon of Hope uses explicit 2024 save/healing-maximization modifiers; "
                    "Dispel Magic uses the universal spell-effect removal action with Charisma."),
         ),
-        paladin_2024_feature(
-            "level9-preparations", "Level 9 Prepared Spells", "class",
-            combat=True, automated=False,
-            notes=("Damage/healing-first choices are Aura of Vitality and Blinding Smite. "
-                   "Both remain fail-closed until their exact recurring-heal/post-hit lifecycles "
-                   "are supported by universal engine primitives."),
-        ),
     ]
 
 
