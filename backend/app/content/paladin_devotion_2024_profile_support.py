@@ -76,6 +76,33 @@ def paladin_2024_level6_audits() -> list[FeatureAudit]:
     ]
 
 
+
+def paladin_2024_level7_audits() -> list[FeatureAudit]:
+    return [
+        paladin_2024_feature(
+            "aura-of-devotion",
+            "Aura of Devotion",
+            "subclass",
+            combat=True,
+            automated=True,
+            notes=(
+                "Universal friendly condition-immunity aura: Charmed immunity inside "
+                "Aura of Protection's 10-foot Emanation, inactive while the source is Incapacitated."
+            ),
+        ),
+        paladin_2024_feature(
+            "lesser-restoration",
+            "Lesser Restoration",
+            "spell",
+            combat=True,
+            automated=True,
+            notes=(
+                "Seventh ordinary preparation reuses the certified 2024 universal "
+                "condition-removal action."
+            ),
+        ),
+    ]
+
 def paladin_2024_source_references(level: int) -> list[str]:
     try:
         references = [
@@ -102,12 +129,14 @@ def paladin_2024_source_references(level: int) -> list[str]:
             ])
         if level >= 6:
             references.append("Basic Rules 2024: Paladin level 6 — Aura of Protection")
+        if level >= 7:
+            references.append("Basic Rules 2024: Oath of Devotion level 7 — Aura of Devotion")
         references.extend([
             "Basic Rules 2024: Character Origins — Human and Soldier",
             (
                 "Basic Rules 2024: Spells — Cure Wounds, Divine Favor, Bless, Divine Smite, "
                 "Searing Smite, Thunderous Smite, Shining Smite, Find Steed, Aid, Zone of Truth, "
-                "Protection from Evil and Good, Shield of Faith"
+                "Protection from Evil and Good, Shield of Faith, Lesser Restoration"
             ),
             (
                 "Basic Rules 2024: Equipment — Chain Mail, Shield, Longsword, Javelin, "
