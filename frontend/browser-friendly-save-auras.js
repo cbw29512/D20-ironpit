@@ -2,6 +2,7 @@
   "use strict";
 
   const PREFIX = "friendly-save-aura:";
+  const COVER_PREFIX = "friendly-cover-aura:";
   const CONDITION_PREFIX = "friendly-condition-aura:";
   const ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"];
   const S = () => window.IRON_PIT_BROWSER_STATE;
@@ -45,6 +46,7 @@
     for (const member of members(setup)) {
       member.state.active_modifiers = (member.state.active_modifiers || [])
         .filter((item) => !String(item.id || "").startsWith(PREFIX)
+          && !String(item.id || "").startsWith(COVER_PREFIX)
           && !String(item.id || "").startsWith(CONDITION_PREFIX));
     }
   }
@@ -56,27 +58,41 @@
       const allMembers = members(setup);
       for (const source of allMembers) {
         const actions = (source.state.template.timed_self_buff_actions || [])
-          .filter((action) => action.friendlySaveAdvantageAura && active(source, action));
+          .filter((action) => (action.friendlySaveAdvantageAura || action.friendlyCoverAura) && active(source, action));
         if (!actions.length) continue;
         const allies = source.side === "heroes" ? setup.heroes : setup.monsters;
         for (const action of actions) {
-          const aura = action.friendlySaveAdvantageAura;
+          const saveAura = action.friendlySaveAdvantageAura;
+          const coverAura = action.friendlyCoverAura;
           for (const target of allies) {
             if (target.state.is_dead || !target.state.is_alive) continue;
-            if (S().distance(source, target) > aura.radius_ft) continue;
-            if (aura.requires_hearing && Q().has(target.state, "deafened")) continue;
-            for (const ability of ABILITIES) {
-              for (const tag of aura.required_effect_tags || []) {
-                M().add(target.state, {
-                  id: `${PREFIX}${source.combatant_id}:${action.id}:${target.combatant_id}:${ability}:${tag}`,
-                  source_id: source.combatant_id,
-                  source_effect_id: action.id,
-                  source_name: action.name,
-                  kind: "saving-throw-advantage",
-                  save_ability: ability,
-                  required_effect_tags: [tag],
-                });
+            if (saveAura && S().distance(source, target) <= saveAura.radius_ft
+                && !(saveAura.requires_hearing && Q().has(target.state, "deafened"))) {
+              for (const ability of ABILITIES) {
+                for (const tag of saveAura.required_effect_tags || []) {
+                  M().add(target.state, {
+                    id: `${PREFIX}${source.combatant_id}:${action.id}:${target.combatant_id}:${ability}:${tag}`,
+                    source_id: source.combatant_id,
+                    source_effect_id: action.id,
+                    source_name: action.name,
+                    kind: "saving-throw-advantage",
+                    save_ability: ability,
+                    required_effect_tags: [tag],
+                  });
+                }
               }
+            }
+            if (coverAura && S().distance(source, target) <= coverAura.radius_ft) {
+              M().add(target.state, {
+                id: `${COVER_PREFIX}${source.combatant_id}:${action.id}:${target.combatant_id}:ac`,
+                source_id: source.combatant_id, source_effect_id: action.id, source_name: action.name,
+                kind: "cover-armor-class", flat_bonus: coverAura.cover_bonus,
+              });
+              M().add(target.state, {
+                id: `${COVER_PREFIX}${source.combatant_id}:${action.id}:${target.combatant_id}:dex`,
+                source_id: source.combatant_id, source_effect_id: action.id, source_name: action.name,
+                kind: "cover-saving-throw-flat", flat_bonus: coverAura.cover_bonus, save_ability: "dexterity",
+              });
             }
           }
         }
