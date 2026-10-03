@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.action_economy import claim_voluntary_activity, voluntary_activity_available
 from app.combat.damage_reaction_events import damage_event_chain
 from app.combat.grid_geometry import footprint_distance_ft
 from app.combat.grid_pathing import plan_movement_toward
@@ -35,6 +36,8 @@ def move_toward_on_grid(
         disengaged = disengaged or mover.state.disengaged_this_turn
         if setup.map_definition is None or mover.state.position is None or target.state.position is None:
             raise ValueError("Grid movement requires an authoritative map and grid positions.")
+        if not voluntary_activity_available(mover.state, "movement"):
+            return [], sequence, None
         members = [*setup.heroes, *setup.monsters]
         plan = plan_movement_toward(
             setup.map_definition,
@@ -101,6 +104,7 @@ def move_toward_on_grid(
                 target.state.position,
                 target.state.template.size,
             )
+            claim_voluntary_activity(mover.state, "movement")
             mover.state.position = destination.model_copy(deep=True)
             mover.state.movement_remaining_ft -= step_cost
             sync_persistent_beneficial_zones(setup, round_number)
