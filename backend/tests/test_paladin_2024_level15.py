@@ -82,9 +82,9 @@ def test_divine_smite_activates_live_half_cover_until_next_turn() -> None:
     try:
         hero = build_aurelia_brightshield_2024(15)
         aurelia = _member("aurelia", "heroes", hero, 0)
-        ally = _member("ally", "heroes", build_commoner(), 1)
+        ally = _member("ally", "heroes", build_commoner(), 2)
         enemy_template = build_commoner().model_copy(update={"max_hp": 100})
-        enemy = _member("enemy", "monsters", enemy_template, 2)
+        enemy = _member("enemy", "monsters", enemy_template, 1)
         setup = EncounterSetup(
             heroes=[aurelia, ally],
             monsters=[enemy],
@@ -95,7 +95,7 @@ def test_divine_smite_activates_live_half_cover_until_next_turn() -> None:
         turn_key = "1:aurelia"
         aurelia.state.feature_last_turn_keys["savage-attacker"] = turn_key
         event = resolve_encounter_attack(
-            1, 1, aurelia, enemy, hero.weapon_attack, 10,
+            1, 1, aurelia, enemy, hero.weapon_attack, 5,
             FixedDiceProvider([18, 4, 5, 6, 7, 8, 3, 2]),
             setup, spend_action=False, turn_key=turn_key,
         )
