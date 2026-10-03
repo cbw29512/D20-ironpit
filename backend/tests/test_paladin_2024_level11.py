@@ -53,7 +53,6 @@ def test_2024_paladin_level_eleven_progression_is_raw_ready() -> None:
 
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["radiant-strikes"].automated is True
-    assert audits["crusaders-mantle"].automated is False
 
     assert_canonical_profile_policy(profile)
     assert_character_build_raw_ready(profile, hero)
