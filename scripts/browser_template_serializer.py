@@ -408,6 +408,7 @@ def persistent_beneficial_zone_row(action: Any) -> dict[str, Any]:
             "moveActionCost": action.move_action_cost, "moveDistanceFt": action.move_distance_ft,
             "moveRangeFt": action.move_range_ft,
             "armorClassBonus": action.armor_class_bonus,
+            "coverBonus": action.cover_bonus,
             "savingThrowBonus": action.saving_throw_bonus,
             "savingThrowAbilities": list(action.saving_throw_abilities),
             "allyDamageResistances": list(action.ally_damage_resistances),
