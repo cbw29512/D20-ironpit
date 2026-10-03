@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
-from app.domain.models import ConditionName
+from app.domain.actions import ConditionName
 
 
 class FriendlyConditionImmunityAuraGrant(BaseModel):
