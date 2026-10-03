@@ -68,6 +68,16 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
             audits.append(paladin_2024_feature(
                 "smite-of-protection", "Smite of Protection", "subclass",
                 combat=True, automated=True,
+                notes=("Divine Smite's generic post-hit damage may trigger a declared timed "
+                       "source-centered friendly aura. For Smite of Protection that aura grants "
+                       "Half Cover (+2 AC and +2 Dexterity saves) to Aurelia and allies inside "
+                       "Aura of Protection until the start of Aurelia's next turn. Cover uses "
+                       "the strongest cover source rather than stacking. No Paladin-specific resolver."),
+            ))
+        if level >= 15:
+            audits.append(paladin_2024_feature(
+                "smite-of-protection", "Smite of Protection", "subclass",
+                combat=True, automated=True,
                 notes=("Divine Smite triggers the universal timed source-centered friendly cover aura. "
                        "Aurelia and allies currently inside Aura of Protection gain Half Cover (+2 AC "
                        "and +2 Dexterity saves) until the start of Aurelia's next turn. Cover sources "
