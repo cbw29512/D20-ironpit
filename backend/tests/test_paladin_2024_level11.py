@@ -66,7 +66,7 @@ def test_2024_radiant_strikes_rolls_and_critically_doubles_without_resource_cost
     _, components = resolve_weapon_damage(
         state,
         state.template.weapon_attack,
-        FixedDiceProvider([4, 7]),
+        FixedDiceProvider([4, 6, 7]),
         False,
         RollMode.NORMAL,
         "1:aurelia-radiant-strikes",
@@ -78,7 +78,7 @@ def test_2024_radiant_strikes_rolls_and_critically_doubles_without_resource_cost
     _, critical_components = resolve_weapon_damage(
         state,
         state.template.weapon_attack,
-        FixedDiceProvider([4, 5, 7, 8]),
+        FixedDiceProvider([4, 5, 6, 6, 7, 8]),
         True,
         RollMode.NORMAL,
         "1:aurelia-radiant-strikes-crit",
