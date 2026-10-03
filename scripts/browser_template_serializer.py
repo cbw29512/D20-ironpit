@@ -286,6 +286,12 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
         row["preventsInstantDeath"] = True
     if effect.source_creature_types:
         row["sourceCreatureTypes"] = list(effect.source_creature_types)
+    if effect.required_effect_tags:
+        row["requiredEffectTags"] = list(effect.required_effect_tags)
+    if effect.save_ability is not None:
+        row["saveAbility"] = effect.save_ability
+    if effect.save_dc is not None:
+        row["saveDc"] = effect.save_dc
     if effect.bypass_attacker_senses:
         row["bypassAttackerSenses"] = list(effect.bypass_attacker_senses)
     if effect.consume_on_attack_against:
