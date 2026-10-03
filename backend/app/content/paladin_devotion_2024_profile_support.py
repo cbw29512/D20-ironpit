@@ -53,6 +53,11 @@ def paladin_2024_source_references(level: int) -> list[str]:
             references.append("Basic Rules 2024: Paladin level 6 — Aura of Protection")
         if level >= 7:
             references.append("Basic Rules 2024: Oath of Devotion level 7 — Aura of Devotion")
+        if level >= 8:
+            references.append(
+                "Basic Rules 2024: Paladin level 8 — Ability Score Improvement; "
+                "Feats — Ability Score Improvement (+1 Strength, +1 Charisma)"
+            )
         references.extend([
             "Basic Rules 2024: Character Origins — Human and Soldier",
             (

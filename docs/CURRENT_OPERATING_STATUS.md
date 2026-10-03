@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-03 for the 2024 Devotion Paladin level 7 tranche. Main baseline: `14c64de1f6ed2b75188b2574c17512d77370ce7c`.
+Recorded 2026-10-03 for the 2024 Devotion Paladin level 8 tranche. Main baseline: `007814e2262ed6e473c2ea023cfb999437857ee2`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -34,9 +34,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
 | 2024 | Monk (Open Hand) | 1–20 |
-| 2024 | Paladin (Devotion) | 1–5 |
+| 2024 | Paladin (Devotion) | 1–7 |
 
-2024 public-ready hero slots on current main: **146 / 240**.
+2024 public-ready hero slots on current main: **147 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -46,9 +46,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 146 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 6 on main; this tranche advances level 7.
+**2024 canonical pregens are 147 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 7 on main; this tranche advances level 8.
 
-Active implementation lane: **2024 Devotion Paladin level 7.** Aura of Devotion reuses universal condition immunity through a generic live friendly aura wrapper. It grants Aurelia and same-side allies within the 10-foot Aura of Protection Emanation immunity to Charmed and is inactive while Aurelia is Incapacitated. The same wrapper migrates 2014 Aura of Devotion and Aura of Courage off Paladin-specific condition-aura resolution while preserving their edition-specific unconscious-only shutdown rule. The seventh ordinary preparation is 2024 Lesser Restoration through the existing edition-isolated universal condition-removal action.
+Active implementation lane: **2024 Devotion Paladin level 8.** The repeatable Ability Score Improvement feat raises Strength 19→20 and Charisma 14→15, preserving the locked Strength → Charisma → Constitution combat priority. Shared derived-stat logic updates weapon attack/damage, Athletics, Charisma skills, spellcasting, and aura values. Prepared spells and spell slots remain unchanged from level 7.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -75,7 +75,8 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 6 adds **Aura of Protection** through the universal friendly saving-throw aura primitive. At Aurelia's current Charisma 14, the live 10-foot Emanation grants **+2 to saving throws** and is inactive while Aurelia is Incapacitated.
 - Level 7 adds **Aura of Devotion** through the generic friendly condition-immunity aura wrapper. It grants **Charmed immunity** to Aurelia and allies inside the live 10-foot Emanation and shuts down while Aurelia is Incapacitated. The same tranche migrates 2014 Aura of Devotion/Courage onto the wrapper instead of retaining a Paladin-specific resolver.
 - Level 7 ordinary preparation adds **Lesser Restoration**, reusing the certified 2024 condition-removal action. Spell slots advance to **4 first-level / 3 second-level**, Lay On Hands to **35**, and HP to **60**.
-- This tranche targets **147 / 240** 2024 public-ready hero slots.
+- Level 8 uses **Ability Score Improvement** for **+1 Strength / +1 Charisma** (Strength 19→20, Charisma 14→15). Shared derived-stat logic raises Longsword/Javelin attack to +8, damage to +5, Athletics to +8, and Charisma skills by 1; Aura of Protection remains +2 because Charisma 15 still has a +2 modifier. HP advances to **68** and Lay On Hands to **40**; prepared spells and slots remain unchanged.
+- This tranche targets **148 / 240** 2024 public-ready hero slots.
 
 ### 2024 Monk lane
 
