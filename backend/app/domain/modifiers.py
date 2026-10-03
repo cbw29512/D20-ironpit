@@ -69,6 +69,7 @@ class CombatModifier(BaseModel):
     requires_spell_effect: bool = False
     required_effect_tags: list[str] = Field(default_factory=list)
     concentration_required: bool = False
+    non_stacking_group: str | None = Field(default=None, min_length=1)
     consume_on_attack_against: bool = False
     consume_on_saving_throw: bool = False
     ends_on_owner_attack: bool = False
@@ -185,6 +186,12 @@ class CombatModifier(BaseModel):
                 raise ValueError("Speed multipliers require a non-1 multiplier and no flat bonus.")
         elif self.multiplier != 1.0:
             raise ValueError(f"{self.kind.value} does not accept a multiplier.")
+        if self.non_stacking_group is not None:
+            if self.kind not in {ModifierKind.ARMOR_CLASS, ModifierKind.SAVING_THROW_FLAT}:
+                raise ValueError("Non-stacking groups currently support AC and saving-throw flat benefits only.")
+            if self.flat_bonus <= 0:
+                raise ValueError("Non-stacking grouped benefits require a positive flat bonus.")
+            self.non_stacking_group = self.non_stacking_group.strip().casefold()
         if self.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and self.target_id is None:
             raise ValueError("Target-scoped attack Advantage requires a target id.")
         return self
