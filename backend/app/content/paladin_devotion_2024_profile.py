@@ -5,7 +5,7 @@ import logging
 from app.content.canonical_combat_build_policy import canonical_background_increases, canonical_base_ability_scores
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.hero_progressions import HERO_BY_CLASS
-from app.content.paladin_devotion_2024_profile_support import paladin_2024_feature
+from app.content.paladin_devotion_2024_profile_support import paladin_2024_feature, paladin_2024_level5_audits
 from app.domain.character_builds import AbilityIncrease, CharacterBuildProfile
 
 logger = logging.getLogger(__name__)
@@ -109,38 +109,7 @@ def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildPro
                 )
             )
         if level >= 5:
-            audits.extend([
-                paladin_2024_feature(
-                    "extra-attack",
-                    "Extra Attack",
-                    "class",
-                    combat=True,
-                    automated=True,
-                    notes="The universal Attack action resolves two legal weapon attacks.",
-                ),
-                paladin_2024_feature(
-                    "faithful-steed",
-                    "Faithful Steed",
-                    "class",
-                    combat=False,
-                    automated=False,
-                    notes=(
-                        "Find Steed is always prepared and retains its one free Long-Rest cast resource, "
-                        "but Iron Pit's no-summons rule keeps the summon arena-unavailable."
-                    ),
-                ),
-                paladin_2024_feature(
-                    "oath-spells-level5",
-                    "Oath of Devotion Spells",
-                    "subclass",
-                    combat=True,
-                    automated=True,
-                    notes=(
-                        "Aid uses the certified 2024 defensive-spell fingerprint; "
-                        "Zone of Truth is always prepared but arena-neutral."
-                    ),
-                ),
-            ])
+            audits.extend(paladin_2024_level5_audits())
 
         return CharacterBuildProfile(
             id=f"build-aurelia-brightshield-2024-l{level}",
