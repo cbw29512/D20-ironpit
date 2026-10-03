@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-03 for the 2024 Devotion Paladin level 14 tranche. Main baseline: `1878e42dee065ef5e95aadf72a9aafadc8f12e4f`.
+Recorded 2026-10-03 for the 2024 Devotion Paladin level 15 tranche. Main baseline: `baabb48ea202d37c79ae7197db4653654368649f`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -34,9 +34,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
 | 2024 | Monk (Open Hand) | 1–20 |
-| 2024 | Paladin (Devotion) | 1–13 |
+| 2024 | Paladin (Devotion) | 1–14 |
 
-2024 public-ready hero slots on current main: **153 / 240**.
+2024 public-ready hero slots on current main: **154 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -46,7 +46,7 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 153 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 13 on main; this tranche advances level 14.
+**2024 canonical pregens are 154 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 14 on main; this tranche advances level 15 to a generated target of **155 / 240**.
 
 Active implementation lane: **2024 Devotion Paladin level 15.** Aurelia remains the same persistent character. HP advances to 124, Lay On Hands to 75, fourth-level slots to 2, and ordinary preparations to 12 with Aura of Life retained fail-closed pending exact recovery-aura support. Smite of Protection composes the existing Divine Smite post-hit payment with a generic timed source-centered friendly cover aura. Half Cover grants +2 AC and +2 Dexterity saves inside Aura of Protection until the start of Aurelia's next turn, and multiple cover sources use only the strongest cover benefit.
 
