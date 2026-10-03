@@ -3,7 +3,7 @@ import pytest
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.modifier_stack import effective_armor_class
-from app.combat.precombat_spells import choose_defensive_spell, prepare_defenses
+from app.combat.precombat_spells import choose_defensive_spell, prepare_defenses, select_defensive_targets
 from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.demo import build_goblin_warrior
@@ -119,3 +119,31 @@ def test_shield_of_faith_uses_real_modifier_attack_and_concentration_paths() -> 
     assert caster.state.concentration is None
     assert caster.state.active_modifiers == []
     assert effective_armor_class(caster.state) == caster.state.template.armor_class
+
+
+def test_all_legal_friendly_targeting_is_not_artificially_capped_at_twenty() -> None:
+    spell = DefensiveSpellAction(
+        id="all-legal", name="All Legal", level=3, action_cost="action",
+        range_ft=30, duration_minutes=1, target_policy="friendly",
+        target_all_legal=True, concentration=True,
+        modifier_effects=[SHIELD_OF_FAITH.modifier_effects[0]],
+    )
+    caster = _caster([spell], {3: 1})
+    allies = [
+        EncounterCombatant(
+            combatant_id=f"ally-{index}",
+            side="heroes",
+            position_ft=5,
+            state=build_combatant_state(build_karnok_stoneward()),
+        )
+        for index in range(25)
+    ]
+    setup = _setup(caster)
+    setup.heroes.extend(allies)
+
+    targets = select_defensive_targets(caster, setup, spell, 3)
+
+    assert len(targets) == 26
+    assert {target.combatant_id for target in targets} == {
+        "caster", *(f"ally-{index}" for index in range(25)),
+    }
