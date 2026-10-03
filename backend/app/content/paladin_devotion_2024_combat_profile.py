@@ -25,7 +25,7 @@ def _profile(level: int) -> PregenCombatProfile:
         resources.append(("channel-divinity", 2))
     if level >= 5:
         resources.extend([
-            ("spell-slot-2", 2),
+            ("spell-slot-2", 3 if level >= 7 else 2),
             ("faithful-steed-free-cast", 1),
         ])
     return PregenCombatProfile(
@@ -61,7 +61,7 @@ def _profile(level: int) -> PregenCombatProfile:
 
 def build_aurelia_2024_combat_profiles() -> list[PregenCombatProfile]:
     try:
-        return [_profile(level) for level in range(1, 7)]
+        return [_profile(level) for level in range(1, 8)]
     except Exception:
         logger.exception("Failed to build 2024 Aurelia combat fingerprints.")
         raise
