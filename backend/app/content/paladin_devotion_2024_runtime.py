@@ -69,10 +69,10 @@ def _resources(level: int) -> list[ResourceDefinition]:
     return resources
 
 def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
-    """Build certified 2024 Aurelia through Paladin level 3."""
+    """Build certified 2024 Aurelia through Paladin level 4."""
     try:
-        if level not in {1, 2, 3}:
-            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-3 only.")
+        if level not in {1, 2, 3, 4}:
+            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-4 only.")
         profile = build_aurelia_brightshield_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -140,6 +140,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                     "Sacred Weapon, Protection from Evil and Good, Shield of Faith, "
                     if level >= 3 else ""
                 )
+                + ("Thunderous Smite (fail-closed pending shared atomic post-hit save/push primitive), " if level >= 4 else "")
                 + "Longsword, Javelin"
             ),
         )
