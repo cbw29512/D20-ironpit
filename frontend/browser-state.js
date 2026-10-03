@@ -26,7 +26,7 @@
       death_save_successes: 0, death_save_failures: 0,
       action_available: true, bonus_action_available: true, reaction_available: true, disengaged_this_turn: false,
       turn_terminated: false, turn_termination_reason: null,
-      dash_uses_this_turn: 0, movement_remaining_ft: 0, resources: { ...(template.resources || {}) },
+      dash_uses_this_turn: 0, movement_remaining_ft: 0, voluntary_turn_activity: null, resources: { ...(template.resources || {}) },
       heroic_inspiration: Boolean(template.starts_with_heroic_inspiration),
       active_effect_ids: [], active_buff_effect_ids: [], opening_buff_id: null,
       grapple_sources: [], timed_effects: [], deferred_effects: [], delayed_resource_refills: [], persistent_spell_attacks: [], active_modifiers: OM().build(template),
@@ -66,7 +66,7 @@
   }
 
   function beginTurn(state) {
-    state.turn_terminated = false; state.turn_termination_reason = null; state.disengaged_this_turn = false;
+    state.turn_terminated = false; state.turn_termination_reason = null; state.disengaged_this_turn = false; state.voluntary_turn_activity = null;
     const incapacitated = Q().incapacitated(state);
     state.action_available = !incapacitated;
     state.bonus_action_available = !incapacitated;
@@ -182,6 +182,7 @@
     const before = distance(member, target);
     const moved = Math.min(Math.max(0, before - desired), member.state.movement_remaining_ft);
     if (!moved) return null;
+    window.IRON_PIT_ACTION_ECONOMY?.claimActivity(member.state, "movement");
     member.position_ft += (member.position_ft < target.position_ft ? 1 : -1) * moved;
     member.state.movement_remaining_ft -= moved;
     return { before, after: distance(member, target), moved };
