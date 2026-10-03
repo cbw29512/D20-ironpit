@@ -44,6 +44,10 @@ PALADIN_SPELLS = (
         spell_level=4, min_character_level=15,
     ),
     _spell(
+        "aura-of-life", "Aura of Life", "healing", "arena-out-of-scope",
+        spell_level=4, min_character_level=15,
+    ),
+    _spell(
         "divine-smite", "Divine Smite", "damage", "post-hit-resource-damage",
         min_character_level=2, always_prepared_from_level=2,
     ),
