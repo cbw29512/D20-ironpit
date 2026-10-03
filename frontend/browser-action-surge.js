@@ -2,11 +2,13 @@
   "use strict";
 
   const MA = () => window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION;
+  const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
 
   function available(state, turnKey) {
     return (state.resources["action-surge"] || 0) > 0
       && !state.action_available
+      && !E()?.singleActivityRestricted?.(state)
       && !state.turn_terminated
       && !state.is_dead
       && !Q().incapacitated(state)

@@ -128,7 +128,7 @@ def beacon_of_hope_2014() -> DefensiveSpellAction:
             range_ft=30,
             duration_minutes=1,
             target_policy="friendly",
-            target_count=20,
+            target_all_legal=True,
             concentration=True,
             priority=60,
             modifier_effects=[

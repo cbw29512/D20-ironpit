@@ -34,6 +34,8 @@ def select_friendly_buff_targets(
     setup: EncounterSetup,
     range_ft: int,
     target_count: int,
+    *,
+    target_all_legal: bool = False,
 ) -> list[EncounterCombatant]:
     """Select legal friendly targets: all melee first, then caster, then remaining back line."""
     try:
@@ -44,7 +46,7 @@ def select_friendly_buff_targets(
             and abs(caster.position_ft - target.position_ft) <= range_ft
         ]
         legal.sort(key=lambda target: _priority(caster, target, setup))
-        return legal[:target_count]
+        return legal if target_all_legal else legal[:target_count]
     except Exception:
         logger.exception("Friendly buff target selection failed for %s.", caster.combatant_id)
         raise

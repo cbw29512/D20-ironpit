@@ -49,6 +49,23 @@ def _level_seven() -> list[FeatureAudit]:
     ]
 
 
+def _level_nine() -> list[FeatureAudit]:
+    return [
+        paladin_2024_feature(
+            "abjure-foes", "Abjure Foes", "class", combat=True, automated=True,
+            notes=("One Channel Divinity powers a universal capped multi-target Wisdom-save action. "
+                   "Failed targets are Frightened for up to 1 minute or until damaged and may choose "
+                   "only movement, an Action, or a Bonus Action on each affected turn."),
+        ),
+        paladin_2024_feature(
+            "oath-spells-level9", "Oath of Devotion Spells", "subclass",
+            combat=True, automated=True,
+            notes=("Beacon of Hope uses explicit 2024 save/healing-maximization modifiers; "
+                   "Dispel Magic uses the universal spell-effect removal action with Charisma."),
+        ),
+    ]
+
+
 def build_paladin_2024_feature_audits(level: int) -> list[FeatureAudit]:
     try:
         audits = [
@@ -124,6 +141,8 @@ def build_paladin_2024_feature_audits(level: int) -> list[FeatureAudit]:
                        "raises Charisma 14 to 15; shared derived-stat logic updates weapon "
                        "attack/damage, Athletics, Charisma skills, spellcasting, and aura bonus."),
             ))
+        if level >= 9:
+            audits.extend(_level_nine())
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Paladin feature audits at level %s.", level)

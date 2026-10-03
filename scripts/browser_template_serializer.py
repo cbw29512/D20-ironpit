@@ -218,6 +218,10 @@ def _save(action: Any) -> dict[str, Any]:
             "repeatSaveAbility": action.failed_save_timed_effect.repeat_save_ability,
             "repeatSaveDc": action.failed_save_timed_effect.repeat_save_dc,
             "repeatSaveTiming": action.failed_save_timed_effect.repeat_save_timing,
+            "turnBehavior": action.failed_save_timed_effect.turn_behavior,
+            "endsOnDamage": action.failed_save_timed_effect.ends_on_damage,
+            "endsIfSourceIncapacitated": action.failed_save_timed_effect.ends_if_source_incapacitated,
+            "endsIfSourceDead": action.failed_save_timed_effect.ends_if_source_dead,
             "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
         }
     if action.grapple_escape_dc is not None:
@@ -421,6 +425,7 @@ def defense_row(action: Any) -> dict[str, Any]:
         "id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
         "range": action.range_ft, "durationMinutes": action.duration_minutes,
         "targetPolicy": action.target_policy, "targetCount": action.target_count,
+        "targetAllLegal": action.target_all_legal,
         "temporaryHp": action.temporary_hp,
         "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
         "damageResistances": list(action.damage_resistances),

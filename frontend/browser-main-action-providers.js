@@ -4,6 +4,7 @@
   const S = () => window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION, DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const C = () => S().CATEGORIES;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
+  const R = () => window.IRON_PIT_BROWSER_RESOURCES;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const L = () => window.IRON_PIT_BROWSER_SPELL_OFFENSE;
   const IP = () => window.IRON_PIT_BROWSER_INTIMIDATING_PRESENCE_2014;
@@ -19,14 +20,22 @@
   const CH = () => window.IRON_PIT_BROWSER_CHARGE;
   const SP = () => window.IRON_PIT_BROWSER_SPELL_POLICY;
   const SR = () => window.IRON_PIT_BROWSER_SPELL_RESOLUTION;
+  const MS = () => window.IRON_PIT_BROWSER_MULTI_SAVE_PROVIDER;
 
   const BOTH = Object.freeze(["2014", "2024"]);
   function saveChoice(member, setup) {
     if (!E().available(member.state, "action")) return null;
+    const actions = member.state.template.saving_throw_actions || [];
+    if (actions.some((action) => (action.maxTargets || 1) > 1)) {
+      const runtime = MS();
+      if (!runtime) throw new Error("Capped multi-target save runtime is not loaded.");
+      const selected = runtime.choose(member, setup);
+      if (selected) return selected;
+    }
     for (const target of F().targetOrder(member, setup)) {
-      for (const action of member.state.template.saving_throw_actions || []) {
-        if ((action.actionCost || "action") !== "action") continue;
-        if (action.resourceId && !window.IRON_PIT_BROWSER_RESOURCES.available(member.state, action.resourceId, action.resourceCost || 1)) continue;
+      for (const action of actions) {
+        if ((action.actionCost || "action") !== "action" || (action.maxTargets || 1) > 1) continue;
+        if (action.resourceId && !R().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
         const distance = F().saveDistance(member, target, action.range);
         if (V().legalAction(action, target, distance)) return { target, action, distance };
       }
@@ -125,14 +134,26 @@
       id: "save-action", category: C().SAVE_ACTION, rulesets: BOTH,
       discover: ({ member, setup }) => {
         const selected = saveChoice(member, setup);
-        return selected ? { payload: {
+        if (!selected) return null;
+        if (selected.targets) return { payload: {
+          targetIds: selected.targets.map((target) => target.combatant_id), actionId: selected.action.id,
+        } };
+        return { payload: {
           targetId: selected.target.combatant_id, actionId: selected.action.id, distance: selected.distance,
-        } } : null;
+        } };
       },
       resolve: ({ sequence, round, member, setup }, candidate) => {
-        const target = memberById(setup, candidate.payload.targetId);
         const action = actionById(member, candidate.payload.actionId);
-        if (!target || !action) throw new Error("Save-action candidate target/action is unavailable.");
+        if (!action) throw new Error("Save-action candidate action is unavailable.");
+        if (Array.isArray(candidate.payload.targetIds)) {
+          const targets = candidate.payload.targetIds.map((id) => memberById(setup, id));
+          if (targets.some((target) => !target)) throw new Error("Multi-save candidate target is unavailable.");
+          const runtime = MS();
+          if (!runtime) throw new Error("Capped multi-target save runtime is not loaded.");
+          return runtime.resolve(sequence, round, member, setup, action, targets);
+        }
+        const target = memberById(setup, candidate.payload.targetId);
+        if (!target) throw new Error("Save-action candidate target is unavailable.");
         const event = V().resolveAction(sequence, round, member, target, action, candidate.payload.distance, { setup });
         const next = sequence + 1;
         return DR() ? DR().chain(next, round, member, event, setup) : { events: [event], sequence: next };

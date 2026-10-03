@@ -75,7 +75,8 @@ def _attack(attack: WeaponAttack) -> dict[str, Any]:
 def _save(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost, "saveAbility": action.save_ability, "dc": action.dc,
-        "range": action.range_ft, "targetMaxSize": _value(action.target_max_size) if action.target_max_size else None,
+        "range": action.range_ft, "maxTargets": action.max_targets,
+        "targetMaxSize": _value(action.target_max_size) if action.target_max_size else None,
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
         "successDamage": action.success_damage,
@@ -113,6 +114,10 @@ def _save(action: Any) -> dict[str, Any]:
             "repeatSaveAbility": action.failed_save_timed_effect.repeat_save_ability,
             "repeatSaveDc": action.failed_save_timed_effect.repeat_save_dc,
             "repeatSaveTiming": action.failed_save_timed_effect.repeat_save_timing,
+            "turnBehavior": action.failed_save_timed_effect.turn_behavior,
+            "endsOnDamage": action.failed_save_timed_effect.ends_on_damage,
+            "endsIfSourceIncapacitated": action.failed_save_timed_effect.ends_if_source_incapacitated,
+            "endsIfSourceDead": action.failed_save_timed_effect.ends_if_source_dead,
             "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
         }
     return row
@@ -246,6 +251,7 @@ def _defense(action: Any) -> dict[str, Any]:
     row = {"id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
            "range": action.range_ft, "durationMinutes": action.duration_minutes,
            "targetPolicy": action.target_policy, "targetCount": action.target_count,
+           "targetAllLegal": action.target_all_legal,
            "targetCountPerSlotAbove": action.target_count_per_slot_above,
            "temporaryHp": action.temporary_hp, "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
            "maxHpIncrease": action.max_hp_increase, "currentHpIncrease": action.current_hp_increase,

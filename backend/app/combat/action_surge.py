@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.action_economy import single_activity_restricted
 from app.combat.condition_rules import is_incapacitated
 from app.domain.models import BattleEvent, CombatantState
 
@@ -14,6 +15,7 @@ def action_surge_available(state: CombatantState, turn_key: str) -> bool:
         resource is not None
         and resource.current_uses > 0
         and not state.action_available
+        and not single_activity_restricted(state)
         and not state.is_dead
         and not is_incapacitated(state)
         and state.feature_last_turn_keys.get("action-surge") != turn_key

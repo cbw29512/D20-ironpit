@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 148
+    "public_ready": 149
   },
   "heroes": [
     {
@@ -9157,24 +9157,74 @@
             "id": "oath-devotion",
             "name": "Oath of Devotion"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "aurelia-brightshield-l9",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Paladin 9, Human, Soldier, Cure Wounds, Divine Favor, Bless, Divine Smite, Sacred Weapon, Protection from Evil and Good, Shield of Faith, Thunderous Smite (fail-closed pending shared atomic post-hit save/push primitive), Shining Smite (fail-closed pending shared persistent post-hit target-effect primitive), Aid, Zone of Truth, Find Steed (arena-unavailable summon), Lesser Restoration, Aura of Devotion, Abjure Foes, Aura of Vitality, Blinding Smite, Beacon of Hope, Dispel Magic, Longsword, Javelin"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack-action-weapon-buff:sacred-weapon",
+            "attack:aurelia-javelin",
+            "attack:aurelia-longsword",
+            "aura-of-devotion-2024",
+            "aura-of-protection-2024",
+            "condition-removal-action:lay-on-hands-poison",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:beacon-of-hope",
+            "defensive-spell-action:bless",
+            "defensive-spell-action:divine-favor",
+            "defensive-spell-action:protection-from-evil-and-good",
+            "defensive-spell-action:shield-of-faith",
+            "divine-smite-2024",
+            "effect-removal-action:dispel-magic",
+            "healing-action:cure-wounds",
+            "healing-action:lay-on-hands-heal",
+            "multiattack-or-extra-attack",
+            "resource:channel-divinity",
+            "resource:faithful-steed-free-cast",
+            "resource:lay-on-hands",
+            "resource:paladins-smite-free-cast",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "saving-throw-action:abjure-foes",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack-action-weapon-buff:sacred-weapon",
+            "attack:aurelia-javelin",
+            "attack:aurelia-longsword",
+            "aura-of-devotion-2024",
+            "aura-of-protection-2024",
+            "condition-removal-action:lay-on-hands-poison",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:beacon-of-hope",
+            "defensive-spell-action:bless",
+            "defensive-spell-action:divine-favor",
+            "defensive-spell-action:protection-from-evil-and-good",
+            "defensive-spell-action:shield-of-faith",
+            "divine-smite-2024",
+            "effect-removal-action:dispel-magic",
+            "healing-action:cure-wounds",
+            "healing-action:lay-on-hands-heal",
+            "multiattack-or-extra-attack",
+            "resource:channel-divinity",
+            "resource:faithful-steed-free-cast",
+            "resource:lay-on-hands",
+            "resource:paladins-smite-free-cast",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "saving-throw-action:abjure-foes",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 10,

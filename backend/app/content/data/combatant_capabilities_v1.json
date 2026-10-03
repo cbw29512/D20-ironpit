@@ -5151,6 +5151,7 @@
         "duration_minutes": 60,
         "target_policy": "self",
         "target_count": 1,
+        "target_all_legal": false,
         "target_count_per_slot_above": 0,
         "temporary_hp": 0,
         "temporary_hp_per_slot_above": 0,

@@ -146,3 +146,29 @@ const enemy = () => ({ combatant_id: "enemy", side: "monsters", position_ft: 30,
 }
 
 console.log("Browser precombat defensive spell regressions passed.");
+
+
+{
+  const allLegal = {
+    ...defense("all-legal", 3),
+    range: 30,
+    targetPolicy: "friendly",
+    targetAllLegal: true,
+    temporaryHp: 0,
+    temporaryHpPerSlotAbove: 0,
+    modifierEffects: [{ kind: "armor-class", flatBonus: 1 }],
+    concentration: true,
+  };
+  const c = caster([allLegal], { 3: 1 });
+  const allies = Array.from({ length: 25 }, (_, index) => ({
+    combatant_id: `ally-${index}`,
+    side: "heroes",
+    position_ft: 5,
+    state: S.buildState(structuredClone(base)),
+  }));
+  const fight = { heroes: [c, ...allies], monsters: [enemy()] };
+  const targets = P.selectTargets(c, fight, allLegal, 3);
+  assert.equal(targets.length, 26);
+  assert.deepEqual(new Set(targets.map((target) => target.combatant_id)),
+    new Set(["caster", ...allies.map((ally) => ally.combatant_id)]));
+}

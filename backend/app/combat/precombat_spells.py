@@ -69,7 +69,10 @@ def select_defensive_targets(
         raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
     if spell.target_policy == "self":
         return [member]
-    return select_friendly_buff_targets(member, setup, spell.range_ft, spell.target_count)
+    return select_friendly_buff_targets(
+        member, setup, spell.range_ft, spell.target_count,
+        target_all_legal=spell.target_all_legal,
+    )
 
 
 def prepare_defenses(

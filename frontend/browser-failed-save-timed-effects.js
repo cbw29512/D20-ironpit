@@ -15,6 +15,10 @@
         repeatSaveAbility: rider.repeatSaveAbility || null,
         repeatSaveDc: rider.repeatSaveDc ?? null,
         repeatSaveTiming: rider.repeatSaveTiming || null,
+        turnBehavior: rider.turnBehavior || "normal",
+        endsOnDamage: Boolean(rider.endsOnDamage),
+        endsIfSourceIncapacitated: Boolean(rider.endsIfSourceIncapacitated),
+        endsIfSourceDead: Boolean(rider.endsIfSourceDead),
         nextAttackDisadvantage: Boolean(rider.nextAttackDisadvantage),
         useDefaultPoisonRecovery: false,
       });

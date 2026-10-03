@@ -16,6 +16,8 @@ load("browser-grid-movement.js");
 const geometry = window.IRON_PIT_BROWSER_GRID_GEOMETRY;
 window.IRON_PIT_ACTION_ECONOMY = {
   available: (state, cost) => cost === "action" ? state.action_available : state.bonus_action_available,
+  voluntaryActivityAvailable: () => true,
+  claimActivity: () => {},
   spend: (state, cost) => {
     if (cost === "action") state.action_available = false;
     else if (cost === "bonus_action") state.bonus_action_available = false;

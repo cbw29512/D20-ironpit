@@ -7,6 +7,34 @@ from app.combat.timed_effect_control import suppresses_action, suppresses_bonus_
 from app.domain.models import CombatantState
 
 ActionCost = Literal["action", "bonus_action", "reaction"]
+VoluntaryActivity = Literal["movement", "action", "bonus_action"]
+
+
+def single_activity_restricted(state: CombatantState) -> bool:
+    return any(effect.turn_behavior == "single_activity" for effect in state.timed_effects)
+
+
+def voluntary_activity_available(state: CombatantState, activity: VoluntaryActivity) -> bool:
+    if not single_activity_restricted(state):
+        return True
+    return state.voluntary_turn_activity in {None, activity}
+
+
+def claim_voluntary_activity(state: CombatantState, activity: VoluntaryActivity) -> None:
+    if not single_activity_restricted(state):
+        return
+    if state.voluntary_turn_activity not in {None, activity}:
+        raise ValueError("A different voluntary turn activity is already committed.")
+    state.voluntary_turn_activity = activity
+    if activity == "movement":
+        state.action_available = False
+        state.bonus_action_available = False
+    elif activity == "action":
+        state.bonus_action_available = False
+        state.movement_remaining_ft = 0
+    else:
+        state.action_available = False
+        state.movement_remaining_ft = 0
 
 
 def is_available(state: CombatantState, cost: ActionCost) -> bool:
@@ -16,9 +44,9 @@ def is_available(state: CombatantState, cost: ActionCost) -> bool:
     if state.turn_terminated and cost != "reaction":
         return False
     if cost == "action":
-        return state.action_available and not suppresses_action(state)
+        return state.action_available and not suppresses_action(state) and voluntary_activity_available(state, "action")
     if cost == "bonus_action":
-        return state.bonus_action_available and not suppresses_bonus_action(state)
+        return state.bonus_action_available and not suppresses_bonus_action(state) and voluntary_activity_available(state, "bonus_action")
     if suppresses_reactions(state):
         return False
     return state.reaction_available
@@ -29,8 +57,10 @@ def spend(state: CombatantState, cost: ActionCost) -> None:
     if not is_available(state, cost):
         raise ValueError(f"{cost.replace('_', ' ').title()} is not available.")
     if cost == "action":
+        claim_voluntary_activity(state, "action")
         state.action_available = False
     elif cost == "bonus_action":
+        claim_voluntary_activity(state, "bonus_action")
         state.bonus_action_available = False
     else:
         state.reaction_available = False

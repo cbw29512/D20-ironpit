@@ -46,6 +46,14 @@ function fighterState(actionSurge = 1) {
   assert.equal(J.available(state, "2:hero-1"), true, "remaining use is legal on a later turn");
 }
 
+{
+  const state = fighterState();
+  state.timed_effects.push({ turn_behavior: "single_activity" });
+  E.spend(state, "action");
+  assert.equal(state.voluntary_turn_activity, "action");
+  assert.equal(J.available(state, "1:hero-1"), false, "single-activity restriction blocks an extra Action");
+}
+
 function grappleCheck(d10) {
   const state = fighterState();
   const member = { combatant_id: "hero-1", side: "heroes", position_ft: 0, state };

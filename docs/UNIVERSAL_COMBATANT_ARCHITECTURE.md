@@ -471,3 +471,12 @@ Passive friendly condition-immunity auras declare source id/name, live radius, o
 - 2024 Aura of Devotion binds Charmed immunity inside its 10-foot Aura of Protection Emanation and is inactive while the source is Incapacitated.
 - Leaving the radius or disabling the source removes the aura-owned modifier on the next synchronization; innate condition immunity remains untouched.
 - Python and browser runtimes consume the same declarative grant. Source names are player/audit metadata only.
+
+
+## Capped multi-target saving-throw actions
+
+A source may declare a normal `SavingThrowAction` with `max_targets > 1`. The shared selector chooses up to that many legal hostile targets using the existing target order, range, sight, immunity, save, resource, and action-economy rules. Every selected target resolves an independent save, while the source Action and source resource are spent exactly once after all selected targets have been validated. The resolver is source-neutral; class, spell, feature, and monster names remain presentation/audit metadata only.
+
+## Single-activity timed turn behavior
+
+A timed effect may declare `turn_behavior="single_activity"`. On each affected turn, the first voluntary category actually used—movement, Action, or Bonus Action—becomes that turn's sole voluntary category. Choosing movement removes Action and Bonus Action availability; choosing an Action removes Bonus Action availability and voluntary movement; choosing a Bonus Action removes Action availability and voluntary movement. Reactions are not affected. Multiple attacks that belong to one Attack action remain inside the chosen Action, but an effect that grants an additional Action cannot bypass the single-Action limit. The claim resets at the start of each turn and disappears when the owning timed-effect group expires or is removed.

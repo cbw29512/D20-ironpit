@@ -76,6 +76,14 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
             "condition-removal", spell_level=2, min_character_level=7,
         ),
         _spell(
+            "aura-of-vitality", "Aura of Vitality", "healing", "arena-out-of-scope",
+            spell_level=3, min_character_level=9,
+        ),
+        _spell(
+            "blinding-smite", "Blinding Smite", "damage", "arena-out-of-scope",
+            spell_level=3, min_character_level=9,
+        ),
+        _spell(
             "divine-smite", "Divine Smite", "damage", "post-hit-resource-damage",
             min_character_level=2, always_prepared_from_level=2,
         ),
@@ -98,6 +106,14 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
         _spell(
             "zone-of-truth", "Zone of Truth", "control", "arena-out-of-scope",
             spell_level=2, min_character_level=5, always_prepared_from_level=5,
+        ),
+        _spell(
+            "beacon-of-hope", "Beacon of Hope", "buff", "modifier-stack", "concentration",
+            spell_level=3, min_character_level=9, always_prepared_from_level=9,
+        ),
+        _spell(
+            "dispel-magic", "Dispel Magic", "control", "effect-removal",
+            spell_level=3, min_character_level=9, always_prepared_from_level=9,
         ),
     ),
     "ranger": (

@@ -127,3 +127,8 @@ is unavailable, using the existing shared resource-availability primitive in
 both engines. A spent breath weapon cannot be selected again until its normal
 recharge succeeds. This corrects illegal candidate discovery; resolution and
 recharge timing remain unchanged.
+
+
+## Capped multi-target save provider
+
+The normal save-action provider may discover a `SavingThrowAction` with `max_targets > 1`. Discovery selects only legal targets and records target ids plus the source action id. Resolution revalidates every target before spending anything, spends the Action and source resource once, then resolves one independent shared saving throw per target. Python and browser must use the same target cap and deterministic target order. This provider does not create source-named dispatch.

@@ -60,6 +60,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "divine-favor",
         "protection-from-evil-and-good",
         "aid",
+        "beacon-of-hope",
         "shatter",
         "thunderwave",
         "fireball",
@@ -219,6 +220,21 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         assert modifiers == {
             ("attack-roll-bonus-die", 1, 4),
             ("saving-throw-bonus-die", 1, 4),
+        }
+
+    if "beacon-of-hope" in defenses:
+        spell = defenses["beacon-of-hope"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.duration_minutes,
+            spell.target_policy,
+            spell.target_all_legal,
+            spell.concentration,
+        ) == (3, "action", 30, 1, "friendly", True, True)
+        assert {item.kind for item in spell.modifier_effects} == {
+            "saving-throw-advantage", "death-save-advantage", "healing-maximize",
         }
 
     if "shield-of-faith" in defenses:
@@ -810,6 +826,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "bard": "charisma",
             "cleric": "wisdom",
             "druid": "wisdom",
+            "paladin": "charisma",
         }
         assert progression.class_id in expected_casting_abilities
         spell = effect_removals["dispel-magic"]
