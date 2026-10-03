@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.content.character_math import fixed_hit_points
+from app.content.character_math import fixed_hit_points, proficiency_bonus
 from app.content.paladin_devotion_2024_profile import build_aurelia_brightshield_2024_profile
 from app.content.pregen_combat_profiles import AttackExpectation, PregenCombatProfile
 
@@ -14,12 +14,20 @@ def _profile(level: int) -> PregenCombatProfile:
     scores = build.final_ability_scores
     if scores is None:
         raise ValueError("2024 Aurelia combat profile requires final ability scores.")
-    pb = 2
-    resources = [("lay-on-hands", 5 * level), ("spell-slot-1", 3 if level >= 3 else 2)]
+    pb = proficiency_bonus(level)
+    resources = [
+        ("lay-on-hands", 5 * level),
+        ("spell-slot-1", 4 if level >= 5 else (3 if level >= 3 else 2)),
+    ]
     if level >= 2:
         resources.append(("paladins-smite-free-cast", 1))
     if level >= 3:
         resources.append(("channel-divinity", 2))
+    if level >= 5:
+        resources.extend([
+            ("spell-slot-2", 2),
+            ("faithful-steed-free-cast", 1),
+        ])
     return PregenCombatProfile(
         template_id=build.template_id, archetype="Paladin", level=level,
         abilities=scores, save_proficiencies=("wisdom", "charisma"),
@@ -53,7 +61,7 @@ def _profile(level: int) -> PregenCombatProfile:
 
 def build_aurelia_2024_combat_profiles() -> list[PregenCombatProfile]:
     try:
-        return [_profile(level) for level in range(1, 5)]
+        return [_profile(level) for level in range(1, 6)]
     except Exception:
         logger.exception("Failed to build 2024 Aurelia combat fingerprints.")
         raise

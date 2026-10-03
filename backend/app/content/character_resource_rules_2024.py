@@ -68,6 +68,10 @@ def _paladin_channel_divinity(level: int) -> int:
     return 2 if level >= 3 else 0
 
 
+def _faithful_steed_free_cast(level: int) -> int:
+    return 1 if level >= 5 else 0
+
+
 def _berserker_intimidating_presence(level: int) -> int:
     try:
         return 1 if level >= 14 else 0
@@ -122,6 +126,7 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         ("lay-on-hands", "Lay On Hands", lambda level: 5 * level),
         ("paladins-smite-free-cast", "Paladin's Smite: Free Cast", _paladins_smite_free_cast),
         ("channel-divinity", "Channel Divinity", _paladin_channel_divinity),
+        ("faithful-steed-free-cast", "Faithful Steed: Free Cast", _faithful_steed_free_cast),
     ),
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),

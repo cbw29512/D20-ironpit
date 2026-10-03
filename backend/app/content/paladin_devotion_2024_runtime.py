@@ -3,8 +3,9 @@ from __future__ import annotations
 import logging
 
 from app.content.canonical_hero_policy import canonical_template_id
-from app.content.character_math import fixed_hit_points, saving_throw_bonuses
+from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.equipment import build_longsword
+from app.content.cleric_life_domain import AID
 from app.content.healing_spell_effects import build_cure_wounds
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.paladin_devotion_2024_profile import build_aurelia_brightshield_2024_profile
@@ -16,7 +17,7 @@ from app.content.paladin_devotion_2024_support import (
 )
 from app.content.spell_effects import BLESS
 from app.content.weapon_catalog import build_weapon
-from app.domain.actions import ConditionRemovalAction, HealingAction
+from app.domain.actions import AttackActionDefinition, AttackActionSlot, ConditionRemovalAction, HealingAction
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.post_hit_damage import ResourceBackedPostHitDamage
 from app.domain.progression import ProgressionCombatFeatures
@@ -24,12 +25,29 @@ from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 
-def _attack(weapon_id: str, strength_modifier: int) -> WeaponAttack:
+def _attack(weapon_id: str, strength_modifier: int, level: int) -> WeaponAttack:
     weapon = build_longsword() if weapon_id == "longsword" else build_weapon(weapon_id)
     return WeaponAttack(
         id=f"aurelia-{weapon_id}", weapon=weapon,
-        attack_bonus=2 + strength_modifier, damage_bonus=strength_modifier,
-        attack_ability="strength", attack_ability_modifier=strength_modifier,
+        attack_bonus=proficiency_bonus(level) + strength_modifier,
+        damage_bonus=strength_modifier,
+        attack_ability="strength",
+        attack_ability_modifier=strength_modifier,
+    )
+
+
+def _attack_action(level: int) -> AttackActionDefinition | None:
+    if level < 5:
+        return None
+    choices = ["aurelia-longsword", "aurelia-javelin"]
+    return AttackActionDefinition(
+        id="extra-attack",
+        name="Extra Attack",
+        slots=[
+            AttackActionSlot(attack_ids=choices),
+            AttackActionSlot(attack_ids=choices),
+        ],
+        is_attack_action=True,
     )
 
 def _progression(level: int) -> ProgressionCombatFeatures:
@@ -55,7 +73,7 @@ def _resources(level: int) -> list[ResourceDefinition]:
         ResourceDefinition(
             id="spell-slot-1",
             name="Level 1 Spell Slot",
-            max_uses=3 if level >= 3 else 2,
+            max_uses=4 if level >= 5 else (3 if level >= 3 else 2),
         ),
     ]
     if level >= 2:
@@ -66,20 +84,29 @@ def _resources(level: int) -> list[ResourceDefinition]:
         resources.append(ResourceDefinition(
             id="channel-divinity", name="Channel Divinity", max_uses=2,
         ))
+    if level >= 5:
+        resources.extend([
+            ResourceDefinition(id="spell-slot-2", name="Level 2 Spell Slot", max_uses=2),
+            ResourceDefinition(
+                id="faithful-steed-free-cast",
+                name="Faithful Steed: Free Cast",
+                max_uses=1,
+            ),
+        ])
     return resources
 
 def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
-    """Build certified 2024 Aurelia through Paladin level 4."""
+    """Build certified 2024 Aurelia through Paladin level 5."""
     try:
-        if level not in {1, 2, 3, 4}:
-            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-4 only.")
+        if level not in {1, 2, 3, 4, 5}:
+            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-5 only.")
         profile = build_aurelia_brightshield_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
             raise ValueError("2024 Aurelia profile is missing final ability scores.")
         strength = scores.modifier("strength")
         charisma = scores.modifier("charisma")
-        pb = 2
+        pb = proficiency_bonus(level)
         return CombatantTemplate(
             id=canonical_template_id("paladin", level),
             name=HERO_BY_CLASS["paladin"].hero_name, archetype="Paladin",
@@ -88,8 +115,9 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
             max_hp=fixed_hit_points(level, 10, scores.modifier("constitution")),
             speed_ft=30, initiative_bonus=scores.modifier("dexterity"),
             starts_with_heroic_inspiration=True,
-            weapon_attack=_attack("longsword", strength),
-            alternate_weapon_attacks=[_attack("javelin", strength)],
+            weapon_attack=_attack("longsword", strength, level),
+            alternate_weapon_attacks=[_attack("javelin", strength, level)],
+            attack_action=_attack_action(level),
             healing_actions=[
                 HealingAction(
                     id="lay-on-hands-heal", name="Lay On Hands", action_cost="bonus_action",
@@ -111,6 +139,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                     [protection_from_evil_and_good_2024(), shield_of_faith_2024()]
                     if level >= 3 else []
                 ),
+                *([AID.model_copy(deep=True)] if level >= 5 else []),
             ],
             attack_action_weapon_buffs=[
                 sacred_weapon_2024(charisma)
@@ -141,6 +170,11 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                     if level >= 3 else ""
                 )
                 + ("Thunderous Smite (fail-closed pending shared atomic post-hit save/push primitive), " if level >= 4 else "")
+                + (
+                    "Shining Smite (fail-closed pending shared persistent post-hit target-effect primitive), "
+                    "Aid, Zone of Truth, Find Steed (arena-unavailable summon), "
+                    if level >= 5 else ""
+                )
                 + "Longsword, Javelin"
             ),
         )
