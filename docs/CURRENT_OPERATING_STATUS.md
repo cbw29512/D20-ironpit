@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-03 for the 2024 Devotion Paladin level 12 tranche. Main baseline: `ad53f23f7eaad83964aae694d0c27c10172813b8`.
+Recorded 2026-10-03 for the 2024 Devotion Paladin level 13 tranche. Main baseline: `b056b1442bbfcb85afebd8c5a2c5645befbd77dc`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -34,9 +34,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
 | 2024 | Monk (Open Hand) | 1–20 |
-| 2024 | Paladin (Devotion) | 1–11 |
+| 2024 | Paladin (Devotion) | 1–12 |
 
-2024 public-ready hero slots on current main: **151 / 240**.
+2024 public-ready hero slots on current main: **152 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -46,9 +46,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 151 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 11 on main; this tranche advances level 12.
+**2024 canonical pregens are 152 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 12 on main; this tranche advances level 13.
 
-Active implementation lane: **2024 Devotion Paladin level 12.** The repeatable Ability Score Improvement feat raises Charisma 15→17. Existing shared derived-stat logic updates the live Aura of Protection bonus to +3, Sacred Weapon to +3, Abjure Foes to DC 15 and up to three targets, Charisma saves/skills, and Cure Wounds. HP advances to 100 and Lay On Hands to 60. Spell slots remain 4/3/3 and ordinary preparations remain ten. No new engine primitive is required.
+Active implementation lane: **2024 Devotion Paladin level 13.** Proficiency Bonus advances to +5, HP to 108, Lay On Hands to 65, slots to 4/3/3/1, and ordinary preparations to eleven. Oath spells add the certified 2024 Freedom of Movement binding plus Guardian of Faith source metadata under the no-summons contract. Staggering Smite is the damage-first preparation and remains fail-closed pending a shared atomic post-hit spell damage/save/condition choice. No new engine primitive is required for the executable level delta.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -62,7 +62,7 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 2 Paladin's Smite always prepares Divine Smite and grants one free cast per Long Rest. The free cast is a generic finite resource; later casts use legal spell slots.
 - Divine Smite uses the universal hit-confirmed resource-backed damage primitive: the hit is established first, Bonus Action/payment legality is checked, then Smite dice are added to the triggering attack's damage components before typed defenses, Temporary HP, HP mutation, Concentration, and damage-triggered reactions resolve.
 - Divine Smite starts at 2d8 Radiant, gains +1d8 per higher-level slot, gains +1d8 against Fiends/Undead, and its attack damage dice double on a Critical Hit through the shared critical-damage path.
-- Javelin attacks do not trigger the canonical Smite binding because Aurelia's runtime javelin profile is Ranged; Longsword is the qualifying melee attack in the current loadout.
+- Longsword and thrown Javelin both trigger 2024 Divine Smite: the source qualifies a printed Melee weapon, independent of attack delivery. The level-13 debt audit corrects the prior ranged-delivery exclusion; 2014 Divine Smite remains edition-isolated.
 - Level 2 ordinary preparation adds certified 2024 Bless; unsupported smite variants are not approximated merely to fill prepared-spell slots.
 - Level 3 adds two Channel Divinity uses and Oath of Devotion. Sacred Weapon uses a universal Attack-action weapon-buff primitive; Protection from Evil and Good and Shield of Faith are explicit 2024 oath-spell fingerprints.
 - Level 4 takes the repeatable **Ability Score Improvement** feat for **+2 Strength (17→19)**. Shared derived-stat logic updates Longsword/Javelin attack and damage plus Athletics.
@@ -78,9 +78,10 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 8 uses **Ability Score Improvement** for **+1 Strength / +1 Charisma** (Strength 19→20, Charisma 14→15). Shared derived-stat logic raises Longsword/Javelin attack to +8, damage to +5, Athletics to +8, and Charisma skills by 1; Aura of Protection remains +2 because Charisma 15 still has a +2 modifier. HP advances to **68** and Lay On Hands to **40**; prepared spells and slots remain unchanged.
 - Level 9 advances Proficiency Bonus to **+4**, HP to **76**, Lay On Hands to **45**, and spell slots to **4 first / 3 second / 2 third**. **Abjure Foes** targets up to Charisma modifier creatures (currently 2) within 60 feet that Aurelia can see; failed Wisdom saves become Frightened for up to 1 minute or until damaged and use the universal single-activity turn rule. **Beacon of Hope** and **Dispel Magic** are always prepared Oath spells with explicit 2024 fingerprints; Dispel Magic uses Charisma. Ordinary preparations advance to nine with **Aura of Vitality** and **Blinding Smite** under the damage/healing-first policy, both fail-closed pending exact shared lifecycle support.
 - Level 10 adds **Aura of Courage** through the existing universal friendly condition-immunity aura. Aurelia and allies inside the live 10-foot Aura of Protection Emanation are immune to **Frightened**; an already-active Frightened condition is suppressed while inside the aura and resumes outside it if its source duration has not ended. The aura shuts down while Aurelia is Incapacitated. HP advances to **84** and Lay On Hands to **50**; prepared spells and slots remain unchanged.
-- Level 11 adds **Radiant Strikes** through generic on-hit damage: Aurelia's qualifying Melee-weapon hit adds **1d8 Radiant**, with normal critical doubling and no resource spend. Channel Divinity advances to **3**, third-level slots to **3**, HP to **92**, and Lay On Hands to **55**. The tenth ordinary preparation is **Crusader's Mantle** under the damage-first policy and remains fail-closed pending an exact live friendly weapon-damage aura.
+- Level 11 adds **Radiant Strikes** through generic on-hit damage: Aurelia's qualifying Melee-weapon hit adds **1d8 Radiant**, with normal critical doubling and no resource spend, including the thrown Javelin because it is a printed Melee weapon. Channel Divinity advances to **3**, third-level slots to **3**, HP to **92**, and Lay On Hands to **55**. The tenth ordinary preparation is **Crusader's Mantle** under the damage-first policy and remains fail-closed pending an exact live friendly weapon-damage aura.
 - Level 12 takes **Ability Score Improvement (+2 Charisma)** through the existing cumulative ability-increase schema. Charisma rises **15→17**, Aura of Protection and Sacred Weapon become **+3**, Abjure Foes becomes **DC 15 / three targets**, HP rises to **100**, and Lay On Hands to **60**. Slots and the ten ordinary preparations are unchanged.
-- This tranche targets **152 / 240** 2024 public-ready hero slots.
+- Level 13 advances Proficiency Bonus to **+5**, HP to **108**, Lay On Hands to **65**, slots to **4/3/3/1**, and ordinary preparations to **eleven**. The attacks become **+10**, Charisma saves/skills **+8**, and Abjure Foes **DC 16 / three targets**. Oath spells always prepare **Freedom of Movement** and **Guardian of Faith**; only Freedom of Movement executes, using the certified 2024 shared binding including Swim Speed and five-foot nonmagical escape costs. Guardian of Faith remains arena-unavailable under the no-summons contract. The new ordinary preparation **Staggering Smite** remains fail-closed pending an exact atomic post-hit spell damage/save/condition choice alongside Divine Smite.
+- This tranche targets **153 / 240** 2024 public-ready hero slots.
 
 ### 2024 Monk lane
 

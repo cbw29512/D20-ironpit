@@ -8,11 +8,13 @@ from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.friendly_condition_auras import FriendlyConditionImmunityAuraGrant
 from app.domain.friendly_save_auras import FriendlySavingThrowAuraGrant
-from app.domain.models import DamageType, OnHitDamage, WeaponAttack, WeaponAttackKind
+from app.domain.models import DamageType, OnHitDamage, WeaponAttack
 from app.domain.post_hit_damage import ResourceBackedPostHitDamage
 from app.domain.progression import ProgressionCombatFeatures
 
 logger = logging.getLogger(__name__)
+# Printed weapon categories for the audited canonical loadout, independent of delivery.
+_MELEE_WEAPON_IDS = ("longsword", "javelin")
 
 
 def build_paladin_2024_attack(
@@ -30,7 +32,7 @@ def build_paladin_2024_attack(
             attack_ability="strength",
             attack_ability_modifier=strength_modifier,
         )
-        if level >= 11 and weapon.attack_kind == WeaponAttackKind.MELEE:
+        if level >= 11 and weapon_id in _MELEE_WEAPON_IDS:
             attack = attack.model_copy(update={
                 "on_hit_damage": [
                     OnHitDamage(
@@ -113,7 +115,7 @@ def build_paladin_2024_progression(
                 ResourceBackedPostHitDamage(
                     source_id="divine-smite-2024",
                     source_name="Divine Smite",
-                    trigger_attack_ids=["aurelia-longsword"],
+                    trigger_attack_ids=[f"aurelia-{weapon_id}" for weapon_id in _MELEE_WEAPON_IDS],
                     action_cost="bonus_action",
                     free_resource_id="paladins-smite-free-cast",
                     printed_spell_level=1,

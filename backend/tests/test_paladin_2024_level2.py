@@ -33,7 +33,7 @@ def test_2024_paladin_level_two_is_raw_ready() -> None:
     smite = hero.progression_features.resource_backed_post_hit_damage
     assert smite is not None
     assert smite.source_name == "Divine Smite"
-    assert smite.trigger_attack_ids == ["aurelia-longsword"]
+    assert smite.trigger_attack_ids == ["aurelia-longsword", "aurelia-javelin"]
     assert (smite.base_dice_count, smite.dice_size, smite.damage_type) == (2, 8, "radiant")
     assert smite.bonus_target_creature_types == ["fiend", "undead"]
     assert smite.bonus_target_dice_count == 1

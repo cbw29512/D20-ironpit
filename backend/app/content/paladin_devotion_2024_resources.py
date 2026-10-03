@@ -48,6 +48,10 @@ def build_paladin_2024_resources(level: int) -> list[ResourceDefinition]:
                 name="Level 3 Spell Slot",
                 max_uses=3 if level >= 11 else 2,
             ))
+        if level >= 13:
+            resources.append(ResourceDefinition(
+                id="spell-slot-4", name="Level 4 Spell Slot", max_uses=1,
+            ))
         return resources
     except Exception:
         logger.exception("Failed to build 2024 Paladin resources at level %s.", level)

@@ -75,6 +75,12 @@ def paladin_2024_source_references(level: int) -> list[str]:
                 "Basic Rules 2024: Paladin level 12 — Ability Score Improvement; "
                 "Feats — Ability Score Improvement (+2 Charisma)"
             )
+        if level >= 13:
+            references.extend([
+                "Basic Rules 2024: Paladin level 13 — fourth-level spells and Proficiency Bonus +5",
+                "Basic Rules 2024: Oath of Devotion level 13 — Freedom of Movement and Guardian of Faith",
+                "Basic Rules 2024: Spells — Staggering Smite",
+            ])
         references.extend([
             "Basic Rules 2024: Character Origins — Human and Soldier",
             (

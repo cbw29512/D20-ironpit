@@ -21,6 +21,7 @@ from app.content.paladin_devotion_2024_support import (
     sacred_weapon_2024,
     shield_of_faith_2024,
 )
+from app.content.shared_movement_spells_2024 import freedom_of_movement_2024
 from app.content.spell_effects import BLESS
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.models import CombatantTemplate, VisualLoadout
@@ -29,10 +30,10 @@ from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
 
 def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
-    """Build certified 2024 Aurelia through Paladin level 12."""
+    """Build certified 2024 Aurelia through Paladin level 13."""
     try:
-        if level not in range(1, 13):
-            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-12 only.")
+        if level not in range(1, 14):
+            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-13 only.")
         profile = build_aurelia_brightshield_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -78,6 +79,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                 ),
                 *([AID.model_copy(deep=True)] if level >= 5 else []),
                 *([beacon_of_hope_2024()] if level >= 9 else []),
+                *([freedom_of_movement_2024()] if level >= 13 else []),
             ],
             effect_removal_actions=[dispel_magic_2024_paladin()] if level >= 9 else [],
             attack_action_weapon_buffs=[
@@ -118,6 +120,9 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                 + ("Abjure Foes, Aura of Vitality, Blinding Smite, Beacon of Hope, Dispel Magic, " if level >= 9 else "")
                 + ("Aura of Courage, " if level >= 10 else "")
                 + ("Radiant Strikes, Crusader\'s Mantle, " if level >= 11 else "")
+                + ("Freedom of Movement, Guardian of Faith (arena-unavailable summon), "
+                   "Staggering Smite (fail-closed pending shared atomic post-hit save/condition choice), "
+                   if level >= 13 else "")
                 + "Longsword, Javelin"
             ),
         )
