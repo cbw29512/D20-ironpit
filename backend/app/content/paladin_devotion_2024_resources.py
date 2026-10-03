@@ -27,7 +27,7 @@ def build_paladin_2024_resources(level: int) -> list[ResourceDefinition]:
             resources.append(ResourceDefinition(
                 id="channel-divinity",
                 name="Channel Divinity",
-                max_uses=2,
+                max_uses=3 if level >= 11 else 2,
             ))
         if level >= 5:
             resources.extend([
@@ -46,7 +46,7 @@ def build_paladin_2024_resources(level: int) -> list[ResourceDefinition]:
             resources.append(ResourceDefinition(
                 id="spell-slot-3",
                 name="Level 3 Spell Slot",
-                max_uses=2,
+                max_uses=3 if level >= 11 else 2,
             ))
         return resources
     except Exception:
