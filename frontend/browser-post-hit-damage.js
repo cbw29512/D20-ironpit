@@ -23,6 +23,23 @@
     return String(raw || "").split(" (", 1)[0].trim().toLowerCase();
   }
 
+  function activateOnUseSelfEffect(attacker, rule, turnKey) {
+    if (!rule.on_use_self_effect_id) return;
+    const split = String(turnKey).indexOf(":");
+    if (split < 1 || split === String(turnKey).length - 1) throw new Error("Timed self-effect activation requires a round:source turn key.");
+    const roundNumber = Number.parseInt(String(turnKey).slice(0, split), 10);
+    const sourceId = String(turnKey).slice(split + 1);
+    if (!Number.isInteger(roundNumber)) throw new Error("Timed self-effect activation round must be an integer.");
+    attacker.timed_effects = (attacker.timed_effects || []).filter((effect) => !(
+      effect.source_id === sourceId && effect.source_effect_id === rule.on_use_self_effect_id
+    ));
+    attacker.timed_effects.push({
+      effect_id: rule.on_use_self_effect_id, source_id: sourceId,
+      source_effect_id: rule.on_use_self_effect_id, applied_round: roundNumber,
+      expires_at_start_of_source_turn: true, expiry_timing: "source_turn_start",
+    });
+  }
+
   function bonusDamage(attacker, attack, turnKey, target = null) {
     try {
       const rule = attacker?.template?.resource_backed_post_hit_damage;
@@ -36,6 +53,7 @@
       E().spend(attacker, rule.action_cost);
       if (paid.expendsSlot) S().markSlotSpellCast(attacker, turnKey);
       R().spend(attacker, paid.resourceId, 1);
+      activateOnUseSelfEffect(attacker, rule, turnKey);
 
       let count = rule.base_dice_count
         + rule.dice_per_slot_above * (paid.slotLevel - rule.printed_spell_level);
