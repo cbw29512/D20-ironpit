@@ -72,6 +72,10 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
             spell_level=2, min_character_level=5,
         ),
         _spell(
+            "lesser-restoration", "Lesser Restoration", "healing",
+            "condition-removal", spell_level=2, min_character_level=7,
+        ),
+        _spell(
             "divine-smite", "Divine Smite", "damage", "post-hit-resource-damage",
             min_character_level=2, always_prepared_from_level=2,
         ),
