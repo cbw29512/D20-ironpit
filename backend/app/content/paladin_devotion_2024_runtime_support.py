@@ -75,16 +75,28 @@ def build_paladin_2024_progression(
                 if level >= 6
                 else None
             ),
-            friendly_condition_immunity_auras=(
-                [FriendlyConditionImmunityAuraGrant(
-                    source_id="aura-of-devotion-2024",
-                    source_name="Aura of Devotion",
-                    radius_ft=10,
-                    condition_id="charmed",
-                    inactive_while_incapacitated=True,
-                )]
-                if level >= 7 else []
-            ),
+            friendly_condition_immunity_auras=[
+                *(
+                    [FriendlyConditionImmunityAuraGrant(
+                        source_id="aura-of-devotion-2024",
+                        source_name="Aura of Devotion",
+                        radius_ft=10,
+                        condition_id="charmed",
+                        inactive_while_incapacitated=True,
+                    )]
+                    if level >= 7 else []
+                ),
+                *(
+                    [FriendlyConditionImmunityAuraGrant(
+                        source_id="aura-of-courage-2024",
+                        source_name="Aura of Courage",
+                        radius_ft=10,
+                        condition_id="frightened",
+                        inactive_while_incapacitated=True,
+                    )]
+                    if level >= 10 else []
+                ),
+            ],
             resource_backed_post_hit_damage=(
                 ResourceBackedPostHitDamage(
                     source_id="divine-smite-2024",
