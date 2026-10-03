@@ -13,6 +13,7 @@ class ResourceBackedPostHitDamage(BaseModel):
     trigger_attack_ids: list[str] = Field(min_length=1)
     action_cost: ActionCost = "bonus_action"
     free_resource_id: str | None = None
+    post_hit_self_buff_action_id: str | None = Field(default=None, min_length=1)
     printed_spell_level: int = Field(default=1, ge=1, le=9)
     max_slot_level: int = Field(default=9, ge=1, le=9)
     base_dice_count: int = Field(ge=1, le=40)
