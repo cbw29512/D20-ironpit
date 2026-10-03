@@ -14,6 +14,7 @@ from app.content.paladin_devotion_2024_runtime_support import (
     build_paladin_2024_attack,
     build_paladin_2024_attack_action,
     build_paladin_2024_progression,
+    build_paladin_2024_timed_self_buffs,
 )
 from app.content.paladin_devotion_2024_support import (
     divine_favor_2024,
@@ -30,10 +31,10 @@ from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
 
 def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
-    """Build certified 2024 Aurelia through Paladin level 14."""
+    """Build certified 2024 Aurelia through Paladin level 15."""
     try:
-        if level not in range(1, 15):
-            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-14 only.")
+        if level not in range(1, 16):
+            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-15 only.")
         profile = build_aurelia_brightshield_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -98,6 +99,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
             },
             combat_traits=[CombatTrait.SAVAGE_ATTACKER],
             progression_features=build_paladin_2024_progression(level, charisma),
+            timed_self_buff_actions=build_paladin_2024_timed_self_buffs(level),
             weapon_masteries=["longsword", "javelin"],
             fighting_style="Defense" if level >= 2 else None,
             fighting_styles=["Defense"] if level >= 2 else [],
@@ -126,6 +128,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                    "Staggering Smite (fail-closed pending shared atomic post-hit save/condition choice), "
                    if level >= 13 else "")
                 + ("Restoring Touch, " if level >= 14 else "")
+                + ("Smite of Protection, Aura of Life (fail-closed pending shared recovery aura), " if level >= 15 else "")
                 + "Longsword, Javelin"
             ),
         )
