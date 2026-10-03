@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-02 for the 2024 Devotion Paladin level 2 tranche. Main baseline: `2bb7bfd39738b29cfa6a7aff89fd96ea95fb5d76`.
+Recorded 2026-10-02 for the 2024 Devotion Paladin level 4 tranche. Main baseline: `fd6469ce87d15a38fd028d9cdab3f6355b5559c4`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -34,9 +34,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
 | 2024 | Monk (Open Hand) | 1–20 |
-| 2024 | Paladin (Devotion) | 1 |
+| 2024 | Paladin (Devotion) | 1–3 |
 
-2024 public-ready hero slots on current main: **141 / 240**.
+2024 public-ready hero slots on current main: **143 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -46,9 +46,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 141 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 1 on main; this tranche advances level 2.
+**2024 canonical pregens are 143 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 3 on main; this tranche advances level 4.
 
-Active implementation lane: **2024 Devotion Paladin level 2.** Defense reuses the armored AC style model. Paladin's Smite always prepares Divine Smite and grants one free cast per Long Rest. Divine Smite binds a universal hit-confirmed resource-backed damage primitive that spends its Bonus Action/payment only after a qualifying hit, while adding its Radiant dice to the same attack damage resolution before defenses and HP mutation.
+Active implementation lane: **2024 Devotion Paladin level 4.** Aurelia takes the repeatable Ability Score Improvement feat for +2 Strength (17→19). The fifth ordinary prepared spell is 2024 Thunderous Smite under the damage-first policy, but its hit-confirmed damage + save + forced-movement/Prone combination remains fail-closed until the shared post-hit spell primitive can represent the atomic RAW sequence without displacing Divine Smite.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -64,7 +64,10 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Divine Smite starts at 2d8 Radiant, gains +1d8 per higher-level slot, gains +1d8 against Fiends/Undead, and its attack damage dice double on a Critical Hit through the shared critical-damage path.
 - Javelin attacks do not trigger the canonical Smite binding because Aurelia's runtime javelin profile is Ranged; Longsword is the qualifying melee attack in the current loadout.
 - Level 2 ordinary preparation adds certified 2024 Bless; unsupported smite variants are not approximated merely to fill prepared-spell slots.
-- This tranche targets **142 / 240** 2024 public-ready hero slots.
+- Level 3 adds two Channel Divinity uses and Oath of Devotion. Sacred Weapon uses a universal Attack-action weapon-buff primitive; Protection from Evil and Good and Shield of Faith are explicit 2024 oath-spell fingerprints.
+- Level 4 takes the repeatable **Ability Score Improvement** feat for **+2 Strength (17→19)**. Shared derived-stat logic updates Longsword/Javelin attack and damage plus Athletics.
+- Level 4 ordinary preparation adds **Thunderous Smite** under the damage-first policy. It remains **arena-out-of-scope/fail-closed** for now because the current engine cannot atomically preserve its post-hit spell damage, Strength save, 10-foot push, and Prone outcome while also retaining Divine Smite as a separate legal post-hit choice.
+- This tranche targets **144 / 240** 2024 public-ready hero slots.
 
 ### 2024 Monk lane
 

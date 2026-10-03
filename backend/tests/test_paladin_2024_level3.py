@@ -31,7 +31,7 @@ def _member(template, combatant_id: str, side: str, position: int) -> EncounterC
 def test_2024_paladin_level_three_profile_and_resources_are_raw_ready() -> None:
     profile = build_aurelia_brightshield_2024_profile(3)
     hero = build_aurelia_brightshield_2024(3)
-    combat = build_aurelia_2024_combat_profiles()[-1]
+    combat = next(item for item in build_aurelia_2024_combat_profiles() if item.level == 3)
 
     assert (profile.subclass_id, profile.subclass_name) == ("oath-devotion", "Oath of Devotion")
     assert (hero.max_hp, hero.armor_class) == (28, 19)

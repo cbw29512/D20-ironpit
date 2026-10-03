@@ -6,22 +6,25 @@ from app.content.canonical_combat_build_policy import canonical_background_incre
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.paladin_devotion_2024_profile_support import paladin_2024_feature
-from app.domain.character_builds import CharacterBuildProfile
+from app.domain.character_builds import AbilityIncrease, CharacterBuildProfile
 
 logger = logging.getLogger(__name__)
 
 
 def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildProfile:
-    """Compile Aurelia's legal 2024 Devotion Paladin progression through level 3."""
+    """Compile Aurelia's legal 2024 Devotion Paladin progression through level 4."""
     try:
-        if level not in {1, 2, 3}:
-            raise ValueError("The current 2024 Paladin profile tranche supports levels 1-3 only.")
+        if level not in {1, 2, 3, 4}:
+            raise ValueError("The current 2024 Paladin profile tranche supports levels 1-4 only.")
         hero = HERO_BY_CLASS["paladin"]
         base = canonical_base_ability_scores("paladin")
         allowed = ["strength", "dexterity", "constitution"]
         background = canonical_background_increases("paladin", allowed)
+        advancement: list[AbilityIncrease] = []
+        if level >= 4:
+            advancement.append(AbilityIncrease(ability="strength", amount=2))
         values = base.model_dump()
-        for increase in background:
+        for increase in [*background, *advancement]:
             values[increase.ability] += increase.amount
         final = type(base)(**values)
 
@@ -91,6 +94,20 @@ def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildPro
                     ),
                 ),
             ])
+        if level >= 4:
+            audits.append(
+                paladin_2024_feature(
+                    "ability-score-improvement-l4",
+                    "Ability Score Improvement (+2 Strength)",
+                    "feat",
+                    combat=True,
+                    automated=True,
+                    notes=(
+                        "Canonical sword-and-shield progression raises Strength 17 to 19; "
+                        "shared derived-stat logic updates weapon attack/damage and Athletics."
+                    ),
+                )
+            )
 
         return CharacterBuildProfile(
             id=f"build-aurelia-brightshield-2024-l{level}",
@@ -103,7 +120,8 @@ def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildPro
             background_id="soldier", background_name="Soldier",
             origin_feat_id="savage-attacker", origin_feat_name="Savage Attacker",
             base_ability_scores=base, background_allowed_abilities=allowed,
-            background_increases=background, final_ability_scores=final,
+            background_increases=background, advancement_increases=advancement,
+            final_ability_scores=final,
             class_equipment_option="package",
             class_equipment=[
                 "Chain Mail", "Shield", "Longsword", "6 Javelins",
@@ -133,8 +151,12 @@ def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildPro
                     ]
                     if level >= 3 else []
                 ),
+                *(
+                    ["Basic Rules 2024: Paladin level 4 — Ability Score Improvement; Feats — Ability Score Improvement (+2 Strength)"]
+                    if level >= 4 else []
+                ),
                 "Basic Rules 2024: Character Origins — Human and Soldier",
-                "Basic Rules 2024: Spells — Cure Wounds, Divine Favor, Bless, Divine Smite, Searing Smite, Protection from Evil and Good, Shield of Faith",
+                "Basic Rules 2024: Spells — Cure Wounds, Divine Favor, Bless, Divine Smite, Searing Smite, Thunderous Smite, Protection from Evil and Good, Shield of Faith",
                 "Basic Rules 2024: Equipment — Chain Mail, Shield, Longsword, Javelin, Sap, Slow",
             ],
         )

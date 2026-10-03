@@ -64,6 +64,10 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
             min_character_level=3,
         ),
         _spell(
+            "thunderous-smite", "Thunderous Smite", "damage", "arena-out-of-scope",
+            min_character_level=4,
+        ),
+        _spell(
             "divine-smite", "Divine Smite", "damage", "post-hit-resource-damage",
             min_character_level=2, always_prepared_from_level=2,
         ),
