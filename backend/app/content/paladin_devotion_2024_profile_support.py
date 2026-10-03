@@ -85,6 +85,11 @@ def paladin_2024_source_references(level: int) -> list[str]:
             references.append("Basic Rules 2024: Paladin level 14 — Restoring Touch")
         if level >= 15:
             references.extend([
+                "Basic Rules 2024: Oath of Devotion level 15 — Smite of Protection",
+                "Basic Rules 2024: Spells — Aura of Life",
+            ])
+        if level >= 15:
+            references.extend([
                 "Player's Handbook 2024: Oath of Devotion level 15 — Smite of Protection",
                 "Basic Rules 2024: Paladin Spells — Aura of Life",
             ])
@@ -94,7 +99,8 @@ def paladin_2024_source_references(level: int) -> list[str]:
                 "Basic Rules 2024: Spells — Cure Wounds, Divine Favor, Bless, Divine Smite, "
                 "Searing Smite, Thunderous Smite, Shining Smite, Find Steed, Aid, Zone of Truth, "
                 "Protection from Evil and Good, Shield of Faith, Lesser Restoration, "
-                "Aura of Vitality, Blinding Smite, Crusader\'s Mantle, Beacon of Hope, Dispel Magic"
+                "Aura of Vitality, Blinding Smite, Crusader\'s Mantle, Beacon of Hope, Dispel Magic, "
+                "Staggering Smite, Aura of Life"
             ),
             (
                 "Basic Rules 2024: Equipment — Chain Mail, Shield, Longsword, Javelin, "
