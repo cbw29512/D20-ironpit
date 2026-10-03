@@ -96,6 +96,16 @@ def sync_persistent_beneficial_zones(setup: EncounterSetup, round_number: int) -
                             kind=ModifierKind.ARMOR_CLASS,
                             flat_bonus=zone.armor_class_bonus,
                         ))
+                    if zone.cover_bonus:
+                        add_modifier(member.state, CombatModifier(
+                            id=f"{zone.zone_id}:{member.combatant_id}:cover-ac",
+                            source_id=zone.source_id,
+                            source_effect_id=zone.zone_id,
+                            source_name=zone.action_name,
+                            source_is_magical=True,
+                            kind=ModifierKind.COVER_ARMOR_CLASS,
+                            flat_bonus=zone.cover_bonus,
+                        ))
                     for ability in zone.saving_throw_abilities:
                         if zone.saving_throw_bonus:
                             add_modifier(member.state, CombatModifier(
@@ -106,6 +116,17 @@ def sync_persistent_beneficial_zones(setup: EncounterSetup, round_number: int) -
                                 source_is_magical=True,
                                 kind=ModifierKind.SAVING_THROW_FLAT,
                                 flat_bonus=zone.saving_throw_bonus,
+                                save_ability=ability,
+                            ))
+                        if zone.cover_bonus and ability == "dexterity":
+                            add_modifier(member.state, CombatModifier(
+                                id=f"{zone.zone_id}:{member.combatant_id}:cover-save:{ability}",
+                                source_id=zone.source_id,
+                                source_effect_id=zone.zone_id,
+                                source_name=zone.action_name,
+                                source_is_magical=True,
+                                kind=ModifierKind.COVER_SAVING_THROW_FLAT,
+                                flat_bonus=zone.cover_bonus,
                                 save_ability=ability,
                             ))
                 if not is_source and zone.ally_damage_resistances:
