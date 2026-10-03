@@ -449,3 +449,14 @@ Deferred save effects remain one source-agnostic capability with immutable sourc
 - Arena candidate selection prefers the Attack-slot path over the full-Action path when both are legal because it preserves the source's remaining Attack-action slots. The full-Action path remains available when no Attack slot is legal.
 - Python and browser use the same mark lifecycle, resource spending, save, damage, harmless-end, and activation-choice parameters.
 - Source names remain audit/player-facing metadata. The deferred-effect runtime never branches on a class, subclass, hero, monster, or feature name.
+
+
+## Universal friendly saving-throw aura
+
+Passive and timed ally save auras share the same live-position synchronization layer.
+
+- Passive flat-bonus auras declare source id/name, radius, flat bonus, and source-state deactivation rules.
+- The runtime recomputes eligible same-side recipients from current grid positions whenever aura state is synchronized; recipients are never snapshotted.
+- Overlapping flat-bonus auras use only the strongest eligible bonus.
+- Source-specific lifecycle differences are parameters. For example, 2014 Aura of Protection is inactive while its source is unconscious, while 2024 Aura of Protection is inactive while its source is Incapacitated.
+- Python and browser runtimes must consume the same declarative aura data. Ability names remain display/audit metadata and do not select resolver behavior.
