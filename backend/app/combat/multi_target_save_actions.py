@@ -4,10 +4,11 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.condition_rules import can_see
+from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.pit_policy import target_order
 from app.combat.resources import action_resource_available, spend_action_resource
-from app.combat.saving_throws import legal_save_action, resolve_save_action
+from app.combat.saving_throws import legal_save_action
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, SavingThrowAction
 
@@ -76,7 +77,7 @@ def resolve_multi_target_save_action(
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
         events: list[BattleEvent] = []
         for target in targets:
-            event = resolve_save_action(
+            resolved, sequence = resolve_save_event_chain(
                 sequence,
                 round_number,
                 actor,
@@ -84,15 +85,14 @@ def resolve_multi_target_save_action(
                 action,
                 combatant_distance(actor, target),
                 dice,
+                setup,
                 spend_action=False,
                 check_resource=False,
                 spend_resource=False,
                 resource_remaining_override=remaining,
                 affected_states=affected_states,
-                setup=setup,
             )
-            events.append(event)
-            sequence += 1
+            events.extend(resolved)
         return events, sequence
     except ValueError:
         raise
