@@ -64,7 +64,6 @@ def expire_target_turn_modifiers(state: CombatantState) -> int:
     state.active_modifiers = [item for item in state.active_modifiers if not item.expires_at_end_of_target_turn]
     return before - len(state.active_modifiers)
 
-
 def effective_armor_class(state: CombatantState) -> int:
     stacking_bonus = sum(
         item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.ARMOR_CLASS
