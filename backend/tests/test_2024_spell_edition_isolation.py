@@ -60,6 +60,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "divine-favor",
         "protection-from-evil-and-good",
         "aid",
+        "beacon-of-hope",
         "shatter",
         "thunderwave",
         "fireball",
@@ -810,6 +811,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "bard": "charisma",
             "cleric": "wisdom",
             "druid": "wisdom",
+            "paladin": "charisma",
         }
         assert progression.class_id in expected_casting_abilities
         spell = effect_removals["dispel-magic"]
