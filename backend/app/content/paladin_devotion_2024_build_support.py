@@ -28,6 +28,11 @@ def build_paladin_2024_ability_progression(
         advancement: list[AbilityIncrease] = []
         if level >= 4:
             advancement.append(AbilityIncrease(ability="strength", amount=2))
+        if level >= 8:
+            advancement.extend([
+                AbilityIncrease(ability="strength", amount=1),
+                AbilityIncrease(ability="charisma", amount=1),
+            ])
 
         values = base.model_dump()
         for increase in [*background, *advancement]:
