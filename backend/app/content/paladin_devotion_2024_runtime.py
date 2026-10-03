@@ -24,7 +24,6 @@ from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 
-
 def _attack(weapon_id: str, strength_modifier: int) -> WeaponAttack:
     weapon = build_longsword() if weapon_id == "longsword" else build_weapon(weapon_id)
     return WeaponAttack(
@@ -32,7 +31,6 @@ def _attack(weapon_id: str, strength_modifier: int) -> WeaponAttack:
         attack_bonus=2 + strength_modifier, damage_bonus=strength_modifier,
         attack_ability="strength", attack_ability_modifier=strength_modifier,
     )
-
 
 def _progression(level: int) -> ProgressionCombatFeatures:
     return ProgressionCombatFeatures(
@@ -50,7 +48,6 @@ def _progression(level: int) -> ProgressionCombatFeatures:
             if level >= 2 else None
         ),
     )
-
 
 def _resources(level: int) -> list[ResourceDefinition]:
     resources = [
@@ -70,7 +67,6 @@ def _resources(level: int) -> list[ResourceDefinition]:
             id="channel-divinity", name="Channel Divinity", max_uses=2,
         ))
     return resources
-
 
 def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
     """Build certified 2024 Aurelia through Paladin level 3."""
