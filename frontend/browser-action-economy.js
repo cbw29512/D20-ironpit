@@ -10,21 +10,34 @@
     suppressesReactions: () => false,
   };
 
+  const singleActivityRestricted = (state) => (state.timed_effects || []).some((effect) => effect.turn_behavior === "single_activity");
+  function voluntaryActivityAvailable(state, activity) {
+    return !singleActivityRestricted(state) || state.voluntary_turn_activity == null || state.voluntary_turn_activity === activity;
+  }
+  function claimActivity(state, activity) {
+    if (!singleActivityRestricted(state)) return;
+    if (!voluntaryActivityAvailable(state, activity)) throw new Error("A different voluntary turn activity is already committed.");
+    state.voluntary_turn_activity = activity;
+    if (activity === "movement") { state.action_available = false; state.bonus_action_available = false; }
+    else if (activity === "action") { state.bonus_action_available = false; state.movement_remaining_ft = 0; }
+    else { state.action_available = false; state.movement_remaining_ft = 0; }
+  }
+
   function available(state, cost) {
     if (state.is_dead || Q().incapacitated(state)) return false;
     if (state.turn_terminated && cost !== "reaction") return false;
-    if (cost === "action") return Boolean(state.action_available) && !T().suppressesAction(state);
-    if (cost === "bonus_action") return Boolean(state.bonus_action_available) && !T().suppressesBonusAction(state);
+    if (cost === "action") return Boolean(state.action_available) && !T().suppressesAction(state) && voluntaryActivityAvailable(state, "action");
+    if (cost === "bonus_action") return Boolean(state.bonus_action_available) && !T().suppressesBonusAction(state) && voluntaryActivityAvailable(state, "bonus_action");
     if (cost === "reaction") return Boolean(state.reaction_available) && !T().suppressesReactions(state);
     throw new Error(`Unknown action cost: ${cost}`);
   }
 
   function spend(state, cost) {
     if (!available(state, cost)) throw new Error(`${cost} is not available.`);
-    if (cost === "action") state.action_available = false;
-    else if (cost === "bonus_action") state.bonus_action_available = false;
+    if (cost === "action") { claimActivity(state, "action"); state.action_available = false; }
+    else if (cost === "bonus_action") { claimActivity(state, "bonus_action"); state.bonus_action_available = false; }
     else state.reaction_available = false;
   }
 
-  window.IRON_PIT_ACTION_ECONOMY = { available, isIncapacitated: (state) => Q().incapacitated(state), spend };
+  window.IRON_PIT_ACTION_ECONOMY = { available, claimActivity, isIncapacitated: (state) => Q().incapacitated(state), singleActivityRestricted, spend, voluntaryActivityAvailable };
 })();
