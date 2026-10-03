@@ -12,10 +12,10 @@ logger = logging.getLogger(__name__)
 
 
 def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildProfile:
-    """Compile Aurelia's legal 2024 Devotion Paladin progression through level 4."""
+    """Compile Aurelia's legal 2024 Devotion Paladin progression through level 5."""
     try:
-        if level not in {1, 2, 3, 4}:
-            raise ValueError("The current 2024 Paladin profile tranche supports levels 1-4 only.")
+        if level not in {1, 2, 3, 4, 5}:
+            raise ValueError("The current 2024 Paladin profile tranche supports levels 1-5 only.")
         hero = HERO_BY_CLASS["paladin"]
         base = canonical_base_ability_scores("paladin")
         allowed = ["strength", "dexterity", "constitution"]
@@ -108,6 +108,39 @@ def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildPro
                     ),
                 )
             )
+        if level >= 5:
+            audits.extend([
+                paladin_2024_feature(
+                    "extra-attack",
+                    "Extra Attack",
+                    "class",
+                    combat=True,
+                    automated=True,
+                    notes="The universal Attack action resolves two legal weapon attacks.",
+                ),
+                paladin_2024_feature(
+                    "faithful-steed",
+                    "Faithful Steed",
+                    "class",
+                    combat=False,
+                    automated=False,
+                    notes=(
+                        "Find Steed is always prepared and retains its one free Long-Rest cast resource, "
+                        "but Iron Pit's no-summons rule keeps the summon arena-unavailable."
+                    ),
+                ),
+                paladin_2024_feature(
+                    "oath-spells-level5",
+                    "Oath of Devotion Spells",
+                    "subclass",
+                    combat=True,
+                    automated=True,
+                    notes=(
+                        "Aid uses the certified 2024 defensive-spell fingerprint; "
+                        "Zone of Truth is always prepared but arena-neutral."
+                    ),
+                ),
+            ])
 
         return CharacterBuildProfile(
             id=f"build-aurelia-brightshield-2024-l{level}",
@@ -155,8 +188,15 @@ def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildPro
                     ["Basic Rules 2024: Paladin level 4 — Ability Score Improvement; Feats — Ability Score Improvement (+2 Strength)"]
                     if level >= 4 else []
                 ),
+                *(
+                    [
+                        "Basic Rules 2024: Paladin level 5 — Extra Attack and Faithful Steed",
+                        "Basic Rules 2024: Oath of Devotion level 5 — Aid and Zone of Truth",
+                    ]
+                    if level >= 5 else []
+                ),
                 "Basic Rules 2024: Character Origins — Human and Soldier",
-                "Basic Rules 2024: Spells — Cure Wounds, Divine Favor, Bless, Divine Smite, Searing Smite, Thunderous Smite, Protection from Evil and Good, Shield of Faith",
+                "Basic Rules 2024: Spells — Cure Wounds, Divine Favor, Bless, Divine Smite, Searing Smite, Thunderous Smite, Shining Smite, Find Steed, Aid, Zone of Truth, Protection from Evil and Good, Shield of Faith",
                 "Basic Rules 2024: Equipment — Chain Mail, Shield, Longsword, Javelin, Sap, Slow",
             ],
         )
