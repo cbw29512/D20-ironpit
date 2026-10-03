@@ -84,7 +84,7 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
             min_character_level=3, always_prepared_from_level=3,
         ),
         _spell(
-            "find-steed", "Find Steed", "summon", "arena-unavailable-summon",
+            "find-steed", "Find Steed", "utility", "arena-unavailable-summon",
             spell_level=2, min_character_level=5, always_prepared_from_level=5,
         ),
         _spell(
