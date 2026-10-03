@@ -6,6 +6,7 @@ from app.content.character_math import proficiency_bonus
 from app.content.equipment import build_longsword
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
+from app.domain.friendly_condition_auras import FriendlyConditionImmunityAuraGrant
 from app.domain.friendly_save_auras import FriendlySavingThrowAuraGrant
 from app.domain.models import ResourceDefinition, WeaponAttack
 from app.domain.post_hit_damage import ResourceBackedPostHitDamage
@@ -74,6 +75,16 @@ def build_paladin_2024_progression(
                 if level >= 6
                 else None
             ),
+            friendly_condition_immunity_auras=(
+                [FriendlyConditionImmunityAuraGrant(
+                    source_id="aura-of-devotion-2024",
+                    source_name="Aura of Devotion",
+                    radius_ft=10,
+                    condition_id="charmed",
+                    inactive_while_incapacitated=True,
+                )]
+                if level >= 7 else []
+            ),
             resource_backed_post_hit_damage=(
                 ResourceBackedPostHitDamage(
                     source_id="divine-smite-2024",
@@ -134,7 +145,7 @@ def build_paladin_2024_resources(level: int) -> list[ResourceDefinition]:
                 ResourceDefinition(
                     id="spell-slot-2",
                     name="Level 2 Spell Slot",
-                    max_uses=2,
+                    max_uses=3 if level >= 7 else 2,
                 ),
                 ResourceDefinition(
                     id="faithful-steed-free-cast",
