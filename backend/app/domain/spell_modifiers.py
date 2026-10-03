@@ -29,6 +29,7 @@ class SpellModifierEffect(BaseModel):
     replacement_hp: int = Field(default=0, ge=0)
     prevents_instant_death: bool = False
     source_creature_types: list[str] = Field(default_factory=list)
+    required_effect_tags: list[str] = Field(default_factory=list)
     bypass_attacker_senses: list[Literal["blindsight", "truesight"]] = Field(default_factory=list)
     save_ability: AbilityName | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
@@ -65,8 +66,16 @@ class SpellModifierEffect(BaseModel):
             raise ValueError("Zero-HP replacement effects require positive replacement HP.")
         if self.kind != "zero-hp-replacement" and (self.replacement_hp or self.prevents_instant_death):
             raise ValueError(f"{self.kind} does not accept zero-HP replacement fields.")
-        if self.source_creature_types and self.kind not in {"attacks-against-disadvantage", "condition-immunity"}:
+        if self.source_creature_types and self.kind not in {
+            "attacks-against-disadvantage", "condition-immunity", "saving-throw-advantage",
+        }:
             raise ValueError(f"{self.kind} does not accept source creature types.")
+        if self.required_effect_tags and self.kind != "saving-throw-advantage":
+            raise ValueError(f"{self.kind} does not accept effect tags.")
+        tags = [item.strip().casefold() for item in self.required_effect_tags]
+        if any(not item for item in tags) or len(set(tags)) != len(tags):
+            raise ValueError("Saving-throw Advantage effect tags must be non-empty and unique.")
+        self.required_effect_tags = tags
         if self.bypass_attacker_senses and self.kind != "attacks-against-disadvantage":
             raise ValueError(f"{self.kind} does not accept attacker-sense bypass.")
         if len(set(self.bypass_attacker_senses)) != len(self.bypass_attacker_senses):
