@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import logging
 
-from app.content.canonical_combat_build_policy import canonical_background_increases, canonical_base_ability_scores
 from app.content.canonical_hero_policy import canonical_template_id
+from app.content.paladin_devotion_2024_build_support import build_paladin_2024_ability_progression
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.paladin_devotion_2024_profile_support import (
     paladin_2024_feature,
@@ -11,7 +11,7 @@ from app.content.paladin_devotion_2024_profile_support import (
     paladin_2024_level6_audits,
     paladin_2024_source_references,
 )
-from app.domain.character_builds import AbilityIncrease, CharacterBuildProfile
+from app.domain.character_builds import CharacterBuildProfile
 
 logger = logging.getLogger(__name__)
 
@@ -22,16 +22,9 @@ def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildPro
         if level not in {1, 2, 3, 4, 5, 6}:
             raise ValueError("The current 2024 Paladin profile tranche supports levels 1-6 only.")
         hero = HERO_BY_CLASS["paladin"]
-        base = canonical_base_ability_scores("paladin")
-        allowed = ["strength", "dexterity", "constitution"]
-        background = canonical_background_increases("paladin", allowed)
-        advancement: list[AbilityIncrease] = []
-        if level >= 4:
-            advancement.append(AbilityIncrease(ability="strength", amount=2))
-        values = base.model_dump()
-        for increase in [*background, *advancement]:
-            values[increase.ability] += increase.amount
-        final = type(base)(**values)
+        base, allowed, background, advancement, final = (
+            build_paladin_2024_ability_progression(level)
+        )
 
         audits = [
             paladin_2024_feature("lay-on-hands", "Lay On Hands", "class", combat=True, automated=True),
