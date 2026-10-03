@@ -8,7 +8,7 @@
   function available(state, turnKey) {
     return (state.resources["action-surge"] || 0) > 0
       && !state.action_available
-      && !E()?.singleActivityRestricted(state)
+      && !E()?.singleActivityRestricted?.(state)
       && !state.turn_terminated
       && !state.is_dead
       && !Q().incapacitated(state)
