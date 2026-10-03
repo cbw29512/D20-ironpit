@@ -27,6 +27,10 @@ class FailedSaveTimedEffect(BaseModel):
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: SaveEffectTiming | None = None
     next_attack_disadvantage: bool = False
+    turn_behavior: Literal["normal", "forced_retreat", "single_activity"] = "normal"
+    ends_on_damage: bool = False
+    ends_if_source_incapacitated: bool = False
+    ends_if_source_dead: bool = False
 
     @model_validator(mode="after")
     def validate_repeat_save(self) -> "FailedSaveTimedEffect":
