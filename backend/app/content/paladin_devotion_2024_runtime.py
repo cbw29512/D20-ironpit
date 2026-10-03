@@ -51,14 +51,14 @@ def _attack_action(level: int) -> AttackActionDefinition | None:
         is_attack_action=True,
     )
 
-def _progression(level: int) -> ProgressionCombatFeatures:
+def _progression(level: int, charisma_modifier: int) -> ProgressionCombatFeatures:
     return ProgressionCombatFeatures(
         friendly_saving_throw_aura=(
             FriendlySavingThrowAuraGrant(
                 source_id="aura-of-protection-2024",
                 source_name="Aura of Protection",
                 radius_ft=10,
-                flat_bonus=max(1, 2),
+                flat_bonus=max(1, charisma_modifier),
                 inactive_while_incapacitated=True,
             )
             if level >= 6 else None
@@ -165,7 +165,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                 "religion": scores.modifier("intelligence") + pb,
             },
             combat_traits=[CombatTrait.SAVAGE_ATTACKER],
-            progression_features=_progression(level),
+            progression_features=_progression(level, charisma),
             weapon_masteries=["longsword", "javelin"],
             fighting_style="Defense" if level >= 2 else None,
             fighting_styles=["Defense"] if level >= 2 else [],
