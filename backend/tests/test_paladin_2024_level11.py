@@ -49,7 +49,7 @@ def test_2024_paladin_level_eleven_progression_is_raw_ready() -> None:
     assert (rider.source, rider.dice_count, rider.dice_size, rider.damage_type.value) == (
         "Radiant Strikes", 1, 8, "radiant",
     )
-    assert hero.alternate_weapon_attacks[0].on_hit_damage == []
+    assert hero.alternate_weapon_attacks[0].on_hit_damage == hero.weapon_attack.on_hit_damage
 
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["radiant-strikes"].automated is True

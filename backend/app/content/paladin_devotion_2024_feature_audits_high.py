@@ -33,7 +33,8 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
                     combat=True,
                     automated=True,
                     notes=("Reuses generic on-hit damage. Each qualifying Melee-weapon hit "
-                           "adds 1d8 Radiant damage and doubles that damage die on a Critical Hit."),
+                           "adds 1d8 Radiant damage, including a thrown Melee weapon, "
+                           "and doubles that damage die on a Critical Hit."),
                 ),
             ])
         if level >= 12:
@@ -45,6 +46,16 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
                        "values update saves, skills, healing, Sacred Weapon, Abjure Foes, "
                        "and Aura of Protection; no new combat primitive is required."),
             ))
+        if level >= 13:
+            audits.extend([
+                paladin_2024_feature(
+                    "oath-spells-level13", "Oath of Devotion Spells", "subclass",
+                    combat=True, automated=True,
+                    notes=("Freedom of Movement reuses the certified 2024 movement/debuff-counter "
+                           "binding. Guardian of Faith remains always prepared in source metadata "
+                           "and arena-unavailable under the no-summons contract."),
+                ),
+            ])
         return audits
     except Exception:
         logger.exception("Failed to build later 2024 Paladin feature audits at level %s.", level)

@@ -8,6 +8,12 @@ If implementation and this contract disagree, either fix the implementation or m
 
 When a canonical combatant can legally cast a non-Concentration buff before combat and that buff is selected as its deterministic opening preparation, Iron Pit may mark that specific opening cast as **free at arena entry**. A free opening cast still requires the spell to be legally prepared or known and the combatant to have access to a slot of the printed spell level, but it does not consume that spell slot. This is an explicit arena setup rule, not a change to the spell's RAW casting rules. Runtime data must opt into the rule declaratively; existing opening spells continue to consume slots unless so marked.
 
+## Weapon category versus attack delivery (2024 Paladin)
+
+A printed Melee weapon remains a Melee weapon when its Thrown property delivers a ranged attack. The 2024 Divine Smite trigger and Radiant Strikes qualify hits using a Melee weapon or an Unarmed Strike; they do not require melee attack delivery. Aurelia's Longsword and Javelin both qualify. Keep ranged geometry, Disadvantage, and other delivery-dependent rules unchanged. The shared damage primitives receive declarative eligible attack IDs and on-hit components; no weapon-name logic belongs in a resolver.
+
+This supersedes the old operating-status exclusion of Javelin from 2024 Smite and the old no-rider Javelin assertion. 2014 Divine Smite retains its separate melee weapon **attack** trigger and is not widened by this 2024 source correction. Sources: [2024 spell descriptions](https://www.dndbeyond.com/sources/dnd/br-2024/spell-descriptions#DivineSmite), [2024 Paladin](https://www.dndbeyond.com/sources/dnd/br-2024/character-classes#Paladin), and [2024 weapon table](https://www.dndbeyond.com/sources/dnd/br-2024/equipment#Weapons).
+
 ## 1. Core architecture
 
 - Iron Pit is a rules-first automated D&D combat simulator.

@@ -3,45 +3,10 @@ from __future__ import annotations
 from app.content.canonical_bard_spells import BARD_CANTRIPS, BARD_SPELLS
 from app.content.canonical_cleric_spells import CLERIC_CANTRIPS, CLERIC_SPELLS
 from app.content.canonical_druid_spells import DRUID_CANTRIPS, DRUID_SPELLS
+from app.content.canonical_paladin_spells import PALADIN_SPELLS
+from app.content.canonical_spell_choice import spell_choice as _spell
 from app.content.class_spell_progression import CASTING_ABILITIES, max_spell_level, prepared_spell_count
 from app.domain.class_loadouts import CanonicalSpellChoice, CasterClassId, ClassSpellPackage
-
-
-def _spell(
-    spell_id: str,
-    name: str,
-    role: str,
-    *capabilities: str,
-    spell_level: int = 1,
-    min_character_level: int = 1,
-    always_prepared_from_level: int | None = None,
-) -> CanonicalSpellChoice:
-    return CanonicalSpellChoice(
-        id=spell_id,
-        name=name,
-        spell_level=spell_level,
-        min_character_level=min_character_level,
-        always_prepared_from_level=always_prepared_from_level,
-        role=role,
-        required_capabilities=list(capabilities),
-    )
-
-
-def _cantrip(
-    spell_id: str,
-    name: str,
-    role: str,
-    *capabilities: str,
-    min_character_level: int = 1,
-) -> CanonicalSpellChoice:
-    return CanonicalSpellChoice(
-        id=spell_id,
-        name=name,
-        spell_level=0,
-        min_character_level=min_character_level,
-        role=role,
-        required_capabilities=list(capabilities),
-    )
 
 
 CANONICAL_CANTRIPS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
@@ -55,71 +20,7 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
     "bard": BARD_SPELLS,
     "cleric": CLERIC_SPELLS,
     "druid": DRUID_SPELLS,
-    "paladin": (
-        _spell("cure-wounds", "Cure Wounds", "healing", "healing"),
-        _spell("divine-favor", "Divine Favor", "damage", "modifier-stack", "bonus-damage"),
-        _spell("bless", "Bless", "buff", "modifier-stack", "concentration", min_character_level=2),
-        _spell(
-            "searing-smite", "Searing Smite", "damage", "arena-out-of-scope",
-            min_character_level=3,
-        ),
-        _spell(
-            "thunderous-smite", "Thunderous Smite", "damage", "arena-out-of-scope",
-            min_character_level=4,
-        ),
-        _spell(
-            "shining-smite", "Shining Smite", "damage", "arena-out-of-scope",
-            spell_level=2, min_character_level=5,
-        ),
-        _spell(
-            "lesser-restoration", "Lesser Restoration", "healing",
-            "condition-removal", spell_level=2, min_character_level=7,
-        ),
-        _spell(
-            "aura-of-vitality", "Aura of Vitality", "healing", "arena-out-of-scope",
-            spell_level=3, min_character_level=9,
-        ),
-        _spell(
-            "blinding-smite", "Blinding Smite", "damage", "arena-out-of-scope",
-            spell_level=3, min_character_level=9,
-        ),
-        _spell(
-            "crusaders-mantle", "Crusader's Mantle", "damage", "arena-out-of-scope",
-            spell_level=3, min_character_level=11,
-        ),
-        _spell(
-            "divine-smite", "Divine Smite", "damage", "post-hit-resource-damage",
-            min_character_level=2, always_prepared_from_level=2,
-        ),
-        _spell(
-            "protection-from-evil-and-good", "Protection from Evil and Good", "buff",
-            "modifier-stack", "concentration", min_character_level=3, always_prepared_from_level=3,
-        ),
-        _spell(
-            "shield-of-faith", "Shield of Faith", "buff", "modifier-stack", "concentration",
-            min_character_level=3, always_prepared_from_level=3,
-        ),
-        _spell(
-            "find-steed", "Find Steed", "utility", "arena-unavailable-summon",
-            spell_level=2, min_character_level=5, always_prepared_from_level=5,
-        ),
-        _spell(
-            "aid", "Aid", "buff", "modifier-stack",
-            spell_level=2, min_character_level=5, always_prepared_from_level=5,
-        ),
-        _spell(
-            "zone-of-truth", "Zone of Truth", "control", "arena-out-of-scope",
-            spell_level=2, min_character_level=5, always_prepared_from_level=5,
-        ),
-        _spell(
-            "beacon-of-hope", "Beacon of Hope", "buff", "modifier-stack", "concentration",
-            spell_level=3, min_character_level=9, always_prepared_from_level=9,
-        ),
-        _spell(
-            "dispel-magic", "Dispel Magic", "control", "effect-removal",
-            spell_level=3, min_character_level=9, always_prepared_from_level=9,
-        ),
-    ),
+    "paladin": PALADIN_SPELLS,
     "ranger": (
         _spell("cure-wounds", "Cure Wounds", "healing", "healing"),
         _spell("ensnaring-strike", "Ensnaring Strike", "mixed", "spell-buff", "restrained", "concentration"),
