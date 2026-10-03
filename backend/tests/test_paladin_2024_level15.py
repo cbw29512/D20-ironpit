@@ -78,7 +78,7 @@ def test_level_fifteen_is_incremental_and_raw_ready() -> None:
         raise
 
 
-def test_divine_smite_activates_live_half_cover_until_next_source_turn() -> None:
+def test_divine_smite_activates_live_half_cover_and_tracks_live_aura_range() -> None:
     try:
         hero = build_aurelia_brightshield_2024(15)
         source = _member(hero, "aurelia", 0)
@@ -109,7 +109,7 @@ def test_divine_smite_activates_live_half_cover_until_next_source_turn() -> None
         )
         sync_friendly_save_auras(setup)
         assert effective_armor_class(ally.state) == ally.state.template.armor_class + 2
-        assert saving_throw_flat_bonus(ally.state, "dexterity") == 2
+        assert saving_throw_flat_bonus(ally.state, "dexterity") == 5  # Aura of Protection + Half Cover.
         assert saving_throw_flat_bonus(ally.state, "wisdom") == 3  # Aura of Protection only.
         ally.state.position = GridPosition(x=3, y=0)
         sync_friendly_save_auras(setup)
