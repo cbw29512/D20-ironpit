@@ -5,17 +5,17 @@ import logging
 from app.content.canonical_combat_build_policy import canonical_background_increases, canonical_base_ability_scores
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.hero_progressions import HERO_BY_CLASS
-from app.content.paladin_devotion_2024_profile_support import paladin_2024_feature, paladin_2024_level5_audits
+from app.content.paladin_devotion_2024_profile_support import paladin_2024_feature, paladin_2024_level5_audits, paladin_2024_level6_audits
 from app.domain.character_builds import AbilityIncrease, CharacterBuildProfile
 
 logger = logging.getLogger(__name__)
 
 
 def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildProfile:
-    """Compile Aurelia's legal 2024 Devotion Paladin progression through level 5."""
+    """Compile Aurelia's legal 2024 Devotion Paladin progression through level 6."""
     try:
-        if level not in {1, 2, 3, 4, 5}:
-            raise ValueError("The current 2024 Paladin profile tranche supports levels 1-5 only.")
+        if level not in {1, 2, 3, 4, 5, 6}:
+            raise ValueError("The current 2024 Paladin profile tranche supports levels 1-6 only.")
         hero = HERO_BY_CLASS["paladin"]
         base = canonical_base_ability_scores("paladin")
         allowed = ["strength", "dexterity", "constitution"]
@@ -110,6 +110,8 @@ def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildPro
             )
         if level >= 5:
             audits.extend(paladin_2024_level5_audits())
+        if level >= 6:
+            audits.extend(paladin_2024_level6_audits())
 
         return CharacterBuildProfile(
             id=f"build-aurelia-brightshield-2024-l{level}",
@@ -164,6 +166,7 @@ def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildPro
                     ]
                     if level >= 5 else []
                 ),
+                *(["Basic Rules 2024: Paladin level 6 — Aura of Protection"] if level >= 6 else []),
                 "Basic Rules 2024: Character Origins — Human and Soldier",
                 "Basic Rules 2024: Spells — Cure Wounds, Divine Favor, Bless, Divine Smite, Searing Smite, Thunderous Smite, Shining Smite, Find Steed, Aid, Zone of Truth, Protection from Evil and Good, Shield of Faith",
                 "Basic Rules 2024: Equipment — Chain Mail, Shield, Longsword, Javelin, Sap, Slow",
