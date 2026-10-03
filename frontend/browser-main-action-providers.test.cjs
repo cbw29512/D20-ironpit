@@ -83,6 +83,7 @@ window.IRON_PIT_BROWSER_CHARGE = { openingFeature: () => null };
 
 load("browser-main-action-profiles.js");
 load("browser-main-action-selection.js");
+load("browser-multi-save-provider.js");
 load("browser-main-action-providers.js");
 load("browser-deferred-main-action-provider.js");
 
