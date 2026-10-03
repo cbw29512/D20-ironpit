@@ -131,8 +131,7 @@
     const matching = (state.active_modifiers || []).filter(eligible);
     return matching.filter((item) => item.kind === "saving-throw-flat").reduce((sum, item) => sum + (item.flat_bonus || 0), 0)
       + Math.max(0, ...matching.filter((item) => item.kind === "cover-saving-throw-flat").map((item) => item.flat_bonus || 0));
-  };
-  function damageSourceQualifiers(state, attack) {
+  }; function damageSourceQualifiers(state, attack) {
     const qualifiers = new Set(["attack", "weapon", attack.kind, ...(attack.damageSourceQualifiers || [])]);
     for (const item of state.active_modifiers || []) {
       if (item.kind === "damage-source-qualifier"
