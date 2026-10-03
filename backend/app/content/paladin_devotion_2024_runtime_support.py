@@ -7,6 +7,7 @@ from app.content.equipment import build_longsword
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.friendly_condition_auras import FriendlyConditionImmunityAuraGrant
+from app.domain.friendly_defensive_auras import FriendlyDefensiveAuraGrant
 from app.domain.friendly_save_auras import FriendlySavingThrowAuraGrant
 from app.domain.models import DamageType, OnHitDamage, WeaponAttack
 from app.domain.post_hit_damage import ResourceBackedPostHitDamage
@@ -85,10 +86,24 @@ def build_paladin_2024_progression(
                     radius_ft=10,
                     flat_bonus=max(1, charisma_modifier),
                     inactive_while_incapacitated=True,
+                    non_stacking_group="aura-of-protection",
                 )
                 if level >= 6
                 else None
             ),
+            friendly_defensive_auras=[
+                FriendlyDefensiveAuraGrant(
+                    source_id="smite-of-protection-2024",
+                    source_name="Smite of Protection",
+                    radius_ft=10,
+                    required_source_effect_id="smite-of-protection-2024",
+                    armor_class_bonus=2,
+                    saving_throw_bonus=2,
+                    saving_throw_abilities=["dexterity"],
+                    non_stacking_group="cover",
+                    inactive_while_incapacitated=True,
+                )
+            ] if level >= 15 else [],
             friendly_condition_immunity_auras=[
                 *(
                     [FriendlyConditionImmunityAuraGrant(
@@ -127,6 +142,7 @@ def build_paladin_2024_progression(
                     bonus_target_creature_types=["fiend", "undead"],
                     bonus_target_dice_count=1,
                     doubles_on_critical=True,
+                    on_use_self_effect_id=("smite-of-protection-2024" if level >= 15 else None),
                 )
                 if level >= 2
                 else None
