@@ -83,6 +83,11 @@ def paladin_2024_source_references(level: int) -> list[str]:
             ])
         if level >= 14:
             references.append("Basic Rules 2024: Paladin level 14 — Restoring Touch")
+        if level >= 15:
+            references.extend([
+                "Player's Handbook 2024: Oath of Devotion level 15 — Smite of Protection",
+                "Basic Rules 2024: Paladin Spells — Aura of Life",
+            ])
         references.extend([
             "Basic Rules 2024: Character Origins — Human and Soldier",
             (
