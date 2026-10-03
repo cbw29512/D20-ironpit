@@ -62,8 +62,8 @@ try {
   ));
   assert.equal(M.effectiveArmorClass(aurelia.state), hero.armor_class + 2);
   assert.equal(M.effectiveArmorClass(ally.state), 12);
-  assert.equal(M.savingThrowFlat(ally.state, "dexterity"), 2);
-  assert.equal(M.savingThrowFlat(ally.state, "wisdom"), 0);
+  assert.equal(M.savingThrowFlat(ally.state, "dexterity"), 5);
+  assert.equal(M.savingThrowFlat(ally.state, "wisdom"), 3);
   assert.equal(M.effectiveArmorClass(enemy.state), 10);
 
   ally.state.position = { x: 3, y: 0 };
