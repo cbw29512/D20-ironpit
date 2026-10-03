@@ -31,6 +31,23 @@ def _active(source: EncounterCombatant, action_id: str) -> bool:
         raise
 
 
+def _passive_active(source: EncounterCombatant, aura) -> bool:
+    try:
+        state = source.state
+        if state.is_dead or not state.is_alive or state.current_hp <= 0:
+            return False
+        if aura.inactive_while_incapacitated and is_incapacitated(state):
+            return False
+        if aura.inactive_while_unconscious and (
+            state.is_unconscious or has_condition(state, "unconscious")
+        ):
+            return False
+        return True
+    except Exception:
+        logger.exception("Failed to evaluate passive friendly save-aura source %s.", source.combatant_id)
+        raise
+
+
 def _clear(setup: EncounterSetup) -> None:
     for member in _members(setup):
         member.state.active_modifiers = [
@@ -43,7 +60,8 @@ def sync_friendly_save_auras(setup: EncounterSetup) -> None:
     """Refresh active source-owned friendly save auras from live positions and state."""
     try:
         _clear(setup)
-        for source in _members(setup):
+        all_members = _members(setup)
+        for source in all_members:
             actions = [
                 action for action in source.state.template.timed_self_buff_actions
                 if action.friendly_save_advantage_aura is not None and _active(source, action.id)
@@ -73,6 +91,27 @@ def sync_friendly_save_auras(setup: EncounterSetup) -> None:
                                 save_ability=ability,
                                 required_effect_tags=[tag],
                             ))
+
+        for target in all_members:
+            allies = setup.heroes if target.side == "heroes" else setup.monsters
+            candidates = []
+            for source in allies:
+                aura = source.state.template.progression_features.friendly_saving_throw_aura
+                if aura is None or not _passive_active(source, aura):
+                    continue
+                if combatant_distance(source, target) > aura.radius_ft:
+                    continue
+                candidates.append((aura.flat_bonus, source.combatant_id, source, aura))
+            if candidates:
+                _, _, source, aura = max(candidates, key=lambda item: (item[0], item[1]))
+                add_modifier(target.state, CombatModifier(
+                    id=f"{_PREFIX}flat:{source.combatant_id}:{aura.source_id}:{target.combatant_id}",
+                    source_id=source.combatant_id,
+                    source_effect_id=aura.source_id,
+                    source_name=aura.source_name,
+                    kind=ModifierKind.SAVING_THROW_FLAT,
+                    flat_bonus=aura.flat_bonus,
+                ))
     except Exception:
         logger.exception("Failed to synchronize friendly save auras.")
         raise
