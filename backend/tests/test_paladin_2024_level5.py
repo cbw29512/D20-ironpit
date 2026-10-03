@@ -12,7 +12,9 @@ from app.content.pregen_combat_audit import assert_pregen_combat_stats
 def test_2024_paladin_level_five_progression_is_raw_ready() -> None:
     profile = build_aurelia_brightshield_2024_profile(5)
     hero = build_aurelia_brightshield_2024(5)
-    combat = build_aurelia_2024_combat_profiles()[-1]
+    combat = next(
+        item for item in build_aurelia_2024_combat_profiles() if item.level == 5
+    )
 
     assert profile.final_ability_scores.strength == 19
     assert (hero.max_hp, hero.armor_class) == (44, 19)
