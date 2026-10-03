@@ -66,7 +66,7 @@ def lesser_restoration_2014() -> ConditionRemovalAction:
 def beacon_of_hope_2014() -> DefensiveSpellAction:
     return DefensiveSpellAction(
         id="beacon-of-hope", name="Beacon of Hope", level=3, action_cost="action",
-        range_ft=30, duration_minutes=1, target_policy="friendly", target_count=20,
+        range_ft=30, duration_minutes=1, target_policy="friendly", target_all_legal=True,
         concentration=True, priority=60,
         modifier_effects=[
             SpellModifierEffect(kind="saving-throw-advantage", save_ability="wisdom"),
