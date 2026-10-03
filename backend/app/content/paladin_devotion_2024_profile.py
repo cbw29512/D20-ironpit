@@ -23,10 +23,10 @@ def _feature(
 
 
 def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildProfile:
-    """Compile Aurelia's legal 2024 Devotion Paladin progression through level 2."""
+    """Compile Aurelia's legal 2024 Devotion Paladin progression through level 3."""
     try:
-        if level not in {1, 2}:
-            raise ValueError("The current 2024 Paladin profile tranche supports levels 1-2 only.")
+        if level not in {1, 2, 3}:
+            raise ValueError("The current 2024 Paladin profile tranche supports levels 1-3 only.")
         hero = HERO_BY_CLASS["paladin"]
         base = canonical_base_ability_scores("paladin")
         allowed = ["strength", "dexterity", "constitution"]
@@ -72,12 +72,44 @@ def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildPro
                     ),
                 ),
             ])
+        if level >= 3:
+            audits.extend([
+                _feature(
+                    "channel-divinity", "Channel Divinity", "class", combat=True, automated=True,
+                    notes="Two source-owned uses feed universal Channel Divinity consumers.",
+                ),
+                _feature(
+                    "divine-sense", "Divine Sense", "class", combat=False, automated=False,
+                    notes=(
+                        "Arena state already exposes combatant creature type and position; "
+                        "the detection feature does not change a current Iron Pit combat outcome."
+                    ),
+                ),
+                _feature(
+                    "sacred-weapon", "Sacred Weapon", "subclass", combat=True, automated=True,
+                    notes=(
+                        "Taking the Attack action spends one Channel Divinity to bind a 10-minute "
+                        "weapon-scoped Charisma attack bonus and Radiant damage-type choice through "
+                        "the universal Attack-action weapon-buff primitive."
+                    ),
+                ),
+                _feature(
+                    "oath-spells-level3", "Oath of Devotion Spells", "subclass",
+                    combat=True, automated=True,
+                    notes=(
+                        "Protection from Evil and Good and Shield of Faith are always prepared with "
+                        "explicit 2024 modifier fingerprints."
+                    ),
+                ),
+            ])
 
         return CharacterBuildProfile(
             id=f"build-aurelia-brightshield-2024-l{level}",
             template_id=canonical_template_id("paladin", level),
             character_name=hero.hero_name, class_id="paladin", class_name=hero.class_name,
             level=level, ruleset="2024", build_id="devotion-sword-shield",
+            subclass_id="oath-devotion" if level >= 3 else None,
+            subclass_name="Oath of Devotion" if level >= 3 else None,
             species_id="human", species_name="Human",
             background_id="soldier", background_name="Soldier",
             origin_feat_id="savage-attacker", origin_feat_name="Savage Attacker",
@@ -105,8 +137,15 @@ def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildPro
             source_references=[
                 "Basic Rules 2024: Paladin — Lay On Hands, Spellcasting, Weapon Mastery",
                 *(["Basic Rules 2024: Paladin level 2 — Fighting Style and Paladin's Smite"] if level >= 2 else []),
+                *(
+                    [
+                        "Basic Rules 2024: Paladin level 3 — Channel Divinity and Divine Sense",
+                        "Basic Rules 2024: Oath of Devotion level 3 — Sacred Weapon and Oath Spells",
+                    ]
+                    if level >= 3 else []
+                ),
                 "Basic Rules 2024: Character Origins — Human and Soldier",
-                "Basic Rules 2024: Spells — Cure Wounds, Divine Favor, Bless, Divine Smite",
+                "Basic Rules 2024: Spells — Cure Wounds, Divine Favor, Bless, Divine Smite, Searing Smite, Protection from Evil and Good, Shield of Faith",
                 "Basic Rules 2024: Equipment — Chain Mail, Shield, Longsword, Javelin, Sap, Slow",
             ],
         )
