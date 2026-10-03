@@ -5,7 +5,12 @@ import logging
 from app.content.canonical_combat_build_policy import canonical_background_increases, canonical_base_ability_scores
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.hero_progressions import HERO_BY_CLASS
-from app.content.paladin_devotion_2024_profile_support import paladin_2024_feature, paladin_2024_level5_audits, paladin_2024_level6_audits
+from app.content.paladin_devotion_2024_profile_support import (
+    paladin_2024_feature,
+    paladin_2024_level5_audits,
+    paladin_2024_level6_audits,
+    paladin_2024_source_references,
+)
 from app.domain.character_builds import AbilityIncrease, CharacterBuildProfile
 
 logger = logging.getLogger(__name__)
@@ -145,32 +150,7 @@ def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildPro
             fighting_styles=["Defense"] if level >= 2 else [],
             combat_loadout_kind="one-hander-shield",
             feature_audits=audits,
-            source_references=[
-                "Basic Rules 2024: Paladin — Lay On Hands, Spellcasting, Weapon Mastery",
-                *(["Basic Rules 2024: Paladin level 2 — Fighting Style and Paladin's Smite"] if level >= 2 else []),
-                *(
-                    [
-                        "Basic Rules 2024: Paladin level 3 — Channel Divinity and Divine Sense",
-                        "Basic Rules 2024: Oath of Devotion level 3 — Sacred Weapon and Oath Spells",
-                    ]
-                    if level >= 3 else []
-                ),
-                *(
-                    ["Basic Rules 2024: Paladin level 4 — Ability Score Improvement; Feats — Ability Score Improvement (+2 Strength)"]
-                    if level >= 4 else []
-                ),
-                *(
-                    [
-                        "Basic Rules 2024: Paladin level 5 — Extra Attack and Faithful Steed",
-                        "Basic Rules 2024: Oath of Devotion level 5 — Aid and Zone of Truth",
-                    ]
-                    if level >= 5 else []
-                ),
-                *(["Basic Rules 2024: Paladin level 6 — Aura of Protection"] if level >= 6 else []),
-                "Basic Rules 2024: Character Origins — Human and Soldier",
-                "Basic Rules 2024: Spells — Cure Wounds, Divine Favor, Bless, Divine Smite, Searing Smite, Thunderous Smite, Shining Smite, Find Steed, Aid, Zone of Truth, Protection from Evil and Good, Shield of Faith",
-                "Basic Rules 2024: Equipment — Chain Mail, Shield, Longsword, Javelin, Sap, Slow",
-            ],
+            source_references=paladin_2024_source_references(level),
         )
     except Exception:
         logger.exception("Failed to compile 2024 Aurelia Brightshield profile at level %s.", level)
