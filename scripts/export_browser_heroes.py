@@ -374,6 +374,8 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["endsIfSourceDead"] = True
     if action.friendly_save_advantage_aura is not None:
         row["friendlySaveAdvantageAura"] = action.friendly_save_advantage_aura.model_dump(mode="json")
+    if action.friendly_cover_aura is not None:
+        row["friendlyCoverAura"] = action.friendly_cover_aura.model_dump(mode="json")
     if action.hostile_start_turn_condition_aura is not None:
         row["hostileStartTurnConditionAura"] = action.hostile_start_turn_condition_aura.model_dump(mode="json")
     if action.concentration:

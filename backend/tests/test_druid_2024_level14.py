@@ -62,8 +62,9 @@ def test_2024_druid_level_fourteen_adds_sanctuary_without_spell_package_drift() 
     assert sanctuary.move_action_cost == "bonus_action"
     assert sanctuary.move_distance_ft == 60
     assert sanctuary.move_range_ft == 120
-    assert sanctuary.armor_class_bonus == 2
-    assert sanctuary.saving_throw_bonus == 2
+    assert sanctuary.armor_class_bonus == 0
+    assert sanctuary.cover_bonus == 2
+    assert sanctuary.saving_throw_bonus == 0
     assert sanctuary.saving_throw_abilities == ["dexterity"]
     assert sanctuary.ally_damage_resistances == ["fire"]
     assert sanctuary.end_if_source_incapacitated is True

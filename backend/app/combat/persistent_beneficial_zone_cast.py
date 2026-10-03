@@ -66,6 +66,7 @@ def cast_persistent_beneficial_zone(
             expires_round=round_number + action.duration_rounds,
             length_ft=action.length_ft,
             armor_class_bonus=action.armor_class_bonus,
+            cover_bonus=action.cover_bonus,
             saving_throw_bonus=action.saving_throw_bonus,
             saving_throw_abilities=list(action.saving_throw_abilities),
             ally_damage_resistances=list(action.ally_damage_resistances),

@@ -408,6 +408,7 @@ def persistent_beneficial_zone_row(action: Any) -> dict[str, Any]:
             "moveActionCost": action.move_action_cost, "moveDistanceFt": action.move_distance_ft,
             "moveRangeFt": action.move_range_ft,
             "armorClassBonus": action.armor_class_bonus,
+            "coverBonus": action.cover_bonus,
             "savingThrowBonus": action.saving_throw_bonus,
             "savingThrowAbilities": list(action.saving_throw_abilities),
             "allyDamageResistances": list(action.ally_damage_resistances),
@@ -570,6 +571,8 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["endsIfSourceDead"] = True
     if action.friendly_save_advantage_aura is not None:
         row["friendlySaveAdvantageAura"] = action.friendly_save_advantage_aura.model_dump(mode="json")
+    if action.friendly_cover_aura is not None:
+        row["friendlyCoverAura"] = action.friendly_cover_aura.model_dump(mode="json")
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
     return row

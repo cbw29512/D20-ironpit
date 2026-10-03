@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
+from app.combat.cover_modifiers import strongest_cover_bonus
 from app.combat.debuff_counters import debuff_is_countered
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import d20_modifier, speed_after_exhaustion
@@ -63,10 +64,12 @@ def expire_target_turn_modifiers(state: CombatantState) -> int:
     state.active_modifiers = [item for item in state.active_modifiers if not item.expires_at_end_of_target_turn]
     return before - len(state.active_modifiers)
 
-
 def effective_armor_class(state: CombatantState) -> int:
-    adjusted = state.template.armor_class + sum(
+    stacking_bonus = sum(
         item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.ARMOR_CLASS
+    )
+    adjusted = state.template.armor_class + stacking_bonus + strongest_cover_bonus(
+        state, ModifierKind.COVER_ARMOR_CLASS,
     )
     minimum = max(
         (item.minimum_value for item in state.active_modifiers if item.kind is ModifierKind.ARMOR_CLASS_MINIMUM),
@@ -82,14 +85,13 @@ def attack_roll_flat_bonus(state: CombatantState, weapon_id: str) -> int:
     )
 
 
-
 def saving_throw_flat_bonus(state: CombatantState, ability: str | None = None) -> int:
-    return sum(
+    stacking_bonus = sum(
         item.flat_bonus for item in state.active_modifiers
         if item.kind is ModifierKind.SAVING_THROW_FLAT
         and (item.save_ability is None or ability is None or item.save_ability == ability)
     )
-
+    return stacking_bonus + strongest_cover_bonus(state, ModifierKind.COVER_SAVING_THROW_FLAT, ability)
 
 def attack_damage_source_qualifiers(
     state: CombatantState, attack: WeaponAttack,

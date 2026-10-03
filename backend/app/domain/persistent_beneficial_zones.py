@@ -22,6 +22,7 @@ class PersistentBeneficialZoneAction(BaseModel):
     move_distance_ft: int = Field(default=0, ge=0)
     move_range_ft: int = Field(default=0, ge=0)
     armor_class_bonus: int = 0
+    cover_bonus: int = Field(default=0, ge=0, le=5)
     saving_throw_bonus: int = 0
     saving_throw_abilities: list[AbilityName] = Field(default_factory=list)
     ally_damage_resistances: list[DamageTypeName] = Field(default_factory=list)
@@ -45,6 +46,7 @@ class PersistentBeneficialZoneState(BaseModel):
     expires_round: int = Field(ge=2)
     length_ft: int = Field(ge=5)
     armor_class_bonus: int = 0
+    cover_bonus: int = Field(default=0, ge=0, le=5)
     saving_throw_bonus: int = 0
     saving_throw_abilities: list[AbilityName] = Field(default_factory=list)
     ally_damage_resistances: list[DamageTypeName] = Field(default_factory=list)

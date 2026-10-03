@@ -5,7 +5,7 @@ on:
   pull_request:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: ci-${{ github.event.pull_request.head.ref || github.ref_name }}
@@ -49,6 +49,19 @@ jobs:
           python scripts/export_browser_monsters_2014.py
       - name: Generate certification manifest candidates
         run: python scripts/verify_certification_manifests.py --write
+      - name: Temporary refresh generated Paladin 15 artifacts
+        if: github.event.pull_request.head.ref == 'feat/2024-paladin-15'
+        run: |
+          python scripts/prepare_static_site.py
+          git config user.name "iron-pit-certification"
+          git config user.email "actions@users.noreply.github.com"
+          git add -u
+          if git diff --cached --quiet; then
+            echo "Generated artifacts already match."
+          else
+            git commit -m "Refresh generated Paladin 15 artifacts [skip refresh]"
+            git push origin HEAD:feat/2024-paladin-15
+          fi
       - name: Upload certification manifest candidates
         uses: actions/upload-artifact@v4
         with:
@@ -353,6 +366,7 @@ jobs:
         run: |
           node frontend/browser-paladin-2024-level13.test.cjs
           node frontend/browser-paladin-2024-level14.test.cjs
+          node frontend/browser-paladin-2024-level15.test.cjs
           node frontend/browser-paladin-2024-level12.test.cjs
           node frontend/browser-ability-hooks.test.cjs
           node frontend/browser-recharge.test.cjs

@@ -52,6 +52,7 @@
         || (action.savingThrowAdvantageGrants || []).length
         || (action.movementModeGrants || []).length
         || action.friendlySaveAdvantageAura
+        || action.friendlyCoverAura
         || action.hostileStartTurnConditionAura
         || action.startTurnEmanationDamage
       )) {

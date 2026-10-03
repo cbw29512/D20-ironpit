@@ -64,6 +64,16 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
                        "or Stunned condition costs five pool points; Poisoned can be removed "
                        "in the same use. Arena AI selects removal without optional HP healing."),
             ))
+        if level >= 15:
+            audits.append(paladin_2024_feature(
+                "smite-of-protection", "Smite of Protection", "subclass",
+                combat=True, automated=True,
+                notes=("Divine Smite's generic post-hit damage may trigger a declared timed "
+                       "source-centered friendly aura. For Smite of Protection that aura grants "
+                       "Half Cover (+2 AC and +2 Dexterity saves) to Aurelia and allies inside "
+                       "Aura of Protection until the start of Aurelia's next turn. Cover uses "
+                       "the strongest cover source rather than stacking. No Paladin-specific resolver."),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build later 2024 Paladin feature audits at level %s.", level)

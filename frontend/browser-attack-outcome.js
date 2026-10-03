@@ -18,6 +18,7 @@
       studiedApplied: false,
       deferredEffectArmed: null,
       exileApplied: null,
+      postHitSelfBuffApplied: null,
       appliedConditions: [],
     };
   }
