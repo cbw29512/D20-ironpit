@@ -4,6 +4,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.state import build_combatant_state
 from app.combat.tactical_mind import apply_tactical_mind
+from app.combat.timed_conditions import apply_timed_condition
 from app.content.fighter_progression import build_karnok_stoneward_level
 from app.content.level_resources import fighter_action_surge_uses, fixed_class_hit_points
 from app.content.monsters import build_commoner
@@ -54,6 +55,21 @@ def test_action_surge_is_limited_to_once_per_turn_even_with_two_uses() -> None:
     spend(state, "action")
     assert action_surge_available(state, "1:hero-1") is False
     assert action_surge_available(state, "2:hero-1") is True
+
+
+def test_single_activity_turn_restriction_blocks_action_surge_extra_action() -> None:
+    state = build_combatant_state(build_karnok_stoneward_level(2))
+    apply_timed_condition(
+        state,
+        "frightened",
+        "paladin",
+        source_effect_id="abjure-foes",
+        turn_behavior="single_activity",
+        ends_on_damage=True,
+    )
+    spend(state, "action")
+    assert state.voluntary_turn_activity == "action"
+    assert action_surge_available(state, "1:hero-1") is False
 
 
 def test_action_surge_ai_uses_extra_action_for_immediate_legal_attack() -> None:
