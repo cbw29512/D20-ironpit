@@ -13,9 +13,13 @@ const load = (name) => vm.runInThisContext(
 const calls = [];
 window.IRON_PIT_ACTION_ECONOMY = {
   available: (state, cost) => cost === "action" && state.action_available,
+  spend: (state, cost) => {
+    assert.equal(cost, "action");
+    state.action_available = false;
+  },
 };
 window.IRON_PIT_BROWSER_FORMATION = {
-  targetOrder: (_member, setup) => [setup.monsters[0]],
+  targetOrder: (_member, setup) => setup.monsters,
   saveDistance: () => 5,
   chooseStandardAttack: (member, setup) => {
     calls.push("standard-discover");
@@ -169,6 +173,36 @@ const ctx = (actor) => ({
   assert.equal(resolved.events[0].feature_id, "dodge");
 }
 
+
+{
+  const actor = member("2024");
+  actor.state.template.spellEnabled = false;
+  actor.state.template.attackActionEnabled = false;
+  actor.state.template.areaEnabled = false;
+  actor.state.template.standardEnabled = false;
+  actor.state.template.saving_throw_actions = [{
+    id: "capped-save", name: "Capped Save", actionCost: "action",
+    range: 60, maxTargets: 2, resourceCost: 1,
+  }];
+  const second = {
+    combatant_id: "monster-2", side: "monsters",
+    state: { template: { ruleset: "2024" }, is_alive: true, is_dead: false, current_hp: 20 },
+  };
+  const third = {
+    combatant_id: "monster-3", side: "monsters",
+    state: { template: { ruleset: "2024" }, is_alive: true, is_dead: false, current_hp: 20 },
+  };
+  const context = {
+    ...ctx(actor),
+    setup: { heroes: [actor], monsters: [target, second, third] },
+  };
+  const selected = S.selectCandidate("normalPostMove", S.discoverCandidates("normalPostMove", context));
+  assert.equal(selected.providerId, "save-action");
+  assert.deepEqual(selected.payload.targetIds, ["monster-1", "monster-2"]);
+  const resolved = S.resolveCandidate("normalPostMove", selected, context);
+  assert.equal(resolved.events.length, 2);
+  assert.equal(actor.state.action_available, false);
+}
 
 {
   const actor = member("2024");
