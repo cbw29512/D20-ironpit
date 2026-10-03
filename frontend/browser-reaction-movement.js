@@ -25,6 +25,7 @@
 
   function gridMoveToward(sequence, round, mover, target, setup, desired, movementSource, options) {
     try {
+      if (!window.IRON_PIT_ACTION_ECONOMY?.voluntaryActivityAvailable(mover.state, "movement")) return { events: [], sequence, movement: null };
       if (!setup.map_definition || !mover.state.position || !target.state.position) {
         throw new Error("Grid movement requires map and combatant positions.");
       }
@@ -73,6 +74,7 @@
         }
         if (stepCost > mover.state.movement_remaining_ft) break;
         const beforeDistance = S().distance(mover, target);
+        window.IRON_PIT_ACTION_ECONOMY?.claimActivity(mover.state, "movement");
         mover.state.position = { ...destination };
         mover.state.movement_remaining_ft -= stepCost;
         const afterDistance = S().distance(mover, target);
@@ -113,6 +115,7 @@
         if (!mover.state.position || !target.state.position) throw new Error("Grid encounter cannot mix position authority.");
         return gridMoveToward(sequence, round, mover, target, setup, desired, movementSource, options);
       }
+      if (!window.IRON_PIT_ACTION_ECONOMY?.voluntaryActivityAvailable(mover.state, "movement")) return { events: [], sequence, movement: null };
       const proposal = preview(mover, target, desired);
       if (!proposal.moved) return { events: [], sequence, movement: null };
       const events = [], wasProne = mover.state.active_effect_ids.includes("prone");
