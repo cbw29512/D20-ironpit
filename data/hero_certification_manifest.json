@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 142
+    "public_ready": 143
   },
   "heroes": [
     {
@@ -8793,24 +8793,52 @@
             "id": "oath-devotion",
             "name": "Oath of Devotion"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "aurelia-brightshield-l3",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Paladin 3, Human, Soldier, Cure Wounds, Divine Favor, Bless, Divine Smite, Sacred Weapon, Protection from Evil and Good, Shield of Faith, Longsword, Javelin"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack-action-weapon-buff:sacred-weapon",
+            "attack:aurelia-javelin",
+            "attack:aurelia-longsword",
+            "condition-removal-action:lay-on-hands-poison",
+            "defensive-spell-action:bless",
+            "defensive-spell-action:divine-favor",
+            "defensive-spell-action:protection-from-evil-and-good",
+            "defensive-spell-action:shield-of-faith",
+            "divine-smite-2024",
+            "healing-action:cure-wounds",
+            "healing-action:lay-on-hands-heal",
+            "resource:channel-divinity",
+            "resource:lay-on-hands",
+            "resource:paladins-smite-free-cast",
+            "resource:spell-slot-1",
+            "trait:savage-attacker"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack-action-weapon-buff:sacred-weapon",
+            "attack:aurelia-javelin",
+            "attack:aurelia-longsword",
+            "condition-removal-action:lay-on-hands-poison",
+            "defensive-spell-action:bless",
+            "defensive-spell-action:divine-favor",
+            "defensive-spell-action:protection-from-evil-and-good",
+            "defensive-spell-action:shield-of-faith",
+            "divine-smite-2024",
+            "healing-action:cure-wounds",
+            "healing-action:lay-on-hands-heal",
+            "resource:channel-divinity",
+            "resource:lay-on-hands",
+            "resource:paladins-smite-free-cast",
+            "resource:spell-slot-1",
+            "trait:savage-attacker"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 4,
