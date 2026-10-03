@@ -110,8 +110,8 @@ def test_divine_smite_activates_live_half_cover_until_next_turn() -> None:
         )
         assert effective_armor_class(aurelia.state) == hero.armor_class + 2
         assert effective_armor_class(ally.state) == ally.state.template.armor_class + 2
-        assert saving_throw_flat_bonus(ally.state, "dexterity") == 2
-        assert saving_throw_flat_bonus(ally.state, "wisdom") == 0
+        assert saving_throw_flat_bonus(ally.state, "dexterity") == 5
+        assert saving_throw_flat_bonus(ally.state, "wisdom") == 3
         assert effective_armor_class(enemy.state) == enemy.state.template.armor_class
 
         ally.state.position = GridPosition(x=3, y=0)
