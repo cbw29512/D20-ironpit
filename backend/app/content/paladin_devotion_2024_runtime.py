@@ -8,11 +8,11 @@ from app.content.cleric_life_domain import AID, LESSER_RESTORATION
 from app.content.healing_spell_effects import build_cure_wounds
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.paladin_devotion_2024_profile import build_aurelia_brightshield_2024_profile
+from app.content.paladin_devotion_2024_resources import build_paladin_2024_resources
 from app.content.paladin_devotion_2024_runtime_support import (
     build_paladin_2024_attack,
     build_paladin_2024_attack_action,
     build_paladin_2024_progression,
-    build_paladin_2024_resources,
 )
 from app.content.paladin_devotion_2024_support import (
     divine_favor_2024,
