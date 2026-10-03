@@ -8,7 +8,7 @@ from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.friendly_condition_auras import FriendlyConditionImmunityAuraGrant
 from app.domain.friendly_save_auras import FriendlySavingThrowAuraGrant
-from app.domain.models import WeaponAttack
+from app.domain.models import DamageType, OnHitDamage, WeaponAttack, WeaponAttackKind
 from app.domain.post_hit_damage import ResourceBackedPostHitDamage
 from app.domain.progression import ProgressionCombatFeatures
 
@@ -22,7 +22,7 @@ def build_paladin_2024_attack(
 ) -> WeaponAttack:
     try:
         weapon = build_longsword() if weapon_id == "longsword" else build_weapon(weapon_id)
-        return WeaponAttack(
+        attack = WeaponAttack(
             id=f"aurelia-{weapon_id}",
             weapon=weapon,
             attack_bonus=proficiency_bonus(level) + strength_modifier,
@@ -30,6 +30,18 @@ def build_paladin_2024_attack(
             attack_ability="strength",
             attack_ability_modifier=strength_modifier,
         )
+        if level >= 11 and weapon.attack_kind == WeaponAttackKind.MELEE:
+            attack = attack.model_copy(update={
+                "on_hit_damage": [
+                    OnHitDamage(
+                        source="Radiant Strikes",
+                        dice_count=1,
+                        dice_size=8,
+                        damage_type=DamageType.RADIANT,
+                    )
+                ],
+            })
+        return attack
     except Exception:
         logger.exception(
             "Failed to build 2024 Paladin attack %s at level %s.",

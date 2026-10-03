@@ -155,6 +155,18 @@ def build_paladin_2024_feature_audits(level: int) -> list[FeatureAudit]:
                        "an existing Frightened condition is suppressed while the creature remains "
                        "inside the aura, and the aura is inactive while Aurelia is Incapacitated."),
             ))
+        if level >= 11:
+            audits.extend([
+                paladin_2024_feature(
+                    "radiant-strikes",
+                    "Radiant Strikes",
+                    "class",
+                    combat=True,
+                    automated=True,
+                    notes=("Reuses generic on-hit damage. Each qualifying Melee-weapon hit "
+                           "adds 1d8 Radiant damage and doubles that damage die on a Critical Hit."),
+                ),
+            ])
         return audits
     except Exception:
         logger.exception("Failed to build 2024 Paladin feature audits at level %s.", level)

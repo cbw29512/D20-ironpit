@@ -65,7 +65,7 @@ def _paladins_smite_free_cast(level: int) -> int:
 
 
 def _paladin_channel_divinity(level: int) -> int:
-    return 2 if level >= 3 else 0
+    return 3 if level >= 11 else (2 if level >= 3 else 0)
 
 
 def _faithful_steed_free_cast(level: int) -> int:

@@ -65,13 +65,18 @@ def paladin_2024_source_references(level: int) -> list[str]:
             ])
         if level >= 10:
             references.append("Basic Rules 2024: Paladin level 10 — Aura of Courage")
+        if level >= 11:
+            references.extend([
+                "Basic Rules 2024: Paladin level 11 — Radiant Strikes and third Channel Divinity use",
+                "Basic Rules 2024: Spells — Crusader\'s Mantle",
+            ])
         references.extend([
             "Basic Rules 2024: Character Origins — Human and Soldier",
             (
                 "Basic Rules 2024: Spells — Cure Wounds, Divine Favor, Bless, Divine Smite, "
                 "Searing Smite, Thunderous Smite, Shining Smite, Find Steed, Aid, Zone of Truth, "
                 "Protection from Evil and Good, Shield of Faith, Lesser Restoration, "
-                "Aura of Vitality, Blinding Smite, Beacon of Hope, Dispel Magic"
+                "Aura of Vitality, Blinding Smite, Crusader\'s Mantle, Beacon of Hope, Dispel Magic"
             ),
             (
                 "Basic Rules 2024: Equipment — Chain Mail, Shield, Longsword, Javelin, "
