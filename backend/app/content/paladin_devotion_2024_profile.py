@@ -5,21 +5,10 @@ import logging
 from app.content.canonical_combat_build_policy import canonical_background_increases, canonical_base_ability_scores
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.hero_progressions import HERO_BY_CLASS
-from app.domain.character_builds import CharacterBuildProfile, FeatureAudit
+from app.content.paladin_devotion_2024_profile_support import paladin_2024_feature
+from app.domain.character_builds import CharacterBuildProfile
 
 logger = logging.getLogger(__name__)
-
-
-def _feature(
-    feature_id: str, name: str, category: str, *, combat: bool, automated: bool,
-    weapon_id: str | None = None, notes: str | None = None,
-) -> FeatureAudit:
-    return FeatureAudit(
-        feature_id=feature_id, feature_name=name,
-        source_reference="D&D Beyond Basic Rules 2024", category=category,
-        combat_relevant=combat, automated=automated,
-        runtime_attack_weapon_id=weapon_id, notes=notes,
-    )
 
 
 def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildProfile:
@@ -37,34 +26,34 @@ def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildPro
         final = type(base)(**values)
 
         audits = [
-            _feature("lay-on-hands", "Lay On Hands", "class", combat=True, automated=True),
-            _feature(
+            paladin_2024_feature("lay-on-hands", "Lay On Hands", "class", combat=True, automated=True),
+            paladin_2024_feature(
                 "spellcasting", "Spellcasting", "class", combat=True, automated=True,
                 notes=(
                     "Damage/healing-first preparation uses Cure Wounds and Divine Favor; "
                     "level 2 adds certified Bless while Divine Smite is always prepared separately."
                 ),
             ),
-            _feature(
+            paladin_2024_feature(
                 "weapon-mastery", "Weapon Mastery", "class", combat=True, automated=True,
                 notes="Longsword uses Sap; Javelin uses Slow.",
             ),
-            _feature("resourceful", "Resourceful", "species", combat=True, automated=True),
-            _feature("skillful", "Skillful", "species", combat=False, automated=False),
-            _feature("versatile-skilled", "Versatile: Skilled", "species", combat=False, automated=False),
-            _feature("savage-attacker", "Savage Attacker", "feat", combat=True, automated=True),
-            _feature("chain-mail", "Chain Mail", "equipment", combat=True, automated=True),
-            _feature("shield", "Shield", "equipment", combat=True, automated=True),
-            _feature("longsword", "Longsword", "equipment", combat=True, automated=True, weapon_id="longsword"),
-            _feature("javelin", "Javelin", "equipment", combat=True, automated=True, weapon_id="javelin"),
+            paladin_2024_feature("resourceful", "Resourceful", "species", combat=True, automated=True),
+            paladin_2024_feature("skillful", "Skillful", "species", combat=False, automated=False),
+            paladin_2024_feature("versatile-skilled", "Versatile: Skilled", "species", combat=False, automated=False),
+            paladin_2024_feature("savage-attacker", "Savage Attacker", "feat", combat=True, automated=True),
+            paladin_2024_feature("chain-mail", "Chain Mail", "equipment", combat=True, automated=True),
+            paladin_2024_feature("shield", "Shield", "equipment", combat=True, automated=True),
+            paladin_2024_feature("longsword", "Longsword", "equipment", combat=True, automated=True, weapon_id="longsword"),
+            paladin_2024_feature("javelin", "Javelin", "equipment", combat=True, automated=True, weapon_id="javelin"),
         ]
         if level >= 2:
             audits.extend([
-                _feature(
+                paladin_2024_feature(
                     "fighting-style-defense", "Defense", "class", combat=True, automated=True,
                     notes="Fighting Style feat grants +1 AC while Aurelia wears Chain Mail.",
                 ),
-                _feature(
+                paladin_2024_feature(
                     "paladins-smite", "Paladin's Smite", "class", combat=True, automated=True,
                     notes=(
                         "Divine Smite is always prepared and has one Long-Rest free cast. "
@@ -74,18 +63,18 @@ def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildPro
             ])
         if level >= 3:
             audits.extend([
-                _feature(
+                paladin_2024_feature(
                     "channel-divinity", "Channel Divinity", "class", combat=True, automated=True,
                     notes="Two source-owned uses feed universal Channel Divinity consumers.",
                 ),
-                _feature(
+                paladin_2024_feature(
                     "divine-sense", "Divine Sense", "class", combat=False, automated=False,
                     notes=(
                         "Arena state already exposes combatant creature type and position; "
                         "the detection feature does not change a current Iron Pit combat outcome."
                     ),
                 ),
-                _feature(
+                paladin_2024_feature(
                     "sacred-weapon", "Sacred Weapon", "subclass", combat=True, automated=True,
                     notes=(
                         "Taking the Attack action spends one Channel Divinity to bind a 10-minute "
@@ -93,7 +82,7 @@ def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildPro
                         "the universal Attack-action weapon-buff primitive."
                     ),
                 ),
-                _feature(
+                paladin_2024_feature(
                     "oath-spells-level3", "Oath of Devotion Spells", "subclass",
                     combat=True, automated=True,
                     notes=(
