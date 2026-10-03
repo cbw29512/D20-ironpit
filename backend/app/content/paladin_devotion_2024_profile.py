@@ -9,6 +9,7 @@ from app.content.paladin_devotion_2024_profile_support import (
     paladin_2024_feature,
     paladin_2024_level5_audits,
     paladin_2024_level6_audits,
+    paladin_2024_level7_audits,
     paladin_2024_source_references,
 )
 from app.domain.character_builds import CharacterBuildProfile
@@ -17,10 +18,10 @@ logger = logging.getLogger(__name__)
 
 
 def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildProfile:
-    """Compile Aurelia's legal 2024 Devotion Paladin progression through level 6."""
+    """Compile Aurelia's legal 2024 Devotion Paladin progression through level 7."""
     try:
-        if level not in {1, 2, 3, 4, 5, 6}:
-            raise ValueError("The current 2024 Paladin profile tranche supports levels 1-6 only.")
+        if level not in {1, 2, 3, 4, 5, 6, 7}:
+            raise ValueError("The current 2024 Paladin profile tranche supports levels 1-7 only.")
         hero = HERO_BY_CLASS["paladin"]
         base, allowed, background, advancement, final = (
             build_paladin_2024_ability_progression(level)
@@ -110,6 +111,8 @@ def build_aurelia_brightshield_2024_profile(level: int = 1) -> CharacterBuildPro
             audits.extend(paladin_2024_level5_audits())
         if level >= 6:
             audits.extend(paladin_2024_level6_audits())
+        if level >= 7:
+            audits.extend(paladin_2024_level7_audits())
 
         return CharacterBuildProfile(
             id=f"build-aurelia-brightshield-2024-l{level}",
