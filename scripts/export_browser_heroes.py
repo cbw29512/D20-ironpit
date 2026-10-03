@@ -251,6 +251,7 @@ def _defense(action: Any) -> dict[str, Any]:
     row = {"id": action.id, "name": action.name, "level": action.level, "actionCost": action.action_cost,
            "range": action.range_ft, "durationMinutes": action.duration_minutes,
            "targetPolicy": action.target_policy, "targetCount": action.target_count,
+           "targetAllLegal": action.target_all_legal,
            "targetCountPerSlotAbove": action.target_count_per_slot_above,
            "temporaryHp": action.temporary_hp, "temporaryHpPerSlotAbove": action.temporary_hp_per_slot_above,
            "maxHpIncrease": action.max_hp_increase, "currentHpIncrease": action.current_hp_increase,
