@@ -641,3 +641,14 @@ Machine-readable counts live in `data/hero_certification_manifest.json` and `dat
 At Paladin 14, Restoring Touch can remove Blinded, Charmed, Deafened, Frightened, Paralyzed, and Stunned when Lay On Hands is used. Each removed condition costs five healing-pool points, and those points do not restore HP. Ordinary Poisoned removal can share that activation. Arena AI selects the legal removal-only option and declines optional simultaneous HP restoration.
 
 Lay On Hands healing in both editions uses the remaining finite pool, spending only the chosen useful HP allocation up to the target's missing effective HP. Condition removal never makes remaining pool points unusable. Action cost remains Action in 2014 and Bonus Action in 2024. Live battlefield footprint distance governs touch range in both editions. The 2014 feature has no effect on Undead or Constructs; the 2024 feature has no such exclusion. These source restrictions are declarative target parameters for both healing and condition removal.
+
+
+### Overlapping non-stacking buffs and identical defensive benefits
+
+When two or more independent sources grant the same non-stacking combat benefit, each source remains active and retains its own source identity, duration, and expiry. The mechanical benefit is applied only once at the strongest currently applicable value unless RAW explicitly allows stacking.
+
+If the currently effective source ends, moves out of range, is suppressed, or otherwise becomes inactive while another equivalent source remains active, the remaining source immediately becomes the effective source without requiring a new cast or activation.
+
+This applies to equivalent buffs from different classes, spells, features, items, monsters, or multiple allies. The engine must not delete or merge source-owned effects merely because their mechanical benefit overlaps. Audit state should preserve every active source even when only one contributes to the final number.
+
+For Half Cover specifically, overlapping sources do not become Three-Quarters Cover and do not add their +2 bonuses together. Each valid Half Cover source remains independently active; the target receives the normal Half Cover benefit while at least one source applies.
