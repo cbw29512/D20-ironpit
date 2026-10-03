@@ -78,7 +78,8 @@ assert.match(css, /\.battle-card\.turn-active/); assert.match(css, /card-turn-sh
 assert.ok(html.indexOf("browser-action-economy.js") < html.indexOf("browser-ability-hooks.js"));
 assert.ok(html.indexOf("browser-ability-hooks.js") < html.indexOf("browser-main-action-profiles.js"));
 assert.ok(html.indexOf("browser-main-action-profiles.js") < html.indexOf("browser-main-action-selection.js"));
-assert.ok(html.indexOf("browser-main-action-selection.js") < html.indexOf("browser-main-action-providers.js"));
+assert.ok(html.indexOf("browser-main-action-selection.js") < html.indexOf("browser-multi-save-provider.js"));
+assert.ok(html.indexOf("browser-multi-save-provider.js") < html.indexOf("browser-main-action-providers.js"));
 assert.ok(html.indexOf("browser-main-action-providers.js") < html.indexOf("browser-attack-outcome.js"));
 assert.ok(html.indexOf("browser-attack-outcome.js") < html.indexOf("browser-attack.js"));
 assert.ok(html.indexOf("browser-topple.js") < html.indexOf("browser-attack-outcome-hook-installation.js"));
