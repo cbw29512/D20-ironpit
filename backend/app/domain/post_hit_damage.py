@@ -22,3 +22,4 @@ class ResourceBackedPostHitDamage(BaseModel):
     bonus_target_creature_types: list[str] = Field(default_factory=list)
     bonus_target_dice_count: int = Field(default=0, ge=0, le=20)
     doubles_on_critical: bool = True
+    on_use_self_effect_id: str | None = Field(default=None, min_length=1)
