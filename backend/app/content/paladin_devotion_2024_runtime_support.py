@@ -6,8 +6,9 @@ from app.content.character_math import proficiency_bonus
 from app.content.equipment import build_longsword
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
+from app.domain.friendly_condition_auras import FriendlyConditionImmunityAuraGrant
 from app.domain.friendly_save_auras import FriendlySavingThrowAuraGrant
-from app.domain.models import ResourceDefinition, WeaponAttack
+from app.domain.models import WeaponAttack
 from app.domain.post_hit_damage import ResourceBackedPostHitDamage
 from app.domain.progression import ProgressionCombatFeatures
 
@@ -74,6 +75,16 @@ def build_paladin_2024_progression(
                 if level >= 6
                 else None
             ),
+            friendly_condition_immunity_auras=(
+                [FriendlyConditionImmunityAuraGrant(
+                    source_id="aura-of-devotion-2024",
+                    source_name="Aura of Devotion",
+                    radius_ft=10,
+                    condition_id="charmed",
+                    inactive_while_incapacitated=True,
+                )]
+                if level >= 7 else []
+            ),
             resource_backed_post_hit_damage=(
                 ResourceBackedPostHitDamage(
                     source_id="divine-smite-2024",
@@ -100,49 +111,4 @@ def build_paladin_2024_progression(
             "Failed to build 2024 Paladin progression features at level %s.",
             level,
         )
-        raise
-
-
-def build_paladin_2024_resources(level: int) -> list[ResourceDefinition]:
-    try:
-        resources = [
-            ResourceDefinition(
-                id="lay-on-hands",
-                name="Lay On Hands",
-                max_uses=5 * level,
-            ),
-            ResourceDefinition(
-                id="spell-slot-1",
-                name="Level 1 Spell Slot",
-                max_uses=4 if level >= 5 else (3 if level >= 3 else 2),
-            ),
-        ]
-        if level >= 2:
-            resources.append(ResourceDefinition(
-                id="paladins-smite-free-cast",
-                name="Paladin's Smite: Free Cast",
-                max_uses=1,
-            ))
-        if level >= 3:
-            resources.append(ResourceDefinition(
-                id="channel-divinity",
-                name="Channel Divinity",
-                max_uses=2,
-            ))
-        if level >= 5:
-            resources.extend([
-                ResourceDefinition(
-                    id="spell-slot-2",
-                    name="Level 2 Spell Slot",
-                    max_uses=2,
-                ),
-                ResourceDefinition(
-                    id="faithful-steed-free-cast",
-                    name="Faithful Steed: Free Cast",
-                    max_uses=1,
-                ),
-            ])
-        return resources
-    except Exception:
-        logger.exception("Failed to build 2024 Paladin resources at level %s.", level)
         raise

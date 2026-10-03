@@ -14,6 +14,7 @@ from app.domain.spell_damage_maximizers import SpellDamageMaximizerGrant
 from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
 from app.domain.d20_outcome_adjustments import ResourceBackedD20OutcomeAdjustment
 from app.domain.end_turn_condition_removal import EndTurnConditionRemovalGrant
+from app.domain.friendly_condition_auras import FriendlyConditionImmunityAuraGrant
 from app.domain.friendly_save_auras import FriendlySavingThrowAuraGrant
 from app.domain.healing_riders import OutgoingHealingDiceMaximizer
 from app.domain.on_hit_save_riders import ResourceBackedOnHitSaveRider
@@ -95,6 +96,7 @@ class ProgressionCombatFeatures(BaseModel):
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
     passive_debuff_counter_grants: list[PassiveDebuffCounterGrant] = Field(default_factory=list)
     friendly_saving_throw_aura: FriendlySavingThrowAuraGrant | None = None
+    friendly_condition_immunity_auras: list[FriendlyConditionImmunityAuraGrant] = Field(default_factory=list)
     opening_targeting_ward: OpeningTargetingWard | None = None
     first_round_extra_turn_grants: list[FirstRoundExtraTurnGrant] = Field(default_factory=list)
     failed_save_reroll_grants: list[FailedSaveRerollGrant] = Field(default_factory=list)

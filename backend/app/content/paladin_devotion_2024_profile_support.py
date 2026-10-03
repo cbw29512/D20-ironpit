@@ -25,57 +25,6 @@ def paladin_2024_feature(
     )
 
 
-def paladin_2024_level5_audits() -> list[FeatureAudit]:
-    return [
-        paladin_2024_feature(
-            "extra-attack",
-            "Extra Attack",
-            "class",
-            combat=True,
-            automated=True,
-            notes="The universal Attack action resolves two legal weapon attacks.",
-        ),
-        paladin_2024_feature(
-            "faithful-steed",
-            "Faithful Steed",
-            "class",
-            combat=False,
-            automated=False,
-            notes=(
-                "Find Steed is always prepared and retains its one free Long-Rest cast resource, "
-                "but Iron Pit's no-summons rule keeps the summon arena-unavailable."
-            ),
-        ),
-        paladin_2024_feature(
-            "oath-spells-level5",
-            "Oath of Devotion Spells",
-            "subclass",
-            combat=True,
-            automated=True,
-            notes=(
-                "Aid uses the certified 2024 defensive-spell fingerprint; "
-                "Zone of Truth is always prepared but arena-neutral."
-            ),
-        ),
-    ]
-
-
-def paladin_2024_level6_audits() -> list[FeatureAudit]:
-    return [
-        paladin_2024_feature(
-            "aura-of-protection",
-            "Aura of Protection",
-            "class",
-            combat=True,
-            automated=True,
-            notes=(
-                "Universal friendly saving-throw aura: 10-foot Emanation, "
-                "Charisma-modifier flat save bonus, inactive while the source is Incapacitated."
-            ),
-        ),
-    ]
-
-
 def paladin_2024_source_references(level: int) -> list[str]:
     try:
         references = [
@@ -102,12 +51,14 @@ def paladin_2024_source_references(level: int) -> list[str]:
             ])
         if level >= 6:
             references.append("Basic Rules 2024: Paladin level 6 — Aura of Protection")
+        if level >= 7:
+            references.append("Basic Rules 2024: Oath of Devotion level 7 — Aura of Devotion")
         references.extend([
             "Basic Rules 2024: Character Origins — Human and Soldier",
             (
                 "Basic Rules 2024: Spells — Cure Wounds, Divine Favor, Bless, Divine Smite, "
                 "Searing Smite, Thunderous Smite, Shining Smite, Find Steed, Aid, Zone of Truth, "
-                "Protection from Evil and Good, Shield of Faith"
+                "Protection from Evil and Good, Shield of Faith, Lesser Restoration"
             ),
             (
                 "Basic Rules 2024: Equipment — Chain Mail, Shield, Longsword, Javelin, "

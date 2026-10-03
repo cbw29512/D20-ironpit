@@ -2,97 +2,15 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.condition_rules import has_condition
-from app.combat.encounter_targeting import combatant_distance
 from app.combat.friendly_save_auras import sync_friendly_save_auras
-from app.combat.modifier_stack import add_modifier
-from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.modifiers import CombatModifier, ModifierKind
+from app.domain.encounters import EncounterSetup
 
 logger = logging.getLogger(__name__)
-_AURA_EFFECTS = {
-    "aura-of-devotion-2014",
-    "aura-of-courage-2014",
-}
-
-
-def _members(setup: EncounterSetup) -> list[EncounterCombatant]:
-    return [*setup.heroes, *setup.monsters]
-
-
-def _active_source(member: EncounterCombatant) -> bool:
-    state = member.state
-    return (
-        state.is_alive
-        and not state.is_dead
-        and state.current_hp > 0
-        and not state.is_unconscious
-        and not has_condition(state, "unconscious")
-    )
-
-
-def _clear_aura_modifiers(setup: EncounterSetup) -> None:
-    for member in _members(setup):
-        member.state.active_modifiers = [
-            item for item in member.state.active_modifiers
-            if item.source_effect_id not in _AURA_EFFECTS
-        ]
-
-
-def _aura_radius_ft(source: EncounterCombatant) -> int:
-    try:
-        return source.state.template.progression_features.aura_radius_2014_ft
-    except Exception:
-        logger.exception("Failed to read 2014 aura radius for %s.", source.combatant_id)
-        raise
-
-
-def _nearby_sources(target: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
-    side_members = setup.heroes if target.side == "heroes" else setup.monsters
-    return [
-        source for source in side_members
-        if _active_source(source)
-        and _aura_radius_ft(source) > 0
-        and combatant_distance(source, target) <= _aura_radius_ft(source)
-    ]
-
-
-def _apply_condition_aura(
-    target: EncounterCombatant,
-    sources: list[EncounterCombatant],
-    feature_name: str,
-    effect_id: str,
-    condition_id: str,
-) -> None:
-    if condition_id in target.state.template.condition_immunities:
-        return
-    source = next((
-        member for member in sources
-        if bool(getattr(member.state.template.progression_features, feature_name))
-    ), None)
-    if source is None:
-        return
-    add_modifier(target.state, CombatModifier(
-        id=f"{source.combatant_id}:{effect_id}:{target.combatant_id}",
-        source_id=source.combatant_id,
-        source_effect_id=effect_id,
-        kind=ModifierKind.CONDITION_IMMUNITY,
-        condition_id=condition_id,
-    ))
 
 
 def sync_paladin_auras_2014(setup: EncounterSetup) -> None:
-    """Refresh non-stacking 2014 Paladin auras using each source's declared radius."""
+    """Compatibility entrypoint; universal friendly aura sync owns all mechanics."""
     try:
-        _clear_aura_modifiers(setup)
-        for target in _members(setup):
-            sources = _nearby_sources(target, setup)
-            _apply_condition_aura(
-                target, sources, "aura_of_devotion_2014", "aura-of-devotion-2014", "charmed",
-            )
-            _apply_condition_aura(
-                target, sources, "aura_of_courage_2014", "aura-of-courage-2014", "frightened",
-            )
         sync_friendly_save_auras(setup)
     except Exception:
         logger.exception("Failed to synchronize 2014 Paladin auras.")

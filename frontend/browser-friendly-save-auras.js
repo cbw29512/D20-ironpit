@@ -2,6 +2,7 @@
   "use strict";
 
   const PREFIX = "friendly-save-aura:";
+  const CONDITION_PREFIX = "friendly-condition-aura:";
   const ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"];
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
@@ -43,7 +44,8 @@
   function clear(setup) {
     for (const member of members(setup)) {
       member.state.active_modifiers = (member.state.active_modifiers || [])
-        .filter((item) => !String(item.id || "").startsWith(PREFIX));
+        .filter((item) => !String(item.id || "").startsWith(PREFIX)
+          && !String(item.id || "").startsWith(CONDITION_PREFIX));
     }
   }
 
@@ -100,6 +102,22 @@
             kind: "saving-throw-flat",
             flat_bonus: aura.flat_bonus,
           });
+        }
+
+        for (const source of allies) {
+          for (const aura of source.state.template.friendly_condition_immunity_auras || []) {
+            if (!passiveActive(source, aura)) continue;
+            if (S().distance(source, target) > aura.radius_ft) continue;
+            if ((target.state.template.condition_immunities || []).includes(aura.condition_id)) continue;
+            M().add(target.state, {
+              id: `${CONDITION_PREFIX}${source.combatant_id}:${aura.source_id}:${target.combatant_id}:${aura.condition_id}`,
+              source_id: source.combatant_id,
+              source_effect_id: aura.source_id,
+              source_name: aura.source_name,
+              kind: "condition-immunity",
+              condition_id: aura.condition_id,
+            });
+          }
         }
       }
     } catch (error) {

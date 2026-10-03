@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-03 for the 2024 Devotion Paladin level 6 tranche. Main baseline: `9968ab26c950543488b822b2e741a6b16ed815d7`.
+Recorded 2026-10-03 for the 2024 Devotion Paladin level 7 tranche. Main baseline: `14c64de1f6ed2b75188b2574c17512d77370ce7c`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -36,7 +36,7 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Monk (Open Hand) | 1–20 |
 | 2024 | Paladin (Devotion) | 1–5 |
 
-2024 public-ready hero slots on current main: **145 / 240**.
+2024 public-ready hero slots on current main: **146 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -46,9 +46,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 145 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 5 on main; this tranche advances level 6.
+**2024 canonical pregens are 146 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 6 on main; this tranche advances level 7.
 
-Active implementation lane: **2024 Devotion Paladin level 6.** Aura of Protection reuses the universal friendly saving-throw aura path. It grants Aurelia and same-side allies within the live 10-foot Emanation a flat saving-throw bonus equal to Aurelia's Charisma modifier (+2 at level 6) and is inactive while Aurelia is Incapacitated. The same primitive also binds the 2014 Aura of Protection with its edition-specific unconscious-only shutdown rule.
+Active implementation lane: **2024 Devotion Paladin level 7.** Aura of Devotion reuses universal condition immunity through a generic live friendly aura wrapper. It grants Aurelia and same-side allies within the 10-foot Aura of Protection Emanation immunity to Charmed and is inactive while Aurelia is Incapacitated. The same wrapper migrates 2014 Aura of Devotion and Aura of Courage off Paladin-specific condition-aura resolution while preserving their edition-specific unconscious-only shutdown rule. The seventh ordinary preparation is 2024 Lesser Restoration through the existing edition-isolated universal condition-removal action.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -73,7 +73,9 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 5 ordinary preparation adds **Shining Smite** under the damage-first policy. It remains fail-closed until its hit-confirmed damage plus persistent Advantage/invisibility-suppression effect can resolve atomically and edition-exactly.
 - Spell slots advance to **4 first-level / 2 second-level**, and Lay On Hands advances to **25**.
 - Level 6 adds **Aura of Protection** through the universal friendly saving-throw aura primitive. At Aurelia's current Charisma 14, the live 10-foot Emanation grants **+2 to saving throws** and is inactive while Aurelia is Incapacitated.
-- This tranche targets **146 / 240** 2024 public-ready hero slots.
+- Level 7 adds **Aura of Devotion** through the generic friendly condition-immunity aura wrapper. It grants **Charmed immunity** to Aurelia and allies inside the live 10-foot Emanation and shuts down while Aurelia is Incapacitated. The same tranche migrates 2014 Aura of Devotion/Courage onto the wrapper instead of retaining a Paladin-specific resolver.
+- Level 7 ordinary preparation adds **Lesser Restoration**, reusing the certified 2024 condition-removal action. Spell slots advance to **4 first-level / 3 second-level**, Lay On Hands to **35**, and HP to **60**.
+- This tranche targets **147 / 240** 2024 public-ready hero slots.
 
 ### 2024 Monk lane
 

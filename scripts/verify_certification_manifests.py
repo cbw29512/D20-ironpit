@@ -165,6 +165,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.update(rule.source_id for rule in features.passive_debuff_counter_grants)
     if features.friendly_saving_throw_aura:
         mechanics.add(features.friendly_saving_throw_aura.source_id)
+    if features.friendly_condition_immunity_auras:
+        mechanics.update(rule.source_id for rule in features.friendly_condition_immunity_auras)
     if features.opening_targeting_ward:
         mechanics.add(features.opening_targeting_ward.source_id)
     if features.first_round_extra_turn_grants:

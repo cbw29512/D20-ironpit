@@ -18,7 +18,7 @@ window.IRON_PIT_BROWSER_CONDITION_RULES = {
   incapacitated: (state) => state.is_unconscious || (state.active_effect_ids || []).includes("incapacitated"),
 };
 
-for (const file of ["browser-defensive-modifier-rules.js", "browser-friendly-save-auras.js"]) {
+for (const file of ["browser-defensive-modifier-rules.js", "browser-condition-immunity.js", "browser-friendly-save-auras.js"]) {
   vm.runInThisContext(fs.readFileSync(`frontend/${file}`, "utf8"));
 }
 
@@ -126,5 +126,27 @@ assert.equal(
   ally.state.active_modifiers.find((item) => item.kind === "saving-throw-flat")?.flat_bonus,
   3,
 );
+
+source.state.active_effect_ids = [];
+source.state.template.friendly_condition_immunity_auras = [{
+  source_id: "aura-of-devotion-2024",
+  source_name: "Aura of Devotion",
+  radius_ft: 10,
+  condition_id: "charmed",
+  inactive_while_incapacitated: true,
+  inactive_while_unconscious: false,
+}];
+ally.position_ft = 5;
+A.sync(setup);
+assert.equal(window.IRON_PIT_BROWSER_CONDITION_IMMUNITY.immune(ally.state, "charmed"), true);
+
+ally.position_ft = 15;
+A.sync(setup);
+assert.equal(window.IRON_PIT_BROWSER_CONDITION_IMMUNITY.immune(ally.state, "charmed"), false);
+
+ally.position_ft = 5;
+source.state.active_effect_ids = ["incapacitated"];
+A.sync(setup);
+assert.equal(window.IRON_PIT_BROWSER_CONDITION_IMMUNITY.immune(ally.state, "charmed"), false);
 
 console.log("Browser friendly save-aura regressions passed.");

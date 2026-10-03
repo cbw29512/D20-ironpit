@@ -44,6 +44,27 @@ function protectionAura(bonus, radius = 10) {
   };
 }
 
+function conditionAuras(radius = 10) {
+  return [
+    {
+      source_id: "aura-of-devotion-2014",
+      source_name: "Aura of Devotion",
+      radius_ft: radius,
+      condition_id: "charmed",
+      inactive_while_incapacitated: false,
+      inactive_while_unconscious: true,
+    },
+    {
+      source_id: "aura-of-courage-2014",
+      source_name: "Aura of Courage",
+      radius_ft: radius,
+      condition_id: "frightened",
+      inactive_while_incapacitated: false,
+      inactive_while_unconscious: true,
+    },
+  ];
+}
+
 function member(id, side, position, tpl) {
   return { combatant_id: id, side, position_ft: position, state: S.buildState(tpl) };
 }
@@ -77,6 +98,7 @@ function setup(sourceTemplate, targetPosition = 5) {
     friendly_saving_throw_aura: protectionAura(3),
     aura_of_devotion_2014: true,
     aura_of_courage_2014: true,
+    friendly_condition_immunity_auras: conditionAuras(),
   }));
   A.sync(battle);
   assert.equal(I.immune(ally.state, "charmed"), true);
@@ -92,6 +114,7 @@ function setup(sourceTemplate, targetPosition = 5) {
     aura_of_protection_2014_bonus: 3, aura_radius_2014_ft: 10,
     friendly_saving_throw_aura: protectionAura(3),
     aura_of_devotion_2014: true, aura_of_courage_2014: true,
+    friendly_condition_immunity_auras: conditionAuras(),
   }));
   A.sync(battle);
   assert.equal(M.savingThrowFlat(source.state), 3);
@@ -117,6 +140,7 @@ function setup(sourceTemplate, targetPosition = 5) {
     friendly_saving_throw_aura: protectionAura(3),
     aura_of_devotion_2014: true,
     aura_of_courage_2014: true,
+    friendly_condition_immunity_auras: conditionAuras(),
   }));
   source.state.active_effect_ids.push("stunned");
   A.sync(battle);
@@ -142,6 +166,7 @@ function setup(sourceTemplate, targetPosition = 5) {
     friendly_saving_throw_aura: protectionAura(4, 30),
     aura_of_devotion_2014: true,
     aura_of_courage_2014: true,
+    friendly_condition_immunity_auras: conditionAuras(30),
   }), 25);
   A.sync(battle);
   assert.equal(M.savingThrowFlat(ally.state), 4);
