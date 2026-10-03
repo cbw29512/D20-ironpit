@@ -15,6 +15,7 @@ from app.content.paladin_devotion_2014_spells import (
     dispel_magic_2014,
 )
 from app.domain.character_builds import AbilityScores
+from app.domain.friendly_save_auras import FriendlySavingThrowAuraGrant
 from app.domain.models import CombatantTemplate, DamageType, OnHitDamage, ResourceDefinition, VisualLoadout
 from app.domain.progression import ProgressionCombatFeatures
 
@@ -124,6 +125,16 @@ def build_aurelia_brightshield_2014(level: int) -> CombatantTemplate:
                 divine_smite_2014=level >= 2,
                 turn_unholy_2014=level >= 3,
                 sacred_weapon_2014_bonus=charisma_modifier if level >= 3 else 0,
+                friendly_saving_throw_aura=(
+                    FriendlySavingThrowAuraGrant(
+                        source_id="aura-of-protection-2014",
+                        source_name="Aura of Protection",
+                        radius_ft=aura_radius,
+                        flat_bonus=max(1, aura_bonus),
+                        inactive_while_unconscious=True,
+                    )
+                    if level >= 6 else None
+                ),
                 aura_of_protection_2014_bonus=aura_bonus,
                 aura_radius_2014_ft=aura_radius,
                 aura_of_devotion_2014=level >= 7,
