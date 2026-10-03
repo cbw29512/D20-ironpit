@@ -2,6 +2,7 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const AWB = () => window.IRON_PIT_BROWSER_ATTACK_ACTION_WEAPON_BUFFS;
   const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const L = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
   const W = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY || {
@@ -9,6 +10,9 @@
   };
 
   function resolve(sequence, round, member, target, attack, distance, setup, turnKey, options = {}) {
+    const events = [];
+    const attackBuff = AWB()?.resolve(sequence, round, member) || null;
+    if (attackBuff) { events.push(attackBuff); sequence += 1; }
     const event = A().resolveAttack(sequence, round, member, target, attack, distance, {
       advantage: options.advantage || 0,
       featureId: options.featureId || null,
@@ -16,11 +20,11 @@
       allowReckless: options.allowReckless !== false,
       turnKey,
     });
-    let events = [event];
+    events.push(event);
     sequence += 1;
     if (setup && DR()) {
       const chain = DR().chain(sequence, round, member, event, setup, turnKey);
-      events = chain.events; sequence = chain.sequence;
+      events.push(...chain.events.slice(1)); sequence = chain.sequence;
     }
     if (event.event_type === "saving_throw" && !event.attack_roll) return { events, sequence };
     if (member.state.turn_terminated) return { events, sequence };

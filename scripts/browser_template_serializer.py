@@ -286,6 +286,12 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
         row["preventsInstantDeath"] = True
     if effect.source_creature_types:
         row["sourceCreatureTypes"] = list(effect.source_creature_types)
+    if effect.required_effect_tags:
+        row["requiredEffectTags"] = list(effect.required_effect_tags)
+    if effect.save_ability is not None:
+        row["saveAbility"] = effect.save_ability
+    if effect.save_dc is not None:
+        row["saveDc"] = effect.save_dc
     if effect.bypass_attacker_senses:
         row["bypassAttackerSenses"] = list(effect.bypass_attacker_senses)
     if effect.consume_on_attack_against:
@@ -511,6 +517,21 @@ def _passive_modifier_grant(grant: Any) -> dict[str, Any]:
     if grant.success_immunity_hours is not None:
         row["success_immunity_hours"] = grant.success_immunity_hours
     return row
+
+def _attack_action_weapon_buff(action: Any) -> dict[str, Any]:
+    return {
+        "id": action.id,
+        "name": action.name,
+        "resourceId": action.resource_id,
+        "resourceCost": action.resource_cost,
+        "weaponId": action.weapon_id,
+        "durationRounds": action.duration_rounds,
+        "attackRollBonus": action.attack_roll_bonus,
+        "damageTypeChoice": _value(action.damage_type_choice) if action.damage_type_choice is not None else None,
+        "sourceIsMagical": action.source_is_magical,
+        "animation": action.animation,
+    }
+
 
 def _timed_self_buff(action: Any) -> dict[str, Any]:
     row = {
@@ -867,6 +888,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
         if template.timed_self_buff_actions:
             row["timed_self_buff_actions"] = [_timed_self_buff(item) for item in template.timed_self_buff_actions]
+        if template.attack_action_weapon_buffs:
+            row["attack_action_weapon_buffs"] = [
+                _attack_action_weapon_buff(item) for item in template.attack_action_weapon_buffs
+            ]
         if template.replacement_form_actions:
             row["replacement_form_actions"] = [
                 {

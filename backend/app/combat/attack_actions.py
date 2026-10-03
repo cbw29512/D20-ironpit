@@ -7,6 +7,7 @@ from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_action_choices import attack_choice, save_choice, slot_has_legal_choice, use_ranged_split
 from app.combat.attack_action_event_target import event_target
 from app.combat.attack_action_rules import validate_attack_action_slots
+from app.combat.attack_action_weapon_buffs import resolve_attack_action_weapon_buff
 from app.combat.cleave import resolve_cleave_extra_attack
 from app.combat.condition_rules import is_incapacitated
 from app.combat.damage_reaction_events import resolve_damage_event_reactions
@@ -38,6 +39,14 @@ def resolve_attack_action(
 
         spend(attacker.state, "action")
         events: list[BattleEvent] = []
+        attack_buff = resolve_attack_action_weapon_buff(
+            sequence,
+            round_number,
+            attacker,
+        )
+        if attack_buff is not None:
+            events.append(attack_buff)
+            sequence += 1
         opening_feature = opening_feature_id(round_number, attacker, setup)
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
         light_trigger: WeaponAttack | None = None

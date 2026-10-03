@@ -8,17 +8,21 @@ from app.content.equipment import build_longsword
 from app.content.healing_spell_effects import build_cure_wounds
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.paladin_devotion_2024_profile import build_aurelia_brightshield_2024_profile
+from app.content.paladin_devotion_2024_support import (
+    divine_favor_2024,
+    protection_from_evil_and_good_2024,
+    sacred_weapon_2024,
+    shield_of_faith_2024,
+)
 from app.content.spell_effects import BLESS
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
 from app.domain.post_hit_damage import ResourceBackedPostHitDamage
 from app.domain.progression import ProgressionCombatFeatures
-from app.domain.spells import DefensiveSpellAction, SpellModifierEffect
 from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
-
 
 def _attack(weapon_id: str, strength_modifier: int) -> WeaponAttack:
     weapon = build_longsword() if weapon_id == "longsword" else build_weapon(weapon_id)
@@ -27,19 +31,6 @@ def _attack(weapon_id: str, strength_modifier: int) -> WeaponAttack:
         attack_bonus=2 + strength_modifier, damage_bonus=strength_modifier,
         attack_ability="strength", attack_ability_modifier=strength_modifier,
     )
-
-
-def _divine_favor_2024() -> DefensiveSpellAction:
-    return DefensiveSpellAction(
-        id="divine-favor", name="Divine Favor", level=1, action_cost="bonus_action",
-        range_ft=0, duration_minutes=1, target_policy="self", concentration=False,
-        priority=40,
-        modifier_effects=[
-            SpellModifierEffect(kind="bonus-damage", dice_count=1, dice_size=4, damage_type="radiant"),
-        ],
-        animation="divine-favor", source="D&D Beyond Basic Rules 2024: Divine Favor",
-    )
-
 
 def _progression(level: int) -> ProgressionCombatFeatures:
     return ProgressionCombatFeatures(
@@ -58,24 +49,30 @@ def _progression(level: int) -> ProgressionCombatFeatures:
         ),
     )
 
-
 def _resources(level: int) -> list[ResourceDefinition]:
     resources = [
         ResourceDefinition(id="lay-on-hands", name="Lay On Hands", max_uses=5 * level),
-        ResourceDefinition(id="spell-slot-1", name="Level 1 Spell Slot", max_uses=2),
+        ResourceDefinition(
+            id="spell-slot-1",
+            name="Level 1 Spell Slot",
+            max_uses=3 if level >= 3 else 2,
+        ),
     ]
     if level >= 2:
         resources.append(ResourceDefinition(
             id="paladins-smite-free-cast", name="Paladin's Smite: Free Cast", max_uses=1,
         ))
+    if level >= 3:
+        resources.append(ResourceDefinition(
+            id="channel-divinity", name="Channel Divinity", max_uses=2,
+        ))
     return resources
 
-
 def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
-    """Build certified 2024 Aurelia through Paladin level 2."""
+    """Build certified 2024 Aurelia through Paladin level 3."""
     try:
-        if level not in {1, 2}:
-            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-2 only.")
+        if level not in {1, 2, 3}:
+            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-3 only.")
         profile = build_aurelia_brightshield_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -108,9 +105,16 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                 max_conditions_per_use=1, resource_costs_per_condition={"lay-on-hands": 5},
             )],
             defensive_spell_actions=[
-                _divine_favor_2024(),
+                divine_favor_2024(),
                 *([BLESS.model_copy(deep=True)] if level >= 2 else []),
+                *(
+                    [protection_from_evil_and_good_2024(), shield_of_faith_2024()]
+                    if level >= 3 else []
+                ),
             ],
+            attack_action_weapon_buffs=[
+                sacred_weapon_2024(charisma)
+            ] if level >= 3 else [],
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("wisdom", "charisma")),
             skill_bonuses={
                 "athletics": strength + pb, "intimidation": charisma + pb,
@@ -132,6 +136,10 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                 f"D&D Beyond Basic Rules 2024: Paladin {level}, Human, Soldier, "
                 "Cure Wounds, Divine Favor, "
                 + ("Bless, Divine Smite, " if level >= 2 else "")
+                + (
+                    "Sacred Weapon, Protection from Evil and Good, Shield of Faith, "
+                    if level >= 3 else ""
+                )
                 + "Longsword, Javelin"
             ),
         )

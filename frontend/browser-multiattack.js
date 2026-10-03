@@ -2,6 +2,7 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const AWB = () => window.IRON_PIT_BROWSER_ATTACK_ACTION_WEAPON_BUFFS;
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const DMR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const DE = () => window.IRON_PIT_BROWSER_DEFERRED_ATTACK_SLOT;
@@ -74,6 +75,8 @@
     if (!available(member, setup)) return { events: [], sequence };
     const events = [];
     E().spend(member.state, "action");
+    const attackBuff = AWB()?.resolve(sequence, round, member) || null;
+    if (attackBuff) { events.push(attackBuff); sequence += 1; }
     let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
     let lightTrigger = null, rangedSplitUsed = false;
     const rangedSplit = useRangedSplit(member, setup, slots);

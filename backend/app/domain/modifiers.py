@@ -35,6 +35,7 @@ class ModifierKind(StrEnum):
     ZERO_HP_REPLACEMENT = "zero-hp-replacement"
     OPPORTUNITY_ATTACK_SUPPRESSED = "opportunity-attack-suppressed"
     DAMAGE_SOURCE_QUALIFIER = "damage-source-qualifier"
+    WEAPON_DAMAGE_TYPE_CHOICE = "weapon-damage-type-choice"
     INVISIBILITY_BENEFITS_SUPPRESSED = "invisibility-benefits-suppressed"
 
 
@@ -90,9 +91,10 @@ class CombatModifier(BaseModel):
                 raise ValueError("Minimum AC modifiers require a positive minimum and no flat bonus.")
         elif self.minimum_value:
             raise ValueError(f"{self.kind.value} does not accept a minimum value.")
-        if self.kind is ModifierKind.BONUS_DAMAGE and self.damage_type is None:
-            raise ValueError("Bonus damage requires a damage type.")
-        if self.kind is not ModifierKind.BONUS_DAMAGE and self.damage_type is not None:
+        damage_type_kinds = {ModifierKind.BONUS_DAMAGE, ModifierKind.WEAPON_DAMAGE_TYPE_CHOICE}
+        if self.kind in damage_type_kinds and self.damage_type is None:
+            raise ValueError(f"{self.kind.value} requires a damage type.")
+        if self.kind not in damage_type_kinds and self.damage_type is not None:
             raise ValueError(f"{self.kind.value} does not accept a damage type.")
         advantage_kinds = {
             ModifierKind.ATTACKS_AGAINST_ADVANTAGE, ModifierKind.ATTACKS_AGAINST_DISADVANTAGE,
@@ -104,10 +106,17 @@ class CombatModifier(BaseModel):
             raise ValueError("Flat attack modifiers require a nonzero bonus and weapon id.")
         if self.kind is ModifierKind.NEXT_INCOMING_ATTACK_ROLL_FLAT and self.flat_bonus == 0:
             raise ValueError("Next incoming attack-roll flat modifiers require a nonzero bonus.")
-        if self.kind not in {ModifierKind.ATTACK_ROLL_FLAT, ModifierKind.DAMAGE_SOURCE_QUALIFIER} and self.weapon_id is not None:
+        weapon_scoped_kinds = {
+            ModifierKind.ATTACK_ROLL_FLAT,
+            ModifierKind.DAMAGE_SOURCE_QUALIFIER,
+            ModifierKind.WEAPON_DAMAGE_TYPE_CHOICE,
+        }
+        if self.kind not in weapon_scoped_kinds and self.weapon_id is not None:
             raise ValueError(f"{self.kind.value} does not accept a weapon id.")
         if self.kind is ModifierKind.DAMAGE_SOURCE_QUALIFIER and (self.weapon_id is None or self.source_qualifier is None):
             raise ValueError("Damage source qualifier modifiers require a weapon id and qualifier.")
+        if self.kind is ModifierKind.WEAPON_DAMAGE_TYPE_CHOICE and self.weapon_id is None:
+            raise ValueError("Weapon damage-type choice modifiers require a weapon id.")
         if self.kind is not ModifierKind.DAMAGE_SOURCE_QUALIFIER and self.source_qualifier is not None:
             raise ValueError(f"{self.kind.value} does not accept a source qualifier.")
         if self.kind is ModifierKind.SAVING_THROW_FLAT and self.flat_bonus == 0:

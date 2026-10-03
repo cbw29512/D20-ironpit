@@ -87,7 +87,12 @@
 
   function chooseDamageType(attacker, attack, target, qualifiers) {
     try {
-      const options = [attack.damageType, ...(attack.damageTypeChoices || [])];
+      const modifierChoices = (attacker.active_modifiers || [])
+        .filter((item) => item.kind === "weapon-damage-type-choice"
+          && item.weapon_id === (attack.weaponId || attack.id)
+          && item.damage_type)
+        .map((item) => item.damage_type);
+      const options = [...new Set([attack.damageType, ...(attack.damageTypeChoices || []), ...modifierChoices])];
       if (!target || options.length <= 1) return attack.damageType;
       const bypass = new Set(
         (attacker.template.damage_resistance_bypass_grants || []).flatMap((grant) => grant.damage_types || []),
