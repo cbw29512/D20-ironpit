@@ -58,3 +58,67 @@ def paladin_2024_level5_audits() -> list[FeatureAudit]:
             ),
         ),
     ]
+
+
+def paladin_2024_level6_audits() -> list[FeatureAudit]:
+    return [
+        paladin_2024_feature(
+            "aura-of-protection",
+            "Aura of Protection",
+            "class",
+            combat=True,
+            automated=True,
+            notes=(
+                "Universal friendly saving-throw aura: 10-foot Emanation, "
+                "Charisma-modifier flat save bonus, inactive while the source is Incapacitated."
+            ),
+        ),
+    ]
+
+
+def paladin_2024_source_references(level: int) -> list[str]:
+    try:
+        references = [
+            "Basic Rules 2024: Paladin — Lay On Hands, Spellcasting, Weapon Mastery",
+        ]
+        if level >= 2:
+            references.append(
+                "Basic Rules 2024: Paladin level 2 — Fighting Style and Paladin's Smite"
+            )
+        if level >= 3:
+            references.extend([
+                "Basic Rules 2024: Paladin level 3 — Channel Divinity and Divine Sense",
+                "Basic Rules 2024: Oath of Devotion level 3 — Sacred Weapon and Oath Spells",
+            ])
+        if level >= 4:
+            references.append(
+                "Basic Rules 2024: Paladin level 4 — Ability Score Improvement; "
+                "Feats — Ability Score Improvement (+2 Strength)"
+            )
+        if level >= 5:
+            references.extend([
+                "Basic Rules 2024: Paladin level 5 — Extra Attack and Faithful Steed",
+                "Basic Rules 2024: Oath of Devotion level 5 — Aid and Zone of Truth",
+            ])
+        if level >= 6:
+            references.append("Basic Rules 2024: Paladin level 6 — Aura of Protection")
+        references.extend([
+            "Basic Rules 2024: Character Origins — Human and Soldier",
+            (
+                "Basic Rules 2024: Spells — Cure Wounds, Divine Favor, Bless, Divine Smite, "
+                "Searing Smite, Thunderous Smite, Shining Smite, Find Steed, Aid, Zone of Truth, "
+                "Protection from Evil and Good, Shield of Faith"
+            ),
+            (
+                "Basic Rules 2024: Equipment — Chain Mail, Shield, Longsword, Javelin, "
+                "Sap, Slow"
+            ),
+        ])
+        return references
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception(
+            "Failed to build 2024 Paladin source references at level %s.",
+            level,
+        )
+        raise

@@ -1,0 +1,148 @@
+from __future__ import annotations
+
+import logging
+
+from app.content.character_math import proficiency_bonus
+from app.content.equipment import build_longsword
+from app.content.weapon_catalog import build_weapon
+from app.domain.actions import AttackActionDefinition, AttackActionSlot
+from app.domain.friendly_save_auras import FriendlySavingThrowAuraGrant
+from app.domain.models import ResourceDefinition, WeaponAttack
+from app.domain.post_hit_damage import ResourceBackedPostHitDamage
+from app.domain.progression import ProgressionCombatFeatures
+
+logger = logging.getLogger(__name__)
+
+
+def build_paladin_2024_attack(
+    weapon_id: str,
+    strength_modifier: int,
+    level: int,
+) -> WeaponAttack:
+    try:
+        weapon = build_longsword() if weapon_id == "longsword" else build_weapon(weapon_id)
+        return WeaponAttack(
+            id=f"aurelia-{weapon_id}",
+            weapon=weapon,
+            attack_bonus=proficiency_bonus(level) + strength_modifier,
+            damage_bonus=strength_modifier,
+            attack_ability="strength",
+            attack_ability_modifier=strength_modifier,
+        )
+    except Exception:
+        logger.exception(
+            "Failed to build 2024 Paladin attack %s at level %s.",
+            weapon_id,
+            level,
+        )
+        raise
+
+
+def build_paladin_2024_attack_action(level: int) -> AttackActionDefinition | None:
+    try:
+        if level < 5:
+            return None
+        choices = ["aurelia-longsword", "aurelia-javelin"]
+        return AttackActionDefinition(
+            id="extra-attack",
+            name="Extra Attack",
+            slots=[
+                AttackActionSlot(attack_ids=choices),
+                AttackActionSlot(attack_ids=choices),
+            ],
+            is_attack_action=True,
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Paladin Attack action at level %s.", level)
+        raise
+
+
+def build_paladin_2024_progression(
+    level: int,
+    charisma_modifier: int,
+) -> ProgressionCombatFeatures:
+    try:
+        return ProgressionCombatFeatures(
+            friendly_saving_throw_aura=(
+                FriendlySavingThrowAuraGrant(
+                    source_id="aura-of-protection-2024",
+                    source_name="Aura of Protection",
+                    radius_ft=10,
+                    flat_bonus=max(1, charisma_modifier),
+                    inactive_while_incapacitated=True,
+                )
+                if level >= 6
+                else None
+            ),
+            resource_backed_post_hit_damage=(
+                ResourceBackedPostHitDamage(
+                    source_id="divine-smite-2024",
+                    source_name="Divine Smite",
+                    trigger_attack_ids=["aurelia-longsword"],
+                    action_cost="bonus_action",
+                    free_resource_id="paladins-smite-free-cast",
+                    printed_spell_level=1,
+                    max_slot_level=5,
+                    base_dice_count=2,
+                    dice_per_slot_above=1,
+                    dice_size=8,
+                    damage_type="radiant",
+                    bonus_target_creature_types=["fiend", "undead"],
+                    bonus_target_dice_count=1,
+                    doubles_on_critical=True,
+                )
+                if level >= 2
+                else None
+            ),
+        )
+    except Exception:
+        logger.exception(
+            "Failed to build 2024 Paladin progression features at level %s.",
+            level,
+        )
+        raise
+
+
+def build_paladin_2024_resources(level: int) -> list[ResourceDefinition]:
+    try:
+        resources = [
+            ResourceDefinition(
+                id="lay-on-hands",
+                name="Lay On Hands",
+                max_uses=5 * level,
+            ),
+            ResourceDefinition(
+                id="spell-slot-1",
+                name="Level 1 Spell Slot",
+                max_uses=4 if level >= 5 else (3 if level >= 3 else 2),
+            ),
+        ]
+        if level >= 2:
+            resources.append(ResourceDefinition(
+                id="paladins-smite-free-cast",
+                name="Paladin's Smite: Free Cast",
+                max_uses=1,
+            ))
+        if level >= 3:
+            resources.append(ResourceDefinition(
+                id="channel-divinity",
+                name="Channel Divinity",
+                max_uses=2,
+            ))
+        if level >= 5:
+            resources.extend([
+                ResourceDefinition(
+                    id="spell-slot-2",
+                    name="Level 2 Spell Slot",
+                    max_uses=2,
+                ),
+                ResourceDefinition(
+                    id="faithful-steed-free-cast",
+                    name="Faithful Steed: Free Cast",
+                    max_uses=1,
+                ),
+            ])
+        return resources
+    except Exception:
+        logger.exception("Failed to build 2024 Paladin resources at level %s.", level)
+        raise

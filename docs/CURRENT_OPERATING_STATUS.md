@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-02 for the 2024 Devotion Paladin level 5 tranche. Main baseline: `8783d9b915a39f8b7f01fad2f296db6da99a6c97`.
+Recorded 2026-10-03 for the 2024 Devotion Paladin level 6 tranche. Main baseline: `9968ab26c950543488b822b2e741a6b16ed815d7`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -34,9 +34,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
 | 2024 | Monk (Open Hand) | 1–20 |
-| 2024 | Paladin (Devotion) | 1–4 |
+| 2024 | Paladin (Devotion) | 1–5 |
 
-2024 public-ready hero slots on current main: **144 / 240**.
+2024 public-ready hero slots on current main: **145 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -46,9 +46,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 144 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 4 on main; this tranche advances level 5.
+**2024 canonical pregens are 145 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 5 on main; this tranche advances level 6.
 
-Active implementation lane: **2024 Devotion Paladin level 5.** Extra Attack reuses the universal two-slot Attack action. Faithful Steed always prepares Find Steed and grants one free Long-Rest cast, but the no-summons arena rule keeps the spell arena-unavailable. Oath of Devotion adds Aid and Zone of Truth; Aid reuses the certified 2024 fingerprint while Zone of Truth is arena-neutral. The sixth ordinary preparation is 2024 Shining Smite under the damage-first policy and remains fail-closed until its persistent post-hit target effect is represented exactly.
+Active implementation lane: **2024 Devotion Paladin level 6.** Aura of Protection reuses the universal friendly saving-throw aura path. It grants Aurelia and same-side allies within the live 10-foot Emanation a flat saving-throw bonus equal to Aurelia's Charisma modifier (+2 at level 6) and is inactive while Aurelia is Incapacitated. The same primitive also binds the 2014 Aura of Protection with its edition-specific unconscious-only shutdown rule.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -72,7 +72,8 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 5 Oath spells add **Aid** and **Zone of Truth**. Aid reuses the explicit 2024 defensive-spell fingerprint; Zone of Truth is retained as arena-neutral.
 - Level 5 ordinary preparation adds **Shining Smite** under the damage-first policy. It remains fail-closed until its hit-confirmed damage plus persistent Advantage/invisibility-suppression effect can resolve atomically and edition-exactly.
 - Spell slots advance to **4 first-level / 2 second-level**, and Lay On Hands advances to **25**.
-- This tranche targets **145 / 240** 2024 public-ready hero slots.
+- Level 6 adds **Aura of Protection** through the universal friendly saving-throw aura primitive. At Aurelia's current Charisma 14, the live 10-foot Emanation grants **+2 to saving throws** and is inactive while Aurelia is Incapacitated.
+- This tranche targets **146 / 240** 2024 public-ready hero slots.
 
 ### 2024 Monk lane
 

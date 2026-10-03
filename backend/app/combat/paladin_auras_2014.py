@@ -4,13 +4,13 @@ import logging
 
 from app.combat.condition_rules import has_condition
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.friendly_save_auras import sync_friendly_save_auras
 from app.combat.modifier_stack import add_modifier
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.modifiers import CombatModifier, ModifierKind
 
 logger = logging.getLogger(__name__)
 _AURA_EFFECTS = {
-    "aura-of-protection-2014",
     "aura-of-devotion-2014",
     "aura-of-courage-2014",
 }
@@ -57,24 +57,6 @@ def _nearby_sources(target: EncounterCombatant, setup: EncounterSetup) -> list[E
     ]
 
 
-def _apply_save_aura(target: EncounterCombatant, sources: list[EncounterCombatant]) -> None:
-    candidates = [
-        (source.state.template.progression_features.aura_of_protection_2014_bonus, source)
-        for source in sources
-        if source.state.template.progression_features.aura_of_protection_2014_bonus > 0
-    ]
-    if not candidates:
-        return
-    best_bonus, source = max(candidates, key=lambda item: (item[0], item[1].combatant_id))
-    add_modifier(target.state, CombatModifier(
-        id=f"{source.combatant_id}:aura-of-protection-2014:{target.combatant_id}",
-        source_id=source.combatant_id,
-        source_effect_id="aura-of-protection-2014",
-        kind=ModifierKind.SAVING_THROW_FLAT,
-        flat_bonus=best_bonus,
-    ))
-
-
 def _apply_condition_aura(
     target: EncounterCombatant,
     sources: list[EncounterCombatant],
@@ -105,13 +87,13 @@ def sync_paladin_auras_2014(setup: EncounterSetup) -> None:
         _clear_aura_modifiers(setup)
         for target in _members(setup):
             sources = _nearby_sources(target, setup)
-            _apply_save_aura(target, sources)
             _apply_condition_aura(
                 target, sources, "aura_of_devotion_2014", "aura-of-devotion-2014", "charmed",
             )
             _apply_condition_aura(
                 target, sources, "aura_of_courage_2014", "aura-of-courage-2014", "frightened",
             )
+        sync_friendly_save_auras(setup)
     except Exception:
         logger.exception("Failed to synchronize 2014 Paladin auras.")
         raise

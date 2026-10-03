@@ -4,11 +4,16 @@ import logging
 
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
-from app.content.equipment import build_longsword
 from app.content.cleric_life_domain import AID
 from app.content.healing_spell_effects import build_cure_wounds
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.paladin_devotion_2024_profile import build_aurelia_brightshield_2024_profile
+from app.content.paladin_devotion_2024_runtime_support import (
+    build_paladin_2024_attack,
+    build_paladin_2024_attack_action,
+    build_paladin_2024_progression,
+    build_paladin_2024_resources,
+)
 from app.content.paladin_devotion_2024_support import (
     divine_favor_2024,
     protection_from_evil_and_good_2024,
@@ -16,90 +21,17 @@ from app.content.paladin_devotion_2024_support import (
     shield_of_faith_2024,
 )
 from app.content.spell_effects import BLESS
-from app.content.weapon_catalog import build_weapon
-from app.domain.actions import AttackActionDefinition, AttackActionSlot, ConditionRemovalAction, HealingAction
-from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
-from app.domain.post_hit_damage import ResourceBackedPostHitDamage
-from app.domain.progression import ProgressionCombatFeatures
+from app.domain.actions import ConditionRemovalAction, HealingAction
+from app.domain.models import CombatantTemplate, VisualLoadout
 from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 
-def _attack(weapon_id: str, strength_modifier: int, level: int) -> WeaponAttack:
-    weapon = build_longsword() if weapon_id == "longsword" else build_weapon(weapon_id)
-    return WeaponAttack(
-        id=f"aurelia-{weapon_id}", weapon=weapon,
-        attack_bonus=proficiency_bonus(level) + strength_modifier,
-        damage_bonus=strength_modifier,
-        attack_ability="strength",
-        attack_ability_modifier=strength_modifier,
-    )
-
-
-def _attack_action(level: int) -> AttackActionDefinition | None:
-    if level < 5:
-        return None
-    choices = ["aurelia-longsword", "aurelia-javelin"]
-    return AttackActionDefinition(
-        id="extra-attack",
-        name="Extra Attack",
-        slots=[
-            AttackActionSlot(attack_ids=choices),
-            AttackActionSlot(attack_ids=choices),
-        ],
-        is_attack_action=True,
-    )
-
-def _progression(level: int) -> ProgressionCombatFeatures:
-    return ProgressionCombatFeatures(
-        resource_backed_post_hit_damage=(
-            ResourceBackedPostHitDamage(
-                source_id="divine-smite-2024", source_name="Divine Smite",
-                trigger_attack_ids=["aurelia-longsword"], action_cost="bonus_action",
-                free_resource_id="paladins-smite-free-cast",
-                printed_spell_level=1, max_slot_level=5,
-                base_dice_count=2, dice_per_slot_above=1, dice_size=8,
-                damage_type="radiant",
-                bonus_target_creature_types=["fiend", "undead"],
-                bonus_target_dice_count=1, doubles_on_critical=True,
-            )
-            if level >= 2 else None
-        ),
-    )
-
-def _resources(level: int) -> list[ResourceDefinition]:
-    resources = [
-        ResourceDefinition(id="lay-on-hands", name="Lay On Hands", max_uses=5 * level),
-        ResourceDefinition(
-            id="spell-slot-1",
-            name="Level 1 Spell Slot",
-            max_uses=4 if level >= 5 else (3 if level >= 3 else 2),
-        ),
-    ]
-    if level >= 2:
-        resources.append(ResourceDefinition(
-            id="paladins-smite-free-cast", name="Paladin's Smite: Free Cast", max_uses=1,
-        ))
-    if level >= 3:
-        resources.append(ResourceDefinition(
-            id="channel-divinity", name="Channel Divinity", max_uses=2,
-        ))
-    if level >= 5:
-        resources.extend([
-            ResourceDefinition(id="spell-slot-2", name="Level 2 Spell Slot", max_uses=2),
-            ResourceDefinition(
-                id="faithful-steed-free-cast",
-                name="Faithful Steed: Free Cast",
-                max_uses=1,
-            ),
-        ])
-    return resources
-
 def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
-    """Build certified 2024 Aurelia through Paladin level 5."""
+    """Build certified 2024 Aurelia through Paladin level 6."""
     try:
-        if level not in {1, 2, 3, 4, 5}:
-            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-5 only.")
+        if level not in {1, 2, 3, 4, 5, 6}:
+            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-6 only.")
         profile = build_aurelia_brightshield_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -115,9 +47,9 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
             max_hp=fixed_hit_points(level, 10, scores.modifier("constitution")),
             speed_ft=30, initiative_bonus=scores.modifier("dexterity"),
             starts_with_heroic_inspiration=True,
-            weapon_attack=_attack("longsword", strength, level),
-            alternate_weapon_attacks=[_attack("javelin", strength, level)],
-            attack_action=_attack_action(level),
+            weapon_attack=build_paladin_2024_attack("longsword", strength, level),
+            alternate_weapon_attacks=[build_paladin_2024_attack("javelin", strength, level)],
+            attack_action=build_paladin_2024_attack_action(level),
             healing_actions=[
                 HealingAction(
                     id="lay-on-hands-heal", name="Lay On Hands", action_cost="bonus_action",
@@ -154,13 +86,13 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                 "religion": scores.modifier("intelligence") + pb,
             },
             combat_traits=[CombatTrait.SAVAGE_ATTACKER],
-            progression_features=_progression(level),
+            progression_features=build_paladin_2024_progression(level, charisma),
             weapon_masteries=["longsword", "javelin"],
             fighting_style="Defense" if level >= 2 else None,
             fighting_styles=["Defense"] if level >= 2 else [],
             wearing_heavy_armor=True, wearing_metal_armor=True,
             visual=VisualLoadout(armor="chain-mail", main_hand="longsword", off_hand="shield"),
-            resources=_resources(level),
+            resources=build_paladin_2024_resources(level),
             source=(
                 f"D&D Beyond Basic Rules 2024: Paladin {level}, Human, Soldier, "
                 "Cure Wounds, Divine Favor, "

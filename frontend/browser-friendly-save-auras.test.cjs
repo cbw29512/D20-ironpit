@@ -78,4 +78,53 @@ source.state.active_effect_ids = ["incapacitated"];
 A.sync(setup);
 assert.equal(D.saveAdvantage(ally.state, "wisdom", { effectTags: ["charmed"] }), 0);
 
+
+source.state.active_effect_ids = [];
+source.state.timed_effects = [];
+source.state.template.timed_self_buff_actions = [];
+source.state.template.friendly_saving_throw_aura = {
+  source_id: "aura-of-protection-2024",
+  source_name: "Aura of Protection",
+  radius_ft: 10,
+  flat_bonus: 2,
+  inactive_while_incapacitated: true,
+  inactive_while_unconscious: false,
+};
+ally.position_ft = 5;
+A.sync(setup);
+assert.equal(
+  ally.state.active_modifiers.find((item) => item.kind === "saving-throw-flat")?.flat_bonus,
+  2,
+);
+
+ally.position_ft = 15;
+A.sync(setup);
+assert.equal(
+  ally.state.active_modifiers.some((item) => item.kind === "saving-throw-flat"),
+  false,
+);
+
+ally.position_ft = 5;
+source.state.active_effect_ids = ["incapacitated"];
+A.sync(setup);
+assert.equal(
+  ally.state.active_modifiers.some((item) => item.kind === "saving-throw-flat"),
+  false,
+);
+
+source.state.active_effect_ids = ["incapacitated"];
+source.state.template.friendly_saving_throw_aura = {
+  source_id: "aura-of-protection-2014",
+  source_name: "Aura of Protection",
+  radius_ft: 10,
+  flat_bonus: 3,
+  inactive_while_incapacitated: false,
+  inactive_while_unconscious: true,
+};
+A.sync(setup);
+assert.equal(
+  ally.state.active_modifiers.find((item) => item.kind === "saving-throw-flat")?.flat_bonus,
+  3,
+);
+
 console.log("Browser friendly save-aura regressions passed.");

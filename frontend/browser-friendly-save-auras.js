@@ -24,6 +24,22 @@
     }
   }
 
+  function passiveActive(source, aura) {
+    try {
+      const state = source.state;
+      if (state.is_dead || !state.is_alive || state.current_hp <= 0) return false;
+      if (aura.inactive_while_incapacitated && Q().incapacitated(state)) return false;
+      if (aura.inactive_while_unconscious
+          && (state.is_unconscious || Q().has(state, "unconscious"))) return false;
+      return true;
+    } catch (error) {
+      console.error("Failed browser passive friendly save-aura source check.", {
+        combatant: source?.combatant_id, error,
+      });
+      throw error;
+    }
+  }
+
   function clear(setup) {
     for (const member of members(setup)) {
       member.state.active_modifiers = (member.state.active_modifiers || [])
@@ -35,7 +51,8 @@
     try {
       if (!setup || !S() || !M()) return;
       clear(setup);
-      for (const source of members(setup)) {
+      const allMembers = members(setup);
+      for (const source of allMembers) {
         const actions = (source.state.template.timed_self_buff_actions || [])
           .filter((action) => action.friendlySaveAdvantageAura && active(source, action));
         if (!actions.length) continue;
@@ -60,6 +77,29 @@
               }
             }
           }
+        }
+      }
+
+      for (const target of allMembers) {
+        const allies = target.side === "heroes" ? setup.heroes : setup.monsters;
+        const candidates = [];
+        for (const source of allies) {
+          const aura = source.state.template.friendly_saving_throw_aura;
+          if (!aura || !passiveActive(source, aura)) continue;
+          if (S().distance(source, target) > aura.radius_ft) continue;
+          candidates.push([aura.flat_bonus, source.combatant_id, source, aura]);
+        }
+        candidates.sort((a, b) => b[0] - a[0] || b[1].localeCompare(a[1]));
+        if (candidates.length) {
+          const [, , source, aura] = candidates[0];
+          M().add(target.state, {
+            id: `${PREFIX}flat:${source.combatant_id}:${aura.source_id}:${target.combatant_id}`,
+            source_id: source.combatant_id,
+            source_effect_id: aura.source_id,
+            source_name: aura.source_name,
+            kind: "saving-throw-flat",
+            flat_bonus: aura.flat_bonus,
+          });
         }
       }
     } catch (error) {

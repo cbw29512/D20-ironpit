@@ -581,6 +581,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "passive_debuff_counter_grants": [
             item.model_dump(mode="json") for item in progression.passive_debuff_counter_grants
         ],
+        "friendly_saving_throw_aura": (
+            progression.friendly_saving_throw_aura.model_dump(mode="json")
+            if progression.friendly_saving_throw_aura else None
+        ),
         "first_round_extra_turn_grants": [
             item.model_dump() for item in progression.first_round_extra_turn_grants
         ],

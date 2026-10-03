@@ -16,6 +16,7 @@ load("browser-defensive-modifier-rules.js");
 load("browser-condition-immunity.js");
 load("browser-saving-throws.js");
 load("browser-saves.js");
+load("browser-friendly-save-auras.js");
 load("browser-2014-paladin-auras.js");
 
 const M = window.IRON_PIT_BROWSER_MODIFIERS;
@@ -32,6 +33,17 @@ function template(name, extra = {}) {
   };
 }
 
+function protectionAura(bonus, radius = 10) {
+  return {
+    source_id: "aura-of-protection-2014",
+    source_name: "Aura of Protection",
+    radius_ft: radius,
+    flat_bonus: bonus,
+    inactive_while_incapacitated: false,
+    inactive_while_unconscious: true,
+  };
+}
+
 function member(id, side, position, tpl) {
   return { combatant_id: id, side, position_ft: position, state: S.buildState(tpl) };
 }
@@ -44,7 +56,7 @@ function setup(sourceTemplate, targetPosition = 5) {
 }
 
 {
-  const { source, ally, battle } = setup(template("Aurelia", { aura_of_protection_2014_bonus: 2, aura_radius_2014_ft: 10 }));
+  const { source, ally, battle } = setup(template("Aurelia", { aura_of_protection_2014_bonus: 2, aura_radius_2014_ft: 10, friendly_saving_throw_aura: protectionAura(2) }));
   A.sync(battle);
   assert.equal(M.savingThrowFlat(ally.state), 2);
   assert.equal(M.savingThrowFlat(source.state), 2);
@@ -62,6 +74,7 @@ function setup(sourceTemplate, targetPosition = 5) {
   const { ally, battle } = setup(template("Aurelia", {
     aura_of_protection_2014_bonus: 3,
     aura_radius_2014_ft: 10,
+    friendly_saving_throw_aura: protectionAura(3),
     aura_of_devotion_2014: true,
     aura_of_courage_2014: true,
   }));
@@ -77,6 +90,7 @@ function setup(sourceTemplate, targetPosition = 5) {
 {
   const { source, ally, battle } = setup(template("Aurelia", {
     aura_of_protection_2014_bonus: 3, aura_radius_2014_ft: 10,
+    friendly_saving_throw_aura: protectionAura(3),
     aura_of_devotion_2014: true, aura_of_courage_2014: true,
   }));
   A.sync(battle);
@@ -100,6 +114,7 @@ function setup(sourceTemplate, targetPosition = 5) {
   const { source, ally, battle } = setup(template("Aurelia", {
     aura_of_protection_2014_bonus: 3,
     aura_radius_2014_ft: 10,
+    friendly_saving_throw_aura: protectionAura(3),
     aura_of_devotion_2014: true,
     aura_of_courage_2014: true,
   }));
@@ -111,8 +126,8 @@ function setup(sourceTemplate, targetPosition = 5) {
 }
 
 {
-  const { source, ally, battle } = setup(template("Aurelia", { aura_of_protection_2014_bonus: 2, aura_radius_2014_ft: 10 }));
-  const stronger = member("aurelia-8", "heroes", 5, template("Aurelia 8", { aura_of_protection_2014_bonus: 3, aura_radius_2014_ft: 10 }));
+  const { source, ally, battle } = setup(template("Aurelia", { aura_of_protection_2014_bonus: 2, aura_radius_2014_ft: 10, friendly_saving_throw_aura: protectionAura(2) }));
+  const stronger = member("aurelia-8", "heroes", 5, template("Aurelia 8", { aura_of_protection_2014_bonus: 3, aura_radius_2014_ft: 10, friendly_saving_throw_aura: protectionAura(3) }));
   battle.heroes.splice(1, 0, stronger);
   A.sync(battle);
   assert.equal(M.savingThrowFlat(ally.state), 3);
@@ -124,6 +139,7 @@ function setup(sourceTemplate, targetPosition = 5) {
   const { ally, battle } = setup(template("Aurelia 18", {
     aura_of_protection_2014_bonus: 4,
     aura_radius_2014_ft: 30,
+    friendly_saving_throw_aura: protectionAura(4, 30),
     aura_of_devotion_2014: true,
     aura_of_courage_2014: true,
   }), 25);
