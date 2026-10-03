@@ -38,7 +38,6 @@ class ModifierKind(StrEnum):
     WEAPON_DAMAGE_TYPE_CHOICE = "weapon-damage-type-choice"
     INVISIBILITY_BENEFITS_SUPPRESSED = "invisibility-benefits-suppressed"
 
-
 class CombatModifier(BaseModel):
     id: str
     source_id: str
@@ -186,16 +185,17 @@ class CombatModifier(BaseModel):
                 raise ValueError("Speed multipliers require a non-1 multiplier and no flat bonus.")
         elif self.multiplier != 1.0:
             raise ValueError(f"{self.kind.value} does not accept a multiplier.")
+        if self.non_stacking_group is not None and self.kind not in {
+            ModifierKind.ARMOR_CLASS, ModifierKind.SAVING_THROW_FLAT,
+        }:
+            raise ValueError("Non-stacking groups support AC and saving-throw flat benefits only.")
         if self.non_stacking_group is not None:
-            if self.kind not in {ModifierKind.ARMOR_CLASS, ModifierKind.SAVING_THROW_FLAT}:
-                raise ValueError("Non-stacking groups currently support AC and saving-throw flat benefits only.")
             if self.flat_bonus <= 0:
                 raise ValueError("Non-stacking grouped benefits require a positive flat bonus.")
             self.non_stacking_group = self.non_stacking_group.strip().casefold()
         if self.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and self.target_id is None:
             raise ValueError("Target-scoped attack Advantage requires a target id.")
         return self
-
 
 class ConcentrationState(BaseModel):
     source_id: str
