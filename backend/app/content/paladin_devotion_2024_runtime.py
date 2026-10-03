@@ -9,6 +9,7 @@ from app.content.healing_spell_effects import build_cure_wounds
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.paladin_devotion_2024_profile import build_aurelia_brightshield_2024_profile
 from app.content.paladin_devotion_2024_level9 import abjure_foes_2024, beacon_of_hope_2024, dispel_magic_2024_paladin
+from app.content.paladin_2024_level15 import death_ward_2024
 from app.content.paladin_devotion_2024_resources import build_paladin_2024_resources
 from app.content.paladin_devotion_2024_runtime_support import (
     build_paladin_2024_attack,
@@ -30,10 +31,10 @@ from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
 
 def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
-    """Build certified 2024 Aurelia through Paladin level 14."""
+    """Build certified 2024 Aurelia through Paladin level 15."""
     try:
-        if level not in range(1, 15):
-            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-14 only.")
+        if level not in range(1, 16):
+            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-15 only.")
         profile = build_aurelia_brightshield_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -82,6 +83,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                 *([AID.model_copy(deep=True)] if level >= 5 else []),
                 *([beacon_of_hope_2024()] if level >= 9 else []),
                 *([freedom_of_movement_2024()] if level >= 13 else []),
+                *([death_ward_2024()] if level >= 15 else []),
             ],
             effect_removal_actions=[dispel_magic_2024_paladin()] if level >= 9 else [],
             attack_action_weapon_buffs=[
@@ -126,6 +128,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                    "Staggering Smite (fail-closed pending shared atomic post-hit save/condition choice), "
                    if level >= 13 else "")
                 + ("Restoring Touch, " if level >= 14 else "")
+                + ("Smite of Protection, Death Ward, " if level >= 15 else "")
                 + "Longsword, Javelin"
             ),
         )
