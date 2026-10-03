@@ -64,9 +64,21 @@ def expire_target_turn_modifiers(state: CombatantState) -> int:
     return before - len(state.active_modifiers)
 
 
+def _non_stacking_flat_total(modifiers: Iterable[CombatModifier]) -> int:
+    """Sum ordinary bonuses while taking only the strongest bonus in each declared group."""
+    ungrouped = 0
+    grouped: dict[str, int] = {}
+    for item in modifiers:
+        if item.non_stacking_group is None:
+            ungrouped += item.flat_bonus
+            continue
+        grouped[item.non_stacking_group] = max(grouped.get(item.non_stacking_group, 0), item.flat_bonus)
+    return ungrouped + sum(grouped.values())
+
+
 def effective_armor_class(state: CombatantState) -> int:
-    adjusted = state.template.armor_class + sum(
-        item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.ARMOR_CLASS
+    adjusted = state.template.armor_class + _non_stacking_flat_total(
+        item for item in state.active_modifiers if item.kind is ModifierKind.ARMOR_CLASS
     )
     minimum = max(
         (item.minimum_value for item in state.active_modifiers if item.kind is ModifierKind.ARMOR_CLASS_MINIMUM),
@@ -84,8 +96,8 @@ def attack_roll_flat_bonus(state: CombatantState, weapon_id: str) -> int:
 
 
 def saving_throw_flat_bonus(state: CombatantState, ability: str | None = None) -> int:
-    return sum(
-        item.flat_bonus for item in state.active_modifiers
+    return _non_stacking_flat_total(
+        item for item in state.active_modifiers
         if item.kind is ModifierKind.SAVING_THROW_FLAT
         and (item.save_ability is None or ability is None or item.save_ability == ability)
     )
