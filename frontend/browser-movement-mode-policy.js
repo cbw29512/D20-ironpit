@@ -5,9 +5,9 @@
   const MODE_VERBS = { flies: "fly", swims: "swim", walks: "walk", climbs: "climb", burrows: "burrow" };
   const EXEMPTION_RE = /doesn['’]t provoke (?:an )?opportunity attacks? when it (flies|swims|walks|climbs|burrows) out of an enemy['’]?s reach/gi;
 
-  function defaultHorizontalMovementMode(modes) {
+  function defaultHorizontalMovementMode(modes, exemptModes) {
     try {
-      return (modes && Number(modes.fly_ft || 0) > 0) ? "fly" : "walk";
+      return (modes && Number(modes.fly_ft || 0) > 0 && (exemptModes || []).includes("fly")) ? "fly" : "walk";
     } catch (error) {
       console.error("Failed to choose the default horizontal movement mode.", { error });
       throw error;
@@ -17,7 +17,10 @@
   function ensureActiveMovementMode(state) {
     try {
       if (!state.active_movement_mode) {
-        state.active_movement_mode = defaultHorizontalMovementMode(state.template.movement_modes);
+        state.active_movement_mode = defaultHorizontalMovementMode(
+          state.template.movement_modes,
+          state.template.opportunity_attack_exempt_movement_modes,
+        );
       }
       return state.active_movement_mode;
     } catch (error) {
@@ -29,6 +32,7 @@
   function printedSpeedForState(state) {
     try {
       const mode = ensureActiveMovementMode(state);
+      if (mode === "walk") return Number(state.template.speed_ft || 0);
       const field = MODE_FIELDS[mode];
       if (!field) throw new Error(`Unknown movement mode ${mode}.`);
       const speed = Number(state.template.movement_modes?.[field] || 0);

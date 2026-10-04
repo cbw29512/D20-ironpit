@@ -15,10 +15,17 @@ _MODE_FIELDS = {
 }
 
 
-def default_horizontal_movement_mode(modes: MovementModes | None) -> str:
-    """Prefer printed horizontal fly; never collapse fly into walk."""
+def default_horizontal_movement_mode(
+    modes: MovementModes | None,
+    exempt_modes: list[str] | tuple[str, ...] | None = None,
+) -> str:
+    """Keep fly as fly when a bound fly OA exemption makes that the production mode."""
     try:
-        if modes is not None and int(modes.fly_ft or 0) > 0:
+        if (
+            modes is not None
+            and int(modes.fly_ft or 0) > 0
+            and "fly" in (exempt_modes or ())
+        ):
             return "fly"
         return "walk"
     except Exception:
@@ -29,7 +36,10 @@ def default_horizontal_movement_mode(modes: MovementModes | None) -> str:
 def ensure_active_movement_mode(state: CombatantState) -> str:
     try:
         if not state.active_movement_mode:
-            state.active_movement_mode = default_horizontal_movement_mode(state.template.movement_modes)
+            state.active_movement_mode = default_horizontal_movement_mode(
+                state.template.movement_modes,
+                state.template.opportunity_attack_exempt_movement_modes,
+            )
         return state.active_movement_mode
     except Exception:
         logger.exception("Failed to establish the active movement mode for %s.", state.template.name)
@@ -39,6 +49,8 @@ def ensure_active_movement_mode(state: CombatantState) -> str:
 def printed_speed_for_state(state: CombatantState) -> int:
     try:
         mode = ensure_active_movement_mode(state)
+        if mode == "walk":
+            return int(state.template.speed_ft)
         field = _MODE_FIELDS.get(mode)
         if field is None:
             raise ValueError(f"Unknown movement mode {mode!r}.")
