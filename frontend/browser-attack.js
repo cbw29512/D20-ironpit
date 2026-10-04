@@ -3,8 +3,7 @@
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP, BS = () => window.IRON_PIT_BROWSER_BRUTAL_STRIKE; const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
   const H = () => {
     const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
-    if (!hooks) throw new Error("Browser attack resolution requires browser-ability-hooks.js.");
-    return hooks;
+    if (!hooks) throw new Error("Browser attack resolution requires browser-ability-hooks.js."); return hooks;
   };
   const O = () => {
     const outcome = window.IRON_PIT_BROWSER_ATTACK_OUTCOME;
@@ -16,8 +15,7 @@
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false }, X = () => window.IRON_PIT_BROWSER_EXHAUSTION || { attackDisadvantage: () => 0 }, DB = () => window.IRON_PIT_BROWSER_D20_BONUS_DICE;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { attackAdvantage: (state) => state.is_unconscious, autoCritical: (state) => state.is_unconscious,
     has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious, suppressAttackAdvantage: () => false,
-    canSee: (observer, target) => !(observer.active_effect_ids || []).includes("blinded")
-      && !(target.active_effect_ids || []).includes("invisible") };
+    canSee: (observer, target) => !observer.active_effect_ids.includes("blinded") && !target.active_effect_ids.includes("invisible") };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function conditionSources(attacker, defender, distance, targetId) {
