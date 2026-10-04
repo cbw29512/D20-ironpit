@@ -53,6 +53,8 @@
       const members = new Map([...setup.heroes, ...setup.monsters]
         .map((member) => [member.combatant_id, member]));
       const action = saveAction(choice);
+      const dcBonus = window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS?.spellSaveDcBonus?.(caster.state) || 0;
+      if (dcBonus) action.dc += dcBonus;
       const events = [];
       let sharedDamageRolls = null;
       if (choice.damageMaximizer) {
@@ -61,7 +63,7 @@
             C().maximizedRolls(component.diceCount || 0, component.diceSize || 6))
           : C().maximizedRolls(spell.damageDiceCount || 0, spell.damageDiceSize || 6);
       }
-      let saveDisadvantage = H()?.choose(caster.state) || null;
+      let saveDisadvantage = H()?.choose(caster.state, turnKey) || null;
 
       for (const targetId of choice.targetIds) {
         const target = members.get(targetId);
@@ -77,7 +79,7 @@
         let saveDisadvantageSources = [];
         let modifierRemaining = null;
         if (saveDisadvantage) {
-          modifierRemaining = H().spend(caster.state, saveDisadvantage);
+          modifierRemaining = H().spend(caster.state, saveDisadvantage, turnKey);
           saveDisadvantageSources = [saveDisadvantage.name];
           saveDisadvantage = null;
         }

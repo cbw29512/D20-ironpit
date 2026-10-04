@@ -17,6 +17,7 @@ def build_2024_pregen_combat_profiles() -> list["PregenCombatProfile"]:
         from app.content.monk_open_hand_2024_combat_profile import build_kael_2024_combat_profiles
         from app.content.paladin_devotion_2024_combat_profile import build_aurelia_2024_combat_profiles
         from app.content.rogue_combat_fingerprint import build_mara_quickstep_combat_profiles
+        from app.content.sorcerer_draconic_2024_combat_profile import build_nyra_2024_combat_profiles
         from app.content.warlock_fiend_2024_combat_profile import build_varek_2024_combat_profiles
 
         return [
@@ -26,6 +27,7 @@ def build_2024_pregen_combat_profiles() -> list["PregenCombatProfile"]:
             *build_kael_2024_combat_profiles(),
             *build_aurelia_2024_combat_profiles(),
             *build_varek_2024_combat_profiles(),
+            *build_nyra_2024_combat_profiles(),
         ]
     except Exception:
         logger.exception("Failed to build the 2024 pregen combat-profile registry.")

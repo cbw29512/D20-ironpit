@@ -429,6 +429,10 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
             "diceSize": action.melee_hit_retaliation.dice_size,
             "damageType": _value(action.melee_hit_retaliation.damage_type),
         }
+    if action.spell_save_dc_bonus:
+        row["spellSaveDcBonus"] = action.spell_save_dc_bonus
+    if action.spell_attack_advantage:
+        row["spellAttackAdvantage"] = True
     return row
 
 
@@ -736,6 +740,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             {
                 "id": item.id, "name": item.name, "resourceId": item.resource_id,
                 "resourceCost": item.resource_cost, "targetPolicy": item.target_policy,
+                "waivedWhileSourceEffectId": item.waived_while_source_effect_id,
+                "waivedOncePerTurn": item.waived_once_per_turn,
                 "priority": item.priority, "source": item.source,
             }
             for item in template.spell_save_disadvantage_options

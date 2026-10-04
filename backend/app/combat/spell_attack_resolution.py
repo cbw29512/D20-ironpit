@@ -26,6 +26,7 @@ from app.combat.spell_modifiers import build_spell_modifier
 from app.combat.spell_range_modifiers import spend_spell_range_modifier
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.combat.spell_attack_helpers import cast_slot_resource, roll_spell_attack_damage
+from app.combat.spell_caster_buffs import active_spell_attack_advantage
 from app.combat.spell_attack_hit_riders import apply_spell_attack_hit_riders
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.combat.timed_conditions import apply_timed_condition
@@ -89,6 +90,7 @@ def resolve_spell_attack(
             and target.state.template.wearing_metal_armor
         )
         advantage += next_attack_against_advantage_sources(caster.state, target.combatant_id)
+        advantage += int(active_spell_attack_advantage(caster.state))
         close_threat = spell.attack_kind == "ranged" and close_ranged_threat_exists(caster, setup)
         mode = resolve_roll_mode(
             advantage,

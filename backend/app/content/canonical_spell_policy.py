@@ -10,6 +10,7 @@ from app.content.paladin_2014_spell_package import build_paladin_2014_spell_pack
 from app.content.ranger_2014_spell_package import build_ranger_2014_spell_package
 from app.content.sorcerer_2014_spell_package import build_sorcerer_2014_spell_package
 from app.content.warlock_2014_spell_package import build_warlock_2014_spell_package
+from app.content.sorcerer_2024_spell_package import build_sorcerer_2024_spell_package
 from app.content.warlock_2024_spell_package import build_warlock_2024_spell_package
 from app.content.wizard_2014_spell_package import build_wizard_2014_spell_package
 from app.domain.character_builds import RulesetId
@@ -69,6 +70,8 @@ def canonical_spell_package(
             return _canonical_spell_package_2014(class_id, level, casting_modifier)
         if class_id == "warlock":
             return build_warlock_2024_spell_package(level)
+        if class_id == "sorcerer":
+            return build_sorcerer_2024_spell_package(level)
         return build_class_spell_package(class_id, level)  # type: ignore[arg-type]
     except Exception:
         logger.exception("Failed to resolve %s %s spell package at level %s.", ruleset, class_id, level)

@@ -105,6 +105,8 @@ class TimedSelfBuffAction(BaseModel):
     friendly_cover_aura: TimedFriendlyCoverAura | None = None
     hostile_start_turn_condition_aura: TimedHostileConditionAura | None = None
     start_turn_emanation_damage: TimedEmanationDamage | None = None
+    spell_save_dc_bonus: int = Field(default=0, ge=0, le=10)
+    spell_attack_advantage: bool = False
     concentration: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
@@ -150,6 +152,8 @@ class TimedSelfBuffAction(BaseModel):
                 or self.hostile_start_turn_condition_aura is not None
                 or self.start_turn_emanation_damage is not None
                 or self.melee_hit_retaliation is not None
+                or self.spell_save_dc_bonus
+                or self.spell_attack_advantage
             ):
                 raise ValueError("Timed self-buff requires at least one combat effect.")
             return self

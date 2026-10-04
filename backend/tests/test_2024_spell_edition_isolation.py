@@ -70,6 +70,8 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "beacon-of-hope",
         "shatter",
         "thunderwave",
+        "lightning-bolt",
+        "chromatic-orb",
         "fireball",
         "flame-strike",
         "disintegrate",
@@ -778,6 +780,31 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         assert spell.modifier_effects[0].flat_bonus == 10
 
 
+    if "chromatic-orb" in spell_attacks:
+        spell = spell_attacks["chromatic-orb"]
+        assert (
+            spell.level, spell.action_cost, spell.attack_kind, spell.range_ft,
+            spell.damage_dice_count, spell.damage_dice_size, spell.damage_type,
+        ) == (1, "action", "ranged", 90, 3, 8, "fire")
+
+    if "lightning-bolt" in spell_saves:
+        spell = spell_saves["lightning-bolt"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.origin if spell.area else None,
+            spell.area.length_ft if spell.area else None,
+            spell.area.width_ft if spell.area else None,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.success_damage,
+            spell.upcast_dice_per_level,
+        ) == (3, "action", 100, "line", "self", 100, 5, "dexterity", 8, 6, "lightning", "half", 1)
+
     if "fire-bolt" in spell_attacks:
         spell = spell_attacks["fire-bolt"]
         expected_dice = 1 + int(level >= 5) + int(level >= 11) + int(level >= 17)
@@ -974,6 +1001,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "cleric": "wisdom",
             "druid": "wisdom",
             "paladin": "charisma",
+            "sorcerer": "charisma",
             "warlock": "charisma",
         }
         assert progression.class_id in expected_casting_abilities

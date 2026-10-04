@@ -10,6 +10,7 @@ from app.combat.spell_save_disadvantage import (
     spend_spell_save_disadvantage,
 )
 from app.combat.fighting_save_advantage import sides_are_fighting
+from app.combat.spell_caster_buffs import active_spell_save_dc_bonus
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_damage_maximizers import maximized_save_damage_rolls
 from app.combat.spell_policy import spell_at_slot
@@ -74,12 +75,15 @@ def resolve_spell_save_effect(
         affected_states = [member.state for member in members]
         placement = choice.placement
         action = compile_spell_save_action(choice)
+        bonus = active_spell_save_dc_bonus(caster.state)
+        if bonus:
+            action = action.model_copy(update={"dc": action.dc + bonus})
         events: list[BattleEvent] = []
         shared_damage_rolls: list[int] | list[list[int]] | None = (
             maximized_save_damage_rolls(scaled_spell)
             if choice.damage_maximizer is not None else None
         )
-        save_disadvantage = choose_spell_save_disadvantage(caster.state)
+        save_disadvantage = choose_spell_save_disadvantage(caster.state, turn_key)
 
         for target_id in choice.target_ids:
             target = by_id[target_id]
@@ -103,7 +107,7 @@ def resolve_spell_save_effect(
             disadvantage_sources: tuple[str, ...] = ()
             modifier_remaining = None
             if save_disadvantage is not None:
-                modifier_remaining = spend_spell_save_disadvantage(caster.state, save_disadvantage)
+                modifier_remaining = spend_spell_save_disadvantage(caster.state, save_disadvantage, turn_key)
                 disadvantage_sources = (save_disadvantage.name,)
                 save_disadvantage = None
             advantage_sources = (

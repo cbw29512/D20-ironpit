@@ -62,6 +62,9 @@
         || action.friendlyCoverAura
         || action.hostileStartTurnConditionAura
         || action.startTurnEmanationDamage
+        || action.meleeHitRetaliation
+        || action.spellSaveDcBonus
+        || action.spellAttackAdvantage
       )) {
         T().apply(member.state, action.id, member.combatant_id, {
           sourceEffectId: action.id,
@@ -157,5 +160,21 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS = { active, choose, installAbilityHooks, resolve };
+  function spellSaveDcBonus(state) {
+    const activeIds = new Set((state.timed_effects || []).map((effect) => effect.source_effect_id));
+    return (state.template.timed_self_buff_actions || []).reduce((total, action) => (
+      activeIds.has(action.id) ? total + (action.spellSaveDcBonus || 0) : total
+    ), 0);
+  }
+
+  function spellAttackAdvantage(state) {
+    const activeIds = new Set((state.timed_effects || []).map((effect) => effect.source_effect_id));
+    return (state.template.timed_self_buff_actions || []).some(
+      (action) => action.spellAttackAdvantage && activeIds.has(action.id),
+    );
+  }
+
+  window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS = {
+    active, choose, installAbilityHooks, resolve, spellSaveDcBonus, spellAttackAdvantage,
+  };
 })();
