@@ -8,6 +8,7 @@ from app.content.attack_bonus_rules import compile_weapon_attack_bonus
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.character_resource_rules import expected_resources
 from app.content.healing_spell_effects import build_cure_wounds
+from app.content.druid_2024_spells import build_longstrider_2024
 from app.content.ranger_hunter_2024_level1 import hunters_mark_2024
 from app.content.ranger_hunter_2024_profile import build_rowan_ashtrail_2024_profile
 from app.content.weapon_catalog import build_weapon
@@ -72,6 +73,7 @@ def build_rowan_ashtrail_2024(level: int = 1) -> CombatantTemplate:
             alternate_weapon_attacks=[shortsword, scimitar],
             targeted_concentration_damage_actions=[hunters_mark_2024()],
             healing_actions=[build_cure_wounds(wisdom)],
+            defensive_spell_actions=[build_longstrider_2024()] if level >= 2 else [],
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("strength", "dexterity")),
             skill_bonuses={
                 "athletics": scores.modifier("strength") + pb,
