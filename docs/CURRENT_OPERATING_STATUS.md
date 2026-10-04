@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-03 for the 2024 Devotion Paladin level 15 tranche. Main baseline: `baabb48ea202d37c79ae7197db4653654368649f`.
+Recorded 2026-10-03 for the 2024 Devotion Paladin level 16 tranche. Main baseline: `a1b04978d91368dfca217b96f99d7913398722a6`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -34,9 +34,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
 | 2024 | Monk (Open Hand) | 1–20 |
-| 2024 | Paladin (Devotion) | 1–14 |
+| 2024 | Paladin (Devotion) | 1–15 |
 
-2024 public-ready hero slots on current main: **154 / 240**.
+2024 public-ready hero slots on current main: **155 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -46,9 +46,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 154 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 14 on main; this tranche advances level 15 to a generated target of **155 / 240**.
+**2024 canonical pregens are 155 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 15 on main; this tranche advances level 16 to a generated target of **156 / 240**.
 
-Active implementation lane: **2024 Devotion Paladin level 15.** Aurelia remains the same persistent character. HP advances to 124, Lay On Hands to 75, fourth-level slots to 2, and ordinary preparations to 12 with Aura of Life retained fail-closed pending exact recovery-aura support. Smite of Protection composes the existing Divine Smite post-hit payment with a generic timed source-centered friendly cover aura. Half Cover grants +2 AC and +2 Dexterity saves inside Aura of Protection until the start of Aurelia's next turn, and multiple cover sources use only the strongest cover benefit.
+Active implementation lane: **2024 Devotion Paladin level 16.** Aurelia remains the same persistent character. The repeatable Ability Score Improvement feat raises Charisma 17→19, which increases Aura of Protection and Sacred Weapon to +4, Abjure Foes to DC 17 / four targets, Charisma saves/skills by 1, HP to 132, and Lay On Hands to 80. Slots and the twelve ordinary preparations remain unchanged. No new combat primitive is required.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -83,7 +83,8 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 13 advances Proficiency Bonus to **+5**, HP to **108**, Lay On Hands to **65**, slots to **4/3/3/1**, and ordinary preparations to **eleven**. The attacks become **+10**, Charisma saves/skills **+8**, and Abjure Foes **DC 16 / three targets**. Oath spells always prepare **Freedom of Movement** and **Guardian of Faith**; only Freedom of Movement executes, using the certified 2024 shared binding including Swim Speed and five-foot nonmagical escape costs. Guardian of Faith remains arena-unavailable under the no-summons contract. The new ordinary preparation **Staggering Smite** remains fail-closed pending an exact atomic post-hit spell damage/save/condition choice alongside Divine Smite.
 - Level 14 adds **Restoring Touch** through the existing condition-removal action. Blinded, Charmed, Deafened, Frightened, Paralyzed, and Stunned cost **five Lay On Hands points each**; Poisoned can be removed in the same Bonus Action. Removal does not restore HP. The remaining pool remains available for later healing through the shared divisible-pool allocation.
 - Level 15 adds **Smite of Protection** without a Paladin-specific resolver. A successfully paid **Divine Smite** activates a one-round source-centered friendly aura matching Aura of Protection's current radius. Aurelia and allies inside it gain **Half Cover** (+2 AC and +2 Dexterity saves) until the start of Aurelia's next turn. The universal modifier stack now classifies cover separately so overlapping cover uses the strongest benefit instead of stacking. HP advances to **124**, Lay On Hands to **75**, fourth-level slots to **2**, and the twelfth ordinary preparation is **Aura of Life**, retained fail-closed until its exact healing/recovery aura lifecycle is certified.
-- This tranche targets **155 / 240** 2024 public-ready hero slots.
+- Level 16 takes **Ability Score Improvement (+2 Charisma)** through the existing cumulative ability-increase schema. Charisma rises **17→19**, Aura of Protection and Sacred Weapon become **+4**, Abjure Foes becomes **DC 17 / four targets**, HP rises to **132**, and Lay On Hands to **80**. Slots and the twelve ordinary preparations remain unchanged; no new combat primitive is required.
+- This tranche targets **156 / 240** 2024 public-ready hero slots.
 
 ### 2024 Monk lane
 
@@ -240,3 +241,6 @@ Thalen Greenbough remains the persistent canonical Druid and preserves the Land-
 - Level 19 advances to 98 HP, two level-6 slots, and 21 prepared spells. Thalen legally selects **Boon of Fate** rather than the recommended Boon of Dimensional Travel, raising Intelligence 13→14 and reusing the universal 2d4 D20 outcome-adjustment plus Initiative refill. **Regenerate** is the healing-priority prepared choice; its 1-minute casting time means Arena AI does not select it in a standard match.
 - Level 20 advances to 103 HP, two level-7 slots, and 22 prepared spells. **Archdruid** reuses initiative resource refill for Evergreen Wild Shape and universal resource conversion for Nature Magician's 1–4 Wild Shape → level 2/4/6/8 spell-slot exchanges; Longevity is arena-neutral. **Ice Storm** is the damage-priority prepared choice but remains arena-out-of-scope until temporary area Difficult Terrain can be represented exactly.
 - Call Lightning remains unbound until its fixed storm-cloud footprint can be represented exactly by a universal persistent-area spell primitive; it is not approximated.
+
+
+Certification checkpoint: Paladin 16 exact-head rerun.

@@ -74,6 +74,15 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
                        "Aura of Protection until the start of Aurelia's next turn. Cover uses "
                        "the strongest cover source rather than stacking. No Paladin-specific resolver."),
             ))
+        if level >= 16:
+            audits.append(paladin_2024_feature(
+                "ability-score-improvement-l16",
+                "Ability Score Improvement (+2 Charisma)",
+                "feat", combat=True, automated=True,
+                notes=("Continue the persistent build: Charisma 17 to 19. Shared derived values "
+                       "update Charisma saves and skills, healing, Sacred Weapon, Abjure Foes, "
+                       "and Aura of Protection from +3 to +4; no new combat primitive is required."),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build later 2024 Paladin feature audits at level %s.", level)

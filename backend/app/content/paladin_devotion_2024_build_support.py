@@ -36,6 +36,8 @@ def build_paladin_2024_ability_progression(
         if level >= 12:
             # Strength is capped; continue Aurelia's shared hybrid stat priority.
             advancement.append(AbilityIncrease(ability="charisma", amount=2))
+        if level >= 16:
+            advancement.append(AbilityIncrease(ability="charisma", amount=2))
 
         values = base.model_dump()
         for increase in [*background, *advancement]:
