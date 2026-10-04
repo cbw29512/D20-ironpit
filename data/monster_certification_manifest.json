@@ -2908,13 +2908,13 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "multiattack",
-        "trait"
+        "multiattack"
       ],
       "unsupported_mechanics": [
         "bonus-action",
         "limited-use",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -2924,7 +2924,8 @@
         "bonus-action",
         "limited-use",
         "monster-combat-mechanics-not-certified",
-        "spellcasting"
+        "spellcasting",
+        "trait"
       ]
     },
     {
@@ -9409,11 +9410,11 @@
         "attack-roll",
         "damage-or-condition-defense",
         "multiattack",
-        "saving-throw-action",
-        "trait"
+        "saving-throw-action"
       ],
       "unsupported_mechanics": [
         "save-or-complex-action",
+        "trait",
         "unsupported-action-rider"
       ],
       "python_certification_status": "blocked",
@@ -9423,6 +9424,7 @@
       "blockers": [
         "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
+        "trait",
         "unsupported-action-rider"
       ]
     },
