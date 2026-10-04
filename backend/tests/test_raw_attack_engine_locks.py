@@ -23,7 +23,7 @@ def test_declared_multiattack_uses_printed_slot_order() -> None:
     _adjacent(setup)
     unicorn = setup.monsters[0]
     begin_turn(unicorn.state)
-    events, _ = resolve_attack_action(1, 1, unicorn, setup, FixedDiceProvider([10] * 12))
+    events, _ = resolve_attack_action(1, 1, unicorn, setup, FixedDiceProvider([15, 4, 4, 4, 4, 4, 4, 15, 4, 4, 4, 4, 4, 4]))
     attacks = [event for event in events if event.event_type == "attack"]
     assert [event.weapon_id for event in attacks] == ["2014-unicorn-hooves", "2014-unicorn-horn"]
 

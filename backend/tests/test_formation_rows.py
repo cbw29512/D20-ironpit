@@ -26,6 +26,7 @@ def test_melee_only_back_row_steps_up_when_front_ally_dies() -> None:
         ruleset="2014",
     ))
     melee = setup.heroes[1]
+    melee.state.template.alternate_weapon_attacks = []
     melee.state.formation_row = "back"
     melee.state.initial_formation_row = "back"
     setup.heroes[0].state.current_hp = 0
