@@ -117,7 +117,7 @@ def build_paladin_2024_progression(
                     [FriendlyConditionImmunityAuraGrant(
                         source_id="aura-of-devotion-2024",
                         source_name="Aura of Devotion",
-                        radius_ft=10,
+                        radius_ft=aura_radius,
                         condition_id="charmed",
                         inactive_while_incapacitated=True,
                     )]
