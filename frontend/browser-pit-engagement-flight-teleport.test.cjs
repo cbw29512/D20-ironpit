@@ -160,3 +160,4 @@ function member(id, side, x, y, extras = {}) {
   assert.ok(closePlan.final_distance_ft <= 5);
   assert.equal(P.leavesMelee(runner, [runner, enemy, closer], closePlan.path[0]), true);
 }
+console.log("Browser pit engagement, flight, and in-place teleport regressions passed.");
