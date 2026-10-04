@@ -146,7 +146,15 @@ class CombatantState(BaseModel):
     feature_use_counts: dict[str, int] = Field(default_factory=dict)
     spell_slot_expended_turn_key: str | None = None
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
+    zone_damage_immunities: list[DamageType] = Field(default_factory=list)
     active_conditional_damage_defenses: list[ConditionalDamageDefense] = Field(default_factory=list)
+    hit_point_maximum_reduction: int = Field(default=0, ge=0)
+    ability_score_reductions: dict[str, int] = Field(default_factory=dict)
+    active_curses: list[str] = Field(default_factory=list)
+    damage_share_source_id: str | None = None
+    damage_share_range_ft: int = Field(default=0, ge=0)
+    damage_share_effect_id: str | None = None
+    emanation_triggers_this_turn: dict[str, str] = Field(default_factory=dict)
     rage_expires_round: int | None = Field(default=None, ge=1)
     rage_max_round: int | None = Field(default=None, ge=1)
 

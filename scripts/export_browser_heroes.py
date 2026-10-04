@@ -11,9 +11,15 @@ from app.content.class_spell_progression import CASTING_ABILITIES
 from app.domain.models import CombatantTemplate, WeaponAttack
 
 try:
-    from scripts.browser_template_serializer import _healing, _removal, persistent_barrier_row, persistent_beneficial_zone_row
+    from scripts.browser_template_serializer import (
+        _healing, _removal, _suppression_zone, _teleport,
+        persistent_barrier_row, persistent_beneficial_zone_row,
+    )
 except ModuleNotFoundError:
-    from browser_template_serializer import _healing, _removal, persistent_barrier_row, persistent_beneficial_zone_row
+    from browser_template_serializer import (
+        _healing, _removal, _suppression_zone, _teleport,
+        persistent_barrier_row, persistent_beneficial_zone_row,
+    )
 
 logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parents[1]
@@ -150,6 +156,28 @@ def _spell(action: Any) -> dict[str, Any]:
              "damageBonus": item.damage_bonus, "damageType": item.damage_type}
             for item in action.damage_components
         ]
+    if action.failed_save_timed_effect is not None:
+        row["failedSaveTimedEffect"] = {
+            "effectId": action.failed_save_timed_effect.effect_id,
+            "durationRounds": action.failed_save_timed_effect.duration_rounds,
+            "expiryTiming": action.failed_save_timed_effect.expiry_timing,
+            "repeatSaveAbility": action.failed_save_timed_effect.repeat_save_ability,
+            "repeatSaveDc": action.failed_save_timed_effect.repeat_save_dc,
+            "repeatSaveTiming": action.failed_save_timed_effect.repeat_save_timing,
+            "turnBehavior": action.failed_save_timed_effect.turn_behavior,
+            "endsOnDamage": action.failed_save_timed_effect.ends_on_damage,
+            "endsIfSourceIncapacitated": action.failed_save_timed_effect.ends_if_source_incapacitated,
+            "endsIfSourceDead": action.failed_save_timed_effect.ends_if_source_dead,
+            "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
+        }
+    if action.required_target_creature_types:
+        row["requiredTargetCreatureTypes"] = list(action.required_target_creature_types)
+    if action.minimum_remaining_hp:
+        row["minimumRemainingHp"] = action.minimum_remaining_hp
+    if action.reduce_hit_point_maximum_on_failed_save:
+        row["reduceHitPointMaximumOnFailedSave"] = True
+    if not action.verbal_component:
+        row["verbalComponent"] = False
     return row
 
 
@@ -271,6 +299,11 @@ def _defense(action: Any) -> dict[str, Any]:
             for grant in action.movement_mode_grants
         ]
     if action.source: row["source"] = action.source
+    if action.selectable_resistance_types:
+        row["selectableResistanceTypes"] = list(action.selectable_resistance_types)
+    if action.share_damage_with_source:
+        row["shareDamageWithSource"] = True
+        row["shareRangeFt"] = action.share_range_ft
     return row
 
 
@@ -491,6 +524,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             "wearing_metal_armor": template.wearing_metal_armor,
         "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
         "timed_self_buff_actions": [_timed_self_buff(item) for item in template.timed_self_buff_actions],
+        "suppression_zone_actions": [_suppression_zone(item) for item in template.suppression_zone_actions],
+        "teleport_actions": [_teleport(item) for item in template.teleport_actions],
         "attack_action_weapon_buffs": [
             {
                 "id": item.id,

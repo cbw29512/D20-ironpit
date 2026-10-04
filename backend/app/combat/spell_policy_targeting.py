@@ -12,6 +12,7 @@ from app.combat.offense_value import save_spell_expected_damage
 from app.combat.spell_area import best_area_placement
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_range_modifiers import choose_spell_range_modifier, effective_spell_range_ft
+from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
 
@@ -37,6 +38,13 @@ def legal_single_spell_targets(
             and clear_line_between_members(caster, target, setup)
             and (not action.requires_target_hearing or "deafened" not in target.state.active_effect_ids)
             and (not action.requires_target_sight or can_see(caster.state, target.state))
+            and (
+                not action.required_target_creature_types
+                or any(
+                    is_creature_type(target.state.template, kind)
+                    for kind in action.required_target_creature_types
+                )
+            )
         ]
     except Exception as exc:
         logger.exception("Failed to determine legal targets for spell %s.", action.id)
@@ -142,6 +150,8 @@ def single_target_spell_choice(
         ),
     )
     score = save_spell_expected_damage(target, scaled)
+    if scaled.failed_save_timed_effect is not None:
+        score += max(8.0, target.state.current_hp * 0.35)
     modifier = choose_spell_range_modifier(
         caster.state,
         base_range_ft=action.range_ft,

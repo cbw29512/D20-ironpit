@@ -85,47 +85,15 @@
           }
 
           const emanation = action.startTurnEmanationDamage;
-          if (!emanation || emanation.trigger !== "enemy_turn_start") continue;
-          if (distance > emanation.radius_ft) continue;
-
-          const hpBefore = target.state.current_hp;
-          const tempBefore = target.state.temporary_hp || 0;
-          const successBefore = target.state.death_save_successes || 0;
-          const failureBefore = target.state.death_save_failures || 0;
-          const applied = A().adjustedDamage(
-            target.state,
-            emanation.fixed_damage,
-            emanation.damage_type,
+          if (!emanation || !["enemy_turn_start", "enter_or_start"].includes(emanation.trigger || "enemy_turn_start")) continue;
+          window.IRON_PIT_BROWSER_EMANATION_SPEED?.sync(setup);
+          const hit = window.IRON_PIT_BROWSER_EMANATION_SAVE_DAMAGE.resolveHit(
+            sequence, round, source, target, action, setup, `${round}:${target.combatant_id}`,
           );
-          if (applied > 0) {
-            A().applyDamage(
-              target.state,
-              applied,
-              false,
-              [emanation.damage_type],
-              all.map((member) => member.state),
-            );
+          if (hit.event) {
+            events.push(hit.event);
+            sequence = hit.sequence;
           }
-          events.push({
-            sequence: sequence++, round_number: round, event_type: "feature",
-            actor_id: source.combatant_id, actor_name: source.state.template.name,
-            target_id: target.combatant_id, target_name: target.state.template.name,
-            damage_roll: {
-              notation: String(emanation.fixed_damage), rolls: [], modifier: 0, total: applied,
-            },
-            damage_components: [{
-              source: action.name, notation: String(emanation.fixed_damage), rolls: [], modifier: 0,
-              damage_type: emanation.damage_type, total: emanation.fixed_damage, applied_total: applied,
-            }],
-            hp_before: hpBefore, hp_after: target.state.current_hp,
-            temporary_hp_before: tempBefore, temporary_hp_after: target.state.temporary_hp || 0,
-            death_save_successes_before: successBefore, death_save_failures_before: failureBefore,
-            death_save_successes: target.state.death_save_successes || 0,
-            death_save_failures: target.state.death_save_failures || 0,
-            is_stable: Boolean(target.state.is_stable), is_dead: Boolean(target.state.is_dead),
-            distance_before_ft: distance, feature_id: action.id, animation: action.animation || "radiant-aura",
-            description: `${target.state.template.name} starts its turn within ${distance} feet of ${source.state.template.name}'s ${action.name} and takes ${applied} ${emanation.damage_type} damage.`,
-          });
         }
       }
       return { events, sequence };
@@ -150,7 +118,7 @@
       rulesets: ["2014", "2024"],
       appliesTo: (_member, ctx) => members(ctx.setup).some((source) =>
         activeEmanations(source).some((action) =>
-          action.startTurnEmanationDamage?.trigger === "enemy_turn_start"
+          ["enemy_turn_start", "enter_or_start"].includes(action.startTurnEmanationDamage?.trigger || "")
           || action.hostileStartTurnConditionAura?.trigger === "enemy_turn_start")),
       resolve: ({ sequence, round, member, setup }) => {
         const result = resolveStartOfTurn(sequence, round, member, setup);

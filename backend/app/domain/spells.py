@@ -35,6 +35,9 @@ class DefensiveSpellAction(BaseModel):
     max_hp_increase: int = Field(default=0, ge=0)
     current_hp_increase: int = Field(default=0, ge=0)
     damage_resistances: list[DamageTypeName] = Field(default_factory=list)
+    selectable_resistance_types: list[DamageTypeName] = Field(default_factory=list)
+    share_damage_with_source: bool = False
+    share_range_ft: int = Field(default=0, ge=0)
     condition_ids: list[ConditionName] = Field(default_factory=list)
     modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
@@ -48,12 +51,15 @@ class DefensiveSpellAction(BaseModel):
     def validate_defense(self) -> "DefensiveSpellAction":
         direct_hp = self.temporary_hp or self.max_hp_increase or self.current_hp_increase
         if not (
-            direct_hp or self.damage_resistances or self.condition_ids
+            direct_hp or self.damage_resistances or self.selectable_resistance_types
+            or self.share_damage_with_source or self.condition_ids
             or self.modifier_effects or self.movement_mode_grants
         ):
             raise ValueError("Certified defensive spell must define an implemented defensive effect.")
-        if self.concentration and (direct_hp or self.damage_resistances):
+        if self.concentration and direct_hp:
             raise ValueError("Concentration defenses require source-owned modifier or timed-condition effects.")
+        if self.share_damage_with_source and self.share_range_ft <= 0:
+            raise ValueError("Damage-share wards require a positive share range.")
         if self.target_policy == "self" and (
             self.target_count != 1 or self.target_all_legal or self.target_count_per_slot_above
         ):
@@ -127,6 +133,10 @@ class SpellSaveAction(BaseModel):
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
     failed_save_push_ft: int = Field(default=0, ge=0)
     failed_save_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
+    required_target_creature_types: list[str] = Field(default_factory=list)
+    minimum_remaining_hp: int = Field(default=0, ge=0)
+    reduce_hit_point_maximum_on_failed_save: bool = False
+    verbal_component: bool = True
     concentration: bool = False
     duration_minutes: int | None = Field(default=None, ge=1)
     animation: str = "spell-save"

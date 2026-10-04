@@ -251,9 +251,25 @@ def _spell(action: Any) -> dict[str, Any]:
     if action.failed_save_timed_effect is not None:
         row["failedSaveTimedEffect"] = {
             "effectId": action.failed_save_timed_effect.effect_id,
+            "durationRounds": action.failed_save_timed_effect.duration_rounds,
             "expiryTiming": action.failed_save_timed_effect.expiry_timing,
+            "repeatSaveAbility": action.failed_save_timed_effect.repeat_save_ability,
+            "repeatSaveDc": action.failed_save_timed_effect.repeat_save_dc,
+            "repeatSaveTiming": action.failed_save_timed_effect.repeat_save_timing,
+            "turnBehavior": action.failed_save_timed_effect.turn_behavior,
+            "endsOnDamage": action.failed_save_timed_effect.ends_on_damage,
+            "endsIfSourceIncapacitated": action.failed_save_timed_effect.ends_if_source_incapacitated,
+            "endsIfSourceDead": action.failed_save_timed_effect.ends_if_source_dead,
             "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
         }
+    if action.required_target_creature_types:
+        row["requiredTargetCreatureTypes"] = list(action.required_target_creature_types)
+    if action.minimum_remaining_hp:
+        row["minimumRemainingHp"] = action.minimum_remaining_hp
+    if action.reduce_hit_point_maximum_on_failed_save:
+        row["reduceHitPointMaximumOnFailedSave"] = True
+    if not action.verbal_component:
+        row["verbalComponent"] = False
     if action.failed_save_push_ft:
         row["failedSavePushFt"] = action.failed_save_push_ft
     if action.failed_save_modifier_effects:
@@ -453,6 +469,11 @@ def defense_row(action: Any) -> dict[str, Any]:
         row["currentHpIncrease"] = action.current_hp_increase
     if action.source:
         row["source"] = action.source
+    if action.selectable_resistance_types:
+        row["selectableResistanceTypes"] = list(action.selectable_resistance_types)
+    if action.share_damage_with_source:
+        row["shareDamageWithSource"] = True
+        row["shareRangeFt"] = action.share_range_ft
     return row
 
 
@@ -540,6 +561,43 @@ def _attack_action_weapon_buff(action: Any) -> dict[str, Any]:
     }
 
 
+def _suppression_zone(action: Any) -> dict[str, Any]:
+    try:
+        row = {
+            "id": action.id, "name": action.name, "level": action.level,
+            "actionCost": action.action_cost, "castRangeFt": action.cast_range_ft,
+            "radiusFt": action.radius_ft, "durationRounds": action.duration_rounds,
+            "concentration": action.concentration, "deafens": action.deafens,
+            "blocksVerbalSpells": action.blocks_verbal_spells,
+            "thunderImmunity": action.thunder_immunity,
+            "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+            "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
+        }
+        if action.source:
+            row["source"] = action.source
+        return row
+    except Exception:
+        logger.exception("Failed to serialize suppression zone %s.", action.id)
+        raise
+
+
+def _teleport(action: Any) -> dict[str, Any]:
+    try:
+        row = {
+            "id": action.id, "name": action.name, "level": action.level,
+            "actionCost": action.action_cost, "range": action.range_ft,
+            "passengerCount": action.passenger_count, "passengerRangeFt": action.passenger_range_ft,
+            "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+            "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
+        }
+        if action.source:
+            row["source"] = action.source
+        return row
+    except Exception:
+        logger.exception("Failed to serialize teleport action %s.", action.id)
+        raise
+
+
 def _timed_self_buff(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost,
@@ -573,6 +631,10 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["friendlySaveAdvantageAura"] = action.friendly_save_advantage_aura.model_dump(mode="json")
     if action.friendly_cover_aura is not None:
         row["friendlyCoverAura"] = action.friendly_cover_aura.model_dump(mode="json")
+    if action.hostile_start_turn_condition_aura is not None:
+        row["hostileStartTurnConditionAura"] = action.hostile_start_turn_condition_aura.model_dump(mode="json")
+    if action.concentration:
+        row["concentration"] = True
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
     return row
@@ -589,6 +651,16 @@ def _removal(action: Any) -> dict[str, Any]:
     }
     if action.reaction_trigger:
         row["reactionTrigger"] = action.reaction_trigger
+    if action.reduces_exhaustion_levels:
+        row["reducesExhaustionLevels"] = action.reduces_exhaustion_levels
+    if action.removes_curses:
+        row["removesCurses"] = True
+    if action.removes_all_curses:
+        row["removesAllCurses"] = True
+    if action.removes_ability_score_reductions:
+        row["removesAbilityScoreReductions"] = True
+    if action.removes_hit_point_maximum_reductions:
+        row["removesHitPointMaximumReductions"] = True
     return row
 
 
@@ -898,6 +970,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
         if template.timed_self_buff_actions:
             row["timed_self_buff_actions"] = [_timed_self_buff(item) for item in template.timed_self_buff_actions]
+        if template.suppression_zone_actions:
+            row["suppression_zone_actions"] = [_suppression_zone(item) for item in template.suppression_zone_actions]
+        if template.teleport_actions:
+            row["teleport_actions"] = [_teleport(item) for item in template.teleport_actions]
         if template.attack_action_weapon_buffs:
             row["attack_action_weapon_buffs"] = [
                 _attack_action_weapon_buff(item) for item in template.attack_action_weapon_buffs

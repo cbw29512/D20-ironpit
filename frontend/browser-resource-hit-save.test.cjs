@@ -21,6 +21,7 @@ window.IRON_PIT_DICE = {
   roll: () => 10,
 };
 
+load("browser-modifier-validation.js");
 load("browser-modifiers.js");
 
 window.IRON_PIT_BROWSER_RESOURCES = {

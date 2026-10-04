@@ -13,6 +13,7 @@ load("browser-condition-rules.js");
 load("browser-condition-immunity.js");
 load("browser-action-economy.js");
 load("browser-rolls.js");
+load("browser-modifier-validation.js");
 load("browser-modifiers.js");
 load("browser-exhaustion.js");
 load("browser-dodge.js");

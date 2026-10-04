@@ -24,6 +24,7 @@ from app.combat.start_turn_timed_self_buffs import resolve_start_turn_timed_self
 from app.combat.persistent_barrier_lifecycle import cleanup_persistent_barriers
 from app.combat.state import refresh_start_of_turn
 from app.combat.timed_conditions import expire_start_of_turn_conditions
+from app.combat.suppression_zone_effects import expire_suppression_zones, sync_suppression_zone_effects
 from app.combat.timed_emanations import resolve_target_turn_start_emanations
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
 from app.domain.models import BattleEvent
@@ -115,8 +116,11 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     sequence, round_number, member, "target_turn_start", dice,
                 )
                 events.extend(lifecycle_events)
+                expire_suppression_zones(setup, round_number)
+                sync_suppression_zone_effects(setup, round_number)
                 emanation_events, sequence = resolve_target_turn_start_emanations(
                     sequence, round_number, member, setup, dice,
+                    turn_key=f"{round_number}:{member.combatant_id}",
                 )
                 events.extend(emanation_events)
                 start_buff = resolve_start_turn_timed_self_buff(

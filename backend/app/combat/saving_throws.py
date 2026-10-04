@@ -16,7 +16,9 @@ from app.combat.defensive_modifier_rules import saving_throw_advantage_source_na
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
-from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
+from app.content.monster_creature_types import is_creature_type
+from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, SavingThrowAction
 from app.domain.runtime import CombatantState
 from app.combat.save_damage_components import resolve_save_damage_components
 from app.domain.saving_throw_context import SavingThrowContext
@@ -27,6 +29,11 @@ def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, dis
     if distance_ft > action.range_ft:
         return False
     if action.requires_target_hearing and "deafened" in target.state.active_effect_ids:
+        return False
+    if action.required_target_creature_types and not any(
+        is_creature_type(target.state.template, kind)
+        for kind in action.required_target_creature_types
+    ):
         return False
     return action.target_max_size is None or size_at_most(target.state.template.size, action.target_max_size)
 
@@ -94,8 +101,21 @@ def resolve_save_action(
                                modifier=sum(component.modifier for component in rolled_components), total=applied_total)
     if applied_total:
         applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
-        damage_outcome = apply_damage(target.state, applied_total, damage_types=applied_types, dice=dice, affected_states=affected_states)
+        incoming = applied_total
+        if action.minimum_remaining_hp:
+            applied_total = min(applied_total, max(0, target.state.current_hp - action.minimum_remaining_hp))
+        damage_outcome = apply_damage(
+            target.state, applied_total, damage_types=applied_types, dice=dice,
+            affected_states=affected_states, setup=setup,
+        )
         end_rage_if_incapacitated(target.state)
+        if (
+            not succeeded
+            and action.reduce_hit_point_maximum_on_failed_save
+            and incoming
+        ):
+            from app.combat.restoration_riders import apply_hit_point_maximum_reduction
+            apply_hit_point_maximum_reduction(target, incoming)
     applied_conditions: list[str] = []
     if (
         not succeeded

@@ -6,7 +6,8 @@
   const PRIORITY = {
     paralyzed: 0, stunned: 0, incapacitated: 0, petrified: 0,
     blinded: 1, restrained: 1, poisoned: 2, frightened: 2, charmed: 2,
-    deafened: 3, grappled: 3, prone: 4, exhaustion: 4,
+    deafened: 3, grappled: 3, prone: 4, exhaustion: 4, curse: 4,
+    "ability-score-reduction": 5, "hit-point-maximum-reduction": 5,
   };
 
   const distance = (a, b) => window.IRON_PIT_BROWSER_STATE.distance(a, b);
@@ -47,9 +48,17 @@
 
   function removable(target, action) {
     const allowed = new Set(action.removableConditions || []);
-    return [...new Set(target.state.active_effect_ids)]
-      .filter((id) => allowed.has(id) && effectAllows(target, id, action.id))
-      .sort((a, b) => (PRIORITY[a] ?? 9) - (PRIORITY[b] ?? 9) || a.localeCompare(b));
+    const effects = [...new Set(target.state.active_effect_ids)]
+      .filter((id) => allowed.has(id) && effectAllows(target, id, action.id));
+    if (action.reducesExhaustionLevels && target.state.exhaustion_level) effects.push("exhaustion");
+    if ((action.removesCurses || action.removesAllCurses) && target.state.active_curses?.length) effects.push("curse");
+    if (action.removesAbilityScoreReductions && Object.keys(target.state.ability_score_reductions || {}).length) {
+      effects.push("ability-score-reduction");
+    }
+    if (action.removesHitPointMaximumReductions && target.state.hit_point_maximum_reduction) {
+      effects.push("hit-point-maximum-reduction");
+    }
+    return effects.sort((a, b) => (PRIORITY[a] ?? 9) - (PRIORITY[b] ?? 9) || a.localeCompare(b));
   }
 
   function affordable(member, target, action) {
@@ -122,7 +131,25 @@
         if ((remover.state.resources[id] || 0) < cost) throw new Error(`Required resource ${id} is unavailable.`);
         remover.state.resources[id] -= cost;
       });
-      conditionIds.forEach((id) => removeCondition(target, id));
+      const riders = new Set(["exhaustion", "curse", "ability-score-reduction", "hit-point-maximum-reduction"]);
+      conditionIds.filter((id) => !riders.has(id)).forEach((id) => removeCondition(target, id));
+      if (conditionIds.some((id) => riders.has(id))) {
+        const wanted = new Set(conditionIds);
+        if (wanted.has("exhaustion") && action.reducesExhaustionLevels && target.state.exhaustion_level) {
+          window.IRON_PIT_BROWSER_EXHAUSTION.reduce(target.state, action.reducesExhaustionLevels);
+        }
+        if (wanted.has("curse") && target.state.active_curses?.length && (action.removesCurses || action.removesAllCurses)) {
+          target.state.active_curses = action.removesAllCurses ? [] : target.state.active_curses.slice(1);
+        }
+        if (wanted.has("ability-score-reduction") && action.removesAbilityScoreReductions) {
+          target.state.ability_score_reductions = {};
+        }
+        if (wanted.has("hit-point-maximum-reduction") && action.removesHitPointMaximumReductions) {
+          target.state.hit_point_maximum_reduction = 0;
+          const maximum = window.IRON_PIT_BROWSER_STATE.effectiveMaxHp(target.state);
+          if (target.state.current_hp > maximum) target.state.current_hp = maximum;
+        }
+      }
       const names = conditionIds.map((id) => id.replaceAll("_", " ").toUpperCase()).join(", ");
       return {
         sequence, round_number: round, event_type: "feature",

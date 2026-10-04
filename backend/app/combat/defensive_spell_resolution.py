@@ -2,10 +2,12 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
+from app.combat.selectable_spell_resistance import choose_spell_resistance_type
 from app.combat.spell_modifiers import apply_spell_modifiers
 from app.combat.spell_duration_modifiers import effective_spell_duration_minutes, spend_spell_duration_modifier
 from app.combat.temporary_hp import grant_temporary_hit_points
-from app.domain.encounters import EncounterCombatant
+from app.combat.timed_conditions import apply_timed_condition
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DamageType
 from app.domain.runtime import CombatantState
 from app.domain.spell_cast_modifiers import ResourceBackedSpellDurationModifier
@@ -34,6 +36,7 @@ def resolve_defensive_spell(
     affected_states: Iterable[CombatantState] | None = None,
     *,
     duration_modifier: ResourceBackedSpellDurationModifier | None = None,
+    setup: EncounterSetup | None = None,
 ) -> BattleEvent:
     if slot_level != spell.level:
         raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
@@ -67,10 +70,35 @@ def resolve_defensive_spell(
             target.state.max_hp_bonus += spell.max_hp_increase
         if spell.current_hp_increase:
             target.state.current_hp += spell.current_hp_increase
-        for damage_type in spell.damage_resistances:
-            typed = DamageType(damage_type)
-            if typed not in target.state.temporary_damage_resistances:
-                target.state.temporary_damage_resistances.append(typed)
+        resistances = list(spell.damage_resistances)
+        if spell.selectable_resistance_types and setup is not None:
+            chosen = choose_spell_resistance_type(member, setup, spell)
+            if chosen is not None:
+                resistances.append(chosen.value)
+        if resistances and (spell.concentration or spell.share_damage_with_source):
+            apply_timed_condition(
+                target.state,
+                spell.id,
+                member.combatant_id,
+                source_effect_id=spell.id,
+                source_template=member.state.template,
+                source_is_magical=True,
+                owned_damage_resistances=[DamageType(item) for item in resistances],
+                applied_round=0,
+                expires_round=effective_duration * 10 + 1,
+                expiry_timing="source_turn_start",
+                ends_if_source_dead=spell.share_damage_with_source,
+                use_default_poison_recovery=False,
+            )
+        else:
+            for damage_type in resistances:
+                typed = DamageType(damage_type)
+                if typed not in target.state.temporary_damage_resistances:
+                    target.state.temporary_damage_resistances.append(typed)
+        if spell.share_damage_with_source and target.combatant_id != member.combatant_id:
+            target.state.damage_share_source_id = member.combatant_id
+            target.state.damage_share_range_ft = spell.share_range_ft
+            target.state.damage_share_effect_id = spell.id
         if not spell.concentration and spell.id not in target.state.active_buff_effect_ids:
             target.state.active_buff_effect_ids.append(spell.id)
     apply_spell_modifiers(
@@ -84,8 +112,10 @@ def resolve_defensive_spell(
         details.append(f"+{spell.max_hp_increase} Hit Point maximum")
     if spell.current_hp_increase:
         details.append(f"+{spell.current_hp_increase} current Hit Points")
-    if spell.damage_resistances:
-        details.append("resistance to " + ", ".join(spell.damage_resistances))
+    if spell.damage_resistances or spell.selectable_resistance_types:
+        details.append("resistance")
+    if spell.share_damage_with_source:
+        details.append(f"shared damage within {spell.share_range_ft} feet")
     details.extend(spell.condition_ids)
     details.extend(_modifier_detail(effect) for effect in spell.modifier_effects)
     if duration_modifier is not None:

@@ -57,7 +57,11 @@ def adjusted_damage_amount(
             raise ValueError("Damage cannot be negative.")
         template = target.template
         conditional = _matching_conditional_defenses(target, damage_type, source_qualifiers or set())
-        if damage_type in template.damage_immunities or DamageDefenseKind.IMMUNITY in conditional:
+        if (
+            damage_type in template.damage_immunities
+            or damage_type in target.zone_damage_immunities
+            or DamageDefenseKind.IMMUNITY in conditional
+        ):
             return 0
 
         adjusted = amount

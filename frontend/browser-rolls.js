@@ -126,7 +126,8 @@
       rolled = fixedCandidate(attack);
     } else {
       const rageBonus = window.IRON_PIT_BROWSER_RAGE?.damageBonus(attacker, attack) || 0;
-      const effective = { ...attack, damageBonus: attack.damageBonus + rageBonus };
+      const weaponFlat = window.IRON_PIT_BROWSER_MODIFIERS?.weaponDamageFlat?.(attacker, attack.weaponId || attack.id) || 0;
+      const effective = { ...attack, damageBonus: attack.damageBonus + rageBonus + weaponFlat };
       rolled = candidate(effective, critical);
       if (attacker.template.traits?.includes("savage-attacker") && attacker.feature_last_turn_keys["savage-attacker"] !== turnKey) {
         const first = rolled, second = candidate(effective, critical), useSecond = second.total > first.total;

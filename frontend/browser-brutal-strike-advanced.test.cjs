@@ -8,7 +8,7 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-modifiers.js",
+  "browser-modifier-validation.js", "browser-modifiers.js",
   "browser-brutal-strike.js",
 ]) load(file);
 

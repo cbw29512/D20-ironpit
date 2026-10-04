@@ -74,6 +74,8 @@
         map_definition: mapDefinition,
         persistent_hazards: [],
         persistent_barriers: [],
+        persistent_beneficial_zones: [],
+        suppression_zones: [],
       };
     } catch (error) { console.error("Failed to build browser encounter setup", { selection, error }); throw error; }
   }
@@ -157,6 +159,8 @@
         S().refreshStartOfTurn(member.state);
         C()?.endIfExpired(member.state, round, states);
         window.IRON_PIT_BROWSER_GRID_BARRIERS?.cleanup(setup, round);
+        window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.expire(setup, round);
+        window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.sync(setup, round);
         const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start");
         events.push(...start.events); sequence = start.sequence;
         if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) events.push(T().deathSave(sequence++, round, member));

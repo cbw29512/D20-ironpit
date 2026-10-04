@@ -11,6 +11,7 @@ const load = (name) => vm.runInThisContext(
   { filename: name },
 );
 
+load("browser-modifier-validation.js");
 load("browser-modifiers.js");
 load("browser-damage-defense-rules.js");
 load("browser-selectable-damage-resistance.js");

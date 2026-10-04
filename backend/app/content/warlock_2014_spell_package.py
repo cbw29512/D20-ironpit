@@ -73,8 +73,8 @@ _LEVEL_SEVEN_UTILITY = _spell(
     level=4, min_level=7,
 )
 
-# D&D Basic Rules 2014 / SRD 5.1 Dimension Door: 500-foot teleport. Combat
-# repositioning; no teleport-action primitive exists, so this stays unbound.
+# D&D Basic Rules 2014 / SRD 5.1 Dimension Door: 500-foot teleport with one
+# willing passenger. Bound to the shared teleport-action primitive.
 _LEVEL_EIGHT_UTILITY = _spell(
     "dimension-door", "Dimension Door", "utility", "teleport", level=4, min_level=8,
 )

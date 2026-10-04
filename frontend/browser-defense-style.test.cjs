@@ -12,6 +12,7 @@ const load = (name) => vm.runInThisContext(
 );
 
 load("browser-heroes.js");
+load("browser-modifier-validation.js");
 load("browser-modifiers.js");
 
 const template = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];

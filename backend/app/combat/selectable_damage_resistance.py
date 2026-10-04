@@ -17,13 +17,16 @@ def _average_damage(dice_count: int, dice_size: int, bonus: int = 0) -> float:
     return dice_count * (dice_size + 1) / 2 + bonus
 
 
-def _score_enemy_damage(member: EncounterCombatant, setup: EncounterSetup) -> dict[DamageType, float]:
-    rule = member.state.template.progression_features.selectable_damage_resistance
-    if rule is None:
-        return {}
-    scores = {damage_type: 0.0 for damage_type in rule.allowed_damage_types}
+def score_enemy_damage_types(
+    member: EncounterCombatant,
+    setup: EncounterSetup,
+    allowed_types: list[DamageType],
+    forbidden_qualifiers=(),
+) -> dict[DamageType, float]:
+    """Score visible opposing damage among an explicit allowed-type list."""
+    scores = {damage_type: 0.0 for damage_type in allowed_types}
     enemies = setup.monsters if member.side == "heroes" else setup.heroes
-    forbidden = set(rule.forbidden_source_qualifiers)
+    forbidden = set(forbidden_qualifiers)
 
     for enemy in enemies:
         template = enemy.state.template
@@ -66,6 +69,15 @@ def _score_enemy_damage(member: EncounterCombatant, setup: EncounterSetup) -> di
                 )
 
     return scores
+
+
+def _score_enemy_damage(member: EncounterCombatant, setup: EncounterSetup) -> dict[DamageType, float]:
+    rule = member.state.template.progression_features.selectable_damage_resistance
+    if rule is None:
+        return {}
+    return score_enemy_damage_types(
+        member, setup, list(rule.allowed_damage_types), rule.forbidden_source_qualifiers,
+    )
 
 
 def choose_damage_resistance(member: EncounterCombatant, setup: EncounterSetup) -> DamageType | None:

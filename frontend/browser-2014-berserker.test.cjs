@@ -10,7 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const name of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js",
   "browser-action-economy.js", "browser-ability-checks.js", "browser-grapple.js", "browser-timed-conditions.js",
-  "browser-exhaustion.js", "browser-modifiers.js", "browser-state.js", "browser-resources.js", "browser-rage.js",
+  "browser-exhaustion.js", "browser-modifier-validation.js", "browser-modifiers.js", "browser-state.js", "browser-resources.js", "browser-rage.js",
   "browser-barbarian2.js", "browser-barbarian3.js", "browser-rolls.js", "browser-zero-hp.js",
   "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-formation.js", "browser-frenzy-2014.js", "browser-saving-throws.js", "browser-saves.js",
   "browser-intimidating-presence-2014.js",

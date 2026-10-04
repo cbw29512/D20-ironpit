@@ -101,6 +101,7 @@ def resolve_attack_hit_damage(
     target_event_id: str | None = None,
     brutal_strike_disadvantage: bool = False,
     natural_roll: int | None = None,
+    setup=None,
 ) -> AttackHitDamageResolution:
     hp_buffer_before = defender.current_hp + defender.temporary_hp
     damage_roll, rolled_components = resolve_weapon_damage(
@@ -127,7 +128,7 @@ def resolve_attack_hit_damage(
     applied_types = {part.damage_type for part in components if part.applied_total > 0}
     outcome = apply_damage(
         defender, applied_total, critical=critical, damage_types=applied_types,
-        dice=dice, affected_states=affected_states,
+        dice=dice, affected_states=affected_states, setup=setup,
     )
     effect = attack.on_hit_save_damage
     if defender.current_hp == 0 and save_damage_caused_zero(

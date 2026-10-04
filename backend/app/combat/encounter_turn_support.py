@@ -15,12 +15,11 @@ from app.combat.d20_bonus_dice import resolve_d20_bonus_die_grant
 from app.combat.d20_bonus_die_support import choose_d20_bonus_die_action
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.frenzy_2014 import resolve_frenzy_bonus_attack
-from app.combat.friendly_save_auras import sync_friendly_save_auras
 from app.combat.healing_support import resolve_healing_support
 from app.combat.monk_bonus_attacks_2014 import resolve_monk_bonus_attacks
 from app.combat.paladin_channel_divinity_2014 import resolve_paladin_channel_support
 from app.combat.pit_policy import save_distance, target_order
-from app.combat.timed_self_buffs import choose_timed_self_buff_action, resolve_timed_self_buff
+from app.combat.encounter_turn_utility import resolve_control_support
 from app.combat.saving_throws import legal_save_action
 from app.combat.tactical_actions import resolve_defensive_tactical_grant
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -142,17 +141,10 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
             action, target = d20_bonus_choice
             events.append(resolve_d20_bonus_die_grant(sequence, round_number, member, target, action))
             sequence += 1
-        self_buff = choose_timed_self_buff_action(member, setup)
-        if self_buff is not None:
-            events.append(resolve_timed_self_buff(
-                sequence,
-                round_number,
-                member,
-                self_buff,
-                affected_states=[entry.state for entry in [*setup.heroes, *setup.monsters]],
-            ))
-            sequence += 1
-            sync_friendly_save_auras(setup)
+        control_events, sequence = resolve_control_support(
+            sequence, round_number, member, setup, dice, turn_key,
+        )
+        events.extend(control_events)
         return events, sequence
     except Exception:
         logger.exception("Failed support-action stage for %s.", member.combatant_id)

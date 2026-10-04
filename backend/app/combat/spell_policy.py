@@ -71,7 +71,7 @@ def choose_spell(
         for index, action in enumerate(caster.state.template.spell_save_actions):
             if (
                 action.action_cost == "reaction"
-                or action.concentration
+                or (action.concentration and caster.state.concentration is not None)
                 or not is_available(caster.state, action.action_cost)
             ):
                 continue

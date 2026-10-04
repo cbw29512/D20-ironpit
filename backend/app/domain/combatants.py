@@ -19,6 +19,8 @@ from app.domain.passive_modifiers import PassiveModifierGrant
 from app.domain.persistent_barriers import PersistentBarrierAction
 from app.domain.persistent_beneficial_zones import PersistentBeneficialZoneAction
 from app.domain.persistent_hazards import PersistentHazardAction
+from app.domain.suppression_zones import PersistentSuppressionZoneAction
+from app.domain.teleport_actions import TeleportAction
 from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import AttackDamageReductionReaction, DamageReactionAttack, ParryReaction, RedirectAttackReaction
@@ -101,6 +103,8 @@ class CombatantTemplate(BaseModel):
     persistent_hazard_actions: list[PersistentHazardAction] = Field(default_factory=list)
     persistent_barrier_actions: list[PersistentBarrierAction] = Field(default_factory=list)
     persistent_beneficial_zone_actions: list[PersistentBeneficialZoneAction] = Field(default_factory=list)
+    suppression_zone_actions: list[PersistentSuppressionZoneAction] = Field(default_factory=list)
+    teleport_actions: list[TeleportAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     d20_bonus_die_actions: list[D20BonusDieAction] = Field(default_factory=list)

@@ -20,6 +20,13 @@
       if (spendActionCost && !E().available(member.state, action.actionCost)) throw new Error(`${action.name} action cost is unavailable.`);
       if (action.resourceId != null && (member.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);
       if (active(member, action)) throw new Error(`${action.name} is already active.`);
+      if (options.setup && action.resourceId && String(action.resourceId).startsWith("spell-slot-")
+        && window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.verbalBlocked(member, options.setup)) {
+        throw new Error(`${action.name} cannot be cast inside a Silence effect.`);
+      }
+      if (options.turnKey && action.resourceId && String(action.resourceId).startsWith("spell-slot-")) {
+        window.IRON_PIT_BROWSER_SPELLCASTING?.markSlotSpellCast(member.state, options.turnKey);
+      }
 
       if (spendActionCost) E().spend(member.state, action.actionCost);
       if (action.resourceId != null) member.state.resources[action.resourceId] -= action.resourceCost || 1;

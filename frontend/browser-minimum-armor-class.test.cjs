@@ -8,6 +8,7 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 window.IRON_PIT_BROWSER_DEBUFF_COUNTERS = { prevented: () => false };
+load("browser-modifier-validation.js");
 load("browser-modifiers.js");
 
 const M = window.IRON_PIT_BROWSER_MODIFIERS;

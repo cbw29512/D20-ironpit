@@ -10,6 +10,7 @@ const load = (name) => vm.runInThisContext(
   fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name },
 );
 
+load("browser-modifier-validation.js");
 load("browser-modifiers.js");
 load("browser-zero-hp-replacement.js");
 load("browser-zero-hp.js");

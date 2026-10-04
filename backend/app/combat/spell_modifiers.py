@@ -87,12 +87,27 @@ def apply_spell_modifiers(
             )
         for target_id, target in targets:
             # Finite nonconcentration modifiers need a source-owned lifetime too.
+            # Preserve owned defenses already attached to this same source-owned effect.
             if not spell.concentration and spell.modifier_effects and duration_rounds > 0:
+                existing = next(
+                    (
+                        effect for effect in target.timed_effects
+                        if effect.effect_id == spell.id
+                        and effect.source_id == source_id
+                        and effect.source_effect_id == spell.id
+                    ),
+                    None,
+                )
                 apply_timed_condition(
                     target, spell.id, source_id, source_effect_id=spell.id,
                     source_template=owner.template, source_is_magical=True,
                     applied_round=round_number, expires_round=expires_round,
                     expiry_timing="source_turn_start", use_default_poison_recovery=False,
+                    owned_damage_resistances=list(existing.owned_damage_resistances) if existing else [],
+                    owned_debuff_counters=list(existing.owned_debuff_counters) if existing else [],
+                    owned_movement_mode_grants=list(existing.owned_movement_mode_grants) if existing else [],
+                    ends_if_source_dead=existing.ends_if_source_dead if existing else False,
+                    ends_if_source_incapacitated=existing.ends_if_source_incapacitated if existing else False,
                 )
             if spell.movement_mode_grants:
                 apply_timed_condition(

@@ -28,6 +28,7 @@ window.IRON_PIT_BROWSER_BARBARIAN2 = { dangerSenseAdvantage: () => 0 };
 window.IRON_PIT_BROWSER_DODGE = { dexSaveAdvantageSources: () => 0 };
 window.IRON_PIT_BROWSER_EXHAUSTION = { saveDisadvantage: () => 0, d20Modifier: () => 0 };
 load("browser-opening-modifiers.js");
+load("browser-modifier-validation.js");
 load("browser-modifiers.js");
 load("browser-defensive-modifier-rules.js");
 load("browser-rolls.js");

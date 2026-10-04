@@ -12,6 +12,7 @@ from app.combat.condition_removal_policy import (
     target_allowed,
 )
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
+from app.combat.restoration_riders import apply_restoration_riders
 from app.combat.timed_condition_lifecycle import remove_effect_group, remove_effect_instance
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent, ConditionRemovalAction
@@ -73,8 +74,17 @@ def resolve_condition_removal(
             if item is None or item.current_uses < cost:
                 raise ValueError(f"Required resource {resource_id} is unavailable.")
             item.current_uses -= cost
-        for condition_id in condition_ids:
+        rider_ids = {
+            "exhaustion",
+            "curse",
+            "ability-score-reduction",
+            "hit-point-maximum-reduction",
+        }
+        ordinary = [item for item in condition_ids if item not in rider_ids]
+        for condition_id in ordinary:
             remove_condition(target, condition_id)
+        if any(item in rider_ids for item in condition_ids):
+            apply_restoration_riders(target, action, condition_ids)
         names = ", ".join(condition_id.replace("_", " ").title() for condition_id in condition_ids)
         return BattleEvent(
             sequence=sequence,

@@ -7,7 +7,7 @@ global.window = globalThis;
 
 try {
   for (const file of ["browser-heroes.js", "browser-opening-modifiers.js", "browser-debuff-counters.js",
-    "browser-condition-immunity.js", "browser-condition-rules.js", "browser-modifiers.js",
+    "browser-condition-immunity.js", "browser-condition-rules.js", "browser-modifier-validation.js", "browser-modifiers.js",
     "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-spell-modifiers.js",
     "browser-precombat-spells.js", "browser-action-economy.js", "browser-resources.js",
     "browser-spellcasting.js", "browser-post-hit-damage.js", "browser-rolls.js"]) {

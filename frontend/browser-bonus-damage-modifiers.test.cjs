@@ -27,6 +27,7 @@ window.IRON_PIT_BROWSER_ATTACK = {
   },
 };
 
+load("browser-modifier-validation.js");
 load("browser-modifiers.js");
 load("browser-rolls.js");
 load("browser-hit-damage.js");

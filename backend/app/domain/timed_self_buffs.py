@@ -15,12 +15,30 @@ logger = logging.getLogger(__name__)
 
 
 class TimedEmanationDamage(BaseModel):
-    """Fixed typed damage emitted by an active timed effect at a declared turn-start window."""
+    """Typed emanation damage emitted by an active timed effect at a declared window."""
 
-    trigger: Literal["enemy_turn_start"] = "enemy_turn_start"
+    trigger: Literal["enemy_turn_start", "enter_or_start"] = "enemy_turn_start"
     radius_ft: int = Field(ge=1, le=120)
-    fixed_damage: int = Field(ge=1, le=500)
+    fixed_damage: int = Field(default=0, ge=0, le=500)
+    dice_count: int = Field(default=0, ge=0, le=40)
+    dice_size: int = Field(default=8, ge=2, le=100)
     damage_type: DamageType
+    save_ability: str | None = None
+    save_dc: int | None = Field(default=None, ge=1, le=40)
+    success_damage: Literal["none", "half"] = "none"
+    speed_multiplier: float = Field(default=1.0, gt=0.0, le=1.0)
+
+    @model_validator(mode="after")
+    def validate_emanation(self) -> "TimedEmanationDamage":
+        try:
+            if self.fixed_damage <= 0 and self.dice_count <= 0:
+                raise ValueError("Emanation damage requires fixed damage or dice.")
+            if (self.save_ability is None) != (self.save_dc is None):
+                raise ValueError("Emanation save damage requires both save ability and DC.")
+            return self
+        except Exception:
+            logger.exception("Timed emanation damage schema validation failed.")
+            raise
 
 
 class TimedHostileConditionAura(BaseModel):

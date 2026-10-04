@@ -10,8 +10,10 @@ from app.combat.grid_pathing_support import movement_step_cost_ft
 from app.combat.grid_reaction_movement_support import approaches_fear_source, distance_to_position
 from app.combat.grapple import speed_is_zero
 from app.combat.opportunity_attacks import MovementSource, resolve_opportunity_attack
+from app.combat.emanation_enter import resolve_emanation_entries
 from app.combat.persistent_beneficial_zone_effects import sync_persistent_beneficial_zones
 from app.combat.persistent_hazards import resolve_persistent_hazard_entries
+from app.combat.suppression_zone_effects import sync_suppression_zone_effects
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -148,6 +150,16 @@ def move_toward_on_grid(
                 turn_key or f"{round_number}:{mover.combatant_id}",
             )
             events.extend(hazard_events)
+            sync_suppression_zone_effects(setup, round_number)
+            enter_events, sequence = resolve_emanation_entries(
+                sequence,
+                round_number,
+                mover,
+                setup,
+                dice,
+                turn_key or f"{round_number}:{mover.combatant_id}",
+            )
+            events.extend(enter_events)
             if mover.state.is_dead or mover.state.is_unconscious:
                 return events, sequence, last_movement
             if after_distance <= desired_distance_ft or mover.state.movement_remaining_ft <= 0:

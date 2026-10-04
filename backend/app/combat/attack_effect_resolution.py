@@ -66,6 +66,7 @@ def resolve_attack_effects(
     sneak_attack_ally_available: bool,
     brutal_strike_disadvantage: int,
     natural_roll: int | None = None,
+    setup=None,
 ) -> AttackEffectResolution:
     """Resolve shared on-hit/on-miss effects after the final attack outcome is known."""
     try:
@@ -87,6 +88,7 @@ def resolve_attack_effects(
             target_event_id=actual_event_id,
             brutal_strike_disadvantage=brutal_strike_disadvantage,
             natural_roll=natural_roll,
+            setup=setup,
         )
         result.damage_roll = hit_damage.damage_roll
         result.damage_components = hit_damage.damage_components

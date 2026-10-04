@@ -58,10 +58,19 @@
       for (const { targetId, state } of targets) {
         // Existing timed groups own cleanup; no Sanctuary-specific expiration path.
         if (!spell.concentration && (spell.modifierEffects || []).length && durationRounds > 0) {
+          const existing = (state.timed_effects || []).find((effect) =>
+            effect.effect_id === spell.id
+            && effect.source_id === sourceId
+            && (effect.source_effect_id || null) === spell.id);
           T().apply(state, spell.id, sourceId, {
             sourceEffectId: spell.id, sourceTemplate: owner.template, sourceIsMagical: true,
             appliedRound: roundNumber, expiresRound, expiryTiming: "source_turn_start",
             useDefaultPoisonRecovery: false,
+            ownedDamageResistances: existing?.owned_damage_resistances || [],
+            ownedDebuffCounters: existing?.owned_debuff_counters || [],
+            ownedMovementModeGrants: existing?.owned_movement_mode_grants || [],
+            endsIfSourceDead: Boolean(existing?.ends_if_source_dead),
+            endsIfSourceIncapacitated: Boolean(existing?.ends_if_source_incapacitated),
           });
         }
         if ((spell.movementModeGrants || []).length) {

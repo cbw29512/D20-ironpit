@@ -45,6 +45,10 @@
   function legalAction(action, target, distance) {
     if (distance > action.range) return false;
     if (action.requiresTargetHearing && target.state.active_effect_ids.includes("deafened")) return false;
+    if ((action.requiredTargetCreatureTypes || []).length) {
+      const type = String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase();
+      if (!(action.requiredTargetCreatureTypes || []).some((kind) => String(kind).toLowerCase() === type)) return false;
+    }
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
   }
 
@@ -96,7 +100,19 @@
       damageComponents = resolved.components; damageRoll = resolved.roll;
       if (resolved.appliedTotal) {
         const affectedStates = states(options.setup);
-        damageOutcome = A().applyDamage(target.state, resolved.appliedTotal, false, resolved.damageTypes, affectedStates);
+        let incoming = resolved.appliedTotal;
+        let appliedTotal = incoming;
+        if (action.minimumRemainingHp) {
+          appliedTotal = Math.min(appliedTotal, Math.max(0, target.state.current_hp - action.minimumRemainingHp));
+        }
+        if (appliedTotal) {
+          damageOutcome = A().applyDamage(target.state, appliedTotal, false, resolved.damageTypes, affectedStates, options.setup);
+        }
+        if (!save.succeeded && action.reduceHitPointMaximumOnFailedSave && incoming) {
+          target.state.hit_point_maximum_reduction = (target.state.hit_point_maximum_reduction || 0) + incoming;
+          const maximum = S().effectiveMaxHp(target.state);
+          if (target.state.current_hp > maximum) target.state.current_hp = maximum;
+        }
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
       }
     }
@@ -112,7 +128,19 @@
       damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
       if (applied) {
         const affectedStates = states(options.setup);
-        damageOutcome = A().applyDamage(target.state, applied, false, [action.damageType], affectedStates);
+        let incoming = applied;
+        let appliedTotal = incoming;
+        if (action.minimumRemainingHp) {
+          appliedTotal = Math.min(appliedTotal, Math.max(0, target.state.current_hp - action.minimumRemainingHp));
+        }
+        if (appliedTotal) {
+          damageOutcome = A().applyDamage(target.state, appliedTotal, false, [action.damageType], affectedStates, options.setup);
+        }
+        if (!save.succeeded && action.reduceHitPointMaximumOnFailedSave && incoming) {
+          target.state.hit_point_maximum_reduction = (target.state.hit_point_maximum_reduction || 0) + incoming;
+          const maximum = S().effectiveMaxHp(target.state);
+          if (target.state.current_hp > maximum) target.state.current_hp = maximum;
+        }
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
       }
     }

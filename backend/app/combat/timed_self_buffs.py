@@ -27,6 +27,8 @@ def resolve_timed_self_buff(
     *,
     spend_action_cost: bool = True,
     affected_states=None,
+    setup=None,
+    turn_key: str | None = None,
 ) -> BattleEvent:
     """Spend source-defined economy/resources and apply one source-owned timed buff."""
     try:
@@ -37,6 +39,13 @@ def resolve_timed_self_buff(
             raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
         if timed_self_buff_active(member, action):
             raise ValueError(f"{action.name} is already active.")
+        if setup is not None:
+            from app.combat.suppression_zone_geometry import verbal_casting_blocked
+            if action.resource_id and action.resource_id.startswith("spell-slot-") and verbal_casting_blocked(member, setup):
+                raise ValueError(f"{action.name} cannot be cast inside a Silence effect.")
+        if turn_key and action.resource_id and action.resource_id.startswith("spell-slot-"):
+            from app.combat.spellcasting import mark_slot_spell_cast
+            mark_slot_spell_cast(member.state, turn_key)
 
         if spend_action_cost:
             spend(member.state, action.action_cost)

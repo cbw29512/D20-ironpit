@@ -6,6 +6,11 @@ from app.combat.cover_modifiers import strongest_cover_bonus
 from app.combat.debuff_counters import debuff_is_countered
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import d20_modifier, speed_after_exhaustion
+from app.combat.modifier_flat_bonuses import (
+    attack_roll_flat_bonus,
+    saving_throw_flat_bonus,
+    weapon_damage_flat_bonus,
+)
 from app.domain.events import DiceRoll
 from app.domain.damage_sources import DamageSourceQualifier
 from app.domain.modifiers import CombatModifier, ModifierKind
@@ -77,21 +82,6 @@ def effective_armor_class(state: CombatantState) -> int:
     )
     return max(0, adjusted, minimum)
 
-
-def attack_roll_flat_bonus(state: CombatantState, weapon_id: str) -> int:
-    return sum(
-        item.flat_bonus for item in state.active_modifiers
-        if item.kind is ModifierKind.ATTACK_ROLL_FLAT and item.weapon_id == weapon_id
-    )
-
-
-def saving_throw_flat_bonus(state: CombatantState, ability: str | None = None) -> int:
-    stacking_bonus = sum(
-        item.flat_bonus for item in state.active_modifiers
-        if item.kind is ModifierKind.SAVING_THROW_FLAT
-        and (item.save_ability is None or ability is None or item.save_ability == ability)
-    )
-    return stacking_bonus + strongest_cover_bonus(state, ModifierKind.COVER_SAVING_THROW_FLAT, ability)
 
 def attack_damage_source_qualifiers(
     state: CombatantState, attack: WeaponAttack,

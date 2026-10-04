@@ -17,7 +17,8 @@ CONDITION_PRIORITY = {
     "blinded": 1, "restrained": 1,
     "poisoned": 2, "frightened": 2, "charmed": 2,
     "deafened": 3, "grappled": 3,
-    "prone": 4, "exhaustion": 4,
+    "prone": 4, "exhaustion": 4, "curse": 4,
+    "ability-score-reduction": 5, "hit-point-maximum-reduction": 5,
 }
 
 
@@ -67,13 +68,19 @@ def _effect_allows_removal(target: EncounterCombatant, condition_id: str, action
 def removable(target: EncounterCombatant, action: ConditionRemovalAction) -> list[str]:
     try:
         allowed = set(action.removable_conditions)
-        return sorted(
-            (
-                effect for effect in set(target.state.active_effect_ids)
-                if effect in allowed and _effect_allows_removal(target, effect, action.id)
-            ),
-            key=lambda effect: (CONDITION_PRIORITY.get(effect, 9), effect),
-        )
+        effects = [
+            effect for effect in set(target.state.active_effect_ids)
+            if effect in allowed and _effect_allows_removal(target, effect, action.id)
+        ]
+        if action.reduces_exhaustion_levels and target.state.exhaustion_level:
+            effects.append("exhaustion")
+        if (action.removes_curses or action.removes_all_curses) and target.state.active_curses:
+            effects.append("curse")
+        if action.removes_ability_score_reductions and target.state.ability_score_reductions:
+            effects.append("ability-score-reduction")
+        if action.removes_hit_point_maximum_reductions and target.state.hit_point_maximum_reduction:
+            effects.append("hit-point-maximum-reduction")
+        return sorted(effects, key=lambda effect: (CONDITION_PRIORITY.get(effect, 9), effect))
     except Exception:
         logger.exception("Failed removal eligibility for %s (%s).", target.combatant_id, action.id)
         raise

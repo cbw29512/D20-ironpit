@@ -44,6 +44,9 @@ def resolve_spell(
             raise ValueError("Reaction spells require their own trigger window.")
         if not is_available(caster.state, spell.action_cost):
             raise ValueError(f"{spell.action_cost} is unavailable for {spell.name}.")
+        from app.combat.suppression_zone_geometry import verbal_casting_blocked
+        if getattr(spell, "verbal_component", True) and verbal_casting_blocked(caster, setup):
+            raise ValueError(f"{spell.name} cannot be cast inside a Silence effect.")
 
         remaining = None
         if choice.alternate_cast is not None:

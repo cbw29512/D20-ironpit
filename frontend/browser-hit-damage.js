@@ -163,7 +163,7 @@
       damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type),
     )];
     let damageOutcome = A().applyDamage(
-      defender, appliedTotal, critical, appliedTypes, options.affectedStates || [],
+      defender, appliedTotal, critical, appliedTypes, options.affectedStates || [], options.setup || null,
     );
     const effect = attack.onHitSaveDamage;
     if (defender.current_hp === 0 && saveDamageCausedZero(

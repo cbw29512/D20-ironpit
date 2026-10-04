@@ -67,6 +67,10 @@ def test_2014_greater_restoration_removes_charm_or_petrify_only() -> None:
     assert spell.resource_costs == {"spell-slot-5": 1}
     assert spell.expends_spell_slot is True
     assert "exhaustion" not in spell.removable_conditions
+    assert spell.reduces_exhaustion_levels == 1
+    assert spell.removes_curses is True
+    assert spell.removes_ability_score_reductions is True
+    assert spell.removes_hit_point_maximum_reductions is True
 
 
 def test_2014_life_cleric_binds_prepared_supported_spells_at_slice_entry() -> None:
@@ -87,20 +91,20 @@ def test_2014_life_cleric_binds_prepared_supported_spells_at_slice_entry() -> No
     assert "heal" in level_nineteen
 
 
-def test_2014_life_cleric_does_not_bind_unsupported_named_spells() -> None:
+def test_2014_life_cleric_binds_remaining_named_combat_spells() -> None:
     ids = runtime_binding_ids(build_seraphine_dawnshield_2014(20))
 
-    assert "warding-bond" not in ids
-    assert "hold-person" not in ids
-    assert "silence" not in ids
-    assert "spirit-guardians" not in ids
-    assert "protection-from-energy" not in ids
-    assert "remove-curse" not in ids
-    assert "harm" not in ids
+    assert "warding-bond" in ids
+    assert "hold-person" in ids
+    assert "silence" in ids
+    assert "spirit-guardians" in ids
+    assert "protection-from-energy" in ids
+    assert "remove-curse" in ids
+    assert "harm" in ids
 
 
-def test_2014_paladin_magic_weapon_stays_unbound() -> None:
-    assert "magic-weapon" not in runtime_binding_ids(build_aurelia_brightshield_2014(20))
+def test_2014_paladin_binds_magic_weapon() -> None:
+    assert "magic-weapon" in runtime_binding_ids(build_aurelia_brightshield_2014(20))
 
 
 def test_2014_warlock_utilities_are_source_backed_arena_out_of_scope() -> None:
@@ -112,4 +116,4 @@ def test_2014_warlock_utilities_are_source_backed_arena_out_of_scope() -> None:
     assert by_id["hallucinatory-terrain"].required_capabilities == ["arena-out-of-scope"]
     assert by_id["prestidigitation"].required_capabilities == ["arena-out-of-scope"]
     assert by_id["dimension-door"].required_capabilities == ["teleport"]
-    assert "dimension-door" not in runtime_binding_ids(build_varek_ashenmark_2014(20))
+    assert "dimension-door" in runtime_binding_ids(build_varek_ashenmark_2014(20))

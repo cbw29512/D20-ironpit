@@ -93,6 +93,8 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
             persistent_hazard_actions=(
                 [guardian_of_faith_2014(save_dc)] if level >= 7 else []
             ),
+            timed_self_buff_actions=list(bound.timed_self_buffs),
+            suppression_zone_actions=list(bound.suppression_zones),
             defensive_spell_actions=[
                 bless_2014(),
                 shield_of_faith_2014(),

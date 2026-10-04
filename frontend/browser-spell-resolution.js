@@ -21,6 +21,9 @@
       FX().scaledSpell(spell, choice.slotLevel);
       if (spell.actionCost === "reaction") throw new Error("Reaction spells require their trigger window.");
       if (!E().available(caster.state, spell.actionCost)) throw new Error(`${spell.actionCost} is unavailable for ${spell.name}.`);
+      if ((spell.verbalComponent !== false) && window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.verbalBlocked(caster, setup)) {
+        throw new Error(`${spell.name} cannot be cast inside a Silence effect.`);
+      }
 
       let remaining = null;
       if (choice.alternateCast) {

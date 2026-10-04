@@ -5,6 +5,7 @@ from app.content.monster_equipment import build_light_crossbow
 from app.content.sorcerer_draconic_2014_spells import burning_hands_2014, fireball_2014, poison_spray_2014, shatter_2014
 from app.content.shared_effect_removal_spells_2014 import dispel_magic_2014
 from app.content.shared_damage_spells_2014 import flame_strike_2014
+from app.content.shared_teleport_spells_2014 import dimension_door_2014
 from app.content.warlock_2014_progression import warlock_2014_level
 from app.content.warlock_2014_spells import (
     circle_of_death_2014,
@@ -144,6 +145,7 @@ def build_varek_ashenmark_2014(level: int) -> CombatantTemplate:
                 max_uses=1,
             )] if level >= 20 else []),
         ],
+        teleport_actions=([dimension_door_2014()] if level >= 8 else []),
         effect_removal_actions=([dispel_magic_2014("charisma")] if level >= 6 else []),
         visual=VisualLoadout(armor="leather-armor", main_hand="arcane-focus", body_style="humanoid"),
         source="D&D Basic Rules 2014: Human; Sage; Warlock; Fiend Patron; Equipment",

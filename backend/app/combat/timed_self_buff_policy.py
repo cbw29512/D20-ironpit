@@ -6,6 +6,7 @@ from typing import Literal
 from app.combat.action_economy import is_available
 from app.combat.condition_rules import has_condition
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.suppression_zone_geometry import verbal_casting_blocked
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 
@@ -124,6 +125,12 @@ def choose_timed_self_buff_action(
                 )
                 and not timed_self_buff_active(member, action)
                 and (not action.concentration or member.state.concentration is None)
+                and not (
+                    action.resource_id
+                    and action.resource_id.startswith("spell-slot-")
+                    and setup is not None
+                    and verbal_casting_blocked(member, setup)
+                )
                 and _friendly_aura_is_relevant(member, action, setup)
                 and _hostile_aura_is_relevant(member, action, setup)
             ):

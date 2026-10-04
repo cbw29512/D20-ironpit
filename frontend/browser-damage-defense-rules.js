@@ -19,7 +19,7 @@
 
   function adjustedDamage(target, amount, type, allowVulnerability = true, sourceQualifiers = [], ignoreResistance = false) {
     const conditional = conditionalKinds(target, type, sourceQualifiers);
-    if (target.template.damage_immunities?.includes(type) || conditional.has("immunity")) return 0;
+    if (target.template.damage_immunities?.includes(type) || (target.zone_damage_immunities || []).includes(type) || conditional.has("immunity")) return 0;
     let value = amount;
     const timed = window.IRON_PIT_BROWSER_TIMED;
     const conditions = window.IRON_PIT_BROWSER_CONDITION_RULES;

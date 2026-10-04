@@ -56,6 +56,8 @@
         && (action.resourceId == null || (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1))
         && !active(member, action)
         && (!action.concentration || !member.state.concentration)
+        && !(action.resourceId && String(action.resourceId).startsWith("spell-slot-")
+          && setup && window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.verbalBlocked(member, setup))
         && friendlyAuraRelevant(member, action, setup)
         && hostileAuraRelevant(member, action, setup));
       choices.sort((a, b) => (b.priority || 0) - (a.priority || 0));

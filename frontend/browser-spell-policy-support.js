@@ -123,7 +123,10 @@
       && target.state.current_hp > 0 && S().distance(caster, target) <= range
       && (!window.IRON_PIT_BROWSER_GRID_BARRIERS || window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(caster, target, setup))
       && (!action.requiresTargetHearing || !target.state.active_effect_ids.includes("deafened"))
-      && (!action.requiresTargetSight || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(caster.state, target.state)));
+      && (!action.requiresTargetSight || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(caster.state, target.state))
+      && (!(action.requiredTargetCreatureTypes || []).length
+        || (action.requiredTargetCreatureTypes || []).some((kind) =>
+          String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase() === String(kind).toLowerCase())));
   }
 
   window.IRON_PIT_BROWSER_SPELL_POLICY_SUPPORT = {

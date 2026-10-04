@@ -11,7 +11,8 @@
 
   function chooseActionAtSlot(caster, setup, action, castLevel, protectedAllyIds = [], alternateCast = null) {
     try {
-      if (!action || action.actionCost === "reaction" || !E().available(caster.state, action.actionCost)) return null;
+      if (!action || action.actionCost === "reaction" || (action.concentration && caster.state.concentration)
+        || !E().available(caster.state, action.actionCost)) return null;
       const scaled = H().scaledSpell(action, castLevel);
       const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
       if (action.area) {
@@ -51,8 +52,9 @@
       legal.sort((a, b) => O().saveSpell(b, scaled) - O().saveSpell(a, scaled)
         || a.state.current_hp - b.state.current_hp || a.combatant_id.localeCompare(b.combatant_id));
       const target = legal[0];
+      const control = action.failedSaveTimedEffect ? Math.max(8, target.state.current_hp * 0.35) : 0;
       return { action, slotLevel: castLevel, targetIds: [target.combatant_id],
-        placement: null, expectedDamage: O().saveSpell(target, scaled), hp: target.state.current_hp,
+        placement: null, expectedDamage: O().saveSpell(target, scaled) + control, hp: target.state.current_hp,
         rangeModifier: H().availableRangeModifier(caster.state, action.range, S().distance(caster, target)),
         alternateCast };
     } catch (error) {
@@ -65,7 +67,8 @@
     try {
       const candidates = [], members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
       for (const [index, action] of (caster.state.template.spell_save_actions || []).entries()) {
-        if (action.actionCost === "reaction" || action.concentration || !E().available(caster.state, action.actionCost)) continue;
+        if (action.actionCost === "reaction" || (action.concentration && caster.state.concentration)
+          || !E().available(caster.state, action.actionCost)) continue;
         for (const { castLevel, alternateCast } of H().castOptions(caster, action, turnKey)) {
           const scaled = H().scaledSpell(action, castLevel);
           if (action.area) {
@@ -102,7 +105,8 @@
           }
           const castRange = H().effectiveRange(caster.state, action.range);
           for (const target of H().legalSingleTargets(caster, setup, action, castRange)) {
-            candidates.push({ action, index, score: O().saveSpell(target, scaled), slotLevel: castLevel,
+            const control = action.failedSaveTimedEffect ? Math.max(8, target.state.current_hp * 0.35) : 0;
+            candidates.push({ action, index, score: O().saveSpell(target, scaled) + control, slotLevel: castLevel,
               targetIds: [target.combatant_id], placement: null, hp: target.state.current_hp,
               rangeModifier: H().availableRangeModifier(caster.state, action.range, S().distance(caster, target)),
               alternateCast });

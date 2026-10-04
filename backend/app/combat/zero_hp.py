@@ -142,6 +142,7 @@ def apply_damage(
     damage_types: set[DamageType] | None = None,
     dice: DiceProvider | None = None,
     affected_states: list[CombatantState] | None = None,
+    setup=None,
 ) -> ZeroHpOutcome:
     """Apply Temporary HP, Concentration, and SRD 5.2.1 zero-HP lifecycle rules."""
     try:
@@ -155,30 +156,36 @@ def apply_damage(
         amount = _after_temporary_hp(state, amount)
         amount, _ = apply_replacement_form_damage(state, amount)
         if state.current_hp == 0:
-            return _finish_damage(state, _damage_at_zero(state, incoming, critical=critical), incoming, dice, affected_states)
-        if amount == 0:
-            return _finish_damage(state, "damaged", incoming, dice, affected_states)
-        hp_before = state.current_hp
-        state.current_hp = max(0, hp_before - amount)
-        if state.current_hp > 0:
-            return _finish_damage(state, "damaged", incoming, dice, affected_states)
-        if consume_zero_hp_replacement(state):
-            return _finish_damage(state, "zero_hp_replacement", incoming, dice, affected_states)
-        if resolve_undead_fortitude(
-            state, incoming, types, critical=critical, dice=dice,
-        ):
-            return _finish_damage(state, "undead_fortitude", incoming, dice, affected_states)
-        if state.template.kind == "monster":
-            return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
-
-        remaining_damage = max(0, amount - hp_before)
-        if remaining_damage >= effective_max_hp(state):
-            return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
-        if resolve_effect_bound_survival_save(state, dice):
-            return _finish_damage(state, "survival_save", incoming, dice, affected_states)
-        if use_relentless_endurance(state, remaining_damage):
-            return _finish_damage(state, "relentless_endurance", incoming, dice, affected_states)
-        return _finish_damage(state, _mark_unconscious(state), incoming, dice, affected_states)
+            outcome = _finish_damage(state, _damage_at_zero(state, incoming, critical=critical), incoming, dice, affected_states)
+        elif amount == 0:
+            outcome = _finish_damage(state, "damaged", incoming, dice, affected_states)
+        else:
+            hp_before = state.current_hp
+            state.current_hp = max(0, hp_before - amount)
+            if state.current_hp > 0:
+                outcome = _finish_damage(state, "damaged", incoming, dice, affected_states)
+            elif consume_zero_hp_replacement(state):
+                outcome = _finish_damage(state, "zero_hp_replacement", incoming, dice, affected_states)
+            elif resolve_undead_fortitude(
+                state, incoming, types, critical=critical, dice=dice,
+            ):
+                outcome = _finish_damage(state, "undead_fortitude", incoming, dice, affected_states)
+            elif state.template.kind == "monster":
+                outcome = _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
+            else:
+                remaining_damage = max(0, amount - hp_before)
+                if remaining_damage >= effective_max_hp(state):
+                    outcome = _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
+                elif resolve_effect_bound_survival_save(state, dice):
+                    outcome = _finish_damage(state, "survival_save", incoming, dice, affected_states)
+                elif use_relentless_endurance(state, remaining_damage):
+                    outcome = _finish_damage(state, "relentless_endurance", incoming, dice, affected_states)
+                else:
+                    outcome = _finish_damage(state, _mark_unconscious(state), incoming, dice, affected_states)
+        if setup is not None and incoming > 0:
+            from app.combat.damage_share import resolve_damage_share_for_state
+            resolve_damage_share_for_state(state, incoming, setup, dice)
+        return outcome
     except ValueError:
         raise
     except Exception as exc:
