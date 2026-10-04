@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.action_economy import spend
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_combat_turn import resolve_combat_turn
 from app.combat.landing_offense_policy import decide_post_move_offense, melee_can_land_now, weapon_mean_damage
@@ -133,6 +134,17 @@ def test_highest_damage_melee_wins_among_melee_options() -> None:
     pick = decide_post_move_offense(attacker, _setup(attacker, target), "1:monster")
     assert pick.family == "standard-attack"
     assert pick.payload[1].id == "test-bite"
+
+
+def test_spent_action_does_not_choose_another_attack() -> None:
+    attacker = _member(_caster_monster(), "monster", "monsters", 0)
+    target = _member(build_commoner(), "hero", "heroes", 5)
+    begin_turn(attacker.state)
+    spend(attacker.state, "action")
+    setup = _setup(attacker, target)
+    assert melee_can_land_now(attacker, setup) is True
+    pick = decide_post_move_offense(attacker, setup, "1:monster")
+    assert pick.family == "dodge"
 
 
 def test_no_landable_option_defaults_to_dodge() -> None:

@@ -68,7 +68,7 @@ def resolve_post_move_action(events, sequence, round_number, attacker, target, s
             )
             events.extend(area_events)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-        if pick.family == "attack-action":
+        if pick.family == "attack-action" and is_available(attacker.state, "action"):
             action_events, sequence = resolve_attack_action(sequence, round_number, attacker, setup, dice)
             events.extend(action_events)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)

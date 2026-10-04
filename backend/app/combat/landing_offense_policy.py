@@ -4,6 +4,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 
+from app.combat.action_economy import is_available
 from app.combat.area_save_actions import choose_area_save
 from app.combat.area_weapon_attacks import choose_area_weapon_attack
 from app.combat.attack_action_choices import attack_choice
@@ -116,6 +117,8 @@ def decide_post_move_offense(
 ) -> OffensePick:
     """Choose the landable Action family under the shared landing-damage rule."""
     try:
+        if not is_available(attacker.state, "action"):
+            return OffensePick("dodge", 0.0)
         if melee_can_land_now(attacker, setup):
             if attack_action_melee_legal(attacker, setup):
                 return OffensePick("attack-action", _attack_action_damage(attacker, setup))
