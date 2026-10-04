@@ -7,6 +7,10 @@ on:
         description: Netlify deploy id to publish to ironpit.netlify.app
         required: true
         default: "6ac22aac2d2a1800082d33b1"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/publish-netlify-production.yml"
 
 jobs:
   publish:
@@ -17,7 +21,7 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
-          DEPLOY_ID: ${{ inputs.deploy_id }}
+          DEPLOY_ID: ${{ github.event.inputs.deploy_id || '6ac22aac2d2a1800082d33b1' }}
           LOCKED_DEPLOY_ID: "6ab2a3c145dcad00084404cc"
         run: |
           set -euo pipefail
