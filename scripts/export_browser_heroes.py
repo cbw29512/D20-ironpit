@@ -490,6 +490,14 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "condition_immunities": list(template.condition_immunities),
             "wearing_metal_armor": template.wearing_metal_armor,
         "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
+        "environmentContextReactions": [
+            {
+                "contextTag": item.context_tag,
+                "attackRollDisadvantage": item.attack_roll_disadvantage,
+                "abilityCheckDisadvantage": item.ability_check_disadvantage,
+            }
+            for item in template.environment_context_reactions
+        ],
         "timed_self_buff_actions": [_timed_self_buff(item) for item in template.timed_self_buff_actions],
         "attack_action_weapon_buffs": [
             {
