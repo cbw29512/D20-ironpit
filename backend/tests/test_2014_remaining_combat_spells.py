@@ -12,6 +12,7 @@ from app.combat.spell_save_effect_resolution import compile_spell_save_action
 from app.combat.state import build_combatant_state
 from app.combat.suppression_zone_cast import cast_suppression_zone, choose_suppression_zone_center
 from app.combat.suppression_zone_geometry import verbal_casting_blocked
+from app.combat.teleport_policy import choose_teleport_action
 from app.combat.teleport_resolution import resolve_teleport
 from app.combat.timed_self_buff_policy import choose_timed_self_buff_action
 from app.combat.timed_self_buffs import resolve_timed_self_buff
@@ -29,6 +30,8 @@ from app.domain.combatants import ResourceDefinition
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
 from app.combat.spell_choice import SpellChoice
+from app.domain.spell_cast_modifiers import ResourceBackedSpellRangeModifier
+from app.domain.spells import SpellSaveAction
 from app.domain.weapons_base import DamageType
 
 
@@ -318,3 +321,32 @@ def test_2014_dimension_door_teleports_or_fails_in_occupied_space() -> None:
     assert caster.state.position == GridPosition(x=7, y=2)
     assert caster.state.current_hp == before - 24
     assert "fails in an occupied space" in failed[0].description
+    assert choose_teleport_action(caster, setup, "1:caster-c") is None
+
+
+def test_compiled_save_action_applies_distant_spell_range() -> None:
+    spell = SpellSaveAction(
+        id="finger-of-death",
+        name="Finger of Death",
+        level=7,
+        range_ft=60,
+        save_ability="constitution",
+        dc=15,
+        damage_dice_count=7,
+        damage_dice_size=8,
+        damage_type=DamageType.NECROTIC,
+        success_damage="half",
+    )
+    action = compile_spell_save_action(SpellChoice(
+        spell,
+        7,
+        ("target",),
+        range_modifier=ResourceBackedSpellRangeModifier(
+            id="distant-spell",
+            name="Distant Spell",
+            resource_id="sorcery-points",
+            range_multiplier=2,
+        ),
+    ))
+    assert action.range_ft == 120
+    assert legal_save_action(action, _member(build_commoner(), "target", "monsters"), 80) is True

@@ -20,9 +20,10 @@
   function saveAction(choice) {
     try {
       const spell = scaledSpell(choice.action, choice.slotLevel);
+      const rangeMultiplier = choice.rangeModifier?.rangeMultiplier || 1;
       return {
         id: spell.id, name: spell.name, saveAbility: spell.saveAbility, dc: spell.dc,
-        range: spell.range + (spell.areaRadius || 0),
+        range: (spell.range + (spell.areaRadius || 0)) * rangeMultiplier,
         damageDiceCount: spell.damageDiceCount,
         damageDiceSize: spell.damageDiceSize, damageBonus: spell.damageBonus || 0,
         damageType: spell.damageType, successDamage: spell.successDamage || "none",

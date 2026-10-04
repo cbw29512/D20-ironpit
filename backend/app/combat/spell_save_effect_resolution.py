@@ -26,7 +26,8 @@ def compile_spell_save_action(choice: SpellChoice) -> SavingThrowAction:
     """Compile one save spell choice into the universal SavingThrowAction shape."""
     try:
         spell = spell_at_slot(choice.action, choice.slot_level)
-        target_range = spell.range_ft + (spell.area_radius_ft or 0)
+        multiplier = choice.range_modifier.range_multiplier if choice.range_modifier is not None else 1
+        target_range = (spell.range_ft + (spell.area_radius_ft or 0)) * multiplier
         return SavingThrowAction(
             id=spell.id,
             name=spell.name,

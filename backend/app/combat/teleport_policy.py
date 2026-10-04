@@ -2,23 +2,14 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.grid_geometry import footprint_distance_ft, position_in_bounds
 from app.combat.grid_pathing_support import overlapping_occupants
-from app.combat.spellcasting import slot_spell_available
-from app.combat.suppression_zone_geometry import verbal_casting_blocked
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
 from app.domain.teleport_actions import TeleportAction
 
 logger = logging.getLogger(__name__)
-
-
-def _resource(caster: EncounterCombatant, resource_id: str | None):
-    if resource_id is None:
-        return None
-    return next((item for item in caster.state.resources if item.id == resource_id), None)
 
 
 def choose_teleport_destination(
@@ -79,21 +70,11 @@ def choose_teleport_action(
     setup: EncounterSetup,
     turn_key: str,
 ) -> tuple[TeleportAction, GridPosition] | None:
+    """Arena AI never selects teleport or plane shift. The pit forbids those options."""
     try:
-        if verbal_casting_blocked(caster, setup):
-            return None
-        for action in caster.state.template.teleport_actions:
-            if not is_available(caster.state, action.action_cost):
-                continue
-            if action.expends_spell_slot and not slot_spell_available(caster.state, turn_key):
-                continue
-            resource = _resource(caster, action.resource_id)
-            if action.resource_id and (resource is None or resource.current_uses < action.resource_cost):
-                continue
-            destination = choose_teleport_destination(caster, setup, action)
-            if destination is not None:
-                return action, destination
+        if caster is None or setup is None or not str(turn_key or "").strip():
+            raise ValueError("Teleport choice requires a caster, setup, and turn key.")
         return None
     except Exception:
-        logger.exception("Failed teleport choice for %s.", caster.combatant_id)
+        logger.exception("Failed teleport choice for %s.", getattr(caster, "combatant_id", "?"))
         raise

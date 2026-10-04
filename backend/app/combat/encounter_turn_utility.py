@@ -26,7 +26,7 @@ def resolve_control_support(
     dice,
     turn_key: str,
 ) -> tuple[list[BattleEvent], int]:
-    """Cast Dimension Door, Spirit Guardians, or Silence when the action is still free."""
+    """Cast a still-free support Action. Teleport stays arena-unavailable under the pit limits."""
     try:
         events: list[BattleEvent] = []
         teleport = choose_teleport_action(member, setup, turn_key)

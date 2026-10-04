@@ -32,7 +32,7 @@
   function clearResult(message = "Cards loaded. Press FIGHT when both sides are ready.") {
     el("result-panel").hidden = true; el("pit-round").textContent = "";
     el("battle-log").replaceChildren(Object.assign(document.createElement("li"), { textContent: message }));
-    el("lab-summary").textContent = "2014 Beta combat path · secure Web Crypto dice.";
+    el("lab-summary").textContent = `${state.ruleset} combat path · secure Web Crypto dice.`;
   }
 
   function invalidateRun() {
@@ -103,19 +103,17 @@
 
   async function changeRuleset(nextRuleset) {
     const selector = el("ruleset-select");
-    if (nextRuleset === "2024") {
+    if (nextRuleset === state.ruleset) {
       if (selector) selector.value = state.ruleset;
-      el("status").textContent = "D&D 5e 2024 is coming soon. The 2014 Beta is currently available.";
       return;
     }
-    if (nextRuleset === state.ruleset) return;
     if (state.fighting || (state.session && !state.session.complete)) { if (selector) selector.value = state.ruleset; return; }
     try {
       await rulesetUi().ensureBundle(nextRuleset);
       state.ruleset = nextRuleset; state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog(nextRuleset);
       state.heroSlots.fill(null); state.monsterSlots.fill(null); invalidateRun();
       clearResult(`${nextRuleset} ruleset loaded. Previous matchup cleared to preserve edition isolation.`); rulesetUi().update(state); render();
-      el("status").textContent = "2014 Beta ready. Choose certified pregens and monsters, or load the sample matchup.";
+      el("status").textContent = `${nextRuleset} ready. Choose certified pregens and monsters, or load a preset.`;
     } catch (error) {
       console.error("Ruleset switch failed", error); if (selector) selector.value = state.ruleset;
       el("status").textContent = `Could not load the ${nextRuleset} ruleset.`;
@@ -131,8 +129,9 @@
       if (required.some((item) => !item)) throw new Error("Iron Pit browser modules did not load.");
       rulesetUi().install(state, changeRuleset); state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog(state.ruleset); picker().bind(() => state);
       actions().install({ state, matchup, render, updateControls, clearResult });
-      window.IRON_PIT_COMBAT_PRESETS.install({ state, load: loadCards }); rulesetUi().update(state); render();
-      el("status").textContent = "Iron Pit 2014 Beta ready. Choose certified pregens and monsters, or load the sample matchup.";
+      await window.IRON_PIT_COMBAT_PRESETS.install({ state, load: loadCards, ensureRuleset: changeRuleset });
+      rulesetUi().update(state); render();
+      el("status").textContent = "Iron Pit ready. Choose certified pregens and monsters, or load a preset.";
     } catch (error) { console.error("Iron Pit initialization failed", error); el("status").textContent = "The Iron Pit failed to initialize."; }
   }
 

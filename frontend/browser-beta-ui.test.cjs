@@ -28,7 +28,12 @@ for (const page of [html, rootHtml]) {
 }
 const elements = new Map([...html.matchAll(/\bid="([^"]+)"/g)].map((match) => [match[1], node()]));
 const el = (id) => { assert.ok(elements.has(id), `missing page element #${id}`); return elements.get(id); };
-global.document = { getElementById: el, createElement: node, querySelector: () => null, querySelectorAll: () => [] };
+global.document = {
+  getElementById: el, createElement: node, querySelector: () => null,
+  querySelectorAll: (sel) => sel === "[data-preset]"
+    ? el("combat-presets").children.filter((item) => item.dataset?.preset)
+    : [],
+};
 global.requestAnimationFrame = (callback) => callback();
 load("browser-catalog.js"); load("encounter-picker.js"); load("battle-log-format.js"); load("battle-lab.js"); load("browser-audit.js");
 load("battlefield-view.js"); load("browser-turbo.js"); load("turbo-view.js"); load("browser-execution.js"); load("battle-actions.js");
@@ -49,11 +54,12 @@ console.error = (...args) => errors.push(args.map((arg) => arg instanceof Error 
 const click = async (id) => { await el(id).listeners.click(); };
 
 (async () => {
-  load("combat-presets.js"); load("app.js");
-  for (let i = 0; i < 10 && !api; i += 1) await Promise.resolve();
+  load("combat-preset-recipes.js"); load("combat-presets.js"); load("app.js");
+  const presetButton = (id) => el("combat-presets").children.find((item) => item.dataset?.preset === id);
+  for (let i = 0; i < 40 && !presetButton("goblins"); i += 1) await Promise.resolve();
   assert.ok(api, `production app must initialize: ${JSON.stringify(errors)}`);
-  assert.equal(el("combat-presets").children.length, 12);
-  await el("combat-presets").children[1].listeners.click();
+  assert.equal(el("combat-presets").children.filter((item) => item.dataset?.preset).length, 24);
+  await presetButton("goblins").listeners.click();
   assert.equal(api.state.heroSlots.filter(Boolean).length, 1);
   assert.equal(api.state.heroSlots[0].class_id, "barbarian");
   assert.equal(api.state.monsterSlots.filter(Boolean).length, 2);
@@ -62,7 +68,7 @@ const click = async (id) => { await el(id).listeners.click(); };
   assert.match(el("status").textContent, /Rage/);
   const before = JSON.stringify(api.state.heroSlots);
   api.state.session = { complete: false };
-  await el("combat-presets").children[0].listeners.click();
+  await presetButton("duel").listeners.click();
   assert.equal(JSON.stringify(api.state.heroSlots), before);
   api.state.session = null;
   await click("quick-test");
@@ -138,9 +144,17 @@ const click = async (id) => { await el(id).listeners.click(); };
   assert.equal(api.state.heroSlots.length, 6); assert.equal(api.state.monsterSlots.length, 6);
   assert.equal(el("fight-button").disabled, true); assert.equal(el("step-fight-button").disabled, true); assert.equal(el("turbo-button").disabled, true);
   assert.match(el("status").textContent, /Board cleared/);
-  await el("combat-presets").children[1].listeners.click();
+  await presetButton("goblins").listeners.click();
   assert.equal(api.state.heroSlots.filter(Boolean).length, 1); assert.equal(api.state.monsterSlots.filter(Boolean).length, 2);
   assert.equal(JSON.stringify(sample), original);
+  await presetButton("2024-goblins").listeners.click();
+  assert.equal(api.state.ruleset, "2024");
+  assert.equal(api.state.heroSlots.filter(Boolean).length, 1);
+  assert.equal(api.state.heroSlots[0].class_id, "barbarian");
+  assert.equal(api.state.heroSlots[0].ruleset, "2024");
+  assert.equal(api.state.monsterSlots.filter(Boolean).length, 2);
+  assert.ok(api.state.monsterSlots.filter(Boolean).every((card) => card.runnable_template_id === "srd-goblin-warrior"));
+  assert.match(el("status").textContent, /Rage/);
   assert.equal(errors.length, 0, JSON.stringify(errors));
-  console.log("2014 sample + actual UI log/result wiring: Fight, rerun, Step/Watch, Turbo and replay passed.");
+  console.log("2014 sample + 2024 preset load + actual UI log/result wiring: Fight, rerun, Step/Watch, Turbo and replay passed.");
 })().catch((error) => { priorError(error); process.exitCode = 1; }).finally(() => { console.error = priorError; });

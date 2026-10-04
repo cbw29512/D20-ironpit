@@ -27,29 +27,29 @@
     if (state.ruleset === "2014") {
       return `${state.catalog.hero_ready_count}/${state.catalog.hero_count} certified 2014 hero levels · ${state.catalog.monster_ready_count}/${state.catalog.monster_count} certified 2014 monsters · Beta.`;
     }
-    return "2024 — Coming Soon";
+    return `${state.catalog.hero_ready_count}/${state.catalog.hero_count} certified 2024 hero levels · ${state.catalog.monster_ready_count}/${state.catalog.monster_count} certified 2024 monsters.`;
   }
 
   function update(state) {
     const is2014 = state.ruleset === "2014", header = document.querySelector("header.hero");
     const eyebrow = header?.querySelector("p.eyebrow"), introStrong = header?.querySelector("p strong");
     const headerNotes = header?.querySelectorAll("p.rules-note") || [];
-    if (eyebrow) eyebrow.textContent = is2014 ? "D&D 5e 2014 · SRD 5.1 · BETA" : "D&D 5e 2024 · COMING SOON";
+    if (eyebrow) eyebrow.textContent = is2014 ? "D&D 5e 2014 · SRD 5.1 · BETA" : "D&D 5e 2024 · SRD 5.2.1";
     if (introStrong?.parentElement) introStrong.parentElement.innerHTML = is2014
       ? "<strong>D&D 5e (2014) Beta combat simulator.</strong> Pick certified 2014 pregens and monsters, then run them through the shared Iron Pit engine."
-      : "<strong>D&D 5e (2024) is coming soon.</strong> 2024 pregens, monsters, and shared-engine certification are still being completed.";
+      : "<strong>D&D 5e (2024) combat simulator.</strong> Pick certified 2024 pregens and monsters, then run them through the shared Iron Pit engine.";
     if (headerNotes[0]) headerNotes[0].textContent = is2014
-      ? "2014 Beta is live. Only certified 2014 pregens and monsters are selectable; 2024 remains isolated until release."
-      : "2024 is under active certification and is not available on the public combat lane yet.";
+      ? "2014 Beta is live. Only certified 2014 pregens and monsters are selectable. Switch to 2024 for that edition's certified roster."
+      : "2024 certified pregens and monsters are selectable. Edition isolation stays absolute: 2014 cards cannot enter a 2024 fight.";
     const auditNote = document.querySelector(".log-panel .rules-note");
-    if (auditNote) auditNote.textContent = is2014 ? "D&D 2014 / SRD 5.1 · Beta · expandable rules audit" : "D&D 2024 / SRD 5.2.1 · Coming Soon";
+    if (auditNote) auditNote.textContent = is2014 ? "D&D 2014 / SRD 5.1 · Beta · expandable rules audit" : "D&D 2024 / SRD 5.2.1 · expandable rules audit";
     const left = document.querySelector(".hero-field .field-heading span"), right = document.querySelector(".monster-field .field-heading span");
     if (left) left.textContent = "HERO CARDS";
     if (right) right.textContent = "MONSTER CARDS";
     el("ruleset-summary").textContent = summary(state);
     el("ruleset-control").dataset.ruleset = state.ruleset;
     el("ruleset-select").value = state.ruleset;
-    document.title = is2014 ? "The Iron Pit — D&D 5e 2014 Beta Combat Simulator" : "The Iron Pit — D&D 5e 2024 Coming Soon";
+    document.title = is2014 ? "The Iron Pit — D&D 5e 2014 Beta Combat Simulator" : "The Iron Pit — D&D 5e 2024 Combat Simulator";
   }
 
   function syncDisabled(state) {

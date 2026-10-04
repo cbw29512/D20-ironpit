@@ -57,15 +57,15 @@
   }
 
   function choose(caster, setup, turnKey) {
-    if (window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.verbalBlocked(caster, setup)) return null;
-    for (const action of caster.state.template.teleport_actions || []) {
-      if (!E().available(caster.state, action.actionCost)) continue;
-      if (action.expendsSpellSlot && !P()?.slotSpellAvailable(caster.state, turnKey)) continue;
-      if (action.resourceId && (caster.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) continue;
-      const destination = chooseDestination(caster, setup, action);
-      if (destination) return { action, destination };
+    try {
+      if (!caster || !setup || !String(turnKey || "").trim()) {
+        throw new Error("Teleport choice requires a caster, setup, and turn key.");
+      }
+      return null;
+    } catch (error) {
+      console.error("Failed browser teleport choice", { caster: caster?.combatant_id, error });
+      throw error;
     }
-    return null;
   }
 
   function resolve(sequence, round, caster, setup, action, destination, turnKey) {
