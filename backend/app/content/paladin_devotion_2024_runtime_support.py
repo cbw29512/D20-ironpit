@@ -4,6 +4,10 @@ import logging
 
 from app.content.character_math import proficiency_bonus
 from app.content.hero_combat_feature_registry import compile_progression_feature_fields
+from app.content.paladin_devotion_2024_level20 import (
+    holy_nimbus_2024,
+    holy_nimbus_resource_conversions_2024,
+)
 from app.content.equipment import build_longsword
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
@@ -12,6 +16,7 @@ from app.domain.friendly_save_auras import FriendlySavingThrowAuraGrant
 from app.domain.models import DamageType, OnHitDamage, WeaponAttack
 from app.domain.post_hit_damage import ResourceBackedPostHitDamage
 from app.domain.timed_self_buffs import TimedFriendlyCoverAura, TimedSelfBuffAction
+from app.domain.resource_conversion import ResourceConversionAction
 from app.domain.progression import ProgressionCombatFeatures
 
 logger = logging.getLogger(__name__)
@@ -74,22 +79,28 @@ def build_paladin_2024_attack_action(level: int) -> AttackActionDefinition | Non
         raise
 
 
-def build_paladin_2024_timed_self_buffs(level: int) -> list[TimedSelfBuffAction]:
+def build_paladin_2024_timed_self_buffs(
+    level: int,
+    charisma_modifier: int,
+) -> list[TimedSelfBuffAction]:
     """Build source-centered timed Devotion aura benefits."""
     try:
-        if level < 15:
-            return []
-        return [TimedSelfBuffAction(
-            id="smite-of-protection-2024",
-            name="Smite of Protection",
-            action_cost="bonus_action",
-            duration_rounds=1,
-            friendly_cover_aura=TimedFriendlyCoverAura(
-                radius_ft=30 if level >= 18 else 10,
-                cover_bonus=2,
-            ),
-            expiry_timing="source_turn_start",
-        )]
+        actions: list[TimedSelfBuffAction] = []
+        if level >= 15:
+            actions.append(TimedSelfBuffAction(
+                id="smite-of-protection-2024",
+                name="Smite of Protection",
+                action_cost="bonus_action",
+                duration_rounds=1,
+                friendly_cover_aura=TimedFriendlyCoverAura(
+                    radius_ft=30 if level >= 18 else 10,
+                    cover_bonus=2,
+                ),
+                expiry_timing="source_turn_start",
+            ))
+        if level >= 20:
+            actions.append(holy_nimbus_2024(charisma_modifier, proficiency_bonus(level)))
+        return actions
     except Exception:
         logger.exception("Failed to build 2024 Paladin timed self buffs at level %s.", level)
         raise
@@ -169,3 +180,8 @@ def build_paladin_2024_progression(
             level,
         )
         raise
+
+
+def build_paladin_2024_resource_conversions(level: int) -> list[ResourceConversionAction]:
+    """Build no-action printed Paladin resource exchanges."""
+    return holy_nimbus_resource_conversions_2024() if level >= 20 else []
