@@ -26,6 +26,8 @@
       return (state.active_modifiers || []).filter((item) =>
         item.kind === "saving-throw-advantage"
         && item.save_ability === ability
+        && (!item.inactive_while_owner_incapacitated
+          || !window.IRON_PIT_BROWSER_CONDITION_RULES?.incapacitated(state))
         && (!item.requires_magical_effect || Boolean(context.magicalEffect))
         && (!item.requires_spell_effect || Boolean(context.spellEffect))
         && (item.required_effect_tags || []).every((tag) =>
