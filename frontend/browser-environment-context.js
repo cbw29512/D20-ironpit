@@ -15,6 +15,8 @@
         for (const action of source.state.template.timed_self_buff_actions || []) {
           const aura = action.environmentContextAura;
           if (!aura || !activeIds.has(action.id)) continue;
+          if (action.inactiveWhileSourceIncapacitated
+              && window.IRON_PIT_BROWSER_CONDITION_RULES?.incapacitated(source.state)) continue;
           if (S().distance(source, member) <= aura.radius_ft) {
             for (const tag of aura.context_tags || []) tags.add(String(tag).toLowerCase());
           }
