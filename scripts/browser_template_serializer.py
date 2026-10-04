@@ -1081,6 +1081,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             ]}
         if template.regeneration is not None:
             row["regeneration"] = template.regeneration.model_dump(mode="json")
+        if template.legendary_actions:
+            row["legendary_actions"] = [item.model_dump(mode="json") for item in template.legendary_actions]
         if template.save_success_overrides:
             row["save_success_overrides"] = [
                 item.model_dump(mode="json") for item in template.save_success_overrides

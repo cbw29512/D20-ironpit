@@ -721,7 +721,7 @@
     {
       "id": "legendary-actions",
       "status": "unsupported",
-      "blocker": "Legendary action pools and after-turn timing are not certified."
+      "blocker": "After-turn attack-kind legendary actions and the shared pool now resolve, but save-kind options such as Wing Attack and optional movement follow-through are not certified."
     },
     {
       "id": "legendary-resistance",

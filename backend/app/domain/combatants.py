@@ -44,6 +44,7 @@ from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSave
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.post_hit_save_condition import PostHitSaveConditionSpell
 from app.domain.targeted_concentration_damage import TargetedConcentrationDamageAction
+from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.regeneration import RegenerationTrait
 from app.domain.save_success_overrides import FailedSaveSuccessOverride
 from app.domain.tactical_actions import BonusActionTacticalGrant
@@ -163,6 +164,7 @@ class CombatantTemplate(BaseModel):
     recharge_rules: list[RechargeRule] = Field(default_factory=list)
     regeneration: RegenerationTrait | None = None
     save_success_overrides: list[FailedSaveSuccessOverride] = Field(default_factory=list)
+    legendary_actions: list[LegendaryActionOption] = Field(default_factory=list)
     source: str
 
     @model_validator(mode="before")

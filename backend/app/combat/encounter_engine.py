@@ -30,6 +30,7 @@ from app.combat.state import refresh_start_of_turn
 from app.combat.timed_conditions import expire_start_of_turn_conditions
 from app.combat.persistent_save_zone_windows import resolve_save_zone_window
 from app.combat.suppression_zone_effects import expire_suppression_zones, sync_suppression_zone_effects
+from app.combat.legendary_actions import resolve_legendary_actions_after_turn
 from app.combat.timed_emanations import resolve_target_turn_start_emanations
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
 from app.domain.models import BattleEvent
@@ -88,6 +89,10 @@ def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
     from app.combat.temporary_terrain import expire_source_terrain
     expire_source_terrain(setup, member.combatant_id, round_number)
     expire_current_turn_type_resistances(setup)
+    legendary, sequence = resolve_legendary_actions_after_turn(
+        sequence, round_number, member, setup, dice,
+    )
+    events.extend(legendary)
     return events, sequence
 
 
