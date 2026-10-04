@@ -57,10 +57,11 @@
     return effectId;
   }
 
-  const suppressesAction = (state) => (state.timed_effects || []).some((effect) => effect.suppress_action);
-  const suppressesBonusAction = (state) => (state.timed_effects || []).some((effect) => effect.suppress_bonus_action);
+  const committedActivity = (state) => Boolean((state.delayed_resource_refills || []).length);
+  const suppressesAction = (state) => committedActivity(state) || (state.timed_effects || []).some((effect) => effect.suppress_action);
+  const suppressesBonusAction = (state) => committedActivity(state) || (state.timed_effects || []).some((effect) => effect.suppress_bonus_action);
   const suppressesReactions = (state) => (state.timed_effects || []).some((effect) => effect.suppress_reactions);
-  const suppressesMovement = (state) => (state.timed_effects || []).some((effect) => effect.suppress_movement);
+  const suppressesMovement = (state) => committedActivity(state) || (state.timed_effects || []).some((effect) => effect.suppress_movement);
   const nextAttackDisadvantage = (state) => (state.timed_effects || []).filter((effect) => effect.next_attack_disadvantage).length;
   function consumeNextAttackDisadvantage(state) {
     let consumed = 0;

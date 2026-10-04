@@ -518,6 +518,7 @@ jobs:
           node frontend/browser-fiendish-resilience-2014.test.cjs
           node frontend/browser-exile-2014.test.cjs
           node frontend/browser-eldritch-master-2014.test.cjs
+          node frontend/browser-magical-cunning-2024.test.cjs
           node frontend/browser-power-word-stun-2014.test.cjs
           node frontend/browser-power-word-kill-2014.test.cjs
           node frontend/browser-power-word-kill-2024.test.cjs
