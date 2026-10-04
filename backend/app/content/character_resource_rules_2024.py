@@ -130,6 +130,10 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
     ),
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),
+    "warlock": (
+        ("magical-cunning", "Magical Cunning", lambda level: 1 if level >= 2 else 0),
+        ("boon-of-fate", "Boon of Fate", _boon_of_fate),
+    ),
 }
 
 SUBCLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
@@ -138,6 +142,9 @@ SUBCLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
     ),
     "warrior-of-the-open-hand": (
         ("wholeness-of-body", "Wholeness of Body", _open_hand_wholeness_of_body),
+    ),
+    "fiend-patron": (
+        ("hurl-through-hell", "Hurl Through Hell", lambda level: 1 if level >= 14 else 0),
     ),
     "circle-land": (
         (

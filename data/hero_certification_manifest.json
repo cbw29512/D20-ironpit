@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 157
+    "public_ready": 177
   },
   "heroes": [
     {
@@ -11966,46 +11966,62 @@
         {
           "level": 1,
           "subclass": null,
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l1",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "resource:spell-slot-1",
+            "spell-attack-action:eldritch-blast",
+            "spell-save-action:charm-person",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "resource:spell-slot-1",
+            "spell-attack-action:eldritch-blast",
+            "spell-save-action:charm-person",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 2,
           "subclass": null,
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l2",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "magical-cunning",
+            "resource:magical-cunning",
+            "resource:spell-slot-1",
+            "spell-attack-action:eldritch-blast",
+            "spell-save-action:charm-person",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "magical-cunning",
+            "resource:magical-cunning",
+            "resource:spell-slot-1",
+            "spell-attack-action:eldritch-blast",
+            "spell-save-action:charm-person",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 3,
@@ -12013,24 +12029,40 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l3",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "magical-cunning",
+            "resource:magical-cunning",
+            "resource:spell-slot-2",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "magical-cunning",
+            "resource:magical-cunning",
+            "resource:spell-slot-2",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 4,
@@ -12038,24 +12070,40 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l4",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "magical-cunning",
+            "resource:magical-cunning",
+            "resource:spell-slot-2",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "magical-cunning",
+            "resource:magical-cunning",
+            "resource:spell-slot-2",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 5,
@@ -12063,24 +12111,42 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l5",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "magical-cunning",
+            "resource:magical-cunning",
+            "resource:spell-slot-3",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "magical-cunning",
+            "resource:magical-cunning",
+            "resource:spell-slot-3",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 6,
@@ -12088,24 +12154,48 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l6",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "magical-cunning",
+            "resource:dark-ones-own-luck",
+            "resource:magical-cunning",
+            "resource:spell-slot-3",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "magical-cunning",
+            "resource:dark-ones-own-luck",
+            "resource:magical-cunning",
+            "resource:spell-slot-3",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 7,
@@ -12113,24 +12203,50 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l7",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "magical-cunning",
+            "resource:dark-ones-own-luck",
+            "resource:magical-cunning",
+            "resource:spell-slot-4",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "magical-cunning",
+            "resource:dark-ones-own-luck",
+            "resource:magical-cunning",
+            "resource:spell-slot-4",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 8,
@@ -12138,24 +12254,50 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l8",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "magical-cunning",
+            "resource:dark-ones-own-luck",
+            "resource:magical-cunning",
+            "resource:spell-slot-4",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "magical-cunning",
+            "resource:dark-ones-own-luck",
+            "resource:magical-cunning",
+            "resource:spell-slot-4",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 9,
@@ -12163,24 +12305,50 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l9",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "magical-cunning",
+            "resource:dark-ones-own-luck",
+            "resource:magical-cunning",
+            "resource:spell-slot-5",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "magical-cunning",
+            "resource:dark-ones-own-luck",
+            "resource:magical-cunning",
+            "resource:spell-slot-5",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 10,
@@ -12188,24 +12356,54 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l10",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "magical-cunning",
+            "resource:dark-ones-own-luck",
+            "resource:magical-cunning",
+            "resource:spell-slot-5",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "magical-cunning",
+            "resource:dark-ones-own-luck",
+            "resource:magical-cunning",
+            "resource:spell-slot-5",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 11,
@@ -12213,24 +12411,58 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l11",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "magical-cunning",
+            "resource:dark-ones-own-luck",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "magical-cunning",
+            "resource:dark-ones-own-luck",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 12,
@@ -12238,24 +12470,58 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l12",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "magical-cunning",
+            "resource:dark-ones-own-luck",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "magical-cunning",
+            "resource:dark-ones-own-luck",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 13,
@@ -12263,24 +12529,62 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l13",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "magical-cunning",
+            "resource:dark-ones-own-luck",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:mystic-arcanum-7",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "saving-throw-action:finger-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "magical-cunning",
+            "resource:dark-ones-own-luck",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:mystic-arcanum-7",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "saving-throw-action:finger-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 14,
@@ -12288,24 +12592,68 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l14",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "hurl-through-hell",
+            "magical-cunning",
+            "resource-conversion:hurl-through-hell-restore",
+            "resource:dark-ones-own-luck",
+            "resource:hurl-through-hell",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:mystic-arcanum-7",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "saving-throw-action:finger-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "hurl-through-hell",
+            "magical-cunning",
+            "resource-conversion:hurl-through-hell-restore",
+            "resource:dark-ones-own-luck",
+            "resource:hurl-through-hell",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:mystic-arcanum-7",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "saving-throw-action:finger-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 15,
@@ -12313,24 +12661,72 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l15",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "hp-threshold-condition:power-word-stun",
+            "hurl-through-hell",
+            "magical-cunning",
+            "resource-conversion:hurl-through-hell-restore",
+            "resource:dark-ones-own-luck",
+            "resource:hurl-through-hell",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:mystic-arcanum-7",
+            "resource:mystic-arcanum-8",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "saving-throw-action:finger-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "hp-threshold-condition:power-word-stun",
+            "hurl-through-hell",
+            "magical-cunning",
+            "resource-conversion:hurl-through-hell-restore",
+            "resource:dark-ones-own-luck",
+            "resource:hurl-through-hell",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:mystic-arcanum-7",
+            "resource:mystic-arcanum-8",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "saving-throw-action:finger-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 16,
@@ -12338,24 +12734,72 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l16",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "hp-threshold-condition:power-word-stun",
+            "hurl-through-hell",
+            "magical-cunning",
+            "resource-conversion:hurl-through-hell-restore",
+            "resource:dark-ones-own-luck",
+            "resource:hurl-through-hell",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:mystic-arcanum-7",
+            "resource:mystic-arcanum-8",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "saving-throw-action:finger-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "hp-threshold-condition:power-word-stun",
+            "hurl-through-hell",
+            "magical-cunning",
+            "resource-conversion:hurl-through-hell-restore",
+            "resource:dark-ones-own-luck",
+            "resource:hurl-through-hell",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:mystic-arcanum-7",
+            "resource:mystic-arcanum-8",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "saving-throw-action:finger-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 17,
@@ -12363,24 +12807,76 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l17",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "hp-threshold-condition:power-word-stun",
+            "hp-threshold-instant-death:power-word-kill",
+            "hurl-through-hell",
+            "magical-cunning",
+            "resource-conversion:hurl-through-hell-restore",
+            "resource:dark-ones-own-luck",
+            "resource:hurl-through-hell",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:mystic-arcanum-7",
+            "resource:mystic-arcanum-8",
+            "resource:mystic-arcanum-9",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "saving-throw-action:finger-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "hp-threshold-condition:power-word-stun",
+            "hp-threshold-instant-death:power-word-kill",
+            "hurl-through-hell",
+            "magical-cunning",
+            "resource-conversion:hurl-through-hell-restore",
+            "resource:dark-ones-own-luck",
+            "resource:hurl-through-hell",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:mystic-arcanum-7",
+            "resource:mystic-arcanum-8",
+            "resource:mystic-arcanum-9",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "saving-throw-action:finger-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 18,
@@ -12388,24 +12884,76 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l18",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "hp-threshold-condition:power-word-stun",
+            "hp-threshold-instant-death:power-word-kill",
+            "hurl-through-hell",
+            "magical-cunning",
+            "resource-conversion:hurl-through-hell-restore",
+            "resource:dark-ones-own-luck",
+            "resource:hurl-through-hell",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:mystic-arcanum-7",
+            "resource:mystic-arcanum-8",
+            "resource:mystic-arcanum-9",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "saving-throw-action:finger-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "hp-threshold-condition:power-word-stun",
+            "hp-threshold-instant-death:power-word-kill",
+            "hurl-through-hell",
+            "magical-cunning",
+            "resource-conversion:hurl-through-hell-restore",
+            "resource:dark-ones-own-luck",
+            "resource:hurl-through-hell",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:mystic-arcanum-7",
+            "resource:mystic-arcanum-8",
+            "resource:mystic-arcanum-9",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "saving-throw-action:finger-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 19,
@@ -12413,24 +12961,82 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l19",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "boon-of-fate",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "hp-threshold-condition:power-word-stun",
+            "hp-threshold-instant-death:power-word-kill",
+            "hurl-through-hell",
+            "initiative-resource-refill:boon-of-fate",
+            "magical-cunning",
+            "resource-conversion:hurl-through-hell-restore",
+            "resource:boon-of-fate",
+            "resource:dark-ones-own-luck",
+            "resource:hurl-through-hell",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:mystic-arcanum-7",
+            "resource:mystic-arcanum-8",
+            "resource:mystic-arcanum-9",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "saving-throw-action:finger-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "boon-of-fate",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "hp-threshold-condition:power-word-stun",
+            "hp-threshold-instant-death:power-word-kill",
+            "hurl-through-hell",
+            "initiative-resource-refill:boon-of-fate",
+            "magical-cunning",
+            "resource-conversion:hurl-through-hell-restore",
+            "resource:boon-of-fate",
+            "resource:dark-ones-own-luck",
+            "resource:hurl-through-hell",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:mystic-arcanum-7",
+            "resource:mystic-arcanum-8",
+            "resource:mystic-arcanum-9",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "saving-throw-action:finger-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 20,
@@ -12438,24 +13044,82 @@
             "id": "fiend-patron",
             "name": "Fiend Patron"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "varek-ashenmark-l20",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Human; Acolyte; Warlock; Fiend Patron; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:varek-2024-dagger",
+            "boon-of-fate",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "hp-threshold-condition:power-word-stun",
+            "hp-threshold-instant-death:power-word-kill",
+            "hurl-through-hell",
+            "initiative-resource-refill:boon-of-fate",
+            "magical-cunning",
+            "resource-conversion:hurl-through-hell-restore",
+            "resource:boon-of-fate",
+            "resource:dark-ones-own-luck",
+            "resource:hurl-through-hell",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:mystic-arcanum-7",
+            "resource:mystic-arcanum-8",
+            "resource:mystic-arcanum-9",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "saving-throw-action:finger-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:varek-2024-dagger",
+            "boon-of-fate",
+            "dark-ones-blessing",
+            "dark-ones-own-luck",
+            "effect-removal-action:dispel-magic",
+            "fiendish-resilience",
+            "hp-threshold-condition:power-word-stun",
+            "hp-threshold-instant-death:power-word-kill",
+            "hurl-through-hell",
+            "initiative-resource-refill:boon-of-fate",
+            "magical-cunning",
+            "resource-conversion:hurl-through-hell-restore",
+            "resource:boon-of-fate",
+            "resource:dark-ones-own-luck",
+            "resource:hurl-through-hell",
+            "resource:magical-cunning",
+            "resource:mystic-arcanum-6",
+            "resource:mystic-arcanum-7",
+            "resource:mystic-arcanum-8",
+            "resource:mystic-arcanum-9",
+            "resource:spell-slot-5",
+            "saving-throw-action:circle-of-death",
+            "saving-throw-action:finger-of-death",
+            "spell-attack-action:eldritch-blast",
+            "spell-attack-action:poison-spray",
+            "spell-attack-action:scorching-ray",
+            "spell-save-action:blight",
+            "spell-save-action:burning-hands",
+            "spell-save-action:charm-person",
+            "spell-save-action:fireball",
+            "targeted-concentration-damage:hex"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         }
       ]
     },

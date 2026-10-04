@@ -52,14 +52,17 @@
     if (slotLevel < action.level || slotLevel > 9) throw new Error(`Illegal slot level ${slotLevel} for ${action.name}.`);
     const levelsAbove = slotLevel - action.level;
     if (!levelsAbove) return action;
-    if (!(action.upcastDicePerLevel > 0)) throw new Error(`${action.name} has no certified higher-slot scaling.`);
+    if (!(action.upcastDicePerLevel > 0) && !action.allowsHigherSlots) {
+      throw new Error(`${action.name} has no certified higher-slot scaling.`);
+    }
+    if (!(action.upcastDicePerLevel > 0)) return action;
     if (action.damageComponents?.length) throw new Error("Multi-component spell upcasting requires component-specific scaling data.");
     return { ...action, damageDiceCount: (action.damageDiceCount || 0) + levelsAbove * action.upcastDicePerLevel };
   }
 
   function slotLevels(caster, action, turnKey) {
     return C().legalSlotLevels(caster.state, turnKey, action.level, {
-      higherSlotScaling: (action.upcastDicePerLevel || 0) > 0,
+      higherSlotScaling: (action.upcastDicePerLevel || 0) > 0 || Boolean(action.allowsHigherSlots),
     });
   }
 

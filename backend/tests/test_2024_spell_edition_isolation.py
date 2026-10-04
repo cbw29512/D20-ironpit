@@ -39,6 +39,9 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
     known_spell_ids = {
         "guiding-bolt",
         "sacred-flame",
+        "eldritch-blast",
+        "charm-person",
+        "scorching-ray",
         "poison-spray",
         "starry-wisp",
         "thunderclap",
@@ -130,6 +133,35 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             expected_dice, 12, "poison",
         )
 
+    if "eldritch-blast" in spell_attacks:
+        spell = spell_attacks["eldritch-blast"]
+        expected_attacks = 1 + int(level >= 5) + int(level >= 11) + int(level >= 17)
+        expected_range = 120 + (30 * level if level >= 2 else 0)
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.attack_kind,
+            spell.range_ft,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.attack_count,
+        ) == (0, "action", "ranged", expected_range, 1, 10, "force", expected_attacks)
+
+    if "scorching-ray" in spell_attacks:
+        spell = spell_attacks["scorching-ray"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.attack_kind,
+            spell.range_ft,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.attack_count,
+            spell.attacks_per_slot_above,
+        ) == (2, "action", "ranged", 120, 2, 6, "fire", 3, 1)
+
     if "starry-wisp" in spell_attacks:
         spell = spell_attacks["starry-wisp"]
         expected_dice = 1 + int(level >= 5) + int(level >= 11) + int(level >= 17)
@@ -179,6 +211,26 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.damage_type,
             spell.success_damage,
         ) == ("action", 60, "dexterity", expected_dice, 8, "radiant", "none")
+
+    if "charm-person" in spell_saves:
+        spell = spell_saves["charm-person"]
+        rider = spell.failed_save_timed_effect
+        assert rider is not None
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.save_ability,
+            spell.requires_target_sight,
+            spell.required_target_creature_types,
+            spell.concentration,
+            spell.allows_higher_slots,
+        ) == (1, "action", 30, "wisdom", True, ["humanoid"], False, True)
+        assert (
+            rider.effect_id,
+            rider.duration_rounds,
+            rider.ends_on_damage,
+        ) == ("charmed", 600, True)
 
     for spell_id, spell in spell_saves.items():
         if not spell_id.startswith("inflict-wounds"):
@@ -574,7 +626,10 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.fallback_damage_bonus,
             spell.fallback_damage_type,
             spell.resource_id,
-        ) == (60, 100, 12, 12, 0, "psychic", "spell-slot-9")
+        ) == (
+            60, 100, 12, 12, 0, "psychic",
+            "mystic-arcanum-9" if progression.class_id == "warlock" else "spell-slot-9",
+        )
         assert spell.max_targets == (2 if level >= 20 and progression.class_id == "bard" else 1)
         assert spell.secondary_target_within_ft == (
             10 if level >= 20 and progression.class_id == "bard" else None
@@ -845,9 +900,14 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "cleric": "wisdom",
             "druid": "wisdom",
             "paladin": "charisma",
+            "warlock": "charisma",
         }
         assert progression.class_id in expected_casting_abilities
         spell = effect_removals["dispel-magic"]
+        expected_resource = "spell-slot-3"
+        if progression.class_id == "warlock":
+            from app.content.warlock_combat_levels import WARLOCK_COMBAT_LEVELS
+            expected_resource = f"spell-slot-{WARLOCK_COMBAT_LEVELS[level].pact_slot_level}"
         assert (
             spell.level,
             spell.action_cost,
@@ -861,7 +921,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             120,
             expected_casting_abilities[progression.class_id],
             3,
-            "spell-slot-3",
+            expected_resource,
         )
 
     divine_healing = healing.get("divine-intervention-mass-cure-wounds")

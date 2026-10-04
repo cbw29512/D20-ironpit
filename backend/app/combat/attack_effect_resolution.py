@@ -148,6 +148,8 @@ def resolve_attack_effects(
             attacker_id=attacker_event_id,
             round_number=round_number,
             affected_states=affected_states,
+            dice=dice,
+            turn_key=active_turn_key,
         )
         end_rage_if_incapacitated(defender)
         return result

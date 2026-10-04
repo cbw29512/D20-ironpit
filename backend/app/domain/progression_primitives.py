@@ -130,6 +130,7 @@ class SourceReducesHostileToZeroHpTemporaryHp(BaseModel):
     flat_bonus: int = 0
     per_level: int = Field(default=0, ge=0)
     minimum: int = Field(default=1, ge=0)
+    ally_zero_hp_range_ft: int = Field(default=0, ge=0)
 
 
 class SourceDamageTemporaryHpGrant(BaseModel):
@@ -168,6 +169,14 @@ class ResourceBackedOnHitExile(BaseModel):
     return_damage_bonus: int = 0
     return_damage_type: DamageType | None = None
     return_damage_excluded_creature_types: list[str] = Field(default_factory=list)
+    save_ability: AbilityName | None = None
+    save_dc: int | None = Field(default=None, ge=1, le=40)
+    once_per_turn: bool = False
+    hit_damage_dice_count: int = Field(default=0, ge=0)
+    hit_damage_dice_size: int = Field(default=0, ge=0)
+    hit_damage_type: DamageType | None = None
+    hit_damage_excluded_creature_types: list[str] = Field(default_factory=list)
+    apply_condition_ids: list[str] = Field(default_factory=list)
 
 
 class DelayedResourceRefill(BaseModel):
@@ -179,3 +188,4 @@ class DelayedResourceRefill(BaseModel):
     use_resource_id: str = Field(min_length=1)
     use_resource_cost: int = Field(default=1, ge=1)
     delay_rounds: int = Field(ge=1)
+    restore_mode: Literal["max", "half_max_rounded_up"] = "max"

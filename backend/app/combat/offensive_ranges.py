@@ -93,7 +93,7 @@ def _spell_ranges(attacker: EncounterCombatant, turn_key: str) -> list[Offensive
                 continue
             if not legal_slot_levels(
                 attacker.state, turn_key, action.level,
-                higher_slot_scaling=action.upcast_dice_per_level > 0,
+                higher_slot_scaling=action.upcast_dice_per_level > 0 or action.allows_higher_slots,
             ):
                 continue
             maximum = action.range_ft + (action.area_radius_ft or 0)

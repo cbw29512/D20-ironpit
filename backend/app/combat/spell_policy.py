@@ -32,8 +32,10 @@ def spell_at_slot(action: SpellSaveAction, slot_level: int) -> SpellSaveAction:
         levels_above = slot_level - action.level
         if levels_above == 0:
             return action
-        if action.upcast_dice_per_level <= 0:
+        if action.upcast_dice_per_level <= 0 and not action.allows_higher_slots:
             raise ValueError(f"{action.name} has no certified higher-slot scaling.")
+        if action.upcast_dice_per_level <= 0:
+            return action
         if action.damage_components:
             raise ValueError(
                 "Multi-component spell upcasting requires component-specific scaling data."
@@ -81,7 +83,7 @@ def choose_spell(
                     caster.state,
                     turn_key,
                     action.level,
-                    higher_slot_scaling=action.upcast_dice_per_level > 0,
+                    higher_slot_scaling=action.upcast_dice_per_level > 0 or action.allows_higher_slots,
                 )
             ]
             cast_options.extend(

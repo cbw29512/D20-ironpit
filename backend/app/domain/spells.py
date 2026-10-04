@@ -140,6 +140,7 @@ class SpellSaveAction(BaseModel):
     verbal_component: bool = True
     concentration: bool = False
     duration_minutes: int | None = Field(default=None, ge=1)
+    allows_higher_slots: bool = False
     animation: str = "spell-save"
 
     @model_validator(mode="after")

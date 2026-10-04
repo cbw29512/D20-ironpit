@@ -136,7 +136,8 @@ def _spell(action: Any) -> dict[str, Any]:
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
         "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level,
-        "concentration": action.concentration, "animation": action.animation,
+        "concentration": action.concentration, "allowsHigherSlots": action.allows_higher_slots,
+        "animation": action.animation,
     }
     if action.effect_tags: row["effectTags"] = list(action.effect_tags)
     if action.requires_target_hearing: row["requiresTargetHearing"] = True
