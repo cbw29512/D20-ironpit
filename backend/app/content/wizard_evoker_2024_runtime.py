@@ -70,6 +70,8 @@ def build_elian_starweaver_2024(level: int) -> CombatantTemplate:
                 "medicine": wis + pb,
                 "nature": intel + pb,
                 "perception": wis + pb,
+                "athletics": scores.modifier("strength"),
+                "acrobatics": dex,
             },
             resources=build_elian_2024_resources(level),
             initiative_resource_refill_grants=build_elian_2024_initiative_refills(level),

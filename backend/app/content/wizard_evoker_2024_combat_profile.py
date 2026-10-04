@@ -51,6 +51,8 @@ def build_elian_2024_combat_profile(level: int) -> PregenCombatProfile:
                 ("medicine", wis + pb),
                 ("nature", intel + pb),
                 ("perception", wis + pb),
+                ("athletics", scores.modifier("strength")),
+                ("acrobatics", dex),
             ),
             attacks=(AttackExpectation("dagger", "dexterity", 1, 4, "piercing"),),
             weapon_masteries=(),

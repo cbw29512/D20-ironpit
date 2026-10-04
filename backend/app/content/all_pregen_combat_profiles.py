@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.content.grapple_escape_skill_bonuses import complete_profile_map
 from app.content.barbarian_berserker_2014_combat_profile import build_rokhan_2014_combat_profiles
 from app.content.bard_lore_2014_combat_profile import build_lyra_2014_combat_profiles
 from app.content.cleric_life_2014_combat_profile import build_seraphine_2014_combat_profiles
@@ -36,4 +37,4 @@ def build_all_pregen_combat_profiles() -> dict[str, PregenCombatProfile]:
         if profile.template_id in profiles:
             raise ValueError(f"Duplicate pregen combat profile: {profile.template_id}.")
         profiles[profile.template_id] = profile
-    return profiles
+    return complete_profile_map(profiles)
