@@ -1,7 +1,5 @@
 [build]
   command = "python3 -m pip install -e ./backend && python3 scripts/prepare_static_site.py"
   publish = "frontend"
-  # AUTOPUBLISH LOCK: Netlify ignore commands return 0 to skip a build.
-  # Git-connected builds stay disabled until Chris explicitly approves a production release.
-  # Publishing Iron Pit is a deliberate release action, never a side effect of pushing to GitHub.
-  ignore = "exit 0"
+  # One-shot unlock for the approved #529 production publish.
+  # Restore `ignore = "exit 0"` after the live deploy finishes.
