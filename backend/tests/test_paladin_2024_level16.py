@@ -40,7 +40,7 @@ def test_level_sixteen_advances_same_aurelia_with_charisma_asi() -> None:
         assert aura.flat_bonus == 4
 
         abjure = hero.saving_throw_actions[0]
-        assert abjure.save_dc == 17
+        assert abjure.dc == 17
 
         assert {item.id: item.max_uses for item in hero.resources} == {
             "lay-on-hands": 80,
