@@ -68,7 +68,7 @@ def resolve_effect_removal(
             check = roll_d20(
                 dice,
                 scores.modifier(action.casting_ability),
-                ability_check_roll_mode(remover.state),
+                ability_check_roll_mode(remover.state, encounter_member=remover, setup=setup),
             )
             check, succeeded = resolve_ability_check_outcome(
                 remover.state,
