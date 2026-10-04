@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 _ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
 
 
-def _weapon(weapon_id: str, dexterity: int, level: int) -> WeaponAttack:
+def _weapon(weapon_id: str, dexterity: int, level: int, fighting_styles: list[str]) -> WeaponAttack:
     try:
         weapon = build_weapon(weapon_id)
         return WeaponAttack(
@@ -26,7 +26,7 @@ def _weapon(weapon_id: str, dexterity: int, level: int) -> WeaponAttack:
             weapon=weapon,
             attack_bonus=compile_weapon_attack_bonus(
                 proficiency_bonus(level) + dexterity,
-                [],
+                fighting_styles,
                 weapon.attack_kind,
             ),
             damage_bonus=dexterity,
@@ -46,10 +46,12 @@ def build_rowan_ashtrail_2024(level: int = 1) -> CombatantTemplate:
         wisdom = scores.modifier("wisdom")
         pb = proficiency_bonus(level)
         armor = get_armor("studded-leather")
-        longbow = _weapon("longbow", dexterity, level)
-        shortsword = _weapon("shortsword", dexterity, level)
-        scimitar = _weapon("scimitar", dexterity, level)
+        styles = list(profile.fighting_styles)
+        longbow = _weapon("longbow", dexterity, level, styles)
+        shortsword = _weapon("shortsword", dexterity, level, styles)
+        scimitar = _weapon("scimitar", dexterity, level, styles)
         resources = expected_resources(profile)
+        perception_bonus = wisdom + (2 * pb if level >= 2 else pb)
         return CombatantTemplate(
             id=profile.template_id,
             name=profile.character_name,
@@ -75,7 +77,7 @@ def build_rowan_ashtrail_2024(level: int = 1) -> CombatantTemplate:
                 "athletics": scores.modifier("strength") + pb,
                 "acrobatics": dexterity,
                 "survival": wisdom + pb,
-                "perception": wisdom + pb,
+                "perception": perception_bonus,
                 "stealth": dexterity + pb,
                 "insight": wisdom + pb,
                 "investigation": scores.modifier("intelligence") + pb,
@@ -91,6 +93,8 @@ def build_rowan_ashtrail_2024(level: int = 1) -> CombatantTemplate:
                     ),
                 ],
             ),
+            fighting_style=profile.fighting_style,
+            fighting_styles=styles,
             resources=[
                 ResourceDefinition(id=resource_id, name=resource_id.replace("-", " ").title(), max_uses=uses)
                 for resource_id, uses in resources.items()
@@ -99,7 +103,7 @@ def build_rowan_ashtrail_2024(level: int = 1) -> CombatantTemplate:
                 armor="studded-leather", main_hand="longbow", body_style="humanoid"
             ),
             source=(
-                "D&D Beyond Basic Rules 2024: Ranger 1, Elf — Wood Elf, "
+                "D&D Beyond Basic Rules 2024: Ranger 1-2, Elf — Wood Elf, "
                 "Hunter's Mark, Cure Wounds; converted legacy Outlander background"
             ),
         )
