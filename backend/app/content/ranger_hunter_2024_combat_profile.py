@@ -18,6 +18,8 @@ def build_rowan_2024_combat_profile(level: int = 1) -> PregenCombatProfile:
         dexterity = scores.modifier("dexterity")
         wisdom = scores.modifier("wisdom")
         resources = tuple(expected_resources(profile).items())
+        archery_bonus = 2 if "Archery" in profile.fighting_styles else 0
+        perception_bonus = wisdom + (2 * pb if level >= 2 else pb)
         return PregenCombatProfile(
             template_id=profile.template_id,
             archetype="Ranger",
@@ -32,7 +34,7 @@ def build_rowan_2024_combat_profile(level: int = 1) -> PregenCombatProfile:
                 ("athletics", scores.modifier("strength") + pb),
                 ("acrobatics", dexterity),
                 ("survival", wisdom + pb),
-                ("perception", wisdom + pb),
+                ("perception", perception_bonus),
                 ("stealth", dexterity + pb),
                 ("insight", wisdom + pb),
                 ("investigation", scores.modifier("intelligence") + pb),
@@ -41,6 +43,7 @@ def build_rowan_2024_combat_profile(level: int = 1) -> PregenCombatProfile:
                 AttackExpectation(
                     "longbow", "dexterity", 1, 8, "piercing",
                     normal_range_ft=150, long_range_ft=600,
+                    style_attack_bonus=archery_bonus,
                     mastery_property="Slow",
                 ),
                 AttackExpectation(
@@ -54,6 +57,7 @@ def build_rowan_2024_combat_profile(level: int = 1) -> PregenCombatProfile:
             ),
             weapon_masteries=("longbow", "shortsword"),
             resources=resources,
+            fighting_style=profile.fighting_style,
         )
     except Exception:
         logger.exception("Failed to compile Rowan's 2024 combat fingerprint at level %s.", level)
@@ -62,7 +66,7 @@ def build_rowan_2024_combat_profile(level: int = 1) -> PregenCombatProfile:
 
 def build_rowan_2024_combat_profiles() -> list[PregenCombatProfile]:
     try:
-        return [build_rowan_2024_combat_profile(1)]
+        return [build_rowan_2024_combat_profile(level) for level in range(1, 3)]
     except Exception:
         logger.exception("Failed to compile Rowan's 2024 combat fingerprint registry.")
         raise
