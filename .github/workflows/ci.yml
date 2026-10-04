@@ -185,6 +185,9 @@ jobs:
           grep -q 'browser-zero-hp.js' index.html
           grep -q 'browser-timed-conditions.js' index.html
           grep -q 'browser-timed-self-buffs.js' index.html
+          grep -q 'browser-friendly-weapon-damage-auras.js' index.html
+          grep -q 'browser-friendly-recovery-auras.js' index.html
+          grep -q 'browser-start-of-turn-timed-burn.js' index.html
           grep -q 'browser-selectable-damage-resistance.js' index.html
           grep -q 'browser-precombat-buffs.js' index.html
           grep -q 'browser-timed-emanations.js' index.html
@@ -297,6 +300,9 @@ jobs:
           grep -q 'browser-zero-hp.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
           grep -q 'browser-timed-self-buffs.js' frontend/index.html
+          grep -q 'browser-friendly-weapon-damage-auras.js' frontend/index.html
+          grep -q 'browser-friendly-recovery-auras.js' frontend/index.html
+          grep -q 'browser-start-of-turn-timed-burn.js' frontend/index.html
           grep -q 'browser-selectable-damage-resistance.js' frontend/index.html
           grep -q 'browser-precombat-buffs.js' frontend/index.html
           grep -q 'browser-timed-emanations.js' frontend/index.html
@@ -469,6 +475,8 @@ jobs:
           node frontend/browser-once-per-turn-hit-damage.test.cjs
           node frontend/browser-post-hit-damage.test.cjs
           node frontend/browser-post-hit-spell-riders.test.cjs
+          node frontend/browser-start-of-turn-timed-burn.test.cjs
+          node frontend/browser-friendly-recovery-auras.test.cjs
           node frontend/browser-persistent-spell-attacks.test.cjs
           node frontend/browser-persistent-hazards.test.cjs
           node frontend/browser-turn-undead-2014.test.cjs

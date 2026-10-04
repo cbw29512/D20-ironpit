@@ -112,9 +112,7 @@
           damageOutcome = A().applyDamage(target.state, appliedTotal, false, resolved.damageTypes, affectedStates, options.setup);
         }
         if (!save.succeeded && action.reduceHitPointMaximumOnFailedSave && incoming) {
-          target.state.hit_point_maximum_reduction = (target.state.hit_point_maximum_reduction || 0) + incoming;
-          const maximum = S().effectiveMaxHp(target.state);
-          if (target.state.current_hp > maximum) target.state.current_hp = maximum;
+          window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS.applyHitPointMaximumReduction(target.state, incoming);
         }
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
       }
@@ -140,9 +138,7 @@
           damageOutcome = A().applyDamage(target.state, appliedTotal, false, [action.damageType], affectedStates, options.setup);
         }
         if (!save.succeeded && action.reduceHitPointMaximumOnFailedSave && incoming) {
-          target.state.hit_point_maximum_reduction = (target.state.hit_point_maximum_reduction || 0) + incoming;
-          const maximum = S().effectiveMaxHp(target.state);
-          if (target.state.current_hp > maximum) target.state.current_hp = maximum;
+          window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS.applyHitPointMaximumReduction(target.state, incoming);
         }
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
       }

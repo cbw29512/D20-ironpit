@@ -84,6 +84,9 @@
         });
       }
 
+      if (action.friendlyRecoveryAura) {
+        window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS?.activate(member, action, options.setup, round);
+      }
       if (action.concentration) {
         const concentration = window.IRON_PIT_BROWSER_CONCENTRATION;
         if (!concentration) throw new Error("Browser Concentration runtime is not loaded.");

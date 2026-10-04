@@ -136,6 +136,8 @@
           }
         }
       }
+      window.IRON_PIT_BROWSER_FRIENDLY_WEAPON_DAMAGE_AURAS?.sync(setup);
+      window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS?.sync(setup);
     } catch (error) {
       console.error("Failed browser friendly save-aura synchronization.", { error });
       throw error;

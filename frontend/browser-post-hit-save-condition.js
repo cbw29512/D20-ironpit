@@ -74,6 +74,7 @@
 
   function resolveStartOfTurn(sequence, round, member, setup) {
     try {
+      window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS?.resolveWindows(member, setup);
       const events = [];
       for (const source of members(setup)) {
         const concentration = source.state.concentration;
@@ -106,6 +107,8 @@
           description: `${action.name} deals ${applied} ${action.start_of_turn_damage_type} damage to ${member.state.template.name} at the start of the turn.`,
         });
       }
+      const burns = window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN?.resolve(sequence, round, member, setup);
+      if (burns) { events.push(...burns.events); sequence = burns.sequence; }
       return { events, sequence };
     } catch (error) {
       console.error("Start-of-turn save-condition damage failed.", error);
