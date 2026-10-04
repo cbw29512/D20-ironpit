@@ -66,7 +66,7 @@ def test_level_nineteen_reuses_combat_prowess_and_advances_paladin_spellcasting(
         assert len(package.spells) == 15
         assert package.spells[-1].id == "banishing-smite"
         assert package.spells[-1].role == "damage"
-        assert package.spells[-1].required_capabilities == ("arena-out-of-scope",)
+        assert package.spells[-1].required_capabilities == ["arena-out-of-scope"]
 
         flame_strike = next(item for item in hero.spell_save_actions if item.id == "flame-strike")
         assert flame_strike.dc == 19
@@ -87,3 +87,5 @@ def test_level_nineteen_reuses_combat_prowess_and_advances_paladin_spellcasting(
     except Exception:
         logger.exception("Paladin 19 Epic Boon certification failed.")
         raise
+
+# Exact-head refresh after generated artifact commit.
