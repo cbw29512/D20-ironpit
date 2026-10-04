@@ -87,7 +87,11 @@ def resolve_paid_post_hit_spell_riders(
                 setup=setup,
             )
             if not succeeded:
-                if option.failed_condition_expiry_timing:
+                if (
+                    option.failed_condition_expiry_timing
+                    or option.repeat_save_ability
+                    or option.duration_rounds
+                ):
                     apply_timed_condition(
                         defender.state,
                         option.failed_condition_id,
@@ -96,9 +100,16 @@ def resolve_paid_post_hit_spell_riders(
                         source_template=attacker.state.template,
                         source_is_magical=True,
                         applied_round=round_number,
-                        expires_round=round_number + 1,
+                        expires_round=(
+                            round_number + max(1, option.duration_rounds)
+                            if option.duration_rounds
+                            else round_number + 1
+                        ),
                         expires_at_start_of_source_turn=False,
                         expiry_timing=option.failed_condition_expiry_timing,
+                        repeat_save_ability=option.repeat_save_ability,
+                        repeat_save_dc=option.repeat_save_dc,
+                        repeat_save_timing=option.repeat_save_timing,
                         affected_states=states,
                         use_default_poison_recovery=False,
                     )

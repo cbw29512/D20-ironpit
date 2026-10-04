@@ -42,6 +42,25 @@ def build_paladin_2024_extra_smites(level: int, save_dc: int) -> list[PostHitSpe
                 attacks_against_advantage=True,
                 suppress_invisible=True,
             ))
+        if level >= 9:
+            options.append(PostHitSpellOption(
+                id="blinding-smite",
+                name="Blinding Smite",
+                level=3,
+                trigger_attack_ids=list(_TRIGGERS),
+                base_dice_count=3,
+                dice_per_slot_above=1,
+                dice_size=8,
+                damage_type="radiant",
+                save_ability="constitution",
+                save_dc=save_dc,
+                failed_condition_id="blinded",
+                concentration=True,
+                duration_rounds=10,
+                repeat_save_ability="constitution",
+                repeat_save_dc=save_dc,
+                repeat_save_timing="target_turn_end",
+            ))
         if level >= 13:
             options.append(PostHitSpellOption(
                 id="staggering-smite",

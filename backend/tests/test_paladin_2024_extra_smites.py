@@ -66,11 +66,14 @@ def test_extra_smites_bind_at_printed_levels_and_compete_by_damage() -> None:
     assert set(options) == {
         "thunderous-smite",
         "shining-smite",
+        "blinding-smite",
         "staggering-smite",
         "banishing-smite",
     }
     assert options["thunderous-smite"].damage_type == "thunder"
     assert options["shining-smite"].attacks_against_advantage is True
+    assert options["blinding-smite"].failed_condition_id == "blinded"
+    assert options["blinding-smite"].repeat_save_timing == "target_turn_end"
     assert options["staggering-smite"].failed_condition_id == "stunned"
     assert options["banishing-smite"].exile_if_hp_at_or_below == 50
     assert expected_post_hit_dice(options["banishing-smite"], 5) == 27.5
@@ -96,6 +99,30 @@ def test_thunderous_smite_applies_printed_prone_and_push_when_divine_is_unavaila
     assert "prone" in enemy.state.active_effect_ids
     assert enemy.state.position is not None
     assert abs(enemy.state.position.x - start.x) + abs(enemy.state.position.y - start.y) >= 1
+
+
+def test_blinding_smite_blinds_on_a_failed_constitution_save_when_divine_is_unavailable() -> None:
+    template = build_aurelia_brightshield_2024(9)
+    template = template.model_copy(update={
+        "progression_features": template.progression_features.model_copy(update={
+            "resource_backed_post_hit_damage": None,
+            "post_hit_spell_options": [
+                item for item in template.progression_features.post_hit_spell_options
+                if item.id == "blinding-smite"
+            ],
+        }),
+    })
+    hero = _member(template, "aurelia", "heroes", 4, 7)
+    enemy = _member(build_commoner().model_copy(update={"max_hp": 40}, deep=True), "enemy", "monsters", 5, 7)
+    setup = _setup(hero, enemy)
+    _hit(hero, enemy, setup, FixedDiceProvider([8, 8, 8, 8, 1]))
+    assert hero.state.feature_last_turn_keys["paid-post-hit-spell"] == "blinding-smite"
+    assert "blinded" in enemy.state.active_effect_ids
+    timed = next(item for item in enemy.state.timed_effects if item.effect_id == "blinded")
+    assert timed.repeat_save_ability == "constitution"
+    assert timed.repeat_save_timing == "target_turn_end"
+    assert hero.state.concentration is not None
+    assert hero.state.concentration.effect_id == "blinding-smite"
 
 
 def test_banishing_smite_exiles_a_creature_left_at_or_below_fifty_hp() -> None:

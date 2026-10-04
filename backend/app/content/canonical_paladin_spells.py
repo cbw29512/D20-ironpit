@@ -28,7 +28,7 @@ PALADIN_SPELLS = (
         spell_level=3, min_character_level=9,
     ),
     _spell(
-        "blinding-smite", "Blinding Smite", "damage", "arena-out-of-scope",
+        "blinding-smite", "Blinding Smite", "damage", "post-hit-spell",
         spell_level=3, min_character_level=9,
     ),
     _spell(

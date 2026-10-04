@@ -32,6 +32,14 @@ class PostHitSpellOption(BaseModel):
         "target_turn_end",
     ] | None = None
     failed_push_ft: int = Field(default=0, ge=0)
+    repeat_save_ability: AbilityName | None = None
+    repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
+    repeat_save_timing: Literal[
+        "source_turn_start",
+        "source_turn_end",
+        "target_turn_start",
+        "target_turn_end",
+    ] | None = None
     concentration: bool = False
     duration_rounds: int = Field(default=0, ge=0, le=14400)
     attacks_against_advantage: bool = False
