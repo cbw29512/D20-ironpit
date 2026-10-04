@@ -60,6 +60,7 @@ def apply_timed_condition(
     return_damage_type: DamageType | None = None,
     return_damage_excluded_creature_types: list[str] | None = None,
     use_default_poison_recovery: bool = True,
+    repeat_save_failures_to_lock: int | None = None,
 ) -> str | None:
     """Apply one source-owned timed condition and its optional passive defenses.
 
@@ -123,6 +124,7 @@ def apply_timed_condition(
             return_damage_bonus=return_damage_bonus,
             return_damage_type=return_damage_type,
             return_damage_excluded_creature_types=return_damage_excluded_creature_types or [],
+            repeat_save_failures_to_lock=repeat_save_failures_to_lock,
         ))
         if effect_id not in state.active_effect_ids:
             state.active_effect_ids.append(effect_id)

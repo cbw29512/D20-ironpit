@@ -223,6 +223,7 @@ def _save(action: Any) -> dict[str, Any]:
             "endsIfSourceIncapacitated": action.failed_save_timed_effect.ends_if_source_incapacitated,
             "endsIfSourceDead": action.failed_save_timed_effect.ends_if_source_dead,
             "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
+            "repeatSaveFailuresToLock": action.failed_save_timed_effect.repeat_save_failures_to_lock,
         }
     if action.grapple_escape_dc is not None:
         row["grappleEscapeDc"] = action.grapple_escape_dc
@@ -266,6 +267,7 @@ def _spell(action: Any) -> dict[str, Any]:
             "endsIfSourceIncapacitated": action.failed_save_timed_effect.ends_if_source_incapacitated,
             "endsIfSourceDead": action.failed_save_timed_effect.ends_if_source_dead,
             "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
+            "repeatSaveFailuresToLock": action.failed_save_timed_effect.repeat_save_failures_to_lock,
         }
     if action.required_target_creature_types:
         row["requiredTargetCreatureTypes"] = list(action.required_target_creature_types)
@@ -375,6 +377,8 @@ def _healing(action: Any) -> dict[str, Any]:
             "proneReactionStand": action.prone_reaction_stand,
             "secondaryTargetWithinFt": action.secondary_target_within_ft,
             "grantsTemporaryHp": action.grants_temporary_hp,
+            "sharedHealingPool": action.shared_healing_pool,
+            "stabilizeAtZero": action.stabilize_at_zero,
             "animation": action.animation,
         }
     except Exception:

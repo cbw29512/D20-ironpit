@@ -29,7 +29,10 @@
 
   function targetAllowed(healer, target, action) {
     if (target.state.is_dead || !target.state.is_alive || swarm(target.state)) return false;
-    if (target.state.current_hp >= S().effectiveMaxHp(target.state) && !riderWorthwhile(target, action)) return false;
+    if (action.stabilizeAtZero && (target.state.current_hp !== 0 || target.state.is_stable)) return false;
+    if (!action.stabilizeAtZero
+      && target.state.current_hp >= S().effectiveMaxHp(target.state)
+      && !riderWorthwhile(target, action)) return false;
     const creatureType = String(target.state.template.creature_type || "").split(" (")[0].toLowerCase();
     const excluded = new Set((action.excludedCreatureTypes || []).map((value) => String(value).toLowerCase()));
     if (creatureType && excluded.has(creatureType)) return false;
@@ -81,9 +84,10 @@
     const urgency = action.restoreToEffectiveMax
       ? -1
       : ally && target.state.current_hp === 0 ? 0 : ally ? 1 : 2;
+    const stabilize = action.stabilizeAtZero ? 1 : 0;
     const cost = action.actionCost === "bonus_action" ? 0 : 1;
     const useful = Math.min(action.maxTargets || 1, worthwhileTargets(healer, setup, action).length);
-    return [urgency, cost, useful >= 2 ? -useful : 0,
+    return [urgency, stabilize, cost, useful >= 2 ? -useful : 0,
       target.state.current_hp / S().effectiveMaxHp(target.state)];
   }
 
@@ -94,7 +98,7 @@
     choices.sort((a, b) => {
       const pa = priority(healer, setup, a.action, a.target);
       const pb = priority(healer, setup, b.action, b.target);
-      return pa[0] - pb[0] || pa[1] - pb[1] || pa[2] - pb[2] || pa[3] - pb[3];
+      return pa[0] - pb[0] || pa[1] - pb[1] || pa[2] - pb[2] || pa[3] - pb[3] || pa[4] - pb[4];
     });
     return choices[0] || null;
   }

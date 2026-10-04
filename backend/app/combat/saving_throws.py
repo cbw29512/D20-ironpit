@@ -147,6 +147,7 @@ def resolve_save_action(
             next_attack_disadvantage=rider.next_attack_disadvantage,
             affected_states=affected_states,
             use_default_poison_recovery=False,
+            repeat_save_failures_to_lock=rider.repeat_save_failures_to_lock,
         )
         if applied is not None:
             applied_conditions.append(applied)

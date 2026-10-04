@@ -21,6 +21,7 @@
         endsIfSourceDead: Boolean(rider.endsIfSourceDead),
         nextAttackDisadvantage: Boolean(rider.nextAttackDisadvantage),
         useDefaultPoisonRecovery: false,
+        repeatSaveFailuresToLock: rider.repeatSaveFailuresToLock || null,
       });
     } catch (error) {
       console.error("Failed browser failed-save timed rider application", {

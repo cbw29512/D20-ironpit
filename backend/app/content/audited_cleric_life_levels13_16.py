@@ -88,17 +88,36 @@ def build_seraphine_dawnshield_level15_profile() -> CharacterBuildProfile:
         base = build_seraphine_dawnshield_level14_profile()
         data = advance_profile_data(base, 15)
         apply_cleric_level_to_profile_data(data, 15)
-        addition = _pending(
-            "cleric-combat-spells-8",
-            "Level 8 Cleric Spells",
-            "Reuses existing Inflict Wounds and Mass Cure Wounds upcast primitives with a level-8 slot.",
-            automated=True,
+        additions = [
+            _pending(
+                "cleric-combat-spells-8",
+                "Level 8 Cleric Spells",
+                "Reuses existing Inflict Wounds, Heal, and Mass Cure Wounds upcast primitives with a level-8 slot.",
+                automated=True,
+            ),
+            _class_feature(
+                "holy-aura",
+                "Holy Aura",
+                notes=(
+                    "Concentration 1-minute 30-foot emanation: allies have Advantage on all "
+                    "saves and attackers have Disadvantage against them. Not auto-cast over damage."
+                ),
+            ),
+            _class_feature(
+                "regenerate",
+                "Regenerate",
+                combat=False,
+                notes=(
+                    "Printed 1-minute casting time keeps it off fight Actions. It stays on "
+                    "the prepared list as a long-cast spell."
+                ),
+            ),
         )
         data.update(
-            feature_audits=[*data["feature_audits"], addition.model_dump()],
+            feature_audits=[*data["feature_audits"], *(item.model_dump() for item in additions)],
             source_references=[
                 *data["source_references"],
-                "D&D Beyond Basic Rules 2024: Cleric level 15 — level 8 spells",
+                "D&D Beyond Basic Rules 2024: Cleric level 15 — level 8 spells; Holy Aura",
             ],
         )
         return CharacterBuildProfile.model_validate(data)

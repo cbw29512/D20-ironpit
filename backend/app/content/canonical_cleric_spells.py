@@ -23,7 +23,7 @@ CLERIC_CANTRIPS = (
     _spell("light", "Light", 0, "utility", 1, "arena-out-of-scope"),
     _spell("thaumaturgy", "Thaumaturgy", 0, "utility", 1, "arena-out-of-scope"),
     _spell("mending", "Mending", 0, "utility", 4, "arena-out-of-scope"),
-    _spell("spare-the-dying", "Spare the Dying", 0, "healing", 10, "arena-out-of-scope"),
+    _spell("spare-the-dying", "Spare the Dying", 0, "healing", 10, "stabilize"),
 )
 
 
@@ -51,13 +51,13 @@ CLERIC_SPELLS = (
     ),
     _spell("revivify", "Revivify", 3, "healing", 5, "arena-out-of-scope", always_prepared_from_level=5),
     _spell("aura-of-life", "Aura of Life", 4, "healing", 7, "recovery-aura", "concentration", always_prepared_from_level=7),
-    _spell("death-ward", "Death Ward", 4, "healing", 7, "arena-out-of-scope", always_prepared_from_level=7),
-    _spell("prayer-of-healing", "Prayer of Healing", 2, "healing", 7, "arena-out-of-scope"),
+    _spell("death-ward", "Death Ward", 4, "healing", 7, "zero-hp-replacement", always_prepared_from_level=7),
+    _spell("prayer-of-healing", "Prayer of Healing", 2, "healing", 7, "long-cast"),
     _spell("guardian-of-faith", "Guardian of Faith", 4, "damage", 8, "arena-unavailable-summon"),
     _spell("flame-strike", "Flame Strike", 5, "damage", 9, "save-damage", "area"),
     _spell("insect-plague", "Insect Plague", 5, "damage", 9, "save-zone", "area"),
-    _spell("contagion", "Contagion", 5, "damage", 10, "arena-out-of-scope"),
-    _spell("heal", "Heal", 6, "healing", 11, "arena-out-of-scope"),
+    _spell("contagion", "Contagion", 5, "damage", 10, "save-damage", "condition"),
+    _spell("heal", "Heal", 6, "healing", 11, "healing"),
     _spell(
         "greater-restoration", "Greater Restoration", 5, "healing", 9,
         "condition-removal", always_prepared_from_level=9,
@@ -67,9 +67,9 @@ CLERIC_SPELLS = (
         "healing", "multi-target-healing", always_prepared_from_level=9,
     ),
     _spell("fire-storm", "Fire Storm", 7, "damage", 13, "save-damage", "area"),
-    _spell("regenerate", "Regenerate", 7, "healing", 13, "arena-out-of-scope"),
+    _spell("regenerate", "Regenerate", 7, "healing", 13, "long-cast"),
     _spell("sunburst", "Sunburst", 8, "damage", 15, "save-damage", "area", "condition"),
-    _spell("holy-aura", "Holy Aura", 8, "buff", 15, "arena-out-of-scope"),
-    _spell("mass-heal", "Mass Heal", 9, "healing", 17, "arena-out-of-scope"),
+    _spell("holy-aura", "Holy Aura", 8, "buff", 15, "friendly-save-aura", "concentration"),
+    _spell("mass-heal", "Mass Heal", 9, "healing", 17, "healing", "multi-target-healing"),
     _spell("true-resurrection", "True Resurrection", 9, "healing", 17, "arena-out-of-scope"),
 )

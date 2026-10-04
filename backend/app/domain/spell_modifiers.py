@@ -9,7 +9,8 @@ from app.domain.debuffs import DebuffCounter
 
 SpellModifierKind = Literal[
     "armor-class", "armor-class-minimum", "attack-roll-bonus-die", "attack-roll-flat",
-    "saving-throw-bonus-die", "saving-throw-flat", "saving-throw-advantage", "d20-test-advantage",
+    "saving-throw-bonus-die", "saving-throw-flat", "saving-throw-advantage",
+    "saving-throw-disadvantage", "d20-test-advantage",
     "death-save-advantage", "healing-maximize", "condition-immunity", "attacks-against-advantage",
     "attacks-against-disadvantage", "targeting-save-gate", "bonus-damage", "weapon-damage-flat",
     "speed", "debuff-counter",
@@ -84,13 +85,17 @@ class SpellModifierEffect(BaseModel):
             raise ValueError(f"{self.kind} does not accept attacker-sense bypass.")
         if len(set(self.bypass_attacker_senses)) != len(self.bypass_attacker_senses):
             raise ValueError("Attacker-sense bypass values must be unique.")
-        if self.kind in {"saving-throw-advantage", "targeting-save-gate"} and not self.save_ability:
+        if self.kind in {
+            "saving-throw-advantage", "saving-throw-disadvantage", "targeting-save-gate",
+        } and not self.save_ability:
             raise ValueError(f"{self.kind} requires a save ability.")
         if self.kind == "targeting-save-gate" and self.save_dc is None:
             raise ValueError("Targeting save gates require a DC.")
         if self.kind != "targeting-save-gate" and self.save_dc is not None:
             raise ValueError(f"{self.kind} does not accept a save DC.")
-        if self.kind not in {"saving-throw-advantage", "targeting-save-gate"} and self.save_ability:
+        if self.kind not in {
+            "saving-throw-advantage", "saving-throw-disadvantage", "targeting-save-gate",
+        } and self.save_ability:
             raise ValueError(f"{self.kind} does not accept a save ability.")
         if self.consume_on_attack_against and self.kind != "attacks-against-advantage":
             raise ValueError("Only attack-advantage spell modifiers can be consumed by the next attack.")

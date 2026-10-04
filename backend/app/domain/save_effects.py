@@ -21,7 +21,7 @@ class FailedSaveTimedEffect(BaseModel):
     """Source-neutral timed rider applied only after a failed saving throw."""
 
     effect_id: str
-    duration_rounds: int | None = Field(default=None, ge=1, le=14400)
+    duration_rounds: int | None = Field(default=None, ge=1, le=100800)
     expiry_timing: SaveEffectTiming = "target_turn_end"
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
@@ -31,6 +31,7 @@ class FailedSaveTimedEffect(BaseModel):
     ends_on_damage: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
+    repeat_save_failures_to_lock: int | None = Field(default=None, ge=1, le=10)
 
     @model_validator(mode="after")
     def validate_repeat_save(self) -> "FailedSaveTimedEffect":

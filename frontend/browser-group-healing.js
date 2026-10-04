@@ -6,6 +6,7 @@
   const P = () => window.IRON_PIT_BROWSER_HEALING_POLICY;
   const H = () => window.IRON_PIT_BROWSER_HEALING;
   const R = () => window.IRON_PIT_BROWSER_HEALING_RESOLUTION;
+  const S = () => window.IRON_PIT_BROWSER_STATE;
 
   function resolveGroup(
     sequence, round, healer, targets, action, turnKey = null, setup = null,
@@ -28,10 +29,20 @@
     healer.state.resources[action.resourceId] -= action.resourceCost || 1;
     const remaining = healer.state.resources[action.resourceId];
     const events = [];
+    let remainingPool = action.sharedHealingPool;
     for (const target of targets) {
       const before = target.state.current_hp;
       let rolls = [], total = 0, healed = 0, notation = "", modifier = 0;
-      if (action.restoreToEffectiveMax) {
+      if (remainingPool != null) {
+        const missing = Math.max(0, S().effectiveMaxHp(target.state) - target.state.current_hp);
+        const allocated = Math.min(remainingPool, missing);
+        remainingPool -= allocated;
+        const bonus = allocated > 0 ? (action.healingBonus || 0) : 0;
+        total = allocated + bonus;
+        modifier = bonus;
+        healed = total ? H().restore(target.state, total) : 0;
+        notation = String(total);
+      } else if (action.restoreToEffectiveMax) {
         healed = H().restore(target.state, Number.MAX_SAFE_INTEGER);
         total = healed;
         notation = "restore-to-effective-max";

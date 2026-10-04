@@ -29,6 +29,7 @@
       }
       const aura = action.friendlySaveAdvantageAura;
       if (!aura) return true;
+      if (aura.all_saves || aura.attacks_against_disadvantage) return false;
       if (!setup) return false;
       const stateRuntime = window.IRON_PIT_BROWSER_STATE;
       const conditions = window.IRON_PIT_BROWSER_CONDITION_RULES;

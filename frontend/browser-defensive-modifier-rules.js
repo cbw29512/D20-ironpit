@@ -59,8 +59,9 @@
       throw error;
     }
   }
-  const saveDisadvantage = (state) => (state.active_modifiers || [])
-    .filter((item) => item.kind === "saving-throw-disadvantage").length;
+  const saveDisadvantage = (state, ability = null) => (state.active_modifiers || [])
+    .filter((item) => item.kind === "saving-throw-disadvantage"
+      && (ability == null || item.save_ability == null || item.save_ability === ability)).length;
 
   function consumeSavingThrowModifiers(state) {
     const removed = (state.active_modifiers || [])

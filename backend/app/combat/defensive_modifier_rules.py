@@ -108,8 +108,12 @@ def saving_throw_advantage_source_names(
         raise
 
 
-def saving_throw_disadvantage_sources(state: CombatantState) -> int:
-    return sum(1 for item in state.active_modifiers if item.kind is ModifierKind.SAVING_THROW_DISADVANTAGE)
+def saving_throw_disadvantage_sources(state: CombatantState, ability: str | None = None) -> int:
+    return sum(
+        1 for item in state.active_modifiers
+        if item.kind is ModifierKind.SAVING_THROW_DISADVANTAGE
+        and (ability is None or item.save_ability is None or item.save_ability == ability)
+    )
 
 
 

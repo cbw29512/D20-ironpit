@@ -97,6 +97,8 @@ def _friendly_aura_is_relevant(
         aura = action.friendly_save_advantage_aura
         if aura is None:
             return True
+        if aura.all_saves or aura.attacks_against_disadvantage:
+            return False
         if setup is None:
             return False
         allies = setup.heroes if member.side == "heroes" else setup.monsters

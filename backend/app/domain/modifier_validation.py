@@ -92,6 +92,7 @@ def validate_combat_modifier_payload(modifier) -> None:
         raise ValueError(f"{modifier.kind.value} does not accept targeting-gate success immunity.")
     if modifier.kind not in {
         ModifierKind.SAVING_THROW_ADVANTAGE,
+        ModifierKind.SAVING_THROW_DISADVANTAGE,
         ModifierKind.SAVING_THROW_FLAT,
         ModifierKind.COVER_SAVING_THROW_FLAT,
         ModifierKind.TARGETING_SAVE_GATE,

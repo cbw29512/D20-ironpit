@@ -83,6 +83,8 @@ class TimedEffect(BaseModel):
     start_of_turn_save_dc: int | None = Field(default=None, ge=1, le=40)
     start_of_turn_save_ends: bool = False
     prevent_hit_point_maximum_reduction: bool = False
+    repeat_save_failure_count: int = Field(default=0, ge=0)
+    repeat_save_failures_to_lock: int | None = Field(default=None, ge=1, le=10)
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":

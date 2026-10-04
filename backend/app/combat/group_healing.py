@@ -104,11 +104,20 @@ def resolve_group_healing(
         resource.current_uses -= action.resource_cost
         remaining = resource.current_uses
     events: list[BattleEvent] = []
+    remaining_pool = action.shared_healing_pool
     for target in targets:
         before = target.state.current_hp
-        rolls, total, healed, notation, modifier = resolve_healing_amount(
-            healer, target, action, dice,
-        )
+        if remaining_pool is not None:
+            missing = max(0, effective_max_hp(target.state) - target.state.current_hp)
+            allocated = min(remaining_pool, missing)
+            remaining_pool -= allocated
+            bonus = action.healing_bonus if allocated > 0 else 0
+            rolls, total, notation, modifier = [], allocated + bonus, str(allocated + bonus), bonus
+            healed = restore_hit_points(target.state, total) if total else 0
+        else:
+            rolls, total, healed, notation, modifier = resolve_healing_amount(
+                healer, target, action, dice,
+            )
         removed = apply_healing_riders(target, action)
         events.append(BattleEvent(
             sequence=sequence, round_number=round_number, event_type="healing",

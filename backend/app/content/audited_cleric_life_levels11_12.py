@@ -38,10 +38,9 @@ def build_seraphine_dawnshield_level11_profile() -> CharacterBuildProfile:
         _class_feature(
             "heal",
             "Heal",
-            combat=False,
             notes=(
-                "Legal prepared level-6 Cleric spell retained on the sheet; Iron Pit prefers "
-                "the simpler Mass Cure Wounds upcast to avoid adding condition-cleanse coupling."
+                "Action, 60 feet: restore 70 HP plus Disciple of Life, and end Blinded, "
+                "Deafened, and Poisoned. Used only when healing policy selects it."
             ),
         ),
     ]

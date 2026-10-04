@@ -680,8 +680,17 @@
     },
     {
       "id": "recharge",
-      "status": "unsupported",
-      "blocker": "No universal recharge state/roll primitive is certified."
+      "status": "supported",
+      "python": [
+        "backend/app/combat/recharge.py"
+      ],
+      "browser": [
+        "frontend/browser-recharge.js"
+      ],
+      "tests": [
+        "backend/tests/test_recharge.py",
+        "frontend/browser-recharge.test.cjs"
+      ]
     },
     {
       "id": "generic-limited-use-resources",
@@ -721,13 +730,36 @@
     },
     {
       "id": "ongoing-periodic-damage",
-      "status": "unsupported",
-      "blocker": "No universal start/end-turn periodic damage effect with source lifecycle is certified."
+      "status": "supported",
+      "python": [
+        "backend/app/combat/start_of_turn_timed_burn.py"
+      ],
+      "browser": [
+        "frontend/browser-start-of-turn-timed-burn.js"
+      ],
+      "tests": [
+        "backend/tests/test_searing_smite_2024.py",
+        "frontend/browser-start-of-turn-timed-burn.test.cjs"
+      ]
     },
     {
       "id": "auras",
-      "status": "unsupported",
-      "blocker": "No universal proximity aura application/removal engine is certified."
+      "status": "supported",
+      "python": [
+        "backend/app/combat/friendly_save_auras.py",
+        "backend/app/combat/friendly_recovery_auras.py",
+        "backend/app/combat/friendly_weapon_damage_auras.py"
+      ],
+      "browser": [
+        "frontend/browser-friendly-save-auras.js",
+        "frontend/browser-friendly-recovery-auras.js",
+        "frontend/browser-friendly-weapon-damage-auras.js"
+      ],
+      "tests": [
+        "backend/tests/test_paladin_2024_recovery_auras.py",
+        "frontend/browser-friendly-recovery-auras.test.cjs",
+        "frontend/browser-2014-paladin-auras.test.cjs"
+      ]
     },
     {
       "id": "regeneration",

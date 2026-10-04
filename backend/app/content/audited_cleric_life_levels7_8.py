@@ -24,8 +24,16 @@ def build_seraphine_dawnshield_level7_profile() -> CharacterBuildProfile:
             "Level 4 Cleric Spells",
             combat=False,
             notes=(
-                "Iron Pit simplicity policy: mandatory Aura of Life and Death Ward "
-                "remain prepared; complex persistent level-4 effects are not preferred arena actions."
+                "Prayer of Healing stays prepared but is a printed 10-minute cast, so it is "
+                "not a fight Action. Death Ward and Aura of Life bind separately."
+            ),
+        ),
+        _class_feature(
+            "death-ward",
+            "Death Ward",
+            notes=(
+                "First drop to 0 HP becomes 1 HP and one printed instant-kill is negated; "
+                "the ward then ends. Bound to the universal zero-HP replacement modifier."
             ),
         ),
         _class_feature(

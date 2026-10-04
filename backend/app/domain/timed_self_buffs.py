@@ -68,14 +68,20 @@ class TimedFriendlySaveAura(BaseModel):
     """Live friendly aura that grants save Advantage for matching effect tags."""
 
     radius_ft: int = Field(ge=1, le=120)
-    required_effect_tags: list[str] = Field(min_length=1)
+    required_effect_tags: list[str] = Field(default_factory=list)
     requires_hearing: bool = False
+    all_saves: bool = False
+    attacks_against_disadvantage: bool = False
 
     @model_validator(mode="after")
     def validate_tags(self) -> "TimedFriendlySaveAura":
         tags = [item.strip().casefold() for item in self.required_effect_tags]
         if any(not item for item in tags) or len(set(tags)) != len(tags):
             raise ValueError("Timed friendly save-aura effect tags must be non-empty and unique.")
+        if self.all_saves and tags:
+            raise ValueError("All-save auras cannot also require effect tags.")
+        if not self.all_saves and not tags and not self.attacks_against_disadvantage:
+            raise ValueError("Timed friendly save-aura requires tags, all-saves, or attacks-against Disadvantage.")
         self.required_effect_tags = tags
         return self
 

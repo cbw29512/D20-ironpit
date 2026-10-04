@@ -47,6 +47,8 @@
       return_damage_bonus: options.returnDamageBonus || 0,
       return_damage_type: options.returnDamageType || null,
       return_damage_excluded_creature_types: [...(options.returnDamageExcludedCreatureTypes || [])],
+      repeat_save_failure_count: 0,
+      repeat_save_failures_to_lock: options.repeatSaveFailuresToLock || null,
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     RF()?.revertIfIncapacitated(state);

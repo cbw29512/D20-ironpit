@@ -9,6 +9,7 @@ from app.content.cleric_divine_intervention import (
 )
 from app.content.cleric_life_domain import AID, DISPEL_MAGIC, LESSER_RESTORATION
 from app.content.shared_restoration_spells_2024 import greater_restoration_2024
+from app.content.shared_survival_spells_2024 import death_ward_2024
 from app.content.cleric_runtime_loadout import (
     build_seraphine_healing,
     build_seraphine_initiative_refills,
@@ -62,6 +63,8 @@ def _build_seraphine(level: int) -> CombatantTemplate:
     defenses = [BLESS.model_copy(deep=True), SHIELD_OF_FAITH.model_copy(deep=True)]
     if level >= 3:
         defenses.insert(0, AID.model_copy(deep=True))
+    if level >= 7:
+        defenses.append(death_ward_2024())
 
     traits = [CombatTrait.ADRENALINE_RUSH, CombatTrait.RELENTLESS_ENDURANCE]
     if "disciple-of-life" in features:
@@ -155,7 +158,7 @@ def _build_seraphine(level: int) -> CombatantTemplate:
         visual=VisualLoadout(armor="chain-shirt", main_hand="mace", off_hand="shield", body_style="humanoid"),
         resources=build_seraphine_resources(level),
         initiative_resource_refill_grants=build_seraphine_initiative_refills(level),
-        timed_self_buff_actions=build_seraphine_timed_self_buffs(level),
+        timed_self_buff_actions=build_seraphine_timed_self_buffs(level, save_dc),
         source=seraphine_source(level),
     )
 

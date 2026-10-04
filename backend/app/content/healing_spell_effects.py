@@ -93,11 +93,13 @@ def build_mass_cure_wounds(
         raise
 
 
-def build_heal_2024(slot_level: int = 6) -> HealingAction:
+def build_heal_2024(slot_level: int = 6, extra_healing_bonus: int = 0) -> HealingAction:
     """2024 Heal using universal fixed healing plus condition removal."""
     try:
         if not 6 <= slot_level <= 9:
             raise ValueError("Heal slot level must be between 6 and 9.")
+        if extra_healing_bonus < 0:
+            raise ValueError("Heal extra healing bonus cannot be negative.")
         suffix = "" if slot_level == 6 else f"-l{slot_level}"
         label = "Heal" if slot_level == 6 else f"Heal ({slot_level}th-Level)"
         return HealingAction(
@@ -108,7 +110,7 @@ def build_heal_2024(slot_level: int = 6) -> HealingAction:
             target_mode="self_or_ally",
             dice_count=0,
             dice_size=6,
-            healing_bonus=70 + 10 * (slot_level - 6),
+            healing_bonus=70 + 10 * (slot_level - 6) + extra_healing_bonus,
             resource_id=f"spell-slot-{slot_level}",
             resource_cost=1,
             removable_conditions=["blinded", "deafened", "poisoned"],
@@ -116,4 +118,59 @@ def build_heal_2024(slot_level: int = 6) -> HealingAction:
         )
     except Exception:
         logger.exception("Failed to build 2024 Heal at slot level %s.", slot_level)
+        raise
+
+
+def build_mass_heal_2024(extra_healing_bonus: int = 0) -> HealingAction:
+    """2024 Mass Heal: divide 700 HP, then per-target extras and condition removal."""
+    try:
+        if extra_healing_bonus < 0:
+            raise ValueError("Mass Heal extra healing bonus cannot be negative.")
+        return HealingAction(
+            id="mass-heal",
+            name="Mass Heal",
+            action_cost="action",
+            range_ft=60,
+            target_mode="self_or_ally",
+            max_targets=6,
+            dice_count=0,
+            dice_size=6,
+            healing_bonus=extra_healing_bonus,
+            shared_healing_pool=700,
+            resource_id="spell-slot-9",
+            resource_cost=1,
+            removable_conditions=["blinded", "deafened", "poisoned"],
+            animation="healing",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Mass Heal.")
+        raise
+
+
+def build_spare_the_dying_2024(character_level: int) -> HealingAction:
+    """2024 Spare the Dying: stabilize a living 0 HP creature. Cantrip range scales at 5/11/17."""
+    try:
+        if character_level < 1:
+            raise ValueError("Spare the Dying requires a positive character level.")
+        range_ft = 15
+        if character_level >= 17:
+            range_ft = 120
+        elif character_level >= 11:
+            range_ft = 60
+        elif character_level >= 5:
+            range_ft = 30
+        return HealingAction(
+            id="spare-the-dying",
+            name="Spare the Dying",
+            action_cost="action",
+            range_ft=range_ft,
+            target_mode="self_or_ally",
+            dice_count=0,
+            dice_size=6,
+            healing_bonus=0,
+            stabilize_at_zero=True,
+            animation="healing",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Spare the Dying at level %s.", character_level)
         raise
