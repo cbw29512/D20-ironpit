@@ -1,0 +1,46 @@
+name: Publish Netlify production
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_id:
+        description: Netlify deploy id to publish to ironpit.netlify.app
+        required: true
+        default: "6ac22aac2d2a1800082d33b1"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Unlock the pinned production deploy and publish the approved build
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          DEPLOY_ID: ${{ inputs.deploy_id }}
+          LOCKED_DEPLOY_ID: "6ab2a3c145dcad00084404cc"
+        run: |
+          set -euo pipefail
+          TOKEN="${NETLIFY_AUTH_TOKEN:-${NETLIFY_TOKEN:-}}"
+          if [ -z "$TOKEN" ]; then
+            echo "No NETLIFY_AUTH_TOKEN or NETLIFY_TOKEN secret is available."
+            exit 1
+          fi
+          api() {
+            curl -sS -X "$1" \
+              -H "Authorization: Bearer $TOKEN" \
+              -H "Content-Type: application/json" \
+              "$2"
+          }
+          echo "Unlocking pinned production deploy $LOCKED_DEPLOY_ID"
+          api POST "https://api.netlify.com/api/v1/deploys/${LOCKED_DEPLOY_ID}/unlock" || true
+          echo "Publishing deploy $DEPLOY_ID"
+          api POST "https://api.netlify.com/api/v1/deploys/${DEPLOY_ID}/restore" | tee /tmp/restore.json
+          python3 - <<'PY'
+          import json
+          payload = json.load(open("/tmp/restore.json"))
+          if payload.get("code") or payload.get("state") not in {None, "ready", "current"}:
+              if not payload.get("id"):
+                  raise SystemExit(f"Netlify restore failed: {payload}")
+          print("restore id", payload.get("id"), "state", payload.get("state"), "published_at", payload.get("published_at"))
+          PY
