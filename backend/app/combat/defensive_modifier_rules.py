@@ -3,8 +3,6 @@ from __future__ import annotations
 import logging
 
 from app.combat.defensive_modifier_lifecycle import consume_saving_throw_modifiers, remove_owner_attack_ending_modifiers
-from app.combat.condition_rules import is_incapacitated
-
 from app.content.monster_creature_types import base_creature_type
 from app.domain.models import CombatantState, CombatantTemplate
 from app.domain.modifiers import CombatModifier, ModifierKind
@@ -51,6 +49,8 @@ def _saving_throw_advantage_modifiers(
     context: SavingThrowContext | None = None,
 ) -> list[CombatModifier]:
     try:
+        from app.combat.condition_rules import is_incapacitated
+
         resolved_context = context or SavingThrowContext()
         return [
             item for item in state.active_modifiers
