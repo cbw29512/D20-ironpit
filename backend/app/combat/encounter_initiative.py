@@ -14,23 +14,25 @@ from app.domain.models import RollMode
 logger = logging.getLogger(__name__)
 
 
-def _initiative_mode(member: EncounterCombatant) -> RollMode:
+def _initiative_mode(member: EncounterCombatant, setup: EncounterSetup) -> RollMode:
     try:
         state = member.state
         return ability_check_roll_mode(
             state,
             advantage_sources=int(state.template.progression_features.initiative_advantage),
             disadvantage_sources=int(is_incapacitated(state)) + ability_check_disadvantage_sources(state),
+            encounter_member=member,
+            setup=setup,
         )
     except Exception as exc:
         logger.exception("Failed to resolve initiative roll mode for %s.", member.state.template.name)
         raise RuntimeError("Initiative roll mode could not be resolved.") from exc
 
 
-def _roll_group(members: list[EncounterCombatant], dice: DiceProvider) -> InitiativeGroup:
+def _roll_group(members: list[EncounterCombatant], dice: DiceProvider, setup: EncounterSetup) -> InitiativeGroup:
     state = members[0].state
     template = state.template
-    roll = roll_d20(dice, template.initiative_bonus + d20_modifier(state), _initiative_mode(members[0]))
+    roll = roll_d20(dice, template.initiative_bonus + d20_modifier(state), _initiative_mode(members[0], setup))
     for member in members:
         member.state.initiative_roll = roll.selected_roll
         member.state.initiative_total = roll.total
@@ -46,7 +48,7 @@ def _roll_group(members: list[EncounterCombatant], dice: DiceProvider) -> Initia
 
 
 def _base_groups(setup: EncounterSetup, dice: DiceProvider) -> list[InitiativeGroup]:
-    groups = [_roll_group([hero], dice) for hero in setup.heroes]
+    groups = [_roll_group([hero], dice, setup) for hero in setup.heroes]
     monster_groups: dict[tuple[str, bool, int], list[EncounterCombatant]] = defaultdict(list)
     monster_order: list[tuple[str, bool, int]] = []
     for monster in setup.monsters:
@@ -54,7 +56,7 @@ def _base_groups(setup: EncounterSetup, dice: DiceProvider) -> list[InitiativeGr
         if key not in monster_groups:
             monster_order.append(key)
         monster_groups[key].append(monster)
-    groups.extend(_roll_group(monster_groups[key], dice) for key in monster_order)
+    groups.extend(_roll_group(monster_groups[key], dice, setup) for key in monster_order)
     return groups
 
 
