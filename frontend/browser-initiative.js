@@ -62,7 +62,7 @@
       const disadvantage = Number(Q().incapacitated(state)) + X().abilityCheckDisadvantage(state);
       const checks = A();
       if (!checks) throw new Error("Browser initiative requires browser-ability-checks.js.");
-      const mode = checks.mode(state, advantage, disadvantage);
+      const mode = checks.mode(state, advantage, disadvantage, { member: group.members[0], setup });
       const roll = R().d20(state.template.initiative_bonus + X().d20Modifier(state), mode);
       group.initiative_roll = roll;
       group.natural_roll = roll.selected_roll;
