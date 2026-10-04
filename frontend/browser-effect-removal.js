@@ -76,7 +76,7 @@
       dc = 10 + effect.spellLevel;
       check = R().d20(
         Math.floor((score - 10) / 2),
-        A()?.mode ? A().mode(remover.state) : "normal",
+        A()?.mode ? A().mode(remover.state, 0, 0, { member: remover, setup }) : "normal",
       );
       const needsCheckRuntime = (remover.state.template.ability_check_minimums || []).some(
         (rule) => rule.ability === action.castingAbility,
