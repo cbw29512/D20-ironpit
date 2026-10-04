@@ -35,16 +35,15 @@ def build_ranger_2024_level2_audits() -> list[FeatureAudit]:
                     notes="Reuses the universal Archery ranged-weapon attack-bonus compiler.",
                 ),
                 FeatureAudit(
-                    feature_id="hail-of-thorns",
-                    feature_name="Hail of Thorns",
-                    source_reference="D&D Beyond Basic Rules 2024: Hail of Thorns",
+                    feature_id="longstrider",
+                    feature_name="Longstrider",
+                    source_reference="D&D Beyond Basic Rules 2024: Longstrider",
                     category="class",
-                    combat_relevant=False,
-                    automated=False,
+                    combat_relevant=True,
+                    automated=True,
                     notes=(
-                        "Third prepared Ranger spell at level 2 under the damage-first policy; "
-                        "arena execution remains fail-closed until its hit-triggered area-save damage "
-                        "is certified through universal primitives."
+                        "Third prepared Ranger spell at level 2; reuses the already-certified explicit "
+                        "2024 Longstrider speed-modifier fingerprint."
                     ),
                 ),
             ]
