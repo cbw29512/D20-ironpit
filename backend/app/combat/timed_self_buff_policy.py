@@ -6,6 +6,7 @@ from typing import Literal
 from app.combat.action_economy import is_available
 from app.combat.condition_rules import has_condition
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.spellcasting import slot_spell_available
 from app.combat.suppression_zone_geometry import verbal_casting_blocked
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.timed_self_buffs import TimedSelfBuffAction
@@ -144,6 +145,7 @@ def choose_timed_self_buff_action(
     setup: EncounterSetup | None = None,
     *,
     activation_timing: Literal["action", "start_turn"] = "action",
+    turn_key: str | None = None,
 ) -> TimedSelfBuffAction | None:
     """Choose the highest-priority legal inactive tactically relevant self-buff."""
     try:
@@ -170,6 +172,12 @@ def choose_timed_self_buff_action(
                     and action.resource_id.startswith("spell-slot-")
                     and setup is not None
                     and verbal_casting_blocked(member, setup)
+                )
+                and not (
+                    action.resource_id
+                    and action.resource_id.startswith("spell-slot-")
+                    and turn_key is not None
+                    and not slot_spell_available(member.state, turn_key)
                 )
                 and not concentration_grant_only(action)
                 and _friendly_aura_is_relevant(member, action, setup)

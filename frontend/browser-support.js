@@ -67,7 +67,7 @@
       events.push(...moved.events);
       return { events, sequence: moved.sequence };
     }
-    const selfBuff = B()?.choose(member, setup);
+    const selfBuff = B()?.choose(member, setup, "action", turnKey);
     if (selfBuff) {
       events.push(B().resolve(sequence++, round, member, selfBuff, {
         affectedStates: [...setup.heroes, ...setup.monsters].map((entry) => entry.state),

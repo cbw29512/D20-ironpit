@@ -80,7 +80,7 @@
     );
   }
 
-  function choose(member, setup = null, activationTiming = "action") {
+  function choose(member, setup = null, activationTiming = "action", turnKey = null) {
     try {
       const choices = (member.state.template.timed_self_buff_actions || []).filter((action) =>
         (action.activationTiming || "action") === activationTiming
@@ -91,6 +91,9 @@
         && (!action.concentration || !member.state.concentration)
         && !(action.resourceId && String(action.resourceId).startsWith("spell-slot-")
           && setup && window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.verbalBlocked(member, setup))
+        && !(action.resourceId && String(action.resourceId).startsWith("spell-slot-")
+          && turnKey && window.IRON_PIT_BROWSER_SPELLCASTING
+          && !window.IRON_PIT_BROWSER_SPELLCASTING.slotSpellAvailable(member.state, turnKey))
         && friendlyAuraRelevant(member, action, setup)
         && hostileAuraRelevant(member, action, setup));
       choices.sort((a, b) => (b.priority || 0) - (a.priority || 0));

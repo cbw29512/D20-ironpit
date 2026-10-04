@@ -37,7 +37,7 @@ def resolve_control_support(
             )
             events.extend(moved)
             return events, sequence
-        self_buff = choose_timed_self_buff_action(member, setup)
+        self_buff = choose_timed_self_buff_action(member, setup, turn_key=turn_key)
         if self_buff is not None:
             events.append(resolve_timed_self_buff(
                 sequence,

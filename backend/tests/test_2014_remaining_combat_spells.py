@@ -13,6 +13,7 @@ from app.combat.state import build_combatant_state
 from app.combat.suppression_zone_cast import cast_suppression_zone, choose_suppression_zone_center
 from app.combat.suppression_zone_geometry import verbal_casting_blocked
 from app.combat.teleport_resolution import resolve_teleport
+from app.combat.timed_self_buff_policy import choose_timed_self_buff_action
 from app.combat.timed_self_buffs import resolve_timed_self_buff
 from app.combat.zero_hp import apply_damage
 from app.content.arena_map import build_standard_iron_pit_map
@@ -147,6 +148,20 @@ def test_2014_spirit_guardians_deals_half_on_successful_wisdom_save() -> None:
     assert event is not None
     assert event.save_succeeded is True
     assert enemy.state.current_hp == before - 12
+
+
+def test_2014_spirit_guardians_is_not_chosen_after_a_slot_is_spent() -> None:
+    action = spirit_guardians_2014(13)
+    caster = _member(build_karnok_stoneward().model_copy(update={
+        "timed_self_buff_actions": [action],
+        "resources": [ResourceDefinition(id="spell-slot-3", name="3rd-level Slot", max_uses=1)],
+    }), "caster", "heroes", 2, 2)
+    enemy = _member(build_commoner(), "enemy", "monsters", 3, 2)
+    setup = _setup([caster], [enemy])
+    assert choose_timed_self_buff_action(caster, setup, turn_key="1:caster") is not None
+    caster.state.spell_slot_expended_turn_key = "1:caster"
+    assert choose_timed_self_buff_action(caster, setup, turn_key="1:caster") is None
+    assert choose_timed_self_buff_action(caster, setup) is not None
 
 
 def test_2014_protection_from_energy_uses_concentration_owned_resistance() -> None:

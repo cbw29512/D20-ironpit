@@ -10,8 +10,8 @@
     return P().active(member, action);
   }
 
-  function choose(member, setup = null, activationTiming = "action") {
-    return P().choose(member, setup, activationTiming);
+  function choose(member, setup = null, activationTiming = "action", turnKey = null) {
+    return P().choose(member, setup, activationTiming, turnKey);
   }
 
   function resolve(sequence, round, member, action, options = {}) {
