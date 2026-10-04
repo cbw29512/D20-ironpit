@@ -46,7 +46,7 @@ def resolve_combat_turn(
         sync_paladin_auras_2014(setup)
         sync_friendly_save_auras(setup)
         start_events, sequence = begin_turn_with_events(
-            sequence, round_number, attacker.combatant_id, attacker.state, dice,
+            sequence, round_number, attacker.combatant_id, attacker.state, dice, member=attacker,
         )
         events.extend(start_events)
         for member in sync_formation_rows(setup):

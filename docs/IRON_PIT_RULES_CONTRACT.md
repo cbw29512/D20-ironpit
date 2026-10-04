@@ -267,9 +267,19 @@ A flavor-only d6 may narrate the fumble; it has no additional mechanical effect.
 - A flavor-only d6 may narrate the critical; it has no additional mechanical effect.
 - Saving throw natural 1/20 values have no extra Iron Pit rule unless RAW for the specific rule says otherwise.
 
+### Turn-start buff versus debuff
+
+At the start of each creature's turn, the engine reads that creature's live debuffs before it acts. A legal matching buff answers the debuff:
+
+- Bloodied (current HP at or below half of maximum) is answered by healing.
+- Charmed or Frightened is answered by a condition-immunity or debuff-counter buff for that same condition.
+- An already-active matching counter-buff suppresses the current condition and causes a new copy of that debuff to fail closed. It does not land.
+
+Arena AI selects the answering buff only when the matching debuff is present on a legal friend. A printed suppression that would do nothing is not selected. Pairing is by condition identity and modifier kind, never by spell name, monster name, or class name.
+
 ### Calm Emotions
 
-2014 Calm Emotions currently binds only the printed charm/frighten suppression option through the shared condition-immunity and debuff-counter primitives. The printed indifference option is not a supported targeting-gate primitive. If the caster uses suppression and there is nothing to suppress, a failed save is a legal no-op. Do not apply Charmed or invent a hostility shutdown to fake the missing option.
+2014 Calm Emotions binds the printed charm/frighten suppression option through the shared condition-immunity and debuff-counter primitives. Allies may choose to fail the save to receive that beneficial suppression. The printed indifference option is not a supported targeting-gate primitive. Do not apply Charmed or invent a hostility shutdown to fake the missing option.
 
 ## 9. Advantage and Disadvantage
 

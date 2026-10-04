@@ -2,16 +2,22 @@
   "use strict";
 
   const A = (kind, value) => Object.freeze({ kind, value });
-  const R = (id, ruleset, title, level, classes, monsters, purpose, seed, aspects) => Object.freeze({
+  const C = (side, rosterIndex, conditionId, sourceSide, sourceRosterIndex) => Object.freeze({
+    side, rosterIndex, conditionId, sourceSide, sourceRosterIndex,
+  });
+  const R = (id, ruleset, title, level, classes, monsters, purpose, seed, aspects, openingConditions = []) => Object.freeze({
     id, ruleset, title, level, seed, purpose,
     classes: Object.freeze(classes), monsters: Object.freeze(monsters), aspects: Object.freeze(aspects),
+    openingConditions: Object.freeze(openingConditions),
   });
 
   const recipes = Object.freeze([
     R("duel", "2014", "1v1 · Monk discipline", 5, ["monk"], ["brown-bear"],
       "Stunning Strike and the Stunned condition.", 1701, [A("feature", "stunning-strike"), A("condition", "stunned")]),
-    R("legendary", "2014", "1v1 · Legendary Unicorn", 5, ["fighter"], ["unicorn"],
-      "A printed legendary action fires after another creature's turn.", 1, [A("text", "Legendary Action")]),
+    R("legendary", "2014", "1v2 · Legendary Unicorn", 5, ["fighter"], ["unicorn", "berserker"],
+      "A printed legendary action fires after another creature's turn, and Calm Emotions answers an ally's fear.", 1,
+      [A("text", "Legendary Action"), A("condition", "frightened"), A("feature", "calm-emotions")],
+      [C("monsters", 2, "frightened", "heroes", 1)]),
     R("goblins", "2014", "1v2 · Barbarian vs two Goblins", 3, ["barbarian"], ["goblin", "goblin"],
       "Barbarian Rage.", 1701, [A("feature", "rage")]),
     R("partners", "2014", "2v2 · Steel and healing", 5, ["fighter", "cleric"], ["brown-bear", "dire-wolf"],

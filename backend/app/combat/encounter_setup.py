@@ -7,6 +7,7 @@ from app.combat.encounter_ruleset import resolve_encounter_ruleset
 from app.combat.formation import starting_position_ft
 from app.combat.formation_rows import assign_formation_rows
 from app.combat.grid_placement import apply_placement, pack_deployment_zone
+from app.combat.opening_conditions import apply_opening_conditions
 from app.combat.state import build_combatant_state
 from app.content.arena_map import (
     build_hero_deployment_zone,
@@ -127,7 +128,7 @@ def build_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
         assign_formation_rows(hero_states)
         assign_formation_rows(monster_states)
         battle_map = _apply_standard_grid_placement(hero_states, monster_states)
-        return EncounterSetup(
+        setup = EncounterSetup(
             heroes=hero_states,
             monsters=monster_states,
             hero_total_levels=_hero_level_total(hero_states),
@@ -135,6 +136,8 @@ def build_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
             ruleset=ruleset,
             map_definition=battle_map,
         )
+        apply_opening_conditions(setup, selection)
+        return setup
     except ValueError:
         raise
     except Exception as exc:

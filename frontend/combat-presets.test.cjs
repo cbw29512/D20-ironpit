@@ -28,6 +28,10 @@ require("./combat-preset-recipes.js"); require("./combat-presets.js");
       ruleset: recipe.ruleset,
       hero_ids: heroes.map((card) => card.runnable_template_id),
       monster_ids: monsters.map((card) => card.runnable_template_id),
+      opening_conditions: (recipe.openingConditions || []).map((item) => ({
+        side: item.side, roster_index: item.rosterIndex, condition_id: item.conditionId,
+        source_side: item.sourceSide, source_roster_index: item.sourceRosterIndex,
+      })),
     };
     const { battle } = IRON_PIT_BROWSER_TURBO.runSeeded(selection, recipe.seed);
     assert.ok(battle.events.length > 0, recipe.id);

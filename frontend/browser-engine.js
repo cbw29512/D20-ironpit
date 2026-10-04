@@ -65,19 +65,15 @@
       const ruleset = resolveRuleset([...heroMembers, ...monsterMembers]);
       if (ruleset !== requestedRuleset) throw new Error(`Selected ruleset ${requestedRuleset} does not match combatant ruleset ${ruleset}.`);
       const mapDefinition = placeStandardGrid(heroMembers, monsterMembers);
-      return {
-        heroes: heroMembers,
-        monsters: monsterMembers,
+      const setup = {
+        heroes: heroMembers, monsters: monsterMembers,
         hero_total_levels: heroMembers.reduce((sum, item) => sum + Number(item.state.template.level || 0), 0),
         monster_total_cr: totalCr(monsterMembers.map((item) => item.state.template.challenge_rating)),
-        ruleset,
-        map_definition: mapDefinition,
-        persistent_hazards: [],
-        persistent_barriers: [],
-        persistent_beneficial_zones: [],
-        suppression_zones: [],
-        save_zones: [],
+        ruleset, map_definition: mapDefinition, persistent_hazards: [], persistent_barriers: [],
+        persistent_beneficial_zones: [], suppression_zones: [], save_zones: [],
       };
+      window.IRON_PIT_BROWSER_OPENING_CONDITIONS?.apply(setup, selection);
+      return setup;
     } catch (error) { console.error("Failed to build browser encounter setup", { selection, error }); throw error; }
   }
   function crNumber(value) {
@@ -132,12 +128,13 @@
   function runEncounter(selection) {
     if (!selection.hero_ids?.length || !selection.monster_ids?.length || selection.hero_ids.length > 6 || selection.monster_ids.length > 6) throw new Error("Iron Pit requires 1-6 cards per side.");
     const setup = buildSetup(selection);
-    const prep = P()?.prepare(setup, 1) || { events: [], sequence: 1 };
+    const opening = window.IRON_PIT_BROWSER_OPENING_CONDITIONS?.events(1, setup, selection) || { events: [], sequence: 1 };
+    const prep = P()?.prepare(setup, opening.sequence) || { events: [], sequence: opening.sequence };
     const init = I().resolve(setup);
     const members = [...setup.heroes, ...setup.monsters], states = members.map((member) => member.state);
     const byId = new Map(members.map((member) => [member.combatant_id, member]));
     const initiativeEvents = I().events(init, setup, prep.sequence);
-    const events = [...prep.events, ...initiativeEvents];
+    const events = [...opening.events, ...prep.events, ...initiativeEvents];
     let sequence = prep.sequence + initiativeEvents.length;
     const refill = IR()?.resolve(sequence, setup);
     if (!IR() && members.some((member) => member.state.template.initiative_resource_refill_grants?.length)) {

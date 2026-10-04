@@ -90,6 +90,10 @@ assert.ok(html.indexOf("browser-offense-value.js") < html.indexOf("browser-spell
 assert.ok(html.indexOf("browser-spell-offense.js") < html.indexOf("browser-turn.js"));
 assert.ok(html.indexOf("browser-main-action-providers.js") < html.indexOf("browser-action-surge.js"));
 assert.ok(html.indexOf("browser-action-surge.js") < html.indexOf("browser-ability-hook-installation.js"));
+assert.ok(html.indexOf("browser-condition-rules.js") < html.indexOf("browser-debuff-answers.js"));
+assert.ok(html.indexOf("browser-debuff-answers.js") < html.indexOf("browser-turn-start-conditions.js"));
+assert.ok(html.indexOf("browser-opening-conditions.js") < html.indexOf("browser-engine.js"));
+assert.ok(html.indexOf("browser-condition-counter.js") < html.indexOf("browser-support.js"));
 assert.ok(html.indexOf("browser-support.js") < html.indexOf("browser-ability-hook-installation.js"));
 assert.ok(html.indexOf("browser-ability-hook-installation.js") < html.indexOf("browser-turn.js"));
 assert.ok(html.indexOf("browser-formation.js") < html.indexOf("browser-arena-map.js"));

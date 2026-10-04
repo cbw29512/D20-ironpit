@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   const MAX_SLOTS = 6;
-  const state = { ruleset: "2014", catalog: null, heroSlots: Array(MAX_SLOTS).fill(null), monsterSlots: Array(MAX_SLOTS).fill(null), fighting: false, hasRun: false, turboBatch: null, session: null };
+  const state = { ruleset: "2014", catalog: null, heroSlots: Array(MAX_SLOTS).fill(null), monsterSlots: Array(MAX_SLOTS).fill(null), openingConditions: [], fighting: false, hasRun: false, turboBatch: null, session: null };
   const el = (id) => document.getElementById(id);
   const view = () => window.IRON_PIT_BATTLEFIELD_VIEW;
   const picker = () => window.IRON_PIT_BATTLEFIELD_PICKER;
@@ -61,14 +61,14 @@
   function matchup() {
     const heroes = selected("heroes"), monsters = selected("monsters");
     const error = validate(heroes.cards, "heroes") || validate(monsters.cards, "monsters");
-    return { heroes, monsters, error, selection: { ruleset: state.ruleset, hero_ids: heroes.cards.map((card) => card.runnable_template_id), monster_ids: monsters.cards.map((card) => card.runnable_template_id) } };
+    return { heroes, monsters, error, selection: { ruleset: state.ruleset, hero_ids: heroes.cards.map((card) => card.runnable_template_id), monster_ids: monsters.cards.map((card) => card.runnable_template_id), opening_conditions: state.openingConditions || [] } };
   }
 
   function resetBattle(clearBoard = false) {
     try {
       if (state.fighting) return;
       // Selections are immutable cards; rebuilding the view drops all live fight overlays.
-      if (clearBoard) { state.heroSlots.fill(null); state.monsterSlots.fill(null); }
+      if (clearBoard) { state.heroSlots.fill(null); state.monsterSlots.fill(null); state.openingConditions = []; }
       invalidateRun();
       const message = clearBoard ? "Board cleared. Choose pregens and monsters, or load a preset." : "Fight reset. Loaded cards restored; ready for a fresh fight.";
       clearResult(message); render(); el("status").textContent = message;
@@ -78,10 +78,11 @@
     const rows = side === "heroes" ? state.catalog.heroes : state.catalog.monsters;
     return rows.find((card) => card.runnable_template_id === templateId && card.coverage_status === "raw_ready") || null;
   }
-  function loadCards(heroes, monsters, message) {
+  function loadCards(heroes, monsters, message, openingConditions = []) {
     try {
       state.heroSlots = [...heroes, ...Array(MAX_SLOTS - heroes.length).fill(null)];
       state.monsterSlots = [...monsters, ...Array(MAX_SLOTS - monsters.length).fill(null)];
+      state.openingConditions = openingConditions || [];
       invalidateRun(); clearResult(message); render(); el("status").textContent = message;
     } catch (error) { console.error("Matchup card loading failed", error); throw error; }
   }
@@ -111,7 +112,7 @@
     try {
       await rulesetUi().ensureBundle(nextRuleset);
       state.ruleset = nextRuleset; state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog(nextRuleset);
-      state.heroSlots.fill(null); state.monsterSlots.fill(null); invalidateRun();
+      state.heroSlots.fill(null); state.monsterSlots.fill(null); state.openingConditions = []; invalidateRun();
       clearResult(`${nextRuleset} ruleset loaded. Previous matchup cleared to preserve edition isolation.`); rulesetUi().update(state); render();
       el("status").textContent = `${nextRuleset} ready. Choose certified pregens and monsters, or load a preset.`;
     } catch (error) {

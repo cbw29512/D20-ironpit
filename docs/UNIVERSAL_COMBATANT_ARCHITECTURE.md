@@ -410,6 +410,10 @@ spell-package pointers, and loadout capabilities; CI rejects manual or stale che
 - Active means executable and certified.
 
 
+## Turn-start debuff answers
+
+The start-of-turn phase reads the acting creature's live conditions before voluntary actions. Condition identity is absolute: Frightened is Frightened, Charmed is Charmed. A beneficial failed-save modifier of kind `condition-immunity` or `debuff-counter` answers the matching condition on a legal friend. Bloodied (current HP at or below half of maximum) is answered by healing. An already-active matching counter-buff keeps the printed condition instance in state but `has_condition` is false, and a new application of that same condition fails closed. Selection is by modifier kind and condition id, never by spell or monster name.
+
 ## Timed source-owned emanations
 
 Timed self effects may declare a source-owned emanation that resolves against opposing combatants at a fixed lifecycle window. The source ability supplies declarative parameters such as trigger, radius, fixed damage, and damage type; engine dispatch must not branch on the source ability name.
