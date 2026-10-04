@@ -297,6 +297,7 @@ jobs:
           grep -q 'browser-zero-hp.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
           grep -q 'browser-timed-self-buffs.js' frontend/index.html
+          grep -q 'browser-environment-context.js' frontend/index.html
           grep -q 'browser-selectable-damage-resistance.js' frontend/index.html
           grep -q 'browser-precombat-buffs.js' frontend/index.html
           grep -q 'browser-timed-emanations.js' frontend/index.html
@@ -478,6 +479,7 @@ jobs:
           node frontend/browser-timed-effect-owned-resistances.test.cjs
           node frontend/browser-condition-removal.test.cjs
           node frontend/browser-timed-self-buffs.test.cjs
+          node frontend/browser-environment-context.test.cjs
           node frontend/browser-movement-mode-grants.test.cjs
           node frontend/browser-reactions.test.cjs
           node frontend/browser-parry-effective-ac.test.cjs
