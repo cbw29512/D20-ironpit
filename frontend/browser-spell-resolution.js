@@ -21,6 +21,9 @@
       FX().scaledSpell(spell, choice.slotLevel);
       if (spell.actionCost === "reaction") throw new Error("Reaction spells require their trigger window.");
       if (!E().available(caster.state, spell.actionCost)) throw new Error(`${spell.actionCost} is unavailable for ${spell.name}.`);
+      if ((spell.verbalComponent !== false) && window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.verbalBlocked(caster, setup)) {
+        throw new Error(`${spell.name} cannot be cast inside a Silence effect.`);
+      }
 
       let remaining = null;
       if (choice.alternateCast) {
@@ -96,6 +99,18 @@
       const effect = FX().resolveEffect(sequence, round, caster, setup, choice, turnKey);
       events.push(...effect.events);
       sequence = effect.sequence;
+      if (spell.createsDifficultTerrain || spell.creates_difficult_terrain) {
+        const origin = choice.placement?.origin;
+        if (origin) {
+          window.IRON_PIT_BROWSER_TEMPORARY_TERRAIN.applySpellTerrain(
+            setup,
+            caster,
+            spell,
+            { x: Math.floor(origin[0] / 5), y: Math.floor(origin[1] / 5) },
+            round,
+          );
+        }
+      }
       if (choice.damageMaximizer) {
         const followUp = C().resolveDamageMaximizerAfterCast(
           sequence, round, caster, setup, choice.damageMaximizer, choice.slotLevel,

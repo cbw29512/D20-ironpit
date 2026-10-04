@@ -34,10 +34,12 @@ assert.deepEqual(hero.resources, {
 });
 assert.equal(hero.canonical_prepared_spells.length, 17);
 assert.equal(hero.canonical_prepared_spells.at(-1).id, "fire-storm");
-assert.equal(
-  hero.spell_save_actions.some((item) => item.id === "fire-storm"),
-  false,
-  "Fire Storm must not be approximated before multi-cube geometry exists.",
-);
+const storm = hero.spell_save_actions.find((item) => item.id === "fire-storm");
+assert.ok(storm, "Fire Storm must bind through the contiguous-cube placer.");
+assert.equal(storm.damageDiceCount, 7);
+assert.equal(storm.damageDiceSize, 10);
+assert.equal(storm.damageType, "fire");
+assert.equal(storm.area.contiguous_section_count, 10);
+assert.equal(storm.area.length_ft, 10);
 
 console.log("Generated browser 2024 Druid 13 progression regressions passed.");

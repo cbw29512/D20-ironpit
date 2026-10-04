@@ -52,14 +52,33 @@
     if (slotLevel < action.level || slotLevel > 9) throw new Error(`Illegal slot level ${slotLevel} for ${action.name}.`);
     const levelsAbove = slotLevel - action.level;
     if (!levelsAbove) return action;
-    if (!(action.upcastDicePerLevel > 0)) throw new Error(`${action.name} has no certified higher-slot scaling.`);
-    if (action.damageComponents?.length) throw new Error("Multi-component spell upcasting requires component-specific scaling data.");
+    const componentUpcast = (action.damageComponents || []).some((part) => (part.upcastDicePerLevel || 0) > 0);
+    if (!(action.upcastDicePerLevel > 0) && !action.allowsHigherSlots && !componentUpcast) {
+      throw new Error(`${action.name} has no certified higher-slot scaling.`);
+    }
+    if (action.damageComponents?.length) {
+      if (!componentUpcast) {
+        if (action.upcastDicePerLevel > 0) {
+          throw new Error("Multi-component spell upcasting requires component-specific scaling data.");
+        }
+        return action;
+      }
+      return {
+        ...action,
+        damageComponents: action.damageComponents.map((part) => ({
+          ...part,
+          diceCount: (part.diceCount || 0) + levelsAbove * (part.upcastDicePerLevel || 0),
+        })),
+      };
+    }
+    if (!(action.upcastDicePerLevel > 0)) return action;
     return { ...action, damageDiceCount: (action.damageDiceCount || 0) + levelsAbove * action.upcastDicePerLevel };
   }
 
   function slotLevels(caster, action, turnKey) {
+    const componentUpcast = (action.damageComponents || []).some((part) => (part.upcastDicePerLevel || 0) > 0);
     return C().legalSlotLevels(caster.state, turnKey, action.level, {
-      higherSlotScaling: (action.upcastDicePerLevel || 0) > 0,
+      higherSlotScaling: (action.upcastDicePerLevel || 0) > 0 || Boolean(action.allowsHigherSlots) || componentUpcast,
     });
   }
 
@@ -117,18 +136,38 @@
       });
   }
 
+  function spellSaveTargetCount(action, slotLevel) {
+    if (action.level === 0) return action.targetCount || 1;
+    if (slotLevel < action.level) throw new Error(`Illegal slot level ${slotLevel} for ${action.name}.`);
+    return (action.targetCount || 1) + (slotLevel - action.level) * (action.targetCountPerSlotAbove || 0);
+  }
+
+  function rankedSaveTargets(legal, scaled, slotLevel) {
+    const ranked = [...legal].sort((a, b) =>
+      window.IRON_PIT_BROWSER_OFFENSE_VALUE.saveSpell(b, scaled)
+        - window.IRON_PIT_BROWSER_OFFENSE_VALUE.saveSpell(a, scaled)
+      || a.state.current_hp - b.state.current_hp
+      || a.combatant_id.localeCompare(b.combatant_id));
+    return ranked.slice(0, spellSaveTargetCount(scaled, slotLevel));
+  }
+
   function legalSingleTargets(caster, setup, action, range = action.range) {
     const enemies = caster.side === "heroes" ? setup.monsters : setup.heroes;
     return enemies.filter((target) => target.state.is_alive && !target.state.is_dead
       && target.state.current_hp > 0 && S().distance(caster, target) <= range
       && (!window.IRON_PIT_BROWSER_GRID_BARRIERS || window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(caster, target, setup))
       && (!action.requiresTargetHearing || !target.state.active_effect_ids.includes("deafened"))
-      && (!action.requiresTargetSight || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(caster.state, target.state)));
+      && (!action.requiresTargetSight || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(caster.state, target.state))
+      && (!(action.requiredTargetCreatureTypes || []).length
+        || (action.requiredTargetCreatureTypes || []).some((kind) =>
+          String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase() === String(kind).toLowerCase()))
+      && !(action.excludedTargetCreatureTypes || []).some((kind) =>
+        String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase() === String(kind).toLowerCase()));
   }
 
   window.IRON_PIT_BROWSER_SPELL_POLICY_SUPPORT = {
     availableRangeModifier, effectiveRange, spendRangeModifier, placementKey, scaledSpell,
     slotLevels, slotLevel, alternateCasts, castOptions, areaSpellProtection,
-    protectedUniversalPlacements, legalSingleTargets,
+    protectedUniversalPlacements, legalSingleTargets, spellSaveTargetCount, rankedSaveTargets,
   };
 })();

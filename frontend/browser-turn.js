@@ -12,6 +12,7 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
   const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false };
   const H = () => window.IRON_PIT_BROWSER_GRAPPLE || NO_CONTROL;
+  const ACE = () => window.IRON_PIT_BROWSER_ABILITY_CHECK_ESCAPE || NO_CONTROL;
 
   function enablePitRangePolicy() {
     const rolls = window.IRON_PIT_BROWSER_ROLLS;
@@ -133,6 +134,7 @@
         if (followUp) { events.push(followUp); sequence += 1; }
       }
       if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member, setup)); return finalize(events, sequence, round, member, setup, turnKey); }
+      if (ACE().shouldEscape(member.state)) { events.push(ACE().resolve(sequence++, round, member, setup)); return finalize(events, sequence, round, member, setup, turnKey); }
       bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "afterEscape");
       events.push(...bonus.events); sequence = bonus.sequence;
       if (bonus.events.length) {

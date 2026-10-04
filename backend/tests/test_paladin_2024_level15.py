@@ -57,11 +57,11 @@ def test_level_fifteen_extends_same_aurelia_and_spell_package() -> None:
         assert package is not None and len(package.spells) == 12
         assert package.spells[:-1] == canonical_spell_package("paladin", 14, "2024", 3).spells
         assert (package.spells[-1].id, package.spells[-1].spell_level) == ("aura-of-life", 4)
-        assert package.spells[-1].required_capabilities == ["arena-out-of-scope"]
+        assert package.spells[-1].required_capabilities == ["recovery-aura", "concentration"]
         rider = hero.progression_features.resource_backed_post_hit_damage
         assert rider is not None
         assert rider.post_hit_self_buff_action_id == "smite-of-protection-2024"
-        action = hero.timed_self_buff_actions[0]
+        action = next(item for item in hero.timed_self_buff_actions if item.id == "smite-of-protection-2024")
         assert (action.id, action.duration_rounds, action.expiry_timing) == (
             "smite-of-protection-2024", 1, "source_turn_start",
         )

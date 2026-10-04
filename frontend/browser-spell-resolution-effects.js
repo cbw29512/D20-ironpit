@@ -20,14 +20,23 @@
   function saveAction(choice) {
     try {
       const spell = scaledSpell(choice.action, choice.slotLevel);
+      const rangeMultiplier = choice.rangeModifier?.rangeMultiplier || 1;
       return {
         id: spell.id, name: spell.name, saveAbility: spell.saveAbility, dc: spell.dc,
-        range: spell.range + (spell.areaRadius || 0),
+        range: (spell.range + (spell.areaRadius || 0)) * rangeMultiplier,
         damageDiceCount: spell.damageDiceCount,
         damageDiceSize: spell.damageDiceSize, damageBonus: spell.damageBonus || 0,
         damageType: spell.damageType, successDamage: spell.successDamage || "none",
         damageComponents: (spell.damageComponents || []).map((item) => ({ ...item })),
         failedSavePushFt: spell.failedSavePushFt || 0,
+        failedSaveTimedEffect: spell.failedSaveTimedEffect || null,
+        requiredTargetCreatureTypes: [...(spell.requiredTargetCreatureTypes || [])],
+        excludedTargetCreatureTypes: [...(spell.excludedTargetCreatureTypes || [])],
+        minimumRemainingHp: spell.minimumRemainingHp || 0,
+        reduceHitPointMaximumOnFailedSave: Boolean(spell.reduceHitPointMaximumOnFailedSave),
+        requiresTargetHearing: Boolean(spell.requiresTargetHearing),
+        requiresTargetSight: Boolean(spell.requiresTargetSight),
+        automaticFailureCreatureTypes: [...(spell.automaticFailureCreatureTypes || [])],
         magicalEffect: true, effectTags: [...(spell.effectTags || [])],
         area: spell.area || null,
         animation: spell.animation || "spell-save",
@@ -45,6 +54,8 @@
       const members = new Map([...setup.heroes, ...setup.monsters]
         .map((member) => [member.combatant_id, member]));
       const action = saveAction(choice);
+      const dcBonus = window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS?.spellSaveDcBonus?.(caster.state) || 0;
+      if (dcBonus) action.dc += dcBonus;
       const events = [];
       let sharedDamageRolls = null;
       if (choice.damageMaximizer) {
@@ -53,7 +64,7 @@
             C().maximizedRolls(component.diceCount || 0, component.diceSize || 6))
           : C().maximizedRolls(spell.damageDiceCount || 0, spell.damageDiceSize || 6);
       }
-      let saveDisadvantage = H()?.choose(caster.state) || null;
+      let saveDisadvantage = H()?.choose(caster.state, turnKey) || null;
 
       for (const targetId of choice.targetIds) {
         const target = members.get(targetId);
@@ -69,16 +80,22 @@
         let saveDisadvantageSources = [];
         let modifierRemaining = null;
         if (saveDisadvantage) {
-          modifierRemaining = H().spend(caster.state, saveDisadvantage);
+          modifierRemaining = H().spend(caster.state, saveDisadvantage, turnKey);
           saveDisadvantageSources = [saveDisadvantage.name];
           saveDisadvantage = null;
         }
+        const fighting = setup && caster.side !== target.side && (
+          caster.side === "heroes" ? setup.heroes : setup.monsters
+        ).some((ally) => ally.state.is_alive && !ally.state.is_dead && ally.state.current_hp > 0);
+        const saveAdvantageSources = (
+          spell.saveAdvantageIfFighting && fighting
+        ) ? ["fighting-the-target"] : [];
         const event = V().resolveAction(
           sequence, round, caster, target, action,
           placement ? 0 : S().distance(caster, target),
           {
             spendAction: false, sharedDamageRolls, spellEffect: true, setup,
-            saveDisadvantageSources, resourceRemaining: modifierRemaining,
+            saveDisadvantageSources, saveAdvantageSources, resourceRemaining: modifierRemaining,
           },
         );
         sequence += 1;

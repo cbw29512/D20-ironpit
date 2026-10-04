@@ -59,6 +59,12 @@
   function resolveDamage(owner, damageTaken, states = []) {
     if (!Number.isInteger(damageTaken) || damageTaken < 0) throw new Error("Concentration damage must be a nonnegative integer.");
     if (!owner.concentration || damageTaken === 0) return null;
+    const immune = owner.template?.progression_features?.concentration_damage_immune_effect_ids
+      || owner.template?.concentration_damage_immune_effect_ids
+      || [];
+    if (immune.includes(owner.concentration.effect_id)) {
+      return { dc: null, roll: null, succeeded: true, ended: false, reason: "relentless-hunter" };
+    }
     if (owner.is_dead || Q().incapacitated(owner)) {
       end(owner, states);
       return { dc: null, roll: null, succeeded: false, ended: true, reason: "incapacitated-or-dead" };

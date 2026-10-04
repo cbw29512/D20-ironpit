@@ -16,8 +16,10 @@ from app.content.level_resources import (
     fighter_2014_second_wind_uses,
 )
 from app.content.ranger_2014_resource_audit import ranger_2014_spell_slot_resources
+from app.content.ranger_2024_resource_rules import ranger_2024_extra_resources
 from app.content.spell_slot_progression import FULL_CASTER_CLASSES, HALF_CASTER_CLASSES, spell_slot_resources
 from app.content.warlock_2014_resource_audit import warlock_2014_resources
+from app.content.warlock_2024_resource_audit import warlock_2024_resources
 from app.domain.character_builds import CharacterBuildProfile
 
 ResourceRule = tuple[str, str, Callable[[int], int]]
@@ -116,6 +118,10 @@ def expected_resources(profile: CharacterBuildProfile) -> dict[str, int]:
         resolved.update(ranger_2014_spell_slot_resources(profile.level))
     if profile.ruleset == "2014" and profile.class_id == "warlock":
         resolved.update(warlock_2014_resources(profile.level))
+    if profile.ruleset == "2024" and profile.class_id == "warlock":
+        resolved.update(warlock_2024_resources(profile))
+    if profile.ruleset == "2024" and profile.class_id == "ranger":
+        resolved.update(ranger_2024_extra_resources(profile))
     if profile.ruleset == "2014" and profile.class_id == "paladin":
         resolved.update({
             f"spell-slot-{spell_level}": uses

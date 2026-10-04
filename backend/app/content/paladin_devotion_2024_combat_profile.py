@@ -36,6 +36,8 @@ def _profile(level: int) -> PregenCombatProfile:
         resources.append(("spell-slot-5", 2 if level >= 19 else 1))
     if level >= 19:
         resources.append(("boon-combat-prowess", 1))
+    if level >= 20:
+        resources.append(("holy-nimbus", 1))
     return PregenCombatProfile(
         template_id=build.template_id, archetype="Paladin", level=level,
         abilities=scores, save_proficiencies=("wisdom", "charisma"),
@@ -71,7 +73,7 @@ def _profile(level: int) -> PregenCombatProfile:
 
 def build_aurelia_2024_combat_profiles() -> list[PregenCombatProfile]:
     try:
-        return [_profile(level) for level in range(1, 20)]
+        return [_profile(level) for level in range(1, 21)]
     except Exception:
         logger.exception("Failed to build 2024 Aurelia combat fingerprints.")
         raise

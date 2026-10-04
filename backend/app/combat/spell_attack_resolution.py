@@ -5,7 +5,6 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.conditions import attack_roll_condition_sources
-from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
 from app.combat.next_attack_disadvantage import (
@@ -13,7 +12,7 @@ from app.combat.next_attack_disadvantage import (
     next_attack_disadvantage_sources,
 )
 from app.combat.modifier_stack import (
-    add_modifier, apply_d20_bonus_dice, attacks_against_advantage_sources,
+    apply_d20_bonus_dice, attacks_against_advantage_sources,
     consume_attacks_against_advantage, consume_next_attack_against_advantage,
     effective_armor_class, next_attack_against_advantage_sources,
 )
@@ -22,13 +21,12 @@ from app.combat.reaction_roll_penalties import apply_reaction_roll_penalty_if_us
 from app.combat.rolls import resolve_roll_mode, roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
 from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance
-from app.combat.spell_modifiers import build_spell_modifier
 from app.combat.spell_range_modifiers import spend_spell_range_modifier
 from app.combat.spellcasting import mark_slot_spell_cast
-from app.combat.spell_attack_helpers import cast_slot_resource, roll_spell_attack_damage
+from app.combat.spell_attack_helpers import cast_slot_resource
+from app.combat.spell_attack_miss_damage import apply_spell_attack_damage_outcome
+from app.combat.spell_caster_buffs import active_spell_attack_advantage
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
-from app.combat.timed_conditions import apply_timed_condition
-from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent
 from app.domain.modifiers import ModifierKind
@@ -42,6 +40,7 @@ def resolve_spell_attack(
     range_modifier: ResourceBackedSpellRangeModifier | None = None,
     cast_slot_level: int | None = None,
     spend_cast_costs: bool = True,
+    skip_range_check: bool = False,
 ) -> BattleEvent:
     try:
         if spell.action_cost == "reaction":
@@ -52,7 +51,7 @@ def resolve_spell_attack(
             raise ValueError(f"{spell.name} requires a living enemy target.")
         distance = combatant_distance(caster, target) if distance_override_ft is None else distance_override_ft
         allowed_range = spell.range_ft * (range_modifier.range_multiplier if range_modifier is not None else 1)
-        if distance > allowed_range:
+        if not skip_range_check and distance > allowed_range:
             raise ValueError(f"{spell.name} target is out of range.")
         resource = (
             cast_slot_resource(caster, spell, turn_key, cast_slot_level)
@@ -88,6 +87,7 @@ def resolve_spell_attack(
             and target.state.template.wearing_metal_armor
         )
         advantage += next_attack_against_advantage_sources(caster.state, target.combatant_id)
+        advantage += int(active_spell_attack_advantage(caster.state))
         close_threat = spell.attack_kind == "ranged" and close_ranged_threat_exists(caster, setup)
         mode = resolve_roll_mode(
             advantage,
@@ -124,41 +124,11 @@ def resolve_spell_attack(
         hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
         death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
         concentration_before = target.state.concentration.effect_id if target.state.concentration else None
-        damage_roll = None; damage_components = []; applied_conditions: list[str] = []
-        if hit:
-            damage_roll, rolled = roll_spell_attack_damage(
-                spell, critical, dice, attacker=caster.state, target_event_id=target.combatant_id,
-            )
-            applied_total, damage_components = apply_damage_defenses(target.state, rolled); damage_roll.total = applied_total
-            affected_states = [entry.state for entry in [*setup.heroes, *setup.monsters]]
-            apply_damage(target.state, applied_total, critical=critical,
-                         damage_types={part.damage_type for part in damage_components if part.applied_total}, dice=dice, affected_states=affected_states)
-            if target.state.is_alive and not target.state.is_dead:
-                for index, effect in enumerate(spell.on_hit_modifier_effects):
-                    add_modifier(target.state, build_spell_modifier(
-                        caster.combatant_id, target.combatant_id, spell.id, effect, index, spell.name, round_number=round_number,
-                    ))
-                for effect in spell.on_hit_timed_effects:
-                    applied = apply_timed_condition(
-                        target.state,
-                        effect.effect_id,
-                        caster.combatant_id,
-                        source_effect_id=spell.id,
-                        source_template=caster.state.template,
-                        source_is_magical=effect.source_is_magical,
-                        suppress_action=effect.suppress_action,
-                        suppress_bonus_action=effect.suppress_bonus_action,
-                        suppress_reactions=effect.suppress_reactions,
-                        suppress_movement=effect.suppress_movement,
-                        next_attack_disadvantage=effect.next_attack_disadvantage,
-                        applied_round=round_number,
-                        expires_round=round_number + effect.duration_rounds,
-                        expiry_timing=effect.expiry_timing,
-                        affected_states=affected_states,
-                        use_default_poison_recovery=False,
-                    )
-                    if applied is not None:
-                        applied_conditions.append(applied)
+        damage_roll, damage_components, applied_conditions = apply_spell_attack_damage_outcome(
+            caster, target, spell, setup, hit=hit, critical=critical,
+            round_number=round_number, turn_key=turn_key, dice=dice,
+            slot_level=cast_slot_level,
+        )
         remaining = resource.current_uses if resource is not None else None
         outcome = "CRITICAL HIT" if critical else "HIT" if hit else "MISS"
         description = f"{caster.state.template.name}: {outcome} with {spell.name}."

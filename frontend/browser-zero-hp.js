@@ -58,7 +58,20 @@
     return "unconscious";
   }
 
+  function delayRegenDeath(state) {
+    const trait = state.template.regeneration;
+    return Boolean(trait && trait.survives_zero_until_turn && !state.is_dead);
+  }
+
+  function noteRegenTypes(state, damageTypes) {
+    if (!state.template.regeneration || !damageTypes?.length) return;
+    const remembered = new Set(state.damage_types_taken_since_regen || []);
+    for (const item of damageTypes) remembered.add(String(item));
+    state.damage_types_taken_since_regen = [...remembered].sort();
+  }
+
   function markDead(state) {
+    if (delayRegenDeath(state)) { markUnconscious(state); return; }
     state.current_hp = 0;
     state.is_alive = false;
     state.is_dead = true;
@@ -68,8 +81,12 @@
     RF()?.revertIfIncapacitated(state);
   }
 
-  function finish(state, outcome, incoming, affectedStates) {
+  function finish(state, outcome, incoming, affectedStates, setup = null) {
     B()?.endDamageSensitive(state);
+    if (incoming > 0 && state.damage_share_source_id) {
+      if (!setup) throw new Error("Damage share requires encounter setup.");
+      window.IRON_PIT_BROWSER_DAMAGE_SHARE.resolveForState(state, incoming, setup);
+    }
     if (!state.concentration) return outcome;
     if (!C()) throw new Error("Browser concentration runtime is not loaded.");
     C().resolveDamage(state, incoming, affectedStates);
@@ -90,7 +107,7 @@
       state.current_hp = 0;
       let outcome = null;
       if (state.template.kind === "monster") {
-        markDead(state); outcome = "dead";
+        markDead(state); outcome = state.is_dead ? "dead" : "unconscious";
       } else if (state.template.effect_bound_survival_save) {
         if (!U()) throw new Error("Effect-bound survival save runtime is not loaded.");
         if (U().resolveEffectBound(state)) outcome = "survival_save";
@@ -105,9 +122,10 @@
     }
   }
 
-  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = []) {
+  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null) {
     const incoming = amount;
     if (!incoming || state.is_dead) return "damaged";
+    noteRegenTypes(state, damageTypes);
     const absorbed = Math.min(state.temporary_hp, amount);
     state.temporary_hp -= absorbed;
     amount -= absorbed;
@@ -117,29 +135,33 @@
     }
     if (state.current_hp === 0) {
       if (state.template.kind === "monster" || incoming >= S().effectiveMaxHp(state)) {
-        markDead(state); return finish(state, "dead", incoming, affectedStates);
+        markDead(state);
+        return finish(state, state.is_dead ? "dead" : "unconscious", incoming, affectedStates, setup);
       }
       state.is_stable = false;
       state.death_save_failures = Math.min(3, state.death_save_failures + (critical ? 2 : 1));
-      if (state.death_save_failures >= 3) { markDead(state); return finish(state, "dead", incoming, affectedStates); }
-      markUnconscious(state); return finish(state, "unconscious", incoming, affectedStates);
+      if (state.death_save_failures >= 3) { markDead(state); return finish(state, "dead", incoming, affectedStates, setup); }
+      markUnconscious(state); return finish(state, "unconscious", incoming, affectedStates, setup);
     }
-    if (!amount) return finish(state, "damaged", incoming, affectedStates);
+    if (!amount) return finish(state, "damaged", incoming, affectedStates, setup);
     const before = state.current_hp;
     state.current_hp = Math.max(0, before - amount);
-    if (state.current_hp > 0) return finish(state, "damaged", incoming, affectedStates);
-    if (Z()?.consumeZero(state)) return finish(state, "zero_hp_replacement", incoming, affectedStates);
-    if (useUndeadFortitude(state, incoming, damageTypes, critical)) return finish(state, "undead_fortitude", incoming, affectedStates);
-    if (state.template.kind === "monster") { markDead(state); return finish(state, "dead", incoming, affectedStates); }
+    if (state.current_hp > 0) return finish(state, "damaged", incoming, affectedStates, setup);
+    if (Z()?.consumeZero(state)) return finish(state, "zero_hp_replacement", incoming, affectedStates, setup);
+    if (useUndeadFortitude(state, incoming, damageTypes, critical)) return finish(state, "undead_fortitude", incoming, affectedStates, setup);
+    if (state.template.kind === "monster") {
+      markDead(state);
+      return finish(state, state.is_dead ? "dead" : "unconscious", incoming, affectedStates, setup);
+    }
     const remaining = Math.max(0, amount - before);
-    if (remaining >= S().effectiveMaxHp(state)) { markDead(state); return finish(state, "dead", incoming, affectedStates); }
+    if (remaining >= S().effectiveMaxHp(state)) { markDead(state); return finish(state, "dead", incoming, affectedStates, setup); }
     if (state.template.effect_bound_survival_save) {
       if (!U()) throw new Error("Effect-bound survival save runtime is not loaded.");
-      if (U().resolveEffectBound(state)) return finish(state, "survival_save", incoming, affectedStates);
+      if (U().resolveEffectBound(state)) return finish(state, "survival_save", incoming, affectedStates, setup);
     }
-    if (useRelentless(state, remaining)) return finish(state, "relentless_endurance", incoming, affectedStates);
+    if (useRelentless(state, remaining)) return finish(state, "relentless_endurance", incoming, affectedStates, setup);
     markUnconscious(state);
-    return finish(state, "unconscious", incoming, affectedStates);
+    return finish(state, "unconscious", incoming, affectedStates, setup);
   }
 
   window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, applyInstantDeath, reduceToZero, stabilizeAtZero };

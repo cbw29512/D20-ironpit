@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.damage_defenses import apply_damage_defenses
+from app.combat.exile_hit_effects import apply_exile_hit_riders, exile_save_succeeded
 from app.combat.resources import resource_state
 from app.combat.timed_condition_lifecycle import remove_effect_group
 from app.combat.timed_conditions import apply_timed_condition
@@ -22,22 +23,42 @@ def removed_from_battlefield(state: CombatantState) -> bool:
 def apply_on_hit_exile(
     attacker: CombatantState,
     defender: CombatantState,
-    attack: WeaponAttack,
+    attack: WeaponAttack | None,
     *,
     attacker_id: str,
     round_number: int,
     affected_states: list[CombatantState] | None = None,
+    dice=None,
+    turn_key: str | None = None,
 ) -> tuple[str, int] | None:
     """Spend a declarative resource after a hit and exile a living target."""
     rule = attacker.template.progression_features.resource_backed_on_hit_exile
     if rule is None or defender.is_dead or not defender.is_alive or defender.current_hp <= 0:
         return None
+    if rule.once_per_turn:
+        if not turn_key:
+            raise ValueError(f"{rule.source_name} requires a turn key for its once-per-turn limit.")
+        if attacker.feature_last_turn_keys.get(rule.source_id) == turn_key:
+            return None
     resource = resource_state(attacker, rule.resource_id)
     if resource is None:
         raise ValueError(f"{rule.source_name} references missing resource {rule.resource_id}.")
     if resource.current_uses < rule.resource_cost:
         return None
     resource.current_uses -= rule.resource_cost
+    if rule.once_per_turn:
+        attacker.feature_last_turn_keys[rule.source_id] = turn_key
+    if exile_save_succeeded(defender, rule, dice):
+        return None
+    apply_exile_hit_riders(
+        attacker,
+        defender,
+        rule,
+        attacker_id=attacker_id,
+        round_number=round_number,
+        dice=dice,
+        affected_states=affected_states,
+    )
     applied = apply_timed_condition(
         defender,
         EXILED_EFFECT_ID,

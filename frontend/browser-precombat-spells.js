@@ -45,6 +45,7 @@
     for (const { spell } of spells) {
       if (spell.concentration && member.state.concentration) continue;
       if (setup && (active(member, setup, spell) || !typedRelevant(member, setup, spell))) continue;
+      if (setup && !selectTargets(member, setup, spell, spell.level).length) continue;
       const slotLevel = slotChoice(member, spell);
       if (slotLevel != null) return { spell, slotLevel, durationModifier: durationModifier(member, spell) };
     }
@@ -82,7 +83,8 @@
     if ((spell.targetPolicy || "self") === "self") return [member];
     const side = member.side === "heroes" ? setup.heroes : setup.monsters;
     const legal = side.filter((target) => target.state.is_alive && !target.state.is_dead
-        && Math.abs(member.position_ft - target.position_ft) <= (spell.range || 0))
+        && Math.abs(member.position_ft - target.position_ft) <= (spell.range || 0)
+        && (!spell.shareDamageWithSource || target.combatant_id !== member.combatant_id))
       .sort((a, b) => comparePriority(friendlyBuffPriority(member, a, setup), friendlyBuffPriority(member, b, setup)));
     return spell.targetAllLegal === true ? legal : legal.slice(0, spell.targetCount || 1);
   }
@@ -95,10 +97,10 @@
     return effect.kind;
   }
 
-  function resolve(sequence, member, targets, spell, slotLevel, states = [member.state], durationOption = null) {
+  function resolve(sequence, member, targets, spell, slotLevel, states = [member.state], durationOption = null, setup = null) {
     if (slotLevel !== spell.level) throw new Error("Spell upcasting is not certified; use the spell's printed slot level.");
     const directHp = (spell.temporaryHp || 0) || (spell.maxHpIncrease || 0) || (spell.currentHpIncrease || 0);
-    if (spell.concentration && (directHp || spell.damageResistances?.length)) throw new Error("Concentration defenses require source-owned modifier effects.");
+    if (spell.concentration && directHp) throw new Error("Concentration defenses require source-owned modifier effects.");
     if (!targets.length) throw new Error(`${spell.name} has no legal precombat targets.`);
     if (member.state.opening_buff_id) throw new Error(`${member.state.template.name} already committed its one opening buff this battle.`);
     if (spell.concentration && member.state.concentration) throw new Error(`${member.state.template.name} is already concentrating and will not replace the active buff automatically.`);
@@ -131,7 +133,27 @@
       if (after > before) tempHpDetails.push(`${target.state.template.name} ${after} Temporary HP`);
       target.state.max_hp_bonus += spell.maxHpIncrease || 0;
       target.state.current_hp += spell.currentHpIncrease || 0;
-      for (const type of spell.damageResistances || []) if (!target.state.temporary_damage_resistances.includes(type)) target.state.temporary_damage_resistances.push(type);
+      const resistances = [...(spell.damageResistances || [])];
+      if (spell.selectableResistanceTypes?.length && setup) {
+        const chosen = window.IRON_PIT_BROWSER_SELECTABLE_SPELL_RESISTANCE?.choose(member, setup, spell);
+        if (chosen) resistances.push(chosen);
+      }
+      if (resistances.length && (spell.concentration || spell.shareDamageWithSource)) {
+        if (!window.IRON_PIT_BROWSER_TIMED) throw new Error("Browser timed-condition runtime is not loaded.");
+        window.IRON_PIT_BROWSER_TIMED.apply(target.state, spell.id, member.combatant_id, {
+          sourceEffectId: spell.id, sourceTemplate: member.state.template, sourceIsMagical: true,
+          ownedDamageResistances: resistances, appliedRound: 0,
+          expiresRound: effectiveDurationMinutes * 10 + 1, expiryTiming: "source_turn_start",
+          endsIfSourceDead: Boolean(spell.shareDamageWithSource), useDefaultPoisonRecovery: false,
+        });
+      } else {
+        for (const type of resistances) if (!target.state.temporary_damage_resistances.includes(type)) target.state.temporary_damage_resistances.push(type);
+      }
+      if (spell.shareDamageWithSource && target.combatant_id !== member.combatant_id) {
+        target.state.damage_share_source_id = member.combatant_id;
+        target.state.damage_share_range_ft = spell.shareRangeFt || 0;
+        target.state.damage_share_effect_id = spell.id;
+      }
       if (!spell.concentration && !target.state.active_buff_effect_ids.includes(spell.id)) target.state.active_buff_effect_ids.push(spell.id);
     }
     if (spell.concentration || spell.modifierEffects?.length || spell.movementModeGrants?.length) {
@@ -142,7 +164,8 @@
     const details = [...tempHpDetails];
     if (spell.maxHpIncrease) details.push(`+${spell.maxHpIncrease} Hit Point maximum`);
     if (spell.currentHpIncrease) details.push(`+${spell.currentHpIncrease} current Hit Points`);
-    if (spell.damageResistances?.length) details.push(`resistance to ${spell.damageResistances.join(", ")}`);
+    if (spell.damageResistances?.length || spell.selectableResistanceTypes?.length) details.push("resistance");
+    if (spell.shareDamageWithSource) details.push(`shared damage within ${spell.shareRangeFt || 0} feet`);
     details.push(...(spell.conditionIds || []));
     details.push(...(spell.modifierEffects || []).map(modifierDetail));
     details.push(...(spell.movementModeGrants || []).map((grant) =>
@@ -163,7 +186,7 @@
     for (const member of members) {
       const choice = choose(member, setup); if (!choice) continue;
       const targets = selectTargets(member, setup, choice.spell, choice.slotLevel);
-      events.push(resolve(sequence++, member, targets, choice.spell, choice.slotLevel, states, choice.durationModifier));
+      events.push(resolve(sequence++, member, targets, choice.spell, choice.slotLevel, states, choice.durationModifier, setup));
     }
     return { events, sequence };
   }

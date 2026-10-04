@@ -17,6 +17,8 @@ window.IRON_PIT_BROWSER_FORMATION = {
   targetOrder: (_member, setup) => setup.monsters,
   chooseStandardAttack: () => null,
   saveDistance: () => 5,
+  meleeCanLandNow: () => false,
+  weaponMeanDamage: () => 0,
 };
 window.IRON_PIT_BROWSER_SPELL_OFFENSE = {
   choose: () => null,

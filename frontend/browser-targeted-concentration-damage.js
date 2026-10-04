@@ -43,11 +43,12 @@
     return candidates.length ? candidates[0] : null;
   }
 
-  function freeCastResource(member, action) {
-    if (!action.freeCastResourceId) return null;
-    const uses = member.state.resources?.[action.freeCastResourceId] || 0;
+  function freeCast(member, action) {
+    const id = action.freeCastResourceId;
+    if (!id) return null;
     const cost = action.freeCastResourceCost || 1;
-    return uses >= cost ? [action.freeCastResourceId, cost] : null;
+    if ((member.state.resources?.[id] || 0) < cost) return null;
+    return { id, cost };
   }
 
   function resolve(sequence, round, member, setup, turnKey) {
@@ -67,18 +68,16 @@
       let resourceRemaining = null;
       let verb = "moves";
       if (!active) {
-        const free = freeCastResource(member, action);
-        let slotLevel;
+        const free = freeCast(member, action);
+        let slotLevel = action.level;
         if (free) {
-          const [resourceId, cost] = free;
-          slotLevel = action.level;
-          member.state.resources[resourceId] -= cost;
-          resourceRemaining = member.state.resources[resourceId];
+          member.state.resources[free.id] -= free.cost;
+          resourceRemaining = member.state.resources[free.id];
         } else {
           const selected = slot(member, action, turnKey);
           if (!selected) continue;
-          const [selectedLevel, resourceId] = selected;
-          slotLevel = selectedLevel;
+          const resourceId = selected[1];
+          slotLevel = selected[0];
           SC().markSlotSpellCast(member.state, turnKey);
           member.state.resources[resourceId] -= 1;
           resourceRemaining = member.state.resources[resourceId];

@@ -10,8 +10,8 @@
     return P().active(member, action);
   }
 
-  function choose(member, setup = null, activationTiming = "action") {
-    return P().choose(member, setup, activationTiming);
+  function choose(member, setup = null, activationTiming = "action", turnKey = null) {
+    return P().choose(member, setup, activationTiming, turnKey);
   }
 
   function resolve(sequence, round, member, action, options = {}) {
@@ -20,6 +20,13 @@
       if (spendActionCost && !E().available(member.state, action.actionCost)) throw new Error(`${action.name} action cost is unavailable.`);
       if (action.resourceId != null && (member.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);
       if (active(member, action)) throw new Error(`${action.name} is already active.`);
+      if (options.setup && action.resourceId && String(action.resourceId).startsWith("spell-slot-")
+        && window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.verbalBlocked(member, options.setup)) {
+        throw new Error(`${action.name} cannot be cast inside a Silence effect.`);
+      }
+      if (options.turnKey && action.resourceId && String(action.resourceId).startsWith("spell-slot-")) {
+        window.IRON_PIT_BROWSER_SPELLCASTING?.markSlotSpellCast(member.state, options.turnKey);
+      }
 
       if (spendActionCost) E().spend(member.state, action.actionCost);
       if (action.resourceId != null) member.state.resources[action.resourceId] -= action.resourceCost || 1;
@@ -53,8 +60,12 @@
         || (action.movementModeGrants || []).length
         || action.friendlySaveAdvantageAura
         || action.friendlyCoverAura
+        || action.friendlyWeaponDamageAura
+        || action.friendlyRecoveryAura
         || action.hostileStartTurnConditionAura
         || action.startTurnEmanationDamage
+        || action.meleeHitRetaliation
+        || action.spellSaveDcBonus || action.spellAttackAdvantage || (action.modifierEffects || []).length
       )) {
         T().apply(member.state, action.id, member.combatant_id, {
           sourceEffectId: action.id,
@@ -72,10 +83,16 @@
         });
       }
 
+      if (action.friendlyRecoveryAura) {
+        window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS?.activate(member, action, options.setup, round);
+      }
       if (action.concentration) {
         const concentration = window.IRON_PIT_BROWSER_CONCENTRATION;
         if (!concentration) throw new Error("Browser Concentration runtime is not loaded.");
         const allStates = options.affectedStates || [member.state];
+        const slotLevel = String(action.resourceId || "").startsWith("spell-slot-")
+          ? Number.parseInt(String(action.resourceId).slice("spell-slot-".length), 10)
+          : null;
         concentration.start(
           member.state,
           member.combatant_id,
@@ -83,8 +100,20 @@
           round,
           allStates,
           expiresRound,
-          null,
+          Number.isInteger(slotLevel) ? slotLevel : null,
         );
+      }
+
+      if ((action.modifierEffects || []).length) {
+        const modifiers = window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
+        if (!modifiers) throw new Error("Timed self-buff modifier effects require browser-spell-modifiers.js.");
+        for (const [index, effect] of action.modifierEffects.entries()) {
+          M().add(member.state, modifiers.build(
+            member.combatant_id, member.combatant_id,
+            { id: action.id, name: action.name, concentration: Boolean(action.concentration) },
+            effect, index, round,
+          ));
+        }
       }
 
       for (const grant of action.savingThrowAdvantageGrants || []) {
@@ -150,5 +179,21 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS = { active, choose, installAbilityHooks, resolve };
+  function spellSaveDcBonus(state) {
+    const activeIds = new Set((state.timed_effects || []).map((effect) => effect.source_effect_id));
+    return (state.template.timed_self_buff_actions || []).reduce((total, action) => (
+      activeIds.has(action.id) ? total + (action.spellSaveDcBonus || 0) : total
+    ), 0);
+  }
+
+  function spellAttackAdvantage(state) {
+    const activeIds = new Set((state.timed_effects || []).map((effect) => effect.source_effect_id));
+    return (state.template.timed_self_buff_actions || []).some(
+      (action) => action.spellAttackAdvantage && activeIds.has(action.id),
+    );
+  }
+
+  window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS = {
+    active, choose, installAbilityHooks, resolve, spellSaveDcBonus, spellAttackAdvantage,
+  };
 })();

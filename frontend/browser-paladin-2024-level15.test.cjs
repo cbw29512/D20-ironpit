@@ -10,7 +10,7 @@ const load = (name) => vm.runInThisContext(
 
 try {
   for (const file of [
-    "browser-heroes.js", "browser-condition-rules.js", "browser-modifiers.js",
+    "browser-heroes.js", "browser-condition-rules.js", "browser-modifier-validation.js", "browser-modifiers.js",
     "browser-timed-conditions.js", "browser-grid-geometry.js", "browser-state.js", "browser-action-economy.js",
     "browser-resources.js", "browser-spellcasting.js", "browser-timed-self-buff-policy.js",
     "browser-timed-self-buffs.js", "browser-friendly-save-auras.js",

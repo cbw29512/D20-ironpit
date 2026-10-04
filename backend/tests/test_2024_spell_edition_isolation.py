@@ -39,6 +39,13 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
     known_spell_ids = {
         "guiding-bolt",
         "sacred-flame",
+        "eldritch-blast",
+        "charm-person",
+        "hold-person",
+        "command",
+        "suggestion",
+        "geas",
+        "scorching-ray",
         "poison-spray",
         "starry-wisp",
         "thunderclap",
@@ -63,8 +70,15 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "beacon-of-hope",
         "shatter",
         "thunderwave",
+        "lightning-bolt",
+        "chromatic-orb",
         "fireball",
         "flame-strike",
+        "destructive-wave",
+        "dragons-breath",
+        "fire-storm",
+        "ice-storm",
+        "greater-restoration",
         "disintegrate",
         "finger-of-death",
         "sunburst",
@@ -84,6 +98,9 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "heal-l7",
         "heal-l8",
         "heal-l9",
+        "mass-heal",
+        "death-ward",
+        "contagion",
         "greater-invisibility",
         "foresight",
         "freedom-of-movement",
@@ -130,6 +147,35 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             expected_dice, 12, "poison",
         )
 
+    if "eldritch-blast" in spell_attacks:
+        spell = spell_attacks["eldritch-blast"]
+        expected_attacks = 1 + int(level >= 5) + int(level >= 11) + int(level >= 17)
+        expected_range = 120 + (30 * level if level >= 2 else 0)
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.attack_kind,
+            spell.range_ft,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.attack_count,
+        ) == (0, "action", "ranged", expected_range, 1, 10, "force", expected_attacks)
+
+    if "scorching-ray" in spell_attacks:
+        spell = spell_attacks["scorching-ray"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.attack_kind,
+            spell.range_ft,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.attack_count,
+            spell.attacks_per_slot_above,
+        ) == (2, "action", "ranged", 120, 2, 6, "fire", 3, 1)
+
     if "starry-wisp" in spell_attacks:
         spell = spell_attacks["starry-wisp"]
         expected_dice = 1 + int(level >= 5) + int(level >= 11) + int(level >= 17)
@@ -160,7 +206,8 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.damage_dice_count,
             spell.damage_dice_size,
             spell.damage_type,
-        ) == ("action", "ranged", 120, 4, 6, "radiant")
+            spell.upcast_dice_per_level,
+        ) == ("action", "ranged", 120, 4, 6, "radiant", 1)
         assert len(spell.on_hit_modifier_effects) == 1
         rider = spell.on_hit_modifier_effects[0]
         assert rider.kind == "attacks-against-advantage"
@@ -179,6 +226,96 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.damage_type,
             spell.success_damage,
         ) == ("action", 60, "dexterity", expected_dice, 8, "radiant", "none")
+
+    if "charm-person" in spell_saves:
+        spell = spell_saves["charm-person"]
+        rider = spell.failed_save_timed_effect
+        assert rider is not None
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.save_ability,
+            spell.requires_target_sight,
+            spell.required_target_creature_types,
+            spell.concentration,
+            spell.allows_higher_slots,
+        ) == (1, "action", 30, "wisdom", True, ["humanoid"], False, True)
+        assert (
+            rider.effect_id,
+            rider.duration_rounds,
+            rider.ends_on_damage,
+        ) == ("charmed", 600, True)
+        assert (
+            spell.target_count,
+            spell.target_count_per_slot_above,
+            spell.save_advantage_if_fighting,
+        ) == (1, 1, True)
+
+    if "hold-person" in spell_saves:
+        spell = spell_saves["hold-person"]
+        rider = spell.failed_save_timed_effect
+        assert rider is not None
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.save_ability,
+            spell.requires_target_sight,
+            spell.required_target_creature_types,
+            spell.concentration,
+            spell.target_count,
+            spell.target_count_per_slot_above,
+        ) == (2, "action", 60, "wisdom", True, ["humanoid"], True, 1, 1)
+        assert (
+            rider.effect_id,
+            rider.duration_rounds,
+            rider.repeat_save_ability,
+            rider.repeat_save_timing,
+        ) == ("paralyzed", 10, "wisdom", "target_turn_end")
+
+    if "command" in spell_saves:
+        spell = spell_saves["command"]
+        rider = spell.failed_save_timed_effect
+        assert rider is not None
+        assert (
+            spell.level,
+            spell.range_ft,
+            spell.save_ability,
+            spell.target_count,
+            spell.target_count_per_slot_above,
+        ) == (1, 60, "wisdom", 1, 1)
+        assert (rider.effect_id, rider.turn_behavior) == ("prone", "forced_retreat")
+
+    if "suggestion" in spell_saves:
+        spell = spell_saves["suggestion"]
+        rider = spell.failed_save_timed_effect
+        assert rider is not None
+        assert (
+            spell.level,
+            spell.range_ft,
+            spell.save_ability,
+            spell.requires_target_hearing,
+            spell.concentration,
+            spell.duration_minutes,
+        ) == (2, 30, "wisdom", True, True, 480)
+        assert (
+            rider.effect_id,
+            rider.turn_behavior,
+            rider.ends_on_damage,
+        ) == ("charmed", "forced_retreat", True)
+
+    if "geas" in spell_saves:
+        spell = spell_saves["geas"]
+        rider = spell.failed_save_timed_effect
+        assert rider is not None
+        assert (
+            spell.level,
+            spell.range_ft,
+            spell.save_ability,
+            spell.cast_rounds,
+        ) == (5, 60, "wisdom", 10)
+        assert rider.effect_id == "charmed"
 
     for spell_id, spell in spell_saves.items():
         if not spell_id.startswith("inflict-wounds"):
@@ -315,7 +452,12 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         expected_bonus = (
             template.ability_scores.modifier("wisdom")
             if progression.class_id == "druid" and level >= 7
+            else template.ability_scores.modifier("intelligence")
+            if progression.class_id == "wizard" and level >= 10
             else 0
+        )
+        expected_success = (
+            "half" if progression.class_id == "wizard" and level >= 3 else "none"
         )
         assert (
             spell.level,
@@ -342,7 +484,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             6,
             expected_bonus,
             "thunder",
-            "none",
+            expected_success,
         )
 
     if "thunderwave" in spell_saves:
@@ -453,6 +595,76 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             (item.dice_count, item.dice_size, item.damage_type)
             for item in spell.damage_components
         ] == [(5, 6, "fire"), (5, 6, "radiant")]
+
+    if "destructive-wave" in spell_saves:
+        spell = spell_saves["destructive-wave"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.origin if spell.area else None,
+            spell.area.radius_ft if spell.area else None,
+            spell.save_ability,
+            spell.success_damage,
+        ) == (5, "action", 30, "emanation", "self", 30, "constitution", "half")
+        assert [
+            (item.dice_count, item.dice_size, item.damage_type)
+            for item in spell.damage_components
+        ] == [(5, 6, "thunder"), (5, 6, "radiant")]
+
+    if "dragons-breath" in spell_saves:
+        spell = spell_saves["dragons-breath"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.origin if spell.area else None,
+            spell.area.length_ft if spell.area else None,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.success_damage,
+            spell.upcast_dice_per_level,
+            spell.concentration,
+            spell.repeat_only,
+        ) == (2, "action", 15, "cone", "self", 15, "dexterity", 3, 6, "fire", "half", 1, True, True)
+
+    if "fire-storm" in spell_saves:
+        spell = spell_saves["fire-storm"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.length_ft if spell.area else None,
+            spell.area.contiguous_section_count if spell.area else None,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.success_damage,
+        ) == (7, "action", 150, "cube", 10, 10, "dexterity", 7, 10, "fire", "half")
+
+    if "ice-storm" in spell_saves:
+        spell = spell_saves["ice-storm"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.radius_ft if spell.area else None,
+            spell.save_ability,
+            spell.success_damage,
+            spell.creates_difficult_terrain,
+            spell.difficult_terrain_duration_rounds,
+        ) == (4, "action", 300, "radius", 20, "dexterity", "half", True, 1)
+        assert [
+            (item.dice_count, item.dice_size, item.damage_type)
+            for item in spell.damage_components
+        ] == [(2, 10, "bludgeoning"), (4, 8, "cold")]
 
     if "disintegrate" in spell_saves:
         spell = spell_saves["disintegrate"]
@@ -574,7 +786,10 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.fallback_damage_bonus,
             spell.fallback_damage_type,
             spell.resource_id,
-        ) == (60, 100, 12, 12, 0, "psychic", "spell-slot-9")
+        ) == (
+            60, 100, 12, 12, 0, "psychic",
+            "mystic-arcanum-9" if progression.class_id == "warlock" else "spell-slot-9",
+        )
         assert spell.max_targets == (2 if level >= 20 and progression.class_id == "bard" else 1)
         assert spell.secondary_target_within_ft == (
             10 if level >= 20 and progression.class_id == "bard" else None
@@ -582,6 +797,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
 
     if "heal" in healing:
         spell = healing["heal"]
+        expected_heal_bonus = 78 if progression.class_id == "cleric" else 70
         assert (
             spell.action_cost,
             spell.range_ft,
@@ -595,10 +811,74 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             60,
             "self_or_ally",
             0,
-            70,
+            expected_heal_bonus,
             "spell-slot-6",
             ["blinded", "deafened", "poisoned"],
         )
+
+    if "mass-heal" in healing:
+        spell = healing["mass-heal"]
+        assert (
+            spell.action_cost,
+            spell.range_ft,
+            spell.target_mode,
+            spell.max_targets,
+            spell.shared_healing_pool,
+            spell.resource_id,
+            spell.removable_conditions,
+        ) == (
+            "action",
+            60,
+            "self_or_ally",
+            6,
+            700,
+            "spell-slot-9",
+            ["blinded", "deafened", "poisoned"],
+        )
+
+    if "death-ward" in defenses:
+        spell = defenses["death-ward"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.duration_minutes,
+            spell.target_policy,
+            spell.target_count,
+            spell.concentration,
+        ) == (4, "action", 5, 480, "friendly", 1, False)
+        assert len(spell.modifier_effects) == 1
+        ward = spell.modifier_effects[0]
+        assert (
+            ward.kind,
+            ward.replacement_hp,
+            ward.prevents_instant_death,
+        ) == ("zero-hp-replacement", 1, True)
+
+    if "contagion" in spell_saves:
+        spell = spell_saves["contagion"]
+        rider = spell.failed_save_timed_effect
+        assert rider is not None
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.success_damage,
+            spell.duration_minutes,
+        ) == (5, "action", 5, "constitution", 11, 8, "necrotic", "none", 10080)
+        assert (
+            rider.effect_id,
+            rider.repeat_save_ability,
+            rider.repeat_save_timing,
+            rider.repeat_save_failures_to_lock,
+        ) == ("poisoned", "constitution", "target_turn_end", 3)
+        assert [
+            (item.kind, item.save_ability) for item in spell.failed_save_modifier_effects
+        ] == [("saving-throw-disadvantage", "constitution")]
 
     if "power-word-heal" in healing:
         spell = healing["power-word-heal"]
@@ -648,6 +928,32 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         assert spell.modifier_effects[0].kind == "speed"
         assert spell.modifier_effects[0].flat_bonus == 10
 
+
+    if "chromatic-orb" in spell_attacks:
+        spell = spell_attacks["chromatic-orb"]
+        assert (
+            spell.level, spell.action_cost, spell.attack_kind, spell.range_ft,
+            spell.damage_dice_count, spell.damage_dice_size, spell.damage_type,
+            spell.matching_dice_leap_range_ft, spell.upcast_dice_per_level,
+        ) == (1, "action", "ranged", 90, 3, 8, "fire", 30, 1)
+
+    if "lightning-bolt" in spell_saves:
+        spell = spell_saves["lightning-bolt"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.origin if spell.area else None,
+            spell.area.length_ft if spell.area else None,
+            spell.area.width_ft if spell.area else None,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.success_damage,
+            spell.upcast_dice_per_level,
+        ) == (3, "action", 100, "line", "self", 100, 5, "dexterity", 8, 6, "lightning", "half", 1)
 
     if "fire-bolt" in spell_attacks:
         spell = spell_attacks["fire-bolt"]
@@ -839,15 +1145,37 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "poisoned",
         }
 
+    if "greater-restoration" in condition_removals:
+        spell = condition_removals["greater-restoration"]
+        assert (
+            spell.action_cost,
+            spell.range_ft,
+            spell.max_conditions_per_use,
+            spell.resource_costs,
+            spell.reduces_exhaustion_levels,
+            spell.removes_curses,
+            spell.removes_ability_score_reductions,
+            spell.removes_hit_point_maximum_reductions,
+        ) == ("action", 5, 1, {"spell-slot-5": 1}, 1, True, True, True)
+        assert set(spell.removable_conditions) == {"charmed", "petrified"}
+
     if "dispel-magic" in effect_removals:
         expected_casting_abilities = {
             "bard": "charisma",
             "cleric": "wisdom",
             "druid": "wisdom",
             "paladin": "charisma",
+            "ranger": "wisdom",
+            "sorcerer": "charisma",
+            "warlock": "charisma",
+            "wizard": "intelligence",
         }
         assert progression.class_id in expected_casting_abilities
         spell = effect_removals["dispel-magic"]
+        expected_resource = "spell-slot-3"
+        if progression.class_id == "warlock":
+            from app.content.warlock_combat_levels import WARLOCK_COMBAT_LEVELS
+            expected_resource = f"spell-slot-{WARLOCK_COMBAT_LEVELS[level].pact_slot_level}"
         assert (
             spell.level,
             spell.action_cost,
@@ -861,7 +1189,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             120,
             expected_casting_abilities[progression.class_id],
             3,
-            "spell-slot-3",
+            expected_resource,
         )
 
     divine_healing = healing.get("divine-intervention-mass-cure-wounds")

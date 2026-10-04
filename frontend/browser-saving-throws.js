@@ -52,8 +52,9 @@
       const advantage = (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
         + B2().dangerSenseAdvantage(state, ability)
         + DG().dexSaveAdvantageSources(state, ability) + DF().saveAdvantage(state, ability, context)
-        + sureFootedAdvantage(state, ability, context);
-      const disadvantage = X().saveDisadvantage(state) + (DF().saveDisadvantage?.(state) || 0)
+        + sureFootedAdvantage(state, ability, context)
+        + (context.advantageSources || []).length;
+      const disadvantage = X().saveDisadvantage(state) + (DF().saveDisadvantage?.(state, ability) || 0)
         + (context.disadvantageSources || []).length
         + (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0);
       return R().modeFromSources(advantage, disadvantage);
@@ -121,6 +122,9 @@
         throw new Error("Failed-D20 override runtime is not loaded for a declared saving-throw capability.");
       }
       roll = DO().apply(state, roll, roll.total < dc, "saving_throw").roll;
+      if (roll.total < dc && window.IRON_PIT_BROWSER_SAVE_SUCCESS_OVERRIDE?.apply(state)) {
+        return { roll, succeeded: true };
+      }
       return { roll, succeeded: roll.total >= dc };
     } catch (error) {
       console.error("Saving-throw resolveSavingThrow failed.", { error });

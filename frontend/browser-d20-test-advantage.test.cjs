@@ -34,6 +34,7 @@ window.IRON_PIT_BROWSER_EXHAUSTION = {
 };
 window.IRON_PIT_DICE = { roll: () => dice.shift() };
 
+load("browser-modifier-validation.js");
 load("browser-modifiers.js");
 load("browser-ability-checks.js");
 load("browser-defensive-modifier-rules.js");

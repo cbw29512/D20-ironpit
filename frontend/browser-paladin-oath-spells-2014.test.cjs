@@ -14,6 +14,7 @@ load("browser-rolls.js");
 load("browser-condition-rules.js");
 load("browser-action-economy.js");
 load("browser-rogue-defenses.js");
+load("browser-modifier-validation.js");
 load("browser-modifiers.js");
 load("browser-state.js");
 load("browser-defensive-modifier-rules.js");

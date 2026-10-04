@@ -14,6 +14,7 @@ load("browser-opening-modifiers.js");
 load("browser-debuff-counters.js");
 load("browser-condition-immunity.js");
 load("browser-condition-rules.js");
+load("browser-modifier-validation.js");
 load("browser-modifiers.js");
 load("browser-grapple.js");
 load("browser-timed-conditions.js");

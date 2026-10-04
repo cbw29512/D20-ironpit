@@ -8,7 +8,12 @@ from app.domain.actions import AbilityName, ConditionName
 from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, GrappleEffectDefinition
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
-from app.domain.weapons import ConditionalAttackAdvantage, DamageType, WeaponAttackKind
+from app.domain.weapons import (
+    ConditionalAttackAdvantage,
+    DamageSourceQualifier,
+    DamageType,
+    WeaponAttackKind,
+)
 
 
 class ChargeDamageDefinition(BaseModel):
@@ -69,6 +74,7 @@ class AttackCapabilityDefinition(BaseModel):
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
     charge_profile: ChargeProfileDefinition | None = None
     forbid_target_grappled_by_self: bool = False
+    damage_source_qualifiers: list[DamageSourceQualifier] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_attack_shape(self) -> "AttackCapabilityDefinition":

@@ -19,7 +19,7 @@
       if ((healing.action.maxTargets || 1) > 1) {
         const targets = H().groupTargets(member, setup, healing.action, turnKey);
         if (targets.some((target) => target.state.current_hp === 0)) {
-          const result = H().resolveGroup(sequence, round, member, targets, healing.action, turnKey);
+          const result = H().resolveGroup(sequence, round, member, targets, healing.action, turnKey, setup);
           events.push(...result.events); sequence = result.sequence;
         }
       } else {
@@ -39,7 +39,7 @@
       if ((healing.action.maxTargets || 1) > 1) {
         const targets = H().groupTargets(member, setup, healing.action, turnKey);
         if (targets.length) {
-          const result = H().resolveGroup(sequence, round, member, targets, healing.action, turnKey);
+          const result = H().resolveGroup(sequence, round, member, targets, healing.action, turnKey, setup);
           events.push(...result.events); sequence = result.sequence;
         }
       } else {
@@ -59,12 +59,37 @@
     if (paladin) { events.push(...paladin.events); sequence = paladin.sequence; }
     const d20Bonus = BI()?.choose(member, setup, round);
     if (d20Bonus) events.push(BI().resolveGrant(sequence++, round, member, d20Bonus.target, d20Bonus.action));
-    const selfBuff = B()?.choose(member, setup);
+    const teleport = window.IRON_PIT_BROWSER_TELEPORT?.choose(member, setup, turnKey);
+    if (teleport) {
+      const moved = window.IRON_PIT_BROWSER_TELEPORT.resolve(
+        sequence, round, member, setup, teleport.action, teleport.destination, turnKey,
+      );
+      events.push(...moved.events);
+      return { events, sequence: moved.sequence };
+    }
+    const selfBuff = B()?.choose(member, setup, "action", turnKey);
     if (selfBuff) {
       events.push(B().resolve(sequence++, round, member, selfBuff, {
         affectedStates: [...setup.heroes, ...setup.monsters].map((entry) => entry.state),
+        setup, turnKey,
       }));
       window.IRON_PIT_BROWSER_FRIENDLY_SAVE_AURAS?.sync(setup);
+      window.IRON_PIT_BROWSER_EMANATION_SPEED?.sync(setup);
+      return { events, sequence };
+    }
+    const saveZone = window.IRON_PIT_BROWSER_SAVE_ZONES?.choose(member, setup, turnKey);
+    if (saveZone) {
+      const cast = window.IRON_PIT_BROWSER_SAVE_ZONES.cast(
+        sequence, round, member, setup, saveZone.action, saveZone.center, turnKey,
+      );
+      events.push(...cast.events);
+      return { events, sequence: cast.sequence };
+    }
+    const zone = window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.choose(member, setup, turnKey);
+    if (zone) {
+      events.push(window.IRON_PIT_BROWSER_SUPPRESSION_ZONES.cast(
+        sequence++, round, member, setup, zone.action, zone.center, turnKey,
+      ));
     }
     return { events, sequence };
   }

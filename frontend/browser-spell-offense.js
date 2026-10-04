@@ -79,6 +79,14 @@
         } else {
           events.push(event);
         }
+        const leap = window.IRON_PIT_BROWSER_MATCHING_DICE_LEAP?.resolve(
+          sequence, round, member, target, event, spell, setup, turnKey,
+          { slotLevel, rangeModifier: choice.rangeModifier || null },
+        );
+        if (leap) {
+          events.push(...leap.events);
+          sequence = leap.sequence;
+        }
         preferred = target.state.current_hp > 0 && !target.state.is_dead ? target : null;
       }
       if (!events.length) throw new Error(`${spell.name} has no legal target for its spell attacks.`);

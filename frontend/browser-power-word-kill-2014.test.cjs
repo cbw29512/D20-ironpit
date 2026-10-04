@@ -11,7 +11,7 @@ const load = (name) => vm.runInThisContext(
 );
 
 for (const file of [
-  "browser-modifiers.js",
+  "browser-modifier-validation.js", "browser-modifiers.js",
   "browser-zero-hp-replacement.js",
   "browser-zero-hp.js",
   "browser-action-economy.js",

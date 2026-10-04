@@ -37,8 +37,10 @@ def roll_spell_attack_damage(
     *,
     attacker=None,
     target_event_id: str | None = None,
+    slot_level: int | None = None,
 ):
-    count = spell.damage_dice_count * (2 if critical else 1)
+    dice_count = spell.damage_dice_count if slot_level is None else spell.damage_dice_at_slot(slot_level)
+    count = dice_count * (2 if critical else 1)
     rolls = [dice.roll(spell.damage_dice_size) for _ in range(count)]
     total = sum(rolls) + spell.damage_bonus
     notation = f"{count}d{spell.damage_dice_size}+{spell.damage_bonus}"

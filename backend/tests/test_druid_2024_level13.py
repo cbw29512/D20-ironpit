@@ -8,7 +8,7 @@ from app.content.pregen_combat_audit import assert_pregen_combat_stats
 from app.content.pregen_combat_profiles import build_pregen_combat_profiles
 
 
-def test_2024_druid_level_thirteen_advances_damage_first_without_fake_fire_storm_geometry() -> None:
+def test_2024_druid_level_thirteen_binds_printed_fire_storm_cubes() -> None:
     hero = build_thalen_greenbough_level(13)
     profile = build_thalen_greenbough_profile(13)
     combat = build_pregen_combat_profiles()[hero.id]
@@ -44,12 +44,18 @@ def test_2024_druid_level_thirteen_advances_damage_first_without_fake_fire_storm
     assert package.spells[-1].id == "fire-storm"
     assert package.spells[-1].spell_level == 7
     assert package.spells[-1].role == "damage"
-    assert package.spells[-1].required_capabilities == ["arena-out-of-scope"]
+    assert package.spells[-1].required_capabilities == ["save-damage", "area"]
 
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["druid-combat-spells-7"].automated is True
-    assert audits["druid-combat-spells-7"].combat_relevant is False
+    assert audits["druid-combat-spells-7"].combat_relevant is True
 
-    assert not any(item.id == "fire-storm" for item in hero.spell_save_actions)
+    storm = next(item for item in hero.spell_save_actions if item.id == "fire-storm")
+    assert storm.damage_dice_count == 7
+    assert storm.damage_dice_size == 10
+    assert storm.damage_type == "fire"
+    assert storm.area is not None
+    assert storm.area.contiguous_section_count == 10
+    assert storm.area.length_ft == 10
     assert_pregen_combat_stats(hero, combat)
     assert_character_resources_raw_ready(hero, profile, combat)

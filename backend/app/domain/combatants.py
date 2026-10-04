@@ -19,9 +19,18 @@ from app.domain.passive_modifiers import PassiveModifierGrant
 from app.domain.persistent_barriers import PersistentBarrierAction
 from app.domain.persistent_beneficial_zones import PersistentBeneficialZoneAction
 from app.domain.persistent_hazards import PersistentHazardAction
+from app.domain.persistent_save_zones import PersistentSaveZoneAction
+from app.domain.suppression_zones import PersistentSuppressionZoneAction
+from app.domain.teleport_actions import TeleportAction
 from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
 from app.domain.progression import ProgressionCombatFeatures
-from app.domain.reactions import AttackDamageReductionReaction, DamageReactionAttack, ParryReaction, RedirectAttackReaction
+from app.domain.reactions import (
+    AttackDamageReductionReaction,
+    DamageReactionAttack,
+    IncomingDamageTypeResistanceReaction,
+    ParryReaction,
+    RedirectAttackReaction,
+)
 from app.domain.reaction_roll_penalties import ReactionRollPenaltyAction
 from app.domain.concentration_repeat_saves import ConcentrationRepeatSaveAction
 from app.domain.recharge import RechargeRule
@@ -33,7 +42,11 @@ from app.domain.spell_cast_modifiers import ResourceBackedSpellDurationModifier,
 from app.domain.spell_cast_effects import SpellCastTimedResistance
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
+from app.domain.post_hit_save_condition import PostHitSaveConditionSpell
 from app.domain.targeted_concentration_damage import TargetedConcentrationDamageAction
+from app.domain.legendary_actions import LegendaryActionOption
+from app.domain.regeneration import RegenerationTrait
+from app.domain.save_success_overrides import FailedSaveSuccessOverride
 from app.domain.tactical_actions import BonusActionTacticalGrant
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
@@ -101,6 +114,9 @@ class CombatantTemplate(BaseModel):
     persistent_hazard_actions: list[PersistentHazardAction] = Field(default_factory=list)
     persistent_barrier_actions: list[PersistentBarrierAction] = Field(default_factory=list)
     persistent_beneficial_zone_actions: list[PersistentBeneficialZoneAction] = Field(default_factory=list)
+    suppression_zone_actions: list[PersistentSuppressionZoneAction] = Field(default_factory=list)
+    persistent_save_zone_actions: list[PersistentSaveZoneAction] = Field(default_factory=list)
+    teleport_actions: list[TeleportAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     d20_bonus_die_actions: list[D20BonusDieAction] = Field(default_factory=list)
@@ -112,6 +128,7 @@ class CombatantTemplate(BaseModel):
     spell_duration_modifiers: list[ResourceBackedSpellDurationModifier] = Field(default_factory=list)
     timed_self_buff_actions: list[TimedSelfBuffAction] = Field(default_factory=list)
     targeted_concentration_damage_actions: list[TargetedConcentrationDamageAction] = Field(default_factory=list)
+    post_hit_save_condition_spells: list[PostHitSaveConditionSpell] = Field(default_factory=list)
     replacement_form_actions: list[ReplacementFormAction] = Field(default_factory=list)
     concentration_repeat_save_actions: list[ConcentrationRepeatSaveAction] = Field(default_factory=list)
     effect_removal_actions: list[EffectRemovalAction] = Field(default_factory=list)
@@ -125,6 +142,7 @@ class CombatantTemplate(BaseModel):
     source_legendary_action_names: list[str] = Field(default_factory=list)
     source_spellcasting_fingerprint: str | None = None
     attack_damage_reduction_reaction: AttackDamageReductionReaction | None = None
+    incoming_damage_type_resistance_reaction: IncomingDamageTypeResistanceReaction | None = None
     parry_reaction: ParryReaction | None = None
     redirect_attack_reaction: RedirectAttackReaction | None = None
     damage_reaction_attack: DamageReactionAttack | None = None
@@ -144,6 +162,9 @@ class CombatantTemplate(BaseModel):
     resources: list[ResourceDefinition] = Field(default_factory=list)
     unlimited_resource_ids: list[str] = Field(default_factory=list)
     recharge_rules: list[RechargeRule] = Field(default_factory=list)
+    regeneration: RegenerationTrait | None = None
+    save_success_overrides: list[FailedSaveSuccessOverride] = Field(default_factory=list)
+    legendary_actions: list[LegendaryActionOption] = Field(default_factory=list)
     source: str
 
     @model_validator(mode="before")

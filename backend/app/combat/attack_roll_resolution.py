@@ -20,6 +20,7 @@ from app.combat.next_attack_disadvantage import (
     consume_next_attack_disadvantage,
     next_attack_disadvantage_sources,
 )
+from app.combat.precise_hunter import marked_target_advantage_sources
 from app.combat.modifier_stack import (
     apply_d20_bonus_dice,
     attack_roll_flat_bonus,
@@ -92,7 +93,8 @@ def resolve_attack_roll(
             + attacks_against_reckless_advantage(defender)
             + reckless_advantage
             + conditional_attack_advantage_sources(attack, defender)
-            + next_attack_against_advantage_sources(attacker, defender_event_id),
+            + next_attack_against_advantage_sources(attacker, defender_event_id)
+            + marked_target_advantage_sources(attacker, defender_event_id),
         )
         mode = resolve_attack_roll_mode(
             attack.weapon,

@@ -15,6 +15,7 @@ window.IRON_PIT_BROWSER_SPELLCASTING = {
 };
 window.IRON_PIT_BROWSER_STATE = {
   effectiveMaxHp: (state) => state.template.max_hp,
+  distance: (a, b) => Math.abs((a.position_ft || 0) - (b.position_ft || 0)),
 };
 window.IRON_PIT_DICE = { roll: () => 8 };
 
@@ -94,5 +95,22 @@ assert.throws(
   ),
   /legal healing area/,
 );
+
+healer.state.template.healingActions = [action];
+healer.state.resources["spell-slot-5"] = 1;
+healer.state.action_available = true;
+window.IRON_PIT_BROWSER_CONDITION_REMOVAL = { chooseAction: () => null };
+window.IRON_PIT_BROWSER_EFFECT_REMOVAL = { choose: () => null };
+window.IRON_PIT_BROWSER_CLERIC_CHANNEL = { resolve: () => null };
+window.IRON_PIT_BROWSER_PALADIN_2014 = { resolveChannel: () => null };
+window.IRON_PIT_BROWSER_D20_BONUS_DICE = { choose: () => null };
+window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS = { choose: () => null };
+load("browser-support.js");
+const supportResult = window.IRON_PIT_BROWSER_SUPPORT.resolve(
+  3, 1, healer, setup, "3:healer",
+);
+assert.equal(supportResult.events[0].feature_id, "area-heal");
+assert.equal(supportResult.events[0].target_id, "reachable");
+assert.equal(healer.state.resources["spell-slot-5"], 0);
 
 console.log("Browser area group-healing regressions passed.");

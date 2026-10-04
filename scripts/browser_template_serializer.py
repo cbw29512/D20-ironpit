@@ -211,19 +211,7 @@ def _save(action: Any) -> dict[str, Any]:
             "healingBonus": action.area_healing_rider.healing_bonus,
         }
     if action.failed_save_timed_effect is not None:
-        row["failedSaveTimedEffect"] = {
-            "effectId": action.failed_save_timed_effect.effect_id,
-            "durationRounds": action.failed_save_timed_effect.duration_rounds,
-            "expiryTiming": action.failed_save_timed_effect.expiry_timing,
-            "repeatSaveAbility": action.failed_save_timed_effect.repeat_save_ability,
-            "repeatSaveDc": action.failed_save_timed_effect.repeat_save_dc,
-            "repeatSaveTiming": action.failed_save_timed_effect.repeat_save_timing,
-            "turnBehavior": action.failed_save_timed_effect.turn_behavior,
-            "endsOnDamage": action.failed_save_timed_effect.ends_on_damage,
-            "endsIfSourceIncapacitated": action.failed_save_timed_effect.ends_if_source_incapacitated,
-            "endsIfSourceDead": action.failed_save_timed_effect.ends_if_source_dead,
-            "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
-        }
+        row["failedSaveTimedEffect"] = _failed_save_timed_effect(action.failed_save_timed_effect)
     if action.grapple_escape_dc is not None:
         row["grappleEscapeDc"] = action.grapple_escape_dc
     if action.restrains_while_grappled:
@@ -238,7 +226,12 @@ def _spell(action: Any) -> dict[str, Any]:
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
         "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level,
-        "concentration": action.concentration, "animation": action.animation,
+        "concentration": action.concentration, "allowsHigherSlots": action.allows_higher_slots,
+        "targetCount": action.target_count,
+        "targetCountPerSlotAbove": action.target_count_per_slot_above,
+        "saveAdvantageIfFighting": action.save_advantage_if_fighting,
+        "castRounds": action.cast_rounds,
+        "animation": action.animation,
     }
     if action.effect_tags:
         row["effectTags"] = list(action.effect_tags)
@@ -249,11 +242,17 @@ def _spell(action: Any) -> dict[str, Any]:
     if action.requires_target_sight:
         row["requiresTargetSight"] = True
     if action.failed_save_timed_effect is not None:
-        row["failedSaveTimedEffect"] = {
-            "effectId": action.failed_save_timed_effect.effect_id,
-            "expiryTiming": action.failed_save_timed_effect.expiry_timing,
-            "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
-        }
+        row["failedSaveTimedEffect"] = _failed_save_timed_effect(action.failed_save_timed_effect)
+    if action.required_target_creature_types:
+        row["requiredTargetCreatureTypes"] = list(action.required_target_creature_types)
+    if action.excluded_target_creature_types:
+        row["excludedTargetCreatureTypes"] = list(action.excluded_target_creature_types)
+    if action.minimum_remaining_hp:
+        row["minimumRemainingHp"] = action.minimum_remaining_hp
+    if action.reduce_hit_point_maximum_on_failed_save:
+        row["reduceHitPointMaximumOnFailedSave"] = True
+    if not action.verbal_component:
+        row["verbalComponent"] = False
     if action.failed_save_push_ft:
         row["failedSavePushFt"] = action.failed_save_push_ft
     if action.failed_save_modifier_effects:
@@ -262,6 +261,9 @@ def _spell(action: Any) -> dict[str, Any]:
         ]
     if action.area is not None:
         row["area"] = action.area.model_dump(mode="json")
+    if action.creates_difficult_terrain:
+        row["createsDifficultTerrain"] = True
+        row["difficultTerrainDurationRounds"] = action.difficult_terrain_duration_rounds
     if action.duration_minutes is not None:
         row["durationMinutes"] = action.duration_minutes
     if action.area_radius_ft is not None:
@@ -275,11 +277,34 @@ def _spell(action: Any) -> dict[str, Any]:
     return row
 
 
+def _failed_save_timed_effect(rider: Any) -> dict[str, Any]:
+    row = {
+        "effectId": rider.effect_id,
+        "durationRounds": rider.duration_rounds,
+        "expiryTiming": rider.expiry_timing,
+        "repeatSaveAbility": rider.repeat_save_ability,
+        "repeatSaveDc": rider.repeat_save_dc,
+        "repeatSaveTiming": rider.repeat_save_timing,
+        "turnBehavior": rider.turn_behavior,
+        "endsOnDamage": rider.ends_on_damage,
+        "endsIfSourceIncapacitated": rider.ends_if_source_incapacitated,
+        "endsIfSourceDead": rider.ends_if_source_dead,
+        "nextAttackDisadvantage": rider.next_attack_disadvantage,
+        "repeatSaveFailuresToLock": rider.repeat_save_failures_to_lock,
+    }
+    if rider.escape_check_ability:
+        row["escapeCheckAbility"] = rider.escape_check_ability
+        row["escapeCheckDc"] = rider.escape_check_dc
+    return row
+
+
 def _modifier_effect(effect: Any) -> dict[str, Any]:
     row = {
         "kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count,
         "diceSize": effect.dice_size, "damageType": effect.damage_type,
     }
+    if effect.condition_id:
+        row["conditionId"] = effect.condition_id
     if effect.minimum_value:
         row["minimumValue"] = effect.minimum_value
     if effect.debuff_counter is not None:
@@ -330,6 +355,8 @@ def _spell_attack(action: Any) -> dict[str, Any]:
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
         "attackCount": action.attack_count, "attacksPerSlotAbove": action.attacks_per_slot_above,
+        "upcastDicePerLevel": action.upcast_dice_per_level,
+        "matchingDiceLeapRangeFt": action.matching_dice_leap_range_ft,
         "onHitModifierEffects": [_modifier_effect(effect) for effect in action.on_hit_modifier_effects],
         "animation": action.animation,
     }
@@ -351,6 +378,9 @@ def _healing(action: Any) -> dict[str, Any]:
             "removableConditions": list(action.removable_conditions),
             "proneReactionStand": action.prone_reaction_stand,
             "secondaryTargetWithinFt": action.secondary_target_within_ft,
+            "grantsTemporaryHp": action.grants_temporary_hp,
+            "sharedHealingPool": action.shared_healing_pool,
+            "stabilizeAtZero": action.stabilize_at_zero,
             "animation": action.animation,
         }
     except Exception:
@@ -453,6 +483,11 @@ def defense_row(action: Any) -> dict[str, Any]:
         row["currentHpIncrease"] = action.current_hp_increase
     if action.source:
         row["source"] = action.source
+    if action.selectable_resistance_types:
+        row["selectableResistanceTypes"] = list(action.selectable_resistance_types)
+    if action.share_damage_with_source:
+        row["shareDamageWithSource"] = True
+        row["shareRangeFt"] = action.share_range_ft
     return row
 
 
@@ -464,6 +499,8 @@ def targeted_concentration_damage_row(action: Any) -> dict[str, Any]:
         "damageType": action.damage_type,
         "durationRoundsBySlot": dict(action.duration_rounds_by_slot),
         "retargetAfterTargetZero": action.retarget_after_target_zero,
+        "freeCastResourceId": action.free_cast_resource_id,
+        "freeCastResourceCost": action.free_cast_resource_cost,
         "priority": action.priority, "animation": action.animation, "source": action.source,
     }
 
@@ -540,6 +577,72 @@ def _attack_action_weapon_buff(action: Any) -> dict[str, Any]:
     }
 
 
+def _suppression_zone(action: Any) -> dict[str, Any]:
+    try:
+        row = {
+            "id": action.id, "name": action.name, "level": action.level,
+            "actionCost": action.action_cost, "castRangeFt": action.cast_range_ft,
+            "radiusFt": action.radius_ft, "durationRounds": action.duration_rounds,
+            "concentration": action.concentration, "deafens": action.deafens,
+            "blocksVerbalSpells": action.blocks_verbal_spells,
+            "thunderImmunity": action.thunder_immunity,
+            "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+            "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
+        }
+        if action.source:
+            row["source"] = action.source
+        return row
+    except Exception:
+        logger.exception("Failed to serialize suppression zone %s.", action.id)
+        raise
+
+
+def _save_zone(action: Any) -> dict[str, Any]:
+    try:
+        row = {
+            "id": action.id, "name": action.name, "level": action.level,
+            "actionCost": action.action_cost, "castRangeFt": action.cast_range_ft,
+            "radiusFt": action.radius_ft, "durationRounds": action.duration_rounds,
+            "concentration": action.concentration, "saveAbility": action.save_ability,
+            "dc": action.dc, "triggers": list(action.triggers),
+            "saveTriggers": list(action.save_triggers),
+            "oncePerTurn": action.once_per_turn,
+            "damageDiceCount": action.damage_dice_count,
+            "damageDiceSize": action.damage_dice_size,
+            "damageType": action.damage_type, "successDamage": action.success_damage,
+            "upcastDicePerLevel": action.upcast_dice_per_level,
+            "failedSaveConditionId": action.failed_save_condition_id,
+            "failedSaveDurationRounds": action.failed_save_duration_rounds,
+            "failedSaveSuppressAction": action.failed_save_suppress_action,
+            "failedSaveSuppressBonusAction": action.failed_save_suppress_bonus_action,
+            "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+            "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
+        }
+        if action.source:
+            row["source"] = action.source
+        return row
+    except Exception:
+        logger.exception("Failed to serialize save zone %s.", action.id)
+        raise
+
+
+def _teleport(action: Any) -> dict[str, Any]:
+    try:
+        row = {
+            "id": action.id, "name": action.name, "level": action.level,
+            "actionCost": action.action_cost, "range": action.range_ft,
+            "passengerCount": action.passenger_count, "passengerRangeFt": action.passenger_range_ft,
+            "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+            "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
+        }
+        if action.source:
+            row["source"] = action.source
+        return row
+    except Exception:
+        logger.exception("Failed to serialize teleport action %s.", action.id)
+        raise
+
+
 def _timed_self_buff(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost,
@@ -573,8 +676,21 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["friendlySaveAdvantageAura"] = action.friendly_save_advantage_aura.model_dump(mode="json")
     if action.friendly_cover_aura is not None:
         row["friendlyCoverAura"] = action.friendly_cover_aura.model_dump(mode="json")
+    if action.hostile_start_turn_condition_aura is not None:
+        row["hostileStartTurnConditionAura"] = action.hostile_start_turn_condition_aura.model_dump(mode="json")
+    if action.concentration:
+        row["concentration"] = True
+    if action.modifier_effects:
+        row["modifierEffects"] = [_modifier_effect(effect) for effect in action.modifier_effects]
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
+    if action.melee_hit_retaliation is not None:
+        row["meleeHitRetaliation"] = {
+            "rangeFt": action.melee_hit_retaliation.range_ft,
+            "diceCount": action.melee_hit_retaliation.dice_count,
+            "diceSize": action.melee_hit_retaliation.dice_size,
+            "damageType": _value(action.melee_hit_retaliation.damage_type),
+        }
     return row
 
 
@@ -589,6 +705,20 @@ def _removal(action: Any) -> dict[str, Any]:
     }
     if action.reaction_trigger:
         row["reactionTrigger"] = action.reaction_trigger
+    if action.reduces_exhaustion_levels:
+        row["reducesExhaustionLevels"] = action.reduces_exhaustion_levels
+    if action.removes_curses:
+        row["removesCurses"] = True
+    if action.removes_all_curses:
+        row["removesAllCurses"] = True
+    if action.removes_ability_score_reductions:
+        row["removesAbilityScoreReductions"] = True
+    if action.removes_hit_point_maximum_reductions:
+        row["removesHitPointMaximumReductions"] = True
+    if action.requires_active_effect_id:
+        row["requiresActiveEffectId"] = action.requires_active_effect_id
+    if action.ends_required_effect:
+        row["endsRequiredEffect"] = True
     return row
 
 
@@ -646,6 +776,12 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["resource_backed_post_hit_damage"] = features.resource_backed_post_hit_damage.model_dump(mode="json")
     if features.delayed_resource_refill:
         row["delayed_resource_refill"] = features.delayed_resource_refill.model_dump(mode="json")
+    if features.start_turn_resource_refill_ids:
+        row["start_turn_resource_refill_ids"] = list(features.start_turn_resource_refill_ids)
+    if features.alternate_spell_cast_grants:
+        row["alternate_spell_cast_grants"] = [
+            item.model_dump() for item in features.alternate_spell_cast_grants
+        ]
     if features.opening_targeting_ward:
         row["opening_targeting_ward"] = features.opening_targeting_ward.model_dump()
     if features.once_per_turn_weapon_hit_damage_rider:
@@ -898,6 +1034,12 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
         if template.timed_self_buff_actions:
             row["timed_self_buff_actions"] = [_timed_self_buff(item) for item in template.timed_self_buff_actions]
+        if template.suppression_zone_actions:
+            row["suppression_zone_actions"] = [_suppression_zone(item) for item in template.suppression_zone_actions]
+        if template.persistent_save_zone_actions:
+            row["persistent_save_zone_actions"] = [_save_zone(item) for item in template.persistent_save_zone_actions]
+        if template.teleport_actions:
+            row["teleport_actions"] = [_teleport(item) for item in template.teleport_actions]
         if template.attack_action_weapon_buffs:
             row["attack_action_weapon_buffs"] = [
                 _attack_action_weapon_buff(item) for item in template.attack_action_weapon_buffs
@@ -951,6 +1093,14 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
                 for slot in template.attack_action.slots
             ]}
+        if template.regeneration is not None:
+            row["regeneration"] = template.regeneration.model_dump(mode="json")
+        if template.legendary_actions:
+            row["legendary_actions"] = [item.model_dump(mode="json") for item in template.legendary_actions]
+        if template.save_success_overrides:
+            row["save_success_overrides"] = [
+                item.model_dump(mode="json") for item in template.save_success_overrides
+            ]
         return row
     except Exception:
         logger.exception("Failed to serialize combatant template %s.", template.id)

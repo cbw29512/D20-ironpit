@@ -74,8 +74,12 @@
     if (!attack) return null;
     E().spend(reactor.state, "reaction");
     const pack = S().packTactics(reactor, mover, setup);
+    const escapeHorde = mover.state.template.opportunity_attacks_against_disadvantage
+      || mover.state.template.progression_features?.opportunity_attacks_against_disadvantage;
     return A().resolveAttack(sequence, round, reactor, mover, attack, before, {
-      spendAction: false, advantage: pack ? 1 : 0, featureId: "opportunity-attack", setup,
+      spendAction: false, advantage: pack ? 1 : 0,
+      otherDisadvantageSources: escapeHorde ? 1 : 0,
+      featureId: "opportunity-attack", setup,
       turnKey: options.turnKey || null, offTurn: true,
     });
   }

@@ -10,7 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-timed-conditions.js", "browser-weapon-mastery.js", "browser-tactical-master.js",
-  "browser-barbarian2.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
+  "browser-barbarian2.js", "browser-modifier-validation.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-heroic-inspiration.js", "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js",
   "browser-spellcasting.js", "browser-spell-modifiers.js", "browser-spell-attack.js",
 ]) load(file);
@@ -105,6 +105,21 @@ function sap(caster) {
   const { caster, target, arena } = setup(5, 30); dice([18, 2]);
   const event = X.resolve(1, 1, caster, target, rangedSpell, arena, "1:caster");
   assert.equal(event.attack_roll.mode, "disadvantage"); assert.equal(event.attack_roll.selected_roll, 2);
+}
+
+{
+  const { caster, target, arena } = setup(30, 10);
+  caster.state.resources["spell-slot-2"] = 1;
+  dice([12, 1, 2, 3, 4]);
+  const orb = {
+    id: "chromatic-orb", name: "Chromatic Orb", level: 1, actionCost: "action",
+    attackKind: "ranged", range: 90, attackBonus: 8, damageDiceCount: 3, damageDiceSize: 8,
+    damageBonus: 0, damageType: "fire", upcastDicePerLevel: 1, matchingDiceLeapRangeFt: 0,
+    onHitModifierEffects: [], animation: "spell-attack",
+  };
+  const event = X.resolve(1, 1, caster, target, orb, arena, "1:caster", { castSlotLevel: 2 });
+  assert.equal(event.hit, true);
+  assert.deepEqual(event.damage_roll.rolls, [1, 2, 3, 4]);
 }
 
 console.log("Browser universal spell-attack context regressions passed.");

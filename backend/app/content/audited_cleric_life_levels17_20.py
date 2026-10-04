@@ -44,6 +44,13 @@ def build_seraphine_dawnshield_level17_profile() -> CharacterBuildProfile:
                 True,
                 "Reuse the universal outgoing-healing-dice maximizer already certified for 2014 Life Cleric.",
             ),
+            _feature(
+                "mass-heal",
+                "Mass Heal",
+                True,
+                "Action, 60 feet: divide 700 HP among seen allies, then Disciple extra and "
+                "remove Blinded, Deafened, and Poisoned on each targeted creature.",
+            ),
         ]
         data.update(
             feature_audits=[*data["feature_audits"], *(item.model_dump() for item in additions)],

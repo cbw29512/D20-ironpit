@@ -48,15 +48,15 @@
     if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2;
     return value;
   }
-  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = []) {
+  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null) {
     const lifecycle = Z(); if (!lifecycle) throw new Error("Browser zero-HP runtime is not loaded.");
-    return lifecycle.applyDamage(state, amount, critical, damageTypes, affectedStates);
+    return lifecycle.applyDamage(state, amount, critical, damageTypes, affectedStates, setup);
   }
   function legacyHitDamage(attacker, defender, attack, critical, mode, turnKey, options = {}) {
     if (attack.onHitSaveDamage) throw new Error("Save-dependent hit damage requires the browser hit-damage runtime.");
     const base = R().weaponDamage(attacker, attack, critical, mode, turnKey, options.bonusDamage || null, defender, Boolean(options.sneakAttackAllyAvailable)), damageComponents = base.components.map((part) => ({ ...part, applied_total: adjustedDamage(defender, part.total, part.damage_type, true, part.source_qualifiers || []) }));
     const appliedTotal = damageComponents.reduce((sum, part) => sum + part.applied_total, 0), damageRoll = { ...base.roll, total: appliedTotal }, appliedTypes = [...new Set(damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type))];
-    return { damageRoll, damageComponents, damageOutcome: applyDamage(defender, appliedTotal, critical, appliedTypes, options.affectedStates || []), appliedTotal, saveDamage: null };
+    return { damageRoll, damageComponents, damageOutcome: applyDamage(defender, appliedTotal, critical, appliedTypes, options.affectedStates || [], options.setup || null), appliedTotal, saveDamage: null };
   }
   const HD = () => window.IRON_PIT_BROWSER_HIT_DAMAGE || { resolve: legacyHitDamage };
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
@@ -68,7 +68,7 @@
     if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
     const disadvantage = conditions.disadvantage + SAP().disadvantage(attacker.state)
-      + (T()?.nextAttackDisadvantage(attacker.state) || 0);
+      + (T()?.nextAttackDisadvantage(attacker.state) || 0) + (extra.otherDisadvantageSources || 0);
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
     const rangedDisadvantage = attack.kind === "ranged" && ((attack.normal && distance > attack.normal) || closeThreat);
     const recklessAdvantage = B2().attackAdvantage(attacker.state, attack);
@@ -77,7 +77,7 @@
     ) || 0;
     const unsuppressedAdvantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
       + Math.max(0, recklessAdvantage - brutalSuppression) + A().sources(attack, target.state)
-      + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id);
+      + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id) + (attacker.state.template.advantage_against_marked_effect_id && attacker.state.active_modifiers?.some((item) => item.source_effect_id === attacker.state.template.advantage_against_marked_effect_id && item.target_id === target.combatant_id) ? 1 : 0);
     const advantage = Q().suppressAttackAdvantage?.(target.state) ? 0 : unsuppressedAdvantage;
     const mode = R().attackMode(attack, distance, advantage, disadvantage, closeThreat);
     const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + M().attackRollFlat(attacker.state, attack.weaponId || attack.id) + (M().nextIncomingAttackRollFlat?.(target.state, attacker.combatant_id) || 0), mode), M().effectiveArmorClass(target.state));
@@ -109,7 +109,7 @@
     if (hit) {
       const affectedStates = states(extra.setup), damage = HD().resolve(attacker.state, actualTarget.state, attack, critical, mode,
         extra.turnKey || `${round}:${attacker.combatant_id}`, { bonusDamage: extra.bonusDamage || null,
-          targetId: actualTarget.combatant_id, sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false, affectedStates, naturalRoll: natural });
+          targetId: actualTarget.combatant_id, sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false, affectedStates, setup: extra.setup || null, naturalRoll: natural });
       damageComponents = damage.damageComponents; damageRoll = damage.damageRoll; damageOutcome = damage.damageOutcome; saveDamage = damage.saveDamage; outcome.damageReductionReaction = damage.damageReductionReactionUsed ? damage : null;
       cunningStrikeTrip = damage.cunningStrikeTrip || null;
       cunningStrikeObscure = damage.cunningStrikeObscure || null;
@@ -135,7 +135,7 @@
         setup: extra.setup, turnKey: extra.turnKey, attackOutcome: outcome, events: [],
       });
       if (phase.events.length) throw new Error("Attack outcome hooks must not emit standalone battle events.");
-      ({ damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, topple, sapApplied, vexApplied, studiedApplied, deferredEffectArmed, exileApplied } = outcome); outcome.brutalStrikeEffects = BS()?.applyEffects?.(attacker, actualTarget, extra.setup, extra.turnKey, extra.brutalStrikeEffectIds) || [];
+      ({ damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, topple, sapApplied, vexApplied, studiedApplied, deferredEffectArmed, exileApplied } = outcome); outcome.brutalStrikeEffects = BS()?.applyEffects?.(attacker, actualTarget, extra.setup, extra.turnKey, extra.brutalStrikeEffectIds) || []; window.IRON_PIT_BROWSER_MELEE_RETALIATION?.apply(attacker, actualTarget, { melee: (attack.kind || attack.attackKind) === "melee", setup: extra.setup }); window.IRON_PIT_BROWSER_MELEE_HIT_SAVE_RETALIATION?.apply(attacker, actualTarget, { melee: (attack.kind || attack.attackKind) === "melee", setup: extra.setup, round });
       window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state); C()?.endIfIncapacitated(actualTarget.state, affectedStates);
     } else {
       const phase = H().runPhase(H().PHASES.ON_MISS, {

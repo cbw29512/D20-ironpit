@@ -5,6 +5,7 @@
   const Z = () => window.IRON_PIT_BROWSER_ATTACK_DAMAGE_REDIRECT;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const T = () => window.IRON_PIT_BROWSER_SOURCE_DAMAGE_TRIGGERS;
+  const B = () => window.IRON_PIT_BROWSER_ZERO_HP_BLESSING;
 
   function appliedDamageTotal(event) {
     try {
@@ -50,6 +51,10 @@
     if (triggeringEvent.hp_before <= 0 || triggeringEvent.hp_after !== 0) {
       return { events: [], sequence };
     }
+    if (B()?.grantZeroHpTemporaryHp) {
+      const granted = B().grantZeroHpTemporaryHp(sequence, round, source, rule, false);
+      return { events: [granted.event], sequence: granted.sequence };
+    }
     const scores = source.state.template.ability_scores;
     const level = source.state.template.level;
     if (!scores || !Number.isInteger(level)) {
@@ -57,27 +62,19 @@
     }
     const score = scores[rule.ability];
     if (!Number.isFinite(score)) throw new Error("Zero-HP Temporary HP trigger ability score is unavailable.");
-    const abilityModifier = Math.floor((score - 10) / 2);
-    const amount = Math.max(rule.minimum ?? 1, (rule.flat_bonus || 0) + (rule.per_level || 0) * level + abilityModifier);
+    const amount = Math.max(rule.minimum ?? 1, (rule.flat_bonus || 0) + (rule.per_level || 0) * level + Math.floor((score - 10) / 2));
     const before = source.state.temporary_hp || 0;
     const stateRuntime = S();
     if (!stateRuntime?.grantTemporaryHp) throw new Error("Browser Temporary HP runtime is not loaded.");
     const after = stateRuntime.grantTemporaryHp(source.state, amount);
     return {
       events: [{
-        sequence,
-        round_number: round,
-        event_type: "feature",
-        actor_id: source.combatant_id,
-        actor_name: source.state.template.name,
-        target_id: source.combatant_id,
-        target_name: source.state.template.name,
-        hp_before: source.state.current_hp,
-        hp_after: source.state.current_hp,
-        temporary_hp_before: before,
-        temporary_hp_after: after,
-        feature_id: rule.source_id,
-        animation: "feature",
+        sequence, round_number: round, event_type: "feature",
+        actor_id: source.combatant_id, actor_name: source.state.template.name,
+        target_id: source.combatant_id, target_name: source.state.template.name,
+        hp_before: source.state.current_hp, hp_after: source.state.current_hp,
+        temporary_hp_before: before, temporary_hp_after: after,
+        feature_id: rule.source_id, animation: "feature",
         description: `${source.state.template.name} gains ${amount} Temporary HP from ${rule.source_name} after reducing a hostile creature to 0 HP.`,
       }],
       sequence: sequence + 1,
@@ -98,6 +95,17 @@
       const sourceTrigger = resolveSourceZeroHpTrigger(hit.sequence, round, source, triggeringEvent, setup);
       sourceTrigger.events.unshift(...hit.events);
       sequence = sourceTrigger.sequence;
+      const needsWitness = [...(setup?.heroes || []), ...(setup?.monsters || [])].some(
+        (member) => (member.state?.template?.source_reduces_hostile_to_zero_hp_temporary_hp?.ally_zero_hp_range_ft || 0) > 0,
+      );
+      if (needsWitness && !B()?.resolveWitnessedZeroHpTriggers) {
+        throw new Error("Zero-HP blessing runtime is not loaded.");
+      }
+      const witnessed = B()?.resolveWitnessedZeroHpTriggers?.(
+        sequence, round, source, triggeringEvent, setup, memberById,
+      ) || { events: [], sequence };
+      sourceTrigger.events.push(...witnessed.events);
+      sequence = witnessed.sequence;
       const appliedDamage = appliedDamageTotal(triggeringEvent);
       const damageTrigger = T()?.resolve(sequence, round, source, triggeringEvent, appliedDamage)
         || { events: [], sequence };

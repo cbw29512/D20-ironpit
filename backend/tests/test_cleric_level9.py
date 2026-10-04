@@ -37,6 +37,12 @@ def test_level_nine_uses_simple_upcast_damage_and_mass_healing() -> None:
     assert upcast.damage_type == "necrotic"
     assert upcast.success_damage == "half"
     assert upcast.dc == 17
+    flame = next(item for item in hero.spell_save_actions if item.id == "flame-strike")
+    assert flame.dc == 17
+    assert [(part.dice_count, part.dice_size, part.damage_type) for part in flame.damage_components] == [
+        (5, 6, "fire"),
+        (5, 6, "radiant"),
+    ]
 
     mass = next(item for item in hero.healing_actions if item.id == "mass-cure-wounds")
     assert (mass.max_targets, mass.dice_count, mass.dice_size) == (6, 5, 8)
@@ -54,7 +60,9 @@ def test_level_nine_uses_simple_upcast_damage_and_mass_healing() -> None:
     assert audits["cleric-combat-spells-5"].automated is True
     assert audits["mass-cure-wounds"].automated is True
     assert audits["inflict-wounds-upcast-l5"].automated is True
-    assert audits["greater-restoration"].combat_relevant is False
+    assert audits["greater-restoration"].combat_relevant is True
+    assert any(item.id == "greater-restoration" for item in hero.condition_removal_actions)
+    assert any(item.id == "insect-plague" for item in hero.persistent_save_zone_actions)
 
     assert_canonical_profile_policy(profile)
     assert_character_build_raw_ready(profile, hero)

@@ -38,7 +38,8 @@ def test_level_seventeen_advances_persistent_aurelia_and_binds_2024_flame_strike
         assert abjure.dc == 18
         assert abjure.max_targets == 4
 
-        flame_strike = hero.spell_save_actions[0]
+        flame_strike = next(item for item in hero.spell_save_actions if item.id == "flame-strike")
+        wave = next(item for item in hero.spell_save_actions if item.id == "destructive-wave")
         assert flame_strike.id == "flame-strike"
         assert flame_strike.level == 5
         assert flame_strike.range_ft == 60
@@ -47,6 +48,14 @@ def test_level_seventeen_advances_persistent_aurelia_and_binds_2024_flame_strike
         assert flame_strike.success_damage == "half"
         assert [(part.dice_count, part.dice_size, part.damage_type) for part in flame_strike.damage_components] == [
             (5, 6, "fire"),
+            (5, 6, "radiant"),
+        ]
+        assert wave.dc == 18
+        assert wave.save_ability == "constitution"
+        assert wave.area is not None
+        assert (wave.area.shape, wave.area.origin, wave.area.radius_ft) == ("emanation", "self", 30)
+        assert [(part.dice_count, part.dice_size, part.damage_type) for part in wave.damage_components] == [
+            (5, 6, "thunder"),
             (5, 6, "radiant"),
         ]
 

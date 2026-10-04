@@ -60,6 +60,10 @@ def build_paladin_2024_resources(level: int) -> list[ResourceDefinition]:
             resources.append(ResourceDefinition(
                 id="boon-combat-prowess", name="Boon of Combat Prowess", max_uses=1,
             ))
+        if level >= 20:
+            resources.append(ResourceDefinition(
+                id="holy-nimbus", name="Holy Nimbus", max_uses=1,
+            ))
         return resources
     except Exception:
         logger.exception("Failed to build 2024 Paladin resources at level %s.", level)

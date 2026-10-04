@@ -34,7 +34,14 @@ def resolve_delayed_resource_refill_end_turn(
                 if resource is None:
                     raise ValueError(f"{rule.source_name} references missing resource {resource_id}.")
                 if resource.current_uses < resource.max_uses:
-                    resource.current_uses = resource.max_uses
+                    if rule.restore_mode == "half_max_rounded_up":
+                        regain = (resource.max_uses + 1) // 2
+                        resource.current_uses = min(
+                            resource.max_uses,
+                            resource.current_uses + regain,
+                        )
+                    else:
+                        resource.current_uses = resource.max_uses
                     restored.append(resource_id)
             actor.state.delayed_resource_refills = [
                 item for item in actor.state.delayed_resource_refills if item is not timer

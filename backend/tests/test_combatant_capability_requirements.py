@@ -16,7 +16,7 @@ STATUSES = {
     "archery-style": "supported",
     "nick-mastery": "blocked",
     "two-weapon-fighting": "blocked",
-    "slow-mastery": "arena_out_of_scope",
+    "slow-mastery": "supported",
 }
 
 
@@ -47,17 +47,13 @@ def test_archer_is_blocked_by_actual_mastered_nick_weapon_not_by_build_name() ->
     profile, template = _pair("archer")
     requirements = combatant_capability_requirements(profile, template)
     assert requirements == {"archery-style", "slow-mastery", "vex-mastery", "nick-mastery"}
-    issues = audit_combatant_capability_support(
-        profile, template, STATUSES, arena_ignored=frozenset({"slow-mastery"}),
-    )
+    issues = audit_combatant_capability_support(profile, template, STATUSES)
     assert issues == ["combat-capability-not-supported:nick-mastery:blocked"]
 
 
 def test_dual_wield_is_blocked_by_twf_and_nick_facts() -> None:
     profile, template = _pair("dual-wield")
-    issues = audit_combatant_capability_support(
-        profile, template, STATUSES, arena_ignored=frozenset({"slow-mastery"}),
-    )
+    issues = audit_combatant_capability_support(profile, template, STATUSES)
     assert "combat-capability-not-supported:nick-mastery:blocked" in issues
     assert "combat-capability-not-supported:two-weapon-fighting:blocked" in issues
 

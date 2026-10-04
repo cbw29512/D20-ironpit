@@ -12,6 +12,8 @@ from app.combat.offense_value import save_spell_expected_damage
 from app.combat.spell_area import best_area_placement
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_range_modifiers import choose_spell_range_modifier, effective_spell_range_ft
+from app.combat.spell_target_counts import spell_save_target_count
+from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
 
@@ -37,6 +39,17 @@ def legal_single_spell_targets(
             and clear_line_between_members(caster, target, setup)
             and (not action.requires_target_hearing or "deafened" not in target.state.active_effect_ids)
             and (not action.requires_target_sight or can_see(caster.state, target.state))
+            and (
+                not action.required_target_creature_types
+                or any(
+                    is_creature_type(target.state.template, kind)
+                    for kind in action.required_target_creature_types
+                )
+            )
+            and not any(
+                is_creature_type(target.state.template, kind)
+                for kind in action.excluded_target_creature_types
+            )
         ]
     except Exception as exc:
         logger.exception("Failed to determine legal targets for spell %s.", action.id)
@@ -133,24 +146,29 @@ def single_target_spell_choice(
     legal = legal_single_spell_targets(caster, setup, action, range_ft=effective_range)
     if not legal:
         return None
-    target = max(
+    ranked = sorted(
         legal,
         key=lambda item: (
             save_spell_expected_damage(item, scaled),
             -item.state.current_hp,
             item.combatant_id,
         ),
+        reverse=True,
     )
-    score = save_spell_expected_damage(target, scaled)
+    chosen = ranked[: spell_save_target_count(scaled, slot_level)]
+    score = 0.0
+    for target in chosen:
+        score += save_spell_expected_damage(target, scaled)
+    farthest = max(combatant_distance(caster, target) for target in chosen)
     modifier = choose_spell_range_modifier(
         caster.state,
         base_range_ft=action.range_ft,
-        required_range_ft=combatant_distance(caster, target),
+        required_range_ft=farthest,
     )
     return SpellChoice(
         action,
         slot_level,
-        (target.combatant_id,),
+        tuple(target.combatant_id for target in chosen),
         expected_damage=score,
         range_modifier=modifier,
     )

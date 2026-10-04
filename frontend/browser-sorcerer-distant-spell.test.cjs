@@ -15,7 +15,7 @@ for (const file of [
   "browser-heroes.js",
   "browser-condition-rules.js",
   "browser-action-economy.js",
-  "browser-modifiers.js",
+  "browser-modifier-validation.js", "browser-modifiers.js",
   "browser-state.js",
   "browser-rolls.js",
   "browser-ability-hooks.js",

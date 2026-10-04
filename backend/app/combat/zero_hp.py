@@ -10,6 +10,7 @@ from app.combat.hit_points import effective_max_hp
 from app.combat.orc import use_relentless_endurance
 from app.combat.replacement_form_lifecycle import apply_replacement_form_damage, revert_replacement_form_if_incapacitated
 from app.combat.source_bound_effects import end_damage_sensitive_effects
+from app.combat.regeneration_lifecycle import delay_zero_hp_death, note_incoming_damage_types
 from app.combat.undead_fortitude import resolve_undead_fortitude, resolve_effect_bound_survival_save
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement
 from app.domain.models import CombatantState, DamageType
@@ -30,6 +31,8 @@ def reset_death_saves(state: CombatantState) -> None:
 
 
 def _mark_dead(state: CombatantState) -> ZeroHpOutcome:
+    if delay_zero_hp_death(state):
+        return _mark_unconscious(state)
     state.current_hp = 0
     state.is_alive = False
     state.is_dead = True
@@ -142,6 +145,7 @@ def apply_damage(
     damage_types: set[DamageType] | None = None,
     dice: DiceProvider | None = None,
     affected_states: list[CombatantState] | None = None,
+    setup=None,
 ) -> ZeroHpOutcome:
     """Apply Temporary HP, Concentration, and SRD 5.2.1 zero-HP lifecycle rules."""
     try:
@@ -152,33 +156,40 @@ def apply_damage(
 
         incoming = amount
         types = damage_types or set()
+        note_incoming_damage_types(state, types)
         amount = _after_temporary_hp(state, amount)
         amount, _ = apply_replacement_form_damage(state, amount)
         if state.current_hp == 0:
-            return _finish_damage(state, _damage_at_zero(state, incoming, critical=critical), incoming, dice, affected_states)
-        if amount == 0:
-            return _finish_damage(state, "damaged", incoming, dice, affected_states)
-        hp_before = state.current_hp
-        state.current_hp = max(0, hp_before - amount)
-        if state.current_hp > 0:
-            return _finish_damage(state, "damaged", incoming, dice, affected_states)
-        if consume_zero_hp_replacement(state):
-            return _finish_damage(state, "zero_hp_replacement", incoming, dice, affected_states)
-        if resolve_undead_fortitude(
-            state, incoming, types, critical=critical, dice=dice,
-        ):
-            return _finish_damage(state, "undead_fortitude", incoming, dice, affected_states)
-        if state.template.kind == "monster":
-            return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
-
-        remaining_damage = max(0, amount - hp_before)
-        if remaining_damage >= effective_max_hp(state):
-            return _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
-        if resolve_effect_bound_survival_save(state, dice):
-            return _finish_damage(state, "survival_save", incoming, dice, affected_states)
-        if use_relentless_endurance(state, remaining_damage):
-            return _finish_damage(state, "relentless_endurance", incoming, dice, affected_states)
-        return _finish_damage(state, _mark_unconscious(state), incoming, dice, affected_states)
+            outcome = _finish_damage(state, _damage_at_zero(state, incoming, critical=critical), incoming, dice, affected_states)
+        elif amount == 0:
+            outcome = _finish_damage(state, "damaged", incoming, dice, affected_states)
+        else:
+            hp_before = state.current_hp
+            state.current_hp = max(0, hp_before - amount)
+            if state.current_hp > 0:
+                outcome = _finish_damage(state, "damaged", incoming, dice, affected_states)
+            elif consume_zero_hp_replacement(state):
+                outcome = _finish_damage(state, "zero_hp_replacement", incoming, dice, affected_states)
+            elif resolve_undead_fortitude(state, incoming, types, critical=critical, dice=dice):
+                outcome = _finish_damage(state, "undead_fortitude", incoming, dice, affected_states)
+            elif state.template.kind == "monster":
+                outcome = _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
+            else:
+                remaining_damage = max(0, amount - hp_before)
+                if remaining_damage >= effective_max_hp(state):
+                    outcome = _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)
+                elif resolve_effect_bound_survival_save(state, dice):
+                    outcome = _finish_damage(state, "survival_save", incoming, dice, affected_states)
+                elif use_relentless_endurance(state, remaining_damage):
+                    outcome = _finish_damage(state, "relentless_endurance", incoming, dice, affected_states)
+                else:
+                    outcome = _finish_damage(state, _mark_unconscious(state), incoming, dice, affected_states)
+        if incoming > 0 and state.damage_share_source_id:
+            if setup is None:
+                raise ValueError("Damage share requires encounter setup.")
+            from app.combat.damage_share import resolve_damage_share_for_state
+            resolve_damage_share_for_state(state, incoming, setup, dice)
+        return outcome
     except ValueError:
         raise
     except Exception as exc:

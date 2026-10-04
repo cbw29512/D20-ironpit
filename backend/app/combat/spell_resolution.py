@@ -44,6 +44,9 @@ def resolve_spell(
             raise ValueError("Reaction spells require their own trigger window.")
         if not is_available(caster.state, spell.action_cost):
             raise ValueError(f"{spell.action_cost} is unavailable for {spell.name}.")
+        from app.combat.suppression_zone_geometry import verbal_casting_blocked
+        if getattr(spell, "verbal_component", True) and verbal_casting_blocked(caster, setup):
+            raise ValueError(f"{spell.name} cannot be cast inside a Silence effect.")
 
         remaining = None
         if choice.alternate_cast is not None:
@@ -130,6 +133,20 @@ def resolve_spell(
             dice,
         )
         events.extend(effect_events)
+        if spell.creates_difficult_terrain:
+            from app.combat.temporary_terrain import apply_spell_difficult_terrain
+            from app.domain.grid import GridPosition
+            placement = choice.placement
+            if placement is not None:
+                origin = getattr(placement, "origin", None)
+                if origin is not None:
+                    apply_spell_difficult_terrain(
+                        setup,
+                        caster,
+                        spell,
+                        GridPosition(x=int(origin[0] // 5), y=int(origin[1] // 5)),
+                        round_number,
+                    )
         if choice.damage_maximizer is not None:
             follow_up, sequence = resolve_maximizer_after_cast(
                 sequence,

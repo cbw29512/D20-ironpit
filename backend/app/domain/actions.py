@@ -56,13 +56,20 @@ class ConditionRemovalAction(BaseModel):
     action_cost: ActionCost
     range_ft: int = Field(default=5, ge=0)
     target_mode: ConditionRemovalTargetMode = "self_or_ally"
-    removable_conditions: list[ConditionName] = Field(min_length=1)
+    removable_conditions: list[ConditionName] = Field(default_factory=list)
     excluded_creature_types: list[str] = Field(default_factory=list)
     max_conditions_per_use: int = Field(default=1, ge=1, le=16)
     resource_costs: dict[str, int] = Field(default_factory=dict)
     resource_costs_per_condition: dict[str, int] = Field(default_factory=dict)
     reaction_trigger: ConditionReactionTrigger | None = None
     expends_spell_slot: bool = False
+    reduces_exhaustion_levels: int = Field(default=0, ge=0, le=6)
+    removes_curses: bool = False
+    removes_all_curses: bool = False
+    removes_ability_score_reductions: bool = False
+    removes_hit_point_maximum_reductions: bool = False
+    requires_active_effect_id: str | None = None
+    ends_required_effect: bool = False
     animation: str = "condition-removal"
 
     @model_validator(mode="after")
@@ -78,6 +85,15 @@ class ConditionRemovalAction(BaseModel):
         has_spell_slot_resource = any(resource_id.startswith("spell-slot-") for resource_id in resource_ids)
         if has_spell_slot_resource != self.expends_spell_slot:
             raise ValueError("Spell-slot resources and expends_spell_slot must agree.")
+        if not (
+            self.removable_conditions
+            or self.reduces_exhaustion_levels
+            or self.removes_curses
+            or self.removes_all_curses
+            or self.removes_ability_score_reductions
+            or self.removes_hit_point_maximum_reductions
+        ):
+            raise ValueError("Condition-removal actions require a removable condition or restoration rider.")
         return self
 
 
@@ -119,6 +135,10 @@ class SavingThrowAction(BaseModel):
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
     failed_save_push_ft: int = Field(default=0, ge=0)
     area_healing_rider: AreaHealingRider | None = None
+    required_target_creature_types: list[str] = Field(default_factory=list)
+    excluded_target_creature_types: list[str] = Field(default_factory=list)
+    minimum_remaining_hp: int = Field(default=0, ge=0)
+    reduce_hit_point_maximum_on_failed_save: bool = False
     animation: str = "save-effect"
 
 

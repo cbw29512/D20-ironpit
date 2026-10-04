@@ -13,7 +13,7 @@ const load = (name) => vm.runInThisContext(
 
 for (const file of [
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-timed-conditions.js", "browser-grapple.js", "browser-modifiers.js", "browser-state.js",
+  "browser-timed-conditions.js", "browser-grapple.js", "browser-modifier-validation.js", "browser-modifiers.js", "browser-state.js",
   "browser-rage.js", "browser-rolls.js", "browser-undead-fortitude.js", "browser-zero-hp.js",
   "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js", "browser-saves.js",
   "browser-spellcasting.js", "browser-spell-modifiers.js", "browser-spell-attack.js",

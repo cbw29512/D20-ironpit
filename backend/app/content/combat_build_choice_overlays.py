@@ -72,9 +72,7 @@ def _build_overlay(class_id: str, build_id: str) -> CombatBuildChoiceOverlay:
         capability = _MASTERY_CAPABILITY.get(mastery or "")
         if capability is None:
             raise ValueError(f"No shared capability maps weapon mastery {mastery!r}.")
-        if capability == "slow-mastery":
-            ignored.append(capability)
-        elif capability not in required:
+        if capability not in required:
             required.append(capability)
     return CombatBuildChoiceOverlay(
         class_id=class_id, build_id=build_id,

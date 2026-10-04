@@ -27,7 +27,7 @@ def _slot_levels(caster: EncounterCombatant, action: SpellAttackAction, turn_key
         caster.state,
         turn_key,
         action.level,
-        higher_slot_scaling=action.attacks_per_slot_above > 0,
+        higher_slot_scaling=action.attacks_per_slot_above > 0 or action.upcast_dice_per_level > 0,
     )
 
 
@@ -60,7 +60,10 @@ def choose_spell_attack(
                     base_range_ft=action.range_ft,
                     required_range_ft=distance,
                 )
-                score = spell_attack_expected_damage(caster, target, action, setup) * attack_count
+                scaled = action.model_copy(
+                    update={"damage_dice_count": action.damage_dice_at_slot(slot_level)},
+                )
+                score = spell_attack_expected_damage(caster, target, scaled, setup) * attack_count
                 candidates.append((
                     score, -slot_level, -action.level, -target.state.current_hp, target.combatant_id,
                     action, target, range_modifier,

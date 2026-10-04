@@ -38,7 +38,7 @@ From `backend/app/content/certified_hero_progressions.py`:
 
 2024 public-ready hero slots on current main: **156 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
-2014 browser monster roster asserted in tests: **129** certified.
+2014 browser monster roster asserted in tests: **130** certified.
 
 Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitive. Do not add a Paladin-named combat resolver.
 

@@ -68,11 +68,12 @@ def build_druid_2024_final_progression_audits(level: int) -> list[FeatureAudit]:
                 ),
                 druid_feature_audit(
                     "druid-combat-spell-l20", "Prepared Spell: Ice Storm", "class",
-                    combat_relevant=False, automated=True,
+                    combat_relevant=True, automated=True,
                     notes=(
-                        "The twenty-second prepared spell follows damage priority, but remains explicit "
-                        "arena-out-of-scope until the engine can preserve its temporary area Difficult Terrain "
-                        "alongside its mixed Bludgeoning/Cold save damage without approximation."
+                        "The twenty-second prepared spell follows damage priority. 2024 Ice Storm uses "
+                        "the multi-component Dexterity-save path for 2d10 Bludgeoning plus 4d8 Cold, "
+                        "half on a success, and places magical Difficult Terrain in the 20-foot cylinder "
+                        "until the end of the caster's next turn."
                     ),
                 ),
             ])

@@ -27,6 +27,9 @@ def resolve_timed_self_buff(
     *,
     spend_action_cost: bool = True,
     affected_states=None,
+    setup=None,
+    turn_key: str | None = None,
+    dice=None,
 ) -> BattleEvent:
     """Spend source-defined economy/resources and apply one source-owned timed buff."""
     try:
@@ -37,6 +40,13 @@ def resolve_timed_self_buff(
             raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
         if timed_self_buff_active(member, action):
             raise ValueError(f"{action.name} is already active.")
+        if setup is not None:
+            from app.combat.suppression_zone_geometry import verbal_casting_blocked
+            if action.resource_id and action.resource_id.startswith("spell-slot-") and verbal_casting_blocked(member, setup):
+                raise ValueError(f"{action.name} cannot be cast inside a Silence effect.")
+        if turn_key and action.resource_id and action.resource_id.startswith("spell-slot-"):
+            from app.combat.spellcasting import mark_slot_spell_cast
+            mark_slot_spell_cast(member.state, turn_key)
 
         if spend_action_cost:
             spend(member.state, action.action_cost)
@@ -78,8 +88,14 @@ def resolve_timed_self_buff(
             or action.movement_mode_grants
             or action.friendly_save_advantage_aura is not None
             or action.friendly_cover_aura is not None
+            or action.friendly_weapon_damage_aura is not None
+            or action.friendly_recovery_aura is not None
             or action.hostile_start_turn_condition_aura is not None
             or action.start_turn_emanation_damage is not None
+            or action.melee_hit_retaliation is not None
+            or action.spell_save_dc_bonus
+            or action.spell_attack_advantage
+            or action.modifier_effects
         ):
             apply_timed_condition(
                 member.state,
@@ -99,7 +115,15 @@ def resolve_timed_self_buff(
                 use_default_poison_recovery=False,
             )
 
+        if action.friendly_recovery_aura is not None:
+            from app.combat.friendly_recovery_auras import activate_source_recovery_aura
+            activate_source_recovery_aura(
+                member, action, setup, dice, round_number=round_number,
+            )
         if action.concentration:
+            slot_level = None
+            if action.resource_id and action.resource_id.startswith("spell-slot-"):
+                slot_level = int(action.resource_id.removeprefix("spell-slot-"))
             start_concentration(
                 member.state,
                 member.combatant_id,
@@ -107,6 +131,7 @@ def resolve_timed_self_buff(
                 round_number,
                 affected_states,
                 expires_round=expires_round,
+                slot_level=slot_level,
             )
 
         for grant in action.saving_throw_advantage_grants:
@@ -123,6 +148,22 @@ def resolve_timed_self_buff(
                     source_creature_types=list(grant.source_creature_types),
                     required_effect_tags=list(grant.required_effect_tags),
                 ))
+        if action.modifier_effects:
+            from app.combat.spell_modifiers import build_spell_modifier
+            for index, effect in enumerate(action.modifier_effects):
+                add_modifier(
+                    member.state,
+                    build_spell_modifier(
+                        member.combatant_id,
+                        member.combatant_id,
+                        action.id,
+                        effect,
+                        index,
+                        action.name,
+                        concentration_required=action.concentration,
+                        round_number=round_number,
+                    ),
+                )
 
         return BattleEvent(
             sequence=sequence,

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from app.combat.undead_fortitude import consume_survival_save_log
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
-
 from app.combat.action_economy import is_available, spend
 from app.combat.automatic_save_failures import automatically_fails_save
 from app.combat.barbarian import end_rage_if_incapacitated
@@ -16,7 +15,9 @@ from app.combat.defensive_modifier_rules import saving_throw_advantage_source_na
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
-from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, EncounterCombatant, SavingThrowAction
+from app.content.monster_creature_types import is_creature_type
+from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, SavingThrowAction
 from app.domain.runtime import CombatantState
 from app.combat.save_damage_components import resolve_save_damage_components
 from app.domain.saving_throw_context import SavingThrowContext
@@ -24,11 +25,18 @@ from app.domain.size import size_at_most
 
 
 def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, distance_ft: int) -> bool:
-    if distance_ft > action.range_ft:
+    template = target.state.template
+    if distance_ft > action.range_ft or (
+        action.requires_target_hearing and "deafened" in target.state.active_effect_ids
+    ):
         return False
-    if action.requires_target_hearing and "deafened" in target.state.active_effect_ids:
+    if action.required_target_creature_types and not any(
+        is_creature_type(template, kind) for kind in action.required_target_creature_types
+    ):
         return False
-    return action.target_max_size is None or size_at_most(target.state.template.size, action.target_max_size)
+    if any(is_creature_type(template, kind) for kind in action.excluded_target_creature_types):
+        return False
+    return action.target_max_size is None or size_at_most(template.size, action.target_max_size)
 
 
 def resolve_save_action(
@@ -37,6 +45,7 @@ def resolve_save_action(
     check_resource: bool = True, spend_resource: bool = True,
     shared_damage_rolls: list[int] | list[list[int]] | None = None, affected_states: list[CombatantState] | None = None,
     spell_effect: bool = False, save_disadvantage_sources: tuple[str, ...] = (),
+    save_advantage_sources: tuple[str, ...] = (),
     resource_remaining_override: int | None = None,
     setup: EncounterSetup | None = None,
 ) -> BattleEvent:
@@ -61,6 +70,7 @@ def resolve_save_action(
         source_creature_type=source_type,
         effect_tags=frozenset(effect_tags),
         disadvantage_sources=save_disadvantage_sources,
+        advantage_sources=save_advantage_sources,
     )
     automatic_failure = automatically_fails_save(action, target)
     advantage_sources = () if automatic_failure else saving_throw_advantage_source_names(
@@ -94,8 +104,21 @@ def resolve_save_action(
                                modifier=sum(component.modifier for component in rolled_components), total=applied_total)
     if applied_total:
         applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
-        damage_outcome = apply_damage(target.state, applied_total, damage_types=applied_types, dice=dice, affected_states=affected_states)
+        incoming = applied_total
+        if action.minimum_remaining_hp:
+            applied_total = min(applied_total, max(0, target.state.current_hp - action.minimum_remaining_hp))
+        damage_outcome = apply_damage(
+            target.state, applied_total, damage_types=applied_types, dice=dice,
+            affected_states=affected_states, setup=setup,
+        )
         end_rage_if_incapacitated(target.state)
+        if (
+            not succeeded
+            and action.reduce_hit_point_maximum_on_failed_save
+            and incoming
+        ):
+            from app.combat.restoration_riders import apply_hit_point_maximum_reduction
+            apply_hit_point_maximum_reduction(target, incoming)
     applied_conditions: list[str] = []
     if (
         not succeeded
@@ -119,11 +142,11 @@ def resolve_save_action(
             repeat_save_timing=rider.repeat_save_timing,
             turn_behavior=rider.turn_behavior,
             ends_on_damage=rider.ends_on_damage,
-            ends_if_source_incapacitated=rider.ends_if_source_incapacitated,
-            ends_if_source_dead=rider.ends_if_source_dead,
+            ends_if_source_incapacitated=rider.ends_if_source_incapacitated, ends_if_source_dead=rider.ends_if_source_dead,
             next_attack_disadvantage=rider.next_attack_disadvantage,
             affected_states=affected_states,
-            use_default_poison_recovery=False,
+            use_default_poison_recovery=False, repeat_save_failures_to_lock=rider.repeat_save_failures_to_lock,
+            escape_check_ability=rider.escape_check_ability, escape_check_dc=rider.escape_check_dc,
         )
         if applied is not None:
             applied_conditions.append(applied)

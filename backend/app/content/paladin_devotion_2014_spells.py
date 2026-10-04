@@ -6,6 +6,7 @@ from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
 from app.content.paladin_devotion_2014_level14 import divine_favor_2014
 from app.content.shared_movement_spells_2014 import freedom_of_movement_2014
 from app.content.shared_spells_2014 import death_ward_2014
+from app.content.shared_ward_spells_2014 import magic_weapon_2014
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.effect_removal import EffectRemovalAction
 from app.content.shared_effect_removal_spells_2014 import dispel_magic_2014 as shared_dispel_magic_2014
@@ -126,6 +127,8 @@ def build_paladin_defensive_spells_2014(level: int, charisma_modifier: int) -> l
         actions.append(beacon_of_hope_2014())
     if level >= 10:
         actions.append(AID.model_copy(update={"source": source}))
+    if level >= 12:
+        actions.append(magic_weapon_2014())
     if level >= 13:
         actions.extend([death_ward_2014(), freedom_of_movement_2014()])
     if level >= 14:

@@ -69,6 +69,20 @@
   function available(member, setup) {
     return Boolean(E().available(member.state, "action") && legalChoiceAvailable(member, setup));
   }
+  function meleeAvailable(member, setup) {
+    return (member.state.template.attack_action?.slots || []).some((slot) =>
+      Boolean(F().chooseAttack(member, setup, slotData(slot).attackIds, "melee")));
+  }
+  function expectedDamage(member, setup) {
+    let total = 0;
+    for (const slot of member.state.template.attack_action?.slots || []) {
+      const data = slotData(slot);
+      const chosen = F().chooseAttack(member, setup, data.attackIds, "melee")
+        || F().chooseAttack(member, setup, data.attackIds, "ranged");
+      if (chosen) total += F().weaponMeanDamage(chosen.attack);
+    }
+    return total;
+  }
 
   function resolveAttackAction(sequence, round, member, setup) {
     const definition = member.state.template.attack_action, slots = definition?.slots;
@@ -145,5 +159,7 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_MULTIATTACK = { available, legalChoiceAvailable, resolveAttackAction };
+  window.IRON_PIT_BROWSER_MULTIATTACK = {
+    available, legalChoiceAvailable, meleeAvailable, expectedDamage, resolveAttackAction,
+  };
 })();

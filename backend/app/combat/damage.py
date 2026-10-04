@@ -10,7 +10,11 @@ from app.combat.conditional_damage import active_replacement_damage, conditional
 from app.combat.dice import DiceProvider
 from app.combat.divine_smite_2014 import divine_smite_bonus_damage
 from app.combat.frenzy import frenzy_bonus_damage
-from app.combat.modifier_stack import attack_damage_source_qualifiers, bonus_damage_modifiers
+from app.combat.modifier_stack import (
+    attack_damage_source_qualifiers,
+    bonus_damage_modifiers,
+    weapon_damage_flat_bonus,
+)
 from app.combat.once_per_turn_hit_damage import once_per_turn_weapon_hit_bonus_damages
 from app.combat.post_hit_damage import post_hit_resource_bonus_damage
 from app.combat.savage_attacker import roll_weapon_component
@@ -94,7 +98,11 @@ def resolve_weapon_damage(
         elif attack.fixed_damage is not None:
             components = [fixed_damage_component(weapon.name, attack.fixed_damage, selected_damage_type)]
         else:
-            weapon_modifier = attack.damage_bonus + rage_damage_bonus(attacker, attack)
+            weapon_modifier = (
+                attack.damage_bonus
+                + rage_damage_bonus(attacker, attack)
+                + weapon_damage_flat_bonus(attacker, attack.weapon.id)
+            )
             components = [roll_weapon_component(
                 attacker, dice, source=weapon.name, dice_count=weapon.dice_count,
                 dice_size=weapon.dice_size, modifier=weapon_modifier, damage_type=selected_damage_type,

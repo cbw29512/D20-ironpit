@@ -40,7 +40,7 @@
     const distance = options.distanceOverrideFt ?? S().distance(caster, target);
     const rangeModifier = options.rangeModifier || null;
     const allowedRange = spell.range * (rangeModifier?.rangeMultiplier || 1);
-    if (distance > allowedRange) throw new Error(`${spell.name} target is out of range.`);
+    if (!options.skipRangeCheck && distance > allowedRange) throw new Error(`${spell.name} target is out of range.`);
     const castSlotLevel = options.castSlotLevel ?? null;
     const resourceId = spendCastCosts ? slotResource(caster, spell, turnKey, castSlotLevel) : null;
     if (spendCastCosts && spell.level > 0 && !resourceId) {
@@ -59,7 +59,8 @@
     }
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
     const armorAdvantage = spell.advantageIfTargetWearingMetalArmor && target.state.template.wearing_metal_armor ? 1 : 0;
-    const advantage = conditions.advantage + armorAdvantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
+    const buffAdvantage = window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS?.spellAttackAdvantage?.(caster.state) ? 1 : 0;
+    const advantage = conditions.advantage + armorAdvantage + buffAdvantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);
     const closeThreat = (spell.attackKind || "ranged") === "ranged" && A().rangedCloseThreat(caster, target, distance, setup);
     const mode = R().modeFromSources(
       advantage,
@@ -83,8 +84,13 @@
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
     const concentrationBefore = target.state.concentration?.effect_id || null;
     let damageRoll = null, damageComponents = [], appliedConditions = [];
-    if (hit) {
-      const count = spell.damageDiceCount * (critical ? 2 : 1);
+    const missHalf = !hit && spell.missDamage === "half";
+    if (hit || missHalf) {
+      const slotLevel = options.castSlotLevel ?? spell.level ?? 0;
+      const extraDice = spell.level > 0
+        ? Math.max(0, slotLevel - spell.level) * (spell.upcastDicePerLevel || 0)
+        : 0;
+      const count = (spell.damageDiceCount + extraDice) * (critical ? 2 : 1);
       const rolls = window.IRON_PIT_DICE.rollMany(count, spell.damageDiceSize);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (spell.damageBonus || 0);
       const rolledComponents = spell.damageType ? [{
@@ -93,9 +99,9 @@
         rolls: [...rolls],
         modifier: spell.damageBonus || 0,
         damage_type: spell.damageType,
-        total: raw,
+        total: missHalf ? Math.floor(raw / 2) : raw,
       }] : [];
-      for (const modifier of M().bonusDamage(caster.state, target.combatant_id)) {
+      for (const modifier of (hit ? M().bonusDamage(caster.state, target.combatant_id) : [])) {
         const riderCount = modifier.dice_count * (critical ? 2 : 1);
         const riderRolls = window.IRON_PIT_DICE.rollMany(riderCount, modifier.dice_size);
         rolledComponents.push({
@@ -123,7 +129,7 @@
         damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type),
       )];
       A().applyDamage(target.state, applied, critical, appliedTypes, states);
-      if (target.state.is_alive && !target.state.is_dead) {
+      if (hit && target.state.is_alive && !target.state.is_dead) {
         (spell.onHitModifierEffects || []).forEach((effect, index) => {
           M().add(target.state, SM().build(caster.combatant_id, target.combatant_id, spell, effect, index, round));
         });
@@ -143,6 +149,17 @@
             useDefaultPoisonRecovery: false,
           });
           if (appliedId) appliedConditions.push(appliedId);
+        });
+      }
+      if (hit && target.state.is_alive && !target.state.is_dead) {
+        window.IRON_PIT_BROWSER_EXILE?.applyOnHit?.({
+          sequence, round, member: caster, target, setup, turnKey, attackOutcome: {},
+        });
+        window.IRON_PIT_BROWSER_MELEE_RETALIATION?.apply(caster, target, {
+          melee: (spell.attackKind || "ranged") === "melee", setup,
+        });
+        window.IRON_PIT_BROWSER_MELEE_HIT_SAVE_RETALIATION?.apply(caster, target, {
+          melee: (spell.attackKind || "ranged") === "melee", setup, round,
         });
       }
     }

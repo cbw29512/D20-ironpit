@@ -4,6 +4,7 @@ import logging
 
 from app.combat.damage_reaction_events import damage_event_chain
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.matching_dice_leap import resolve_matching_dice_leaps
 from app.combat.pit_policy import target_order
 from app.combat.spell_attack_resolution import resolve_spell_attack
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -91,6 +92,20 @@ def resolve_spell_attack_sequence(
                 turn_key=turn_key,
             )
             events.extend(chain)
+            leap_events, next_sequence = resolve_matching_dice_leaps(
+                next_sequence,
+                round_number,
+                caster,
+                target,
+                event,
+                spell,
+                setup,
+                turn_key,
+                dice,
+                slot_level=slot_level,
+                range_modifier=range_modifier,
+            )
+            events.extend(leap_events)
             preferred = target if target.state.current_hp > 0 and not target.state.is_dead else None
 
         if not events:

@@ -32,10 +32,10 @@ def build_seraphine_dawnshield_level9_profile() -> CharacterBuildProfile:
         _class_feature(
             "greater-restoration",
             "Greater Restoration",
-            combat=False,
             notes=(
-                "Always prepared for RAW Life Domain progression; broad restoration semantics "
-                "remain outside the simple arena action set."
+                "Always-prepared Life Domain spell. Reuses ConditionRemovalAction for one printed "
+                "rider: Charm or Petrified, a curse, one Exhaustion level, an ability-score "
+                "reduction, or a Hit Point maximum reduction."
             ),
         ),
         _class_feature(
@@ -82,19 +82,17 @@ def build_seraphine_dawnshield_level10_profile() -> CharacterBuildProfile:
         _class_feature(
             "spare-the-dying",
             "Spare the Dying",
-            combat=False,
             notes=(
-                "Fifth Cleric cantrip at level 10; retained for RAW progression but not "
-                "needed in the 1v1 arena action set."
+                "Action, 15-foot cantrip range (30 at this level). Stabilizes a living 0 HP "
+                "creature. Healing Word still wins when a real HP heal is legal."
             ),
         ),
         _class_feature(
             "contagion",
             "Contagion",
-            combat=False,
             notes=(
-                "Legal prepared fifth-level damage spell retained on the sheet; Iron Pit "
-                "prefers the simpler 5th-level Inflict Wounds upcast for arena damage."
+                "Touch Constitution save: fail-only 11d8 Necrotic, Poisoned, and Constitution "
+                "save Disadvantage. Repeat save at end of each turn; three failures lock it."
             ),
         ),
     ]

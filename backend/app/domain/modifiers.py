@@ -30,6 +30,7 @@ class ModifierKind(StrEnum):
     NEXT_INCOMING_ATTACK_ROLL_FLAT = "next-incoming-attack-roll-flat"
     TARGETING_SAVE_GATE = "targeting-save-gate"
     BONUS_DAMAGE = "bonus-damage"
+    WEAPON_DAMAGE_FLAT = "weapon-damage-flat"
     SPEED = "speed"
     SPEED_MULTIPLIER = "speed-multiplier"
     DEBUFF_COUNTER = "debuff-counter"
@@ -79,116 +80,9 @@ class CombatModifier(BaseModel):
 
     @model_validator(mode="after")
     def validate_payload(self) -> "CombatModifier":
-        die_kind = self.kind in {
-            ModifierKind.ATTACK_ROLL_BONUS_DIE, ModifierKind.SAVING_THROW_BONUS_DIE,
-            ModifierKind.BONUS_DAMAGE,
-        }
-        if die_kind and (self.dice_count < 1 or self.dice_size < 2):
-            raise ValueError(f"{self.kind.value} requires certified dice.")
-        if not die_kind and (self.dice_count or self.dice_size):
-            raise ValueError(f"{self.kind.value} does not accept dice.")
-        if self.kind is ModifierKind.ARMOR_CLASS_MINIMUM:
-            if self.minimum_value < 1 or self.flat_bonus:
-                raise ValueError("Minimum AC modifiers require a positive minimum and no flat bonus.")
-        elif self.minimum_value:
-            raise ValueError(f"{self.kind.value} does not accept a minimum value.")
-        damage_type_kinds = {ModifierKind.BONUS_DAMAGE, ModifierKind.WEAPON_DAMAGE_TYPE_CHOICE}
-        if self.kind in damage_type_kinds and self.damage_type is None:
-            raise ValueError(f"{self.kind.value} requires a damage type.")
-        if self.kind not in damage_type_kinds and self.damage_type is not None:
-            raise ValueError(f"{self.kind.value} does not accept a damage type.")
-        advantage_kinds = {
-            ModifierKind.ATTACKS_AGAINST_ADVANTAGE, ModifierKind.ATTACKS_AGAINST_DISADVANTAGE,
-            ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE, ModifierKind.D20_TEST_ADVANTAGE,
-        }
-        if self.kind in advantage_kinds and self.flat_bonus:
-            raise ValueError("Attack roll-mode modifiers do not accept a flat bonus.")
-        if self.kind is ModifierKind.ATTACK_ROLL_FLAT and (self.flat_bonus == 0 or self.weapon_id is None):
-            raise ValueError("Flat attack modifiers require a nonzero bonus and weapon id.")
-        if self.kind is ModifierKind.NEXT_INCOMING_ATTACK_ROLL_FLAT and self.flat_bonus == 0:
-            raise ValueError("Next incoming attack-roll flat modifiers require a nonzero bonus.")
-        weapon_scoped_kinds = {
-            ModifierKind.ATTACK_ROLL_FLAT,
-            ModifierKind.DAMAGE_SOURCE_QUALIFIER,
-            ModifierKind.WEAPON_DAMAGE_TYPE_CHOICE,
-        }
-        if self.kind not in weapon_scoped_kinds and self.weapon_id is not None:
-            raise ValueError(f"{self.kind.value} does not accept a weapon id.")
-        if self.kind is ModifierKind.DAMAGE_SOURCE_QUALIFIER and (self.weapon_id is None or self.source_qualifier is None):
-            raise ValueError("Damage source qualifier modifiers require a weapon id and qualifier.")
-        if self.kind is ModifierKind.WEAPON_DAMAGE_TYPE_CHOICE and self.weapon_id is None:
-            raise ValueError("Weapon damage-type choice modifiers require a weapon id.")
-        if self.kind is not ModifierKind.DAMAGE_SOURCE_QUALIFIER and self.source_qualifier is not None:
-            raise ValueError(f"{self.kind.value} does not accept a source qualifier.")
-        if self.kind in {ModifierKind.SAVING_THROW_FLAT, ModifierKind.COVER_SAVING_THROW_FLAT} and self.flat_bonus == 0:
-            raise ValueError("Flat saving-throw modifiers require a nonzero bonus.")
-        if self.kind is ModifierKind.CONDITION_IMMUNITY and self.condition_id is None:
-            raise ValueError("Condition-immunity modifiers require a condition id.")
-        if self.kind is not ModifierKind.CONDITION_IMMUNITY and self.condition_id is not None:
-            raise ValueError(f"{self.kind.value} does not accept a condition id.")
-        if self.kind is ModifierKind.DEBUFF_COUNTER and self.debuff_counter is None:
-            raise ValueError("Debuff-counter modifiers require a counter definition.")
-        if self.kind is not ModifierKind.DEBUFF_COUNTER and self.debuff_counter is not None:
-            raise ValueError(f"{self.kind.value} does not accept a debuff counter.")
-        if self.kind is ModifierKind.ZERO_HP_REPLACEMENT and self.replacement_hp < 1:
-            raise ValueError("Zero-HP replacement modifiers require positive replacement HP.")
-        if self.kind is not ModifierKind.ZERO_HP_REPLACEMENT and (self.replacement_hp or self.prevents_instant_death):
-            raise ValueError(f"{self.kind.value} does not accept zero-HP replacement fields.")
-        if self.source_creature_types and self.kind not in {
-            ModifierKind.ATTACKS_AGAINST_DISADVANTAGE, ModifierKind.CONDITION_IMMUNITY,
-            ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.TARGETING_SAVE_GATE,
-        }:
-            raise ValueError(f"{self.kind.value} does not accept source creature types.")
-        if self.bypass_attacker_senses and self.kind is not ModifierKind.ATTACKS_AGAINST_DISADVANTAGE:
-            raise ValueError(f"{self.kind.value} does not accept attacker-sense bypass.")
-        if len(set(self.bypass_attacker_senses)) != len(self.bypass_attacker_senses):
-            raise ValueError("Attacker-sense bypass values must be unique.")
-        if self.required_active_effect_ids and self.kind is not ModifierKind.CONDITION_IMMUNITY:
-            raise ValueError(f"{self.kind.value} does not accept active-effect requirements.")
-        required_effects = [item.strip().casefold() for item in self.required_active_effect_ids]
-        if any(not item for item in required_effects) or len(set(required_effects)) != len(required_effects):
-            raise ValueError("Active-effect requirements must be non-empty and unique.")
-        self.required_active_effect_ids = required_effects
-        if self.kind in {ModifierKind.SAVING_THROW_ADVANTAGE, ModifierKind.TARGETING_SAVE_GATE} and not self.save_ability:
-            raise ValueError(f"{self.kind.value} requires a save ability.")
-        if self.kind is ModifierKind.TARGETING_SAVE_GATE and self.save_dc is None:
-            raise ValueError("Targeting save gates require a DC.")
-        if self.kind is not ModifierKind.TARGETING_SAVE_GATE and self.save_dc is not None:
-            raise ValueError(f"{self.kind.value} does not accept a save DC.")
-        if self.kind is not ModifierKind.TARGETING_SAVE_GATE and self.success_immunity_hours is not None:
-            raise ValueError(f"{self.kind.value} does not accept targeting-gate success immunity.")
-        if self.kind not in {
-            ModifierKind.SAVING_THROW_ADVANTAGE,
-            ModifierKind.SAVING_THROW_FLAT,
-            ModifierKind.COVER_SAVING_THROW_FLAT,
-            ModifierKind.TARGETING_SAVE_GATE,
-        } and self.save_ability:
-            raise ValueError(f"{self.kind.value} does not accept a save ability.")
-        if self.requires_magical_effect and self.kind is not ModifierKind.SAVING_THROW_ADVANTAGE:
-            raise ValueError("Only saving-throw Advantage can require a magical-effect context.")
-        if self.requires_spell_effect and self.kind is not ModifierKind.SAVING_THROW_ADVANTAGE:
-            raise ValueError("Only saving-throw Advantage can require a spell-effect context.")
-        if self.required_effect_tags and self.kind is not ModifierKind.SAVING_THROW_ADVANTAGE:
-            raise ValueError("Only saving-throw Advantage can require effect tags.")
-        effect_tags = [item.strip().casefold() for item in self.required_effect_tags]
-        if any(not item for item in effect_tags) or len(set(effect_tags)) != len(effect_tags):
-            raise ValueError("Saving-throw Advantage effect tags must be non-empty and unique.")
-        self.required_effect_tags = effect_tags
-        if self.consume_on_attack_against and self.kind is not ModifierKind.ATTACKS_AGAINST_ADVANTAGE:
-            raise ValueError("Only attack-advantage defender modifiers can be consumed by the next attack.")
-        if self.consume_on_saving_throw and self.kind is not ModifierKind.SAVING_THROW_DISADVANTAGE:
-            raise ValueError("Only saving-throw Disadvantage modifiers can be consumed by a saving throw.")
-        if self.ends_on_owner_attack and self.kind is not ModifierKind.TARGETING_SAVE_GATE:
-            raise ValueError("Only targeting save gates can end when their owner attacks.")
-        if self.kind is ModifierKind.SPEED and self.flat_bonus == 0:
-            raise ValueError("Speed modifiers require a nonzero flat bonus.")
-        if self.kind is ModifierKind.SPEED_MULTIPLIER:
-            if self.flat_bonus != 0 or self.multiplier == 1.0:
-                raise ValueError("Speed multipliers require a non-1 multiplier and no flat bonus.")
-        elif self.multiplier != 1.0:
-            raise ValueError(f"{self.kind.value} does not accept a multiplier.")
-        if self.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and self.target_id is None:
-            raise ValueError("Target-scoped attack Advantage requires a target id.")
+        from app.domain.modifier_validation import validate_combat_modifier_payload
+
+        validate_combat_modifier_payload(self)
         return self
 
 

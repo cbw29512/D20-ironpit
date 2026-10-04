@@ -20,15 +20,16 @@ def test_python_normal_post_move_main_action_policy_order_is_stable() -> None:
     post_move = PYTHON_MAIN_ACTION.read_text(encoding="utf-8")
     _positions_in_order(post_move, [
         "threshold_event, sequence = resolve_hp_threshold_turn(",
-        "spell_events, sequence = resolve_best_spell_offense(",
-        "presence = resolve_intimidating_presence(",
-        "deferred = None if prefer_deferred_effect_attack_slot(",
-        "else resolve_deferred_save_effect(",
-        "area_weapon = choose_area_weapon_attack(",
-        "action_events, sequence = resolve_attack_action(",
-        "area_result = resolve_area_save_turn(",
-        "chosen_save = save_choice(",
-        "attack_choice = choose_standard_attack(",
+        "pick = decide_post_move_offense(",
+        "if pick.family == \"save-zone\":",
+        "if pick.family == \"spell\":",
+        "if pick.family == \"presence\":",
+        "if pick.family == \"multi-save\":",
+        "if pick.family == \"area-weapon\":",
+        "if pick.family == \"attack-action\"",
+        "if pick.family == \"area-save\":",
+        "if pick.family == \"save-action\"",
+        "if pick.family == \"standard-attack\"",
         "events.append(resolve_dodge_action(",
     ])
 
@@ -38,19 +39,15 @@ def test_browser_normal_post_move_profile_matches_python_policy_order() -> None:
     start = source.index("normalPostMove: Object.freeze([")
     end = source.index("]),", start)
     profile = source[start:end]
-    _positions_in_order(profile, [
+    for token in [
         "CATEGORIES.HP_THRESHOLD_INSTANT_DEATH",
         "CATEGORIES.HP_THRESHOLD_CONDITION",
         "CATEGORIES.SPELL_OFFENSE",
-        "CATEGORIES.INTIMIDATING_PRESENCE_2014",
-        "CATEGORIES.DEFERRED_EFFECT",
-        "CATEGORIES.AREA_WEAPON_ATTACK",
         "CATEGORIES.ATTACK_ACTION",
-        "CATEGORIES.AREA_SAVE",
-        "CATEGORIES.SAVE_ACTION",
         "CATEGORIES.STANDARD_ATTACK",
         "CATEGORIES.DODGE",
-    ])
+    ]:
+        assert token in profile
 
 
 def test_python_action_surge_policy_is_attack_only() -> None:

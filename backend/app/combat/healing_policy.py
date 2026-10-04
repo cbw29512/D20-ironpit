@@ -57,8 +57,11 @@ def target_allowed(
 ) -> bool:
     if target.state.is_dead or not target.state.is_alive:
         return False
+    if action.stabilize_at_zero and (target.state.current_hp != 0 or target.state.is_stable):
+        return False
     if (
-        target.state.current_hp >= effective_max_hp(target.state)
+        not action.stabilize_at_zero
+        and target.state.current_hp >= effective_max_hp(target.state)
         and not healing_rider_worthwhile(target, action)
     ):
         return False
@@ -146,16 +149,17 @@ def _priority(
     setup: EncounterSetup,
     action: HealingAction,
     target: EncounterCombatant,
-) -> tuple[int, int, int, float]:
+) -> tuple[int, int, int, int, float]:
     ally = target.combatant_id != healer.combatant_id
     urgency = (
         -1 if action.restore_to_effective_max
         else 0 if ally and target.state.current_hp == 0
         else 1 if ally else 2
     )
+    stabilize = 1 if action.stabilize_at_zero else 0
     cost = 0 if action.action_cost == "bonus_action" else 1
     useful = min(action.max_targets, _worthwhile_target_count(healer, setup, action))
-    return urgency, cost, (-useful if useful >= 2 else 0), target.state.current_hp / effective_max_hp(target.state)
+    return urgency, stabilize, cost, (-useful if useful >= 2 else 0), target.state.current_hp / effective_max_hp(target.state)
 
 
 def choose_healing_action(

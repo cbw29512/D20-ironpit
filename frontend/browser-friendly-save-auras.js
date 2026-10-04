@@ -68,18 +68,28 @@
             if (target.state.is_dead || !target.state.is_alive) continue;
             if (saveAura && S().distance(source, target) <= saveAura.radius_ft
                 && !(saveAura.requires_hearing && Q().has(target.state, "deafened"))) {
+              const tags = saveAura.all_saves ? [""] : (saveAura.required_effect_tags || []);
               for (const ability of ABILITIES) {
-                for (const tag of saveAura.required_effect_tags || []) {
+                for (const tag of tags) {
                   M().add(target.state, {
-                    id: `${PREFIX}${source.combatant_id}:${action.id}:${target.combatant_id}:${ability}:${tag}`,
+                    id: `${PREFIX}${source.combatant_id}:${action.id}:${target.combatant_id}:${ability}:${tag || "all"}`,
                     source_id: source.combatant_id,
                     source_effect_id: action.id,
                     source_name: action.name,
                     kind: "saving-throw-advantage",
                     save_ability: ability,
-                    required_effect_tags: [tag],
+                    required_effect_tags: tag ? [tag] : [],
                   });
                 }
+              }
+              if (saveAura.attacks_against_disadvantage) {
+                M().add(target.state, {
+                  id: `${PREFIX}${source.combatant_id}:${action.id}:${target.combatant_id}:attacks`,
+                  source_id: source.combatant_id,
+                  source_effect_id: action.id,
+                  source_name: action.name,
+                  kind: "attacks-against-disadvantage",
+                });
               }
             }
             if (coverAura && S().distance(source, target) <= coverAura.radius_ft) {
@@ -136,6 +146,8 @@
           }
         }
       }
+      window.IRON_PIT_BROWSER_FRIENDLY_WEAPON_DAMAGE_AURAS?.sync(setup);
+      window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS?.sync(setup);
     } catch (error) {
       console.error("Failed browser friendly save-aura synchronization.", { error });
       throw error;

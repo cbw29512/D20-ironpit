@@ -53,6 +53,8 @@ def choose_defensive_spell(member: EncounterCombatant, setup: EncounterSetup | N
             continue
         if setup is not None and (defensive_spell_active(member, setup, spell) or not _typed_defense_relevant(member, setup, spell)):
             continue
+        if setup is not None and not select_defensive_targets(member, setup, spell, spell.level):
+            continue
         slot = _slot_resource(member, spell)
         if slot is not None:
             return spell, slot[0], slot[1]
@@ -69,10 +71,13 @@ def select_defensive_targets(
         raise ValueError("Spell upcasting is not certified; use the spell's printed slot level.")
     if spell.target_policy == "self":
         return [member]
-    return select_friendly_buff_targets(
+    targets = select_friendly_buff_targets(
         member, setup, spell.range_ft, spell.target_count,
         target_all_legal=spell.target_all_legal,
     )
+    if spell.share_damage_with_source:
+        targets = [target for target in targets if target.combatant_id != member.combatant_id]
+    return targets
 
 
 def prepare_defenses(
@@ -94,6 +99,7 @@ def prepare_defenses(
         events.append(resolve_defensive_spell(
             sequence, member, targets, spell, slot_level, resource, affected_states,
             duration_modifier=duration_modifier,
+            setup=setup,
         ))
         sequence += 1
     return events, sequence

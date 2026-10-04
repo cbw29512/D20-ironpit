@@ -87,6 +87,9 @@
 
   function legalPlacements(actor, setup, area, rangeFt = 0, allowNoEnemyTargets = false) {
     try {
+      if (area?.contiguousSectionCount || area?.contiguous_section_count) {
+        return window.IRON_PIT_BROWSER_CONTIGUOUS_CUBES.legalPlacements(actor, setup, area, rangeFt);
+      }
       if (!area || !["self", "point"].includes(area.origin)) throw new Error("Browser universal area has an invalid origin.");
       if (!setup.map_definition) throw new Error("Area targeting requires an authoritative battle map.");
       const enemies = livingSide(actor, setup, true);
@@ -124,6 +127,10 @@
 
   function memberInPlacement(actor, member, area, placement) {
     try {
+      if (placement?.cubeSwCells?.length) {
+        const span = window.IRON_PIT_BROWSER_CONTIGUOUS_CUBES.spanOf(area);
+        return placement.cubeSwCells.some((sw) => window.IRON_PIT_BROWSER_CONTIGUOUS_CUBES.covers(sw, span, member));
+      }
       return hits(area, points(actor), placement.origin, placement.direction, member);
     } catch (error) {
       console.error("Failed browser area-membership check", {

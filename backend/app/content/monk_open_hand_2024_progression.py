@@ -72,6 +72,7 @@ def build_monk_2024_progression(
             ),
             martial_arts_bonus_attack=True,
             martial_arts_die_size=monk_martial_arts_die(level),
+            stunning_strike=level >= 5,
             resource_backed_on_hit_save_rider=(
                 ResourceBackedOnHitSaveRider(
                     source_id="stunning-strike",

@@ -15,6 +15,7 @@ window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
 load("browser-action-economy.js");
 load("browser-condition-rules.js");
 load("browser-timed-conditions.js");
+load("browser-spellcasting.js");
 load("browser-timed-self-buff-policy.js");
 load("browser-timed-self-buffs.js");
 load("browser-precombat-buffs.js");
@@ -161,5 +162,26 @@ assert.equal(supportResult.sequence, 2);
 assert.equal(supportMonk.state.action_available, false);
 assert.equal(supportMonk.state.resources.ki, 14);
 assert.ok(supportMonk.state.active_effect_ids.includes("invisible"));
+
+const guardians = {
+  id: "spirit-guardians", name: "Spirit Guardians", actionCost: "action",
+  resourceId: "spell-slot-3", resourceCost: 1, durationRounds: 10,
+  conditionIds: [], damageResistances: [], concentration: true,
+  expiryTiming: "source_turn_start", priority: 90, animation: "spirit-guardians",
+  startTurnEmanationDamage: { radius_ft: 15, saveAbility: "wisdom", dc: 17 },
+};
+const slotCleric = { combatant_id: "slot-cleric", side: "heroes", state: state("Slot Cleric") };
+slotCleric.state.template.timed_self_buff_actions = [guardians];
+slotCleric.state.resources["spell-slot-3"] = 1;
+const slotEnemy = { combatant_id: "slot-enemy", side: "monsters", state: state("Slot Enemy") };
+slotEnemy.state.template.timed_self_buff_actions = [];
+const slotSetup = { heroes: [slotCleric], monsters: [slotEnemy] };
+assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(slotCleric, slotSetup, "action", "1:slot-cleric").id, "spirit-guardians");
+slotCleric.state.spell_slot_expended_turn_key = "1:slot-cleric";
+assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(slotCleric, slotSetup, "action", "1:slot-cleric"), null);
+const skipped = window.IRON_PIT_BROWSER_SUPPORT.resolve(1, 1, slotCleric, slotSetup, "1:slot-cleric");
+assert.deepEqual(skipped.events, []);
+assert.equal(slotCleric.state.action_available, true);
+assert.equal(slotCleric.state.resources["spell-slot-3"], 1);
 
 console.log("Browser timed self-buff, invisibility, and owned resistance parity are certified.");

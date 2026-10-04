@@ -54,6 +54,8 @@ def resolve_target_condition_timing(
                     dice,
                 )
                 removed = remove_effect_group(target.state, effect) if succeeded else []
+                if not succeeded:
+                    effect.repeat_save_failure_count += 1
                 events.append(BattleEvent(
                     sequence=sequence,
                     round_number=round_number,

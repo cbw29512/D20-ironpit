@@ -9,6 +9,8 @@ from app.combat.spell_save_disadvantage import (
     choose_spell_save_disadvantage,
     spend_spell_save_disadvantage,
 )
+from app.combat.fighting_save_advantage import sides_are_fighting
+from app.combat.spell_caster_buffs import active_spell_save_dc_bonus
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_damage_maximizers import maximized_save_damage_rolls
 from app.combat.spell_policy import spell_at_slot
@@ -24,7 +26,8 @@ def compile_spell_save_action(choice: SpellChoice) -> SavingThrowAction:
     """Compile one save spell choice into the universal SavingThrowAction shape."""
     try:
         spell = spell_at_slot(choice.action, choice.slot_level)
-        target_range = spell.range_ft + (spell.area_radius_ft or 0)
+        multiplier = choice.range_modifier.range_multiplier if choice.range_modifier is not None else 1
+        target_range = (spell.range_ft + (spell.area_radius_ft or 0)) * multiplier
         return SavingThrowAction(
             id=spell.id,
             name=spell.name,
@@ -45,6 +48,10 @@ def compile_spell_save_action(choice: SpellChoice) -> SavingThrowAction:
             requires_target_sight=spell.requires_target_sight,
             failed_save_timed_effect=spell.failed_save_timed_effect,
             failed_save_push_ft=spell.failed_save_push_ft,
+            required_target_creature_types=list(spell.required_target_creature_types),
+            excluded_target_creature_types=list(spell.excluded_target_creature_types),
+            minimum_remaining_hp=spell.minimum_remaining_hp,
+            reduce_hit_point_maximum_on_failed_save=spell.reduce_hit_point_maximum_on_failed_save,
             animation=spell.animation,
         )
     except Exception:
@@ -69,12 +76,15 @@ def resolve_spell_save_effect(
         affected_states = [member.state for member in members]
         placement = choice.placement
         action = compile_spell_save_action(choice)
+        bonus = active_spell_save_dc_bonus(caster.state)
+        if bonus:
+            action = action.model_copy(update={"dc": action.dc + bonus})
         events: list[BattleEvent] = []
         shared_damage_rolls: list[int] | list[list[int]] | None = (
             maximized_save_damage_rolls(scaled_spell)
             if choice.damage_maximizer is not None else None
         )
-        save_disadvantage = choose_spell_save_disadvantage(caster.state)
+        save_disadvantage = choose_spell_save_disadvantage(caster.state, turn_key)
 
         for target_id in choice.target_ids:
             target = by_id[target_id]
@@ -98,9 +108,15 @@ def resolve_spell_save_effect(
             disadvantage_sources: tuple[str, ...] = ()
             modifier_remaining = None
             if save_disadvantage is not None:
-                modifier_remaining = spend_spell_save_disadvantage(caster.state, save_disadvantage)
+                modifier_remaining = spend_spell_save_disadvantage(caster.state, save_disadvantage, turn_key)
                 disadvantage_sources = (save_disadvantage.name,)
                 save_disadvantage = None
+            advantage_sources = (
+                ("fighting-the-target",)
+                if scaled_spell.save_advantage_if_fighting
+                and sides_are_fighting(caster, target, setup)
+                else ()
+            )
 
             chain, sequence = resolve_save_event_chain(
                 sequence,
@@ -117,6 +133,7 @@ def resolve_spell_save_effect(
                 affected_states=affected_states,
                 spell_effect=True,
                 save_disadvantage_sources=disadvantage_sources,
+                save_advantage_sources=advantage_sources,
                 resource_remaining_override=modifier_remaining,
             )
             event = chain[0]

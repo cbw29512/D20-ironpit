@@ -7,20 +7,44 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import ActionCost, ConditionName, ConditionTiming
 from app.domain.debuffs import DebuffCounter
+from app.domain.friendly_combat_auras import (
+    TimedFriendlyRecoveryAura,
+    TimedFriendlyWeaponDamageAura,
+)
+from app.domain.melee_hit_save_retaliation import MeleeHitSaveRetaliation
 from app.domain.progression import SavingThrowAdvantageGrant
 from app.domain.movement import MovementModeGrant
+from app.domain.spell_modifiers import SpellModifierEffect
 from app.domain.weapons_base import DamageType
 
 logger = logging.getLogger(__name__)
 
 
 class TimedEmanationDamage(BaseModel):
-    """Fixed typed damage emitted by an active timed effect at a declared turn-start window."""
+    """Typed emanation damage emitted by an active timed effect at a declared window."""
 
-    trigger: Literal["enemy_turn_start"] = "enemy_turn_start"
+    trigger: Literal["enemy_turn_start", "enter_or_start"] = "enemy_turn_start"
     radius_ft: int = Field(ge=1, le=120)
-    fixed_damage: int = Field(ge=1, le=500)
+    fixed_damage: int = Field(default=0, ge=0, le=500)
+    dice_count: int = Field(default=0, ge=0, le=40)
+    dice_size: int = Field(default=8, ge=2, le=100)
     damage_type: DamageType
+    save_ability: str | None = None
+    save_dc: int | None = Field(default=None, ge=1, le=40)
+    success_damage: Literal["none", "half"] = "none"
+    speed_multiplier: float = Field(default=1.0, gt=0.0, le=1.0)
+
+    @model_validator(mode="after")
+    def validate_emanation(self) -> "TimedEmanationDamage":
+        try:
+            if self.fixed_damage <= 0 and self.dice_count <= 0:
+                raise ValueError("Emanation damage requires fixed damage or dice.")
+            if (self.save_ability is None) != (self.save_dc is None):
+                raise ValueError("Emanation save damage requires both save ability and DC.")
+            return self
+        except Exception:
+            logger.exception("Timed emanation damage schema validation failed.")
+            raise
 
 
 class TimedHostileConditionAura(BaseModel):
@@ -46,16 +70,32 @@ class TimedFriendlySaveAura(BaseModel):
     """Live friendly aura that grants save Advantage for matching effect tags."""
 
     radius_ft: int = Field(ge=1, le=120)
-    required_effect_tags: list[str] = Field(min_length=1)
+    required_effect_tags: list[str] = Field(default_factory=list)
     requires_hearing: bool = False
+    all_saves: bool = False
+    attacks_against_disadvantage: bool = False
+    melee_hit_save_retaliation: MeleeHitSaveRetaliation | None = None
 
     @model_validator(mode="after")
     def validate_tags(self) -> "TimedFriendlySaveAura":
         tags = [item.strip().casefold() for item in self.required_effect_tags]
         if any(not item for item in tags) or len(set(tags)) != len(tags):
             raise ValueError("Timed friendly save-aura effect tags must be non-empty and unique.")
+        if self.all_saves and tags:
+            raise ValueError("All-save auras cannot also require effect tags.")
+        if not self.all_saves and not tags and not self.attacks_against_disadvantage:
+            raise ValueError("Timed friendly save-aura requires tags, all-saves, or attacks-against Disadvantage.")
         self.required_effect_tags = tags
         return self
+
+
+class MeleeHitRetaliation(BaseModel):
+    """Damage a creature that hits the source with a melee attack roll inside the printed reach."""
+
+    range_ft: int = Field(default=5, ge=5, le=15)
+    dice_count: int = Field(ge=1, le=40)
+    dice_size: int = Field(default=8, ge=2, le=100)
+    damage_type: DamageType
 
 
 class TimedSelfBuffAction(BaseModel):
@@ -70,13 +110,19 @@ class TimedSelfBuffAction(BaseModel):
     duration_rounds: int | None = Field(default=None, ge=1, le=600)
     condition_ids: list[ConditionName] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
+    melee_hit_retaliation: MeleeHitRetaliation | None = None
     debuff_counters: list[DebuffCounter] = Field(default_factory=list)
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
     movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
     friendly_save_advantage_aura: TimedFriendlySaveAura | None = None
     friendly_cover_aura: TimedFriendlyCoverAura | None = None
+    friendly_weapon_damage_aura: TimedFriendlyWeaponDamageAura | None = None
+    friendly_recovery_aura: TimedFriendlyRecoveryAura | None = None
     hostile_start_turn_condition_aura: TimedHostileConditionAura | None = None
     start_turn_emanation_damage: TimedEmanationDamage | None = None
+    spell_save_dc_bonus: int = Field(default=0, ge=0, le=10)
+    spell_attack_advantage: bool = False
+    modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     concentration: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
@@ -119,8 +165,15 @@ class TimedSelfBuffAction(BaseModel):
                 or self.movement_mode_grants
                 or self.friendly_save_advantage_aura is not None
                 or self.friendly_cover_aura is not None
+                or self.friendly_weapon_damage_aura is not None
+                or self.friendly_recovery_aura is not None
                 or self.hostile_start_turn_condition_aura is not None
                 or self.start_turn_emanation_damage is not None
+                or self.melee_hit_retaliation is not None
+                or self.spell_save_dc_bonus
+                or self.spell_attack_advantage
+                or self.modifier_effects
+                or self.concentration
             ):
                 raise ValueError("Timed self-buff requires at least one combat effect.")
             return self

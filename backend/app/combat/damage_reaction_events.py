@@ -6,7 +6,10 @@ from app.combat.attack_damage_redirect import resolve_attack_damage_zero_redirec
 from app.combat.damage_event_context import applied_damage_total, _member_by_id
 from app.combat.hit_rider_events import resolve_hit_rider_event
 from app.combat.damage_reaction_dispatch import resolve_damage_reaction_attack
-from app.combat.source_zero_hp_triggers import resolve_source_zero_hp_triggers
+from app.combat.source_zero_hp_triggers import (
+    resolve_source_zero_hp_triggers,
+    resolve_witnessed_zero_hp_triggers,
+)
 from app.combat.source_damage_triggers import resolve_source_damage_temporary_hp
 from app.combat.dice import DiceProvider
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -35,7 +38,10 @@ def resolve_damage_event_reactions(
         source_events, sequence = resolve_source_zero_hp_triggers(
             sequence, round_number, source, triggering_event, setup,
         )
-        source_events = [*hit_events, *source_events]
+        witnessed_events, sequence = resolve_witnessed_zero_hp_triggers(
+            sequence, round_number, source, triggering_event, setup,
+        )
+        source_events = [*hit_events, *source_events, *witnessed_events]
         applied_damage = applied_damage_total(triggering_event)
         damage_events, sequence = resolve_source_damage_temporary_hp(
             sequence, round_number, source, triggering_event, applied_damage,

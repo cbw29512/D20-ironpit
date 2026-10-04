@@ -12,12 +12,61 @@
     if (!rule || !target?.state?.is_alive || target.state.is_dead || target.state.current_hp <= 0) {
       return window.IRON_PIT_BROWSER_ATTACK_OUTCOME.noEventResult(ctx.sequence);
     }
+    if (rule.once_per_turn) {
+      if (!ctx.turnKey) throw new Error(rule.source_name + " requires a turn key for its once-per-turn limit.");
+      if (member.state.feature_last_turn_keys?.[rule.source_id] === ctx.turnKey) {
+        return window.IRON_PIT_BROWSER_ATTACK_OUTCOME.noEventResult(ctx.sequence);
+      }
+    }
     const available = member.state.resources?.[rule.resource_id] || 0;
     const cost = rule.resource_cost || 1;
     if (available < cost || removed(target.state)) {
       return window.IRON_PIT_BROWSER_ATTACK_OUTCOME.noEventResult(ctx.sequence);
     }
     member.state.resources[rule.resource_id] -= cost;
+    if (rule.once_per_turn) {
+      member.state.feature_last_turn_keys ||= {};
+      member.state.feature_last_turn_keys[rule.source_id] = ctx.turnKey;
+    }
+    if (rule.save_ability) {
+      const saves = window.IRON_PIT_BROWSER_SAVING_THROWS;
+      if (!saves?.resolveSavingThrow || rule.save_dc == null) {
+        throw new Error(rule.source_name + " requires a save DC and the saving-throw runtime.");
+      }
+      const save = saves.resolveSavingThrow(target.state, rule.save_ability, rule.save_dc, {
+        condition_id: EFFECT,
+      });
+      if (save.succeeded) return window.IRON_PIT_BROWSER_ATTACK_OUTCOME.noEventResult(ctx.sequence);
+    }
+    const creatureType = String(target.state.template.creature_type || "").toLowerCase();
+    const hitExcluded = (rule.hit_damage_excluded_creature_types || [])
+      .map((item) => String(item).toLowerCase())
+      .includes(creatureType);
+    if (rule.hit_damage_type && rule.hit_damage_dice_count && !hitExcluded) {
+      const rolls = window.IRON_PIT_DICE.rollMany(rule.hit_damage_dice_count, rule.hit_damage_dice_size);
+      const raw = rolls.reduce((sum, roll) => sum + roll, 0);
+      const applied = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES
+        ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.adjustedDamage(target.state, raw, rule.hit_damage_type)
+        : raw;
+      if (applied) {
+        const affected = [...(ctx.setup?.heroes || []), ...(ctx.setup?.monsters || [])]
+          .map((item) => item.state);
+        window.IRON_PIT_BROWSER_ZERO_HP.applyDamage(
+          target.state, applied, false, [rule.hit_damage_type], affected, ctx.setup,
+        );
+      }
+    }
+    for (const conditionId of rule.apply_condition_ids || []) {
+      window.IRON_PIT_BROWSER_TIMED.apply(target.state, conditionId, member.combatant_id, {
+        sourceEffectId: rule.source_id,
+        sourceTemplate: member.state.template,
+        sourceIsMagical: true,
+        appliedRound: ctx.round,
+        expiresRound: ctx.round + (rule.duration_rounds || 1),
+        expiryTiming: rule.expiry_timing || "source_turn_end",
+        useDefaultPoisonRecovery: false,
+      });
+    }
     window.IRON_PIT_BROWSER_TIMED.apply(target.state, EFFECT, member.combatant_id, {
       sourceEffectId: rule.source_id,
       sourceTemplate: member.state.template,
@@ -123,5 +172,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_EXILE = { EFFECT, installAbilityHooks, removed };
+  window.IRON_PIT_BROWSER_EXILE = { EFFECT, applyOnHit, installAbilityHooks, removed };
 })();

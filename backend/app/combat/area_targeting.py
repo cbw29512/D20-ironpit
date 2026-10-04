@@ -24,6 +24,7 @@ class AreaPlacement:
     direction: Direction | None = None
     friendly_ids: tuple[str, ...] = ()
     protected_friendly_ids: tuple[str, ...] = ()
+    cube_sw_cells: tuple[tuple[int, int], ...] = ()
 
     @property
     def enemy_ids(self) -> tuple[str, ...]:
@@ -90,6 +91,11 @@ def _point_origins(actor: EncounterCombatant, setup: EncounterSetup, range_ft: i
 def legal_area_placements(actor: EncounterCombatant, setup: EncounterSetup, area: AreaTargeting, range_ft: int, *, actor_position: GridPosition | None = None, allow_no_enemy_targets: bool = False) -> list[AreaPlacement]:
     """Return distinct placements with enemy targets and explicit friendly exposure."""
     try:
+        if area.contiguous_section_count:
+            from app.combat.contiguous_cube_targeting import legal_contiguous_cube_placements
+            return legal_contiguous_cube_placements(
+                actor, setup, area, range_ft, actor_position=actor_position,
+            )
         enemies = _living_side(actor, setup, opponents=True)
         friends = _living_side(actor, setup, opponents=False)
         if not enemies and not allow_no_enemy_targets: return []
@@ -150,6 +156,9 @@ def member_in_area_placement(
 ) -> bool:
     """Return whether a combatant occupies any square covered by one resolved area placement."""
     try:
+        if placement.cube_sw_cells:
+            from app.combat.contiguous_cube_targeting import member_in_contiguous_cubes
+            return member_in_contiguous_cubes(member, placement, (area.length_ft or 5) // 5)
         actor_points = _points(actor)
         return _hits(area, actor_points, placement.origin, placement.direction, member)
     except Exception:

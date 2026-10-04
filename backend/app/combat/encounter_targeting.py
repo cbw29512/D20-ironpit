@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.charmed_targeting import charmed_blocks_hostile_target
 from app.combat.condition_rules import is_incapacitated
 from app.combat.grid_geometry import footprint_distance_ft
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -67,7 +68,11 @@ def _target_priority(member: EncounterCombatant) -> int | None:
 
 def living_opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
     """Return only the highest-priority eligible target class under deterministic Pit policy."""
-    candidates = [member for member in _opponents(attacker, setup) if _target_priority(member) is not None]
+    candidates = [
+        member for member in _opponents(attacker, setup)
+        if _target_priority(member) is not None
+        and not charmed_blocks_hostile_target(attacker.state, member.combatant_id)
+    ]
     if not candidates:
         return []
     priority = min(_target_priority(member) for member in candidates)

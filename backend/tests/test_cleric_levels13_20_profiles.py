@@ -70,6 +70,19 @@ def test_level_thirteen_reuses_existing_seventh_level_spell_primitives() -> None
 
 
 
+def test_level_fifteen_binds_2024_sunburst() -> None:
+    from app.content.audited_cleric import build_seraphine_dawnshield_level
+
+    hero = build_seraphine_dawnshield_level(15)
+    sunburst = next(item for item in hero.spell_save_actions if item.id == "sunburst")
+    assert sunburst.level == 8
+    assert sunburst.save_ability == "constitution"
+    assert (sunburst.damage_dice_count, sunburst.damage_dice_size, sunburst.damage_type) == (12, 6, "radiant")
+    assert sunburst.success_damage == "half"
+    assert sunburst.area is not None
+    assert (sunburst.area.shape, sunburst.area.origin, sunburst.area.radius_ft) == ("radius", "point", 60)
+
+
 def test_level_fourteen_binds_improved_blessed_strikes_to_universal_trigger() -> None:
     from app.content.audited_cleric import build_seraphine_dawnshield_level
 

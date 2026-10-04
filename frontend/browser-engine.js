@@ -74,6 +74,9 @@
         map_definition: mapDefinition,
         persistent_hazards: [],
         persistent_barriers: [],
+        persistent_beneficial_zones: [],
+        suppression_zones: [],
+        save_zones: [],
       };
     } catch (error) { console.error("Failed to build browser encounter setup", { selection, error }); throw error; }
   }
@@ -157,8 +160,17 @@
         S().refreshStartOfTurn(member.state);
         C()?.endIfExpired(member.state, round, states);
         window.IRON_PIT_BROWSER_GRID_BARRIERS?.cleanup(setup, round);
+        window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.expire(setup, round);
+        window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.sync(setup, round);
+        window.IRON_PIT_BROWSER_SAVE_ZONES?.expire(setup, round);
+        const startZones = window.IRON_PIT_BROWSER_SAVE_ZONES?.resolveWindow(
+          sequence, round, member, setup, `${round}:${member.combatant_id}`, "start_turn",
+        );
+        if (startZones) { events.push(...startZones.events); sequence = startZones.sequence; }
         const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start");
         events.push(...start.events); sequence = start.sequence;
+        const saveDot = window.IRON_PIT_BROWSER_POST_HIT_SAVE_CONDITION?.resolveStartOfTurn(sequence, round, member, setup);
+        if (saveDot) { events.push(...saveDot.events); sequence = saveDot.sequence; }
         if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) events.push(T().deathSave(sequence++, round, member));
         if (member.state.current_hp > 0 && !member.state.is_dead) {
           const turn = T().resolveTurn(sequence, round, member, setup);
@@ -166,6 +178,14 @@
         }
         const end = lifecycle(sequence, round, member, setup, "target_turn_end", "source_turn_end");
         events.push(...end.events); sequence = end.sequence;
+        window.IRON_PIT_BROWSER_TEMPORARY_TERRAIN?.expireSource(setup, member.combatant_id, round);
+        const endZones = window.IRON_PIT_BROWSER_SAVE_ZONES?.resolveWindow(
+          sequence, round, member, setup, `${round}:${member.combatant_id}`, "end_turn",
+        );
+        if (endZones) { events.push(...endZones.events); sequence = endZones.sequence; }
+        const legend = window.IRON_PIT_BROWSER_LEGENDARY_ACTIONS?.resolveAfterTurn(sequence, round, member, setup);
+        if (legend) { events.push(...legend.events); sequence = legend.sequence; }
+        window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.expireCurrentTurnTypeResistances(setup);
       }
       const current = outcome(setup);
       if (current !== "active") return finish(setup, init, events, current, round, sequence);

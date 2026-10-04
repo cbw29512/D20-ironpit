@@ -28,6 +28,7 @@ window.IRON_PIT_BROWSER_BARBARIAN2 = { dangerSenseAdvantage: () => 0 };
 window.IRON_PIT_BROWSER_DODGE = { dexSaveAdvantageSources: () => 0 };
 window.IRON_PIT_BROWSER_EXHAUSTION = { saveDisadvantage: () => 0, d20Modifier: () => 0 };
 load("browser-opening-modifiers.js");
+load("browser-modifier-validation.js");
 load("browser-modifiers.js");
 load("browser-defensive-modifier-rules.js");
 load("browser-rolls.js");
@@ -84,6 +85,18 @@ const converted = window.IRON_PIT_BROWSER_SPELL_RESOLUTION.saveAction({
 });
 assert.equal(converted.magicalEffect, true);
 assert.deepEqual(converted.effectTags, []);
+assert.equal(converted.range, 60);
+const distant = window.IRON_PIT_BROWSER_SPELL_RESOLUTION.saveAction({
+  slotLevel: 0,
+  rangeModifier: { id: "distant-spell", name: "Distant Spell", rangeMultiplier: 2 },
+  action: {
+    id: "finger-of-death", name: "Finger of Death", level: 0, range: 60,
+    saveAbility: "constitution", dc: 15, damageDiceCount: 7,
+    damageDiceSize: 8, damageBonus: 0, damageType: "necrotic",
+    successDamage: "half", animation: "spell-save",
+  },
+});
+assert.equal(distant.range, 120);
 
 const poisonTemplate = {
   id: "dwarf-test",

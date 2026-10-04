@@ -46,7 +46,8 @@ def test_2024_paladin_level_four_asi_and_spell_progression_are_raw_ready() -> No
         "protection-from-evil-and-good",
         "shield-of-faith",
     ]
-    assert package.spells[-1].required_capabilities == ["arena-out-of-scope"]
+    assert package.spells[-1].required_capabilities == ["post-hit-spell"]
+    assert any(item.id == "thunderous-smite" for item in hero.progression_features.post_hit_spell_options)
 
     audits = {item.feature_id: item for item in profile.feature_audits}
     assert audits["ability-score-improvement-l4"].automated is True

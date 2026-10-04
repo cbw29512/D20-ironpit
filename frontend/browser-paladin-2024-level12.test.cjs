@@ -7,7 +7,7 @@ global.window = globalThis;
 
 try {
   // Read generator-owned character truth and execute the shared production aura path.
-  for (const file of ["browser-heroes.js", "browser-grid-geometry.js", "browser-state.js", "browser-modifiers.js",
+  for (const file of ["browser-heroes.js", "browser-grid-geometry.js", "browser-state.js", "browser-modifier-validation.js", "browser-modifiers.js",
     "browser-condition-immunity.js", "browser-friendly-save-auras.js"]) {
     vm.runInThisContext(fs.readFileSync(`frontend/${file}`, "utf8"), { filename: file });
   }

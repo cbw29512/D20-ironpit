@@ -11,9 +11,15 @@ from app.content.class_spell_progression import CASTING_ABILITIES
 from app.domain.models import CombatantTemplate, WeaponAttack
 
 try:
-    from scripts.browser_template_serializer import _healing, _removal, persistent_barrier_row, persistent_beneficial_zone_row
+    from scripts.browser_template_serializer import (
+        _healing, _removal, _save_zone, _suppression_zone, _teleport,
+        persistent_barrier_row, persistent_beneficial_zone_row,
+    )
 except ModuleNotFoundError:
-    from browser_template_serializer import _healing, _removal, persistent_barrier_row, persistent_beneficial_zone_row
+    from browser_template_serializer import (
+        _healing, _removal, _save_zone, _suppression_zone, _teleport,
+        persistent_barrier_row, persistent_beneficial_zone_row,
+    )
 
 logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parents[1]
@@ -97,7 +103,8 @@ def _save(action: Any) -> dict[str, Any]:
     if action.damage_components:
         row["damageComponents"] = [
             {"diceCount": item.dice_count, "diceSize": item.dice_size,
-             "damageBonus": item.damage_bonus, "damageType": item.damage_type}
+             "damageBonus": item.damage_bonus, "damageType": item.damage_type,
+             "upcastDicePerLevel": item.upcast_dice_per_level}
             for item in action.damage_components
         ]
     if action.area_healing_rider is not None:
@@ -130,7 +137,13 @@ def _spell(action: Any) -> dict[str, Any]:
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
         "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level,
-        "concentration": action.concentration, "animation": action.animation,
+        "concentration": action.concentration, "repeatOnly": action.repeat_only,
+        "allowsHigherSlots": action.allows_higher_slots,
+        "targetCount": action.target_count,
+        "targetCountPerSlotAbove": action.target_count_per_slot_above,
+        "saveAdvantageIfFighting": action.save_advantage_if_fighting,
+        "castRounds": action.cast_rounds,
+        "animation": action.animation,
     }
     if action.effect_tags: row["effectTags"] = list(action.effect_tags)
     if action.requires_target_hearing: row["requiresTargetHearing"] = True
@@ -140,6 +153,9 @@ def _spell(action: Any) -> dict[str, Any]:
     if action.failed_save_modifier_effects:
         row["failedSaveModifierEffects"] = [_modifier_effect(effect) for effect in action.failed_save_modifier_effects]
     if action.area is not None: row["area"] = action.area.model_dump(mode="json")
+    if action.creates_difficult_terrain:
+        row["createsDifficultTerrain"] = True
+        row["difficultTerrainDurationRounds"] = action.difficult_terrain_duration_rounds
     if action.duration_minutes is not None: row["durationMinutes"] = action.duration_minutes
     if action.area_radius_ft is not None: row["areaRadius"] = action.area_radius_ft
     if action.failed_save_push_ft:
@@ -147,9 +163,34 @@ def _spell(action: Any) -> dict[str, Any]:
     if action.damage_components:
         row["damageComponents"] = [
             {"diceCount": item.dice_count, "diceSize": item.dice_size,
-             "damageBonus": item.damage_bonus, "damageType": item.damage_type}
+             "damageBonus": item.damage_bonus, "damageType": item.damage_type,
+             "upcastDicePerLevel": item.upcast_dice_per_level}
             for item in action.damage_components
         ]
+    if action.failed_save_timed_effect is not None:
+        row["failedSaveTimedEffect"] = {
+            "effectId": action.failed_save_timed_effect.effect_id,
+            "durationRounds": action.failed_save_timed_effect.duration_rounds,
+            "expiryTiming": action.failed_save_timed_effect.expiry_timing,
+            "repeatSaveAbility": action.failed_save_timed_effect.repeat_save_ability,
+            "repeatSaveDc": action.failed_save_timed_effect.repeat_save_dc,
+            "repeatSaveTiming": action.failed_save_timed_effect.repeat_save_timing,
+            "turnBehavior": action.failed_save_timed_effect.turn_behavior,
+            "endsOnDamage": action.failed_save_timed_effect.ends_on_damage,
+            "endsIfSourceIncapacitated": action.failed_save_timed_effect.ends_if_source_incapacitated,
+            "endsIfSourceDead": action.failed_save_timed_effect.ends_if_source_dead,
+            "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
+        }
+    if action.required_target_creature_types:
+        row["requiredTargetCreatureTypes"] = list(action.required_target_creature_types)
+    if action.excluded_target_creature_types:
+        row["excludedTargetCreatureTypes"] = list(action.excluded_target_creature_types)
+    if action.minimum_remaining_hp:
+        row["minimumRemainingHp"] = action.minimum_remaining_hp
+    if action.reduce_hit_point_maximum_on_failed_save:
+        row["reduceHitPointMaximumOnFailedSave"] = True
+    if not action.verbal_component:
+        row["verbalComponent"] = False
     return row
 
 
@@ -178,7 +219,10 @@ def _spell_attack(action: Any) -> dict[str, Any]:
            "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
            "damageBonus": action.damage_bonus, "damageType": action.damage_type,
            "attackCount": action.attack_count, "attacksPerSlotAbove": action.attacks_per_slot_above,
+           "upcastDicePerLevel": action.upcast_dice_per_level,
            "advantageIfTargetWearingMetalArmor": action.advantage_if_target_wearing_metal_armor,
+           "missDamage": action.miss_damage,
+           "matchingDiceLeapRangeFt": action.matching_dice_leap_range_ft,
            "onHitModifierEffects": [_modifier_effect(effect) for effect in action.on_hit_modifier_effects],
            "onHitTimedEffects": [
                {
@@ -271,6 +315,11 @@ def _defense(action: Any) -> dict[str, Any]:
             for grant in action.movement_mode_grants
         ]
     if action.source: row["source"] = action.source
+    if action.selectable_resistance_types:
+        row["selectableResistanceTypes"] = list(action.selectable_resistance_types)
+    if action.share_damage_with_source:
+        row["shareDamageWithSource"] = True
+        row["shareRangeFt"] = action.share_range_ft
     return row
 
 
@@ -282,6 +331,8 @@ def _targeted_concentration_damage(action: Any) -> dict[str, Any]:
         "damageType": action.damage_type,
         "durationRoundsBySlot": dict(action.duration_rounds_by_slot),
         "retargetAfterTargetZero": action.retarget_after_target_zero,
+        "freeCastResourceId": action.free_cast_resource_id,
+        "freeCastResourceCost": action.free_cast_resource_cost,
         "priority": action.priority, "animation": action.animation, "source": action.source,
     }
     if action.free_cast_resource_id is not None:
@@ -380,12 +431,27 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["friendlySaveAdvantageAura"] = action.friendly_save_advantage_aura.model_dump(mode="json")
     if action.friendly_cover_aura is not None:
         row["friendlyCoverAura"] = action.friendly_cover_aura.model_dump(mode="json")
+    if action.friendly_weapon_damage_aura is not None:
+        row["friendlyWeaponDamageAura"] = action.friendly_weapon_damage_aura.model_dump(mode="json")
+    if action.friendly_recovery_aura is not None:
+        row["friendlyRecoveryAura"] = action.friendly_recovery_aura.model_dump(mode="json")
     if action.hostile_start_turn_condition_aura is not None:
         row["hostileStartTurnConditionAura"] = action.hostile_start_turn_condition_aura.model_dump(mode="json")
     if action.concentration:
         row["concentration"] = True
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
+    if action.melee_hit_retaliation is not None:
+        row["meleeHitRetaliation"] = {
+            "rangeFt": action.melee_hit_retaliation.range_ft,
+            "diceCount": action.melee_hit_retaliation.dice_count,
+            "diceSize": action.melee_hit_retaliation.dice_size,
+            "damageType": _value(action.melee_hit_retaliation.damage_type),
+        }
+    if action.spell_save_dc_bonus:
+        row["spellSaveDcBonus"] = action.spell_save_dc_bonus
+    if action.spell_attack_advantage:
+        row["spellAttackAdvantage"] = True
     return row
 
 
@@ -495,6 +561,9 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             "wearing_metal_armor": template.wearing_metal_armor,
         "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
         "timed_self_buff_actions": [_timed_self_buff(item) for item in template.timed_self_buff_actions],
+        "suppression_zone_actions": [_suppression_zone(item) for item in template.suppression_zone_actions],
+        "persistent_save_zone_actions": [_save_zone(item) for item in template.persistent_save_zone_actions],
+        "teleport_actions": [_teleport(item) for item in template.teleport_actions],
         "attack_action_weapon_buffs": [
             {
                 "id": item.id,
@@ -519,6 +588,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "first_round_extra_turn_initiative_offset": progression.first_round_extra_turn_initiative_offset,
         "suppress_attack_advantage_while_not_incapacitated": progression.suppress_attack_advantage_while_not_incapacitated,
         "ignore_unseen_target_attack_disadvantage": progression.ignore_unseen_target_attack_disadvantage,
+        "opportunity_attacks_against_disadvantage": progression.opportunity_attacks_against_disadvantage,
+        "concentration_damage_immune_effect_ids": list(progression.concentration_damage_immune_effect_ids),
+        "advantage_against_marked_effect_id": progression.advantage_against_marked_effect_id,
+        "hunters_mark_splash_range_ft": progression.hunters_mark_splash_range_ft,
         "miss_to_hit_override_resource_id": progression.miss_to_hit_override_resource_id,
         "miss_to_hit_override_source_name": progression.miss_to_hit_override_source_name,
         "start_turn_resource_refill_ids": list(progression.start_turn_resource_refill_ids),
@@ -613,6 +686,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             template.progression_features.resource_backed_post_hit_damage.model_dump(mode="json")
             if template.progression_features.resource_backed_post_hit_damage else None
         ),
+        "post_hit_spell_options": [
+            item.model_dump(mode="json")
+            for item in template.progression_features.post_hit_spell_options
+        ],
         "attackDamageReductionReaction": (
             {
                 "sourceId": template.attack_damage_reduction_reaction.source_id,
@@ -690,6 +767,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             {
                 "id": item.id, "name": item.name, "resourceId": item.resource_id,
                 "resourceCost": item.resource_cost, "targetPolicy": item.target_policy,
+                "waivedWhileSourceEffectId": item.waived_while_source_effect_id,
+                "waivedOncePerTurn": item.waived_once_per_turn,
                 "priority": item.priority, "source": item.source,
             }
             for item in template.spell_save_disadvantage_options
@@ -770,6 +849,18 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
     if template.targeted_concentration_damage_actions:
         row["targeted_concentration_damage_actions"] = [
             _targeted_concentration_damage(item) for item in template.targeted_concentration_damage_actions
+        ]
+    if template.post_hit_save_condition_spells:
+        row["post_hit_save_condition_spells"] = [
+            item.model_dump(mode="json") for item in template.post_hit_save_condition_spells
+        ]
+    if template.incoming_damage_type_resistance_reaction:
+        row["incomingDamageTypeResistanceReaction"] = (
+            template.incoming_damage_type_resistance_reaction.model_dump(mode="json")
+        )
+    if template.concentration_repeat_save_actions:
+        row["concentration_repeat_save_actions"] = [
+            item.model_dump(mode="json") for item in template.concentration_repeat_save_actions
         ]
     if template.auto_hit_spell_actions: row["auto_hit_spell_actions"] = [_auto_hit_spell(item) for item in template.auto_hit_spell_actions]
     if template.persistent_spell_attack_actions:

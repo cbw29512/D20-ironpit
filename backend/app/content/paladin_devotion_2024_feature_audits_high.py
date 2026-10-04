@@ -89,8 +89,9 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
                 "Oath of Devotion Spells",
                 "subclass", combat=True, automated=True,
                 notes=("Commune is arena-neutral. Flame Strike reuses the universal multi-component "
-                       "Dexterity-save damage path with an explicit 2024 fingerprint: 5d6 Fire plus "
-                       "5d6 Radiant on a failed save, half on a success."),
+                       "Dexterity-save damage path: 5d6 Fire plus 5d6 Radiant, half on a success. "
+                       "Destructive Wave reuses the same path as a 30-foot emanation: Constitution "
+                       "save, 5d6 Thunder plus 5d6 Radiant, half on a success."),
             ))
         if level >= 18:
             audits.append(paladin_2024_feature(
@@ -114,12 +115,24 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
                 paladin_2024_feature(
                     "banishing-smite",
                     "Banishing Smite",
-                    "class", combat=False, automated=False,
-                    notes=("Selected as the fifteenth damage-first Paladin preparation. It remains "
-                           "fail-closed until the shared post-hit Concentration and banishment semantics "
-                           "are fully represented; no approximation is allowed."),
+                    "class", combat=True, automated=True,
+                    notes=("Shared post-hit spell option: Bonus Action after a qualifying hit adds "
+                           "5d10 Force, plus 1d10 per slot above 5. If the attack then leaves the "
+                           "target at 50 HP or fewer, the existing exile/banished primitive removes "
+                           "it from the battlefield until the Concentration spell ends."),
                 ),
             ])
+        if level >= 20:
+            audits.append(paladin_2024_feature(
+                "holy-nimbus",
+                "Holy Nimbus",
+                "subclass", combat=True, automated=True,
+                notes=("2024 Bonus Action timed self-buff for 100 rounds. Enemy-start radiant "
+                       "damage is Charisma modifier plus Proficiency Bonus inside Aura of "
+                       "Protection. Holy Ward grants save Advantage against Fiend or Undead "
+                       "sources. A spent use restores by expending a level 5 slot with no action. "
+                       "Sunlight/Bright Light remains unbound; no sunlight primitive exists."),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build later 2024 Paladin feature audits at level %s.", level)

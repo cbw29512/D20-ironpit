@@ -12,8 +12,12 @@ from app.combat.deferred_save_effect import arm_deferred_save_effect
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.exile import apply_on_hit_exile
+from app.combat.post_hit_spell_riders import resolve_paid_post_hit_spell_riders
+from app.combat.melee_hit_retaliation import apply_melee_hit_retaliation
+from app.combat.melee_hit_save_retaliation import apply_melee_hit_save_retaliation
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
 from app.combat.sap import apply_weapon_sap
+from app.combat.slow import apply_weapon_slow
 from app.combat.studied_attacks import apply_studied_attack_miss
 from app.combat.tactical_master import apply_tactical_master_sap
 from app.combat.topple import resolve_topple_hit
@@ -36,6 +40,7 @@ class AttackEffectResolution:
     topple: Any = None
     weapon_sap_applied: bool = False
     tactical_sap_applied: bool = False
+    weapon_slow_applied: bool = False
     vex_applied: bool = False
     studied_applied: bool = False
     damage_reduction_reaction_used: bool = False
@@ -66,6 +71,7 @@ def resolve_attack_effects(
     sneak_attack_ally_available: bool,
     brutal_strike_disadvantage: int,
     natural_roll: int | None = None,
+    setup=None,
 ) -> AttackEffectResolution:
     """Resolve shared on-hit/on-miss effects after the final attack outcome is known."""
     try:
@@ -87,6 +93,7 @@ def resolve_attack_effects(
             target_event_id=actual_event_id,
             brutal_strike_disadvantage=brutal_strike_disadvantage,
             natural_roll=natural_roll,
+            setup=setup,
         )
         result.damage_roll = hit_damage.damage_roll
         result.damage_components = hit_damage.damage_components
@@ -128,6 +135,9 @@ def resolve_attack_effects(
         result.weapon_sap_applied = apply_weapon_sap(
             attacker, attacker_event_id, defender, attack, round_number,
         )
+        result.weapon_slow_applied = apply_weapon_slow(
+            attacker, attacker_event_id, defender, attack, round_number,
+        )
         if not result.weapon_sap_applied:
             result.tactical_sap_applied = apply_tactical_master_sap(
                 attacker, attacker_event_id, defender, attack, round_number,
@@ -146,7 +156,42 @@ def resolve_attack_effects(
             attacker_id=attacker_event_id,
             round_number=round_number,
             affected_states=affected_states,
+            dice=dice,
+            turn_key=active_turn_key,
         )
+        if setup is not None:
+            members = {item.combatant_id: item for item in [*setup.heroes, *setup.monsters]}
+            attacker_member = members.get(attacker_event_id)
+            defender_member = members.get(defender_event_id)
+            if attacker_member is not None and defender_member is not None:
+                result.applied_conditions.extend(
+                    resolve_paid_post_hit_spell_riders(
+                        attacker_member,
+                        defender_member,
+                        setup,
+                        dice,
+                        round_number=round_number,
+                        turn_key=active_turn_key,
+                        affected_states=affected_states,
+                    )
+                )
+                melee = attack.weapon.attack_kind.value == "melee"
+                apply_melee_hit_retaliation(
+                    attacker_member,
+                    defender_member,
+                    melee=melee,
+                    dice=dice,
+                    affected_states=affected_states,
+                )
+                apply_melee_hit_save_retaliation(
+                    attacker_member,
+                    defender_member,
+                    melee=melee,
+                    dice=dice,
+                    setup=setup,
+                    round_number=round_number,
+                    affected_states=affected_states,
+                )
         end_rage_if_incapacitated(defender)
         return result
     except Exception as exc:

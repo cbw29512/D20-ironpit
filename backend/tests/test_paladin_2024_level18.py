@@ -80,5 +80,3 @@ def test_level_eighteen_expands_existing_paladin_auras_to_thirty_feet() -> None:
     except Exception:
         logger.exception("Paladin 18 Aura Expansion certification failed.")
         raise
-
-# Exact-head refresh: generated artifacts are committed separately by CI.

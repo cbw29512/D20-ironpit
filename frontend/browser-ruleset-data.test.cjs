@@ -78,6 +78,11 @@ const monk10 = monks2014.find((hero) => hero.level === 10);
 assert.equal(monk2.flurry_of_blows, true);
 assert.equal(monk5.stunning_strike, true);
 assert.equal(monk7.evasion, true);
+const monks2024 = heroes2024.filter((hero) => hero.class_id === "monk");
+const monk2024L5 = monks2024.find((hero) => hero.level === 5);
+assert.ok(monk2024L5);
+assert.equal(monk2024L5.stunning_strike, true);
+assert.equal(monk2024L5.resource_backed_on_hit_save_rider?.source_id, "stunning-strike");
 assert.deepEqual(monk10.condition_immunities, ["poisoned"]);
 const paladin3 = paladins2014.find((hero) => hero.level === 3);
 const paladin6 = paladins2014.find((hero) => hero.level === 6);
@@ -133,7 +138,7 @@ assertRuleset(Object.values(window.IRON_PIT_BROWSER_MONSTERS), "2024", "legacy b
 
 load("browser-monsters-2014.js");
 const monsters2014 = Object.values(window.IRON_PIT_BROWSER_MONSTERS_2014);
-assert.equal(monsters2014.length, 129, "2014 browser roster must contain exactly 129 certified monsters");
+assert.equal(monsters2014.length, 131, "2014 browser roster must contain exactly 131 certified monsters");
 const spy2014 = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-spy"];
 assert.ok(spy2014, "2014 Spy must be in the certified browser roster");
 assert.equal(spy2014.cunning_action, true);

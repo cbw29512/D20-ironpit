@@ -19,6 +19,7 @@ from app.combat.healing_resolution_support import (
     spend_healing_resource,
 )
 from app.combat.spellcasting import mark_slot_spell_cast
+from app.combat.zero_hp_stabilization import stabilize_at_zero
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent, DiceRoll, HealingAction
 
@@ -60,16 +61,26 @@ def resolve_healing(
             return failure
 
         hp_before = target.state.current_hp
-        rolls, roll_total, healed, notation, modifier = resolve_healing_amount(healer, target, action, dice)
-        removed = apply_healing_riders(target, action)
-        rider_text = (
-            " Conditions ended: " + ", ".join(item.replace("_", " ").title() for item in removed) + "."
-            if removed else ""
-        )
-        description = (
-            f"{healer.state.template.name} uses {action.name} on {target.state.template.name} "
-            f"and restores {healed} HP." + rider_text
-        )
+        if action.stabilize_at_zero:
+            stabilize_at_zero(target.state)
+            rolls, roll_total, healed, notation, modifier = [], 0, 0, "stabilize", 0
+            removed = []
+            description = (
+                f"{healer.state.template.name} uses {action.name} on {target.state.template.name} "
+                f"and stabilizes them."
+            )
+        else:
+            rolls, roll_total, healed, notation, modifier = resolve_healing_amount(healer, target, action, dice)
+            removed = apply_healing_riders(target, action)
+            rider_text = (
+                " Conditions ended: " + ", ".join(item.replace("_", " ").title() for item in removed) + "."
+                if removed else ""
+            )
+            restored = "Temporary HP" if action.grants_temporary_hp else "HP"
+            description = (
+                f"{healer.state.template.name} uses {action.name} on {target.state.template.name} "
+                f"and restores {healed} {restored}." + rider_text
+            )
         if feature_roll is not None:
             description = (
                 f"{healer.state.template.name} uses {action.name} and rolls {feature_roll.total} on d100; "

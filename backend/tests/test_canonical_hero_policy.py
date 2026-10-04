@@ -107,7 +107,7 @@ def test_same_class_and_level_reuses_same_spell_package() -> None:
     assert first == second
     assert first is not None
     assert [spell.name for spell in first.spells] == [
-        "Mage Armor", "Magic Missile", "Sleep", "Thunderwave",
+        "Burning Hands", "Magic Missile", "Thunderwave", "Detect Magic",
     ]
 
 
@@ -116,5 +116,7 @@ def test_noncasters_do_not_receive_a_spell_package() -> None:
 
 
 def test_incomplete_higher_level_spell_package_fails_closed() -> None:
+    from app.content.canonical_spell_packages import build_class_spell_package
+
     with pytest.raises(ValueError, match="canonical package is incomplete"):
-        canonical_spell_package("wizard", 2)
+        build_class_spell_package("ranger", 2)

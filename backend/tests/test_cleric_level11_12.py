@@ -55,7 +55,9 @@ def test_level_eleven_uses_simple_sixth_level_upcasts() -> None:
     assert audits["cleric-combat-spells-6"].automated is True
     assert audits["inflict-wounds-upcast-l6"].automated is True
     assert audits["mass-cure-wounds-upcast-l6"].automated is True
-    assert audits["heal"].combat_relevant is False
+    assert audits["heal"].combat_relevant is True
+    assert audits["heal"].automated is True
+    assert any(item.id == "heal" for item in hero.healing_actions)
 
     assert_canonical_profile_policy(profile)
     assert_character_build_raw_ready(profile, hero)
@@ -71,8 +73,9 @@ def test_level_twelve_is_incremental_and_updates_charisma_only() -> None:
 
     assert hero.max_hp == level11.max_hp + 5 == 63
     assert (hero.ability_scores.wisdom, hero.ability_scores.charisma) == (20, 17)
-    assert hero.spell_save_actions[-1].id == "inflict-wounds-l6"
-    assert hero.healing_actions[-1].id == "mass-cure-wounds-l6"
+    assert next(item.id for item in hero.spell_save_actions if item.id == "inflict-wounds-l6") == "inflict-wounds-l6"
+    assert any(item.id == "flame-strike" for item in hero.spell_save_actions)
+    assert {item.id for item in hero.healing_actions} >= {"heal", "mass-cure-wounds-l6"}
     assert hero.saving_throw_bonuses["charisma"] == 7
     assert hero.skill_bonuses["persuasion"] == 7
 

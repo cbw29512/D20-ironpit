@@ -21,6 +21,8 @@ window.IRON_PIT_ACTION_ECONOMY = {
 window.IRON_PIT_BROWSER_FORMATION = {
   targetOrder: (_member, setup) => setup.monsters,
   saveDistance: () => 5,
+  meleeCanLandNow: () => false,
+  weaponMeanDamage: () => 0,
   chooseStandardAttack: (member, setup) => {
     calls.push("standard-discover");
     return member.state.template.standardEnabled
@@ -53,6 +55,8 @@ window.IRON_PIT_BROWSER_MULTIATTACK = {
     calls.push("attack-discover");
     return Boolean(member.state.template.attackActionEnabled);
   },
+  meleeAvailable: () => false,
+  expectedDamage: () => 0,
   resolveAttackAction: (sequence, _round, member) => {
     member.state.action_available = false;
     return { events: [{ event_type: "attack", feature_id: "attack-action" }], sequence: sequence + 1 };

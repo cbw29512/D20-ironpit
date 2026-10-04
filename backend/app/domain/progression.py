@@ -19,6 +19,7 @@ from app.domain.friendly_save_auras import FriendlySavingThrowAuraGrant
 from app.domain.healing_riders import OutgoingHealingDiceMaximizer
 from app.domain.on_hit_save_riders import ResourceBackedOnHitSaveRider
 from app.domain.post_hit_damage import ResourceBackedPostHitDamage
+from app.domain.post_hit_spell import PostHitSpellOption
 from app.domain.progression_primitives import (
     AbilityCheckMinimum,
     AbilityScaledDamageRider,
@@ -109,6 +110,7 @@ class ProgressionCombatFeatures(BaseModel):
     resource_backed_on_hit_exile: ResourceBackedOnHitExile | None = None
     resource_backed_on_hit_save_rider: ResourceBackedOnHitSaveRider | None = None
     resource_backed_post_hit_damage: ResourceBackedPostHitDamage | None = None
+    post_hit_spell_options: list[PostHitSpellOption] = Field(default_factory=list)
     delayed_resource_refill: DelayedResourceRefill | None = None
     end_turn_condition_removal: EndTurnConditionRemovalGrant | None = None
     bonus_action_follow_up_tactical_grants: list[BonusActionFollowUpTacticalGrant] = Field(default_factory=list)
@@ -121,6 +123,10 @@ class ProgressionCombatFeatures(BaseModel):
     first_round_extra_turn_initiative_offset: int | None = Field(default=None, ge=-30, le=30)
     suppress_attack_advantage_while_not_incapacitated: bool = False
     ignore_unseen_target_attack_disadvantage: bool = False
+    opportunity_attacks_against_disadvantage: bool = False
+    concentration_damage_immune_effect_ids: list[str] = Field(default_factory=list)
+    advantage_against_marked_effect_id: str | None = None
+    hunters_mark_splash_range_ft: int = Field(default=0, ge=0, le=120)
     miss_to_hit_override_resource_id: str | None = None
     miss_to_hit_override_source_name: str | None = None
     start_turn_resource_refill_ids: list[str] = Field(default_factory=list)

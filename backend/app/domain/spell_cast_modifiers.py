@@ -13,6 +13,8 @@ class ResourceBackedSpellSaveDisadvantage(BaseModel):
     resource_id: str
     resource_cost: int = Field(ge=1)
     target_policy: Literal["first-target"] = "first-target"
+    waived_while_source_effect_id: str | None = None
+    waived_once_per_turn: bool = False
     priority: int = 0
     source: str | None = None
 

@@ -84,17 +84,26 @@ def sync_friendly_save_auras(setup: EncounterSetup) -> None:
                         continue
                     if save_aura is not None and combatant_distance(source, target) <= save_aura.radius_ft:
                         if not (save_aura.requires_hearing and has_condition(target.state, "deafened")):
+                            tags = [""] if save_aura.all_saves else save_aura.required_effect_tags
                             for ability in _ABILITIES:
-                                for tag in save_aura.required_effect_tags:
+                                for tag in tags:
                                     add_modifier(target.state, CombatModifier(
-                                        id=f"{_PREFIX}{source.combatant_id}:{action.id}:{target.combatant_id}:{ability}:{tag}",
+                                        id=f"{_PREFIX}{source.combatant_id}:{action.id}:{target.combatant_id}:{ability}:{tag or 'all'}",
                                         source_id=source.combatant_id,
                                         source_effect_id=action.id,
                                         source_name=action.name,
                                         kind=ModifierKind.SAVING_THROW_ADVANTAGE,
                                         save_ability=ability,
-                                        required_effect_tags=[tag],
+                                        required_effect_tags=[tag] if tag else [],
                                     ))
+                            if save_aura.attacks_against_disadvantage:
+                                add_modifier(target.state, CombatModifier(
+                                    id=f"{_PREFIX}{source.combatant_id}:{action.id}:{target.combatant_id}:attacks",
+                                    source_id=source.combatant_id,
+                                    source_effect_id=action.id,
+                                    source_name=action.name,
+                                    kind=ModifierKind.ATTACKS_AGAINST_DISADVANTAGE,
+                                ))
                     if cover_aura is not None and combatant_distance(source, target) <= cover_aura.radius_ft:
                         add_modifier(target.state, CombatModifier(
                             id=f"{_COVER_PREFIX}{source.combatant_id}:{action.id}:{target.combatant_id}:ac",
@@ -154,6 +163,10 @@ def sync_friendly_save_auras(setup: EncounterSetup) -> None:
                         kind=ModifierKind.CONDITION_IMMUNITY,
                         condition_id=aura.condition_id,
                     ))
+        from app.combat.friendly_recovery_auras import sync_friendly_recovery_auras
+        from app.combat.friendly_weapon_damage_auras import sync_friendly_weapon_damage_auras
+        sync_friendly_weapon_damage_auras(setup)
+        sync_friendly_recovery_auras(setup)
     except Exception:
         logger.exception("Failed to synchronize friendly save auras.")
         raise

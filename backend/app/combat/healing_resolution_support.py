@@ -5,6 +5,7 @@ from app.combat.condition_removal import remove_condition
 from app.combat.healing_policy import healing_dice_maximized
 from app.combat.dice import DiceProvider
 from app.combat.hit_points import effective_max_hp
+from app.combat.temporary_hp import grant_temporary_hit_points
 from app.combat.zero_hp import restore_hit_points
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent, DiceRoll, HealingAction
@@ -102,7 +103,12 @@ def resolve_healing_amount(
         else [dice.roll(action.dice_size) for _ in range(action.dice_count)]
     )
     total = sum(rolls) + action.healing_bonus
-    healed = restore_hit_points(target.state, total)
+    if action.grants_temporary_hp:
+        before = target.state.temporary_hp
+        grant_temporary_hit_points(target.state, total)
+        healed = max(0, target.state.temporary_hp - before)
+    else:
+        healed = restore_hit_points(target.state, total)
     notation = (
         f"{action.dice_count}d{action.dice_size}+{action.healing_bonus}"
         if action.dice_count else str(action.healing_bonus)

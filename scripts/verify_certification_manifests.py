@@ -253,6 +253,19 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("aura-of-devotion-2014")
     if features.aura_of_courage_2014:
         mechanics.add("aura-of-courage-2014")
+    if features.post_hit_spell_options:
+        mechanics.update(item.id for item in features.post_hit_spell_options)
+    if features.opportunity_attacks_against_disadvantage:
+        mechanics.add("opportunity-attacks-against-disadvantage")
+    if features.concentration_damage_immune_effect_ids:
+        mechanics.update(
+            f"concentration-damage-immune:{effect_id}"
+            for effect_id in features.concentration_damage_immune_effect_ids
+        )
+    if features.advantage_against_marked_effect_id:
+        mechanics.add(features.advantage_against_marked_effect_id)
+    if features.hunters_mark_splash_range_ft:
+        mechanics.add("hunters-mark-splash")
     return sorted(mechanics)
 
 

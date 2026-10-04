@@ -99,6 +99,18 @@
             return { events, sequence, movement: lastMovement };
           }
         }
+        window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.sync(setup, round);
+        const saveEnter = window.IRON_PIT_BROWSER_SAVE_ZONES?.resolveWindow(
+          sequence, round, mover, setup, options.turnKey || `${round}:${mover.combatant_id}`, "enter",
+        );
+        if (saveEnter) { events.push(...saveEnter.events); sequence = saveEnter.sequence; }
+        const entered = window.IRON_PIT_BROWSER_EMANATION_ENTER?.resolveEntries(
+          sequence, round, mover, setup, options.turnKey || `${round}:${mover.combatant_id}`,
+        );
+        if (entered) {
+          events.push(...entered.events);
+          sequence = entered.sequence;
+        }
         if (afterDistance <= desired || mover.state.movement_remaining_ft <= 0) break;
       }
       return { events, sequence, movement: lastMovement };

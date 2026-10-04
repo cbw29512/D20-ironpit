@@ -185,6 +185,14 @@ jobs:
           grep -q 'browser-zero-hp.js' index.html
           grep -q 'browser-timed-conditions.js' index.html
           grep -q 'browser-timed-self-buffs.js' index.html
+          grep -q 'browser-friendly-weapon-damage-auras.js' index.html
+          grep -q 'browser-friendly-recovery-auras.js' index.html
+          grep -q 'browser-start-of-turn-timed-burn.js' index.html
+          grep -q 'browser-regeneration.js' index.html
+          grep -q 'browser-legendary-actions.js' index.html
+          grep -q 'browser-melee-hit-save-retaliation.js' index.html
+          grep -q 'browser-matching-dice-leap.js' index.html
+          grep -q 'browser-save-success-override.js' index.html
           grep -q 'browser-selectable-damage-resistance.js' index.html
           grep -q 'browser-precombat-buffs.js' index.html
           grep -q 'browser-timed-emanations.js' index.html
@@ -291,12 +299,22 @@ jobs:
           grep -q 'browser-damage-reaction-dispatch.js' frontend/index.html
           grep -q 'browser-activation-movement.js' frontend/index.html
           grep -q 'browser-grapple.js' frontend/index.html
+          grep -q 'browser-ability-check-escape.js' frontend/index.html
           grep -q 'browser-champion.js' frontend/index.html
           grep -q 'browser-tactical-shift.js' frontend/index.html
           grep -q 'browser-undead-fortitude.js' frontend/index.html
           grep -q 'browser-zero-hp.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
           grep -q 'browser-timed-self-buffs.js' frontend/index.html
+          grep -q 'browser-friendly-weapon-damage-auras.js' frontend/index.html
+          grep -q 'browser-friendly-recovery-auras.js' frontend/index.html
+          grep -q 'browser-start-of-turn-timed-burn.js' frontend/index.html
+          grep -q 'browser-regeneration.js' frontend/index.html
+          grep -q 'browser-legendary-action-choice.js' frontend/index.html
+          grep -q 'browser-legendary-actions.js' frontend/index.html
+          grep -q 'browser-melee-hit-save-retaliation.js' frontend/index.html
+          grep -q 'browser-matching-dice-leap.js' frontend/index.html
+          grep -q 'browser-save-success-override.js' frontend/index.html
           grep -q 'browser-selectable-damage-resistance.js' frontend/index.html
           grep -q 'browser-precombat-buffs.js' frontend/index.html
           grep -q 'browser-timed-emanations.js' frontend/index.html
@@ -429,6 +447,7 @@ jobs:
           node frontend/browser-sneak-attack.test.cjs
           node frontend/browser-vex.test.cjs
           node frontend/browser-graze.test.cjs
+          node frontend/browser-slow.test.cjs
           node frontend/browser-topple.test.cjs
           node frontend/browser-light-weapons.test.cjs
           node frontend/browser-defense-style.test.cjs
@@ -463,10 +482,20 @@ jobs:
           node frontend/browser-action-healing.test.cjs
           node frontend/browser-healing-creature-type-exclusions.test.cjs
           node frontend/browser-group-healing-area.test.cjs
+          node frontend/browser-cleric-2024-leftover-spells.test.cjs
+          node frontend/browser-regeneration-legendary-resistance.test.cjs
+          node frontend/browser-legendary-actions.test.cjs
+          node frontend/browser-ability-check-escape.test.cjs
+          node frontend/browser-unicorn-2014.test.cjs
+          node frontend/browser-holy-aura-blind.test.cjs
+          node frontend/browser-matching-dice-leap.test.cjs
           node frontend/browser-pooled-healing.test.cjs
           node frontend/browser-outgoing-healing-maximize.test.cjs
           node frontend/browser-once-per-turn-hit-damage.test.cjs
           node frontend/browser-post-hit-damage.test.cjs
+          node frontend/browser-post-hit-spell-riders.test.cjs
+          node frontend/browser-start-of-turn-timed-burn.test.cjs
+          node frontend/browser-friendly-recovery-auras.test.cjs
           node frontend/browser-persistent-spell-attacks.test.cjs
           node frontend/browser-persistent-hazards.test.cjs
           node frontend/browser-turn-undead-2014.test.cjs

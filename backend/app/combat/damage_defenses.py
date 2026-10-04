@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.condition_rules import has_condition
+from app.combat.incoming_damage_resistance import apply_incoming_damage_type_resistance
 from app.domain.models import CombatantState, DamageRollComponent, DamageType
 from app.domain.damage_sources import DamageDefenseKind, DamageSourceQualifier
 
@@ -57,7 +58,11 @@ def adjusted_damage_amount(
             raise ValueError("Damage cannot be negative.")
         template = target.template
         conditional = _matching_conditional_defenses(target, damage_type, source_qualifiers or set())
-        if damage_type in template.damage_immunities or DamageDefenseKind.IMMUNITY in conditional:
+        if (
+            damage_type in template.damage_immunities
+            or damage_type in target.zone_damage_immunities
+            or DamageDefenseKind.IMMUNITY in conditional
+        ):
             return 0
 
         adjusted = amount
@@ -94,6 +99,7 @@ def apply_damage_defenses(
 ) -> tuple[int, list[DamageRollComponent]]:
     """Apply defenses per typed component and return total damage actually taken."""
     try:
+        apply_incoming_damage_type_resistance(target, components)
         adjusted_components: list[DamageRollComponent] = []
         applied_total = 0
         for component in components:

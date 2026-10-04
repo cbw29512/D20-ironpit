@@ -41,6 +41,13 @@ class ZeroDamageSaveRedirect(BaseModel):
     requires_clear_line: bool = True
 
 
+class IncomingDamageTypeResistanceReaction(BaseModel):
+    """Reaction: resist the triggering damage type until the current turn ends."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+
+
 class AttackDamageReductionReaction(BaseModel):
     """Universal Reaction that reduces damage from one qualifying attack hit."""
 

@@ -44,14 +44,35 @@ def post_hit_resource_bonus_damage(
 ) -> BonusDamageSpec | None:
     """Pay for and return damage that becomes part of a confirmed attack hit."""
     try:
-        rule = attacker.template.progression_features.resource_backed_post_hit_damage
-        if rule is None or attack.id not in rule.trigger_attack_ids:
-            return None
         if target is None or target.current_hp <= 0 or target.is_dead or not target.is_alive:
+            return None
+        features = attacker.template.progression_features
+        if (
+            not features.post_hit_spell_options
+            and features.resource_backed_post_hit_damage is None
+        ):
             return None
         if not turn_key:
             raise ValueError("Post-hit resource damage requires the active turn key.")
-        if not is_available(attacker, rule.action_cost):
+        from app.combat.post_hit_spell_policy import (
+            choose_post_hit_spell,
+            extra_smite_beats_divine,
+            pay_post_hit_spell,
+        )
+        extra = choose_post_hit_spell(attacker, attack, turn_key)
+        rule = attacker.template.progression_features.resource_backed_post_hit_damage
+        divine_ready = (
+            rule is not None
+            and attack.id in rule.trigger_attack_ids
+            and is_available(attacker, rule.action_cost)
+            and _payment(attacker, rule, turn_key) is not None
+        )
+        if extra is not None and (not divine_ready or extra_smite_beats_divine(attacker, attack, turn_key)):
+            option, slot_level = extra
+            pay_post_hit_spell(attacker, option, slot_level, turn_key)
+            count = option.base_dice_count + option.dice_per_slot_above * (slot_level - option.level)
+            return option.name, count, option.dice_size, 0, DamageType(option.damage_type)
+        if not divine_ready:
             return None
         payment = _payment(attacker, rule, turn_key)
         if payment is None:

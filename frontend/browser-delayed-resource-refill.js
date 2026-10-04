@@ -16,7 +16,12 @@
         if (maxUses == null) throw new Error(rule.source_name + " references missing resource " + resourceId + ".");
         const current = ctx.member.state.resources?.[resourceId] || 0;
         if (current < maxUses) {
-          ctx.member.state.resources[resourceId] = maxUses;
+          if (rule.restore_mode === "half_max_rounded_up") {
+            const regain = Math.floor((maxUses + 1) / 2);
+            ctx.member.state.resources[resourceId] = Math.min(maxUses, current + regain);
+          } else {
+            ctx.member.state.resources[resourceId] = maxUses;
+          }
           restored.push(resourceId);
         }
       }

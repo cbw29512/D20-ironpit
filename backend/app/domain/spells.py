@@ -35,6 +35,9 @@ class DefensiveSpellAction(BaseModel):
     max_hp_increase: int = Field(default=0, ge=0)
     current_hp_increase: int = Field(default=0, ge=0)
     damage_resistances: list[DamageTypeName] = Field(default_factory=list)
+    selectable_resistance_types: list[DamageTypeName] = Field(default_factory=list)
+    share_damage_with_source: bool = False
+    share_range_ft: int = Field(default=0, ge=0)
     condition_ids: list[ConditionName] = Field(default_factory=list)
     modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
@@ -48,12 +51,15 @@ class DefensiveSpellAction(BaseModel):
     def validate_defense(self) -> "DefensiveSpellAction":
         direct_hp = self.temporary_hp or self.max_hp_increase or self.current_hp_increase
         if not (
-            direct_hp or self.damage_resistances or self.condition_ids
+            direct_hp or self.damage_resistances or self.selectable_resistance_types
+            or self.share_damage_with_source or self.condition_ids
             or self.modifier_effects or self.movement_mode_grants
         ):
             raise ValueError("Certified defensive spell must define an implemented defensive effect.")
-        if self.concentration and (direct_hp or self.damage_resistances):
+        if self.concentration and direct_hp:
             raise ValueError("Concentration defenses require source-owned modifier or timed-condition effects.")
+        if self.share_damage_with_source and self.share_range_ft <= 0:
+            raise ValueError("Damage-share wards require a positive share range.")
         if self.target_policy == "self" and (
             self.target_count != 1 or self.target_all_legal or self.target_count_per_slot_above
         ):
@@ -77,9 +83,12 @@ class SpellAttackAction(BaseModel):
     damage_type: DamageTypeName | None = None
     attack_count: int = Field(default=1, ge=1, le=20)
     attacks_per_slot_above: int = Field(default=0, ge=0, le=20)
+    upcast_dice_per_level: int = Field(default=0, ge=0, le=20)
     advantage_if_target_wearing_metal_armor: bool = False
     on_hit_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     on_hit_timed_effects: list[OnHitTimedEffect] = Field(default_factory=list)
+    miss_damage: Literal["none", "half"] = "none"
+    matching_dice_leap_range_ft: int = Field(default=0, ge=0)
     animation: str = "spell-attack"
     source: str | None = None
 
@@ -87,8 +96,15 @@ class SpellAttackAction(BaseModel):
     def validate_attack_spell(self) -> "SpellAttackAction":
         if self.damage_dice_count and self.damage_type is None:
             raise ValueError("Damaging spell attacks require a damage type.")
-        if self.level == 0 and self.attacks_per_slot_above:
-            raise ValueError("Cantrip spell attacks cannot scale attacks by spell-slot level.")
+        if self.level == 0 and (self.attacks_per_slot_above or self.upcast_dice_per_level):
+            raise ValueError("Cantrip spell attacks cannot scale by spell-slot level.")
+        if self.matching_dice_leap_range_ft:
+            if self.matching_dice_leap_range_ft % 5:
+                raise ValueError("Matching-dice leap range must use 5-foot increments.")
+            if self.attack_count > 1 or self.attacks_per_slot_above:
+                raise ValueError("Matching-dice leap requires a single-attack spell.")
+            if not self.damage_dice_count:
+                raise ValueError("Matching-dice leap requires damage dice.")
         return self
 
     def attack_count_at_slot(self, slot_level: int) -> int:
@@ -99,6 +115,13 @@ class SpellAttackAction(BaseModel):
         if slot_level < self.level or slot_level > 9:
             raise ValueError(f"Illegal slot level {slot_level} for {self.name}.")
         return self.attack_count + (slot_level - self.level) * self.attacks_per_slot_above
+
+    def damage_dice_at_slot(self, slot_level: int) -> int:
+        if self.level == 0:
+            return self.damage_dice_count
+        if slot_level < self.level or slot_level > 9:
+            raise ValueError(f"Illegal slot level {slot_level} for {self.name}.")
+        return self.damage_dice_count + (slot_level - self.level) * self.upcast_dice_per_level
 
 
 class SpellSaveAction(BaseModel):
@@ -127,8 +150,21 @@ class SpellSaveAction(BaseModel):
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
     failed_save_push_ft: int = Field(default=0, ge=0)
     failed_save_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
+    required_target_creature_types: list[str] = Field(default_factory=list)
+    excluded_target_creature_types: list[str] = Field(default_factory=list)
+    minimum_remaining_hp: int = Field(default=0, ge=0)
+    reduce_hit_point_maximum_on_failed_save: bool = False
+    verbal_component: bool = True
     concentration: bool = False
+    repeat_only: bool = False
     duration_minutes: int | None = Field(default=None, ge=1)
+    allows_higher_slots: bool = False
+    target_count: int = Field(default=1, ge=1, le=20)
+    target_count_per_slot_above: int = Field(default=0, ge=0, le=20)
+    save_advantage_if_fighting: bool = False
+    cast_rounds: int = Field(default=1, ge=1, le=100)
+    creates_difficult_terrain: bool = False
+    difficult_terrain_duration_rounds: int = Field(default=0, ge=0, le=100)
     animation: str = "spell-save"
 
     @model_validator(mode="after")
@@ -143,4 +179,6 @@ class SpellSaveAction(BaseModel):
             raise ValueError("Multi-component save spells cannot also define legacy single-component damage.")
         if self.damage_dice_count and self.damage_type is None:
             raise ValueError("Damaging spells require a damage type.")
+        if self.creates_difficult_terrain and self.difficult_terrain_duration_rounds < 1:
+            raise ValueError("Difficult-terrain save spells require a positive duration.")
         return self

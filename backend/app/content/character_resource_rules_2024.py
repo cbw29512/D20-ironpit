@@ -10,6 +10,7 @@ from app.content.druid_2024_resource_rules import (
     land_natural_recovery_free_cast_uses,
 )
 from app.content.monk_2024_resource_rules import monk_focus_points, uncanny_metabolism_uses
+from app.content.ranger_2024_resource_rules import favored_enemy_uses
 from app.content.level_resources import (
     barbarian_rage_uses,
     cleric_channel_divinity_uses,
@@ -60,15 +61,11 @@ def _rogue_stroke(level: int) -> int:
     return 1 if level >= 20 else 0
 
 
-def _ranger_favored_enemy(level: int) -> int:
+def _wizard_signature(level: int) -> int:
     try:
-        if not 1 <= level <= 20:
-            raise ValueError("2024 Ranger Favored Enemy progression covers levels 1 through 20.")
-        return 2 + int(level >= 5) + int(level >= 9) + int(level >= 13) + int(level >= 17)
-    except ValueError:
-        raise
+        return 1 if level >= 20 else 0
     except Exception as exc:
-        raise ValueError(f"Failed to resolve 2024 Ranger Favored Enemy uses for level {level}.") from exc
+        raise ValueError(f"Failed to resolve 2024 Wizard Signature Spell uses for level {level}.") from exc
 
 
 def _paladins_smite_free_cast(level: int) -> int:
@@ -140,8 +137,25 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         ("faithful-steed-free-cast", "Faithful Steed: Free Cast", _faithful_steed_free_cast),
         ("boon-combat-prowess", "Boon of Combat Prowess", _combat_prowess),
     ),
-    "ranger": (("favored-enemy-hunters-mark", "Favored Enemy: Hunter's Mark", _ranger_favored_enemy),),
+    "ranger": (
+        ("favored-enemy-hunters-mark", "Favored Enemy: Hunter's Mark", favored_enemy_uses),
+        ("boon-combat-prowess", "Boon of Combat Prowess", _combat_prowess),
+    ),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),
+    "sorcerer": (
+        ("sorcery-points", "Sorcery Points", lambda level: level if level >= 2 else 0),
+        ("innate-sorcery", "Innate Sorcery", lambda _level: 2),
+        ("boon-of-fate", "Boon of Fate", _boon_of_fate),
+    ),
+    "warlock": (
+        ("magical-cunning", "Magical Cunning", lambda level: 1 if level >= 2 else 0),
+        ("boon-of-fate", "Boon of Fate", _boon_of_fate),
+    ),
+    "wizard": (
+        ("boon-of-fate", "Boon of Fate", _boon_of_fate),
+        ("signature-spell-fireball", "Signature Spells: Fireball", _wizard_signature),
+        ("signature-spell-lightning-bolt", "Signature Spells: Lightning Bolt", _wizard_signature),
+    ),
 }
 
 SUBCLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
@@ -150,6 +164,15 @@ SUBCLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
     ),
     "warrior-of-the-open-hand": (
         ("wholeness-of-body", "Wholeness of Body", _open_hand_wholeness_of_body),
+    ),
+    "fiend-patron": (
+        ("hurl-through-hell", "Hurl Through Hell", lambda level: 1 if level >= 14 else 0),
+    ),
+    "draconic-sorcery": (
+        ("dragon-wings", "Dragon Wings", lambda level: 1 if level >= 14 else 0),
+    ),
+    "oath-devotion": (
+        ("holy-nimbus", "Holy Nimbus", lambda level: 1 if level >= 20 else 0),
     ),
     "circle-land": (
         (

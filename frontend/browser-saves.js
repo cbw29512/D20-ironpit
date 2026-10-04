@@ -45,6 +45,11 @@
   function legalAction(action, target, distance) {
     if (distance > action.range) return false;
     if (action.requiresTargetHearing && target.state.active_effect_ids.includes("deafened")) return false;
+    const type = String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase();
+    if ((action.requiredTargetCreatureTypes || []).length) {
+      if (!(action.requiredTargetCreatureTypes || []).some((kind) => String(kind).toLowerCase() === type)) return false;
+    }
+    if ((action.excludedTargetCreatureTypes || []).some((kind) => String(kind).toLowerCase() === type)) return false;
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
   }
 
@@ -67,6 +72,7 @@
       magicalEffect: Boolean(action.magicalEffect), spellEffect: Boolean(options.spellEffect),
       sourceCreatureType: actor.state.template.creature_type || null, effectTags, roundNumber: round,
       disadvantageSources: [...(options.saveDisadvantageSources || [])],
+      advantageSources: [...(options.saveAdvantageSources || [])],
       encounterRoller: target,
       setup: options.setup || null,
     };
@@ -75,9 +81,10 @@
       .map((creatureType) => String(creatureType).trim().toLowerCase())
       .filter(Boolean);
     const automaticallyFails = Boolean(targetType && automaticFailureTypes.includes(targetType));
-    const advantageSources = automaticallyFails ? [] : (DF().saveAdvantageSourceNames?.(
-      target.state, action.saveAbility, saveContext,
-    ) || []);
+    const advantageSources = automaticallyFails ? [] : [
+      ...(DF().saveAdvantageSourceNames?.(target.state, action.saveAbility, saveContext) || []),
+      ...(saveContext.advantageSources || []),
+    ];
     const save = automaticallyFails
       ? { roll: null, succeeded: false }
       : resolveSavingThrow(target.state, action.saveAbility, action.dc, saveContext);
@@ -96,7 +103,17 @@
       damageComponents = resolved.components; damageRoll = resolved.roll;
       if (resolved.appliedTotal) {
         const affectedStates = states(options.setup);
-        damageOutcome = A().applyDamage(target.state, resolved.appliedTotal, false, resolved.damageTypes, affectedStates);
+        let incoming = resolved.appliedTotal;
+        let appliedTotal = incoming;
+        if (action.minimumRemainingHp) {
+          appliedTotal = Math.min(appliedTotal, Math.max(0, target.state.current_hp - action.minimumRemainingHp));
+        }
+        if (appliedTotal) {
+          damageOutcome = A().applyDamage(target.state, appliedTotal, false, resolved.damageTypes, affectedStates, options.setup);
+        }
+        if (!save.succeeded && action.reduceHitPointMaximumOnFailedSave && incoming) {
+          window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS.applyHitPointMaximumReduction(target.state, incoming);
+        }
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
       }
     }
@@ -112,7 +129,17 @@
       damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
       if (applied) {
         const affectedStates = states(options.setup);
-        damageOutcome = A().applyDamage(target.state, applied, false, [action.damageType], affectedStates);
+        let incoming = applied;
+        let appliedTotal = incoming;
+        if (action.minimumRemainingHp) {
+          appliedTotal = Math.min(appliedTotal, Math.max(0, target.state.current_hp - action.minimumRemainingHp));
+        }
+        if (appliedTotal) {
+          damageOutcome = A().applyDamage(target.state, appliedTotal, false, [action.damageType], affectedStates, options.setup);
+        }
+        if (!save.succeeded && action.reduceHitPointMaximumOnFailedSave && incoming) {
+          window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS.applyHitPointMaximumReduction(target.state, incoming);
+        }
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
       }
     }

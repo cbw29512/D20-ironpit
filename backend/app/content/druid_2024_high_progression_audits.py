@@ -36,12 +36,12 @@ def build_druid_2024_high_progression_audits(level: int) -> list[FeatureAudit]:
         if level >= 13:
             audits.append(druid_feature_audit(
                 "druid-combat-spells-7", "Level 7 Spellcasting: Fire Storm", "class",
-                combat_relevant=False, automated=True,
+                combat_relevant=True, automated=True,
                 notes=(
-                    "Damage-first preparation selects 2024 Fire Storm. Its 7d10 Fire damage and Dexterity "
-                    "save are source-audited, but the spell's freely arranged ten contiguous 10-foot cubes "
-                    "require multi-cube battlefield geometry that Iron Pit does not yet model exactly. "
-                    "It is therefore preserved as arena-out-of-scope instead of approximated."
+                    "Damage-first preparation selects 2024 Fire Storm. The universal contiguous-cube "
+                    "placer arranges up to ten face-adjacent 10-foot cubes for the most enemies that "
+                    "can actually land. Dexterity save, 7d10 Fire, half on a success. Landing-damage "
+                    "selects it only when that coverage is the highest landable damage."
                 ),
             ))
         if level >= 14:

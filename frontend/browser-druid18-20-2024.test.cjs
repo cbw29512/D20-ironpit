@@ -49,5 +49,9 @@ const refill = window.IRON_PIT_BROWSER_INITIATIVE_RESOURCE_REFILL.resolve(
 assert.ok(refill.events.some((item) => item.feature_id === "evergreen-wild-shape"));
 assert.equal(state.resources["wild-shape"], 1);
 assert.equal(l20.canonical_prepared_spells.at(-1).id, "ice-storm");
+const ice = l20.spell_save_actions.find((item) => item.id === "ice-storm");
+assert.ok(ice, "Ice Storm must bind its printed Difficult Terrain rider.");
+assert.equal(ice.createsDifficultTerrain, true);
+assert.equal(ice.difficultTerrainDurationRounds, 1);
 
 console.log("Generated browser 2024 Druid levels 18-20 endgame parity passed.");

@@ -39,3 +39,57 @@ def mass_cure_wounds_2014(
     except Exception:
         logger.exception("Failed to build shared 2014 Mass Cure Wounds at slot level %s.", slot_level)
         raise
+
+
+def mass_healing_word_2014(
+    spellcasting_modifier: int,
+    *,
+    additional_healing_bonus: int = 0,
+) -> HealingAction:
+    """Build source-neutral 2014 Mass Healing Word on generic multi-target healing."""
+    try:
+        if spellcasting_modifier < 0 or additional_healing_bonus < 0:
+            raise ValueError("2014 Mass Healing Word requires nonnegative healing modifiers.")
+        return HealingAction(
+            id="mass-healing-word",
+            name="Mass Healing Word",
+            action_cost="bonus_action",
+            range_ft=60,
+            target_mode="self_or_ally",
+            max_targets=6,
+            dice_count=1,
+            dice_size=4,
+            healing_bonus=spellcasting_modifier + additional_healing_bonus,
+            resource_id="spell-slot-3",
+            resource_cost=1,
+            excluded_creature_types=["undead", "construct"],
+            animation="healing",
+        )
+    except Exception:
+        logger.exception("Failed to build shared 2014 Mass Healing Word.")
+        raise
+
+
+def heal_2014(*, additional_healing_bonus: int = 0) -> HealingAction:
+    """Build source-neutral 2014 Heal: 70 HP, touch, ends blinded and deafened."""
+    try:
+        if additional_healing_bonus < 0:
+            raise ValueError("2014 Heal requires a nonnegative additional healing bonus.")
+        return HealingAction(
+            id="heal",
+            name="Heal",
+            action_cost="action",
+            range_ft=5,
+            target_mode="self_or_ally",
+            dice_count=0,
+            dice_size=6,
+            healing_bonus=70 + additional_healing_bonus,
+            resource_id="spell-slot-6",
+            resource_cost=1,
+            removable_conditions=["blinded", "deafened"],
+            excluded_creature_types=["undead", "construct"],
+            animation="healing",
+        )
+    except Exception:
+        logger.exception("Failed to build shared 2014 Heal.")
+        raise

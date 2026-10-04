@@ -21,6 +21,7 @@
       if (repeatSaveDue(effect, round, timing)) {
         const save = V().resolveSavingThrow(target.state, effect.repeat_save_ability, effect.repeat_save_dc);
         const removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
+        if (!save.succeeded) effect.repeat_save_failure_count = (effect.repeat_save_failure_count || 0) + 1;
         events.push({
           sequence: sequence++, round_number: round, event_type: "saving_throw",
           actor_id: target.combatant_id, actor_name: target.state.template.name,

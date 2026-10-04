@@ -82,7 +82,12 @@
 
       const hpBefore = target.state.current_hp;
       let rolls = [], healed = 0, rollTotal = 0, notation = "", modifier = 0;
-      if (action.restoreToEffectiveMax) {
+      if (action.stabilizeAtZero) {
+        const zero = window.IRON_PIT_BROWSER_ZERO_HP;
+        if (!zero?.stabilizeAtZero) throw new Error("Spare the Dying requires browser zero-HP stabilization.");
+        zero.stabilizeAtZero(target.state);
+        notation = "stabilize";
+      } else if (action.restoreToEffectiveMax) {
         const amount = S().effectiveMaxHp(target.state) - target.state.current_hp;
         healed = restore(target.state, amount);
         rollTotal = healed;
@@ -95,18 +100,23 @@
         );
         const total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.healingBonus || 0);
         rollTotal = total;
-        healed = restore(target.state, total);
+        const tempBefore = target.state.temporary_hp || 0;
+        healed = action.grantsTemporaryHp
+          ? S().grantTemporaryHp(target.state, total) - tempBefore
+          : restore(target.state, total);
         notation = rolls.length
           ? `${rolls.length}d${action.diceSize || 6}+${action.healingBonus || 0}`
           : String(action.healingBonus || 0);
         modifier = action.healingBonus || 0;
       }
 
-      const removed = applyRiders(target, action);
+      const removed = action.stabilizeAtZero ? [] : applyRiders(target, action);
       const riderText = removed.length
         ? " Conditions ended: " + removed.map((id) => id.replaceAll("_", " ")).join(", ") + "."
         : "";
-      const description = gate.featureRoll
+      const description = action.stabilizeAtZero
+        ? `${healer.state.template.name} uses ${action.name} on ${target.state.template.name} and stabilizes them.`
+        : gate.featureRoll
         ? `${healer.state.template.name} uses ${action.name} and rolls ${gate.featureRoll.total} on d100; the intervention succeeds. ${target.state.template.name} is restored for ${healed} HP.${riderText}`
         : `${healer.state.template.name} uses ${action.name} on ${target.state.template.name} and restores ${healed} HP.${riderText}`;
 

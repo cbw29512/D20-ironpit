@@ -1,19 +1,37 @@
 from __future__ import annotations
 
+import logging
+
 from app.content.cleric_combat_levels import CLERIC_COMBAT_LEVELS
 from app.content.cleric_divine_intervention import build_divine_intervention_healing
 from app.content.cleric_life_domain import disciple_of_life_bonus
 from app.content.healing_spell_effects import (
     build_cure_wounds,
+    build_heal_2024,
     build_healing_word,
     build_mass_cure_wounds,
+    build_mass_heal_2024,
     build_mass_healing_word,
+    build_spare_the_dying_2024,
 )
-from app.content.offensive_spell_effects import build_inflict_wounds, build_sacred_flame
+from app.content.shared_contagion_2024 import contagion_2024
+from app.content.shared_holy_aura_2024 import holy_aura_2024
+from app.content.bard_2024_high_damage_spells import build_sunburst_2024
+from app.content.offensive_spell_effects import (
+    build_flame_strike_2024,
+    build_inflict_wounds,
+    build_sacred_flame,
+)
+from app.content.storm_spell_effects import build_fire_storm_2024
+from app.content.shared_recovery_auras_2024 import aura_of_life_2024
+from app.content.warlock_2024_zone_spells import insect_plague_2024
 from app.domain.actions import HealingAction
+from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.combatants import ResourceDefinition
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
 from app.domain.spells import SpellSaveAction
+
+logger = logging.getLogger(__name__)
 
 
 def build_seraphine_resources(level: int) -> list[ResourceDefinition]:
@@ -85,16 +103,22 @@ def build_seraphine_healing(
             wisdom_modifier, disciple_of_life_bonus(5) if life else 0,
         ))
     if level >= 10:
+        actions.append(build_spare_the_dying_2024(level))
         actions.append(build_divine_intervention_healing(
             wisdom_modifier, disciple_of_life_bonus(5) if life else 0,
         ))
     for slot_level, unlock_level in ((6, 11), (7, 13), (8, 15), (9, 17)):
         if level >= unlock_level:
+            actions.append(build_heal_2024(
+                slot_level, disciple_of_life_bonus(slot_level) if life else 0,
+            ))
             actions.append(build_mass_cure_wounds(
                 wisdom_modifier,
                 disciple_of_life_bonus(slot_level) if life else 0,
                 slot_level,
             ))
+    if level >= 17:
+        actions.append(build_mass_heal_2024(disciple_of_life_bonus(9) if life else 0))
     return actions
 
 
@@ -114,7 +138,36 @@ def build_seraphine_save_spells(
     for slot_level, unlock_level in ((5, 9), (6, 11), (7, 13), (8, 15), (9, 17)):
         if level >= unlock_level:
             spells.append(build_inflict_wounds(save_dc, slot_level))
+    if level >= 9:
+        spells.append(build_flame_strike_2024(save_dc))
+    if level >= 10:
+        spells.append(contagion_2024(save_dc))
+    if level >= 13:
+        spells.append(build_fire_storm_2024(save_dc))
+    if level >= 15:
+        spells.append(build_sunburst_2024(save_dc))
     return spells
+
+
+def build_seraphine_save_zones(level: int, save_dc: int):
+    try:
+        if level < 9:
+            return []
+        return [insect_plague_2024(save_dc, 5)]
+    except Exception:
+        logger.exception("Failed to build Seraphine save zones at level %s.", level)
+        raise
+
+
+def build_seraphine_timed_self_buffs(level: int, save_dc: int = 15) -> list[TimedSelfBuffAction]:
+    try:
+        buffs = [aura_of_life_2024()] if level >= 7 else []
+        if level >= 15:
+            buffs.append(holy_aura_2024(save_dc))
+        return buffs
+    except Exception:
+        logger.exception("Failed to build Seraphine timed self-buffs at level %s.", level)
+        raise
 
 
 def seraphine_source(level: int) -> str:

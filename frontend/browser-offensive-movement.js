@@ -14,14 +14,15 @@
       if (!E().available(member.state, "action") || !setup.map_definition) return null;
       if (!member.state.position) throw new Error("Grid offensive movement requires an authoritative attacker position.");
       const members = [...setup.heroes, ...setup.monsters];
-      const candidates = [];
-      let legalNow = false;
+      const meleeReach = [], progress = [];
+      let meleeNow = false, otherNow = false;
       for (const target of F().targetOrder(member, setup)) {
         if (!target.state.position) throw new Error("Grid offensive movement requires authoritative target positions.");
         const distance = S().distance(member, target);
         for (const option of O().rangesForTarget(member, target, turnKey)) {
           if (distance <= option.range) {
-            legalNow = true;
+            if (option.family === "melee") meleeNow = true;
+            else otherNow = true;
             continue;
           }
           const plan = G().planToward(
@@ -34,23 +35,49 @@
             setup.persistent_barriers || [],
           );
           if (!plan.goal_reachable || !plan.path.length) continue;
-          if (plan.final_distance_ft >= distance) continue;
-          candidates.push({
+          const row = {
             cost: plan.movement_cost_ft,
             distance,
             targetId: target.combatant_id,
             family: option.family,
             range: option.range,
-          });
+          };
+          if (option.family === "melee" && plan.final_distance_ft <= option.range) meleeReach.push(row);
+          else if (plan.final_distance_ft < distance) progress.push(row);
         }
       }
-      if (legalNow || !candidates.length) return null;
+      if (meleeNow) return null;
+      const candidates = meleeReach.length ? meleeReach : (otherNow ? [] : progress);
+      if (!candidates.length) return null;
       candidates.sort((a, b) => a.cost - b.cost || a.distance - b.distance
         || a.targetId.localeCompare(b.targetId) || a.family.localeCompare(b.family) || b.range - a.range);
       const best = candidates[0];
       return { targetId: best.targetId, desiredDistanceFt: best.range, family: best.family };
     } catch (error) {
       console.error("Failed browser offensive movement intent", { member: member.combatant_id, error });
+      throw error;
+    }
+  }
+
+  function meleeCanBeEnabled(member, setup, turnKey) {
+    try {
+      if (F().meleeCanLandNow(member, setup)) return true;
+      if (!setup.map_definition || !member.state.position) return false;
+      const members = [...setup.heroes, ...setup.monsters];
+      for (const target of F().targetOrder(member, setup)) {
+        if (!target.state.position) throw new Error("Grid offensive movement requires authoritative target positions.");
+        for (const option of O().rangesForTarget(member, target, turnKey)) {
+          if (option.family !== "melee") continue;
+          const plan = G().planToward(
+            setup.map_definition, member, target, members, option.range,
+            member.state.movement_remaining_ft, setup.persistent_barriers || [],
+          );
+          if (plan.goal_reachable && plan.path.length && plan.final_distance_ft <= option.range) return true;
+        }
+      }
+      return false;
+    } catch (error) {
+      console.error("Failed browser melee-enable probe", { member: member.combatant_id, error });
       throw error;
     }
   }
@@ -77,5 +104,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT = { chooseIntent, move };
+  window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT = { chooseIntent, meleeCanBeEnabled, move };
 })();

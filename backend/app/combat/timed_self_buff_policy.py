@@ -6,6 +6,8 @@ from typing import Literal
 from app.combat.action_economy import is_available
 from app.combat.condition_rules import has_condition
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.spellcasting import slot_spell_available
+from app.combat.suppression_zone_geometry import verbal_casting_blocked
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 
@@ -29,6 +31,30 @@ def timed_self_buff_resource(
             member.combatant_id,
         )
         raise RuntimeError("Timed self-buff resource could not be resolved.") from exc
+
+
+def concentration_grant_only(action: TimedSelfBuffAction) -> bool:
+    """True when the Action only starts Concentration and has no other live buff."""
+    try:
+        return bool(action.concentration) and not (
+            action.condition_ids
+            or action.damage_resistances
+            or action.debuff_counters
+            or action.saving_throw_advantage_grants
+            or action.movement_mode_grants
+            or action.friendly_save_advantage_aura
+            or action.friendly_cover_aura
+            or action.friendly_weapon_damage_aura
+            or action.friendly_recovery_aura
+            or action.hostile_start_turn_condition_aura
+            or action.start_turn_emanation_damage
+            or action.melee_hit_retaliation
+            or action.spell_save_dc_bonus
+            or action.spell_attack_advantage
+        )
+    except Exception:
+        logger.exception("Failed concentration-grant-only check for %s.", action.id)
+        raise
 
 
 def timed_self_buff_active(
@@ -55,9 +81,25 @@ def _friendly_aura_is_relevant(
     setup: EncounterSetup | None,
 ) -> bool:
     try:
+        if action.friendly_weapon_damage_aura is not None:
+            return False
+        recovery = action.friendly_recovery_aura
+        if recovery is not None:
+            if setup is None:
+                return False
+            allies = setup.heroes if member.side == "heroes" else setup.monsters
+            return any(
+                target.state.is_alive
+                and not target.state.is_dead
+                and combatant_distance(member, target) <= recovery.radius_ft
+                and target.state.current_hp <= 0
+                for target in allies
+            )
         aura = action.friendly_save_advantage_aura
         if aura is None:
             return True
+        if aura.all_saves or aura.attacks_against_disadvantage:
+            return False
         if setup is None:
             return False
         allies = setup.heroes if member.side == "heroes" else setup.monsters
@@ -103,6 +145,7 @@ def choose_timed_self_buff_action(
     setup: EncounterSetup | None = None,
     *,
     activation_timing: Literal["action", "start_turn"] = "action",
+    turn_key: str | None = None,
 ) -> TimedSelfBuffAction | None:
     """Choose the highest-priority legal inactive tactically relevant self-buff."""
     try:
@@ -124,6 +167,19 @@ def choose_timed_self_buff_action(
                 )
                 and not timed_self_buff_active(member, action)
                 and (not action.concentration or member.state.concentration is None)
+                and not (
+                    action.resource_id
+                    and action.resource_id.startswith("spell-slot-")
+                    and setup is not None
+                    and verbal_casting_blocked(member, setup)
+                )
+                and not (
+                    action.resource_id
+                    and action.resource_id.startswith("spell-slot-")
+                    and turn_key is not None
+                    and not slot_spell_available(member.state, turn_key)
+                )
+                and not concentration_grant_only(action)
                 and _friendly_aura_is_relevant(member, action, setup)
                 and _hostile_aura_is_relevant(member, action, setup)
             ):

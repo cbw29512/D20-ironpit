@@ -66,7 +66,18 @@ const ordered = S.discoverCandidates("normalPostMove", ctx());
 assert.equal(
   S.selectCandidate("normalPostMove", ordered).providerId,
   "spell-last",
-  "Arena category policy must beat provider registration order",
+  "Unannotated post-move families still walk profile order",
+);
+
+S._resetForTests();
+S.registerProvider(provider("dodge-first", "dodge", ["2024"], () => ({ payload: { delivery: "dodge", expectedDamage: 0 } })));
+S.registerProvider(provider("standard", "standard-attack", ["2024"], () => ({ payload: { delivery: "melee", expectedDamage: 19.5 } })));
+S.registerProvider(provider("spell-last", "spell-offense", ["2024"], () => ({ payload: { delivery: "spell", expectedDamage: 10.5 } })));
+const landing = S.discoverCandidates("normalPostMove", ctx());
+assert.equal(
+  S.selectCandidate("normalPostMove", landing).providerId,
+  "standard",
+  "Landable melee must beat a weaker Magic Missile",
 );
 
 S._resetForTests();

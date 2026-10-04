@@ -4,12 +4,15 @@ import logging
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.hp_threshold_turn import resolve_hp_threshold_turn
 from app.combat.encounter_main_action import resolve_post_move_action
+from app.combat.landing_offense_policy import melee_can_land_now
+from app.combat.offensive_movement_policy import melee_can_be_enabled_this_turn
 from app.combat.action_economy import is_available
 from app.combat.charge import resolve_charge_closing
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.deferred_save_effect import cleanup_deferred_effects
 from app.combat.encounter_turn_support import finish_turn, resolve_support_actions
+from app.combat.ability_check_escape import resolve_escape_check, should_escape_check
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.friendly_save_auras import sync_friendly_save_auras
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
@@ -71,6 +74,10 @@ def resolve_combat_turn(
             ))
             sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+        if should_escape_check(attacker.state):
+            events.append(resolve_escape_check(sequence, round_number, attacker, dice, setup=setup))
+            sequence += 1
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         if should_use_adrenaline_rush(attacker.state):
             adrenaline_event = use_adrenaline_rush(sequence, round_number, attacker.state, attacker.combatant_id)
             if adrenaline_event is not None:
@@ -99,8 +106,13 @@ def resolve_combat_turn(
         events.extend(form_events)
         if not is_available(attacker.state, "action"):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-        spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
-        events.extend(spell_events)
+        if not melee_can_land_now(attacker, setup) and not melee_can_be_enabled_this_turn(
+            attacker, setup, turn_key,
+        ):
+            spell_events, sequence = resolve_best_spell_offense(
+                sequence, round_number, attacker, setup, turn_key, dice,
+            )
+            events.extend(spell_events)
         if not is_available(attacker.state, "action"):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         targets = target_order(attacker, setup)

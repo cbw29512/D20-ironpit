@@ -20,6 +20,17 @@ from app.domain.spells import SpellSaveAction
 logger = logging.getLogger(__name__)
 
 
+def spell_has_higher_slot_scaling(action: SpellSaveAction) -> bool:
+    """True when the spell declares action-level or per-component higher-slot dice."""
+    try:
+        if action.upcast_dice_per_level > 0 or action.allows_higher_slots:
+            return True
+        return any(part.upcast_dice_per_level > 0 for part in action.damage_components)
+    except Exception:
+        logger.exception("Failed higher-slot probe for %s.", action.id)
+        raise
+
+
 def spell_at_slot(action: SpellSaveAction, slot_level: int) -> SpellSaveAction:
     """Return the source spell scaled only by its declared higher-slot rule."""
     try:
@@ -32,12 +43,30 @@ def spell_at_slot(action: SpellSaveAction, slot_level: int) -> SpellSaveAction:
         levels_above = slot_level - action.level
         if levels_above == 0:
             return action
-        if action.upcast_dice_per_level <= 0:
+        component_upcast = any(part.upcast_dice_per_level > 0 for part in action.damage_components)
+        if (
+            action.upcast_dice_per_level <= 0
+            and not action.allows_higher_slots
+            and not component_upcast
+        ):
             raise ValueError(f"{action.name} has no certified higher-slot scaling.")
         if action.damage_components:
-            raise ValueError(
-                "Multi-component spell upcasting requires component-specific scaling data."
-            )
+            if not component_upcast:
+                if action.upcast_dice_per_level > 0:
+                    raise ValueError(
+                        "Multi-component spell upcasting requires component-specific scaling data."
+                    )
+                return action
+            return action.model_copy(update={
+                "damage_components": [
+                    part.model_copy(update={
+                        "dice_count": part.dice_count + levels_above * part.upcast_dice_per_level,
+                    })
+                    for part in action.damage_components
+                ],
+            })
+        if action.upcast_dice_per_level <= 0:
+            return action
         return action.model_copy(update={
             "damage_dice_count": (
                 action.damage_dice_count
@@ -71,7 +100,9 @@ def choose_spell(
         for index, action in enumerate(caster.state.template.spell_save_actions):
             if (
                 action.action_cost == "reaction"
-                or action.concentration
+                or action.cast_rounds > 1
+                or action.repeat_only
+                or (action.concentration and caster.state.concentration is not None)
                 or not is_available(caster.state, action.action_cost)
             ):
                 continue
@@ -81,7 +112,7 @@ def choose_spell(
                     caster.state,
                     turn_key,
                     action.level,
-                    higher_slot_scaling=action.upcast_dice_per_level > 0,
+                    higher_slot_scaling=spell_has_higher_slot_scaling(action),
                 )
             ]
             cast_options.extend(
@@ -111,15 +142,16 @@ def choose_spell(
                 if choice is not None:
                     choice = replace(choice, alternate_cast=alternate_cast)
                     candidates.append((
+                        int(choice.expected_damage > 0),
+                        action.level,
                         choice.expected_damage,
                         int(alternate_cast is not None),
-                        -action.level,
                         -index,
                         choice,
                     ))
         if not candidates:
             return None
-        choice = max(candidates, key=lambda item: item[:4])[4]
+        choice = max(candidates, key=lambda item: item[:5])[5]
         maximizer = safe_maximizer_for_spell(
             caster, choice.action.id, choice.slot_level,
         )
