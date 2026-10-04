@@ -10,6 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-heroes.js", "browser-condition-rules.js", "browser-modifier-validation.js", "browser-modifiers.js", "browser-state.js",
   "browser-timed-conditions.js", "browser-concentration.js", "browser-spell-modifiers.js", "browser-precombat-spells.js",
+  "browser-action-economy.js", "browser-timed-self-buff-policy.js", "browser-timed-self-buffs.js", "browser-precombat-buffs.js",
 ]) load(file);
 const S = window.IRON_PIT_BROWSER_STATE;
 const P = window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS;
@@ -49,6 +50,26 @@ const enemy = () => ({ combatant_id: "enemy", side: "monsters", position_ft: 30,
   assert.equal(c.state.opening_buff_id, "stronger");
   assert.equal(c.state.resources["spell-slot-2"], 0);
   assert.equal(c.state.resources["spell-slot-1"], 1);
+}
+
+{
+  const loud = {
+    id: "loud-buff", name: "Loud Buff", actionCost: "action",
+    resourceId: null, resourceCost: 1, durationRounds: 1,
+    conditionIds: [], damageResistances: [], expiryTiming: "source_turn_end",
+    priority: 99, animation: "countercharm",
+  };
+  const c = caster([defense("stronger", 2, 1), defense("weaker", 1, 80)], { 1: 1, 2: 1 });
+  c.state.template.timed_self_buff_actions = [loud];
+  const result = window.IRON_PIT_BROWSER_PRECOMBAT_BUFFS.prepare({ heroes: [c], monsters: [enemy()] });
+  assert.equal(result.events.length, 1);
+  assert.equal(result.events[0].feature_id, "stronger");
+  assert.equal(c.state.opening_buff_id, "stronger");
+  assert.equal(c.state.action_available, true);
+  assert.equal(c.state.bonus_action_available, true);
+  assert.equal(c.state.resources["spell-slot-2"], 0);
+  assert.equal(c.state.resources["spell-slot-1"], 1);
+  assert.ok(!c.state.timed_effects.some((effect) => effect.source_effect_id === "loud-buff"));
 }
 
 {

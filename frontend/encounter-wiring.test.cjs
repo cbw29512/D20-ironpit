@@ -103,6 +103,7 @@ assert.ok(html.indexOf("browser-grid-movement-support.js") < html.indexOf("brows
 assert.ok(html.indexOf("browser-grid-path-search-support.js") < html.indexOf("browser-grid-path-search.js"));
 assert.ok(html.indexOf("browser-grid-path-search.js") < html.indexOf("browser-grid-movement.js"));
 assert.ok(html.indexOf("browser-grid-movement.js") < html.indexOf("browser-grid-placement.js"));
+assert.ok(html.indexOf("browser-formation-rows.js") < html.indexOf("browser-grid-placement.js"));
 assert.ok(html.indexOf("browser-grid-placement.js") < html.indexOf("browser-engine.js"));
 assert.ok(html.indexOf("figure-portraits.js") < html.indexOf("combatant-art.js"));
 assert.ok(html.indexOf("combatant-art.js") < html.indexOf("battlefield-view.js"));

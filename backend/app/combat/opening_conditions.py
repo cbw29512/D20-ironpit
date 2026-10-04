@@ -25,7 +25,7 @@ def member_at(setup: EncounterSetup, side: str, roster_index: int):
 
 
 def apply_opening_conditions(setup: EncounterSetup, selection: EncounterSelection) -> None:
-    """Apply declared starting conditions. Source cards stay immutable."""
+    """Apply harness-declared starting conditions. Player-loaded fights must pass none."""
     try:
         for binding in selection.opening_conditions:
             target = member_at(setup, binding.side, binding.roster_index)

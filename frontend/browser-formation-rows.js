@@ -11,6 +11,21 @@
     return F().usesBackline(template) || F().hasRangedWeaponOffense(template);
   }
 
+  function isBackline(member) {
+    try {
+      const row = member.state.formation_row;
+      if (row === "front") return false;
+      if (row === "back") return true;
+      const formation = F();
+      if (typeof formation?.isBackline === "function") return Boolean(formation.isBackline(member));
+      if (typeof formation?.usesBackline === "function") return Boolean(formation.usesBackline(member.state.template));
+      return false;
+    } catch (error) {
+      console.error("Failed browser backline check", { id: member?.combatant_id, error });
+      throw error;
+    }
+  }
+
   function assignFormationRows(members) {
     try {
       const mixed = [];
@@ -53,5 +68,7 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_FORMATION_ROWS = { assignFormationRows, syncFormationRows, hasMeleeWeapon, hasRangedOrSpellOffense };
+  window.IRON_PIT_BROWSER_FORMATION_ROWS = {
+    assignFormationRows, syncFormationRows, hasMeleeWeapon, hasRangedOrSpellOffense, isBackline,
+  };
 })();

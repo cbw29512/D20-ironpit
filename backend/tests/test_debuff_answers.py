@@ -10,7 +10,15 @@ from app.combat.timed_conditions import apply_timed_condition
 from app.domain.encounters import EncounterSelection, OpeningConditionBinding
 
 
-def _selection() -> EncounterSelection:
+def _production_selection() -> EncounterSelection:
+    return EncounterSelection(
+        ruleset="2014",
+        hero_ids=["karnok-stoneward-2014-l5"],
+        monster_ids=["2014-unicorn", "2014-berserker"],
+    )
+
+
+def _harness_selection() -> EncounterSelection:
     return EncounterSelection(
         ruleset="2014",
         hero_ids=["karnok-stoneward-2014-l5"],
@@ -27,33 +35,24 @@ def _selection() -> EncounterSelection:
     )
 
 
-def _setup():
-    setup = build_encounter_setup(_selection())
-    unicorn = setup.monsters[0]
-    ally = setup.monsters[1]
-    hero = setup.heroes[0]
-    return setup, unicorn, ally, hero
+def _setup(selection: EncounterSelection):
+    setup = build_encounter_setup(selection)
+    return setup, setup.monsters[0], setup.monsters[1], setup.heroes[0]
 
 
-def test_opening_condition_applies_fear_to_the_named_roster_slot() -> None:
-    setup, _unicorn, ally, hero = _setup()
+def test_player_loaded_legendary_matchup_starts_without_a_debuff() -> None:
+    setup, unicorn, ally, _hero = _setup(_production_selection())
+    assert ally.state.timed_effects == []
+    assert "frightened" not in ally.state.active_effect_ids
+    assert "charmed" not in ally.state.active_effect_ids
+    assert unicorn.state.timed_effects == []
+
+
+def test_harness_may_seed_fear_so_calm_can_be_asserted() -> None:
+    setup, unicorn, ally, hero = _setup(_harness_selection())
     assert "frightened" in ally.state.active_effect_ids
     assert has_condition(ally.state, "frightened") is True
     assert ally.state.timed_effects[0].source_id == hero.combatant_id
-    assert "frightened" not in setup.monsters[0].state.active_effect_ids
-
-
-def test_turn_start_reads_active_fear_before_the_creature_acts() -> None:
-    setup, _unicorn, ally, _hero = _setup()
-    events, _ = begin_turn_with_events(1, 1, ally.combatant_id, ally.state, FixedDiceProvider([10]), member=ally)
-    assert any(
-        event.feature_id == "turn-start-condition" and event.applied_condition_ids == ["frightened"]
-        for event in events
-    )
-
-
-def test_condition_counter_buff_answers_live_fear_and_blocks_a_new_copy() -> None:
-    setup, unicorn, ally, hero = _setup()
     begin_turn_with_events(1, 1, unicorn.combatant_id, unicorn.state, FixedDiceProvider([10]), member=unicorn)
     choice = choose_condition_counter_spell(unicorn, setup, "1:unicorn")
     assert choice is not None
@@ -67,8 +66,17 @@ def test_condition_counter_buff_answers_live_fear_and_blocks_a_new_copy() -> Non
     assert has_condition(ally.state, "frightened") is False
 
 
+def test_turn_start_reads_harness_fear_before_the_creature_acts() -> None:
+    setup, _unicorn, ally, _hero = _setup(_harness_selection())
+    events, _ = begin_turn_with_events(1, 1, ally.combatant_id, ally.state, FixedDiceProvider([10]), member=ally)
+    assert any(
+        event.feature_id == "turn-start-condition" and event.applied_condition_ids == ["frightened"]
+        for event in events
+    )
+
+
 def test_support_phase_casts_the_answering_buff_when_a_friend_is_frightened() -> None:
-    setup, unicorn, ally, _hero = _setup()
+    setup, unicorn, ally, _hero = _setup(_harness_selection())
     begin_turn_with_events(1, 1, unicorn.combatant_id, unicorn.state, FixedDiceProvider([10]), member=unicorn)
     events, _ = resolve_support_actions(1, 1, unicorn, setup, FixedDiceProvider([1] * 8), "1:unicorn")
     assert any(event.feature_id == "calm-emotions" for event in events)
@@ -76,18 +84,13 @@ def test_support_phase_casts_the_answering_buff_when_a_friend_is_frightened() ->
 
 
 def test_no_counter_cast_when_nobody_has_the_matching_debuff() -> None:
-    setup = build_encounter_setup(EncounterSelection(
-        ruleset="2014",
-        hero_ids=["karnok-stoneward-2014-l5"],
-        monster_ids=["2014-unicorn", "2014-berserker"],
-    ))
-    unicorn = setup.monsters[0]
+    setup, unicorn, _ally, _hero = _setup(_production_selection())
     begin_turn_with_events(1, 1, unicorn.combatant_id, unicorn.state, FixedDiceProvider([10]), member=unicorn)
     assert choose_condition_counter_spell(unicorn, setup, "1:unicorn") is None
 
 
 def test_bloodied_is_the_need_that_healing_answers() -> None:
-    setup, _unicorn, ally, _hero = _setup()
+    setup, _unicorn, ally, _hero = _setup(_production_selection())
     ally.state.current_hp = max(1, ally.state.template.max_hp // 2)
     assert is_bloodied(ally.state) is True
     events, _ = begin_turn_with_events(1, 1, ally.combatant_id, ally.state, FixedDiceProvider([10]), member=ally)

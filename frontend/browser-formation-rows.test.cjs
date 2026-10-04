@@ -36,6 +36,8 @@ assert.equal(first.state.formation_row, "front");
 assert.equal(second.state.formation_row, "back");
 assert.equal(first.state.initial_formation_row, "front");
 assert.equal(second.state.initial_formation_row, "back");
+assert.equal(R.isBackline(first), false);
+assert.equal(R.isBackline(second), true);
 
 const front = member("hero-front", "heroes", melee);
 const reserve = member("hero-back", "heroes", melee);

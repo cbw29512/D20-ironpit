@@ -83,11 +83,7 @@
           if (api.ensureRuleset) await api.ensureRuleset(recipe.ruleset);
           const catalog = api.state.catalog;
           const selection = resolve(recipe, catalog);
-          api.load(selection.heroes, selection.monsters, `${recipe.title} loaded. Look for: ${recipe.purpose}`,
-            (recipe.openingConditions || []).map((item) => ({
-              side: item.side, roster_index: item.rosterIndex, condition_id: item.conditionId,
-              source_side: item.sourceSide, source_roster_index: item.sourceRosterIndex,
-            })));
+          api.load(selection.heroes, selection.monsters, `${recipe.title} loaded. Look for: ${recipe.purpose}`);
         } catch (error) {
           console.error("Combat preset loading failed", { preset: recipe.id, error });
           document.getElementById("status").textContent = "Preset could not be loaded. See console for details.";

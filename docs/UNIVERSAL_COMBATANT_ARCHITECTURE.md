@@ -283,7 +283,7 @@ The spell package contains desired spells, but the level compiler exposes only s
 
 Arena AI is deterministic policy, not a new rule system. A simple default is:
 
-1. apply worthwhile legal precombat buffs that fit the arena;
+1. apply exactly one legal opening buff under the pit rule below;
 2. if a legal melee attack can land this turn, use the highest-damage melee option;
 3. otherwise prefer the highest-damage landable option, with the highest-level damage spell first among spells;
 4. fall back through remaining landable damage options;
@@ -410,9 +410,13 @@ spell-package pointers, and loadout capabilities; CI rejects manual or stale che
 - Active means executable and certified.
 
 
+## Opening buff pit rule
+
+Before initiative, each combatant that has a legal combat buff uses **exactly one** as a free opening action. If more than one buff is legal, the shared precombat pipeline selects the **highest-level** option only; non-spell abilities compete as level 0, and same-level ties use declarative priority. The activation does not spend Action, Bonus Action, or Reaction. Do not apply every known buff. This is pit setup policy, not a seeded starting debuff. Production presets and player-loaded fights still start with an empty opening-condition list.
+
 ## Turn-start debuff answers
 
-The start-of-turn phase reads the acting creature's live conditions before voluntary actions. Condition identity is absolute: Frightened is Frightened, Charmed is Charmed. A beneficial failed-save modifier of kind `condition-immunity` or `debuff-counter` answers the matching condition on a legal friend. Bloodied (current HP at or below half of maximum) is answered by healing. An already-active matching counter-buff keeps the printed condition instance in state but `has_condition` is false, and a new application of that same condition fails closed. Selection is by modifier kind and condition id, never by spell or monster name.
+The start-of-turn phase reads the acting creature's live conditions before voluntary actions. Condition identity is absolute: Frightened is Frightened, Charmed is Charmed. A beneficial failed-save modifier of kind `condition-immunity` or `debuff-counter` answers the matching condition on a legal friend. Bloodied (current HP at or below half of maximum) is answered by healing. An already-active matching counter-buff keeps the printed condition instance in state but `has_condition` is false, and a new application of that same condition fails closed. Selection is by modifier kind and condition id, never by spell or monster name. A test harness may seed a starting buff or debuff. Player-loaded fights and website presets must pass an empty opening-condition list.
 
 ## Timed source-owned emanations
 

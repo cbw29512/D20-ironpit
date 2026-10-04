@@ -220,13 +220,15 @@ Normal initiative bonuses and ruleset-specific initiative mechanics apply, with 
 
 ## 7.1 Opening buff on arena entry
 
-- Before initiative is rolled, each combatant may activate **one legal available combat buff** as its opening buff.
-- This opening activation is free in action economy: it does not consume the combatant's Action, Bonus Action, or Reaction.
+- Before initiative is rolled, each combatant that has a legal available combat buff **must activate exactly one** as its opening buff. This is an Iron Pit pit rule, not a seeded starting condition and not a starting debuff.
+- If the combatant knows or can legally activate more than one combat buff, it uses the **highest-level** one only. Non-spell abilities compete as level 0. Same-level ties use the existing declarative priority, then registration order. Do not apply every buff the combatant knows.
+- This opening activation is a free action in the pit: it does not consume the combatant's Action, Bonus Action, or Reaction, and it does not spend the first-turn Action.
 - The buff still pays every other printed cost and requirement that remains meaningful in Iron Pit, including spell slots, charges, class resources, target/range legality, and Concentration.
 - **Explicit Foresight arena exception:** when a Druid of level 17+ selects **Foresight** as its one opening buff, the precombat cast does **not** expend the level-9 spell slot. This is an Iron Pit arena override recorded here, not a change to 2024 RAW. The spell otherwise keeps its legal target, duration, and effect semantics. Other opening-buff spells continue to pay their printed spell-slot/resource costs unless this contract records another explicit exception.
 - A combatant receives only one opening-buff activation per fight. A spell, class feature, subclass feature, species feature, item effect, or other source competes for that same single opening-buff opportunity when it is otherwise legal.
 - The opening buff resolves in the precombat phase before initiative. Its normal duration/lifecycle begins there; source-turn timing continues normally once round 1 starts. An effect that lasts until the end of the source's next turn therefore expires at the end of that combatant's first turn.
 - Opening-buff selection is universal Arena policy. Do not create class-, spell-, or source-name exceptions in resolver logic; explicit arena overrides recorded in this contract must be represented as declarative source parameters consumed by the shared precombat pipeline. The source ability supplies its exact player-facing name and parameters; the shared precombat buff pipeline supplies the activation.
+- Production presets and player-loaded fights start with no debuffs. A test harness may seed a buff or debuff so a combination can be asserted. The opening-buff pit rule is not that harness.
 - Buffs that require a separate combat entity, an unavailable target, an unsupported outcome-changing mechanic, or another illegal precondition remain unavailable and do not bypass normal certification gates.
 
 ## 8. Action economy
@@ -276,6 +278,8 @@ At the start of each creature's turn, the engine reads that creature's live debu
 - An already-active matching counter-buff suppresses the current condition and causes a new copy of that debuff to fail closed. It does not land.
 
 Arena AI selects the answering buff only when the matching debuff is present on a legal friend. A printed suppression that would do nothing is not selected. Pairing is by condition identity and modifier kind, never by spell name, monster name, or class name.
+
+A test harness may start a buff or debuff so a combination can be asserted. Purpose-built production fights and any matchup a player loads must not begin with a debuff. Seeded fear for Calm Emotions lives only in the engine test, never on the website legendary preset.
 
 ### Calm Emotions
 

@@ -4,6 +4,19 @@
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_ACTIONS;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
+  const FR = () => window.IRON_PIT_BROWSER_FORMATION_ROWS;
+
+  function isBackline(member) {
+    try {
+      if (typeof FR()?.isBackline === "function") return Boolean(FR().isBackline(member));
+      if (typeof F()?.isBackline === "function") return Boolean(F().isBackline(member));
+      if (typeof F()?.usesBackline === "function") return Boolean(F().usesBackline(member.state.template));
+      return member.state.formation_row === "back";
+    } catch (error) {
+      console.error("Failed to read browser backline for movement", { id: member?.combatant_id, error });
+      throw error;
+    }
+  }
   const G = () => window.IRON_PIT_BROWSER_GRID_MOVEMENT;
   const O = () => window.IRON_PIT_BROWSER_OFFENSIVE_RANGES;
   const R = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT;
@@ -48,7 +61,7 @@
         }
       }
       if (meleeNow) return null;
-      const candidates = F().isBackline(member)
+      const candidates = isBackline(member)
         ? (meleeReach.length ? meleeReach : (otherNow ? [] : rangedProgress.length ? rangedProgress : meleeProgress))
         : (meleeReach.length ? meleeReach : meleeProgress);
       if (!candidates.length) return null;
