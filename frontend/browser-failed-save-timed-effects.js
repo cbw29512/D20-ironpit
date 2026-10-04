@@ -22,6 +22,8 @@
         nextAttackDisadvantage: Boolean(rider.nextAttackDisadvantage),
         useDefaultPoisonRecovery: false,
         repeatSaveFailuresToLock: rider.repeatSaveFailuresToLock || null,
+        escapeCheckAbility: rider.escapeCheckAbility || null,
+        escapeCheckDc: rider.escapeCheckDc ?? null,
       });
     } catch (error) {
       console.error("Failed browser failed-save timed rider application", {

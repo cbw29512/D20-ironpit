@@ -65,8 +65,7 @@
         || action.hostileStartTurnConditionAura
         || action.startTurnEmanationDamage
         || action.meleeHitRetaliation
-        || action.spellSaveDcBonus
-        || action.spellAttackAdvantage
+        || action.spellSaveDcBonus || action.spellAttackAdvantage || (action.modifierEffects || []).length
       )) {
         T().apply(member.state, action.id, member.combatant_id, {
           sourceEffectId: action.id,
@@ -103,6 +102,18 @@
           expiresRound,
           Number.isInteger(slotLevel) ? slotLevel : null,
         );
+      }
+
+      if ((action.modifierEffects || []).length) {
+        const modifiers = window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
+        if (!modifiers) throw new Error("Timed self-buff modifier effects require browser-spell-modifiers.js.");
+        for (const [index, effect] of action.modifierEffects.entries()) {
+          M().add(member.state, modifiers.build(
+            member.combatant_id, member.combatant_id,
+            { id: action.id, name: action.name, concentration: Boolean(action.concentration) },
+            effect, index, round,
+          ));
+        }
       }
 
       for (const grant of action.savingThrowAdvantageGrants || []) {

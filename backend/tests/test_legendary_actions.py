@@ -6,7 +6,7 @@ from app.content.arena_map import build_standard_iron_pit_map
 from app.domain.actions import SavingThrowAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
-from app.domain.legendary_actions import LegendaryActionOption
+from app.domain.legendary_actions import LegendaryAcBuffSpec, LegendaryActionOption, LegendaryHealSpec
 from app.domain.models import (
     CombatantTemplate,
     ResourceDefinition,
@@ -207,4 +207,39 @@ def test_legendary_save_loses_to_higher_damage_attack() -> None:
     choice = choose_legendary_action(legend, setup)
     assert choice is not None and choice[0] == "attack"
     assert choice[1][0].id == "tail-attack"
+
+
+def test_legendary_ac_buff_fires_when_no_attack_is_in_reach() -> None:
+    legend = _monster("legend")
+    legend.state.template.legendary_actions = [
+        LegendaryActionOption(
+            id="shimmering-shield", name="Shimmering Shield", cost=2, kind="ac_buff",
+            ac_buff=LegendaryAcBuffSpec(ac_bonus=2, range_ft=60),
+        ),
+    ]
+    hero = _hero("hero", x=12)
+    setup = _setup(legend, hero)
+    events, _ = resolve_legendary_actions_after_turn(1, 1, hero, setup, FixedDiceProvider([20]))
+    assert events
+    assert "Legendary Action: Shimmering Shield" in events[0].description
+    assert legend.state.resources[0].current_uses == 1
+    assert any(item.kind.value == "armor-class" and item.flat_bonus == 2 for item in legend.state.active_modifiers)
+
+
+def test_legendary_heal_fires_when_damaged_and_no_attack_is_in_reach() -> None:
+    legend = _monster("legend")
+    legend.state.current_hp = 40
+    legend.state.template.legendary_actions = [
+        LegendaryActionOption(
+            id="heal-self", name="Heal Self", cost=3, kind="heal",
+            heal=LegendaryHealSpec(dice_count=2, dice_size=8, healing_bonus=2),
+        ),
+    ]
+    hero = _hero("hero", x=12)
+    setup = _setup(legend, hero)
+    events, _ = resolve_legendary_actions_after_turn(1, 1, hero, setup, FixedDiceProvider([6, 6]))
+    assert events
+    assert "Legendary Action: Heal Self" in events[0].description
+    assert legend.state.current_hp == 54
+    assert legend.state.resources[0].current_uses == 0
 

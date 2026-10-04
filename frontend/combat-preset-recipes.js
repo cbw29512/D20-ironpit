@@ -10,6 +10,8 @@
   const recipes = Object.freeze([
     R("duel", "2014", "1v1 · Monk discipline", 5, ["monk"], ["brown-bear"],
       "Stunning Strike and the Stunned condition.", 1701, [A("feature", "stunning-strike"), A("condition", "stunned")]),
+    R("legendary", "2014", "1v1 · Legendary Unicorn", 5, ["fighter"], ["unicorn"],
+      "A printed legendary action fires after another creature's turn.", 1, [A("text", "Legendary Action")]),
     R("goblins", "2014", "1v2 · Barbarian vs two Goblins", 3, ["barbarian"], ["goblin", "goblin"],
       "Barbarian Rage.", 1701, [A("feature", "rage")]),
     R("partners", "2014", "2v2 · Steel and healing", 5, ["fighter", "cleric"], ["brown-bear", "dire-wolf"],

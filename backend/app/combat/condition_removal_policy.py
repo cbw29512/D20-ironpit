@@ -34,6 +34,14 @@ def target_allowed(remover: EncounterCombatant, target: EncounterCombatant, acti
             return target.combatant_id == remover.combatant_id
         if action.target_mode == "ally":
             return target.combatant_id != remover.combatant_id
+        if action.requires_active_effect_id:
+            active = action.requires_active_effect_id in remover.state.active_effect_ids
+            concentrating = (
+                remover.state.concentration is not None
+                and remover.state.concentration.effect_id == action.requires_active_effect_id
+            )
+            if not (active or concentrating):
+                return False
         return True
     except Exception:
         logger.exception("Failed removal target legality %s -> %s (%s).", remover.combatant_id, target.combatant_id, action.id)

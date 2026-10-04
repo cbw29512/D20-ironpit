@@ -211,20 +211,7 @@ def _save(action: Any) -> dict[str, Any]:
             "healingBonus": action.area_healing_rider.healing_bonus,
         }
     if action.failed_save_timed_effect is not None:
-        row["failedSaveTimedEffect"] = {
-            "effectId": action.failed_save_timed_effect.effect_id,
-            "durationRounds": action.failed_save_timed_effect.duration_rounds,
-            "expiryTiming": action.failed_save_timed_effect.expiry_timing,
-            "repeatSaveAbility": action.failed_save_timed_effect.repeat_save_ability,
-            "repeatSaveDc": action.failed_save_timed_effect.repeat_save_dc,
-            "repeatSaveTiming": action.failed_save_timed_effect.repeat_save_timing,
-            "turnBehavior": action.failed_save_timed_effect.turn_behavior,
-            "endsOnDamage": action.failed_save_timed_effect.ends_on_damage,
-            "endsIfSourceIncapacitated": action.failed_save_timed_effect.ends_if_source_incapacitated,
-            "endsIfSourceDead": action.failed_save_timed_effect.ends_if_source_dead,
-            "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
-            "repeatSaveFailuresToLock": action.failed_save_timed_effect.repeat_save_failures_to_lock,
-        }
+        row["failedSaveTimedEffect"] = _failed_save_timed_effect(action.failed_save_timed_effect)
     if action.grapple_escape_dc is not None:
         row["grappleEscapeDc"] = action.grapple_escape_dc
     if action.restrains_while_grappled:
@@ -255,20 +242,7 @@ def _spell(action: Any) -> dict[str, Any]:
     if action.requires_target_sight:
         row["requiresTargetSight"] = True
     if action.failed_save_timed_effect is not None:
-        row["failedSaveTimedEffect"] = {
-            "effectId": action.failed_save_timed_effect.effect_id,
-            "durationRounds": action.failed_save_timed_effect.duration_rounds,
-            "expiryTiming": action.failed_save_timed_effect.expiry_timing,
-            "repeatSaveAbility": action.failed_save_timed_effect.repeat_save_ability,
-            "repeatSaveDc": action.failed_save_timed_effect.repeat_save_dc,
-            "repeatSaveTiming": action.failed_save_timed_effect.repeat_save_timing,
-            "turnBehavior": action.failed_save_timed_effect.turn_behavior,
-            "endsOnDamage": action.failed_save_timed_effect.ends_on_damage,
-            "endsIfSourceIncapacitated": action.failed_save_timed_effect.ends_if_source_incapacitated,
-            "endsIfSourceDead": action.failed_save_timed_effect.ends_if_source_dead,
-            "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
-            "repeatSaveFailuresToLock": action.failed_save_timed_effect.repeat_save_failures_to_lock,
-        }
+        row["failedSaveTimedEffect"] = _failed_save_timed_effect(action.failed_save_timed_effect)
     if action.required_target_creature_types:
         row["requiredTargetCreatureTypes"] = list(action.required_target_creature_types)
     if action.excluded_target_creature_types:
@@ -287,6 +261,9 @@ def _spell(action: Any) -> dict[str, Any]:
         ]
     if action.area is not None:
         row["area"] = action.area.model_dump(mode="json")
+    if action.creates_difficult_terrain:
+        row["createsDifficultTerrain"] = True
+        row["difficultTerrainDurationRounds"] = action.difficult_terrain_duration_rounds
     if action.duration_minutes is not None:
         row["durationMinutes"] = action.duration_minutes
     if action.area_radius_ft is not None:
@@ -300,11 +277,34 @@ def _spell(action: Any) -> dict[str, Any]:
     return row
 
 
+def _failed_save_timed_effect(rider: Any) -> dict[str, Any]:
+    row = {
+        "effectId": rider.effect_id,
+        "durationRounds": rider.duration_rounds,
+        "expiryTiming": rider.expiry_timing,
+        "repeatSaveAbility": rider.repeat_save_ability,
+        "repeatSaveDc": rider.repeat_save_dc,
+        "repeatSaveTiming": rider.repeat_save_timing,
+        "turnBehavior": rider.turn_behavior,
+        "endsOnDamage": rider.ends_on_damage,
+        "endsIfSourceIncapacitated": rider.ends_if_source_incapacitated,
+        "endsIfSourceDead": rider.ends_if_source_dead,
+        "nextAttackDisadvantage": rider.next_attack_disadvantage,
+        "repeatSaveFailuresToLock": rider.repeat_save_failures_to_lock,
+    }
+    if rider.escape_check_ability:
+        row["escapeCheckAbility"] = rider.escape_check_ability
+        row["escapeCheckDc"] = rider.escape_check_dc
+    return row
+
+
 def _modifier_effect(effect: Any) -> dict[str, Any]:
     row = {
         "kind": effect.kind, "flatBonus": effect.flat_bonus, "diceCount": effect.dice_count,
         "diceSize": effect.dice_size, "damageType": effect.damage_type,
     }
+    if effect.condition_id:
+        row["conditionId"] = effect.condition_id
     if effect.minimum_value:
         row["minimumValue"] = effect.minimum_value
     if effect.debuff_counter is not None:
@@ -680,6 +680,8 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["hostileStartTurnConditionAura"] = action.hostile_start_turn_condition_aura.model_dump(mode="json")
     if action.concentration:
         row["concentration"] = True
+    if action.modifier_effects:
+        row["modifierEffects"] = [_modifier_effect(effect) for effect in action.modifier_effects]
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
     if action.melee_hit_retaliation is not None:
@@ -713,6 +715,10 @@ def _removal(action: Any) -> dict[str, Any]:
         row["removesAbilityScoreReductions"] = True
     if action.removes_hit_point_maximum_reductions:
         row["removesHitPointMaximumReductions"] = True
+    if action.requires_active_effect_id:
+        row["requiresActiveEffectId"] = action.requires_active_effect_id
+    if action.ends_required_effect:
+        row["endsRequiredEffect"] = True
     return row
 
 
@@ -770,6 +776,12 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["resource_backed_post_hit_damage"] = features.resource_backed_post_hit_damage.model_dump(mode="json")
     if features.delayed_resource_refill:
         row["delayed_resource_refill"] = features.delayed_resource_refill.model_dump(mode="json")
+    if features.start_turn_resource_refill_ids:
+        row["start_turn_resource_refill_ids"] = list(features.start_turn_resource_refill_ids)
+    if features.alternate_spell_cast_grants:
+        row["alternate_spell_cast_grants"] = [
+            item.model_dump() for item in features.alternate_spell_cast_grants
+        ]
     if features.opening_targeting_ward:
         row["opening_targeting_ward"] = features.opening_targeting_ward.model_dump()
     if features.once_per_turn_weapon_hit_damage_rider:

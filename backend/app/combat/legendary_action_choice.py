@@ -98,6 +98,75 @@ def choose_legendary_save(
         raise
 
 
+def _living_side(actor: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
+    side = setup.heroes if actor.side == "heroes" else setup.monsters
+    return [
+        item for item in side
+        if item.state.is_alive and not item.state.is_dead and item.state.current_hp > 0
+    ]
+
+
+def choose_legendary_ac_buff(
+    actor: EncounterCombatant,
+    setup: EncounterSetup,
+) -> tuple[LegendaryActionOption, EncounterCombatant] | None:
+    try:
+        if is_incapacitated(actor.state) or actor.state.is_dead or actor.state.current_hp <= 0:
+            return None
+        for option in actor.state.template.legendary_actions:
+            if option.kind != "ac_buff" or not resource_available(actor.state, RESOURCE_ID, option.cost):
+                continue
+            spec = option.ac_buff
+            if spec is None:
+                raise ValueError(f"{actor.state.template.name} legendary action {option.id} is missing ac_buff.")
+            legal = [
+                item for item in _living_side(actor, setup)
+                if combatant_distance(actor, item) <= spec.range_ft
+            ]
+            if not legal:
+                continue
+            target = next((item for item in legal if item.combatant_id == actor.combatant_id), legal[0])
+            return option, target
+        return None
+    except Exception:
+        logger.exception("Failed to choose a legendary AC buff for %s.", actor.combatant_id)
+        raise
+
+
+def choose_legendary_heal(actor: EncounterCombatant) -> LegendaryActionOption | None:
+    try:
+        if is_incapacitated(actor.state) or actor.state.is_dead or actor.state.current_hp <= 0:
+            return None
+        if actor.state.current_hp >= actor.state.template.max_hp:
+            return None
+        for option in actor.state.template.legendary_actions:
+            if option.kind != "heal" or not resource_available(actor.state, RESOURCE_ID, option.cost):
+                continue
+            if option.heal is None:
+                raise ValueError(f"{actor.state.template.name} legendary action {option.id} is missing heal.")
+            return option
+        return None
+    except Exception:
+        logger.exception("Failed to choose a legendary heal for %s.", actor.combatant_id)
+        raise
+
+
+def choose_legendary_check(actor: EncounterCombatant) -> LegendaryActionOption | None:
+    try:
+        if is_incapacitated(actor.state) or actor.state.is_dead or actor.state.current_hp <= 0:
+            return None
+        for option in actor.state.template.legendary_actions:
+            if option.kind != "check" or not resource_available(actor.state, RESOURCE_ID, option.cost):
+                continue
+            if not option.check_ability:
+                raise ValueError(f"{actor.state.template.name} legendary action {option.id} is missing check_ability.")
+            return option
+        return None
+    except Exception:
+        logger.exception("Failed to choose a legendary check for %s.", actor.combatant_id)
+        raise
+
+
 def choose_legendary_action(actor: EncounterCombatant, setup: EncounterSetup):
     """Pick the landable legendary option with the most easy-to-calculate damage."""
     try:
@@ -109,6 +178,15 @@ def choose_legendary_action(actor: EncounterCombatant, setup: EncounterSetup):
             return ("save", save)
         if attack is not None:
             return ("attack", attack)
+        shield = choose_legendary_ac_buff(actor, setup)
+        if shield is not None:
+            return ("ac_buff", shield)
+        heal = choose_legendary_heal(actor)
+        if heal is not None:
+            return ("heal", heal)
+        check = choose_legendary_check(actor)
+        if check is not None:
+            return ("check", check)
         return None
     except Exception:
         logger.exception("Failed to choose a legendary action for %s.", actor.combatant_id)

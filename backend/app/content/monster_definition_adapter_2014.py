@@ -6,6 +6,15 @@ from app.content.monster_basic_candidates_2014 import (
 )
 from app.content.monster_charge_profile_2014 import charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
+from app.content.monster_healing_2014 import healing_actions_2014, healing_resources_2014
+from app.content.monster_innate_spells_2014 import innate_spell_save_actions_2014
+from app.content.monster_innate_support_2014 import (
+    innate_alternate_spell_casts_2014,
+    innate_condition_removal_2014,
+    innate_spell_resources_2014,
+    innate_timed_self_buffs_2014,
+)
+from app.content.monster_legendary_bindings_2014 import legendary_action_options_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.content.monster_trait_bindings_2014 import (
     conditional_attack_advantage_2014,
@@ -20,6 +29,8 @@ from app.content.monster_regeneration_2014 import regeneration_trait_2014
 from app.content.monster_save_capabilities_2014 import (
     recharge_rules_2014, save_capabilities_2014, save_resources_2014,
 )
+from app.domain.combatants import ResourceDefinition
+from app.domain.weapons import DamageSourceQualifier
 from app.domain.capabilities import CombatantDefinition
 from app.domain.capability_attacks import (
     AttackCapabilityDefinition,
@@ -90,6 +101,9 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "effects": basic_attack_effects_2014(attack),
         "charge_profile": charge_profile_2014(charge_source, monster_id=monster.id),
         "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
+        "damage_source_qualifiers": (
+            [DamageSourceQualifier.MAGICAL] if "Magic Weapons" in monster.trait_names else []
+        ),
     }
     if attack.damage.dice_count:
         kwargs["damage"] = DiceSpec(
@@ -126,10 +140,32 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     movement = _movement(monster)
     attacks = [_attack(monster, attack) for attack in monster.attacks]
     resources = list(save_resources_2014(monster))
+    resources.extend(healing_resources_2014(monster))
+    resources.extend(innate_spell_resources_2014(monster))
     legendary_resource = legendary_resistance_resource_2014(monster)
     if legendary_resource is not None:
         resources.append(legendary_resource)
+    legendary_options = legendary_action_options_2014(monster)
+    if legendary_options:
+        resources.append(ResourceDefinition(
+            id="legendary-actions", name="Legendary Actions", max_uses=max(1, monster.legendary_action_uses),
+        ))
     legendary_override = legendary_resistance_override_2014(monster)
+    features = progression_features_2014(monster)
+    feature_update: dict[str, object] = {}
+    if legendary_options:
+        feature_update["start_turn_resource_refill_ids"] = [
+            *features.start_turn_resource_refill_ids,
+            "legendary-actions",
+        ]
+    innate_grants = innate_alternate_spell_casts_2014(monster)
+    if innate_grants:
+        feature_update["alternate_spell_cast_grants"] = [
+            *features.alternate_spell_cast_grants,
+            *innate_grants,
+        ]
+    if feature_update:
+        features = features.model_copy(update=feature_update)
     return CombatantDefinition(
         id=f"2014-{monster.id}", name=monster.name, archetype=f"2014 {monster.creature_type}",
         challenge_rating=monster.challenge_rating, kind="monster", ruleset="2014",
@@ -139,14 +175,20 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         movement_modes=movement, initiative_bonus=scores.modifier("dexterity"), attacks=attacks,
         primary_attack_id=attacks[0].id, attack_action=_multiattack(monster),
         save_actions=save_capabilities_2014(monster),
+        spell_save_actions=innate_spell_save_actions_2014(monster),
+        timed_self_buff_actions=innate_timed_self_buffs_2014(monster),
+        healing_actions=healing_actions_2014(monster),
+        condition_removal_actions=innate_condition_removal_2014(monster),
+        legendary_actions=legendary_options,
         resources=resources, recharge_rules=recharge_rules_2014(monster),
         regeneration=regeneration_trait_2014(monster),
         save_success_overrides=[legendary_override] if legendary_override else [],
         combat_traits=modeled_combat_traits_2014(monster),
-        progression_features=progression_features_2014(monster),
+        progression_features=features,
         saving_throw_bonuses=_save_bonuses(monster, scores),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
+        source_legendary_action_names=list(monster.legendary_action_names),
         parry_reaction=ParryReaction(ac_bonus=monster.parry_ac_bonus)
             if supports_parry_reaction_2014(monster) else None,
         damage_resistances=[item.lower() for item in monster.damage_resistances],

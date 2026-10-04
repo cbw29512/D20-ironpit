@@ -14,6 +14,7 @@ from app.domain.friendly_combat_auras import (
 from app.domain.melee_hit_save_retaliation import MeleeHitSaveRetaliation
 from app.domain.progression import SavingThrowAdvantageGrant
 from app.domain.movement import MovementModeGrant
+from app.domain.spell_modifiers import SpellModifierEffect
 from app.domain.weapons_base import DamageType
 
 logger = logging.getLogger(__name__)
@@ -121,6 +122,7 @@ class TimedSelfBuffAction(BaseModel):
     start_turn_emanation_damage: TimedEmanationDamage | None = None
     spell_save_dc_bonus: int = Field(default=0, ge=0, le=10)
     spell_attack_advantage: bool = False
+    modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     concentration: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
@@ -170,6 +172,7 @@ class TimedSelfBuffAction(BaseModel):
                 or self.melee_hit_retaliation is not None
                 or self.spell_save_dc_bonus
                 or self.spell_attack_advantage
+                or self.modifier_effects
                 or self.concentration
             ):
                 raise ValueError("Timed self-buff requires at least one combat effect.")

@@ -23,7 +23,9 @@ from app.domain.save_success_overrides import FailedSaveSuccessOverride
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.rulesets import RulesetId
 from app.domain.size import CreatureSize
+from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.spells import DefensiveSpellAction, SpellSaveAction
+from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
 from app.domain.weapons import DamageType
@@ -58,6 +60,8 @@ class CombatantDefinition(BaseModel):
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
+    timed_self_buff_actions: list[TimedSelfBuffAction] = Field(default_factory=list)
+    legendary_actions: list[LegendaryActionOption] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
     effect_removal_actions: list[EffectRemovalAction] = Field(default_factory=list)
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)

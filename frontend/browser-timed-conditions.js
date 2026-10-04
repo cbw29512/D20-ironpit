@@ -49,6 +49,8 @@
       return_damage_excluded_creature_types: [...(options.returnDamageExcludedCreatureTypes || [])],
       repeat_save_failure_count: 0,
       repeat_save_failures_to_lock: options.repeatSaveFailuresToLock || null,
+      escape_check_ability: options.escapeCheckAbility || null,
+      escape_check_dc: options.escapeCheckDc ?? null,
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     RF()?.revertIfIncapacitated(state);

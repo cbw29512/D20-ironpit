@@ -68,6 +68,8 @@ class ConditionRemovalAction(BaseModel):
     removes_all_curses: bool = False
     removes_ability_score_reductions: bool = False
     removes_hit_point_maximum_reductions: bool = False
+    requires_active_effect_id: str | None = None
+    ends_required_effect: bool = False
     animation: str = "condition-removal"
 
     @model_validator(mode="after")

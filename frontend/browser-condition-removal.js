@@ -21,6 +21,12 @@
       if (distance(remover, target) > action.range) return false;
       if (action.targetMode === "self") return target.combatant_id === remover.combatant_id;
       if (action.targetMode === "ally") return target.combatant_id !== remover.combatant_id;
+      if (action.requiresActiveEffectId) {
+        const required = action.requiresActiveEffectId;
+        const active = (remover.state.active_effect_ids || []).includes(required);
+        const concentrating = remover.state.concentration?.effect_id === required;
+        if (!active && !concentrating) return false;
+      }
       return true;
     } catch (error) {
       console.error("Failed removal target legality", { remover: remover.combatant_id, target: target.combatant_id, action: action.id, error });
@@ -151,6 +157,11 @@
           const maximum = window.IRON_PIT_BROWSER_STATE.effectiveMaxHp(target.state);
           if (target.state.current_hp > maximum) target.state.current_hp = maximum;
         }
+      }
+      if (action.endsRequiredEffect && action.requiresActiveEffectId) {
+        const concentration = window.IRON_PIT_BROWSER_CONCENTRATION;
+        if (!concentration) throw new Error("Break Enchantment requires browser-concentration.js.");
+        concentration.end(remover.state);
       }
       const names = conditionIds.map((id) => id.replaceAll("_", " ").toUpperCase()).join(", ");
       return {

@@ -142,11 +142,11 @@ def resolve_save_action(
             repeat_save_timing=rider.repeat_save_timing,
             turn_behavior=rider.turn_behavior,
             ends_on_damage=rider.ends_on_damage,
-            ends_if_source_incapacitated=rider.ends_if_source_incapacitated,
-            ends_if_source_dead=rider.ends_if_source_dead,
+            ends_if_source_incapacitated=rider.ends_if_source_incapacitated, ends_if_source_dead=rider.ends_if_source_dead,
             next_attack_disadvantage=rider.next_attack_disadvantage,
             affected_states=affected_states,
             use_default_poison_recovery=False, repeat_save_failures_to_lock=rider.repeat_save_failures_to_lock,
+            escape_check_ability=rider.escape_check_ability, escape_check_dc=rider.escape_check_dc,
         )
         if applied is not None:
             applied_conditions.append(applied)

@@ -16,16 +16,14 @@ text on the website matches those asserted aspects, not optional color. If
 dice can skip a feature, the seed or roster must change until the aspect
 resolves under the landing-damage Action policy.
 
-Twelve 2014 fights and twelve 2024 fights cover every class and party sizes
-1v1 through 6v6: melee, spells, healing, conditions, undead defenses, and
-high-level resources. 2024 recipes use certified 2024 pregen snapshots and
-certified `srd-` monster templates only. Legendary-action fights are included
-only when a runnable monster template already carries printed legendary
-actions. Source catalogs contain printed legendary actions (2014 SRD 5.1
-catalog and 2024 SRD 5.2.1 JSON both list 30 legendary monsters), but no
-certified/runnable website template currently binds `legendary_actions`, so
-the panel does not invent a stripped legendary monster. Those fights keep
-using undead and breath/recharge monsters instead.
+Thirteen 2014 fights and twelve 2024 fights cover every class and party sizes
+1v1 through 6v6: melee, spells, healing, conditions, undead defenses,
+legendary actions, and high-level resources. 2024 recipes use certified 2024
+pregen snapshots and certified `srd-` monster templates only. The 2014
+`legendary` recipe is Karnok versus the certified 2014 Unicorn and asserts
+that a printed legendary action actually fires. Teleport and Dispel Evil and
+Good Dismissal stay omitted under the pit bans; the remaining printed Unicorn
+block is bound.
 
 Difficulty labels use the 2014 XP thresholds and monster-count multipliers
 as a rough estimate. They do not promise equal win rates.

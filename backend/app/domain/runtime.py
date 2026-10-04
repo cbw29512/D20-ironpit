@@ -85,12 +85,16 @@ class TimedEffect(BaseModel):
     prevent_hit_point_maximum_reduction: bool = False
     repeat_save_failure_count: int = Field(default=0, ge=0)
     repeat_save_failures_to_lock: int | None = Field(default=None, ge=1, le=10)
+    escape_check_ability: AbilityName | None = None
+    escape_check_dc: int | None = Field(default=None, ge=1, le=40)
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":
         repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
         if any(item is not None for item in repeat_fields) and not all(item is not None for item in repeat_fields):
             raise ValueError("Timed effect repeat save requires ability, DC, and timing together.")
+        if (self.escape_check_ability is None) != (self.escape_check_dc is None):
+            raise ValueError("Timed effect escape check requires ability and DC together.")
         if self.expires_round is not None and self.applied_round is not None and self.expires_round <= self.applied_round:
             raise ValueError("Timed effect expiry round must follow its applied round.")
         if self.expiry_timing is not None:

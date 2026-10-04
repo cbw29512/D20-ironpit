@@ -15,6 +15,8 @@ _RECKLESS = "Reckless"
 _CUNNING_ACTION = "Cunning Action"
 _SNEAK_ATTACK = "Sneak Attack (1/Turn)"
 _MAGIC_RESISTANCE = "Magic Resistance"
+_MAGIC_WEAPONS = "Magic Weapons"
+_INNATE_SPELLCASTING = "Innate Spellcasting"
 _ALL_SAVE_ABILITIES = (
     "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",
 )
@@ -104,6 +106,12 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(_SNEAK_ATTACK)
         if _MAGIC_RESISTANCE in monster.trait_names:
             bound.add(_MAGIC_RESISTANCE)
+        if _MAGIC_WEAPONS in monster.trait_names:
+            bound.add(_MAGIC_WEAPONS)
+        if _INNATE_SPELLCASTING in monster.trait_names:
+            from app.content.monster_innate_support_2014 import supports_innate_spellcasting_2014
+            if supports_innate_spellcasting_2014(monster):
+                bound.add(_INNATE_SPELLCASTING)
         if supports_regeneration_2014(monster):
             bound.add("Regeneration")
         resistance = legendary_resistance_trait_name_2014(monster)

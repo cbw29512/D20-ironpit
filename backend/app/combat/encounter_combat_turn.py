@@ -12,6 +12,7 @@ from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.deferred_save_effect import cleanup_deferred_effects
 from app.combat.encounter_turn_support import finish_turn, resolve_support_actions
+from app.combat.ability_check_escape import resolve_escape_check, should_escape_check
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.friendly_save_auras import sync_friendly_save_auras
 from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
@@ -71,6 +72,10 @@ def resolve_combat_turn(
             events.append(resolve_escape_grapple(
                 sequence, round_number, attacker.combatant_id, attacker.state, dice, encounter_actor=attacker, setup=setup,
             ))
+            sequence += 1
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+        if should_escape_check(attacker.state):
+            events.append(resolve_escape_check(sequence, round_number, attacker, dice, setup=setup))
             sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         if should_use_adrenaline_rush(attacker.state):

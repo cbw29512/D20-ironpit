@@ -85,6 +85,9 @@ def resolve_condition_removal(
             remove_condition(target, condition_id)
         if any(item in rider_ids for item in condition_ids):
             apply_restoration_riders(target, action, condition_ids)
+        if action.ends_required_effect and action.requires_active_effect_id:
+            from app.combat.concentration import end_concentration
+            end_concentration(remover.state)
         names = ", ".join(condition_id.replace("_", " ").title() for condition_id in condition_ids)
         return BattleEvent(
             sequence=sequence,

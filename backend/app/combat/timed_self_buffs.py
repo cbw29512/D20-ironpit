@@ -95,6 +95,7 @@ def resolve_timed_self_buff(
             or action.melee_hit_retaliation is not None
             or action.spell_save_dc_bonus
             or action.spell_attack_advantage
+            or action.modifier_effects
         ):
             apply_timed_condition(
                 member.state,
@@ -147,6 +148,22 @@ def resolve_timed_self_buff(
                     source_creature_types=list(grant.source_creature_types),
                     required_effect_tags=list(grant.required_effect_tags),
                 ))
+        if action.modifier_effects:
+            from app.combat.spell_modifiers import build_spell_modifier
+            for index, effect in enumerate(action.modifier_effects):
+                add_modifier(
+                    member.state,
+                    build_spell_modifier(
+                        member.combatant_id,
+                        member.combatant_id,
+                        action.id,
+                        effect,
+                        index,
+                        action.name,
+                        concentration_required=action.concentration,
+                        round_number=round_number,
+                    ),
+                )
 
         return BattleEvent(
             sequence=sequence,

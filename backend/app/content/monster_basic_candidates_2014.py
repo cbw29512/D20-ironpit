@@ -8,6 +8,9 @@ from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2
 from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
+from app.content.monster_healing_2014 import healing_action_names_2014, supports_healing_2014
+from app.content.monster_innate_support_2014 import innate_spell_names_2014, supports_innate_spellcasting_2014
+from app.content.monster_legendary_bindings_2014 import supports_legendary_actions_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_save_capabilities_2014 import supports_recharge_rules_2014, unsupported_save_actions_2014, unsupported_source_actions_2014
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
@@ -22,7 +25,8 @@ _MODELED_2014_TRAITS = {
     "Swarm": CombatTrait.SWARM,
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
-_CHARGE_TRAIT_NAMES = frozenset({"Pounce", "Trampling Charge"})
+_CHARGE_TRAIT_NAMES = frozenset({"Charge", "Pounce", "Trampling Charge"})
+_PIT_BANNED_ACTION_LABELS = frozenset({"teleport", "plane shift"})
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 
 
@@ -88,6 +92,11 @@ def supports_parry_reaction_2014(monster: SourceMonster2014) -> bool:
 
 def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
     extras = unsupported_source_actions_2014(monster)
+    allowed_extras = healing_action_names_2014(monster) | innate_spell_names_2014(monster) | _PIT_BANNED_ACTION_LABELS
+    extras = [
+        name for name in extras
+        if action_label_from_name(name) not in allowed_extras
+    ]
     blockers = []
     if extras:
         blockers.append("source:extra-action")
@@ -95,9 +104,14 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
         blockers.append("source:trait")
     if (monster.reaction_names or monster.parry_ac_bonus is not None) and not supports_parry_reaction_2014(monster):
         blockers.append("source:reaction")
-    if monster.legendary_action_names:
+    if monster.legendary_action_names and not supports_legendary_actions_2014(monster):
         blockers.append("source:legendary")
     return blockers
+
+
+def action_label_from_name(name: str) -> str:
+    from app.content.monster_save_capabilities_2014 import action_label_2014
+    return action_label_2014(name).split(" (", 1)[0]
 
 
 def modeled_combat_traits_2014(monster: SourceMonster2014) -> list[CombatTrait]:
@@ -119,18 +133,38 @@ def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     blockers.extend(_attack_blockers(monster))
     blockers.extend(_multiattack_blockers(monster))
     blockers.extend(_source_name_blockers(monster))
+    bound_limited = set()
+    if supports_healing_2014(monster):
+        from app.content.monster_healing_2014 import healing_actions_2014
+        bound_limited.update(action.resource_id for action in healing_actions_2014(monster) if action.resource_id)
+    if supports_innate_spellcasting_2014(monster):
+        from app.content.monster_innate_support_2014 import innate_spell_resources_2014
+        bound_limited.update(item.id for item in innate_spell_resources_2014(monster))
+    unbound_limited = {
+        key: value for key, value in monster.limited_action_uses.items()
+        if key not in bound_limited
+    }
     families = {
         "defense": monster.unsupported_defense_text,
         "save-action": unsupported_save_actions_2014(monster),
         "swallow": monster.swallow_actions,
         "death-trigger": monster.death_trigger_actions,
-        "healing": monster.healing_actions,
-        "limited-use": monster.limited_action_uses,
-        "spellcasting": monster.innate_spellcasting or monster.spellcasting,
+        "healing": monster.healing_actions if not supports_healing_2014(monster) else None,
+        "limited-use": unbound_limited,
+        "spellcasting": (
+            None if (
+                supports_innate_spellcasting_2014(monster) and not monster.spellcasting
+            ) else (monster.innate_spellcasting or monster.spellcasting)
+        ),
         "zero-hp": monster.zero_hp_prevention,
         "regeneration": monster.regeneration if not supports_regeneration_2014(monster) else None,
-        "legendary": monster.legendary_actions or monster.legendary_action_uses
-            or monster.unsupported_legendary_action_names,
+        "legendary": (
+            None if supports_legendary_actions_2014(monster)
+            else (
+                monster.legendary_actions or monster.legendary_action_uses
+                or monster.unsupported_legendary_action_names
+            )
+        ),
         "recharge": (
             monster.action_recharges or monster.rest_recharge_action_ids
         ) if not supports_recharge_rules_2014(monster) else {},

@@ -27,6 +27,22 @@ window.IRON_PIT_BROWSER_ATTACK = {
 window.IRON_PIT_DICE = {
   rollMany: (count) => Array.from({ length: count }, () => 6),
 };
+window.IRON_PIT_BROWSER_ROLLS = {
+  d20: (bonus) => ({ total: 12 + (bonus || 0), selected_roll: 12, modifier: bonus || 0, rolls: [12] }),
+};
+window.IRON_PIT_BROWSER_MODIFIERS = {
+  add: (state, modifier) => {
+    state.active_modifiers = state.active_modifiers || [];
+    state.active_modifiers.push(modifier);
+  },
+};
+window.IRON_PIT_BROWSER_HEALING = {
+  restore: (state, amount) => {
+    const before = state.current_hp;
+    state.current_hp = Math.min(state.template.max_hp || before + amount, before + amount);
+    return state.current_hp - before;
+  },
+};
 window.IRON_PIT_BROWSER_SAVES = {
   resolveAction: (sequence, round, actor, target, action, _distance, options = {}) => {
     const roll = (options.forcedRoll != null) ? options.forcedRoll : 1;
@@ -49,6 +65,7 @@ window.IRON_PIT_BROWSER_SAVES = {
   },
 };
 
+load("browser-legendary-action-choice.js");
 load("browser-legendary-actions.js");
 
 function member(id, side, x, extras = {}) {
@@ -58,11 +75,15 @@ function member(id, side, x, extras = {}) {
       template: {
         name: id, attacks: extras.attacks || [],
         legendary_actions: extras.legendary_actions || [],
+        max_hp: extras.max_hp ?? 40,
+        ability_scores: extras.ability_scores || { strength: 18, dexterity: 14, constitution: 15, intelligence: 11, wisdom: 17, charisma: 16 },
       },
       current_hp: extras.hp ?? 40,
+      templateMax: extras.max_hp,
       is_alive: true, is_dead: false, is_unconscious: false,
       resources: { "legendary-actions": extras.uses ?? 3 },
       active_effect_ids: extras.active_effect_ids || [],
+      active_modifiers: extras.active_modifiers || [],
       position: { x, y: 0 },
     },
   };
@@ -143,4 +164,38 @@ function member(id, side, x, extras = {}) {
   assert.equal(chosen.option.id, "tail-attack");
 }
 
-console.log("Legendary Action after-turn attack and save paths passed.");
+{
+  const legend = member("legend", "monsters", 0, {
+    hp: 20, max_hp: 67, uses: 3,
+    legendary_actions: [{
+      id: "shimmering-shield", name: "Shimmering Shield", cost: 2, kind: "ac_buff",
+      ac_buff: { ac_bonus: 2, range_ft: 60 },
+    }],
+  });
+  const hero = member("hero", "heroes", 8, { hp: 30 });
+  const setup = { heroes: [hero], monsters: [legend] };
+  const result = window.IRON_PIT_BROWSER_LEGENDARY_ACTIONS.resolveAfterTurn(1, 1, hero, setup);
+  assert.equal(result.events.length, 1);
+  assert.match(result.events[0].description, /Legendary Action: Shimmering Shield/);
+  assert.equal(legend.state.resources["legendary-actions"], 1);
+  assert.equal(legend.state.active_modifiers[0].flat_bonus, 2);
+}
+
+{
+  const legend = member("legend", "monsters", 0, {
+    hp: 20, max_hp: 67, uses: 3,
+    legendary_actions: [{
+      id: "heal-self", name: "Heal Self", cost: 3, kind: "heal",
+      heal: { dice_count: 2, dice_size: 8, healing_bonus: 2 },
+    }],
+  });
+  const hero = member("hero", "heroes", 8, { hp: 30 });
+  const setup = { heroes: [hero], monsters: [legend] };
+  const result = window.IRON_PIT_BROWSER_LEGENDARY_ACTIONS.resolveAfterTurn(1, 1, hero, setup);
+  assert.equal(result.events.length, 1);
+  assert.match(result.events[0].description, /Legendary Action: Heal Self/);
+  assert.equal(legend.state.current_hp, 34);
+  assert.equal(legend.state.resources["legendary-actions"], 0);
+}
+
+console.log("Legendary Action after-turn attack, save, shield, and heal paths passed.");
