@@ -24,7 +24,7 @@
     R("pressure", "2014", "5v5 · Breath and trampling", 11, ["barbarian", "rogue", "cleric", "monk", "wizard"], ["elephant", "elephant", "red-dragon-wyrmling", "red-dragon-wyrmling", "red-dragon-wyrmling"],
       "Rage, Sneak Attack, and healing.", 13, [A("feature", "rage"), A("source", "Sneak Attack"), A("event", "healing")]),
     R("party", "2014", "6v6 · Full party stress test", 15, ["fighter", "paladin", "cleric", "rogue", "sorcerer", "warlock"], ["young-black-dragon", "young-black-dragon", "young-black-dragon", "giant-ape", "giant-ape", "giant-ape"],
-      "Acid breath, Extra Attack, and healing.", 3, [A("feature", "acid-breath"), A("feature", "extra-attack"), A("event", "healing")]),
+      "Acid breath, Extra Attack, and healing.", 10, [A("feature", "acid-breath"), A("feature", "extra-attack"), A("event", "healing")]),
     R("grapple", "2014", "2v2 · Escape the coils", 4, ["monk", "rogue"], ["giant-constrictor-snake", "giant-constrictor-snake"],
       "Grappled, Restrained, and a grapple escape.", 1701, [A("condition", "grappled"), A("condition", "restrained"), A("feature", "escape-grapple")]),
     R("poison", "2014", "3v3 · Poison and recovery", 6, ["paladin", "cleric", "ranger"], ["giant-scorpion", "giant-scorpion", "giant-scorpion"],
