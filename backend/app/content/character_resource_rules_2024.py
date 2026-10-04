@@ -49,7 +49,7 @@ def _boon_of_fate(level: int) -> int:
         raise ValueError(f"Failed to resolve 2024 Boon of Fate uses for level {level}.") from exc
 
 
-def _fighter_combat_prowess(level: int) -> int:
+def _combat_prowess(level: int) -> int:
     try:
         return 1 if level >= 19 else 0
     except Exception as exc:
@@ -106,7 +106,7 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         ("second-wind", "Second Wind", fighter_second_wind_uses),
         ("action-surge", "Action Surge", fighter_action_surge_uses),
         ("indomitable", "Indomitable", fighter_indomitable_uses),
-        ("boon-combat-prowess", "Boon of Combat Prowess", _fighter_combat_prowess),
+        ("boon-combat-prowess", "Boon of Combat Prowess", _combat_prowess),
     ),
     "druid": (
         ("wild-shape", "Wild Shape", druid_wild_shape_uses),
@@ -127,6 +127,7 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         ("paladins-smite-free-cast", "Paladin's Smite: Free Cast", _paladins_smite_free_cast),
         ("channel-divinity", "Channel Divinity", _paladin_channel_divinity),
         ("faithful-steed-free-cast", "Faithful Steed: Free Cast", _faithful_steed_free_cast),
+        ("boon-combat-prowess", "Boon of Combat Prowess", _combat_prowess),
     ),
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),

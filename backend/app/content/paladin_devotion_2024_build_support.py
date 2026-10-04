@@ -38,6 +38,8 @@ def build_paladin_2024_ability_progression(
             advancement.append(AbilityIncrease(ability="charisma", amount=2))
         if level >= 16:
             advancement.append(AbilityIncrease(ability="charisma", amount=2))
+        if level >= 19:
+            advancement.append(AbilityIncrease(ability="charisma", amount=1))
 
         values = base.model_dump()
         for increase in [*background, *advancement]:

@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.character_math import proficiency_bonus
+from app.content.hero_combat_feature_registry import compile_progression_feature_fields
 from app.content.equipment import build_longsword
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
@@ -100,6 +101,9 @@ def build_paladin_2024_progression(
 ) -> ProgressionCombatFeatures:
     try:
         aura_radius = 30 if level >= 18 else 10
+        boon_fields = compile_progression_feature_fields(
+            ["boon-combat-prowess"] if level >= 19 else [], level
+        )
         return ProgressionCombatFeatures(
             friendly_saving_throw_aura=(
                 FriendlySavingThrowAuraGrant(
@@ -134,6 +138,7 @@ def build_paladin_2024_progression(
                     if level >= 10 else []
                 ),
             ],
+            **boon_fields,
             resource_backed_post_hit_damage=(
                 ResourceBackedPostHitDamage(
                     source_id="divine-smite-2024",
