@@ -581,8 +581,21 @@
     },
     {
       "id": "slow-mastery",
-      "status": "arena_out_of_scope",
-      "blocker": "The current card-v-card arena does not use tactical retreat or kiting outputs where Slow can change the declared combat result."
+      "status": "supported",
+      "python": [
+        "backend/app/combat/slow.py",
+        "backend/app/combat/attack_effect_resolution.py",
+        "backend/app/combat/modifier_stack.py"
+      ],
+      "browser": [
+        "frontend/browser-slow.js",
+        "frontend/browser-weapon-mastery.js",
+        "frontend/browser-modifiers.js"
+      ],
+      "tests": [
+        "backend/tests/test_slow_mastery.py",
+        "frontend/browser-slow.test.cjs"
+      ]
     },
     {
       "id": "cleave-mastery",

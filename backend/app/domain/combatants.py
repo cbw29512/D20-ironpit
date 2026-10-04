@@ -24,7 +24,13 @@ from app.domain.suppression_zones import PersistentSuppressionZoneAction
 from app.domain.teleport_actions import TeleportAction
 from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
 from app.domain.progression import ProgressionCombatFeatures
-from app.domain.reactions import AttackDamageReductionReaction, DamageReactionAttack, ParryReaction, RedirectAttackReaction
+from app.domain.reactions import (
+    AttackDamageReductionReaction,
+    DamageReactionAttack,
+    IncomingDamageTypeResistanceReaction,
+    ParryReaction,
+    RedirectAttackReaction,
+)
 from app.domain.reaction_roll_penalties import ReactionRollPenaltyAction
 from app.domain.concentration_repeat_saves import ConcentrationRepeatSaveAction
 from app.domain.recharge import RechargeRule
@@ -133,6 +139,7 @@ class CombatantTemplate(BaseModel):
     source_legendary_action_names: list[str] = Field(default_factory=list)
     source_spellcasting_fingerprint: str | None = None
     attack_damage_reduction_reaction: AttackDamageReductionReaction | None = None
+    incoming_damage_type_resistance_reaction: IncomingDamageTypeResistanceReaction | None = None
     parry_reaction: ParryReaction | None = None
     redirect_attack_reaction: RedirectAttackReaction | None = None
     damage_reaction_attack: DamageReactionAttack | None = None

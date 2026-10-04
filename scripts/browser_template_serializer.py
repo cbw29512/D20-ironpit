@@ -374,6 +374,7 @@ def _healing(action: Any) -> dict[str, Any]:
             "removableConditions": list(action.removable_conditions),
             "proneReactionStand": action.prone_reaction_stand,
             "secondaryTargetWithinFt": action.secondary_target_within_ft,
+            "grantsTemporaryHp": action.grants_temporary_hp,
             "animation": action.animation,
         }
     except Exception:

@@ -8,6 +8,7 @@ from app.content.cleric_2014_spell_package import build_cleric_2014_spell_packag
 from app.content.druid_2014_spell_package import build_druid_2014_spell_package
 from app.content.paladin_2014_spell_package import build_paladin_2014_spell_package
 from app.content.ranger_2014_spell_package import build_ranger_2014_spell_package
+from app.content.ranger_2024_spell_package import build_ranger_2024_spell_package
 from app.content.sorcerer_2014_spell_package import build_sorcerer_2014_spell_package
 from app.content.warlock_2014_spell_package import build_warlock_2014_spell_package
 from app.content.sorcerer_2024_spell_package import build_sorcerer_2024_spell_package
@@ -69,6 +70,8 @@ def canonical_spell_package(
             return None
         if ruleset == "2014":
             return _canonical_spell_package_2014(class_id, level, casting_modifier)
+        if class_id == "ranger":
+            return build_ranger_2024_spell_package(level)
         if class_id == "warlock":
             return build_warlock_2024_spell_package(level)
         if class_id == "sorcerer":

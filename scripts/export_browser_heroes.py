@@ -572,6 +572,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "first_round_extra_turn_initiative_offset": progression.first_round_extra_turn_initiative_offset,
         "suppress_attack_advantage_while_not_incapacitated": progression.suppress_attack_advantage_while_not_incapacitated,
         "ignore_unseen_target_attack_disadvantage": progression.ignore_unseen_target_attack_disadvantage,
+        "opportunity_attacks_against_disadvantage": progression.opportunity_attacks_against_disadvantage,
+        "concentration_damage_immune_effect_ids": list(progression.concentration_damage_immune_effect_ids),
+        "advantage_against_marked_effect_id": progression.advantage_against_marked_effect_id,
+        "hunters_mark_splash_range_ft": progression.hunters_mark_splash_range_ft,
         "miss_to_hit_override_resource_id": progression.miss_to_hit_override_resource_id,
         "miss_to_hit_override_source_name": progression.miss_to_hit_override_source_name,
         "start_turn_resource_refill_ids": list(progression.start_turn_resource_refill_ids),
@@ -826,6 +830,14 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["targeted_concentration_damage_actions"] = [
             _targeted_concentration_damage(item) for item in template.targeted_concentration_damage_actions
         ]
+    if template.post_hit_save_condition_spells:
+        row["post_hit_save_condition_spells"] = [
+            item.model_dump(mode="json") for item in template.post_hit_save_condition_spells
+        ]
+    if template.incoming_damage_type_resistance_reaction:
+        row["incomingDamageTypeResistanceReaction"] = (
+            template.incoming_damage_type_resistance_reaction.model_dump(mode="json")
+        )
     if template.auto_hit_spell_actions: row["auto_hit_spell_actions"] = [_auto_hit_spell(item) for item in template.auto_hit_spell_actions]
     if template.persistent_spell_attack_actions:
         row["persistent_spell_attack_actions"] = [_persistent_spell_attack(item) for item in template.persistent_spell_attack_actions]

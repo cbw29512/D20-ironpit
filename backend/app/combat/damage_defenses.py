@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.condition_rules import has_condition
+from app.combat.incoming_damage_resistance import apply_incoming_damage_type_resistance
 from app.domain.models import CombatantState, DamageRollComponent, DamageType
 from app.domain.damage_sources import DamageDefenseKind, DamageSourceQualifier
 
@@ -98,6 +99,7 @@ def apply_damage_defenses(
 ) -> tuple[int, list[DamageRollComponent]]:
     """Apply defenses per typed component and return total damage actually taken."""
     try:
+        apply_incoming_damage_type_resistance(target, components)
         adjusted_components: list[DamageRollComponent] = []
         applied_total = 0
         for component in components:

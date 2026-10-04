@@ -15,7 +15,7 @@ def _build_capability_statuses() -> dict[str, str]:
         "vex-mastery": "supported",
         "nick-mastery": "supported",
         "two-weapon-fighting": "supported",
-        "slow-mastery": "arena_out_of_scope",
+        "slow-mastery": "supported",
         "cleave-mastery": "blocked",
         "topple-mastery": "blocked",
     }
@@ -92,15 +92,15 @@ def test_partial_status_is_not_valid_for_declared_build_requirement() -> None:
     assert any("graze-mastery" in issue and "must be supported or blocked" in issue for issue in issues)
 
 
-def test_arena_ignored_capability_must_be_explicitly_out_of_scope() -> None:
+def test_required_slow_cannot_be_declared_out_of_scope() -> None:
     statuses = _build_capability_statuses()
-    statuses["slow-mastery"] = "blocked"
+    statuses["slow-mastery"] = "arena_out_of_scope"
 
     issues = audit_build_capability_contract(
         FIGHTER_COMBAT_BUILD_CHOICES.values(), statuses, _build_statuses(),
     )
 
-    assert any("slow-mastery" in issue and "arena_out_of_scope" in issue for issue in issues)
+    assert any("slow-mastery" in issue and "must be supported or blocked" in issue for issue in issues)
 
 
 def test_planned_barbarian_builds_may_declare_blocked_masteries_without_activation() -> None:

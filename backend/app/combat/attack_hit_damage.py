@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import logging
 
 from app.combat.damage import BonusDamageSpec, aggregate_damage_components, resolve_weapon_damage
+from app.combat.hunters_mark_splash import resolve_hunters_mark_splash
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.cunning_strike import (
     CunningStrikeObscureResolution, CunningStrikeTripResolution,
@@ -130,6 +131,16 @@ def resolve_attack_hit_damage(
         defender, applied_total, critical=critical, damage_types=applied_types,
         dice=dice, affected_states=affected_states, setup=setup,
     )
+    if setup is not None and target_event_id:
+        source = next(
+            (item for item in [*setup.heroes, *setup.monsters] if item.state is attacker),
+            None,
+        )
+        if source is not None:
+            resolve_hunters_mark_splash(
+                attacker, source.combatant_id, target_event_id, components,
+                turn_key, setup, dice, affected_states,
+            )
     effect = attack.on_hit_save_damage
     if defender.current_hp == 0 and save_damage_caused_zero(
         hp_buffer_before, applied_total, components, effect, save_component_present=save_component_present,

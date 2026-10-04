@@ -42,6 +42,7 @@ from app.content.certified_hero_progression_model import CertifiedHeroProgressio
 from app.content.certified_hero_progressions_2014 import CERTIFIED_HERO_PROGRESSIONS_2014
 from app.content.certified_monk_2024 import CERTIFIED_MONK_2024
 from app.content.certified_paladin_2024 import CERTIFIED_PALADIN_2024
+from app.content.certified_ranger_2024 import CERTIFIED_RANGER_2024
 from app.content.certified_sorcerer_2024 import CERTIFIED_SORCERER_2024
 from app.content.certified_warlock_2024 import CERTIFIED_WARLOCK_2024
 from app.content.certified_wizard_2024 import CERTIFIED_WIZARD_2024
@@ -119,6 +120,7 @@ CERTIFIED_HERO_PROGRESSIONS_2024: tuple[CertifiedHeroProgression, ...] = (
     CERTIFIED_DRUID_2024,
     CERTIFIED_MONK_2024,
     CERTIFIED_PALADIN_2024,
+    CERTIFIED_RANGER_2024,
     CERTIFIED_WARLOCK_2024,
     CERTIFIED_SORCERER_2024,
     CERTIFIED_WIZARD_2024,

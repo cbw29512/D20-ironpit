@@ -15,6 +15,7 @@ from app.combat.exile import apply_on_hit_exile
 from app.combat.melee_hit_retaliation import apply_melee_hit_retaliation
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
 from app.combat.sap import apply_weapon_sap
+from app.combat.slow import apply_weapon_slow
 from app.combat.studied_attacks import apply_studied_attack_miss
 from app.combat.tactical_master import apply_tactical_master_sap
 from app.combat.topple import resolve_topple_hit
@@ -37,6 +38,7 @@ class AttackEffectResolution:
     topple: Any = None
     weapon_sap_applied: bool = False
     tactical_sap_applied: bool = False
+    weapon_slow_applied: bool = False
     vex_applied: bool = False
     studied_applied: bool = False
     damage_reduction_reaction_used: bool = False
@@ -129,6 +131,9 @@ def resolve_attack_effects(
         if result.topple.applied and "prone" not in result.applied_conditions:
             result.applied_conditions.append("prone")
         result.weapon_sap_applied = apply_weapon_sap(
+            attacker, attacker_event_id, defender, attack, round_number,
+        )
+        result.weapon_slow_applied = apply_weapon_slow(
             attacker, attacker_event_id, defender, attack, round_number,
         )
         if not result.weapon_sap_applied:

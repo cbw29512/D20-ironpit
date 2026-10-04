@@ -10,6 +10,7 @@ from app.content.druid_2024_resource_rules import (
     land_natural_recovery_free_cast_uses,
 )
 from app.content.monk_2024_resource_rules import monk_focus_points, uncanny_metabolism_uses
+from app.content.ranger_2024_resource_rules import favored_enemy_uses
 from app.content.level_resources import (
     barbarian_rage_uses,
     cleric_channel_divinity_uses,
@@ -136,7 +137,10 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         ("faithful-steed-free-cast", "Faithful Steed: Free Cast", _faithful_steed_free_cast),
         ("boon-combat-prowess", "Boon of Combat Prowess", _fighter_combat_prowess),
     ),
-    "ranger": (),
+    "ranger": (
+        ("favored-enemy-hunters-mark", "Favored Enemy: Hunter's Mark", favored_enemy_uses),
+        ("boon-combat-prowess", "Boon of Combat Prowess", _fighter_combat_prowess),
+    ),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),
     "sorcerer": (
         ("sorcery-points", "Sorcery Points", lambda level: level if level >= 2 else 0),

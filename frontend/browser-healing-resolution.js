@@ -95,7 +95,10 @@
         );
         const total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.healingBonus || 0);
         rollTotal = total;
-        healed = restore(target.state, total);
+        const tempBefore = target.state.temporary_hp || 0;
+        healed = action.grantsTemporaryHp
+          ? S().grantTemporaryHp(target.state, total) - tempBefore
+          : restore(target.state, total);
         notation = rolls.length
           ? `${rolls.length}d${action.diceSize || 6}+${action.healingBonus || 0}`
           : String(action.healingBonus || 0);

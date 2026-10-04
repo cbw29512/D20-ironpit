@@ -14,7 +14,7 @@ STATUSES = {
     "archery-style": "supported",
     "nick-mastery": "supported",
     "two-weapon-fighting": "supported",
-    "slow-mastery": "arena_out_of_scope",
+    "slow-mastery": "supported",
     "indomitable": "supported",
     "tactical-master": "supported",
 }

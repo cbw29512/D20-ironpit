@@ -66,9 +66,10 @@ def resolve_healing(
             " Conditions ended: " + ", ".join(item.replace("_", " ").title() for item in removed) + "."
             if removed else ""
         )
+        restored = "Temporary HP" if action.grants_temporary_hp else "HP"
         description = (
             f"{healer.state.template.name} uses {action.name} on {target.state.template.name} "
-            f"and restores {healed} HP." + rider_text
+            f"and restores {healed} {restored}." + rider_text
         )
         if feature_roll is not None:
             description = (

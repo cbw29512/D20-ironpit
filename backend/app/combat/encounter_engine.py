@@ -15,6 +15,10 @@ from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.encounter_targeting import select_nearest_target
 from app.combat.hit_modifiers import expire_source_turn_start_modifiers
+from app.combat.incoming_damage_resistance import expire_current_turn_type_resistances
+from app.combat.start_of_turn_save_condition_events import (
+    resolve_start_of_turn_save_condition_damage_events,
+)
 from app.combat.intimidating_presence_2014 import end_invalid_presence
 from app.combat.initiative_resource_refill import resolve_initiative_resource_refills
 from app.combat.modifier_stack import expire_source_turn_modifiers
@@ -81,6 +85,7 @@ def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
         member.combatant_id,
         round_number,
     )
+    expire_current_turn_type_resistances(setup)
     return events, sequence
 
 
@@ -118,6 +123,10 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     sequence, round_number, member, setup,
                 )
                 events.extend(expiry_events)
+                save_dot_events, sequence = resolve_start_of_turn_save_condition_damage_events(
+                    sequence, round_number, member, setup, dice,
+                )
+                events.extend(save_dot_events)
                 lifecycle_events, sequence = resolve_target_condition_timing(
                     sequence, round_number, member, "target_turn_start", dice,
                 )

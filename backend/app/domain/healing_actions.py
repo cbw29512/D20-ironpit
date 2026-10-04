@@ -28,6 +28,7 @@ class HealingAction(BaseModel):
     removable_conditions: list[ConditionName] = Field(default_factory=list)
     prone_reaction_stand: bool = False
     secondary_target_within_ft: int | None = Field(default=None, ge=5)
+    grants_temporary_hp: bool = False
     animation: str = "healing"
 
     @model_validator(mode="after")

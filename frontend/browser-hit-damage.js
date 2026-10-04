@@ -165,6 +165,9 @@
     let damageOutcome = A().applyDamage(
       defender, appliedTotal, critical, appliedTypes, options.affectedStates || [], options.setup || null,
     );
+    window.IRON_PIT_BROWSER_HUNTERS_MARK_SPLASH?.resolve(
+      attacker, null, options.targetId, damageComponents, turnKey, options.setup,
+    );
     const effect = attack.onHitSaveDamage;
     if (defender.current_hp === 0 && saveDamageCausedZero(
       hpBufferBefore, appliedTotal, damageComponents, effect, saveComponentPresent,

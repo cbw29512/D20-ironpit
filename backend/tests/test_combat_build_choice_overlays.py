@@ -48,10 +48,10 @@ def test_dual_wield_fighter_declares_nick_and_vex_as_shared_engine_requirements(
     assert {"nick-mastery", "vex-mastery"} <= set(dual.required_capabilities)
 
 
-def test_archer_does_not_turn_slow_into_an_arena_engine_requirement() -> None:
+def test_archer_requires_slow_mastery() -> None:
     archer = get_combat_build_choice_overlay("fighter", "archer")
-    assert "slow-mastery" in archer.arena_ignored
-    assert "slow-mastery" not in archer.required_capabilities
+    assert "slow-mastery" in archer.required_capabilities
+    assert "slow-mastery" not in archer.arena_ignored
 
 
 def test_sword_and_shield_is_a_real_distinct_defender_overlay() -> None:
@@ -123,7 +123,7 @@ def test_ranger_subclasses_generate_distinct_loadouts_from_shared_rules() -> Non
     beast = get_combat_build_choice_overlay("ranger", "dual-wield")
     hunter = get_combat_build_choice_overlay("ranger", "sword-shield")
     assert (gloom.primary_weapon, gloom.fighting_style) == ("longbow", "Archery")
-    assert "slow-mastery" in gloom.arena_ignored
+    assert "slow-mastery" in gloom.required_capabilities
     assert (hunter.primary_weapon, hunter.shield, hunter.fighting_style) == (
         "shortsword", True, "Defense",
     )

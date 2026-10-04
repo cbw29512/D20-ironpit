@@ -5,7 +5,7 @@
   "summary": {
     "canonical_heroes": 12,
     "level_slots": 240,
-    "public_ready": 220
+    "public_ready": 240
   },
   "heroes": [
     {
@@ -10167,46 +10167,72 @@
         {
           "level": 1,
           "subclass": null,
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l1",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "targeted-concentration-damage:hunters-mark"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "targeted-concentration-damage:hunters-mark"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 2,
           "subclass": null,
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l2",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "targeted-concentration-damage:hunters-mark"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "targeted-concentration-damage:hunters-mark"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 3,
@@ -10214,24 +10240,40 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l3",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "targeted-concentration-damage:hunters-mark"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "targeted-concentration-damage:hunters-mark"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 4,
@@ -10239,24 +10281,40 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l4",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "targeted-concentration-damage:hunters-mark"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "targeted-concentration-damage:hunters-mark"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 5,
@@ -10264,24 +10322,50 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l5",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "targeted-concentration-damage:hunters-mark"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "targeted-concentration-damage:hunters-mark"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 6,
@@ -10289,24 +10373,50 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l6",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "targeted-concentration-damage:hunters-mark"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "targeted-concentration-damage:hunters-mark"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 7,
@@ -10314,24 +10424,50 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l7",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "targeted-concentration-damage:hunters-mark"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "targeted-concentration-damage:hunters-mark"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 8,
@@ -10339,24 +10475,50 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l8",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "targeted-concentration-damage:hunters-mark"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:longstrider",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "targeted-concentration-damage:hunters-mark"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 9,
@@ -10364,24 +10526,54 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l9",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "targeted-concentration-damage:hunters-mark"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "targeted-concentration-damage:hunters-mark"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 10,
@@ -10389,24 +10581,58 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l10",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 11,
@@ -10414,24 +10640,58 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l11",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 12,
@@ -10439,24 +10699,58 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l12",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 13,
@@ -10464,24 +10758,62 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l13",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:freedom-of-movement",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:freedom-of-movement",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 14,
@@ -10489,24 +10821,66 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l14",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:freedom-of-movement",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:natures-veil",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark",
+            "timed-self-buff:natures-veil"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:freedom-of-movement",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:natures-veil",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark",
+            "timed-self-buff:natures-veil"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 15,
@@ -10514,24 +10888,66 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l15",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:freedom-of-movement",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:natures-veil",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark",
+            "timed-self-buff:natures-veil"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:freedom-of-movement",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:natures-veil",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark",
+            "timed-self-buff:natures-veil"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 16,
@@ -10539,24 +10955,66 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l16",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:freedom-of-movement",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:natures-veil",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark",
+            "timed-self-buff:natures-veil"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:freedom-of-movement",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:natures-veil",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark",
+            "timed-self-buff:natures-veil"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 17,
@@ -10564,24 +11022,68 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l17",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:freedom-of-movement",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:natures-veil",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:spell-slot-5",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark",
+            "timed-self-buff:natures-veil"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:freedom-of-movement",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:natures-veil",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:spell-slot-5",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark",
+            "timed-self-buff:natures-veil"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 18,
@@ -10589,24 +11091,68 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l18",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:freedom-of-movement",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:natures-veil",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:spell-slot-5",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark",
+            "timed-self-buff:natures-veil"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:freedom-of-movement",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "multiattack-or-extra-attack",
+            "resource:favored-enemy-hunters-mark",
+            "resource:natures-veil",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:spell-slot-5",
+            "resource:tireless",
+            "targeted-concentration-damage:hunters-mark",
+            "timed-self-buff:natures-veil"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 19,
@@ -10614,24 +11160,76 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l19",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "boon-combat-prowess",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:freedom-of-movement",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "miss-to-hit-override",
+            "multiattack-or-extra-attack",
+            "resource:boon-combat-prowess",
+            "resource:favored-enemy-hunters-mark",
+            "resource:natures-veil",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:spell-slot-5",
+            "resource:tireless",
+            "start-turn-resource-refill:boon-combat-prowess",
+            "targeted-concentration-damage:hunters-mark",
+            "timed-self-buff:natures-veil"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "boon-combat-prowess",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:freedom-of-movement",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "miss-to-hit-override",
+            "multiattack-or-extra-attack",
+            "resource:boon-combat-prowess",
+            "resource:favored-enemy-hunters-mark",
+            "resource:natures-veil",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:spell-slot-5",
+            "resource:tireless",
+            "start-turn-resource-refill:boon-combat-prowess",
+            "targeted-concentration-damage:hunters-mark",
+            "timed-self-buff:natures-veil"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         },
         {
           "level": 20,
@@ -10639,24 +11237,76 @@
             "id": "hunter",
             "name": "Hunter"
           },
-          "runtime_template_id": null,
+          "runtime_template_id": "rowan-ashtrail-l20",
           "source_references": [
-            "SRD 5.2.1 / 2024 Free Rules"
+            "D&D Beyond Basic Rules 2024: Wood Elf; Outlander; Ranger; Hunter; Alert; Equipment"
           ],
-          "expected_combat_features": [],
-          "supported_mechanics": [],
-          "unsupported_mechanics": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
+          "expected_combat_features": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "boon-combat-prowess",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:freedom-of-movement",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "miss-to-hit-override",
+            "multiattack-or-extra-attack",
+            "resource:boon-combat-prowess",
+            "resource:favored-enemy-hunters-mark",
+            "resource:natures-veil",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:spell-slot-5",
+            "resource:tireless",
+            "start-turn-resource-refill:boon-combat-prowess",
+            "targeted-concentration-damage:hunters-mark",
+            "timed-self-buff:natures-veil"
           ],
-          "python_certification_status": "blocked",
-          "browser_certification_status": "blocked",
-          "generated_static_status": "not-generated",
-          "public_ready_status": "blocked",
-          "blockers": [
-            "hero-level-not-certified",
-            "combat-feature-coverage-not-certified"
-          ]
+          "supported_mechanics": [
+            "attack:rowan-2024-longbow",
+            "attack:rowan-2024-scimitar",
+            "attack:rowan-2024-shortsword",
+            "boon-combat-prowess",
+            "colossus-slayer",
+            "condition-removal-action:lesser-restoration",
+            "defensive-spell-action:aid",
+            "defensive-spell-action:barkskin",
+            "defensive-spell-action:freedom-of-movement",
+            "defensive-spell-action:longstrider",
+            "effect-removal-action:dispel-magic",
+            "fey-ancestry",
+            "healing-action:cure-wounds",
+            "healing-action:tireless",
+            "miss-to-hit-override",
+            "multiattack-or-extra-attack",
+            "resource:boon-combat-prowess",
+            "resource:favored-enemy-hunters-mark",
+            "resource:natures-veil",
+            "resource:spell-slot-1",
+            "resource:spell-slot-2",
+            "resource:spell-slot-3",
+            "resource:spell-slot-4",
+            "resource:spell-slot-5",
+            "resource:tireless",
+            "start-turn-resource-refill:boon-combat-prowess",
+            "targeted-concentration-damage:hunters-mark",
+            "timed-self-buff:natures-veil"
+          ],
+          "unsupported_mechanics": [],
+          "python_certification_status": "certified",
+          "browser_certification_status": "certified",
+          "generated_static_status": "current",
+          "public_ready_status": "ready",
+          "blockers": []
         }
       ]
     },
