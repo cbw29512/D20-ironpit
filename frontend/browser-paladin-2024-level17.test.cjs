@@ -21,17 +21,19 @@ try {
   assert.equal(hero.resources["lay-on-hands"], 85);
   assert.equal(hero.resources["spell-slot-4"], 3);
   assert.equal(hero.resources["spell-slot-5"], 1);
-  assert.equal(hero.weapon_attack.attack_bonus, 11);
+  const primaryAttack = hero.attacks.find(item => item.id === hero.primary_attack_id);
+  assert.ok(primaryAttack);
+  assert.equal(primaryAttack.bonus, 11);
 
   const flameStrike = hero.spell_save_actions.find(item => item.id === "flame-strike");
   assert.ok(flameStrike);
   assert.equal(flameStrike.level, 5);
   assert.equal(flameStrike.dc, 18);
-  assert.equal(flameStrike.save_ability, "dexterity");
-  assert.equal(flameStrike.success_damage, "half");
+  assert.equal(flameStrike.saveAbility, "dexterity");
+  assert.equal(flameStrike.successDamage, "half");
   assert.deepEqual(
-    flameStrike.damage_components.map(part => [
-      part.dice_count, part.dice_size, part.damage_type,
+    flameStrike.damageComponents.map(part => [
+      part.diceCount, part.diceSize, part.damageType,
     ]),
     [[5, 6, "fire"], [5, 6, "radiant"]],
   );
