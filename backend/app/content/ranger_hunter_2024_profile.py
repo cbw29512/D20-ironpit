@@ -23,7 +23,7 @@ def build_rowan_ashtrail_2024_profile(level: int = 1) -> CharacterBuildProfile:
         base = canonical_base_ability_scores("ranger")
         # Outlander is retained from Rowan's 2014 identity. Under the 2024
         # legacy-background conversion rule its ability increases are flexible.
-        allowed = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
+        allowed = ["dexterity", "wisdom", "constitution"]
         background = canonical_background_increases("ranger", allowed)
         values = base.model_dump()
         for increase in background:
