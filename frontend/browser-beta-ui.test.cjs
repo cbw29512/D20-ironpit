@@ -58,7 +58,7 @@ const click = async (id) => { await el(id).listeners.click(); };
   const presetButton = (id) => el("combat-presets").children.find((item) => item.dataset?.preset === id);
   for (let i = 0; i < 40 && !presetButton("goblins"); i += 1) await Promise.resolve();
   assert.ok(api, `production app must initialize: ${JSON.stringify(errors)}`);
-  assert.equal(el("combat-presets").children.filter((item) => item.dataset?.preset).length, 24);
+  assert.equal(el("combat-presets").children.filter((item) => item.dataset?.preset).length, 25);
   await presetButton("goblins").listeners.click();
   assert.equal(api.state.heroSlots.filter(Boolean).length, 1);
   assert.equal(api.state.heroSlots[0].class_id, "barbarian");

@@ -48,7 +48,7 @@
       id: "spell-offense", category: C().SPELL_OFFENSE, rulesets: BOTH,
       discover: ({ member, setup, turnKey, opportunityProfile }) => {
         if (opportunityProfile === "normalPreMove"
-          && (F().meleeCanLandNow(member, setup) || window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT?.meleeCanBeEnabled(member, setup, turnKey))) {
+          && (F()?.meleeCanLandNow?.(member, setup) || window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT?.meleeCanBeEnabled(member, setup, turnKey))) {
           return null;
         }
         const selected = L().choose(member, setup, turnKey);

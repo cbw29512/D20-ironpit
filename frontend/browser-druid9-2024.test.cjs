@@ -46,6 +46,7 @@ assert.equal(cone.damageType, "cold");
 assert.equal(cone.successDamage, "half");
 assert.deepEqual(cone.area, {
   shape: "cone", origin: "self", radius_ft: null, length_ft: 60, width_ft: null,
+  contiguous_section_count: null,
 });
 
 const mass = hero.healingActions.find((item) => item.id === "mass-cure-wounds");

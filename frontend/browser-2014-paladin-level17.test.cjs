@@ -33,8 +33,8 @@ assert.equal(flame.saveAbility, "dexterity");
 assert.equal(flame.dc, 18);
 assert.equal(flame.successDamage, "half");
 assert.deepEqual(flame.damageComponents, [
-  { diceCount: 4, diceSize: 6, damageBonus: 0, damageType: "fire" },
-  { diceCount: 4, diceSize: 6, damageBonus: 0, damageType: "radiant" },
+  { diceCount: 4, diceSize: 6, damageBonus: 0, damageType: "fire", upcastDicePerLevel: 1 },
+  { diceCount: 4, diceSize: 6, damageBonus: 0, damageType: "radiant", upcastDicePerLevel: 0 },
 ]);
 
 const oathIds = new Set(hero.canonical_always_prepared_spells.map((spell) => spell.id));

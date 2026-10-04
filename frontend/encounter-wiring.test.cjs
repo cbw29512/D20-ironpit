@@ -60,7 +60,7 @@ const css = fs.readFileSync(path.join(root, "battlefield.css"), "utf8");
 assert.match(view, /MAX_SLOTS = 6/); assert.match(app, /MAX_SLOTS = 6/);
 assert.match(view, /card-concentration/); assert.match(replay, /CONCENTRATING/);
 assert.match(view, /IRON_PIT_COMBATANT_ART/);
-assert.match(app, /Iron Pit 2014 Beta ready\. Choose certified pregens and monsters, or load the sample matchup\./);
+assert.match(app, /Iron Pit ready\. Choose certified pregens and monsters, or load a preset\./);
 assert.match(app, /IRON_PIT_EXECUTION/); assert.match(app, /IRON_PIT_BATTLE_ACTIONS/);
 assert.match(actions, /startLive/); assert.match(actions, /nextEvent/); assert.match(actions, /watchRest/); assert.match(actions, /replayTurbo/);
 assert.match(execution, /function createSession/); assert.match(execution, /function resolveLive/); assert.match(execution, /function resolveReplay/); assert.match(execution, /async function runTurbo/);

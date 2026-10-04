@@ -46,6 +46,7 @@ assert.equal(thunderclap.damageType, "thunder");
 assert.equal(thunderclap.successDamage, "none");
 assert.deepEqual(thunderclap.area, {
   shape: "emanation", origin: "self", radius_ft: 5, length_ft: null, width_ft: null,
+  contiguous_section_count: null,
 });
 
 const thunderwave = hero.spell_save_actions.find((item) => item.id === "thunderwave");
@@ -60,6 +61,7 @@ assert.equal(thunderwave.upcastDicePerLevel, 1);
 assert.equal(thunderwave.failedSavePushFt, 10);
 assert.deepEqual(thunderwave.area, {
   shape: "cube", origin: "self", radius_ft: null, length_ft: 15, width_ft: null,
+  contiguous_section_count: null,
 });
 
 console.log("Generated browser 2024 Druid 10 progression regressions passed.");
