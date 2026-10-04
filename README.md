@@ -33,6 +33,7 @@ All modes use the same canonical combat resolution path:
 - **FIGHT / Watch** — play the fight automatically.
 - **STEP FIGHT** — pause after each resolved event.
 - **WATCH REST** — continue the same already-resolved Step session; no reroll/restart.
+- **Load Combat** — review a selected purpose-built test fight's full recorded battle log without stepping the live board.
 - **REPLAY** — reproduce a seeded fight exactly.
 - **TURBO X** — run the matchup repeatedly without animation/rendering overhead and report win/loss/draw statistics.
 

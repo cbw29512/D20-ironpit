@@ -135,6 +135,8 @@ jobs:
           grep -q 'id="watch-rest-button"' index.html
           grep -q 'id="quick-test"' index.html
           grep -q '>LOAD SAMPLE<' index.html
+          grep -q 'id="load-combat-button"' index.html
+          grep -q '>Load Combat<' index.html
           grep -q 'id="rerun-button"' index.html
           ! grep -q 'id="battle-seed"' index.html
           ! grep -q 'id="instant-mode"' index.html
@@ -145,6 +147,8 @@ jobs:
           grep -q 'browser-audit.js' index.html
           grep -q 'browser-execution.js' index.html
           grep -q 'battle-actions.js' index.html
+          grep -q 'combat-review.js' index.html
+          grep -q 'combat-review.css' index.html
           grep -q 'figure-archetypes.css' index.html
           grep -q 'figure-swarms.css' index.html
           grep -q 'figure-portraits.css' index.html
@@ -244,6 +248,8 @@ jobs:
           grep -q 'id="combat-fx-overlay"' frontend/index.html
           grep -q 'id="quick-test"' frontend/index.html
           grep -q '>LOAD SAMPLE<' frontend/index.html
+          grep -q 'id="load-combat-button"' frontend/index.html
+          grep -q '>Load Combat<' frontend/index.html
           grep -q 'id="rerun-button"' frontend/index.html
           grep -q 'id="step-fight-button"' frontend/index.html
           grep -q 'id="next-event-button"' frontend/index.html
@@ -259,6 +265,8 @@ jobs:
           grep -q 'browser-audit.js' frontend/index.html
           grep -q 'browser-execution.js' frontend/index.html
           grep -q 'battle-actions.js' frontend/index.html
+          grep -q 'combat-review.js' frontend/index.html
+          grep -q 'combat-review.css' frontend/index.html
           grep -q 'figure-archetypes.css' frontend/index.html
           grep -q 'figure-swarms.css' frontend/index.html
           grep -q 'figure-portraits.css' frontend/index.html
@@ -432,6 +440,7 @@ jobs:
           node frontend/browser-execution.test.cjs
           node frontend/browser-beta-ui.test.cjs
           node frontend/combat-presets.test.cjs
+          node frontend/combat-review.test.cjs
           node frontend/browser-audit.test.cjs
           node frontend/browser-roll-revisions.test.cjs
           node frontend/browser-dice-recording.test.cjs
