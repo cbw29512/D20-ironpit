@@ -47,6 +47,7 @@ class CombatantDefinition(BaseModel):
     max_hp: int = Field(ge=1)
     speed_ft: int = Field(ge=0)
     movement_modes: MovementModes | None = None
+    opportunity_attack_exempt_movement_modes: list[str] = Field(default_factory=list)
     initiative_bonus: int
     blindsight_ft: int = Field(default=0, ge=0)
     truesight_ft: int = Field(default=0, ge=0)

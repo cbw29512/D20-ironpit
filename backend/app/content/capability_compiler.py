@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.capability_attack_compiler import UnsupportedCapabilityError, compile_attack
+from app.content.movement_mode_oa_exemption import compiled_opportunity_attack_exempt_movement_modes
 from app.domain.actions import AttackActionDefinition, AttackActionSlot, SavingThrowAction
 from app.domain.capabilities import CombatantDefinition, SaveCapabilityDefinition
 from app.domain.models import CombatantTemplate
@@ -67,6 +68,9 @@ def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
         })
         if definition.movement_modes is not None:
             kwargs["movement_modes"] = definition.movement_modes
+        kwargs["opportunity_attack_exempt_movement_modes"] = list(
+            compiled_opportunity_attack_exempt_movement_modes(definition)
+        )
         return CombatantTemplate(
             **kwargs,
             weapon_attack=primary,

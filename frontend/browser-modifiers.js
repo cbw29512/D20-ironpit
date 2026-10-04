@@ -108,7 +108,9 @@
           ? 0
           : (item.flat_bonus || 0)
       ), 0);
-    const base = Math.max(0, state.template.speed_ft + speedDelta);
+    const policy = window.IRON_PIT_BROWSER_MOVEMENT_MODE_POLICY;
+    const printed = policy ? policy.printedSpeedForState(state) : state.template.speed_ft;
+    const base = Math.max(0, printed + speedDelta);
     const multiplier = (state.active_modifiers || []).filter((item) => item.kind === "speed-multiplier")
       .reduce((value, item) => value * (item.multiplier ?? 1), 1);
     const adjusted = Math.max(0, Math.trunc(base * multiplier));

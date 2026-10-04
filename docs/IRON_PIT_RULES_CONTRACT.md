@@ -304,6 +304,7 @@ Permanent arena rules:
 - No default pits, lava, traps, difficult terrain, water, or random arena hazards. A supported RAW effect may create an area/hazard.
 - Flyers cannot use altitude to become permanently unreachable. A melee flyer must enter its legal reach to attack.
 - Opportunity Attacks, forced movement, Disengage consequences, speed changes, Grappled/Prone movement effects, Frightened movement restrictions, and other combat-relevant movement rules remain RAW where applicable.
+- Printed movement-mode Opportunity Attack exemptions compile from trait body text such as "doesn't provoke opportunity attacks when it flies out of an enemy's reach." The bound data is the exempt movement mode (`fly`, `swim`, and so on), not the source trait name and not the monster name. Horizontal Fly remains `fly`; walking still provokes. The standard Pit stays horizontal-only.
 - If the pathfinder proves a legal eventual route toward a supported offensive position, the combatant may spend this turn making useful progress even when it cannot reach attack range yet; after moving, if no supported offense is legal and its Action remains, it Dodges. If no such eventual legal route exists, or no useful legal progress can be made, it stays put and uses the same Dodge fallback after the other supported offensive families are exhausted.
 
 ### AoE/targeting arena simplification

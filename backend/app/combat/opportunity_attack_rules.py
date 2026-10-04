@@ -4,6 +4,7 @@ from typing import Literal
 
 from app.combat.action_economy import is_available
 from app.combat.condition_rules import BLINDED, has_condition
+from app.combat.movement_mode_policy import mover_is_opportunity_attack_exempt
 from app.combat.policy import weapon_attack_profiles
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import WeaponAttack, WeaponAttackKind
@@ -29,6 +30,7 @@ def _can_react(
         reactor.side != mover.side and not disengaged and can_see
         and not has_condition(reactor.state, BLINDED)
         and not opportunity_attacks_suppressed(reactor)
+        and not mover_is_opportunity_attack_exempt(mover.state)
         and movement_source in _PROVOKING_SOURCES
         and is_available(reactor.state, "reaction")
     )

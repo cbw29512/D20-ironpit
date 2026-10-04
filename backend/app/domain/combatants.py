@@ -89,6 +89,7 @@ class CombatantTemplate(BaseModel):
     max_hp: int = Field(ge=1)
     speed_ft: int = Field(ge=0)
     movement_modes: MovementModes
+    opportunity_attack_exempt_movement_modes: list[str] = Field(default_factory=list)
     initiative_bonus: int
     starts_with_heroic_inspiration: bool = False
     blindsight_ft: int = Field(default=0, ge=0)

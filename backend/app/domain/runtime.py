@@ -137,6 +137,7 @@ class CombatantState(BaseModel):
     heroic_inspiration: bool = False
     dash_uses_this_turn: int = Field(default=0, ge=0)
     movement_remaining_ft: int = Field(default=0, ge=0)
+    active_movement_mode: str | None = None
     voluntary_turn_activity: Literal["movement", "action", "bonus_action"] | None = None
     resources: list[ResourceState] = Field(default_factory=list)
     active_effect_ids: list[str] = Field(default_factory=list)
