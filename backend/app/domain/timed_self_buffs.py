@@ -154,6 +154,7 @@ class TimedSelfBuffAction(BaseModel):
                 or self.melee_hit_retaliation is not None
                 or self.spell_save_dc_bonus
                 or self.spell_attack_advantage
+                or self.concentration
             ):
                 raise ValueError("Timed self-buff requires at least one combat effect.")
             return self

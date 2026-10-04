@@ -136,7 +136,8 @@ def _spell(action: Any) -> dict[str, Any]:
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
         "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level,
-        "concentration": action.concentration, "allowsHigherSlots": action.allows_higher_slots,
+        "concentration": action.concentration, "repeatOnly": action.repeat_only,
+        "allowsHigherSlots": action.allows_higher_slots,
         "targetCount": action.target_count,
         "targetCountPerSlotAbove": action.target_count_per_slot_above,
         "saveAdvantageIfFighting": action.save_advantage_if_fighting,
@@ -838,6 +839,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["incomingDamageTypeResistanceReaction"] = (
             template.incoming_damage_type_resistance_reaction.model_dump(mode="json")
         )
+    if template.concentration_repeat_save_actions:
+        row["concentration_repeat_save_actions"] = [
+            item.model_dump(mode="json") for item in template.concentration_repeat_save_actions
+        ]
     if template.auto_hit_spell_actions: row["auto_hit_spell_actions"] = [_auto_hit_spell(item) for item in template.auto_hit_spell_actions]
     if template.persistent_spell_attack_actions:
         row["persistent_spell_attack_actions"] = [_persistent_spell_attack(item) for item in template.persistent_spell_attack_actions]

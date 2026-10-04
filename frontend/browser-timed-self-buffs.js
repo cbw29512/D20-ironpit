@@ -86,6 +86,9 @@
         const concentration = window.IRON_PIT_BROWSER_CONCENTRATION;
         if (!concentration) throw new Error("Browser Concentration runtime is not loaded.");
         const allStates = options.affectedStates || [member.state];
+        const slotLevel = String(action.resourceId || "").startsWith("spell-slot-")
+          ? Number.parseInt(String(action.resourceId).slice("spell-slot-".length), 10)
+          : null;
         concentration.start(
           member.state,
           member.combatant_id,
@@ -93,7 +96,7 @@
           round,
           allStates,
           expiresRound,
-          null,
+          Number.isInteger(slotLevel) ? slotLevel : null,
         );
       }
 

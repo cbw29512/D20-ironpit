@@ -112,6 +112,9 @@ def resolve_timed_self_buff(
             )
 
         if action.concentration:
+            slot_level = None
+            if action.resource_id and action.resource_id.startswith("spell-slot-"):
+                slot_level = int(action.resource_id.removeprefix("spell-slot-"))
             start_concentration(
                 member.state,
                 member.combatant_id,
@@ -119,6 +122,7 @@ def resolve_timed_self_buff(
                 round_number,
                 affected_states,
                 expires_round=expires_round,
+                slot_level=slot_level,
             )
 
         for grant in action.saving_throw_advantage_grants:

@@ -13,7 +13,7 @@ from app.content.bard_2024_spells import build_shatter_2024
 from app.content.druid_2024_land_spells import build_blight_2024, build_burning_hands_2024, build_fire_bolt_2024
 from app.content.druid_2024_spells import build_poison_spray_2024, build_thunderclap_2024, build_thunderwave_2024
 from app.content.offensive_spell_effects import build_fireball_2024
-from app.content.sorcerer_2024_spells import chromatic_orb_2024, lightning_bolt_2024
+from app.content.sorcerer_2024_spells import chromatic_orb_2024, dragons_breath_2024, lightning_bolt_2024
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +46,7 @@ def build_nyra_2024_spell_saves(level: int, save_dc: int, charisma_modifier: int
         actions = [burning, build_thunderwave_2024(save_dc)]
         if level >= 3:
             actions.append(build_shatter_2024(save_dc))
+            actions.append(dragons_breath_2024(save_dc))
         if level >= 4:
             actions.append(build_thunderclap_2024(save_dc, level))
         if level >= 5:

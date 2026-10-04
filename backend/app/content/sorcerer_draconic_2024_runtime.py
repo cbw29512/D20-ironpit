@@ -8,6 +8,7 @@ from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.sorcerer_draconic_2024_features import build_sorcerer_2024_features
 from app.content.sorcerer_draconic_2024_math import nyra_2024_armor_class, nyra_2024_hit_points
 from app.content.sorcerer_draconic_2024_profile import build_nyra_emberveil_2024_profile
+from app.content.sorcerer_2024_spells import dragons_breath_repeat_2024
 from app.content.sorcerer_draconic_2024_runtime_support import (
     build_nyra_2024_auto_hits,
     build_nyra_2024_conversions,
@@ -73,6 +74,9 @@ def build_nyra_emberveil_2024(level: int) -> CombatantTemplate:
             spell_save_disadvantage_options=build_nyra_2024_heightened(level),
             spell_range_modifiers=build_nyra_2024_distant(level),
             timed_self_buff_actions=build_nyra_2024_self_buffs(level),
+            concentration_repeat_save_actions=(
+                [dragons_breath_repeat_2024()] if level >= 3 else []
+            ),
             progression_features=build_sorcerer_2024_features(level),
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("constitution", "charisma")),
             skill_bonuses={

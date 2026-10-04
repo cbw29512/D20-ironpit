@@ -79,6 +79,8 @@ def build_nyra_draconic_2024_audits(level: int) -> list[FeatureAudit]:
                        notes="2024 subclass begins at level 3 and always prepares its Draconic spells."),
                 _audit("draconic-resilience", "Draconic Resilience", "subclass", combat_relevant=True, automated=True,
                        notes="HP maximum +3 then +1 per later Sorcerer level. Unarmored AC is 10 + Dex + Cha."),
+                _audit("dragons-breath", "Dragon's Breath", "subclass", combat_relevant=True, automated=True,
+                       notes="Action starts Concentration; later Magic actions exhale a 15-foot Fire cone, Dexterity save, 3d6, half on success."),
             ]
         if level >= 4:
             audits.append(_audit(

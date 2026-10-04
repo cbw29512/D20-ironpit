@@ -12421,8 +12421,10 @@
             "spell-attack-action:fire-bolt",
             "spell-attack-action:poison-spray",
             "spell-save-action:burning-hands",
+            "spell-save-action:dragons-breath",
             "spell-save-action:shatter",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -12440,8 +12442,10 @@
             "spell-attack-action:fire-bolt",
             "spell-attack-action:poison-spray",
             "spell-save-action:burning-hands",
+            "spell-save-action:dragons-breath",
             "spell-save-action:shatter",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -12476,9 +12480,11 @@
             "spell-attack-action:fire-bolt",
             "spell-attack-action:poison-spray",
             "spell-save-action:burning-hands",
+            "spell-save-action:dragons-breath",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -12496,9 +12502,11 @@
             "spell-attack-action:fire-bolt",
             "spell-attack-action:poison-spray",
             "spell-save-action:burning-hands",
+            "spell-save-action:dragons-breath",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -12536,10 +12544,12 @@
             "spell-attack-action:fire-bolt",
             "spell-attack-action:poison-spray",
             "spell-save-action:burning-hands",
+            "spell-save-action:dragons-breath",
             "spell-save-action:fireball",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -12560,10 +12570,12 @@
             "spell-attack-action:fire-bolt",
             "spell-attack-action:poison-spray",
             "spell-save-action:burning-hands",
+            "spell-save-action:dragons-breath",
             "spell-save-action:fireball",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -12601,11 +12613,13 @@
             "spell-attack-action:fire-bolt",
             "spell-attack-action:poison-spray",
             "spell-save-action:burning-hands",
+            "spell-save-action:dragons-breath",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -12626,11 +12640,13 @@
             "spell-attack-action:fire-bolt",
             "spell-attack-action:poison-spray",
             "spell-save-action:burning-hands",
+            "spell-save-action:dragons-breath",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -12672,11 +12688,13 @@
             "spell-attack-action:poison-spray",
             "spell-save-action:blight",
             "spell-save-action:burning-hands",
+            "spell-save-action:dragons-breath",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -12701,11 +12719,13 @@
             "spell-attack-action:poison-spray",
             "spell-save-action:blight",
             "spell-save-action:burning-hands",
+            "spell-save-action:dragons-breath",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -12748,11 +12768,13 @@
             "spell-attack-action:poison-spray",
             "spell-save-action:blight",
             "spell-save-action:burning-hands",
+            "spell-save-action:dragons-breath",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -12778,11 +12800,13 @@
             "spell-attack-action:poison-spray",
             "spell-save-action:blight",
             "spell-save-action:burning-hands",
+            "spell-save-action:dragons-breath",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -12830,11 +12854,13 @@
             "spell-save-action:blight",
             "spell-save-action:burning-hands",
             "spell-save-action:cone-of-cold",
+            "spell-save-action:dragons-breath",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -12865,11 +12891,13 @@
             "spell-save-action:blight",
             "spell-save-action:burning-hands",
             "spell-save-action:cone-of-cold",
+            "spell-save-action:dragons-breath",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -12917,11 +12945,13 @@
             "spell-save-action:blight",
             "spell-save-action:burning-hands",
             "spell-save-action:cone-of-cold",
+            "spell-save-action:dragons-breath",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -12952,11 +12982,13 @@
             "spell-save-action:blight",
             "spell-save-action:burning-hands",
             "spell-save-action:cone-of-cold",
+            "spell-save-action:dragons-breath",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -13006,11 +13038,13 @@
             "spell-save-action:burning-hands",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -13043,11 +13077,13 @@
             "spell-save-action:burning-hands",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -13097,11 +13133,13 @@
             "spell-save-action:burning-hands",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -13134,11 +13172,13 @@
             "spell-save-action:burning-hands",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -13189,12 +13229,14 @@
             "spell-save-action:burning-hands",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:finger-of-death",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -13228,12 +13270,14 @@
             "spell-save-action:burning-hands",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:finger-of-death",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
             "spell-save-action:shatter",
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -13286,6 +13330,7 @@
             "spell-save-action:burning-hands",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:finger-of-death",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
@@ -13293,6 +13338,7 @@
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
             "timed-self-buff:dragon-wings",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -13328,6 +13374,7 @@
             "spell-save-action:burning-hands",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:finger-of-death",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
@@ -13335,6 +13382,7 @@
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
             "timed-self-buff:dragon-wings",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -13388,6 +13436,7 @@
             "spell-save-action:burning-hands",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:finger-of-death",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
@@ -13396,6 +13445,7 @@
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
             "timed-self-buff:dragon-wings",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -13432,6 +13482,7 @@
             "spell-save-action:burning-hands",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:finger-of-death",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
@@ -13440,6 +13491,7 @@
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
             "timed-self-buff:dragon-wings",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -13493,6 +13545,7 @@
             "spell-save-action:burning-hands",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:finger-of-death",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
@@ -13501,6 +13554,7 @@
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
             "timed-self-buff:dragon-wings",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -13537,6 +13591,7 @@
             "spell-save-action:burning-hands",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:finger-of-death",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
@@ -13545,6 +13600,7 @@
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
             "timed-self-buff:dragon-wings",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -13600,6 +13656,7 @@
             "spell-save-action:circle-of-death",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:finger-of-death",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
@@ -13608,6 +13665,7 @@
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
             "timed-self-buff:dragon-wings",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -13646,6 +13704,7 @@
             "spell-save-action:circle-of-death",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:finger-of-death",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
@@ -13654,6 +13713,7 @@
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
             "timed-self-buff:dragon-wings",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -13709,6 +13769,7 @@
             "spell-save-action:circle-of-death",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:finger-of-death",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
@@ -13717,6 +13778,7 @@
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
             "timed-self-buff:dragon-wings",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -13755,6 +13817,7 @@
             "spell-save-action:circle-of-death",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:finger-of-death",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
@@ -13763,6 +13826,7 @@
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
             "timed-self-buff:dragon-wings",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -13821,6 +13885,7 @@
             "spell-save-action:circle-of-death",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:finger-of-death",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
@@ -13829,6 +13894,7 @@
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
             "timed-self-buff:dragon-wings",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -13870,6 +13936,7 @@
             "spell-save-action:circle-of-death",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:finger-of-death",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
@@ -13878,6 +13945,7 @@
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
             "timed-self-buff:dragon-wings",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],
@@ -13936,6 +14004,7 @@
             "spell-save-action:circle-of-death",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:finger-of-death",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
@@ -13944,6 +14013,7 @@
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
             "timed-self-buff:dragon-wings",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "supported_mechanics": [
@@ -13985,6 +14055,7 @@
             "spell-save-action:circle-of-death",
             "spell-save-action:cone-of-cold",
             "spell-save-action:disintegrate",
+            "spell-save-action:dragons-breath",
             "spell-save-action:finger-of-death",
             "spell-save-action:fireball",
             "spell-save-action:lightning-bolt",
@@ -13993,6 +14064,7 @@
             "spell-save-action:thunderclap",
             "spell-save-action:thunderwave",
             "timed-self-buff:dragon-wings",
+            "timed-self-buff:dragons-breath",
             "timed-self-buff:innate-sorcery"
           ],
           "unsupported_mechanics": [],

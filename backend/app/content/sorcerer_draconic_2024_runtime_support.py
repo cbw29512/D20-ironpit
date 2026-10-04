@@ -5,7 +5,7 @@ import logging
 from app.content.bard_2024_spells import build_greater_invisibility_2024
 from app.content.sorcerer_2024_font import font_of_magic_2024_actions
 from app.content.sorcerer_2024_metamagic import distant_spell_2024, heightened_spell_2024
-from app.content.sorcerer_2024_spells import magic_missile_2024
+from app.content.sorcerer_2024_spells import dragons_breath_cast_2024, magic_missile_2024
 from app.content.sorcerer_combat_levels import SORCERER_COMBAT_LEVELS
 from app.content.sorcerer_draconic_2024_bound_spells import (
     build_nyra_2024_spell_attacks,
@@ -60,6 +60,8 @@ def build_nyra_2024_conversions(level: int) -> list[ResourceConversionAction]:
 def build_nyra_2024_self_buffs(level: int):
     try:
         buffs = [innate_sorcery_2024()]
+        if level >= 3:
+            buffs.append(dragons_breath_cast_2024())
         if level >= 7:
             buffs.append(innate_sorcery_incarnate_2024())
         if level >= 14:

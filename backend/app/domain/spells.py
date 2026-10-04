@@ -140,6 +140,7 @@ class SpellSaveAction(BaseModel):
     reduce_hit_point_maximum_on_failed_save: bool = False
     verbal_component: bool = True
     concentration: bool = False
+    repeat_only: bool = False
     duration_minutes: int | None = Field(default=None, ge=1)
     allows_higher_slots: bool = False
     target_count: int = Field(default=1, ge=1, le=20)

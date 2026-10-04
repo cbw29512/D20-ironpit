@@ -12,6 +12,7 @@ from app.combat.precombat_spells import (
     select_defensive_targets,
 )
 from app.combat.timed_self_buff_policy import (
+    concentration_grant_only,
     timed_self_buff_active,
     timed_self_buff_resource,
 )
@@ -42,6 +43,8 @@ def _timed_choice(member: EncounterCombatant) -> TimedSelfBuffAction | None:
                 continue
             resource = timed_self_buff_resource(member, action)
             if timed_self_buff_active(member, action):
+                continue
+            if concentration_grant_only(action):
                 continue
             if action.resource_id is not None and (
                 resource is None or resource.current_uses < action.resource_cost

@@ -12,7 +12,6 @@
   function chooseActionAtSlot(caster, setup, action, castLevel, protectedAllyIds = [], alternateCast = null) {
     try {
       if (!action || action.actionCost === "reaction" || (action.castRounds || 1) > 1
-        || (action.concentration && caster.state.concentration)
         || !E().available(caster.state, action.actionCost)) return null;
       const scaled = H().scaledSpell(action, castLevel);
       const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
@@ -71,6 +70,7 @@
       const candidates = [], members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
       for (const [index, action] of (caster.state.template.spell_save_actions || []).entries()) {
         if (action.actionCost === "reaction" || (action.castRounds || 1) > 1
+          || action.repeatOnly
           || (action.concentration && caster.state.concentration)
           || !E().available(caster.state, action.actionCost)) continue;
         for (const { castLevel, alternateCast } of H().castOptions(caster, action, turnKey)) {

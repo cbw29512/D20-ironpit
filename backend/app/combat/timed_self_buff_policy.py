@@ -32,6 +32,28 @@ def timed_self_buff_resource(
         raise RuntimeError("Timed self-buff resource could not be resolved.") from exc
 
 
+def concentration_grant_only(action: TimedSelfBuffAction) -> bool:
+    """True when the Action only starts Concentration and has no other live buff."""
+    try:
+        return bool(action.concentration) and not (
+            action.condition_ids
+            or action.damage_resistances
+            or action.debuff_counters
+            or action.saving_throw_advantage_grants
+            or action.movement_mode_grants
+            or action.friendly_save_advantage_aura
+            or action.friendly_cover_aura
+            or action.hostile_start_turn_condition_aura
+            or action.start_turn_emanation_damage
+            or action.melee_hit_retaliation
+            or action.spell_save_dc_bonus
+            or action.spell_attack_advantage
+        )
+    except Exception:
+        logger.exception("Failed concentration-grant-only check for %s.", action.id)
+        raise
+
+
 def timed_self_buff_active(
     member: EncounterCombatant,
     action: TimedSelfBuffAction,
@@ -131,6 +153,7 @@ def choose_timed_self_buff_action(
                     and setup is not None
                     and verbal_casting_blocked(member, setup)
                 )
+                and not concentration_grant_only(action)
                 and _friendly_aura_is_relevant(member, action, setup)
                 and _hostile_aura_is_relevant(member, action, setup)
             ):

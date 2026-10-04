@@ -48,6 +48,23 @@
       && stateRuntime.distance(member, target) <= aura.radius_ft);
   }
 
+  function concentrationGrantOnly(action) {
+    return Boolean(action.concentration) && !(
+      (action.conditionIds || []).length
+      || (action.damageResistances || []).length
+      || (action.debuffCounters || []).length
+      || (action.savingThrowAdvantageGrants || []).length
+      || (action.movementModeGrants || []).length
+      || action.friendlySaveAdvantageAura
+      || action.friendlyCoverAura
+      || action.hostileStartTurnConditionAura
+      || action.startTurnEmanationDamage
+      || action.meleeHitRetaliation
+      || action.spellSaveDcBonus
+      || action.spellAttackAdvantage
+    );
+  }
+
   function choose(member, setup = null, activationTiming = "action") {
     try {
       const choices = (member.state.template.timed_self_buff_actions || []).filter((action) =>
@@ -55,6 +72,7 @@
         && (activationTiming === "start_turn" || E().available(member.state, action.actionCost))
         && (action.resourceId == null || (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1))
         && !active(member, action)
+        && !concentrationGrantOnly(action)
         && (!action.concentration || !member.state.concentration)
         && !(action.resourceId && String(action.resourceId).startsWith("spell-slot-")
           && setup && window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.verbalBlocked(member, setup))
@@ -68,5 +86,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_TIMED_SELF_BUFF_POLICY = { active, choose };
+  window.IRON_PIT_BROWSER_TIMED_SELF_BUFF_POLICY = { active, choose, concentrationGrantOnly };
 })();
