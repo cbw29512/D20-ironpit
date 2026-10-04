@@ -12,6 +12,7 @@ from app.domain.attack_action_weapon_buffs import AttackActionWeaponBuff
 from app.domain.character_builds import AbilityScores
 from app.domain.damage_sources import ConditionalDamageDefense
 from app.domain.effect_removal import EffectRemovalAction
+from app.domain.environment_context import EnvironmentContextReaction
 from app.domain.d20_bonus_dice import D20BonusDieAction
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
 from app.domain.movement import MovementModes
@@ -82,6 +83,7 @@ class CombatantTemplate(BaseModel):
     truesight_ft: int = Field(default=0, ge=0)
     progression_features: ProgressionCombatFeatures = Field(default_factory=ProgressionCombatFeatures)
     passive_modifier_grants: list[PassiveModifierGrant] = Field(default_factory=list)
+    environment_context_reactions: list[EnvironmentContextReaction] = Field(default_factory=list)
     weapon_attack: WeaponAttack
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
