@@ -93,6 +93,12 @@ def paladin_2024_source_references(level: int) -> list[str]:
                 "Basic Rules 2024: Paladin level 16 — Ability Score Improvement; "
                 "Feats — Ability Score Improvement (+2 Charisma)"
             )
+        if level >= 17:
+            references.extend([
+                "Basic Rules 2024: Paladin level 17 — Proficiency Bonus +6 and fifth-level spell slots",
+                "Basic Rules 2024: Oath of Devotion level 17 — Commune and Flame Strike",
+                "Basic Rules 2024: Spells — Destructive Wave and Greater Restoration",
+            ])
         references.extend([
             "Basic Rules 2024: Character Origins — Human and Soldier",
             (
@@ -100,7 +106,7 @@ def paladin_2024_source_references(level: int) -> list[str]:
                 "Searing Smite, Thunderous Smite, Shining Smite, Find Steed, Aid, Zone of Truth, "
                 "Protection from Evil and Good, Shield of Faith, Lesser Restoration, "
                 "Aura of Vitality, Blinding Smite, Crusader\'s Mantle, Beacon of Hope, Dispel Magic, "
-                "Staggering Smite, Aura of Life"
+                "Staggering Smite, Aura of Life, Destructive Wave, Greater Restoration, Commune, Flame Strike"
             ),
             (
                 "Basic Rules 2024: Equipment — Chain Mail, Shield, Longsword, Javelin, "
