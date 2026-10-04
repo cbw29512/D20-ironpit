@@ -101,6 +101,9 @@ def build_paladin_2024_progression(
 ) -> ProgressionCombatFeatures:
     try:
         aura_radius = 30 if level >= 18 else 10
+        boon_fields = compile_progression_feature_fields(
+            ["boon-combat-prowess"] if level >= 19 else [], level
+        )
         return ProgressionCombatFeatures(
             friendly_saving_throw_aura=(
                 FriendlySavingThrowAuraGrant(
