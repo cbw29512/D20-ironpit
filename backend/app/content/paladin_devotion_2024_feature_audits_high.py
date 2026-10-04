@@ -120,6 +120,19 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
                            "are fully represented; no approximation is allowed."),
                 ),
             ])
+        if level >= 20:
+            audits.append(paladin_2024_feature(
+                "holy-nimbus",
+                "Holy Nimbus",
+                "subclass", combat=True, automated=True,
+                notes=("Composes existing universal mechanics: a Bonus Action finite timed self-buff; "
+                       "all-save Advantage against Fiend/Undead sources; 30-foot enemy-turn-start "
+                       "Radiant damage equal to Charisma modifier plus Proficiency Bonus; a 30-foot "
+                       "sunlight environment-context aura consumed by target-owned traits; and a "
+                       "no-action level-5-slot resource conversion that restores the finite use. "
+                       "Aura effects pause while Aura of Protection is inactive from Incapacitated "
+                       "without ending the 10-minute duration. No Paladin or monster-name resolver."),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build later 2024 Paladin feature audits at level %s.", level)
