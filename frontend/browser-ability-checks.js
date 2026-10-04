@@ -1,11 +1,14 @@
 (() => {
   "use strict";
 
-  function mode(state, advantageSources = 0, disadvantageSources = 0) {
+  function mode(state, advantageSources = 0, disadvantageSources = 0, options = {}) {
     try {
       const generic = window.IRON_PIT_BROWSER_MODIFIERS?.d20TestAdvantage(state) || 0;
+      const context = window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXT?.disadvantage(
+        options.member || null, options.setup || null, "ability_check",
+      ) || 0;
       return window.IRON_PIT_BROWSER_ROLLS.modeFromSources(
-        advantageSources + generic, disadvantageSources,
+        advantageSources + generic, disadvantageSources + context,
       );
     } catch (error) {
       console.error("Browser ability-check roll mode failed", { combatant: state?.template?.name, error });
