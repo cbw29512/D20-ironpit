@@ -114,12 +114,34 @@ def main() -> None:
     singles = single_family_yields(signatures)
     trait_only = singles.get("trait", [])
     control_only = singles.get("condition-or-control", [])
+
+    # Whole-roster family membership. These views intentionally include monsters
+    # with multiple blockers so batch work is chosen by total downstream yield,
+    # not only by immediately certifiable single-family candidates.
+    family_names: dict[str, list[str]] = defaultdict(list)
+    for name, blockers in blockers_by_name.items():
+        for blocker in blockers:
+            family_names[blocker].append(name)
+    family_names = {
+        blocker: sorted(names)
+        for blocker, names in sorted(
+            family_names.items(), key=lambda item: (-len(item[1]), item[0])
+        )
+    }
+    all_control_names = family_names.get("condition-or-control", [])
+    all_trait_names = family_names.get("trait", [])
     print(
         "CAPABILITY_YIELD_BASELINE"
         f"\tready={len(ready_names)}\tblocked={len(blockers_by_name)}\tsignatures={len(signatures)}"
     )
+    for blocker, names in family_names.items():
+        print(f"CAPABILITY_FAMILY_TOTAL\t{blocker}\t{len(names)}\t" + " | ".join(names))
     for blocker, names in sorted(singles.items(), key=lambda item: (-len(item[1]), item[0])):
         print(f"CAPABILITY_SINGLE_FAMILY\t{blocker}\t{len(names)}\t" + " | ".join(names))
+    for effect, names in _control_effect_yields(rows_by_name, all_control_names).items():
+        print(f"CAPABILITY_CONTROL_EFFECT_ALL\t{effect}\t{len(names)}\t" + " | ".join(names))
+    for trait, names in _trait_heading_yields(rows_by_name, all_trait_names).items():
+        print(f"CAPABILITY_TRAIT_HEADING_ALL\t{trait}\t{len(names)}\t" + " | ".join(names))
     for signature, names in _control_signatures(rows_by_name, control_only).items():
         print(f"CAPABILITY_CONTROL_SIGNATURE\t{'+'.join(signature)}\t{len(names)}\t" + " | ".join(names))
     for effect, names in _control_effect_yields(rows_by_name, control_only).items():
