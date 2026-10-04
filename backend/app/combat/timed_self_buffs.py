@@ -123,6 +123,7 @@ def resolve_timed_self_buff(
                     requires_spell_effect=grant.requires_spell_effect,
                     source_creature_types=list(grant.source_creature_types),
                     required_effect_tags=list(grant.required_effect_tags),
+                    inactive_while_owner_incapacitated=action.inactive_while_source_incapacitated,
                 ))
 
         return BattleEvent(
