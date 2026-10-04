@@ -87,3 +87,5 @@ def test_level_nineteen_reuses_combat_prowess_and_advances_paladin_spellcasting(
     except Exception:
         logger.exception("Paladin 19 Epic Boon certification failed.")
         raise
+
+# Exact-head refresh after generated artifact commit.
