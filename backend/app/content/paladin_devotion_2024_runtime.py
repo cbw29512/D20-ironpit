@@ -32,10 +32,10 @@ from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
 
 def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
-    """Build certified 2024 Aurelia through Paladin level 17."""
+    """Build certified 2024 Aurelia through Paladin level 18."""
     try:
-        if level not in range(1, 18):
-            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-17 only.")
+        if level not in range(1, 19):
+            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-18 only.")
         profile = build_aurelia_brightshield_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -132,6 +132,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                 + ("Restoring Touch, " if level >= 14 else "")
                 + ("Smite of Protection, Aura of Life (fail-closed pending shared recovery aura), " if level >= 15 else "")
                 + ("Commune (arena-neutral), Flame Strike, Destructive Wave (fail-closed), Greater Restoration (fail-closed), " if level >= 17 else "")
+                + ("Aura Expansion, " if level >= 18 else "")
                 + "Longsword, Javelin"
             ),
         )
