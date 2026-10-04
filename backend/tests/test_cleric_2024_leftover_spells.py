@@ -8,6 +8,7 @@ from app.combat.healing import resolve_healing
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_save_effect_resolution import resolve_spell_save_effect
 from app.combat.state import begin_turn, build_combatant_state
+from app.combat.timed_self_buff_policy import choose_timed_self_buff_action
 from app.combat.timed_self_buffs import resolve_timed_self_buff
 from app.combat.zero_hp import apply_damage
 from app.combat.zero_hp_replacement import (
@@ -17,7 +18,9 @@ from app.combat.zero_hp_replacement import (
 from app.content.arena_map import build_standard_iron_pit_map
 from app.content.audited_cleric import build_seraphine_dawnshield_level
 from app.content.audited_fighter import build_karnok_stoneward
+from app.content.canonical_cleric_spells import CLERIC_SPELLS
 from app.content.canonical_hero_policy import canonical_spell_package
+from app.content.canonical_paladin_spells import PALADIN_SPELLS
 from app.content.monsters import build_commoner
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
@@ -48,6 +51,16 @@ def _setup(heroes, monsters) -> EncounterSetup:
 
 def _slot(member: EncounterCombatant, level: int):
     return next(item for item in member.state.resources if item.id == f"spell-slot-{level}")
+
+
+def _tank(combatant_id: str) -> EncounterCombatant:
+    return _member(
+        build_commoner().model_copy(update={"max_hp": 200}, deep=True),
+        combatant_id,
+        "monsters",
+        5,
+        7,
+    )
 
 
 def test_death_ward_2024_replaces_zero_hp_and_blocks_instant_kill() -> None:
@@ -93,12 +106,12 @@ def test_heal_and_spare_the_dying_follow_healing_policy() -> None:
     assert choice[0].id == "healing-word"
 
     for resource in cleric.state.resources:
-        if resource.id.startswith("spell-slot-"):
+        if resource.id.startswith("spell-slot-") or resource.id == "divine-intervention":
             resource.current_uses = 0
     begin_turn(cleric.state)
     choice = choose_healing_action(cleric, setup, "1:cleric")
     assert choice is not None and choice[0].id == "spare-the-dying"
-    event = resolve_healing(1, 1, cleric, ally, spare, FixedDiceProvider([]), "1:cleric")
+    event = resolve_healing(1, 1, cleric, ally, spare, FixedDiceProvider([1]), "1:cleric")
     assert ally.state.is_stable is True
     assert ally.state.current_hp == 0
     assert event.healing_roll is not None
@@ -119,7 +132,7 @@ def test_mass_heal_divides_the_printed_pool() -> None:
     targets = choose_group_healing_targets(cleric, setup, action, "1:cleric")
     assert [item.combatant_id for item in targets][:2] == ["first", "second"]
     events, _ = resolve_group_healing(
-        1, 1, cleric, targets, action, FixedDiceProvider([]), "1:cleric", setup=setup,
+        1, 1, cleric, targets, action, FixedDiceProvider([1]), "1:cleric", setup=setup,
     )
     assert first.state.current_hp == first.state.template.max_hp
     assert second.state.current_hp == second.state.template.max_hp
@@ -135,9 +148,9 @@ def test_holy_aura_grants_all_save_advantage_and_is_not_auto_cast() -> None:
     aura = next(item for item in cleric.state.template.timed_self_buff_actions if item.id == "holy-aura")
     assert aura.friendly_save_advantage_aura is not None
     assert aura.friendly_save_advantage_aura.all_saves is True
-    from app.combat.timed_self_buff_policy import choose_timed_self_buff_action
     begin_turn(cleric.state)
-    assert choose_timed_self_buff_action(cleric, setup) is None or choose_timed_self_buff_action(cleric, setup).id != "holy-aura"
+    chosen = choose_timed_self_buff_action(cleric, setup)
+    assert chosen is None or chosen.id != "holy-aura"
     resolve_timed_self_buff(1, 1, cleric, aura, setup=setup, turn_key="1:cleric")
     sync_friendly_save_auras(setup)
     kinds = {item.kind for item in ally.state.active_modifiers}
@@ -151,17 +164,16 @@ def test_holy_aura_grants_all_save_advantage_and_is_not_auto_cast() -> None:
 
 def test_contagion_is_fail_only_poison_and_con_save_disadvantage() -> None:
     cleric = _member(build_seraphine_dawnshield_level(10), "cleric", "heroes")
-    enemy = _member(build_commoner().model_copy(update={"max_hp": 80}, deep=True), "enemy", "monsters", 5, 7)
+    enemy = _tank("enemy")
     setup = _setup([cleric], [enemy])
     spell = next(item for item in cleric.state.template.spell_save_actions if item.id == "contagion")
     assert (spell.damage_dice_count, spell.damage_dice_size, spell.success_damage) == (11, 8, "none")
     begin_turn(cleric.state)
-    fail_dice = FixedDiceProvider([1, *[8] * 11])
     events, _ = resolve_spell_save_effect(
         1, 1, cleric, setup,
         SpellChoice(action=spell, slot_level=5, target_ids=("enemy",)),
         "1:cleric",
-        fail_dice,
+        FixedDiceProvider([1, *[8] * 11]),
     )
     assert events[0].save_succeeded is False
     assert "poisoned" in enemy.state.active_effect_ids
@@ -173,7 +185,7 @@ def test_contagion_is_fail_only_poison_and_con_save_disadvantage() -> None:
     assert poison.repeat_save_failures_to_lock == 3
 
     success_cleric = _member(build_seraphine_dawnshield_level(10), "cleric2", "heroes")
-    success_enemy = _member(build_commoner().model_copy(update={"max_hp": 80}, deep=True), "enemy2", "monsters", 5, 7)
+    success_enemy = _tank("enemy2")
     success_setup = _setup([success_cleric], [success_enemy])
     begin_turn(success_cleric.state)
     ok_events, _ = resolve_spell_save_effect(
@@ -183,13 +195,13 @@ def test_contagion_is_fail_only_poison_and_con_save_disadvantage() -> None:
         FixedDiceProvider([20]),
     )
     assert ok_events[0].save_succeeded is True
-    assert success_enemy.state.current_hp == 80
+    assert success_enemy.state.current_hp == 200
     assert "poisoned" not in success_enemy.state.active_effect_ids
 
 
 def test_contagion_repeat_save_success_ends_and_failures_count() -> None:
     cleric = _member(build_seraphine_dawnshield_level(10), "cleric", "heroes")
-    enemy = _member(build_commoner().model_copy(update={"max_hp": 80}, deep=True), "enemy", "monsters", 5, 7)
+    enemy = _tank("enemy")
     setup = _setup([cleric], [enemy])
     spell = next(item for item in cleric.state.template.spell_save_actions if item.id == "contagion")
     begin_turn(cleric.state)
@@ -199,29 +211,26 @@ def test_contagion_repeat_save_success_ends_and_failures_count() -> None:
         "1:cleric",
         FixedDiceProvider([1, *[8] * 11]),
     )
-    resolve_target_condition_timing(2, 2, enemy, "target_turn_end", FixedDiceProvider([1]))
+    resolve_target_condition_timing(2, 2, enemy, "target_turn_end", FixedDiceProvider([1, 1]))
     poison = next(item for item in enemy.state.timed_effects if item.effect_id == "poisoned")
     assert poison.repeat_save_failure_count == 1
-    resolve_target_condition_timing(3, 3, enemy, "target_turn_end", FixedDiceProvider([20]))
+    resolve_target_condition_timing(3, 3, enemy, "target_turn_end", FixedDiceProvider([20, 20]))
     assert "poisoned" not in enemy.state.active_effect_ids
     assert not any(item.source_effect_id == "contagion" for item in enemy.state.active_modifiers)
 
 
 def test_prayer_of_healing_and_regenerate_stay_long_cast_on_the_sheet() -> None:
     seven = canonical_spell_package("cleric", 7)
-    thirteen = canonical_spell_package("cleric", 13)
+    by_id = {item.id: item for item in CLERIC_SPELLS}
     prayer = next(item for item in seven.spells if item.id == "prayer-of-healing")
-    regenerate = next(item for item in thirteen.spells if item.id == "regenerate")
     assert prayer.required_capabilities == ["long-cast"]
-    assert regenerate.required_capabilities == ["long-cast"]
+    assert by_id["regenerate"].required_capabilities == ["long-cast"]
     hero = build_seraphine_dawnshield_level(13)
     assert all(item.id != "prayer-of-healing" for item in hero.healing_actions)
     assert all(item.id != "regenerate" for item in hero.healing_actions)
 
 
 def test_zone_of_truth_and_commune_stay_noncombat_on_the_paladin_sheet() -> None:
-    from app.content.canonical_paladin_spells import PALADIN_SPELLS
-
     by_id = {item.id: item for item in PALADIN_SPELLS}
     assert by_id["zone-of-truth"].required_capabilities == ["arena-out-of-scope"]
     assert by_id["commune"].required_capabilities == ["arena-out-of-scope"]

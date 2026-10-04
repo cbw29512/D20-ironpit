@@ -112,7 +112,7 @@ def build_seraphine_dawnshield_level15_profile() -> CharacterBuildProfile:
                     "the prepared list as a long-cast spell."
                 ),
             ),
-        )
+        ]
         data.update(
             feature_audits=[*data["feature_audits"], *(item.model_dump() for item in additions)],
             source_references=[
