@@ -28,7 +28,7 @@ def test_canonical_base_array_is_always_legal_15_14_13_10_10_10() -> None:
 
 
 def test_weapon_first_builds_dump_all_three_mental_scores_to_ten() -> None:
-    for class_id in ("barbarian", "fighter", "monk", "ranger", "rogue"):
+    for class_id in ("barbarian", "fighter", "monk", "rogue"):
         scores = canonical_base_ability_scores(class_id)
         assert (scores.intelligence, scores.wisdom, scores.charisma) == (10, 10, 10)
 
@@ -51,7 +51,7 @@ def test_representative_primary_and_secondary_priorities() -> None:
         strength=15, constitution=14, dexterity=13, intelligence=10, wisdom=10, charisma=10,
     )
     assert canonical_base_ability_scores("ranger") == AbilityScores(
-        dexterity=15, constitution=14, strength=13, intelligence=10, wisdom=10, charisma=10,
+        dexterity=15, wisdom=14, constitution=13, strength=10, intelligence=10, charisma=10,
     )
     assert canonical_base_ability_scores("cleric") == AbilityScores(
         wisdom=15, charisma=14, intelligence=13, strength=10, dexterity=10, constitution=10,
