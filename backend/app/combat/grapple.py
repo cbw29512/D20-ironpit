@@ -18,7 +18,6 @@ GRAPPLED_EFFECT_ID = "grappled"
 POISONED_EFFECT_ID = "poisoned"
 RESTRAINED_EFFECT_ID = "restrained"
 
-
 def _sync_effect_ids(state: CombatantState) -> None:
     if state.grapple_sources:
         if GRAPPLED_EFFECT_ID not in state.active_effect_ids:
@@ -32,7 +31,6 @@ def _sync_effect_ids(state: CombatantState) -> None:
         state.active_effect_ids.append(RESTRAINED_EFFECT_ID)
     elif not restrained and RESTRAINED_EFFECT_ID in state.active_effect_ids:
         state.active_effect_ids.remove(RESTRAINED_EFFECT_ID)
-
 
 def apply_grapple(
     state: CombatantState,
@@ -61,11 +59,9 @@ def apply_grapple(
     _sync_effect_ids(state)
     return [GRAPPLED_EFFECT_ID, RESTRAINED_EFFECT_ID] if restrains else [GRAPPLED_EFFECT_ID]
 
-
 def release_grapple(state: CombatantState, source_id: str) -> None:
     state.grapple_sources = [source for source in state.grapple_sources if source.source_id != source_id]
     _sync_effect_ids(state)
-
 
 def resolve_movement_countered_grapples(state: CombatantState) -> list[tuple[str, str, int]]:
     """Spend movement to clear grapple-backed debuffs when an active buff permits it."""
