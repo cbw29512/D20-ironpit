@@ -51,6 +51,7 @@ def choose_offensive_movement_intent(
                     desired_distance,
                     attacker.state.movement_remaining_ft,
                     setup.persistent_barriers,
+                    setup.temporary_terrain_zones,
                 )
                 if not plan.goal_reachable or not plan.path:
                     continue
@@ -114,6 +115,7 @@ def melee_can_be_enabled_this_turn(
                     desired_distance,
                     budget,
                     setup.persistent_barriers,
+                    setup.temporary_terrain_zones,
                 )
                 if plan.goal_reachable and plan.path and plan.final_distance_ft <= desired_distance:
                     return True

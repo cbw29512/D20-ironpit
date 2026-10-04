@@ -11,6 +11,7 @@ from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.friendly_condition_auras import FriendlyConditionImmunityAuraGrant
 from app.domain.friendly_save_auras import FriendlySavingThrowAuraGrant
 from app.domain.models import DamageType, OnHitDamage, WeaponAttack
+from app.content.paladin_2024_smites import build_paladin_2024_extra_smites
 from app.domain.post_hit_damage import ResourceBackedPostHitDamage
 from app.domain.resource_conversion import ResourceConversionAction
 from app.domain.timed_self_buffs import TimedFriendlyCoverAura, TimedSelfBuffAction
@@ -114,6 +115,7 @@ def build_paladin_2024_conversions(level: int) -> list[ResourceConversionAction]
 def build_paladin_2024_progression(
     level: int,
     charisma_modifier: int,
+    save_dc: int = 0,
 ) -> ProgressionCombatFeatures:
     try:
         aura_radius = 30 if level >= 18 else 10
@@ -155,6 +157,7 @@ def build_paladin_2024_progression(
                 ),
             ],
             **boon_fields,
+            post_hit_spell_options=build_paladin_2024_extra_smites(level, save_dc),
             resource_backed_post_hit_damage=(
                 ResourceBackedPostHitDamage(
                     source_id="divine-smite-2024",

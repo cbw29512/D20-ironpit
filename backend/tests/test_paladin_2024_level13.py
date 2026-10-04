@@ -47,7 +47,8 @@ def test_level_thirteen_extends_the_same_build_and_edition_spell_package() -> No
         assert len(package.spells) == 11
         assert package.spells[:-1] == canonical_spell_package("paladin", 12, "2024", 3).spells
         assert package.spells[-1].id == "staggering-smite"
-        assert package.spells[-1].required_capabilities == ["arena-out-of-scope"]
+        assert package.spells[-1].required_capabilities == ["post-hit-spell"]
+        assert any(item.id == "staggering-smite" for item in hero.progression_features.post_hit_spell_options)
         oath = {s.id: s for s in package.always_prepared_spells}
         assert oath["freedom-of-movement"].always_prepared_from_level == 13
         assert oath["guardian-of-faith"].required_capabilities == ["arena-unavailable-summon"]

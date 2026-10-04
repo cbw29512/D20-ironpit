@@ -76,6 +76,9 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "flame-strike",
         "destructive-wave",
         "dragons-breath",
+        "fire-storm",
+        "ice-storm",
+        "greater-restoration",
         "disintegrate",
         "finger-of-death",
         "sunburst",
@@ -625,6 +628,40 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.repeat_only,
         ) == (2, "action", 15, "cone", "self", 15, "dexterity", 3, 6, "fire", "half", 1, True, True)
 
+    if "fire-storm" in spell_saves:
+        spell = spell_saves["fire-storm"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.length_ft if spell.area else None,
+            spell.area.contiguous_section_count if spell.area else None,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.success_damage,
+        ) == (7, "action", 150, "cube", 10, 10, "dexterity", 7, 10, "fire", "half")
+
+    if "ice-storm" in spell_saves:
+        spell = spell_saves["ice-storm"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.radius_ft if spell.area else None,
+            spell.save_ability,
+            spell.success_damage,
+            spell.creates_difficult_terrain,
+            spell.difficult_terrain_duration_rounds,
+        ) == (4, "action", 300, "radius", 20, "dexterity", "half", True, 1)
+        assert [
+            (item.dice_count, item.dice_size, item.damage_type)
+            for item in spell.damage_components
+        ] == [(2, 10, "bludgeoning"), (4, 8, "cold")]
+
     if "disintegrate" in spell_saves:
         spell = spell_saves["disintegrate"]
         assert (
@@ -1037,6 +1074,20 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "paralyzed",
             "poisoned",
         }
+
+    if "greater-restoration" in condition_removals:
+        spell = condition_removals["greater-restoration"]
+        assert (
+            spell.action_cost,
+            spell.range_ft,
+            spell.max_conditions_per_use,
+            spell.resource_costs,
+            spell.reduces_exhaustion_levels,
+            spell.removes_curses,
+            spell.removes_ability_score_reductions,
+            spell.removes_hit_point_maximum_reductions,
+        ) == ("action", 5, 1, {"spell-slot-5": 1}, 1, True, True, True)
+        assert set(spell.removable_conditions) == {"charmed", "petrified"}
 
     if "dispel-magic" in effect_removals:
         expected_casting_abilities = {

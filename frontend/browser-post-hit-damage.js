@@ -23,13 +23,60 @@
     return String(raw || "").split(" (", 1)[0].trim().toLowerCase();
   }
 
+  function extraExpected(option, slotLevel) {
+    const extra = Math.max(0, slotLevel - option.level);
+    return (option.base_dice_count + extra * (option.dice_per_slot_above || 0)) * ((option.dice_size + 1) / 2);
+  }
+
+  function chooseExtra(attacker, attack, turnKey) {
+    if (!E().available(attacker, "bonus_action")) return null;
+    let best = null;
+    for (const option of attacker.template.post_hit_spell_options || []) {
+      if (!(option.trigger_attack_ids || []).includes(attack?.id)) continue;
+      if (!S().slotSpellAvailable(attacker, turnKey)) continue;
+      let slot = null;
+      for (let level = option.max_slot_level || 9; level >= option.level; level -= 1) {
+        if (R().available(attacker, `spell-slot-${level}`, 1)) { slot = level; break; }
+      }
+      if (slot == null) continue;
+      const score = extraExpected(option, slot);
+      if (!best || score > best.score) best = { option, slot, score };
+    }
+    return best;
+  }
+
   function bonusDamage(attacker, attack, turnKey, target = null) {
     try {
-      const rule = attacker?.template?.resource_backed_post_hit_damage;
-      if (!rule || !(rule.trigger_attack_ids || []).includes(attack?.id)) return null;
       if (!target || target.current_hp <= 0 || target.is_dead || !target.is_alive) return null;
       if (!turnKey) throw new Error("Post-hit resource damage requires the active turn key.");
-      if (!E().available(attacker, rule.action_cost)) return null;
+      const extra = chooseExtra(attacker, attack, turnKey);
+      const rule = attacker?.template?.resource_backed_post_hit_damage;
+      const divineReady = rule
+        && (rule.trigger_attack_ids || []).includes(attack?.id)
+        && E().available(attacker, rule.action_cost)
+        && payment(attacker, rule, turnKey);
+      const divineScore = divineReady
+        ? (rule.base_dice_count + (divineReady.slotLevel - rule.printed_spell_level) * rule.dice_per_slot_above)
+          * ((rule.dice_size + 1) / 2)
+        : 0;
+      if (extra && (!divineReady || extra.score > divineScore)) {
+        E().spend(attacker, extra.option.action_cost || "bonus_action");
+        S().markSlotSpellCast(attacker, turnKey);
+        R().spend(attacker, `spell-slot-${extra.slot}`, 1);
+        attacker.feature_last_turn_keys = attacker.feature_last_turn_keys || {};
+        attacker.feature_last_turn_keys[extra.option.id] = turnKey;
+        attacker.feature_last_turn_keys["paid-post-hit-spell"] = extra.option.id;
+        const count = extra.option.base_dice_count
+          + (extra.option.dice_per_slot_above || 0) * (extra.slot - extra.option.level);
+        return {
+          source: extra.option.name,
+          diceCount: count,
+          diceSize: extra.option.dice_size,
+          damageBonus: 0,
+          damageType: extra.option.damage_type,
+        };
+      }
+      if (!divineReady) return null;
       const paid = payment(attacker, rule, turnKey);
       if (!paid) return null;
 

@@ -32,6 +32,7 @@
   function choose(caster, setup, turnKey) {
     if (Z()?.verbalBlocked(caster, setup)) return null;
     for (const action of caster.state.template.persistent_save_zone_actions || []) {
+      if (action.damageDiceCount) continue;
       if (!E().available(caster.state, action.actionCost)) continue;
       if (action.concentration && caster.state.concentration) continue;
       if (action.expendsSpellSlot && !P()?.slotSpellAvailable(caster.state, turnKey)) continue;

@@ -10,6 +10,7 @@ from app.domain.persistent_barriers import PersistentBarrierState
 from app.domain.persistent_beneficial_zones import PersistentBeneficialZoneState
 from app.domain.persistent_hazards import PersistentHazardState
 from app.domain.persistent_save_zones import PersistentSaveZoneState
+from app.domain.temporary_terrain import TemporaryTerrainZone
 from app.domain.suppression_zones import PersistentSuppressionZoneState
 from app.domain.rulesets import DEFAULT_RULESET, RulesetId
 from app.domain.runtime import CombatantState
@@ -46,6 +47,7 @@ class EncounterSetup(BaseModel):
     persistent_beneficial_zones: list[PersistentBeneficialZoneState] = Field(default_factory=list)
     suppression_zones: list[PersistentSuppressionZoneState] = Field(default_factory=list)
     save_zones: list[PersistentSaveZoneState] = Field(default_factory=list)
+    temporary_terrain_zones: list[TemporaryTerrainZone] = Field(default_factory=list)
 
 
 class InitiativeGroup(BaseModel):

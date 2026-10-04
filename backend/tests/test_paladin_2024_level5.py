@@ -57,7 +57,11 @@ def test_2024_paladin_level_five_progression_is_raw_ready() -> None:
         "aid",
         "zone-of-truth",
     ]
-    assert package.spells[-1].required_capabilities == ["arena-out-of-scope"]
+    assert package.spells[-1].required_capabilities == ["post-hit-spell"]
+    assert {item.id for item in hero.progression_features.post_hit_spell_options} >= {
+        "thunderous-smite",
+        "shining-smite",
+    }
     find_steed = next(spell for spell in package.always_prepared_spells if spell.id == "find-steed")
     assert find_steed.required_capabilities == ["arena-unavailable-summon"]
 

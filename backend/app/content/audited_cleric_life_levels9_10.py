@@ -32,10 +32,10 @@ def build_seraphine_dawnshield_level9_profile() -> CharacterBuildProfile:
         _class_feature(
             "greater-restoration",
             "Greater Restoration",
-            combat=False,
             notes=(
-                "Always prepared for RAW Life Domain progression; broad restoration semantics "
-                "remain outside the simple arena action set."
+                "Always-prepared Life Domain spell. Reuses ConditionRemovalAction for one printed "
+                "rider: Charm or Petrified, a curse, one Exhaustion level, an ability-score "
+                "reduction, or a Hit Point maximum reduction."
             ),
         ),
         _class_feature(

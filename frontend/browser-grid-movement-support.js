@@ -80,7 +80,7 @@
     }
   }
 
-  function movementStepCostFt(map, mover, destination, members, origin = null, barriers = null) {
+  function movementStepCostFt(map, mover, destination, members, origin = null, barriers = null, terrainZones = null) {
     try {
       if (!geometry().inBounds(map, destination, mover.state.template.size)) return null;
       if (origin && window.IRON_PIT_BROWSER_GRID_BARRIERS?.blocksTransition(origin, destination, barriers)) {
@@ -90,6 +90,10 @@
       for (const occupant of occupantsAt(mover, destination, members)) {
         if (!canPassThrough(mover, occupant)) return null;
         if (creatureSpaceIsDifficult(mover, occupant)) cost = (map.cell_size_ft || 5) * 2;
+      }
+      const zones = terrainZones || [];
+      if (zones.length && window.IRON_PIT_BROWSER_TEMPORARY_TERRAIN?.destinationIsDifficult(zones, mover, destination)) {
+        cost = (map.cell_size_ft || 5) * 2;
       }
       return cost;
     } catch (error) {

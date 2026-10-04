@@ -101,7 +101,7 @@ DRUID_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         spell_level=6, min_character_level=11,
     ),
     _spell(
-        "fire-storm", "Fire Storm", "damage", "arena-out-of-scope",
+        "fire-storm", "Fire Storm", "damage", "save-damage", "area",
         spell_level=7, min_character_level=13,
     ),
     _spell(
@@ -121,7 +121,7 @@ DRUID_SPELLS: tuple[CanonicalSpellChoice, ...] = (
         spell_level=7, min_character_level=19,
     ),
     _spell(
-        "ice-storm", "Ice Storm", "damage", "arena-out-of-scope",
+        "ice-storm", "Ice Storm", "damage", "save-damage", "area", "difficult-terrain",
         spell_level=4, min_character_level=20,
     ),
     _spell(

@@ -60,6 +60,8 @@ def choose_save_zone_action(
         if verbal_casting_blocked(caster, setup):
             return None
         for action in caster.state.template.persistent_save_zone_actions:
+            if action.damage_dice_count:
+                continue
             if not is_available(caster.state, action.action_cost):
                 continue
             if action.concentration and caster.state.concentration is not None:

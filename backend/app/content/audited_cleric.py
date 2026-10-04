@@ -8,11 +8,13 @@ from app.content.cleric_divine_intervention import (
     build_greater_divine_intervention_wish_fireball,
 )
 from app.content.cleric_life_domain import AID, DISPEL_MAGIC, LESSER_RESTORATION
+from app.content.shared_restoration_spells_2024 import greater_restoration_2024
 from app.content.cleric_runtime_loadout import (
     build_seraphine_healing,
     build_seraphine_initiative_refills,
     build_seraphine_resources,
     build_seraphine_save_spells,
+    build_seraphine_save_zones,
     seraphine_source,
 )
 from app.content.cleric_runtime_stats import (
@@ -89,7 +91,11 @@ def _build_seraphine(level: int) -> CombatantTemplate:
         spell_attack_actions=[build_guiding_bolt(spell_attack_bonus)],
         defensive_spell_actions=defenses,
         healing_actions=build_seraphine_healing(level, wisdom_modifier, features),
-        condition_removal_actions=[LESSER_RESTORATION.model_copy(deep=True)] if level >= 3 else [],
+        condition_removal_actions=[
+            *([LESSER_RESTORATION.model_copy(deep=True)] if level >= 3 else []),
+            *([greater_restoration_2024()] if level >= 9 else []),
+        ],
+        persistent_save_zone_actions=build_seraphine_save_zones(level, save_dc),
         effect_removal_actions=[DISPEL_MAGIC.model_copy(deep=True)] if level >= 5 else [],
         progression_features=ProgressionCombatFeatures(
             turning_failure_damage=(

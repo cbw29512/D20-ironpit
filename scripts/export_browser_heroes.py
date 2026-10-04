@@ -152,6 +152,9 @@ def _spell(action: Any) -> dict[str, Any]:
     if action.failed_save_modifier_effects:
         row["failedSaveModifierEffects"] = [_modifier_effect(effect) for effect in action.failed_save_modifier_effects]
     if action.area is not None: row["area"] = action.area.model_dump(mode="json")
+    if action.creates_difficult_terrain:
+        row["createsDifficultTerrain"] = True
+        row["difficultTerrainDurationRounds"] = action.difficult_terrain_duration_rounds
     if action.duration_minutes is not None: row["durationMinutes"] = action.duration_minutes
     if action.area_radius_ft is not None: row["areaRadius"] = action.area_radius_ft
     if action.failed_save_push_ft:
@@ -671,6 +674,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             template.progression_features.resource_backed_post_hit_damage.model_dump(mode="json")
             if template.progression_features.resource_backed_post_hit_damage else None
         ),
+        "post_hit_spell_options": [
+            item.model_dump(mode="json")
+            for item in template.progression_features.post_hit_spell_options
+        ],
         "attackDamageReductionReaction": (
             {
                 "sourceId": template.attack_damage_reduction_reaction.source_id,

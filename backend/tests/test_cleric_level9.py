@@ -60,7 +60,9 @@ def test_level_nine_uses_simple_upcast_damage_and_mass_healing() -> None:
     assert audits["cleric-combat-spells-5"].automated is True
     assert audits["mass-cure-wounds"].automated is True
     assert audits["inflict-wounds-upcast-l5"].automated is True
-    assert audits["greater-restoration"].combat_relevant is False
+    assert audits["greater-restoration"].combat_relevant is True
+    assert any(item.id == "greater-restoration" for item in hero.condition_removal_actions)
+    assert any(item.id == "insect-plague" for item in hero.persistent_save_zone_actions)
 
     assert_canonical_profile_policy(profile)
     assert_character_build_raw_ready(profile, hero)

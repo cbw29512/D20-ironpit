@@ -15,6 +15,7 @@ from app.combat.hp_threshold_turn import resolve_hp_threshold_turn
 from app.combat.landing_offense_policy import decide_post_move_offense
 from app.combat.opening_burst import opening_feature_id
 from app.combat.multi_target_save_actions import resolve_multi_target_save_action
+from app.combat.persistent_save_zone_cast import cast_save_zone
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 
@@ -29,6 +30,13 @@ def resolve_post_move_action(events, sequence, round_number, attacker, target, s
             events.extend(threshold_event if isinstance(threshold_event, list) else [threshold_event])
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         pick = decide_post_move_offense(attacker, setup, turn_key)
+        if pick.family == "save-zone":
+            action, center = pick.payload
+            more, sequence = cast_save_zone(
+                sequence, round_number, attacker, setup, action, center, turn_key, dice,
+            )
+            events.extend(more)
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         if pick.family == "spell":
             spell_events, sequence = resolve_best_spell_offense(
                 sequence, round_number, attacker, setup, turn_key, dice,

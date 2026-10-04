@@ -16,6 +16,7 @@ from app.content.druid_2024_spells import (
     build_thunderwave_2024,
 )
 from app.content.offensive_spell_effects import build_fireball_2024
+from app.content.storm_spell_effects import build_fire_storm_2024, build_ice_storm_2024
 from app.domain.spells import SpellAttackAction, SpellSaveAction
 
 logger = logging.getLogger(__name__)
@@ -60,7 +61,9 @@ def druid_offensive_actions(
             *([build_cone_of_cold_2024(save_dc)] if level >= 9 else []),
             *([build_thunderclap_2024(save_dc, level, damage_bonus)] if level >= 10 else []),
             *([build_thunderwave_2024(save_dc)] if level >= 10 else []),
+            *([build_fire_storm_2024(save_dc)] if level >= 13 else []),
             *([build_sunburst_2024(save_dc)] if level >= 15 else []),
+            *([build_ice_storm_2024(save_dc)] if level >= 20 else []),
         ]
         return (
             [_with_cantrip_range_bonus(action, range_bonus) for action in attacks],

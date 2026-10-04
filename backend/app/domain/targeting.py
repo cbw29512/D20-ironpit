@@ -14,6 +14,7 @@ class AreaTargeting(BaseModel):
     radius_ft: int | None = Field(default=None, ge=5)
     length_ft: int | None = Field(default=None, ge=5)
     width_ft: int | None = Field(default=None, ge=5)
+    contiguous_section_count: int | None = Field(default=None, ge=2, le=20)
 
     @model_validator(mode="after")
     def validate_shape(self) -> "AreaTargeting":
@@ -31,6 +32,8 @@ class AreaTargeting(BaseModel):
                 raise ValueError("line requires length_ft and width_ft.")
             if self.shape in {"cone", "line", "emanation"} and self.origin != "self":
                 raise ValueError(f"{self.shape} must originate from self.")
+            if self.contiguous_section_count is not None and self.shape != "cube":
+                raise ValueError("Contiguous sections require cube geometry.")
             return self
         except Exception:
             raise

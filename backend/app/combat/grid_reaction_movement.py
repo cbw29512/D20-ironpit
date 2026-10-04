@@ -50,6 +50,7 @@ def move_toward_on_grid(
             desired_distance_ft,
             mover.state.movement_remaining_ft,
             setup.persistent_barriers,
+            setup.temporary_terrain_zones,
         )
         if not plan.path:
             return [], sequence, None
@@ -69,6 +70,7 @@ def move_toward_on_grid(
                 members,
                 origin=before_position,
                 barriers=setup.persistent_barriers,
+                terrain_zones=setup.temporary_terrain_zones,
             )
             if step_cost is None or step_cost > mover.state.movement_remaining_ft:
                 break

@@ -12,11 +12,11 @@ PALADIN_SPELLS = (
         min_character_level=3,
     ),
     _spell(
-        "thunderous-smite", "Thunderous Smite", "damage", "arena-out-of-scope",
+        "thunderous-smite", "Thunderous Smite", "damage", "post-hit-spell",
         min_character_level=4,
     ),
     _spell(
-        "shining-smite", "Shining Smite", "damage", "arena-out-of-scope",
+        "shining-smite", "Shining Smite", "damage", "post-hit-spell",
         spell_level=2, min_character_level=5,
     ),
     _spell(
@@ -36,7 +36,7 @@ PALADIN_SPELLS = (
         spell_level=3, min_character_level=11,
     ),
     _spell(
-        "staggering-smite", "Staggering Smite", "damage", "arena-out-of-scope",
+        "staggering-smite", "Staggering Smite", "damage", "post-hit-spell",
         spell_level=4, min_character_level=13,
     ),
     _spell(
@@ -48,11 +48,11 @@ PALADIN_SPELLS = (
         spell_level=5, min_character_level=17,
     ),
     _spell(
-        "greater-restoration", "Greater Restoration", "healing", "arena-out-of-scope",
+        "greater-restoration", "Greater Restoration", "healing", "condition-removal",
         spell_level=5, min_character_level=17,
     ),
     _spell(
-        "banishing-smite", "Banishing Smite", "damage", "arena-out-of-scope",
+        "banishing-smite", "Banishing Smite", "damage", "post-hit-spell",
         spell_level=5, min_character_level=19,
     ),
     _spell(

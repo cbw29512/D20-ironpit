@@ -85,6 +85,8 @@ def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
         member.combatant_id,
         round_number,
     )
+    from app.combat.temporary_terrain import expire_source_terrain
+    expire_source_terrain(setup, member.combatant_id, round_number)
     expire_current_turn_type_resistances(setup)
     return events, sequence
 

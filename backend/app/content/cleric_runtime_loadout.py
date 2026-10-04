@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import logging
+
 from app.content.cleric_combat_levels import CLERIC_COMBAT_LEVELS
 from app.content.cleric_divine_intervention import build_divine_intervention_healing
 from app.content.cleric_life_domain import disciple_of_life_bonus
@@ -15,10 +17,14 @@ from app.content.offensive_spell_effects import (
     build_inflict_wounds,
     build_sacred_flame,
 )
+from app.content.storm_spell_effects import build_fire_storm_2024
+from app.content.warlock_2024_zone_spells import insect_plague_2024
 from app.domain.actions import HealingAction
 from app.domain.combatants import ResourceDefinition
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
 from app.domain.spells import SpellSaveAction
+
+logger = logging.getLogger(__name__)
 
 
 def build_seraphine_resources(level: int) -> list[ResourceDefinition]:
@@ -121,9 +127,21 @@ def build_seraphine_save_spells(
             spells.append(build_inflict_wounds(save_dc, slot_level))
     if level >= 9:
         spells.append(build_flame_strike_2024(save_dc))
+    if level >= 13:
+        spells.append(build_fire_storm_2024(save_dc))
     if level >= 15:
         spells.append(build_sunburst_2024(save_dc))
     return spells
+
+
+def build_seraphine_save_zones(level: int, save_dc: int):
+    try:
+        if level < 9:
+            return []
+        return [insect_plague_2024(save_dc, 5)]
+    except Exception:
+        logger.exception("Failed to build Seraphine save zones at level %s.", level)
+        raise
 
 
 def seraphine_source(level: int) -> str:

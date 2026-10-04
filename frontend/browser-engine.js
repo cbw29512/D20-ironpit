@@ -178,6 +178,7 @@
         }
         const end = lifecycle(sequence, round, member, setup, "target_turn_end", "source_turn_end");
         events.push(...end.events); sequence = end.sequence;
+        window.IRON_PIT_BROWSER_TEMPORARY_TERRAIN?.expireSource(setup, member.combatant_id, round);
         const endZones = window.IRON_PIT_BROWSER_SAVE_ZONES?.resolveWindow(
           sequence, round, member, setup, `${round}:${member.combatant_id}`, "end_turn",
         );

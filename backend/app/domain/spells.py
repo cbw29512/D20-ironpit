@@ -147,6 +147,8 @@ class SpellSaveAction(BaseModel):
     target_count_per_slot_above: int = Field(default=0, ge=0, le=20)
     save_advantage_if_fighting: bool = False
     cast_rounds: int = Field(default=1, ge=1, le=100)
+    creates_difficult_terrain: bool = False
+    difficult_terrain_duration_rounds: int = Field(default=0, ge=0, le=100)
     animation: str = "spell-save"
 
     @model_validator(mode="after")
@@ -161,4 +163,6 @@ class SpellSaveAction(BaseModel):
             raise ValueError("Multi-component save spells cannot also define legacy single-component damage.")
         if self.damage_dice_count and self.damage_type is None:
             raise ValueError("Damaging spells require a damage type.")
+        if self.creates_difficult_terrain and self.difficult_terrain_duration_rounds < 1:
+            raise ValueError("Difficult-terrain save spells require a positive duration.")
         return self

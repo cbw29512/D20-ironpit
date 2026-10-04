@@ -16,6 +16,7 @@ from app.combat.pit_policy import choose_attack, save_distance, target_order
 from app.combat.resources import resource_available
 from app.combat.saving_throws import legal_save_action
 from app.combat.spell_attack_policy import choose_spell_attack
+from app.combat.save_zone_landing import choose_damaging_save_zone
 from app.combat.spell_policy import choose_spell
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import WeaponAttack, WeaponAttackKind
@@ -174,6 +175,10 @@ def decide_post_move_offense(
                 break
         if chosen_save is not None:
             picks.append(OffensePick("save-action", _save_mean_damage(chosen_save[1]), chosen_save))
+        save_zone = choose_damaging_save_zone(attacker, setup, turn_key)
+        if save_zone is not None:
+            action, center, score = save_zone
+            picks.append(OffensePick("save-zone", score, (action, center)))
         damage = [item for item in picks if item.expected_damage > 0]
         if damage:
             return max(damage, key=lambda item: (item.expected_damage, item.family))

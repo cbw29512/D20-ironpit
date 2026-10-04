@@ -115,10 +115,11 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
                 paladin_2024_feature(
                     "banishing-smite",
                     "Banishing Smite",
-                    "class", combat=False, automated=False,
-                    notes=("Selected as the fifteenth damage-first Paladin preparation. It remains "
-                           "fail-closed until the shared post-hit Concentration and banishment semantics "
-                           "are fully represented; no approximation is allowed."),
+                    "class", combat=True, automated=True,
+                    notes=("Shared post-hit spell option: Bonus Action after a qualifying hit adds "
+                           "5d10 Force, plus 1d10 per slot above 5. If the attack then leaves the "
+                           "target at 50 HP or fewer, the existing exile/banished primitive removes "
+                           "it from the battlefield until the Concentration spell ends."),
                 ),
             ])
         if level >= 20:

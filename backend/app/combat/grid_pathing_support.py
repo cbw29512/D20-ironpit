@@ -53,6 +53,7 @@ def movement_step_cost_ft(
     *,
     origin: GridPosition | None = None,
     barriers: list[PersistentBarrierState] | None = None,
+    terrain_zones=None,
 ) -> int | None:
     """Return 5/10 feet for a legal adjacent destination, or None when passage is illegal."""
     try:
@@ -65,6 +66,10 @@ def movement_step_cost_ft(
             if not can_pass_through(mover, occupant):
                 return None
             if creature_space_is_difficult(mover, occupant):
+                cost = map_definition.cell_size_ft * 2
+        if terrain_zones:
+            from app.combat.temporary_terrain import destination_is_difficult_terrain
+            if destination_is_difficult_terrain(list(terrain_zones), mover, destination):
                 cost = map_definition.cell_size_ft * 2
         return cost
     except Exception:

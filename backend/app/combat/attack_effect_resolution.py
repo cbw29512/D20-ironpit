@@ -12,6 +12,7 @@ from app.combat.deferred_save_effect import arm_deferred_save_effect
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.exile import apply_on_hit_exile
+from app.combat.post_hit_spell_riders import resolve_paid_post_hit_spell_riders
 from app.combat.melee_hit_retaliation import apply_melee_hit_retaliation
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
 from app.combat.sap import apply_weapon_sap
@@ -162,6 +163,17 @@ def resolve_attack_effects(
             attacker_member = members.get(attacker_event_id)
             defender_member = members.get(defender_event_id)
             if attacker_member is not None and defender_member is not None:
+                result.applied_conditions.extend(
+                    resolve_paid_post_hit_spell_riders(
+                        attacker_member,
+                        defender_member,
+                        setup,
+                        dice,
+                        round_number=round_number,
+                        turn_key=active_turn_key,
+                        affected_states=affected_states,
+                    )
+                )
                 apply_melee_hit_retaliation(
                     attacker_member,
                     defender_member,
