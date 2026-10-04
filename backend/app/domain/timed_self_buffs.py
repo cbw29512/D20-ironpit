@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import ActionCost, ConditionName, ConditionTiming
 from app.domain.debuffs import DebuffCounter
+from app.domain.environment_context import TimedEnvironmentContextAura
 from app.domain.progression import SavingThrowAdvantageGrant
 from app.domain.movement import MovementModeGrant
 from app.domain.weapons_base import DamageType
@@ -75,10 +76,12 @@ class TimedSelfBuffAction(BaseModel):
     movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
     friendly_save_advantage_aura: TimedFriendlySaveAura | None = None
     friendly_cover_aura: TimedFriendlyCoverAura | None = None
+    environment_context_aura: TimedEnvironmentContextAura | None = None
     hostile_start_turn_condition_aura: TimedHostileConditionAura | None = None
     start_turn_emanation_damage: TimedEmanationDamage | None = None
     concentration: bool = False
     ends_if_source_incapacitated: bool = False
+    inactive_while_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
     expiry_timing: ConditionTiming | None = "source_turn_start"
     priority: int = 0
@@ -119,6 +122,7 @@ class TimedSelfBuffAction(BaseModel):
                 or self.movement_mode_grants
                 or self.friendly_save_advantage_aura is not None
                 or self.friendly_cover_aura is not None
+                or self.environment_context_aura is not None
                 or self.hostile_start_turn_condition_aura is not None
                 or self.start_turn_emanation_damage is not None
             ):
