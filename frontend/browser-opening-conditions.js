@@ -15,9 +15,11 @@
 
   function apply(setup, selection) {
     try {
-      const T = window.IRON_PIT_BROWSER_TIMED_CONDITIONS;
+      const bindings = selection.opening_conditions || [];
+      if (!bindings.length) return;
+      const T = window.IRON_PIT_BROWSER_TIMED;
       if (!T?.apply) throw new Error("Opening conditions require browser-timed-conditions.js.");
-      for (const binding of selection.opening_conditions || []) {
+      for (const binding of bindings) {
         const target = memberAt(setup, binding.side, binding.roster_index);
         const source = memberAt(setup, binding.source_side, binding.source_roster_index);
         T.apply(target.state, binding.condition_id, source.combatant_id, {
