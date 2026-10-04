@@ -91,4 +91,12 @@ PALADIN_SPELLS = (
         "guardian-of-faith", "Guardian of Faith", "control", "arena-unavailable-summon",
         spell_level=4, min_character_level=13, always_prepared_from_level=13,
     ),
+    _spell(
+        "commune", "Commune", "utility", "arena-out-of-scope",
+        spell_level=5, min_character_level=17, always_prepared_from_level=17,
+    ),
+    _spell(
+        "flame-strike", "Flame Strike", "damage", "save-damage", "area",
+        spell_level=5, min_character_level=17, always_prepared_from_level=17,
+    ),
 )
