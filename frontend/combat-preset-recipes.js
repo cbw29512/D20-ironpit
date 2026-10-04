@@ -21,7 +21,7 @@
     R("auras", "2014", "4v4 · Mixed arms", 9, ["paladin", "ranger", "druid", "warlock"], ["minotaur", "hell-hound", "owlbear", "blue-dragon-wyrmling"],
       "Extra Attack, healing, and a dragon breath.", 1701, [A("feature", "extra-attack"), A("event", "healing"), A("anyFeature", ["lightning-breath", "fire-breath"])]),
     R("pressure", "2014", "5v5 · Breath and trampling", 11, ["barbarian", "rogue", "cleric", "monk", "wizard"], ["elephant", "elephant", "red-dragon-wyrmling", "red-dragon-wyrmling", "red-dragon-wyrmling"],
-      "Rage, Sneak Attack, and healing.", 13, [A("feature", "rage"), A("source", "Sneak Attack"), A("event", "healing")]),
+      "Rage, Sneak Attack, and healing.", 15, [A("feature", "rage"), A("source", "Sneak Attack"), A("event", "healing")]),
     R("party", "2014", "6v6 · Full party stress test", 15, ["fighter", "paladin", "cleric", "rogue", "sorcerer", "warlock"], ["young-black-dragon", "young-black-dragon", "young-black-dragon", "giant-ape", "giant-ape", "giant-ape"],
       "Acid breath, Extra Attack, and healing.", 1702, [A("feature", "acid-breath"), A("feature", "extra-attack"), A("event", "healing")]),
     R("grapple", "2014", "2v2 · Escape the coils", 4, ["monk", "rogue"], ["giant-constrictor-snake", "giant-constrictor-snake"],
