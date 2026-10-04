@@ -52,15 +52,24 @@ def choose_offensive_dash_grant(
         if not candidates:
             return None
         normal_move = member.state.movement_remaining_ft
-        dash_would_help = False
+        melee_needs_dash = False
+        other_needs_dash = False
         for target in living_opponents(member, setup):
             distance = combatant_distance(member, target)
-            for _, desired in offensive_ranges_for_target(member, target, turn_key):
+            for family, desired in offensive_ranges_for_target(member, target, turn_key):
+                if family == "melee":
+                    if distance <= desired:
+                        return None
+                    if distance <= desired + normal_move:
+                        return None
+                    if distance <= desired + normal_move + speed:
+                        melee_needs_dash = True
+                    continue
                 if distance <= desired + normal_move:
-                    return None
+                    continue
                 if distance <= desired + normal_move + speed:
-                    dash_would_help = True
-        if not dash_would_help:
+                    other_needs_dash = True
+        if not melee_needs_dash and not other_needs_dash:
             return None
         return min(candidates, key=lambda item: (
             item.resource_id is not None,

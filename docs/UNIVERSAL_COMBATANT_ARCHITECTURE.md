@@ -152,11 +152,11 @@ The movement engine owns legal squares, footprints, pathfinding, movement cost, 
 Default Iron Pit voluntary movement policy is intentionally simple:
 
 1. The combatant's goal is to engage and defeat a living opponent; it does not wander around the arena without an action-driven reason.
-2. A melee combatant moves toward its chosen target until a legal melee attack/reach is available, then stops and attacks.
-3. A ranged combatant that already has a legal ranged attack from its current position stays in place and attacks. It moves toward the chosen target only when movement is needed to enter legal range.
+2. If a legal melee attack can be made this turn after useful legal approach movement, the combatant closes to that melee reach, then uses the highest-damage legal melee option.
+3. A combatant that cannot make a melee attack this turn stays in place when a legal spell or ranged option can already land, and uses the highest-damage landable option.
 4. If a ranged combatant is already in melee and has a legal melee option, it uses the legal melee option rather than retreating merely to preserve range.
-5. A caster that can cast its chosen legal spell from its current position stays in place and casts. It moves only when movement is needed to make the chosen spell or other action legal.
-6. A mixed combatant uses its best legal action from its current position and closes only when its desired legal action requires closing.
+5. A caster does not stay in place to cast when a legal melee attack can still be made this turn. It casts from its current position only when melee cannot land.
+6. A mixed combatant uses the landing-damage rule: melee if melee can land, otherwise the highest-damage option that can actually land.
 7. Default Arena AI does not voluntarily kite, circle, run to map edges, seek cover, disperse, or retreat merely for positional optimization.
 8. Specific printed features, conditions, forced movement, explicit retreat effects, or other RAW mechanics may require movement that overrides this default policy; those effects still use the same universal movement engine.
 
@@ -173,7 +173,7 @@ Before the Arena AI may choose Dodge, it must establish that the combatant canno
 3. no legal offensive spell;
 4. no other legal offensive attack, SavingThrowAction, Multiattack/signature action, or supported damaging/control ability.
 
-This checklist is a **fallback gate**, not a universal tactical-priority override. A caster may still prefer its legal spell, a ranged combatant may still prefer its legal ranged attack, and a melee combatant may still prefer melee according to its normal Arena policy. The invariant is that Dodge is legal as the automated fallback only after every supported offensive family is unavailable or cannot be made legal with the combatant's remaining legal movement.
+This checklist is the Dodge fallback gate. Arena Action selection is the landing-damage rule: if melee can land this turn, take the highest-damage legal melee option; if melee cannot land, take the highest-damage option that can still land; if no supported offensive family can be used or made legal, Dodge. Control loses to raw damage. Dodge is never a substitute for a legal offensive option and never hides an engine error.
 
 If the combatant is physically blocked, lacks sufficient movement, has no valid path, has no target in usable range after movement, or otherwise cannot make any supported offensive option legal without violating RAW, it takes the shared Dodge action if its Action is available. This is an ordinary combat outcome, not an engine exception.
 
@@ -283,11 +283,11 @@ The spell package contains desired spells, but the level compiler exposes only s
 Arena AI is deterministic policy, not a new rule system. A simple default is:
 
 1. apply worthwhile legal precombat buffs that fit the arena;
-2. prefer the highest-value legal spell the package can currently cast;
-3. spend higher-level slots before lower-value attacks when sensible;
-4. fall back through the package;
-5. use cantrips when appropriate;
-6. use a weapon only when spellcasting is unavailable or the weapon is the better legal action.
+2. if a legal melee attack can land this turn, use the highest-damage melee option;
+3. otherwise prefer the highest-damage landable option, with the highest-level damage spell first among spells;
+4. fall back through remaining landable damage options;
+5. use cantrips when leveled damage is exhausted;
+6. use charm or other control only when no damaging option can land.
 
 RAW determines what the caster **can** do. Arena policy determines which legal option it **chooses**.
 

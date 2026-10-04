@@ -159,8 +159,6 @@ def single_target_spell_choice(
     score = 0.0
     for target in chosen:
         score += save_spell_expected_damage(target, scaled)
-        if scaled.failed_save_timed_effect is not None:
-            score += max(8.0, target.state.current_hp * 0.35)
     farthest = max(combatant_distance(caster, target) for target in chosen)
     modifier = choose_spell_range_modifier(
         caster.state,

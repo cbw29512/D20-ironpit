@@ -76,20 +76,18 @@ The Action Surge profile deliberately preserves the currently certified Iron Pit
 
 ## Current normal-turn policy
 
-Python and browser currently use the same normal-turn preference:
+Python and browser use the same landing-damage Action policy for heroes and monsters:
 
 1. legal HP-threshold instant-death, then HP-threshold condition Action after urgent support, before optional Bonus Action spell setup;
-2. pre-move best spell offense;
-2. charge/closing and offensive movement;
-3. recompute HP-threshold Actions after movement, then post-move best spell offense;
-4. 2014 Intimidating Presence;
-5. Attack/Multiattack action;
-6. area save action;
-7. single-target save action;
-8. standard attack;
-9. Dodge fallback.
+2. pre-move replacement-form setup, then pre-move spell offense only when a melee attack cannot land this turn after useful legal approach movement;
+3. charge/closing and offensive movement, preferring a close that enables melee when that close is legal this turn;
+4. recompute HP-threshold Actions after movement;
+5. if a legal melee Attack/Multiattack or standard melee attack can land now, take the highest-damage melee option;
+6. if melee cannot land, take the highest-damage landable spell, ranged attack, area/save Action, or other damaging option;
+7. charm, Intimidating Presence, and other control only when no damaging option can land;
+8. Dodge fallback when no supported offensive option can be used.
 
-The initial migration preserved these choices. The 2014 audit correction below explicitly promotes legal threshold actions ahead of ordinary offense.
+Among legal damage spells, highest-level first, then down the list. Most damage still wins when comparing a spell to another landable option. The initial migration used a static family walk; this landing-damage rule supersedes that walk for ordinary offense. Signature threshold Actions remain ahead of ordinary offense.
 
 ## Registered provider families
 

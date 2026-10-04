@@ -114,15 +114,16 @@ def choose_spell(
                 if choice is not None:
                     choice = replace(choice, alternate_cast=alternate_cast)
                     candidates.append((
+                        int(choice.expected_damage > 0),
+                        action.level,
                         choice.expected_damage,
                         int(alternate_cast is not None),
-                        -action.level,
                         -index,
                         choice,
                     ))
         if not candidates:
             return None
-        choice = max(candidates, key=lambda item: item[:4])[4]
+        choice = max(candidates, key=lambda item: item[:5])[5]
         maximizer = safe_maximizer_for_spell(
             caster, choice.action.id, choice.slot_level,
         )

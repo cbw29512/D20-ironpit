@@ -239,7 +239,12 @@ Normal initiative bonuses and ruleset-specific initiative mechanics apply, with 
 - Conditions suppress actions/reactions according to RAW.
 - Once-per-turn, once-per-round, and once-on-each-of-your-turns are distinct limits.
 - Dash/Disengage/Hide/Ready/Help/Search are not generic tactical spam; use them only when a supported combat identity or legal fallback requires them.
-- Dodge is the final automated fallback after meaningful healing/support priorities have been handled and no supported melee attack, ranged attack, offensive spell, or other supported offensive ability can be used or made legal after any useful legal approach movement available this turn.
+- After healing/support and signature Actions, heroes and monsters use the same landing-damage Action policy.
+- If a legal melee weapon or natural attack can land this turn, including after useful legal approach movement, compare only those melee options and take the one that deals the most printed damage. Do not spend the Action on a spell or ranged option while that melee attack can reach.
+- If no melee attack can land this turn, compare the options that can still land right now (a damage spell, a ranged attack, a damaging save or area Action) and take the one that deals the most damage.
+- Among legal damage spells, cast the highest-level damage spell first, then work downward. Most damage still wins when comparing a spell to another landable option.
+- Prefer raw damage that is easy to calculate over charm and other control. Control remains legal only when no damaging option can land.
+- Dodge is the default when no supported offensive option can be used or made legal after any useful legal approach movement available this turn. Dodge is an ordinary combat outcome, not a skip and not a crash.
 - A legal tactical dead end may resolve to Dodge. Unsupported mechanics, malformed state, impossible source data, mixed position authority, and engine/rules errors must fail closed and must never be converted into Dodge.
 
 ### Attack natural 1 — Iron Pit house rule
@@ -544,11 +549,16 @@ Normal spell AI:
 - legal upcasting is allowed when the spell is actually known/prepared/provided, the higher-level slot exists, and the source spell defines scaling at higher slot levels;
 - an upcast consumes the higher-level slot and must use the source-defined scaling exactly; never invent non-RAW scaling or matchup-only spells;
 - when a newly unlocked spell level has no better meaningful combat choice, the AI may prefer a legal upcast of an established damage or healing spell rather than forcing a weaker native-level option;
-- prioritize the strongest useful legal spell-slot use, then work downward, then cantrips when leveled offense is exhausted/not meaningful;
+- among legal damage spells, cast the highest-level damage spell first, then work downward, then cantrips when leveled offense is exhausted;
+- most damage still wins when the Action choice is between a spell and another landable option;
+- prefer raw damage that is easy to calculate (Magic Missile, Disintegrate, Finger of Death, Hunter's Mark, Ensnaring Strike) over charm and other control;
+- damage spells remain legal in the Iron Pit; do not disable them;
+- do not pre-cast a spell when a legal melee attack can land this turn after useful legal approach movement;
 - one enemy: prefer useful high-damage single-target options before AoE;
 - multiple enemies: prefer useful high-damage AoE before single-target options;
-- damage-first unless control/utility is a defining source identity or is otherwise clearly the meaningful legal action;
 - selected-target spell counts and source geometry remain authoritative.
+
+Iron Pit environmental limits, and only these, change RAW fight options: no teleport, no plane shift, no summoning/creating a separate combat entity, and no flying vertically. A character or monster still fights with every other printed option the engine supports.
 
 ### 2014 Turn Undead arena mapping
 

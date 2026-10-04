@@ -323,6 +323,8 @@ def _targeted_concentration_damage(action: Any) -> dict[str, Any]:
         "damageType": action.damage_type,
         "durationRoundsBySlot": dict(action.duration_rounds_by_slot),
         "retargetAfterTargetZero": action.retarget_after_target_zero,
+        "freeCastResourceId": action.free_cast_resource_id,
+        "freeCastResourceCost": action.free_cast_resource_cost,
         "priority": action.priority, "animation": action.animation, "source": action.source,
     }
 

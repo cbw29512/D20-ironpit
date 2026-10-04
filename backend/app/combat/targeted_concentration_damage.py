@@ -33,6 +33,18 @@ def _slot_resource(member: EncounterCombatant, action: TargetedConcentrationDama
     return min(candidates, key=lambda item: item[0]) if candidates else None
 
 
+def _free_cast_resource(member: EncounterCombatant, action: TargetedConcentrationDamageAction):
+    if action.free_cast_resource_id is None:
+        return None
+    resource = next(
+        (item for item in member.state.resources if item.id == action.free_cast_resource_id),
+        None,
+    )
+    if resource is None or resource.current_uses < action.free_cast_resource_cost:
+        return None
+    return resource
+
+
 def _member_by_id(setup: EncounterSetup, combatant_id: str | None) -> EncounterCombatant | None:
     if combatant_id is None:
         return None
@@ -111,13 +123,19 @@ def resolve_targeted_concentration_damage(
             affected = [entry.state for entry in [*setup.heroes, *setup.monsters]]
             resource_remaining = None
             if active is None:
-                selected = _slot_resource(member, action, turn_key)
-                if selected is None:
-                    continue
-                slot_level, resource = selected
-                mark_slot_spell_cast(member.state, turn_key)
-                resource.current_uses -= 1
-                resource_remaining = resource.current_uses
+                free_resource = _free_cast_resource(member, action)
+                if free_resource is not None:
+                    slot_level = action.level
+                    free_resource.current_uses -= action.free_cast_resource_cost
+                    resource_remaining = free_resource.current_uses
+                else:
+                    selected = _slot_resource(member, action, turn_key)
+                    if selected is None:
+                        continue
+                    slot_level, resource = selected
+                    mark_slot_spell_cast(member.state, turn_key)
+                    resource.current_uses -= 1
+                    resource_remaining = resource.current_uses
                 start_concentration(
                     member.state,
                     member.combatant_id,

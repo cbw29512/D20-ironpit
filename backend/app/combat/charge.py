@@ -112,6 +112,7 @@ def resolve_charge_closing(
             sequence, round_number, attacker, target, charged_attack,
             attack.weapon.reach_ft, dice, setup,
             feature_id="charge", bonus_damage=_bonus_damage(profile),
+            turn_key=f"{round_number}:{attacker.combatant_id}",
         )
         event = events[0]
         if attacker.state.is_dead or is_incapacitated(attacker.state):

@@ -78,15 +78,25 @@
       throw error;
     }
   }
+  function weaponMeanDamage(attack) {
+    return (attack.diceCount || 0) * ((attack.diceSize || 0) + 1) / 2 + (attack.damageBonus || 0);
+  }
   function chooseAttack(member, setup, ids, kind = null, preferBackline = false) {
     const allowed = new Set(ids);
     const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id) && (!kind || attack.kind === kind));
     for (const target of targetOrder(member, setup, preferBackline)) {
       const distance = attackDistance(member, target);
-      const attack = profiles.find((profile) => (!window.IRON_PIT_BROWSER_GRID_BARRIERS || window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(member, target, setup)) && targetAllowed(member, target, profile) && attackInRange(profile, distance));
-      if (attack) return { target, attack, distance };
+      const legal = profiles.filter((profile) => (!window.IRON_PIT_BROWSER_GRID_BARRIERS || window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(member, target, setup)) && targetAllowed(member, target, profile) && attackInRange(profile, distance));
+      if (legal.length) {
+        legal.sort((a, b) => weaponMeanDamage(b) - weaponMeanDamage(a));
+        return { target, attack: legal[0], distance };
+      }
     }
     return null;
+  }
+  function meleeCanLandNow(member, setup) {
+    const ids = attacks(member.state.template).filter((attack) => attack.kind === "melee").map((attack) => attack.id);
+    return Boolean(ids.length && chooseAttack(member, setup, ids, "melee"));
   }
   function chooseStandardAttack(member, setup) {
     const ids = attacks(member.state.template).map((attack) => attack.id);
@@ -107,6 +117,7 @@
   window.IRON_PIT_BROWSER_FORMATION = {
     hasRangedWeaponOffense, hasTrueRangeOffense, usesBackline, isBackline, startingPosition,
     targetOrder, hasFrontlineTarget, hasBacklineTarget, alliedFrontlineActive, targetAllowed,
-    attackDistance, saveDistance, chooseAttack, chooseStandardAttack, flexibleSlotHasBoth, backlineHoldsPosition,
+    attackDistance, saveDistance, weaponMeanDamage, chooseAttack, chooseStandardAttack, meleeCanLandNow,
+    flexibleSlotHasBoth, backlineHoldsPosition,
   };
 })();

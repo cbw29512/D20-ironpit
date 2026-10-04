@@ -19,6 +19,8 @@ class TargetedConcentrationDamageAction(BaseModel):
     damage_type: DamageTypeName
     duration_rounds_by_slot: dict[int, int] = Field(min_length=1)
     retarget_after_target_zero: bool = True
+    free_cast_resource_id: str | None = None
+    free_cast_resource_cost: int = Field(default=1, ge=1)
     priority: int = 0
     animation: str = "targeted-concentration"
     source: str | None = None
@@ -31,6 +33,8 @@ class TargetedConcentrationDamageAction(BaseModel):
             raise ValueError("Targeted concentration duration slots must be legal for the printed spell level.")
         if any(rounds < 1 for rounds in self.duration_rounds_by_slot.values()):
             raise ValueError("Targeted concentration durations must be positive.")
+        if self.free_cast_resource_id is not None and not self.free_cast_resource_id.strip():
+            raise ValueError("Free-cast resource id must be non-empty when provided.")
         return self
 
     def duration_rounds(self, slot_level: int) -> int:

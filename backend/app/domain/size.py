@@ -22,3 +22,7 @@ _SIZE_RANK = {
 
 def size_at_most(size: CreatureSize, maximum: CreatureSize) -> bool:
     return _SIZE_RANK[size] <= _SIZE_RANK[maximum]
+
+
+def size_at_least(size: CreatureSize, minimum: CreatureSize) -> bool:
+    return _SIZE_RANK[size] >= _SIZE_RANK[minimum]

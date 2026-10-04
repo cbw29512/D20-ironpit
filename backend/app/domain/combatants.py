@@ -36,6 +36,7 @@ from app.domain.spell_cast_modifiers import ResourceBackedSpellDurationModifier,
 from app.domain.spell_cast_effects import SpellCastTimedResistance
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
+from app.domain.post_hit_save_condition import PostHitSaveConditionSpell
 from app.domain.targeted_concentration_damage import TargetedConcentrationDamageAction
 from app.domain.tactical_actions import BonusActionTacticalGrant
 from app.domain.traits import CombatTrait
@@ -118,6 +119,7 @@ class CombatantTemplate(BaseModel):
     spell_duration_modifiers: list[ResourceBackedSpellDurationModifier] = Field(default_factory=list)
     timed_self_buff_actions: list[TimedSelfBuffAction] = Field(default_factory=list)
     targeted_concentration_damage_actions: list[TargetedConcentrationDamageAction] = Field(default_factory=list)
+    post_hit_save_condition_spells: list[PostHitSaveConditionSpell] = Field(default_factory=list)
     replacement_form_actions: list[ReplacementFormAction] = Field(default_factory=list)
     concentration_repeat_save_actions: list[ConcentrationRepeatSaveAction] = Field(default_factory=list)
     effect_removal_actions: list[EffectRemovalAction] = Field(default_factory=list)

@@ -117,6 +117,9 @@ def resolve_concentration_damage(
         raise ValueError("Concentration damage cannot be negative.")
     if owner.concentration is None or damage_taken == 0:
         return None
+    immune = owner.template.progression_features.concentration_damage_immune_effect_ids
+    if owner.concentration.effect_id in immune:
+        return ConcentrationCheck(None, None, True, False, "relentless-hunter")
     if owner.is_dead or is_incapacitated(owner):
         end_concentration(owner, affected_states)
         return ConcentrationCheck(None, None, False, True, "incapacitated-or-dead")

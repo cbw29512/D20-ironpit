@@ -43,6 +43,14 @@
     return candidates.length ? candidates[0] : null;
   }
 
+  function freeCast(member, action) {
+    const id = action.freeCastResourceId;
+    if (!id) return null;
+    const cost = action.freeCastResourceCost || 1;
+    if ((member.state.resources?.[id] || 0) < cost) return null;
+    return { id, cost };
+  }
+
   function resolve(sequence, round, member, setup, turnKey) {
     if (!E().available(member.state, "bonus_action")) return null;
     for (const action of member.state.template.targeted_concentration_damage_actions || []) {
@@ -60,12 +68,20 @@
       let resourceRemaining = null;
       let verb = "moves";
       if (!active) {
-        const selected = slot(member, action, turnKey);
-        if (!selected) continue;
-        const [slotLevel, resourceId] = selected;
-        SC().markSlotSpellCast(member.state, turnKey);
-        member.state.resources[resourceId] -= 1;
-        resourceRemaining = member.state.resources[resourceId];
+        const free = freeCast(member, action);
+        let slotLevel = action.level;
+        if (free) {
+          member.state.resources[free.id] -= free.cost;
+          resourceRemaining = member.state.resources[free.id];
+        } else {
+          const selected = slot(member, action, turnKey);
+          if (!selected) continue;
+          const resourceId = selected[1];
+          slotLevel = selected[0];
+          SC().markSlotSpellCast(member.state, turnKey);
+          member.state.resources[resourceId] -= 1;
+          resourceRemaining = member.state.resources[resourceId];
+        }
         C().start(
           member.state, member.combatant_id, action.id, round, allStates,
           round + durationRounds(action, slotLevel), slotLevel,

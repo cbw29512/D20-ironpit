@@ -144,4 +144,20 @@ function caster(spells, slots) {
   assert.equal(c.state.current_hp, hpBeforeThird - 9);
 }
 
+{
+  const control = {
+    id: "hold-person", name: "Hold Person", level: 2, actionCost: "action", range: 60,
+    saveAbility: "wisdom", dc: 13, damageDiceCount: 0, damageType: null, concentration: true,
+    durationMinutes: 1, animation: "spell-save",
+  };
+  const damage = spell("magic-bolt", 0);
+  damage.damageDiceCount = 1;
+  damage.damageDiceSize = 10;
+  damage.damageType = "force";
+  damage.successDamage = "none";
+  const c = caster([control, damage], { 2: 1 });
+  const choice = P.choose(c, { heroes: [c], monsters: [member("monster-0", "monsters", 30)] }, "1:caster");
+  assert.equal(choice.action.id, "magic-bolt");
+}
+
 console.log("Browser spell priority, ally-safe AoE, and declared save-spell upcasting regressions passed.");

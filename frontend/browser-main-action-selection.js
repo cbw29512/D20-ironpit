@@ -103,9 +103,7 @@
     return candidates;
   }
 
-  function selectCandidate(profileId, candidates) {
-    const profile = requireProfile(profileId);
-    if (!Array.isArray(candidates)) throw new Error("Main Action candidates must be an array.");
+  function selectByCategoryOrder(profile, profileId, candidates) {
     for (const category of profile) {
       const matching = candidates.filter((candidate) => candidate?.opportunityProfile === profileId && candidate?.category === category);
       if (matching.length > 1) {
@@ -114,6 +112,38 @@
       if (matching.length === 1) return matching[0];
     }
     return null;
+  }
+
+  function selectLandingCandidate(profile, profileId, candidates) {
+    for (const category of profile) {
+      const matching = candidates.filter((candidate) => candidate?.opportunityProfile === profileId && candidate?.category === category);
+      if (matching.length > 1) {
+        throw new Error(`Main Action policy found multiple candidates in category "${category}".`);
+      }
+    }
+    const signature = new Set([
+      "hp-threshold-instant-death", "hp-threshold-condition", "replacement-form-setup",
+    ]);
+    const first = selectByCategoryOrder(profile.filter((category) => signature.has(category)), profileId, candidates);
+    if (first) return first;
+    const rest = candidates.filter((candidate) => candidate?.opportunityProfile === profileId && !signature.has(candidate.category));
+    const damageOf = (candidate) => Number(candidate.payload?.expectedDamage || 0);
+    const melee = rest.filter((candidate) => candidate.payload?.delivery === "melee");
+    if (melee.length) {
+      return melee.sort((a, b) => damageOf(b) - damageOf(a) || profile.indexOf(a.category) - profile.indexOf(b.category))[0];
+    }
+    const damage = rest.filter((candidate) => candidate.category !== "dodge" && damageOf(candidate) > 0);
+    if (damage.length) {
+      return damage.sort((a, b) => damageOf(b) - damageOf(a) || profile.indexOf(a.category) - profile.indexOf(b.category))[0];
+    }
+    return selectByCategoryOrder(profile.filter((category) => !signature.has(category)), profileId, rest);
+  }
+
+  function selectCandidate(profileId, candidates) {
+    const profile = requireProfile(profileId);
+    if (!Array.isArray(candidates)) throw new Error("Main Action candidates must be an array.");
+    if (profileId === "normalPostMove") return selectLandingCandidate(profile, profileId, candidates);
+    return selectByCategoryOrder(profile, profileId, candidates);
   }
 
   function resolveCandidate(profileId, candidate, ctx) {

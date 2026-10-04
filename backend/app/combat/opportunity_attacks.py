@@ -47,9 +47,11 @@ def resolve_opportunity_attack(
         return None
     spend(reactor.state, "reaction")
     pack = pack_tactics_active(reactor, mover, setup)
+    escape_horde = mover.state.template.progression_features.opportunity_attacks_against_disadvantage
     return resolve_encounter_attack(
         sequence, round_number, reactor, mover, attack, distance_before_ft, dice, setup,
         spend_action=False, advantage_sources=1 if pack else 0,
+        other_disadvantage_sources=1 if escape_horde else 0,
         feature_id="opportunity-attack", close_enemy_active=True, turn_key=turn_key,
         off_turn=True,
     )

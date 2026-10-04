@@ -4,6 +4,8 @@ import logging
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.hp_threshold_turn import resolve_hp_threshold_turn
 from app.combat.encounter_main_action import resolve_post_move_action
+from app.combat.landing_offense_policy import melee_can_land_now
+from app.combat.offensive_movement_policy import melee_can_be_enabled_this_turn
 from app.combat.action_economy import is_available
 from app.combat.charge import resolve_charge_closing
 from app.combat.condition_rules import is_incapacitated
@@ -99,8 +101,13 @@ def resolve_combat_turn(
         events.extend(form_events)
         if not is_available(attacker.state, "action"):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-        spell_events, sequence = resolve_best_spell_offense(sequence, round_number, attacker, setup, turn_key, dice)
-        events.extend(spell_events)
+        if not melee_can_land_now(attacker, setup) and not melee_can_be_enabled_this_turn(
+            attacker, setup, turn_key,
+        ):
+            spell_events, sequence = resolve_best_spell_offense(
+                sequence, round_number, attacker, setup, turn_key, dice,
+            )
+            events.extend(spell_events)
         if not is_available(attacker.state, "action"):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         targets = target_order(attacker, setup)

@@ -113,7 +113,6 @@
           let score = 0, farthest = 0;
           for (const target of chosen) {
             score += O().saveSpell(target, scaled);
-            if (action.failedSaveTimedEffect) score += Math.max(8, target.state.current_hp * 0.35);
             farthest = Math.max(farthest, S().distance(caster, target));
           }
           candidates.push({ action, index, score, slotLevel: castLevel,
@@ -122,9 +121,10 @@
             alternateCast });
         }
       }
-      candidates.sort((a, b) => b.score - a.score
+      candidates.sort((a, b) => Number(b.score > 0) - Number(a.score > 0)
+        || b.action.level - a.action.level
+        || b.score - a.score
         || Number(Boolean(b.alternateCast)) - Number(Boolean(a.alternateCast))
-        || a.action.level - b.action.level
         || (a.hp ?? Number.MAX_SAFE_INTEGER) - (b.hp ?? Number.MAX_SAFE_INTEGER) || a.index - b.index);
       if (!candidates.length) return null;
       const best = candidates[0];
