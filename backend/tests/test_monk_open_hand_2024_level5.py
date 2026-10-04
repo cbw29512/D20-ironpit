@@ -66,6 +66,7 @@ def test_2024_monk_level_five_snapshot_extra_attack_and_fingerprint() -> None:
             ["kael-2024-unarmed"],
         ]
 
+        assert monk.progression_features.stunning_strike is True
         rider = monk.progression_features.resource_backed_on_hit_save_rider
         assert rider is not None
         assert rider.source_id == "stunning-strike"

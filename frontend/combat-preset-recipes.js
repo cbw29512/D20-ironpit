@@ -34,7 +34,7 @@
       "Concentration and healing or a leveled spell.", 1701, [A("concentration", true), A("anyFeature", ["mass-cure-wounds", "mass-healing-word", "healing-word", "cure-wounds", "fireball", "cone-of-cold", "spirit-guardians"])]),
 
     R("2024-duel", "2024", "2024 1v1 · Monk discipline", 5, ["monk"], ["brown-bear"],
-      "Extra Attack and Flurry of Blows.", 1701, [A("feature", "extra-attack"), A("anyFeature", ["flurry-of-blows", "open-hand-technique"])]),
+      "Stunning Strike and the Stunned condition.", 4, [A("feature", "stunning-strike"), A("condition", "stunned")]),
     R("2024-goblins", "2024", "2024 1v2 · Barbarian vs two Goblin Warriors", 3, ["barbarian"], ["goblin-warrior", "goblin-warrior"],
       "Barbarian Rage.", 1701, [A("feature", "rage")]),
     R("2024-partners", "2024", "2024 2v2 · Steel and healing", 5, ["fighter", "cleric"], ["brown-bear", "dire-wolf"],
