@@ -11,6 +11,7 @@ from app.content.canonical_spell_policy import CASTER_CLASS_IDS, canonical_spell
 from app.content.certified_hero_progressions import iter_certified_progression_levels
 from app.content.character_resource_audit import audit_character_resources
 from app.content.class_spell_progression import CASTING_ABILITIES
+from app.content.grapple_escape_skill_bonuses import complete_template_grapple_escape_skills
 from app.content.pregen_combat_audit import audit_pregen_combat_stats
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.class_loadouts import CanonicalSpellChoice, ClassSpellPackage
@@ -122,7 +123,7 @@ def audit_2014_pregen_snapshot(
     class_id = getattr(progression, "class_id", "unknown")
     try:
         profile = progression.profile(level)
-        template = progression.template_builder(level)
+        template = complete_template_grapple_escape_skills(progression.template_builder(level))
         issues = _raw_and_engine_issues(profile, template, combat_profiles)
         return Pregen2014SnapshotAudit(
             class_id=profile.class_id,
