@@ -114,7 +114,7 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
                 paladin_2024_feature(
                     "banishing-smite",
                     "Banishing Smite",
-                    "class", combat=True, automated=False,
+                    "class", combat=False, automated=False,
                     notes=("Selected as the fifteenth damage-first Paladin preparation. It remains "
                            "fail-closed until the shared post-hit Concentration and banishment semantics "
                            "are fully represented; no approximation is allowed."),
