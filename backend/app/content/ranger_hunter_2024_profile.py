@@ -7,22 +7,21 @@ from app.content.canonical_combat_build_policy import (
     canonical_base_ability_scores,
 )
 from app.content.canonical_hero_policy import canonical_template_id
+from app.content.canonical_progression import advance_profile_data
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.ranger_hunter_2024_level1 import build_ranger_2024_level1_audits
+from app.content.ranger_hunter_2024_level2 import build_ranger_2024_level2_audits
 from app.domain.character_builds import CharacterBuildProfile
 
 logger = logging.getLogger(__name__)
 
 
-def build_rowan_ashtrail_2024_profile(level: int = 1) -> CharacterBuildProfile:
-    """Convert persistent 2014 Rowan Ashtrail into the audited 2024 Ranger track."""
+def _level_one() -> CharacterBuildProfile:
     try:
-        if level != 1:
-            raise ValueError("The current 2024 Ranger conversion tranche certifies level 1 only.")
         hero = HERO_BY_CLASS["ranger"]
         base = canonical_base_ability_scores("ranger")
-        # Outlander is retained from Rowan's 2014 identity. Under the 2024
-        # legacy-background conversion rule its ability increases are flexible.
+        # Preserve Rowan's legacy Outlander identity. Under the 2024 legacy-
+        # background conversion rule its ability increases are flexible.
         allowed = ["dexterity", "wisdom", "constitution"]
         background = canonical_background_increases("ranger", allowed)
         values = base.model_dump()
@@ -73,6 +72,31 @@ def build_rowan_ashtrail_2024_profile(level: int = 1) -> CharacterBuildProfile:
                 "D&D Beyond Basic Rules 2014: Outlander",
             ],
         )
+    except Exception:
+        logger.exception("Failed to compile 2024 Rowan Ashtrail level 1 profile.")
+        raise
+
+
+def build_rowan_ashtrail_2024_profile(level: int = 1) -> CharacterBuildProfile:
+    """Advance persistent Rowan Ashtrail through the certified 2024 Ranger track."""
+    try:
+        if level not in (1, 2):
+            raise ValueError("The current 2024 Ranger conversion tranche certifies levels 1 through 2.")
+        profile = _level_one()
+        if level == 1:
+            return profile
+
+        data = advance_profile_data(profile, 2)
+        data.update(
+            fighting_style="Archery",
+            fighting_styles=["Archery"],
+            feature_audits=build_ranger_2024_level2_audits(),
+            source_references=[
+                *profile.source_references,
+                "D&D Beyond Basic Rules 2024: Ranger 2 — Deft Explorer, Fighting Style",
+            ],
+        )
+        return CharacterBuildProfile(**data)
     except Exception:
         logger.exception("Failed to compile 2024 Rowan Ashtrail profile at level %s.", level)
         raise
