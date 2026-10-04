@@ -72,6 +72,10 @@ def _faithful_steed_free_cast(level: int) -> int:
     return 1 if level >= 5 else 0
 
 
+def _holy_nimbus(level: int) -> int:
+    return 1 if level >= 20 else 0
+
+
 def _berserker_intimidating_presence(level: int) -> int:
     try:
         return 1 if level >= 14 else 0
@@ -128,6 +132,7 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         ("channel-divinity", "Channel Divinity", _paladin_channel_divinity),
         ("faithful-steed-free-cast", "Faithful Steed: Free Cast", _faithful_steed_free_cast),
         ("boon-combat-prowess", "Boon of Combat Prowess", _combat_prowess),
+        ("holy-nimbus", "Holy Nimbus", _holy_nimbus),
     ),
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),
