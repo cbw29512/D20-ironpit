@@ -17,6 +17,7 @@ from app.content.cleric_2014_level1_spells import (
 from app.content.cleric_2014_level4_spells import guardian_of_faith_2014
 from app.content.cleric_2014_level5_spells import mass_cure_wounds_2014
 from app.content.cleric_2014_divine_intervention import divine_intervention_full_heal_2014
+from app.content.cleric_life_2014_bound_spells import bind_cleric_life_2014_prepared_spells
 from app.content.cleric_life_2014_profile import build_seraphine_dawnshield_2014_profile
 from app.content.cleric_life_2014_progression_support import build_cleric_progression_2014
 from app.content.cleric_life_2014_runtime_support import (
@@ -50,6 +51,7 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
         wisdom_modifier = scores.modifier("wisdom")
         spell_attack = pb + wisdom_modifier
         save_dc = 8 + spell_attack
+        bound = bind_cleric_life_2014_prepared_spells(level, wisdom_modifier, save_dc)
         armor = get_armor("scale-mail")
         armor_class = compile_worn_armor_class(
             armor.base_ac,
@@ -75,7 +77,7 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
             alternate_weapon_attacks=[
                 build_seraphine_weapon_attack(seraphine_light_crossbow(), scores, level)
             ],
-            spell_save_actions=[sacred_flame_2014(save_dc, level)],
+            spell_save_actions=[sacred_flame_2014(save_dc, level), *bound.saves],
             spell_attack_actions=[
                 guiding_bolt_2014(spell_attack),
                 inflict_wounds_2014(spell_attack),
@@ -98,16 +100,20 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
                 *([aid_2014()] if level >= 3 else []),
                 *([beacon_of_hope_2014()] if level >= 5 else []),
                 *([death_ward_2014()] if level >= 7 else []),
+                *bound.defenses,
             ],
             healing_actions=[
                 healing_word_2014(wisdom_modifier, 3),
                 cure_wounds_2014(wisdom_modifier, 3),
                 *([mass_cure_wounds_2014(wisdom_modifier)] if level >= 9 else []),
                 *([divine_intervention_full_heal_2014(level)] if level >= 10 else []),
+                *bound.healing,
             ],
             condition_removal_actions=(
-                [lesser_restoration_2014()] if level >= 3 else []
+                [lesser_restoration_2014(), *bound.condition_removals] if level >= 3
+                else list(bound.condition_removals)
             ),
+            effect_removal_actions=list(bound.effect_removals),
             saving_throw_bonuses=saving_throw_bonuses(
                 scores,
                 level,
@@ -135,7 +141,9 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
                 "D&D Basic Rules 2014: Hill Dwarf, Acolyte, Cleric, Life Domain, "
                 "Bless, Cure Wounds, Guiding Bolt, Healing Word, Inflict Wounds, "
                 "Sacred Flame, Shield of Faith, Aid, Lesser Restoration, Spiritual Weapon, "
-                "Beacon of Hope, Death Ward, Guardian of Faith, Mass Cure Wounds, Divine Intervention, Equipment"
+                "Beacon of Hope, Death Ward, Guardian of Faith, Mass Cure Wounds, "
+                "Mass Healing Word, Dispel Magic, Freedom of Movement, Flame Strike, "
+                "Greater Restoration, Heal, Divine Intervention, Equipment"
             ),
         )
     except Exception:

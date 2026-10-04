@@ -30,8 +30,10 @@ _LEVEL_ONE_CANTRIPS = (
     _spell("poison-spray", "Poison Spray", "damage", "save-damage"),
 )
 
+# D&D Basic Rules 2014 / SRD 5.1 Mage Hand: the hand cannot attack, activate
+# magic items, or carry more than 10 pounds. Object-only utility.
 _LEVEL_FOUR_CANTRIP = _spell(
-    "mage-hand", "Mage Hand", "utility", min_level=4,
+    "mage-hand", "Mage Hand", "utility", "arena-out-of-scope", min_level=4,
 )
 
 _LEVEL_ONE_KNOWN = (
@@ -39,8 +41,11 @@ _LEVEL_ONE_KNOWN = (
     _spell("burning-hands", "Burning Hands", "damage", "save-damage", "area", level=1),
 )
 
+# D&D Basic Rules 2014 / SRD 5.1 Comprehend Languages: understand spoken and
+# written language only; it does not decode ciphers or alter combat.
 _LEVEL_TWO_ADDITION = _spell(
-    "comprehend-languages", "Comprehend Languages", "utility", level=1, min_level=2,
+    "comprehend-languages", "Comprehend Languages", "utility", "arena-out-of-scope",
+    level=1, min_level=2,
 )
 
 _LEVEL_THREE_DAMAGE = (
@@ -49,7 +54,8 @@ _LEVEL_THREE_DAMAGE = (
 )
 
 _LEVEL_FOUR_UTILITY = _spell(
-    "comprehend-languages", "Comprehend Languages", "utility", level=1, min_level=4,
+    "comprehend-languages", "Comprehend Languages", "utility", "arena-out-of-scope",
+    level=1, min_level=4,
 )
 
 _LEVEL_FIVE_DAMAGE = _spell(
@@ -60,20 +66,27 @@ _LEVEL_SIX_UTILITY = _spell(
     "dispel-magic", "Dispel Magic", "control", "effect-removal", level=3, min_level=6,
 )
 
+# D&D Basic Rules 2014 / SRD 5.1 Hallucinatory Terrain: look/sound/smell only;
+# "The tactile characteristics of the terrain are unchanged."
 _LEVEL_SEVEN_UTILITY = _spell(
-    "hallucinatory-terrain", "Hallucinatory Terrain", "utility", level=4, min_level=7,
+    "hallucinatory-terrain", "Hallucinatory Terrain", "utility", "arena-out-of-scope",
+    level=4, min_level=7,
 )
 
+# D&D Basic Rules 2014 / SRD 5.1 Dimension Door: 500-foot teleport. Combat
+# repositioning; no teleport-action primitive exists, so this stays unbound.
 _LEVEL_EIGHT_UTILITY = _spell(
-    "dimension-door", "Dimension Door", "utility", level=4, min_level=8,
+    "dimension-door", "Dimension Door", "utility", "teleport", level=4, min_level=8,
 )
 
 _LEVEL_NINE_DAMAGE = _spell(
     "flame-strike", "Flame Strike", "damage", "save-damage", "area", level=5, min_level=9,
 )
 
+# D&D Basic Rules 2014 / SRD 5.1 Prestidigitation: "minor magical trick" /
+# harmless sensory and object-flavor effects only.
 _LEVEL_TEN_CANTRIP = _spell(
-    "prestidigitation", "Prestidigitation", "utility", min_level=10,
+    "prestidigitation", "Prestidigitation", "utility", "arena-out-of-scope", min_level=10,
 )
 
 _LEVEL_ELEVEN_KNOWN = _spell(
