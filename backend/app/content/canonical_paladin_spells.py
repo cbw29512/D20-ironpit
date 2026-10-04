@@ -44,6 +44,14 @@ PALADIN_SPELLS = (
         spell_level=4, min_character_level=15,
     ),
     _spell(
+        "destructive-wave", "Destructive Wave", "damage", "arena-out-of-scope",
+        spell_level=5, min_character_level=17,
+    ),
+    _spell(
+        "greater-restoration", "Greater Restoration", "healing", "arena-out-of-scope",
+        spell_level=5, min_character_level=17,
+    ),
+    _spell(
         "divine-smite", "Divine Smite", "damage", "post-hit-resource-damage",
         min_character_level=2, always_prepared_from_level=2,
     ),
