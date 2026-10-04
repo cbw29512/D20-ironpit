@@ -111,7 +111,6 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         ("action-surge", "Action Surge", fighter_action_surge_uses),
         ("indomitable", "Indomitable", fighter_indomitable_uses),
         ("boon-combat-prowess", "Boon of Combat Prowess", _combat_prowess),
-        ("holy-nimbus", "Holy Nimbus", _holy_nimbus),
     ),
     "druid": (
         ("wild-shape", "Wild Shape", druid_wild_shape_uses),
@@ -133,6 +132,7 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         ("channel-divinity", "Channel Divinity", _paladin_channel_divinity),
         ("faithful-steed-free-cast", "Faithful Steed: Free Cast", _faithful_steed_free_cast),
         ("boon-combat-prowess", "Boon of Combat Prowess", _combat_prowess),
+        ("holy-nimbus", "Holy Nimbus", _holy_nimbus),
     ),
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),
