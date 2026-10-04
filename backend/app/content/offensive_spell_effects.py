@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.domain.save_damage import SaveDamageComponent
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.spells import SpellAttackAction, SpellModifierEffect, SpellSaveAction
 from app.domain.targeting import AreaTargeting
@@ -83,6 +84,30 @@ def build_guiding_bolt(attack_bonus: int) -> SpellAttackAction:
         source="SRD 5.2.1 Guiding Bolt",
     )
 
+
+
+def build_flame_strike_2024(save_dc: int) -> SpellSaveAction:
+    """2024 Flame Strike through the universal multi-component save-damage path."""
+    try:
+        return SpellSaveAction(
+            id="flame-strike",
+            name="Flame Strike",
+            level=5,
+            action_cost="action",
+            range_ft=60,
+            area=AreaTargeting(shape="radius", origin="point", radius_ft=10),
+            save_ability="dexterity",
+            dc=save_dc,
+            success_damage="half",
+            damage_components=[
+                SaveDamageComponent(dice_count=5, dice_size=6, damage_type="fire"),
+                SaveDamageComponent(dice_count=5, dice_size=6, damage_type="radiant"),
+            ],
+            animation="flame-strike",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Flame Strike.")
+        raise
 
 
 def build_fireball_2024(save_dc: int) -> SpellSaveAction:

@@ -9,6 +9,7 @@ from app.content.healing_spell_effects import build_cure_wounds
 from app.content.hero_progressions import HERO_BY_CLASS
 from app.content.paladin_devotion_2024_profile import build_aurelia_brightshield_2024_profile
 from app.content.paladin_devotion_2024_level9 import abjure_foes_2024, beacon_of_hope_2024, dispel_magic_2024_paladin
+from app.content.offensive_spell_effects import build_flame_strike_2024
 from app.content.paladin_devotion_2024_resources import build_paladin_2024_resources
 from app.content.paladin_devotion_2024_runtime_support import (
     build_paladin_2024_attack,
@@ -31,10 +32,10 @@ from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
 
 def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
-    """Build certified 2024 Aurelia through Paladin level 16."""
+    """Build certified 2024 Aurelia through Paladin level 17."""
     try:
-        if level not in range(1, 17):
-            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-16 only.")
+        if level not in range(1, 18):
+            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-17 only.")
         profile = build_aurelia_brightshield_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -54,6 +55,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
             alternate_weapon_attacks=[build_paladin_2024_attack("javelin", strength, level)],
             attack_action=build_paladin_2024_attack_action(level),
             saving_throw_actions=[abjure_foes_2024(8 + pb + charisma, charisma)] if level >= 9 else [],
+            spell_save_actions=[build_flame_strike_2024(8 + pb + charisma)] if level >= 17 else [],
             healing_actions=[
                 HealingAction(
                     id="lay-on-hands-heal", name="Lay On Hands", action_cost="bonus_action",
@@ -129,6 +131,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                    if level >= 13 else "")
                 + ("Restoring Touch, " if level >= 14 else "")
                 + ("Smite of Protection, Aura of Life (fail-closed pending shared recovery aura), " if level >= 15 else "")
+                + ("Commune (arena-neutral), Flame Strike, Destructive Wave (fail-closed), Greater Restoration (fail-closed), " if level >= 17 else "")
                 + "Longsword, Javelin"
             ),
         )

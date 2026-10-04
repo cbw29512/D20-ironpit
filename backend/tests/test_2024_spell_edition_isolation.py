@@ -64,6 +64,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "shatter",
         "thunderwave",
         "fireball",
+        "flame-strike",
         "disintegrate",
         "finger-of-death",
         "sunburst",
@@ -435,6 +436,23 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "half",
             1,
         )
+
+    if "flame-strike" in spell_saves:
+        spell = spell_saves["flame-strike"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.origin if spell.area else None,
+            spell.area.radius_ft if spell.area else None,
+            spell.save_ability,
+            spell.success_damage,
+        ) == (5, "action", 60, "radius", "point", 10, "dexterity", "half")
+        assert [
+            (item.dice_count, item.dice_size, item.damage_type)
+            for item in spell.damage_components
+        ] == [(5, 6, "fire"), (5, 6, "radiant")]
 
     if "disintegrate" in spell_saves:
         spell = spell_saves["disintegrate"]

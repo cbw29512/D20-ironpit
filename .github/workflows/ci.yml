@@ -62,6 +62,9 @@ jobs:
             git commit -m "Refresh generated Paladin progression artifacts [skip refresh]"
             git push origin HEAD:${{ github.event.pull_request.head.ref }}
           fi
+      - name: Run Paladin 17 generated browser parity
+        if: startsWith(github.event.pull_request.head.ref, 'feat/2024-paladin-')
+        run: node frontend/browser-paladin-2024-level17.test.cjs
       - name: Upload certification manifest candidates
         uses: actions/upload-artifact@v4
         with:
