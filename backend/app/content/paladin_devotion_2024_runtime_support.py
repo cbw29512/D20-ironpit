@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.character_math import proficiency_bonus
+from app.content.hero_combat_feature_registry import compile_progression_feature_fields
 from app.content.equipment import build_longsword
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
