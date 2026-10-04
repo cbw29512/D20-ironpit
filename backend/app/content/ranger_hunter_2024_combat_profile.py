@@ -30,6 +30,7 @@ def build_rowan_2024_combat_profile(level: int = 1) -> PregenCombatProfile:
             initiative_bonus=dexterity + pb,
             skill_bonuses=(
                 ("athletics", scores.modifier("strength") + pb),
+                ("acrobatics", dexterity),
                 ("survival", wisdom + pb),
                 ("perception", wisdom + pb),
                 ("stealth", dexterity + pb),
