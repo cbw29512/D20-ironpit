@@ -94,15 +94,20 @@ def test_guiding_bolt_uses_ranged_attack_disadvantage_in_close_combat() -> None:
     assert event.attack_roll.selected_roll == 2
 
 
-def test_guiding_bolt_does_not_use_higher_slot_while_upcasting_is_deferred() -> None:
+def test_guiding_bolt_upcast_adds_one_d6() -> None:
     setup, caster, _, target = _setup()
     caster.state.resources = [
         item.model_copy(update={"id": "spell-slot-2", "name": "Level 2 Slot", "current_uses": 1, "max_uses": 1})
         for item in caster.state.resources
     ]
     spell = caster.state.template.spell_attack_actions[0]
-
-    with pytest.raises(ValueError, match="No level 1 spell slot"):
-        resolve_spell_attack(1, 1, caster, target, spell, setup, "1:caster", FixedDiceProvider([20]))
-    assert caster.state.resources[0].current_uses == 1
-    assert caster.state.action_available is True
+    assert spell.upcast_dice_per_level == 1
+    event = resolve_spell_attack(
+        1, 1, caster, target, spell, setup, "1:caster",
+        FixedDiceProvider([12, 1, 2, 3, 4, 5]),
+        cast_slot_level=2,
+    )
+    assert event.hit is True
+    assert event.damage_roll is not None
+    assert event.damage_roll.rolls == [1, 2, 3, 4, 5]
+    assert caster.state.resources[0].current_uses == 0

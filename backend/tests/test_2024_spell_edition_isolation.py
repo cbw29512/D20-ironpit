@@ -203,7 +203,8 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             spell.damage_dice_count,
             spell.damage_dice_size,
             spell.damage_type,
-        ) == ("action", "ranged", 120, 4, 6, "radiant")
+            spell.upcast_dice_per_level,
+        ) == ("action", "ranged", 120, 4, 6, "radiant", 1)
         assert len(spell.on_hit_modifier_effects) == 1
         rider = spell.on_hit_modifier_effects[0]
         assert rider.kind == "attacks-against-advantage"
