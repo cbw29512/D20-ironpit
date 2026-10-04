@@ -57,6 +57,40 @@ A capability discovered while implementing a hero must be reusable by monsters, 
 
 **Buff/debuff interaction is universal.** Harmful combat states and penalties are represented as debuffs or debuff semantics; protective effects are buffs that may counter named debuffs. The engine resolves the counter by semantic identity plus declared qualifiers such as magical/nonmagical source, duration, resource requirement, or movement cost. A source ability must not receive a bespoke immunity/removal branch when the same result can be expressed as a reusable buff counter. Conditional counters pay their declared cost automatically when Arena policy has no meaningful reason to decline it; for example, a 5-foot movement cost that automatically clears a nonmagical Grappled/Restrained debuff is paid at the first legal opportunity.
 
+### 1.1.1 Simple universal mechanic vocabulary
+
+Iron Pit must prefer the smallest reusable mechanical vocabulary possible. Most source abilities should reduce to one or more of these shared outcomes and context checks:
+
+- attack -> hit or miss;
+- saving throw / ability check -> success or failure;
+- damage;
+- healing / Hit Point change / Temporary Hit Points;
+- buff;
+- debuff;
+- condition;
+- resource spend, gain, refill, or depletion;
+- movement, range, position, or area;
+- duration, trigger, and expiry timing.
+
+A named class feature, spell, monster trait, item, or environmental effect is normally **data that composes these primitives**, not a reason to create another resolver.
+
+**Source creates context; affected creature owns its response.** When one effect creates a universal battlefield fact such as sunlight, darkness, difficult terrain, cover, invisibility, a damage type, a condition, or an effect tag, the source should declare only that fact and its area/duration. Each affected combatant's own declarative traits, buffs, debuffs, immunities, vulnerabilities, or other rules determine what that fact does to that combatant.
+
+Example: Holy Nimbus creates a 30-foot sunlight area. Holy Nimbus does **not** contain Drider, Kobold Warrior, Specter, Wight, Wraith, or other monster-name branches. A creature with Sunlight Sensitivity sees the universal `sunlight` context and applies its own declared attack-roll and ability-check Disadvantage. A creature with no sunlight interaction is unaffected. A future beneficial sunlight trait would consume the same sunlight context and apply its own buff semantics.
+
+**Forbidden architecture:**
+
+- `if monster_name == ...` to implement a generally reusable rule;
+- `if class_name == ...` or `if feature_name == ...` inside a generic resolver when declarative capability data can express the behavior;
+- source-to-target pair tables such as "Holy Nimbus debuffs Wight";
+- duplicate hit/miss, save, damage, healing, buff/debuff, condition, resource, movement, area, or timing engines for different named abilities;
+- treating a new printed name as a new mechanic before semantic decomposition proves it is one.
+
+The required pattern is:
+
+`source data -> universal context/primitive -> target-owned declarative interaction -> shared resolver -> result`
+
+If the same outcome can be represented by combining existing primitives, **composition is mandatory**. A genuinely new primitive is justified only when the source introduces a combat outcome that cannot be represented correctly by this vocabulary or by existing universal modifiers.
 Invisibility is one universal condition regardless of source. A spell, feature, item, monster ability, or self-buff that grants invisibility applies the same `invisible` condition; source-specific activation cost, resource cost, duration, and companion effects belong to declarative source data rather than a source-specific invisibility resolver.
 
 The player-facing combat log must preserve the exact source ability name. Internal audit/certification data should additionally record the generic capability/primitive IDs used underneath so engine reuse remains provable without exposing implementation jargon to the player.
