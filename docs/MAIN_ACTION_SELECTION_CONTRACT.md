@@ -80,7 +80,7 @@ Python and browser use the same landing-damage Action policy for heroes and mons
 
 1. legal HP-threshold instant-death, then HP-threshold condition Action after urgent support, before optional Bonus Action spell setup;
 2. pre-move replacement-form setup, then pre-move spell offense only when a melee attack cannot land this turn after useful legal approach movement;
-3. charge/closing and offensive movement, preferring a close that enables melee when that close is legal this turn;
+3. charge/closing and offensive movement: front-row melee closes or makes useful progress toward melee even when backup range can already land; back-row ranged/casters hold when they can already shoot or cast;
 4. recompute HP-threshold Actions after movement;
 5. if a legal melee Attack/Multiattack or standard melee attack can land now, take the highest-damage melee option;
 6. if melee cannot land, take the highest-damage landable spell, ranged attack, area/save Action, or other damaging option;

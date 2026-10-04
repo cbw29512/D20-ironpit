@@ -5,6 +5,7 @@ from fractions import Fraction
 
 from app.combat.encounter_ruleset import resolve_encounter_ruleset
 from app.combat.formation import starting_position_ft
+from app.combat.formation_rows import assign_formation_rows
 from app.combat.grid_placement import apply_placement, pack_deployment_zone
 from app.combat.state import build_combatant_state
 from app.content.arena_map import (
@@ -123,6 +124,8 @@ def build_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
         ])
         if ruleset != selection.ruleset:
             raise ValueError(f"Selected ruleset {selection.ruleset} does not match resolved combatant ruleset {ruleset}.")
+        assign_formation_rows(hero_states)
+        assign_formation_rows(monster_states)
         battle_map = _apply_standard_grid_placement(hero_states, monster_states)
         return EncounterSetup(
             heroes=hero_states,

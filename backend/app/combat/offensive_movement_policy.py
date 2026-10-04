@@ -5,6 +5,7 @@ import logging
 from app.combat.action_economy import is_available
 from app.combat.tactical_actions import choose_offensive_dash_grant, use_offensive_dash
 from app.combat.encounter_targeting import combatant_distance, living_opponents
+from app.combat.formation_rows import member_is_backline
 from app.combat.grid_pathing import plan_movement_toward
 from app.combat.modifier_stack import effective_speed
 from app.combat.offensive_ranges import offensive_ranges_for_target
@@ -29,7 +30,8 @@ def choose_offensive_movement_intent(
             raise ValueError("Grid offensive movement requires an authoritative attacker position.")
         members = [*setup.heroes, *setup.monsters]
         melee_reach: list[tuple[int, int, str, str, int]] = []
-        progress: list[tuple[int, int, str, str, int]] = []
+        melee_progress: list[tuple[int, int, str, str, int]] = []
+        ranged_progress: list[tuple[int, int, str, str, int]] = []
         melee_legal_now = False
         other_legal_now = False
         for target in living_opponents(attacker, setup):
@@ -53,7 +55,7 @@ def choose_offensive_movement_intent(
                     setup.persistent_barriers,
                     setup.temporary_terrain_zones,
                 )
-                if not plan.goal_reachable or not plan.path:
+                if not plan.path:
                     continue
                 row = (
                     plan.movement_cost_ft,
@@ -64,11 +66,16 @@ def choose_offensive_movement_intent(
                 )
                 if family == "melee" and plan.final_distance_ft <= desired_distance:
                     melee_reach.append(row)
+                elif family == "melee" and plan.final_distance_ft < distance:
+                    melee_progress.append(row)
                 elif plan.final_distance_ft < distance:
-                    progress.append(row)
+                    ranged_progress.append(row)
         if melee_legal_now:
             return None
-        chosen = melee_reach or ([] if other_legal_now else progress)
+        if member_is_backline(attacker):
+            chosen = melee_reach or ([] if other_legal_now else ranged_progress or melee_progress)
+        else:
+            chosen = melee_reach or melee_progress
         if not chosen:
             return None
         _, _, target_id, family, desired_distance = min(chosen)

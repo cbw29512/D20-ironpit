@@ -39,7 +39,7 @@
     state.hasRun = false; state.turboBatch = null; state.session = null; turboView()?.hide();
     actions()?.syncControls(state); updateControls();
   }
-  function render() { if (state.catalog) view().render(state, openSlot); updateControls(); actions()?.syncControls(state); }
+  function render() { if (state.catalog) view().render(state, openSlot); window.IRON_PIT_FORMATION_BOARD?.renderPreview(state); updateControls(); actions()?.syncControls(state); }
   function setSlot(side, index, card) { (side === "heroes" ? state.heroSlots : state.monsterSlots)[index] = card; invalidateRun(); clearResult(); render(); }
   function removeSlot(side, index) { (side === "heroes" ? state.heroSlots : state.monsterSlots)[index] = null; invalidateRun(); clearResult(); render(); }
   function openSlot(side, index) {

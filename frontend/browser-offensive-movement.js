@@ -14,7 +14,7 @@
       if (!E().available(member.state, "action") || !setup.map_definition) return null;
       if (!member.state.position) throw new Error("Grid offensive movement requires an authoritative attacker position.");
       const members = [...setup.heroes, ...setup.monsters];
-      const meleeReach = [], progress = [];
+      const meleeReach = [], meleeProgress = [], rangedProgress = [];
       let meleeNow = false, otherNow = false;
       for (const target of F().targetOrder(member, setup)) {
         if (!target.state.position) throw new Error("Grid offensive movement requires authoritative target positions.");
@@ -34,7 +34,7 @@
             member.state.movement_remaining_ft,
             setup.persistent_barriers || [],
           );
-          if (!plan.goal_reachable || !plan.path.length) continue;
+          if (!plan.path.length) continue;
           const row = {
             cost: plan.movement_cost_ft,
             distance,
@@ -43,11 +43,14 @@
             range: option.range,
           };
           if (option.family === "melee" && plan.final_distance_ft <= option.range) meleeReach.push(row);
-          else if (plan.final_distance_ft < distance) progress.push(row);
+          else if (option.family === "melee" && plan.final_distance_ft < distance) meleeProgress.push(row);
+          else if (plan.final_distance_ft < distance) rangedProgress.push(row);
         }
       }
       if (meleeNow) return null;
-      const candidates = meleeReach.length ? meleeReach : (otherNow ? [] : progress);
+      const candidates = F().isBackline(member)
+        ? (meleeReach.length ? meleeReach : (otherNow ? [] : rangedProgress.length ? rangedProgress : meleeProgress))
+        : (meleeReach.length ? meleeReach : meleeProgress);
       if (!candidates.length) return null;
       candidates.sort((a, b) => a.cost - b.cost || a.distance - b.distance
         || a.targetId.localeCompare(b.targetId) || a.family.localeCompare(b.family) || b.range - a.range);

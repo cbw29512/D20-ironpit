@@ -263,8 +263,13 @@ A flavor-only d6 may narrate the fumble; it has no additional mechanical effect.
 ### Attack natural 20
 
 - Use the selected edition's RAW automatic-hit/critical behavior.
+- Critical hits and automatic hits use the kept/selected natural die after Advantage or Disadvantage. A discarded 20 is never a critical or automatic hit.
 - A flavor-only d6 may narrate the critical; it has no additional mechanical effect.
 - Saving throw natural 1/20 values have no extra Iron Pit rule unless RAW for the specific rule says otherwise.
+
+### Calm Emotions
+
+2014 Calm Emotions currently binds only the printed charm/frighten suppression option through the shared condition-immunity and debuff-counter primitives. The printed indifference option is not a supported targeting-gate primitive. If the caster uses suppression and there is nothing to suppress, a failed save is a legal no-op. Do not apply Charmed or invent a hostility shutdown to fake the missing option.
 
 ## 9. Advantage and Disadvantage
 
@@ -298,6 +303,7 @@ Permanent arena rules:
 - Printed Walk, Fly, Climb, Swim, Burrow, Hover, and base-speed data remain source-derived and must not be rewritten merely to make a creature usable in the Pit.
 - Movement modes never become roster-eligibility filters. The magical Pit remains hospitable to aquatic, flying, burrowing, climbing, unusual-biology, breathing, and atmosphere requirements. Every combatant may use its printed movement modes and make attacks as though the Pit were a valid native environment for those modes and its normal biology. Environmental hospitality removes habitat-only penalties such as underwater movement or attack penalties; it does not grant extra Speed, a movement mode the source does not have, free movement, altitude-based immunity, or protection from RAW combat effects that explicitly create Difficult Terrain, Speed penalties, conditions, or other debuffs.
 - Flying movement remains horizontal-only in the standard Iron Pit. Flyers may use their printed Fly Speed across the battlefield but may not gain altitude to become permanently unreachable.
+- Front row is melee. Back row is ranged and/or casters. Mixed melee-and-ranged cards on one side split: one starts in front as melee, extras start in back as ranged. A back-row melee creature uses a ranged attack when it has one; if it has none, it steps to the front when a front creature dies, or Dodges until it can move up. Front-row combatants close to melee even when they have backup thrown/ranged attacks. Creature names never assign rows.
 - Starting placement is deterministic and footprint-aware. Future manual legal placement is authoritative when explicitly selected by the user.
 - No environmental cover by default.
 - Clear line of sight by default; only combat effects such as Darkness, Fog Cloud, Blindness, Invisibility, or similar supported mechanics alter visibility.

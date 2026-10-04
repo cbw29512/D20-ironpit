@@ -102,6 +102,15 @@
         sequence, round, member, setup, turnKey, events: [],
       });
       events.push(...start.events); sequence = start.sequence;
+      const promoted = window.IRON_PIT_BROWSER_FORMATION_ROWS?.syncFormationRows(setup) || [];
+      for (const stepped of promoted) {
+        events.push({
+          sequence: sequence++, round_number: round, event_type: "feature",
+          actor_id: stepped.combatant_id, actor_name: stepped.state.template.name,
+          feature_id: "formation-step-up", animation: "movement",
+          description: `${stepped.state.template.name} steps to the front row.`,
+        });
+      }
       if (window.IRON_PIT_BROWSER_TIMED?.suppressesVoluntaryTurn(member.state)) {
         return finalize(events, sequence, round, member, setup, turnKey, false);
       }

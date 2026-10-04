@@ -29,6 +29,7 @@ from app.combat.targeted_concentration_damage import resolve_targeted_concentrat
 from app.combat.timed_effect_control import suppresses_voluntary_turn
 from app.combat.feature_activation_phase import resolve_feature_activation_phase
 from app.combat.fighter import use_second_wind
+from app.combat.formation_rows import sync_formation_rows
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 logger = logging.getLogger(__name__)
@@ -48,6 +49,14 @@ def resolve_combat_turn(
             sequence, round_number, attacker.combatant_id, attacker.state, dice,
         )
         events.extend(start_events)
+        for member in sync_formation_rows(setup):
+            events.append(BattleEvent(
+                sequence=sequence, round_number=round_number, event_type="feature",
+                actor_id=member.combatant_id, actor_name=member.state.template.name,
+                feature_id="formation-step-up", animation="movement",
+                description=f"{member.state.template.name} steps to the front row.",
+            ))
+            sequence += 1
         turn_key = f"{round_number}:{attacker.combatant_id}"
         if suppresses_voluntary_turn(attacker.state):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=False)

@@ -11,7 +11,7 @@
       const maxY = zone.y + zone.height_squares - side;
       if (maxX < zone.x || maxY < zone.y) return [];
       const xValues = Array.from({ length: maxX - zone.x + 1 }, (_, i) => zone.x + i);
-      const backline = F().usesBackline(member.state.template);
+      const backline = F().isBackline(member);
       const frontEast = zone.front_edge === "east";
       const towardFront = !backline;
       if (frontEast === towardFront) xValues.reverse();
@@ -49,7 +49,7 @@
       return members.map((member, index) => ({ member, index }))
         .sort((a, b) => G().footprintSide(b.member.state.template.size)
           - G().footprintSide(a.member.state.template.size)
-          || Number(F().usesBackline(a.member.state.template)) - Number(F().usesBackline(b.member.state.template))
+          || Number(F().isBackline(a.member)) - Number(F().isBackline(b.member))
           || a.index - b.index)
         .map(({ member }) => member);
     } catch (error) {
@@ -60,6 +60,7 @@
 
   function packZone(map, zone, members) {
     try {
+      window.IRON_PIT_BROWSER_FORMATION_ROWS?.assignFormationRows(members);
       const ordered = placementOrder(members), placed = [];
       function search(index) {
         try {
