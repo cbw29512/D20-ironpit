@@ -7,10 +7,6 @@ on:
         description: Netlify deploy id to publish to ironpit.netlify.app
         required: true
         default: "6ac22aac2d2a1800082d33b1"
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/publish-netlify-production.yml"
 
 jobs:
   publish:
