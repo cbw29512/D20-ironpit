@@ -24,6 +24,7 @@ CANONICAL_SPELLS: dict[CasterClassId, tuple[CanonicalSpellChoice, ...]] = {
     "ranger": (
         _spell("cure-wounds", "Cure Wounds", "healing", "healing"),
         _spell("ensnaring-strike", "Ensnaring Strike", "mixed", "spell-buff", "restrained", "concentration"),
+        _spell("longstrider", "Longstrider", "buff", "speed-modifier", min_character_level=2),
     ),
     "sorcerer": (
         _spell("burning-hands", "Burning Hands", "damage", "save-damage", "area"),
