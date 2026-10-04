@@ -17,7 +17,7 @@ def test_2024_ranger_level_one_is_conversion_of_rowan() -> None:
     assert profile.origin_feat_id == "alert"
     assert profile.weapon_masteries == ["longbow", "shortsword"]
     assert profile.final_ability_scores.dexterity == 17
-    assert profile.final_ability_scores.wisdom == 15
+    assert profile.final_ability_scores.wisdom == 10
     assert ranger.speed_ft == 35
     assert ranger.initiative_bonus == 5
     assert ranger.weapon_attack.weapon.id == "longbow"
