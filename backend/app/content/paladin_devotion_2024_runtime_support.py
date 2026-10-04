@@ -127,7 +127,7 @@ def build_paladin_2024_progression(
                     [FriendlyConditionImmunityAuraGrant(
                         source_id="aura-of-courage-2024",
                         source_name="Aura of Courage",
-                        radius_ft=10,
+                        radius_ft=aura_radius,
                         condition_id="frightened",
                         inactive_while_incapacitated=True,
                     )]
