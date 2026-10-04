@@ -9,7 +9,12 @@ from app.content.healing_spell_effects import (
     build_mass_cure_wounds,
     build_mass_healing_word,
 )
-from app.content.offensive_spell_effects import build_inflict_wounds, build_sacred_flame
+from app.content.bard_2024_high_damage_spells import build_sunburst_2024
+from app.content.offensive_spell_effects import (
+    build_flame_strike_2024,
+    build_inflict_wounds,
+    build_sacred_flame,
+)
 from app.domain.actions import HealingAction
 from app.domain.combatants import ResourceDefinition
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
@@ -114,6 +119,10 @@ def build_seraphine_save_spells(
     for slot_level, unlock_level in ((5, 9), (6, 11), (7, 13), (8, 15), (9, 17)):
         if level >= unlock_level:
             spells.append(build_inflict_wounds(save_dc, slot_level))
+    if level >= 9:
+        spells.append(build_flame_strike_2024(save_dc))
+    if level >= 15:
+        spells.append(build_sunburst_2024(save_dc))
     return spells
 
 

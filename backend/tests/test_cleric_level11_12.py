@@ -71,7 +71,8 @@ def test_level_twelve_is_incremental_and_updates_charisma_only() -> None:
 
     assert hero.max_hp == level11.max_hp + 5 == 63
     assert (hero.ability_scores.wisdom, hero.ability_scores.charisma) == (20, 17)
-    assert hero.spell_save_actions[-1].id == "inflict-wounds-l6"
+    assert next(item.id for item in hero.spell_save_actions if item.id == "inflict-wounds-l6") == "inflict-wounds-l6"
+    assert any(item.id == "flame-strike" for item in hero.spell_save_actions)
     assert hero.healing_actions[-1].id == "mass-cure-wounds-l6"
     assert hero.saving_throw_bonuses["charisma"] == 7
     assert hero.skill_bonuses["persuasion"] == 7

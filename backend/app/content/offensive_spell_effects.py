@@ -110,6 +110,31 @@ def build_flame_strike_2024(save_dc: int) -> SpellSaveAction:
         raise
 
 
+def build_destructive_wave_2024(save_dc: int) -> SpellSaveAction:
+    """2024 Destructive Wave: 30-foot emanation, Constitution save, 5d6 Thunder + 5d6 Radiant."""
+    try:
+        return SpellSaveAction(
+            id="destructive-wave",
+            name="Destructive Wave",
+            level=5,
+            action_cost="action",
+            range_ft=30,
+            area=AreaTargeting(shape="emanation", origin="self", radius_ft=30),
+            save_ability="constitution",
+            dc=save_dc,
+            success_damage="half",
+            damage_components=[
+                SaveDamageComponent(dice_count=5, dice_size=6, damage_type="thunder"),
+                SaveDamageComponent(dice_count=5, dice_size=6, damage_type="radiant"),
+            ],
+            animation="destructive-wave",
+            source="D&D Beyond Basic Rules 2024: Destructive Wave",
+        )
+    except Exception:
+        logger.exception("Failed to build 2024 Destructive Wave.")
+        raise
+
+
 def build_fireball_2024(save_dc: int) -> SpellSaveAction:
     """2024 Fireball at its printed level for edition-correct reusable casting."""
     try:

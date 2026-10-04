@@ -37,6 +37,12 @@ def test_level_nine_uses_simple_upcast_damage_and_mass_healing() -> None:
     assert upcast.damage_type == "necrotic"
     assert upcast.success_damage == "half"
     assert upcast.dc == 17
+    flame = next(item for item in hero.spell_save_actions if item.id == "flame-strike")
+    assert flame.dc == 17
+    assert [(part.dice_count, part.dice_size, part.damage_type) for part in flame.damage_components] == [
+        (5, 6, "fire"),
+        (5, 6, "radiant"),
+    ]
 
     mass = next(item for item in hero.healing_actions if item.id == "mass-cure-wounds")
     assert (mass.max_targets, mass.dice_count, mass.dice_size) == (6, 5, 8)

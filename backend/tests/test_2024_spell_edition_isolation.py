@@ -74,6 +74,8 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "chromatic-orb",
         "fireball",
         "flame-strike",
+        "destructive-wave",
+        "dragons-breath",
         "disintegrate",
         "finger-of-death",
         "sunburst",
@@ -587,6 +589,42 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             for item in spell.damage_components
         ] == [(5, 6, "fire"), (5, 6, "radiant")]
 
+    if "destructive-wave" in spell_saves:
+        spell = spell_saves["destructive-wave"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.origin if spell.area else None,
+            spell.area.radius_ft if spell.area else None,
+            spell.save_ability,
+            spell.success_damage,
+        ) == (5, "action", 30, "emanation", "self", 30, "constitution", "half")
+        assert [
+            (item.dice_count, item.dice_size, item.damage_type)
+            for item in spell.damage_components
+        ] == [(5, 6, "thunder"), (5, 6, "radiant")]
+
+    if "dragons-breath" in spell_saves:
+        spell = spell_saves["dragons-breath"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.area.shape if spell.area else None,
+            spell.area.origin if spell.area else None,
+            spell.area.length_ft if spell.area else None,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.success_damage,
+            spell.upcast_dice_per_level,
+            spell.concentration,
+            spell.repeat_only,
+        ) == (2, "action", 15, "cone", "self", 15, "dexterity", 3, 6, "fire", "half", 1, True, True)
+
     if "disintegrate" in spell_saves:
         spell = spell_saves["disintegrate"]
         assert (
@@ -1006,6 +1044,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "cleric": "wisdom",
             "druid": "wisdom",
             "paladin": "charisma",
+            "ranger": "wisdom",
             "sorcerer": "charisma",
             "warlock": "charisma",
             "wizard": "intelligence",

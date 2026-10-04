@@ -44,7 +44,7 @@ PALADIN_SPELLS = (
         spell_level=4, min_character_level=15,
     ),
     _spell(
-        "destructive-wave", "Destructive Wave", "damage", "arena-out-of-scope",
+        "destructive-wave", "Destructive Wave", "damage", "save-damage", "area",
         spell_level=5, min_character_level=17,
     ),
     _spell(

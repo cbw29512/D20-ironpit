@@ -89,8 +89,9 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
                 "Oath of Devotion Spells",
                 "subclass", combat=True, automated=True,
                 notes=("Commune is arena-neutral. Flame Strike reuses the universal multi-component "
-                       "Dexterity-save damage path with an explicit 2024 fingerprint: 5d6 Fire plus "
-                       "5d6 Radiant on a failed save, half on a success."),
+                       "Dexterity-save damage path: 5d6 Fire plus 5d6 Radiant, half on a success. "
+                       "Destructive Wave reuses the same path as a 30-foot emanation: Constitution "
+                       "save, 5d6 Thunder plus 5d6 Radiant, half on a success."),
             ))
         if level >= 18:
             audits.append(paladin_2024_feature(
