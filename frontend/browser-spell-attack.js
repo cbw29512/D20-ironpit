@@ -145,6 +145,14 @@
           if (appliedId) appliedConditions.push(appliedId);
         });
       }
+      if (target.state.is_alive && !target.state.is_dead) {
+        window.IRON_PIT_BROWSER_EXILE?.applyOnHit?.({
+          sequence, round, member: caster, target, setup, turnKey, attackOutcome: {},
+        });
+        window.IRON_PIT_BROWSER_MELEE_RETALIATION?.apply(caster, target, {
+          melee: (spell.attackKind || "ranged") === "melee", setup,
+        });
+      }
     }
     const outcome = critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS";
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "";

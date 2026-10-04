@@ -81,12 +81,18 @@
           saveDisadvantageSources = [saveDisadvantage.name];
           saveDisadvantage = null;
         }
+        const fighting = setup && caster.side !== target.side && (
+          caster.side === "heroes" ? setup.heroes : setup.monsters
+        ).some((ally) => ally.state.is_alive && !ally.state.is_dead && ally.state.current_hp > 0);
+        const saveAdvantageSources = (
+          spell.saveAdvantageIfFighting && fighting
+        ) ? ["fighting-the-target"] : [];
         const event = V().resolveAction(
           sequence, round, caster, target, action,
           placement ? 0 : S().distance(caster, target),
           {
             spendAction: false, sharedDamageRolls, spellEffect: true, setup,
-            saveDisadvantageSources, resourceRemaining: modifierRemaining,
+            saveDisadvantageSources, saveAdvantageSources, resourceRemaining: modifierRemaining,
           },
         );
         sequence += 1;

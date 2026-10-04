@@ -76,6 +76,15 @@ class TimedFriendlySaveAura(BaseModel):
         return self
 
 
+class MeleeHitRetaliation(BaseModel):
+    """Damage a creature that hits the source with a melee attack roll inside the printed reach."""
+
+    range_ft: int = Field(default=5, ge=5, le=15)
+    dice_count: int = Field(ge=1, le=40)
+    dice_size: int = Field(default=8, ge=2, le=100)
+    damage_type: DamageType
+
+
 class TimedSelfBuffAction(BaseModel):
     """Declarative timed self effect composed from universal combat primitives."""
 
@@ -88,6 +97,7 @@ class TimedSelfBuffAction(BaseModel):
     duration_rounds: int | None = Field(default=None, ge=1, le=600)
     condition_ids: list[ConditionName] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
+    melee_hit_retaliation: MeleeHitRetaliation | None = None
     debuff_counters: list[DebuffCounter] = Field(default_factory=list)
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
     movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
@@ -139,6 +149,7 @@ class TimedSelfBuffAction(BaseModel):
                 or self.friendly_cover_aura is not None
                 or self.hostile_start_turn_condition_aura is not None
                 or self.start_turn_emanation_damage is not None
+                or self.melee_hit_retaliation is not None
             ):
                 raise ValueError("Timed self-buff requires at least one combat effect.")
             return self

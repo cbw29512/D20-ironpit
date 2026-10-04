@@ -26,6 +26,7 @@ from app.combat.spell_modifiers import build_spell_modifier
 from app.combat.spell_range_modifiers import spend_spell_range_modifier
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.combat.spell_attack_helpers import cast_slot_resource, roll_spell_attack_damage
+from app.combat.spell_attack_hit_riders import apply_spell_attack_hit_riders
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.combat.timed_conditions import apply_timed_condition
 from app.combat.zero_hp import apply_damage
@@ -159,6 +160,7 @@ def resolve_spell_attack(
                     )
                     if applied is not None:
                         applied_conditions.append(applied)
+            apply_spell_attack_hit_riders(caster, target, spell, setup, hit=True, round_number=round_number, turn_key=turn_key, dice=dice)
         remaining = resource.current_uses if resource is not None else None
         outcome = "CRITICAL HIT" if critical else "HIT" if hit else "MISS"
         description = f"{caster.state.template.name}: {outcome} with {spell.name}."

@@ -23,7 +23,7 @@ def removed_from_battlefield(state: CombatantState) -> bool:
 def apply_on_hit_exile(
     attacker: CombatantState,
     defender: CombatantState,
-    attack: WeaponAttack,
+    attack: WeaponAttack | None,
     *,
     attacker_id: str,
     round_number: int,

@@ -13,6 +13,7 @@ from app.combat.opportunity_attacks import MovementSource, resolve_opportunity_a
 from app.combat.emanation_enter import resolve_emanation_entries
 from app.combat.persistent_beneficial_zone_effects import sync_persistent_beneficial_zones
 from app.combat.persistent_hazards import resolve_persistent_hazard_entries
+from app.combat.persistent_save_zone_windows import resolve_save_zone_window
 from app.combat.suppression_zone_effects import sync_suppression_zone_effects
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -150,6 +151,11 @@ def move_toward_on_grid(
                 turn_key or f"{round_number}:{mover.combatant_id}",
             )
             events.extend(hazard_events)
+            zone_key = turn_key or f"{round_number}:{mover.combatant_id}"
+            zone_events, sequence = resolve_save_zone_window(
+                sequence, round_number, mover, setup, dice, zone_key, "enter",
+            )
+            events.extend(zone_events)
             sync_suppression_zone_effects(setup, round_number)
             enter_events, sequence = resolve_emanation_entries(
                 sequence,

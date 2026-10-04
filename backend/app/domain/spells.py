@@ -141,6 +141,10 @@ class SpellSaveAction(BaseModel):
     concentration: bool = False
     duration_minutes: int | None = Field(default=None, ge=1)
     allows_higher_slots: bool = False
+    target_count: int = Field(default=1, ge=1, le=20)
+    target_count_per_slot_above: int = Field(default=0, ge=0, le=20)
+    save_advantage_if_fighting: bool = False
+    cast_rounds: int = Field(default=1, ge=1, le=100)
     animation: str = "spell-save"
 
     @model_validator(mode="after")

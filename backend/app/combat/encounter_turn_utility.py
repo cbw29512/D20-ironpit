@@ -4,6 +4,7 @@ import logging
 
 from app.combat.emanation_speed import sync_emanation_speed
 from app.combat.friendly_save_auras import sync_friendly_save_auras
+from app.combat.persistent_save_zone_cast import choose_save_zone_action, cast_save_zone
 from app.combat.suppression_zone_cast import (
     choose_suppression_zone_action,
     cast_suppression_zone,
@@ -50,6 +51,14 @@ def resolve_control_support(
             sequence += 1
             sync_friendly_save_auras(setup)
             sync_emanation_speed(setup)
+            return events, sequence
+        save_zone = choose_save_zone_action(member, setup, turn_key)
+        if save_zone is not None:
+            action, center = save_zone
+            moved, sequence = cast_save_zone(
+                sequence, round_number, member, setup, action, center, turn_key, dice,
+            )
+            events.extend(moved)
             return events, sequence
         zone = choose_suppression_zone_action(member, setup, turn_key)
         if zone is not None:

@@ -42,6 +42,7 @@ def saving_throw_mode(
             + dodge_dex_save_advantage_sources(state, ability)
             + sure_footed_advantage(state, ability, context)
             + saving_throw_advantage_sources(state, ability, context)
+            + len(context.advantage_sources if context is not None else ())
         )
         disadvantage = (
             saving_throw_disadvantage_sources(state)

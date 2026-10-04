@@ -9,6 +9,7 @@ from app.combat.spell_save_disadvantage import (
     choose_spell_save_disadvantage,
     spend_spell_save_disadvantage,
 )
+from app.combat.fighting_save_advantage import sides_are_fighting
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_damage_maximizers import maximized_save_damage_rolls
 from app.combat.spell_policy import spell_at_slot
@@ -105,6 +106,12 @@ def resolve_spell_save_effect(
                 modifier_remaining = spend_spell_save_disadvantage(caster.state, save_disadvantage)
                 disadvantage_sources = (save_disadvantage.name,)
                 save_disadvantage = None
+            advantage_sources = (
+                ("fighting-the-target",)
+                if scaled_spell.save_advantage_if_fighting
+                and sides_are_fighting(caster, target, setup)
+                else ()
+            )
 
             chain, sequence = resolve_save_event_chain(
                 sequence,
@@ -121,6 +128,7 @@ def resolve_spell_save_effect(
                 affected_states=affected_states,
                 spell_effect=True,
                 save_disadvantage_sources=disadvantage_sources,
+                save_advantage_sources=advantage_sources,
                 resource_remaining_override=modifier_remaining,
             )
             event = chain[0]

@@ -12,6 +12,7 @@ from app.combat.deferred_save_effect import arm_deferred_save_effect
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.exile import apply_on_hit_exile
+from app.combat.melee_hit_retaliation import apply_melee_hit_retaliation
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
 from app.combat.sap import apply_weapon_sap
 from app.combat.studied_attacks import apply_studied_attack_miss
@@ -151,6 +152,18 @@ def resolve_attack_effects(
             dice=dice,
             turn_key=active_turn_key,
         )
+        if setup is not None:
+            members = {item.combatant_id: item for item in [*setup.heroes, *setup.monsters]}
+            attacker_member = members.get(attacker_event_id)
+            defender_member = members.get(defender_event_id)
+            if attacker_member is not None and defender_member is not None:
+                apply_melee_hit_retaliation(
+                    attacker_member,
+                    defender_member,
+                    melee=attack.weapon.attack_kind.value == "melee",
+                    dice=dice,
+                    affected_states=affected_states,
+                )
         end_rage_if_incapacitated(defender)
         return result
     except Exception as exc:

@@ -72,6 +72,7 @@
       magicalEffect: Boolean(action.magicalEffect), spellEffect: Boolean(options.spellEffect),
       sourceCreatureType: actor.state.template.creature_type || null, effectTags, roundNumber: round,
       disadvantageSources: [...(options.saveDisadvantageSources || [])],
+      advantageSources: [...(options.saveAdvantageSources || [])],
       encounterRoller: target,
       setup: options.setup || null,
     };
@@ -80,9 +81,10 @@
       .map((creatureType) => String(creatureType).trim().toLowerCase())
       .filter(Boolean);
     const automaticallyFails = Boolean(targetType && automaticFailureTypes.includes(targetType));
-    const advantageSources = automaticallyFails ? [] : (DF().saveAdvantageSourceNames?.(
-      target.state, action.saveAbility, saveContext,
-    ) || []);
+    const advantageSources = automaticallyFails ? [] : [
+      ...(DF().saveAdvantageSourceNames?.(target.state, action.saveAbility, saveContext) || []),
+      ...(saveContext.advantageSources || []),
+    ];
     const save = automaticallyFails
       ? { roll: null, succeeded: false }
       : resolveSavingThrow(target.state, action.saveAbility, action.dc, saveContext);

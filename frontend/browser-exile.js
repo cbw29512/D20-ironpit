@@ -172,5 +172,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_EXILE = { EFFECT, installAbilityHooks, removed };
+  window.IRON_PIT_BROWSER_EXILE = { EFFECT, applyOnHit, installAbilityHooks, removed };
 })();

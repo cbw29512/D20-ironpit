@@ -102,7 +102,7 @@ def _always_prepared(level: int):
                 always_prepared_from_level=3,
             ),
             _spell(
-                "command", "Command", "control", "arena-out-of-scope",
+                "command", "Command", "control", "prone", "forced-retreat",
                 always_prepared_from_level=3,
             ),
             _spell(
@@ -121,18 +121,18 @@ def _always_prepared(level: int):
                 spell_level=3, min_character_level=5, always_prepared_from_level=5,
             ),
             _spell(
-                "stinking-cloud", "Stinking Cloud", "control", "arena-out-of-scope",
+                "stinking-cloud", "Stinking Cloud", "control", "poisoned", "save-zone",
                 spell_level=3, min_character_level=5, always_prepared_from_level=5,
             ),
         ])
     if level >= 7:
         always.extend([
             _spell(
-                "fire-shield", "Fire Shield", "buff", "arena-out-of-scope",
+                "fire-shield", "Fire Shield", "buff", "resistance", "melee-retaliation",
                 spell_level=4, min_character_level=7, always_prepared_from_level=7,
             ),
             _spell(
-                "wall-of-fire", "Wall of Fire", "damage", "arena-out-of-scope",
+                "wall-of-fire", "Wall of Fire", "damage", "save-zone", "area",
                 spell_level=4, min_character_level=7, always_prepared_from_level=7,
             ),
         ])
@@ -143,11 +143,11 @@ def _always_prepared(level: int):
                 spell_level=5, min_character_level=9, always_prepared_from_level=9,
             ),
             _spell(
-                "geas", "Geas", "control", "arena-out-of-scope",
+                "geas", "Geas", "control", "charmed", "long-cast",
                 spell_level=5, min_character_level=9, always_prepared_from_level=9,
             ),
             _spell(
-                "insect-plague", "Insect Plague", "damage", "arena-out-of-scope",
+                "insect-plague", "Insect Plague", "damage", "save-zone", "area",
                 spell_level=5, min_character_level=9, always_prepared_from_level=9,
             ),
         ])

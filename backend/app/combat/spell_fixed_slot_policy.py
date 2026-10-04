@@ -8,6 +8,7 @@ from app.combat.offense_value import save_spell_expected_damage
 from app.combat.spell_area import best_area_placement
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_policy import legal_single_spell_targets, spell_at_slot
+from app.combat.spell_target_counts import spell_save_target_count
 from app.combat.spellcasting import legal_slot_levels
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
@@ -87,19 +88,21 @@ def choose_spell_action_at_slot(
         legal = legal_single_spell_targets(caster, setup, action)
         if not legal:
             return None
-        target = max(
+        ranked = sorted(
             legal,
             key=lambda item: (
                 save_spell_expected_damage(item, scaled),
                 -item.state.current_hp,
                 item.combatant_id,
             ),
+            reverse=True,
         )
+        chosen = ranked[: spell_save_target_count(scaled, slot_level)]
         return SpellChoice(
             action=action,
             slot_level=slot_level,
-            target_ids=(target.combatant_id,),
-            expected_damage=save_spell_expected_damage(target, scaled),
+            target_ids=tuple(target.combatant_id for target in chosen),
+            expected_damage=sum(save_spell_expected_damage(target, scaled) for target in chosen),
         )
     except Exception:
         logger.exception(

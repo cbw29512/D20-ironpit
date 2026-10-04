@@ -239,6 +239,10 @@ def _spell(action: Any) -> dict[str, Any]:
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
         "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level,
         "concentration": action.concentration, "allowsHigherSlots": action.allows_higher_slots,
+        "targetCount": action.target_count,
+        "targetCountPerSlotAbove": action.target_count_per_slot_above,
+        "saveAdvantageIfFighting": action.save_advantage_if_fighting,
+        "castRounds": action.cast_rounds,
         "animation": action.animation,
     }
     if action.effect_tags:
@@ -584,6 +588,35 @@ def _suppression_zone(action: Any) -> dict[str, Any]:
         raise
 
 
+def _save_zone(action: Any) -> dict[str, Any]:
+    try:
+        row = {
+            "id": action.id, "name": action.name, "level": action.level,
+            "actionCost": action.action_cost, "castRangeFt": action.cast_range_ft,
+            "radiusFt": action.radius_ft, "durationRounds": action.duration_rounds,
+            "concentration": action.concentration, "saveAbility": action.save_ability,
+            "dc": action.dc, "triggers": list(action.triggers),
+            "saveTriggers": list(action.save_triggers),
+            "oncePerTurn": action.once_per_turn,
+            "damageDiceCount": action.damage_dice_count,
+            "damageDiceSize": action.damage_dice_size,
+            "damageType": action.damage_type, "successDamage": action.success_damage,
+            "upcastDicePerLevel": action.upcast_dice_per_level,
+            "failedSaveConditionId": action.failed_save_condition_id,
+            "failedSaveDurationRounds": action.failed_save_duration_rounds,
+            "failedSaveSuppressAction": action.failed_save_suppress_action,
+            "failedSaveSuppressBonusAction": action.failed_save_suppress_bonus_action,
+            "resourceId": action.resource_id, "resourceCost": action.resource_cost,
+            "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
+        }
+        if action.source:
+            row["source"] = action.source
+        return row
+    except Exception:
+        logger.exception("Failed to serialize save zone %s.", action.id)
+        raise
+
+
 def _teleport(action: Any) -> dict[str, Any]:
     try:
         row = {
@@ -640,6 +673,13 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["concentration"] = True
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
+    if action.melee_hit_retaliation is not None:
+        row["meleeHitRetaliation"] = {
+            "rangeFt": action.melee_hit_retaliation.range_ft,
+            "diceCount": action.melee_hit_retaliation.dice_count,
+            "diceSize": action.melee_hit_retaliation.dice_size,
+            "damageType": _value(action.melee_hit_retaliation.damage_type),
+        }
     return row
 
 
@@ -975,6 +1015,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["timed_self_buff_actions"] = [_timed_self_buff(item) for item in template.timed_self_buff_actions]
         if template.suppression_zone_actions:
             row["suppression_zone_actions"] = [_suppression_zone(item) for item in template.suppression_zone_actions]
+        if template.persistent_save_zone_actions:
+            row["persistent_save_zone_actions"] = [_save_zone(item) for item in template.persistent_save_zone_actions]
         if template.teleport_actions:
             row["teleport_actions"] = [_teleport(item) for item in template.teleport_actions]
         if template.attack_action_weapon_buffs:

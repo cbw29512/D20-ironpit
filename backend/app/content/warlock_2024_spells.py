@@ -107,6 +107,9 @@ def charm_person_2024(save_dc: int) -> SpellSaveAction:
             ),
             concentration=False,
             allows_higher_slots=True,
+            target_count=1,
+            target_count_per_slot_above=1,
+            save_advantage_if_fighting=True,
             animation="spell-save",
             source="D&D Beyond Basic Rules 2024: Charm Person",
         )

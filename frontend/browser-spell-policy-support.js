@@ -120,6 +120,21 @@
       });
   }
 
+  function spellSaveTargetCount(action, slotLevel) {
+    if (action.level === 0) return action.targetCount || 1;
+    if (slotLevel < action.level) throw new Error(`Illegal slot level ${slotLevel} for ${action.name}.`);
+    return (action.targetCount || 1) + (slotLevel - action.level) * (action.targetCountPerSlotAbove || 0);
+  }
+
+  function rankedSaveTargets(legal, scaled, slotLevel) {
+    const ranked = [...legal].sort((a, b) =>
+      window.IRON_PIT_BROWSER_OFFENSE_VALUE.saveSpell(b, scaled)
+        - window.IRON_PIT_BROWSER_OFFENSE_VALUE.saveSpell(a, scaled)
+      || a.state.current_hp - b.state.current_hp
+      || a.combatant_id.localeCompare(b.combatant_id));
+    return ranked.slice(0, spellSaveTargetCount(scaled, slotLevel));
+  }
+
   function legalSingleTargets(caster, setup, action, range = action.range) {
     const enemies = caster.side === "heroes" ? setup.monsters : setup.heroes;
     return enemies.filter((target) => target.state.is_alive && !target.state.is_dead
@@ -137,6 +152,6 @@
   window.IRON_PIT_BROWSER_SPELL_POLICY_SUPPORT = {
     availableRangeModifier, effectiveRange, spendRangeModifier, placementKey, scaledSpell,
     slotLevels, slotLevel, alternateCasts, castOptions, areaSpellProtection,
-    protectedUniversalPlacements, legalSingleTargets,
+    protectedUniversalPlacements, legalSingleTargets, spellSaveTargetCount, rankedSaveTargets,
   };
 })();

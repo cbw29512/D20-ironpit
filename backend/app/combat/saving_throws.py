@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from app.combat.undead_fortitude import consume_survival_save_log
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
-
 from app.combat.action_economy import is_available, spend
 from app.combat.automatic_save_failures import automatically_fails_save
 from app.combat.barbarian import end_rage_if_incapacitated
@@ -46,6 +45,7 @@ def resolve_save_action(
     check_resource: bool = True, spend_resource: bool = True,
     shared_damage_rolls: list[int] | list[list[int]] | None = None, affected_states: list[CombatantState] | None = None,
     spell_effect: bool = False, save_disadvantage_sources: tuple[str, ...] = (),
+    save_advantage_sources: tuple[str, ...] = (),
     resource_remaining_override: int | None = None,
     setup: EncounterSetup | None = None,
 ) -> BattleEvent:
@@ -70,6 +70,7 @@ def resolve_save_action(
         source_creature_type=source_type,
         effect_tags=frozenset(effect_tags),
         disadvantage_sources=save_disadvantage_sources,
+        advantage_sources=save_advantage_sources,
     )
     automatic_failure = automatically_fails_save(action, target)
     advantage_sources = () if automatic_failure else saving_throw_advantage_source_names(

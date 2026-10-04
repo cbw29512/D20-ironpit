@@ -11,7 +11,8 @@
 
   function chooseActionAtSlot(caster, setup, action, castLevel, protectedAllyIds = [], alternateCast = null) {
     try {
-      if (!action || action.actionCost === "reaction" || (action.concentration && caster.state.concentration)
+      if (!action || action.actionCost === "reaction" || (action.castRounds || 1) > 1
+        || (action.concentration && caster.state.concentration)
         || !E().available(caster.state, action.actionCost)) return null;
       const scaled = H().scaledSpell(action, castLevel);
       const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
@@ -47,15 +48,17 @@
           alternateCast };
       }
       const castRange = H().effectiveRange(caster.state, action.range);
-      const legal = H().legalSingleTargets(caster, setup, action, castRange);
-      if (!legal.length) return null;
-      legal.sort((a, b) => O().saveSpell(b, scaled) - O().saveSpell(a, scaled)
-        || a.state.current_hp - b.state.current_hp || a.combatant_id.localeCompare(b.combatant_id));
-      const target = legal[0];
-      const control = action.failedSaveTimedEffect ? Math.max(8, target.state.current_hp * 0.35) : 0;
-      return { action, slotLevel: castLevel, targetIds: [target.combatant_id],
-        placement: null, expectedDamage: O().saveSpell(target, scaled) + control, hp: target.state.current_hp,
-        rangeModifier: H().availableRangeModifier(caster.state, action.range, S().distance(caster, target)),
+      const chosen = H().rankedSaveTargets(H().legalSingleTargets(caster, setup, action, castRange), scaled, castLevel);
+      if (!chosen.length) return null;
+      let score = 0, farthest = 0;
+      for (const target of chosen) {
+        score += O().saveSpell(target, scaled);
+        if (action.failedSaveTimedEffect) score += Math.max(8, target.state.current_hp * 0.35);
+        farthest = Math.max(farthest, S().distance(caster, target));
+      }
+      return { action, slotLevel: castLevel, targetIds: chosen.map((target) => target.combatant_id),
+        placement: null, expectedDamage: score, hp: chosen[0].state.current_hp,
+        rangeModifier: H().availableRangeModifier(caster.state, action.range, farthest),
         alternateCast };
     } catch (error) {
       console.error("Browser fixed-slot save-spell selection failed", { caster: caster?.combatant_id, spell: action?.id, error });
@@ -67,7 +70,8 @@
     try {
       const candidates = [], members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
       for (const [index, action] of (caster.state.template.spell_save_actions || []).entries()) {
-        if (action.actionCost === "reaction" || (action.concentration && caster.state.concentration)
+        if (action.actionCost === "reaction" || (action.castRounds || 1) > 1
+          || (action.concentration && caster.state.concentration)
           || !E().available(caster.state, action.actionCost)) continue;
         for (const { castLevel, alternateCast } of H().castOptions(caster, action, turnKey)) {
           const scaled = H().scaledSpell(action, castLevel);
@@ -104,13 +108,18 @@
             continue;
           }
           const castRange = H().effectiveRange(caster.state, action.range);
-          for (const target of H().legalSingleTargets(caster, setup, action, castRange)) {
-            const control = action.failedSaveTimedEffect ? Math.max(8, target.state.current_hp * 0.35) : 0;
-            candidates.push({ action, index, score: O().saveSpell(target, scaled) + control, slotLevel: castLevel,
-              targetIds: [target.combatant_id], placement: null, hp: target.state.current_hp,
-              rangeModifier: H().availableRangeModifier(caster.state, action.range, S().distance(caster, target)),
-              alternateCast });
+          const chosen = H().rankedSaveTargets(H().legalSingleTargets(caster, setup, action, castRange), scaled, castLevel);
+          if (!chosen.length) continue;
+          let score = 0, farthest = 0;
+          for (const target of chosen) {
+            score += O().saveSpell(target, scaled);
+            if (action.failedSaveTimedEffect) score += Math.max(8, target.state.current_hp * 0.35);
+            farthest = Math.max(farthest, S().distance(caster, target));
           }
+          candidates.push({ action, index, score, slotLevel: castLevel,
+            targetIds: chosen.map((target) => target.combatant_id), placement: null, hp: chosen[0].state.current_hp,
+            rangeModifier: H().availableRangeModifier(caster.state, action.range, farthest),
+            alternateCast });
         }
       }
       candidates.sort((a, b) => b.score - a.score

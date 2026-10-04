@@ -5,6 +5,12 @@ import logging
 from app.content.druid_2024_land_spells import build_blight_2024, build_burning_hands_2024
 from app.content.druid_2024_spells import build_poison_spray_2024
 from app.content.offensive_spell_effects import build_fireball_2024
+from app.content.warlock_2024_control_spells import (
+    command_2024,
+    geas_2024,
+    hold_person_2024,
+    suggestion_2024,
+)
 from app.content.warlock_2024_spells import (
     charm_person_2024,
     eldritch_blast_2024,
@@ -45,11 +51,17 @@ def build_varek_2024_spell_saves(level: int, save_dc: int):
     try:
         actions = [charm_person_2024(save_dc)]
         if level >= 3:
-            actions.append(build_burning_hands_2024(save_dc))
+            actions.extend([
+                build_burning_hands_2024(save_dc),
+                command_2024(save_dc),
+                suggestion_2024(save_dc),
+            ])
         if level >= 5:
-            actions.append(build_fireball_2024(save_dc))
+            actions.extend([build_fireball_2024(save_dc), hold_person_2024(save_dc)])
         if level >= 7:
             actions.append(build_blight_2024(save_dc))
+        if level >= 9:
+            actions.append(geas_2024(save_dc))
         return actions
     except Exception:
         logger.exception("Failed to build 2024 Varek spell saves at level %s.", level)
@@ -124,7 +136,7 @@ def build_varek_2024_conversions(level: int, pact_slot_level: int) -> list[Resou
             target_resource_id="hurl-through-hell",
             target_gain=1,
             requires_target_empty=True,
-            automation="manual",
+            automation="when-target-empty",
             source="D&D Beyond Basic Rules 2024: Hurl Through Hell",
         )]
     except Exception:

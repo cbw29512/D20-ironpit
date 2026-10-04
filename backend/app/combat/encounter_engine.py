@@ -24,6 +24,7 @@ from app.combat.start_turn_timed_self_buffs import resolve_start_turn_timed_self
 from app.combat.persistent_barrier_lifecycle import cleanup_persistent_barriers
 from app.combat.state import refresh_start_of_turn
 from app.combat.timed_conditions import expire_start_of_turn_conditions
+from app.combat.persistent_save_zone_windows import resolve_save_zone_window
 from app.combat.suppression_zone_effects import expire_suppression_zones, sync_suppression_zone_effects
 from app.combat.timed_emanations import resolve_target_turn_start_emanations
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
@@ -70,6 +71,11 @@ def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
         sequence, round_number, member,
     )
     events.extend(delayed)
+    zone_events, sequence = resolve_save_zone_window(
+        sequence, round_number, member, setup, dice,
+        f"{round_number}:{member.combatant_id}", "end_turn",
+    )
+    events.extend(zone_events)
     expire_source_turn_modifiers(
         [entry.state for entry in [*setup.heroes, *setup.monsters]],
         member.combatant_id,
@@ -123,6 +129,11 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     turn_key=f"{round_number}:{member.combatant_id}",
                 )
                 events.extend(emanation_events)
+                zone_events, sequence = resolve_save_zone_window(
+                    sequence, round_number, member, setup, dice,
+                    f"{round_number}:{member.combatant_id}", "start_turn",
+                )
+                events.extend(zone_events)
                 start_buff = resolve_start_turn_timed_self_buff(
                     sequence, round_number, member, setup,
                 )

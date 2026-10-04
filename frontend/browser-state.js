@@ -145,7 +145,8 @@
   }
 
   function priorityTargets(member, setup) {
-    const eligible = opponents(member, setup).filter((candidate) => targetPriority(candidate) !== null);
+    const eligible = opponents(member, setup).filter((candidate) => targetPriority(candidate) !== null
+      && !window.IRON_PIT_BROWSER_CHARMED_TARGETING?.blocks(member.state, candidate.combatant_id));
     if (!eligible.length) return [];
     const priority = Math.min(...eligible.map(targetPriority));
     return eligible.filter((candidate) => targetPriority(candidate) === priority);

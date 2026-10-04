@@ -26,11 +26,17 @@ def _audit(
 def build_varek_fiend_2024_high_audits(level: int) -> list[FeatureAudit]:
     audits: list[FeatureAudit] = []
     if level >= 9:
-        audits.append(_audit(
-            "contact-patron", "Contact Patron", "class",
-            combat_relevant=False, automated=True,
-            notes="Always prepares Contact Other Plane. Arena-ignored by the Warlock combat spine.",
-        ))
+        audits += [
+            _audit(
+                "contact-patron", "Contact Patron", "class",
+                combat_relevant=False, automated=True,
+                notes="Always prepares Contact Other Plane. Arena-ignored by the Warlock combat spine.",
+            ),
+            _audit("geas", "Geas", "subclass",
+                   notes="Always-prepared Fiend spell. 1-minute cast binds Charmed; not selected mid-fight."),
+            _audit("insect-plague", "Insect Plague", "subclass",
+                   notes="Always-prepared Fiend 20-foot sphere: Con 4d10 Piercing half on appear, enter, and end turn."),
+        ]
     if level >= 10:
         audits.append(_audit(
             "fiendish-resilience", "Fiendish Resilience", "subclass",
@@ -56,7 +62,7 @@ def build_varek_fiend_2024_high_audits(level: int) -> list[FeatureAudit]:
     if level >= 14:
         audits.append(_audit(
             "hurl-through-hell", "Hurl Through Hell", "subclass",
-            notes="On-hit Charisma save, immediate 8d10 Psychic if not a Fiend, Incapacitated, then return.",
+            notes="Triggers from any attack-roll hit, including Eldritch Blast. Empty uses restore by expending a Pact slot.",
         ))
     if level >= 15:
         audits.append(_audit(

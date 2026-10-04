@@ -41,6 +41,10 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "sacred-flame",
         "eldritch-blast",
         "charm-person",
+        "hold-person",
+        "command",
+        "suggestion",
+        "geas",
         "scorching-ray",
         "poison-spray",
         "starry-wisp",
@@ -231,6 +235,76 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             rider.duration_rounds,
             rider.ends_on_damage,
         ) == ("charmed", 600, True)
+        assert (
+            spell.target_count,
+            spell.target_count_per_slot_above,
+            spell.save_advantage_if_fighting,
+        ) == (1, 1, True)
+
+    if "hold-person" in spell_saves:
+        spell = spell_saves["hold-person"]
+        rider = spell.failed_save_timed_effect
+        assert rider is not None
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.save_ability,
+            spell.requires_target_sight,
+            spell.required_target_creature_types,
+            spell.concentration,
+            spell.target_count,
+            spell.target_count_per_slot_above,
+        ) == (2, "action", 60, "wisdom", True, ["humanoid"], True, 1, 1)
+        assert (
+            rider.effect_id,
+            rider.duration_rounds,
+            rider.repeat_save_ability,
+            rider.repeat_save_timing,
+        ) == ("paralyzed", 10, "wisdom", "target_turn_end")
+
+    if "command" in spell_saves:
+        spell = spell_saves["command"]
+        rider = spell.failed_save_timed_effect
+        assert rider is not None
+        assert (
+            spell.level,
+            spell.range_ft,
+            spell.save_ability,
+            spell.target_count,
+            spell.target_count_per_slot_above,
+        ) == (1, 60, "wisdom", 1, 1)
+        assert (rider.effect_id, rider.turn_behavior) == ("prone", "forced_retreat")
+
+    if "suggestion" in spell_saves:
+        spell = spell_saves["suggestion"]
+        rider = spell.failed_save_timed_effect
+        assert rider is not None
+        assert (
+            spell.level,
+            spell.range_ft,
+            spell.save_ability,
+            spell.requires_target_hearing,
+            spell.concentration,
+            spell.duration_minutes,
+        ) == (2, 30, "wisdom", True, True, 480)
+        assert (
+            rider.effect_id,
+            rider.turn_behavior,
+            rider.ends_on_damage,
+        ) == ("charmed", "forced_retreat", True)
+
+    if "geas" in spell_saves:
+        spell = spell_saves["geas"]
+        rider = spell.failed_save_timed_effect
+        assert rider is not None
+        assert (
+            spell.level,
+            spell.range_ft,
+            spell.save_ability,
+            spell.cast_rounds,
+        ) == (5, 60, "wisdom", 10)
+        assert rider.effect_id == "charmed"
 
     for spell_id, spell in spell_saves.items():
         if not spell_id.startswith("inflict-wounds"):

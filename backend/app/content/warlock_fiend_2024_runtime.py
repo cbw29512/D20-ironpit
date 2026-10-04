@@ -14,6 +14,10 @@ from app.content.warlock_fiend_2024_arcanum import (
     build_varek_2024_power_word_stun,
     build_varek_2024_threshold_death,
 )
+from app.content.warlock_fiend_2024_bound_zones import (
+    build_varek_2024_save_zones,
+    build_varek_2024_self_buffs,
+)
 from app.content.warlock_fiend_2024_runtime_support import (
     build_varek_2024_conversions,
     build_varek_2024_dispel,
@@ -89,6 +93,8 @@ def build_varek_ashenmark_2024(level: int) -> CombatantTemplate:
             },
             resources=build_varek_2024_resources(level, row.pact_slots, row.pact_slot_level, cha),
             resource_conversion_actions=build_varek_2024_conversions(level, row.pact_slot_level),
+            timed_self_buff_actions=build_varek_2024_self_buffs(level, row.pact_slot_level),
+            persistent_save_zone_actions=build_varek_2024_save_zones(level, save_dc, row.pact_slot_level),
             teleport_actions=([dimension_door_2024(row.pact_slot_level)] if level >= 8 else []),
             effect_removal_actions=([build_varek_2024_dispel(row.pact_slot_level)] if level >= 6 else []),
             initiative_resource_refill_grants=build_varek_2024_initiative_refills(level),

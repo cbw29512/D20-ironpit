@@ -135,7 +135,7 @@
         setup: extra.setup, turnKey: extra.turnKey, attackOutcome: outcome, events: [],
       });
       if (phase.events.length) throw new Error("Attack outcome hooks must not emit standalone battle events.");
-      ({ damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, topple, sapApplied, vexApplied, studiedApplied, deferredEffectArmed, exileApplied } = outcome); outcome.brutalStrikeEffects = BS()?.applyEffects?.(attacker, actualTarget, extra.setup, extra.turnKey, extra.brutalStrikeEffectIds) || [];
+      ({ damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, topple, sapApplied, vexApplied, studiedApplied, deferredEffectArmed, exileApplied } = outcome); outcome.brutalStrikeEffects = BS()?.applyEffects?.(attacker, actualTarget, extra.setup, extra.turnKey, extra.brutalStrikeEffectIds) || []; window.IRON_PIT_BROWSER_MELEE_RETALIATION?.apply(attacker, actualTarget, { melee: (attack.kind || attack.attackKind) === "melee", setup: extra.setup });
       window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(actualTarget.state); C()?.endIfIncapacitated(actualTarget.state, affectedStates);
     } else {
       const phase = H().runPhase(H().PHASES.ON_MISS, {

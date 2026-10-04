@@ -77,6 +77,14 @@
       window.IRON_PIT_BROWSER_EMANATION_SPEED?.sync(setup);
       return { events, sequence };
     }
+    const saveZone = window.IRON_PIT_BROWSER_SAVE_ZONES?.choose(member, setup, turnKey);
+    if (saveZone) {
+      const cast = window.IRON_PIT_BROWSER_SAVE_ZONES.cast(
+        sequence, round, member, setup, saveZone.action, saveZone.center, turnKey,
+      );
+      events.push(...cast.events);
+      return { events, sequence: cast.sequence };
+    }
     const zone = window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.choose(member, setup, turnKey);
     if (zone) {
       events.push(window.IRON_PIT_BROWSER_SUPPRESSION_ZONES.cast(

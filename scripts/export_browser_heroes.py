@@ -12,12 +12,12 @@ from app.domain.models import CombatantTemplate, WeaponAttack
 
 try:
     from scripts.browser_template_serializer import (
-        _healing, _removal, _suppression_zone, _teleport,
+        _healing, _removal, _save_zone, _suppression_zone, _teleport,
         persistent_barrier_row, persistent_beneficial_zone_row,
     )
 except ModuleNotFoundError:
     from browser_template_serializer import (
-        _healing, _removal, _suppression_zone, _teleport,
+        _healing, _removal, _save_zone, _suppression_zone, _teleport,
         persistent_barrier_row, persistent_beneficial_zone_row,
     )
 
@@ -137,6 +137,10 @@ def _spell(action: Any) -> dict[str, Any]:
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
         "successDamage": action.success_damage, "upcastDicePerLevel": action.upcast_dice_per_level,
         "concentration": action.concentration, "allowsHigherSlots": action.allows_higher_slots,
+        "targetCount": action.target_count,
+        "targetCountPerSlotAbove": action.target_count_per_slot_above,
+        "saveAdvantageIfFighting": action.save_advantage_if_fighting,
+        "castRounds": action.cast_rounds,
         "animation": action.animation,
     }
     if action.effect_tags: row["effectTags"] = list(action.effect_tags)
@@ -418,6 +422,13 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["concentration"] = True
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
+    if action.melee_hit_retaliation is not None:
+        row["meleeHitRetaliation"] = {
+            "rangeFt": action.melee_hit_retaliation.range_ft,
+            "diceCount": action.melee_hit_retaliation.dice_count,
+            "diceSize": action.melee_hit_retaliation.dice_size,
+            "damageType": _value(action.melee_hit_retaliation.damage_type),
+        }
     return row
 
 
@@ -528,6 +539,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
         "timed_self_buff_actions": [_timed_self_buff(item) for item in template.timed_self_buff_actions],
         "suppression_zone_actions": [_suppression_zone(item) for item in template.suppression_zone_actions],
+        "persistent_save_zone_actions": [_save_zone(item) for item in template.persistent_save_zone_actions],
         "teleport_actions": [_teleport(item) for item in template.teleport_actions],
         "attack_action_weapon_buffs": [
             {

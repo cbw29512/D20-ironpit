@@ -89,6 +89,7 @@ def resolve_timed_self_buff(
             or action.friendly_cover_aura is not None
             or action.hostile_start_turn_condition_aura is not None
             or action.start_turn_emanation_damage is not None
+            or action.melee_hit_retaliation is not None
         ):
             apply_timed_condition(
                 member.state,
