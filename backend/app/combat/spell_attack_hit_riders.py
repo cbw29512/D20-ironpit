@@ -4,6 +4,7 @@ import logging
 
 from app.combat.exile import apply_on_hit_exile
 from app.combat.melee_hit_retaliation import apply_melee_hit_retaliation
+from app.combat.melee_hit_save_retaliation import apply_melee_hit_save_retaliation
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellAttackAction
 
@@ -36,12 +37,13 @@ def apply_spell_attack_hit_riders(
             dice=dice,
             turn_key=turn_key,
         )
+        melee = spell.attack_kind == "melee"
         apply_melee_hit_retaliation(
-            caster,
-            target,
-            melee=spell.attack_kind == "melee",
-            dice=dice,
-            affected_states=affected,
+            caster, target, melee=melee, dice=dice, affected_states=affected,
+        )
+        apply_melee_hit_save_retaliation(
+            caster, target, melee=melee, dice=dice, setup=setup,
+            round_number=round_number, affected_states=affected,
         )
     except Exception:
         logger.exception("Failed spell-attack hit riders for %s.", caster.combatant_id)

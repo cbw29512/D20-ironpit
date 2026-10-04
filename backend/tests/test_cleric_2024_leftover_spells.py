@@ -148,6 +148,10 @@ def test_holy_aura_grants_all_save_advantage_and_is_not_auto_cast() -> None:
     aura = next(item for item in cleric.state.template.timed_self_buff_actions if item.id == "holy-aura")
     assert aura.friendly_save_advantage_aura is not None
     assert aura.friendly_save_advantage_aura.all_saves is True
+    rider = aura.friendly_save_advantage_aura.melee_hit_save_retaliation
+    assert rider is not None
+    assert rider.attacker_creature_types == ["fiend", "undead"]
+    assert rider.condition_id == "blinded"
     begin_turn(cleric.state)
     chosen = choose_timed_self_buff_action(cleric, setup)
     assert chosen is None or chosen.id != "holy-aura"

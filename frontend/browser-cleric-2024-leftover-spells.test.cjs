@@ -126,7 +126,14 @@ function combatant(id, side, hp, maxHp, x = 0) {
   source.state.template.timed_self_buff_actions = [{
     id: "holy-aura",
     name: "Holy Aura",
-    friendlySaveAdvantageAura: { radius_ft: 30, all_saves: true, attacks_against_disadvantage: true },
+    friendlySaveAdvantageAura: {
+      radius_ft: 30, all_saves: true, attacks_against_disadvantage: true,
+      melee_hit_save_retaliation: {
+        attacker_creature_types: ["fiend", "undead"],
+        save_ability: "constitution", save_dc: 18, condition_id: "blinded",
+        expiry_timing: "target_turn_end", duration_rounds: 1,
+      },
+    },
   }];
   window.IRON_PIT_BROWSER_FRIENDLY_SAVE_AURAS.sync({ heroes: [source, ally], monsters: [] });
   assert.ok(ally.state.active_modifiers.some((item) => item.kind === "saving-throw-advantage" && !(item.required_effect_tags || []).length));

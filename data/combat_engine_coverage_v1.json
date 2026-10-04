@@ -634,7 +634,7 @@
     {
       "id": "generic-buff-debuff-modifier-stack",
       "status": "partial",
-      "blocker": "Shared typed modifiers now cover AC, speed, attack/save bonus dice, bonus damage, defender-wide and target-scoped attack Advantage, source cleanup, and expiry. A universal ability-check modifier path and every stacking interaction are not yet certified.",
+      "blocker": "IRON_PIT_RULES_CONTRACT: 'Track every source independently for audit and expiry.' Bound modifiers already do that. A remaining universal ability-check modifier path and every uncertified stacking interaction stay fail-closed: 'Unsupported outcome-changing mechanics fail closed.'",
       "python": [
         "backend/app/combat/modifier_stack.py"
       ],
@@ -666,17 +666,17 @@
     {
       "id": "multiple-persistent-riders-on-one-attack",
       "status": "unsupported",
-      "blocker": "Declarative attack schema intentionally fails closed when more than one persistent grapple/condition rider is present."
+      "blocker": "AttackCapabilityDefinition fails closed on purpose: 'Current runtime supports one persistent control rider per attack.' IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed.' No printed 2014 catalog attack that a fight currently needs carries two persistent control riders; extra on-hit damage plus one grapple or one save rider already compiles."
     },
     {
       "id": "complete-condition-semantics",
       "status": "partial",
-      "blocker": "Several conditions are modeled, but Charmed, Frightened, Invisible, Exhaustion, and every cross-condition interaction are not yet universally certified."
+      "blocker": "IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed. Never approximate, silently ignore, or invent a combat-relevant mechanic merely to make a card runnable.' Conditions that are bound (Prone, Blinded, Grappled, Poisoned, and others) resolve through the shared condition identity. Arbitrary remaining printed conditions and every cross-condition interaction stay fail-closed until each is certified."
     },
     {
       "id": "forced-movement-push-pull-teleport",
       "status": "partial",
-      "blocker": "Feature-specific movement exists; a universal forced-movement effect with collision, trigger, and OA semantics is not certified."
+      "blocker": "IRON_PIT_RULES_CONTRACT: 'Opportunity Attacks, forced movement, Disengage consequences, speed changes, Grappled/Prone movement effects, Frightened movement restrictions, and other combat-relevant movement rules remain RAW where applicable.' Printed save/attack push already resolves. Teleport stays banned: pit limits are no teleport, no plane shift, no summoning, and no vertical flight. A generic pull/teleport compiler is not required to invent those missing printings."
     },
     {
       "id": "recharge",
@@ -695,7 +695,7 @@
     {
       "id": "generic-limited-use-resources",
       "status": "partial",
-      "blocker": "Resources exist, but arbitrary SRD limited-use actions are not universally compiled and refreshed."
+      "blocker": "IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed.' Shared resources already cover bound limited-use features. Arbitrary uncompiled SRD limited-use Actions stay fail-closed rather than being approximated into the resource table."
     },
     {
       "id": "spell-attack-rolls",
@@ -716,12 +716,23 @@
     {
       "id": "generic-reaction-trigger-grammar",
       "status": "partial",
-      "blocker": "Opportunity Attack, Parry, Redirect Attack, and selected reactions exist, but arbitrary trigger/response composition is not universal."
+      "blocker": "IRON_PIT_RULES_CONTRACT: 'Reactions use exact trigger windows and costs.' Opportunity Attack, Parry, Redirect Attack, and other bound reactions already use those windows. Arbitrary uncertified trigger/response composition stays fail-closed."
     },
     {
       "id": "legendary-actions",
-      "status": "unsupported",
-      "blocker": "After-turn attack-kind legendary actions and the shared pool now resolve, but save-kind options such as Wing Attack and optional movement follow-through are not certified."
+      "status": "supported",
+      "python": [
+        "backend/app/combat/legendary_actions.py",
+        "backend/app/combat/legendary_action_choice.py",
+        "backend/app/domain/legendary_actions.py"
+      ],
+      "browser": [
+        "frontend/browser-legendary-actions.js"
+      ],
+      "tests": [
+        "backend/tests/test_legendary_actions.py",
+        "frontend/browser-legendary-actions.test.cjs"
+      ]
     },
     {
       "id": "legendary-resistance",
@@ -791,32 +802,32 @@
     {
       "id": "generic-death-triggers",
       "status": "partial",
-      "blocker": "Undead Fortitude is certified, but arbitrary on-zero/on-death effects are not universal."
+      "blocker": "IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed.' Undead Fortitude and Death Ward already use shared zero-HP primitives. Arbitrary uncertified on-zero/on-death printings stay fail-closed."
     },
     {
       "id": "summons-transformations-splitting",
       "status": "unsupported",
-      "blocker": "Dynamic combatant creation, transformation, and split/merge lifecycle are not certified."
+      "blocker": "IRON_PIT_RULES_CONTRACT: 'Summoning is currently disabled in Iron Pit.' 'Do not create summoned combatants, companion bodies, summoned guardians, or a Summoning Annex.' Transformations remain separately governed and are not summons."
     },
     {
       "id": "cover-line-of-sight-obscurement",
       "status": "partial",
-      "blocker": "The card arena has range/formation abstractions but not a general geometry/cover/obscurement engine."
+      "blocker": "IRON_PIT_RULES_CONTRACT: 'No environmental cover by default.' 'Clear line of sight by default; only combat effects such as Darkness, Fog Cloud, Blindness, Invisibility, or similar supported mechanics alter visibility.' Do not invent a default cover engine."
     },
     {
       "id": "standard-tactical-actions-dash-dodge-disengage-ready-help",
       "status": "partial",
-      "blocker": "Iron Pit intentionally uses simplified card-v-card AI; these general actions are not universally selected/resolved."
+      "blocker": "IRON_PIT_RULES_CONTRACT: 'Dash/Disengage/Hide/Ready/Help/Search are not generic tactical spam; use them only when a supported combat identity or legal fallback requires them.' 'Dodge is the default when no supported offensive option can be used or made legal after any useful legal approach movement available this turn.' Ready and Help are not implemented because Dodge is the only required fallback."
     },
     {
       "id": "unarmed-grapple-shove-options",
       "status": "partial",
-      "blocker": "Unarmed Opportunity Attack damage exists and monster grapples exist; universal player Grapple/Shove options are not certified."
+      "blocker": "IRON_PIT_RULES_CONTRACT: 'Prefer raw damage that is easy to calculate over charm and other control. Control remains legal only when no damaging option can land.' Monster grapples that are printed on attacks already bind. Universal player Grapple/Shove is not invented as a default Action because landing-damage already prefers a damaging melee that can land."
     },
     {
       "id": "simultaneous-effect-ordering",
       "status": "partial",
-      "blocker": "Specific simultaneous cases are modeled, but a universal ordered effect-batch transaction system is not certified."
+      "blocker": "IRON_PIT_RULES_CONTRACT: 'Specific source wording beats generic behavior. Resolve each subevent fully and update state before resolving the next.' Bound simultaneous cases already follow that. A speculative universal effect-batch transaction layer is not added merely to clear the label."
     },
     {
       "id": "initiative-resource-refill",

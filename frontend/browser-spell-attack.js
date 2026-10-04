@@ -154,6 +154,9 @@
         window.IRON_PIT_BROWSER_MELEE_RETALIATION?.apply(caster, target, {
           melee: (spell.attackKind || "ranged") === "melee", setup,
         });
+        window.IRON_PIT_BROWSER_MELEE_HIT_SAVE_RETALIATION?.apply(caster, target, {
+          melee: (spell.attackKind || "ranged") === "melee", setup, round,
+        });
       }
     }
     const outcome = critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS";

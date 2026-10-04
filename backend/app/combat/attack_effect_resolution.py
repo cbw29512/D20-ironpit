@@ -14,6 +14,7 @@ from app.combat.graze import resolve_graze_miss
 from app.combat.exile import apply_on_hit_exile
 from app.combat.post_hit_spell_riders import resolve_paid_post_hit_spell_riders
 from app.combat.melee_hit_retaliation import apply_melee_hit_retaliation
+from app.combat.melee_hit_save_retaliation import apply_melee_hit_save_retaliation
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
 from app.combat.sap import apply_weapon_sap
 from app.combat.slow import apply_weapon_slow
@@ -174,11 +175,21 @@ def resolve_attack_effects(
                         affected_states=affected_states,
                     )
                 )
+                melee = attack.weapon.attack_kind.value == "melee"
                 apply_melee_hit_retaliation(
                     attacker_member,
                     defender_member,
-                    melee=attack.weapon.attack_kind.value == "melee",
+                    melee=melee,
                     dice=dice,
+                    affected_states=affected_states,
+                )
+                apply_melee_hit_save_retaliation(
+                    attacker_member,
+                    defender_member,
+                    melee=melee,
+                    dice=dice,
+                    setup=setup,
+                    round_number=round_number,
                     affected_states=affected_states,
                 )
         end_rage_if_incapacitated(defender)

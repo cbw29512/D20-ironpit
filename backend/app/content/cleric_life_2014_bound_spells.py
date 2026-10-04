@@ -14,6 +14,7 @@ from app.content.shared_effect_removal_spells_2014 import dispel_magic_2014
 from app.content.shared_healing_spells_2014 import heal_2014, mass_healing_word_2014
 from app.content.shared_movement_spells_2014 import freedom_of_movement_2014
 from app.content.shared_restoration_spells_2014 import greater_restoration_2014, remove_curse_2014
+from app.content.shared_holy_aura_2024 import holy_aura_2014
 from app.content.shared_ward_spells_2014 import protection_from_energy_2014, warding_bond_2014
 from app.domain.actions import ConditionRemovalAction, HealingAction
 from app.domain.effect_removal import EffectRemovalAction
@@ -77,10 +78,10 @@ def bind_cleric_life_2014_prepared_spells(
                 if "dispel-magic" in prepared else ()
             ),
             condition_removals=tuple(removals),
-            timed_self_buffs=(
-                (spirit_guardians_2014(save_dc),)
-                if "spirit-guardians" in prepared else ()
-            ),
+            timed_self_buffs=tuple([
+                *([spirit_guardians_2014(save_dc)] if "spirit-guardians" in prepared else []),
+                *([holy_aura_2014(save_dc)] if "holy-aura" in prepared else []),
+            ]),
             suppression_zones=((silence_2014(),) if "silence" in prepared else ()),
         )
     except Exception:

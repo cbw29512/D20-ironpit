@@ -11,6 +11,7 @@ from app.domain.friendly_combat_auras import (
     TimedFriendlyRecoveryAura,
     TimedFriendlyWeaponDamageAura,
 )
+from app.domain.melee_hit_save_retaliation import MeleeHitSaveRetaliation
 from app.domain.progression import SavingThrowAdvantageGrant
 from app.domain.movement import MovementModeGrant
 from app.domain.weapons_base import DamageType
@@ -72,6 +73,7 @@ class TimedFriendlySaveAura(BaseModel):
     requires_hearing: bool = False
     all_saves: bool = False
     attacks_against_disadvantage: bool = False
+    melee_hit_save_retaliation: MeleeHitSaveRetaliation | None = None
 
     @model_validator(mode="after")
     def validate_tags(self) -> "TimedFriendlySaveAura":
