@@ -10,6 +10,7 @@ from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_save_capabilities_2014 import supports_recharge_rules_2014, unsupported_save_actions_2014, unsupported_source_actions_2014
+from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_trait_bindings_2014 import bound_trait_names_2014, supports_reckless_2014
 from app.domain.traits import CombatTrait
 from app.domain.weapons import DamageType
@@ -127,7 +128,7 @@ def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
         "limited-use": monster.limited_action_uses,
         "spellcasting": monster.innate_spellcasting or monster.spellcasting,
         "zero-hp": monster.zero_hp_prevention,
-        "regeneration": monster.regeneration,
+        "regeneration": monster.regeneration if not supports_regeneration_2014(monster) else None,
         "legendary": monster.legendary_actions or monster.legendary_action_uses
             or monster.unsupported_legendary_action_names,
         "recharge": (

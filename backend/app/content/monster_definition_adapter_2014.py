@@ -12,6 +12,11 @@ from app.content.monster_trait_bindings_2014 import (
     progression_features_2014,
     sneak_attack_eligible_2014,
 )
+from app.content.monster_legendary_resistance_2014 import (
+    legendary_resistance_override_2014,
+    legendary_resistance_resource_2014,
+)
+from app.content.monster_regeneration_2014 import regeneration_trait_2014
 from app.content.monster_save_capabilities_2014 import (
     recharge_rules_2014, save_capabilities_2014, save_resources_2014,
 )
@@ -120,6 +125,11 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     scores = AbilityScores(**_ability_values(monster))
     movement = _movement(monster)
     attacks = [_attack(monster, attack) for attack in monster.attacks]
+    resources = list(save_resources_2014(monster))
+    legendary_resource = legendary_resistance_resource_2014(monster)
+    if legendary_resource is not None:
+        resources.append(legendary_resource)
+    legendary_override = legendary_resistance_override_2014(monster)
     return CombatantDefinition(
         id=f"2014-{monster.id}", name=monster.name, archetype=f"2014 {monster.creature_type}",
         challenge_rating=monster.challenge_rating, kind="monster", ruleset="2014",
@@ -129,7 +139,9 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         movement_modes=movement, initiative_bonus=scores.modifier("dexterity"), attacks=attacks,
         primary_attack_id=attacks[0].id, attack_action=_multiattack(monster),
         save_actions=save_capabilities_2014(monster),
-        resources=save_resources_2014(monster), recharge_rules=recharge_rules_2014(monster),
+        resources=resources, recharge_rules=recharge_rules_2014(monster),
+        regeneration=regeneration_trait_2014(monster),
+        save_success_overrides=[legendary_override] if legendary_override else [],
         combat_traits=modeled_combat_traits_2014(monster),
         progression_features=progression_features_2014(monster),
         saving_throw_bonuses=_save_bonuses(monster, scores),

@@ -166,6 +166,7 @@ class CombatantState(BaseModel):
     emanation_triggers_this_turn: dict[str, str] = Field(default_factory=dict)
     rage_expires_round: int | None = Field(default=None, ge=1)
     rage_max_round: int | None = Field(default=None, ge=1)
+    damage_types_taken_since_regen: list[str] = Field(default_factory=list)
 
 
 class BattlefieldState(BaseModel):

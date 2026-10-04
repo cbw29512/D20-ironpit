@@ -16,6 +16,7 @@ from app.combat.dice import DiceProvider
 from app.combat.dodge import dodge_dex_save_advantage_sources
 from app.combat.exhaustion import saving_throw_disadvantage_sources
 from app.combat.failed_d20_test_override import apply_failed_d20_test_override
+from app.combat.save_success_override import apply_save_success_override
 from app.combat.failed_save_reroll import apply_failed_save_reroll
 from app.combat.grapple import RESTRAINED_EFFECT_ID
 from app.combat.modifier_stack import apply_d20_bonus_dice, saving_throw_flat_bonus
@@ -142,6 +143,8 @@ def resolve_saving_throw(
         roll, _, _ = apply_failed_d20_test_override(
             state, roll, failed=roll.total < dc, test_kind="saving_throw",
         )
+        if roll.total < dc and apply_save_success_override(state):
+            return roll, True
         return roll, roll.total >= dc
     except ValueError:
         raise

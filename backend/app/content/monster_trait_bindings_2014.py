@@ -3,6 +3,8 @@ from __future__ import annotations
 import logging
 import re
 
+from app.content.monster_legendary_resistance_2014 import legendary_resistance_trait_name_2014
+from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
 from app.domain.weapons import ConditionalAttackAdvantage
@@ -102,6 +104,11 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(_SNEAK_ATTACK)
         if _MAGIC_RESISTANCE in monster.trait_names:
             bound.add(_MAGIC_RESISTANCE)
+        if supports_regeneration_2014(monster):
+            bound.add("Regeneration")
+        resistance = legendary_resistance_trait_name_2014(monster)
+        if resistance:
+            bound.add(resistance)
         return frozenset(bound)
     except Exception:
         logger.exception("Failed to classify bound 2014 traits for %s.", monster.name)

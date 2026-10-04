@@ -74,8 +74,10 @@
 
   function resolveStartOfTurn(sequence, round, member, setup) {
     try {
-      window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS?.resolveWindows(member, setup);
+      const regen = window.IRON_PIT_BROWSER_REGENERATION?.resolve(sequence, round, member);
       const events = [];
+      if (regen) { events.push(...regen.events); sequence = regen.sequence; }
+      window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS?.resolveWindows(member, setup);
       for (const source of members(setup)) {
         const concentration = source.state.concentration;
         if (!concentration) continue;

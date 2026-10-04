@@ -1079,6 +1079,12 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
                 for slot in template.attack_action.slots
             ]}
+        if template.regeneration is not None:
+            row["regeneration"] = template.regeneration.model_dump(mode="json")
+        if template.save_success_overrides:
+            row["save_success_overrides"] = [
+                item.model_dump(mode="json") for item in template.save_success_overrides
+            ]
         return row
     except Exception:
         logger.exception("Failed to serialize combatant template %s.", template.id)

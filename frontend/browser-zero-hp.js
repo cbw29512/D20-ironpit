@@ -58,7 +58,20 @@
     return "unconscious";
   }
 
+  function delayRegenDeath(state) {
+    const trait = state.template.regeneration;
+    return Boolean(trait && trait.survives_zero_until_turn && !state.is_dead);
+  }
+
+  function noteRegenTypes(state, damageTypes) {
+    if (!state.template.regeneration || !damageTypes?.length) return;
+    const remembered = new Set(state.damage_types_taken_since_regen || []);
+    for (const item of damageTypes) remembered.add(String(item));
+    state.damage_types_taken_since_regen = [...remembered].sort();
+  }
+
   function markDead(state) {
+    if (delayRegenDeath(state)) { markUnconscious(state); return; }
     state.current_hp = 0;
     state.is_alive = false;
     state.is_dead = true;
@@ -94,7 +107,7 @@
       state.current_hp = 0;
       let outcome = null;
       if (state.template.kind === "monster") {
-        markDead(state); outcome = "dead";
+        markDead(state); outcome = state.is_dead ? "dead" : "unconscious";
       } else if (state.template.effect_bound_survival_save) {
         if (!U()) throw new Error("Effect-bound survival save runtime is not loaded.");
         if (U().resolveEffectBound(state)) outcome = "survival_save";
@@ -112,6 +125,7 @@
   function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null) {
     const incoming = amount;
     if (!incoming || state.is_dead) return "damaged";
+    noteRegenTypes(state, damageTypes);
     const absorbed = Math.min(state.temporary_hp, amount);
     state.temporary_hp -= absorbed;
     amount -= absorbed;
@@ -121,7 +135,8 @@
     }
     if (state.current_hp === 0) {
       if (state.template.kind === "monster" || incoming >= S().effectiveMaxHp(state)) {
-        markDead(state); return finish(state, "dead", incoming, affectedStates, setup);
+        markDead(state);
+        return finish(state, state.is_dead ? "dead" : "unconscious", incoming, affectedStates, setup);
       }
       state.is_stable = false;
       state.death_save_failures = Math.min(3, state.death_save_failures + (critical ? 2 : 1));
@@ -134,7 +149,10 @@
     if (state.current_hp > 0) return finish(state, "damaged", incoming, affectedStates, setup);
     if (Z()?.consumeZero(state)) return finish(state, "zero_hp_replacement", incoming, affectedStates, setup);
     if (useUndeadFortitude(state, incoming, damageTypes, critical)) return finish(state, "undead_fortitude", incoming, affectedStates, setup);
-    if (state.template.kind === "monster") { markDead(state); return finish(state, "dead", incoming, affectedStates, setup); }
+    if (state.template.kind === "monster") {
+      markDead(state);
+      return finish(state, state.is_dead ? "dead" : "unconscious", incoming, affectedStates, setup);
+    }
     const remaining = Math.max(0, amount - before);
     if (remaining >= S().effectiveMaxHp(state)) { markDead(state); return finish(state, "dead", incoming, affectedStates, setup); }
     if (state.template.effect_bound_survival_save) {

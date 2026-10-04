@@ -10,6 +10,7 @@ from app.combat.hit_points import effective_max_hp
 from app.combat.orc import use_relentless_endurance
 from app.combat.replacement_form_lifecycle import apply_replacement_form_damage, revert_replacement_form_if_incapacitated
 from app.combat.source_bound_effects import end_damage_sensitive_effects
+from app.combat.regeneration_lifecycle import delay_zero_hp_death, note_incoming_damage_types
 from app.combat.undead_fortitude import resolve_undead_fortitude, resolve_effect_bound_survival_save
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement
 from app.domain.models import CombatantState, DamageType
@@ -30,6 +31,8 @@ def reset_death_saves(state: CombatantState) -> None:
 
 
 def _mark_dead(state: CombatantState) -> ZeroHpOutcome:
+    if delay_zero_hp_death(state):
+        return _mark_unconscious(state)
     state.current_hp = 0
     state.is_alive = False
     state.is_dead = True
@@ -153,6 +156,7 @@ def apply_damage(
 
         incoming = amount
         types = damage_types or set()
+        note_incoming_damage_types(state, types)
         amount = _after_temporary_hp(state, amount)
         amount, _ = apply_replacement_form_damage(state, amount)
         if state.current_hp == 0:
@@ -166,9 +170,7 @@ def apply_damage(
                 outcome = _finish_damage(state, "damaged", incoming, dice, affected_states)
             elif consume_zero_hp_replacement(state):
                 outcome = _finish_damage(state, "zero_hp_replacement", incoming, dice, affected_states)
-            elif resolve_undead_fortitude(
-                state, incoming, types, critical=critical, dice=dice,
-            ):
+            elif resolve_undead_fortitude(state, incoming, types, critical=critical, dice=dice):
                 outcome = _finish_damage(state, "undead_fortitude", incoming, dice, affected_states)
             elif state.template.kind == "monster":
                 outcome = _finish_damage(state, _mark_dead(state), incoming, dice, affected_states)

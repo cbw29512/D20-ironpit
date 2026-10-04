@@ -725,8 +725,19 @@
     },
     {
       "id": "legendary-resistance",
-      "status": "unsupported",
-      "blocker": "Save replacement with limited-use legendary resistance is not certified."
+      "status": "supported",
+      "python": [
+        "backend/app/combat/save_success_override.py",
+        "backend/app/combat/saving_throw_rolls.py"
+      ],
+      "browser": [
+        "frontend/browser-save-success-override.js",
+        "frontend/browser-saving-throws.js"
+      ],
+      "tests": [
+        "backend/tests/test_regeneration_and_legendary_resistance.py",
+        "frontend/browser-regeneration-legendary-resistance.test.cjs"
+      ]
     },
     {
       "id": "ongoing-periodic-damage",
@@ -763,8 +774,19 @@
     },
     {
       "id": "regeneration",
-      "status": "unsupported",
-      "blocker": "No universal conditional start-turn regeneration primitive is certified."
+      "status": "supported",
+      "python": [
+        "backend/app/combat/regeneration.py",
+        "backend/app/combat/regeneration_lifecycle.py"
+      ],
+      "browser": [
+        "frontend/browser-regeneration.js",
+        "frontend/browser-zero-hp.js"
+      ],
+      "tests": [
+        "backend/tests/test_regeneration_and_legendary_resistance.py",
+        "frontend/browser-regeneration-legendary-resistance.test.cjs"
+      ]
     },
     {
       "id": "generic-death-triggers",

@@ -188,6 +188,8 @@ jobs:
           grep -q 'browser-friendly-weapon-damage-auras.js' index.html
           grep -q 'browser-friendly-recovery-auras.js' index.html
           grep -q 'browser-start-of-turn-timed-burn.js' index.html
+          grep -q 'browser-regeneration.js' index.html
+          grep -q 'browser-save-success-override.js' index.html
           grep -q 'browser-selectable-damage-resistance.js' index.html
           grep -q 'browser-precombat-buffs.js' index.html
           grep -q 'browser-timed-emanations.js' index.html
@@ -303,6 +305,8 @@ jobs:
           grep -q 'browser-friendly-weapon-damage-auras.js' frontend/index.html
           grep -q 'browser-friendly-recovery-auras.js' frontend/index.html
           grep -q 'browser-start-of-turn-timed-burn.js' frontend/index.html
+          grep -q 'browser-regeneration.js' frontend/index.html
+          grep -q 'browser-save-success-override.js' frontend/index.html
           grep -q 'browser-selectable-damage-resistance.js' frontend/index.html
           grep -q 'browser-precombat-buffs.js' frontend/index.html
           grep -q 'browser-timed-emanations.js' frontend/index.html
@@ -471,6 +475,7 @@ jobs:
           node frontend/browser-healing-creature-type-exclusions.test.cjs
           node frontend/browser-group-healing-area.test.cjs
           node frontend/browser-cleric-2024-leftover-spells.test.cjs
+          node frontend/browser-regeneration-legendary-resistance.test.cjs
           node frontend/browser-pooled-healing.test.cjs
           node frontend/browser-outgoing-healing-maximize.test.cjs
           node frontend/browser-once-per-turn-hit-damage.test.cjs
