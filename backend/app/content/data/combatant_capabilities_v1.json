@@ -63,6 +63,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "goblin-scimitar",
@@ -257,6 +258,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "goblin-minion-dagger-melee",
@@ -422,6 +424,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "hobgoblin-longsword",
@@ -602,6 +605,13 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [
+      {
+        "context_tag": "sunlight",
+        "attack_roll_disadvantage": true,
+        "ability_check_disadvantage": true
+      }
+    ],
     "attacks": [
       {
         "id": "kobold-warrior-dagger-melee",
@@ -770,6 +780,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "goblin-boss-scimitar",
@@ -991,6 +1002,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "bandit-scimitar",
@@ -1155,6 +1167,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "commoner-club",
@@ -1292,6 +1305,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "guard-spear-melee",
@@ -1455,6 +1469,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-rat-bite",
@@ -1594,6 +1609,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-weasel-bite",
@@ -1729,6 +1745,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-blood-hawk-beak",
@@ -1881,6 +1898,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "axe-beak-beak",
@@ -2016,6 +2034,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-lizard-bite",
@@ -2161,6 +2180,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "wolf-bite",
@@ -2305,6 +2325,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "dire-wolf-bite",
@@ -2449,6 +2470,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "black-bear-rend",
@@ -2611,6 +2633,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "brown-bear-bite",
@@ -2795,6 +2818,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "baboon-bite",
@@ -2934,6 +2958,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "camel-bite",
@@ -3069,6 +3094,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "deer-ram",
@@ -3206,6 +3232,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "draft-horse-hooves",
@@ -3341,6 +3368,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-badger-bite",
@@ -3478,6 +3506,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "jackal-bite",
@@ -3613,6 +3642,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "boar-gore",
@@ -3753,6 +3783,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "elk-ram",
@@ -3890,6 +3921,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-boar-gore",
@@ -4030,6 +4062,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "minotaur-skeleton-gore",
@@ -4199,6 +4232,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "triceratops-gore",
@@ -4355,6 +4389,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "warhorse-skeleton-hooves",
@@ -4499,6 +4534,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "allosaurus-bite",
@@ -4663,6 +4699,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "goat-ram",
@@ -4796,6 +4833,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "merfolk-skirmisher-ocean-spear-ranged",
@@ -5001,6 +5039,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-druid-vine-staff",
@@ -5291,6 +5330,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "hippogriff-rend",
@@ -5447,6 +5487,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "awakened-shrub-rake",
@@ -5582,6 +5623,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "badger-bite",
@@ -5715,6 +5757,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "bat-bite",
@@ -5846,6 +5889,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "cat-scratch",
@@ -5979,6 +6023,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "crab-claw",
@@ -6112,6 +6157,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "frog-bite",
@@ -6246,6 +6292,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "hawk-talons",
@@ -6377,6 +6424,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "lizard-bite",
@@ -6510,6 +6558,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "owl-talons",
@@ -6643,6 +6692,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "rat-bite",
@@ -6776,6 +6826,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "raven-beak",
@@ -6909,6 +6960,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "weasel-bite",
@@ -7040,6 +7092,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "eagle-talons",
@@ -7175,6 +7228,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "panther-rend",
@@ -7312,6 +7366,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "plesiosaurus-bite",
@@ -7449,6 +7504,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "polar-bear-rend",
@@ -7605,6 +7661,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "pony-hooves",
@@ -7740,6 +7797,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "pteranodon-bite",
@@ -7877,6 +7935,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "riding-horse-hooves",
@@ -8012,6 +8071,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "tiger-rend",
@@ -8154,6 +8214,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "vulture-beak",
@@ -8293,6 +8354,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-fire-beetle-bite",
@@ -8428,6 +8490,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-goat-ram",
@@ -8565,6 +8628,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-owl-talons",
@@ -8706,6 +8770,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "hyena-bite",
@@ -8845,6 +8910,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-bat-bite",
@@ -8980,6 +9046,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "mastiff-bite",
@@ -9120,6 +9187,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "mule-hooves",
@@ -9257,6 +9325,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "rhinoceros-gore",
@@ -9394,6 +9463,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "warhorse-hooves",
@@ -9531,6 +9601,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "ogre-greatclub",
@@ -9718,6 +9789,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "owlbear-rend",
@@ -9872,6 +9944,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "saber-toothed-tiger-rend",
@@ -10030,6 +10103,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "scout-longbow",
@@ -10213,6 +10287,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "warrior-infantry-spear-melee",
@@ -10379,6 +10454,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "crocodile-bite",
@@ -10526,6 +10602,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-crab-claw",
@@ -10673,6 +10750,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "constrictor-snake-bite",
@@ -10838,6 +10916,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-giant-scorpion-claw",
@@ -11046,6 +11125,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-grick-beak",
@@ -11236,6 +11316,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-griffon-rend",
@@ -11401,6 +11482,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-centipede-bite",
@@ -11547,6 +11629,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-vulture-gouge",
@@ -11698,6 +11781,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "wyvern-bite",
@@ -11899,6 +11983,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-venomous-snake-bite",
@@ -12051,6 +12136,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-wasp-sting",
@@ -12204,6 +12290,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-wolf-spider-bite",
@@ -12359,6 +12446,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "archelon-bite",
@@ -12515,6 +12603,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "ankylosaurus-tail",
@@ -12674,6 +12763,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-eagle-rend",
@@ -12844,6 +12934,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-elk-ram",
@@ -12997,6 +13088,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-crocodile-bite",
@@ -13192,6 +13284,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "giant-constrictor-snake-bite",
@@ -13377,6 +13470,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "tyrannosaurus-rex-bite",
@@ -13570,6 +13664,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-animated-armor-slam",
@@ -13735,6 +13830,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-animated-flying-sword-slash",
@@ -13881,6 +13977,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-earth-elemental-slam",
@@ -14082,6 +14179,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-awakened-tree-slam",
@@ -14222,6 +14320,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-cultist-ritual-sickle",
@@ -14370,6 +14469,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-flying-snake-bite",
@@ -14516,6 +14616,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-gargoyle-claw",
@@ -14678,6 +14779,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-grimlock-bone-cudgel",
@@ -14826,6 +14928,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-guard-captain-javelin-melee",
@@ -15036,6 +15139,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-hippopotamus-bite",
@@ -15192,6 +15296,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-hill-giant-tree-club",
@@ -15388,6 +15493,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-killer-whale-bite",
@@ -15525,6 +15631,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-lemure-vile-slime",
@@ -15671,6 +15778,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-manticore-rend",
@@ -15861,6 +15969,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-ogre-zombie-slam",
@@ -16005,6 +16114,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-pegasus-hooves",
@@ -16153,6 +16263,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-scorpion-sting",
@@ -16297,6 +16408,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-skeleton-shortsword",
@@ -16466,6 +16578,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-spider-bite",
@@ -16613,6 +16726,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-spy-shortsword",
@@ -16803,6 +16917,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-tough-mace",
@@ -16969,6 +17084,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-venomous-snake-bite",
@@ -17117,6 +17233,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-violet-fungus-rotting-touch",
@@ -17276,6 +17393,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-xorn-bite",
@@ -17478,6 +17596,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-zombie-slam",
@@ -17622,6 +17741,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-giant-shark-bite",
@@ -17782,6 +17902,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-hunter-shark-bite",
@@ -17923,6 +18044,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-piranha-bite",
@@ -18060,6 +18182,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-reef-shark-bite",
@@ -18200,6 +18323,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-sahuagin-warrior-claw",
@@ -18367,6 +18491,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-swarm-of-piranhas-bites",
@@ -18537,6 +18662,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-hell-hound-bite",
@@ -18750,6 +18876,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-black-dragon-wyrmling-rend",
@@ -18962,6 +19089,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-blue-dragon-wyrmling-rend",
@@ -19172,6 +19300,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-green-dragon-wyrmling-rend",
@@ -19385,6 +19514,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-red-dragon-wyrmling-rend",
@@ -19594,6 +19724,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-white-dragon-wyrmling-rend",
@@ -19805,6 +19936,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-young-black-dragon-rend",
@@ -20023,6 +20155,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-young-blue-dragon-rend",
@@ -20239,6 +20372,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-young-green-dragon-rend",
@@ -20458,6 +20592,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-young-red-dragon-rend",
@@ -20673,6 +20808,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-young-white-dragon-rend",
@@ -20890,6 +21026,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-worg-bite",
@@ -21035,6 +21172,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-swarm-of-bats-bites",
@@ -21200,6 +21338,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-swarm-of-rats-bites",
@@ -21365,6 +21504,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-swarm-of-crawling-claws-swarm-of-grasping-hands",
@@ -21540,6 +21680,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-bandit-captain-scimitar",
@@ -21729,6 +21870,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-knight-greatsword",
@@ -21946,6 +22088,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-noble-rapier",
@@ -22086,6 +22229,7 @@
       "critical_move_fraction": 0.0,
       "tactical_shift_fraction": 0.0
     },
+    "environment_context_reactions": [],
     "attacks": [
       {
         "id": "srd-warrior-veteran-greatsword",
