@@ -573,6 +573,8 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["friendlySaveAdvantageAura"] = action.friendly_save_advantage_aura.model_dump(mode="json")
     if action.friendly_cover_aura is not None:
         row["friendlyCoverAura"] = action.friendly_cover_aura.model_dump(mode="json")
+    if action.environment_context_aura is not None:
+        row["environmentContextAura"] = action.environment_context_aura.model_dump(mode="json")
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
     return row
@@ -749,6 +751,14 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "condition_immunities": list(template.condition_immunities),
             "wearing_metal_armor": template.wearing_metal_armor,
             "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
+            "environmentContextReactions": [
+                {
+                    "contextTag": item.context_tag,
+                    "attackRollDisadvantage": item.attack_roll_disadvantage,
+                    "abilityCheckDisadvantage": item.ability_check_disadvantage,
+                }
+                for item in template.environment_context_reactions
+            ],
             "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
