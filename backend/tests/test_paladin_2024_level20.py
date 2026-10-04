@@ -34,7 +34,7 @@ def _member(template, combatant_id: str, side: str, position: int) -> EncounterC
     )
 
 
-def _setup(distance: int = 20) -> tuple[EncounterSetup, EncounterCombatant, EncounterCombatant]:
+def _setup(distance: int = 5) -> tuple[EncounterSetup, EncounterCombatant, EncounterCombatant]:
     paladin = _member(build_aurelia_brightshield_2024(20), "aurelia", "heroes", 0)
     kobold_template = complete_monster_trait_fingerprints([build_kobold_warrior()])[0]
     kobold = _member(kobold_template, "kobold", "monsters", distance)
@@ -192,7 +192,7 @@ def test_sunlight_is_context_and_sunlight_sensitivity_is_target_owned() -> None:
 
     begin_turn(kobold.state)
     event = resolve_encounter_attack(
-        2, 1, kobold, paladin, kobold.state.template.weapon_attack, 20,
+        2, 1, kobold, paladin, kobold.state.template.weapon_attack, 5,
         FixedDiceProvider([18, 2, 2, 2]),
         setup,
     )
