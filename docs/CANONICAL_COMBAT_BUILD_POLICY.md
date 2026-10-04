@@ -12,6 +12,15 @@ The intended pipeline is:
 
 Do not duplicate complete hero definitions per level when the same result can be derived from the previous level plus the current level's RAW changes.
 
+### 2014 -> 2024 conversion-first rule
+
+When a canonical 2014 class progression already exists, the 2024 progression MUST start from that finished 2014 character track rather than being rebuilt from scratch.
+
+Use the 2014 character as the baseline for identity, role, level-by-level continuity, equipment intent, spell-role intent, and already-proven universal combat capabilities. Then apply only the RAW edition delta required for 2024: changed class/subclass features, subclass levels, Background/origin rules, feats/ASIs, weapon masteries, spell text, resource counts, action economy, and other rules that actually differ.
+
+Unchanged mechanics MUST reuse the same universal primitives and should require data/certification work only. Do not re-implement or re-audit an unchanged mechanic merely because the ruleset label changed. Same-name features or spells that materially differ between editions remain explicitly edition-isolated.
+
+
 ### Multiple combat builds from one class spine
 
 Combat builds and subclasses are different layers. A subclass adds its RAW features only at its subclass levels. A combat build selects a battle role and the legal role-dependent choices that support it. Multiple builds can therefore share both the same class spine and the same subclass without duplicating either progression.
