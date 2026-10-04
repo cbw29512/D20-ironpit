@@ -92,6 +92,15 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
                        "Dexterity-save damage path with an explicit 2024 fingerprint: 5d6 Fire plus "
                        "5d6 Radiant on a failed save, half on a success."),
             ))
+        if level >= 18:
+            audits.append(paladin_2024_feature(
+                "aura-expansion",
+                "Aura Expansion",
+                "class", combat=True, automated=True,
+                notes=("Parameter-only delta on the existing universal friendly aura primitives. "
+                       "Aura of Protection, Aura of Courage, Aura of Devotion, and the subclass's "
+                       "Smite of Protection cover aura use a 30-foot radius at level 18. No new resolver."),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build later 2024 Paladin feature audits at level %s.", level)
