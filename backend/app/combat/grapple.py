@@ -89,7 +89,6 @@ def resolve_movement_countered_grapples(state: CombatantState) -> list[tuple[str
         resolved.append((RESTRAINED_EFFECT_ID if source.restrains else GRAPPLED_EFFECT_ID, source.source_id, cost))
     return resolved
 
-
 def speed_is_zero(state: CombatantState) -> bool:
     grapple_stops_speed = any(
         not debuff_is_countered(
@@ -122,16 +121,13 @@ def cleanup_grapples(setup: EncounterSetup) -> None:
         target.state.grapple_sources = retained
         _sync_effect_ids(target.state)
 
-
 def should_escape_grapple(state: CombatantState) -> bool:
     return is_available(state, "action") and any(source.restrains for source in state.grapple_sources)
 
 
 def _check_mode(
-    state: CombatantState,
-    strength_check: bool,
-    encounter_actor: EncounterCombatant | None = None,
-    setup: EncounterSetup | None = None,
+    state: CombatantState, strength_check: bool,
+    encounter_actor: EncounterCombatant | None = None, setup: EncounterSetup | None = None,
 ) -> RollMode:
     advantage = int(strength_check and (
         rage_active(state) or state.template.progression_features.athletics_advantage
@@ -148,8 +144,7 @@ def _check_mode(
 
 
 def _escape_choice(
-    state: CombatantState,
-    encounter_actor: EncounterCombatant | None = None,
+    state: CombatantState, encounter_actor: EncounterCombatant | None = None,
     setup: EncounterSetup | None = None,
 ) -> tuple[str, str, int, RollMode]:
     athletics = state.template.skill_bonuses.get("athletics")
