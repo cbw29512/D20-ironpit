@@ -15,6 +15,7 @@ from app.domain.capability_attacks import (
 from app.domain.character_builds import AbilityScores
 from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.effect_removal import EffectRemovalAction
+from app.domain.environment_context import EnvironmentContextReaction
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.recharge import RechargeRule
@@ -47,6 +48,7 @@ class CombatantDefinition(BaseModel):
     blindsight_ft: int = Field(default=0, ge=0)
     truesight_ft: int = Field(default=0, ge=0)
     progression_features: ProgressionCombatFeatures = Field(default_factory=ProgressionCombatFeatures)
+    environment_context_reactions: list[EnvironmentContextReaction] = Field(default_factory=list)
     attacks: list[AttackCapabilityDefinition] = Field(min_length=1)
     primary_attack_id: str
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
