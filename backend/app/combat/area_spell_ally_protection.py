@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.condition_rules import can_see
+from app.combat.encounter_targeting import combatant_distance
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
 
@@ -28,7 +29,7 @@ def eligible_area_spell_allies(
             and ally.state.is_alive
             and not ally.state.is_dead
             and ally.state.current_hp > 0
-            and (not grant.requires_source_sight or can_see(caster.state, ally.state))
+            and (not grant.requires_source_sight or can_see(caster.state, ally.state, combatant_distance(caster, ally)))
         }
         limit = grant.base_protected_allies + grant.protected_allies_per_slot_level * slot_level
         return eligible, limit

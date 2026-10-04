@@ -29,6 +29,17 @@ for (const page of ["frontend/index.html", "index.html"]) {
   target.state.active_effect_ids.push("invisible");
   assert.equal(K.legal(actor, target, kill), false);
   assert.equal(C.legal(actor, target, stun), false);
+  actor.state.template.truesight_ft = 60;
+  assert.equal(K.legal(actor, target, kill), true);
+  assert.equal(C.legal(actor, target, stun), true);
+  actor.state.template.truesight_ft = 30;
+  const mid = member("mid-target", "monsters", 8);
+  mid.state.current_hp = 100;
+  mid.state.active_effect_ids.push("invisible");
+  assert.equal(K.legal(actor, mid, kill), false);
+  actor.state.template.truesight_ft = 60;
+  assert.equal(K.legal(actor, mid, kill), true);
+  actor.state.template.truesight_ft = 0;
   target.state.active_effect_ids = [];
   actor.state.active_effect_ids.push("blinded");
   assert.equal(K.legal(actor, target, kill), false);

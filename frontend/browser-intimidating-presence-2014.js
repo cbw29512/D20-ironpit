@@ -70,7 +70,7 @@
     for (const effect of [...target.state.timed_effects]) {
       if (effect.source_effect_id !== FEATURE) continue;
       const source = members.get(effect.source_id); if (!source) continue;
-      if (Q().canSee(target.state, source.state) && S().distance(target, source) <= 60) continue;
+      if (Q().canSee(target.state, source.state, S().distance(target, source)) && S().distance(target, source) <= 60) continue;
       const removed = T().removeGroup(target.state, effect); if (!removed.length) continue;
       events.push({
         sequence: sequence++, round_number: round, event_type: "feature",
