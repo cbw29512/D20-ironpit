@@ -15,6 +15,7 @@ from app.content.paladin_devotion_2024_runtime_support import (
     build_paladin_2024_attack,
     build_paladin_2024_attack_action,
     build_paladin_2024_progression,
+    build_paladin_2024_resource_conversions,
     build_paladin_2024_timed_self_buffs,
 )
 from app.content.paladin_devotion_2024_support import (
@@ -32,10 +33,10 @@ from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
 
 def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
-    """Build certified 2024 Aurelia through Paladin level 19."""
+    """Build certified 2024 Aurelia through Paladin level 20."""
     try:
-        if level not in range(1, 20):
-            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-19 only.")
+        if level not in range(1, 21):
+            raise ValueError("The current 2024 Paladin runtime tranche supports levels 1-20 only.")
         profile = build_aurelia_brightshield_2024_profile(level)
         scores = profile.final_ability_scores
         if scores is None:
@@ -101,7 +102,8 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
             },
             combat_traits=[CombatTrait.SAVAGE_ATTACKER],
             progression_features=build_paladin_2024_progression(level, charisma),
-            timed_self_buff_actions=build_paladin_2024_timed_self_buffs(level),
+            timed_self_buff_actions=build_paladin_2024_timed_self_buffs(level, charisma),
+            resource_conversion_actions=build_paladin_2024_resource_conversions(level),
             weapon_masteries=["longsword", "javelin"],
             fighting_style="Defense" if level >= 2 else None,
             fighting_styles=["Defense"] if level >= 2 else [],
@@ -134,6 +136,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                 + ("Commune (arena-neutral), Flame Strike, Destructive Wave (fail-closed), Greater Restoration (fail-closed), " if level >= 17 else "")
                 + ("Aura Expansion, " if level >= 18 else "")
                 + ("Boon of Combat Prowess, Banishing Smite (fail-closed), " if level >= 19 else "")
+                + ("Holy Nimbus, " if level >= 20 else "")
                 + "Longsword, Javelin"
             ),
         )
