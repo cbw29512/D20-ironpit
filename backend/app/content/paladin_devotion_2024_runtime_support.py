@@ -99,12 +99,13 @@ def build_paladin_2024_progression(
     charisma_modifier: int,
 ) -> ProgressionCombatFeatures:
     try:
+        aura_radius = 30 if level >= 18 else 10
         return ProgressionCombatFeatures(
             friendly_saving_throw_aura=(
                 FriendlySavingThrowAuraGrant(
                     source_id="aura-of-protection-2024",
                     source_name="Aura of Protection",
-                    radius_ft=10,
+                    radius_ft=aura_radius,
                     flat_bonus=max(1, charisma_modifier),
                     inactive_while_incapacitated=True,
                 )
