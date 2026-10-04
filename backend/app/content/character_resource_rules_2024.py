@@ -72,6 +72,10 @@ def _faithful_steed_free_cast(level: int) -> int:
     return 1 if level >= 5 else 0
 
 
+def _holy_nimbus(level: int) -> int:
+    return 1 if level >= 20 else 0
+
+
 def _berserker_intimidating_presence(level: int) -> int:
     try:
         return 1 if level >= 14 else 0
@@ -107,6 +111,7 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         ("action-surge", "Action Surge", fighter_action_surge_uses),
         ("indomitable", "Indomitable", fighter_indomitable_uses),
         ("boon-combat-prowess", "Boon of Combat Prowess", _combat_prowess),
+        ("holy-nimbus", "Holy Nimbus", _holy_nimbus),
     ),
     "druid": (
         ("wild-shape", "Wild Shape", druid_wild_shape_uses),
