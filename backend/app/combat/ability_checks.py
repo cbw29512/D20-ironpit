@@ -9,6 +9,7 @@ from app.combat.d20_bonus_dice import (
 from app.combat.d20_outcome_adjustments import apply_resource_backed_d20_outcome_adjustment_if_useful
 from app.combat.dice import DiceProvider
 from app.combat.failed_d20_test_override import apply_failed_d20_test_override
+from app.combat.environment_context import environment_context_disadvantage_sources
 from app.combat.modifier_stack import d20_test_advantage_sources
 from app.combat.rolls import resolve_roll_mode
 from app.domain.character_builds import AbilityName
@@ -23,12 +24,18 @@ def ability_check_roll_mode(
     *,
     advantage_sources: int = 0,
     disadvantage_sources: int = 0,
+    encounter_member: EncounterCombatant | None = None,
+    setup: EncounterSetup | None = None,
 ) -> RollMode:
     """Resolve ability-check roll mode including universal D20-test modifiers."""
     try:
+        context_disadvantage = (
+            environment_context_disadvantage_sources(encounter_member, setup, "ability_check")
+            if encounter_member is not None else 0
+        )
         return resolve_roll_mode(
             advantage_sources + d20_test_advantage_sources(state),
-            disadvantage_sources,
+            disadvantage_sources + context_disadvantage,
         )
     except Exception as exc:
         logger.exception("Failed to resolve ability-check roll mode for %s.", state.template.name)
