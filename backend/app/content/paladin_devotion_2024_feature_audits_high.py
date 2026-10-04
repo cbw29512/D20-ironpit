@@ -83,6 +83,15 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
                        "update Charisma saves and skills, healing, Sacred Weapon, Abjure Foes, "
                        "and Aura of Protection from +3 to +4; no new combat primitive is required."),
             ))
+        if level >= 17:
+            audits.append(paladin_2024_feature(
+                "oath-spells-level17",
+                "Oath of Devotion Spells",
+                "subclass", combat=True, automated=True,
+                notes=("Commune is arena-neutral. Flame Strike reuses the universal multi-component "
+                       "Dexterity-save damage path with an explicit 2024 fingerprint: 5d6 Fire plus "
+                       "5d6 Radiant on a failed save, half on a success."),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build later 2024 Paladin feature audits at level %s.", level)
