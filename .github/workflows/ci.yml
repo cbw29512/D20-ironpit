@@ -49,8 +49,8 @@ jobs:
           python scripts/export_browser_monsters_2014.py
       - name: Generate certification manifest candidates
         run: python scripts/verify_certification_manifests.py --write
-      - name: Refresh generated Paladin progression artifacts
-        if: startsWith(github.event.pull_request.head.ref, 'feat/2024-paladin-')
+      - name: Refresh generated hero progression artifacts
+        if: startsWith(github.event.pull_request.head.ref, 'feat/2024-paladin-') || startsWith(github.event.pull_request.head.ref, 'feat/2024-ranger-')
         run: |
           python scripts/prepare_static_site.py
           git config user.name "iron-pit-certification"
