@@ -26,16 +26,18 @@ from app.domain.size import size_at_most
 
 
 def legal_save_action(action: SavingThrowAction, target: EncounterCombatant, distance_ft: int) -> bool:
-    if distance_ft > action.range_ft:
-        return False
-    if action.requires_target_hearing and "deafened" in target.state.active_effect_ids:
-        return False
-    if action.required_target_creature_types and not any(
-        is_creature_type(target.state.template, kind)
-        for kind in action.required_target_creature_types
+    template = target.state.template
+    if distance_ft > action.range_ft or (
+        action.requires_target_hearing and "deafened" in target.state.active_effect_ids
     ):
         return False
-    return action.target_max_size is None or size_at_most(target.state.template.size, action.target_max_size)
+    if action.required_target_creature_types and not any(
+        is_creature_type(template, kind) for kind in action.required_target_creature_types
+    ):
+        return False
+    if any(is_creature_type(template, kind) for kind in action.excluded_target_creature_types):
+        return False
+    return action.target_max_size is None or size_at_most(template.size, action.target_max_size)
 
 
 def resolve_save_action(

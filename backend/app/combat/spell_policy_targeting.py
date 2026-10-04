@@ -45,6 +45,10 @@ def legal_single_spell_targets(
                     for kind in action.required_target_creature_types
                 )
             )
+            and not any(
+                is_creature_type(target.state.template, kind)
+                for kind in action.excluded_target_creature_types
+            )
         ]
     except Exception as exc:
         logger.exception("Failed to determine legal targets for spell %s.", action.id)

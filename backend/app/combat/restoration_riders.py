@@ -39,7 +39,12 @@ def apply_restoration_riders(
             and action.removes_ability_score_reductions
             and target.state.ability_score_reductions
         ):
-            target.state.ability_score_reductions = {}
+            ability = sorted(target.state.ability_score_reductions)[0]
+            target.state.ability_score_reductions = {
+                key: value
+                for key, value in target.state.ability_score_reductions.items()
+                if key != ability
+            }
             applied.append("ability-score-reduction")
         if (
             "hit-point-maximum-reduction" in wanted

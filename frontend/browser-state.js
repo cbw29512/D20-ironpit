@@ -15,9 +15,8 @@
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
   const GEOM = () => window.IRON_PIT_BROWSER_GRID_GEOMETRY;
   const OM = () => window.IRON_PIT_BROWSER_OPENING_MODIFIERS || { build: () => [] };
-  const effectiveMaxHp = (state) => X()?.effectiveMaxHp(
-    state, Math.max(0, state.template.max_hp + (state.max_hp_bonus || 0) - (state.hit_point_maximum_reduction || 0)),
-  ) ?? Math.max(0, state.template.max_hp + (state.max_hp_bonus || 0) - (state.hit_point_maximum_reduction || 0));
+  const rawMax = (state) => state.template.max_hp + (state.max_hp_bonus || 0) - (state.hit_point_maximum_reduction || 0);
+  const effectiveMaxHp = (state) => Math.max(1, X()?.effectiveMaxHp(state, rawMax(state)) ?? rawMax(state));
 
   function buildState(template) {
     return {

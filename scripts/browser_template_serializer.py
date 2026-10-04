@@ -264,6 +264,8 @@ def _spell(action: Any) -> dict[str, Any]:
         }
     if action.required_target_creature_types:
         row["requiredTargetCreatureTypes"] = list(action.required_target_creature_types)
+    if action.excluded_target_creature_types:
+        row["excludedTargetCreatureTypes"] = list(action.excluded_target_creature_types)
     if action.minimum_remaining_hp:
         row["minimumRemainingHp"] = action.minimum_remaining_hp
     if action.reduce_hit_point_maximum_on_failed_save:

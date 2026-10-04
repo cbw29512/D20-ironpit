@@ -70,7 +70,10 @@
 
   function finish(state, outcome, incoming, affectedStates, setup = null) {
     B()?.endDamageSensitive(state);
-    if (setup && incoming > 0) window.IRON_PIT_BROWSER_DAMAGE_SHARE?.resolveForState(state, incoming, setup);
+    if (incoming > 0 && state.damage_share_source_id) {
+      if (!setup) throw new Error("Damage share requires encounter setup.");
+      window.IRON_PIT_BROWSER_DAMAGE_SHARE.resolveForState(state, incoming, setup);
+    }
     if (!state.concentration) return outcome;
     if (!C()) throw new Error("Browser concentration runtime is not loaded.");
     C().resolveDamage(state, incoming, affectedStates);

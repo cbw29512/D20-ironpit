@@ -48,6 +48,7 @@ def harm_2014(save_dc: int) -> SpellSaveAction:
             damage_type="necrotic",
             success_damage="half",
             requires_target_sight=True,
+            excluded_target_creature_types=["undead", "construct"],
             minimum_remaining_hp=1,
             reduce_hit_point_maximum_on_failed_save=True,
             animation="harm",

@@ -182,7 +182,9 @@ def apply_damage(
                     outcome = _finish_damage(state, "relentless_endurance", incoming, dice, affected_states)
                 else:
                     outcome = _finish_damage(state, _mark_unconscious(state), incoming, dice, affected_states)
-        if setup is not None and incoming > 0:
+        if incoming > 0 and state.damage_share_source_id:
+            if setup is None:
+                raise ValueError("Damage share requires encounter setup.")
             from app.combat.damage_share import resolve_damage_share_for_state
             resolve_damage_share_for_state(state, incoming, setup, dice)
         return outcome

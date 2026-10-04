@@ -54,6 +54,19 @@ def _setup(heroes, monsters) -> EncounterSetup:
     )
 
 
+def test_2014_damage_share_fails_closed_without_encounter_setup() -> None:
+    ally = _member(build_karnok_stoneward(), "ally", "heroes", 3, 2)
+    ally.state.damage_share_source_id = "caster"
+    ally.state.damage_share_range_ft = 60
+    ally.state.damage_share_effect_id = "warding-bond"
+    try:
+        apply_damage(ally.state, 4, damage_types={DamageType.SLASHING})
+    except ValueError as exc:
+        assert "encounter setup" in str(exc)
+    else:
+        raise AssertionError("Warding Bond share must fail closed when setup is missing.")
+
+
 def test_2014_warding_bond_shares_post_resistance_damage_and_excludes_self() -> None:
     caster_template = build_karnok_stoneward().model_copy(update={
         "defensive_spell_actions": [warding_bond_2014()],
@@ -207,14 +220,31 @@ def test_2014_greater_restoration_clears_ability_score_reduction() -> None:
     }), "cleric", "heroes", 2, 2)
     ally = _member(build_karnok_stoneward(), "ally", "heroes", 3, 2)
     enemy = _member(build_commoner(), "enemy", "monsters", 8, 2)
-    ally.state.ability_score_reductions = {"constitution": 3}
+    ally.state.ability_score_reductions = {"constitution": 3, "strength": 2}
     setup = _setup([cleric, ally], [enemy])
     choice = choose_condition_removal_action(cleric, setup, "1:cleric")
     assert choice is not None
     action, target, conditions = choice
     assert conditions == ["ability-score-reduction"]
     resolve_condition_removal(1, 1, cleric, target, action, conditions, "1:cleric")
-    assert ally.state.ability_score_reductions == {}
+    assert ally.state.ability_score_reductions == {"strength": 2}
+
+
+def test_2014_harm_has_no_effect_on_undead() -> None:
+    spell = harm_2014(15)
+    assert spell.excluded_target_creature_types == ["undead", "construct"]
+    caster = _member(build_karnok_stoneward(), "caster", "heroes", 2, 2)
+    undead = _member(
+        build_commoner().model_copy(update={"creature_type": "undead", "max_hp": 20}),
+        "undead",
+        "monsters",
+        4,
+        2,
+    )
+    setup = _setup([caster], [undead])
+    assert legal_single_spell_targets(caster, setup, spell) == []
+    action = compile_spell_save_action(SpellChoice(spell, 6, (undead.combatant_id,)))
+    assert legal_save_action(action, undead, 10) is False
 
 
 def test_2014_harm_floors_at_one_hp_and_cuts_maximum_on_a_failed_save() -> None:

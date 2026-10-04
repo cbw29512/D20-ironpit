@@ -141,8 +141,10 @@
         if (wanted.has("curse") && target.state.active_curses?.length && (action.removesCurses || action.removesAllCurses)) {
           target.state.active_curses = action.removesAllCurses ? [] : target.state.active_curses.slice(1);
         }
-        if (wanted.has("ability-score-reduction") && action.removesAbilityScoreReductions) {
-          target.state.ability_score_reductions = {};
+        if (wanted.has("ability-score-reduction") && action.removesAbilityScoreReductions
+          && Object.keys(target.state.ability_score_reductions || {}).length) {
+          const ability = Object.keys(target.state.ability_score_reductions).sort()[0];
+          delete target.state.ability_score_reductions[ability];
         }
         if (wanted.has("hit-point-maximum-reduction") && action.removesHitPointMaximumReductions) {
           target.state.hit_point_maximum_reduction = 0;

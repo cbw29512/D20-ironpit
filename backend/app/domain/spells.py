@@ -134,6 +134,7 @@ class SpellSaveAction(BaseModel):
     failed_save_push_ft: int = Field(default=0, ge=0)
     failed_save_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     required_target_creature_types: list[str] = Field(default_factory=list)
+    excluded_target_creature_types: list[str] = Field(default_factory=list)
     minimum_remaining_hp: int = Field(default=0, ge=0)
     reduce_hit_point_maximum_on_failed_save: bool = False
     verbal_component: bool = True

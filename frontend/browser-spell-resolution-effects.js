@@ -30,6 +30,7 @@
         failedSavePushFt: spell.failedSavePushFt || 0,
         failedSaveTimedEffect: spell.failedSaveTimedEffect || null,
         requiredTargetCreatureTypes: [...(spell.requiredTargetCreatureTypes || [])],
+        excludedTargetCreatureTypes: [...(spell.excludedTargetCreatureTypes || [])],
         minimumRemainingHp: spell.minimumRemainingHp || 0,
         reduceHitPointMaximumOnFailedSave: Boolean(spell.reduceHitPointMaximumOnFailedSave),
         requiresTargetHearing: Boolean(spell.requiresTargetHearing),

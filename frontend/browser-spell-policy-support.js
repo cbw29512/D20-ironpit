@@ -126,7 +126,9 @@
       && (!action.requiresTargetSight || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(caster.state, target.state))
       && (!(action.requiredTargetCreatureTypes || []).length
         || (action.requiredTargetCreatureTypes || []).some((kind) =>
-          String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase() === String(kind).toLowerCase())));
+          String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase() === String(kind).toLowerCase()))
+      && !(action.excludedTargetCreatureTypes || []).some((kind) =>
+        String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase() === String(kind).toLowerCase()));
   }
 
   window.IRON_PIT_BROWSER_SPELL_POLICY_SUPPORT = {

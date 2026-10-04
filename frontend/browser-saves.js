@@ -45,10 +45,11 @@
   function legalAction(action, target, distance) {
     if (distance > action.range) return false;
     if (action.requiresTargetHearing && target.state.active_effect_ids.includes("deafened")) return false;
+    const type = String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase();
     if ((action.requiredTargetCreatureTypes || []).length) {
-      const type = String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase();
       if (!(action.requiredTargetCreatureTypes || []).some((kind) => String(kind).toLowerCase() === type)) return false;
     }
+    if ((action.excludedTargetCreatureTypes || []).some((kind) => String(kind).toLowerCase() === type)) return false;
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
   }
 

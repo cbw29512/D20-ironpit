@@ -46,6 +46,7 @@ def compile_spell_save_action(choice: SpellChoice) -> SavingThrowAction:
             failed_save_timed_effect=spell.failed_save_timed_effect,
             failed_save_push_ft=spell.failed_save_push_ft,
             required_target_creature_types=list(spell.required_target_creature_types),
+            excluded_target_creature_types=list(spell.excluded_target_creature_types),
             minimum_remaining_hp=spell.minimum_remaining_hp,
             reduce_hit_point_maximum_on_failed_save=spell.reduce_hit_point_maximum_on_failed_save,
             animation=spell.animation,
