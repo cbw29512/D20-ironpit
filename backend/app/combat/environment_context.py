@@ -4,6 +4,7 @@ import logging
 from typing import Literal
 
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.condition_rules import is_incapacitated
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 logger = logging.getLogger(__name__)
@@ -23,6 +24,8 @@ def _active_context_tags(member: EncounterCombatant, setup: EncounterSetup) -> s
             for action in source.state.template.timed_self_buff_actions:
                 aura = action.environment_context_aura
                 if aura is None or action.id not in active_effect_ids:
+                    continue
+                if action.inactive_while_source_incapacitated and is_incapacitated(source.state):
                     continue
                 if combatant_distance(source, member) <= aura.radius_ft:
                     tags.update(aura.context_tags)
