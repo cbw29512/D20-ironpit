@@ -8,7 +8,6 @@ from app.domain.combatants import DamageType
 from app.domain.debuffs import DebuffCounter
 from app.domain.damage_sources import DamageSourceQualifier
 
-
 class ModifierKind(StrEnum):
     ARMOR_CLASS = "armor-class"
     ARMOR_CLASS_MINIMUM = "armor-class-minimum"
@@ -70,6 +69,7 @@ class CombatModifier(BaseModel):
     requires_spell_effect: bool = False
     required_effect_tags: list[str] = Field(default_factory=list)
     concentration_required: bool = False
+    inactive_while_owner_incapacitated: bool = False
     consume_on_attack_against: bool = False
     consume_on_saving_throw: bool = False
     ends_on_owner_attack: bool = False
@@ -190,7 +190,6 @@ class CombatModifier(BaseModel):
         if self.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and self.target_id is None:
             raise ValueError("Target-scoped attack Advantage requires a target id.")
         return self
-
 
 class ConcentrationState(BaseModel):
     source_id: str
