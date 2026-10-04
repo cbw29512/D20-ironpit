@@ -8,7 +8,6 @@ from app.domain.combatants import DamageType
 from app.domain.debuffs import DebuffCounter
 from app.domain.damage_sources import DamageSourceQualifier
 
-
 class ModifierKind(StrEnum):
     ARMOR_CLASS = "armor-class"
     ARMOR_CLASS_MINIMUM = "armor-class-minimum"
@@ -191,7 +190,6 @@ class CombatModifier(BaseModel):
         if self.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and self.target_id is None:
             raise ValueError("Target-scoped attack Advantage requires a target id.")
         return self
-
 
 class ConcentrationState(BaseModel):
     source_id: str
