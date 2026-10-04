@@ -3622,7 +3622,7 @@
       "demand_count": 4,
       "id": "slow-mastery",
       "kinds": [
-        "arena-ignored"
+        "loadout-capability"
       ],
       "owners": [
         "fighter/battle-master",
@@ -3630,7 +3630,7 @@
         "ranger/gloom-stalker",
         "ranger/hunter"
       ],
-      "status": "arena_out_of_scope"
+      "status": "supported"
     },
     {
       "demand_count": 1,
@@ -4920,8 +4920,8 @@
   },
   "schema_version": 1,
   "summary": {
-    "arena_out_of_scope": 28,
+    "arena_out_of_scope": 27,
     "planned": 333,
-    "supported": 80
+    "supported": 81
   }
 }

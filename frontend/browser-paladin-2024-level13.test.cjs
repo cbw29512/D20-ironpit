@@ -30,7 +30,7 @@ try {
   assert.equal(hero.canonical_prepared_spells.length, 11);
   assert.equal(hero.canonical_prepared_spells.at(-1).id, "staggering-smite");
   assert.equal(hero.persistent_hazard_actions.length, 0);
-  assert.deepEqual(hero.canonical_prepared_spells.at(-1).requiredCapabilities, ["arena-out-of-scope"]);
+  assert.deepEqual(hero.canonical_prepared_spells.at(-1).requiredCapabilities, ["post-hit-spell"]);
   assert.deepEqual(hero.canonical_always_prepared_spells.find(s => s.id === "guardian-of-faith").requiredCapabilities,
     ["arena-unavailable-summon"]);
   assert.deepEqual(hero.resource_backed_post_hit_damage, previous.resource_backed_post_hit_damage);
@@ -75,19 +75,19 @@ try {
   attacker.feature_last_turn_keys["savage-attacker"] = "1:aurelia";
   const target = S.buildState(registry["kael-stillwater-l1"]);
   window.IRON_PIT_DICE = {
-    rolls: [3, 4, 5, 6, 7, 8, 1, 2],
+    rolls: [3, 4, 5, 6, 7, 8, 1, 2, 1, 1, 1, 1],
     roll() { if (!this.rolls.length) throw new Error("Queued damage dice exhausted."); return this.rolls.shift(); },
     rollMany(count, sides) { return Array.from({ length: count }, () => this.roll(sides)); },
   };
   const hit = window.IRON_PIT_BROWSER_ROLLS.weaponDamage(attacker, thrown, true, "normal", "1:aurelia", null, target);
   assert.deepEqual(hit.components.map(c => [c.source, c.notation]), [
-    ["Javelin", "2d6+5"], ["Radiant Strikes", "2d8+0"], ["Divine Smite", "4d8+0"],
+    ["Javelin", "2d6+5"], ["Radiant Strikes", "2d8+0"], ["Blinding Smite", "8d8+0"],
   ]);
-  assert.equal(hit.roll.total, 41);
+  assert.equal(hit.roll.total, 45);
   assert.equal(attacker.bonus_action_available, false);
-  assert.equal(attacker.resources["paladins-smite-free-cast"], 0);
-  assert.equal(attacker.resources["spell-slot-4"], 1);
-  assert.equal(attacker.spell_slot_expended_turn_key, null);
+  assert.equal(attacker.resources["paladins-smite-free-cast"], 1);
+  assert.equal(attacker.resources["spell-slot-4"], 0);
+  assert.equal(attacker.spell_slot_expended_turn_key, "1:aurelia");
   console.log("2024 Paladin 13 source and shared opening movement spell parity passed.");
 } catch (error) {
   console.error("2024 Paladin 13 browser parity failed.", error);
