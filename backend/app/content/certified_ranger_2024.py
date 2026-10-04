@@ -9,5 +9,5 @@ CERTIFIED_RANGER_2024 = CertifiedHeroProgression(
     ruleset="2024",
     template_builder=build_rowan_ashtrail_2024,
     profile_level_builder=build_rowan_ashtrail_2024_profile,
-    max_level=1,
+    max_level=2,
 )
