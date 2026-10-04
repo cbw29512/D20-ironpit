@@ -304,6 +304,22 @@ Permanent arena rules:
 - No default pits, lava, traps, difficult terrain, water, or random arena hazards. A supported RAW effect may create an area/hazard.
 - Flyers cannot use altitude to become permanently unreachable. A melee flyer must enter its legal reach to attack.
 - Opportunity Attacks, forced movement, Disengage consequences, speed changes, Grappled/Prone movement effects, Frightened movement restrictions, and other combat-relevant movement rules remain RAW where applicable.
+
+### 10.1 Iron Pit engagement, flying, and in-place teleport (2026-10-04)
+
+The standard Iron Pit is a brutal ring. Monsters and pregens close and stay in melee. People come to watch carnage, not cowards. These are explicit arena overrides, not RAW changes outside the Pit.
+
+- Voluntary movement cannot increase a combatant's distance from a living opponent once that combatant is already in melee reach. The default engagement distance is 5 feet.
+- Flying, running, Dash, Disengage, circling, and leave-reach movement do not create an exception. A flyer cannot leave melee and stay gone.
+- Horizontal fly remains fly. There is no vertical flight, altitude band, or unreachable-by-height state.
+- Flying is only a buff that counters **ground-contact** debuffs. Thorns, Entangle plants, temporary Difficult Terrain, and similar ground snares do not affect a combatant while it has an effective Fly speed. Flying grants no other combat benefit and does not change rows to escape.
+- This overrides leave-reach Flyby behavior: an opportunity-attack exemption, if present, does not authorize leaving the engagement.
+- Teleport, plane shift, and summoning remain banned as position-changing or entity-creating options.
+- A teleport-class action such as Misty Step may clear debuffs a teleport would cancel, including Grappled, Restrained, and other effects marked `ends_on_teleport` or applied as a ground snare. The combatant does not change its authoritative grid position.
+- The combat lens for every effect remains: a buff cancels the matching debuff. Do not add an escape ability merely because it could negate a state. If the matching buff is already present, the incoming debuff does not land. Debuffs are checked at the start of each creature's turn before it acts.
+- Nothing a player can load starts with a debuff. A test harness may seed a buff or debuff to prove a combination; that seed must never ship.
+
+Engine dispatch uses movement-mode, `ground_contact`, and `ends_on_teleport` facts. Printed names such as Fly, Flyby, Entangle, Thorns, and Misty Step remain card, log, and audit labels only.
 - If the pathfinder proves a legal eventual route toward a supported offensive position, the combatant may spend this turn making useful progress even when it cannot reach attack range yet; after moving, if no supported offense is legal and its Action remains, it Dodges. If no such eventual legal route exists, or no useful legal progress can be made, it stays put and uses the same Dodge fallback after the other supported offensive families are exhausted.
 
 ### AoE/targeting arena simplification
@@ -558,7 +574,7 @@ Normal spell AI:
 - multiple enemies: prefer useful high-damage AoE before single-target options;
 - selected-target spell counts and source geometry remain authoritative.
 
-Iron Pit environmental limits, and only these, change RAW fight options: no teleport, no plane shift, no summoning/creating a separate combat entity, and no flying vertically. A character or monster still fights with every other printed option the engine supports.
+Iron Pit environmental limits, and only these, change RAW fight options: no teleport movement, no plane shift, no summoning/creating a separate combat entity, and no flying vertically. A teleport-class action may still clear teleport-cancelable debuffs in place under section 10.1. A character or monster still fights with every other printed option the engine supports.
 
 ### 2014 Turn Undead arena mapping
 

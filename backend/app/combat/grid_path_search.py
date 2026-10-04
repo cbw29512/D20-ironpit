@@ -28,6 +28,7 @@ def _diagonal_step_allowed(
     members: list[EncounterCombatant],
     barriers: list[PersistentBarrierState] | None = None,
     terrain_zones=None,
+    allow_leave_melee: bool = False,
 ) -> bool:
     """Reject diagonal squeezing only when both orthogonal side steps are blocked."""
     try:
@@ -46,6 +47,7 @@ def _diagonal_step_allowed(
                 origin=current,
                 barriers=barriers,
                 terrain_zones=terrain_zones,
+                allow_leave_melee=allow_leave_melee,
             ) is not None
             or movement_step_cost_ft(
                 map_definition,
@@ -55,6 +57,7 @@ def _diagonal_step_allowed(
                 origin=current,
                 barriers=barriers,
                 terrain_zones=terrain_zones,
+                allow_leave_melee=allow_leave_melee,
             ) is not None
         )
     except Exception:
@@ -70,6 +73,7 @@ def search_path_toward(
     desired_distance_ft: int,
     barriers: list[PersistentBarrierState] | None = None,
     terrain_zones=None,
+    allow_leave_melee: bool = False,
 ) -> list[GridPosition]:
     """Search the full legal map for a direct, deterministic route toward the target."""
     try:
@@ -119,6 +123,7 @@ def search_path_toward(
                     origin=current,
                     barriers=barriers,
                     terrain_zones=terrain_zones,
+                    allow_leave_melee=allow_leave_melee,
                 )
                 if step_cost is None or not _diagonal_step_allowed(
                     map_definition,
@@ -128,6 +133,7 @@ def search_path_toward(
                     members,
                     barriers,
                     terrain_zones,
+                    allow_leave_melee=allow_leave_melee,
                 ):
                     continue
                 next_cost = cost + step_cost

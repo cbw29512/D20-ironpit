@@ -70,11 +70,26 @@ def choose_teleport_action(
     setup: EncounterSetup,
     turn_key: str,
 ) -> tuple[TeleportAction, GridPosition] | None:
-    """Arena AI never selects teleport or plane shift. The pit forbids those options."""
+    """Arena AI never teleports away. It may clear teleport-cancelable debuffs in place."""
     try:
         if caster is None or setup is None or not str(turn_key or "").strip():
             raise ValueError("Teleport choice requires a caster, setup, and turn key.")
-        return None
+        from app.combat.action_economy import is_available
+        from app.combat.teleport_cancel import teleport_cancelable_effect_ids
+
+        if caster.state.position is None:
+            return None
+        if not teleport_cancelable_effect_ids(caster.state):
+            return None
+        actions = [
+            action
+            for action in caster.state.template.teleport_actions
+            if is_available(caster.state, action.action_cost)
+        ]
+        if not actions:
+            return None
+        action = min(actions, key=lambda item: (item.level, item.id))
+        return action, caster.state.position.model_copy(deep=True)
     except Exception:
         logger.exception("Failed teleport choice for %s.", getattr(caster, "combatant_id", "?"))
         raise

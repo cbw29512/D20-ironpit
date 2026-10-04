@@ -80,9 +80,14 @@
     }
   }
 
-  function movementStepCostFt(map, mover, destination, members, origin = null, barriers = null, terrainZones = null) {
+  function movementStepCostFt(
+    map, mover, destination, members, origin = null, barriers = null, terrainZones = null, allowLeaveMelee = false,
+  ) {
     try {
       if (!geometry().inBounds(map, destination, mover.state.template.size)) return null;
+      if (!allowLeaveMelee && window.IRON_PIT_BROWSER_PIT_ENGAGEMENT?.leavesMelee(mover, members, destination)) {
+        return null;
+      }
       if (origin && window.IRON_PIT_BROWSER_GRID_BARRIERS?.blocksTransition(origin, destination, barriers)) {
         return null;
       }

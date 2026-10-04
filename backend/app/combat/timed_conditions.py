@@ -63,6 +63,8 @@ def apply_timed_condition(
     repeat_save_failures_to_lock: int | None = None,
     escape_check_ability: AbilityName | None = None,
     escape_check_dc: int | None = None,
+    ground_contact: bool = False,
+    ends_on_teleport: bool = False,
 ) -> str | None:
     """Apply one source-owned timed condition and its optional passive defenses.
 
@@ -76,6 +78,7 @@ def apply_timed_condition(
             effect_id,
             source_template,
             source_is_magical=source_is_magical,
+            ground_contact=ground_contact,
         ):
             return None
         if effect_id == POISONED_EFFECT_ID and use_default_poison_recovery:
@@ -129,6 +132,8 @@ def apply_timed_condition(
             repeat_save_failures_to_lock=repeat_save_failures_to_lock,
             escape_check_ability=escape_check_ability,
             escape_check_dc=escape_check_dc,
+            ground_contact=ground_contact,
+            ends_on_teleport=ends_on_teleport or ground_contact,
         ))
         if effect_id not in state.active_effect_ids:
             state.active_effect_ids.append(effect_id)
@@ -147,7 +152,9 @@ def apply_timed_condition(
 
 def resolve_movement_countered_conditions(state: CombatantState) -> list[tuple[str, str, int]]:
     """Automatically spend movement to clear active debuffs when a buff grants that option."""
-    resolved: list[tuple[str, str, int]] = []
+    from app.combat.flight_ground_immunity import resolve_flight_countered_ground_conditions
+
+    resolved: list[tuple[str, str, int]] = list(resolve_flight_countered_ground_conditions(state))
     for effect in list(state.timed_effects):
         cost = movement_counter_cost(
             state,
