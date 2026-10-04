@@ -40,6 +40,7 @@ def resolve_spell_attack(
     range_modifier: ResourceBackedSpellRangeModifier | None = None,
     cast_slot_level: int | None = None,
     spend_cast_costs: bool = True,
+    skip_range_check: bool = False,
 ) -> BattleEvent:
     try:
         if spell.action_cost == "reaction":
@@ -50,7 +51,7 @@ def resolve_spell_attack(
             raise ValueError(f"{spell.name} requires a living enemy target.")
         distance = combatant_distance(caster, target) if distance_override_ft is None else distance_override_ft
         allowed_range = spell.range_ft * (range_modifier.range_multiplier if range_modifier is not None else 1)
-        if distance > allowed_range:
+        if not skip_range_check and distance > allowed_range:
             raise ValueError(f"{spell.name} target is out of range.")
         resource = (
             cast_slot_resource(caster, spell, turn_key, cast_slot_level)

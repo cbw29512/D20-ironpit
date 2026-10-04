@@ -221,6 +221,7 @@ def _spell_attack(action: Any) -> dict[str, Any]:
            "attackCount": action.attack_count, "attacksPerSlotAbove": action.attacks_per_slot_above,
            "advantageIfTargetWearingMetalArmor": action.advantage_if_target_wearing_metal_armor,
            "missDamage": action.miss_damage,
+           "matchingDiceLeapRangeFt": action.matching_dice_leap_range_ft,
            "onHitModifierEffects": [_modifier_effect(effect) for effect in action.on_hit_modifier_effects],
            "onHitTimedEffects": [
                {

@@ -40,7 +40,7 @@
     const distance = options.distanceOverrideFt ?? S().distance(caster, target);
     const rangeModifier = options.rangeModifier || null;
     const allowedRange = spell.range * (rangeModifier?.rangeMultiplier || 1);
-    if (distance > allowedRange) throw new Error(`${spell.name} target is out of range.`);
+    if (!options.skipRangeCheck && distance > allowedRange) throw new Error(`${spell.name} target is out of range.`);
     const castSlotLevel = options.castSlotLevel ?? null;
     const resourceId = spendCastCosts ? slotResource(caster, spell, turnKey, castSlotLevel) : null;
     if (spendCastCosts && spell.level > 0 && !resourceId) {

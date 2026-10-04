@@ -355,6 +355,7 @@ def _spell_attack(action: Any) -> dict[str, Any]:
         "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
         "damageBonus": action.damage_bonus, "damageType": action.damage_type,
         "attackCount": action.attack_count, "attacksPerSlotAbove": action.attacks_per_slot_above,
+        "matchingDiceLeapRangeFt": action.matching_dice_leap_range_ft,
         "onHitModifierEffects": [_modifier_effect(effect) for effect in action.on_hit_modifier_effects],
         "animation": action.animation,
     }

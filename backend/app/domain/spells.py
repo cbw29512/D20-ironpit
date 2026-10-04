@@ -87,6 +87,7 @@ class SpellAttackAction(BaseModel):
     on_hit_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     on_hit_timed_effects: list[OnHitTimedEffect] = Field(default_factory=list)
     miss_damage: Literal["none", "half"] = "none"
+    matching_dice_leap_range_ft: int = Field(default=0, ge=0)
     animation: str = "spell-attack"
     source: str | None = None
 
@@ -96,6 +97,13 @@ class SpellAttackAction(BaseModel):
             raise ValueError("Damaging spell attacks require a damage type.")
         if self.level == 0 and self.attacks_per_slot_above:
             raise ValueError("Cantrip spell attacks cannot scale attacks by spell-slot level.")
+        if self.matching_dice_leap_range_ft:
+            if self.matching_dice_leap_range_ft % 5:
+                raise ValueError("Matching-dice leap range must use 5-foot increments.")
+            if self.attack_count > 1 or self.attacks_per_slot_above:
+                raise ValueError("Matching-dice leap requires a single-attack spell.")
+            if not self.damage_dice_count:
+                raise ValueError("Matching-dice leap requires damage dice.")
         return self
 
     def attack_count_at_slot(self, slot_level: int) -> int:

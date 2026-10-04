@@ -865,7 +865,8 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         assert (
             spell.level, spell.action_cost, spell.attack_kind, spell.range_ft,
             spell.damage_dice_count, spell.damage_dice_size, spell.damage_type,
-        ) == (1, "action", "ranged", 90, 3, 8, "fire")
+            spell.matching_dice_leap_range_ft,
+        ) == (1, "action", "ranged", 90, 3, 8, "fire", 30)
 
     if "lightning-bolt" in spell_saves:
         spell = spell_saves["lightning-bolt"]

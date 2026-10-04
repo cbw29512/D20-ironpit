@@ -118,7 +118,7 @@ def dragons_breath_repeat_2024() -> ConcentrationRepeatSaveAction:
 
 
 def chromatic_orb_2024(attack_bonus: int, damage_bonus: int = 0) -> SpellAttackAction:
-    """2024 Chromatic Orb primary hit. Matching-dice leap remains unbound."""
+    """2024 Chromatic Orb hit plus matching-d8 leap to a new creature within 30 feet."""
     try:
         return SpellAttackAction(
             id="chromatic-orb",
@@ -132,6 +132,7 @@ def chromatic_orb_2024(attack_bonus: int, damage_bonus: int = 0) -> SpellAttackA
             damage_dice_size=8,
             damage_bonus=damage_bonus,
             damage_type="fire",
+            matching_dice_leap_range_ft=30,
             animation="spell-attack",
             source="D&D Beyond Basic Rules 2024: Chromatic Orb",
         )
