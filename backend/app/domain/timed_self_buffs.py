@@ -81,6 +81,7 @@ class TimedSelfBuffAction(BaseModel):
     start_turn_emanation_damage: TimedEmanationDamage | None = None
     concentration: bool = False
     ends_if_source_incapacitated: bool = False
+    inactive_while_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
     expiry_timing: ConditionTiming | None = "source_turn_start"
     priority: int = 0
