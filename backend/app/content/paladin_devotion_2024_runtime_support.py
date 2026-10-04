@@ -138,6 +138,7 @@ def build_paladin_2024_progression(
                     if level >= 10 else []
                 ),
             ],
+            **boon_fields,
             resource_backed_post_hit_damage=(
                 ResourceBackedPostHitDamage(
                     source_id="divine-smite-2024",
