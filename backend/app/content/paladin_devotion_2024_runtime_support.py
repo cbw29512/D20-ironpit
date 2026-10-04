@@ -4,12 +4,15 @@ import logging
 
 from app.content.character_math import proficiency_bonus
 from app.content.equipment import build_longsword
+from app.content.hero_combat_feature_registry import compile_progression_feature_fields
+from app.content.paladin_devotion_2024_level20 import holy_nimbus_2024, holy_nimbus_restore_2024
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.friendly_condition_auras import FriendlyConditionImmunityAuraGrant
 from app.domain.friendly_save_auras import FriendlySavingThrowAuraGrant
 from app.domain.models import DamageType, OnHitDamage, WeaponAttack
 from app.domain.post_hit_damage import ResourceBackedPostHitDamage
+from app.domain.resource_conversion import ResourceConversionAction
 from app.domain.timed_self_buffs import TimedFriendlyCoverAura, TimedSelfBuffAction
 from app.domain.progression import ProgressionCombatFeatures
 
@@ -73,24 +76,38 @@ def build_paladin_2024_attack_action(level: int) -> AttackActionDefinition | Non
         raise
 
 
-def build_paladin_2024_timed_self_buffs(level: int) -> list[TimedSelfBuffAction]:
+def build_paladin_2024_timed_self_buffs(
+    level: int,
+    charisma_modifier: int = 0,
+) -> list[TimedSelfBuffAction]:
     """Build source-centered timed Devotion aura benefits."""
     try:
-        if level < 15:
-            return []
-        return [TimedSelfBuffAction(
-            id="smite-of-protection-2024",
-            name="Smite of Protection",
-            action_cost="bonus_action",
-            duration_rounds=1,
-            friendly_cover_aura=TimedFriendlyCoverAura(
-                radius_ft=30 if level >= 18 else 10,
-                cover_bonus=2,
-            ),
-            expiry_timing="source_turn_start",
-        )]
+        buffs: list[TimedSelfBuffAction] = []
+        if level >= 15:
+            buffs.append(TimedSelfBuffAction(
+                id="smite-of-protection-2024",
+                name="Smite of Protection",
+                action_cost="bonus_action",
+                duration_rounds=1,
+                friendly_cover_aura=TimedFriendlyCoverAura(
+                    radius_ft=30 if level >= 18 else 10,
+                    cover_bonus=2,
+                ),
+                expiry_timing="source_turn_start",
+            ))
+        if level >= 20:
+            buffs.append(holy_nimbus_2024(level, charisma_modifier))
+        return buffs
     except Exception:
         logger.exception("Failed to build 2024 Paladin timed self buffs at level %s.", level)
+        raise
+
+
+def build_paladin_2024_conversions(level: int) -> list[ResourceConversionAction]:
+    try:
+        return [holy_nimbus_restore_2024()] if level >= 20 else []
+    except Exception:
+        logger.exception("Failed to build 2024 Paladin resource conversions at level %s.", level)
         raise
 
 
@@ -99,12 +116,16 @@ def build_paladin_2024_progression(
     charisma_modifier: int,
 ) -> ProgressionCombatFeatures:
     try:
+        aura_radius = 30 if level >= 18 else 10
+        boon_fields = compile_progression_feature_fields(
+            ["boon-combat-prowess"] if level >= 19 else [], level
+        )
         return ProgressionCombatFeatures(
             friendly_saving_throw_aura=(
                 FriendlySavingThrowAuraGrant(
                     source_id="aura-of-protection-2024",
                     source_name="Aura of Protection",
-                    radius_ft=10,
+                    radius_ft=aura_radius,
                     flat_bonus=max(1, charisma_modifier),
                     inactive_while_incapacitated=True,
                 )
@@ -116,7 +137,7 @@ def build_paladin_2024_progression(
                     [FriendlyConditionImmunityAuraGrant(
                         source_id="aura-of-devotion-2024",
                         source_name="Aura of Devotion",
-                        radius_ft=10,
+                        radius_ft=aura_radius,
                         condition_id="charmed",
                         inactive_while_incapacitated=True,
                     )]
@@ -126,13 +147,14 @@ def build_paladin_2024_progression(
                     [FriendlyConditionImmunityAuraGrant(
                         source_id="aura-of-courage-2024",
                         source_name="Aura of Courage",
-                        radius_ft=10,
+                        radius_ft=aura_radius,
                         condition_id="frightened",
                         inactive_while_incapacitated=True,
                     )]
                     if level >= 10 else []
                 ),
             ],
+            **boon_fields,
             resource_backed_post_hit_damage=(
                 ResourceBackedPostHitDamage(
                     source_id="divine-smite-2024",

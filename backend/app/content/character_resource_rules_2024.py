@@ -127,6 +127,7 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
         ("paladins-smite-free-cast", "Paladin's Smite: Free Cast", _paladins_smite_free_cast),
         ("channel-divinity", "Channel Divinity", _paladin_channel_divinity),
         ("faithful-steed-free-cast", "Faithful Steed: Free Cast", _faithful_steed_free_cast),
+        ("boon-combat-prowess", "Boon of Combat Prowess", _fighter_combat_prowess),
     ),
     "ranger": (),
     "rogue": (("stroke-of-luck", "Stroke of Luck", _rogue_stroke),),
@@ -153,6 +154,9 @@ SUBCLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
     ),
     "draconic-sorcery": (
         ("dragon-wings", "Dragon Wings", lambda level: 1 if level >= 14 else 0),
+    ),
+    "oath-devotion": (
+        ("holy-nimbus", "Holy Nimbus", lambda level: 1 if level >= 20 else 0),
     ),
     "circle-land": (
         (

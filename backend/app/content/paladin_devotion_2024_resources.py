@@ -54,7 +54,15 @@ def build_paladin_2024_resources(level: int) -> list[ResourceDefinition]:
             ))
         if level >= 17:
             resources.append(ResourceDefinition(
-                id="spell-slot-5", name="Level 5 Spell Slot", max_uses=1,
+                id="spell-slot-5", name="Level 5 Spell Slot", max_uses=2 if level >= 19 else 1,
+            ))
+        if level >= 19:
+            resources.append(ResourceDefinition(
+                id="boon-combat-prowess", name="Boon of Combat Prowess", max_uses=1,
+            ))
+        if level >= 20:
+            resources.append(ResourceDefinition(
+                id="holy-nimbus", name="Holy Nimbus", max_uses=1,
             ))
         return resources
     except Exception:

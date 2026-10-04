@@ -92,6 +92,45 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
                        "Dexterity-save damage path with an explicit 2024 fingerprint: 5d6 Fire plus "
                        "5d6 Radiant on a failed save, half on a success."),
             ))
+        if level >= 18:
+            audits.append(paladin_2024_feature(
+                "aura-expansion",
+                "Aura Expansion",
+                "class", combat=True, automated=True,
+                notes=("Parameter-only delta on the existing universal friendly aura primitives. "
+                       "Aura of Protection, Aura of Courage, Aura of Devotion, and the subclass's "
+                       "Smite of Protection cover aura use a 30-foot radius at level 18. No new resolver."),
+            ))
+        if level >= 19:
+            audits.extend([
+                paladin_2024_feature(
+                    "boon-combat-prowess",
+                    "Boon of Combat Prowess",
+                    "feat", combat=True, automated=True,
+                    notes=("Aurelia raises Charisma 19 to 20. Peerless Aim reuses the universal "
+                           "miss-to-hit override and start-of-turn one-use resource refill; no "
+                           "Paladin-specific resolver is introduced."),
+                ),
+                paladin_2024_feature(
+                    "banishing-smite",
+                    "Banishing Smite",
+                    "class", combat=False, automated=False,
+                    notes=("Selected as the fifteenth damage-first Paladin preparation. It remains "
+                           "fail-closed until the shared post-hit Concentration and banishment semantics "
+                           "are fully represented; no approximation is allowed."),
+                ),
+            ])
+        if level >= 20:
+            audits.append(paladin_2024_feature(
+                "holy-nimbus",
+                "Holy Nimbus",
+                "subclass", combat=True, automated=True,
+                notes=("2024 Bonus Action timed self-buff for 100 rounds. Enemy-start radiant "
+                       "damage is Charisma modifier plus Proficiency Bonus inside Aura of "
+                       "Protection. Holy Ward grants save Advantage against Fiend or Undead "
+                       "sources. A spent use restores by expending a level 5 slot with no action. "
+                       "Sunlight/Bright Light remains unbound; no sunlight primitive exists."),
+            ))
         return audits
     except Exception:
         logger.exception("Failed to build later 2024 Paladin feature audits at level %s.", level)
