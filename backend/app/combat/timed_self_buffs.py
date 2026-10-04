@@ -78,6 +78,7 @@ def resolve_timed_self_buff(
             or action.movement_mode_grants
             or action.friendly_save_advantage_aura is not None
             or action.friendly_cover_aura is not None
+            or action.environment_context_aura is not None
             or action.hostile_start_turn_condition_aura is not None
             or action.start_turn_emanation_damage is not None
         ):
