@@ -400,6 +400,9 @@ spell-package pointers, and loadout capabilities; CI rejects manual or stale che
 - Characters and monsters are the source of combat truth.
 - Names are not rule switches.
 - The same mechanic is implemented once.
+- Source abilities create universal facts/primitives; affected combatants own their declarative reactions to those facts.
+- Never encode source-to-specific-monster or source-to-specific-class interaction tables when typed context plus target-owned traits can express the rule.
+- Prefer composition from hit/miss, save/check, damage/healing, buff/debuff, condition, resource, movement/area, and timing primitives before adding any new mechanic.
 - Weapon mastery requires both the weapon mastery property and the combatant's mastery of that weapon.
 - Casters receive only spells legal for their level/build.
 - Noncombat rules do not bloat the arena engine.
