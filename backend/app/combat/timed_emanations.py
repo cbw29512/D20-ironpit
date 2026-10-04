@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.damage_defenses import adjusted_damage_amount
+from app.combat.condition_rules import is_incapacitated
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.hostile_condition_auras import resolve_hostile_condition_aura
 from app.combat.zero_hp import apply_damage
@@ -29,6 +30,7 @@ def _active_emanations(source: EncounterCombatant):
             action
             for action in source.state.template.timed_self_buff_actions
             if action.id in active_effect_ids
+            and not (action.inactive_while_source_incapacitated and is_incapacitated(source.state))
             and (
                 action.start_turn_emanation_damage is not None
                 or action.hostile_start_turn_condition_aura is not None
