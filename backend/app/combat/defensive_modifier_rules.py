@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.defensive_modifier_lifecycle import consume_saving_throw_modifiers, remove_owner_attack_ending_modifiers
+from app.combat.condition_rules import is_incapacitated
 
 from app.content.monster_creature_types import base_creature_type
 from app.domain.models import CombatantState, CombatantTemplate
@@ -55,6 +56,7 @@ def _saving_throw_advantage_modifiers(
             item for item in state.active_modifiers
             if item.kind is ModifierKind.SAVING_THROW_ADVANTAGE
             and item.save_ability == ability
+            and (not item.inactive_while_owner_incapacitated or not is_incapacitated(state))
             and (not item.requires_magical_effect or resolved_context.magical_effect)
             and (not item.requires_spell_effect or resolved_context.spell_effect)
             and set(item.required_effect_tags).issubset(resolved_context.effect_tags)
