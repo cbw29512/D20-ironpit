@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-03 for the 2024 Devotion Paladin level 17 tranche. Main baseline: `1d00f52ee5eb3e603584f7a2ea32949ed3cb3ffb`.
+Recorded 2026-10-03 for the 2024 Devotion Paladin level 20 tranche. Main baseline: `8592f813d639363b686a3d6a1afa00f5b3a358bf`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -34,9 +34,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
 | 2024 | Monk (Open Hand) | 1–20 |
-| 2024 | Paladin (Devotion) | 1–16 |
+| 2024 | Paladin (Devotion) | 1–19 |
 
-2024 public-ready hero slots on current main: **156 / 240**.
+2024 public-ready hero slots on current main: **159 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -46,9 +46,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 156 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 16 on main; this tranche advances level 17 to a generated target of **157 / 240**.
+**2024 canonical pregens are 159 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 19 on main; this tranche advances level 20 to a generated target of **160 / 240**.
 
-Active implementation lane: **2024 Devotion Paladin level 17.** Aurelia remains the same persistent character. Proficiency Bonus advances to +6, HP to 140, Lay On Hands to 85, spell slots to 4/3/3/3/1, and ordinary preparations to fourteen. Devotion always prepares Commune and Flame Strike. Commune is arena-neutral; 2024 Flame Strike reuses the universal multi-component Dexterity-save damage path with its edition-correct 5d6 Fire + 5d6 Radiant fingerprint. The two new ordinary preparations are Destructive Wave and Greater Restoration under the damage/healing-first policy; both remain fail-closed until their complete 2024 mechanics are certified.
+Active implementation lane: **2024 Devotion Paladin level 20.** Aurelia remains the same persistent character. Holy Nimbus is composed from universal timed-self-buff, timed-emanation, saving-throw modifier, environment-context, damage, and delayed-resource primitives rather than a Paladin-specific resolver. Sunlight is generic context; susceptible targets own their reactions. Exact-head certification must be green before merge.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
