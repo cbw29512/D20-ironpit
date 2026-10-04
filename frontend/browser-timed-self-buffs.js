@@ -53,6 +53,7 @@
         || (action.movementModeGrants || []).length
         || action.friendlySaveAdvantageAura
         || action.friendlyCoverAura
+        || action.environmentContextAura
         || action.hostileStartTurnConditionAura
         || action.startTurnEmanationDamage
       )) {
@@ -100,6 +101,7 @@
             requires_spell_effect: Boolean(grant.requires_spell_effect),
             source_creature_types: [...(grant.source_creature_types || [])],
             required_effect_tags: [...(grant.required_effect_tags || [])],
+            inactive_while_owner_incapacitated: Boolean(action.inactiveWhileSourceIncapacitated),
           });
         }
       }
