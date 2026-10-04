@@ -101,6 +101,11 @@ def paladin_2024_source_references(level: int) -> list[str]:
             ])
         if level >= 18:
             references.append("Basic Rules 2024: Paladin level 18 — Aura Expansion")
+        if level >= 19:
+            references.extend([
+                "Basic Rules 2024: Paladin level 19 — Epic Boon; Boon of Combat Prowess",
+                "Basic Rules 2024: Spells — Banishing Smite",
+            ])
         references.extend([
             "Basic Rules 2024: Character Origins — Human and Soldier",
             (
