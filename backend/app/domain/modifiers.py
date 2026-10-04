@@ -70,6 +70,7 @@ class CombatModifier(BaseModel):
     requires_spell_effect: bool = False
     required_effect_tags: list[str] = Field(default_factory=list)
     concentration_required: bool = False
+    inactive_while_owner_incapacitated: bool = False
     consume_on_attack_against: bool = False
     consume_on_saving_throw: bool = False
     ends_on_owner_attack: bool = False
