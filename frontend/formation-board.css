@@ -1,4 +1,4 @@
-.formation-board{margin:14px 0;padding:16px 18px;border:1px solid #4b3a28;border-radius:18px;background:rgba(24,22,20,.96)}
+.battlefield .formation-board{grid-column:1/-1;margin:10px 0 0;padding:12px 14px;border:1px solid #4b3a28;border-radius:14px;background:rgba(17,16,15,.92)}
 .formation-board h2{margin:0 0 10px;font-size:1rem;letter-spacing:.08em}
 .formation-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .formation-side h3{margin:0 0 8px;color:#d7b06a;font-size:.72rem;letter-spacing:.12em}
