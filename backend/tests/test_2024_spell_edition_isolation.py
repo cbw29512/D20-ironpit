@@ -98,6 +98,9 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         "heal-l7",
         "heal-l8",
         "heal-l9",
+        "mass-heal",
+        "death-ward",
+        "contagion",
         "greater-invisibility",
         "foresight",
         "freedom-of-movement",
@@ -794,6 +797,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
 
     if "heal" in healing:
         spell = healing["heal"]
+        expected_heal_bonus = 78 if progression.class_id == "cleric" else 70
         assert (
             spell.action_cost,
             spell.range_ft,
@@ -807,10 +811,74 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             60,
             "self_or_ally",
             0,
-            70,
+            expected_heal_bonus,
             "spell-slot-6",
             ["blinded", "deafened", "poisoned"],
         )
+
+    if "mass-heal" in healing:
+        spell = healing["mass-heal"]
+        assert (
+            spell.action_cost,
+            spell.range_ft,
+            spell.target_mode,
+            spell.max_targets,
+            spell.shared_healing_pool,
+            spell.resource_id,
+            spell.removable_conditions,
+        ) == (
+            "action",
+            60,
+            "self_or_ally",
+            6,
+            700,
+            "spell-slot-9",
+            ["blinded", "deafened", "poisoned"],
+        )
+
+    if "death-ward" in defenses:
+        spell = defenses["death-ward"]
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.duration_minutes,
+            spell.target_policy,
+            spell.target_count,
+            spell.concentration,
+        ) == (4, "action", 5, 480, "friendly", 1, False)
+        assert len(spell.modifier_effects) == 1
+        ward = spell.modifier_effects[0]
+        assert (
+            ward.kind,
+            ward.replacement_hp,
+            ward.prevents_instant_death,
+        ) == ("zero-hp-replacement", 1, True)
+
+    if "contagion" in spell_saves:
+        spell = spell_saves["contagion"]
+        rider = spell.failed_save_timed_effect
+        assert rider is not None
+        assert (
+            spell.level,
+            spell.action_cost,
+            spell.range_ft,
+            spell.save_ability,
+            spell.damage_dice_count,
+            spell.damage_dice_size,
+            spell.damage_type,
+            spell.success_damage,
+            spell.duration_minutes,
+        ) == (5, "action", 5, "constitution", 11, 8, "necrotic", "none", 10080)
+        assert (
+            rider.effect_id,
+            rider.repeat_save_ability,
+            rider.repeat_save_timing,
+            rider.repeat_save_failures_to_lock,
+        ) == ("poisoned", "constitution", "target_turn_end", 3)
+        assert [
+            (item.kind, item.save_ability) for item in spell.failed_save_modifier_effects
+        ] == [("saving-throw-disadvantage", "constitution")]
 
     if "power-word-heal" in healing:
         spell = healing["power-word-heal"]

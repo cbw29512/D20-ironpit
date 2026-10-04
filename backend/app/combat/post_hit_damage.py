@@ -46,6 +46,12 @@ def post_hit_resource_bonus_damage(
     try:
         if target is None or target.current_hp <= 0 or target.is_dead or not target.is_alive:
             return None
+        features = attacker.template.progression_features
+        if (
+            not features.post_hit_spell_options
+            and features.resource_backed_post_hit_damage is None
+        ):
+            return None
         if not turn_key:
             raise ValueError("Post-hit resource damage requires the active turn key.")
         from app.combat.post_hit_spell_policy import (

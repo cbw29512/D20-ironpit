@@ -64,12 +64,18 @@ def test_arena_neutral_source_traits_are_raw_ready() -> None:
 
 def test_uncertified_cards_fail_closed_in_catalog() -> None:
     catalog = build_full_content_catalog()
-    blocked_hero = next(
+    blocked_heroes = [
         card for card in catalog.heroes
         if card.coverage_status is CoverageStatus.BLOCKED
+    ]
+    for blocked_hero in blocked_heroes:
+        assert blocked_hero.runnable_template_id is None
+        assert blocked_hero.blockers
+    assert all(
+        card.coverage_status is CoverageStatus.RAW_READY and card.runnable_template_id
+        for card in catalog.heroes
+        if card not in blocked_heroes
     )
-    assert blocked_hero.runnable_template_id is None
-    assert blocked_hero.blockers
 
     berserker = next(monster for monster in catalog.monsters if monster.name == "Berserker")
     assert berserker.coverage_status is CoverageStatus.BLOCKED

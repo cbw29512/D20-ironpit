@@ -21,8 +21,14 @@ def test_python_normal_post_move_main_action_policy_order_is_stable() -> None:
     _positions_in_order(post_move, [
         "threshold_event, sequence = resolve_hp_threshold_turn(",
         "pick = decide_post_move_offense(",
+        "if pick.family == \"save-zone\":",
         "if pick.family == \"spell\":",
-        "if pick.family == \"attack-action\":",
+        "if pick.family == \"presence\":",
+        "if pick.family == \"multi-save\":",
+        "if pick.family == \"area-weapon\":",
+        "if pick.family == \"attack-action\"",
+        "if pick.family == \"area-save\":",
+        "if pick.family == \"save-action\"",
         "if pick.family == \"standard-attack\"",
         "events.append(resolve_dodge_action(",
     ])

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.landing_offense_policy import decide_post_move_offense
 from app.combat.persistent_save_zone_cast import choose_save_zone_action
+from app.combat.spell_attack_policy import choose_spell_attack
 from app.combat.spell_policy import choose_spell
 from app.combat.state import begin_turn, build_combatant_state
 from app.content.arena_map import build_standard_iron_pit_map
@@ -58,6 +59,17 @@ def test_insect_plague_is_selected_only_when_it_is_the_most_damage_that_can_land
     setup = _setup(caster, enemy)
     begin_turn(caster.state)
     assert choose_spell(caster, setup, "1:seraphine") is None
+    bolt = choose_spell_attack(caster, setup, "1:seraphine")
+    assert bolt is not None
+    assert bolt.action.id == "guiding-bolt"
+    assert bolt.expected_damage > 4 * 5.5
+    pick = decide_post_move_offense(caster, setup, "1:seraphine")
+    assert pick.family == "spell"
+    assert pick.expected_damage == bolt.expected_damage
+
+    caster.state.template = caster.state.template.model_copy(update={"spell_attack_actions": []})
+    assert choose_spell(caster, setup, "1:seraphine") is None
+    assert choose_spell_attack(caster, setup, "1:seraphine") is None
     pick = decide_post_move_offense(caster, setup, "1:seraphine")
     assert pick.family == "save-zone"
     action, _center = pick.payload
