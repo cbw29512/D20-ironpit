@@ -13,6 +13,8 @@
         .map((effect) => effect.source_effect_id));
       return (source.state.template.timed_self_buff_actions || [])
         .filter((action) => activeIds.has(action.id)
+          && !(action.inactiveWhileSourceIncapacitated
+            && window.IRON_PIT_BROWSER_CONDITION_RULES?.incapacitated(source.state))
           && (action.startTurnEmanationDamage || action.hostileStartTurnConditionAura));
     } catch (error) {
       console.error("Failed browser timed emanation discovery.", { combatant: source?.combatant_id, error });
