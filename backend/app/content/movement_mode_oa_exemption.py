@@ -54,11 +54,8 @@ def _source_traits_by_id() -> dict[str, str]:
 def compiled_opportunity_attack_exempt_movement_modes(
     definition: CombatantDefinition,
 ) -> tuple[str, ...]:
-    """Prefer explicit definition data, otherwise compile from 2014 source trait bodies."""
+    """Compile exempt modes from 2014 source trait bodies, never from a trait heading."""
     try:
-        existing = tuple(definition.opportunity_attack_exempt_movement_modes or ())
-        if existing:
-            return existing
         if definition.kind != "monster" or definition.ruleset != "2014":
             return ()
         source_id = definition.id.removeprefix("2014-")

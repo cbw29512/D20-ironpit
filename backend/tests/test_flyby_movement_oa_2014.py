@@ -1,7 +1,6 @@
-from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.modifier_stack import effective_speed
-from app.combat.opportunity_attacks import resolve_opportunity_attack
+from app.combat.opportunity_attack_rules import opportunity_attack_available, opportunity_attack_weapon
 from app.combat.state import begin_turn, build_combatant_state
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
@@ -93,15 +92,11 @@ def test_horizontal_fly_is_the_default_mode_and_uses_printed_fly_speed() -> None
 def test_fly_movement_does_not_provoke_and_walk_still_does() -> None:
     for monster_id in FLYBY_IDS:
         setup, reactor, mover = _flyby_setup(monster_id, movement_mode="fly")
-        assert resolve_opportunity_attack(
-            1, 1, reactor, mover, setup, 5, 10, "speed", FixedDiceProvider([19]),
-        ) is None
+        assert opportunity_attack_available(reactor, mover, 5, 10, "speed") is False
+        assert opportunity_attack_weapon(reactor, mover, 5, 10, "speed") is None
         assert reactor.state.reaction_available is True
 
         setup, reactor, mover = _flyby_setup(monster_id, movement_mode="walk")
-        event = resolve_opportunity_attack(
-            1, 1, reactor, mover, setup, 5, 10, "speed", FixedDiceProvider([19, 1]),
-        )
-        assert event is not None
-        assert event.feature_id == "opportunity-attack"
-        assert reactor.state.reaction_available is False
+        assert opportunity_attack_available(reactor, mover, 5, 10, "speed") is True
+        assert opportunity_attack_weapon(reactor, mover, 5, 10, "speed") is not None
+        assert reactor.state.reaction_available is True
