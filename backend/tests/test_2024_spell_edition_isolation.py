@@ -443,7 +443,12 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
         expected_bonus = (
             template.ability_scores.modifier("wisdom")
             if progression.class_id == "druid" and level >= 7
+            else template.ability_scores.modifier("intelligence")
+            if progression.class_id == "wizard" and level >= 10
             else 0
+        )
+        expected_success = (
+            "half" if progression.class_id == "wizard" and level >= 3 else "none"
         )
         assert (
             spell.level,
@@ -470,7 +475,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             6,
             expected_bonus,
             "thunder",
-            "none",
+            expected_success,
         )
 
     if "thunderwave" in spell_saves:
@@ -1003,6 +1008,7 @@ def test_certified_2024_spell_surfaces_use_registered_2024_fingerprints(
             "paladin": "charisma",
             "sorcerer": "charisma",
             "warlock": "charisma",
+            "wizard": "intelligence",
         }
         assert progression.class_id in expected_casting_abilities
         spell = effect_removals["dispel-magic"]

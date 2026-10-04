@@ -214,6 +214,7 @@ def _spell_attack(action: Any) -> dict[str, Any]:
            "damageBonus": action.damage_bonus, "damageType": action.damage_type,
            "attackCount": action.attack_count, "attacksPerSlotAbove": action.attacks_per_slot_above,
            "advantageIfTargetWearingMetalArmor": action.advantage_if_target_wearing_metal_armor,
+           "missDamage": action.miss_damage,
            "onHitModifierEffects": [_modifier_effect(effect) for effect in action.on_hit_modifier_effects],
            "onHitTimedEffects": [
                {

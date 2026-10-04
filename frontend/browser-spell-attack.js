@@ -84,7 +84,8 @@
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;
     const concentrationBefore = target.state.concentration?.effect_id || null;
     let damageRoll = null, damageComponents = [], appliedConditions = [];
-    if (hit) {
+    const missHalf = !hit && spell.missDamage === "half";
+    if (hit || missHalf) {
       const count = spell.damageDiceCount * (critical ? 2 : 1);
       const rolls = window.IRON_PIT_DICE.rollMany(count, spell.damageDiceSize);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (spell.damageBonus || 0);
@@ -94,9 +95,9 @@
         rolls: [...rolls],
         modifier: spell.damageBonus || 0,
         damage_type: spell.damageType,
-        total: raw,
+        total: missHalf ? Math.floor(raw / 2) : raw,
       }] : [];
-      for (const modifier of M().bonusDamage(caster.state, target.combatant_id)) {
+      for (const modifier of (hit ? M().bonusDamage(caster.state, target.combatant_id) : [])) {
         const riderCount = modifier.dice_count * (critical ? 2 : 1);
         const riderRolls = window.IRON_PIT_DICE.rollMany(riderCount, modifier.dice_size);
         rolledComponents.push({
@@ -124,7 +125,7 @@
         damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type),
       )];
       A().applyDamage(target.state, applied, critical, appliedTypes, states);
-      if (target.state.is_alive && !target.state.is_dead) {
+      if (hit && target.state.is_alive && !target.state.is_dead) {
         (spell.onHitModifierEffects || []).forEach((effect, index) => {
           M().add(target.state, SM().build(caster.combatant_id, target.combatant_id, spell, effect, index, round));
         });
@@ -146,7 +147,7 @@
           if (appliedId) appliedConditions.push(appliedId);
         });
       }
-      if (target.state.is_alive && !target.state.is_dead) {
+      if (hit && target.state.is_alive && !target.state.is_dead) {
         window.IRON_PIT_BROWSER_EXILE?.applyOnHit?.({
           sequence, round, member: caster, target, setup, turnKey, attackOutcome: {},
         });

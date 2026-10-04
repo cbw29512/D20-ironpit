@@ -86,6 +86,7 @@ class SpellAttackAction(BaseModel):
     advantage_if_target_wearing_metal_armor: bool = False
     on_hit_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     on_hit_timed_effects: list[OnHitTimedEffect] = Field(default_factory=list)
+    miss_damage: Literal["none", "half"] = "none"
     animation: str = "spell-attack"
     source: str | None = None
 

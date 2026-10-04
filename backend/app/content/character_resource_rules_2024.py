@@ -60,6 +60,13 @@ def _rogue_stroke(level: int) -> int:
     return 1 if level >= 20 else 0
 
 
+def _wizard_signature(level: int) -> int:
+    try:
+        return 1 if level >= 20 else 0
+    except Exception as exc:
+        raise ValueError(f"Failed to resolve 2024 Wizard Signature Spell uses for level {level}.") from exc
+
+
 def _paladins_smite_free_cast(level: int) -> int:
     return 1 if level >= 2 else 0
 
@@ -139,6 +146,11 @@ CLASS_RULES_2024: dict[str, tuple[ResourceRule, ...]] = {
     "warlock": (
         ("magical-cunning", "Magical Cunning", lambda level: 1 if level >= 2 else 0),
         ("boon-of-fate", "Boon of Fate", _boon_of_fate),
+    ),
+    "wizard": (
+        ("boon-of-fate", "Boon of Fate", _boon_of_fate),
+        ("signature-spell-fireball", "Signature Spells: Fireball", _wizard_signature),
+        ("signature-spell-lightning-bolt", "Signature Spells: Lightning Bolt", _wizard_signature),
     ),
 }
 
