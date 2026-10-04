@@ -101,6 +101,25 @@ def build_paladin_2024_high_feature_audits(level: int) -> list[FeatureAudit]:
                        "Aura of Protection, Aura of Courage, Aura of Devotion, and the subclass's "
                        "Smite of Protection cover aura use a 30-foot radius at level 18. No new resolver."),
             ))
+        if level >= 19:
+            audits.extend([
+                paladin_2024_feature(
+                    "boon-combat-prowess",
+                    "Boon of Combat Prowess",
+                    "feat", combat=True, automated=True,
+                    notes=("Aurelia raises Charisma 19 to 20. Peerless Aim reuses the universal "
+                           "miss-to-hit override and start-of-turn one-use resource refill; no "
+                           "Paladin-specific resolver is introduced."),
+                ),
+                paladin_2024_feature(
+                    "banishing-smite",
+                    "Banishing Smite",
+                    "spell", combat=True, automated=False,
+                    notes=("Selected as the fifteenth damage-first Paladin preparation. It remains "
+                           "fail-closed until the shared post-hit Concentration and banishment semantics "
+                           "are fully represented; no approximation is allowed."),
+                ),
+            ])
         return audits
     except Exception:
         logger.exception("Failed to build later 2024 Paladin feature audits at level %s.", level)
