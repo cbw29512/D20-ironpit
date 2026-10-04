@@ -3,7 +3,12 @@ from __future__ import annotations
 import logging
 
 from app.combat.damage_defenses import apply_damage_defenses
+from app.combat.friendly_recovery_aura_windows import (
+    resolve_source_turn_recovery_heals,
+    resolve_zero_hp_ally_recovery,
+)
 from app.combat.post_hit_save_condition_lifecycle import start_of_turn_save_condition_damage
+from app.combat.start_of_turn_timed_burn import start_of_turn_timed_burns
 from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent
@@ -22,8 +27,14 @@ def resolve_start_of_turn_save_condition_damage_events(
     """Apply printed start-of-turn save-condition damage and emit one event per packet."""
     try:
         events: list[BattleEvent] = []
+        resolve_zero_hp_ally_recovery(member, setup)
+        resolve_source_turn_recovery_heals(member, setup, dice)
         affected = [item.state for item in [*setup.heroes, *setup.monsters]]
-        for name, total, damage_type in start_of_turn_save_condition_damage(member, setup, dice):
+        packets = [
+            *start_of_turn_save_condition_damage(member, setup, dice),
+            *start_of_turn_timed_burns(member, setup, dice),
+        ]
+        for name, total, damage_type in packets:
             component = DamageRollComponent(
                 source=name,
                 notation=str(total),
@@ -50,6 +61,7 @@ def resolve_start_of_turn_save_condition_damage_events(
                 feature_id=name,
                 hp_before=hp_before,
                 hp_after=member.state.current_hp,
+                animation="feature",
                 description=(
                     f"{name} deals {applied} {damage_type} damage to "
                     f"{member.state.template.name} at the start of the turn."

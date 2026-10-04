@@ -103,7 +103,8 @@ def _save(action: Any) -> dict[str, Any]:
     if action.damage_components:
         row["damageComponents"] = [
             {"diceCount": item.dice_count, "diceSize": item.dice_size,
-             "damageBonus": item.damage_bonus, "damageType": item.damage_type}
+             "damageBonus": item.damage_bonus, "damageType": item.damage_type,
+             "upcastDicePerLevel": item.upcast_dice_per_level}
             for item in action.damage_components
         ]
     if action.area_healing_rider is not None:
@@ -162,7 +163,8 @@ def _spell(action: Any) -> dict[str, Any]:
     if action.damage_components:
         row["damageComponents"] = [
             {"diceCount": item.dice_count, "diceSize": item.dice_size,
-             "damageBonus": item.damage_bonus, "damageType": item.damage_type}
+             "damageBonus": item.damage_bonus, "damageType": item.damage_type,
+             "upcastDicePerLevel": item.upcast_dice_per_level}
             for item in action.damage_components
         ]
     if action.failed_save_timed_effect is not None:
@@ -423,6 +425,10 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["friendlySaveAdvantageAura"] = action.friendly_save_advantage_aura.model_dump(mode="json")
     if action.friendly_cover_aura is not None:
         row["friendlyCoverAura"] = action.friendly_cover_aura.model_dump(mode="json")
+    if action.friendly_weapon_damage_aura is not None:
+        row["friendlyWeaponDamageAura"] = action.friendly_weapon_damage_aura.model_dump(mode="json")
+    if action.friendly_recovery_aura is not None:
+        row["friendlyRecoveryAura"] = action.friendly_recovery_aura.model_dump(mode="json")
     if action.hostile_start_turn_condition_aura is not None:
         row["hostileStartTurnConditionAura"] = action.hostile_start_turn_condition_aura.model_dump(mode="json")
     if action.concentration:

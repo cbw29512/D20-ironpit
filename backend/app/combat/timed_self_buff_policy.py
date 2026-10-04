@@ -43,6 +43,8 @@ def concentration_grant_only(action: TimedSelfBuffAction) -> bool:
             or action.movement_mode_grants
             or action.friendly_save_advantage_aura
             or action.friendly_cover_aura
+            or action.friendly_weapon_damage_aura
+            or action.friendly_recovery_aura
             or action.hostile_start_turn_condition_aura
             or action.start_turn_emanation_damage
             or action.melee_hit_retaliation
@@ -78,6 +80,20 @@ def _friendly_aura_is_relevant(
     setup: EncounterSetup | None,
 ) -> bool:
     try:
+        if action.friendly_weapon_damage_aura is not None:
+            return False
+        recovery = action.friendly_recovery_aura
+        if recovery is not None:
+            if setup is None:
+                return False
+            allies = setup.heroes if member.side == "heroes" else setup.monsters
+            return any(
+                target.state.is_alive
+                and not target.state.is_dead
+                and combatant_distance(member, target) <= recovery.radius_ft
+                and target.state.current_hp <= 0
+                for target in allies
+            )
         aura = action.friendly_save_advantage_aura
         if aura is None:
             return True

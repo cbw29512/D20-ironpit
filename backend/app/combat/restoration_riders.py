@@ -66,6 +66,8 @@ def apply_hit_point_maximum_reduction(target: EncounterCombatant, amount: int) -
             raise ValueError("Hit point maximum reduction cannot be negative.")
         if amount == 0:
             return 0
+        if any(effect.prevent_hit_point_maximum_reduction for effect in target.state.timed_effects):
+            return 0
         target.state.hit_point_maximum_reduction += amount
         maximum = effective_max_hp(target.state)
         if target.state.current_hp > maximum:

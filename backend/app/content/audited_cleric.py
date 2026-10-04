@@ -14,7 +14,7 @@ from app.content.cleric_runtime_loadout import (
     build_seraphine_initiative_refills,
     build_seraphine_resources,
     build_seraphine_save_spells,
-    build_seraphine_save_zones,
+    build_seraphine_save_zones, build_seraphine_timed_self_buffs,
     seraphine_source,
 )
 from app.content.cleric_runtime_stats import (
@@ -152,12 +152,10 @@ def _build_seraphine(level: int) -> CombatantTemplate:
             row.proficiency_bonus, wisdom_modifier, charisma_modifier,
         ),
         combat_traits=traits,
-        visual=VisualLoadout(
-            armor="chain-shirt", main_hand="mace",
-            off_hand="shield", body_style="humanoid",
-        ),
+        visual=VisualLoadout(armor="chain-shirt", main_hand="mace", off_hand="shield", body_style="humanoid"),
         resources=build_seraphine_resources(level),
         initiative_resource_refill_grants=build_seraphine_initiative_refills(level),
+        timed_self_buff_actions=build_seraphine_timed_self_buffs(level),
         source=seraphine_source(level),
     )
 

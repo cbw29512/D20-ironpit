@@ -47,6 +47,7 @@ def resolve_control_support(
                 affected_states=[entry.state for entry in [*setup.heroes, *setup.monsters]],
                 setup=setup,
                 turn_key=turn_key,
+                dice=dice,
             ))
             sequence += 1
             sync_friendly_save_auras(setup)

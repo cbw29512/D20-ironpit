@@ -45,3 +45,10 @@ class PostHitSpellOption(BaseModel):
     attacks_against_advantage: bool = False
     suppress_invisible: bool = False
     exile_if_hp_at_or_below: int = Field(default=0, ge=0)
+    start_of_turn_dice_count: int = Field(default=0, ge=0, le=40)
+    start_of_turn_dice_per_slot_above: int = Field(default=0, ge=0, le=20)
+    start_of_turn_dice_size: int = Field(default=6, ge=2, le=100)
+    start_of_turn_damage_type: str | None = None
+    start_of_turn_save_ability: AbilityName | None = None
+    start_of_turn_save_dc: int | None = Field(default=None, ge=1, le=40)
+    start_of_turn_save_ends: bool = False

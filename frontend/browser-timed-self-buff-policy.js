@@ -15,6 +15,18 @@
 
   function friendlyAuraRelevant(member, action, setup) {
     try {
+      if (action.friendlyWeaponDamageAura) return false;
+      const recovery = action.friendlyRecoveryAura;
+      if (recovery) {
+        if (!setup) return false;
+        const stateRuntime = window.IRON_PIT_BROWSER_STATE;
+        if (!stateRuntime?.distance) throw new Error("Recovery-aura policy requires state distance.");
+        const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
+        return (allies || []).some((target) =>
+          target.state.is_alive && !target.state.is_dead
+          && stateRuntime.distance(member, target) <= recovery.radius_ft
+          && target.state.current_hp <= 0);
+      }
       const aura = action.friendlySaveAdvantageAura;
       if (!aura) return true;
       if (!setup) return false;
@@ -57,6 +69,8 @@
       || (action.movementModeGrants || []).length
       || action.friendlySaveAdvantageAura
       || action.friendlyCoverAura
+      || action.friendlyWeaponDamageAura
+      || action.friendlyRecoveryAura
       || action.hostileStartTurnConditionAura
       || action.startTurnEmanationDamage
       || action.meleeHitRetaliation

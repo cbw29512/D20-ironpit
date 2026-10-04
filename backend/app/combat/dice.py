@@ -13,6 +13,17 @@ class DiceProvider(Protocol):
     def roll(self, sides: int) -> int: ...
 
 
+def roll_dice(dice: DiceProvider, count: int, sides: int) -> int:
+    """Roll a printed dice pool and return the total."""
+    try:
+        if count < 0:
+            raise ValueError("Dice count cannot be negative.")
+        return sum(dice.roll(sides) for _ in range(count))
+    except Exception:
+        logger.exception("Failed to roll %sd%s.", count, sides)
+        raise
+
+
 class SecureDiceProvider:
     """Production dice backed by the operating system CSPRNG."""
 

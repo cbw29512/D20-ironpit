@@ -7,6 +7,10 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import ActionCost, ConditionName, ConditionTiming
 from app.domain.debuffs import DebuffCounter
+from app.domain.friendly_combat_auras import (
+    TimedFriendlyRecoveryAura,
+    TimedFriendlyWeaponDamageAura,
+)
 from app.domain.progression import SavingThrowAdvantageGrant
 from app.domain.movement import MovementModeGrant
 from app.domain.weapons_base import DamageType
@@ -103,6 +107,8 @@ class TimedSelfBuffAction(BaseModel):
     movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
     friendly_save_advantage_aura: TimedFriendlySaveAura | None = None
     friendly_cover_aura: TimedFriendlyCoverAura | None = None
+    friendly_weapon_damage_aura: TimedFriendlyWeaponDamageAura | None = None
+    friendly_recovery_aura: TimedFriendlyRecoveryAura | None = None
     hostile_start_turn_condition_aura: TimedHostileConditionAura | None = None
     start_turn_emanation_damage: TimedEmanationDamage | None = None
     spell_save_dc_bonus: int = Field(default=0, ge=0, le=10)
@@ -149,6 +155,8 @@ class TimedSelfBuffAction(BaseModel):
                 or self.movement_mode_grants
                 or self.friendly_save_advantage_aura is not None
                 or self.friendly_cover_aura is not None
+                or self.friendly_weapon_damage_aura is not None
+                or self.friendly_recovery_aura is not None
                 or self.hostile_start_turn_condition_aura is not None
                 or self.start_turn_emanation_damage is not None
                 or self.melee_hit_retaliation is not None

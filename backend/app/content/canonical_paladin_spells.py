@@ -8,7 +8,7 @@ PALADIN_SPELLS = (
     _spell("divine-favor", "Divine Favor", "damage", "modifier-stack", "bonus-damage"),
     _spell("bless", "Bless", "buff", "modifier-stack", "concentration", min_character_level=2),
     _spell(
-        "searing-smite", "Searing Smite", "damage", "arena-out-of-scope",
+        "searing-smite", "Searing Smite", "damage", "post-hit-spell",
         min_character_level=3,
     ),
     _spell(
@@ -24,24 +24,24 @@ PALADIN_SPELLS = (
         "condition-removal", spell_level=2, min_character_level=7,
     ),
     _spell(
-        "aura-of-vitality", "Aura of Vitality", "healing", "arena-out-of-scope",
-        spell_level=3, min_character_level=9,
+        "aura-of-vitality", "Aura of Vitality", "healing", "recovery-aura",
+        "concentration", spell_level=3, min_character_level=9,
     ),
     _spell(
         "blinding-smite", "Blinding Smite", "damage", "post-hit-spell",
         spell_level=3, min_character_level=9,
     ),
     _spell(
-        "crusaders-mantle", "Crusader's Mantle", "damage", "arena-out-of-scope",
-        spell_level=3, min_character_level=11,
+        "crusaders-mantle", "Crusader's Mantle", "damage", "weapon-damage-aura",
+        "concentration", spell_level=3, min_character_level=11,
     ),
     _spell(
         "staggering-smite", "Staggering Smite", "damage", "post-hit-spell",
         spell_level=4, min_character_level=13,
     ),
     _spell(
-        "aura-of-life", "Aura of Life", "healing", "arena-out-of-scope",
-        spell_level=4, min_character_level=15,
+        "aura-of-life", "Aura of Life", "healing", "recovery-aura",
+        "concentration", spell_level=4, min_character_level=15,
     ),
     _spell(
         "destructive-wave", "Destructive Wave", "damage", "save-damage", "area",

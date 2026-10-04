@@ -7,7 +7,11 @@ from app.combat.area_targeting import legal_area_placements
 from app.combat.offense_value import save_spell_expected_damage
 from app.combat.spell_area import best_area_placement
 from app.combat.spell_choice import SpellChoice
-from app.combat.spell_policy import legal_single_spell_targets, spell_at_slot
+from app.combat.spell_policy import (
+    legal_single_spell_targets,
+    spell_at_slot,
+    spell_has_higher_slot_scaling,
+)
 from app.combat.spell_target_counts import spell_save_target_count
 from app.combat.spellcasting import legal_slot_levels
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -132,7 +136,7 @@ def choose_named_spell(
             caster.state,
             turn_key,
             action.level,
-            higher_slot_scaling=action.upcast_dice_per_level > 0 or action.allows_higher_slots,
+            higher_slot_scaling=spell_has_higher_slot_scaling(action),
         )
         if not levels:
             return None

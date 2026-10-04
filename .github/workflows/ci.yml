@@ -429,6 +429,7 @@ jobs:
           node frontend/browser-sneak-attack.test.cjs
           node frontend/browser-vex.test.cjs
           node frontend/browser-graze.test.cjs
+          node frontend/browser-slow.test.cjs
           node frontend/browser-topple.test.cjs
           node frontend/browser-light-weapons.test.cjs
           node frontend/browser-defense-style.test.cjs
@@ -467,6 +468,7 @@ jobs:
           node frontend/browser-outgoing-healing-maximize.test.cjs
           node frontend/browser-once-per-turn-hit-damage.test.cjs
           node frontend/browser-post-hit-damage.test.cjs
+          node frontend/browser-post-hit-spell-riders.test.cjs
           node frontend/browser-persistent-spell-attacks.test.cjs
           node frontend/browser-persistent-hazards.test.cjs
           node frontend/browser-turn-undead-2014.test.cjs

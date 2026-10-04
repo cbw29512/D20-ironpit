@@ -12,6 +12,25 @@ def build_paladin_2024_extra_smites(level: int, save_dc: int) -> list[PostHitSpe
     """Bind the printed 2024 extra smites that share the post-hit Bonus Action window."""
     try:
         options: list[PostHitSpellOption] = []
+        if level >= 3:
+            options.append(PostHitSpellOption(
+                id="searing-smite",
+                name="Searing Smite",
+                level=1,
+                trigger_attack_ids=list(_TRIGGERS),
+                base_dice_count=1,
+                dice_per_slot_above=1,
+                dice_size=6,
+                damage_type="fire",
+                duration_rounds=10,
+                start_of_turn_dice_count=1,
+                start_of_turn_dice_per_slot_above=1,
+                start_of_turn_dice_size=6,
+                start_of_turn_damage_type="fire",
+                start_of_turn_save_ability="constitution",
+                start_of_turn_save_dc=save_dc,
+                start_of_turn_save_ends=True,
+            ))
         if level >= 4:
             options.append(PostHitSpellOption(
                 id="thunderous-smite",

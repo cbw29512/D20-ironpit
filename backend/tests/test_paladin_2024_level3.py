@@ -50,7 +50,7 @@ def test_2024_paladin_level_three_profile_and_resources_are_raw_ready() -> None:
     assert [spell.id for spell in package.always_prepared_spells] == [
         "divine-smite", "protection-from-evil-and-good", "shield-of-faith",
     ]
-    assert package.spells[-1].required_capabilities == ["arena-out-of-scope"]
+    assert package.spells[-1].required_capabilities == ["post-hit-spell"]
 
     assert_canonical_profile_policy(profile)
     assert_character_build_raw_ready(profile, hero)

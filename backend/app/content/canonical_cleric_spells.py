@@ -50,7 +50,7 @@ CLERIC_SPELLS = (
         "healing", "bonus-action", "multi-target-healing", always_prepared_from_level=5,
     ),
     _spell("revivify", "Revivify", 3, "healing", 5, "arena-out-of-scope", always_prepared_from_level=5),
-    _spell("aura-of-life", "Aura of Life", 4, "healing", 7, "arena-out-of-scope", always_prepared_from_level=7),
+    _spell("aura-of-life", "Aura of Life", 4, "healing", 7, "recovery-aura", "concentration", always_prepared_from_level=7),
     _spell("death-ward", "Death Ward", 4, "healing", 7, "arena-out-of-scope", always_prepared_from_level=7),
     _spell("prayer-of-healing", "Prayer of Healing", 2, "healing", 7, "arena-out-of-scope"),
     _spell("guardian-of-faith", "Guardian of Faith", 4, "damage", 8, "arena-unavailable-summon"),

@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available
 from app.combat.attack_legality import attack_allowed_against
+from app.combat.spell_policy import spell_has_higher_slot_scaling
 from app.combat.spellcasting import legal_slot_levels, slot_spell_available
 from app.domain.encounters import EncounterCombatant
 from app.domain.weapons import WeaponAttackKind
@@ -93,7 +94,7 @@ def _spell_ranges(attacker: EncounterCombatant, turn_key: str) -> list[Offensive
                 continue
             if not legal_slot_levels(
                 attacker.state, turn_key, action.level,
-                higher_slot_scaling=action.upcast_dice_per_level > 0 or action.allows_higher_slots,
+                higher_slot_scaling=spell_has_higher_slot_scaling(action),
             ):
                 continue
             maximum = action.range_ft + (action.area_radius_ft or 0)

@@ -76,6 +76,13 @@ class TimedEffect(BaseModel):
     return_damage_bonus: int = 0
     return_damage_type: DamageType | None = None
     return_damage_excluded_creature_types: list[str] = Field(default_factory=list)
+    start_of_turn_dice_count: int = Field(default=0, ge=0, le=40)
+    start_of_turn_dice_size: int = Field(default=6, ge=2, le=100)
+    start_of_turn_damage_type: DamageType | None = None
+    start_of_turn_save_ability: AbilityName | None = None
+    start_of_turn_save_dc: int | None = Field(default=None, ge=1, le=40)
+    start_of_turn_save_ends: bool = False
+    prevent_hit_point_maximum_reduction: bool = False
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":

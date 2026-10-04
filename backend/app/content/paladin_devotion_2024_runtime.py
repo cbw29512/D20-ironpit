@@ -140,7 +140,7 @@ def build_aurelia_brightshield_2024(level: int = 1) -> CombatantTemplate:
                    "Staggering Smite, "
                    if level >= 13 else "")
                 + ("Restoring Touch, " if level >= 14 else "")
-                + ("Smite of Protection, Aura of Life (fail-closed pending shared recovery aura), " if level >= 15 else "")
+                + ("Smite of Protection, Aura of Life, " if level >= 15 else "")
                 + ("Commune (arena-neutral), Flame Strike, Destructive Wave, Greater Restoration, " if level >= 17 else "")
                 + ("Aura Expansion, " if level >= 18 else "")
                 + ("Boon of Combat Prowess, Banishing Smite, " if level >= 19 else "")

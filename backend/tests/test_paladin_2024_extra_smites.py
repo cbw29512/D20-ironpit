@@ -64,12 +64,15 @@ def _hit(hero: EncounterCombatant, enemy: EncounterCombatant, setup: EncounterSe
 def test_extra_smites_bind_at_printed_levels_and_compete_by_damage() -> None:
     options = {item.id: item for item in build_paladin_2024_extra_smites(19, 19)}
     assert set(options) == {
+        "searing-smite",
         "thunderous-smite",
         "shining-smite",
         "blinding-smite",
         "staggering-smite",
         "banishing-smite",
     }
+    assert options["searing-smite"].damage_type == "fire"
+    assert options["searing-smite"].start_of_turn_save_ends is True
     assert options["thunderous-smite"].damage_type == "thunder"
     assert options["shining-smite"].attacks_against_advantage is True
     assert options["blinding-smite"].failed_condition_id == "blinded"

@@ -22,7 +22,9 @@ def flame_strike_2014(save_dc: int) -> SpellSaveAction:
             dc=save_dc,
             success_damage="half",
             damage_components=[
-                SaveDamageComponent(dice_count=4, dice_size=6, damage_type="fire"),
+                SaveDamageComponent(
+                    dice_count=4, dice_size=6, damage_type="fire", upcast_dice_per_level=1,
+                ),
                 SaveDamageComponent(dice_count=4, dice_size=6, damage_type="radiant"),
             ],
             animation="flame-strike",

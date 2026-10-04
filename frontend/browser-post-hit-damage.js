@@ -66,6 +66,7 @@
         attacker.feature_last_turn_keys = attacker.feature_last_turn_keys || {};
         attacker.feature_last_turn_keys[extra.option.id] = turnKey;
         attacker.feature_last_turn_keys["paid-post-hit-spell"] = extra.option.id;
+        attacker.feature_last_turn_keys["paid-post-hit-slot"] = String(extra.slot);
         const count = extra.option.base_dice_count
           + (extra.option.dice_per_slot_above || 0) * (extra.slot - extra.option.level);
         return {

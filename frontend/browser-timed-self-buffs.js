@@ -60,6 +60,8 @@
         || (action.movementModeGrants || []).length
         || action.friendlySaveAdvantageAura
         || action.friendlyCoverAura
+        || action.friendlyWeaponDamageAura
+        || action.friendlyRecoveryAura
         || action.hostileStartTurnConditionAura
         || action.startTurnEmanationDamage
         || action.meleeHitRetaliation

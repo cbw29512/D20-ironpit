@@ -52,10 +52,12 @@ def build_ice_storm_2024(save_dc: int) -> SpellSaveAction:
             dc=save_dc,
             success_damage="half",
             damage_components=[
-                SaveDamageComponent(dice_count=2, dice_size=10, damage_type="bludgeoning"),
+                SaveDamageComponent(
+                    dice_count=2, dice_size=10, damage_type="bludgeoning",
+                    upcast_dice_per_level=1,
+                ),
                 SaveDamageComponent(dice_count=4, dice_size=8, damage_type="cold"),
             ],
-            upcast_dice_per_level=0,
             creates_difficult_terrain=True,
             difficult_terrain_duration_rounds=1,
             animation="ice-storm",

@@ -18,8 +18,10 @@ from app.content.offensive_spell_effects import (
     build_sacred_flame,
 )
 from app.content.storm_spell_effects import build_fire_storm_2024
+from app.content.shared_recovery_auras_2024 import aura_of_life_2024
 from app.content.warlock_2024_zone_spells import insect_plague_2024
 from app.domain.actions import HealingAction
+from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.combatants import ResourceDefinition
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
 from app.domain.spells import SpellSaveAction
@@ -141,6 +143,14 @@ def build_seraphine_save_zones(level: int, save_dc: int):
         return [insect_plague_2024(save_dc, 5)]
     except Exception:
         logger.exception("Failed to build Seraphine save zones at level %s.", level)
+        raise
+
+
+def build_seraphine_timed_self_buffs(level: int) -> list[TimedSelfBuffAction]:
+    try:
+        return [aura_of_life_2024()] if level >= 7 else []
+    except Exception:
+        logger.exception("Failed to build Seraphine timed self-buffs at level %s.", level)
         raise
 
 

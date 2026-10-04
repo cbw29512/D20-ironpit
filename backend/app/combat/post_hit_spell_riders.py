@@ -120,6 +120,36 @@ def resolve_paid_post_hit_spell_riders(
                     push_straight_away(
                         defender, attacker, setup, option.failed_push_ft, round_number=round_number,
                     )
+        if option.start_of_turn_dice_count:
+            slot = int(attacker.state.feature_last_turn_keys.get("paid-post-hit-slot") or option.level)
+            count = option.start_of_turn_dice_count + option.start_of_turn_dice_per_slot_above * max(
+                0, slot - option.level
+            )
+            apply_timed_condition(
+                defender.state,
+                option.id,
+                attacker.combatant_id,
+                source_effect_id=option.id,
+                source_template=attacker.state.template,
+                source_is_magical=True,
+                applied_round=round_number,
+                expires_round=round_number + max(1, option.duration_rounds or 10),
+                expires_at_start_of_source_turn=False,
+                expiry_timing="source_turn_end",
+                affected_states=states,
+                use_default_poison_recovery=False,
+            )
+            from app.domain.combatants import DamageType
+            for effect in defender.state.timed_effects:
+                if effect.effect_id == option.id and effect.source_id == attacker.combatant_id:
+                    effect.start_of_turn_dice_count = count
+                    effect.start_of_turn_dice_size = option.start_of_turn_dice_size
+                    if option.start_of_turn_damage_type:
+                        effect.start_of_turn_damage_type = DamageType(option.start_of_turn_damage_type)
+                    effect.start_of_turn_save_ability = option.start_of_turn_save_ability
+                    effect.start_of_turn_save_dc = option.start_of_turn_save_dc
+                    effect.start_of_turn_save_ends = option.start_of_turn_save_ends
+            applied.append(option.id)
         if option.exile_if_hp_at_or_below and 0 < defender.state.current_hp <= option.exile_if_hp_at_or_below:
             apply_timed_condition(
                 defender.state,

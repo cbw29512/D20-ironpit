@@ -12,6 +12,7 @@ from app.domain.friendly_condition_auras import FriendlyConditionImmunityAuraGra
 from app.domain.friendly_save_auras import FriendlySavingThrowAuraGrant
 from app.domain.models import DamageType, OnHitDamage, WeaponAttack
 from app.content.paladin_2024_smites import build_paladin_2024_extra_smites
+from app.content.shared_recovery_auras_2024 import paladin_2024_recovery_auras
 from app.domain.post_hit_damage import ResourceBackedPostHitDamage
 from app.domain.resource_conversion import ResourceConversionAction
 from app.domain.timed_self_buffs import TimedFriendlyCoverAura, TimedSelfBuffAction
@@ -98,6 +99,7 @@ def build_paladin_2024_timed_self_buffs(
             ))
         if level >= 20:
             buffs.append(holy_nimbus_2024(level, charisma_modifier))
+        buffs.extend(paladin_2024_recovery_auras(level))
         return buffs
     except Exception:
         logger.exception("Failed to build 2024 Paladin timed self buffs at level %s.", level)

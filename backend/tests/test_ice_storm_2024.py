@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.combat.grid_pathing_support import movement_step_cost_ft
-from app.combat.spell_policy import choose_spell
+from app.combat.spell_policy import choose_spell, spell_at_slot
 from app.combat.spell_resolution import resolve_spell
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.dice import FixedDiceProvider
@@ -43,13 +43,21 @@ def test_ice_storm_prints_mixed_damage_and_temporary_difficult_terrain() -> None
     assert spell.creates_difficult_terrain is True
     assert spell.difficult_terrain_duration_rounds == 1
     assert [
-        (part.dice_count, part.dice_size, part.damage_type)
+        (part.dice_count, part.dice_size, part.damage_type, part.upcast_dice_per_level)
         for part in spell.damage_components
-    ] == [(2, 10, "bludgeoning"), (4, 8, "cold")]
+    ] == [(2, 10, "bludgeoning", 1), (4, 8, "cold", 0)]
+    scaled = spell_at_slot(spell, 5)
+    assert [
+        (part.dice_count, part.dice_size, part.damage_type)
+        for part in scaled.damage_components
+    ] == [(3, 10, "bludgeoning"), (4, 8, "cold")]
 
 
 def test_ice_storm_places_magical_difficult_terrain_until_end_of_next_turn() -> None:
     caster = _ice_druid()
+    caster.state.resources = [
+        item for item in caster.state.resources if item.id == "spell-slot-4"
+    ]
     enemy = _member(build_commoner().model_copy(update={"max_hp": 80}, deep=True), "enemy", "monsters", 6, 7)
     setup = EncounterSetup(
         heroes=[caster],
