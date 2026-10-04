@@ -94,7 +94,7 @@
     const disadvantage = state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0;
     let roll = R().d20(
       bonus,
-      A()?.mode ? A().mode(state, advantage, disadvantage) : R().modeFromSources(advantage, disadvantage),
+      A()?.mode ? A().mode(state, advantage, disadvantage, { member, setup }) : R().modeFromSources(advantage, disadvantage),
     );
     const needsCheckRuntime = (state.template.ability_check_minimums || []).some(
       (rule) => rule.ability === ability,
