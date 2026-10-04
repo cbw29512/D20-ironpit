@@ -309,8 +309,8 @@ Permanent arena rules:
 
 The standard Iron Pit is a brutal ring. Monsters and pregens close and stay in melee. People come to watch carnage, not cowards. These are explicit arena overrides, not RAW changes outside the Pit.
 
-- Voluntary movement cannot increase a combatant's distance from a living opponent once that combatant is already in melee reach. The default engagement distance is 5 feet.
-- Flying, running, Dash, Disengage, circling, and leave-reach movement do not create an exception. A flyer cannot leave melee and stay gone.
+- Voluntary movement planned relative to an opponent the combatant is already in melee reach of cannot increase that distance. The default engagement distance is 5 feet. Leaving one foe only to close on another remains legal and still provokes Opportunity Attacks. Forced movement may push a combatant out of melee.
+- Flying, running, Dash, Disengage, circling, and leave-reach movement do not create a kiting exception. Arena AI and other voluntary planners cannot open distance from the engaged opponent. A flyer cannot leave melee and stay gone.
 - Horizontal fly remains fly. There is no vertical flight, altitude band, or unreachable-by-height state.
 - Flying is only a buff that counters **ground-contact** debuffs. Thorns, Entangle plants, temporary Difficult Terrain, and similar ground snares do not affect a combatant while it has an effective Fly speed. Flying grants no other combat benefit and does not change rows to escape.
 - This overrides leave-reach Flyby behavior: an opportunity-attack exemption, if present, does not authorize leaving the engagement.

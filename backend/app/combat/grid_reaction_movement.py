@@ -73,7 +73,6 @@ def move_toward_on_grid(
                 origin=before_position,
                 barriers=setup.persistent_barriers,
                 terrain_zones=setup.temporary_terrain_zones,
-                allow_leave_melee=allow_leave_melee,
             )
             if step_cost is None or step_cost > mover.state.movement_remaining_ft:
                 break

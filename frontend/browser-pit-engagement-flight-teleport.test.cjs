@@ -79,7 +79,8 @@ function member(id, side, x, y, extras = {}) {
   }), "restrained");
   assert.equal(C.difficultTerrainMultiplier(walker.state, { sourceIsMagical: true }), 2);
 
-  assert.equal(M.movementStepCostFt(map, flyer, { x: 5, y: 6 }, [flyer, enemy]), null);
+  assert.equal(P.leavesMelee(flyer, [flyer, enemy], { x: 5, y: 6 }), true);
+  assert.equal(M.movementStepCostFt(map, flyer, { x: 5, y: 6 }, [flyer, enemy]), 5);
   const plan = M.planToward(map, flyer, enemy, [flyer, enemy], 25, 60);
   assert.deepEqual(plan.path, []);
   assert.deepEqual(flyer.state.position, { x: 7, y: 6 });
@@ -146,11 +147,16 @@ function member(id, side, x, y, extras = {}) {
   const enemy = member("anchor", "monsters", 5, 4);
   const heroAnchor = member("hero-anchor", "heroes", 9, 4);
   assert.equal(P.leavesMelee(runner, [runner, enemy], { x: 2, y: 4 }), true);
-  assert.equal(M.movementStepCostFt(map, runner, { x: 2, y: 4 }, [runner, enemy]), null);
+  assert.equal(M.movementStepCostFt(map, runner, { x: 2, y: 4 }, [runner, enemy]), 5);
   assert.deepEqual(M.planToward(map, runner, enemy, [runner, enemy], 40, 60).path, []);
   assert.deepEqual(runner.state.position, { x: 4, y: 4 });
-  assert.equal(M.movementStepCostFt(map, flyer, { x: 12, y: 4 }, [flyer, heroAnchor]), null);
+  assert.equal(M.movementStepCostFt(map, flyer, { x: 12, y: 4 }, [flyer, heroAnchor]), 5);
   assert.deepEqual(M.planToward(map, flyer, heroAnchor, [flyer, heroAnchor], 40, 60).path, []);
   assert.deepEqual(flyer.state.position, { x: 8, y: 4 });
   assert.equal(F.isFlying(flyer.state), true);
+  const closer = member("closer", "monsters", 0, 4);
+  const closePlan = M.planToward(map, runner, closer, [runner, enemy, closer], 5, 30);
+  assert.ok(closePlan.path.length);
+  assert.ok(closePlan.final_distance_ft <= 5);
+  assert.equal(P.leavesMelee(runner, [runner, enemy, closer], closePlan.path[0]), true);
 }

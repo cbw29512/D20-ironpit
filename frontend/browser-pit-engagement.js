@@ -30,6 +30,39 @@
     }
   }
 
+  function meleeDistanceToTargetFt(mover, target) {
+    try {
+      const geometry = window.IRON_PIT_BROWSER_GRID_GEOMETRY;
+      if (!geometry || !mover.state?.position || !target.state?.position) return null;
+      return geometry.footprintDistanceFt(
+        mover.state.position,
+        mover.state.template.size,
+        target.state.position,
+        target.state.template.size,
+      );
+    } catch (error) {
+      console.error("Failed browser melee distance", {
+        mover: mover?.combatant_id,
+        target: target?.combatant_id,
+        error,
+      });
+      throw error;
+    }
+  }
+
+  function clampVoluntaryMeleeDesiredDistanceFt(mover, target, desiredDistanceFt, allowLeaveMelee = false) {
+    try {
+      if (allowLeaveMelee) return desiredDistanceFt;
+      if (desiredDistanceFt < 0) throw new Error("Desired distance cannot be negative.");
+      const current = meleeDistanceToTargetFt(mover, target);
+      if (current == null || current > MELEE_ENGAGEMENT_FT) return desiredDistanceFt;
+      return Math.min(desiredDistanceFt, current);
+    } catch (error) {
+      console.error("Failed browser melee-desired-distance clamp", { mover: mover?.combatant_id, error });
+      throw error;
+    }
+  }
+
   function leavesMelee(mover, members, destination) {
     try {
       const current = nearestLivingEnemyDistanceFt(mover, members);
@@ -43,6 +76,10 @@
   }
 
   window.IRON_PIT_BROWSER_PIT_ENGAGEMENT = {
-    MELEE_ENGAGEMENT_FT, leavesMelee, nearestLivingEnemyDistanceFt,
+    MELEE_ENGAGEMENT_FT,
+    clampVoluntaryMeleeDesiredDistanceFt,
+    leavesMelee,
+    meleeDistanceToTargetFt,
+    nearestLivingEnemyDistanceFt,
   };
 })();

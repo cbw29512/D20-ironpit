@@ -3,6 +3,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.flight_ground_immunity import combatant_is_flying
 from app.combat.grapple import apply_grapple
 from app.combat.grid_pathing import movement_step_cost_ft, plan_movement_toward
+from app.combat.pit_engagement import voluntary_destination_leaves_melee
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.teleport_policy import choose_teleport_action
 from app.combat.teleport_resolution import resolve_teleport
@@ -118,7 +119,8 @@ def test_flyer_ignores_ground_debuff_and_stays_in_melee() -> None:
     map_definition = BattleMapDefinition(id="melee-lock", width_squares=16, height_squares=16)
     members = [flyer, enemy]
     away = GridPosition(x=5, y=6)
-    assert movement_step_cost_ft(map_definition, flyer, away, members) is None
+    assert voluntary_destination_leaves_melee(flyer, members, away) is True
+    assert movement_step_cost_ft(map_definition, flyer, away, members) == 5
     plan = plan_movement_toward(map_definition, flyer, enemy, members, 25, 60)
     assert plan.path == []
     assert flyer.state.position == GridPosition(x=7, y=6)
@@ -191,13 +193,23 @@ def test_creature_cannot_kite_out_of_melee_by_flying_or_running() -> None:
     enemy = _member("anchor", "monsters", 5, 4)
     hero_anchor = _member("hero-anchor", "heroes", 9, 4)
 
-    assert movement_step_cost_ft(map_definition, runner, GridPosition(x=2, y=4), [runner, enemy]) is None
+    assert voluntary_destination_leaves_melee(runner, [runner, enemy], GridPosition(x=2, y=4)) is True
+    assert movement_step_cost_ft(map_definition, runner, GridPosition(x=2, y=4), [runner, enemy]) == 5
     run_plan = plan_movement_toward(map_definition, runner, enemy, [runner, enemy], 40, 60)
     assert run_plan.path == []
     assert runner.state.position == GridPosition(x=4, y=4)
 
-    assert movement_step_cost_ft(map_definition, flyer, GridPosition(x=12, y=4), [flyer, hero_anchor]) is None
+    assert voluntary_destination_leaves_melee(flyer, [flyer, hero_anchor], GridPosition(x=12, y=4)) is True
+    assert movement_step_cost_ft(map_definition, flyer, GridPosition(x=12, y=4), [flyer, hero_anchor]) == 5
     fly_plan = plan_movement_toward(map_definition, flyer, hero_anchor, [flyer, hero_anchor], 40, 60)
     assert fly_plan.path == []
     assert flyer.state.position == GridPosition(x=8, y=4)
     assert combatant_is_flying(flyer.state) is True
+
+    closer = _member("closer", "monsters", 0, 4)
+    close_plan = plan_movement_toward(
+        map_definition, runner, closer, [runner, enemy, closer], 5, 30,
+    )
+    assert close_plan.path
+    assert close_plan.final_distance_ft <= 5
+    assert voluntary_destination_leaves_melee(runner, [runner, enemy, closer], close_plan.path[0]) is True

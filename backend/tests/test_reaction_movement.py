@@ -18,18 +18,21 @@ def _three_way(reactor_id: str = "srd-commoner"):
     return setup, mover, reactor, target
 
 
-def test_voluntary_leave_from_melee_is_blocked_and_does_not_spend_the_reaction() -> None:
+def test_departure_reaction_resolves_before_square_movement_then_move_completes() -> None:
     setup, mover, reactor, target = _three_way()
-    before = mover.state.position.model_copy(deep=True)
     events, sequence, movement = move_toward_with_reactions(
         1, 1, mover, target, setup, 5, FixedDiceProvider([2]),
     )
 
-    assert events == []
-    assert sequence == 1
-    assert movement is None
-    assert mover.state.position == before
-    assert reactor.state.reaction_available is True
+    assert events[0].event_type == "attack"
+    assert events[0].feature_id == "opportunity-attack"
+    assert all(event.event_type == "movement" for event in events[1:])
+    assert sum(event.movement_ft or 0 for event in events[1:]) == 30
+    assert [event.sequence for event in events] == list(range(1, 8))
+    assert sequence == 8
+    assert reactor.state.reaction_available is False
+    assert movement is events[-1]
+    assert movement.distance_after_ft == 5
 
 
 def test_creature_being_approached_does_not_get_opportunity_attack() -> None:
@@ -51,7 +54,7 @@ def test_creature_being_approached_does_not_get_opportunity_attack() -> None:
     assert movement.distance_after_ft == 5
 
 
-def test_grappling_opportunity_attack_cannot_fire_when_the_pit_blocks_the_leave() -> None:
+def test_grappling_opportunity_attack_stops_move_before_position_changes() -> None:
     setup, mover, reactor, target = _three_way("srd-crocodile")
     reactor.state.position = GridPosition(x=8, y=5)
     before = mover.state.position.model_copy(deep=True)
@@ -59,11 +62,11 @@ def test_grappling_opportunity_attack_cannot_fire_when_the_pit_blocks_the_leave(
         1, 1, mover, target, setup, 5, FixedDiceProvider([19, 1]),
     )
 
-    assert events == []
+    assert len(events) == 1 and events[0].feature_id == "opportunity-attack"
     assert movement is None
     assert mover.state.position == before
-    assert "grappled" not in mover.state.active_effect_ids
-    assert reactor.state.reaction_available is True
+    assert "grappled" in mover.state.active_effect_ids
+    assert "restrained" in mover.state.active_effect_ids
 
 
 def test_forced_movement_uses_same_grid_pipeline_without_provoking() -> None:

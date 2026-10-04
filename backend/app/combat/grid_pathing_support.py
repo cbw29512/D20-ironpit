@@ -54,14 +54,10 @@ def movement_step_cost_ft(
     origin: GridPosition | None = None,
     barriers: list[PersistentBarrierState] | None = None,
     terrain_zones=None,
-    allow_leave_melee: bool = False,
 ) -> int | None:
     """Return 5/10 feet for a legal adjacent destination, or None when passage is illegal."""
     try:
         if not position_in_bounds(map_definition, destination, mover.state.template.size):
-            return None
-        from app.combat.pit_engagement import voluntary_destination_leaves_melee
-        if not allow_leave_melee and voluntary_destination_leaves_melee(mover, members, destination):
             return None
         if origin is not None and barrier_blocks_transition(origin, destination, barriers):
             return None
