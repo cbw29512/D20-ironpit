@@ -30,6 +30,17 @@ const hex = {
   durationRoundsBySlot: { 1: 600, 3: 4800, 5: 14400 },
   retargetAfterTargetZero: true, priority: 10, animation: "targeted-concentration",
 };
+
+const mark = {
+  id: "hunters-mark", name: "Hunter's Mark", level: 1, actionCost: "bonus_action", range: 90,
+  diceCount: 1, diceSize: 6, damageType: "force",
+  durationRoundsBySlot: { 1: 600, 3: 4800, 5: 14400 },
+  retargetAfterTargetZero: true,
+  freeCastResourceId: "favored-enemy-hunters-mark",
+  freeCastResourceCost: 1,
+  priority: 20, animation: "targeted-concentration",
+};
+
 const blast = {
   id: "eldritch-blast", name: "Eldritch Blast", level: 0, actionCost: "action",
   attackKind: "ranged", range: 120, attackBonus: 5,
@@ -93,5 +104,20 @@ assert.match(moved.description, /moves Hex/);
 assert.equal(varek.state.resources["spell-slot-1"], 0);
 assert.equal(varek.state.concentration.effect_id, "hex");
 assert.equal(varek.state.active_modifiers.find((item) => item.source_effect_id === "hex").target_id, "second");
+
+
+const rowan = member("rowan", "heroes", 0, {
+  "favored-enemy-hunters-mark": 2,
+  "spell-slot-1": 2,
+});
+rowan.state.template.ruleset = "2024";
+rowan.state.template.targeted_concentration_damage_actions = [mark];
+const quarry = member("quarry", "monsters", 20);
+const rangerSetup = { heroes: [rowan], monsters: [quarry] };
+const marked = TD.resolve(4, 1, rowan, rangerSetup, "1:rowan");
+assert.ok(marked);
+assert.equal(marked.feature_id, "hunters-mark");
+assert.equal(rowan.state.resources["favored-enemy-hunters-mark"], 1);
+assert.equal(rowan.state.resources["spell-slot-1"], 2);
 
 console.log("Browser targeted concentration damage regression passed.");

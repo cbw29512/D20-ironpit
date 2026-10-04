@@ -324,7 +324,7 @@ def _defense(action: Any) -> dict[str, Any]:
 
 
 def _targeted_concentration_damage(action: Any) -> dict[str, Any]:
-    return {
+    row = {
         "id": action.id, "name": action.name, "level": action.level,
         "actionCost": action.action_cost, "range": action.range_ft,
         "diceCount": action.dice_count, "diceSize": action.dice_size,
@@ -335,6 +335,10 @@ def _targeted_concentration_damage(action: Any) -> dict[str, Any]:
         "freeCastResourceCost": action.free_cast_resource_cost,
         "priority": action.priority, "animation": action.animation, "source": action.source,
     }
+    if action.free_cast_resource_id is not None:
+        row["freeCastResourceId"] = action.free_cast_resource_id
+        row["freeCastResourceCost"] = action.free_cast_resource_cost
+    return row
 
 
 def _d20_bonus_die_action(action: Any) -> dict[str, Any]:
