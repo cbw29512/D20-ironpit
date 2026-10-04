@@ -5,6 +5,7 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
+from app.domain.environment_context import EnvironmentContextReaction
 from app.domain.models import CombatantTemplate
 from app.domain.traits import CombatTrait
 
@@ -17,11 +18,12 @@ _MODELED_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _DECLARATIVE_ATTACK_TRAITS = frozenset({"Blood Frenzy"})
+_DECLARATIVE_CONTEXT_TRAITS = frozenset({"Sunlight Sensitivity"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hellish Restoration",
     "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
     "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness", "Mimicry",
-    "Earth Glide", "Running Leap", "Shark Telepathy", "Spider Climb", "Standing Leap", "Sunlight Sensitivity",
+    "Earth Glide", "Running Leap", "Shark Telepathy", "Spider Climb", "Standing Leap",
     "Siege Monster", "Training", "Treasure Sense", "Water Breathing", "Web Walker",
 })
 
@@ -74,7 +76,19 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             for attack in attacks
         ):
             issues.append("trait-runtime-missing:blood-frenzy")
-    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_ARENA_NEUTRAL_TRAITS)
+    if "Sunlight Sensitivity" in expected:
+        reactions = [
+            item for item in template.environment_context_reactions
+            if item.context_tag == "sunlight"
+        ]
+        if len(reactions) != 1 or not reactions[0].attack_roll_disadvantage or not reactions[0].ability_check_disadvantage:
+            issues.append("trait-runtime-missing:sunlight-sensitivity")
+    certified = (
+        set(_MODELED_TRAITS)
+        | set(_DECLARATIVE_ATTACK_TRAITS)
+        | set(_DECLARATIVE_CONTEXT_TRAITS)
+        | set(_ARENA_NEUTRAL_TRAITS)
+    )
     for name in expected:
         if name not in certified:
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
@@ -96,11 +110,24 @@ def source_trait_names(name: str) -> list[str]:
 
 def complete_monster_trait_fingerprints(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
     try:
-        return [
-            template.model_copy(update={"source_trait_names": source_trait_names(template.name)})
-            if template.kind == "monster" else template
-            for template in templates
-        ]
+        completed: list[CombatantTemplate] = []
+        for template in templates:
+            if template.kind != "monster":
+                completed.append(template)
+                continue
+            names = source_trait_names(template.name)
+            reactions = list(template.environment_context_reactions)
+            if "Sunlight Sensitivity" in names and not any(item.context_tag == "sunlight" for item in reactions):
+                reactions.append(EnvironmentContextReaction(
+                    context_tag="sunlight",
+                    attack_roll_disadvantage=True,
+                    ability_check_disadvantage=True,
+                ))
+            completed.append(template.model_copy(update={
+                "source_trait_names": names,
+                "environment_context_reactions": reactions,
+            }))
+        return completed
     except Exception:
         logger.exception("Failed to derive canonical monster trait fingerprints from SRD source.")
         raise
