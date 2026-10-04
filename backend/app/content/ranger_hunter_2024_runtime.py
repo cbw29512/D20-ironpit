@@ -73,6 +73,7 @@ def build_rowan_ashtrail_2024(level: int = 1) -> CombatantTemplate:
             saving_throw_bonuses=saving_throw_bonuses(scores, level, ("strength", "dexterity")),
             skill_bonuses={
                 "athletics": scores.modifier("strength") + pb,
+                "acrobatics": dexterity,
                 "survival": wisdom + pb,
                 "perception": wisdom + pb,
                 "stealth": dexterity + pb,
