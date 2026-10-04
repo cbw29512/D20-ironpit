@@ -107,4 +107,19 @@ function sap(caster) {
   assert.equal(event.attack_roll.mode, "disadvantage"); assert.equal(event.attack_roll.selected_roll, 2);
 }
 
+{
+  const { caster, target, arena } = setup(30, 10);
+  caster.state.resources["spell-slot-2"] = 1;
+  dice([12, 1, 2, 3, 4]);
+  const orb = {
+    id: "chromatic-orb", name: "Chromatic Orb", level: 1, actionCost: "action",
+    attackKind: "ranged", range: 90, attackBonus: 8, damageDiceCount: 3, damageDiceSize: 8,
+    damageBonus: 0, damageType: "fire", upcastDicePerLevel: 1, matchingDiceLeapRangeFt: 0,
+    onHitModifierEffects: [], animation: "spell-attack",
+  };
+  const event = X.resolve(1, 1, caster, target, orb, arena, "1:caster", { castSlotLevel: 2 });
+  assert.equal(event.hit, true);
+  assert.deepEqual(event.damage_roll.rolls, [1, 2, 3, 4]);
+}
+
 console.log("Browser universal spell-attack context regressions passed.");

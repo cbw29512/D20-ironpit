@@ -127,6 +127,7 @@ def resolve_spell_attack(
         damage_roll, damage_components, applied_conditions = apply_spell_attack_damage_outcome(
             caster, target, spell, setup, hit=hit, critical=critical,
             round_number=round_number, turn_key=turn_key, dice=dice,
+            slot_level=cast_slot_level,
         )
         remaining = resource.current_uses if resource is not None else None
         outcome = "CRITICAL HIT" if critical else "HIT" if hit else "MISS"

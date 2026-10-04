@@ -86,7 +86,11 @@
     let damageRoll = null, damageComponents = [], appliedConditions = [];
     const missHalf = !hit && spell.missDamage === "half";
     if (hit || missHalf) {
-      const count = spell.damageDiceCount * (critical ? 2 : 1);
+      const slotLevel = options.castSlotLevel ?? spell.level ?? 0;
+      const extraDice = spell.level > 0
+        ? Math.max(0, slotLevel - spell.level) * (spell.upcastDicePerLevel || 0)
+        : 0;
+      const count = (spell.damageDiceCount + extraDice) * (critical ? 2 : 1);
       const rolls = window.IRON_PIT_DICE.rollMany(count, spell.damageDiceSize);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (spell.damageBonus || 0);
       const rolledComponents = spell.damageType ? [{

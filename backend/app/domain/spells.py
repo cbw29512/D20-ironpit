@@ -83,6 +83,7 @@ class SpellAttackAction(BaseModel):
     damage_type: DamageTypeName | None = None
     attack_count: int = Field(default=1, ge=1, le=20)
     attacks_per_slot_above: int = Field(default=0, ge=0, le=20)
+    upcast_dice_per_level: int = Field(default=0, ge=0, le=20)
     advantage_if_target_wearing_metal_armor: bool = False
     on_hit_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     on_hit_timed_effects: list[OnHitTimedEffect] = Field(default_factory=list)
@@ -95,8 +96,8 @@ class SpellAttackAction(BaseModel):
     def validate_attack_spell(self) -> "SpellAttackAction":
         if self.damage_dice_count and self.damage_type is None:
             raise ValueError("Damaging spell attacks require a damage type.")
-        if self.level == 0 and self.attacks_per_slot_above:
-            raise ValueError("Cantrip spell attacks cannot scale attacks by spell-slot level.")
+        if self.level == 0 and (self.attacks_per_slot_above or self.upcast_dice_per_level):
+            raise ValueError("Cantrip spell attacks cannot scale by spell-slot level.")
         if self.matching_dice_leap_range_ft:
             if self.matching_dice_leap_range_ft % 5:
                 raise ValueError("Matching-dice leap range must use 5-foot increments.")
@@ -114,6 +115,13 @@ class SpellAttackAction(BaseModel):
         if slot_level < self.level or slot_level > 9:
             raise ValueError(f"Illegal slot level {slot_level} for {self.name}.")
         return self.attack_count + (slot_level - self.level) * self.attacks_per_slot_above
+
+    def damage_dice_at_slot(self, slot_level: int) -> int:
+        if self.level == 0:
+            return self.damage_dice_count
+        if slot_level < self.level or slot_level > 9:
+            raise ValueError(f"Illegal slot level {slot_level} for {self.name}.")
+        return self.damage_dice_count + (slot_level - self.level) * self.upcast_dice_per_level
 
 
 class SpellSaveAction(BaseModel):

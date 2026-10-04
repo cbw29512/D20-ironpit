@@ -26,6 +26,7 @@ def apply_spell_attack_damage_outcome(
     round_number: int,
     turn_key: str,
     dice,
+    slot_level: int | None = None,
 ):
     """Apply hit damage and riders, or printed miss-half cantrip damage with no extra effect."""
     try:
@@ -38,6 +39,7 @@ def apply_spell_attack_damage_outcome(
             dice,
             attacker=caster.state if hit else None,
             target_event_id=target.combatant_id if hit else None,
+            slot_level=slot_level,
         )
         if miss_half:
             rolled = [item.model_copy(update={"total": item.total // 2}) for item in rolled]

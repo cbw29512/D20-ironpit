@@ -132,6 +132,7 @@ def chromatic_orb_2024(attack_bonus: int, damage_bonus: int = 0) -> SpellAttackA
             damage_dice_size=8,
             damage_bonus=damage_bonus,
             damage_type="fire",
+            upcast_dice_per_level=1,
             matching_dice_leap_range_ft=30,
             animation="spell-attack",
             source="D&D Beyond Basic Rules 2024: Chromatic Orb",

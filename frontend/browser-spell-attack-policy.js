@@ -9,7 +9,7 @@
 
   function slotLevels(member, spell, turnKey) {
     return C().legalSlotLevels(member.state, turnKey, spell.level, {
-      higherSlotScaling: (spell.attacksPerSlotAbove || 0) > 0,
+      higherSlotScaling: (spell.attacksPerSlotAbove || 0) > 0 || (spell.upcastDicePerLevel || 0) > 0,
     });
   }
 
@@ -31,12 +31,16 @@
         : spell.range;
       for (const slotLevel of levels) {
         const attackCount = attackCountAtSlot(spell, slotLevel);
+        const extraDice = spell.level > 0
+          ? Math.max(0, slotLevel - spell.level) * (spell.upcastDicePerLevel || 0)
+          : 0;
+        const scaled = extraDice ? { ...spell, damageDiceCount: spell.damageDiceCount + extraDice } : spell;
         for (const target of enemies) {
           const distance = S().distance(member, target);
           if (!target.state.is_alive || target.state.is_dead || target.state.current_hp <= 0 || distance > castRange || window.IRON_PIT_BROWSER_GRID_BARRIERS && !window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(member, target, setup)) continue;
           candidates.push({
             spell, target, index, slotLevel,
-            score: O().spellAttack(member, target, spell, setup) * attackCount,
+            score: O().spellAttack(member, target, scaled, setup) * attackCount,
             rangeModifier: policy?.availableRangeModifier
               ? policy.availableRangeModifier(member.state, spell.range, distance)
               : null,

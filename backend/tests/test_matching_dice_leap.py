@@ -49,6 +49,8 @@ def test_chromatic_orb_2024_binds_matching_dice_leap() -> None:
     assert spell.matching_dice_leap_range_ft == 30
     assert spell.damage_dice_count == 3
     assert spell.damage_dice_size == 8
+    assert spell.upcast_dice_per_level == 1
+    assert spell.damage_dice_at_slot(2) == 4
 
 
 def test_matching_d8s_leap_once_at_first_level() -> None:
@@ -112,13 +114,30 @@ def test_higher_slot_allows_two_leaps() -> None:
     spell = caster.state.template.spell_attack_actions[0]
     events, _ = resolve_spell_attack_sequence(
         1, 1, caster, first, spell, setup, "1:caster",
-        FixedDiceProvider([12, 4, 4, 1, 12, 5, 5, 2, 12, 1, 2, 3]),
+        FixedDiceProvider([12, 4, 4, 1, 8, 12, 5, 5, 2, 8, 12, 1, 2, 3, 8]),
         slot_level=2,
     )
     assert [event.target_id for event in events if event.event_type == "attack"] == [
         "first", "second", "third",
     ]
-    assert third.state.current_hp == 34
+    assert first.state.current_hp == 23
+    assert second.state.current_hp == 20
+    assert third.state.current_hp == 26
+
+
+def test_chromatic_orb_upcast_adds_one_d8() -> None:
+    caster = _caster(2)
+    first = _enemy("first", 30)
+    setup = _setup(caster, first)
+    spell = caster.state.template.spell_attack_actions[0]
+    events, _ = resolve_spell_attack_sequence(
+        1, 1, caster, first, spell, setup, "1:caster",
+        FixedDiceProvider([12, 1, 2, 3, 4]),
+        slot_level=2,
+    )
+    assert events[0].damage_roll is not None
+    assert events[0].damage_roll.rolls == [1, 2, 3, 4]
+    assert first.state.current_hp == 30
 
 
 def test_leap_can_leave_the_casters_spell_range() -> None:

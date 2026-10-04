@@ -219,6 +219,7 @@ def _spell_attack(action: Any) -> dict[str, Any]:
            "damageDiceCount": action.damage_dice_count, "damageDiceSize": action.damage_dice_size,
            "damageBonus": action.damage_bonus, "damageType": action.damage_type,
            "attackCount": action.attack_count, "attacksPerSlotAbove": action.attacks_per_slot_above,
+           "upcastDicePerLevel": action.upcast_dice_per_level,
            "advantageIfTargetWearingMetalArmor": action.advantage_if_target_wearing_metal_armor,
            "missDamage": action.miss_damage,
            "matchingDiceLeapRangeFt": action.matching_dice_leap_range_ft,
