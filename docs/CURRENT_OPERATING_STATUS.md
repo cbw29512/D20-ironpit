@@ -1,6 +1,6 @@
 # Current operating status
 
-Recorded 2026-10-03 for the 2024 Devotion Paladin level 16 tranche. Main baseline: `a1b04978d91368dfca217b96f99d7913398722a6`.
+Recorded 2026-10-03 for the 2024 Devotion Paladin level 17 tranche. Main baseline: `1d00f52ee5eb3e603584f7a2ea32949ed3cb3ffb`.
 
 This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
 
@@ -34,9 +34,9 @@ From `backend/app/content/certified_hero_progressions.py`:
 | 2024 | Rogue (Thief) | 1–20 |
 | 2024 | Druid (Land) | 1–20 |
 | 2024 | Monk (Open Hand) | 1–20 |
-| 2024 | Paladin (Devotion) | 1–15 |
+| 2024 | Paladin (Devotion) | 1–16 |
 
-2024 public-ready hero slots on current main: **155 / 240**.
+2024 public-ready hero slots on current main: **156 / 240**.
 2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
 2014 browser monster roster asserted in tests: **129** certified.
 
@@ -46,9 +46,9 @@ Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitiv
 
 **2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
 
-**2024 canonical pregens are 155 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 15 on main; this tranche advances level 16 to a generated target of **156 / 240**.
+**2024 canonical pregens are 156 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 16 on main; this tranche advances level 17 to a generated target of **157 / 240**.
 
-Active implementation lane: **2024 Devotion Paladin level 16.** Aurelia remains the same persistent character. The repeatable Ability Score Improvement feat raises Charisma 17→19, which increases Aura of Protection and Sacred Weapon to +4, Abjure Foes to DC 17 / four targets, Charisma saves/skills by 1, HP to 132, and Lay On Hands to 80. Slots and the twelve ordinary preparations remain unchanged. No new combat primitive is required.
+Active implementation lane: **2024 Devotion Paladin level 17.** Aurelia remains the same persistent character. Proficiency Bonus advances to +6, HP to 140, Lay On Hands to 85, spell slots to 4/3/3/3/1, and ordinary preparations to fourteen. Devotion always prepares Commune and Flame Strike. Commune is arena-neutral; 2024 Flame Strike reuses the universal multi-component Dexterity-save damage path with its edition-correct 5d6 Fire + 5d6 Radiant fingerprint. The two new ordinary preparations are Destructive Wave and Greater Restoration under the damage/healing-first policy; both remain fail-closed until their complete 2024 mechanics are certified.
 
 Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
 
@@ -84,7 +84,8 @@ Owner-requested completion order: finish every canonical pregen; audit and test 
 - Level 14 adds **Restoring Touch** through the existing condition-removal action. Blinded, Charmed, Deafened, Frightened, Paralyzed, and Stunned cost **five Lay On Hands points each**; Poisoned can be removed in the same Bonus Action. Removal does not restore HP. The remaining pool remains available for later healing through the shared divisible-pool allocation.
 - Level 15 adds **Smite of Protection** without a Paladin-specific resolver. A successfully paid **Divine Smite** activates a one-round source-centered friendly aura matching Aura of Protection's current radius. Aurelia and allies inside it gain **Half Cover** (+2 AC and +2 Dexterity saves) until the start of Aurelia's next turn. The universal modifier stack now classifies cover separately so overlapping cover uses the strongest benefit instead of stacking. HP advances to **124**, Lay On Hands to **75**, fourth-level slots to **2**, and the twelfth ordinary preparation is **Aura of Life**, retained fail-closed until its exact healing/recovery aura lifecycle is certified.
 - Level 16 takes **Ability Score Improvement (+2 Charisma)** through the existing cumulative ability-increase schema. Charisma rises **17→19**, Aura of Protection and Sacred Weapon become **+4**, Abjure Foes becomes **DC 17 / four targets**, HP rises to **132**, and Lay On Hands to **80**. Slots and the twelve ordinary preparations remain unchanged; no new combat primitive is required.
-- This tranche targets **156 / 240** 2024 public-ready hero slots.
+- Level 17 advances Proficiency Bonus to **+6**, HP to **140**, Lay On Hands to **85**, and slots to **4/3/3/3/1**. Devotion always prepares **Commune** and **Flame Strike**. Commune is arena-neutral; Flame Strike reuses universal multi-component save damage with an explicit 2024 fingerprint of **5d6 Fire + 5d6 Radiant**, half on a successful Dexterity save. Ordinary preparations increase to fourteen with **Destructive Wave** and **Greater Restoration** under the damage/healing-first policy; both remain fail-closed until their full mechanics are certified.
+- This tranche targets **157 / 240** 2024 public-ready hero slots.
 
 ### 2024 Monk lane
 
