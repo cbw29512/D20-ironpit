@@ -23,6 +23,8 @@ _ARENA_NEUTRAL_TRAITS = frozenset({
     "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness", "Mimicry",
     "Earth Glide", "Running Leap", "Shark Telepathy", "Spider Climb", "Standing Leap", "Sunlight Sensitivity",
     "Siege Monster", "Training", "Treasure Sense", "Water Breathing", "Web Walker",
+    "Diabolical Restoration", "Demonic Restoration", "Eldritch Restoration",
+    "Elemental Restoration", "Exalted Restoration", "Fiendish Restoration",
 })
 
 
