@@ -33,11 +33,7 @@ jobs:
           python scripts/export_roster_mechanic_checklist.py --check
       - name: Enforce declarative monster source of truth
         run: |
-          if [ "${{ github.event.pull_request.head.ref }}" = "refactor/tactical-shift-triggered-movement" ]; then
-            python scripts/export_runtime_monster_capabilities.py
-          else
-            python scripts/export_runtime_monster_capabilities.py --check
-          fi
+          python scripts/export_runtime_monster_capabilities.py --check
           ! grep -Eq 'app\.content\.(legacy_monster_roster|monster_|monsters_)' backend/app/content/roster.py
       - name: Generate canonical hero artifact
         run: python scripts/export_browser_heroes.py
@@ -54,7 +50,7 @@ jobs:
       - name: Generate certification manifest candidates
         run: python scripts/verify_certification_manifests.py --write
       - name: Refresh generated hero progression artifacts
-        if: startsWith(github.event.pull_request.head.ref, 'feat/2024-paladin-') || startsWith(github.event.pull_request.head.ref, 'feat/2024-ranger-') || github.event.pull_request.head.ref == 'refactor/tactical-shift-triggered-movement'
+        if: startsWith(github.event.pull_request.head.ref, 'feat/2024-paladin-') || startsWith(github.event.pull_request.head.ref, 'feat/2024-ranger-')
         run: |
           python scripts/prepare_static_site.py
           git config user.name "iron-pit-certification"
