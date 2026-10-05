@@ -90,7 +90,7 @@ Standing instruction: park, record, continue. Revisit this list after the rest o
 | Iron Golem | breath + multiattack | `multiattack:choice-or-binding`, `source:trait` | Poison Breath is out of this family by standing instruction. | Recharge-breath or multiattack-choice lane |
 | Quasit | combined save | `attack:complex` plus Shapechanger / Scare | Same Con save wants fail-only poison damage **and** Poisoned. Still blocked after a bind. | Widen on-hit save to compose save-damage + save-condition; still need extra-action / trait |
 | Homunculus; Sprite; Pseudodragon; Drow | fail-by-5 sleep poison | `failure_margin_escalation` plus Unconscious / `wake-sleeper` | Same missing machine as Sleep Breath. Each card also has another leftover. | Extend FailedSaveTimedEffect with fail-margin + generic wake-sleeper Action |
-| Drider; Deep Gnome; Guardian Naga; Spirit Naga; and other poison casters | spellcasting | `mechanic:spellcasting` plus leftover trait | Poison riders compile where printed on the weapon. Innate/slot spellcasting remains. | Spellcasting family (highest-level / damage-first) |
+| Drider; Deep Gnome; Guardian Naga; Spirit Naga; and other poison casters | spellcasting | `mechanic:spellcasting` plus leftover trait | Poison riders compile where printed on the weapon. Unbound combat spells remain after the Acolyte slot bind. | Remaining spell rows below |
 
 **2014 recharge-breath leftovers (from #603).** Do not invent these in a poison or defense lane:
 
@@ -123,6 +123,18 @@ Standing instruction: park, record, continue. Revisit this list after the rest o
 | Androsphinx / Gynosphinx | Cast a Spell legendary | Spellcasting lane | Teleport is pit-banned; Claw Attack compiles | Other agent's spellcasting bind; do not skip Cast a Spell |
 | Vampire / Tarrasque | Legendary Move | Move up to speed on another turn, sometimes without OA | No `move` legendary kind | Legendary movement option |
 | Solar / Lich / Mummy Lord / Kraken | Remaining legendary menus | Mixed save/gaze/spell/swallow options | Not a single reuse | Bind each compiled option; park the rest |
+
+**2014 spellcasting leftovers (this lane).** Highest-level / damage-first already exists in §8 / §22. Slot and innate lists bind only when every printed spell is a reused constructor, arena-neutral utility, or pit-banned teleport/plane-shift. Acolyte is READY (Sacred Flame, Bless, Cure Wounds, Sanctuary; light / thaumaturgy / detect magic are neutral). Do not copy 2024 Command. Do not mark levitate arena-neutral without Chris.
+
+| Card / item | Family | Blocker | Why parked | Needed to unpark |
+|---|---|---|---|---|
+| Cult Fanatic | slot list | `command` | Inflict Wounds / Spiritual Weapon / Hold Person constructors exist, but Command has no 2014 bind. Do not copy `command_2024`. | 2014 Command, then CombatantDefinition spell-attack / persistent fields |
+| Priest | leftover trait + slot | Divine Eminence + `dispel-magic` | The rest of the printed list can reuse existing constructors. | Divine Eminence leftover-trait bind; dispel-magic primitive |
+| Mage; Archmage; Flameskull; Lich | slot list | fire-bolt / magic-missile / shield / counterspell / fly and other unbound combat spells | Auto-hit and spell-attack constructors exist on heroes, not yet on the 2014 monster definition schema. | Grow CombatantDefinition with those existing fields, then bind; park true leftovers |
+| Druid | slot list | produce-flame / shillelagh / thunderwave / barkskin | Produce Flame needs the same spell-attack field. Do not substitute 2024 arena replacements. | Those constructors plus the schema field |
+| Spirit Naga; Guardian Naga; sphinxes; Mummy Lord | slot list + extras | charm / sleep / command / blight / geas and other unbound plus legendary / extra-action | Poison or weapon lines compile where printed. Spell leftovers are real. | Per-spell constructors; do not invent control |
+| Cloud Giant; Storm Giant; Glabrezu | innate list | fog cloud / levitate / darkness / fly / telekinesis / confusion | Light and detect magic are now classified. Remaining spells change combat or need a Chris-locked neutral. | Constructor or explicit lock; not a guess |
+| Night Hag and other innate leftovers | innate + extra-action | magic-missile / sleep / extra-action / leftover trait | Magic Missile exists as a hero auto-hit. Extra-action and leftover traits still block READY. | Schema auto-hit field, then the leftover family |
 
 2024 counterparts after the 2014 octopus unlock stay blocked on their own source. 2024 Giant Octopus Tentacles still need Grappled+Restrained, but Ink Cloud is a 1/Day underwater damage-triggered reaction plus Swim movement. 2024 Octopus Tentacles are damage-only (no grapple) and its Ink Cloud is a different 1/Day underwater reaction. Do not copy 2014 Ink Cloud absence into those 2024 reaction machines.
 
