@@ -14,6 +14,7 @@ from app.content.monster_physical_control_2024 import (
     physical_control_coverage_matches,
 )
 from report_zero_engine_monsters import _source_blockers
+from verify_certification_manifests import _detected_monster_mechanics
 
 
 def _row(name: str) -> dict[str, object]:
@@ -115,3 +116,13 @@ def test_physical_control_batch_has_expected_current_yield() -> None:
         "Succubus", "Winter Wolf",
     }
     assert expected.issubset(marker_names)
+
+
+def test_supported_condition_control_remains_detected_in_manifest() -> None:
+    row = _row("Ankheg")
+    names = {str(item["name"]) for item in load_monster_rows()}
+    blockers = _source_blockers(row, names)
+    detected = _detected_monster_mechanics(row, blockers)
+
+    assert "condition-or-control" in detected
+    assert "condition-or-control" not in blockers
