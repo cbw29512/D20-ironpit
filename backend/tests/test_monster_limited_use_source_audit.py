@@ -44,13 +44,13 @@ def test_limited_use_fingerprint_drift_is_detected() -> None:
     assert "source-limited-use-fingerprint-mismatch" in limited_use_issues(wolf, _row("Wolf"))
 
 
-def test_troll_loathsome_limbs_is_explicit_arena_neutral_simplification() -> None:
-    wolf = _monster("Wolf")
+def test_troll_loathsome_limbs_four_per_day_is_bound_to_stack_cap() -> None:
+    from app.content.monster_trait_bindings_2024 import bind_monster_source_traits_2024
+    from app.content.monsters_zero_engine import build_zero_engine_monsters
+
     row = _row("Troll")
     expected = parse_limited_use_names(row)
     assert "traits:Loathsome Limbs (4/Day)" in expected
-    stand_in = wolf.model_copy(update={
-        "name": "Troll",
-        "source_limited_use_names": expected,
-    })
-    assert limited_use_issues(stand_in, row) == []
+    raw = next(item for item in build_zero_engine_monsters() if item.name == "Troll")
+    troll = bind_monster_source_traits_2024(raw).model_copy(update={"source_limited_use_names": expected})
+    assert limited_use_issues(troll, row) == []
