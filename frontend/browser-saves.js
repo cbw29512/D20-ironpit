@@ -109,7 +109,7 @@
           appliedTotal = Math.min(appliedTotal, Math.max(0, target.state.current_hp - action.minimumRemainingHp));
         }
         if (appliedTotal) {
-          damageOutcome = A().applyDamage(target.state, appliedTotal, false, resolved.damageTypes, affectedStates, options.setup);
+          damageOutcome = A().applyDamage(target.state, appliedTotal, false, resolved.damageTypes, affectedStates, options.setup, damageComponents);
         }
         if (!save.succeeded && action.reduceHitPointMaximumOnFailedSave && incoming) {
           window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS.applyHitPointMaximumReduction(target.state, incoming);
@@ -135,7 +135,7 @@
           appliedTotal = Math.min(appliedTotal, Math.max(0, target.state.current_hp - action.minimumRemainingHp));
         }
         if (appliedTotal) {
-          damageOutcome = A().applyDamage(target.state, appliedTotal, false, [action.damageType], affectedStates, options.setup);
+          damageOutcome = A().applyDamage(target.state, appliedTotal, false, [action.damageType], affectedStates, options.setup, damageComponents);
         }
         if (!save.succeeded && action.reduceHitPointMaximumOnFailedSave && incoming) {
           window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS.applyHitPointMaximumReduction(target.state, incoming);

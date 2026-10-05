@@ -21,6 +21,7 @@ from app.content.monster_reaction_source_audit import complete_monster_reaction_
 from app.content.monster_saving_throws import complete_monster_saving_throws
 from app.content.monster_spellcasting_source_audit import complete_monster_spellcasting_fingerprints
 from app.content.monster_special_senses import complete_monster_special_senses
+from app.content.monster_trait_bindings_2024 import bind_monster_source_traits_2024_many
 from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints
 from app.content.monster_tyrannosaurus import build_tyrannosaurus_rex
 from app.content.monster_worg import build_worg
@@ -85,6 +86,7 @@ def build_legacy_monster_templates(*, include_capability_migrated: bool = True) 
     monsters = complete_monster_creature_types(monsters)
     monsters = complete_monster_special_senses(monsters)
     monsters = complete_monster_trait_fingerprints(monsters)
+    monsters = bind_monster_source_traits_2024_many(monsters)
     monsters = complete_monster_reaction_fingerprints(monsters)
     monsters = complete_monster_bonus_action_fingerprints(monsters)
     monsters = complete_monster_limited_use_fingerprints(monsters)

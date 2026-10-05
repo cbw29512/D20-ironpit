@@ -122,10 +122,36 @@
     }
   }
 
-  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null) {
+  function noteTurnDamage(state, incoming, damageTypes = [], damageComponents = []) {
+    try {
+      if (!(incoming > 0)) return;
+      state.damage_taken_this_turn_by_type ||= {};
+      let remaining = incoming;
+      for (const part of damageComponents || []) {
+        const applied = Math.max(0, Number(part.applied_total || 0));
+        const credited = Math.min(applied, remaining);
+        if (credited) {
+          const key = String(part.damage_type);
+          state.damage_taken_this_turn_by_type[key] = (state.damage_taken_this_turn_by_type[key] || 0) + credited;
+          remaining -= credited;
+        }
+        if (remaining <= 0) return;
+      }
+      if (remaining > 0 && (damageTypes || []).length === 1) {
+        const key = String(damageTypes[0]);
+        state.damage_taken_this_turn_by_type[key] = (state.damage_taken_this_turn_by_type[key] || 0) + remaining;
+      }
+    } catch (error) {
+      console.error("Failed browser per-turn typed damage tracking.", { combatant: state?.template?.name, error });
+      throw error;
+    }
+  }
+
+  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null, damageComponents = []) {
     const incoming = amount;
     if (!incoming || state.is_dead) return "damaged";
     noteRegenTypes(state, damageTypes);
+    noteTurnDamage(state, incoming, damageTypes, damageComponents);
     const absorbed = Math.min(state.temporary_hp, amount);
     state.temporary_hp -= absorbed;
     amount -= absorbed;

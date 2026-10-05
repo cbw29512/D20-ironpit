@@ -56,6 +56,7 @@ _ATTACKS = {
         ("Shortsword", "melee", 4, 1, 6, 2, "piercing", None, 5, None, None, [("Poison", 2, 6, 0, "poison")]),
         ("Hand Crossbow", "ranged", 4, 1, 6, 2, "piercing", None, 5, 30, 120, [("Poison", 2, 6, 0, "poison")]),
     ],
+    "Troll": [("Rend", "melee", 7, 2, 6, 4, "slashing", None, 10, None, None, [])],
     "Tough": [
         ("Mace", "melee", 4, 1, 6, 2, "bludgeoning", None, 5, None, None, []),
         ("Heavy Crossbow", "ranged", 3, 1, 10, 1, "piercing", None, 5, 100, 400, []),
@@ -72,7 +73,7 @@ _MULTI = {
     "Animated Armor": (2, ("Slam",)), "Gargoyle": (2, ("Claw",)),
     "Earth Elemental": (2, ("Slam", "Rock Launch")),
     "Guard Captain": (2, ("Javelin", "Longsword")), "Hill Giant": (2, ("Tree Club", "Trash Lob")),
-    "Hippopotamus": (2, ("Bite",)), "Manticore": (3, ("Rend", "Tail Spike")), "Violet Fungus": (2, ("Rotting Touch",)),
+    "Hippopotamus": (2, ("Bite",)), "Manticore": (3, ("Rend", "Tail Spike")), "Troll": (3, ("Rend",)), "Violet Fungus": (2, ("Rotting Touch",)),
 }
 _PRONE_MAX_SIZE = {
     ("Earth Elemental", "Rock Launch"): CreatureSize.LARGE,

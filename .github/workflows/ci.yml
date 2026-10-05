@@ -198,6 +198,7 @@ jobs:
           grep -q 'browser-friendly-recovery-auras.js' index.html
           grep -q 'browser-start-of-turn-timed-burn.js' index.html
           grep -q 'browser-regeneration.js' index.html
+          grep -q 'browser-triggered-extra-attacks.js' index.html
           grep -q 'browser-legendary-actions.js' index.html
           grep -q 'browser-melee-hit-save-retaliation.js' index.html
           grep -q 'browser-matching-dice-leap.js' index.html
@@ -329,6 +330,7 @@ jobs:
           grep -q 'browser-friendly-recovery-auras.js' frontend/index.html
           grep -q 'browser-start-of-turn-timed-burn.js' frontend/index.html
           grep -q 'browser-regeneration.js' frontend/index.html
+          grep -q 'browser-triggered-extra-attacks.js' frontend/index.html
           grep -q 'browser-legendary-action-choice.js' frontend/index.html
           grep -q 'browser-legendary-actions.js' frontend/index.html
           grep -q 'browser-melee-hit-save-retaliation.js' frontend/index.html
@@ -513,6 +515,7 @@ jobs:
           node frontend/browser-group-healing-area.test.cjs
           node frontend/browser-cleric-2024-leftover-spells.test.cjs
           node frontend/browser-regeneration-legendary-resistance.test.cjs
+          node frontend/browser-triggered-extra-attacks.test.cjs
           node frontend/browser-legendary-actions.test.cjs
           node frontend/browser-ability-check-escape.test.cjs
           node frontend/browser-unicorn-2014.test.cjs

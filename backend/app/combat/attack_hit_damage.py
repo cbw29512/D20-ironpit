@@ -129,7 +129,7 @@ def resolve_attack_hit_damage(
     applied_types = {part.damage_type for part in components if part.applied_total > 0}
     outcome = apply_damage(
         defender, applied_total, critical=critical, damage_types=applied_types,
-        dice=dice, affected_states=affected_states, setup=setup,
+        dice=dice, affected_states=affected_states, setup=setup, damage_components=components,
     )
     if setup is not None and target_event_id:
         source = next(

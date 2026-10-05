@@ -48,15 +48,15 @@
     if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2;
     return value;
   }
-  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null) {
+  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null, damageComponents = []) {
     const lifecycle = Z(); if (!lifecycle) throw new Error("Browser zero-HP runtime is not loaded.");
-    return lifecycle.applyDamage(state, amount, critical, damageTypes, affectedStates, setup);
+    return lifecycle.applyDamage(state, amount, critical, damageTypes, affectedStates, setup, damageComponents);
   }
   function legacyHitDamage(attacker, defender, attack, critical, mode, turnKey, options = {}) {
     if (attack.onHitSaveDamage) throw new Error("Save-dependent hit damage requires the browser hit-damage runtime.");
     const base = R().weaponDamage(attacker, attack, critical, mode, turnKey, options.bonusDamage || null, defender, Boolean(options.sneakAttackAllyAvailable)), damageComponents = base.components.map((part) => ({ ...part, applied_total: adjustedDamage(defender, part.total, part.damage_type, true, part.source_qualifiers || []) }));
     const appliedTotal = damageComponents.reduce((sum, part) => sum + part.applied_total, 0), damageRoll = { ...base.roll, total: appliedTotal }, appliedTypes = [...new Set(damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type))];
-    return { damageRoll, damageComponents, damageOutcome: applyDamage(defender, appliedTotal, critical, appliedTypes, options.affectedStates || [], options.setup || null), appliedTotal, saveDamage: null };
+    return { damageRoll, damageComponents, damageOutcome: applyDamage(defender, appliedTotal, critical, appliedTypes, options.affectedStates || [], options.setup || null, damageComponents), appliedTotal, saveDamage: null };
   }
   const HD = () => window.IRON_PIT_BROWSER_HIT_DAMAGE || { resolve: legacyHitDamage };
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {

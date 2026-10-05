@@ -109,7 +109,7 @@ def resolve_save_action(
             applied_total = min(applied_total, max(0, target.state.current_hp - action.minimum_remaining_hp))
         damage_outcome = apply_damage(
             target.state, applied_total, damage_types=applied_types, dice=dice,
-            affected_states=affected_states, setup=setup,
+            affected_states=affected_states, setup=setup, damage_components=damage_components,
         )
         end_rage_if_incapacitated(target.state)
         if (

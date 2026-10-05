@@ -42,3 +42,34 @@ def test_unimplemented_recharge_economy_fails_closed() -> None:
 def test_limited_use_fingerprint_drift_is_detected() -> None:
     wolf = _monster("Wolf").model_copy(update={"source_limited_use_names": ["actions:Howl (Recharge 5-6)"]})
     assert "source-limited-use-fingerprint-mismatch" in limited_use_issues(wolf, _row("Wolf"))
+
+
+def test_troll_loathsome_limbs_four_per_day_is_bound_to_stack_cap() -> None:
+    from app.content.monster_trait_bindings_2024 import bind_monster_source_traits_2024
+    from app.content.monsters_zero_engine import build_zero_engine_monsters
+
+    row = _row("Troll")
+    expected = parse_limited_use_names(row)
+    assert "traits:Loathsome Limbs (4/Day)" in expected
+    raw = next(item for item in build_zero_engine_monsters() if item.name == "Troll")
+    troll = bind_monster_source_traits_2024(raw).model_copy(update={"source_limited_use_names": expected})
+    assert limited_use_issues(troll, row) == []
+
+
+def test_troll_loathsome_limbs_wrong_per_day_cap_fails_closed() -> None:
+    from app.content.monster_trait_bindings_2024 import bind_monster_source_traits_2024
+    from app.content.monsters_zero_engine import build_zero_engine_monsters
+
+    row = _row("Troll")
+    expected = parse_limited_use_names(row)
+    raw = next(item for item in build_zero_engine_monsters() if item.name == "Troll")
+    troll = bind_monster_source_traits_2024(raw).model_copy(
+        update={"source_limited_use_names": expected},
+        deep=True,
+    )
+    rule = troll.triggered_extra_attack_stacks[0].model_copy(update={"max_uses": 3})
+    drifted = troll.model_copy(update={"triggered_extra_attack_stacks": [rule]})
+    assert (
+        "uncertified-limited-use:traits-loathsome-limbs-4-day"
+        in limited_use_issues(drifted, row)
+    )

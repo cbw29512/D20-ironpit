@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.zero_hp import restore_hit_points
+from app.combat.triggered_extra_attacks import clear_regeneration_owned_stacks
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent, CombatantState
 
@@ -28,6 +29,8 @@ def apply_start_of_turn_regeneration(state: CombatantState) -> tuple[int, bool, 
                 return 0, True, suppressed
             return 0, False, suppressed
         healed = restore_hit_points(state, trait.amount)
+        if healed:
+            clear_regeneration_owned_stacks(state)
         return healed, False, False
     except Exception:
         logger.exception("Failed start-of-turn Regeneration for %s.", state.template.name)

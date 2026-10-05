@@ -84,6 +84,7 @@ def resolve_auto_hit_spell(
             damage_types={DamageType(action.damage_type)} if applied_total else set(),
             dice=dice,
             affected_states=affected_states,
+            damage_components=applied_components,
         )
         mark_slot_spell_cast(caster.state, turn_key)
         resource.current_uses -= 1
