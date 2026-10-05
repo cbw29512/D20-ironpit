@@ -142,6 +142,18 @@ Specific source wording beats generic behavior. Resolve each subevent fully and 
 
 ## Monsters
 
+### Non-negotiable monster edition order
+
+- Finish the **2014 source monster roster first** before expanding the 2024 monster backlog.
+- Treat 2014 as the first implementation/reference pass for any mechanic that exists in both editions.
+- Build each mechanic **once** in the universal engine. Edition/source cards supply only the printed parameters and qualifiers.
+- After a 2014 mechanic is certified, immediately audit 2024 monsters for direct reuse of that same primitive before writing any 2024-specific code.
+- A different number, DC, range, damage amount/type, regeneration amount, recharge threshold, duration, target count, or similar source value is **data**, not a new mechanic.
+- Do not create separate 2014 and 2024 resolvers for semantically identical behavior. Edition-specific binding is allowed; duplicate engine behavior is not.
+- Only a genuine semantic rules difference may justify edition-scoped behavior, and that difference must be documented before implementation.
+- Example: Regeneration is one mechanic. A card may say 10 HP, 15 HP, Acid/Fire suppression, or a zero-HP lifecycle qualifier; those are parameters of the shared Regeneration primitive.
+- This order applies to traits, actions, reactions, saves, recharge, resistances, immunities, vulnerabilities, conditions, healing, auras, legendary mechanics, and all other monster combat behavior.
+
 - Canonical 2024 SRD 5.2.1 roster: exactly 330 monsters.
 - Promotion path: source -> detected mechanics -> universal capability data -> runtime -> Python/browser behavior -> generated assets -> certification -> exact-head CI.
 - A monster is runnable only when every outcome-changing printed mechanic is supported or explicitly proven irrelevant under the permanent arena contract.
