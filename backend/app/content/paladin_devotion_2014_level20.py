@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.domain.environment_contexts import EmittedEnvironmentContext
 from app.domain.progression import SavingThrowAdvantageGrant
 from app.domain.timed_self_buffs import TimedEmanationDamage, TimedSelfBuffAction
 from app.domain.weapons_base import DamageType
@@ -33,6 +34,9 @@ def holy_nimbus_2014() -> TimedSelfBuffAction:
             fixed_damage=10,
             damage_type=DamageType.RADIANT,
         ),
+        emitted_environment_contexts=[
+            EmittedEnvironmentContext(context_id="sunlight", radius_ft=30),
+        ],
         expiry_timing="source_turn_start",
         priority=120,
         animation="holy-nimbus",

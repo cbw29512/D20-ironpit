@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import ActionCost, ConditionName, ConditionTiming
 from app.domain.debuffs import DebuffCounter
+from app.domain.environment_contexts import EmittedEnvironmentContext
 from app.domain.friendly_combat_auras import (
     TimedFriendlyRecoveryAura,
     TimedFriendlyWeaponDamageAura,
@@ -120,6 +121,7 @@ class TimedSelfBuffAction(BaseModel):
     friendly_recovery_aura: TimedFriendlyRecoveryAura | None = None
     hostile_start_turn_condition_aura: TimedHostileConditionAura | None = None
     start_turn_emanation_damage: TimedEmanationDamage | None = None
+    emitted_environment_contexts: list[EmittedEnvironmentContext] = Field(default_factory=list)
     spell_save_dc_bonus: int = Field(default=0, ge=0, le=10)
     spell_attack_advantage: bool = False
     modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
@@ -169,6 +171,7 @@ class TimedSelfBuffAction(BaseModel):
                 or self.friendly_recovery_aura is not None
                 or self.hostile_start_turn_condition_aura is not None
                 or self.start_turn_emanation_damage is not None
+                or self.emitted_environment_contexts
                 or self.melee_hit_retaliation is not None
                 or self.spell_save_dc_bonus
                 or self.spell_attack_advantage

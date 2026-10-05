@@ -92,6 +92,7 @@ def resolve_timed_self_buff(
             or action.friendly_recovery_aura is not None
             or action.hostile_start_turn_condition_aura is not None
             or action.start_turn_emanation_damage is not None
+            or action.emitted_environment_contexts
             or action.melee_hit_retaliation is not None
             or action.spell_save_dc_bonus
             or action.spell_attack_advantage
