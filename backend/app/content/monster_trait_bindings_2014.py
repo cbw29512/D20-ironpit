@@ -5,10 +5,15 @@ import re
 
 from app.content.environment_context_reactions import sunlight_sensitivity_2014
 from app.content.monster_legendary_resistance_2014 import legendary_resistance_trait_name_2014
+from app.content.monster_passive_grants_2014 import (
+    aggressive_tactical_grants_2014,
+    bound_passive_trait_names_2014,
+    saving_throw_advantage_grants_2014,
+)
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.domain.environment_contexts import EnvironmentContextReaction
-from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
+from app.domain.progression import ProgressionCombatFeatures
 from app.domain.weapons import ConditionalAttackAdvantage
 
 logger = logging.getLogger(__name__)
@@ -16,13 +21,9 @@ _BLOOD_FRENZY = "Blood Frenzy"
 _RECKLESS = "Reckless"
 _CUNNING_ACTION = "Cunning Action"
 _SNEAK_ATTACK = "Sneak Attack (1/Turn)"
-_MAGIC_RESISTANCE = "Magic Resistance"
 _MAGIC_WEAPONS = "Magic Weapons"
 _INNATE_SPELLCASTING = "Innate Spellcasting"
 _SUNLIGHT_SENSITIVITY = "Sunlight Sensitivity"
-_ALL_SAVE_ABILITIES = (
-    "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",
-)
 _FINESSE_WEAPON_NAMES_2014 = frozenset({"Dagger", "Rapier", "Scimitar", "Shortsword", "Whip"})
 _SNEAK_ATTACK_D6 = re.compile(
     r"Sneak Attack \(1/Turn\).*?extra\s+\d+\s+\((\d+)d6\)",
@@ -80,19 +81,15 @@ def sneak_attack_eligible_2014(monster: SourceMonster2014, attack: SourceAttack2
 
 def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFeatures:
     """Translate printed 2014 traits into reusable progression feature fields."""
-    return ProgressionCombatFeatures(
-        cunning_action=supports_cunning_action_2014(monster),
-        sneak_attack_d6=sneak_attack_d6_2014(monster),
-        saving_throw_advantage_grants=(
-            [SavingThrowAdvantageGrant(
-                source_id="magic-resistance",
-                source_name=_MAGIC_RESISTANCE,
-                abilities=list(_ALL_SAVE_ABILITIES),
-                requires_magical_effect=True,
-            )]
-            if _MAGIC_RESISTANCE in monster.trait_names else []
-        ),
-    )
+    try:
+        return ProgressionCombatFeatures(
+            cunning_action=supports_cunning_action_2014(monster),
+            sneak_attack_d6=sneak_attack_d6_2014(monster),
+            saving_throw_advantage_grants=saving_throw_advantage_grants_2014(monster),
+        )
+    except Exception:
+        logger.exception("Failed to compile 2014 progression features for %s.", monster.name)
+        raise
 
 
 def environment_context_reactions_2014(
@@ -123,8 +120,7 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(_CUNNING_ACTION)
         if sneak_attack_d6_2014(monster) > 0:
             bound.add(_SNEAK_ATTACK)
-        if _MAGIC_RESISTANCE in monster.trait_names:
-            bound.add(_MAGIC_RESISTANCE)
+        bound.update(bound_passive_trait_names_2014(monster))
         if _MAGIC_WEAPONS in monster.trait_names:
             bound.add(_MAGIC_WEAPONS)
         if _INNATE_SPELLCASTING in monster.trait_names:

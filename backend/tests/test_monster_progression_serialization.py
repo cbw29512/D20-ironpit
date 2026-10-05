@@ -29,3 +29,12 @@ def test_monster_capability_export_excludes_all_hero_only_progression_fields() -
     for row in rows:
         progression = row.get("progression_features", {})
         assert HERO_ONLY_FIELDS.isdisjoint(progression), row["id"]
+
+
+def test_monster_capability_export_omits_empty_bonus_tactical_action_grants() -> None:
+    module = _load_exporter()
+    rows = json.loads(module.render_registry())
+    assert rows
+    for row in rows:
+        grants = row.get("bonus_tactical_action_grants")
+        assert grants != [], row["id"]
