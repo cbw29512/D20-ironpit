@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from app.combat.action_economy import is_available
 from app.combat.area_save_actions import choose_area_save
 from app.combat.area_weapon_attacks import choose_area_weapon_attack
-from app.combat.attack_action_choices import attack_choice
+from app.combat.attack_action_choices import attack_choice, save_choice
 from app.combat.auto_hit_spell_policy import choose_auto_hit_spell
 from app.combat.concentration_repeat_saves import choose_concentration_repeat_save
 from app.combat.encounter_targeting import living_opponents
@@ -92,8 +92,8 @@ def _attack_action_damage(attacker: EncounterCombatant, setup: EncounterSetup) -
     total = 0.0
     for slot in definition.slots:
         chosen = attack_choice(attacker, setup, slot)
-        if chosen is not None:
-            total += weapon_mean_damage(chosen[1])
+        saved = save_choice(attacker, setup, slot) if chosen is None else None
+        total += weapon_mean_damage(chosen[1]) if chosen else _save_mean_damage(saved[1]) if saved else 0.0
     return total
 
 

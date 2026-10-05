@@ -12,6 +12,7 @@ from app.content.sorcerer_draconic_2014_spell_support import magic_missile_2014
 from app.domain.combatants import ResourceDefinition
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
+from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.models import DamageType, SavingThrowAction, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.spells import SpellSaveAction
 from app.domain.targeting import AreaTargeting
@@ -161,6 +162,50 @@ def test_higher_damage_area_save_beats_reachable_melee() -> None:
     events, _ = resolve_combat_turn(1, 1, attacker, target, setup, FixedDiceProvider([8] * 20))
     assert any(event.feature_id == "acid-line" for event in events)
     assert not [event for event in events if event.event_type == "attack"]
+
+
+def test_mixed_multiattack_beats_weaker_standalone_save() -> None:
+    constrict = SavingThrowAction(
+        id="test-constrict",
+        name="Constrict",
+        save_ability="strength",
+        dc=14,
+        range_ft=10,
+        target_max_size="large",
+        damage_dice_count=2,
+        damage_dice_size=8,
+        damage_bonus=4,
+        damage_type="bludgeoning",
+        success_damage="none",
+        grapple_escape_dc=14,
+    )
+    attacker = _member(
+        _caster_monster().model_copy(update={
+            "auto_hit_spell_actions": [],
+            "saving_throw_actions": [constrict],
+            "attack_action": AttackActionDefinition(
+                id="test-multiattack",
+                name="Multiattack",
+                slots=[
+                    AttackActionSlot(attack_ids=["test-bite"], save_action_ids=[]),
+                    AttackActionSlot(attack_ids=[], save_action_ids=["test-constrict"]),
+                ],
+            ),
+        }),
+        "monster",
+        "monsters",
+        0,
+    )
+    target = _member(build_commoner().model_copy(update={"max_hp": 80}), "hero", "heroes", 5)
+    begin_turn(attacker.state)
+    setup = _setup(attacker, target)
+    pick = decide_post_move_offense(attacker, setup, "1:monster")
+    assert pick.family == "attack-action"
+    events, _ = resolve_combat_turn(
+        1, 1, attacker, target, setup, FixedDiceProvider([18, 6, 6, 6, 8, 6, 6]),
+    )
+    assert any(event.event_type == "attack" and event.attack_id == "test-bite" for event in events)
+    assert any(event.feature_id == "test-constrict" for event in events)
 
 
 def test_highest_damage_melee_wins_among_melee_options() -> None:

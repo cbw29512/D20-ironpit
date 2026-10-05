@@ -152,7 +152,7 @@ The movement engine owns legal squares, footprints, pathfinding, movement cost, 
 Default Iron Pit voluntary movement policy is intentionally simple:
 
 1. The combatant's goal is to engage and defeat a living opponent; it does not wander around the arena without an action-driven reason.
-2. If a legal melee attack can be made this turn after useful legal approach movement, the combatant closes to that melee reach, then uses the highest-damage option that can actually land from there. A landable area/save Action or damage spell beats weaker melee.
+2. If a legal melee attack can be made this turn after useful legal approach movement, the combatant closes to that melee reach, then uses the highest-damage option that can actually land from there. A landable area/save Action or damage spell beats weaker melee. Multiattack printed damage includes every landable slot.
 3. Front-row combatants are melee. They make useful legal progress toward melee even when a backup thrown/ranged attack could already land. After that approach, if melee still cannot land, they use the highest-damage option that can land.
 4. Back-row combatants are ranged and/or casters. They stay in place when a legal ranged or spell option can already land. A back-row melee creature with no ranged attack steps to the front when the last front-row ally dies, or Dodges until that step-up is legal.
 5. If a ranged combatant is already in melee and has a legal melee option, it uses the legal melee option rather than retreating merely to preserve range.

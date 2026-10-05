@@ -92,6 +92,16 @@ assert.equal(
 );
 
 S._resetForTests();
+S.registerProvider(provider("multiattack", "attack-action", ["2024"], () => ({ payload: { delivery: "melee", expectedDamage: 24 } })));
+S.registerProvider(provider("constrict", "save-action", ["2024"], () => ({ payload: { delivery: "ability", expectedDamage: 13 } })));
+const multiattackOverSave = S.discoverCandidates("normalPostMove", ctx());
+assert.equal(
+  S.selectCandidate("normalPostMove", multiattackOverSave).providerId,
+  "multiattack",
+  "Mixed Multiattack printed damage must beat the same save used alone",
+);
+
+S._resetForTests();
 S.registerProvider(provider("melee", "attack-action", ["2024"], () => ({ payload: { delivery: "melee", expectedDamage: 8 } })));
 S.registerProvider(provider("bow", "area-weapon-attack", ["2024"], () => ({ payload: { delivery: "ranged", expectedDamage: 20 } })));
 const meleeOverRanged = S.discoverCandidates("normalPostMove", ctx());
