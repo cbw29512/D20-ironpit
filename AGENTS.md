@@ -8,6 +8,7 @@ When Chris has more than one assistant working on Iron Pit concurrently, read an
 
 Before changing combat code, read:
 
+0. `SOUL.md` — non-negotiable product philosophy: one universal semantic engine, names for presentation/logging only.
 1. `docs/CURRENT_OPERATING_STATUS.md` — current lane, certified counts, parked PRs, CI spend rules.
 2. `docs/IRON_PIT_RULES_CONTRACT.md` — authoritative product/combat rules.
 3. `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md` — specific battlefield/card-token/grid architecture; it supersedes older fixed-formation/deity-closing assumptions wherever they conflict.
