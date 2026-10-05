@@ -12,6 +12,7 @@ const load = (name) => vm.runInThisContext(
 );
 
 window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
+load("browser-effective-senses.js");
 load("browser-condition-rules.js");
 
 const C = window.IRON_PIT_BROWSER_CONDITION_RULES;
@@ -63,5 +64,26 @@ assert.equal(C.canSee(blindsightObserver, hidden, 10), true);
 assert.equal(C.canSee(blindsightObserver, hidden, 15), false);
 assert.equal(C.effectiveSenseRangeFt(seer, "truesight"), 60);
 assert.equal(C.senseIsSuppressed(seer, "truesight"), false);
+
+const hearing = {
+  active_effect_ids: ["blinded"],
+  timed_effects: [],
+  active_modifiers: [],
+  blindsight_requires_hearing: true,
+  template: {
+    name: "Synthetic Hearing Blindsight",
+    blindsight_ft: 30,
+    truesight_ft: 0,
+    blindsight_requires_hearing: true,
+    size: "medium",
+  },
+};
+assert.equal(C.canSee(hearing, hidden, 30), true);
+hearing.active_effect_ids.push("deafened");
+assert.equal(C.effectiveSenseRangeFt(hearing, "blindsight"), 0);
+assert.equal(C.canSee(hearing, hidden, 30), false);
+hearing.active_effect_ids = hearing.active_effect_ids.filter((id) => id !== "deafened");
+assert.equal(hearing.template.blindsight_ft, 30);
+assert.equal(C.canSee(hearing, hidden, 30), true);
 
 console.log("Browser invisibility-benefit suppression parity passed.");
