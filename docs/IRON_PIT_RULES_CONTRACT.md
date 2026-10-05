@@ -74,6 +74,16 @@ Before adding new mechanic code, the implementation audit must classify the feat
 `ENGINE_TRULY_MISSING` requires evidence that the existing primitive inventory cannot represent the outcome correctly. After adding any new universal primitive, re-audit all classes and monsters for additional content that can now bind to it.
 
 
+### 1.3 Ability names never define mechanics
+
+The source ability name exists for cards, logs, audit evidence, and player-facing presentation. It must not determine engine behavior when the same outcome can be expressed through universal primitives.
+
+Every ability is decomposed into semantic operations such as attack, save, damage, healing, condition/debuff, movement, resource, timing, range/geometry, and lifecycle. Reuse the same primitive whenever the semantics match, regardless of whether the source is a monster, pregen, spell, item, different edition, or future homebrew card.
+
+The product goal is to maintain the **smallest practical universal effect vocabulary** that can correctly compose all supported combat possibilities. New source content should normally add parameters or new compositions, not new engine effects.
+
+Example: a homebrew `Psychic Push` that attacks once per round, deals 1d10 Psychic damage on hit, and forces a DC 15 fear save is resolved as: shared attack -> shared typed damage -> shared immunity/resistance/vulnerability -> shared save -> shared fear/frightened condition. A miss ends the chain before damage or fear. A fear-immune target skips the fear application. No `PsychicPushResolver` is permitted.
+
 ### 1.2 Universal combat resolution pipeline
 
 All outcome-changing combat must follow the same conceptual pipeline:
