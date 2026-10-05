@@ -30,7 +30,7 @@ def test_fighter_level_six_snapshot_applies_strength_asi_and_preserves_champion_
     assert features.initiative_advantage is True
     assert features.athletics_advantage is True
     assert features.critical_move_fraction == 0.5
-    assert features.tactical_shift_fraction == 0.5
+    assert [item.source_id for item in features.bonus_action_follow_up_movement_grants] == ["tactical-shift"]
     assert karnok.attack_action is not None and len(karnok.attack_action.slots) == 2
     assert all(slot.attack_ids == ["karnok-greatsword", "karnok-shortbow"] for slot in karnok.attack_action.slots)
 
