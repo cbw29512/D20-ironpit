@@ -143,6 +143,43 @@ function member(id, side, x, y, extras = {}) {
 }
 
 {
+  const caster = member("door-caster", "heroes", 1, 2, {
+    resources: { "spell-slot-4": 1 },
+    teleportActions: [{
+      id: "dimension-door",
+      name: "Dimension Door",
+      level: 4,
+      actionCost: "action",
+      range: 500,
+      resourceId: "spell-slot-4",
+      resourceCost: 1,
+      expendsSpellSlot: true,
+      animation: "dimension-door",
+    }],
+  });
+  const enemy = member("door-enemy", "monsters", 8, 2);
+  const origin = { ...caster.state.position };
+  assert.equal(T.apply(caster.state, "restrained", "enemy", {
+    sourceEffectId: "ground-snare",
+    sourceIsMagical: true,
+    groundContact: true,
+    endsOnTeleport: true,
+    useDefaultPoisonRecovery: false,
+  }), "restrained");
+  const setup = { heroes: [caster], monsters: [enemy], map_definition: map };
+  const resolved = TP.resolve(
+    1, 1, caster, setup, caster.state.template.teleport_actions[0], { x: 7, y: 2 }, "1:door-caster",
+  );
+  assert.deepEqual(caster.state.position, origin);
+  assert.equal(caster.state.active_effect_ids.includes("restrained"), false);
+  assert.equal(resolved.events[0].feature_id, "dimension-door");
+  assert.equal(resolved.events[0].event_type, "feature");
+  assert.match(resolved.events[0].description, /Dimension Door/);
+  assert.match(resolved.events[0].description, /without leaving its spot/);
+  assert.deepEqual(TP.chooseDestination(caster, setup, caster.state.template.teleport_actions[0]), origin);
+}
+
+{
   const runner = member("runner", "heroes", 4, 4);
   const flyer = member("flyer", "monsters", 8, 4, { flyFt: 60 });
   const enemy = member("anchor", "monsters", 5, 4);
