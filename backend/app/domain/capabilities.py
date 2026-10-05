@@ -27,6 +27,7 @@ from app.domain.size import CreatureSize
 from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.spells import DefensiveSpellAction, SpellSaveAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
+from app.domain.triggered_extra_attacks import TriggeredExtraAttackStack
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
 from app.domain.weapons import DamageType
@@ -90,6 +91,7 @@ class CombatantDefinition(BaseModel):
     resources: list[ResourceDefinition] = Field(default_factory=list)
     recharge_rules: list[RechargeRule] = Field(default_factory=list)
     regeneration: RegenerationTrait | None = None
+    triggered_extra_attack_stacks: list[TriggeredExtraAttackStack] = Field(default_factory=list)
     save_success_overrides: list[FailedSaveSuccessOverride] = Field(default_factory=list)
     visual: VisualLoadout
     source: str
