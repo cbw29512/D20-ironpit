@@ -14,7 +14,7 @@ assert.equal(fighter.critical_hit_minimum, 19);
 assert.equal(fighter.initiative_advantage, true);
 assert.equal(fighter.athletics_advantage, true);
 assert.equal(fighter.critical_move_fraction, 0.5);
-assert.equal(fighter.tactical_shift_fraction, 0.5);
+assert.equal(fighter.bonus_action_follow_up_movement_grants[0].source_id, "tactical-shift");
 assert.deepEqual(fighter.weapon_masteries, ["flail", "javelin", "spear", "longsword"]);
 assert.equal(fighter.saving_throw_bonuses.strength, 8);
 assert.equal(fighter.saving_throw_bonuses.constitution, 6);
