@@ -6,7 +6,7 @@ Iron Pit is a rules-first browser combat simulator. The current certified public
 
 ## Authoritative rules
 
-Read `docs/IRON_PIT_RULES_CONTRACT.md` for the product/combat contract.
+Chris-locked product rules are indexed in `docs/IRON_PIT_LOCKED_RULES.md`. Read `docs/IRON_PIT_RULES_CONTRACT.md` for the detailed product/combat contract those locks cite. Do not copy the index into a second spec.
 
 Key principles:
 
