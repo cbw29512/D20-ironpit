@@ -48,9 +48,9 @@
     if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2;
     return value;
   }
-  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null) {
+  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null, damageComponents = []) {
     const lifecycle = Z(); if (!lifecycle) throw new Error("Browser zero-HP runtime is not loaded.");
-    return lifecycle.applyDamage(state, amount, critical, damageTypes, affectedStates, setup);
+    return lifecycle.applyDamage(state, amount, critical, damageTypes, affectedStates, setup, damageComponents);
   }
   function legacyHitDamage(attacker, defender, attack, critical, mode, turnKey, options = {}) {
     if (attack.onHitSaveDamage) throw new Error("Save-dependent hit damage requires the browser hit-damage runtime.");
