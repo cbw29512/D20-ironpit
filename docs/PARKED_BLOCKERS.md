@@ -18,3 +18,5 @@ When #602 lands a Parked blockers section, fold this table there and delete this
 | Reel / pull | Roper | Tendril attach + pull toward source | Forced-movement pull primitive; only push exists |
 | Engulf | Gelatinous Cube, Shambling Mound | Cube/mound engulf is swallow-shaped plus form-specific extras | Same swallow machine, then extras |
 | Teleport + extra attack | Blink Dog | Recharge Teleport also grants a Bite before or after; `TeleportAction` has no extra-attack rider | In-place teleport (10.1) plus a parameterized extra-attack grant; do not drop the Bite |
+
+2024 counterparts after this 2014 octopus unlock stay blocked on their own source. 2024 Giant Octopus Tentacles still need Grappled+Restrained, but Ink Cloud is a 1/Day underwater damage-triggered reaction plus Swim movement. 2024 Octopus Tentacles are damage-only (no grapple) and its Ink Cloud is a different 1/Day underwater reaction. Do not copy 2014 Ink Cloud absence into those 2024 reaction machines.
