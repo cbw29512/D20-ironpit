@@ -90,6 +90,7 @@ jobs:
           node frontend/browser-spell-save-disadvantage.test.cjs
           node frontend/browser-d20-bonus-dice.test.cjs
           node frontend/browser-timed-self-buffs.test.cjs
+          node frontend/browser-environment-contexts.test.cjs
           node frontend/browser-turn-undead-2014.test.cjs
           node frontend/browser-divine-intervention-2014.test.cjs
           node frontend/browser-cleric9-2014.test.cjs

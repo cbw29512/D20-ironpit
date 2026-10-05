@@ -684,6 +684,10 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["modifierEffects"] = [_modifier_effect(effect) for effect in action.modifier_effects]
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
+    if action.emitted_environment_contexts:
+        row["emittedEnvironmentContexts"] = [
+            item.model_dump(mode="json") for item in action.emitted_environment_contexts
+        ]
     if action.melee_hit_retaliation is not None:
         row["meleeHitRetaliation"] = {
             "rangeFt": action.melee_hit_retaliation.range_ft,
@@ -889,6 +893,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        if template.environment_context_reactions:
+            row["environment_context_reactions"] = [
+                item.model_dump(mode="json") for item in template.environment_context_reactions
+            ]
         if template.kind == "monster":
             row["creature_type"] = template.creature_type
             row["source_trait_names"] = list(template.source_trait_names)

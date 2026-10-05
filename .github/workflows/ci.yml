@@ -185,6 +185,7 @@ jobs:
           grep -q 'browser-zero-hp.js' index.html
           grep -q 'browser-timed-conditions.js' index.html
           grep -q 'browser-timed-self-buffs.js' index.html
+          grep -q 'browser-environment-contexts.js' index.html
           grep -q 'browser-friendly-weapon-damage-auras.js' index.html
           grep -q 'browser-friendly-recovery-auras.js' index.html
           grep -q 'browser-start-of-turn-timed-burn.js' index.html
@@ -306,6 +307,7 @@ jobs:
           grep -q 'browser-zero-hp.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
           grep -q 'browser-timed-self-buffs.js' frontend/index.html
+          grep -q 'browser-environment-contexts.js' frontend/index.html
           grep -q 'browser-friendly-weapon-damage-auras.js' frontend/index.html
           grep -q 'browser-friendly-recovery-auras.js' frontend/index.html
           grep -q 'browser-start-of-turn-timed-burn.js' frontend/index.html
@@ -507,6 +509,7 @@ jobs:
           node frontend/browser-timed-effect-owned-resistances.test.cjs
           node frontend/browser-condition-removal.test.cjs
           node frontend/browser-timed-self-buffs.test.cjs
+          node frontend/browser-environment-contexts.test.cjs
           node frontend/browser-movement-mode-grants.test.cjs
           node frontend/browser-reactions.test.cjs
           node frontend/browser-parry-effective-ac.test.cjs

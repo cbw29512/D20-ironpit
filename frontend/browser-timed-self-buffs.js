@@ -64,6 +64,7 @@
         || action.friendlyRecoveryAura
         || action.hostileStartTurnConditionAura
         || action.startTurnEmanationDamage
+        || (action.emittedEnvironmentContexts || []).length
         || action.meleeHitRetaliation
         || action.spellSaveDcBonus || action.spellAttackAdvantage || (action.modifierEffects || []).length
       )) {

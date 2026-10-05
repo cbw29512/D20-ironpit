@@ -4,6 +4,7 @@ from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.condition_rules import close_hit_is_automatic_critical
+from app.combat.environment_contexts import environment_context_disadvantage_sources
 from app.combat.conditions import attack_roll_condition_sources
 from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
@@ -94,6 +95,7 @@ def resolve_spell_attack(
             condition_disadvantage
             + sap_disadvantage(caster.state)
             + next_attack_disadvantage_sources(caster.state)
+            + environment_context_disadvantage_sources(caster, setup, "attack_rolls")
             + int(close_threat),
         )
         target_ac = effective_armor_class(target.state)
