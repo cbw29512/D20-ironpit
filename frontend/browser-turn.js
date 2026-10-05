@@ -65,9 +65,9 @@
 
   function appendFollowUps(events, sequence, round, member, setup, triggerId, turnKey) {
     if (!triggerId) return sequence;
-    const tactical = BF()?.resolve(sequence, round, member, triggerId, turnKey);
+    const tactical = BF()?.resolve?.(sequence, round, member, triggerId, turnKey);
     if (tactical) { events.push(tactical); sequence += 1; }
-    const moved = BF()?.resolveMovement(sequence, round, member, setup, triggerId, turnKey);
+    const moved = BF()?.resolveMovement?.(sequence, round, member, setup, triggerId, turnKey);
     if (moved) { events.push(...moved.events); sequence = moved.sequence; }
     return sequence;
   }
