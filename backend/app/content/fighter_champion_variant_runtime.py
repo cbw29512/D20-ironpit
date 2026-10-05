@@ -9,6 +9,7 @@ from app.content.fighter_champion_variant_specs import FIGHTER_CHAMPION_VARIANT_
 from app.content.fighting_style_rules import has_fighting_style
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
+from app.domain.bonus_action_follow_up import BonusActionFollowUpMovementGrant
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack, WeaponAttackKind
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.traits import CombatTrait
@@ -88,7 +89,16 @@ def _progression(level: int, styles: list[str], build_id: str) -> ProgressionCom
         ),
         heroic_warrior=level >= 10,
         critical_move_fraction=0.5,
-        tactical_shift_fraction=0.5 if level >= 5 else 0.0,
+        bonus_action_follow_up_movement_grants=(
+            [BonusActionFollowUpMovementGrant(
+                source_id="tactical-shift",
+                source_name="Tactical Shift",
+                required_trigger_ids=["second-wind"],
+                speed_fraction=0.5,
+                desired_distance_ft=5,
+                provokes_opportunity_attacks=False,
+            )] if level >= 5 else []
+        ),
     )
 
 
