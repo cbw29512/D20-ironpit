@@ -18,7 +18,7 @@ _MODELED_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _DECLARATIVE_ATTACK_TRAITS = frozenset({"Blood Frenzy"})
-_DECLARATIVE_TEMPLATE_TRAITS = frozenset({"Loathsome Limbs", "Magic Resistance", "Regeneration"})
+_DECLARATIVE_TEMPLATE_TRAITS = frozenset({"Loathsome Limbs (4/Day)", "Magic Resistance", "Regeneration"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hellish Restoration",
     "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
@@ -86,7 +86,7 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             issues.append("trait-runtime-mismatch:regeneration")
     elif template.regeneration is not None:
         issues.append("trait-source-missing:regeneration")
-    if "Loathsome Limbs" in expected:
+    if "Loathsome Limbs (4/Day)" in expected:
         matches = [
             item for item in template.triggered_extra_attack_stacks
             if item.source_id == "loathsome-limbs"
