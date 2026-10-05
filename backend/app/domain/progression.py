@@ -179,4 +179,3 @@ class ProgressionCombatFeatures(BaseModel):
     death_save_advantage: bool = False
     death_save_recovery_minimum: int = Field(default=20, ge=2, le=20)
     critical_move_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
-    tactical_shift_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
