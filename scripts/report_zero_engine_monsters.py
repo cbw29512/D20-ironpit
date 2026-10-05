@@ -25,6 +25,7 @@ from app.content.monster_spellcasting_source_audit import arena_neutral_spellcas
 from app.content.monster_trait_source_audit import (
     _ARENA_NEUTRAL_TRAITS,
     _DECLARATIVE_ATTACK_TRAITS,
+    _DECLARATIVE_SAVE_TRAITS,
     _MODELED_TRAITS,
     parse_trait_names,
 )
@@ -59,7 +60,12 @@ _DYNAMIC_COMBATANT = re.compile(
     r"spirit rises as a [A-Za-z'-]+ in the space)\b",
     re.I,
 )
-_ALLOWED_TRAITS = set(_ARENA_NEUTRAL_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_MODELED_TRAITS)
+_ALLOWED_TRAITS = (
+    set(_ARENA_NEUTRAL_TRAITS)
+    | set(_DECLARATIVE_ATTACK_TRAITS)
+    | set(_DECLARATIVE_SAVE_TRAITS)
+    | set(_MODELED_TRAITS)
+)
 _DETAIL_FIELDS = ("name", "size", "armorClass", "hitPoints", "speed", "challenge", "traits", "actions")
 _DETAIL_BLOCKER_LIMIT = 30
 
