@@ -13,6 +13,12 @@
 .battle-card.empty-slot small{font-size:.58rem}
 .battle-card.empty-slot:hover{border-color:#d7b06a;transform:translateY(-2px)}
 .slot-number{position:absolute;left:6px;top:5px;font-size:.58rem;color:#777}
+.card-trash{position:absolute;top:4px;right:4px;z-index:8;display:grid;place-items:center;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid #7a4a3c;border-radius:999px;background:rgba(32,16,14,.94);color:#f3c4b4;box-shadow:0 2px 8px rgba(0,0,0,.45)}
+.card-trash svg{width:20px;height:20px}
+.card-trash:hover:not(:disabled),.card-trash:focus-visible{border-color:#f0a090;color:#ffe4dc;background:#3a1c18}
+.card-trash:disabled{opacity:.35;cursor:not-allowed}
+.battle-card.occupied{cursor:pointer}
+.battle-card.occupied .initiative-badge{right:auto;left:6px;top:22px}
 .initiative-badge{position:absolute;right:5px;top:5px;min-width:26px;padding:2px 4px;border:1px solid #6f5b43;border-radius:999px;background:#1c1814;color:#f3d08b;font-size:.6rem;font-weight:1000}
 .initiative-badge::before{content:"INIT ";font-size:.4rem;color:#8e867e}
 .card-name{display:block;padding:2px 24px 1px;font-size:.72rem}
@@ -22,7 +28,7 @@
 .card-hp{height:6px;margin:3px 0;background:#2b2520;border-radius:999px;overflow:hidden}
 .card-hp span{display:block;height:100%;background:#80b875;transition:width .15s ease}
 .hp-text{font-size:.58rem;color:#c8c0b7}
-.death-stamp{display:none;position:absolute;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,.74);color:#ff6666;font-size:1.05rem;font-weight:1000;letter-spacing:.08em;transform:rotate(-10deg)}
+.death-stamp{display:none;position:absolute;inset:0;z-index:4;align-items:center;justify-content:center;background:rgba(0,0,0,.74);color:#ff6666;font-size:1.05rem;font-weight:1000;letter-spacing:.08em;transform:rotate(-10deg);pointer-events:none}
 .battle-card.battle-dead .death-stamp{display:flex}
 .battle-card.battle-dead{filter:grayscale(1);opacity:.5}
 .battle-card.battle-down:not(.battle-dead){transform:rotate(2deg);opacity:.72}

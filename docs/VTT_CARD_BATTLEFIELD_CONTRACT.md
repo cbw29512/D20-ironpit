@@ -210,9 +210,10 @@ fights. Both website entry pages use this same section order.
 
 The live Pit is a product arena, not a developer console. Center copy
 and button names tell a buyer what to do: pick heroes and monsters, press
-Fight, watch the result, and download the log. Options that change how
-fights run stay on the lower bar. Certification, engine, and beta jargon
-do not belong in the main Pit.
+Fight, watch the result, and download the log. Each filled card has a
+touch-sized trash control that clears that slot in one tap. Options that
+change how fights run stay on the lower bar. Certification, engine, and
+beta jargon do not belong in the main Pit.
 
 **Review log** (formerly Load Combat, 2026-10-04) is a review control on
 the options bar. It does not change this section order. When a ready-made

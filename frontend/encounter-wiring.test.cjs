@@ -70,6 +70,9 @@ const turbo = fs.readFileSync(path.join(root, "browser-turbo.js"), "utf8");
 const css = fs.readFileSync(path.join(root, "battlefield.css"), "utf8");
 
 assert.match(view, /MAX_SLOTS = 6/); assert.match(app, /MAX_SLOTS = 6/);
+assert.match(view, /class="card-trash"/); assert.match(view, /aria-label="Remove /);
+assert.match(app, /view\(\)\.render\(state, openSlot, removeSlot\)/);
+assert.match(css, /\.card-trash/);
 assert.match(view, /card-concentration/); assert.match(replay, /CONCENTRATING/);
 assert.match(view, /IRON_PIT_COMBATANT_ART/);
 assert.match(app, /Iron Pit ready\. Pick heroes and monsters, then press Fight\./);
