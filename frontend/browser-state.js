@@ -16,7 +16,6 @@
   const OM = () => window.IRON_PIT_BROWSER_OPENING_MODIFIERS || { build: () => [] };
   const rawMax = (state) => state.template.max_hp + (state.max_hp_bonus || 0) - (state.hit_point_maximum_reduction || 0);
   const effectiveMaxHp = (state) => Math.max(1, X()?.effectiveMaxHp(state, rawMax(state)) ?? rawMax(state));
-
   function buildState(template) {
     return {
       template, current_hp: template.max_hp, max_hp_bonus: 0, temporary_hp: 0, position: null,
@@ -38,7 +37,6 @@
       rage_expires_round: null, rage_max_round: null,
     };
   }
-
   function grantTemporaryHp(state, amount) {
     if (amount < 0) throw new Error("Temporary HP cannot be negative.");
     if (state.template.traits?.includes("swarm")) return state.temporary_hp;
