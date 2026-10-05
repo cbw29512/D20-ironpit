@@ -31,6 +31,14 @@ def _unsupported_traits(monsters):
     )
 
 
+def _unsupported_trait_names(monsters):
+    names = defaultdict(list)
+    for monster in monsters:
+        for trait in unsupported_traits_2014(monster):
+            names[trait].append(monster.name)
+    return names
+
+
 def _attack_shapes(monsters):
     counts = Counter()
     names = defaultdict(set)
@@ -91,8 +99,9 @@ def main() -> None:
     for field, count in attack_counts.most_common():
         print(f"  {count:3}  {field}: {' | '.join(sorted(attack_names[field]))}")
     print("Unsupported traits:")
+    trait_names = _unsupported_trait_names(monsters)
     for trait, count in _unsupported_traits(monsters).most_common():
-        print(f"  {count:3}  {trait}")
+        print(f"  {count:3}  {trait}: {' | '.join(trait_names[trait])}")
     if len(monsters) != 327:
         raise RuntimeError(f"Expected 327 source monsters, found {len(monsters)}")
     if len(ready) <= 4:
