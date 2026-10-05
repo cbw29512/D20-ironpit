@@ -42,6 +42,7 @@ from app.domain.spell_cast_modifiers import ResourceBackedSpellDurationModifier,
 from app.domain.spell_cast_effects import SpellCastTimedResistance
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
+from app.domain.triggered_extra_attacks import TriggeredExtraAttackStack
 from app.domain.post_hit_save_condition import PostHitSaveConditionSpell
 from app.domain.targeted_concentration_damage import TargetedConcentrationDamageAction
 from app.domain.legendary_actions import LegendaryActionOption
@@ -163,6 +164,7 @@ class CombatantTemplate(BaseModel):
     unlimited_resource_ids: list[str] = Field(default_factory=list)
     recharge_rules: list[RechargeRule] = Field(default_factory=list)
     regeneration: RegenerationTrait | None = None
+    triggered_extra_attack_stacks: list[TriggeredExtraAttackStack] = Field(default_factory=list)
     save_success_overrides: list[FailedSaveSuccessOverride] = Field(default_factory=list)
     legendary_actions: list[LegendaryActionOption] = Field(default_factory=list)
     source: str
