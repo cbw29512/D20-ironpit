@@ -1,18 +1,24 @@
 from app.combat.dice import FixedDiceProvider
 from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.state import build_combatant_state
-from app.content.demo import build_demo_fighter
+from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 
 def _setup():
     state = build_combatant_state(build_demo_fighter())
     member = EncounterCombatant(combatant_id="fighter", side="heroes", position_ft=0, state=state)
+    monster = EncounterCombatant(
+        combatant_id="monster",
+        side="monsters",
+        position_ft=5,
+        state=build_combatant_state(build_goblin_warrior()),
+    )
     setup = EncounterSetup(
         heroes=[member],
-        monsters=[],
+        monsters=[monster],
         hero_total_levels=1,
-        monster_total_cr="0",
+        monster_total_cr="1/4",
     )
     return member, setup
 
