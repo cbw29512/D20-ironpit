@@ -9,11 +9,12 @@
   function legal(member, target, action) {
     try {
       // Visibility is source data, not a spell-name branch.
-      if (action.requiresTargetSight && !window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(member.state, target.state)) return false;
+      const distance = F().saveDistance(member, target, action.range || 0);
+      if (action.requiresTargetSight && !window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(member.state, target.state, distance)) return false;
       if (!E().available(member.state, action.actionCost || "action")) return false;
       if (!target.state.is_alive || target.state.is_dead || target.state.current_hp <= 0) return false;
       if (target.state.current_hp > action.maxCurrentHp && !(action.fallbackDamageDiceCount || 0)) return false;
-      if (F().saveDistance(member, target, action.range || 0) > (action.range || 0)) return false;
+      if (distance > (action.range || 0)) return false;
       if (action.resourceId && (member.state.resources?.[action.resourceId] || 0) < (action.resourceCost || 1)) return false;
       return true;
     } catch (error) {

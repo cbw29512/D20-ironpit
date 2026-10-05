@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.combat.condition_immunity import condition_is_immune
-from app.combat.condition_rules import attacks_have_advantage_against, has_condition, invisibility_benefits_suppressed
+from app.combat.condition_rules import attacks_have_advantage_against, can_see, has_condition
 from app.combat.defensive_modifier_rules import attacks_against_disadvantage_sources
 from app.combat.dodge import DODGE_EFFECT_ID, dodge_benefits_active
 from app.combat.exhaustion import attack_disadvantage_sources
@@ -37,7 +37,7 @@ def attack_roll_condition_sources(
     ignores_unseen = attacker.template.progression_features.ignore_unseen_target_attack_disadvantage
     if has_condition(attacker, BLINDED_EFFECT_ID) and not ignores_unseen:
         disadvantage += 1
-    if has_condition(attacker, INVISIBLE_EFFECT_ID) and not invisibility_benefits_suppressed(attacker):
+    if has_condition(attacker, INVISIBLE_EFFECT_ID) and not can_see(defender, attacker, distance_ft):
         advantage += 1
     if has_condition(attacker, FRIGHTENED_EFFECT_ID):
         disadvantage += 1
@@ -53,7 +53,7 @@ def attack_roll_condition_sources(
         disadvantage += 1
     if attacks_have_advantage_against(defender):
         advantage += 1
-    if has_condition(defender, INVISIBLE_EFFECT_ID) and not invisibility_benefits_suppressed(defender) and not ignores_unseen:
+    if has_condition(defender, INVISIBLE_EFFECT_ID) and not ignores_unseen and not can_see(attacker, defender, distance_ft):
         disadvantage += 1
     if RESTRAINED_EFFECT_ID in defender.active_effect_ids:
         advantage += 1

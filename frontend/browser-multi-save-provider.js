@@ -17,7 +17,7 @@
         const distance = F().saveDistance(member, target, action.range);
         return V().legalAction(action, target, distance)
           && (!action.requiresTargetSight
-            || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(member.state, target.state));
+            || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(member.state, target.state, distance));
       }).slice(0, action.maxTargets);
       if (targets.length) return { targets, action };
     }
@@ -38,7 +38,7 @@
       const distance = F().saveDistance(member, target, action.range);
       if (!V().legalAction(action, target, distance)
         || (action.requiresTargetSight
-          && !window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(member.state, target.state))) {
+          && !window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(member.state, target.state, distance))) {
         throw new Error(`${action.name} has an illegal selected target.`);
       }
     }

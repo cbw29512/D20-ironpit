@@ -59,6 +59,8 @@ A capability discovered while implementing a hero must be reusable by monsters, 
 
 Invisibility is one universal condition regardless of source. A spell, feature, item, monster ability, or self-buff that grants invisibility applies the same `invisible` condition; source-specific activation cost, resource cost, duration, and companion effects belong to declarative source data rather than a source-specific invisibility resolver.
 
+Effective visibility is one universal, distance-aware predicate. It consumes observer and target live state, the distance between them, source-derived `truesight_ft` / `blindsight_ft` through an effective-sense layer, Invisible / invisibility-suppression, and Blinded. 2014 and 2024 Truesight is visual: it sees Invisible creatures and objects inside its declared range and does not function while Blinded. 2014 and 2024 Blindsight perceives without relying on sight: it functions while Blinded and perceives Invisible creatures inside its declared range. Outside a sense's effective range, ordinary Invisible and Blinded rules apply. Live sense suppressors may reduce effective range without mutating the immutable source value; they bind declaratively rather than through named-creature dispatch.
+
 The player-facing combat log must preserve the exact source ability name. Internal audit/certification data should additionally record the generic capability/primitive IDs used underneath so engine reuse remains provable without exposing implementation jargon to the player.
 
 Before adding new mechanic code, the implementation audit must classify the feature as one of:

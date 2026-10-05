@@ -5,11 +5,15 @@ from app.combat.condition_rules import can_see, is_incapacitated
 from app.domain.models import CombatantState, DamageRollComponent
 
 
-def can_uncanny_dodge(attacker: CombatantState, defender: CombatantState) -> bool:
+def can_uncanny_dodge(
+    attacker: CombatantState,
+    defender: CombatantState,
+    distance_ft: int | None = None,
+) -> bool:
     """Return whether the defender can see this attacker and spend its Reaction."""
     return bool(
         defender.template.progression_features.uncanny_dodge
-        and can_see(defender, attacker)
+        and can_see(defender, attacker, distance_ft)
         and is_available(defender, "reaction")
     )
 
@@ -18,9 +22,10 @@ def apply_uncanny_dodge(
     attacker: CombatantState,
     defender: CombatantState,
     components: list[DamageRollComponent],
+    distance_ft: int | None = None,
 ) -> tuple[list[DamageRollComponent], bool]:
     """Halve one visible attack's rolled damage and spend the defender's Reaction."""
-    if not components or not can_uncanny_dodge(attacker, defender):
+    if not components or not can_uncanny_dodge(attacker, defender, distance_ft):
         return components, False
     spend(defender, "reaction")
     return [item.model_copy(update={"total": item.total // 2}) for item in components], True

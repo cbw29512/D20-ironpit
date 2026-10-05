@@ -37,9 +37,10 @@ def _legal_targets(
         for target in opponents:
             if not target.state.is_alive or target.state.is_dead or target.state.current_hp <= 0:
                 continue
-            if combatant_distance(reactor, target) > range_ft:
+            distance = combatant_distance(reactor, target)
+            if distance > range_ft:
                 continue
-            if requires_sight and not can_see(reactor.state, target.state):
+            if requires_sight and not can_see(reactor.state, target.state, distance):
                 continue
             if requires_clear_line and not clear_line_between_members(reactor, target, setup):
                 continue
