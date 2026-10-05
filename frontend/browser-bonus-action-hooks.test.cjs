@@ -36,15 +36,6 @@ window.IRON_PIT_BROWSER_ATTACK = {
   },
 };
 window.IRON_PIT_BROWSER_PALADIN_AURAS_2014 = { sync: () => {} };
-let shiftCalls = 0;
-window.IRON_PIT_BROWSER_TACTICAL_SHIFT = {
-  resolve(sequence, round, member) {
-    shiftCalls += 1;
-    if (!(member.state.template.tactical_shift_fraction > 0)) return null;
-    return { sequence, round_number: round, event_type: "feature", actor_id: member.combatant_id,
-      actor_name: member.state.template.name, feature_id: "tactical-shift", description: "Tactical Shift rider." };
-  },
-};
 window.IRON_PIT_BROWSER_ACTIVATION_MOVEMENT = {
   resolve(sequence) { return { events: [], sequence }; },
 };
@@ -132,7 +123,7 @@ const finalizePhase = (actor, round = 1, monsters = [], turnEvents = []) => H.ru
 {
   const fighter = member("healthy-fighter", {
     name: "Healthy Fighter", ruleset: "2024", max_hp: 40, level: 4, traits: ["adrenaline-rush"],
-    wearing_heavy_armor: false, rage_damage_bonus: 0, tactical_shift_fraction: 0,
+    wearing_heavy_armor: false, rage_damage_bonus: 0,
   }, { "second-wind": 3, "adrenaline-rush": 2 });
   const beforeEscape = run(fighter, "beforeEscape");
   assert.deepEqual(beforeEscape.events, [], "Adrenaline Rush must wait until after the grapple-escape checkpoint");
@@ -168,7 +159,7 @@ const finalizePhase = (actor, round = 1, monsters = [], turnEvents = []) => H.ru
 {
   const legacy = member("legacy", {
     name: "Legacy", ruleset: "2014", max_hp: 30, level: 4, traits: ["adrenaline-rush"],
-    wearing_heavy_armor: false, rage_damage_bonus: 0, tactical_shift_fraction: 0,
+    wearing_heavy_armor: false, rage_damage_bonus: 0,
   }, { "adrenaline-rush": 2 });
   const result = run(legacy, "afterEscape");
   assert.deepEqual(result.events, [], "2024-only Adrenaline Rush must not cross into the 2014 ruleset");
