@@ -17,6 +17,11 @@ window.IRON_PIT_BROWSER_STATE = {
   nearestTarget: (_member, setup) => setup.heroes[0],
   distance: () => 5,
 };
+window.IRON_PIT_BROWSER_FORMATION = {
+  targetOrder: (_member, setup) => setup.heroes,
+  targetAllowed: () => true,
+  attackDistance: () => 5,
+};
 const attackCalls = [];
 window.IRON_PIT_BROWSER_ATTACK = {
   resolveAttack(sequence, round, member, target, attack) {
@@ -122,6 +127,18 @@ const setup = { heroes: [hero], monsters: [] };
   assert.deepEqual(result.events.map((event) => event.event_type), ["attack"]);
   assert.equal(troll.state.triggered_extra_attack_stack_counts["loathsome-limbs"], 1);
   assert.deepEqual(attackCalls, ["attached-limb-rend"]);
+}
+
+{
+  const troll = member();
+  setup.monsters = [troll];
+  troll.state.triggered_extra_attack_stack_counts["loathsome-limbs"] = 1;
+  window.IRON_PIT_BROWSER_GRID_BARRIERS = { clearBetweenMembers: () => false };
+  attackCalls.length = 0;
+  const result = window.IRON_PIT_BROWSER_TRIGGERED_EXTRA_ATTACKS.resolveAfterTurn(1, 1, troll, setup);
+  assert.equal(result.events.length, 0, "blocked line of effect prevents attached attacks");
+  assert.equal(attackCalls.length, 0);
+  delete window.IRON_PIT_BROWSER_GRID_BARRIERS;
 }
 
 {
