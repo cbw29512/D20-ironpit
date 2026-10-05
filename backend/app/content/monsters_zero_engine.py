@@ -56,7 +56,6 @@ _ATTACKS = {
         ("Shortsword", "melee", 4, 1, 6, 2, "piercing", None, 5, None, None, [("Poison", 2, 6, 0, "poison")]),
         ("Hand Crossbow", "ranged", 4, 1, 6, 2, "piercing", None, 5, 30, 120, [("Poison", 2, 6, 0, "poison")]),
     ],
-    "Troll Limb": [("Rend", "melee", 6, 2, 4, 4, "slashing", None, 5, None, None, [])],
     "Tough": [
         ("Mace", "melee", 4, 1, 6, 2, "bludgeoning", None, 5, None, None, []),
         ("Heavy Crossbow", "ranged", 3, 1, 10, 1, "piercing", None, 5, 100, 400, []),
