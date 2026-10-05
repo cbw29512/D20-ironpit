@@ -85,6 +85,17 @@ The transfer packet is a cache; the repository is the database.
 - If a new clarification conflicts with an existing authoritative rule, stop and reconcile the conflict explicitly in the repository before changing runtime behavior.
 - This gate overrides speed, convenience, and perceived momentum. Asking one targeted question is preferred to implementing the wrong abstraction.
 
+## Universal composition invariant
+
+- **Ability names are never engine dispatch keys** when behavior can be expressed through shared mechanics. Names are retained for cards/logs/audit only.
+- Decompose every source ability into the minimum shared primitives required to resolve it.
+- Stop resolution immediately when an upstream prerequisite fails. Example: if an attack misses, on-hit damage and on-hit condition riders do not resolve.
+- Typed damage always passes through the shared immunity/resistance/vulnerability pipeline.
+- Condition riders always pass through shared immunity/save/application logic.
+- Resource limits and timing such as once per round belong to declarative source data.
+- Prefer adding parameters or composing existing primitives over adding new engine effects.
+- Future homebrew cards must use the same engine and composition vocabulary as RAW pregens and monsters.
+
 ## Mandatory every-task semantic reuse check
 
 Before **every** class, subclass, feat, spell, item, monster, legendary action, lair action, or other combat-mechanic implementation, re-read:
