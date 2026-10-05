@@ -10,8 +10,9 @@ It does **not** replace `docs/IRON_PIT_RULES_CONTRACT.md`. That file remains the
 - **Universal conditions.** Prone is Prone, Grappled is Grappled, Frightened is Frightened, Poisoned is Poisoned, and the same for every other shared condition, save, Advantage, and Disadvantage. The card supplies parameters. The engine supplies the mechanic.
 - **Printed names in the log.** The player log and card keep the exact source ability name. Engine dispatch uses generic primitive IDs, never class/monster/ability-name branches.
 - **2014 families first, then bind 2024.** Finish the 2014 source roster family before expanding an independent 2024 mechanic. After a 2014 primitive is certified, audit 2024 for direct reuse. Edition cards supply printed numbers; do not duplicate engine behavior.
+- **Do not stall a family on one blocker.** If a monster, item, spell, or feature hits a real blocker (needs new engine support, RAW ambiguity, missing primitive, or a Chris decision), park that card. Record it below with the printed name, the blocker, and why it cannot ship yet. Keep moving to the next creature or family. Come back to parked items only after the rest of the current family is finished. Do not guess, invent a special case, or strip a printed mechanic to make the card READY. Unsupported outcome-changing mechanics still fail closed.
 
-Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §1.1, §2, §25; `SOUL.md`; `AGENTS.md` semantic-reuse and 2014-first monster order.
+Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §1.1, §2, §25; `SOUL.md`; `AGENTS.md` semantic-reuse, 2014-first monster order, and uncertainty gate.
 
 ## Death and dying
 
@@ -71,3 +72,11 @@ Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §1.2, Attack natural 1 / 20, §11,
 - **One big Netlify push only.** Routine development and verification stay in repository CI. Production publish requires Chris to unlock Iron Pit. Completing a feature, PR, or merge is not publish approval.
 
 Authority: `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md`; `docs/IRON_PIT_RULES_CONTRACT.md` §28; `AGENTS.md` Netlify lock.
+
+## Parked blockers
+
+Standing instruction: park, record, continue. Revisit this list after the rest of the current family is finished.
+
+| Card / item | Family | Blocker | Why parked | Needed to unpark |
+|---|---|---|---|---|
+| — | — | — | None parked on this commit. | — |

@@ -82,8 +82,9 @@ The transfer packet is a cache; the repository is the database.
 
 - If there is any uncertainty about RAW wording, source interpretation, timing, architecture, data mapping, user intent, or whether an existing shared mechanic already covers the behavior, stop before changing code.
 - Do not guess, infer around the uncertainty, create a temporary special case, or keep coding merely to preserve momentum.
-- Ask Chris one precise clarification question that isolates the unresolved decision.
-- After Chris answers, write the decision into the repository before implementation continues. Rules/mechanics decisions belong in `docs/IRON_PIT_RULES_CONTRACT.md`; durable universal architecture decisions belong in `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`; battlefield/card-token/grid decisions belong in `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md`; operating/process decisions belong in `AGENTS.md`.
+- If the blocker is one monster, item, spell, or feature and the rest of the family can proceed, park that card in `docs/IRON_PIT_LOCKED_RULES.md` **Parked blockers** with the reason and keep moving. Do not stall the lane on that one card. Do not strip a printed mechanic to make it READY.
+- Ask Chris one precise clarification question that isolates the unresolved decision when the decision would change the family, the shared primitive, or the contract.
+- After Chris answers, write the decision into the repository before implementation continues. Rules/mechanics decisions belong in `docs/IRON_PIT_RULES_CONTRACT.md`; durable universal architecture decisions belong in `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`; battlefield/card-token/grid decisions belong in `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md`; operating/process decisions belong in `AGENTS.md`. Add a one-line index entry in `docs/IRON_PIT_LOCKED_RULES.md` that cites that file. Do not copy the full rule into a second spec.
 - If the correct authority file is itself unclear, ask before writing.
 - Re-read the written decision and implement against that repository authority. Do not rely on chat memory alone for a decision that can affect future combat work.
 - If a new clarification conflicts with an existing authoritative rule, stop and reconcile the conflict explicitly in the repository before changing runtime behavior.
