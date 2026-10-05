@@ -121,6 +121,7 @@
   color:#f5f1e8;
   font-weight:750;
 }
+.law-list li:last-child{grid-column:1 / -1;text-align:center}
 .compact-hero .ruleset-control{justify-content:center}
 #ruleset-edition-note{max-width:40rem;margin:.2rem auto 0;color:#cfc5b6}
 @media(max-width:720px){
