@@ -36,6 +36,15 @@ def _channel_uses(cleric: EncounterCombatant) -> int:
     return next(item.current_uses for item in cleric.state.resources if item.id == "channel-divinity")
 
 
+def test_channel_policy_uses_semantic_modes_not_class_identity() -> None:
+    setup, cleric, skeleton, zombie = _setup()
+    cleric.state.template = cleric.state.template.model_copy(update={"archetype": "Homebrew Psychic"})
+    choice = choose_channel_divinity(cleric, setup)
+    assert choice is not None
+    assert choice.kind == "turn-undead"
+    assert choice.targets == (skeleton, zombie)
+
+
 def test_level_two_policy_turns_every_legal_undead_before_spending_spell_slots() -> None:
     setup, cleric, skeleton, zombie = _setup()
     choice = choose_channel_divinity(cleric, setup)
