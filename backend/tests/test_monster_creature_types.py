@@ -1,5 +1,7 @@
 from app.content.capability_registry import build_combatant_from_capabilities, build_monster_templates_from_capabilities
-from app.content.monster_creature_types import base_creature_type, creature_type_matches_source, is_creature_type
+from app.content.monster_creature_types import (
+    base_creature_type, creature_matches_kind, creature_type_matches_source, is_creature_type,
+)
 
 
 def test_runtime_monsters_receive_exact_srd_creature_type() -> None:
@@ -23,6 +25,18 @@ def test_parenthetical_creature_type_preserves_source_and_matches_base_type() ->
     assert base_creature_type("Dragon (Chromatic)") == "dragon"
     assert base_creature_type("Fey (Goblinoid)") == "fey"
     assert base_creature_type(None) is None
+
+
+def test_creature_matches_kind_reads_base_type_and_parenthetical_subtypes() -> None:
+    goblin = build_combatant_from_capabilities("srd-goblin-warrior")
+    skeleton = build_combatant_from_capabilities("srd-skeleton")
+    elf = goblin.model_copy(update={"creature_type": "Humanoid (Elf)"})
+    assert creature_matches_kind(goblin, "fey") is True
+    assert creature_matches_kind(goblin, "goblinoid") is True
+    assert creature_matches_kind(skeleton, "undead") is True
+    assert creature_matches_kind(elf, "humanoid") is True
+    assert creature_matches_kind(elf, "elf") is True
+    assert creature_matches_kind(elf, "undead") is False
 
 
 def test_creature_type_source_parity_fails_closed_when_runtime_is_tampered() -> None:

@@ -14,6 +14,9 @@ _ATTACK_EFFECT_IDS = {
 _SAVE_PRONE_IDS = {
     "ankylosaurus", "dire-wolf", "giant-crocodile", "mastiff", "wolf", "worg",
 }
+_SAVE_CONDITION_IDS = {
+    "ghoul",
+}
 _SAVE_DAMAGE_IDS = {
     "giant-centipede", "giant-poisonous-snake", "giant-scorpion", "giant-wasp",
     "poisonous-snake", "scorpion", "wyvern",
@@ -40,12 +43,12 @@ def _enum_value(value):
     return value.value if hasattr(value, "value") else value
 
 
-def test_basic_attack_effect_tranche_is_exactly_134_and_ruleset_isolated():
+def test_basic_attack_effect_tranche_is_exactly_145_and_ruleset_isolated():
     source = load_monster_source_2014()
     ready = [monster for monster in source if not basic_blockers_2014(monster)]
-    assert len(ready) == 144
+    assert len(ready) == 145
     expected = (
-        _ATTACK_EFFECT_IDS | _SAVE_PRONE_IDS | _SAVE_DAMAGE_IDS | _CHARGE_IDS |
+        _ATTACK_EFFECT_IDS | _SAVE_PRONE_IDS | _SAVE_CONDITION_IDS | _SAVE_DAMAGE_IDS | _CHARGE_IDS |
         _SURE_FOOTED_IDS | _SWARM_IDS
     )
     assert expected <= {monster.id for monster in ready}
@@ -80,9 +83,9 @@ def test_basic_attack_effects_preserve_pinned_source_semantics():
             assert runtime.forbid_target_grappled_by_self == source_attack.forbid_target_grappled_by_self
 
 
-def test_save_to_prone_riders_preserve_exact_pinned_source_semantics():
+def test_save_to_condition_riders_preserve_exact_pinned_source_semantics():
     source = {monster.id: monster for monster in load_monster_source_2014()}
-    for monster_id in _SAVE_PRONE_IDS:
+    for monster_id in _SAVE_PRONE_IDS | _SAVE_CONDITION_IDS:
         monster = source[monster_id]
         runtime_attacks = _runtime_attacks(compile_combatant(adapt_basic_monster_2014(monster)))
         for source_attack in [attack for attack in monster.attacks if attack.on_hit_save_effect is not None]:
@@ -91,7 +94,13 @@ def test_save_to_prone_riders_preserve_exact_pinned_source_semantics():
             assert expected is not None and runtime is not None
             assert _enum_value(runtime.save_ability) == str(expected["save_ability"]).lower()
             assert runtime.dc == expected["dc"]
-            assert runtime.condition_id == "prone"
+            assert runtime.condition_id == str(expected["condition_id"]).lower()
+            assert runtime.duration_rounds == expected.get("duration_rounds")
+            assert _enum_value(runtime.repeat_save_timing) == (
+                str(expected["repeat_save_timing"]).lower() if expected.get("repeat_save_timing") else None
+            )
+            assert list(runtime.excluded_creature_types) == list(expected.get("excluded_creature_types") or [])
+            assert list(runtime.excluded_creature_subtypes) == list(expected.get("excluded_creature_subtypes") or [])
 
 
 def test_save_damage_riders_preserve_exact_pinned_source_semantics():

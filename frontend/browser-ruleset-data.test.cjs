@@ -138,7 +138,7 @@ assertRuleset(Object.values(window.IRON_PIT_BROWSER_MONSTERS), "2024", "legacy b
 
 load("browser-monsters-2014.js");
 const monsters2014 = Object.values(window.IRON_PIT_BROWSER_MONSTERS_2014);
-assert.equal(monsters2014.length, 144, "2014 browser roster must contain exactly 144 certified monsters");
+assert.equal(monsters2014.length, 145, "2014 browser roster must contain exactly 145 certified monsters");
 const spy2014 = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-spy"];
 assert.ok(spy2014, "2014 Spy must be in the certified browser roster");
 assert.equal(spy2014.cunning_action, true);
@@ -154,6 +154,7 @@ for (const id of [
   "2014-constrictor-snake", "2014-crocodile", "2014-flying-snake", "2014-giant-constrictor-snake",
   "2014-giant-crab", "2014-roc", "2014-tyrannosaurus-rex",
   "2014-ankylosaurus", "2014-dire-wolf", "2014-giant-crocodile", "2014-mastiff", "2014-wolf", "2014-worg",
+  "2014-ghoul",
   "2014-giant-centipede", "2014-giant-poisonous-snake", "2014-giant-scorpion", "2014-giant-wasp",
   "2014-poisonous-snake", "2014-scorpion", "2014-wyvern", "2014-elk", "2014-giant-elk",
   "2014-giant-sea-horse", "2014-minotaur-skeleton", "2014-rhinoceros", "2014-allosaurus", "2014-elephant",

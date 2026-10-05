@@ -112,11 +112,20 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row["onHitSaveDamage"] = save_damage
         if attack.on_hit_condition_save:
             effect = attack.on_hit_condition_save
-            row["onHitConditionSave"] = {
+            save_row = {
                 "saveAbility": _value(effect.save_ability), "dc": effect.dc,
                 "conditionId": effect.condition_id,
                 "maxTargetSize": _value(effect.max_target_size) if effect.max_target_size else None,
             }
+            if effect.duration_rounds is not None:
+                save_row["durationRounds"] = effect.duration_rounds
+            if effect.repeat_save_timing is not None:
+                save_row["repeatSaveTiming"] = _value(effect.repeat_save_timing)
+            if effect.excluded_creature_types:
+                save_row["excludedCreatureTypes"] = list(effect.excluded_creature_types)
+            if effect.excluded_creature_subtypes:
+                save_row["excludedCreatureSubtypes"] = list(effect.excluded_creature_subtypes)
+            row["onHitConditionSave"] = save_row
         if attack.on_hit_modifier_effects:
             row["onHitModifiers"] = [_hit_modifier(effect) for effect in attack.on_hit_modifier_effects]
         if attack.conditional_damage:

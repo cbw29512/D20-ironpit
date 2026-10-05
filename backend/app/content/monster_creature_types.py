@@ -35,6 +35,25 @@ def is_creature_type(template: CombatantTemplate, expected: str) -> bool:
     return base_creature_type(template.creature_type) == expected.strip().casefold()
 
 
+def creature_matches_kind(template: CombatantTemplate, expected: str) -> bool:
+    try:
+        token = expected.strip().casefold()
+        if not token:
+            return False
+        if is_creature_type(template, token):
+            return True
+        raw = str(template.creature_type or "")
+        open_paren = raw.find("(")
+        close_paren = raw.rfind(")")
+        if open_paren < 0 or close_paren <= open_paren:
+            return False
+        inner = raw[open_paren + 1:close_paren]
+        return any(part.strip().casefold() == token for part in inner.split(","))
+    except Exception:
+        logger.exception("Failed to match creature kind %s for %s.", expected, template.name)
+        raise
+
+
 def creature_type_matches_source(template: CombatantTemplate) -> bool:
     return template.kind != "monster" or template.creature_type == source_creature_type(template.name)
 

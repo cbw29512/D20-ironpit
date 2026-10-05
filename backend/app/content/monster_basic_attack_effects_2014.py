@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import get_args
+
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_conditional_damage_2014 import (
     conditional_damage_effect_2014,
@@ -20,16 +22,23 @@ from app.domain.capability_effects import (
     SaveDamageEffectDefinition,
 )
 from app.domain.size import CreatureSize
+from app.domain.action_types import ConditionName, ConditionTiming
 from app.domain.weapons import DamageType
 
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 _DAMAGE_KEYS = frozenset({"average", "bonus", "dice_count", "dice_size", "type"})
 _CONTROL_KEYS = frozenset({"grapple_escape_dc", "max_target_size", "restrains_while_grappled"})
-_SAVE_CONDITION_KEYS = frozenset({"condition_id", "dc", "max_target_size", "save_ability"})
+_SAVE_CONDITION_KEYS = frozenset({
+    "condition_id", "dc", "max_target_size", "save_ability",
+    "duration_rounds", "repeat_save_timing",
+    "excluded_creature_types", "excluded_creature_subtypes",
+})
 _SAVE_DAMAGE_KEYS = frozenset({
     "damage_bonus", "damage_dice_count", "damage_dice_size", "damage_type", "dc", "save_ability", "success_damage",
 }) | ZERO_HP_SAVE_RIDER_KEYS_2014
 _ABILITIES = frozenset({"strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"})
+_CONDITIONS = frozenset(get_args(ConditionName))
+_TIMINGS = frozenset(get_args(ConditionTiming))
 
 
 def _supported_damage_row(value: object) -> bool:
@@ -54,15 +63,33 @@ def _supported_control(value: object) -> bool:
     )
 
 
+def _optional_size(value: object) -> bool:
+    return value is None or str(value).lower() in {item.value for item in CreatureSize}
+
+
+def _optional_name_list(value: object) -> bool:
+    return value is None or (
+        isinstance(value, list)
+        and all(isinstance(item, str) and str(item).strip() for item in value)
+    )
+
+
 def _supported_save_condition(value: object) -> bool:
     if not isinstance(value, dict) or not set(value) <= _SAVE_CONDITION_KEYS:
         return False
-    max_size = value.get("max_target_size")
+    duration = value.get("duration_rounds")
+    timing = value.get("repeat_save_timing")
+    if timing is not None and duration is None:
+        return False
     return (
-        value.get("condition_id") == "prone"
+        str(value.get("condition_id", "")).lower() in _CONDITIONS
         and isinstance(value.get("dc"), int) and 0 < int(value["dc"]) <= 40
         and str(value.get("save_ability", "")).lower() in _ABILITIES
-        and (max_size is None or str(max_size).lower() in {item.value for item in CreatureSize})
+        and _optional_size(value.get("max_target_size"))
+        and (duration is None or (isinstance(duration, int) and 0 < int(duration) <= 100800))
+        and (timing is None or str(timing).lower() in _TIMINGS)
+        and _optional_name_list(value.get("excluded_creature_types"))
+        and _optional_name_list(value.get("excluded_creature_subtypes"))
     )
 
 
@@ -127,9 +154,16 @@ def basic_attack_effects_2014(attack: SourceAttack2014) -> list[AttackEffectDefi
         assert isinstance(row, dict)
         if _supported_save_condition(row):
             max_size = row.get("max_target_size")
+            duration = row.get("duration_rounds")
+            timing = row.get("repeat_save_timing")
             effects.append(SaveConditionEffectDefinition(
-                save_ability=str(row["save_ability"]).lower(), dc=int(row["dc"]), condition="prone",
+                save_ability=str(row["save_ability"]).lower(), dc=int(row["dc"]),
+                condition=str(row["condition_id"]).lower(),
                 max_target_size=CreatureSize(str(max_size).lower()) if max_size is not None else None,
+                duration_rounds=int(duration) if duration is not None else None,
+                repeat_save_timing=str(timing).lower() if timing is not None else None,
+                excluded_creature_types=[str(item) for item in row.get("excluded_creature_types") or []],
+                excluded_creature_subtypes=[str(item) for item in row.get("excluded_creature_subtypes") or []],
             ))
         else:
             effects.append(SaveDamageEffectDefinition(

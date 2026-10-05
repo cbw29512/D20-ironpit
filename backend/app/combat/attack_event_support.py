@@ -132,10 +132,15 @@ def build_attack_description(
             "restrained": "Restrained while Grappled",
             "poisoned": "Poisoned",
             "blinded": "Blinded",
+            "paralyzed": "Paralyzed",
         }
-        for condition, text in labels.items():
-            if condition in applied_conditions:
-                description += f" {actual_defender_name} is {text}."
+        seen: set[str] = set()
+        for condition in applied_conditions:
+            if condition in seen:
+                continue
+            seen.add(condition)
+            text = labels.get(condition) or condition.replace("_", " ").title()
+            description += f" {actual_defender_name} is {text}."
         return description
     except Exception as exc:
         logger.exception("Failed to build attack description for %s.", attacker_name)

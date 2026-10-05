@@ -6,6 +6,8 @@ import logging
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.combat.timed_conditions import apply_timed_condition
+from app.content.monster_creature_types import creature_matches_kind
 from app.domain.models import CombatantState, CombatantTemplate, DiceRoll, WeaponAttack
 from app.domain.saving_throw_context import SavingThrowContext
 from app.domain.size import size_at_most
@@ -22,17 +24,32 @@ class OnHitConditionSaveResolution:
     applied_condition: str | None = None
 
 
+def _excluded_target(defender: CombatantState, effect) -> bool:
+    try:
+        kinds = [*effect.excluded_creature_types, *effect.excluded_creature_subtypes]
+        return any(creature_matches_kind(defender.template, kind) for kind in kinds)
+    except Exception:
+        logger.exception("Failed to evaluate on-hit condition-save exclusions for %s.", defender.template.name)
+        raise
+
+
 def resolve_on_hit_condition_save(
     defender: CombatantState,
     attack: WeaponAttack,
     dice: DiceProvider,
     source_template: CombatantTemplate | None = None,
+    *,
+    source_id: str | None = None,
+    round_number: int | None = None,
+    affected_states: list[CombatantState] | None = None,
 ) -> OnHitConditionSaveResolution:
     try:
         effect = attack.on_hit_condition_save
         if effect is None or defender.is_dead or not defender.is_alive:
             return OnHitConditionSaveResolution()
         if effect.max_target_size is not None and not size_at_most(defender.template.size, effect.max_target_size):
+            return OnHitConditionSaveResolution()
+        if _excluded_target(defender, effect):
             return OnHitConditionSaveResolution()
         if condition_is_immune(defender, effect.condition_id, source_template):
             return OnHitConditionSaveResolution()
@@ -47,9 +64,30 @@ def resolve_on_hit_condition_save(
             ),
         )
         applied = None
-        if not succeeded and effect.condition_id not in defender.active_effect_ids:
-            defender.active_effect_ids.append(effect.condition_id)
-            applied = effect.condition_id
+        if not succeeded:
+            timed = effect.duration_rounds is not None or effect.repeat_save_timing is not None
+            if timed:
+                applied = apply_timed_condition(
+                    defender,
+                    effect.condition_id,
+                    source_id or (source_template.id if source_template is not None else "on-hit-save"),
+                    source_effect_id=attack.weapon.name,
+                    source_template=source_template,
+                    applied_round=round_number,
+                    expires_round=(
+                        None if round_number is None or effect.duration_rounds is None
+                        else round_number + effect.duration_rounds
+                    ),
+                    expiry_timing="target_turn_end" if effect.duration_rounds is not None else None,
+                    repeat_save_ability=effect.save_ability if effect.repeat_save_timing else None,
+                    repeat_save_dc=effect.dc if effect.repeat_save_timing else None,
+                    repeat_save_timing=effect.repeat_save_timing,
+                    affected_states=affected_states,
+                    use_default_poison_recovery=False,
+                )
+            elif effect.condition_id not in defender.active_effect_ids:
+                defender.active_effect_ids.append(effect.condition_id)
+                applied = effect.condition_id
         return OnHitConditionSaveResolution(save_roll, effect.save_ability, effect.dc, succeeded, applied)
     except Exception:
         logger.exception("Failed to resolve on-hit condition save for %s.", defender.template.name)
