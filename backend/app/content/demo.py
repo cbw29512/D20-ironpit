@@ -8,6 +8,7 @@ from app.content.attacks import (
     build_goblin_shortbow_attack,
 )
 from app.content.equipment import build_fighter_visual_loadout, build_goblin_visual_loadout
+from app.content.fighter_second_wind import second_wind_healing_action
 from app.domain.models import CombatantTemplate, ResourceDefinition
 
 logger = logging.getLogger(__name__)
@@ -26,6 +27,7 @@ def build_demo_fighter() -> CombatantTemplate:
             speed_ft=30,
             initiative_bonus=1,
             weapon_attack=build_fighter_longsword_attack(),
+            healing_actions=[second_wind_healing_action(1)],
             saving_throw_bonuses={
                 "strength": 5, "dexterity": 1, "constitution": 4,
                 "intelligence": 0, "wisdom": 1, "charisma": -1,

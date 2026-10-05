@@ -5,14 +5,15 @@ import uuid
 
 from app.combat.ability_checks import ability_check_roll_mode
 from app.combat.attacks import resolve_attack
+from app.combat.action_economy import is_available
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifier
-from app.combat.fighter import use_second_wind
-from app.combat.policy import should_use_second_wind
+from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.rolls import roll_d20
 from app.combat.start_turn import begin_turn_with_events
 from app.combat.state import build_combatant_state
 from app.combat.turns import prepare_attack
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, BattlefieldState, BattleResult, CombatantTemplate
 
 logger = logging.getLogger(__name__)
@@ -34,6 +35,18 @@ def run_duel(
         )
         events: list[BattleEvent] = []
         sequence = 1
+        fighter_member = EncounterCombatant(
+            combatant_id=fighter.template.id, side="heroes", position_ft=0, state=fighter,
+        )
+        monster_member = EncounterCombatant(
+            combatant_id=monster.template.id, side="monsters", position_ft=starting_distance_ft, state=monster,
+        )
+        duel_setup = EncounterSetup(
+            heroes=[fighter_member],
+            monsters=[monster_member],
+            hero_total_levels=max(1, fighter.template.level or 1),
+            monster_total_cr="legacy-duel",
+        )
 
         for state in (fighter, monster):
             initiative_mode = ability_check_roll_mode(
@@ -76,9 +89,17 @@ def run_duel(
                     sequence, round_number, attacker.template.id, attacker, dice,
                 )
                 events.extend(start_events)
-                if attacker is fighter and should_use_second_wind(fighter):
-                    events.append(use_second_wind(sequence, round_number, fighter, dice))
+                member = fighter_member if attacker is fighter else monster_member
+                turn_key = f"{round_number}:{member.combatant_id}"
+                healing_choice = choose_healing_action(member, duel_setup, turn_key)
+                if healing_choice is not None:
+                    healing_action, healing_target = healing_choice
+                    events.append(resolve_healing(
+                        sequence, round_number, member, healing_target, healing_action, dice, turn_key,
+                    ))
                     sequence += 1
+                if not is_available(attacker, "action"):
+                    continue
 
                 weapon, prep_events, sequence = prepare_attack(
                     sequence,

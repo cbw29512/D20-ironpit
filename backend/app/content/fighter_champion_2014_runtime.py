@@ -6,6 +6,7 @@ from app.content.armor_catalog import get_armor
 from app.content.armor_class_rules import compile_worn_armor_class
 from app.content.character_math import fixed_hit_points, proficiency_bonus, saving_throw_bonuses
 from app.content.weapon_catalog import build_weapon
+from app.content.fighter_second_wind import second_wind_healing_action
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack, WeaponAttackKind
@@ -91,6 +92,7 @@ def build_karnok_stoneward_2014(level: int) -> CombatantTemplate:
             wearing_heavy_armor=True, wearing_metal_armor=True,
             visual=VisualLoadout(armor=armor.id, main_hand="greatsword", body_style="humanoid"),
             resources=_resources(level),
+            healing_actions=[second_wind_healing_action(level)],
             progression_features=ProgressionCombatFeatures(
                 critical_hit_minimum=_critical_minimum(level), indomitable_reroll=level >= 9,
                 indomitable_bonus=0, survivor_heal_amount=survivor,

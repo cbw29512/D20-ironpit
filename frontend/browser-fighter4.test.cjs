@@ -11,9 +11,11 @@ const load = (name) => vm.runInThisContext(
   { filename: name },
 );
 
-load("browser-heroes.js");
-load("browser-action-economy.js");
-load("browser-support.js");
+for (const file of [
+  "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js",
+  "browser-state.js", "browser-action-economy.js", "browser-healing-policy.js",
+  "browser-healing-resolution.js", "browser-healing.js",
+]) load(file);
 
 const fighter3 = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l3"];
 const fighter4 = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l4"];
@@ -49,22 +51,28 @@ assert.equal(greatsword.damageBonus, 4);
 assert.equal(shortbow.bonus, 3);
 assert.equal(shortbow.damageBonus, 1);
 
+const secondWind = (fighter4.healingActions || []).find((action) => action.id === "second-wind");
+assert.ok(secondWind, "generated Fighter 4 must declare Second Wind as healing data");
+assert.equal(secondWind.actionCost, "bonus_action");
+assert.equal(secondWind.targetMode, "self");
+assert.equal(secondWind.diceCount, 1);
+assert.equal(secondWind.diceSize, 10);
+assert.equal(secondWind.healingBonus, 4);
+assert.equal(secondWind.resourceId, "second-wind");
+
 window.IRON_PIT_DICE = { roll: () => 5 };
 const member = {
-  combatant_id: "hero-1",
-  state: {
-    template: fighter4,
-    current_hp: 20,
-    resources: { ...fighter4.resources },
-    action_available: true,
-    bonus_action_available: true,
-    reaction_available: true,
-    is_dead: false,
-    is_unconscious: false,
-  },
+  combatant_id: "hero-1", side: "heroes", position_ft: 0,
+  state: window.IRON_PIT_BROWSER_STATE.buildState(structuredClone(fighter4)),
 };
-const wind = window.IRON_PIT_BROWSER_SUPPORT.secondWind(1, 1, member);
-assert.ok(wind, "bloodied Fighter 4 should use Second Wind");
+member.state.current_hp = 20;
+const setup = { heroes: [member], monsters: [] };
+const choice = window.IRON_PIT_BROWSER_HEALING.chooseAction(member, setup, "1:hero-1");
+assert.ok(choice, "bloodied Fighter 4 should select Second Wind");
+assert.equal(choice.action.id, "second-wind");
+const wind = window.IRON_PIT_BROWSER_HEALING.resolve(
+  1, 1, member, member, choice.action, "1:hero-1",
+);
 assert.equal(wind.healing_roll.notation, "1d10+4");
 assert.equal(wind.healing_roll.modifier, 4);
 assert.equal(wind.healing_roll.total, 9);

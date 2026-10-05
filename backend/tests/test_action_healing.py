@@ -49,6 +49,25 @@ def test_incapacitated_creature_cannot_spend_action_bonus_action_or_reaction() -
             spend(state, cost)
 
 
+def test_unconscious_self_cannot_use_bonus_action_healing_even_with_resource_remaining() -> None:
+    setup = _setup()
+    fighter = setup.heroes[0]
+    action = next(item for item in fighter.state.template.healing_actions if item.id == "second-wind")
+    resource = next(item for item in fighter.state.resources if item.id == "second-wind")
+    resource.current_uses = 1
+    fighter.state.current_hp = 0
+    fighter.state.is_alive = True
+    fighter.state.is_unconscious = True
+
+    assert not is_available(fighter.state, "bonus_action")
+    assert choose_healing_target(fighter, setup, action) is None
+    assert choose_healing_action(fighter, setup) is None
+    with pytest.raises(ValueError):
+        resolve_healing(1, 1, fighter, fighter, action, FixedDiceProvider([10]))
+    assert resource.current_uses == 1
+    assert fighter.state.current_hp == 0
+
+
 def test_bonus_action_heal_rescues_downed_ally_before_self_and_preserves_action() -> None:
     setup = _setup()
     healer, ally = setup.heroes

@@ -71,7 +71,6 @@ const phase = H.PHASES.BONUS_ACTION_WINDOW;
 const registrations = H.abilitiesFor(phase).map((item) => [item.id, item.priority, item.rulesets]);
 assert.deepEqual(registrations, [
   ["rage-enter", 10, ["2014", "2024"]],
-  ["second-wind", 20, ["2014", "2024"]],
   ["steady-aim", 25, ["2024"]],
   ["adrenaline-rush", 30, ["2024"]],
   ["resource-conversion", 30, ["2014", "2024"]],
@@ -128,22 +127,6 @@ const finalizePhase = (actor, round = 1, monsters = [], turnEvents = []) => H.ru
   assert.deepEqual(result.events.map((event) => event.feature_id), ["rage"]);
   assert.equal(barbarian.state.resources.rage, 3);
   assert.equal(barbarian.state.resources["adrenaline-rush"], 3, "Rage must retain its existing priority over Adrenaline Rush");
-}
-
-{
-  shiftCalls = 0;
-  const fighter = member("fighter", {
-    name: "Fighter", ruleset: "2024", max_hp: 40, level: 4, traits: ["adrenaline-rush"],
-    wearing_heavy_armor: false, rage_damage_bonus: 0, tactical_shift_fraction: 0.5,
-  }, { "second-wind": 3, "adrenaline-rush": 2 });
-  fighter.state.current_hp = 20;
-  window.IRON_PIT_DICE = { roll: () => 5 };
-  const result = run(fighter, "beforeEscape");
-  assert.equal(result.claimed, true);
-  assert.deepEqual(result.events.map((event) => event.feature_id), ["second-wind", "tactical-shift"]);
-  assert.equal(shiftCalls, 1, "Tactical Shift remains a rider on Second Wind");
-  assert.equal(fighter.state.resources["second-wind"], 2);
-  assert.equal(fighter.state.resources["adrenaline-rush"], 2, "Second Wind must retain priority over Adrenaline Rush");
 }
 
 {
