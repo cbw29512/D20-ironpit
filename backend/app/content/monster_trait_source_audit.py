@@ -6,6 +6,7 @@ from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
 from app.domain.models import CombatantTemplate
+from app.domain.progression import SavingThrowAdvantageGrant
 from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
@@ -17,6 +18,8 @@ _MODELED_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _DECLARATIVE_ATTACK_TRAITS = frozenset({"Blood Frenzy"})
+_DECLARATIVE_SAVE_TRAITS = frozenset({"Magic Resistance"})
+_ALL_SAVE_ABILITIES = ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma")
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hellish Restoration",
     "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
@@ -74,7 +77,21 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             for attack in attacks
         ):
             issues.append("trait-runtime-missing:blood-frenzy")
-    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_ARENA_NEUTRAL_TRAITS)
+    if "Magic Resistance" in expected:
+        grants = template.progression_features.saving_throw_advantage_grants
+        if not any(
+            grant.source_name == "Magic Resistance"
+            and grant.requires_magical_effect
+            and set(grant.abilities) == set(_ALL_SAVE_ABILITIES)
+            for grant in grants
+        ):
+            issues.append("trait-runtime-missing:magic-resistance")
+    certified = (
+        set(_MODELED_TRAITS)
+        | set(_DECLARATIVE_ATTACK_TRAITS)
+        | set(_DECLARATIVE_SAVE_TRAITS)
+        | set(_ARENA_NEUTRAL_TRAITS)
+    )
     for name in expected:
         if name not in certified:
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
@@ -96,11 +113,29 @@ def source_trait_names(name: str) -> list[str]:
 
 def complete_monster_trait_fingerprints(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
     try:
-        return [
-            template.model_copy(update={"source_trait_names": source_trait_names(template.name)})
-            if template.kind == "monster" else template
-            for template in templates
-        ]
+        completed: list[CombatantTemplate] = []
+        for template in templates:
+            if template.kind != "monster":
+                completed.append(template)
+                continue
+            names = source_trait_names(template.name)
+            features = template.progression_features.model_copy(deep=True)
+            grants = list(features.saving_throw_advantage_grants)
+            if "Magic Resistance" in names and not any(
+                grant.source_id == "magic-resistance" for grant in grants
+            ):
+                grants.append(SavingThrowAdvantageGrant(
+                    source_id="magic-resistance",
+                    source_name="Magic Resistance",
+                    abilities=list(_ALL_SAVE_ABILITIES),
+                    requires_magical_effect=True,
+                ))
+                features = features.model_copy(update={"saving_throw_advantage_grants": grants})
+            completed.append(template.model_copy(update={
+                "source_trait_names": names,
+                "progression_features": features,
+            }))
+        return completed
     except Exception:
         logger.exception("Failed to derive canonical monster trait fingerprints from SRD source.")
         raise
