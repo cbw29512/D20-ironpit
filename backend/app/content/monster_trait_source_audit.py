@@ -5,6 +5,7 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_regeneration_2024 import regeneration_trait_2024
 from app.domain.models import CombatantTemplate
 from app.domain.traits import CombatTrait
 
@@ -77,9 +78,12 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             issues.append("trait-runtime-missing:magic-resistance")
     elif any(grant.source_id == "magic-resistance" for grant in template.progression_features.saving_throw_advantage_grants):
         issues.append("trait-source-missing:magic-resistance")
-    if "Regeneration" in expected:
+    expected_regeneration = regeneration_trait_2024(row.get("traits", ""))
+    if expected_regeneration is not None:
         if template.regeneration is None:
             issues.append("trait-runtime-missing:regeneration")
+        elif template.regeneration != expected_regeneration:
+            issues.append("trait-runtime-mismatch:regeneration")
     elif template.regeneration is not None:
         issues.append("trait-source-missing:regeneration")
     if "Blood Frenzy" in expected:
