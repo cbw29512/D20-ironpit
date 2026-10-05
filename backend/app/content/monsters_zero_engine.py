@@ -11,7 +11,6 @@ from app.domain.models import (
     Weapon, WeaponAttack, WeaponAttackKind,
 )
 from app.domain.progression import ProgressionCombatFeatures
-from app.domain.regeneration import RegenerationTrait
 from app.domain.size import CreatureSize
 from app.domain.traits import CombatTrait
 
@@ -57,7 +56,6 @@ _ATTACKS = {
         ("Shortsword", "melee", 4, 1, 6, 2, "piercing", None, 5, None, None, [("Poison", 2, 6, 0, "poison")]),
         ("Hand Crossbow", "ranged", 4, 1, 6, 2, "piercing", None, 5, 30, 120, [("Poison", 2, 6, 0, "poison")]),
     ],
-    "Troll Limb": [("Rend", "melee", 6, 2, 4, 4, "slashing", None, 5, None, None, [])],
     "Tough": [
         ("Mace", "melee", 4, 1, 6, 2, "bludgeoning", None, 5, None, None, []),
         ("Heavy Crossbow", "ranged", 3, 1, 10, 1, "piercing", None, 5, 100, 400, []),
@@ -84,14 +82,6 @@ _CONTROL_EFFECTS = {
     ("Hill Giant", "Trash Lob"): HitControlEffect(
         condition_id="poisoned",
         expiry_timing="target_turn_end",
-    ),
-}
-_REGENERATION = {
-    "Troll Limb": RegenerationTrait(
-        amount=5,
-        suppressed_by_damage_types=[DamageType.ACID, DamageType.FIRE],
-        survives_zero_until_turn=True,
-        source_name="Regeneration",
     ),
 }
 _TRAITS = {
@@ -173,7 +163,7 @@ def _template(name: str) -> CombatantTemplate:
         speed_ft=standard_arena_closing_speed(row["speed"]), movement_modes=parse_movement_profile(row["speed"]),
         initiative_bonus=int(initiative.group(1)), challenge_rating=str(row["challenge"]).split()[0],
         weapon_attack=attacks[0], alternate_weapon_attacks=attacks[1:], attack_action=_multiattack(name, attacks),
-        combat_traits=_TRAITS.get(name, []), regeneration=_REGENERATION.get(name),
+        combat_traits=_TRAITS.get(name, []),
         progression_features=ProgressionCombatFeatures(cunning_action=name == "Spy"),
         damage_vulnerabilities=[DamageType(item) for item in sorted(defenses["damage_vulnerabilities"])],
         damage_resistances=[DamageType(item) for item in sorted(defenses["damage_resistances"])],
