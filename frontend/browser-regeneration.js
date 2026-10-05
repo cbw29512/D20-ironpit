@@ -35,7 +35,9 @@
         state.death_save_failures = 0;
       }
     }
-    return { healed: state.current_hp - before, died: false, suppressed: false };
+    const healed = state.current_hp - before;
+    if (healed > 0) window.IRON_PIT_BROWSER_TRIGGERED_EXTRA_ATTACKS?.clearRegenerationOwnedStacks(state);
+    return { healed, died: false, suppressed: false };
   }
 
   function resolve(sequence, round, member) {
