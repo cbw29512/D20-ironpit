@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.activation_movement import resolve_activation_movement
 from app.combat.dodge import DODGE_EFFECT_ID, apply_dodge_effect
 from app.combat.modifier_stack import effective_speed
 from app.combat.temporary_hp import grant_temporary_hit_points
-from app.domain.encounters import EncounterCombatant
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
 logger = logging.getLogger(__name__)
@@ -84,3 +85,50 @@ def resolve_bonus_action_follow_up(
     except Exception as exc:
         logger.exception("Failed Bonus Action follow-up for %s.", member.combatant_id)
         raise RuntimeError("Bonus Action follow-up could not be resolved.") from exc
+
+
+
+def resolve_bonus_action_follow_up_movement(
+    sequence: int,
+    round_number: int,
+    member: EncounterCombatant,
+    setup: EncounterSetup,
+    triggering_feature_id: str | None,
+    turn_key: str,
+    dice,
+) -> tuple[list[BattleEvent], int]:
+    """Resolve one declared movement grant after a matching Bonus Action trigger."""
+    try:
+        if not triggering_feature_id or member.state.bonus_action_available:
+            return [], sequence
+        rules = member.state.template.progression_features.bonus_action_follow_up_movement_grants
+        for rule in rules:
+            if triggering_feature_id not in rule.required_trigger_ids:
+                continue
+            if member.state.feature_last_turn_keys.get(rule.source_id) == turn_key:
+                continue
+            events, next_sequence = resolve_activation_movement(
+                sequence,
+                round_number,
+                member,
+                setup,
+                dice,
+                speed_fraction=rule.speed_fraction,
+                desired_distance_ft=rule.desired_distance_ft,
+                turn_key=turn_key,
+                provokes_opportunity_attacks=rule.provokes_opportunity_attacks,
+            )
+            if not events:
+                return [], sequence
+            for event in events:
+                if event.event_type == "movement":
+                    event.feature_id = rule.source_id
+                    event.description = f"{rule.source_name}: {event.description}"
+            member.state.feature_last_turn_keys[rule.source_id] = turn_key
+            return events, next_sequence
+        return [], sequence
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Failed Bonus Action follow-up movement for %s.", member.combatant_id)
+        raise RuntimeError("Bonus Action follow-up movement could not be resolved.") from exc
