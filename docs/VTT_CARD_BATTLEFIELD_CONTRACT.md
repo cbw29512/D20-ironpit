@@ -187,3 +187,9 @@ header. The Battle Log comes directly below the battlefield, followed by
 purpose-built/custom fight presets (Chris’s 2026-09-30 layout correction).
 Result and Turbo panels follow the presets. Both website entry pages use
 this same section order.
+
+**Load Combat** (2026-10-04) is a review control in the live-battle action
+cluster. It does not change this section order. When a purpose-built fight is
+selected, it opens a dedicated dialog with that fight's full recorded event
+log so the log can be read without stepping the live board or hunting through
+the page. FIGHT, STEP FIGHT, and TURBO remain the live execution controls.

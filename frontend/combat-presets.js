@@ -83,7 +83,7 @@
           if (api.ensureRuleset) await api.ensureRuleset(recipe.ruleset);
           const catalog = api.state.catalog;
           const selection = resolve(recipe, catalog);
-          api.load(selection.heroes, selection.monsters, `${recipe.title} loaded. Look for: ${recipe.purpose}`);
+          api.load(selection.heroes, selection.monsters, `${recipe.title} loaded. Look for: ${recipe.purpose}`, recipe);
         } catch (error) {
           console.error("Combat preset loading failed", { preset: recipe.id, error });
           document.getElementById("status").textContent = "Preset could not be loaded. See console for details.";
@@ -110,14 +110,39 @@
     }
   }
 
+  let selectedId = null;
+
+  function paintSelection() {
+    for (const button of document.querySelectorAll("[data-preset]")) {
+      const selected = button.dataset.preset === selectedId;
+      button.classList.toggle("selected", selected);
+      button.setAttribute("aria-pressed", selected ? "true" : "false");
+    }
+  }
+
+  function select(recipe) {
+    selectedId = recipe?.id || null;
+    paintSelection();
+    return selected();
+  }
+
+  function selected() {
+    return allRecipes().find((recipe) => recipe.id === selectedId) || null;
+  }
+
+  function clear() {
+    return select(null);
+  }
+
   function sync(state) {
     for (const button of document.querySelectorAll("[data-preset]")) {
       button.disabled = state.fighting || Boolean(state.session && !state.session.complete);
     }
+    paintSelection();
   }
 
   window.IRON_PIT_COMBAT_PRESETS = {
     get recipes() { return allRecipes(); },
-    resolve, install, sync, aspectFired, monsterTemplateId,
+    resolve, install, sync, select, selected, clear, aspectFired, monsterTemplateId,
   };
 })();
