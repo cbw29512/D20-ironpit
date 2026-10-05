@@ -22,18 +22,19 @@ from app.combat.sneak_attack import sneak_attack_bonus_damage
 from app.domain.models import CombatantState, DamageRollComponent, DamageType, DiceRoll, RollMode, WeaponAttack
 
 logger = logging.getLogger(__name__)
-BonusDamageSpec = tuple[str, int, int, DamageType] | tuple[str, int, int, int, DamageType]
+BonusDamageSpec = tuple[str, int, int, DamageType] | tuple[str, int, int, int, DamageType] | tuple[str, int, int, int, DamageType, str]
 
 
 def roll_damage_component(
     dice: DiceProvider, source: str, dice_count: int, dice_size: int, modifier: int,
-    damage_type: DamageType, critical: bool,
+    damage_type: DamageType, critical: bool, *, source_effect_id: str | None = None,
 ) -> DamageRollComponent:
     try:
         count = dice_count * (2 if critical else 1)
         rolls = [dice.roll(dice_size) for _ in range(count)]
         return DamageRollComponent(
-            source=source, notation=f"{count}d{dice_size}+{modifier}", rolls=rolls,
+            source=source, source_effect_id=source_effect_id,
+            notation=f"{count}d{dice_size}+{modifier}", rolls=rolls,
             modifier=modifier, damage_type=damage_type, total=sum(rolls) + modifier,
         )
     except Exception as exc:
@@ -62,13 +63,17 @@ def _append_bonus_component(
 ) -> None:
     if spec is None:
         return
+    source_effect_id = None
     if len(spec) == 4:
         source, dice_count, dice_size, damage_type = spec
         modifier = 0
-    else:
+    elif len(spec) == 5:
         source, dice_count, dice_size, modifier, damage_type = spec
+    else:
+        source, dice_count, dice_size, modifier, damage_type, source_effect_id = spec
     components.append(roll_damage_component(
         dice, source, dice_count, dice_size, modifier, damage_type, critical,
+        source_effect_id=source_effect_id,
     ))
 
 
