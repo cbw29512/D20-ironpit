@@ -17770,6 +17770,182 @@
   },
   {
     "schema_version": 1,
+    "id": "srd-troll",
+    "name": "Troll",
+    "archetype": "source-certified monster",
+    "challenge_rating": "5",
+    "kind": "monster",
+    "ruleset": "2024",
+    "creature_type": "Giant",
+    "size": "large",
+    "armor_class": 15,
+    "max_hp": 94,
+    "speed_ft": 30,
+    "movement_modes": {
+      "walk_ft": 30,
+      "fly_ft": 0,
+      "climb_ft": 0,
+      "swim_ft": 0,
+      "burrow_ft": 0,
+      "hover": false
+    },
+    "initiative_bonus": 1,
+    "blindsight_ft": 0,
+    "truesight_ft": 0,
+    "progression_features": {
+      "once_per_turn_weapon_hit_damage_riders": [],
+      "ability_check_minimums": [],
+      "damage_resistance_bypass_grants": [],
+      "natural_twenty_attack_damage_grants": [],
+      "saving_throw_minimums": [],
+      "saving_throw_proficiency_grants": [],
+      "saving_throw_advantage_grants": [],
+      "friendly_condition_immunity_auras": [],
+      "first_round_extra_turn_grants": [],
+      "failed_save_reroll_grants": [],
+      "failed_d20_test_override_grants": [],
+      "resource_backed_d20_outcome_adjustments": [],
+      "post_hit_spell_options": [],
+      "bonus_action_follow_up_tactical_grants": [],
+      "alternate_spell_cast_grants": [],
+      "critical_hit_minimum": 20,
+      "initiative_advantage": false,
+      "suppress_attack_advantage_while_not_incapacitated": false,
+      "ignore_unseen_target_attack_disadvantage": false,
+      "opportunity_attacks_against_disadvantage": false,
+      "concentration_damage_immune_effect_ids": [],
+      "hunters_mark_splash_range_ft": 0,
+      "start_turn_resource_refill_ids": [],
+      "athletics_advantage": false,
+      "persistent_rage_2014": false,
+      "rage_persists_without_maintenance": false,
+      "brutal_strike_damage_dice": 0,
+      "brutal_strike_effect_ids": [],
+      "brutal_strike_max_effects": 0,
+      "heroic_warrior": false,
+      "studied_attacks": false,
+      "cunning_action": false,
+      "stationary_bonus_action_next_attack_advantage": false,
+      "cunning_strike_trip_die_cost": 0,
+      "cunning_strike_obscure_die_cost": 0,
+      "cunning_strike_max_effects": 0,
+      "evasion_disabled_while_incapacitated": false,
+      "bloodied_start_turn_heal_amount": 0,
+      "death_save_advantage": false,
+      "death_save_recovery_minimum": 20,
+      "critical_move_fraction": 0.0,
+      "tactical_shift_fraction": 0.0
+    },
+    "attacks": [
+      {
+        "id": "srd-troll-rend",
+        "name": "Rend",
+        "weapon_id": "srd-troll-rend-weapon",
+        "attack_kind": "melee",
+        "attack_bonus": 7,
+        "damage": {
+          "count": 2,
+          "size": 6,
+          "bonus": 4
+        },
+        "damage_type": "slashing",
+        "animation": "strike",
+        "reach_ft": 10,
+        "light": false,
+        "finesse": false,
+        "heavy": false,
+        "two_handed": false,
+        "versatile": false,
+        "rage_eligible": false,
+        "sneak_attack_eligible": false,
+        "conditional_attack_advantage": [],
+        "effects": [],
+        "forbid_target_grappled_by_self": false,
+        "damage_source_qualifiers": []
+      }
+    ],
+    "primary_attack_id": "srd-troll-rend",
+    "unarmed_opportunity_attack": {
+      "attack_bonus": 7,
+      "damage": 5
+    },
+    "attack_action": {
+      "id": "srd-troll-multiattack",
+      "name": "Multiattack",
+      "is_attack_action": false,
+      "slots": [
+        {
+          "attack_ids": [
+            "srd-troll-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-troll-rend"
+          ],
+          "save_action_ids": []
+        },
+        {
+          "attack_ids": [
+            "srd-troll-rend"
+          ],
+          "save_action_ids": []
+        }
+      ]
+    },
+    "save_actions": [],
+    "spell_save_actions": [],
+    "defensive_spell_actions": [],
+    "healing_actions": [],
+    "timed_self_buff_actions": [],
+    "legendary_actions": [],
+    "condition_removal_actions": [],
+    "saving_throw_bonuses": {
+      "strength": 4,
+      "dexterity": 1,
+      "constitution": 5,
+      "intelligence": -2,
+      "wisdom": -1,
+      "charisma": -2
+    },
+    "skill_bonuses": {},
+    "combat_traits": [],
+    "source_trait_names": [
+      "Loathsome Limbs (4/Day)",
+      "Regeneration"
+    ],
+    "source_reaction_names": [],
+    "source_bonus_action_names": [
+      "Charge"
+    ],
+    "source_limited_use_names": [
+      "traits:Loathsome Limbs (4/Day)"
+    ],
+    "source_legendary_action_names": [],
+    "fighting_styles": [],
+    "weapon_masteries": [],
+    "damage_resistances": [],
+    "damage_vulnerabilities": [],
+    "damage_immunities": [],
+    "condition_immunities": [],
+    "wearing_heavy_armor": false,
+    "wearing_metal_armor": false,
+    "rage_damage_bonus": 0,
+    "resources": [],
+    "recharge_rules": [],
+    "triggered_extra_attack_stacks": [],
+    "save_success_overrides": [],
+    "visual": {
+      "armor": "natural",
+      "main_hand": "Rend",
+      "body_style": "monster"
+    },
+    "source": "SRD 5.2.1 p. 333",
+    "unsupported_capabilities": []
+  },
+  {
+    "schema_version": 1,
     "id": "srd-tough",
     "name": "Tough",
     "archetype": "source-certified monster",
