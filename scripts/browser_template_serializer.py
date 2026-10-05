@@ -893,6 +893,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        if template.support_action_modes:
+            row["support_action_modes"] = list(template.support_action_modes)
         if template.environment_context_reactions:
             row["environment_context_reactions"] = [
                 item.model_dump(mode="json") for item in template.environment_context_reactions

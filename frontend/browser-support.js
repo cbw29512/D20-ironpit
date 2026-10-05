@@ -58,8 +58,10 @@
     }
     const effectRemoval = X()?.choose(member, setup, turnKey);
     if (effectRemoval) events.push(X().resolve(sequence++, round, member, setup, effectRemoval.action, effectRemoval.effect, turnKey));
-    const cleric = member.state.template.class_id === "cleric" || member.state.template.archetype === "Cleric";
-    const channel = cleric ? K()?.resolve(sequence, round, member, setup) : null;
+    const hasChannelSupport = (member.state.template.support_action_modes || []).some(
+      (mode) => ["turn-undead", "divine-spark", "preserve-life"].includes(mode),
+    );
+    const channel = hasChannelSupport ? K()?.resolve(sequence, round, member, setup) : null;
     if (channel) { events.push(...channel.events); sequence = channel.sequence; }
     const paladin = P()?.resolveChannel(sequence, round, member, setup);
     if (paladin) { events.push(...paladin.events); sequence = paladin.sequence; }
