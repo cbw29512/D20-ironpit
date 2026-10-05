@@ -119,38 +119,35 @@ def decide_post_move_offense(
     try:
         if not is_available(attacker.state, "action"):
             return OffensePick("dodge", 0.0)
-        if melee_can_land_now(attacker, setup):
-            if attack_action_melee_legal(attacker, setup):
-                return OffensePick("attack-action", _attack_action_damage(attacker, setup))
-            ids = [
-                attacker.state.template.weapon_attack.id,
-                *(item.id for item in attacker.state.template.alternate_weapon_attacks),
-            ]
-            melee = choose_attack(attacker, setup, ids, kind=WeaponAttackKind.MELEE)
-            if melee is not None:
-                return OffensePick("standard-attack", weapon_mean_damage(melee[1]), melee)
-            return OffensePick("dodge", 0.0)
+        melee_now = melee_can_land_now(attacker, setup)
         picks: list[OffensePick] = []
-        spell_score = _spell_offense_score(attacker, setup, turn_key)
-        if spell_score != float("-inf"):
-            picks.append(OffensePick("spell", max(0.0, spell_score)))
-        attack_action_score = _attack_action_damage(attacker, setup)
-        if attacker.state.template.attack_action is not None and attack_action_score > 0:
-            picks.append(OffensePick("attack-action", attack_action_score))
+        if melee_now and attack_action_melee_legal(attacker, setup):
+            picks.append(OffensePick("attack-action", _attack_action_damage(attacker, setup)))
+        elif not melee_now:
+            attack_action_score = _attack_action_damage(attacker, setup)
+            if attacker.state.template.attack_action is not None and attack_action_score > 0:
+                picks.append(OffensePick("attack-action", attack_action_score))
         ids = [
             attacker.state.template.weapon_attack.id,
             *(item.id for item in attacker.state.template.alternate_weapon_attacks),
         ]
-        ranged = choose_attack(attacker, setup, ids, kind=WeaponAttackKind.RANGED)
-        if ranged is not None:
-            picks.append(OffensePick("standard-attack", weapon_mean_damage(ranged[1]), ranged))
-        area_weapon = choose_area_weapon_attack(attacker, setup)
-        if area_weapon is not None:
-            picks.append(OffensePick(
-                "area-weapon",
-                weapon_mean_damage(area_weapon.attack) * len(area_weapon.placement.target_ids),
-                area_weapon,
-            ))
+        weapon = choose_attack(
+            attacker, setup, ids,
+            kind=WeaponAttackKind.MELEE if melee_now else WeaponAttackKind.RANGED,
+        )
+        if weapon is not None:
+            picks.append(OffensePick("standard-attack", weapon_mean_damage(weapon[1]), weapon))
+        if not melee_now:
+            area_weapon = choose_area_weapon_attack(attacker, setup)
+            if area_weapon is not None:
+                picks.append(OffensePick(
+                    "area-weapon",
+                    weapon_mean_damage(area_weapon.attack) * len(area_weapon.placement.target_ids),
+                    area_weapon,
+                ))
+        spell_score = _spell_offense_score(attacker, setup, turn_key)
+        if spell_score != float("-inf"):
+            picks.append(OffensePick("spell", max(0.0, spell_score)))
         area_save = choose_area_save(attacker, setup, action_cost="action")
         if area_save is not None:
             action, placement = area_save
@@ -166,6 +163,8 @@ def decide_post_move_offense(
         chosen_save = None
         for target in target_order(attacker, setup):
             for action in attacker.state.template.saving_throw_actions:
+                if action.area is not None:
+                    continue
                 if action.action_cost != "action" or (action.max_targets or 1) > 1:
                     continue
                 if not resource_available(attacker.state, action.resource_id, action.resource_cost):
@@ -184,7 +183,11 @@ def decide_post_move_offense(
             picks.append(OffensePick("save-zone", score, (action, center)))
         damage = [item for item in picks if item.expected_damage > 0]
         if damage:
-            return max(damage, key=lambda item: (item.expected_damage, item.family))
+            return max(damage, key=lambda item: (
+                item.expected_damage,
+                1 if melee_now and item.family in {"attack-action", "standard-attack"} else 0,
+                item.family,
+            ))
         target = living_opponents(attacker, setup)[0] if living_opponents(attacker, setup) else None
         if target is not None and can_use_presence(attacker, target):
             return OffensePick("presence", 0.0, target)

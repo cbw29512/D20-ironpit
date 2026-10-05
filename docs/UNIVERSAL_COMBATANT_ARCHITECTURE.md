@@ -152,12 +152,12 @@ The movement engine owns legal squares, footprints, pathfinding, movement cost, 
 Default Iron Pit voluntary movement policy is intentionally simple:
 
 1. The combatant's goal is to engage and defeat a living opponent; it does not wander around the arena without an action-driven reason.
-2. If a legal melee attack can be made this turn after useful legal approach movement, the combatant closes to that melee reach, then uses the highest-damage legal melee option.
+2. If a legal melee attack can be made this turn after useful legal approach movement, the combatant closes to that melee reach, then uses the highest-damage option that can actually land from there. A landable area/save Action or damage spell beats weaker melee.
 3. Front-row combatants are melee. They make useful legal progress toward melee even when a backup thrown/ranged attack could already land. After that approach, if melee still cannot land, they use the highest-damage option that can land.
 4. Back-row combatants are ranged and/or casters. They stay in place when a legal ranged or spell option can already land. A back-row melee creature with no ranged attack steps to the front when the last front-row ally dies, or Dodges until that step-up is legal.
 5. If a ranged combatant is already in melee and has a legal melee option, it uses the legal melee option rather than retreating merely to preserve range.
-6. A caster does not stay in place to cast when a legal melee attack can still be made this turn. It casts from its current position only when melee cannot land.
-7. A mixed combatant uses the landing-damage rule after row policy: melee if melee can land, otherwise the highest-damage option that can actually land.
+6. A caster does not retreat or hold range merely to preserve a spell. It casts from its current square when that spell is the highest-damage option that can land, including after it has already closed.
+7. A mixed combatant uses the landing-damage rule after row policy: the highest-damage option that can actually land; melee when in reach instead of a ranged weapon; Dodge only if nothing lands.
 8. Default Arena AI does not voluntarily kite, circle, run to map edges, seek cover, disperse, or retreat merely for positional optimization.
 9. Specific printed features, conditions, forced movement, explicit retreat effects, or other RAW mechanics may require movement that overrides this default policy; those effects still use the same universal movement engine.
 
@@ -174,7 +174,7 @@ Before the Arena AI may choose Dodge, it must establish that the combatant canno
 3. no legal offensive spell;
 4. no other legal offensive attack, SavingThrowAction, Multiattack/signature action, or supported damaging/control ability.
 
-This checklist is the Dodge fallback gate. Arena Action selection is the landing-damage rule: if melee can land this turn, take the highest-damage legal melee option; if melee cannot land, take the highest-damage option that can still land; if no supported offensive family can be used or made legal, Dodge. Control loses to raw damage. Dodge is never a substitute for a legal offensive option and never hides an engine error.
+This checklist is the Dodge fallback gate. Arena Action selection is the landing-damage rule: take the highest-damage option that can actually land; if melee can land, do not spend the Action on a ranged weapon; if no supported offensive family can be used or made legal, Dodge. Control loses to raw damage. Dodge is never a substitute for a legal offensive option and never hides an engine error.
 
 If the combatant is physically blocked, lacks sufficient movement, has no valid path, has no target in usable range after movement, or otherwise cannot make any supported offensive option legal without violating RAW, it takes the shared Dodge action if its Action is available. This is an ordinary combat outcome, not an engine exception.
 

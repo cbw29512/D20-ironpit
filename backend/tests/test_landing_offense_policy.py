@@ -12,8 +12,9 @@ from app.content.sorcerer_draconic_2014_spell_support import magic_missile_2014
 from app.domain.combatants import ResourceDefinition
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
-from app.domain.models import DamageType, Weapon, WeaponAttack, WeaponAttackKind
+from app.domain.models import DamageType, SavingThrowAction, Weapon, WeaponAttack, WeaponAttackKind
 from app.domain.spells import SpellSaveAction
+from app.domain.targeting import AreaTargeting
 
 
 def _bite() -> WeaponAttack:
@@ -125,6 +126,41 @@ def test_monster_closes_to_bite_when_melee_can_land_this_turn() -> None:
     assert any(event.event_type == "movement" for event in events)
     assert any(event.event_type == "attack" and event.attack_id == "test-bite" for event in events)
     assert not [event for event in events if event.feature_id == "magic-missile"]
+
+
+def test_higher_damage_area_save_beats_reachable_melee() -> None:
+    breath = SavingThrowAction(
+        id="acid-line",
+        name="Acid Line",
+        save_ability="dexterity",
+        dc=14,
+        range_ft=30,
+        area=AreaTargeting(shape="line", origin="self", length_ft=30, width_ft=5),
+        damage_dice_count=11,
+        damage_dice_size=8,
+        damage_type="acid",
+        success_damage="half",
+    )
+    attacker = _member(
+        _caster_monster().model_copy(update={
+            "saving_throw_actions": [breath],
+            "auto_hit_spell_actions": [],
+        }),
+        "monster",
+        "monsters",
+        x=4,
+        y=7,
+    )
+    target = _member(build_commoner(), "hero", "heroes", x=5, y=7)
+    begin_turn(attacker.state)
+    setup = _setup(attacker, target, mapped=True)
+    assert melee_can_land_now(attacker, setup) is True
+    pick = decide_post_move_offense(attacker, setup, "1:monster")
+    assert pick.family == "area-save"
+    assert pick.payload[0].id == "acid-line"
+    events, _ = resolve_combat_turn(1, 1, attacker, target, setup, FixedDiceProvider([8] * 20))
+    assert any(event.feature_id == "acid-line" for event in events)
+    assert not [event for event in events if event.event_type == "attack"]
 
 
 def test_highest_damage_melee_wins_among_melee_options() -> None:
