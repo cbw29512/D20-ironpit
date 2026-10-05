@@ -32,7 +32,7 @@
     }
     for (const target of F().targetOrder(member, setup)) {
       for (const action of actions) {
-        if ((action.actionCost || "action") !== "action" || (action.maxTargets || 1) > 1) continue;
+        if ((action.actionCost || "action") !== "action" || action.area || (action.maxTargets || 1) > 1) continue;
         if (action.resourceId && !R().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
         const distance = F().saveDistance(member, target, action.range);
         if (V().legalAction(action, target, distance)) return { target, action, distance };

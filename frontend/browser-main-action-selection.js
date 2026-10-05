@@ -129,12 +129,15 @@
     const rest = candidates.filter((candidate) => candidate?.opportunityProfile === profileId && !signature.has(candidate.category));
     const damageOf = (candidate) => Number(candidate.payload?.expectedDamage || 0);
     const melee = rest.filter((candidate) => candidate.payload?.delivery === "melee");
-    if (melee.length) {
-      return melee.sort((a, b) => damageOf(b) - damageOf(a) || profile.indexOf(a.category) - profile.indexOf(b.category))[0];
-    }
-    const damage = rest.filter((candidate) => candidate.category !== "dodge" && damageOf(candidate) > 0);
+    const damage = rest.filter((candidate) => {
+      if (candidate.category === "dodge" || damageOf(candidate) <= 0) return false;
+      return !(melee.length && candidate.payload?.delivery === "ranged");
+    });
     if (damage.length) {
-      return damage.sort((a, b) => damageOf(b) - damageOf(a) || profile.indexOf(a.category) - profile.indexOf(b.category))[0];
+      return damage.sort((a, b) =>
+        damageOf(b) - damageOf(a)
+        || Number(b.payload?.delivery === "melee") - Number(a.payload?.delivery === "melee")
+        || profile.indexOf(a.category) - profile.indexOf(b.category))[0];
     }
     return selectByCategoryOrder(profile.filter((category) => !signature.has(category)), profileId, rest);
   }
