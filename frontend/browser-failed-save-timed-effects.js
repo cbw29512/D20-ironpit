@@ -42,7 +42,9 @@
     const abilities = [...(rider.d20DisadvantageAbilities || [])];
     if (rider.disadvantageStrengthD20Tests && !abilities.includes("strength")) abilities.push("strength");
     const speed = rider.speedMultiplier == null ? 1 : rider.speedMultiplier;
-    if (speed === 1 && !rider.actionBonusExclusive && rider.maxAttacksPerTurn == null && !abilities.length) {
+    const acBonus = rider.armorClassBonus || 0;
+    const saveFlats = [...(rider.savingThrowFlatBonuses || [])];
+    if (speed === 1 && !rider.actionBonusExclusive && rider.maxAttacksPerTurn == null && !abilities.length && !acBonus && !saveFlats.length) {
       return null;
     }
     return {
@@ -50,6 +52,8 @@
       action_bonus_exclusive: Boolean(rider.actionBonusExclusive),
       max_attacks_per_turn: rider.maxAttacksPerTurn ?? null,
       d20_disadvantage_abilities: abilities,
+      armor_class_bonus: acBonus,
+      saving_throw_flat_bonuses: saveFlats,
     };
   }
 

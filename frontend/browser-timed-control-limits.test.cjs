@@ -35,6 +35,7 @@ const member = () => ({ combatant_id: "hero", side: "heroes", position_ft: 0, st
 
 {
   const hero = member();
+  const acBefore = M.effectiveArmorClass(hero.state);
   T.apply(hero.state, "slowed", "copper", {
     sourceEffectId: "slowing-breath",
     suppressReactions: true,
@@ -43,6 +44,8 @@ const member = () => ({ combatant_id: "hero", side: "heroes", position_ft: 0, st
       action_bonus_exclusive: true,
       max_attacks_per_turn: 1,
       d20_disadvantage_abilities: [],
+      armor_class_bonus: 0,
+      saving_throw_flat_bonuses: [],
     },
   });
   S.beginTurn(hero.state);
@@ -53,6 +56,9 @@ const member = () => ({ combatant_id: "hero", side: "heroes", position_ft: 0, st
   E.spend(hero.state, "action");
   assert.equal(E.available(hero.state, "bonus_action"), false);
   assert.equal(hero.state.movement_remaining_ft, expectedSpeed);
+  assert.equal(M.effectiveArmorClass(hero.state), acBefore);
+  assert.equal(M.savingThrowFlat(hero.state, "dexterity"), 0);
+  assert.equal(C.abilityD20Disadvantage(hero.state, "strength"), 0);
   C.registerTurnAttack(hero.state, false);
   assert.equal(C.turnAttackAllowed(hero.state), false);
   C.registerTurnAttack(hero.state, true);
@@ -72,6 +78,7 @@ const member = () => ({ combatant_id: "hero", side: "heroes", position_ft: 0, st
 
 {
   const hero = member();
+  const acBefore = M.effectiveArmorClass(hero.state);
   T.apply(hero.state, "weakened-strength", "gold", {
     sourceEffectId: "weakening-breath",
     controlLimits: {
@@ -79,12 +86,41 @@ const member = () => ({ combatant_id: "hero", side: "heroes", position_ft: 0, st
       action_bonus_exclusive: false,
       max_attacks_per_turn: null,
       d20_disadvantage_abilities: ["strength"],
+      armor_class_bonus: 0,
+      saving_throw_flat_bonuses: [],
     },
   });
+  S.beginTurn(hero.state);
+  assert.equal(M.effectiveSpeed(hero.state), hero.state.template.speed_ft || 30);
+  assert.equal(E.available(hero.state, "reaction"), true);
+  E.spend(hero.state, "action");
+  assert.equal(E.available(hero.state, "bonus_action"), true);
   assert.equal(C.abilityD20Disadvantage(hero.state, "strength"), 1);
   assert.equal(C.abilityD20Disadvantage(hero.state, "dexterity"), 0);
   assert.equal(SV.saveMode(hero.state, "strength"), "disadvantage");
   assert.equal(SV.saveMode(hero.state, "dexterity"), "normal");
   assert.equal(A.mode(hero.state, 0, 0, { ability: "strength" }), "disadvantage");
   assert.equal(A.mode(hero.state, 0, 0, { ability: "dexterity" }), "normal");
+  assert.equal(M.effectiveArmorClass(hero.state), acBefore);
+  assert.equal(C.turnAttackAllowed(hero.state), true);
+}
+
+{
+  const hero = member();
+  const acBefore = M.effectiveArmorClass(hero.state);
+  T.apply(hero.state, "slowed", "wizard", {
+    sourceEffectId: "slow",
+    suppressReactions: true,
+    controlLimits: {
+      speed_multiplier: 0.5,
+      action_bonus_exclusive: true,
+      max_attacks_per_turn: 1,
+      d20_disadvantage_abilities: [],
+      armor_class_bonus: -2,
+      saving_throw_flat_bonuses: [{ ability: "dexterity", flat_bonus: -2 }],
+    },
+  });
+  assert.equal(M.effectiveArmorClass(hero.state), acBefore - 2);
+  assert.equal(M.savingThrowFlat(hero.state, "dexterity"), -2);
+  assert.equal(M.savingThrowFlat(hero.state, "constitution"), 0);
 }

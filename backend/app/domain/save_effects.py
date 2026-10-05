@@ -6,7 +6,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.character_builds import AbilityName
-from app.domain.timed_control_limits import TimedControlLimits, compiled_control_limits
+from app.domain.timed_control_limits import TimedControlLimits, TimedSaveFlatBonus, compiled_control_limits
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +44,8 @@ class FailedSaveTimedEffect(BaseModel):
     max_attacks_per_turn: int | None = Field(default=None, ge=1, le=20)
     d20_disadvantage_abilities: list[AbilityName] = Field(default_factory=list)
     disadvantage_strength_d20_tests: bool = False
+    armor_class_bonus: int = 0
+    saving_throw_flat_bonuses: list[TimedSaveFlatBonus] = Field(default_factory=list)
 
     def compiled_limits(self) -> TimedControlLimits | None:
         return compiled_control_limits(
@@ -52,6 +54,8 @@ class FailedSaveTimedEffect(BaseModel):
             max_attacks_per_turn=self.max_attacks_per_turn,
             d20_disadvantage_abilities=list(self.d20_disadvantage_abilities),
             disadvantage_strength_d20_tests=self.disadvantage_strength_d20_tests,
+            armor_class_bonus=self.armor_class_bonus,
+            saving_throw_flat_bonuses=list(self.saving_throw_flat_bonuses),
         )
 
     @model_validator(mode="after")

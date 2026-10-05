@@ -53,6 +53,31 @@
     }
   }
 
+  function armorClassBonus(state) {
+    try {
+      return (state.timed_effects || []).reduce((sum, effect) => sum + (limitsOf(effect)?.armor_class_bonus || 0), 0);
+    } catch (error) {
+      console.error("Timed armor-class bonus lookup failed.", error);
+      throw error;
+    }
+  }
+
+  function savingThrowFlat(state, ability) {
+    try {
+      const wanted = String(ability || "").trim().toLowerCase();
+      return (state.timed_effects || []).reduce((sum, effect) => {
+        const bonuses = limitsOf(effect)?.saving_throw_flat_bonuses || [];
+        return sum + bonuses.reduce((inner, bonus) => {
+          if (wanted && bonus.ability !== wanted) return inner;
+          return inner + (bonus.flat_bonus || 0);
+        }, 0);
+      }, 0);
+    } catch (error) {
+      console.error("Timed saving-throw flat lookup failed.", { ability, error });
+      throw error;
+    }
+  }
+
   function abilityD20Disadvantage(state, ability) {
     try {
       const wanted = String(ability || "").trim().toLowerCase();
@@ -68,7 +93,7 @@
   }
 
   window.IRON_PIT_BROWSER_TIMED_CONTROL = {
-    abilityD20Disadvantage, actionBonusExclusive, maxAttacksPerTurn, registerTurnAttack,
-    speedMultiplier, turnAttackAllowed,
+    abilityD20Disadvantage, actionBonusExclusive, armorClassBonus, maxAttacksPerTurn,
+    registerTurnAttack, savingThrowFlat, speedMultiplier, turnAttackAllowed,
   };
 })();

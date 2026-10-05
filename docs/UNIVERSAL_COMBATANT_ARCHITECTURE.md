@@ -509,7 +509,9 @@ A timed effect may carry `control_limits` without becoming a named `ConditionNam
 - `max_attacks_per_turn` caps attacks on the affected creature's own turn. Extra Attack, remaining Multiattack slots, Cleave, and bonus-action attacks are additional attacks and stop once the cap is reached. Off-turn attacks are not counted.
 - `d20_disadvantage_abilities` imposes Disadvantage on matching ability checks, ability-based attack rolls, and saving throws. Weakening Breath binds Strength.
 
-A failed-save rider may declare `blocks_reactions`, which maps to the existing `suppress_reactions` flag. Catalog Slowing Breath and Weakening Breath already carry these keys; the 2014 failed-save control classifier stays closed to them until a later unlock tranche binds those catalog payloads.
+A failed-save rider may declare `blocks_reactions`, which maps to the existing `suppress_reactions` flag. Optional `armor_class_bonus` and `saving_throw_flat_bonuses` apply only when a source prints those penalties. The 2014 Slow spell prints −2 AC and −2 Dexterity saving throws; 2014 Copper Slowing Breath and 2014 Stone Golem Slow do not. 2014 Gold Weakening Breath prints only Strength-based attack, check, and save Disadvantage.
+
+Catalog Slowing Breath, Stone Golem Slow, and Weakening Breath already carry their own printed keys; the 2014 failed-save control classifier stays closed to them until a later unlock tranche binds those catalog payloads.
 
 ## Committed timed activities
 

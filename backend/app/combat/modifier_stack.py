@@ -6,6 +6,7 @@ from app.combat.cover_modifiers import strongest_cover_bonus
 from app.combat.debuff_counters import debuff_is_countered
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import d20_modifier, speed_after_exhaustion
+from app.combat.timed_control_bonuses import timed_armor_class_bonus
 from app.combat.timed_effect_speed import timed_speed_multiplier
 from app.combat.modifier_flat_bonuses import (
     attack_roll_flat_bonus,
@@ -74,7 +75,7 @@ def effective_armor_class(state: CombatantState) -> int:
     stacking_bonus = sum(
         item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.ARMOR_CLASS
     )
-    adjusted = state.template.armor_class + stacking_bonus + strongest_cover_bonus(
+    adjusted = state.template.armor_class + stacking_bonus + timed_armor_class_bonus(state) + strongest_cover_bonus(
         state, ModifierKind.COVER_ARMOR_CLASS,
     )
     minimum = max(
