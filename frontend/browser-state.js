@@ -37,8 +37,6 @@
       hit_point_maximum_reduction: 0, ability_score_reductions: {}, active_curses: [],
       damage_share_source_id: null, damage_share_range_ft: 0, damage_share_effect_id: null, emanation_triggers_this_turn: {},
       rage_expires_round: null, rage_max_round: null,
-      damage_types_taken_since_regen: [], damage_taken_this_turn_by_type: {},
-      triggered_extra_attack_stack_counts: {}, source_owned_exhaustion_levels: {},
     };
   }
 
