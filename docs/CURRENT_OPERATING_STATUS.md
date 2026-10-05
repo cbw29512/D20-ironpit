@@ -136,7 +136,7 @@ Progression PRs whose completed behavior is already present on current `main` ar
 
 ## Publishing
 
-Chris approved a one-shot production publish of Pit UI #569 (2026-10-05). Merge is `7e831e1f9`; unlock head is `a6b77bb88`. Git-connected ignore is restored. Production Git deploy `6ac3b69534351e0007b460d0` is **ready** but unpublished because https://ironpit.netlify.app/ is still pinned to locked upload `6ac38c99dc0482af1a20136b`. Publish `6ac3b69534351e0007b460d0` in the Netlify UI (or restore it via API). Do not buy or attach `ironpit.app`. Verified deploy: https://6ac3b69534351e0007b460d0--ironpit.netlify.app/
+Chris approved a one-shot roster production publish (2026-10-05): current `main` through soft QA #591 (`2964a4257`) — monster card art #557/#581/#584/#583/#591, landing/site #562+, Pit UI #569. Clear the `netlify.toml` ignore lock so `main` deploys once to https://ironpit.netlify.app/. Do not buy or attach `ironpit.app`. Do not merge unrelated engine PRs as part of this unlock. Restore `ignore = "exit 0"` after that live deploy finishes unless Chris changes the policy.
 
 ## Verification truth
 

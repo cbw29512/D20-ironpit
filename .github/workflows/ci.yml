@@ -392,7 +392,7 @@ jobs:
           grep -q 'pip install -e ./backend' netlify.toml
           ! grep -q 'CONTEXT.*production' netlify.toml
           grep -q 'prepare_static_site.py' netlify.toml
-          if grep -q 'ignore = "exit 0"' netlify.toml; then
+          if grep -qE '^[[:space:]]*ignore = "exit 0"' netlify.toml; then
             echo "Netlify autopublish lock is active"
           elif grep -q 'One-shot unlock' netlify.toml; then
             echo "Chris-approved one-shot Netlify unlock is active"

@@ -4,9 +4,7 @@
 
 Netlify is reserved for deliberate production deployment and real production bandwidth testing.
 
-**AUTOPUBLISH LOCKED:** Git-connected Netlify builds are disabled for every deploy context. Pushing or merging code must not consume Netlify build credits or publish Iron Pit.
-
-**2026-10-05 Pit UI (#569):** Production Git deploy `6ac3b69534351e0007b460d0` (`main` `a6b77bb88`, merge `7e831e1f9`) is ready but unpublished; https://ironpit.netlify.app/ remains pinned to locked upload `6ac38c99dc0482af1a20136b`. Publish `6ac3b69534351e0007b460d0` in the Netlify UI. Do not buy or attach `ironpit.app`. Verified deploy: https://6ac3b69534351e0007b460d0--ironpit.netlify.app/
+**ONE-SHOT UNLOCK (2026-10-05 roster publish):** Chris approved a production publish of current `main` through soft QA #591 (`2964a4257`) to https://ironpit.netlify.app/. Stack already on main: monster card art #557/#581/#584/#583/#591, landing/site #562+, Pit UI #569. Git-connected production builds are temporarily allowed. Restore `ignore = "exit 0"` after that deploy finishes. Do not buy or attach `ironpit.app`. Do not merge unrelated engine PRs as part of this unlock.
 
 - [ ] Production branch remains `main`, but branch selection does not authorize deployment.
 - [ ] Deploy Previews are disabled.
