@@ -357,7 +357,7 @@ def build_monster_manifest() -> dict[str, Any]:
         name = str(row["name"])
         card = cards[name]
         ready = card.coverage_status is CoverageStatus.RAW_READY
-        source_blockers = _source_blockers(row, monster_names)
+        source_blockers = _source_blockers(row, monster_names, runtime_by_name.get(name))
         blockers = [] if ready else sorted(set([*card.blockers, *source_blockers]))
         detected = _detected_monster_mechanics(row, source_blockers)
         unsupported = [] if ready else sorted(set(source_blockers or card.blockers))
