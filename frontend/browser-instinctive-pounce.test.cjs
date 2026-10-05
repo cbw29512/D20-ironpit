@@ -7,10 +7,13 @@ global.window = global;
 window.IRON_PIT_BROWSER_STATE = {
   distance: (a, b) => Math.abs(a.position_ft - b.position_ft),
 };
+window.IRON_PIT_BROWSER_MODIFIERS = { effectiveSpeed: () => 30 };
 let observedRemaining = null;
+let observedOptions = null;
 window.IRON_PIT_BROWSER_REACTION_MOVEMENT = {
-  moveToward: (sequence, round, mover) => {
+  moveToward: (sequence, round, mover, _target, _setup, _desired, _source, options) => {
     observedRemaining = mover.state.movement_remaining_ft;
+    observedOptions = options;
     return { events: [{ event_type: "movement", sequence, round_number: round }], sequence: sequence + 1 };
   },
 };
@@ -36,10 +39,17 @@ const target = {
 const result = window.IRON_PIT_BROWSER_ACTIVATION_MOVEMENT.resolve(
   7, 2, mover, { heroes: [mover], monsters: [target] }, { speedFraction: 0.5, turnKey: "2:hero" },
 );
-assert.equal(observedRemaining, 60, "activation movement adds half speed only while resolving the trigger");
+assert.equal(observedRemaining, 15, "activation movement gets an isolated half-effective-Speed budget");
 assert.equal(mover.state.movement_remaining_ft, 40, "activation movement must not consume or inflate normal turn movement");
 assert.equal(result.sequence, 8);
 assert.equal(result.events.length, 1);
+assert.equal(observedOptions.disengaged, false);
+
+window.IRON_PIT_BROWSER_ACTIVATION_MOVEMENT.resolve(
+  9, 2, mover, { heroes: [mover], monsters: [target] },
+  { speedFraction: 0.5, turnKey: "2:hero", provokesOpportunityAttacks: false },
+);
+assert.equal(observedOptions.disengaged, true, "OA-free granted movement must suppress reactions only for that movement");
 
 assert.throws(
   () => window.IRON_PIT_BROWSER_ACTIVATION_MOVEMENT.resolve(1, 1, mover, { heroes: [mover], monsters: [target] }, { speedFraction: 1.5 }),
