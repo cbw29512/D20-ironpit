@@ -117,14 +117,18 @@
       "id": "typed-damage-resistance-immunity-vulnerability",
       "status": "supported",
       "python": [
-        "backend/app/combat/damage_defenses.py"
+        "backend/app/combat/damage_defenses.py",
+        "backend/app/domain/damage_sources.py"
       ],
       "browser": [
-        "frontend/browser-attack.js"
+        "frontend/browser-attack.js",
+        "frontend/browser-damage-defense-rules.js"
       ],
       "tests": [
         "backend/tests/test_damage_defenses.py",
-        "frontend/browser-mixed-damage.test.cjs"
+        "backend/tests/test_2014_conditional_damage_defenses.py",
+        "frontend/browser-mixed-damage.test.cjs",
+        "frontend/browser-conditional-damage-defenses.test.cjs"
       ]
     },
     {

@@ -398,7 +398,7 @@ Resolve each damage component separately and preserve source qualifiers.
 Universal dimensions include:
 
 - damage type;
-- magical/nonmagical or other source qualifiers when relevant;
+- magical/nonmagical or other source qualifiers when relevant, including silvered and adamantine;
 - weapon/spell/melee/ranged qualifiers;
 - resistance, immunity, vulnerability;
 - flat/rolled reductions;
@@ -662,6 +662,8 @@ Weapon properties, masteries, fighting styles, feats, and two-weapon rules are u
 - Dual wield/off-hand/Nick/Vex/Graze/Cleave/Push/Topple/Sap/Slow and similar properties use exact edition rules when supported.
 - Equipment removal/destruction/suppression during combat immediately changes derived stats/access as RAW requires and is visible on the card.
 - Temporary equipment state resets after the match.
+- Printed monster defenses that apply only to nonmagical attacks, including silvered and adamantine bypasses, stay on the card. Iron Pit does not strip those defenses to make fights easier. They bind to the shared `ConditionalDamageDefense` primitive with `DamageSourceQualifier` values `magical`, `silvered`, and `adamantine`.
+- Canonical pregen manufactured weapons use this Iron Pit loadout band so later levels can actually hurt those printed defenses: levels 1–2 mundane, levels 3–4 silvered, levels 5–20 magical. Unarmed Strikes are not manufactured weapons and keep only class-feature qualifiers such as Ki-Empowered Strikes. Magical weapons bypass every “from nonmagical attacks” clause, including the silvered and adamantine variants.
 
 ## 24. Canonical pregens
 

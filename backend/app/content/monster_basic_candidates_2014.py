@@ -8,6 +8,7 @@ from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2
 from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
+from app.content.monster_conditional_damage_defenses_2014 import remaining_unsupported_defense_text_2014
 from app.content.monster_healing_2014 import healing_action_names_2014, supports_healing_2014
 from app.content.monster_innate_support_2014 import innate_spell_names_2014, supports_innate_spellcasting_2014
 from app.content.monster_legendary_bindings_2014 import supports_legendary_actions_2014
@@ -151,7 +152,7 @@ def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
         if key not in bound_limited
     }
     families = {
-        "defense": monster.unsupported_defense_text,
+        "defense": remaining_unsupported_defense_text_2014(monster),
         "save-action": unsupported_save_actions_2014(monster),
         "swallow": monster.swallow_actions,
         "death-trigger": monster.death_trigger_actions,

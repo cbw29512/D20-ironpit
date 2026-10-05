@@ -6,6 +6,7 @@ from app.content.monster_basic_candidates_2014 import (
 )
 from app.content.monster_charge_profile_2014 import charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
+from app.content.monster_conditional_damage_defenses_2014 import template_defense_fields_2014
 from app.content.monster_healing_2014 import healing_actions_2014, healing_resources_2014
 from app.content.monster_innate_spells_2014 import innate_spell_save_actions_2014
 from app.content.monster_innate_support_2014 import (
@@ -191,10 +192,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         source_legendary_action_names=list(monster.legendary_action_names),
         parry_reaction=ParryReaction(ac_bonus=monster.parry_ac_bonus)
             if supports_parry_reaction_2014(monster) else None,
-        damage_resistances=[item.lower() for item in monster.damage_resistances],
-        damage_vulnerabilities=[item.lower() for item in monster.damage_vulnerabilities],
-        damage_immunities=[item.lower() for item in monster.damage_immunities],
-        condition_immunities=[item.lower() for item in monster.condition_immunities],
+        **template_defense_fields_2014(monster),
         visual=VisualLoadout(armor=monster.creature_type, main_hand=monster.attacks[0].name, body_style=monster.creature_type),
         source=f"SRD 5.1 (2014) {monster.name}",
     )

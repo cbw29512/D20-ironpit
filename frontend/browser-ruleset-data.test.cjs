@@ -167,7 +167,7 @@ for (const id of [
   "2014-giant-shark", "2014-hunter-shark", "2014-quipper", "2014-swarm-of-quippers",
   "2014-giant-wolf-spider", "2014-spider", "2014-lion", "2014-young-white-dragon",
   "2014-bat", "2014-giant-bat", "2014-killer-whale", "2014-swarm-of-bats",
-  "2014-berserker", "2014-minotaur", "2014-winter-wolf",
+  "2014-berserker", "2014-minotaur", "2014-winter-wolf", "2014-gargoyle",
 ]) assert.ok(monsters2014.some((monster) => monster.id === id), `${id} must exist in the 2014 browser roster`);
 for (const id of ["2014-swarm-of-insects", "2014-swarm-of-poisonous-snakes", "2014-swarm-of-rats", "2014-swarm-of-ravens"]) {
   const swarm = monsters2014.find((monster) => monster.id === id);

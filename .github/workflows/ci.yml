@@ -552,6 +552,7 @@ jobs:
           node frontend/browser-persistent-barriers.test.cjs
           node frontend/browser-damage-triggered-reactions.test.cjs
           node frontend/browser-fiendish-resilience-2014.test.cjs
+          node frontend/browser-conditional-damage-defenses.test.cjs
           node frontend/browser-exile-2014.test.cjs
           node frontend/browser-eldritch-master-2014.test.cjs
           node frontend/browser-magical-cunning-2024.test.cjs
