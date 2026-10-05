@@ -136,7 +136,7 @@ Progression PRs whose completed behavior is already present on current `main` ar
 
 ## Publishing
 
-Chris approved a one-shot roster production publish (2026-10-05). Unlock merge is `2292ba324` (#592). Git-connected ignore is restored. Production Git deploy `6ac3e995b21bb000098a0bdd` is **ready** but unpublished because https://ironpit.netlify.app/ is still pinned/locked to #569 deploy `6ac3b69534351e0007b460d0`. Publish `6ac3e995b21bb000098a0bdd` in the Netlify UI (or restore it via API). Do not buy or attach `ironpit.app`. Verified deploy: https://6ac3e995b21bb000098a0bdd--ironpit.netlify.app/
+Chris approved a one-shot roster production publish (2026-10-05). Unlock merge is `2292ba324` (#592); relock merge is `0963fff45` (#594). Git-connected ignore is restored. https://ironpit.netlify.app/ is serving production Git deploy `6ac3e995b21bb000098a0bdd` (`main` `2292ba324`) and that deploy is locked. Do not buy or attach `ironpit.app`.
 
 ## Verification truth
 
