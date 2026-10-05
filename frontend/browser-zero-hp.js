@@ -126,6 +126,11 @@
     const incoming = amount;
     if (!incoming || state.is_dead) return "damaged";
     noteRegenTypes(state, damageTypes);
+    if ((damageTypes || []).length === 1) {
+      const key = String(damageTypes[0]);
+      state.damage_taken_this_turn_by_type ||= {};
+      state.damage_taken_this_turn_by_type[key] = (state.damage_taken_this_turn_by_type[key] || 0) + incoming;
+    }
     const absorbed = Math.min(state.temporary_hp, amount);
     state.temporary_hp -= absorbed;
     amount -= absorbed;
