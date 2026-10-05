@@ -3,9 +3,11 @@ from __future__ import annotations
 import logging
 import re
 
+from app.content.environment_context_reactions import sunlight_sensitivity_2014
 from app.content.monster_legendary_resistance_2014 import legendary_resistance_trait_name_2014
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
+from app.domain.environment_contexts import EnvironmentContextReaction
 from app.domain.progression import ProgressionCombatFeatures, SavingThrowAdvantageGrant
 from app.domain.weapons import ConditionalAttackAdvantage
 
@@ -17,6 +19,7 @@ _SNEAK_ATTACK = "Sneak Attack (1/Turn)"
 _MAGIC_RESISTANCE = "Magic Resistance"
 _MAGIC_WEAPONS = "Magic Weapons"
 _INNATE_SPELLCASTING = "Innate Spellcasting"
+_SUNLIGHT_SENSITIVITY = "Sunlight Sensitivity"
 _ALL_SAVE_ABILITIES = (
     "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",
 )
@@ -92,6 +95,22 @@ def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFe
     )
 
 
+def environment_context_reactions_2014(
+    monster: SourceMonster2014,
+) -> list[EnvironmentContextReaction]:
+    """Bind printed Sunlight Sensitivity to the shared sunlight context reaction."""
+    try:
+        if _SUNLIGHT_SENSITIVITY not in monster.trait_names:
+            return []
+        return [sunlight_sensitivity_2014()]
+    except Exception:
+        logger.exception(
+            "Failed to bind 2014 environment-context reactions for %s.",
+            monster.name,
+        )
+        raise
+
+
 def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
     """Return source traits that are fully bound to existing universal primitives."""
     try:
@@ -112,6 +131,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             from app.content.monster_innate_support_2014 import supports_innate_spellcasting_2014
             if supports_innate_spellcasting_2014(monster):
                 bound.add(_INNATE_SPELLCASTING)
+        if _SUNLIGHT_SENSITIVITY in monster.trait_names:
+            bound.add(_SUNLIGHT_SENSITIVITY)
         if supports_regeneration_2014(monster):
             bound.add("Regeneration")
         resistance = legendary_resistance_trait_name_2014(monster)

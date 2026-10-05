@@ -179,6 +179,21 @@ for (const id of ["2014-giant-shark", "2014-hunter-shark", "2014-quipper", "2014
   assert.ok(monster);
   assert.deepEqual(monster.attacks[0].conditionalAttackAdvantage, [{ trigger: "target_not_full_hp" }]);
 }
+const kobold = monsters2014.find((monster) => monster.id === "2014-kobold");
+assert.ok(kobold);
+assert.deepEqual(kobold.environment_context_reactions, [{
+  source_id: "sunlight-sensitivity",
+  source_name: "Sunlight Sensitivity",
+  context_id: "sunlight",
+  disadvantage_on: ["attack_rolls", "sight_based_perception_checks"],
+}]);
+assert.ok(kobold.traits.includes("pack-tactics"));
+for (const id of ["2014-flying-snake", "2014-giant-owl", "2014-owl", "2014-pteranodon"]) {
+  const flyer = monsters2014.find((monster) => monster.id === id);
+  assert.ok(flyer, `${id} must exist`);
+  assert.equal(flyer.movement_modes.fly_ft, 60);
+  assert.equal(flyer.environment_context_reactions, undefined);
+}
 const mule = monsters2014.find((monster) => monster.id === "2014-mule");
 assert.ok(mule); assert.deepEqual(mule.traits, ["sure-footed"]);
 const noble = monsters2014.find((monster) => monster.id === "2014-noble");

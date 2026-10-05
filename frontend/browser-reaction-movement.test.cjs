@@ -8,7 +8,7 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-control.js",
+  "browser-heroes.js", "browser-monsters.js", "browser-monsters-control.js", "browser-monsters-2014.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
   "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-reactions.js", "browser-reaction-movement.js",
@@ -54,5 +54,20 @@ function threeWay(reactorId = "srd-commoner") {
   dice(); const { mover, reactor, target, fight } = threeWay();
   const result = W.moveToward(1, 1, mover, target, fight, 5, "forced");
   assert.equal(result.events.length, 0); assert.ok(result.movement); assert.equal(reactor.state.reaction_available, true);
+}
+{
+  const R = window.IRON_PIT_BROWSER_REACTIONS;
+  const karnok = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-2014-l1"];
+  for (const id of ["2014-flying-snake", "2014-giant-owl", "2014-owl", "2014-pteranodon"]) {
+    const flyerTemplate = window.IRON_PIT_BROWSER_MONSTERS_2014[id];
+    const mover = member(id, "monsters", flyerTemplate, 5);
+    const reactor = member("hero-1", "heroes", karnok, 0);
+    const fight = { heroes: [reactor], monsters: [mover], ruleset: "2014" };
+    dice(2);
+    const event = R.resolveOpportunityAttack(1, 1, reactor, mover, fight, 5, 10, "speed");
+    assert.ok(event, `${id} Flyby must not exempt a leave-reach opportunity attack`);
+    assert.equal(event.feature_id, "opportunity-attack");
+    assert.equal(reactor.state.reaction_available, false);
+  }
 }
 console.log("Browser reaction-aware movement regressions passed.");
