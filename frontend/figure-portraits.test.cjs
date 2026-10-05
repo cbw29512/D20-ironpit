@@ -31,6 +31,12 @@ assert.notEqual(P.markup(monster("Goblin")), P.markup(monster("Skeleton")));
 assert.match(P.markup(monster("Goblin")), /M28 22 18 10/, "Goblin portrait must keep pointed ears.");
 assert.match(P.markup(monster("Goblin")), /M64 50c16-12/, "Goblin portrait must include a scimitar.");
 assert.notEqual(P.markup(monster("Unicorn", "large")), P.markup(monster("Riding Horse", "large")));
+assert.equal(P.keyFor(monster("Troll", "large"), { form: "brute", detail: "troll" }), "troll");
+assert.match(P.markup(monster("Troll", "large")), /M22 88 36 48/, "Troll portrait must reuse the existing long-limbed silhouette.");
+assert.notEqual(P.markup(monster("Troll", "large")), P.markup(monster("Ogre", "large")));
+assert.notEqual(P.markup(monster("Troll", "large")), P.markup(monster("Hill Giant", "huge")));
+const trollCss = fs.readFileSync(path.join(__dirname, "figure-archetypes.css"), "utf8");
+assert.match(trollCss, /\[data-form="brute"\]\[data-detail="troll"\]/, "Troll stick-figure must keep a hunched long-limbed identity.");
 
 const hero = P.markup({
   name: "Audited Paladin", kind: "character", size: "medium", archetype: "Paladin",
