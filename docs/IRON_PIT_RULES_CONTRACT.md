@@ -548,7 +548,7 @@ Iron Pit lair-action ownership house rule:
 
 2024 RAW Loathsome Limbs normally creates separate Troll Limb creatures. Iron Pit does not create dynamic limb combatants for this feature. Instead, the source behavior is represented by a source-owned stack on the Troll:
 
-- At the end of the Troll's turn, if the Troll is Bloodied and took **15 or more Slashing damage during that turn**, it gains one **Loathsome Limbs** stack, subject to the printed **4/Day** limit and a maximum of four active stacks.
+- At the end of **any creature's turn**, if the Troll is Bloodied and took **15 or more Slashing damage during that just-ended turn**, it gains one **Loathsome Limbs** stack, subject to the printed **4/Day** limit and a maximum of four active stacks.
 - Each active stack gives the Troll **1 Exhaustion level**, preserving the printed missing-limb penalty.
 - Immediately after the Troll's turn, each active stack makes one attached limb attack using the source Troll Limb Rend profile: **+6 to hit, reach 5 ft., 2d4 + 4 Slashing**.
 - These attached attacks use the normal universal attack resolver. They do not create separate initiative entries, positions, Hit Point pools, movement, targeting bodies, or spawned combatants.
