@@ -2789,7 +2789,9 @@
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
+      "unsupported_mechanics": [
+        "monster-combat-mechanics-not-certified"
+      ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
@@ -9376,7 +9378,9 @@
         "saving-throw-action",
         "trait"
       ],
-      "unsupported_mechanics": [],
+      "unsupported_mechanics": [
+        "monster-combat-mechanics-not-certified"
+      ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
