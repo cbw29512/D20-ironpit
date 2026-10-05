@@ -8,6 +8,7 @@ from app.combat.grid_geometry import footprint_distance_ft
 from app.combat.grid_pathing_support import overlapping_occupants
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.combat.suppression_zone_geometry import verbal_casting_blocked
+from app.combat.teleport_cancel import clear_teleport_cancelable_effects
 from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent, DamageRollComponent, DiceRoll
@@ -119,27 +120,47 @@ def resolve_teleport(
                 sequence += 1
             return events, sequence
         origin = caster.state.position.model_copy(deep=True)
-        offset_x = destination.x - origin.x
-        offset_y = destination.y - origin.y
-        for traveler in travelers:
-            if traveler.state.position is None:
-                continue
-            traveler.state.position = GridPosition(
-                x=traveler.state.position.x + offset_x,
-                y=traveler.state.position.y + offset_y,
+        stays_in_place = destination.x == origin.x and destination.y == origin.y
+        removed: list[str] = []
+        if stays_in_place:
+            for traveler in travelers:
+                for condition_id in clear_teleport_cancelable_effects(traveler):
+                    if condition_id not in removed:
+                        removed.append(condition_id)
+        else:
+            offset_x = destination.x - origin.x
+            offset_y = destination.y - origin.y
+            for traveler in travelers:
+                if traveler.state.position is None:
+                    continue
+                traveler.state.position = GridPosition(
+                    x=traveler.state.position.x + offset_x,
+                    y=traveler.state.position.y + offset_y,
+                )
+                for condition_id in clear_teleport_cancelable_effects(traveler):
+                    if condition_id not in removed:
+                        removed.append(condition_id)
+        names = ", ".join(item.replace("_", " ").title() for item in removed)
+        description = f"{caster.state.template.name} teleports with {action.name}."
+        if stays_in_place:
+            description = (
+                f"{caster.state.template.name} uses {action.name} without leaving its spot."
             )
+            if names:
+                description += f" {names} ends."
         events.append(BattleEvent(
             sequence=sequence,
             round_number=round_number,
-            event_type="movement",
+            event_type="feature" if stays_in_place else "movement",
             actor_id=caster.combatant_id,
             actor_name=caster.state.template.name,
             feature_id=action.id,
+            removed_condition_ids=removed,
             resource_remaining=resource.current_uses if resource is not None else None,
             grid_position_before=origin,
-            grid_position_after=destination.model_copy(deep=True),
+            grid_position_after=origin if stays_in_place else destination.model_copy(deep=True),
             animation=action.animation,
-            description=f"{caster.state.template.name} teleports with {action.name}.",
+            description=description,
         ))
         return events, sequence + 1
     except ValueError:

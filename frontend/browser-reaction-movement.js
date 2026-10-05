@@ -30,6 +30,7 @@
         throw new Error("Grid movement requires map and combatant positions.");
       }
       const members = [...setup.heroes, ...setup.monsters];
+      const allowLeaveMelee = movementSource === "forced";
       const plan = GM().planToward(
         setup.map_definition,
         mover,
@@ -38,6 +39,7 @@
         desired,
         mover.state.movement_remaining_ft,
         setup.persistent_barriers || [],
+        allowLeaveMelee,
       );
       if (!plan.path.length) return { events: [], sequence, movement: null };
       const events = [], reactors = mover.side === "heroes" ? setup.monsters : setup.heroes;

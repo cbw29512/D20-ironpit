@@ -52,12 +52,18 @@
     }
   }
 
-  function planToward(map, mover, target, members, desiredDistanceFt, movementBudgetFt, barriers = null) {
+  function planToward(
+    map, mover, target, members, desiredDistanceFt, movementBudgetFt, barriers = null, allowLeaveMelee = false,
+  ) {
     try {
       if (desiredDistanceFt < 0 || movementBudgetFt < 0) {
         throw new Error("Movement distance values cannot be negative.");
       }
       const api = support();
+      const engagement = window.IRON_PIT_BROWSER_PIT_ENGAGEMENT;
+      const plannedDistanceFt = engagement?.clampVoluntaryMeleeDesiredDistanceFt
+        ? engagement.clampVoluntaryMeleeDesiredDistanceFt(mover, target, desiredDistanceFt, allowLeaveMelee)
+        : desiredDistanceFt;
       const helpers = {
         position: api.position,
         occupantsAt: api.occupantsAt,
@@ -68,7 +74,7 @@
         mover,
         target,
         members,
-        desiredDistanceFt,
+        plannedDistanceFt,
         helpers,
         barriers,
       );
@@ -92,7 +98,7 @@
         path: prefix.path,
         movement_cost_ft: prefix.cost,
         final_distance_ft: finalDistance,
-        goal_reachable: routeGoalDistance <= desiredDistanceFt,
+        goal_reachable: routeGoalDistance <= plannedDistanceFt,
       };
     } catch (error) {
       console.error("Failed to plan browser grid movement", {

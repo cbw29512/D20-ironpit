@@ -8,7 +8,10 @@
   const POISON_RECOVERY_DC = 10;
 
   function apply(state, effectId, sourceId, options = {}) {
-    if (I().immune(state, effectId, options.sourceTemplate || null, { sourceIsMagical: options.sourceIsMagical === true })) return null;
+    if (I().immune(state, effectId, options.sourceTemplate || null, {
+      sourceIsMagical: options.sourceIsMagical === true,
+      groundContact: options.groundContact === true,
+    })) return null;
     const defaultPoison = effectId === POISONED && options.useDefaultPoisonRecovery !== false;
     if (defaultPoison && state.timed_effects.some((effect) => effect.effect_id === POISONED)) return POISONED;
     const sourceEffectId = options.sourceEffectId || null;
@@ -51,6 +54,8 @@
       repeat_save_failures_to_lock: options.repeatSaveFailuresToLock || null,
       escape_check_ability: options.escapeCheckAbility || null,
       escape_check_dc: options.escapeCheckDc ?? null,
+      ground_contact: Boolean(options.groundContact),
+      ends_on_teleport: Boolean(options.endsOnTeleport || options.groundContact),
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     RF()?.revertIfIncapacitated(state);
@@ -93,7 +98,9 @@
   }
 
   function resolveMovementCounters(state) {
-    const resolved = [];
+    const resolved = [
+      ...(window.IRON_PIT_BROWSER_FLIGHT_GROUND?.resolveGroundConditions(state) || []),
+    ];
     for (const effect of [...(state.timed_effects || [])]) {
       const cost = C().movementCost(state, effect.effect_id, { sourceIsMagical: Boolean(effect.source_is_magical) });
       if (cost == null || state.movement_remaining_ft < cost) continue;

@@ -38,7 +38,8 @@
   }
 
   const difficultTerrainMultiplier = (state, options = {}) =>
-    prevented(state, "difficult-terrain", options) ? 1 : 2;
+    (window.IRON_PIT_BROWSER_FLIGHT_GROUND?.isFlying(state) || prevented(state, "difficult-terrain", options))
+      ? 1 : 2;
 
   window.IRON_PIT_BROWSER_DEBUFF_COUNTERS = {
     difficultTerrainMultiplier, matching, movementCost, prevented,

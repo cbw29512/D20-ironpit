@@ -34,6 +34,8 @@ class FailedSaveTimedEffect(BaseModel):
     repeat_save_failures_to_lock: int | None = Field(default=None, ge=1, le=10)
     escape_check_ability: AbilityName | None = None
     escape_check_dc: int | None = Field(default=None, ge=1, le=40)
+    ground_contact: bool = False
+    ends_on_teleport: bool = False
 
     @model_validator(mode="after")
     def validate_repeat_save(self) -> "FailedSaveTimedEffect":
