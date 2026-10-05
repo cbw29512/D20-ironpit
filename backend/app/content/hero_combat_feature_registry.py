@@ -40,7 +40,16 @@ _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
         "athletics_advantage": True,
         "critical_move_fraction": 0.5,
     },
-    "tactical-shift": {"tactical_shift_fraction": 0.5},
+    "tactical-shift": {
+        "bonus_action_follow_up_movement_grants": [{
+            "source_id": "tactical-shift",
+            "source_name": "Tactical Shift",
+            "required_trigger_ids": ["second-wind"],
+            "speed_fraction": 0.5,
+            "desired_distance_ft": 5,
+            "provokes_opportunity_attacks": False,
+        }],
+    },
     "great-weapon-fighting": {"great_weapon_fighting": True},
     "heroic-warrior": {"heroic_warrior": True},
     "studied-attacks": {"studied_attacks": True},
