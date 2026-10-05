@@ -1,6 +1,6 @@
 # Real card-art inventory
 
-Hero pregens have Chris-approved full-color painterly portraits. Forty-five approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
+Hero pregens have Chris-approved full-color painterly portraits. Seventy approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
 
 Processed hero assets are `frontend/assets/portraits/heroes/hero-{2014|2024}-{class}.webp` (3:4, about 50–85 KB). One file per character per edition is reused across levels 1–20.
 
@@ -46,7 +46,7 @@ One portrait per character per edition, reused across levels 1–20.
 | `hero-2024-warlock` | Varek Ashenmark | Warlock | `frontend/assets/portraits/heroes/hero-2024-warlock.webp` |
 | `hero-2024-wizard` | Elian Starweaver | Wizard | `frontend/assets/portraits/heroes/hero-2024-wizard.webp` |
 
-## Monsters — 45 approved silhouettes; remaining cards keep the SVG glyph
+## Monsters — 70 approved silhouettes; remaining cards keep the SVG glyph
 
 Live fight-board / picker captures of the wired silhouettes:
 
@@ -65,7 +65,7 @@ Not mapped, even when a similar name exists:
 
 - Goblin art is not used for Goblin Minion, Goblin Boss, or Hobgoblin; those three now have their own files
 - 2014 Minotaur art is not used for Minotaur of Baphomet or Minotaur Skeleton
-- Skeleton / Zombie / Crocodile / Wolf / Boar / Guard / Spider art is not reused for Warhorse Skeleton, Ogre Zombie, Giant Crocodile, Dire Wolf, Winter Wolf, Giant Boar, Guard Captain, or Giant Wolf Spider
+- Skeleton / Zombie / Crocodile / Wolf / Boar / Guard / Spider / Ape / Snake / Rat / Hawk / Bandit / Cultist / Priest / Mage / Vampire / Pegasus / Medusa art is not reused for Warhorse Skeleton, Ogre Zombie, Giant Crocodile, Dire Wolf, Winter Wolf, Giant Boar, Guard Captain, Giant Wolf Spider, Giant Ape, Giant Constrictor Snake, Giant Rat, Blood Hawk vs Hawk, Bandit Captain, Cultist Fanatic, Priest Acolyte, Archmage, Vampire, Unicorn, or Gorgon
 - Hippopotamus and Manticore exist in the 2024 roster only
 - Berserker, Elephant, Giant Ape, Unicorn, Roc, and Troll have 2014 runtime ids plus 2024 catalog ids; Troll is not in the certified 2024 runtime subset
 - `orc.webp` was processed but is not registered: neither the 2014 certified roster, the 2024 certified roster, nor the 330-name 2024 catalog has `orc` / `orc-warrior`
@@ -117,5 +117,30 @@ Not mapped, even when a similar name exists:
 | `harpy.webp` | — | — | `srd-5.2.1-2024-monster-harpy` |
 | `stirge.webp` | — | — | `srd-5.2.1-2024-monster-stirge` |
 | `guard.webp` | `2014-guard` | `srd-guard` | `srd-5.2.1-2024-monster-guard` |
+| `ape.webp` | `2014-ape` | — | `srd-5.2.1-2024-monster-ape` |
+| `blood-hawk.webp` | `2014-blood-hawk` | `srd-blood-hawk` | `srd-5.2.1-2024-monster-blood-hawk` |
+| `constrictor-snake.webp` | `2014-constrictor-snake` | `srd-constrictor-snake` | `srd-5.2.1-2024-monster-constrictor-snake` |
+| `giant-rat.webp` | `2014-giant-rat` | `srd-giant-rat` | `srd-5.2.1-2024-monster-giant-rat` |
+| `giant-wolf-spider.webp` | `2014-giant-wolf-spider` | `srd-giant-wolf-spider` | `srd-5.2.1-2024-monster-giant-wolf-spider` |
+| `specter.webp` | — | — | `srd-5.2.1-2024-monster-specter` |
+| `wight.webp` | — | — | `srd-5.2.1-2024-monster-wight` |
+| `ghost.webp` | — | — | `srd-5.2.1-2024-monster-ghost` |
+| `vampire-spawn.webp` | — | — | `srd-5.2.1-2024-monster-vampire-spawn` |
+| `bandit.webp` | `2014-bandit` | `srd-bandit` | `srd-5.2.1-2024-monster-bandit` |
+| `cultist.webp` | — | `srd-cultist` | `srd-5.2.1-2024-monster-cultist` |
+| `priest.webp` | — | — | `srd-5.2.1-2024-monster-priest` |
+| `knight.webp` | — | `srd-knight` | `srd-5.2.1-2024-monster-knight` |
+| `mage.webp` | — | — | `srd-5.2.1-2024-monster-mage` |
+| `imp.webp` | — | — | `srd-5.2.1-2024-monster-imp` |
+| `quasit.webp` | — | — | `srd-5.2.1-2024-monster-quasit` |
+| `pegasus.webp` | `2014-pegasus` | `srd-pegasus` | `srd-5.2.1-2024-monster-pegasus` |
+| `griffon.webp` | `2014-griffon` | `srd-griffon` | `srd-5.2.1-2024-monster-griffon` |
+| `hippogriff.webp` | `2014-hippogriff` | `srd-hippogriff` | `srd-5.2.1-2024-monster-hippogriff` |
+| `basilisk.webp` | — | — | `srd-5.2.1-2024-monster-basilisk` |
+| `cockatrice.webp` | — | — | `srd-5.2.1-2024-monster-cockatrice` |
+| `chimera.webp` | `2014-chimera` | — | `srd-5.2.1-2024-monster-chimera` |
+| `hydra.webp` | — | — | `srd-5.2.1-2024-monster-hydra` |
+| `medusa.webp` | — | — | `srd-5.2.1-2024-monster-medusa` |
+| `gorgon.webp` | — | — | `srd-5.2.1-2024-monster-gorgon` |
 
 Every other monster still uses `figure-portraits.js`. See `ART_SHOPPING_LIST.md` for the remaining missing/inaccurate table.

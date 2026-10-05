@@ -90,19 +90,50 @@ assert.equal(A.assetFor({ id: "srd-guard-captain", kind: "monster" }), null);
 assert.equal(A.assetFor({ id: "srd-giant-boar", kind: "monster" }), null);
 assert.equal(A.assetFor({ id: "2014-winter-wolf", kind: "monster" }), null);
 assert.equal(A.assetFor({ id: "srd-spider", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "2014-ape", kind: "monster" }).src, "assets/portraits/monsters/ape.webp");
+assert.equal(A.assetFor({ id: "srd-5.2.1-2024-monster-ape", kind: "monster" }).src, "assets/portraits/monsters/ape.webp");
+assert.equal(A.assetFor({ id: "2014-giant-ape", kind: "monster" }).src, "assets/portraits/monsters/giant-ape.webp");
+assert.notEqual(A.assetFor({ id: "2014-ape", kind: "monster" }).src, A.assetFor({ id: "2014-giant-ape", kind: "monster" }).src);
+assert.equal(A.assetFor({ id: "srd-constrictor-snake", kind: "monster" }).src, "assets/portraits/monsters/constrictor-snake.webp");
+assert.notEqual(A.assetFor({ id: "srd-constrictor-snake", kind: "monster" }).src, A.assetFor({ id: "srd-giant-constrictor-snake", kind: "monster" }).src);
+assert.equal(A.assetFor({ id: "srd-giant-wolf-spider", kind: "monster" }).src, "assets/portraits/monsters/giant-wolf-spider.webp");
+assert.notEqual(A.assetFor({ id: "srd-giant-wolf-spider", kind: "monster" }).src, A.assetFor({ id: "srd-giant-spider", kind: "monster" }).src);
+assert.equal(A.assetFor({ id: "srd-bandit", kind: "monster" }).src, "assets/portraits/monsters/bandit.webp");
+assert.equal(A.assetFor({ id: "srd-bandit-captain", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "srd-cultist", kind: "monster" }).src, "assets/portraits/monsters/cultist.webp");
+assert.equal(A.assetFor({ id: "srd-cultist-fanatic", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "srd-5.2.1-2024-monster-priest", kind: "monster" }).src, "assets/portraits/monsters/priest.webp");
+assert.equal(A.assetFor({ id: "srd-priest-acolyte", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "srd-5.2.1-2024-monster-mage", kind: "monster" }).src, "assets/portraits/monsters/mage.webp");
+assert.equal(A.assetFor({ id: "srd-archmage", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "srd-5.2.1-2024-monster-vampire-spawn", kind: "monster" }).src, "assets/portraits/monsters/vampire-spawn.webp");
+assert.equal(A.assetFor({ id: "srd-vampire", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "srd-pegasus", kind: "monster" }).src, "assets/portraits/monsters/pegasus.webp");
+assert.notEqual(A.assetFor({ id: "srd-pegasus", kind: "monster" }).src, A.assetFor({ id: "2014-unicorn", kind: "monster" }).src);
+assert.equal(A.assetFor({ id: "srd-5.2.1-2024-monster-medusa", kind: "monster" }).src, "assets/portraits/monsters/medusa.webp");
+assert.equal(A.assetFor({ id: "srd-5.2.1-2024-monster-gorgon", kind: "monster" }).src, "assets/portraits/monsters/gorgon.webp");
+assert.notEqual(A.assetFor({ id: "srd-medusa", kind: "monster" }).src, A.assetFor({ id: "srd-gorgon", kind: "monster" }).src);
+assert.equal(A.assetFor({ id: "srd-hawk", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "srd-rat", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "2014-chimera", kind: "monster" }).src, "assets/portraits/monsters/chimera.webp");
+assert.equal(A.assetFor({ id: "srd-5.2.1-2024-monster-hydra", kind: "monster" }).src, "assets/portraits/monsters/hydra.webp");
 assert.match(A.markup({ id: "2014-wyvern", kind: "monster", name: "Wyvern" }), /portrait-image-monster/);
 assert.doesNotMatch(A.markup({ id: "2014-wyvern", kind: "monster", name: "Wyvern" }), /portrait-image-hero/);
 
 const monsterFiles = [
-  "berserker", "black-bear", "blue-dragon-wyrmling", "boar", "brown-bear",
-  "bugbear-warrior", "crocodile", "dire-wolf", "elephant", "ghoul", "giant-ape",
-  "giant-constrictor-snake", "giant-crocodile", "giant-scorpion", "giant-spider",
-  "goblin", "goblin-boss", "goblin-minion", "guard", "harpy", "hell-hound",
-  "hippopotamus", "hobgoblin-warrior", "manticore", "minotaur", "minotaur-of-baphomet",
-  "minotaur-skeleton", "ogre", "ogre-zombie", "owlbear", "red-dragon-wyrmling", "roc",
-  "skeleton", "stirge", "triceratops", "troll", "tyrannosaurus-rex", "unicorn",
-  "warhorse-skeleton", "wolf", "worg", "wyvern", "young-black-dragon",
-  "young-red-dragon", "zombie",
+  "ape", "bandit", "basilisk", "berserker", "black-bear", "blood-hawk",
+  "blue-dragon-wyrmling", "boar", "brown-bear", "bugbear-warrior", "chimera",
+  "cockatrice", "constrictor-snake", "crocodile", "cultist", "dire-wolf",
+  "elephant", "ghost", "ghoul", "giant-ape", "giant-constrictor-snake",
+  "giant-crocodile", "giant-rat", "giant-scorpion", "giant-spider",
+  "giant-wolf-spider", "goblin", "goblin-boss", "goblin-minion", "gorgon",
+  "griffon", "guard", "harpy", "hell-hound", "hippogriff", "hippopotamus",
+  "hobgoblin-warrior", "hydra", "imp", "knight", "mage", "manticore", "medusa",
+  "minotaur", "minotaur-of-baphomet", "minotaur-skeleton", "ogre", "ogre-zombie",
+  "owlbear", "pegasus", "priest", "quasit", "red-dragon-wyrmling", "roc",
+  "skeleton", "specter", "stirge", "triceratops", "troll", "tyrannosaurus-rex",
+  "unicorn", "vampire-spawn", "warhorse-skeleton", "wight", "wolf", "worg",
+  "wyvern", "young-black-dragon", "young-red-dragon", "zombie",
 ];
 for (const fileId of monsterFiles) {
   const rel = `assets/portraits/monsters/${fileId}.webp`;
