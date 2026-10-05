@@ -55,6 +55,9 @@ Live fight-board / picker captures of the wired silhouettes:
 - `docs/artifacts/card-art/2024-monster-sample-board.png`
 - `docs/artifacts/card-art/2024-batch2-sample-board.png`
 - `docs/artifacts/card-art/2014-batch2-sample-board.png`
+- `docs/artifacts/card-art/2014-card-wolf.png` / `2014-card-troll.png` / `2014-card-giant-crocodile.png`
+- `docs/artifacts/card-art/2024-card-wolf.png` / `2024-card-goblin-boss.png` / `2024-card-hobgoblin-warrior.png` / `2024-card-giant-crocodile.png`
+- `docs/artifacts/card-art/2014-picker-wolf.png` / `2024-picker-goblin-boss.png` / `2024-picker-hobgoblin-warrior.png` / `2024-picker-harpy.png`
 
 The same creature image is registered to the real 2014 runtime id (`2014-{slug}`), the 2024 certified runtime id (`srd-{slug}`, or `srd-goblin-warrior` for Goblin), and the 2024 catalog id (`srd-5.2.1-2024-monster-{slug}`) when that row is genuinely the same creature.
 
