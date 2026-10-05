@@ -4,4 +4,5 @@
 .combat-presets button { display: flex; flex-direction: column; gap: .45rem; text-align: left; padding: .85rem; color: #f1e7d4; background: #252c38; border: 1px solid #817154; border-radius: 8px; cursor: pointer; }
 .combat-presets button span { font-size: .85rem; line-height: 1.4; }
 .combat-presets button:hover, .combat-presets button:focus-visible { border-color: #efc477; background: #303949; }
+.combat-presets button.selected, .combat-presets button[aria-pressed="true"] { border-color: #efc477; background: #3a3220; box-shadow: inset 0 0 0 1px #efc477; }
 .combat-presets button:disabled { opacity: .5; cursor: default; }

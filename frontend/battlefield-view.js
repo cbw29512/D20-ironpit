@@ -132,5 +132,5 @@
     }
   }
 
-  window.IRON_PIT_BATTLEFIELD_VIEW = { appendEvents, render, resetBattleView, showResult, writeLog };
+  window.IRON_PIT_BATTLEFIELD_VIEW = { appendEvents, eventRow, render, resetBattleView, showResult, writeLog };
 })();

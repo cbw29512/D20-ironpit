@@ -24,6 +24,7 @@
     for (const id of ["fight-button", "step-fight-button", "turbo-button"]) el(id).disabled = state.fighting || active || !ready;
     el("rerun-button").disabled = state.fighting || active || !state.hasRun;
     el("quick-test").disabled = state.fighting || active;
+    el("load-combat-button").disabled = state.fighting || active || !window.IRON_PIT_COMBAT_PRESETS?.selected?.();
     for (const id of ["reset-fight", "reset-board"]) el(id).disabled = state.fighting;
     rulesetUi()?.syncDisabled(state);
     window.IRON_PIT_COMBAT_PRESETS?.sync(state);
@@ -37,11 +38,12 @@
 
   function invalidateRun() {
     state.hasRun = false; state.turboBatch = null; state.session = null; turboView()?.hide();
+    window.IRON_PIT_COMBAT_REVIEW?.hide?.();
     actions()?.syncControls(state); updateControls();
   }
   function render() { if (state.catalog) view().render(state, openSlot); window.IRON_PIT_FORMATION_BOARD?.renderPreview(state); updateControls(); actions()?.syncControls(state); }
-  function setSlot(side, index, card) { (side === "heroes" ? state.heroSlots : state.monsterSlots)[index] = card; invalidateRun(); clearResult(); render(); }
-  function removeSlot(side, index) { (side === "heroes" ? state.heroSlots : state.monsterSlots)[index] = null; invalidateRun(); clearResult(); render(); }
+  function setSlot(side, index, card) { (side === "heroes" ? state.heroSlots : state.monsterSlots)[index] = card; window.IRON_PIT_COMBAT_PRESETS?.clear?.(); invalidateRun(); clearResult(); render(); }
+  function removeSlot(side, index) { (side === "heroes" ? state.heroSlots : state.monsterSlots)[index] = null; window.IRON_PIT_COMBAT_PRESETS?.clear?.(); invalidateRun(); clearResult(); render(); }
   function openSlot(side, index) {
     if (state.fighting || (state.session && !state.session.complete) || !state.catalog) return;
     picker().open(state, side, index, setSlot, removeSlot);
@@ -68,7 +70,7 @@
     try {
       if (state.fighting) return;
       // Selections are immutable cards; rebuilding the view drops all live fight overlays.
-      if (clearBoard) { state.heroSlots.fill(null); state.monsterSlots.fill(null); }
+      if (clearBoard) { state.heroSlots.fill(null); state.monsterSlots.fill(null); window.IRON_PIT_COMBAT_PRESETS?.clear?.(); }
       invalidateRun();
       const message = clearBoard ? "Board cleared. Choose pregens and monsters, or load a preset." : "Fight reset. Loaded cards restored; ready for a fresh fight.";
       clearResult(message); render(); el("status").textContent = message;
@@ -78,10 +80,12 @@
     const rows = side === "heroes" ? state.catalog.heroes : state.catalog.monsters;
     return rows.find((card) => card.runnable_template_id === templateId && card.coverage_status === "raw_ready") || null;
   }
-  function loadCards(heroes, monsters, message) {
+  function loadCards(heroes, monsters, message, recipe = null) {
     try {
       state.heroSlots = [...heroes, ...Array(MAX_SLOTS - heroes.length).fill(null)];
       state.monsterSlots = [...monsters, ...Array(MAX_SLOTS - monsters.length).fill(null)];
+      if (recipe) window.IRON_PIT_COMBAT_PRESETS.select(recipe);
+      else window.IRON_PIT_COMBAT_PRESETS?.clear?.();
       invalidateRun(); clearResult(message); render(); el("status").textContent = message;
     } catch (error) { console.error("Matchup card loading failed", error); throw error; }
   }
@@ -111,7 +115,7 @@
     try {
       await rulesetUi().ensureBundle(nextRuleset);
       state.ruleset = nextRuleset; state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog(nextRuleset);
-      state.heroSlots.fill(null); state.monsterSlots.fill(null); invalidateRun();
+      state.heroSlots.fill(null); state.monsterSlots.fill(null); window.IRON_PIT_COMBAT_PRESETS?.clear?.(); invalidateRun();
       clearResult(`${nextRuleset} ruleset loaded. Previous matchup cleared to preserve edition isolation.`); rulesetUi().update(state); render();
       el("status").textContent = `${nextRuleset} ready. Choose certified pregens and monsters, or load a preset.`;
     } catch (error) {
@@ -125,11 +129,12 @@
       await loadRulesetUi();
       await rulesetUi().ensureBundle(state.ruleset);
       if (window.IRON_PIT_CANONICAL_MONSTERS_READY !== true) throw new Error("Canonical RAW-certified monster bundle did not load.");
-      const required = [window.IRON_PIT_BROWSER_ENGINE, window.IRON_PIT_BROWSER_CATALOG, window.IRON_PIT_ENCOUNTER_PICKER, view(), picker(), window.IRON_PIT_EXECUTION, actions(), rulesetUi(), window.IRON_PIT_COMBAT_PRESETS];
+      const required = [window.IRON_PIT_BROWSER_ENGINE, window.IRON_PIT_BROWSER_CATALOG, window.IRON_PIT_ENCOUNTER_PICKER, view(), picker(), window.IRON_PIT_EXECUTION, actions(), rulesetUi(), window.IRON_PIT_COMBAT_PRESETS, window.IRON_PIT_COMBAT_REVIEW];
       if (required.some((item) => !item)) throw new Error("Iron Pit browser modules did not load.");
       rulesetUi().install(state, changeRuleset); state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog(state.ruleset); picker().bind(() => state);
       actions().install({ state, matchup, render, updateControls, clearResult });
       await window.IRON_PIT_COMBAT_PRESETS.install({ state, load: loadCards, ensureRuleset: changeRuleset });
+      window.IRON_PIT_COMBAT_REVIEW.install({ state, matchup, render, updateControls, clearResult, load: loadCards, ensureRuleset: changeRuleset });
       rulesetUi().update(state); render();
       el("status").textContent = "Iron Pit ready. Choose certified pregens and monsters, or load a preset.";
     } catch (error) { console.error("Iron Pit initialization failed", error); el("status").textContent = "The Iron Pit failed to initialize."; }

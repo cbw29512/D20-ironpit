@@ -14,6 +14,9 @@ function node() {
     append(...items) { this.children.push(...items); },
     replaceChildren(...items) { this.children = [...items]; },
     addEventListener(name, handler) { this.listeners[name] = handler; },
+    setAttribute(name, value) { this.attributes = this.attributes || {}; this.attributes[name] = value; },
+    showModal() { this.open = true; this.hidden = false; },
+    close() { this.open = false; this.hidden = true; },
     querySelector() { return node(); },
     querySelectorAll() { return []; },
   };
@@ -54,7 +57,7 @@ console.error = (...args) => errors.push(args.map((arg) => arg instanceof Error 
 const click = async (id) => { await el(id).listeners.click(); };
 
 (async () => {
-  load("combat-preset-recipes.js"); load("combat-presets.js"); load("app.js");
+  load("combat-preset-recipes.js"); load("combat-presets.js"); load("combat-review.js"); load("app.js");
   const presetButton = (id) => el("combat-presets").children.find((item) => item.dataset?.preset === id);
   for (let i = 0; i < 40 && !presetButton("goblins"); i += 1) await Promise.resolve();
   assert.ok(api, `production app must initialize: ${JSON.stringify(errors)}`);
@@ -65,6 +68,8 @@ const click = async (id) => { await el(id).listeners.click(); };
   assert.equal(api.state.monsterSlots.filter(Boolean).length, 2);
   assert.ok(api.state.monsterSlots.filter(Boolean).every((card) => card.runnable_template_id === "2014-goblin"));
   assert.equal(api.state.session, null);
+  assert.equal(window.IRON_PIT_COMBAT_PRESETS.selected().id, "goblins");
+  assert.equal(el("load-combat-button").disabled, false);
   assert.match(el("status").textContent, /Rage/);
   const before = JSON.stringify(api.state.heroSlots);
   api.state.session = { complete: false };
@@ -78,6 +83,8 @@ const click = async (id) => { await el(id).listeners.click(); };
   assert.ok(heroes.every((c) => c.kind === "character" && c.ruleset === "2014" && c.coverage_status === "raw_ready"));
   assert.ok(monsters.every((c) => c.kind === "monster" && c.ruleset === "2014" && c.coverage_status === "raw_ready"));
   assert.match(el("battle-log").children[0].textContent, /Karnok \+ Seraphine/);
+  assert.equal(window.IRON_PIT_COMBAT_PRESETS.selected(), null);
+  assert.equal(el("load-combat-button").disabled, true);
   assert.equal(el("fight-button").disabled, false);
   assert.ok(rendered.length >= 2);
 
@@ -146,6 +153,35 @@ const click = async (id) => { await el(id).listeners.click(); };
   assert.match(el("status").textContent, /Board cleared/);
   await presetButton("goblins").listeners.click();
   assert.equal(api.state.heroSlots.filter(Boolean).length, 1); assert.equal(api.state.monsterSlots.filter(Boolean).length, 2);
+  assert.equal(el("load-combat-button").disabled, false);
+  const seeded = window.IRON_PIT_BROWSER_TURBO.runSeeded;
+  let reviewSeeds = [];
+  window.IRON_PIT_BROWSER_TURBO.runSeeded = (selection, seed) => {
+    reviewSeeds.push(seed);
+    return seeded(selection, seed);
+  };
+  await click("load-combat-button");
+  window.IRON_PIT_BROWSER_TURBO.runSeeded = seeded;
+  assert.deepEqual(reviewSeeds, [1701]);
+  assert.equal(api.state.session.seed, 1701);
+  assert.equal(api.state.session.complete, true);
+  assert.equal(api.state.session.eventIndex, api.state.session.battle.events.length);
+  assert.equal(el("combat-review").hidden, false);
+  assert.equal(el("combat-review-log").children.length, api.state.session.battle.events.length);
+  assert.equal(el("battle-log").children.length, api.state.session.battle.events.length);
+  assert.match(el("combat-review-title").textContent, /Barbarian vs two Goblins/);
+  assert.match(el("combat-review-meta").textContent, /recorded seed 1701/);
+  assert.match(el("lab-summary").textContent, /Load Combat · recorded seed 1701/);
+  await click("combat-review-close");
+  assert.equal(el("combat-review").hidden, true);
+  assert.equal(el("fight-button").disabled, false);
+  assert.equal(el("step-fight-button").disabled, false);
+  assert.equal(el("turbo-button").disabled, false);
+  const liveBefore = resolutions;
+  await click("fight-button");
+  assert.equal(resolutions, liveBefore + 1);
+  assert.equal(el("combat-review").hidden, true);
+  assert.equal(api.state.session.complete, true);
   assert.equal(JSON.stringify(sample), original);
   await presetButton("2024-goblins").listeners.click();
   assert.equal(api.state.ruleset, "2024");
@@ -156,5 +192,5 @@ const click = async (id) => { await el(id).listeners.click(); };
   assert.ok(api.state.monsterSlots.filter(Boolean).every((card) => card.runnable_template_id === "srd-goblin-warrior"));
   assert.match(el("status").textContent, /Rage/);
   assert.equal(errors.length, 0, JSON.stringify(errors));
-  console.log("2014 sample + 2024 preset load + actual UI log/result wiring: Fight, rerun, Step/Watch, Turbo and replay passed.");
+  console.log("2014 sample + 2024 preset load + Load Combat review + actual UI log/result wiring: Fight, rerun, Step/Watch, Turbo and replay passed.");
 })().catch((error) => { priorError(error); process.exitCode = 1; }).finally(() => { console.error = priorError; });

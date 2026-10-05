@@ -6,7 +6,12 @@ certified class/level snapshots and certified monster template IDs for 2014
 and 2024. They contain no rolls, combat state, positioning overrides, AI
 overrides or rules resolvers. The loader validates the complete recipe,
 switches the ruleset when a 2024 fight is chosen, replaces the six slots on
-each side, and leaves execution to Fight, Step, Watch, Turbo and Replay.
+each side, and leaves live execution to Fight, Step, Watch, Turbo and Replay.
+
+**Load Combat** is review-only. After a purpose-built fight is selected from
+the list, it replays that recipe's recorded seed through the existing replay
+resolver and presents the complete event log in a dedicated dialog. It does
+not add a combat mode, change dice, or alter asserted preset mechanics.
 
 Each recipe records a probe seed and one or more required aspects. The
 browser test runs that seed and fails if any named aspect is missing from
