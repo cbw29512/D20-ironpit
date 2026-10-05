@@ -58,29 +58,22 @@ def _base_groups(setup: EncounterSetup, dice: DiceProvider) -> list[InitiativeGr
     return groups
 
 
-def _priority(group: InitiativeGroup) -> int:
-    if group.natural_roll == 20:
-        return 2
-    if group.natural_roll == 1:
-        return 0
-    return 1
+def _priority_bucket(group: InitiativeGroup) -> int:
+    """Return the Iron Pit initiative bucket. Natural 20 is not special; natural 1 stays last."""
+    try:
+        return 0 if group.natural_roll == 1 else 1
+    except Exception as exc:
+        logger.exception("Failed to resolve the initiative priority bucket.")
+        raise RuntimeError("Initiative priority bucket could not be resolved.") from exc
 
 
-def _resolve_ties(groups: list[InitiativeGroup], dice: DiceProvider) -> None:
-    """Reroll only unresolved exact ties until every initiative group has a stable order."""
-    while True:
-        tied_by_signature: dict[tuple[int, int, tuple[int, ...]], list[InitiativeGroup]] = defaultdict(list)
-        for group in groups:
-            tied_by_signature[(_priority(group), group.initiative_count, tuple(group.tie_break_rolls))].append(group)
-        unresolved = [tied for tied in tied_by_signature.values() if len(tied) > 1]
-        if not unresolved:
-            return
-        for tied in unresolved:
-            for group in tied:
-                value = dice.roll(20)
-                group.tie_break_rolls.append(value)
-                group.tie_break_roll = value
-
+def _ownership_rank(group: InitiativeGroup) -> int:
+    """Deterministic RAW-compatible tie ownership: DM lets heroes act before monsters."""
+    try:
+        return 1 if group.side == "heroes" else 0
+    except Exception as exc:
+        logger.exception("Failed to resolve initiative tie ownership for %s.", group.template_id)
+        raise RuntimeError("Initiative tie ownership could not be resolved.") from exc
 
 
 def _first_round_schedule(
@@ -94,7 +87,8 @@ def _first_round_schedule(
         for group_index, group in enumerate(groups):
             for member_index, combatant_id in enumerate(group.combatant_ids):
                 normal_key = (
-                    _priority(group), group.initiative_count, 1,
+                    _priority_bucket(group), group.initiative_count, 1,
+                    _ownership_rank(group),
                     -group_index, -member_index,
                 )
                 slots.append((normal_key, combatant_id))
@@ -118,10 +112,10 @@ def _first_round_schedule(
                         source_name = grant.source_name
                         initiative_offset = grant.initiative_offset
                     count = group.initiative_count + initiative_offset
-                    # The extra turn has an initiative count, not a second initiative roll.
-                    # It therefore belongs to the normal Iron Pit priority bucket.
+                    # Extra turns have an initiative count, not a second roll, and stay in the normal bucket.
                     extra_key = (
                         1, count, 0,
+                        _ownership_rank(group),
                         -group_index, -member_index,
                     )
                     slots.append((extra_key, combatant_id))
@@ -152,16 +146,15 @@ def turn_order_for_round(
         raise RuntimeError("Encounter turn schedule could not be resolved.") from exc
 
 def roll_encounter_initiative(setup: EncounterSetup, dice: DiceProvider) -> EncounterInitiative:
-    """Resolve initiative with Iron Pit natural-20/natural-1 buckets and pure d20 tie rerolls."""
+    """Resolve initiative by check total, natural-1 house bucket, and deterministic RAW tie ownership."""
     try:
         groups = _base_groups(setup, dice)
-        _resolve_ties(groups, dice)
         indexed = {id(group): index for index, group in enumerate(groups)}
         groups.sort(
             key=lambda group: (
-                _priority(group),
+                _priority_bucket(group),
                 group.initiative_count,
-                tuple(group.tie_break_rolls),
+                _ownership_rank(group),
                 -indexed[id(group)],
             ),
             reverse=True,

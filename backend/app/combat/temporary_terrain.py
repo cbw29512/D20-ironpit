@@ -13,6 +13,18 @@ from app.domain.temporary_terrain import TemporaryTerrainZone
 logger = logging.getLogger(__name__)
 
 
+def spell_terrain_is_supported(action: SpellSaveAction) -> bool:
+    """Cube or other non-radius Difficult Terrain overlays fail closed until bound."""
+    try:
+        if not action.creates_difficult_terrain:
+            return True
+        radius = action.area.radius_ft if action.area is not None else action.area_radius_ft
+        return radius is not None
+    except Exception:
+        logger.exception("Failed Difficult Terrain support check for %s.", getattr(action, "id", "?"))
+        raise
+
+
 def cell_is_difficult_terrain(
     zones: list[TemporaryTerrainZone],
     cell: GridPosition,

@@ -81,6 +81,37 @@ assert.equal(
 );
 
 S._resetForTests();
+S.registerProvider(provider("dodge-first", "dodge", ["2024"], () => ({ payload: { delivery: "dodge", expectedDamage: 0 } })));
+S.registerProvider(provider("melee", "attack-action", ["2024"], () => ({ payload: { delivery: "melee", expectedDamage: 37 } })));
+S.registerProvider(provider("breath", "area-save", ["2024"], () => ({ payload: { delivery: "ability", expectedDamage: 49.5 } })));
+const breathOverMelee = S.discoverCandidates("normalPostMove", ctx());
+assert.equal(
+  S.selectCandidate("normalPostMove", breathOverMelee).providerId,
+  "breath",
+  "Higher-damage landable area save must beat melee",
+);
+
+S._resetForTests();
+S.registerProvider(provider("multiattack", "attack-action", ["2024"], () => ({ payload: { delivery: "melee", expectedDamage: 24 } })));
+S.registerProvider(provider("constrict", "save-action", ["2024"], () => ({ payload: { delivery: "ability", expectedDamage: 13 } })));
+const multiattackOverSave = S.discoverCandidates("normalPostMove", ctx());
+assert.equal(
+  S.selectCandidate("normalPostMove", multiattackOverSave).providerId,
+  "multiattack",
+  "Mixed Multiattack printed damage must beat the same save used alone",
+);
+
+S._resetForTests();
+S.registerProvider(provider("melee", "attack-action", ["2024"], () => ({ payload: { delivery: "melee", expectedDamage: 8 } })));
+S.registerProvider(provider("bow", "area-weapon-attack", ["2024"], () => ({ payload: { delivery: "ranged", expectedDamage: 20 } })));
+const meleeOverRanged = S.discoverCandidates("normalPostMove", ctx());
+assert.equal(
+  S.selectCandidate("normalPostMove", meleeOverRanged).providerId,
+  "melee",
+  "Melee when in reach must exclude a higher-damage ranged weapon",
+);
+
+S._resetForTests();
 S.registerProvider(provider("spell", "spell-offense", ["2024"], () => {
   throw new Error("spell discovery should not run");
 }));

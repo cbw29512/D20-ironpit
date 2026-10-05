@@ -59,6 +59,8 @@ A capability discovered while implementing a hero must be reusable by monsters, 
 
 Invisibility is one universal condition regardless of source. A spell, feature, item, monster ability, or self-buff that grants invisibility applies the same `invisible` condition; source-specific activation cost, resource cost, duration, and companion effects belong to declarative source data rather than a source-specific invisibility resolver.
 
+Effective visibility is one universal, distance-aware predicate. It consumes observer and target live state, the distance between them, source-derived `truesight_ft` / `blindsight_ft` through an effective-sense layer, Invisible / invisibility-suppression, and Blinded. 2014 and 2024 Truesight is visual: it sees Invisible creatures and objects inside its declared range and does not function while Blinded. 2014 and 2024 Blindsight perceives without relying on sight: it functions while Blinded and perceives Invisible creatures inside its declared range. Outside a sense's effective range, ordinary Invisible and Blinded rules apply. Live sense suppressors may reduce effective range without mutating the immutable source value; they bind declaratively rather than through named-creature dispatch.
+
 The player-facing combat log must preserve the exact source ability name. Internal audit/certification data should additionally record the generic capability/primitive IDs used underneath so engine reuse remains provable without exposing implementation jargon to the player.
 
 Before adding new mechanic code, the implementation audit must classify the feature as one of:
@@ -207,28 +209,34 @@ Audit annotation is evidence-only and must never change combat resolution.
 - If a printed delay or required trigger is genuinely longer than a plausible Iron Pit fight, classify and re-evaluate the mechanic before certification. Do not silently wait out combat, silently fire it early, or ignore an outcome-changing delayed effect.
 - Delayed mechanics must use fresh per-fight runtime state and reset completely between matches.
 
-## 7. Initiative — Iron Pit house rule
+## 7. Initiative
 
-Normal initiative bonuses and ruleset-specific initiative mechanics apply, with these Iron Pit ordering rules:
+Initiative is a Dexterity check. Normal initiative bonuses and ruleset-specific Initiative mechanics apply, including Advantage and Disadvantage on Initiative.
 
-- A natural 20 initiative roll is in the top-priority bucket.
-- A natural 1 initiative roll is in the bottom-priority bucket.
-- Natural 20/1 initiative does not grant or remove actions, attacks, or rounds.
-- Within the relevant bucket, preserve the normal initiative result ordering unless an exact tie remains.
-- Any unresolved initiative tie is broken by pure d20 rerolls among only the tied combatants.
-- Repeat tie rerolls until a complete order exists.
-- Multiple natural-20 or natural-1 rollers use the same tie-reroll process among themselves.
-- Surprise is resolved separately according to the selected ruleset; it does not automatically move a creature to the bottom of initiative.
+- A natural 20 on Initiative has no special ordering rule. The check total is the initiative count.
+- A natural 1 on Initiative remains in the bottom-priority bucket as an Iron Pit house rule. This is separate from the combat house rule that a natural 1 on an attack roll ends that attacker's current turn.
+- Natural 20/1 Initiative does not grant or remove actions, attacks, or rounds.
+- Surprise is resolved separately according to the selected ruleset; it does not automatically move a creature to the bottom of Initiative.
+
+Tie policy (deterministic simulator equivalent of RAW decision ownership):
+
+- 2024 and 2014 RAW give decision ownership rather than a reroll: players decide PC/PC ties; the DM decides monster/monster ties and PC/monster ties.
+- Iron Pit has no live player or DM during resolution, so both engines use this deterministic equivalent and never reroll Initiative to break a tie.
+- Higher initiative count acts first. On an exact tied count inside the same priority bucket: PC/PC uses earlier party/roster order; monster/monster uses earlier encounter order; PC/monster lets heroes act before monsters, then uses the same-side encounter order.
+- Identical monsters that share one RAW group roll are one initiative count, not a tie.
+- First-round extra turns keep their offset initiative count in the normal priority bucket and resolve after any normal turn at that same count.
 
 ## 7.1 Opening buff on arena entry
 
-- Before initiative is rolled, each combatant may activate **one legal available combat buff** as its opening buff.
-- This opening activation is free in action economy: it does not consume the combatant's Action, Bonus Action, or Reaction.
+- Before initiative is rolled, each combatant that has a legal available combat buff **must activate exactly one** as its opening buff. This is an Iron Pit pit rule, not a seeded starting condition and not a starting debuff.
+- If the combatant knows or can legally activate more than one combat buff, it uses the **highest-level** one only. Non-spell abilities compete as level 0. Same-level ties use the existing declarative priority, then registration order. Do not apply every buff the combatant knows.
+- This opening activation is a free action in the pit: it does not consume the combatant's Action, Bonus Action, or Reaction, and it does not spend the first-turn Action.
 - The buff still pays every other printed cost and requirement that remains meaningful in Iron Pit, including spell slots, charges, class resources, target/range legality, and Concentration.
 - **Explicit Foresight arena exception:** when a Druid of level 17+ selects **Foresight** as its one opening buff, the precombat cast does **not** expend the level-9 spell slot. This is an Iron Pit arena override recorded here, not a change to 2024 RAW. The spell otherwise keeps its legal target, duration, and effect semantics. Other opening-buff spells continue to pay their printed spell-slot/resource costs unless this contract records another explicit exception.
 - A combatant receives only one opening-buff activation per fight. A spell, class feature, subclass feature, species feature, item effect, or other source competes for that same single opening-buff opportunity when it is otherwise legal.
 - The opening buff resolves in the precombat phase before initiative. Its normal duration/lifecycle begins there; source-turn timing continues normally once round 1 starts. An effect that lasts until the end of the source's next turn therefore expires at the end of that combatant's first turn.
 - Opening-buff selection is universal Arena policy. Do not create class-, spell-, or source-name exceptions in resolver logic; explicit arena overrides recorded in this contract must be represented as declarative source parameters consumed by the shared precombat pipeline. The source ability supplies its exact player-facing name and parameters; the shared precombat buff pipeline supplies the activation.
+- Production presets and player-loaded fights start with no debuffs. A test harness may seed a buff or debuff so a combination can be asserted. The opening-buff pit rule is not that harness.
 - Buffs that require a separate combat entity, an unavailable target, an unsupported outcome-changing mechanic, or another illegal precondition remain unavailable and do not bypass normal certification gates.
 
 ## 8. Action economy
@@ -242,8 +250,8 @@ Normal initiative bonuses and ruleset-specific initiative mechanics apply, with 
 - Once-per-turn, once-per-round, and once-on-each-of-your-turns are distinct limits.
 - Dash/Disengage/Hide/Ready/Help/Search are not generic tactical spam; use them only when a supported combat identity or legal fallback requires them.
 - After healing/support and signature Actions, heroes and monsters use the same landing-damage Action policy.
-- If a legal melee weapon or natural attack can land this turn, including after useful legal approach movement, compare only those melee options and take the one that deals the most printed damage. Do not spend the Action on a spell or ranged option while that melee attack can reach.
-- If no melee attack can land this turn, compare the options that can still land right now (a damage spell, a ranged attack, a damaging save or area Action) and take the one that deals the most damage.
+- Damage-first: compare every damaging option that can actually land this turn (a melee Attack/Multiattack, a damage spell, a damaging save or area Action) and take the one that deals the most printed damage. Multiattack printed damage includes every landable slot (weapon attacks and save actions), so a Bite-plus-Constrict Multiattack beats Constrict used alone. A recharge line/cone/area Action that can land from the current square is not kiting; it competes on damage even when melee can also reach.
+- Melee when in reach: if a legal melee weapon or natural attack can land this turn, including after useful legal approach movement, do not spend the Action on a ranged weapon attack. Stay in the ring. Equal printed damage prefers the melee option.
 - Among legal damage spells, cast the highest-level damage spell first, then work downward. Most damage still wins when comparing a spell to another landable option.
 - Prefer raw damage that is easy to calculate over charm and other control. Control remains legal only when no damaging option can land.
 - Dodge is the default when no supported offensive option can be used or made legal after any useful legal approach movement available this turn. Dodge is an ordinary combat outcome, not a skip and not a crash.
@@ -265,8 +273,25 @@ A flavor-only d6 may narrate the fumble; it has no additional mechanical effect.
 ### Attack natural 20
 
 - Use the selected edition's RAW automatic-hit/critical behavior.
+- Critical hits and automatic hits use the kept/selected natural die after Advantage or Disadvantage. A discarded 20 is never a critical or automatic hit.
 - A flavor-only d6 may narrate the critical; it has no additional mechanical effect.
 - Saving throw natural 1/20 values have no extra Iron Pit rule unless RAW for the specific rule says otherwise.
+
+### Turn-start buff versus debuff
+
+At the start of each creature's turn, the engine reads that creature's live debuffs before it acts. A legal matching buff answers the debuff:
+
+- Bloodied (current HP at or below half of maximum) is answered by healing.
+- Charmed or Frightened is answered by a condition-immunity or debuff-counter buff for that same condition.
+- An already-active matching counter-buff suppresses the current condition and causes a new copy of that debuff to fail closed. It does not land.
+
+Arena AI selects the answering buff only when the matching debuff is present on a legal friend. A printed suppression that would do nothing is not selected. Pairing is by condition identity and modifier kind, never by spell name, monster name, or class name.
+
+A test harness may start a buff or debuff so a combination can be asserted. Purpose-built production fights and any matchup a player loads must not begin with a debuff. Seeded fear for Calm Emotions lives only in the engine test, never on the website legendary preset.
+
+### Calm Emotions
+
+2014 Calm Emotions binds the printed charm/frighten suppression option through the shared condition-immunity and debuff-counter primitives. Allies may choose to fail the save to receive that beneficial suppression. The printed indifference option is not a supported targeting-gate primitive. Do not apply Charmed or invent a hostility shutdown to fake the missing option.
 
 ## 9. Advantage and Disadvantage
 
@@ -300,6 +325,7 @@ Permanent arena rules:
 - Printed Walk, Fly, Climb, Swim, Burrow, Hover, and base-speed data remain source-derived and must not be rewritten merely to make a creature usable in the Pit.
 - Movement modes never become roster-eligibility filters. The magical Pit remains hospitable to aquatic, flying, burrowing, climbing, unusual-biology, breathing, and atmosphere requirements. Every combatant may use its printed movement modes and make attacks as though the Pit were a valid native environment for those modes and its normal biology. Environmental hospitality removes habitat-only penalties such as underwater movement or attack penalties; it does not grant extra Speed, a movement mode the source does not have, free movement, altitude-based immunity, or protection from RAW combat effects that explicitly create Difficult Terrain, Speed penalties, conditions, or other debuffs.
 - Flying movement remains horizontal-only in the standard Iron Pit. Flyers may use their printed Fly Speed across the battlefield but may not gain altitude to become permanently unreachable.
+- Front row is melee. Back row is ranged and/or casters. Mixed melee-and-ranged cards on one side split: one starts in front as melee, extras start in back as ranged. A back-row melee creature uses a ranged attack when it has one; if it has none, it steps to the front when a front creature dies, or Dodges until it can move up. Front-row combatants close to melee even when they have backup thrown/ranged attacks. Creature names never assign rows.
 - Starting placement is deterministic and footprint-aware. Future manual legal placement is authoritative when explicitly selected by the user.
 - No environmental cover by default.
 - Clear line of sight by default; only combat effects such as Darkness, Fog Cloud, Blindness, Invisibility, or similar supported mechanics alter visibility.

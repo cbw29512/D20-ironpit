@@ -102,7 +102,7 @@ def test_blocked_melee_only_gargantuan_dodges_instead_of_breaking() -> None:
         raise
 
 
-def test_medium_melee_creature_surrounded_target_by_summoned_allies_dodges() -> None:
+def test_medium_melee_creature_prefix_closes_toward_a_surrounded_target() -> None:
     try:
         mover = _commoner("hero-medium-mover", "heroes", 0, 7)
         target = _target(7, 7)
@@ -112,7 +112,15 @@ def test_medium_melee_creature_surrounded_target_by_summoned_allies_dodges() -> 
             _commoner("summon-right", "heroes", 8, 7),
             _commoner("summon-bottom", "heroes", 6, 8, size=CreatureSize.HUGE),
         ]
-        _assert_dodge_only(mover, target, summons)
+        setup = _setup(mover, target, summons)
+        start = mover.state.position.model_copy(deep=True)
+        events, _ = resolve_combat_turn(1, 1, mover, target, setup, FixedDiceProvider([1]))
+        after = mover.state.position
+        start_distance = max(abs(start.x - 7), abs(start.y - 7))
+        after_distance = max(abs(after.x - 7), abs(after.y - 7))
+        assert [event for event in events if event.event_type == "movement"]
+        assert after_distance < start_distance
+        assert not [event for event in events if event.event_type == "attack"]
     except Exception:
-        logger.exception("Blocked Medium summon-ring Dodge fallback regression failed.")
+        logger.exception("Surrounded-target prefix-close regression failed.")
         raise

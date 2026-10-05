@@ -95,8 +95,8 @@ def choose_opening_buff(
         return max(
             candidates,
             key=lambda item: (
-                item.priority,
                 item.spell.level if item.spell is not None else 0,
+                item.priority,
                 1 if item.kind == "spell" else 0,
             ),
             default=None,

@@ -3,8 +3,11 @@ from __future__ import annotations
 from app.combat.precombat_buffs import prepare_opening_buffs
 from app.combat.state import build_combatant_state
 from app.content.bard_2014_countercharm import countercharm_2014
+from app.content.cleric_2014_level1_spells import bless_2014
 from app.content.monsters import build_commoner
+from app.content.shared_movement_spells_2014 import freedom_of_movement_2014
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.models import ResourceDefinition
 
 
 def _member(combatant_id: str, side: str, position: int, *, countercharm: bool = False):
@@ -65,3 +68,47 @@ def test_opening_buff_is_single_use_for_the_fight() -> None:
     assert [event.feature_id for event in first] == ["countercharm"]
     assert second == []
     assert final_sequence == sequence
+
+
+def test_opening_buff_uses_highest_level_only_as_a_free_action() -> None:
+    caster = EncounterCombatant(
+        combatant_id="caster",
+        side="heroes",
+        position_ft=0,
+        state=build_combatant_state(build_commoner().model_copy(update={
+            "id": "caster-template",
+            "name": "Caster",
+            "ruleset": "2014",
+            "defensive_spell_actions": [
+                bless_2014(),
+                freedom_of_movement_2014().model_copy(update={"priority": 1}),
+            ],
+            "timed_self_buff_actions": [
+                countercharm_2014().model_copy(update={"priority": 99}),
+            ],
+            "resources": [
+                ResourceDefinition(id="spell-slot-1", name="1st-level slots", max_uses=1),
+                ResourceDefinition(id="spell-slot-4", name="4th-level slots", max_uses=1),
+            ],
+        })),
+    )
+    enemy = _member("enemy", "monsters", 40)
+    setup = EncounterSetup(
+        heroes=[caster],
+        monsters=[enemy],
+        hero_total_levels=1,
+        monster_total_cr="0",
+        ruleset="2014",
+    )
+
+    events, _ = prepare_opening_buffs(setup)
+
+    assert [event.feature_id for event in events] == ["freedom-of-movement"]
+    assert caster.state.opening_buff_id == "freedom-of-movement"
+    assert caster.state.action_available is True
+    assert caster.state.bonus_action_available is True
+    assert caster.state.reaction_available is True
+    assert "bless" not in caster.state.active_buff_effect_ids
+    assert all(effect.source_effect_id != "countercharm" for effect in caster.state.timed_effects)
+    assert next(item for item in caster.state.resources if item.id == "spell-slot-4").current_uses == 0
+    assert next(item for item in caster.state.resources if item.id == "spell-slot-1").current_uses == 1

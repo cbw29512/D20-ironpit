@@ -115,7 +115,7 @@
       .filter((ally) => ally.combatant_id !== caster.combatant_id
         && ally.state.is_alive && !ally.state.is_dead && ally.state.current_hp > 0
         && (!grant.requires_source_sight
-          || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(caster.state, ally.state)))
+          || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(caster.state, ally.state, S().distance(caster, ally))))
       .map((ally) => ally.combatant_id);
     return {
       ids: new Set([...explicit, ...visible]),
@@ -157,7 +157,7 @@
       && target.state.current_hp > 0 && S().distance(caster, target) <= range
       && (!window.IRON_PIT_BROWSER_GRID_BARRIERS || window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(caster, target, setup))
       && (!action.requiresTargetHearing || !target.state.active_effect_ids.includes("deafened"))
-      && (!action.requiresTargetSight || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(caster.state, target.state))
+      && (!action.requiresTargetSight || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(caster.state, target.state, S().distance(caster, target)))
       && (!(action.requiredTargetCreatureTypes || []).length
         || (action.requiredTargetCreatureTypes || []).some((kind) =>
           String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase() === String(kind).toLowerCase()))

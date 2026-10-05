@@ -21,7 +21,12 @@
   }
   function hasTrueRangeOffense(template) { return hasRangedWeaponOffense(template) || hasRangedSpellOffense(template); }
   function usesBackline(template) { return primaryWeaponIsRanged(template) || hasRangedSpellOffense(template); }
-  function isBackline(member) { return usesBackline(member.state.template); }
+  function isBackline(member) {
+    const row = member.state.formation_row;
+    if (row === "front") return false;
+    if (row === "back") return true;
+    return usesBackline(member.state.template);
+  }
 
   function startingPosition(template, side) {
     const back = usesBackline(template);

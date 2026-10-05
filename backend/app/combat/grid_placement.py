@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.formation import uses_backline
+from app.combat.formation_rows import member_is_backline
 from app.combat.grid_geometry import footprint_side_squares, footprints_overlap, position_in_bounds
 from app.domain.encounters import EncounterCombatant
 from app.domain.grid import BattleMapDefinition, DeploymentZone, GridPlacementAssignment, GridPosition
@@ -22,7 +22,7 @@ def _zone_positions(
         if max_x < zone.x or max_y < zone.y:
             return []
         x_values = list(range(zone.x, max_x + 1))
-        backline = uses_backline(member.state.template)
+        backline = member_is_backline(member)
         front_east = zone.front_edge == "east"
         toward_front = not backline
         reverse_x = front_east == toward_front
@@ -71,7 +71,7 @@ def _placement_order(members: list[EncounterCombatant]) -> list[EncounterCombata
         indexed.sort(
             key=lambda item: (
                 -footprint_side_squares(item[1].state.template.size),
-                uses_backline(item[1].state.template),
+                member_is_backline(item[1]),
                 item[0],
             )
         )

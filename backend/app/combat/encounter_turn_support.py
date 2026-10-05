@@ -8,6 +8,7 @@ from app.combat.area_save_actions import choose_area_save, resolve_area_save
 from app.combat.barbarian import finalize_rage_turn
 from app.combat.bonus_action_follow_up import resolve_bonus_action_follow_up
 from app.combat.bonus_attacks import resolve_bonus_attack_grant
+from app.combat.condition_counter_policy import choose_condition_counter_spell
 from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
 from app.combat.effect_removal import choose_effect_removal_action, resolve_effect_removal
@@ -19,6 +20,7 @@ from app.combat.healing_support import resolve_healing_support
 from app.combat.monk_bonus_attacks_2014 import resolve_monk_bonus_attacks
 from app.combat.paladin_channel_divinity_2014 import resolve_paladin_channel_support
 from app.combat.pit_policy import save_distance, target_order
+from app.combat.spell_resolution import resolve_spell
 from app.combat.encounter_turn_utility import resolve_control_support
 from app.combat.saving_throws import legal_save_action
 from app.combat.tactical_actions import resolve_defensive_tactical_grant
@@ -123,6 +125,13 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
             if follow_up is not None:
                 events.append(follow_up)
                 sequence += 1
+        counter = choose_condition_counter_spell(member, setup, turn_key)
+        if counter is not None:
+            countered, sequence = resolve_spell(
+                sequence, round_number, member, setup, counter, turn_key, dice,
+            )
+            events.extend(countered)
+            return events, sequence
         effect_choice = choose_effect_removal_action(member, setup, turn_key)
         if effect_choice is not None:
             action, effect = effect_choice

@@ -24,6 +24,7 @@ require("./combat-preset-recipes.js"); require("./combat-presets.js");
     assert.ok(recipe.purpose.length > 10, recipe.id);
     assert.ok(recipe.aspects.length > 0, recipe.id);
     assert.ok(Object.isFrozen(recipe) && Object.isFrozen(recipe.classes) && Object.isFrozen(recipe.monsters));
+    assert.equal(recipe.openingConditions, undefined, `${recipe.id} must not seed a player-loaded starting debuff`);
     const selection = {
       ruleset: recipe.ruleset,
       hero_ids: heroes.map((card) => card.runnable_template_id),
@@ -34,6 +35,10 @@ require("./combat-preset-recipes.js"); require("./combat-presets.js");
     assert.ok(["heroes_win", "monsters_win", "draw"].includes(battle.outcome), `${recipe.id} ${battle.outcome}`);
     assert.equal(battle.setup.heroes.length, heroes.length);
     assert.equal(battle.setup.monsters.length, monsters.length);
+    assert.ok(
+      !battle.events.some((event) => event.feature_id === "opening-condition"),
+      `${recipe.id} must not seed a player-loaded starting debuff`,
+    );
     const banned = /teleport|plane.?shift|dimension-door|misty-step|summon|flies vertically/i;
     for (const event of battle.events) {
       assert.doesNotMatch(
@@ -51,6 +56,13 @@ require("./combat-preset-recipes.js"); require("./combat-presets.js");
     fired.push(`${recipe.id}@${recipe.seed}:${recipe.aspects.map((spec) => spec.kind).join("+")}`);
     if (recipe.id === "goblins") { assert.equal(difficulty, "Medium"); assert.equal(adjusted, 200); }
     if (recipe.id === "party") { assert.equal(difficulty, "Hard"); assert.equal(adjusted, 26100); }
+    if (recipe.id === "2024-undead") {
+      assert.ok(battle.events.some((event) => event.feature_id === "guiding-bolt"), "2024-undead must keep Guiding Bolt legal");
+      assert.ok(
+        !recipe.aspects.some((spec) => spec.kind === "text" && spec.value === "Undead Fortitude"),
+        "2024-undead must not require Fortitude after a legal radiant kill",
+      );
+    }
   }
   assert.equal(classes["2014"].size, 12);
   assert.equal(classes["2024"].size, 12);

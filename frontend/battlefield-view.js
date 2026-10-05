@@ -115,6 +115,7 @@
       // Replace the visible projection; Step supplies a prefix, Watch the full stream.
       el("battle-log").replaceChildren();
       appendEvents(battle.events || []);
+      window.IRON_PIT_FORMATION_BOARD?.renderBattle(battle.setup, battle.events || []);
     } catch (error) {
       console.error("Battle event log could not be rendered", error);
       throw error;
@@ -123,6 +124,7 @@
 
   function resetBattleView() {
     el("battle-log").replaceChildren(); el("result-panel").hidden = true;
+    window.IRON_PIT_FORMATION_BOARD?.renderBattle({ heroes: [], monsters: [] }, []);
     for (const node of document.querySelectorAll(".battle-card.occupied")) {
       node.classList.remove("dead"); node.querySelector(".initiative-badge").textContent = "—";
       const maxHp = Number(node.dataset.maxHp || 0); node.dataset.currentHp = String(maxHp);
@@ -130,5 +132,5 @@
     }
   }
 
-  window.IRON_PIT_BATTLEFIELD_VIEW = { appendEvents, render, resetBattleView, showResult, writeLog };
+  window.IRON_PIT_BATTLEFIELD_VIEW = { appendEvents, eventRow, render, resetBattleView, showResult, writeLog };
 })();

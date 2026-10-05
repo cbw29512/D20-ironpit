@@ -72,15 +72,20 @@ def test_universal_d20_test_advantage_applies_to_initiative() -> None:
     assert hero_group.initiative_roll.rolls == [2, 17]
     assert hero_group.initiative_roll.selected_roll == 17
 
-def test_natural_20_has_top_priority_over_higher_normal_roll() -> None:
+def test_natural_20_is_only_the_check_total() -> None:
     setup = _setup(["karnok-stoneward-l1"], ["srd-commoner"])
     _neutralize_initiative(setup)
+    setup.monsters[0].state.template.initiative_bonus = 2
     initiative = roll_encounter_initiative(setup, FixedDiceProvider([20, 19]))
 
-    assert initiative.groups[0].side == "heroes"
-    assert initiative.groups[0].natural_roll == 20
+    assert initiative.groups[0].side == "monsters"
+    assert initiative.groups[0].initiative_count == 21
+    assert initiative.groups[1].side == "heroes"
+    assert initiative.groups[1].natural_roll == 20
+    assert initiative.groups[1].initiative_count == 20
     events, _ = build_initiative_events(initiative, 1)
-    assert "Natural 20: top initiative priority." in events[0].description
+    assert all("top initiative priority" not in event.description for event in events)
+    assert all("Tie reroll" not in event.description for event in events)
 
 
 def test_natural_1_has_bottom_priority() -> None:
@@ -95,23 +100,64 @@ def test_natural_1_has_bottom_priority() -> None:
     assert "Natural 1: bottom initiative priority." in hero_event.description
 
 
-def test_exact_initiative_ties_reroll_only_tied_groups_until_resolved() -> None:
+def test_pc_monster_tie_uses_dm_decision_without_reroll() -> None:
     setup = _setup(["karnok-stoneward-l1"], ["srd-commoner"])
     _neutralize_initiative(setup)
-    initiative = roll_encounter_initiative(setup, FixedDiceProvider([10, 10, 5, 5, 7, 12]))
+    leftover = FixedDiceProvider([14, 14, 3])
+    initiative = roll_encounter_initiative(setup, leftover)
 
     hero = next(group for group in initiative.groups if group.side == "heroes")
     monster = next(group for group in initiative.groups if group.side == "monsters")
-    assert hero.tie_break_rolls == [5, 7]
-    assert monster.tie_break_rolls == [5, 12]
-    assert monster.tie_break_roll == 12
-    assert initiative.groups[0].side == "monsters"
+    assert hero.initiative_count == 14
+    assert monster.initiative_count == 14
+    assert hero.tie_break_rolls == []
+    assert monster.tie_break_rolls == []
+    assert monster.tie_break_roll is None
+    assert initiative.groups[0].side == "heroes"
+    leftover.roll(20)
 
     events, _ = build_initiative_events(initiative, 1)
-    hero_event = next(event for event in events if event.actor_id.startswith("hero-1:"))
-    monster_event = next(event for event in events if event.actor_id.startswith("monster-1:"))
-    assert "Tie rerolls: 5 → 7." in hero_event.description
-    assert "Tie rerolls: 5 → 12." in monster_event.description
+    assert any("Tied initiative: DM decides; heroes act before monsters, then encounter order." in event.description for event in events)
+    assert all("Tie reroll" not in event.description for event in events)
+
+
+def test_pc_pc_tie_uses_party_order_without_reroll() -> None:
+    setup = _setup(["karnok-stoneward-l1", "rokhan-stonefury-l1"], ["srd-commoner"])
+    _neutralize_initiative(setup)
+    leftover = FixedDiceProvider([14, 14, 5, 3])
+    initiative = roll_encounter_initiative(setup, leftover)
+
+    assert initiative.turn_order[:2] == [
+        setup.heroes[0].combatant_id,
+        setup.heroes[1].combatant_id,
+    ]
+    assert all(group.tie_break_rolls == [] for group in initiative.groups)
+    leftover.roll(20)
+
+    events, _ = build_initiative_events(initiative, 1)
+    hero_events = [event for event in events if event.actor_id.startswith("hero-")]
+    assert any("Tied initiative: players decide; party order." in event.description for event in hero_events)
+    assert all("Tie reroll" not in event.description for event in events)
+
+
+def test_monster_monster_tie_uses_encounter_order_without_reroll() -> None:
+    setup = _setup(["karnok-stoneward-l1"], ["srd-commoner", "srd-bandit"])
+    _neutralize_initiative(setup)
+    leftover = FixedDiceProvider([3, 11, 11, 4])
+    initiative = roll_encounter_initiative(setup, leftover)
+
+    assert initiative.turn_order == [
+        setup.monsters[0].combatant_id,
+        setup.monsters[1].combatant_id,
+        setup.heroes[0].combatant_id,
+    ]
+    assert all(group.tie_break_rolls == [] for group in initiative.groups)
+    leftover.roll(20)
+
+    events, _ = build_initiative_events(initiative, 1)
+    monster_events = [event for event in events if event.actor_id.startswith("monster-")]
+    assert any("Tied initiative: DM decides; encounter order." in event.description for event in monster_events)
+    assert all("Tie reroll" not in event.description for event in events)
 
 
 def test_encounter_outcome_requires_an_entire_side_down() -> None:

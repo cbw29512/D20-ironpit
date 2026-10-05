@@ -1,247 +1,150 @@
 # Current operating status
 
-Recorded 2026-10-03 for the 2024 Devotion Paladin level 17 tranche. Main baseline: `1d00f52ee5eb3e603584f7a2ea32949ed3cb3ffb`.
+Recorded 2026-10-04 after the 2024 canonical-pregen completion and website preset publish work.
+Main baseline audited: `1676a9a3bf8ba41e6c845561f027abc8217e3346`.
 
-This file is operating authority for *what to work on next*. Combat rules still live in `docs/IRON_PIT_RULES_CONTRACT.md`. If this file and a chat summary disagree, this file wins until it is updated on `main`.
+This file is operating authority for **what to work on next**. Combat rules remain authoritative in `docs/IRON_PIT_RULES_CONTRACT.md`. Generated certification manifests and exact current source/tests determine counts and readiness. Repository truth overrides chat summaries and older milestone prose.
 
-## Owner split
+## Owner split / collision rule
 
-- **Iron Pit (`cbw29512/D20-ironpit`)** is the only combat-engine lane. One agent at a time.
-- **Blackink Bestiary / coloring-book local AI** is a separate product. Do not mix PRs, CI, or GPU loops into this repository.
+- Iron Pit remains the only combat-engine lane in this repository.
+- Multiple agents may assist only when their work is deliberately non-overlapping.
+- The active combat/content worker owns its touched combat subsystem until handoff or merge.
+- Audit/documentation/repository-hygiene work may proceed separately when it does not edit the active combat subsystem.
+- Never rebase or merge a stale progression PR merely to preserve its history; reconcile useful behavior against current `main` first.
 
-## What is already certified on `main`
+## Verified current certification
 
-From `backend/app/content/certified_hero_progressions.py`:
+Generated authority on the audited main baseline reports:
 
-| Edition | Class | Registered levels |
-|---|---|---|
-| 2014 | Fighter (Champion) | 1–20 |
-| 2014 | Barbarian (Berserker) | 1–20 |
-| 2014 | Bard (Lore) | 1–20 |
-| 2014 | Cleric (Life) | 1–20 |
-| 2014 | Druid (Land) | 1–20 |
-| 2014 | Monk (Open Hand) | 1–20 |
-| 2014 | Paladin (Devotion) | 1–20 |
-| 2014 | Ranger (Hunter) | 1–20 |
-| 2014 | Rogue (Thief) | 1–20 |
-| 2014 | Sorcerer (Draconic) | 1–20 |
-| 2014 | Warlock (Fiend) | 1–20 |
-| 2014 | Wizard (Evoker) | 1–20 |
-| 2024 | Barbarian (Berserker) | 1–20 |
-| 2024 | Bard (Lore) | 1–20 |
-| 2024 | Cleric (Life) | 1–20 |
-| 2024 | Fighter (Champion) | 1–20 |
-| 2024 | Rogue (Thief) | 1–20 |
-| 2024 | Druid (Land) | 1–20 |
-| 2024 | Monk (Open Hand) | 1–20 |
-| 2024 | Paladin (Devotion) | 1–16 |
+| Edition | Content | READY / target |
+|---|---|---:|
+| 2014 | Canonical pregens | **240 / 240** |
+| 2024 | Canonical pregens | **240 / 240** |
+| 2024 | SRD monsters | **140 / 330** |
+| 2014 | Browser monster roster | **130 certified** (per permanent roster assertion) |
 
-2024 public-ready hero slots on current main: **156 / 240**.
-2024 public-ready monster slots in `data/monster_certification_manifest.json`: **140 / 330**.
-2014 browser monster roster asserted in tests: **130** certified.
+### Canonical pregen status
 
-Holy Nimbus (2014 Paladin 20) is a timed self-buff plus timed emanation primitive. Do not add a Paladin-named combat resolver.
+All twelve canonical classes are complete through level 20 in both editions:
 
-## Active lane
+- Fighter (Champion)
+- Barbarian (Berserker)
+- Bard (Lore)
+- Cleric (Life)
+- Druid (Land)
+- Monk (Open Hand)
+- Paladin (Devotion)
+- Ranger (Hunter)
+- Rogue (Thief)
+- Sorcerer (Draconic)
+- Warlock (Fiend)
+- Wizard (Evoker)
 
-**2014 canonical pregens remain complete at 240 / 240 registered level snapshots.**
+Do **not** reopen class-progression work merely because an older PR or chat summary claims a lower certified count.
 
-**2024 canonical pregens are 156 / 240 on current main.** Fighter, Barbarian, Rogue, Life Cleric, Lore Bard, Circle of the Land Druid, and Open Hand Monk are complete at levels 1–20; Devotion Paladin is certified through level 16 on main; this tranche advances level 17 to a generated target of **157 / 240**.
+## Current completion order
 
-Active implementation lane: **2024 Devotion Paladin level 17.** Aurelia remains the same persistent character. Proficiency Bonus advances to +6, HP to 140, Lay On Hands to 85, spell slots to 4/3/3/3/1, and ordinary preparations to fourteen. Devotion always prepares Commune and Flame Strike. Commune is arena-neutral; 2024 Flame Strike reuses the universal multi-component Dexterity-save damage path with its edition-correct 5d6 Fire + 5d6 Radiant fingerprint. The two new ordinary preparations are Destructive Wave and Greater Restoration under the damage/healing-first policy; both remain fail-closed until their complete 2024 mechanics are certified.
+Owner-requested order is now:
 
-Owner-requested completion order: finish every canonical pregen; audit and test the universal engine; finish monster readiness with 2014 catch-up and paired-edition certification; then finish the website's visual design. Engine fixes required to certify a pregen belong in its tranche. Preserve the publishing lock throughout.
+1. **Audit and test the universal combat engine.**
+2. Fix any A-class correctness/parity/edition-isolation debt found by that audit.
+3. Use universal engine improvements to unlock the remaining monster catalog in broad semantic batches.
+4. Complete paired-edition monster certification and final RAW audit.
+5. Finish website visual/design polish after combat correctness and roster work are stable.
 
-### 2024 Paladin lane
+Pregens are complete and are no longer the active expansion lane.
 
-- Aurelia Brightshield remains the persistent canonical Paladin and remains Human.
-- Level 1 uses Soldier, Savage Attacker, Human Resourceful/Skillful/Versatile, Longsword Sap, Javelin Slow, Bonus Action Lay On Hands, and level-1 Spellcasting.
-- The canonical Paladin stat priority is Strength → Charisma → Constitution so the 2024 progression does not sacrifice its spellcasting/aura ability merely because it is weapon-forward.
-- Level 1 prepares Cure Wounds and Divine Favor under the damage/healing-first policy. Divine Favor is explicitly 2024 edition data and does not require Concentration.
-- Level 2 selects the Defense Fighting Style feat, raising armored AC by 1.
-- Level 2 Paladin's Smite always prepares Divine Smite and grants one free cast per Long Rest. The free cast is a generic finite resource; later casts use legal spell slots.
-- Divine Smite uses the universal hit-confirmed resource-backed damage primitive: the hit is established first, Bonus Action/payment legality is checked, then Smite dice are added to the triggering attack's damage components before typed defenses, Temporary HP, HP mutation, Concentration, and damage-triggered reactions resolve.
-- Divine Smite starts at 2d8 Radiant, gains +1d8 per higher-level slot, gains +1d8 against Fiends/Undead, and its attack damage dice double on a Critical Hit through the shared critical-damage path.
-- Longsword and thrown Javelin both trigger 2024 Divine Smite: the source qualifies a printed Melee weapon, independent of attack delivery. The level-13 debt audit corrects the prior ranged-delivery exclusion; 2014 Divine Smite remains edition-isolated.
-- Level 2 ordinary preparation adds certified 2024 Bless; unsupported smite variants are not approximated merely to fill prepared-spell slots.
-- Level 3 adds two Channel Divinity uses and Oath of Devotion. Sacred Weapon uses a universal Attack-action weapon-buff primitive; Protection from Evil and Good and Shield of Faith are explicit 2024 oath-spell fingerprints.
-- Level 4 takes the repeatable **Ability Score Improvement** feat for **+2 Strength (17→19)**. Shared derived-stat logic updates Longsword/Javelin attack and damage plus Athletics.
-- Level 4 ordinary preparation adds **Thunderous Smite** under the damage-first policy. It remains **arena-out-of-scope/fail-closed** for now because the current engine cannot atomically preserve its post-hit spell damage, Strength save, 10-foot push, and Prone outcome while also retaining Divine Smite as a separate legal post-hit choice.
-- Level 5 gains **Extra Attack** through the universal two-slot Attack action and Proficiency Bonus advances to **+3**.
-- Level 5 **Faithful Steed** always prepares **Find Steed** and grants one free Long-Rest cast; the resource is preserved, while the summon remains arena-unavailable under the no-summons rule.
-- Level 5 Oath spells add **Aid** and **Zone of Truth**. Aid reuses the explicit 2024 defensive-spell fingerprint; Zone of Truth is retained as arena-neutral.
-- Level 5 ordinary preparation adds **Shining Smite** under the damage-first policy. It remains fail-closed until its hit-confirmed damage plus persistent Advantage/invisibility-suppression effect can resolve atomically and edition-exactly.
-- Spell slots advance to **4 first-level / 2 second-level**, and Lay On Hands advances to **25**.
-- Level 6 adds **Aura of Protection** through the universal friendly saving-throw aura primitive. At Aurelia's current Charisma 14, the live 10-foot Emanation grants **+2 to saving throws** and is inactive while Aurelia is Incapacitated.
-- Level 7 adds **Aura of Devotion** through the generic friendly condition-immunity aura wrapper. It grants **Charmed immunity** to Aurelia and allies inside the live 10-foot Emanation and shuts down while Aurelia is Incapacitated. The same tranche migrates 2014 Aura of Devotion/Courage onto the wrapper instead of retaining a Paladin-specific resolver.
-- Level 7 ordinary preparation adds **Lesser Restoration**, reusing the certified 2024 condition-removal action. Spell slots advance to **4 first-level / 3 second-level**, Lay On Hands to **35**, and HP to **60**.
-- Level 8 uses **Ability Score Improvement** for **+1 Strength / +1 Charisma** (Strength 19→20, Charisma 14→15). Shared derived-stat logic raises Longsword/Javelin attack to +8, damage to +5, Athletics to +8, and Charisma skills by 1; Aura of Protection remains +2 because Charisma 15 still has a +2 modifier. HP advances to **68** and Lay On Hands to **40**; prepared spells and slots remain unchanged.
-- Level 9 advances Proficiency Bonus to **+4**, HP to **76**, Lay On Hands to **45**, and spell slots to **4 first / 3 second / 2 third**. **Abjure Foes** targets up to Charisma modifier creatures (currently 2) within 60 feet that Aurelia can see; failed Wisdom saves become Frightened for up to 1 minute or until damaged and use the universal single-activity turn rule. **Beacon of Hope** and **Dispel Magic** are always prepared Oath spells with explicit 2024 fingerprints; Dispel Magic uses Charisma. Ordinary preparations advance to nine with **Aura of Vitality** and **Blinding Smite** under the damage/healing-first policy, both fail-closed pending exact shared lifecycle support.
-- Level 10 adds **Aura of Courage** through the existing universal friendly condition-immunity aura. Aurelia and allies inside the live 10-foot Aura of Protection Emanation are immune to **Frightened**; an already-active Frightened condition is suppressed while inside the aura and resumes outside it if its source duration has not ended. The aura shuts down while Aurelia is Incapacitated. HP advances to **84** and Lay On Hands to **50**; prepared spells and slots remain unchanged.
-- Level 11 adds **Radiant Strikes** through generic on-hit damage: Aurelia's qualifying Melee-weapon hit adds **1d8 Radiant**, with normal critical doubling and no resource spend, including the thrown Javelin because it is a printed Melee weapon. Channel Divinity advances to **3**, third-level slots to **3**, HP to **92**, and Lay On Hands to **55**. The tenth ordinary preparation is **Crusader's Mantle** under the damage-first policy and remains fail-closed pending an exact live friendly weapon-damage aura.
-- Level 12 takes **Ability Score Improvement (+2 Charisma)** through the existing cumulative ability-increase schema. Charisma rises **15→17**, Aura of Protection and Sacred Weapon become **+3**, Abjure Foes becomes **DC 15 / three targets**, HP rises to **100**, and Lay On Hands to **60**. Slots and the ten ordinary preparations are unchanged.
-- Level 13 advances Proficiency Bonus to **+5**, HP to **108**, Lay On Hands to **65**, slots to **4/3/3/1**, and ordinary preparations to **eleven**. The attacks become **+10**, Charisma saves/skills **+8**, and Abjure Foes **DC 16 / three targets**. Oath spells always prepare **Freedom of Movement** and **Guardian of Faith**; only Freedom of Movement executes, using the certified 2024 shared binding including Swim Speed and five-foot nonmagical escape costs. Guardian of Faith remains arena-unavailable under the no-summons contract. The new ordinary preparation **Staggering Smite** remains fail-closed pending an exact atomic post-hit spell damage/save/condition choice alongside Divine Smite.
-- Level 14 adds **Restoring Touch** through the existing condition-removal action. Blinded, Charmed, Deafened, Frightened, Paralyzed, and Stunned cost **five Lay On Hands points each**; Poisoned can be removed in the same Bonus Action. Removal does not restore HP. The remaining pool remains available for later healing through the shared divisible-pool allocation.
-- Level 15 adds **Smite of Protection** without a Paladin-specific resolver. A successfully paid **Divine Smite** activates a one-round source-centered friendly aura matching Aura of Protection's current radius. Aurelia and allies inside it gain **Half Cover** (+2 AC and +2 Dexterity saves) until the start of Aurelia's next turn. The universal modifier stack now classifies cover separately so overlapping cover uses the strongest benefit instead of stacking. HP advances to **124**, Lay On Hands to **75**, fourth-level slots to **2**, and the twelfth ordinary preparation is **Aura of Life**, retained fail-closed until its exact healing/recovery aura lifecycle is certified.
-- Level 16 takes **Ability Score Improvement (+2 Charisma)** through the existing cumulative ability-increase schema. Charisma rises **17→19**, Aura of Protection and Sacred Weapon become **+4**, Abjure Foes becomes **DC 17 / four targets**, HP rises to **132**, and Lay On Hands to **80**. Slots and the twelve ordinary preparations remain unchanged; no new combat primitive is required.
-- Level 17 advances Proficiency Bonus to **+6**, HP to **140**, Lay On Hands to **85**, and slots to **4/3/3/3/1**. Devotion always prepares **Commune** and **Flame Strike**. Commune is arena-neutral; Flame Strike reuses universal multi-component save damage with an explicit 2024 fingerprint of **5d6 Fire + 5d6 Radiant**, half on a successful Dexterity save. Ordinary preparations increase to fourteen with **Destructive Wave** and **Greater Restoration** under the damage/healing-first policy; both remain fail-closed until their full mechanics are certified.
-- This tranche targets **157 / 240** 2024 public-ready hero slots.
+## Active work
 
-### 2024 Monk lane
+At the time of this status refresh:
 
-- Kael Stillwater remains the persistent canonical Monk and remains Human.
-- Level 1 uses the legal 2024 Criminal background, Alert origin feat, Human Skillful, and Human Versatile selecting Skilled.
-- Martial Arts uses a 1d6 die and the source-agnostic Bonus Attack grant; unlike 2014, the 2024 Bonus Unarmed Strike does not require a prior Attack action.
-- Human Resourceful initializes fresh-rest combat state with Heroic Inspiration through generic combatant state.
-- The separate 2014 Monk bonus-strike prerequisite resolver remains unchanged and edition-isolated.
-- Level 2 adds Monk's Focus, Unarmored Movement, and Uncanny Metabolism through shared resource, action-economy, movement, initiative-resource, healing, Dodge, Disengage, and Dash mechanics.
-- Level 3 adds Deflect Attacks through the universal attack-damage-reduction Reaction model; 2014 Deflect Missiles now binds the same primitive with its own ranged-only parameters.
-- Level 3 selects Warrior of the Open Hand. Canonical arena automation selects Open Hand Technique's Topple option on Flurry hits and composes the shared Dexterity-save-to-Prone attack rider; no Open-Hand-named resolver is added for 2024.
-- Level 4 uses the repeatable **Ability Score Improvement** feat for **+2 Dexterity (17→19)**. Shared derived-stat logic updates AC, Initiative, Unarmed Strike attack/damage, Dexterity save/skills, and Deflect Attacks reduction; Focus Points advance to 4.
-- **Slow Fall** is source-audited but arena-neutral because the standard Iron Pit battlefield has no falling hazard. No Monk-named resolver or ordinary attack-damage reduction is created for it.
-- Level 5 is merged. Extra Attack and Stunning Strike use shared attack-action, resource-backed hit-save, timed-condition and modifier primitives.
-- Level 6 adds Empowered Strikes through a universal attack damage-type choice and Wholeness of Body through shared limited-use Bonus Action healing. Unarmored Movement increases to +15 feet (45-foot Speed for Kael).
-- Level 7 adds Evasion through the shared Dexterity-save half-damage transform. The 2024 binding disables Evasion while Incapacitated; 2014 behavior remains isolated.
-- Level 8 uses the repeatable **Ability Score Improvement** feat for **+1 Dexterity (19→20) and +1 Constitution (15→16)**. Shared derived-stat logic updates AC, HP, Initiative, attack/damage, Dexterity save, and Dexterity skills.
-- Level 9 adds **Acrobatic Movement**. RAW permits movement along vertical surfaces and across liquids while unarmored and not wielding a Shield; the current Iron Pit battlefield has no vertical-surface or liquid-terrain state, so the feature is source-audited as arena-neutral rather than approximated. Proficiency Bonus advances to +4 and Focus Points to 9.
-- Level 10 increases Unarmored Movement to +20 feet and Focus Points to 10. **Heightened Focus** upgrades Flurry of Blows to three Unarmed Strikes and Focus-backed Patient Defense to grant 2d8 Temporary HP through universal mechanics. The optional Step of the Wind ally-transport choice remains deliberately unselected by arena automation. **Self-Restoration** binds to the generic end-turn condition-removal primitive with deterministic priority **Charmed → Frightened → Poisoned**.
-- Level 11 advances Martial Arts to **d10**, Focus Points to **11**, and HP to **91**. The tranche also corrects prior 2024 Monk healing-die drift by deriving Uncanny Metabolism and Wholeness of Body from the same Martial Arts die rule. **Fleet Step** uses the universal Bonus Action follow-up tactical grant. After another eligible Bonus Action, arena automation immediately takes the resource-free Dash form of Step of the Wind; it does not invent retreat or kiting behavior.
-- Level 12 uses the repeatable **Ability Score Improvement** feat for **+2 Wisdom (10→12)**, following the Open Hand unarmed-offense specialization priority of Dexterity → Wisdom → Constitution. This raises AC to 16, Stunning Strike DC to 13, Wisdom skills by 1, and Wholeness of Body healing to 1d10+1 while Focus Points advance to 12.
-- Level 13 adds **Deflect Energy**, widening Deflect Attacks from Bludgeoning/Piercing/Slashing to attacks dealing any damage type. Proficiency Bonus advances to +5, Focus Points to 13, HP to 107, Initiative/Unarmed Strike attack bonus to +10, and Stunning Strike DC to 14. The same tranche closes the existing RAW redirect gap: when Deflect Attacks reduces an attack to 0 damage, the Monk can spend 1 Focus Point to force the printed Dexterity save and deal two Martial Arts dice plus Dexterity modifier on a failure through a universal zero-damage redirect primitive with Python/browser parity.
-- Level 14 adds **Disciplined Survivor** by reusing universal saving-throw proficiency grants and the shared failed-save reroll. Constitution, Intelligence, Wisdom, and Charisma join Kael's existing Strength/Dexterity save proficiencies; a failed save may spend 1 Focus Point to reroll and must use the replacement result. Unarmored Movement rises to +25 feet (55-foot Speed), Focus Points to 14, and HP to 115.
-- Level 15 adds **Perfect Focus** through the universal initiative resource-refill primitive. Uncanny Metabolism resolves first; if it is unavailable/not used and Focus Points are 3 or fewer, Perfect Focus restores the total to 4. Focus Points advance to 15 and HP to 123.
-- Level 16 uses the repeatable **Ability Score Improvement** feat for **+2 Wisdom (12→14)**. Shared derived-stat logic raises AC to 17, Wisdom save/skills, Stunning Strike and Deflect Attacks redirect DCs to 15, and Wholeness of Body healing to 1d10+2; Focus Points advance to 16 and HP to 131.
-- Level 17 adds **Quivering Palm** through the universal deferred-save effect engine. An Unarmed Strike hit may spend 4 Focus Points to arm one target; an existing mark can end harmlessly before a different target is armed. Detonation uses the Monk Constitution-save DC and deals 10d12 Force damage on failure or half on success. Arena selection prefers replacing one legal Attack-action attack over spending the entire Action, while retaining the full-Action fallback when no Attack slot is legal. The Martial Arts die advances to d12, Proficiency Bonus to +6, Focus Points to 17, HP to 139, Initiative/attack bonus to +11, and Monk save DC to 16.
-- The same tranche closes the pre-existing 2014 Quivering Palm harmless-end gap through the same universal mark-replacement parameter; 2014 remains Action-only for detonation.
-- Level 18 adds **Superior Defense** through the universal start-turn timed self-buff path. It spends 3 Focus Points at the start of the Monk's turn, grants resistance to every damage type except Force for 10 rounds, and ends early if the Monk is Incapacitated. Unarmored Movement rises to +30 feet (60-foot Speed), Focus Points advance to 18, and HP to 147. Start-turn activation is explicitly excluded from the free opening-buff path and does not spend an Action or Bonus Action.
-- Level 19 selects **Boon of Irresistible Offense**, the recommended Monk Epic Boon. Dexterity rises **20→21** with a maximum of 30; B/P/S damage ignores Resistance through the existing universal bypass grant; a natural-20 attack adds **21** damage of the attack's type through the existing universal natural-20 rider. Focus Points advance to 19 and HP to 155.
-- Level 20 adds **Body and Mind** through normal ability-score progression: Dexterity **21→25** and Wisdom **14→18**, both capped at 25. This raises AC to **21**, HP to **163**, Initiative and Unarmed Strike attack bonus to **+13**, Unarmed Strike damage bonus to **+7**, Monk save DCs to **18**, Wholeness of Body to **1d12+4**, and inherited Boon of Irresistible Offense natural-20 damage to **25**.
-- This tranche completes the 2024 Open Hand Monk at **20 / 20** and raises the 2024 public-ready target to **140 / 240**.
-- After Monk 20 certification, re-anchor on `main` and advance the next incomplete 2024 canonical class. Do not start monster completion until all 240 pregen slots are certified.
+- **PR #530 — Add Load Combat review for purpose-built test fights** is current work based directly on the audited `main` baseline.
+- Do not edit the same combat/runtime files from a second branch while #530 is active.
+- Separate repository-hygiene/documentation work may proceed without touching its subsystem.
 
-### Druid spell-selection policy
+## Universal-engine audit priorities
 
-For Iron Pit caster pregens, ordinary prepared-spell choices prioritize **damage and healing** when legal choices are available and mechanically useful in arena combat. Utility/control options do not displace a stronger damage/healing choice merely because they are newly available. Always-prepared subclass spells are still source-audited and implemented when combat-relevant, but they do not redefine the canonical optimization lane.
+Audit by semantic mechanic, not by source ability name:
 
-Druid 9 follows that policy:
-- **Cone of Cold** is the new damaging prepared choice: 60-foot self-origin cone, Constitution save, 8d8 Cold, half on success, +1d8 per slot above 5.
-- **Mass Cure Wounds** is the new healing prepared choice: point within 60 feet, up to six creatures in a 30-foot-radius sphere, 5d8 + Wisdom modifier, +1d8 per slot above 5.
-- **Wall of Stone** is an Arid Circle spell granted independently of ordinary prepared choices. It is represented through a universal persistent-barrier primitive and does not replace the damage/healing-first choices.
+1. **Attacks / saves / checks**
+   - legality and targeting;
+   - Advantage/Disadvantage;
+   - modifiers;
+   - DC/AC comparison;
+   - result propagation.
 
-Bard 20 Words of Creation is edition-specific: 2024 always prepares Power Word Heal and Power Word Kill, and either spell may affect one additional creature only when that second creature is within 10 feet of the first. Power Word Heal is modeled as one atomic healing resolution that also ends Charmed, Frightened, Paralyzed, Poisoned, and Stunned, with the target optionally spending its Reaction to stand from Prone.
+2. **Damage / healing**
+   - typed components;
+   - resistance/immunity/vulnerability;
+   - Temporary HP and replacement effects;
+   - critical hits;
+   - zero-HP transitions.
 
-Bard 18 Superior Inspiration is edition-specific: 2024 restores Bardic Inspiration to two on Initiative when below two; do not substitute the 2014 zero-use-to-one rule.
-Bard 18's new prepared spell is 2024 Teleport, recorded as arena-out-of-scope rather than approximated.
+3. **Conditions / buffs / debuffs**
+   - one universal state identity per condition;
+   - source-specific parameters only;
+   - duration/expiry;
+   - immunity/suppression/removal.
 
-Bard 19 canonical Epic Boon choice: **Boon of Fate**. The 2024 Bard table recommends Boon of Spell Recall but permits any qualified Epic Boon; Lyra uses Boon of Fate so the build reuses the already-certified universal 2d4 D20 outcome-adjustment mechanic.
+4. **Movement / geometry**
+   - authoritative grid position;
+   - printed movement modes;
+   - reach/range/areas;
+   - Opportunity Attacks;
+   - forced movement and movement debuffs.
 
-For each Druid tranche:
-- start from the completed 2014 Circle of the Land Druid progression and reuse universal mechanics where behavior is equivalent;
-- verify every 2024 class/subclass feature against 2024 rules before carrying behavior forward;
-- keep same-named 2014/2024 spells edition-isolated and require an explicit 2024 spell fingerprint before certification;
-- prioritize damaging/healing prepared spells for the Iron Pit combat build;
-- keep Python/browser parity, independent combat fingerprints, generated parity, and the 2014 guard green before merge;
-- do not weaken Netlify publishing locks.
+5. **Resources / action economy**
+   - availability before spending;
+   - Action/Bonus Action/Reaction legality;
+   - limited-use/recharge resources;
+   - reset semantics.
 
-## Parked / superseded
+6. **Hooks / reactions / timing**
+   - generic timing windows;
+   - no class/monster/ability-name resolver switches;
+   - deterministic ordering;
+   - Python/browser parity.
 
-Stale stacked PRs whose work already landed on `main` are to be closed as superseded. Do not rebase them.
+7. **Edition isolation**
+   - explicit 2014 versus 2024 data/fingerprints;
+   - same-name features/spells do not imply same behavior.
 
-Universal-engine PRs that are still current against `main` may stay open only if they serve a current combat requirement.
+## Monster lane after engine audit
 
-## Universal combat refactor plan
+2024 currently has **190 blocked monster slots**. Work them by shared blocker families rather than one monster at a time. Current recurring blocker classes include:
 
-Architecture target: **checks -> modifiers -> result -> state mutation -> audit**.
+- legendary actions;
+- limited-use/recharge behavior;
+- complex save/action effects;
+- spellcasting;
+- condition/control mechanics;
+- trait parsing/binding.
 
-This is the default refactor direction for the engine. Named abilities remain source/audit metadata; combat resolution depends on universal typed facts.
+Before adding any primitive, classify each blocker as:
 
-Current migration sequence:
+- `ENGINE_EXISTS_BINDING_MISSING`
+- `ENGINE_EXISTS_CERTIFICATION_MISSING`
+- `ARENA_NEUTRAL`
+- `ENGINE_TRULY_MISSING`
 
-1. **Conditions / buffs / debuffs**
-   - remove class/feature-name immunity branches where an existing condition-immunity or debuff-counter primitive can express the rule;
-   - preserve source qualifiers such as creature type, magical/nonmagical origin, effect tags, duration, and resource cost;
-   - Nature's Ward (Druid 10) is 2024-edition-specific: immunity to the Poisoned condition plus damage resistance from the current land choice; canonical Arid grants Fire resistance. Reuse generic condition-immunity and damage-resistance data, not a Druid-named resolver.
-2. **Attacks / saves / checks**
-   - keep legality, roll-mode modifiers, bonuses, DC/AC comparison, and final result separate;
-   - source abilities provide data, not alternate attack/save engines.
-3. **Damage / healing**
-   - route all components through typed defense/reduction/replacement checks before HP mutation.
-4. **Movement**
-   - route movement through legality, movement-mode, terrain/debuff/counter, path, and final-position checks.
-5. **Resources / action economy / recharge**
-   - resolve availability first, then spend only after the action is accepted at the appropriate resolution point.
-6. **Hooks / reactions / interrupts**
-   - keep timing generic; named sources register declarative behavior into canonical windows.
+Only `ENGINE_TRULY_MISSING` justifies a new universal engine primitive.
 
-Refactor discipline:
+## Stale PR policy
 
-- preserve behavior while migrating;
-- Python reference and browser implementation move together;
-- add/regenerate permanent parity tests for every migrated path;
-- do not create a new primitive when existing checks/modifiers can compose the rule;
-- do not stall the active 2024 Druid lane for unrelated cosmetic rewrites;
-- when a named special case is discovered during active work, migrate it if the shared replacement is small and safe; otherwise record it here and continue the canonical lane.
+Progression PRs whose completed behavior is already present on current `main` are superseded and should be closed, not rebased. Any older universal-engine PR must be re-audited against current source before reuse because its useful behavior may already have landed through a later implementation.
 
-Immediate examples:
+## Publishing
 
-- **Nature's Ward (Druid 10):** 2024 Arid grants Poisoned immunity and Fire resistance. Bind those to generic condition-immunity and damage-resistance data; do not carry forward the 2014 feature by name.
-- **Mindless Rage:** preserve the 2014 vs 2024 difference for already-active Charm/Frighten while migrating it to shared condition/debuff semantics in a dedicated tranche.
+Netlify automatic publishing remains locked. Production publish is deliberate/manual only. Do not restore a push-triggered Netlify production publish.
 
-## CI / spend
+## Verification truth
 
-September 2026 included Actions usage was exhausted by Iron Pit volume (~$197 gross on this repo).
+Only claim:
 
-Heavy workflows are gated:
+- **implemented** when code exists on the stated SHA;
+- **tested** when relevant permanent tests ran on that exact code;
+- **CI green** when exact-head workflows completed successfully;
+- **certified** when current generated manifests, runtime data, and certification gates agree.
 
-- `2014-hero-certification.yml` — `main`, PRs into `main`, or `workflow_dispatch`
-- `sync-generated.yml` — `main` or `workflow_dispatch` only
-- `ci.yml` — `main` + pull_request
-
-Do not restore per-push certification on feature branches. Generated artifacts must be produced by the repository generator, never hand-edited.
-
-## Agent rules for this repo
-
-1. One coherent tranche per PR. Rebase on current `main` or close.
-2. Never hand-edit generated artifacts.
-3. Never implement a class-named resolver when a universal primitive exists.
-4. Ask one clarification question rather than guessing RAW.
-5. Do not start a second 2024 class while the active 2024 class progression is open.
-
-## 2024 Druid lane
-
-Thalen Greenbough remains the persistent canonical Druid and preserves the Land-Druid damage-caster concept while applying 2024 rules.
-
-- Level 1 uses **Primal Order: Magician**.
-- 2024 Wood Elf, Acolyte, and background-based ability increases are explicit.
-- 2024 Poison Spray is edition-isolated as a 30-foot ranged spell attack for 1d12 Poison at level 1.
-- Cure Wounds and Healing Word reuse their certified 2024 healing primitives.
-- Longstrider uses an explicit 2024 fingerprint.
-- Druidic always prepares Speak with Animals; it is arena-neutral, not approximated.
-- Unsupported or only-partially-generalized spell mechanics are not substituted with 2014 behavior.
-- Level 2 uses the shared replacement-form engine for 2024 Wild Shape: Bonus Action entry, Wolf form, owner HP retained, Druid-level Temporary HP, retained Humanoid creature type, no spellcasting while shaped, and generic reversion on Incapacitated/death.
-- Wild Companion remains source-audited but arena-unavailable under the global no-separate-summon rule.
-- 2024 Faerie Fire is edition-fingerprinted and uses the shared area-save/modifier engine; the same tranche re-audited 2014 Faerie Fire to suppress Invisible benefits through a universal modifier.
-- Level 3 chooses **Circle of the Land — Arid** and adds Land's Aid plus always-prepared Blur, Burning Hands, and Fire Bolt.
-- Land's Aid reuses the universal area-save engine with a generic independent area-healing rider; one Wild Shape use pays for the entire Magic action.
-- Blur reuses the modifier stack with source-derived Blindsight/Truesight ranges and distance-aware bypass; no Blur-named attack resolver exists.
-- Level 4 takes the canonical **+2 Wisdom ASI** (17→19), adds **Starry Wisp** as the fourth Druid cantrip, and fills the seventh prepared-spell slot with arena-neutral **Detect Poison and Disease**.
-- Level 5 adds **Wild Resurgence** through the universal resource-conversion engine and reuses the explicit **2024 Fireball** fingerprint for Arid Land; **Dispel Magic** and **Water Breathing** fill the remaining progression needs.
-- Level 6 adds **Natural Recovery** through the universal alternate-spell-cast resource; **Aid** is the tenth ordinary prepared Druid spell.
-- Level 7 chooses **Elemental Fury: Potent Spellcasting** and adds Wisdom (+4) to each damaging Druid cantrip through generic spell-action damage bonus; Arid adds explicit **2024 Blight** and **Divination** is the eleventh ordinary prepared spell.
-- Level 8 takes **+1 Wisdom / +1 Charisma** (Wisdom 19→20, Charisma 15→16), upgrades deterministic Wild Shape to certified **Brown Bear (CR 1)**, and adds **Freedom of Movement** as the twelfth ordinary prepared spell.
-- Level 9 advances to PB +4, 48 HP, slots 4/3/3/3/1, and fourteen ordinary prepared Druid spells. The new prepared choices are **Cone of Cold** and **Mass Cure Wounds** under the damage/healing-first policy.
-- Arid level 9 additionally grants **Wall of Stone**. Its source data binds to a reusable persistent-barrier engine for blocked edges, forced-movement interaction, destructible sections, support legality, concentration lifecycle, and Python/browser parity; it is not a Druid-named resolver.
-- Level 10 adds **Nature's Ward** through universal defenses: Poisoned immunity plus Arid Fire resistance. It also adds **Thunderclap** and prepares **Thunderwave** under the damage-first policy.
-- Level 11 advances to 58 HP, 16 prepared spells, and a level-6 slot. The new prepared spell is **Heal**: 70 fixed HP plus removal of Blinded, Deafened, and Poisoned through the universal healing action.
-- Level 12 advances to 63 HP and uses the repeatable **Ability Score Improvement** feat for +2 Charisma (16→18); Wisdom remains capped at 20 and the damage/healing spell package is preserved.
-- Level 13 advances to PB +5, 68 HP, 17 prepared spells, and a level-7 slot. **Fire Storm** is the damage-first preparation but remains explicitly arena-out-of-scope because its ten freely arranged contiguous cubes require unsupported multi-cube battlefield geometry.
-- Level 14 advances to 73 HP, improves **Land's Aid** to 4d6 damage/healing, and adds **Nature's Sanctuary** through the universal persistent-beneficial-zone engine: a movable 15-foot cube that grants Half Cover and the Arid Fire resistance according to its source rules.
-- Level 15 advances to 78 HP, adds a level-8 slot and the 18th prepared spell **Sunburst**, reusing the certified 2024 area save-damage and timed-Blinded primitives. **Improved Elemental Fury: Potent Spellcasting** increases qualifying Druid cantrip ranges by 300 feet as compiled action data; Poison Spray, Fire Bolt, and Starry Wisp become 330/420/360 feet while Self-range Thunderclap remains unchanged.\n- Level 16 advances to 83 HP and uses the repeatable **Ability Score Improvement** feat for +2 Charisma (18→20). Wisdom, spell slots, prepared spells, and the damage/healing package remain unchanged.
-- Level 17 advances to PB +6, 88 HP, 19 ordinary prepared spells, 4 Wild Shape uses, and one level-9 slot. **Foresight** is the one arena-entry opening buff and uses universal D20 Advantage/incoming-attack Disadvantage; the explicit Iron Pit exception leaves the level-9 slot unspent.
-- Level 18 advances to 93 HP, a third level-5 slot, and 20 prepared spells. **Beast Spells** reuses the replacement-form spell allowlist; the new prepared spell is explicit 2024 **Barkskin** (Bonus Action, Touch, AC minimum 17, no Concentration).
-- Level 19 advances to 98 HP, two level-6 slots, and 21 prepared spells. Thalen legally selects **Boon of Fate** rather than the recommended Boon of Dimensional Travel, raising Intelligence 13→14 and reusing the universal 2d4 D20 outcome-adjustment plus Initiative refill. **Regenerate** is the healing-priority prepared choice; its 1-minute casting time means Arena AI does not select it in a standard match.
-- Level 20 advances to 103 HP, two level-7 slots, and 22 prepared spells. **Archdruid** reuses initiative resource refill for Evergreen Wild Shape and universal resource conversion for Nature Magician's 1–4 Wild Shape → level 2/4/6/8 spell-slot exchanges; Longevity is arena-neutral. **Ice Storm** is the damage-priority prepared choice but remains arena-out-of-scope until temporary area Difficult Terrain can be represented exactly.
-- Call Lightning remains unbound until its fixed storm-cloud footprint can be represented exactly by a universal persistent-area spell primitive; it is not approximated.
-
-
-Certification checkpoint: Paladin 16 exact-head rerun.
+Never carry counts or CI status across a commit change without re-verification.

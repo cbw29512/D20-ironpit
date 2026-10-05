@@ -37,6 +37,7 @@ Iron Pit production is a **static browser application**.
 - [ ] Duplicate monster cards remain independent combatants.
 - [ ] FIGHT resolves through the canonical browser execution controller/engine.
 - [ ] STEP FIGHT can advance one event at a time.
+- [ ] Load Combat opens the selected purpose-built fight's full recorded log for review.
 - [ ] WATCH REST continues the same Step session without rerolling/restarting.
 - [ ] Turbo uses the same combat engine with presentation overhead suppressed.
 - [ ] A selected Turbo fight reproduces from its recorded seed.

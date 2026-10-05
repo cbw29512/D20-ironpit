@@ -3,6 +3,19 @@
 
   const G = () => window.IRON_PIT_BROWSER_GRID_GEOMETRY;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
+  const R = () => window.IRON_PIT_BROWSER_FORMATION_ROWS;
+
+  function isBackline(member) {
+    try {
+      if (typeof R()?.isBackline === "function") return Boolean(R().isBackline(member));
+      if (typeof F()?.isBackline === "function") return Boolean(F().isBackline(member));
+      if (typeof F()?.usesBackline === "function") return Boolean(F().usesBackline(member.state.template));
+      return member.state.formation_row === "back";
+    } catch (error) {
+      console.error("Failed to read browser backline for placement", { id: member?.combatant_id, error });
+      throw error;
+    }
+  }
 
   function zonePositions(map, zone, member) {
     try {
@@ -11,7 +24,7 @@
       const maxY = zone.y + zone.height_squares - side;
       if (maxX < zone.x || maxY < zone.y) return [];
       const xValues = Array.from({ length: maxX - zone.x + 1 }, (_, i) => zone.x + i);
-      const backline = F().usesBackline(member.state.template);
+      const backline = isBackline(member);
       const frontEast = zone.front_edge === "east";
       const towardFront = !backline;
       if (frontEast === towardFront) xValues.reverse();
@@ -49,7 +62,7 @@
       return members.map((member, index) => ({ member, index }))
         .sort((a, b) => G().footprintSide(b.member.state.template.size)
           - G().footprintSide(a.member.state.template.size)
-          || Number(F().usesBackline(a.member.state.template)) - Number(F().usesBackline(b.member.state.template))
+          || Number(isBackline(a.member)) - Number(isBackline(b.member))
           || a.index - b.index)
         .map(({ member }) => member);
     } catch (error) {
@@ -60,6 +73,7 @@
 
   function packZone(map, zone, members) {
     try {
+      window.IRON_PIT_BROWSER_FORMATION_ROWS?.assignFormationRows(members);
       const ordered = placementOrder(members), placed = [];
       function search(index) {
         try {

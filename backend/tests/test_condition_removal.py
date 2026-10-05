@@ -5,7 +5,16 @@ import pytest
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.state import begin_turn
+from app.domain.grid import GridPosition
 from app.domain.models import ConditionRemovalAction, EncounterSelection, ResourceState, TimedEffect
+
+
+def _place_adjacent(actor, ally) -> None:
+    origin = actor.state.position
+    if origin is None:
+        ally.position_ft = actor.position_ft
+        return
+    ally.state.position = GridPosition(x=origin.x + 1, y=origin.y)
 
 
 def _setup():
@@ -13,6 +22,7 @@ def _setup():
         hero_ids=["karnok-stoneward-l1", "rokhan-stonefury-l1"],
         monster_ids=["srd-commoner"],
     ))
+    _place_adjacent(setup.heroes[0], setup.heroes[1])
     return setup, setup.heroes[0], setup.heroes[1]
 
 

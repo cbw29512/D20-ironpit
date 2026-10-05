@@ -30,27 +30,31 @@ def legal_single_spell_targets(
     try:
         enemies = setup.monsters if caster.side == "heroes" else setup.heroes
         limit = action.range_ft if range_ft is None else range_ft
-        return [
-            target for target in enemies
-            if target.state.is_alive
-            and not target.state.is_dead
-            and target.state.current_hp > 0
-            and combatant_distance(caster, target) <= limit
-            and clear_line_between_members(caster, target, setup)
-            and (not action.requires_target_hearing or "deafened" not in target.state.active_effect_ids)
-            and (not action.requires_target_sight or can_see(caster.state, target.state))
-            and (
-                not action.required_target_creature_types
-                or any(
-                    is_creature_type(target.state.template, kind)
-                    for kind in action.required_target_creature_types
-                )
-            )
-            and not any(
+        legal = []
+        for target in enemies:
+            if not target.state.is_alive or target.state.is_dead or target.state.current_hp <= 0:
+                continue
+            distance = combatant_distance(caster, target)
+            if distance > limit:
+                continue
+            if not clear_line_between_members(caster, target, setup):
+                continue
+            if action.requires_target_hearing and "deafened" in target.state.active_effect_ids:
+                continue
+            if action.requires_target_sight and not can_see(caster.state, target.state, distance):
+                continue
+            if action.required_target_creature_types and not any(
+                is_creature_type(target.state.template, kind)
+                for kind in action.required_target_creature_types
+            ):
+                continue
+            if any(
                 is_creature_type(target.state.template, kind)
                 for kind in action.excluded_target_creature_types
-            )
-        ]
+            ):
+                continue
+            legal.append(target)
+        return legal
     except Exception as exc:
         logger.exception("Failed to determine legal targets for spell %s.", action.id)
         raise RuntimeError("Spell targets could not be evaluated.") from exc
