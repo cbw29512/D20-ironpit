@@ -6,7 +6,7 @@ Netlify is reserved for deliberate production deployment and real production ban
 
 **AUTOPUBLISH LOCKED:** Git-connected Netlify builds are disabled for every deploy context. Pushing or merging code must not consume Netlify build credits or publish Iron Pit.
 
-**2026-10-05 roster publish (#592):** Production Git deploy `6ac3e995b21bb000098a0bdd` (`main` `2292ba324`) is ready but unpublished; https://ironpit.netlify.app/ remains pinned/locked to #569 deploy `6ac3b69534351e0007b460d0`. Publish `6ac3e995b21bb000098a0bdd` in the Netlify UI (unlock the current production deploy first). Do not buy or attach `ironpit.app`. Verified deploy: https://6ac3e995b21bb000098a0bdd--ironpit.netlify.app/
+**2026-10-05 roster publish (#592 / #594):** https://ironpit.netlify.app/ is serving production Git deploy `6ac3e995b21bb000098a0bdd` (`main` `2292ba324`) and that deploy is locked. Git-connected ignore is restored. Do not buy or attach `ironpit.app`.
 
 - [ ] Production branch remains `main`, but branch selection does not authorize deployment.
 - [ ] Deploy Previews are disabled.

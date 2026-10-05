@@ -18,7 +18,7 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
           DEPLOY_ID: ${{ github.event.inputs.deploy_id || '6ac3e995b21bb000098a0bdd' }}
-          LOCKED_DEPLOY_ID: "6ac3b69534351e0007b460d0"
+          LOCKED_DEPLOY_ID: "6ac3e995b21bb000098a0bdd"
         run: |
           set -euo pipefail
           TOKEN="${NETLIFY_AUTH_TOKEN:-${NETLIFY_TOKEN:-}}"
