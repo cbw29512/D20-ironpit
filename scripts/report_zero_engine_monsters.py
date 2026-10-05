@@ -12,6 +12,7 @@ from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
 from app.content.monster_save_for_half_2024 import compiled_save_signatures
+from app.content.monster_recharge_save_2024 import recharge_save_coverage_matches
 from app.content.monster_physical_control_2024 import physical_control_coverage_matches
 from app.content.monster_source_audit import _save_ownership_matches, _source_save_signatures
 from app.content.roster import build_arena_roster
@@ -106,7 +107,8 @@ def _source_blockers(
     except ValueError:
         blockers.append("bonus-action-parse")
     try:
-        if parse_limited_use_names(row):
+        limited_use = parse_limited_use_names(row)
+        if limited_use and not recharge_save_coverage_matches(row):
             blockers.append("limited-use")
     except ValueError:
         blockers.append("limited-use-parse")
