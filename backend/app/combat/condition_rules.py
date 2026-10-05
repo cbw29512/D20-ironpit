@@ -36,10 +36,11 @@ def invisibility_benefits_suppressed(state: CombatantState) -> bool:
     )
 
 
-def can_see(observer: CombatantState, target: CombatantState) -> bool:
-    """Return whether the observer can visually perceive the target under supported visibility rules."""
-    target_hidden = has_condition(target, INVISIBLE) and not invisibility_benefits_suppressed(target)
-    return not has_condition(observer, BLINDED) and not target_hidden
+def can_see(observer: CombatantState, target: CombatantState, distance_ft: int | None = None) -> bool:
+    """Compatibility wrapper around the universal visibility predicate."""
+    from app.combat.visibility_rules import can_see as resolve_visibility
+
+    return resolve_visibility(observer, target, distance_ft)
 
 
 def is_incapacitated(state: CombatantState) -> bool:

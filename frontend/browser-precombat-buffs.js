@@ -48,7 +48,7 @@
         value: resistance,
       });
       candidates.sort((a, b) =>
-        b.priority - a.priority || b.level - a.level || (a.kind === "spell" ? -1 : 1));
+        b.level - a.level || b.priority - a.priority || (a.kind === "spell" ? -1 : 1));
       return candidates[0] || null;
     } catch (error) {
       console.error("Opening buff choice failed.", { combatant: member?.combatant_id, error });

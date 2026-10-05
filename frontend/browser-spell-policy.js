@@ -12,7 +12,8 @@
   function chooseActionAtSlot(caster, setup, action, castLevel, protectedAllyIds = [], alternateCast = null) {
     try {
       if (!action || action.actionCost === "reaction" || (action.castRounds || 1) > 1
-        || !E().available(caster.state, action.actionCost)) return null;
+        || !E().available(caster.state, action.actionCost)
+        || window.IRON_PIT_BROWSER_TEMPORARY_TERRAIN?.spellTerrainSupported?.(action) === false) return null;
       const scaled = H().scaledSpell(action, castLevel);
       const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
       if (action.area) {
@@ -72,7 +73,9 @@
         if (action.actionCost === "reaction" || (action.castRounds || 1) > 1
           || action.repeatOnly
           || (action.concentration && caster.state.concentration)
-          || !E().available(caster.state, action.actionCost)) continue;
+          || !E().available(caster.state, action.actionCost)
+          || window.IRON_PIT_BROWSER_TEMPORARY_TERRAIN?.spellTerrainSupported?.(action) === false
+          || window.IRON_PIT_BROWSER_DEBUFF_ANSWERS?.failedSaveIsBeneficial?.(action)) continue;
         for (const { castLevel, alternateCast } of H().castOptions(caster, action, turnKey)) {
           const scaled = H().scaledSpell(action, castLevel);
           if (action.area) {

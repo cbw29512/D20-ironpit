@@ -106,7 +106,7 @@ def end_invalid_presence(
         source = members.get(effect.source_id)
         if source is None:
             continue
-        if can_see(target.state, source.state) and combatant_distance(target, source) <= 60:
+        if can_see(target.state, source.state, combatant_distance(target, source)) and combatant_distance(target, source) <= 60:
             continue
         removed = remove_effect_group(target.state, effect)
         if not removed:

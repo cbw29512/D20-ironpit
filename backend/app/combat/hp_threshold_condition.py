@@ -27,9 +27,10 @@ def legal_hp_threshold_condition(
         if target.state.current_hp > action.max_current_hp:
             return False
         # Source data owns visibility; all sources share the ordinary sight predicate.
-        if action.requires_target_sight and not can_see(actor.state, target.state):
+        distance = combatant_distance(actor, target)
+        if action.requires_target_sight and not can_see(actor.state, target.state, distance):
             return False
-        if combatant_distance(actor, target) > action.range_ft:
+        if distance > action.range_ft:
             return False
         if action.resource_id:
             resource = resource_state(actor.state, action.resource_id)

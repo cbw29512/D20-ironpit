@@ -14,6 +14,7 @@ from app.combat.spell_policy import (
 )
 from app.combat.spell_target_counts import spell_save_target_count
 from app.combat.spellcasting import legal_slot_levels
+from app.combat.temporary_terrain import spell_terrain_is_supported
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
 
@@ -29,7 +30,11 @@ def choose_spell_action_at_slot(
 ) -> SpellChoice | None:
     """Choose targets for one already-declared save spell at a fixed slot level."""
     try:
-        if action.action_cost == "reaction" or not is_available(caster.state, action.action_cost):
+        if (
+            action.action_cost == "reaction"
+            or not is_available(caster.state, action.action_cost)
+            or not spell_terrain_is_supported(action)
+        ):
             return None
         scaled = spell_at_slot(action, slot_level)
         protected = protected_ally_ids or set()

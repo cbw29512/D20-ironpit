@@ -88,6 +88,7 @@ window.IRON_PIT_BROWSER_MONSTERS = { target: { name: "Target", kind: "monster", 
 window.IRON_PIT_BROWSER_FORMATION = {
   startingPosition: (_template, side) => side === "heroes" ? 5 : 10,
   usesBackline: () => false,
+  isBackline: () => false,
 };
 window.IRON_PIT_BROWSER_PRECOMBAT_SPELLS = { prepare: (_setup, sequence) => ({ events: [], sequence }) };
 window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE = {

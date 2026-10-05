@@ -31,4 +31,37 @@ target.active_modifiers.push({
 assert.equal(C.invisibilitySuppressed(target), true);
 assert.equal(C.canSee(observer, target), true);
 
+const seer = {
+  active_effect_ids: [],
+  timed_effects: [],
+  active_modifiers: [],
+  template: { blindsight_ft: 0, truesight_ft: 60, size: "medium" },
+};
+const hidden = {
+  active_effect_ids: ["invisible"],
+  timed_effects: [],
+  active_modifiers: [],
+  template: { blindsight_ft: 0, truesight_ft: 0, size: "medium" },
+};
+assert.equal(C.canSee(seer, hidden, 60), true);
+assert.equal(C.canSee(seer, hidden, 65), false);
+assert.equal(C.canSee(seer, hidden), false);
+
+const blindedSeer = {
+  ...seer,
+  active_effect_ids: ["blinded"],
+};
+assert.equal(C.canSee(blindedSeer, hidden, 5), false);
+
+const blindsightObserver = {
+  active_effect_ids: ["blinded"],
+  timed_effects: [],
+  active_modifiers: [],
+  template: { blindsight_ft: 10, truesight_ft: 0, size: "medium" },
+};
+assert.equal(C.canSee(blindsightObserver, hidden, 10), true);
+assert.equal(C.canSee(blindsightObserver, hidden, 15), false);
+assert.equal(C.effectiveSenseRangeFt(seer, "truesight"), 60);
+assert.equal(C.senseIsSuppressed(seer, "truesight"), false);
+
 console.log("Browser invisibility-benefit suppression parity passed.");

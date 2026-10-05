@@ -4,16 +4,16 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
 
-  function canUncannyDodge(attacker, defender) {
+  function canUncannyDodge(attacker, defender, distanceFt = null) {
     return Boolean(
       defender?.template?.uncanny_dodge
-      && Q().canSee(defender, attacker)
+      && Q().canSee(defender, attacker, distanceFt)
       && E().available(defender, "reaction")
     );
   }
 
-  function applyUncannyDodge(attacker, defender, components) {
-    if (!components?.length || !canUncannyDodge(attacker, defender)) {
+  function applyUncannyDodge(attacker, defender, components, distanceFt = null) {
+    if (!components?.length || !canUncannyDodge(attacker, defender, distanceFt)) {
       return { components, used: false };
     }
     E().spend(defender, "reaction");
