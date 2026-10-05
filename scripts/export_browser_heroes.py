@@ -562,6 +562,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
         "damage_immunities": [item.value for item in template.damage_immunities],
         "condition_immunities": list(template.condition_immunities),
+        "support_action_modes": list(template.support_action_modes),
             "wearing_metal_armor": template.wearing_metal_armor,
         "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
         "timed_self_buff_actions": [_timed_self_buff(item) for item in template.timed_self_buff_actions],
