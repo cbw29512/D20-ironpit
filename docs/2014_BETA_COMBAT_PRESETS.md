@@ -21,6 +21,14 @@ text on the website matches those asserted aspects, not optional color. If
 dice can skip a feature, the seed or roster must change until the aspect
 resolves under the landing-damage Action policy.
 
+A certification must not require an event the rules would not produce on
+that seed. Do not assert Undead Fortitude when the legal killing blow is
+radiant or a critical hit. Do not assert healing unless a healable
+combatant is actually bloodied or at 0 HP when a healer acts. Do not seed
+a starting debuff on a player-loaded fight. Do not nerf a legal radiant
+attack merely to make Fortitude fire. Bloodied calls for healing at the
+start of a turn; damage-first otherwise.
+
 Thirteen 2014 fights and twelve 2024 fights cover every class and party sizes
 1v1 through 6v6: melee, spells, healing, conditions, undead defenses,
 legendary actions, and high-level resources. 2024 recipes use certified 2024
