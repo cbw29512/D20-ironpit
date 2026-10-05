@@ -11,5 +11,5 @@ ARENA_NEUTRAL_TRAITS_2014 = frozenset({
     "Ice Walk", "Illumination", "Keen Hearing", "Keen Hearing and Smell", "Keen Hearing and Sight",
     "Keen Sight", "Keen Sight and Smell", "Keen Smell", "Labyrinthine Recall", "Mimicry",
     "Running Leap", "Snow Camouflage", "Spider Climb", "Water Breathing",
-    "Web Sense", "Web Walker",
+    "Web Sense", "Web Walker", "Rejuvenation", "Hellish Rejuvenation",
 })
