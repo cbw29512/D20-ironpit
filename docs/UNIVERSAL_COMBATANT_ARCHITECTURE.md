@@ -78,6 +78,26 @@ The content card owns **parameters**, not mechanics. For example, a monster acti
 
 Before new mechanic code is allowed, record why existing primitives cannot represent the behavior. If that cannot be shown, reuse wins.
 
+### Canonical composition example: Psychic Push
+
+Ability names are presentation only. Engine design follows semantics.
+
+Example homebrew ability: **Psychic Push** — once per round, make an attack; on a hit deal 1d10 Psychic damage and force a DC 15 fear check.
+
+Resolve it by composition:
+
+1. **Attack primitive** — determine whether the attack hits. On a miss, stop; no damage or fear rider resolves.
+2. **Damage primitive** — on a hit, roll 1d10 Psychic damage.
+3. **Defense pipeline** — pass that Psychic damage through the same universal immunity/resistance/vulnerability handling used by every other damage source.
+4. **Condition rider** — because the hit occurred, evaluate the Fear rider.
+5. **Condition immunity/save** — if the target is immune to the relevant fear/frightened effect, the rider ends. Otherwise roll the printed DC 15 save using the shared saving-throw resolver.
+6. **Condition application** — on a failed save, apply the universal Frightened/fear debuff with the source-defined duration/expiry; on success, continue combat with no fear effect.
+7. **Resource/timing** — the once-per-round limit is a normal source-defined resource/timing qualifier, not a new attack engine.
+
+The final source ability is therefore a composition of existing primitives, not a dedicated Psychic Push resolver.
+
+This same decomposition rule applies to monsters, pregens, spells, items, and future homebrew cards. The design target is the smallest practical set of universal combat primitives capable of expressing all supported RAW and homebrew combinations through declarative source data.
+
 ## Mandatory preflight before touching any ability
 
 **STOP AND READ THIS SECTION BEFORE IMPLEMENTING OR MODIFYING ANY CLASS, SUBCLASS, FEAT, SPELL, ITEM, MONSTER, LEGENDARY ACTION, LAIR ACTION, OR OTHER COMBAT ABILITY.**
