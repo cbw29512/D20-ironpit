@@ -11,11 +11,11 @@ for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-modifier-validation.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js", "browser-saves.js", "browser-concentration.js",
-  "browser-support.js", "browser-tactical-shift.js",
+  "browser-support.js",
 ]) load(file);
 const M = window.IRON_PIT_BROWSER_MODIFIERS, S = window.IRON_PIT_BROWSER_STATE;
 const A = window.IRON_PIT_BROWSER_ATTACK, V = window.IRON_PIT_BROWSER_SAVES, C = window.IRON_PIT_BROWSER_CONCENTRATION;
-const P = window.IRON_PIT_BROWSER_SUPPORT, TS = window.IRON_PIT_BROWSER_TACTICAL_SHIFT;
+const P = window.IRON_PIT_BROWSER_SUPPORT;
 const base = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
 function dice(values) {
   const rolls = [...values];
@@ -72,15 +72,6 @@ const attack = { id: "test-blade", name: "Test Blade", kind: "melee", reach: 5, 
   const event = P.adrenaline(1, 1, hero);
   assert.ok(event); assert.equal(event.movement_ft, 0); assert.equal(hero.state.movement_remaining_ft, 20,
     "Adrenaline Rush keeps its resource/temp-HP effect but adds no Pit movement");
-}
-
-{
-  const hero = member("fighter"), target = member("monster", "monsters"); target.position_ft = 35;
-  hero.state.template.tactical_shift_fraction = 0.5;
-  M.add(hero.state, modifier("slow-shift", "enemy", "slow", "speed", { flat_bonus: -10 }));
-  const event = TS.resolve(1, 1, hero, { heroes: [hero], monsters: [target] });
-  assert.equal(event, null, "Tactical Shift movement is arena-neutral in fixed Pit formation");
-  assert.equal(hero.position_ft, 0);
 }
 
 {
