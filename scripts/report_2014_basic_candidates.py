@@ -45,6 +45,12 @@ def _attack_shapes(monsters):
     return counts, names
 
 
+def _death_trigger_shapes(monsters):
+    for monster in monsters:
+        if monster.death_trigger_actions:
+            print(f"DEATH_TRIGGER\t{monster.name}\t{monster.death_trigger_actions!r}\ttraits={monster.trait_names!r}")
+
+
 def _single_blocker_families(monsters):
     names = defaultdict(list)
     for monster in monsters:
