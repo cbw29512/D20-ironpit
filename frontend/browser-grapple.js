@@ -99,6 +99,8 @@
       (rule) => rule.ability === ability,
     ) || (state.template.failed_d20_test_override_grants || []).some(
       (grant) => (grant.test_kinds || []).includes("ability_check"),
+    ) || (state.template.resource_backed_d20_bonus_dice || []).some(
+      (grant) => (grant.test_kinds || []).includes("ability_check"),
     );
     if (needsCheckRuntime && !A()) throw new Error("Ability-check runtime is not loaded.");
     const resolved = A()?.resolve
