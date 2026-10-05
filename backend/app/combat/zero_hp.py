@@ -157,10 +157,7 @@ def apply_damage(
         incoming = amount
         types = damage_types or set()
         note_incoming_damage_types(state, types)
-        if len(types) == 1:
-            damage_type = next(iter(types))
-            key = damage_type.value if hasattr(damage_type, "value") else str(damage_type)
-            state.damage_taken_this_turn_by_type[key] = state.damage_taken_this_turn_by_type.get(key, 0) + incoming
+        note_single_type_turn_damage(state, incoming, types)
         amount = _after_temporary_hp(state, amount)
         amount, _ = apply_replacement_form_damage(state, amount)
         if state.current_hp == 0:
