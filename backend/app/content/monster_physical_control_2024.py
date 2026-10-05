@@ -54,6 +54,9 @@ _COMPLEX_SAVE_CONTROL = re.compile(
     re.I,
 )
 _PHYSICAL = {"grappled", "restrained", "prone"}
+_ACTION_HEADING = re.compile(
+    r"\b([A-Z][A-Za-z’'-]*(?: [A-Z][A-Za-z’'-]*)*)(?: \([^)]*\))?\.\s"
+)
 
 
 @dataclass(frozen=True)
@@ -69,11 +72,10 @@ class PhysicalControlBinding:
 
 
 def _action_name(actions: str, marker_start: int) -> str:
-    prefix = actions[max(0, marker_start - 120):marker_start]
-    match = re.search(r"([A-Z][A-Za-z’' -]+(?: \([^)]*\))?)\.\s*$", prefix)
-    if match is None:
+    matches = list(_ACTION_HEADING.finditer(actions[:marker_start]))
+    if not matches:
         raise ValueError(f"Could not identify action heading before {actions[marker_start:marker_start + 50]!r}.")
-    return match.group(1).strip()
+    return matches[-1].group(1).strip()
 
 
 def _max_size(segment: str) -> CreatureSize | None:
