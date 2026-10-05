@@ -22,7 +22,7 @@ _DECLARATIVE_TEMPLATE_TRAITS = frozenset({"Magic Resistance", "Regeneration"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hellish Restoration",
     "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
-    "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness", "Mimicry",
+    "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness", "Loathsome Limbs", "Mimicry",
     "Earth Glide", "Running Leap", "Shark Telepathy", "Spider Climb", "Standing Leap", "Sunlight Sensitivity",
     "Siege Monster", "Training", "Treasure Sense", "Troll Spawn", "Water Breathing", "Web Walker",
 })
