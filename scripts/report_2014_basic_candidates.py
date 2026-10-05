@@ -85,6 +85,7 @@ def main() -> None:
     print("Blockers:")
     for blocker, count in counts.most_common():
         print(f"  {blocker}: {count}")
+    _death_trigger_shapes(monsters)
     print("Single-blocker unlocks:")
     for blocker, names in sorted(_single_blocker_families(monsters).items(), key=lambda item: (-len(item[1]), item[0])):
         print(f"  {len(names):3}  {blocker}: {' | '.join(names)}")
