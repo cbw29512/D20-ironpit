@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AbilityName, HitControlEffect
+from app.domain.actions import AbilityName, ConditionName, ConditionTiming, HitControlEffect
 from app.domain.charge import AttackChargeProfile, ChargeDamage
 from app.domain.damage_sources import DamageSourceQualifier
 from app.domain.hit_modifiers import HitModifierEffect
@@ -55,8 +55,18 @@ class OnHitSaveDamage(BaseModel):
 class OnHitConditionSave(BaseModel):
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
-    condition_id: Literal["prone"]
+    condition_id: ConditionName
     max_target_size: CreatureSize | None = None
+    duration_rounds: int | None = Field(default=None, ge=1, le=100800)
+    repeat_save_timing: ConditionTiming | None = None
+    excluded_creature_types: list[str] = Field(default_factory=list)
+    excluded_creature_subtypes: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_condition_lifecycle(self) -> "OnHitConditionSave":
+        if self.repeat_save_timing is not None and self.duration_rounds is None:
+            raise ValueError("On-hit repeat-save riders require a printed duration.")
+        return self
 
 
 class Weapon(BaseModel):

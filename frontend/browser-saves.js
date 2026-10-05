@@ -17,22 +17,22 @@
   };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
-  // Preserve the shared save API while keeping roll policy in its own module.
   const resolveSavingThrow = (...args) => window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow(...args);
   const saveMode = (...args) => window.IRON_PIT_BROWSER_SAVING_THROWS.saveMode(...args);
 
-  function resolveOnHitConditionSave(target, attack, sourceTemplate = null, round = null, setup = null) {
+  function resolveOnHitConditionSave(target, attack, sourceTemplate = null, round = null, setup = null, attacker = null) {
+    const impl = window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE;
+    if (impl) return impl.resolve(target, attack, sourceTemplate, round, setup, attacker);
     const effect = attack.onHitConditionSave;
     if (!effect || target.state.is_dead || !target.state.is_alive) return null;
     if (effect.maxTargetSize && !S().sizeAtMost(target, effect.maxTargetSize)) return null;
     if (I().immune(target.state, effect.conditionId, sourceTemplate)) return null;
+    if (effect.durationRounds || effect.repeatSaveTiming || (effect.excludedCreatureTypes || []).length || (effect.excludedCreatureSubtypes || []).length) {
+      throw new Error("On-hit condition save lifecycle runtime is not loaded.");
+    }
     const effectTags = effect.conditionId === "poisoned" ? ["poison"] : [];
     const save = resolveSavingThrow(target.state, effect.saveAbility, effect.dc, {
-      conditionId: effect.conditionId,
-      effectTags,
-      roundNumber: round,
-      encounterRoller: target,
-      setup,
+      conditionId: effect.conditionId, effectTags, roundNumber: round, encounterRoller: target, setup,
     });
     let appliedCondition = null;
     if (!save.succeeded && !target.state.active_effect_ids.includes(effect.conditionId)) {

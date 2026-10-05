@@ -123,6 +123,7 @@ def resolve_attack_effects(
         )
         result.on_hit_save = resolve_on_hit_condition_save(
             defender, attack, dice, attacker.template,
+            source_id=attacker_event_id, round_number=round_number, affected_states=affected_states,
         )
         if (
             result.on_hit_save.applied_condition

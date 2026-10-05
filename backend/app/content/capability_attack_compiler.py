@@ -99,6 +99,10 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             on_hit_save = OnHitConditionSave(
                 save_ability=effect.save_ability, dc=effect.dc,
                 condition_id=effect.condition, max_target_size=effect.max_target_size,
+                duration_rounds=effect.duration_rounds,
+                repeat_save_timing=effect.repeat_save_timing,
+                excluded_creature_types=list(effect.excluded_creature_types),
+                excluded_creature_subtypes=list(effect.excluded_creature_subtypes),
             )
         elif isinstance(effect, HitModifierEffect):
             on_hit_modifiers.append(effect)

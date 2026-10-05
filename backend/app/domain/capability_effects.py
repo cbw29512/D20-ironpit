@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming
 from app.domain.combatants import DamageType
@@ -48,6 +48,16 @@ class SaveConditionEffectDefinition(BaseModel):
     dc: int = Field(ge=1, le=40)
     condition: ConditionName
     max_target_size: CreatureSize | None = None
+    duration_rounds: int | None = Field(default=None, ge=1, le=100800)
+    repeat_save_timing: ConditionTiming | None = None
+    excluded_creature_types: list[str] = Field(default_factory=list)
+    excluded_creature_subtypes: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_condition_lifecycle(self) -> "SaveConditionEffectDefinition":
+        if self.repeat_save_timing is not None and self.duration_rounds is None:
+            raise ValueError("Save-condition repeat-save riders require a printed duration.")
+        return self
 
 
 class GrappleEffectDefinition(BaseModel):

@@ -925,6 +925,18 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                                 item.on_hit_condition_save.max_target_size.value
                                 if item.on_hit_condition_save.max_target_size else None
                             ),
+                            **({
+                                "durationRounds": item.on_hit_condition_save.duration_rounds,
+                            } if item.on_hit_condition_save.duration_rounds is not None else {}),
+                            **({
+                                "repeatSaveTiming": item.on_hit_condition_save.repeat_save_timing,
+                            } if item.on_hit_condition_save.repeat_save_timing is not None else {}),
+                            **({
+                                "excludedCreatureTypes": list(item.on_hit_condition_save.excluded_creature_types),
+                            } if item.on_hit_condition_save.excluded_creature_types else {}),
+                            **({
+                                "excludedCreatureSubtypes": list(item.on_hit_condition_save.excluded_creature_subtypes),
+                            } if item.on_hit_condition_save.excluded_creature_subtypes else {}),
                         }
                     }
                     if item.on_hit_condition_save else {}
