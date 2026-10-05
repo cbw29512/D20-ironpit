@@ -104,7 +104,7 @@ const cleric2014 = {
   side: "heroes",
   position_ft: 0,
   state: {
-    template: { name: "Seraphine", archetype: "Cleric", ruleset: "2014", level: 2, traits: ["life-domain"] },
+    template: { name: "Seraphine", archetype: "NotACleric", ruleset: "2014", level: 2, traits: [], support_action_modes: ["turn-undead", "preserve-life"] },
     current_hp: 19,
     is_alive: true,
     is_dead: false,
