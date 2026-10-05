@@ -35,7 +35,7 @@
     const save = V().resolveSavingThrow(target.state, "wisdom", dc);
     E().spend(actor.state, "action");
     const applied = [];
-    if (save.succeeded) target.state.feature_last_turn_keys[immunityKey(actor.combatant_id)] = "24h";
+    if (save.succeeded) target.state.feature_last_turn_keys[immunityKey(actor.combatant_id)] = "match";
     else {
       const effect = T().apply(target.state, FRIGHTENED, actor.combatant_id, {
         sourceEffectId: FEATURE, appliedRound: round, expiresRound: round + 1,

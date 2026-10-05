@@ -2,6 +2,10 @@ from __future__ import annotations
 
 import logging
 
+from app.content.monster_save_control_2014 import (
+    compile_failed_save_control_2014,
+    supports_failed_save_control_2014,
+)
 from app.content.monster_source_2014 import SourceMonster2014
 from app.domain.capability_attacks import SaveCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
@@ -17,7 +21,9 @@ def supports_save_action_2014(action: object) -> bool:
             return False
         if not {"id", "name", "save_ability", "dc", "range_ft"} <= set(action):
             return False
-        if action.get("failure_control_effect") or action.get("failure_push_ft"):
+        if action.get("failure_push_ft"):
+            return False
+        if not supports_failed_save_control_2014(action):
             return False
         count = int(action.get("damage_dice_count", 0) or 0)
         if count and not action.get("damage_type"):
@@ -69,7 +75,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
     try:
         result = []
         for action in monster.saving_throw_actions:
-            if not supports_save_action_2014(action):
+            if not supports_save_action_2014(action) or not isinstance(action, dict):
                 continue
             damage = None
             count = int(action.get("damage_dice_count", 0) or 0)
@@ -79,11 +85,14 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                     size=int(action.get("damage_dice_size", 6)),
                     bonus=int(action.get("damage_bonus", 0) or 0),
                 )
+            rider = compile_failed_save_control_2014(action)
             effect_tags = {
                 str(item).strip().casefold()
                 for item in action.get("effect_tags", [])
                 if str(item).strip()
             }
+            if rider is not None:
+                effect_tags.add(rider.effect_id)
             result.append(SaveCapabilityDefinition(
                 id=str(action["id"]), name=str(action["name"]),
                 save_ability=str(action["save_ability"]), dc=int(action["dc"]),
@@ -95,6 +104,10 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                 requires_no_active_grapple=bool(action.get("requires_no_active_grapple", False)),
                 magical_effect=bool(action.get("magical_effect", False)),
                 effect_tags=sorted(effect_tags),
+                failed_save_timed_effect=rider,
+                source_effect_immunity_on_success=bool(
+                    action.get("source_effect_immunity_on_success", False)
+                ),
                 animation=str(action.get("animation", "save-effect")),
             ))
         return result

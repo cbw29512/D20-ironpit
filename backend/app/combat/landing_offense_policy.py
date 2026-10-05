@@ -170,7 +170,7 @@ def decide_post_move_offense(
                 if not resource_available(attacker.state, action.resource_id, action.resource_cost):
                     continue
                 distance = save_distance(attacker, target, action.range_ft)
-                if legal_save_action(action, target, distance):
+                if legal_save_action(action, target, distance, source_id=attacker.combatant_id):
                     chosen_save = (target, action, distance)
                     break
             if chosen_save is not None:

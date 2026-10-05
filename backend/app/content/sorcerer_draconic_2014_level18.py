@@ -18,7 +18,7 @@ def draconic_presence_fear_2014(save_dc: int) -> TimedSelfBuffAction:
             save_ability="wisdom",
             save_dc=save_dc,
             condition_id="frightened",
-            success_immunity_rounds=14400,
+            success_immunity=True,
             source_is_magical=True,
         ),
         concentration=True,

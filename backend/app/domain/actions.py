@@ -133,6 +133,7 @@ class SavingThrowAction(BaseModel):
     requires_target_hearing: bool = False
     requires_target_sight: bool = False
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
+    source_effect_immunity_on_success: bool = False
     failed_save_push_ft: int = Field(default=0, ge=0)
     area_healing_rider: AreaHealingRider | None = None
     required_target_creature_types: list[str] = Field(default_factory=list)

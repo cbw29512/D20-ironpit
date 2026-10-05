@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.combat.source_effect_immunity import (
+    grant_source_effect_immunity,
+    has_source_effect_immunity,
+)
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.encounters import EncounterCombatant
 from app.domain.events import BattleEvent
@@ -20,8 +24,7 @@ def resolve_hostile_condition_aura(
     if aura is None or aura.trigger != "enemy_turn_start" or distance > aura.radius_ft:
         return None, sequence
 
-    immunity_id = f"{action.id}:success-immunity:{source.combatant_id}"
-    if any(effect.effect_id == immunity_id for effect in target.state.timed_effects):
+    if has_source_effect_immunity(target.state, action.id, source.combatant_id):
         return None, sequence
 
     roll, succeeded = resolve_saving_throw(
@@ -29,17 +32,11 @@ def resolve_hostile_condition_aura(
     )
     applied: list[str] = []
     if succeeded:
-        if aura.success_immunity_rounds:
-            apply_timed_condition(
-                target.state, immunity_id, source.combatant_id,
-                source_effect_id=f"{action.id}:success-immunity",
+        if aura.success_immunity:
+            grant_source_effect_immunity(
+                target.state, action.id, source.combatant_id, round_number,
                 source_template=source.state.template,
                 source_is_magical=aura.source_is_magical,
-                applied_round=round_number,
-                expires_round=round_number + aura.success_immunity_rounds,
-                expiry_timing="source_turn_start",
-                expires_at_start_of_source_turn=True,
-                use_default_poison_recovery=False,
             )
     else:
         condition = apply_timed_condition(

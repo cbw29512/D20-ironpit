@@ -89,7 +89,7 @@ const auraSource = {
           save_ability: "wisdom",
           save_dc: 19,
           condition_id: "frightened",
-          success_immunity_rounds: 14400,
+          success_immunity: true,
           source_is_magical: true,
         },
       }],

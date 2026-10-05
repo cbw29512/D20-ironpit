@@ -56,7 +56,7 @@ class TimedHostileConditionAura(BaseModel):
     save_ability: str
     save_dc: int = Field(ge=1, le=40)
     condition_id: ConditionName
-    success_immunity_rounds: int = Field(default=0, ge=0)
+    success_immunity: bool = False
     source_is_magical: bool = True
 
 

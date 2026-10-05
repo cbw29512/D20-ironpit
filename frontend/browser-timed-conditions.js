@@ -56,6 +56,7 @@
       escape_check_dc: options.escapeCheckDc ?? null,
       ground_contact: Boolean(options.groundContact),
       ends_on_teleport: Boolean(options.endsOnTeleport || options.groundContact),
+      source_effect_immunity_on_end: Boolean(options.sourceEffectImmunityOnEnd),
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     RF()?.revertIfIncapacitated(state);
@@ -86,6 +87,11 @@
   }
 
   function removeGroup(state, effect) {
+    const grantImmunity = Boolean(effect.source_effect_immunity_on_end);
+    const actionId = effect.source_effect_id;
+    const sourceId = effect.source_id;
+    const round = state.current_round || 1;
+    const sourceIsMagical = Boolean(effect.source_is_magical);
     if (!effect.source_effect_id) return removeEffect(state, effect) ? [effect.effect_id] : [];
     const grouped = state.timed_effects.filter((item) =>
       item.source_id === effect.source_id && item.source_effect_id === effect.source_effect_id,
@@ -95,6 +101,9 @@
     state.active_modifiers = (state.active_modifiers || []).filter((item) => !(
       item.source_id === effect.source_id && item.source_effect_id === effect.source_effect_id
     ));
+    if (removed.length && grantImmunity && actionId && !String(actionId).includes(":success-immunity")) {
+      window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS?.grantImmunity(state, actionId, sourceId, round, { sourceIsMagical });
+    }
     return removed;
   }
 

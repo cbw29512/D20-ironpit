@@ -83,9 +83,15 @@
           member, setup, action.area, action.range, Boolean(action.areaHealingRider),
         );
         for (const placement of placements) {
-          const healTarget = healingTarget(member, setup, action, placement, !placement.targetIds.length);
+          const targetIds = placement.targetIds.filter((id) => {
+            const target = memberById(setup, id);
+            return target && V().legalAction(action, target, 0, member.combatant_id);
+          });
+          if (!targetIds.length && !action.areaHealingRider) continue;
+          const legal = { ...placement, targetIds, target_ids: targetIds };
+          const healTarget = healingTarget(member, setup, action, legal, !legal.targetIds.length);
           if (action.areaHealingRider && !healTarget) continue;
-          candidates.push({ action, placement, healTarget });
+          candidates.push({ action, placement: legal, healTarget });
         }
       }
       candidates.sort((a, b) =>
