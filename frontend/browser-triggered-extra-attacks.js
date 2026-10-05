@@ -39,32 +39,36 @@
     return { candidate, distance };
   }
 
-  function resolveAfterTurn(sequence, round, member, setup) {
+  function resolveAfterTurn(sequence, round, justActed, setup) {
     try {
       const events = [];
-      for (const rule of member.state.template.triggered_extra_attack_stacks || []) {
-        const added = maybeAddStack(member, rule);
-        const stacks = member.state.triggered_extra_attack_stack_counts?.[rule.sourceId] || 0;
-        if (added) {
+      const combatants = [...(setup.heroes || []), ...(setup.monsters || [])];
+      for (const owner of combatants) {
+        for (const rule of owner.state.template.triggered_extra_attack_stacks || []) {
+          if (!maybeAddStack(owner, rule)) continue;
+          const stacks = owner.state.triggered_extra_attack_stack_counts?.[rule.sourceId] || 0;
           events.push({
             sequence: sequence++, round_number: round, event_type: "feature",
-            actor_id: member.combatant_id, actor_name: member.state.template.name,
+            actor_id: owner.combatant_id, actor_name: owner.state.template.name,
             feature_id: rule.sourceId, animation: "feature",
-            description: `${member.state.template.name} gains one ${rule.sourceName} stack (${stacks}/${rule.maxStacks}).`,
+            description: `${owner.state.template.name} gains one ${rule.sourceName} stack (${stacks}/${rule.maxStacks}).`,
           });
         }
+      }
+      for (const rule of justActed.state.template.triggered_extra_attack_stacks || []) {
+        const stacks = justActed.state.triggered_extra_attack_stack_counts?.[rule.sourceId] || 0;
         for (let i = 0; i < stacks; i += 1) {
-          if (member.state.is_dead) break;
-          const chosen = target(member, setup, rule.attack);
+          if (justActed.state.is_dead) break;
+          const chosen = target(justActed, setup, rule.attack);
           if (!chosen) break;
           if (!A()?.resolveAttack) throw new Error("Triggered extra attacks require browser-attack.js.");
           const event = A().resolveAttack(
-            sequence++, round, member, chosen.candidate, rule.attack, chosen.distance,
+            sequence++, round, justActed, chosen.candidate, rule.attack, chosen.distance,
             {
               spendAction: false,
               offTurn: true,
               setup,
-              turnKey: `${round}:${member.combatant_id}:post-turn`,
+              turnKey: `${round}:${justActed.combatant_id}:post-turn`,
             },
           );
           event.feature_id = rule.sourceId;
@@ -74,7 +78,18 @@
       }
       return { events, sequence };
     } catch (error) {
-      console.error("Triggered post-turn extra attacks failed.", { combatant: member?.combatant_id, error });
+      console.error("Triggered post-turn extra attacks failed.", { combatant: justActed?.combatant_id, error });
+      throw error;
+    }
+  }
+
+  function clearTurnDamage(setup) {
+    try {
+      for (const member of [...(setup.heroes || []), ...(setup.monsters || [])]) {
+        member.state.damage_taken_this_turn_by_type = {};
+      }
+    } catch (error) {
+      console.error("Failed to clear browser per-turn typed damage state.", { error });
       throw error;
     }
   }
@@ -96,5 +111,5 @@
     return cleared;
   }
 
-  window.IRON_PIT_BROWSER_TRIGGERED_EXTRA_ATTACKS = { clearRegenerationOwnedStacks, resolveAfterTurn };
+  window.IRON_PIT_BROWSER_TRIGGERED_EXTRA_ATTACKS = { clearRegenerationOwnedStacks, clearTurnDamage, resolveAfterTurn };
 })();
