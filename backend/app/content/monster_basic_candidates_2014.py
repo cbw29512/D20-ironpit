@@ -29,6 +29,10 @@ _MODELED_2014_TRAITS = {
 _CHARGE_TRAIT_NAMES = frozenset({"Charge", "Pounce", "Trampling Charge"})
 _PIT_BANNED_ACTION_LABELS = frozenset({"teleport", "plane shift"})
 _ARENA_ABSENT_CONTEXT_ACTION_LABELS = frozenset({"ink cloud"})
+_ARENA_UNAVAILABLE_SUMMON_ACTION_LABELS = frozenset({
+    "animate trees", "children of the night", "create specter",
+})
+_ARENA_NEUTRAL_MIND_ACTION_LABELS = frozenset({"weird insight"})
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 
 
@@ -99,6 +103,8 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
         | innate_spell_names_2014(monster)
         | _PIT_BANNED_ACTION_LABELS
         | _ARENA_ABSENT_CONTEXT_ACTION_LABELS
+        | _ARENA_UNAVAILABLE_SUMMON_ACTION_LABELS
+        | _ARENA_NEUTRAL_MIND_ACTION_LABELS
     )
     extras = [
         name for name in extras
