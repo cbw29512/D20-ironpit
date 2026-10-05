@@ -4,6 +4,7 @@ from app.content.armor_class_rules import compile_armored_base_ac
 from app.content.canonical_hero_policy import canonical_template_id
 from app.content.equipment import build_greatsword, build_shortbow
 from app.content.hero_progressions import HERO_BY_CLASS
+from app.content.fighter_second_wind import second_wind_healing_action
 from app.content.level_resources import fighter_second_wind_uses, orc_adrenaline_rush_uses
 from app.domain.character_builds import AbilityScores
 from app.domain.models import CombatantTemplate, ResourceDefinition, VisualLoadout, WeaponAttack
@@ -54,6 +55,7 @@ def build_karnok_stoneward() -> CombatantTemplate:
         initiative_bonus=1,
         weapon_attack=_greatsword_attack(),
         alternate_weapon_attacks=[_shortbow_attack()],
+        healing_actions=[second_wind_healing_action(level)],
         saving_throw_bonuses={
             "strength": 5, "dexterity": 1, "constitution": 4,
             "intelligence": 0, "wisdom": 0, "charisma": 0,
