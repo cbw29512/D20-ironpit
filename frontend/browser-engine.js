@@ -184,6 +184,7 @@
         if (triggered) { events.push(...triggered.events); sequence = triggered.sequence; }
         const legend = window.IRON_PIT_BROWSER_LEGENDARY_ACTIONS?.resolveAfterTurn(sequence, round, member, setup);
         if (legend) { events.push(...legend.events); sequence = legend.sequence; }
+        window.IRON_PIT_BROWSER_TRIGGERED_EXTRA_ATTACKS?.clearTurnDamage(setup);
         window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.expireCurrentTurnTypeResistances(setup);
       }
       const current = outcome(setup);
