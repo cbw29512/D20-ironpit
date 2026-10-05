@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import json
+import re
+from pathlib import Path
+
 from app.combat.action_economy import is_available, spend
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.dice import FixedDiceProvider
@@ -52,6 +56,19 @@ def _member(template, combatant_id: str, side: str, position: int) -> EncounterC
         position_ft=position,
         state=build_combatant_state(template),
     )
+
+
+_CATALOG_PATH = Path(__file__).resolve().parents[1] / "app/content/data/srd_5_1_monsters_catalog.json"
+
+
+def _printed_action_plain(monster_id: str, heading: str) -> str:
+    catalog = json.loads(_CATALOG_PATH.read_text(encoding="utf-8"))
+    html = next(item["source_actions"] for item in catalog if item["id"] == monster_id)
+    for part in re.findall(r"<p>(.*?)</p>", html, flags=re.IGNORECASE | re.DOTALL):
+        plain = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", part)).strip()
+        if plain.startswith(heading):
+            return plain
+    raise AssertionError(f"{monster_id} has no printed {heading!r} paragraph.")
 
 
 def _catalog_action(monster_id: str, action_id: str) -> dict:
@@ -137,6 +154,40 @@ def test_gold_weakening_breath_payloads_are_strength_disadvantage_only() -> None
             assert key not in control
         assert "armor_class_bonus" not in control
         assert "saving_throw_flat_bonuses" not in control
+
+
+def test_printed_2014_slow_weaken_stat_blocks_are_not_one_bundle() -> None:
+    for monster_id in _COPPER:
+        text = _printed_action_plain(monster_id, "Slowing Breath")
+        assert "can't use reactions" in text
+        assert "speed is halved" in text
+        assert "can't make more than one attack on its turn" in text
+        assert "action or a bonus action" in text
+        assert "1 minute" in text
+        assert "Constitution" in text
+        assert "-2" not in text
+        assert "AC" not in text
+        assert "Dexterity" not in text
+        assert "disadvantage" not in text.casefold()
+    golem = _printed_action_plain("stone-golem", "Slow")
+    assert "can't use reactions" in golem
+    assert "speed is halved" in golem
+    assert "can't make more than one attack on its turn" in golem
+    assert "action or a bonus action" in golem
+    assert "Wisdom" in golem
+    assert "-2" not in golem
+    assert "AC" not in golem
+    assert "Dexterity" not in golem
+    assert "disadvantage" not in golem.casefold()
+    for monster_id in _GOLD:
+        text = _printed_action_plain(monster_id, "Weakening Breath")
+        assert "disadvantage on Strength-based attack rolls, Strength checks, and Strength saving throws" in text
+        assert "1 minute" in text
+        assert "speed is halved" not in text
+        assert "can't use reactions" not in text
+        assert "can't make more than one attack" not in text
+        assert "bonus action" not in text.casefold()
+        assert "-2" not in text
 
 
 def test_copper_slowing_breath_applies_only_printed_combat_limits() -> None:
