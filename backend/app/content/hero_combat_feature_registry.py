@@ -23,6 +23,18 @@ SUPPORTED_HERO_ENGINE_FEATURES = {
 _STATIC_PROGRESSION_FIELDS: dict[str, dict[str, object]] = {
     "improved-critical": {"critical_hit_minimum": 19},
     "superior-critical": {"critical_hit_minimum": 18},
+    "tactical-mind": {
+        "resource_backed_d20_bonus_dice": [{
+            "source_id": "tactical-mind",
+            "source_name": "Tactical Mind",
+            "resource_id": "second-wind",
+            "resource_cost": 1,
+            "dice_count": 1,
+            "dice_size": 10,
+            "test_kinds": ["ability_check"],
+            "consume_only_on_success": True,
+        }],
+    },
     "remarkable-athlete": {
         "initiative_advantage": True,
         "athletics_advantage": True,
