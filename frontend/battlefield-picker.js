@@ -17,6 +17,33 @@
     return P().preferredHero(candidates);
   }
 
+  function runtimeTemplate(card, side) {
+    if (!card?.runnable_template_id) return { id: card?.id, name: card?.name, kind: card?.kind, class_id: card?.class_id, ruleset: card?.ruleset };
+    if (card.ruleset === "2014") {
+      return side === "heroes"
+        ? window.IRON_PIT_BROWSER_HEROES?.[card.runnable_template_id] || card
+        : window.IRON_PIT_BROWSER_MONSTERS_2014?.[card.runnable_template_id] || card;
+    }
+    return side === "heroes"
+      ? window.IRON_PIT_BROWSER_HEROES?.[card.runnable_template_id] || card
+      : window.IRON_PIT_BROWSER_MONSTERS?.[card.runnable_template_id] || card;
+  }
+
+  function renderPreview(card, side) {
+    const frame = el("picker-portrait");
+    if (!frame) return;
+    if (!card) { frame.hidden = true; frame.replaceChildren(); return; }
+    const template = runtimeTemplate(card, side);
+    const artwork = window.IRON_PIT_COMBATANT_ART?.markup(template) || "";
+    const fallback = window.IRON_PIT_FIGURE_PORTRAITS?.markup(template) || "";
+    frame.hidden = false;
+    const kind = side === "heroes" ? "hero-art" : "monster-art";
+    const hasArt = artwork ? " has-art" : "";
+    frame.className = `picker-portrait-frame fighter-portrait ${side} ${kind}${hasArt}`;
+    frame.innerHTML = `${artwork}${fallback}`;
+    window.IRON_PIT_FIGURE_VISUALS?.decorate(frame, template);
+  }
+
   function populateHero(state, existing) {
     const heroSelect = el("picker-class"), levelSelect = el("picker-level");
     heroSelect.replaceChildren(); levelSelect.replaceChildren();
@@ -31,6 +58,7 @@
         : `${chosen?.name || "This hero"} level ${levelSelect.value} is not RAW-certified yet.`;
       el("confirm-card").disabled = !ready(chosen);
       el("confirm-card").textContent = ready(chosen) ? "Add to Slot" : "Certification Pending";
+      renderPreview(chosen, "heroes");
     }
     heroSelect.value = fallback.class_id; levelSelect.value = String(fallback.level);
     heroSelect.onchange = refresh; levelSelect.onchange = refresh; refresh();
@@ -54,6 +82,7 @@
       el("picker-note").textContent = monsterNote(state, rows, chosen);
       el("confirm-card").disabled = !ready(chosen);
       el("confirm-card").textContent = ready(chosen) ? "Add to Slot" : "Certification Pending";
+      renderPreview(chosen, "monsters");
     }
     function refreshMonsters() {
       const rows = P().sortedMonsters(all, crSelect.value); monsterSelect.replaceChildren();
@@ -100,7 +129,7 @@
     el("remove-card").addEventListener("click", () => {
       if (!active) return; active.onRemove(active.side, active.index); el("card-picker").close(); active = null;
     });
-    el("card-picker").addEventListener("close", () => { active = null; });
+    el("card-picker").addEventListener("close", () => { active = null; renderPreview(null); });
   }
 
   window.IRON_PIT_BATTLEFIELD_PICKER = { bind, open };

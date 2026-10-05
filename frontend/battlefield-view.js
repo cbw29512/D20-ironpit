@@ -21,10 +21,12 @@
 
   function figureMarkup(template) {
     try {
-      const artwork = A()?.markup(template);
-      const portrait = artwork || P()?.markup(template)
+      const fallback = P()?.markup(template)
         || '<svg class="portrait-svg" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="32"/></svg>';
-      return `<div class="stick-figure fighter-portrait" aria-hidden="true">${portrait}</div>`;
+      const artwork = A()?.markup(template) || "";
+      const hasArt = artwork ? " has-art" : "";
+      const kind = template?.kind === "character" ? " hero-art" : " monster-art";
+      return `<div class="stick-figure fighter-portrait${hasArt}${kind}" aria-hidden="true">${artwork}${fallback}</div>`;
     } catch (error) {
       console.error("Failed to render battlefield combatant visual", { templateId: template?.id, error });
       throw error;
@@ -43,7 +45,7 @@
     const template = runtimeTemplate(card, side), node = document.createElement("button");
     const monsterCard = card.kind === "monster";
     node.type = "button"; node.className = `battle-card occupied ${side}`; node.dataset.slotIndex = String(index);
-    node.innerHTML = `<span class="slot-number">${index + 1}</span><span class="initiative-badge" aria-label="Initiative">—</span><strong class="card-name"></strong><small class="card-meta"></small>${figureMarkup(template)}<div class="card-status-lanes"><div class="card-status-lane card-status-buffs" aria-label="Buffs"><small>BUFFS</small><div class="card-concentration" hidden></div><div class="card-buffs"></div></div><div class="card-status-lane card-status-debuffs" aria-label="Debuffs"><small>DEBUFFS</small><div class="card-debuffs"></div></div></div><div class="card-hp"><span></span></div><small class="hp-text"></small><span class="death-stamp">✕ DEAD</span>`;
+    node.innerHTML = `<span class="slot-number">${index + 1}</span><span class="initiative-badge" aria-label="Initiative">—</span>${figureMarkup(template)}<strong class="card-name"></strong><small class="card-meta"></small><div class="card-status-lanes"><div class="card-status-lane card-status-buffs" aria-label="Buffs"><small>BUFFS</small><div class="card-concentration" hidden></div><div class="card-buffs"></div></div><div class="card-status-lane card-status-debuffs" aria-label="Debuffs"><small>DEBUFFS</small><div class="card-debuffs"></div></div></div><div class="card-hp"><span></span></div><small class="hp-text"></small><span class="death-stamp">✕ DEAD</span>`;
     node.querySelector(".card-name").textContent = card.name;
     node.querySelector(".card-meta").textContent = monsterCard ? `${card.monster_type} · CR ${card.challenge_rating}` : `${card.class_name} · Level ${card.level} · ${card.build_name}`;
     const hp = Number(template?.max_hp || card.hit_points || 0);
