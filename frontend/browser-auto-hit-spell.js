@@ -35,7 +35,7 @@
 
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
-    A().applyDamage(target.state, total, false, total > 0 ? [action.damageType] : [], states);
+    A().applyDamage(target.state, total, false, total > 0 ? [action.damageType] : [], states, setup, components);
     C().markSlotSpellCast(caster.state, turnKey);
     caster.state.resources[resourceId] -= 1;
     E().spend(caster.state, action.actionCost);
