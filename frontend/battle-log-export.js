@@ -25,9 +25,10 @@
       lines.push(`Round ${event.round_number} · ${event.event_type || "Combat event"}`);
       lines.push(formatter.format(event));
       for (const step of event.audit?.steps || []) {
-        const label = step.rule || step.step || "Resolution";
-        const detail = step.detail || step.outcome || "Applied.";
-        lines.push(`  - ${label}: ${detail}`);
+        const text = String(step.label || step.detail || step.outcome || "").trim();
+        if (!text || text === "Applied.") continue;
+        const heading = step.rule || step.step;
+        lines.push(heading && heading !== "Resolution" ? `  - ${heading}: ${text}` : `  - ${text}`);
       }
       lines.push("");
     }

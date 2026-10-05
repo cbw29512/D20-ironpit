@@ -109,10 +109,13 @@
     const details = document.createElement("details"), heading = document.createElement("summary"), body = document.createElement("div");
     details.className = "rules-audit"; heading.textContent = `Details · ${steps.length} step${steps.length === 1 ? "" : "s"}`; body.className = "rules-audit-steps";
     steps.forEach((item, index) => {
+      const text = String(item.label || item.detail || item.outcome || "").trim();
+      if (!text || text === "Applied.") return;
       const row = document.createElement("div"); row.className = "rules-audit-step";
       row.innerHTML = `<span>${index + 1}</span><b></b><p></p>`;
-      row.querySelector("b").textContent = item.rule || item.step || "Resolution";
-      row.querySelector("p").textContent = item.detail || item.outcome || "Applied."; body.append(row);
+      row.querySelector("b").textContent = item.kind || item.phase || item.rule || item.step || "Evidence";
+      row.querySelector("p").textContent = text;
+      body.append(row);
     });
     details.append(heading, body); return details;
   }

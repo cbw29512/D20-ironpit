@@ -178,4 +178,13 @@ function member(id, side, x, y, extras = {}) {
     assert.deepEqual(flyer.state.position, { x: 6, y: 6 });
   }
 }
+
+{
+  const roc = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-roc"];
+  assert.ok(roc, "2014 Roc must be in the browser roster");
+  assert.equal(roc.speed_ft, 120, "2014 flyers use printed Fly as arena closing speed");
+  assert.equal(roc.movement_modes.walk_ft, 20);
+  assert.equal(roc.movement_modes.fly_ft, 120);
+  assert.deepEqual(roc.attack_action.slots.map((slot) => slot.attackIds), [["2014-roc-beak"], ["2014-roc-talons"]]);
+}
 console.log("Browser pit engagement, flight, and in-place teleport regressions passed.");

@@ -79,6 +79,7 @@
     if (event.resource_remaining != null) out.push(step("resource_change", "resource", `${label(event.feature_id)} resource remaining: ${event.resource_remaining}`));
     if (event.is_stable) out.push(step("state_change", "outcome", "Target is stable at 0 HP"));
     if (event.is_dead) out.push(step("state_change", "outcome", "Target is dead"));
+    else if (event.hp_after === 0) out.push(step("state_change", "outcome", "Target is unconscious"));
     return out;
   }
 

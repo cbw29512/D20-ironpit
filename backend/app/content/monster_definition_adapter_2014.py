@@ -24,11 +24,12 @@ from app.content.monster_legendary_resistance_2014 import (
     legendary_resistance_override_2014,
     legendary_resistance_resource_2014,
 )
+from app.content.movement_modes import standard_arena_closing_speed_from_modes
 from app.content.monster_regeneration_2014 import regeneration_trait_2014
 from app.content.monster_save_capabilities_2014 import (
     recharge_rules_2014, save_capabilities_2014, save_resources_2014,
 )
-from app.domain.combatants import ResourceDefinition
+from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.weapons import DamageSourceQualifier
 from app.domain.capabilities import CombatantDefinition
 from app.domain.capability_attacks import (
@@ -38,7 +39,6 @@ from app.domain.capability_attacks import (
 )
 from app.domain.capability_effects import DiceSpec
 from app.domain.character_builds import AbilityScores
-from app.domain.combatants import VisualLoadout
 from app.domain.movement import MovementModes
 from app.domain.reactions import ParryReaction
 from app.domain.size import CreatureSize
@@ -170,7 +170,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         challenge_rating=monster.challenge_rating, kind="monster", ruleset="2014",
         creature_type=monster.creature_type,
         size=CreatureSize(monster.size.lower()), ability_scores=scores,
-        armor_class=monster.armor_class, max_hp=monster.max_hp, speed_ft=movement.walk_ft,
+        armor_class=monster.armor_class, max_hp=monster.max_hp, speed_ft=standard_arena_closing_speed_from_modes(movement),
         movement_modes=movement, initiative_bonus=scores.modifier("dexterity"), attacks=attacks,
         primary_attack_id=attacks[0].id, attack_action=_multiattack(monster),
         save_actions=save_capabilities_2014(monster),

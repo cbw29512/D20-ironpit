@@ -2,7 +2,12 @@ import logging
 
 import pytest
 
-from app.content.movement_modes import parse_movement_modes, parse_movement_profile, standard_arena_closing_speed
+from app.content.movement_modes import (
+    parse_movement_modes,
+    parse_movement_profile,
+    standard_arena_closing_speed,
+    standard_arena_closing_speed_from_modes,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +52,9 @@ def test_burrow_and_hover_are_retained_in_complete_fingerprint() -> None:
 def test_fly_speed_can_legally_be_faster_than_walk_in_open_pit() -> None:
     try:
         assert standard_arena_closing_speed("10 ft., Fly 60 ft.") == 60
+        profile = parse_movement_profile("20 ft., Fly 120 ft.")
+        assert standard_arena_closing_speed_from_modes(profile) == 120
+        assert (profile.walk_ft, profile.fly_ft) == (20, 120)
     except Exception:
         logger.exception("Fly source-speed regression failed.")
         raise

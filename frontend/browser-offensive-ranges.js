@@ -84,6 +84,32 @@
     }
   }
 
+  function tightestUsableMeleeReach(member, target) {
+    try {
+      const attacks = member.state.template.attacks || [];
+      const byId = Object.fromEntries(attacks.map((attack) => [attack.id, attack]));
+      const allowed = (attack) => attack && attack.kind === "melee"
+        && !(attack.forbidSelfGrappledTarget
+          && target.state.grapple_sources.some((source) => source.source_id === member.combatant_id));
+      const reaches = [];
+      for (const slot of member.state.template.attack_action?.slots || []) {
+        for (const id of slot.attackIds || []) {
+          const attack = byId[id];
+          if (allowed(attack)) reaches.push(attack.reach || 5);
+        }
+      }
+      if (!reaches.length) {
+        for (const attack of attacks) {
+          if (allowed(attack)) reaches.push(attack.reach || 5);
+        }
+      }
+      return reaches.length ? Math.min(...reaches) : null;
+    } catch (error) {
+      console.error("Failed browser tightest melee-reach probe", { member: member.combatant_id, error });
+      throw error;
+    }
+  }
+
   function rangesForTarget(member, target, turnKey) {
     try {
       return [...weaponRanges(member, target), ...spellRanges(member, turnKey), ...saveActionRanges(member, target)];
@@ -93,5 +119,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_OFFENSIVE_RANGES = { rangesForTarget };
+  window.IRON_PIT_BROWSER_OFFENSIVE_RANGES = { rangesForTarget, tightestUsableMeleeReach };
 })();
