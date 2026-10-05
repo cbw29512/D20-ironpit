@@ -35,10 +35,20 @@ def supports_save_action_2014(action: object) -> bool:
         raise
 
 
+def _pit_banned_recharge_id(action_id: str) -> bool:
+    return action_id.replace("_", " ").replace("-", " ").casefold() in {"teleport", "plane shift"}
+
+
 def supports_recharge_rules_2014(monster: SourceMonster2014) -> bool:
     try:
         if monster.rest_recharge_action_ids:
             return False
+        remaining = {
+            action_id: minimum for action_id, minimum in monster.action_recharges.items()
+            if not _pit_banned_recharge_id(action_id)
+        }
+        if not remaining:
+            return True
         supported = [
             action for action in monster.saving_throw_actions
             if supports_save_action_2014(action) and isinstance(action, dict)
@@ -49,7 +59,7 @@ def supports_recharge_rules_2014(monster: SourceMonster2014) -> bool:
         }
         return all(
             action_id in supported_ids or action_id in supported_resources
-            for action_id in monster.action_recharges
+            for action_id in remaining
         )
     except Exception:
         logger.exception("Failed to classify 2014 Recharge rules for %s.", monster.name)
@@ -140,4 +150,5 @@ def recharge_rules_2014(monster: SourceMonster2014) -> list[RechargeRule]:
     return [
         RechargeRule(resource_id=action_id, minimum_roll=minimum)
         for action_id, minimum in sorted(monster.action_recharges.items())
+        if not _pit_banned_recharge_id(action_id)
     ] if supports_recharge_rules_2014(monster) else []

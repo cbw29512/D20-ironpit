@@ -13,3 +13,7 @@ When #602 lands a Parked blockers section, fold this table there and delete this
 | Change Shape | Adult / ancient metallic dragons | Extra Action that replaces the combatant form | Park until polymorph/form-replace policy is opened |
 | Horror Nimbus | Nalfeshnee | Recharge + Frightened already compile; leftover `mechanic:defense` | Defense-text family, not this lane |
 | Blinding Spittle | Gibbering Mouther | Recharge + Blinded already compile; leftover multiattack / extra-action / trait | Separate multiattack-complex lane |
+| Swallow | Giant Frog, Giant Toad, Purple Worm, Remorhaz, Behir, Kraken, Tarrasque | Swallowed state (blinded + restrained + total cover + start-turn acid + death/regurgitate exit) is a new machine | Do not fake swallow as Grappled |
+| Attach / Blood Drain | Stirge | Ongoing attach, source-attack lock, detach movement, HP-loss end | New attach rider, not a Grapple rename |
+| Reel / pull | Roper | Tendril attach + pull toward source | Forced-movement pull primitive; only push exists |
+| Engulf | Gelatinous Cube, Shambling Mound | Cube/mound engulf is swallow-shaped plus form-specific extras | Same swallow machine, then extras |

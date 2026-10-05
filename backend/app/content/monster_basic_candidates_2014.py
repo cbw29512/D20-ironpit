@@ -27,6 +27,7 @@ _MODELED_2014_TRAITS = {
 }
 _CHARGE_TRAIT_NAMES = frozenset({"Charge", "Pounce", "Trampling Charge"})
 _PIT_BANNED_ACTION_LABELS = frozenset({"teleport", "plane shift"})
+_ARENA_ABSENT_CONTEXT_ACTION_LABELS = frozenset({"ink cloud"})
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 
 
@@ -92,7 +93,12 @@ def supports_parry_reaction_2014(monster: SourceMonster2014) -> bool:
 
 def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
     extras = unsupported_source_actions_2014(monster)
-    allowed_extras = healing_action_names_2014(monster) | innate_spell_names_2014(monster) | _PIT_BANNED_ACTION_LABELS
+    allowed_extras = (
+        healing_action_names_2014(monster)
+        | innate_spell_names_2014(monster)
+        | _PIT_BANNED_ACTION_LABELS
+        | _ARENA_ABSENT_CONTEXT_ACTION_LABELS
+    )
     extras = [
         name for name in extras
         if action_label_from_name(name) not in allowed_extras
