@@ -47,11 +47,15 @@ Do **not** reopen class-progression work merely because an older PR or chat summ
 
 Owner-requested order is now:
 
-1. **Audit and test the universal combat engine.**
-2. Fix any A-class correctness/parity/edition-isolation debt found by that audit.
-3. Use universal engine improvements to unlock the remaining monster catalog in broad semantic batches.
-4. Complete paired-edition monster certification and final RAW audit.
-5. Finish website visual/design polish after combat correctness and roster work are stable.
+1. **Finish the 2014 source monster roster first.**
+2. For each 2014 blocker family, reuse/extend one universal mechanic and certify the 2014 source behavior.
+3. Immediately audit 2024 for direct reuse of that completed 2014-backed primitive.
+4. Do not expand independent 2024 monster mechanics while 2014 remains incomplete.
+5. After 2014 monster completion, process only the remaining genuine 2024 semantic deltas.
+6. Complete paired-edition monster certification and final RAW audit.
+7. Finish website visual/design polish after combat correctness and roster work are stable.
+
+Mechanic identity is edition-agnostic. Regeneration is Regeneration; Magic Resistance is Magic Resistance; a save is a save; resistance is resistance. Edition cards/source data supply the printed parameters and qualifiers.
 
 Pregens are complete and are no longer the active expansion lane.
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+import json
 from pathlib import Path
 import sys
 
@@ -12,7 +13,7 @@ if str(BACKEND) not in sys.path:
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014
-from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014, unsupported_traits_2014
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 
@@ -26,9 +27,16 @@ _ATTACK_FIELDS = (
 
 def _unsupported_traits(monsters):
     return Counter(
-        trait for monster in monsters for trait in monster.trait_names
-        if trait not in ARENA_NEUTRAL_TRAITS_2014 and not is_arena_neutral_bonus_action(trait)
+        trait for monster in monsters for trait in unsupported_traits_2014(monster)
     )
+
+
+def _unsupported_trait_names(monsters):
+    names = defaultdict(list)
+    for monster in monsters:
+        for trait in unsupported_traits_2014(monster):
+            names[trait].append(monster.name)
+    return names
 
 
 def _attack_shapes(monsters):
@@ -76,6 +84,7 @@ def main() -> None:
     print(f"2014 basic candidates compiled: {len(compiled)}/{len(ready)}")
     print("Candidate names:")
     print(", ".join(monster.name for monster in ready))
+    print("2014_BLOCKER_SUMMARY\t" + json.dumps(dict(counts.most_common()), sort_keys=False))
     print("Blockers:")
     for blocker, count in counts.most_common():
         print(f"  {blocker}: {count}")
@@ -90,8 +99,9 @@ def main() -> None:
     for field, count in attack_counts.most_common():
         print(f"  {count:3}  {field}: {' | '.join(sorted(attack_names[field]))}")
     print("Unsupported traits:")
+    trait_names = _unsupported_trait_names(monsters)
     for trait, count in _unsupported_traits(monsters).most_common():
-        print(f"  {count:3}  {trait}")
+        print(f"  {count:3}  {trait}: {' | '.join(trait_names[trait])}")
     if len(monsters) != 327:
         raise RuntimeError(f"Expected 327 source monsters, found {len(monsters)}")
     if len(ready) <= 4:

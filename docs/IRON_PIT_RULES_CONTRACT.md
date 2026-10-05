@@ -333,6 +333,8 @@ Permanent arena rules:
 - A combatant may pass through creature spaces only when the selected ruleset permits it, pays any required Difficult Terrain cost, and may not willingly end normal movement overlapping another creature.
 - Printed Walk, Fly, Climb, Swim, Burrow, Hover, and base-speed data remain source-derived and must not be rewritten merely to make a creature usable in the Pit.
 - Movement modes never become roster-eligibility filters. The magical Pit remains hospitable to aquatic, flying, burrowing, climbing, unusual-biology, breathing, and atmosphere requirements. Every combatant may use its printed movement modes and make attacks as though the Pit were a valid native environment for those modes and its normal biology. Environmental hospitality removes habitat-only penalties such as underwater movement or attack penalties; it does not grant extra Speed, a movement mode the source does not have, free movement, altitude-based immunity, or protection from RAW combat effects that explicitly create Difficult Terrain, Speed penalties, conditions, or other debuffs.
+- **Environmental viability is not environmental presence.** The standard Pit contains no water terrain/context. Aquatic creatures may still breathe, use printed Swim Speed, move, attack, and fight normally because the Pit magically supports their biology. That support does not count as being underwater and does not activate traits, actions, or bonuses that require actual water/underwater terrain, such as Underwater Camouflage, unless a supported combat effect explicitly creates a matching water context.
+- The standard Pit also has no rocky-terrain context. Terrain-only traits such as Stone Camouflage remain inactive when their required terrain is absent. More generally, a terrain/environment-only trait is arena-neutral when its required context is absent and no supported combat effect creates that context.
 - Flying movement remains horizontal-only in the standard Iron Pit. Flyers may use their printed Fly Speed across the battlefield but may not gain altitude to become permanently unreachable.
 - Front row is melee. Back row is ranged and/or casters. Mixed melee-and-ranged cards on one side split: one starts in front as melee, extras start in back as ranged. A back-row melee creature uses a ranged attack when it has one; if it has none, it steps to the front when a front creature dies, or Dodges until it can move up. Front-row combatants close to melee even when they have backup thrown/ranged attacks. Creature names never assign rows.
 - Starting placement is deterministic and footprint-aware. Future manual legal placement is authoritative when explicitly selected by the user.
@@ -662,6 +664,28 @@ Weapon properties, masteries, fighting styles, feats, and two-weapon rules are u
 - Canonical hero construction details live in `CANONICAL_COMBAT_BUILD_POLICY.md`.
 
 ## 25. Monsters
+
+### 25.1 Mandatory 2014-first monster sequencing
+
+Iron Pit completes the **2014 source monster roster first**.
+
+For every 2014 monster mechanic:
+
+1. identify the semantic mechanic;
+2. bind or implement it in the universal engine once;
+3. certify the 2014 source/card against that primitive;
+4. immediately audit matching 2024 source content for reuse;
+5. carry the same primitive forward when semantics match;
+6. add 2024-specific behavior only for a documented rules difference.
+
+The source/card owns parameters. The engine owns mechanics.
+
+Therefore:
+- `Regeneration 10`, `Regeneration 15`, and `Regeneration 20` are the same mechanic with different card data;
+- Acid/Fire suppression, required-positive-HP, and zero-HP timing are Regeneration parameters/qualifiers, not separate edition engines;
+- the same principle applies to saves, recharge, conditions, damage/healing, resistances, immunities, vulnerabilities, Advantage/Disadvantage, auras, reactions, legendary mechanics, and other reusable combat semantics.
+
+No 2024-specific resolver may be introduced for a mechanic already represented correctly by the 2014-backed universal primitive. If the 2024 wording truly changes the semantics, preserve only that delta through ruleset-scoped data or behavior.
 
 The canonical 2024 SRD catalog contains 330 source monsters.
 
