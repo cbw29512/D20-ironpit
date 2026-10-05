@@ -15,6 +15,7 @@ _SAVE_PRONE_IDS = {
     "ankylosaurus", "dire-wolf", "giant-crocodile", "mastiff", "wolf", "worg",
 }
 _SAVE_CONDITION_IDS = {
+    "bone-devil",
     "ghoul",
 }
 _SAVE_DAMAGE_IDS = {
