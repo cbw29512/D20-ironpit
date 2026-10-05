@@ -1,5 +1,7 @@
 # Iron Pit Rules Contract
 
+Chris-locked product decisions are indexed in `docs/IRON_PIT_LOCKED_RULES.md`. This file remains the detailed combat/product contract those locks cite. Do not copy the index into a second spec.
+
 This is the authoritative product/rules contract for Iron Pit. It describes the intended combat model. Repository code, generated certification manifests, and exact-head permanent tests prove implementation status; they do not override this contract by silently changing a rule.
 
 If implementation and this contract disagree, either fix the implementation or make an explicit product decision to revise this file. Historical milestone documents and conversational progress claims are not authority.

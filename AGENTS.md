@@ -10,17 +10,18 @@ Before changing combat code, read:
 
 1. `SOUL.md` — first-read product philosophy: semantic mechanics over source names; universal reuse is mandatory.
 2. `docs/CURRENT_OPERATING_STATUS.md` — current lane, certified counts, parked PRs, CI spend rules.
-3. `docs/IRON_PIT_RULES_CONTRACT.md` — authoritative product/combat rules.
-4. `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md` — specific battlefield/card-token/grid architecture; it supersedes older fixed-formation/deity-closing assumptions wherever they conflict.
-5. `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md` — durable universal-engine and data-binding architecture.
-6. `docs/COMBAT_RESOLUTION_PIPELINE.md` — canonical checks/modifiers/result/state/audit pipeline and source-name dispatch prohibition.
-7. `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md` — authoritative sequencing-phase extension to the universal architecture.
-8. `docs/MAIN_ACTION_SELECTION_CONTRACT.md` — authoritative separation of legal Action candidates from Arena tactical selection.
-9. `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md` — audit/event evidence contract.
-10. `docs/PREGEN_AND_CONTENT_RULES_CONTRACT.md` — source/content binding contract.
-11. `docs/CANONICAL_COMBAT_BUILD_POLICY.md` — canonical pregen construction.
-12. current source/runtime code and permanent tests.
-13. generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
+3. `docs/IRON_PIT_LOCKED_RULES.md` — Chris-locked product rules index. Do not duplicate it.
+4. `docs/IRON_PIT_RULES_CONTRACT.md` — detailed product/combat contract those locks cite.
+5. `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md` — specific battlefield/card-token/grid architecture; it supersedes older fixed-formation/deity-closing assumptions wherever they conflict.
+6. `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md` — durable universal-engine and data-binding architecture.
+7. `docs/COMBAT_RESOLUTION_PIPELINE.md` — canonical checks/modifiers/result/state/audit pipeline and source-name dispatch prohibition.
+8. `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md` — authoritative sequencing-phase extension to the universal architecture.
+9. `docs/MAIN_ACTION_SELECTION_CONTRACT.md` — authoritative separation of legal Action candidates from Arena tactical selection.
+10. `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md` — audit/event evidence contract.
+11. `docs/PREGEN_AND_CONTENT_RULES_CONTRACT.md` — source/content binding contract.
+12. `docs/CANONICAL_COMBAT_BUILD_POLICY.md` — canonical pregen construction.
+13. current source/runtime code and permanent tests.
+14. generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
 
 Repository truth beats chat summaries, historical counts, old milestone prose, uploaded registry dumps, and stale file-library references. External/user-provided files are evidence only until reconciled against the exact current commit.
 
