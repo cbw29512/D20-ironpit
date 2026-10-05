@@ -1,6 +1,6 @@
 # Iron Pit card-art shopping list
 
-Generated from this presentation branch. Hero pregens have framed color portraits. One hundred ninety-nine approved monster silhouettes are framed to 3:4; remaining monsters keep SVG glyphs.
+Generated from this presentation branch. Hero pregens have framed color portraits. Two hundred forty approved monster silhouettes are framed to 3:4; remaining monsters keep SVG glyphs.
 
 **Real-art inventory:** `docs/artifacts/card-art/REAL_ART_INVENTORY.md`. All 24 unique pregens have framed color portraits. Do not treat pipeline demo drawings as source pictures.
 
@@ -69,7 +69,7 @@ Edition isolation is mandatory: do not reuse a 2014 portrait for the 2024 counte
 
 ## Monsters (one portrait per creature per edition)
 
-### 2014 certified card roster — 131 (inaccurate: 2)
+### 2014 certified card roster — 131 (inaccurate: 1)
 
 | Id | Name | Type | CR | Status | Why |
 |---|---|---|---|---|---|
@@ -132,27 +132,27 @@ Edition isolation is mandatory: do not reuse a 2014 portrait for the 2024 counte
 | `2014-green-dragon-wyrmling` | Green Dragon Wyrmling | dragon | 2 | good | Chris-approved 3:4 silhouette; distinct from Adult Green Dragon. |
 | `2014-griffon` | Griffon | monstrosity | 2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-guard` | Guard | humanoid | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-hawk` | Hawk | beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-hawk` | Hawk | beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-hell-hound` | Hell Hound | fiend | 3 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-hill-giant` | Hill Giant | giant | 5 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-hill-giant` | Hill Giant | giant | 5 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-hippogriff` | Hippogriff | monstrosity | 1 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-hunter-shark` | Hunter Shark | beast | 2 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-hyena` | Hyena | beast | 0 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-jackal` | Jackal | beast | 0 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-killer-whale` | Killer Whale | beast | 3 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-kobold` | Kobold | humanoid | 1/8 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-lion` | Lion | beast | 1 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-lizard` | Lizard | beast | 0 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-mammoth` | Mammoth | beast | 6 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-mastiff` | Mastiff | beast | 1/8 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-merfolk` | Merfolk | humanoid | 1/8 | inaccurate | Humanoid-with-legs silhouette omits the printed aquatic anatomy. |
+| `2014-hunter-shark` | Hunter Shark | beast | 2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-hyena` | Hyena | beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-jackal` | Jackal | beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-killer-whale` | Killer Whale | beast | 3 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-kobold` | Kobold | humanoid | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-lion` | Lion | beast | 1 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-lizard` | Lizard | beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-mammoth` | Mammoth | beast | 6 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-mastiff` | Mastiff | beast | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-merfolk` | Merfolk | humanoid | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-minotaur` | Minotaur | monstrosity | 3 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-minotaur-skeleton` | Minotaur Skeleton | undead | 2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-mule` | Mule | beast | 1/8 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-noble` | Noble | humanoid | 1/8 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-mule` | Mule | beast | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-noble` | Noble | humanoid | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-ogre` | Ogre | giant | 2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-ogre-zombie` | Ogre Zombie | undead | 2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-owl` | Owl | beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-owl` | Owl | beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-owlbear` | Owlbear | monstrosity | 3 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-panther` | Panther | beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
 | `2014-pegasus` | Pegasus | celestial | 2 | good | Chris-approved 3:4 silhouette; winged horse, distinct from Unicorn. |
@@ -205,7 +205,7 @@ Edition isolation is mandatory: do not reuse a 2014 portrait for the 2024 counte
 | `2014-young-white-dragon` | Young White Dragon | dragon | 6 | missing | Needs a licensed source picture of this printed creature. |
 | `2014-zombie` | Zombie | undead | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 
-### 2024 certified card roster — 140 (inaccurate: 5)
+### 2024 certified card roster — 140 (inaccurate: 2)
 
 | Id | Name | Type | CR | Status | Why |
 |---|---|---|---|---|---|
@@ -276,29 +276,29 @@ Edition isolation is mandatory: do not reuse a 2014 portrait for the 2024 counte
 | `srd-grimlock` | Grimlock | Aberration | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching catalog row. |
 | `srd-guard` | Guard | Humanoid | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-guard-captain` | Guard Captain | Humanoid | 4 | good | Chris-approved 3:4 silhouette; distinct from Guard. |
-| `srd-hawk` | Hawk | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-hawk` | Hawk | Beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-hell-hound` | Hell Hound | Fiend | 3 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `srd-hill-giant` | Hill Giant | Giant | 5 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-hill-giant` | Hill Giant | Giant | 5 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-hippogriff` | Hippogriff | Monstrosity | 1 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-hippopotamus` | Hippopotamus | Beast | 4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-hobgoblin-warrior` | Hobgoblin Warrior | Fey (Goblinoid) | 1/2 | good | Chris-approved 3:4 silhouette; distinct from Goblin Warrior. |
-| `srd-hunter-shark` | Hunter Shark | Beast | 2 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-hyena` | Hyena | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-jackal` | Jackal | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-killer-whale` | Killer Whale | Beast | 3 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-hunter-shark` | Hunter Shark | Beast | 2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `srd-hyena` | Hyena | Beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `srd-jackal` | Jackal | Beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `srd-killer-whale` | Killer Whale | Beast | 3 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-knight` | Knight | Humanoid | 3 | good | Chris-approved 3:4 silhouette; 2024 runtime plus catalog. |
-| `srd-kobold-warrior` | Kobold Warrior | Dragon | 1/8 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-lemure` | Lemure | Fiend (Devil) | 0 | inaccurate | Generic brute omits the printed molten, bloated devil anatomy. |
-| `srd-lizard` | Lizard | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-kobold-warrior` | Kobold Warrior | Dragon | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `srd-lemure` | Lemure | Fiend (Devil) | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `srd-lizard` | Lizard | Beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-manticore` | Manticore | Monstrosity | 3 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `srd-mastiff` | Mastiff | Beast | 1/8 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-merfolk-skirmisher` | Merfolk Skirmisher | Elemental | 1/8 | inaccurate | Humanoid-with-legs silhouette omits the printed aquatic anatomy. |
+| `srd-mastiff` | Mastiff | Beast | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `srd-merfolk-skirmisher` | Merfolk Skirmisher | Elemental | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-minotaur-skeleton` | Minotaur Skeleton | Undead | 2 | good | Chris-approved 3:4 silhouette; distinct from 2014 Minotaur. |
-| `srd-mule` | Mule | Beast | 1/8 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-noble` | Noble | Humanoid | 1/8 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-mule` | Mule | Beast | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `srd-noble` | Noble | Humanoid | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-ogre` | Ogre | Giant | 2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-ogre-zombie` | Ogre Zombie | Undead | 2 | good | Chris-approved 3:4 silhouette; distinct from Ogre and Zombie. |
-| `srd-owl` | Owl | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-owl` | Owl | Beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-owlbear` | Owlbear | Monstrosity | 3 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-panther` | Panther | Beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
 | `srd-pegasus` | Pegasus | Celestial | 2 | good | Chris-approved 3:4 silhouette; winged horse, distinct from Unicorn. |
