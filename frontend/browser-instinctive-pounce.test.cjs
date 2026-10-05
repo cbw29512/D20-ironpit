@@ -8,6 +8,8 @@ window.IRON_PIT_BROWSER_STATE = {
   distance: (a, b) => Math.abs(a.position_ft - b.position_ft),
 };
 window.IRON_PIT_BROWSER_MODIFIERS = { effectiveSpeed: () => 30 };
+let speedZero = false;
+window.IRON_PIT_BROWSER_GRAPPLE = { speedIsZero: () => speedZero };
 let observedRemaining = null;
 let observedOptions = null;
 window.IRON_PIT_BROWSER_REACTION_MOVEMENT = {
@@ -70,3 +72,14 @@ for (const htmlPath of [path.join(__dirname, "index.html"), path.join(__dirname,
 }
 
 console.log("Browser Instinctive Pounce activation movement wiring is certified.");
+
+
+speedZero = true;
+observedRemaining = null;
+const blocked = window.IRON_PIT_BROWSER_ACTIVATION_MOVEMENT.resolve(
+  20, 3, mover, { heroes: [mover], monsters: [target] },
+  { speedFraction: 0.5, turnKey: "3:hero", provokesOpportunityAttacks: false },
+);
+assert.equal(blocked.events.length, 0, "speed-zero must block all granted activation movement");
+assert.equal(observedRemaining, null, "speed-zero must stop before movement resolution");
+speedZero = false;
