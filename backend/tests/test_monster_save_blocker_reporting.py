@@ -28,10 +28,11 @@ def test_modeled_save_action_is_not_reported_as_complex_blocker() -> None:
     assert "limited-use" in blockers
 
 
-def test_unowned_source_save_remains_fail_closed() -> None:
+def test_source_compiled_save_does_not_require_runtime_template_to_clear_blocker() -> None:
     row = _row("Hell Hound")
     names = {str(item["name"]) for item in load_monster_rows()}
 
     blockers = _source_blockers(row, names)
 
-    assert "save-or-complex-action" in blockers
+    assert "save-or-complex-action" not in blockers
+    assert "limited-use" in blockers
