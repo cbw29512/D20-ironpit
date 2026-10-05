@@ -114,6 +114,7 @@ This check is mandatory even when the source comes from a different class, monst
 
 - The Iron Pit magically makes the environment survivable/hospitable for every creature. Breathing, atmosphere, aquatic biology, flight requirements, and similar survival constraints never exclude a combatant.
 - **Environmental viability does not imply environmental presence.** The standard Pit has no water terrain/context. Aquatic creatures may breathe, swim, move, attack, and fight normally through Pit magic, but are not considered underwater; water/underwater-only traits remain inactive unless a supported effect explicitly creates that context.
+- The standard Pit also has no rocky-terrain context. Environment/terrain-only traits are arena-neutral when their required context is absent and no supported combat effect creates it; do not invent terrain merely to activate a printed trait.
 - Movement modes must never be used as roster eligibility filters.
 - Preserve printed movement modes and printed base speeds exactly as source data; never convert Swim/Fly/Climb/Burrow speed into a generic land/base speed just to make a creature runnable.
 - The battlefield is one authoritative 5-foot square grid with real combatant x/y positions.
