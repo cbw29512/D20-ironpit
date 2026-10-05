@@ -24,7 +24,7 @@ def test_fighter_level_seven_snapshot_adds_great_weapon_fighting_only_to_greatsw
     assert (shortbow.attack_bonus, shortbow.damage_bonus, shortbow.damage_die_minimum) == (4, 1, None)
     assert karnok.progression_features.great_weapon_fighting is True
     assert karnok.progression_features.critical_hit_minimum == 19
-    assert karnok.progression_features.tactical_shift_fraction == 0.5
+    assert [item.source_id for item in karnok.progression_features.bonus_action_follow_up_movement_grants] == ["tactical-shift"]
     assert karnok.attack_action is not None and len(karnok.attack_action.slots) == 2
 
 
