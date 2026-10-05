@@ -1,6 +1,6 @@
 # Iron Pit card-art shopping list
 
-Generated from this presentation branch. Hero pregens have framed color portraits. Seventy approved monster silhouettes are framed to 3:4; remaining monsters keep SVG glyphs.
+Generated from this presentation branch. Hero pregens have framed color portraits. Ninety-seven approved monster silhouettes are framed to 3:4; remaining monsters keep SVG glyphs.
 
 **Real-art inventory:** `docs/artifacts/card-art/REAL_ART_INVENTORY.md`. All 24 unique pregens have framed color portraits. Do not treat pipeline demo drawings as source pictures.
 
@@ -205,12 +205,12 @@ Edition isolation is mandatory: do not reuse a 2014 portrait for the 2024 counte
 | `2014-young-white-dragon` | Young White Dragon | dragon | 6 | missing | Needs a licensed source picture of this printed creature. |
 | `2014-zombie` | Zombie | undead | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 
-### 2024 certified card roster — 140 (inaccurate: 7)
+### 2024 certified card roster — 140 (inaccurate: 6)
 
 | Id | Name | Type | CR | Status | Why |
 |---|---|---|---|---|---|
 | `srd-allosaurus` | Allosaurus | Beast (Dinosaur) | 2 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-animated-armor` | Animated Armor | Construct | 1 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-animated-armor` | Animated Armor | Construct | 1 | good | Chris-approved 3:4 silhouette; empty plate, distinct from other constructs. |
 | `srd-animated-flying-sword` | Animated Flying Sword | Construct | 1/4 | missing | Needs a licensed source picture of this printed creature. |
 | `srd-ankylosaurus` | Ankylosaurus | Beast (Dinosaur) | 3 | inaccurate | Generic reptile omits the printed club tail and armor plates. |
 | `srd-archelon` | Archelon | Beast (Dinosaur) | 4 | missing | Needs a licensed source picture of this printed creature. |
@@ -240,7 +240,7 @@ Edition isolation is mandatory: do not reuse a 2014 portrait for the 2024 counte
 | `srd-draft-horse` | Draft Horse | Beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
 | `srd-druid` | Druid | Humanoid (Druid) | 2 | missing | Needs a licensed source picture of this printed creature. |
 | `srd-eagle` | Eagle | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-earth-elemental` | Earth Elemental | Elemental | 5 | inaccurate | Generic brute omits the printed walking-stone anatomy. |
+| `srd-earth-elemental` | Earth Elemental | Elemental | 5 | good | Chris-approved 3:4 silhouette; rocky humanoid, distinct from the other elementals. |
 | `srd-elk` | Elk | Beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
 | `srd-flying-snake` | Flying Snake | Monstrosity | 1/8 | missing | Needs a licensed source picture of this printed creature. |
 | `srd-frog` | Frog | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |

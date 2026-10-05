@@ -1,6 +1,6 @@
 # Real card-art inventory
 
-Hero pregens have Chris-approved full-color painterly portraits. Seventy approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
+Hero pregens have Chris-approved full-color painterly portraits. Ninety-seven approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
 
 Processed hero assets are `frontend/assets/portraits/heroes/hero-{2014|2024}-{class}.webp` (3:4, about 50–85 KB). One file per character per edition is reused across levels 1–20.
 
@@ -46,7 +46,7 @@ One portrait per character per edition, reused across levels 1–20.
 | `hero-2024-warlock` | Varek Ashenmark | Warlock | `frontend/assets/portraits/heroes/hero-2024-warlock.webp` |
 | `hero-2024-wizard` | Elian Starweaver | Wizard | `frontend/assets/portraits/heroes/hero-2024-wizard.webp` |
 
-## Monsters — 70 approved silhouettes; remaining cards keep the SVG glyph
+## Monsters — 97 approved silhouettes; remaining cards keep the SVG glyph
 
 Live fight-board / picker captures of the wired silhouettes:
 
@@ -68,7 +68,11 @@ Not mapped, even when a similar name exists:
 - Skeleton / Zombie / Crocodile / Wolf / Boar / Guard / Spider / Ape / Snake / Rat / Hawk / Bandit / Cultist / Priest / Mage / Vampire / Pegasus / Medusa art is not reused for Warhorse Skeleton, Ogre Zombie, Giant Crocodile, Dire Wolf, Winter Wolf, Giant Boar, Guard Captain, Giant Wolf Spider, Giant Ape, Giant Constrictor Snake, Giant Rat, Blood Hawk vs Hawk, Bandit Captain, Cultist Fanatic, Priest Acolyte, Archmage, Vampire, Unicorn, or Gorgon
 - Hippopotamus and Manticore exist in the 2024 roster only
 - Berserker, Elephant, Giant Ape, Unicorn, Roc, and Troll have 2014 runtime ids plus 2024 catalog ids; Troll is not in the certified 2024 runtime subset
+- Adult dragon art is not used for the matching young, wyrmling, or ancient rows
+- Air / Earth / Fire / Water Elemental each have their own raster
+- 2024 Azer Sentinel uses `azer.webp`; 2024 Centaur Trooper uses `centaur.webp`
 - `orc.webp` was processed but is not registered: neither the 2014 certified roster, the 2024 certified roster, nor the 330-name 2024 catalog has `orc` / `orc-warrior`
+- `beholder.webp` was processed but is not registered: neither the 2014 certified roster, the 2024 certified roster, nor the 330-name 2024 catalog has `beholder`
 
 | File | 2014 runtime | 2024 runtime | 2024 catalog |
 |---|---|---|---|
@@ -142,5 +146,32 @@ Not mapped, even when a similar name exists:
 | `hydra.webp` | — | — | `srd-5.2.1-2024-monster-hydra` |
 | `medusa.webp` | — | — | `srd-5.2.1-2024-monster-medusa` |
 | `gorgon.webp` | — | — | `srd-5.2.1-2024-monster-gorgon` |
+| `aboleth.webp` | — | — | `srd-5.2.1-2024-monster-aboleth` |
+| `adult-black-dragon.webp` | — | — | `srd-5.2.1-2024-monster-adult-black-dragon` |
+| `adult-blue-dragon.webp` | — | — | `srd-5.2.1-2024-monster-adult-blue-dragon` |
+| `adult-brass-dragon.webp` | — | — | `srd-5.2.1-2024-monster-adult-brass-dragon` |
+| `adult-bronze-dragon.webp` | — | — | `srd-5.2.1-2024-monster-adult-bronze-dragon` |
+| `adult-copper-dragon.webp` | — | — | `srd-5.2.1-2024-monster-adult-copper-dragon` |
+| `adult-gold-dragon.webp` | — | — | `srd-5.2.1-2024-monster-adult-gold-dragon` |
+| `adult-green-dragon.webp` | — | — | `srd-5.2.1-2024-monster-adult-green-dragon` |
+| `adult-red-dragon.webp` | — | — | `srd-5.2.1-2024-monster-adult-red-dragon` |
+| `adult-silver-dragon.webp` | — | — | `srd-5.2.1-2024-monster-adult-silver-dragon` |
+| `adult-white-dragon.webp` | — | — | `srd-5.2.1-2024-monster-adult-white-dragon` |
+| `air-elemental.webp` | — | — | `srd-5.2.1-2024-monster-air-elemental` |
+| `animated-armor.webp` | — | `srd-animated-armor` | `srd-5.2.1-2024-monster-animated-armor` |
+| `ankheg.webp` | — | — | `srd-5.2.1-2024-monster-ankheg` |
+| `azer.webp` | — | — | `srd-5.2.1-2024-monster-azer-sentinel` |
+| `balor.webp` | — | — | `srd-5.2.1-2024-monster-balor` |
+| `barbed-devil.webp` | — | — | `srd-5.2.1-2024-monster-barbed-devil` |
+| `bearded-devil.webp` | — | — | `srd-5.2.1-2024-monster-bearded-devil` |
+| `black-pudding.webp` | — | — | `srd-5.2.1-2024-monster-black-pudding` |
+| `bone-devil.webp` | — | — | `srd-5.2.1-2024-monster-bone-devil` |
+| `centaur.webp` | — | — | `srd-5.2.1-2024-monster-centaur-trooper` |
+| `chuul.webp` | — | — | `srd-5.2.1-2024-monster-chuul` |
+| `cloaker.webp` | — | — | `srd-5.2.1-2024-monster-cloaker` |
+| `earth-elemental.webp` | — | `srd-earth-elemental` | `srd-5.2.1-2024-monster-earth-elemental` |
+| `fire-elemental.webp` | — | — | `srd-5.2.1-2024-monster-fire-elemental` |
+| `pit-fiend.webp` | — | — | `srd-5.2.1-2024-monster-pit-fiend` |
+| `water-elemental.webp` | — | — | `srd-5.2.1-2024-monster-water-elemental` |
 
 Every other monster still uses `figure-portraits.js`. See `ART_SHOPPING_LIST.md` for the remaining missing/inaccurate table.
