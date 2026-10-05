@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+import json
 from pathlib import Path
 import sys
 
@@ -76,6 +77,7 @@ def main() -> None:
     print(f"2014 basic candidates compiled: {len(compiled)}/{len(ready)}")
     print("Candidate names:")
     print(", ".join(monster.name for monster in ready))
+    print("2014_BLOCKER_SUMMARY\t" + json.dumps(dict(counts.most_common()), sort_keys=False))
     print("Blockers:")
     for blocker, count in counts.most_common():
         print(f"  {blocker}: {count}")
