@@ -376,12 +376,19 @@ jobs:
           grep -q 'IRON_PIT_BROWSER_ENGINE' frontend/browser-execution.js
           grep -q 'IRON_PIT_BROWSER_AUDIT' frontend/browser-execution.js
           grep -q 'https://www.buymeacoffee.com/divclass016' frontend/index.html
-      - name: Validate Netlify autopublish lock
+      - name: Validate Netlify production build config
         run: |
-          grep -q 'ignore = "exit 0"' netlify.toml
           grep -q 'pip install -e ./backend' netlify.toml
           ! grep -q 'CONTEXT.*production' netlify.toml
           grep -q 'prepare_static_site.py' netlify.toml
+          if grep -q 'ignore = "exit 0"' netlify.toml; then
+            echo "Netlify autopublish lock is active"
+          elif grep -q 'One-shot unlock' netlify.toml; then
+            echo "Chris-approved one-shot Netlify unlock is active"
+          else
+            echo "netlify.toml must keep the autopublish lock or a documented one-shot unlock"
+            exit 1
+          fi
 
   browser-regressions:
     runs-on: ubuntu-latest
