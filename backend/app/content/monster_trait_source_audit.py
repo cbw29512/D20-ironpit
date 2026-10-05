@@ -17,6 +17,7 @@ _MODELED_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _DECLARATIVE_ATTACK_TRAITS = frozenset({"Blood Frenzy"})
+_DECLARATIVE_PASSIVE_TRAITS = frozenset({"Magic Resistance"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hellish Restoration",
     "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
@@ -74,7 +75,21 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             for attack in attacks
         ):
             issues.append("trait-runtime-missing:blood-frenzy")
-    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_ARENA_NEUTRAL_TRAITS)
+    if "Magic Resistance" in expected:
+        grants = template.progression_features.saving_throw_advantage_grants
+        if not any(
+            grant.source_name == "Magic Resistance"
+            and grant.requires_magical_effect
+            and set(grant.abilities) == {"strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"}
+            for grant in grants
+        ):
+            issues.append("trait-runtime-missing:magic-resistance")
+    certified = (
+        set(_MODELED_TRAITS)
+        | set(_DECLARATIVE_ATTACK_TRAITS)
+        | set(_DECLARATIVE_PASSIVE_TRAITS)
+        | set(_ARENA_NEUTRAL_TRAITS)
+    )
     for name in expected:
         if name not in certified:
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
