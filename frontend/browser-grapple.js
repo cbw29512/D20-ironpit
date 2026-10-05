@@ -5,7 +5,6 @@
   const A = () => window.IRON_PIT_BROWSER_ABILITY_CHECKS;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { speedZero: (state) => state.active_effect_ids.includes("restrained") };
-  const T = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
   const C = () => window.IRON_PIT_BROWSER_DEBUFF_COUNTERS || {
     movementCost: () => null,
     prevented: () => false,
@@ -100,6 +99,8 @@
       (rule) => rule.ability === ability,
     ) || (state.template.failed_d20_test_override_grants || []).some(
       (grant) => (grant.test_kinds || []).includes("ability_check"),
+    ) || (state.template.resource_backed_d20_bonus_dice || []).some(
+      (grant) => (grant.test_kinds || []).includes("ability_check"),
     );
     if (needsCheckRuntime && !A()) throw new Error("Ability-check runtime is not loaded.");
     const resolved = A()?.resolve
@@ -109,11 +110,7 @@
         })
       : { roll, succeeded: roll.total >= source.escape_dc };
     roll = resolved.roll;
-    let success = resolved.succeeded, tactical = null;
-    if (!success && T()) {
-      tactical = T().apply(state, roll, source.escape_dc);
-      roll = tactical.roll; success = tactical.succeeded;
-    }
+    const success = resolved.succeeded;
     E().spend(state, "action");
     if (success) {
       release(state, source.source_id);
@@ -124,9 +121,9 @@
       sequence, round_number: round, event_type: "feature", actor_id: member.combatant_id,
       actor_name: state.template.name, target_id: source.source_id, ability_check_roll: roll,
       check_ability: check, check_dc: source.escape_dc, check_succeeded: success,
-      feature_id: "escape-grapple", resource_remaining: tactical?.used ? tactical.resource_remaining : null,
+      feature_id: "escape-grapple",
       animation: "escape-grapple",
-      description: `${state.template.name} ${success ? "escapes" : "fails to escape"} the grapple${tactical?.used ? " after using Tactical Mind" : ""} with ${check} against DC ${source.escape_dc}.`,
+      description: `${state.template.name} ${success ? "escapes" : "fails to escape"} the grapple with ${check} against DC ${source.escape_dc}.`,
     };
   }
 
