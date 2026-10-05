@@ -7,14 +7,8 @@ from app.content.monster_basic_candidates_2014 import (
 from app.content.monster_charge_profile_2014 import charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_conditional_damage_defenses_2014 import template_defense_fields_2014
-from app.content.monster_healing_2014 import healing_actions_2014, healing_resources_2014
-from app.content.monster_innate_spells_2014 import innate_spell_save_actions_2014
-from app.content.monster_innate_support_2014 import (
-    innate_alternate_spell_casts_2014,
-    innate_condition_removal_2014,
-    innate_spell_resources_2014,
-    innate_timed_self_buffs_2014,
-)
+from app.content.monster_healing_2014 import healing_resources_2014
+from app.content.monster_spell_package_2014 import spell_package_2014
 from app.content.monster_legendary_bindings_2014 import legendary_action_options_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.content.monster_trait_bindings_2014 import (
@@ -139,9 +133,10 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     scores = AbilityScores(**_ability_values(monster))
     movement = _movement(monster)
     attacks = [_attack(monster, attack) for attack in monster.attacks]
+    package = spell_package_2014(monster)
     resources = list(save_resources_2014(monster))
     resources.extend(healing_resources_2014(monster))
-    resources.extend(innate_spell_resources_2014(monster))
+    resources.extend(package.resources)
     legendary_resource = legendary_resistance_resource_2014(monster)
     if legendary_resource is not None:
         resources.append(legendary_resource)
@@ -158,11 +153,10 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
             *features.start_turn_resource_refill_ids,
             "legendary-actions",
         ]
-    innate_grants = innate_alternate_spell_casts_2014(monster)
-    if innate_grants:
+    if package.alternate_spell_cast_grants:
         feature_update["alternate_spell_cast_grants"] = [
             *features.alternate_spell_cast_grants,
-            *innate_grants,
+            *package.alternate_spell_cast_grants,
         ]
     if feature_update:
         features = features.model_copy(update=feature_update)
@@ -175,10 +169,11 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         movement_modes=movement, initiative_bonus=scores.modifier("dexterity"), attacks=attacks,
         primary_attack_id=attacks[0].id, attack_action=_multiattack(monster),
         save_actions=save_capabilities_2014(monster),
-        spell_save_actions=innate_spell_save_actions_2014(monster),
-        timed_self_buff_actions=innate_timed_self_buffs_2014(monster),
-        healing_actions=healing_actions_2014(monster),
-        condition_removal_actions=innate_condition_removal_2014(monster),
+        spell_save_actions=package.spell_save_actions,
+        defensive_spell_actions=package.defensive_spell_actions,
+        timed_self_buff_actions=package.timed_self_buff_actions,
+        healing_actions=package.healing_actions,
+        condition_removal_actions=package.condition_removal_actions,
         legendary_actions=legendary_options,
         resources=resources, recharge_rules=recharge_rules_2014(monster),
         regeneration=regeneration_trait_2014(monster),

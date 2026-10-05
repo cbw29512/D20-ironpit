@@ -23,6 +23,7 @@ _CUNNING_ACTION = "Cunning Action"
 _SNEAK_ATTACK = "Sneak Attack (1/Turn)"
 _MAGIC_WEAPONS = "Magic Weapons"
 _INNATE_SPELLCASTING = "Innate Spellcasting"
+_SPELLCASTING = "Spellcasting"
 _SUNLIGHT_SENSITIVITY = "Sunlight Sensitivity"
 _FINESSE_WEAPON_NAMES_2014 = frozenset({"Dagger", "Rapier", "Scimitar", "Shortsword", "Whip"})
 _SNEAK_ATTACK_D6 = re.compile(
@@ -127,6 +128,10 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             from app.content.monster_innate_support_2014 import supports_innate_spellcasting_2014
             if supports_innate_spellcasting_2014(monster):
                 bound.add(_INNATE_SPELLCASTING)
+        if _SPELLCASTING in monster.trait_names:
+            from app.content.monster_slot_spells_2014 import supports_slot_spellcasting_2014
+            if supports_slot_spellcasting_2014(monster):
+                bound.add(_SPELLCASTING)
         if _SUNLIGHT_SENSITIVITY in monster.trait_names:
             bound.add(_SUNLIGHT_SENSITIVITY)
         if supports_regeneration_2014(monster):

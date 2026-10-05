@@ -14,8 +14,11 @@ logger = logging.getLogger(__name__)
 # These printed innate spells do not change Iron Pit combat state.
 ARENA_NEUTRAL_INNATE_SPELLS_2014 = frozenset({
     "detect-evil-and-good",
+    "detect-magic",
     "druidcraft",
+    "light",
     "pass-without-trace",
+    "thaumaturgy",
 })
 _PIT_BANNED_INNATE_SPELLS_2014 = frozenset({
     "teleport",

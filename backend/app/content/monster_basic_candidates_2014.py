@@ -10,7 +10,11 @@ from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_conditional_damage_defenses_2014 import remaining_unsupported_defense_text_2014
 from app.content.monster_healing_2014 import healing_action_names_2014, supports_healing_2014
-from app.content.monster_innate_support_2014 import innate_spell_names_2014, supports_innate_spellcasting_2014
+from app.content.monster_spell_package_2014 import (
+    bound_spell_action_names_2014,
+    bound_spell_resource_ids_2014,
+    supports_monster_spellcasting_2014,
+)
 from app.content.monster_legendary_bindings_2014 import supports_legendary_actions_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_save_capabilities_2014 import supports_recharge_rules_2014, unsupported_save_actions_2014, unsupported_source_actions_2014
@@ -100,7 +104,7 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
     extras = unsupported_source_actions_2014(monster)
     allowed_extras = (
         healing_action_names_2014(monster)
-        | innate_spell_names_2014(monster)
+        | bound_spell_action_names_2014(monster)
         | _PIT_BANNED_ACTION_LABELS
         | _ARENA_ABSENT_CONTEXT_ACTION_LABELS
         | _ARENA_UNAVAILABLE_SUMMON_ACTION_LABELS
@@ -150,9 +154,8 @@ def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     if supports_healing_2014(monster):
         from app.content.monster_healing_2014 import healing_actions_2014
         bound_limited.update(action.resource_id for action in healing_actions_2014(monster) if action.resource_id)
-    if supports_innate_spellcasting_2014(monster):
-        from app.content.monster_innate_support_2014 import innate_spell_resources_2014
-        bound_limited.update(item.id for item in innate_spell_resources_2014(monster))
+    if supports_monster_spellcasting_2014(monster):
+        bound_limited.update(bound_spell_resource_ids_2014(monster))
     unbound_limited = {
         key: value for key, value in monster.limited_action_uses.items()
         if key not in bound_limited
@@ -165,9 +168,8 @@ def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
         "healing": monster.healing_actions if not supports_healing_2014(monster) else None,
         "limited-use": unbound_limited,
         "spellcasting": (
-            None if (
-                supports_innate_spellcasting_2014(monster) and not monster.spellcasting
-            ) else (monster.innate_spellcasting or monster.spellcasting)
+            None if supports_monster_spellcasting_2014(monster)
+            else (monster.innate_spellcasting or monster.spellcasting)
         ),
         "zero-hp": monster.zero_hp_prevention,
         "regeneration": monster.regeneration if not supports_regeneration_2014(monster) else None,
