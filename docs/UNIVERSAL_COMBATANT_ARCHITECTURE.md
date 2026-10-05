@@ -97,7 +97,17 @@ This checklist is mandatory on every implementation pass:
 11. Only after proving no current primitive or composition can represent the behavior may `ENGINE_TRULY_MISSING` justify new universal engine code.
 12. After adding a genuinely new primitive, immediately re-audit heroes and monsters for other abilities that can now reuse it.
 
-**2014-first pregen rule:** for overlapping class progressions, finish/reconcile the 2014 mechanic first, bind it to universal capabilities, then carry all mechanically compatible behavior into 2024 and implement only the true 2024 differences.
+**2014-first edition rule:** for overlapping content, finish/reconcile the 2014 mechanic first, bind it to universal capabilities, then carry all mechanically compatible behavior into 2024 and implement only the true 2024 differences.
+
+This rule applies to **monsters as well as pregens**. The 2014 monster roster is completed before 2024 monster expansion resumes. When both editions print the same mechanic, there is one shared engine implementation. The edition card/source supplies the printed values and qualifiers.
+
+Examples:
+- Regeneration is one primitive; the card supplies amount, positive-HP requirement, suppression damage types, and zero-HP lifecycle.
+- Magic Resistance is one contextual saving-throw Advantage primitive; the source supplies the magical-effect qualifier.
+- Recharge is one resource/recharge primitive; the source supplies the die threshold and resource.
+- Grappled, Prone, resistance, immunity, vulnerability, saves, healing, and damage remain the same universal mechanics across editions unless the actual rules semantics differ.
+
+A different number is not a different mechanic. A different source name is not a different mechanic. A different edition is not, by itself, a different mechanic.
 
 If there is uncertainty about whether two abilities are semantically the same, stop and ask Chris before creating new engine behavior.
 
