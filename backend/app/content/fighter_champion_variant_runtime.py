@@ -7,6 +7,7 @@ from app.content.character_math import fixed_hit_points, proficiency_bonus, savi
 from app.content.fighter_champion_variant_profiles import build_fighter_champion_variant_profile
 from app.content.fighter_champion_variant_specs import FIGHTER_CHAMPION_VARIANT_SPECS
 from app.content.fighting_style_rules import has_fighting_style
+from app.content.fighter_second_wind import second_wind_healing_action
 from app.content.weapon_catalog import build_weapon
 from app.domain.actions import AttackActionDefinition, AttackActionSlot
 from app.domain.bonus_action_follow_up import BonusActionFollowUpMovementGrant
@@ -136,6 +137,7 @@ def compile_fighter_champion_variant(build_id: str, level: int) -> CombatantTemp
             off_hand="shield" if spec.shield else (spec.secondary_weapons[0] if build_id == "dual-wield" else None),
             body_style="humanoid",
         ),
-        resources=_resources(level), progression_features=_progression(level, profile.fighting_styles, build_id),
+        resources=_resources(level), healing_actions=[second_wind_healing_action(level)],
+        progression_features=_progression(level, profile.fighting_styles, build_id),
         source="; ".join(profile.source_references),
     )
