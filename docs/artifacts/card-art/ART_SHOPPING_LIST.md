@@ -1,6 +1,6 @@
 # Iron Pit card-art shopping list
 
-Generated from this presentation branch. Hero pregens have framed color portraits. One hundred forty-nine approved monster silhouettes are framed to 3:4; remaining monsters keep SVG glyphs.
+Generated from this presentation branch. Hero pregens have framed color portraits. One hundred seventy-four approved monster silhouettes are framed to 3:4; remaining monsters keep SVG glyphs.
 
 **Real-art inventory:** `docs/artifacts/card-art/REAL_ART_INVENTORY.md`. All 24 unique pregens have framed color portraits. Do not treat pipeline demo drawings as source pictures.
 
@@ -98,23 +98,23 @@ Edition isolation is mandatory: do not reuse a 2014 portrait for the 2024 counte
 | `2014-crocodile` | Crocodile | beast | 1/2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-deer` | Deer | beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-dire-wolf` | Dire Wolf | beast | 1 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-draft-horse` | Draft Horse | beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-eagle` | Eagle | beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-draft-horse` | Draft Horse | beast | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-eagle` | Eagle | beast | 0 | good | Chris-approved 3:4 silhouette; distinct from Giant Eagle. |
 | `2014-elephant` | Elephant | beast | 4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-elk` | Elk | beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-fire-giant` | Fire Giant | giant | 9 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-elk` | Elk | beast | 1/4 | good | Chris-approved 3:4 silhouette; distinct from Giant Elk. |
+| `2014-fire-giant` | Fire Giant | giant | 9 | good | Chris-approved 3:4 silhouette; distinct from Frost Giant. |
 | `2014-flying-snake` | Flying Snake | beast | 1/8 | good | Chris-approved 3:4 silhouette; winged snake, distinct from Constrictor Snake. |
-| `2014-frost-giant` | Frost Giant | giant | 8 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-frost-giant` | Frost Giant | giant | 8 | good | Chris-approved 3:4 silhouette; distinct from Fire Giant. |
 | `2014-giant-ape` | Giant Ape | beast | 7 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-giant-badger` | Giant Badger | beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-giant-bat` | Giant Bat | beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-giant-centipede` | Giant Centipede | beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-giant-badger` | Giant Badger | beast | 1/4 | good | Chris-approved 3:4 silhouette; distinct from Badger. |
+| `2014-giant-bat` | Giant Bat | beast | 1/4 | good | Chris-approved 3:4 silhouette; distinct from Bat. |
+| `2014-giant-centipede` | Giant Centipede | beast | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-giant-constrictor-snake` | Giant Constrictor Snake | beast | 2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-giant-crab` | Giant Crab | beast | 1/8 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-giant-crab` | Giant Crab | beast | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-giant-crocodile` | Giant Crocodile | beast | 5 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-giant-eagle` | Giant Eagle | beast | 1 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-giant-elk` | Giant Elk | beast | 2 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-giant-fire-beetle` | Giant Fire Beetle | beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-giant-elk` | Giant Elk | beast | 2 | good | Chris-approved 3:4 silhouette; distinct from Elk. |
+| `2014-giant-fire-beetle` | Giant Fire Beetle | beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-giant-goat` | Giant Goat | beast | 1/2 | missing | Needs a licensed source picture of this printed creature. |
 | `2014-giant-lizard` | Giant Lizard | beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
 | `2014-giant-owl` | Giant Owl | beast | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
@@ -237,24 +237,24 @@ Edition isolation is mandatory: do not reuse a 2014 portrait for the 2024 counte
 | `srd-cultist` | Cultist | Humanoid | 1/8 | good | Chris-approved 3:4 silhouette; distinct from Cultist Fanatic. |
 | `srd-deer` | Deer | Beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-dire-wolf` | Dire Wolf | Beast | 1 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `srd-draft-horse` | Draft Horse | Beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-druid` | Druid | Humanoid (Druid) | 2 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-eagle` | Eagle | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-draft-horse` | Draft Horse | Beast | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `srd-druid` | Druid | Humanoid (Druid) | 2 | good | Chris-approved 3:4 silhouette; monster NPC, distinct from hero Druid portraits. |
+| `srd-eagle` | Eagle | Beast | 0 | good | Chris-approved 3:4 silhouette; distinct from Giant Eagle. |
 | `srd-earth-elemental` | Earth Elemental | Elemental | 5 | good | Chris-approved 3:4 silhouette; rocky humanoid, distinct from the other elementals. |
-| `srd-elk` | Elk | Beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-elk` | Elk | Beast | 1/4 | good | Chris-approved 3:4 silhouette; distinct from Giant Elk. |
 | `srd-flying-snake` | Flying Snake | Monstrosity | 1/8 | good | Chris-approved 3:4 silhouette; winged snake, distinct from Constrictor Snake. |
-| `srd-frog` | Frog | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-frog` | Frog | Beast | 0 | good | Chris-approved 3:4 silhouette; distinct from Giant Frog. |
 | `srd-gargoyle` | Gargoyle | Elemental | 2 | good | Chris-approved 3:4 silhouette; 2024 runtime plus catalog. |
-| `srd-giant-badger` | Giant Badger | Beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-giant-bat` | Giant Bat | Beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-giant-boar` | Giant Boar | Beast | 2 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-giant-centipede` | Giant Centipede | Beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-giant-badger` | Giant Badger | Beast | 1/4 | good | Chris-approved 3:4 silhouette; distinct from Badger. |
+| `srd-giant-bat` | Giant Bat | Beast | 1/4 | good | Chris-approved 3:4 silhouette; distinct from Bat. |
+| `srd-giant-boar` | Giant Boar | Beast | 2 | good | Chris-approved 3:4 silhouette; distinct from Boar. |
+| `srd-giant-centipede` | Giant Centipede | Beast | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-giant-constrictor-snake` | Giant Constrictor Snake | Beast | 2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `srd-giant-crab` | Giant Crab | Beast | 1/8 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-giant-crab` | Giant Crab | Beast | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-giant-crocodile` | Giant Crocodile | Beast | 5 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-giant-eagle` | Giant Eagle | Celestial | 1 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `srd-giant-elk` | Giant Elk | Celestial | 2 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-giant-fire-beetle` | Giant Fire Beetle | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-giant-elk` | Giant Elk | Celestial | 2 | good | Chris-approved 3:4 silhouette; distinct from Elk. |
+| `srd-giant-fire-beetle` | Giant Fire Beetle | Beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-giant-goat` | Giant Goat | Beast | 1/2 | missing | Needs a licensed source picture of this printed creature. |
 | `srd-giant-lizard` | Giant Lizard | Beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
 | `srd-giant-owl` | Giant Owl | Celestial | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |

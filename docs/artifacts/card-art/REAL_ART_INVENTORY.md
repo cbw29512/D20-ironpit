@@ -1,6 +1,6 @@
 # Real card-art inventory
 
-Hero pregens have Chris-approved full-color painterly portraits. One hundred forty-nine approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
+Hero pregens have Chris-approved full-color painterly portraits. One hundred seventy-four approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
 
 Processed hero assets are `frontend/assets/portraits/heroes/hero-{2014|2024}-{class}.webp` (3:4, about 50–85 KB). One file per character per edition is reused across levels 1–20.
 
@@ -46,7 +46,7 @@ One portrait per character per edition, reused across levels 1–20.
 | `hero-2024-warlock` | Varek Ashenmark | Warlock | `frontend/assets/portraits/heroes/hero-2024-warlock.webp` |
 | `hero-2024-wizard` | Elian Starweaver | Wizard | `frontend/assets/portraits/heroes/hero-2024-wizard.webp` |
 
-## Monsters — 149 approved silhouettes; remaining cards keep the SVG glyph
+## Monsters — 174 approved silhouettes; remaining cards keep the SVG glyph
 
 Live fight-board / picker captures of the wired silhouettes:
 
@@ -74,6 +74,8 @@ Not mapped, even when a similar name exists:
 - Bandit and Bandit Captain are distinct; Cultist and Cultist Fanatic are distinct
 - Animated Armor, Animated Flying Sword, and Animated Rug of Smothering are distinct
 - Bugbear Stalker is distinct from Bugbear Warrior
+- Eagle / Elk / Frog / Boar / Badger / Bat are distinct from their Giant counterparts
+- Fire Giant and Frost Giant are distinct; monster Druid art is not the hero Druid portrait
 - 2024 Azer Sentinel uses `azer.webp`; 2024 Centaur Trooper uses `centaur.webp`
 - `orc.webp` was processed but is not registered: neither the 2014 certified roster, the 2024 certified roster, nor the 330-name 2024 catalog has `orc` / `orc-warrior`
 - `beholder.webp` was processed but is not registered: neither the 2014 certified roster, the 2024 certified roster, nor the 330-name 2024 catalog has `beholder`
@@ -230,5 +232,30 @@ Not mapped, even when a similar name exists:
 | `deer.webp` | `2014-deer` | `srd-deer` | `srd-5.2.1-2024-monster-deer` |
 | `deva.webp` | — | — | `srd-5.2.1-2024-monster-deva` |
 | `dragon-turtle.webp` | — | — | `srd-5.2.1-2024-monster-dragon-turtle` |
+| `djinni.webp` | — | — | `srd-5.2.1-2024-monster-djinni` |
+| `doppelganger.webp` | — | — | `srd-5.2.1-2024-monster-doppelganger` |
+| `draft-horse.webp` | `2014-draft-horse` | `srd-draft-horse` | `srd-5.2.1-2024-monster-draft-horse` |
+| `dretch.webp` | — | — | `srd-5.2.1-2024-monster-dretch` |
+| `drider.webp` | — | — | `srd-5.2.1-2024-monster-drider` |
+| `druid.webp` | — | `srd-druid` | `srd-5.2.1-2024-monster-druid` |
+| `dust-mephit.webp` | — | — | `srd-5.2.1-2024-monster-dust-mephit` |
+| `eagle.webp` | `2014-eagle` | `srd-eagle` | `srd-5.2.1-2024-monster-eagle` |
+| `efreeti.webp` | — | — | `srd-5.2.1-2024-monster-efreeti` |
+| `elk.webp` | `2014-elk` | `srd-elk` | `srd-5.2.1-2024-monster-elk` |
+| `erinyes.webp` | — | — | `srd-5.2.1-2024-monster-erinyes` |
+| `ettercap.webp` | — | — | `srd-5.2.1-2024-monster-ettercap` |
+| `fire-giant.webp` | `2014-fire-giant` | — | `srd-5.2.1-2024-monster-fire-giant` |
+| `flesh-golem.webp` | — | — | `srd-5.2.1-2024-monster-flesh-golem` |
+| `frog.webp` | — | `srd-frog` | `srd-5.2.1-2024-monster-frog` |
+| `frost-giant.webp` | `2014-frost-giant` | — | `srd-5.2.1-2024-monster-frost-giant` |
+| `ghast.webp` | — | — | `srd-5.2.1-2024-monster-ghast` |
+| `giant-badger.webp` | `2014-giant-badger` | `srd-giant-badger` | `srd-5.2.1-2024-monster-giant-badger` |
+| `giant-bat.webp` | `2014-giant-bat` | `srd-giant-bat` | `srd-5.2.1-2024-monster-giant-bat` |
+| `giant-boar.webp` | — | `srd-giant-boar` | `srd-5.2.1-2024-monster-giant-boar` |
+| `giant-centipede.webp` | `2014-giant-centipede` | `srd-giant-centipede` | `srd-5.2.1-2024-monster-giant-centipede` |
+| `giant-crab.webp` | `2014-giant-crab` | `srd-giant-crab` | `srd-5.2.1-2024-monster-giant-crab` |
+| `giant-elk.webp` | `2014-giant-elk` | `srd-giant-elk` | `srd-5.2.1-2024-monster-giant-elk` |
+| `giant-fire-beetle.webp` | `2014-giant-fire-beetle` | `srd-giant-fire-beetle` | `srd-5.2.1-2024-monster-giant-fire-beetle` |
+| `giant-frog.webp` | — | — | `srd-5.2.1-2024-monster-giant-frog` |
 
 Every other monster still uses `figure-portraits.js`. See `ART_SHOPPING_LIST.md` for the remaining missing/inaccurate table.
