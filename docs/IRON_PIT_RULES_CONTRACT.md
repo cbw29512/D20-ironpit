@@ -650,6 +650,28 @@ Weapon properties, masteries, fighting styles, feats, and two-weapon rules are u
 
 ## 25. Monsters
 
+### 25.1 Mandatory 2014-first monster sequencing
+
+Iron Pit completes the **2014 source monster roster first**.
+
+For every 2014 monster mechanic:
+
+1. identify the semantic mechanic;
+2. bind or implement it in the universal engine once;
+3. certify the 2014 source/card against that primitive;
+4. immediately audit matching 2024 source content for reuse;
+5. carry the same primitive forward when semantics match;
+6. add 2024-specific behavior only for a documented rules difference.
+
+The source/card owns parameters. The engine owns mechanics.
+
+Therefore:
+- `Regeneration 10`, `Regeneration 15`, and `Regeneration 20` are the same mechanic with different card data;
+- Acid/Fire suppression, required-positive-HP, and zero-HP timing are Regeneration parameters/qualifiers, not separate edition engines;
+- the same principle applies to saves, recharge, conditions, damage/healing, resistances, immunities, vulnerabilities, Advantage/Disadvantage, auras, reactions, legendary mechanics, and other reusable combat semantics.
+
+No 2024-specific resolver may be introduced for a mechanic already represented correctly by the 2014-backed universal primitive. If the 2024 wording truly changes the semantics, preserve only that delta through ruleset-scoped data or behavior.
+
 The canonical 2024 SRD catalog contains 330 source monsters.
 
 Monster promotion path:
