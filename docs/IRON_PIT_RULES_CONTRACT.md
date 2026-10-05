@@ -205,18 +205,22 @@ Audit annotation is evidence-only and must never change combat resolution.
 - If a printed delay or required trigger is genuinely longer than a plausible Iron Pit fight, classify and re-evaluate the mechanic before certification. Do not silently wait out combat, silently fire it early, or ignore an outcome-changing delayed effect.
 - Delayed mechanics must use fresh per-fight runtime state and reset completely between matches.
 
-## 7. Initiative — Iron Pit house rule
+## 7. Initiative
 
-Normal initiative bonuses and ruleset-specific initiative mechanics apply, with these Iron Pit ordering rules:
+Initiative is a Dexterity check. Normal initiative bonuses and ruleset-specific Initiative mechanics apply, including Advantage and Disadvantage on Initiative.
 
-- A natural 20 initiative roll is in the top-priority bucket.
-- A natural 1 initiative roll is in the bottom-priority bucket.
-- Natural 20/1 initiative does not grant or remove actions, attacks, or rounds.
-- Within the relevant bucket, preserve the normal initiative result ordering unless an exact tie remains.
-- Any unresolved initiative tie is broken by pure d20 rerolls among only the tied combatants.
-- Repeat tie rerolls until a complete order exists.
-- Multiple natural-20 or natural-1 rollers use the same tie-reroll process among themselves.
-- Surprise is resolved separately according to the selected ruleset; it does not automatically move a creature to the bottom of initiative.
+- A natural 20 on Initiative has no special ordering rule. The check total is the initiative count.
+- A natural 1 on Initiative remains in the bottom-priority bucket as an Iron Pit house rule. This is separate from the combat house rule that a natural 1 on an attack roll ends that attacker's current turn.
+- Natural 20/1 Initiative does not grant or remove actions, attacks, or rounds.
+- Surprise is resolved separately according to the selected ruleset; it does not automatically move a creature to the bottom of Initiative.
+
+Tie policy (deterministic simulator equivalent of RAW decision ownership):
+
+- 2024 and 2014 RAW give decision ownership rather than a reroll: players decide PC/PC ties; the DM decides monster/monster ties and PC/monster ties.
+- Iron Pit has no live player or DM during resolution, so both engines use this deterministic equivalent and never reroll Initiative to break a tie.
+- Higher initiative count acts first. On an exact tied count inside the same priority bucket: PC/PC uses earlier party/roster order; monster/monster uses earlier encounter order; PC/monster lets heroes act before monsters, then uses the same-side encounter order.
+- Identical monsters that share one RAW group roll are one initiative count, not a tie.
+- First-round extra turns keep their offset initiative count in the normal priority bucket and resolve after any normal turn at that same count.
 
 ## 7.1 Opening buff on arena entry
 
