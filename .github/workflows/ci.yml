@@ -47,6 +47,14 @@ jobs:
         run: |
           python scripts/export_browser_monsters.py
           python scripts/export_browser_monsters_2014.py
+      - name: Upload generated browser monster artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-monsters-${{ github.sha }}
+          path: |
+            frontend/browser-monsters-generated.js
+            frontend/browser-monsters-2014.js
+          retention-days: 1
       - name: Generate certification manifest candidates
         run: python scripts/verify_certification_manifests.py --write
       - name: Refresh generated hero progression artifacts
