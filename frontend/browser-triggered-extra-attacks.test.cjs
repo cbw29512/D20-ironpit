@@ -61,6 +61,7 @@ const setup = { heroes: [hero], monsters: [] };
 
 {
   const troll = member();
+  setup.monsters = [troll];
   troll.state.current_hp = 60;
   troll.state.damage_taken_this_turn_by_type.slashing = 15;
   let result = window.IRON_PIT_BROWSER_TRIGGERED_EXTRA_ATTACKS.resolveAfterTurn(1, 1, troll, setup);
@@ -83,6 +84,7 @@ const setup = { heroes: [hero], monsters: [] };
 
 {
   const troll = member();
+  setup.monsters = [troll];
   for (let expected = 1; expected <= 4; expected += 1) {
     troll.state.damage_taken_this_turn_by_type.slashing = 20;
     attackCalls.length = 0;
@@ -100,7 +102,31 @@ const setup = { heroes: [hero], monsters: [] };
 }
 
 {
+  // End-any-turn stack timing: another creature ends its turn after damaging the Troll.
   const troll = member();
+  setup.monsters = [troll];
+  troll.state.current_hp = 40;
+  troll.state.damage_taken_this_turn_by_type.slashing = 15;
+  attackCalls.length = 0;
+  let result = window.IRON_PIT_BROWSER_TRIGGERED_EXTRA_ATTACKS.resolveAfterTurn(1, 1, hero, setup);
+  assert.deepEqual(result.events.map((event) => event.event_type), ["feature"]);
+  assert.equal(troll.state.triggered_extra_attack_stack_counts["loathsome-limbs"], 1);
+  assert.equal(attackCalls.length, 0);
+
+  window.IRON_PIT_BROWSER_TRIGGERED_EXTRA_ATTACKS.clearTurnDamage(setup);
+  assert.deepEqual(troll.state.damage_taken_this_turn_by_type, {});
+  assert.deepEqual(hero.state.damage_taken_this_turn_by_type, {});
+
+  attackCalls.length = 0;
+  result = window.IRON_PIT_BROWSER_TRIGGERED_EXTRA_ATTACKS.resolveAfterTurn(result.sequence, 1, troll, setup);
+  assert.deepEqual(result.events.map((event) => event.event_type), ["attack"]);
+  assert.equal(troll.state.triggered_extra_attack_stack_counts["loathsome-limbs"], 1);
+  assert.deepEqual(attackCalls, ["attached-limb-rend"]);
+}
+
+{
+  const troll = member();
+  setup.monsters = [troll];
   troll.state.triggered_extra_attack_stack_counts["loathsome-limbs"] = 2;
   troll.state.source_owned_exhaustion_levels["loathsome-limbs"] = 2;
   troll.state.exhaustion_level = 3;
