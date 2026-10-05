@@ -332,6 +332,14 @@ def _detected_monster_mechanics(row: dict[str, object], source_blockers: list[st
         detected.add("multiattack")
     if re.search(r"\bSaving Throw:", actions, re.I):
         detected.add("saving-throw-action")
+    if re.search(
+        r"\b(blinded|charmed|deafened|frightened|grappled|incapacitated|paralyzed|"
+        r"petrified|poisoned|prone|restrained|stunned|unconscious|"
+        r"push(?:es|ed)?|pull(?:s|ed)?|swallow(?:s|ed)?)\b",
+        actions,
+        re.I,
+    ):
+        detected.add("condition-or-control")
     if str(row.get("traits", "")).strip():
         detected.add("trait")
     if str(row.get("bonusActions", "")).strip():

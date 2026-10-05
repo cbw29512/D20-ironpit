@@ -12,6 +12,7 @@ from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
 from app.content.monster_save_for_half_2024 import compiled_save_signatures
+from app.content.monster_physical_control_2024 import physical_control_coverage_matches
 from app.content.monster_source_audit import _save_ownership_matches, _source_save_signatures
 from app.content.roster import build_arena_roster
 from app.content.monster_reaction_source_audit import (
@@ -134,7 +135,7 @@ def _source_blockers(
     )
     if _NON_SAVE_COMPLEX_ACTION.search(actions) or (save_text and not save_is_modeled):
         blockers.append("save-or-complex-action")
-    if _CONDITION_OR_CONTROL.search(actions):
+    if _CONDITION_OR_CONTROL.search(actions) and not physical_control_coverage_matches(row):
         blockers.append("condition-or-control")
     if _unmodeled_action_rider(actions):
         blockers.append("unsupported-action-rider")
