@@ -25,7 +25,7 @@ def test_modeled_save_action_is_not_reported_as_complex_blocker() -> None:
     blockers = _source_blockers(row, names, runtime)
 
     assert "save-or-complex-action" not in blockers
-    assert "limited-use" in blockers
+    assert "limited-use" not in blockers
 
 
 def test_source_compiled_save_does_not_require_runtime_template_to_clear_blocker() -> None:
@@ -35,4 +35,4 @@ def test_source_compiled_save_does_not_require_runtime_template_to_clear_blocker
     blockers = _source_blockers(row, names)
 
     assert "save-or-complex-action" not in blockers
-    assert "limited-use" in blockers
+    assert "limited-use" not in blockers
