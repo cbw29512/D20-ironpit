@@ -17,12 +17,13 @@ _MODELED_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _DECLARATIVE_ATTACK_TRAITS = frozenset({"Blood Frenzy"})
+_DECLARATIVE_TEMPLATE_TRAITS = frozenset({"Magic Resistance", "Regeneration"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hellish Restoration",
     "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
     "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness", "Mimicry",
     "Earth Glide", "Running Leap", "Shark Telepathy", "Spider Climb", "Standing Leap", "Sunlight Sensitivity",
-    "Siege Monster", "Training", "Treasure Sense", "Water Breathing", "Web Walker",
+    "Siege Monster", "Training", "Treasure Sense", "Troll Spawn", "Water Breathing", "Web Walker",
 })
 
 
@@ -67,6 +68,20 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             issues.append(f"trait-runtime-missing:{runtime_trait.value}")
         elif runtime_has and not source_has:
             issues.append(f"trait-source-missing:{runtime_trait.value}")
+    if "Magic Resistance" in expected:
+        grants = template.progression_features.saving_throw_advantage_grants
+        matching = [grant for grant in grants if grant.source_id == "magic-resistance"]
+        if len(matching) != 1 or not matching[0].requires_magical_effect or set(matching[0].abilities) != {
+            "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"
+        }:
+            issues.append("trait-runtime-missing:magic-resistance")
+    elif any(grant.source_id == "magic-resistance" for grant in template.progression_features.saving_throw_advantage_grants):
+        issues.append("trait-source-missing:magic-resistance")
+    if "Regeneration" in expected:
+        if template.regeneration is None:
+            issues.append("trait-runtime-missing:regeneration")
+    elif template.regeneration is not None:
+        issues.append("trait-source-missing:regeneration")
     if "Blood Frenzy" in expected:
         attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
         if not attacks or any(
@@ -74,7 +89,7 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             for attack in attacks
         ):
             issues.append("trait-runtime-missing:blood-frenzy")
-    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_ARENA_NEUTRAL_TRAITS)
+    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_DECLARATIVE_TEMPLATE_TRAITS) | set(_ARENA_NEUTRAL_TRAITS)
     for name in expected:
         if name not in certified:
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
