@@ -25,25 +25,25 @@
   function summary(state) {
     if (!state.catalog) return "";
     if (state.ruleset === "2014") {
-      return `${state.catalog.hero_ready_count}/${state.catalog.hero_count} certified 2014 hero levels · ${state.catalog.monster_ready_count}/${state.catalog.monster_count} certified 2014 monsters · Beta.`;
+      return `${state.catalog.hero_ready_count} heroes · ${state.catalog.monster_ready_count} monsters ready for 2014 fights.`;
     }
-    return `${state.catalog.hero_ready_count}/${state.catalog.hero_count} certified 2024 hero levels · ${state.catalog.monster_ready_count}/${state.catalog.monster_count} certified 2024 monsters.`;
+    return `${state.catalog.hero_ready_count} heroes · ${state.catalog.monster_ready_count} monsters ready for 2024 fights.`;
   }
 
   function update(state) {
     try {
       const is2014 = state.ruleset === "2014";
-      const eyebrow = el("ruleset-eyebrow") || document.querySelector("header.hero p.eyebrow");
+      const eyebrow = el("ruleset-eyebrow") || document.querySelector("header.pit-chrome p.eyebrow, header.hero p.eyebrow");
       const editionNote = el("ruleset-edition-note");
-      if (eyebrow) eyebrow.textContent = is2014 ? "D&D 5e 2014 · SRD 5.1 · BETA" : "D&D 5e 2024 · SRD 5.2.1";
+      if (eyebrow) eyebrow.textContent = is2014 ? "D&D 5e 2014" : "D&D 5e 2024";
       if (editionNote) editionNote.textContent = is2014
-        ? "2014 Beta is live. Only certified 2014 pregens and monsters are selectable. Switch to 2024 for that edition's certified roster."
-        : "2024 certified pregens and monsters are selectable. Edition isolation stays absolute: 2014 cards cannot enter a 2024 fight.";
+        ? "2014 is selected. Switch to 2024 to use that edition's heroes and monsters."
+        : "2024 is selected. Switch to 2014 to use that edition's heroes and monsters.";
       const auditNote = document.querySelector(".log-panel .rules-note");
-      if (auditNote) auditNote.textContent = is2014 ? "D&D 2014 / SRD 5.1 · Beta · expandable rules audit" : "D&D 2024 / SRD 5.2.1 · expandable rules audit";
+      if (auditNote) auditNote.textContent = is2014 ? "2014 rules" : "2024 rules";
       const left = document.querySelector(".hero-field .field-heading span"), right = document.querySelector(".monster-field .field-heading span");
-      if (left) left.textContent = "HERO CARDS";
-      if (right) right.textContent = "MONSTER CARDS";
+      if (left) left.textContent = "Heroes";
+      if (right) right.textContent = "Monsters";
       el("ruleset-summary").textContent = summary(state);
       el("ruleset-control").dataset.ruleset = state.ruleset;
       el("ruleset-select").value = state.ruleset;

@@ -100,4 +100,44 @@ const L = window.IRON_PIT_BATTLE_LOG;
   assert.match(text, /AUTO FAIL vs DC 15/); assert.match(text, /RESTRAINED/);
 }
 
+{
+  const button = { disabled: true, listeners: {}, addEventListener(name, handler) { this.listeners[name] = handler; } };
+  const status = { textContent: "" };
+  global.document = {
+    getElementById: (id) => ({ "download-log-button": button, status }[id] || null),
+    createElement: () => ({ click() {}, remove() {} }),
+    body: { append() {} },
+  };
+  global.URL = { createObjectURL: () => "blob:test", revokeObjectURL() {} };
+  vm.runInThisContext(fs.readFileSync(path.join(__dirname, "battle-log-export.js"), "utf8"), { filename: "battle-log-export.js" });
+  const exportLog = window.IRON_PIT_BATTLE_LOG_EXPORT;
+  const battle = {
+    events: [
+      { round_number: 1, event_type: "initiative", actor_name: "Karnok Stoneward", description: "Karnok Stoneward rolls initiative 19." },
+      {
+        round_number: 1, event_type: "attack", actor_name: "Bandit", target_name: "Fighter", attack_name: "Scimitar",
+        target_ac: 18, hit: true, critical: false,
+        attack_roll: { selected_roll: 16, rolls: [16], modifier: 3, total: 19, mode: "normal" },
+        damage_roll: { total: 6 }, damage_components: [{ total: 6, applied_total: 6, damage_type: "slashing" }],
+        hp_before: 12, hp_after: 6, applied_condition_ids: [], is_dead: false,
+        audit: { steps: [{ rule: "To hit", detail: "16 + 3 = 19 vs AC 18" }] },
+      },
+    ],
+  };
+  exportLog.install();
+  assert.equal(button.disabled, true);
+  exportLog.remember(battle);
+  assert.equal(button.disabled, false);
+  const text = exportLog.textFromBattle(battle);
+  assert.match(text, /Round 1 · initiative/);
+  assert.match(text, /Karnok Stoneward rolls initiative 19/);
+  assert.match(text, /Bandit → Fighter/);
+  assert.match(text, /6 slashing/);
+  assert.match(text, /To hit: 16 \+ 3 = 19 vs AC 18/);
+  assert.doesNotMatch(text, /placeholder|lorem|example fight/i);
+  exportLog.remember({ events: [] });
+  assert.equal(button.disabled, true);
+}
+
 console.log("Audit-grade battle log regressions passed.");
+

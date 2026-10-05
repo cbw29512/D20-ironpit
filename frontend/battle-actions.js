@@ -34,7 +34,7 @@
     try {
       view().writeLog(session.battle); view().showResult(session.battle); state.hasRun = true;
       if (prefix) {
-        el("lab-summary").textContent = `${prefix} · ${session.rolls.length} deterministic dice rolls.`;
+        el("lab-summary").textContent = `${prefix} · ${session.battle.rounds} rounds.`;
       } else {
         el("lab-summary").textContent = lab().summary(session.battle, session.rolls, session.diagnosticId);
       }
@@ -49,17 +49,17 @@
     try {
       window.IRON_PIT_COMBAT_REVIEW?.hide?.();
       api.state.session = null; api.state.fighting = true; api.render(); api.clearResult();
-      el("status").textContent = mode === "step" ? "Resolving fight for Step Mode…" : "Rolling initiative…";
+      el("status").textContent = mode === "step" ? "Preparing a stepped fight…" : "The fight is starting…";
       await new Promise((resolve) => requestAnimationFrame(resolve));
       const session = execution().resolveLive(match.selection, slotMap(match)); api.state.session = session;
       if (mode === "step") {
-        await session.begin(); el("status").textContent = `Step Mode ready · 0 / ${session.battle.events.length} events.`;
+        await session.begin(); el("status").textContent = `Step ready · 0 / ${session.battle.events.length} events.`;
       } else {
         await session.watch(); finishSession(api.state, session);
       }
     } catch (error) {
       console.error("Live execution failed", error);
-      el("status").textContent = "Fight stopped because a required RAW mechanic is unsupported or the battle engine failed.";
+      el("status").textContent = "Fight stopped because a required rule is not available yet.";
     } finally { api.state.fighting = false; api.updateControls(); syncControls(api.state); }
   }
 
@@ -69,7 +69,7 @@
       api.state.fighting = true; api.updateControls(); syncControls(api.state);
       const status = await session.step(); writeProgress(session);
       if (status.complete) finishSession(api.state, session, session.mode === "replay" ? `Replay seed ${session.seed}` : null);
-      else el("status").textContent = `Step Mode · event ${status.event_index} / ${status.event_count}.`;
+      else el("status").textContent = `Step · event ${status.event_index} / ${status.event_count}.`;
     } catch (error) {
       console.error("Step execution failed", error); el("status").textContent = `Step execution failed: ${error.message}`;
     } finally { api.state.fighting = false; api.updateControls(); syncControls(api.state); }
@@ -90,14 +90,14 @@
     try {
       const count = turboView().fightCount(); api.state.session = null; api.state.fighting = true;
       window.IRON_PIT_COMBAT_REVIEW?.hide?.();
-      turboView().hide(); api.render(); api.clearResult("Turbo Mode is running the full combat engine without animations.");
+      turboView().hide(); api.render(); api.clearResult("Turbo is running many fights.");
       el("status").textContent = `Turbo: 0 / ${count.toLocaleString()} fights`;
       api.state.turboBatch = await execution().runTurbo(match.selection, count, null, (done, total) => {
         el("status").textContent = `Turbo: ${done.toLocaleString()} / ${total.toLocaleString()} fights`;
       });
-      turboView().render(api.state.turboBatch); el("status").textContent = `Turbo complete: ${api.state.turboBatch.valid_fights.toLocaleString()} valid fights.`;
+      turboView().render(api.state.turboBatch); el("status").textContent = `Turbo complete: ${api.state.turboBatch.valid_fights.toLocaleString()} fights.`;
     } catch (error) {
-      console.error("Turbo execution failed", error); el("status").textContent = error.message || "Turbo Mode failed.";
+      console.error("Turbo execution failed", error); el("status").textContent = error.message || "Turbo failed.";
     } finally { api.state.fighting = false; api.updateControls(); syncControls(api.state); }
   }
 

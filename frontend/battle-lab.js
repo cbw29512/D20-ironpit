@@ -56,7 +56,7 @@
     const attacks = events.filter((event) => event.event_type === "attack");
     const criticals = attacks.filter((event) => event.critical).length;
     const healing = events.filter((event) => event.event_type === "healing").length;
-    return `Battle ${id} · ${rolls.length} secure dice rolls · ${battle.rounds} rounds · ${attacks.length} attacks · ${criticals} criticals · ${healing} heals`;
+    return `${battle.rounds} rounds · ${attacks.length} attacks · ${criticals} criticals · ${healing} heals`;
   }
 
   window.IRON_PIT_BATTLE_LAB = { diagnosticId, fingerprint, hashText, summary };
