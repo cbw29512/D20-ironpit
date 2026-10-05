@@ -163,7 +163,7 @@
       damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type),
     )];
     let damageOutcome = A().applyDamage(
-      defender, appliedTotal, critical, appliedTypes, options.affectedStates || [], options.setup || null,
+      defender, appliedTotal, critical, appliedTypes, options.affectedStates || [], options.setup || null, damageComponents,
     );
     window.IRON_PIT_BROWSER_HUNTERS_MARK_SPLASH?.resolve(
       attacker, null, options.targetId, damageComponents, turnKey, options.setup,
