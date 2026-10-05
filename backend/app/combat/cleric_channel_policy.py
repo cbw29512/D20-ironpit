@@ -8,7 +8,6 @@ from app.combat.cleric_preserve_life import preserve_life_targets
 from app.combat.encounter_targeting import combatant_distance
 from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.traits import CombatTrait
 
 ChannelChoiceKind = Literal["preserve-life", "turn-undead", "divine-spark-heal", "divine-spark-damage"]
 
@@ -17,6 +16,10 @@ ChannelChoiceKind = Literal["preserve-life", "turn-undead", "divine-spark-heal",
 class ChannelDivinityChoice:
     kind: ChannelChoiceKind
     targets: tuple[EncounterCombatant, ...]
+
+
+def _supports(member: EncounterCombatant, mode: str) -> bool:
+    return mode in member.state.template.support_action_modes
 
 
 def _uses(member: EncounterCombatant, resource_id: str) -> int:
@@ -53,7 +56,7 @@ def _nearest_enemy(cleric: EncounterCombatant, setup: EncounterSetup) -> Encount
 
 
 def _worth_preserving(cleric: EncounterCombatant, setup: EncounterSetup) -> tuple[EncounterCombatant, ...]:
-    if CombatTrait.LIFE_DOMAIN not in cleric.state.template.combat_traits:
+    if not _supports(cleric, "preserve-life"):
         return ()
     targets = preserve_life_targets(cleric, setup)
     urgent = any(target.state.current_hp == 0 or target.combatant_id == cleric.combatant_id for target in targets)
@@ -62,7 +65,7 @@ def _worth_preserving(cleric: EncounterCombatant, setup: EncounterSetup) -> tupl
 
 def choose_channel_divinity(cleric: EncounterCombatant, setup: EncounterSetup) -> ChannelDivinityChoice | None:
     """Rescue/support first, then control Undead, and conserve damage Spark while spell slots remain."""
-    if cleric.state.template.archetype != "Cleric":
+    if not cleric.state.template.support_action_modes:
         return None
     if not is_available(cleric.state, "action") or _uses(cleric, "channel-divinity") < 1:
         return None
@@ -71,12 +74,22 @@ def choose_channel_divinity(cleric: EncounterCombatant, setup: EncounterSetup) -
         return ChannelDivinityChoice("preserve-life", preserve)
     is_2014 = cleric.state.template.ruleset == "2014"
     downed = _downed_other_ally(cleric, setup)
-    if not is_2014 and downed is not None and not any(item.id.startswith("spell-slot-") and item.current_uses for item in cleric.state.resources):
+    if (
+        _supports(cleric, "divine-spark")
+        and not is_2014
+        and downed is not None
+        and not any(item.id.startswith("spell-slot-") and item.current_uses for item in cleric.state.resources)
+    ):
         return ChannelDivinityChoice("divine-spark-heal", (downed,))
-    undead = _undead_targets(cleric, setup)
-    if undead:
-        return ChannelDivinityChoice("turn-undead", undead)
-    if is_2014 or any(item.id.startswith("spell-slot-") and item.current_uses for item in cleric.state.resources):
+    if _supports(cleric, "turn-undead"):
+        undead = _undead_targets(cleric, setup)
+        if undead:
+            return ChannelDivinityChoice("turn-undead", undead)
+    if (
+        not _supports(cleric, "divine-spark")
+        or is_2014
+        or any(item.id.startswith("spell-slot-") and item.current_uses for item in cleric.state.resources)
+    ):
         return None
     enemy = _nearest_enemy(cleric, setup)
     return ChannelDivinityChoice("divine-spark-damage", (enemy,)) if enemy is not None else None
