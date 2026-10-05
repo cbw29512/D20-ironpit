@@ -6,7 +6,7 @@ from app.domain.weapons import DamageType, WeaponAttack
 
 
 class TriggeredExtraAttackStack(BaseModel):
-    """Stackable source-owned state that can add off-turn attacks after the owner's turn."""
+    """Source-owned stack trigger checked after every turn; attacks fire after the owner's turn."""
 
     source_id: str
     source_name: str
