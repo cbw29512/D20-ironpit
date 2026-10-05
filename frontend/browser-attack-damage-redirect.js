@@ -21,7 +21,7 @@
       return opponents
         .filter((target) => target.state.is_alive && !target.state.is_dead && target.state.current_hp > 0)
         .filter((target) => S().distance(reactor, target) <= rangeFt)
-        .filter((target) => !rule.requiresSight || Q().canSee(reactor.state, target.state))
+        .filter((target) => !rule.requiresSight || Q().canSee(reactor.state, target.state, S().distance(reactor, target)))
         .filter((target) => !rule.requiresClearLine
           || !window.IRON_PIT_BROWSER_GRID_BARRIERS
           || window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(reactor, target, setup))

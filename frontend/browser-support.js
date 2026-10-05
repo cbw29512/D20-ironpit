@@ -50,6 +50,12 @@
         if (rider) events.push(rider), sequence += 1;
       }
     }
+    const counter = window.IRON_PIT_BROWSER_CONDITION_COUNTER?.choose(member, setup, turnKey);
+    if (counter) {
+      const cast = window.IRON_PIT_BROWSER_CONDITION_COUNTER.resolve(sequence, round, member, setup, counter, turnKey);
+      events.push(...cast.events);
+      return { events, sequence: cast.sequence };
+    }
     const effectRemoval = X()?.choose(member, setup, turnKey);
     if (effectRemoval) events.push(X().resolve(sequence++, round, member, setup, effectRemoval.action, effectRemoval.effect, turnKey));
     const cleric = member.state.template.class_id === "cleric" || member.state.template.archetype === "Cleric";

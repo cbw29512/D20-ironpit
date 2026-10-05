@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.condition_rules import has_condition
 from app.domain.runtime import CombatantState
 
 logger = logging.getLogger(__name__)
@@ -10,6 +11,8 @@ logger = logging.getLogger(__name__)
 def charmed_source_ids(state: CombatantState) -> set[str]:
     """Return source combatant IDs of live Charmed conditions on the creature."""
     try:
+        if not has_condition(state, "charmed"):
+            return set()
         return {
             effect.source_id
             for effect in state.timed_effects

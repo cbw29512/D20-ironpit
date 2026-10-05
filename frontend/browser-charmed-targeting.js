@@ -3,6 +3,7 @@
 
   function sourceIds(state) {
     try {
+      if (!window.IRON_PIT_BROWSER_CONDITION_RULES?.has(state, "charmed")) return new Set();
       return new Set(
         (state.timed_effects || [])
           .filter((effect) => effect.effect_id === "charmed" && effect.source_id)

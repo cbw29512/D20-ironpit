@@ -7,39 +7,50 @@
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION || { abilityCheckDisadvantage: () => 0, d20Modifier: () => 0 };
 
   function priority(group) {
-    if (group.natural_roll === 20) return 2;
-    if (group.natural_roll === 1) return 0;
-    return 1;
-  }
-
-  function rerollExactTies(groups) {
-    while (true) {
-      const signatures = new Map();
-      for (const group of groups) {
-        const key = `${priority(group)}:${group.initiative_count}:${group.tie_break_rolls.join(",")}`;
-        const tied = signatures.get(key) || [];
-        tied.push(group);
-        signatures.set(key, tied);
-      }
-      const unresolved = [...signatures.values()].filter((tied) => tied.length > 1);
-      if (!unresolved.length) return;
-      for (const tied of unresolved) {
-        for (const group of tied) {
-          const value = window.IRON_PIT_DICE.roll(20);
-          group.tie_break_rolls.push(value);
-          group.tie_break_roll = value;
-        }
-      }
+    try {
+      return group.natural_roll === 1 ? 0 : 1;
+    } catch (error) {
+      console.error("Failed to resolve initiative priority bucket", { error });
+      throw error;
     }
   }
 
-  function compareTieHistory(left, right) {
-    const length = Math.max(left.length, right.length);
-    for (let index = 0; index < length; index += 1) {
-      const a = left[index] || 0, b = right[index] || 0;
-      if (a !== b) return b - a;
+  function ownershipRank(group) {
+    try {
+      return group.side === "heroes" ? 1 : 0;
+    } catch (error) {
+      console.error("Failed to resolve initiative tie ownership", { error });
+      throw error;
     }
-    return 0;
+  }
+
+  function sameBucket(left, right) {
+    try {
+      return (left.natural_roll === 1) === (right.natural_roll === 1);
+    } catch (error) {
+      console.error("Failed to compare initiative priority buckets", { error });
+      throw error;
+    }
+  }
+
+  function tieNote(group, groups) {
+    try {
+      const tied = groups.filter((other) => (
+        other.initiative_count === group.initiative_count && sameBucket(group, other)
+      ));
+      if (tied.length < 2) return "";
+      const sides = new Set(tied.map((other) => other.side));
+      if (sides.size === 1 && sides.has("heroes")) {
+        return " Tied initiative: players decide; party order.";
+      }
+      if (sides.size === 1 && sides.has("monsters")) {
+        return " Tied initiative: DM decides; encounter order.";
+      }
+      return " Tied initiative: DM decides; heroes act before monsters, then encounter order.";
+    } catch (error) {
+      console.error("Failed to describe initiative tie ownership", { error });
+      throw error;
+    }
   }
 
   function resolve(setup) {
@@ -75,10 +86,9 @@
         member.state.initiative_total = roll.total;
       });
     }
-    rerollExactTies(groups);
     groups.sort((a, b) => priority(b) - priority(a)
       || b.initiative_count - a.initiative_count
-      || compareTieHistory(a.tie_break_rolls, b.tie_break_rolls)
+      || ownershipRank(b) - ownershipRank(a)
       || a.index - b.index);
     const result = {
       groups: groups.map((group) => ({
@@ -131,6 +141,7 @@
       slots.sort((a, b) => b.bucket - a.bucket
         || b.count - a.count
         || b.normal - a.normal
+        || ownershipRank(b.group) - ownershipRank(a.group)
         || a.groupIndex - b.groupIndex
         || a.memberIndex - b.memberIndex);
       return { order: slots.map((slot) => slot.id), extras };
@@ -159,9 +170,8 @@
       const result = initiative.groups.map((group) => {
         const name = names.get(group.combatant_ids[0]);
         let description = `${name}${group.combatant_ids.length > 1 ? ` group (${group.combatant_ids.length})` : ""} rolls initiative ${group.initiative_count}.`;
-        if (group.natural_roll === 20) description += " Natural 20: top initiative priority.";
-        else if (group.natural_roll === 1) description += " Natural 1: bottom initiative priority.";
-        if (group.tie_break_rolls.length) description += ` Tie reroll${group.tie_break_rolls.length > 1 ? "s" : ""}: ${group.tie_break_rolls.join(" → ")}.`;
+        if (group.natural_roll === 1) description += " Natural 1: bottom initiative priority.";
+        description += tieNote(group, initiative.groups);
         return {
           sequence: sequence++, round_number: 0, event_type: "initiative",
           actor_id: group.combatant_ids[0], actor_name: name,

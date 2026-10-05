@@ -153,12 +153,13 @@ Default Iron Pit voluntary movement policy is intentionally simple:
 
 1. The combatant's goal is to engage and defeat a living opponent; it does not wander around the arena without an action-driven reason.
 2. If a legal melee attack can be made this turn after useful legal approach movement, the combatant closes to that melee reach, then uses the highest-damage legal melee option.
-3. A combatant that cannot make a melee attack this turn stays in place when a legal spell or ranged option can already land, and uses the highest-damage landable option.
-4. If a ranged combatant is already in melee and has a legal melee option, it uses the legal melee option rather than retreating merely to preserve range.
-5. A caster does not stay in place to cast when a legal melee attack can still be made this turn. It casts from its current position only when melee cannot land.
-6. A mixed combatant uses the landing-damage rule: melee if melee can land, otherwise the highest-damage option that can actually land.
-7. Default Arena AI does not voluntarily kite, circle, run to map edges, seek cover, disperse, or retreat merely for positional optimization.
-8. Specific printed features, conditions, forced movement, explicit retreat effects, or other RAW mechanics may require movement that overrides this default policy; those effects still use the same universal movement engine.
+3. Front-row combatants are melee. They make useful legal progress toward melee even when a backup thrown/ranged attack could already land. After that approach, if melee still cannot land, they use the highest-damage option that can land.
+4. Back-row combatants are ranged and/or casters. They stay in place when a legal ranged or spell option can already land. A back-row melee creature with no ranged attack steps to the front when the last front-row ally dies, or Dodges until that step-up is legal.
+5. If a ranged combatant is already in melee and has a legal melee option, it uses the legal melee option rather than retreating merely to preserve range.
+6. A caster does not stay in place to cast when a legal melee attack can still be made this turn. It casts from its current position only when melee cannot land.
+7. A mixed combatant uses the landing-damage rule after row policy: melee if melee can land, otherwise the highest-damage option that can actually land.
+8. Default Arena AI does not voluntarily kite, circle, run to map edges, seek cover, disperse, or retreat merely for positional optimization.
+9. Specific printed features, conditions, forced movement, explicit retreat effects, or other RAW mechanics may require movement that overrides this default policy; those effects still use the same universal movement engine.
 
 The 24 x 16 arena therefore uses a capable pathfinder with deliberately simple destination policy. Pathfinding solves **how to reach a legal action position**; it does not invent tactical goals.
 
@@ -282,7 +283,7 @@ The spell package contains desired spells, but the level compiler exposes only s
 
 Arena AI is deterministic policy, not a new rule system. A simple default is:
 
-1. apply worthwhile legal precombat buffs that fit the arena;
+1. apply exactly one legal opening buff under the pit rule below;
 2. if a legal melee attack can land this turn, use the highest-damage melee option;
 3. otherwise prefer the highest-damage landable option, with the highest-level damage spell first among spells;
 4. fall back through remaining landable damage options;
@@ -408,6 +409,14 @@ spell-package pointers, and loadout capabilities; CI rejects manual or stale che
 - Production source-size limits stay enforced.
 - Active means executable and certified.
 
+
+## Opening buff pit rule
+
+Before initiative, each combatant that has a legal combat buff uses **exactly one** as a free opening action. If more than one buff is legal, the shared precombat pipeline selects the **highest-level** option only; non-spell abilities compete as level 0, and same-level ties use declarative priority. The activation does not spend Action, Bonus Action, or Reaction. Do not apply every known buff. This is pit setup policy, not a seeded starting debuff. Production presets and player-loaded fights still start with an empty opening-condition list.
+
+## Turn-start debuff answers
+
+The start-of-turn phase reads the acting creature's live conditions before voluntary actions. Condition identity is absolute: Frightened is Frightened, Charmed is Charmed. A beneficial failed-save modifier of kind `condition-immunity` or `debuff-counter` answers the matching condition on a legal friend. Bloodied (current HP at or below half of maximum) is answered by healing. An already-active matching counter-buff keeps the printed condition instance in state but `has_condition` is false, and a new application of that same condition fails closed. Selection is by modifier kind and condition id, never by spell or monster name. A test harness may seed a starting buff or debuff. Player-loaded fights and website presets must pass an empty opening-condition list.
 
 ## Timed source-owned emanations
 

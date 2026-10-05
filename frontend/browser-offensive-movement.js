@@ -4,6 +4,19 @@
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_ACTIONS;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
+  const FR = () => window.IRON_PIT_BROWSER_FORMATION_ROWS;
+
+  function isBackline(member) {
+    try {
+      if (typeof FR()?.isBackline === "function") return Boolean(FR().isBackline(member));
+      if (typeof F()?.isBackline === "function") return Boolean(F().isBackline(member));
+      if (typeof F()?.usesBackline === "function") return Boolean(F().usesBackline(member.state.template));
+      return member.state.formation_row === "back";
+    } catch (error) {
+      console.error("Failed to read browser backline for movement", { id: member?.combatant_id, error });
+      throw error;
+    }
+  }
   const G = () => window.IRON_PIT_BROWSER_GRID_MOVEMENT;
   const O = () => window.IRON_PIT_BROWSER_OFFENSIVE_RANGES;
   const R = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT;
@@ -14,7 +27,7 @@
       if (!E().available(member.state, "action") || !setup.map_definition) return null;
       if (!member.state.position) throw new Error("Grid offensive movement requires an authoritative attacker position.");
       const members = [...setup.heroes, ...setup.monsters];
-      const meleeReach = [], progress = [];
+      const meleeReach = [], meleeProgress = [], rangedProgress = [];
       let meleeNow = false, otherNow = false;
       for (const target of F().targetOrder(member, setup)) {
         if (!target.state.position) throw new Error("Grid offensive movement requires authoritative target positions.");
@@ -34,7 +47,7 @@
             member.state.movement_remaining_ft,
             setup.persistent_barriers || [],
           );
-          if (!plan.goal_reachable || !plan.path.length) continue;
+          if (!plan.path.length) continue;
           const row = {
             cost: plan.movement_cost_ft,
             distance,
@@ -43,11 +56,14 @@
             range: option.range,
           };
           if (option.family === "melee" && plan.final_distance_ft <= option.range) meleeReach.push(row);
-          else if (plan.final_distance_ft < distance) progress.push(row);
+          else if (option.family === "melee" && plan.final_distance_ft < distance) meleeProgress.push(row);
+          else if (plan.final_distance_ft < distance) rangedProgress.push(row);
         }
       }
       if (meleeNow) return null;
-      const candidates = meleeReach.length ? meleeReach : (otherNow ? [] : progress);
+      const candidates = isBackline(member)
+        ? (meleeReach.length ? meleeReach : (otherNow ? [] : rangedProgress.length ? rangedProgress : meleeProgress))
+        : (meleeReach.length ? meleeReach : meleeProgress);
       if (!candidates.length) return null;
       candidates.sort((a, b) => a.cost - b.cost || a.distance - b.distance
         || a.targetId.localeCompare(b.targetId) || a.family.localeCompare(b.family) || b.range - a.range);

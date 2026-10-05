@@ -77,7 +77,7 @@ def test_forced_retreat_skips_voluntary_turn_without_moving_card() -> None:
     events, _ = resolve_combat_turn(1, 1, fighter, enemy, setup, NoRollDice())
     assert fighter.position_ft == before
     assert forced_retreat_active(fighter.state) is True
-    assert [event.feature_id for event in events] == ["forced-retreat"]
+    assert [event.feature_id for event in events] == ["turn-start-condition", "forced-retreat"]
     assert not any(event.event_type in {"attack", "healing", "movement"} for event in events)
 
     save_events, _ = resolve_target_condition_timing(

@@ -90,8 +90,18 @@
         const saveAdvantageSources = (
           spell.saveAdvantageIfFighting && fighting
         ) ? ["fighting-the-target"] : [];
+        const resolvedAction = { ...action, automaticFailureCreatureTypes: [...(action.automaticFailureCreatureTypes || [])] };
+        if (
+          caster.side === target.side
+          && window.IRON_PIT_BROWSER_DEBUFF_ANSWERS?.failedSaveIsBeneficial(spell)
+          && target.state.template.creature_type
+        ) {
+          resolvedAction.automaticFailureCreatureTypes.push(
+            String(target.state.template.creature_type).split(" (")[0],
+          );
+        }
         const event = V().resolveAction(
-          sequence, round, caster, target, action,
+          sequence, round, caster, target, resolvedAction,
           placement ? 0 : S().distance(caster, target),
           {
             spendAction: false, sharedDamageRolls, spellEffect: true, setup,

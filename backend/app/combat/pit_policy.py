@@ -5,7 +5,7 @@ import logging
 from app.combat.barrier_line_of_effect import clear_line_between_members
 from app.combat.attack_legality import attack_allowed_against
 from app.combat.encounter_targeting import combatant_distance, living_opponents
-from app.combat.formation import uses_backline
+from app.combat.formation_rows import member_is_backline
 from app.combat.range import resolve_attack_roll_mode
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import WeaponAttack, WeaponAttackKind
@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 def is_backline(member: EncounterCombatant) -> bool:
-    return uses_backline(member.state.template)
+    return member_is_backline(member)
 
 
 def target_order(

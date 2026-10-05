@@ -41,18 +41,19 @@ def test_melee_only_creature_advances_then_dodges_when_attack_is_not_reachable()
     assert "dodge" in hero.state.active_effect_ids
 
 
-def test_frontline_with_backup_range_uses_legal_range_instead_of_fake_closing() -> None:
+def test_front_row_closes_even_when_backup_range_can_land() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-giant-lizard"],
     ))
     hero, monster = _set_grid_distance(setup, 60)
     _disable_adrenaline_rush(hero)
+    hero.state.formation_row = "front"
 
-    events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([2]))
+    events, _ = resolve_combat_turn(1, 1, hero, monster, setup, FixedDiceProvider([2, 2, 2, 2, 2, 2]))
 
-    attack = next(event for event in events if event.event_type == "attack")
-    assert attack.weapon_id == "shortbow"
-    assert not any(event.event_type in {"movement", "dash"} for event in events)
+    movement = [event for event in events if event.event_type == "movement"]
+    assert sum(event.movement_cost_ft or 0 for event in movement) == 30
+    assert hero.state.position == GridPosition(x=6, y=6)
 
 
 def test_protected_ranged_primary_uses_range_without_close_combat_disadvantage() -> None:

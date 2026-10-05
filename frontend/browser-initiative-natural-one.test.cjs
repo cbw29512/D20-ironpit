@@ -45,10 +45,17 @@ function neutralizeInitiative(setup) {
 
 {
   const setup = basicSetup(); neutralizeInitiative(setup);
+  setup.monster.state.template.initiative_bonus = 2;
   window.IRON_PIT_DICE = queuedDice([20, 19]);
   const initiative = window.IRON_PIT_BROWSER_INITIATIVE.resolve(setup);
-  assert.equal(initiative.groups[0].side, "heroes");
-  assert.equal(initiative.groups[0].natural_roll, 20);
+  assert.equal(initiative.groups[0].side, "monsters");
+  assert.equal(initiative.groups[0].initiative_count, 21);
+  assert.equal(initiative.groups[1].side, "heroes");
+  assert.equal(initiative.groups[1].natural_roll, 20);
+  assert.equal(initiative.groups[1].initiative_count, 20);
+  const events = window.IRON_PIT_BROWSER_INITIATIVE.events(initiative, setup);
+  assert.ok(events.every((event) => !event.description.includes("top initiative priority")));
+  assert.ok(events.every((event) => !event.description.includes("Tie reroll")));
 }
 
 {
@@ -61,13 +68,50 @@ function neutralizeInitiative(setup) {
 
 {
   const setup = basicSetup(); neutralizeInitiative(setup);
-  window.IRON_PIT_DICE = queuedDice([10, 10, 5, 5, 7, 12]);
+  window.IRON_PIT_DICE = queuedDice([14, 14, 3]);
   const initiative = window.IRON_PIT_BROWSER_INITIATIVE.resolve(setup);
   const hero = initiative.groups.find((group) => group.side === "heroes");
   const monster = initiative.groups.find((group) => group.side === "monsters");
-  assert.deepEqual(hero.tie_break_rolls, [5, 7]);
-  assert.deepEqual(monster.tie_break_rolls, [5, 12]);
-  assert.equal(initiative.groups[0].side, "monsters");
+  assert.deepEqual(hero.tie_break_rolls, []);
+  assert.deepEqual(monster.tie_break_rolls, []);
+  assert.equal(hero.tie_break_roll, null);
+  assert.equal(initiative.groups[0].side, "heroes");
+  assert.equal(window.IRON_PIT_DICE.roll(20), 3);
+  const events = window.IRON_PIT_BROWSER_INITIATIVE.events(initiative, setup);
+  assert.ok(events.some((event) => event.description.includes(
+    "Tied initiative: DM decides; heroes act before monsters, then encounter order.",
+  )));
+  assert.ok(events.every((event) => !event.description.includes("Tie reroll")));
+}
+
+{
+  const heroA = member(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"], "heroes", "hero-1:karnok-stoneward-l1", 5);
+  const heroB = member(window.IRON_PIT_BROWSER_HEROES["rokhan-stonefury-l1"], "heroes", "hero-2:rokhan-stonefury-l1", 5);
+  const monster = member(window.IRON_PIT_BROWSER_MONSTERS["srd-commoner"], "monsters", "monster-1:srd-commoner", 10);
+  const setup = { heroes: [heroA, heroB], monsters: [monster] };
+  neutralizeInitiative(setup);
+  window.IRON_PIT_DICE = queuedDice([14, 14, 5, 3]);
+  const initiative = window.IRON_PIT_BROWSER_INITIATIVE.resolve(setup);
+  assert.deepEqual(initiative.turn_order.slice(0, 2), [heroA.combatant_id, heroB.combatant_id]);
+  assert.ok(initiative.groups.every((group) => group.tie_break_rolls.length === 0));
+  assert.equal(window.IRON_PIT_DICE.roll(20), 3);
+  const events = window.IRON_PIT_BROWSER_INITIATIVE.events(initiative, setup);
+  assert.ok(events.some((event) => event.description.includes("Tied initiative: players decide; party order.")));
+}
+
+{
+  const hero = member(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"], "heroes", "hero-1:karnok-stoneward-l1", 5);
+  const commoner = member(window.IRON_PIT_BROWSER_MONSTERS["srd-commoner"], "monsters", "monster-1:srd-commoner", 10);
+  const bandit = member(window.IRON_PIT_BROWSER_MONSTERS["srd-bandit"], "monsters", "monster-2:srd-bandit", 10);
+  const setup = { heroes: [hero], monsters: [commoner, bandit] };
+  neutralizeInitiative(setup);
+  window.IRON_PIT_DICE = queuedDice([3, 11, 11, 4]);
+  const initiative = window.IRON_PIT_BROWSER_INITIATIVE.resolve(setup);
+  assert.deepEqual(initiative.turn_order, [commoner.combatant_id, bandit.combatant_id, hero.combatant_id]);
+  assert.ok(initiative.groups.every((group) => group.tie_break_rolls.length === 0));
+  assert.equal(window.IRON_PIT_DICE.roll(20), 4);
+  const events = window.IRON_PIT_BROWSER_INITIATIVE.events(initiative, setup);
+  assert.ok(events.some((event) => event.description.includes("Tied initiative: DM decides; encounter order.")));
 }
 
 {

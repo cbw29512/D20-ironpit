@@ -8,7 +8,7 @@ const root = __dirname;
 const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]));
 
-for (const file of ["app.js", "battle-actions.js", "battlefield-picker.js", "battlefield-view.js", "battlefield-replay.js", "turbo-view.js"]) {
+for (const file of ["app.js", "battle-actions.js", "battlefield-picker.js", "battlefield-view.js", "battlefield-replay.js", "turbo-view.js", "combat-review.js"]) {
   const source = fs.readFileSync(path.join(root, file), "utf8");
   const referenced = [
     ...source.matchAll(/\bel\("([^"]+)"\)/g),
@@ -20,7 +20,9 @@ for (const file of ["app.js", "battle-actions.js", "battlefield-picker.js", "bat
 for (const id of [
   "hero-slots", "monster-slots", "fight-button", "step-fight-button", "pit-round", "status",
   "step-session-actions", "next-event-button", "watch-rest-button",
-  "quick-test", "rerun-button", "reset-fight", "lab-summary",
+  "quick-test", "rerun-button", "reset-fight", "load-combat-button",
+  "combat-review", "combat-review-title", "combat-review-meta", "combat-review-log", "combat-review-close",
+  "lab-summary",
   "turbo-count", "turbo-button", "turbo-panel", "turbo-result-title", "turbo-result-summary",
   "turbo-heroes", "turbo-monsters", "turbo-draws", "turbo-rounds", "turbo-notables",
   "turbo-fight-number", "turbo-replay-button", "turbo-replay-step-button", "turbo-error-summary",
@@ -32,6 +34,8 @@ assert.equal(ids.has("instant-mode"), false, "production battlefield must not ex
 assert.equal(ids.has("picker-hero"), false, "canonical heroes must not expose a redundant build selector");
 assert.equal(ids.has("distance"), false, "formation combat must not expose a starting-distance control");
 assert.match(html, /<button id="quick-test" type="button">LOAD SAMPLE<\/button>/);
+assert.match(html, /<button id="load-combat-button"[^>]*>Load Combat<\/button>/);
+assert.match(html, /combat-review\.js/); assert.match(html, /combat-review\.css/);
 assert.match(html, /id="step-fight-button"/); assert.match(html, /id="turbo-count"[^>]+value="100"/);
 assert.match(html, /browser-turbo\.js/); assert.match(html, /browser-execution\.js/); assert.match(html, /battle-actions\.js/);
 assert.match(html, /browser-ability-hooks\.js/);
@@ -90,6 +94,10 @@ assert.ok(html.indexOf("browser-offense-value.js") < html.indexOf("browser-spell
 assert.ok(html.indexOf("browser-spell-offense.js") < html.indexOf("browser-turn.js"));
 assert.ok(html.indexOf("browser-main-action-providers.js") < html.indexOf("browser-action-surge.js"));
 assert.ok(html.indexOf("browser-action-surge.js") < html.indexOf("browser-ability-hook-installation.js"));
+assert.ok(html.indexOf("browser-condition-rules.js") < html.indexOf("browser-debuff-answers.js"));
+assert.ok(html.indexOf("browser-debuff-answers.js") < html.indexOf("browser-turn-start-conditions.js"));
+assert.ok(html.indexOf("browser-opening-conditions.js") < html.indexOf("browser-engine.js"));
+assert.ok(html.indexOf("browser-condition-counter.js") < html.indexOf("browser-support.js"));
 assert.ok(html.indexOf("browser-support.js") < html.indexOf("browser-ability-hook-installation.js"));
 assert.ok(html.indexOf("browser-ability-hook-installation.js") < html.indexOf("browser-turn.js"));
 assert.ok(html.indexOf("browser-formation.js") < html.indexOf("browser-arena-map.js"));
@@ -99,6 +107,7 @@ assert.ok(html.indexOf("browser-grid-movement-support.js") < html.indexOf("brows
 assert.ok(html.indexOf("browser-grid-path-search-support.js") < html.indexOf("browser-grid-path-search.js"));
 assert.ok(html.indexOf("browser-grid-path-search.js") < html.indexOf("browser-grid-movement.js"));
 assert.ok(html.indexOf("browser-grid-movement.js") < html.indexOf("browser-grid-placement.js"));
+assert.ok(html.indexOf("browser-formation-rows.js") < html.indexOf("browser-grid-placement.js"));
 assert.ok(html.indexOf("browser-grid-placement.js") < html.indexOf("browser-engine.js"));
 assert.ok(html.indexOf("figure-portraits.js") < html.indexOf("combatant-art.js"));
 assert.ok(html.indexOf("combatant-art.js") < html.indexOf("battlefield-view.js"));
@@ -109,5 +118,7 @@ assert.ok(html.indexOf("browser-turbo.js") < html.indexOf("browser-execution.js"
 assert.ok(html.indexOf("turbo-view.js") < html.indexOf("browser-execution.js"));
 assert.ok(html.indexOf("browser-execution.js") < html.indexOf("battle-actions.js"));
 assert.ok(html.indexOf("battle-actions.js") < html.indexOf("app.js"));
+assert.ok(html.indexOf("combat-presets.js") < html.indexOf("combat-review.js"));
+assert.ok(html.indexOf("combat-review.js") < html.indexOf("app.js"));
 
 console.log("production-path battlefield + universal execution wiring regression passed");

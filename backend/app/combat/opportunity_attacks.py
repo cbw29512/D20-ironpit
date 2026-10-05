@@ -33,7 +33,7 @@ def resolve_opportunity_attack(
 ) -> BattleEvent | None:
     """Resolve an OA only when the reactor can currently see the departing mover."""
     if can_see is None:
-        can_see = can_see_target(reactor.state, mover.state)
+        can_see = can_see_target(reactor.state, mover.state, distance_before_ft)
     attack = opportunity_attack_weapon(
         reactor, mover, distance_before_ft, distance_after_ft, movement_source,
         disengaged=disengaged, can_see=can_see,

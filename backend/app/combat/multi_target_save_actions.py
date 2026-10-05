@@ -33,7 +33,7 @@ def choose_multi_target_save_action(
                 distance = combatant_distance(actor, target)
                 if not legal_save_action(action, target, distance):
                     continue
-                if action.requires_target_sight and not can_see(actor.state, target.state):
+                if action.requires_target_sight and not can_see(actor.state, target.state, distance):
                     continue
                 legal_targets.append(target)
                 if len(legal_targets) >= action.max_targets:
@@ -69,7 +69,7 @@ def resolve_multi_target_save_action(
             distance = combatant_distance(actor, target)
             if not legal_save_action(action, target, distance):
                 raise ValueError(f"{action.name} has an illegal selected target.")
-            if action.requires_target_sight and not can_see(actor.state, target.state):
+            if action.requires_target_sight and not can_see(actor.state, target.state, distance):
                 raise ValueError(f"{action.name} requires every selected target to be visible.")
 
         remaining = spend_action_resource(actor.state, action)

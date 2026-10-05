@@ -3,10 +3,38 @@ from __future__ import annotations
 import logging
 import uuid
 
-from app.domain.encounters import EncounterBattleResult, EncounterInitiative, EncounterSetup
+from app.domain.encounters import EncounterBattleResult, EncounterInitiative, EncounterSetup, InitiativeGroup
 from app.domain.models import BattleEvent
 
 logger = logging.getLogger(__name__)
+
+
+def _same_initiative_bucket(left: InitiativeGroup, right: InitiativeGroup) -> bool:
+    try:
+        return (left.natural_roll == 1) == (right.natural_roll == 1)
+    except Exception as exc:
+        logger.exception("Failed to compare initiative priority buckets.")
+        raise RuntimeError("Initiative priority buckets could not be compared.") from exc
+
+
+def _initiative_tie_note(group: InitiativeGroup, groups: list[InitiativeGroup]) -> str:
+    try:
+        tied = [
+            other for other in groups
+            if other.initiative_count == group.initiative_count
+            and _same_initiative_bucket(group, other)
+        ]
+        if len(tied) < 2:
+            return ""
+        sides = {other.side for other in tied}
+        if sides == {"heroes"}:
+            return " Tied initiative: players decide; party order."
+        if sides == {"monsters"}:
+            return " Tied initiative: DM decides; encounter order."
+        return " Tied initiative: DM decides; heroes act before monsters, then encounter order."
+    except Exception as exc:
+        logger.exception("Failed to describe initiative tie ownership.")
+        raise RuntimeError("Initiative tie note could not be resolved.") from exc
 
 
 def build_initiative_events(
@@ -17,14 +45,9 @@ def build_initiative_events(
         events: list[BattleEvent] = []
         for group in initiative.groups:
             description = f"{', '.join(group.combatant_ids)} act at Initiative {group.initiative_count}."
-            if group.natural_roll == 20:
-                description += " Natural 20: top initiative priority."
-            elif group.natural_roll == 1:
+            if group.natural_roll == 1:
                 description += " Natural 1: bottom initiative priority."
-            if group.tie_break_rolls:
-                history = " → ".join(str(value) for value in group.tie_break_rolls)
-                suffix = "s" if len(group.tie_break_rolls) > 1 else ""
-                description += f" Tie reroll{suffix}: {history}."
+            description += _initiative_tie_note(group, initiative.groups)
             events.append(BattleEvent(
                 sequence=sequence,
                 round_number=0,

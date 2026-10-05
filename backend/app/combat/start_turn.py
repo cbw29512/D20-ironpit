@@ -5,6 +5,8 @@ import logging
 from app.combat.dice import DiceProvider
 from app.combat.recharge import resolve_recharge_checks
 from app.combat.state import begin_turn
+from app.combat.turn_start_conditions import turn_start_condition_events
+from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent, CombatantState
 
 logger = logging.getLogger(__name__)
@@ -16,11 +18,15 @@ def begin_turn_with_events(
     actor_id: str,
     state: CombatantState,
     dice: DiceProvider,
+    member: EncounterCombatant | None = None,
 ) -> tuple[list[BattleEvent], int]:
     """Initialize a turn and resolve auditable start-of-turn resource checks."""
     try:
         countered = begin_turn(state)
         events: list[BattleEvent] = []
+        if member is not None:
+            checked, sequence = turn_start_condition_events(sequence, round_number, member)
+            events.extend(checked)
         for debuff_id, source_id, movement_cost in countered:
             events.append(BattleEvent(
                 sequence=sequence,

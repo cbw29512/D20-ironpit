@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.condition_rules import has_condition
 from app.combat.action_economy import claim_voluntary_activity, voluntary_activity_available
 from app.combat.damage_reaction_events import damage_event_chain
 from app.combat.dice import DiceProvider
@@ -35,7 +36,7 @@ def _proposed_position(
 
 def _fear_source_ids(mover: EncounterCombatant) -> set[str]:
     try:
-        if FRIGHTENED_EFFECT_ID not in mover.state.active_effect_ids:
+        if not has_condition(mover.state, FRIGHTENED_EFFECT_ID):
             return set()
         return {
             effect.source_id for effect in mover.state.timed_effects

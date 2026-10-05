@@ -121,6 +121,8 @@ class CombatantState(BaseModel):
     max_hp_bonus: int = Field(default=0, ge=0)
     temporary_hp: int = Field(default=0, ge=0)
     position: GridPosition | None = None
+    formation_row: Literal["front", "back"] | None = None
+    initial_formation_row: Literal["front", "back"] | None = None
     initiative_roll: int | None = None
     initiative_total: int | None = None
     is_alive: bool = True

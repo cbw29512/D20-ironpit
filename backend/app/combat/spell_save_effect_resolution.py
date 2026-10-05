@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.debuff_answers import failed_save_is_beneficial
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.modifier_stack import add_modifier
 from app.combat.spell_modifiers import build_spell_modifier
@@ -83,10 +84,10 @@ def resolve_spell_save_effect(
         by_id = {member.combatant_id: member for member in members}
         affected_states = [member.state for member in members]
         placement = choice.placement
-        action = compile_spell_save_action(choice)
+        compiled = compile_spell_save_action(choice)
         bonus = active_spell_save_dc_bonus(caster.state)
         if bonus:
-            action = action.model_copy(update={"dc": action.dc + bonus})
+            compiled = compiled.model_copy(update={"dc": compiled.dc + bonus})
         events: list[BattleEvent] = []
         shared_damage_rolls: list[int] | list[list[int]] | None = (
             maximized_save_damage_rolls(scaled_spell)
@@ -125,6 +126,18 @@ def resolve_spell_save_effect(
                 and sides_are_fighting(caster, target, setup)
                 else ()
             )
+            action = compiled
+            if (
+                caster.side == target.side
+                and failed_save_is_beneficial(scaled_spell)
+                and target.state.template.creature_type
+            ):
+                action = compiled.model_copy(update={
+                    "automatic_failure_creature_types": [
+                        *compiled.automatic_failure_creature_types,
+                        str(target.state.template.creature_type).split(" (", 1)[0],
+                    ],
+                })
 
             chain, sequence = resolve_save_event_chain(
                 sequence,

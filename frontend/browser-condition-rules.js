@@ -14,8 +14,80 @@
   const invisibilitySuppressed = (state) => Boolean(
     (state.active_modifiers || []).some((item) => item.kind === "invisibility-benefits-suppressed")
   );
-  const canSee = (observer, target) => !has(observer, "blinded")
-    && (!has(target, "invisible") || invisibilitySuppressed(target));
+
+  function sourceSenseRangeFt(observer, senseId) {
+    try {
+      const template = observer?.template || {};
+      if (senseId === "blindsight") return Math.max(0, Number(template.blindsight_ft || 0));
+      if (senseId === "truesight") return Math.max(0, Number(template.truesight_ft || 0));
+      return 0;
+    } catch (error) {
+      console.error("Failed to read browser source sense range.", { senseId, error });
+      throw error;
+    }
+  }
+
+  function senseIsSuppressed(observer, senseId) {
+    try {
+      const modifiers = observer?.active_modifiers || [];
+      if (modifiers.some((item) => item.suppressed_sense_id === senseId)) return true;
+      const grants = observer?.template?.sense_suppressors || [];
+      return grants.some((grant) => grant.sense_id === senseId
+        && (grant.suppressed_while_conditions || []).some((conditionId) => has(observer, conditionId)));
+    } catch (error) {
+      console.error("Failed to resolve browser sense suppression.", { senseId, error });
+      throw error;
+    }
+  }
+
+  function effectiveSenseRangeFt(observer, senseId) {
+    try {
+      return senseIsSuppressed(observer, senseId) ? 0 : sourceSenseRangeFt(observer, senseId);
+    } catch (error) {
+      console.error("Failed to resolve browser effective sense range.", { senseId, error });
+      throw error;
+    }
+  }
+
+  function visibilityDistanceFt(observer, target, distanceFt) {
+    try {
+      if (distanceFt != null) return Number(distanceFt);
+      const observerPosition = observer?.position;
+      const targetPosition = target?.position;
+      const geom = window.IRON_PIT_BROWSER_GRID_GEOMETRY;
+      if (!observerPosition || !targetPosition || !geom) return null;
+      return geom.footprintDistanceFt(
+        observerPosition,
+        observer?.template?.size,
+        targetPosition,
+        target?.template?.size,
+      );
+    } catch (error) {
+      console.error("Failed to resolve browser visibility distance.", error);
+      throw error;
+    }
+  }
+
+  function senseReaches(observer, senseId, distanceFt) {
+    return distanceFt != null && effectiveSenseRangeFt(observer, senseId) >= Number(distanceFt);
+  }
+
+  function canSee(observer, target, distanceFt = null) {
+    try {
+      const resolved = visibilityDistanceFt(observer, target, distanceFt);
+      const hidden = has(target, "invisible") && !invisibilitySuppressed(target);
+      const blinded = has(observer, "blinded");
+      if (senseReaches(observer, "blindsight", resolved)) return true;
+      if (blinded) return false;
+      if (hidden) return senseReaches(observer, "truesight", resolved);
+      return true;
+    } catch (error) {
+      console.error("Failed to resolve browser visibility.", {
+        observer: observer?.template?.name, target: target?.template?.name, error,
+      });
+      throw error;
+    }
+  }
 
   function incapacitated(state) {
     if (I().immune(state, "incapacitated")) return false;
@@ -28,5 +100,9 @@
   const suppressAttackAdvantage = (state) => Boolean(state.template?.suppress_attack_advantage_while_not_incapacitated) && !incapacitated(state);
   const speedZero = (state) => state.is_unconscious || has(state, "paralyzed") || has(state, "petrified") || has(state, "restrained");
 
-  window.IRON_PIT_BROWSER_CONDITION_RULES = { attackAdvantage, autoCritical, autoFailStrDex, canSee, has, incapacitated, invisibilitySuppressed, speedZero, suppressAttackAdvantage };
+  window.IRON_PIT_BROWSER_CONDITION_RULES = {
+    attackAdvantage, autoCritical, autoFailStrDex, canSee, effectiveSenseRangeFt, has,
+    incapacitated, invisibilitySuppressed, senseIsSuppressed, sourceSenseRangeFt, speedZero,
+    suppressAttackAdvantage, visibilityDistanceFt,
+  };
 })();

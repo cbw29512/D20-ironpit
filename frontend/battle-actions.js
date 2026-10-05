@@ -27,7 +27,7 @@
 
   function writeProgress(session) {
     const events = session.battle.events.slice(0, session.eventIndex);
-    view().writeLog({ events });
+    view().writeLog({ events, setup: session.battle.setup });
   }
 
   function finishSession(state, session, prefix = null) {
@@ -47,6 +47,7 @@
   async function startLive(api, mode) {
     const match = api.matchup(); if (match.error) { el("status").textContent = match.error; return; }
     try {
+      window.IRON_PIT_COMBAT_REVIEW?.hide?.();
       api.state.session = null; api.state.fighting = true; api.render(); api.clearResult();
       el("status").textContent = mode === "step" ? "Resolving fight for Step Mode…" : "Rolling initiative…";
       await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -88,6 +89,7 @@
     const match = api.matchup(); if (match.error) { el("status").textContent = match.error; return; }
     try {
       const count = turboView().fightCount(); api.state.session = null; api.state.fighting = true;
+      window.IRON_PIT_COMBAT_REVIEW?.hide?.();
       turboView().hide(); api.render(); api.clearResult("Turbo Mode is running the full combat engine without animations.");
       el("status").textContent = `Turbo: 0 / ${count.toLocaleString()} fights`;
       api.state.turboBatch = await execution().runTurbo(match.selection, count, null, (done, total) => {
@@ -107,6 +109,7 @@
       fightNumber = turboView().replayNumber(api.state.turboBatch);
       const record = turboView().findFight(api.state.turboBatch, fightNumber) || api.state.turboBatch.errors.find((item) => item.fight_number === fightNumber);
       if (!record) throw new Error(`Fight #${fightNumber} was not found.`);
+      window.IRON_PIT_COMBAT_REVIEW?.hide?.();
       api.state.session = null; api.state.fighting = true; api.render(); api.clearResult();
       const session = execution().resolveReplay(api.state.turboBatch.selection, record.seed, slotMap(match)); api.state.session = session;
       el("status").textContent = `${mode === "step" ? "Step" : "Watch"} replay #${fightNumber} · seed ${record.seed}.`;
