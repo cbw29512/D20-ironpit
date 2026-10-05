@@ -12,9 +12,11 @@ const load = (name) => vm.runInThisContext(
 );
 
 for (const file of [
-  "browser-heroes.js", "browser-action-economy.js", "browser-grapple.js", "browser-state.js",
+  "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js",
+  "browser-action-economy.js", "browser-grapple.js", "browser-state.js",
   "browser-rolls.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js", "browser-saves.js", "browser-charge.js",
-  "browser-formation.js", "browser-multiattack.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-action-surge.js", "browser-support.js", "browser-tactical-shift.js",
+  "browser-formation.js", "browser-multiattack.js", "browser-healing-policy.js", "browser-healing-resolution.js", "browser-healing.js",
+  "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-action-surge.js", "browser-support.js", "browser-tactical-shift.js",
 ]) load(file);
 
 const fighter = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l5"];
@@ -71,8 +73,12 @@ const targetTemplate = {
   hero.state.movement_remaining_ft = 30;
   window.IRON_PIT_DICE = { roll: () => 5, rollMany: (count) => Array(count).fill(5) };
 
-  const wind = window.IRON_PIT_BROWSER_SUPPORT.secondWind(1, 1, hero);
-  assert.ok(wind);
+  const choice = window.IRON_PIT_BROWSER_HEALING.chooseAction(hero, setup, "1:hero-shift");
+  assert.ok(choice);
+  assert.equal(choice.action.id, "second-wind");
+  const wind = window.IRON_PIT_BROWSER_HEALING.resolve(
+    1, 1, hero, hero, choice.action, "1:hero-shift",
+  );
   assert.equal(wind.healing_roll.notation, "1d10+5");
   assert.equal(wind.healing_roll.total, 10);
   assert.equal(hero.state.current_hp, 30);
