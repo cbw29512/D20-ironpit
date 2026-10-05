@@ -44,16 +44,12 @@
               });
               const applied = [];
               if (save.succeeded) {
-                if (aura.success_immunity_rounds) {
-                  timed.apply(target.state, immunityId, source.combatant_id, {
-                    sourceEffectId: `${action.id}:success-immunity`,
+                if (aura.success_immunity || aura.successImmunity) {
+                  const granted = window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS?.grantImmunity;
+                  if (!granted) throw new Error("Hostile condition aura immunity requires failed-save timed-effect runtime.");
+                  granted(target.state, action.id, source.combatant_id, round, {
                     sourceTemplate: source.state.template,
                     sourceIsMagical: Boolean(aura.source_is_magical),
-                    appliedRound: round,
-                    expiresRound: round + aura.success_immunity_rounds,
-                    expiryTiming: "source_turn_start",
-                    expiresAtStartOfSourceTurn: true,
-                    useDefaultPoisonRecovery: false,
                   });
                 }
               } else {

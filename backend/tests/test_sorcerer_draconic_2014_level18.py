@@ -40,7 +40,7 @@ def test_level_eighteen_draconic_presence_is_resource_backed_concentration_aura(
     assert aura.save_ability == "wisdom"
     assert aura.save_dc == 19
     assert aura.condition_id == "frightened"
-    assert aura.success_immunity_rounds == 14400
+    assert aura.success_immunity is True
 
 
 def test_draconic_presence_failure_applies_frightened_until_concentration_ends() -> None:
@@ -72,7 +72,7 @@ def test_draconic_presence_failure_applies_frightened_until_concentration_ends()
     assert "frightened" not in target.state.active_effect_ids
 
 
-def test_draconic_presence_success_grants_source_specific_24_hour_immunity() -> None:
+def test_draconic_presence_success_grants_match_scoped_source_immunity() -> None:
     setup, source, target = _setup()
     begin_turn(source.state)
     action = next(
@@ -91,7 +91,8 @@ def test_draconic_presence_success_grants_source_specific_24_hour_immunity() -> 
     assert events[0].save_succeeded is True
     immunity_id = f"{action.id}:success-immunity:{source.combatant_id}"
     immunity = next(effect for effect in target.state.timed_effects if effect.effect_id == immunity_id)
-    assert immunity.expires_round == 14401
+    assert immunity.expires_round is None
+    assert immunity.expires_at_start_of_source_turn is False
 
     repeated, sequence = resolve_target_turn_start_emanations(
         next_sequence, 2, target, setup, FixedDiceProvider([1]),

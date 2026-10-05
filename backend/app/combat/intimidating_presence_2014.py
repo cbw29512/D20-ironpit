@@ -53,7 +53,7 @@ def resolve_intimidating_presence(
         spend(actor.state, "action")
         applied: list[str] = []
         if succeeded:
-            target.state.feature_last_turn_keys[_immunity_key(actor.combatant_id)] = "24h"
+            target.state.feature_last_turn_keys[_immunity_key(actor.combatant_id)] = "match"
         else:
             effect = apply_timed_condition(
                 target.state, FRIGHTENED, actor.combatant_id, source_effect_id=FEATURE_ID,

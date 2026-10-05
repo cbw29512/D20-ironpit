@@ -147,11 +147,11 @@ Until the 2014 profile is implemented and certified, the public product remains 
 
 Pit matches end when one side wins. The combat instance is discarded. The next fight starts every card completely fresh.
 
-Printed 24-hour immunities from a successful save against a source ability — including 2014 Frightful Presence ("If a creature's saving throw is successful or the effect ends for it, the creature is immune to the dragon's Frightful Presence for the next 24 hours") — map to **match-scoped source immunity** in the Pit. The target is immune to that source's Frightful Presence for the rest of the current fight only. Do not simulate calendar 24 hours as a 14400-round timer. Do not persist immunity across fights. Cards stay immutable; only temporary in-fight state exists.
+Printed 24-hour immunities from a successful save against a source ability — including 2014 Frightful Presence and 2014 Draconic Presence — map to **match-scoped source immunity** in the Pit. The target is immune to that source's effect for the rest of the current fight only. Do not simulate calendar 24 hours as a 14400-round timer. Do not persist immunity across fights. Cards stay immutable; only temporary in-fight state exists.
 
 On a failed Wisdom save, Frightful Presence still applies Frightened for the printed in-fight duration and repeat-save window. Preserve the printed ability name in the combat log.
 
-`source_effect_immunity_on_success` and `source_effect_immunity_on_end` compile to that same match-scoped immunity. A successful save, or the Frightened effect ending, grants immunity to that source until the match ends.
+`source_effect_immunity_on_success`, `source_effect_immunity_on_end`, and hostile-aura `success_immunity` compile to that same match-scoped immunity. A successful save, or the Frightened effect ending where printed, grants immunity to that source until the match ends. Nature's Sanctuary and similar targeting-ward 24-hour success immunities also last only for the current fight instance.
 
 ## 4. One combat engine, four execution modes
 
