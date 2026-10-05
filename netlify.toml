@@ -1,10 +1,5 @@
 [build]
   command = "python3 -m pip install -e ./backend && python3 scripts/prepare_static_site.py"
   publish = "frontend"
-  # AUTOPUBLISH LOCK: Netlify ignore commands return 0 to skip a build.
-  # 2026-10-05 friend-test production Git deploy is ready but unpublished:
-  #   deploy 6ac3ad986aa5ba000860741b (main c0c23a647, #557/#562/#564/#565)
-  # Production URL is still pinned to locked upload 6ac38c99dc0482af1a20136b.
-  # Publishing that ready deploy is a Netlify UI/API action; this lock only
-  # stops further Git-connected builds. ironpit.app remains unpurchased.
-  ignore = "exit 0"
+  # Temporary unlock 2026-10-05 for #569 Pit UI production publish.
+  # Restore ignore = "exit 0" immediately after the production deploy is Ready/Published.
