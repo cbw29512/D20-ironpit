@@ -8,6 +8,7 @@ from pathlib import Path
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_creature_types import complete_monster_creature_types
 from app.content.monster_special_senses import complete_monster_special_senses
+from app.content.monster_trait_bindings_2024 import bind_monster_source_traits_2024_many
 from app.domain.capabilities import CombatantDefinition
 from app.domain.models import CombatantTemplate
 
@@ -62,7 +63,8 @@ def get_capability_definition(combatant_id: str) -> CombatantDefinition:
 
 def build_combatant_from_capabilities(combatant_id: str) -> CombatantTemplate:
     template = compile_combatant(get_capability_definition(combatant_id))
-    return complete_monster_special_senses(complete_monster_creature_types([template]))[0]
+    templates = complete_monster_special_senses(complete_monster_creature_types([template]))
+    return bind_monster_source_traits_2024_many(templates)[0]
 
 
 def build_monster_templates_from_capabilities() -> list[CombatantTemplate]:
@@ -71,7 +73,8 @@ def build_monster_templates_from_capabilities() -> list[CombatantTemplate]:
         monsters = [compile_combatant(item) for item in definitions if item.kind == "monster"]
         if not monsters:
             raise ValueError("Combat capability registry contains no monsters.")
-        return complete_monster_special_senses(complete_monster_creature_types(monsters))
+        monsters = complete_monster_special_senses(complete_monster_creature_types(monsters))
+        return bind_monster_source_traits_2024_many(monsters)
     except Exception as exc:
         logger.exception("Failed to compile monster roster from combat capability registry.")
         raise RuntimeError("Declarative monster roster could not be created.") from exc
