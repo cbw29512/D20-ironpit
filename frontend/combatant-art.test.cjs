@@ -55,6 +55,40 @@ for (const ruleset of ["2014", "2024"]) {
 const css = fs.readFileSync(path.join(__dirname, "figure-portraits.css"), "utf8");
 assert.match(css, /\.fighter-portrait\.has-art[^{]*\.portrait-svg/, "Legacy SVG layer must hide when a portrait asset exists.");
 assert.match(css, /\.picker-portrait-frame\{position:relative\}|\.picker-portrait-frame\{[^}]*position:relative/, "Picker portrait images must stay inside the frame.");
+assert.match(css, /\.portrait-image-monster\{[^}]*object-fit:cover/, "Monster rasters must fill the shadow-box without stretching.");
+
+const goblinSrc = "assets/portraits/monsters/goblin.webp";
+assert.equal(A.assetFor({ id: "2014-goblin", kind: "monster", name: "Goblin" }).src, goblinSrc);
+assert.equal(A.assetFor({ id: "srd-goblin-warrior", kind: "monster", name: "Goblin Warrior" }).src, goblinSrc);
+assert.equal(A.assetFor({ id: "srd-5.2.1-2024-monster-goblin-warrior", kind: "monster" }).src, goblinSrc);
+assert.equal(A.assetFor({ id: "catalog-2014-goblin", kind: "monster" }).src, goblinSrc);
+assert.equal(A.assetFor({ id: "srd-brown-bear", kind: "monster" }).src, A.assetFor({ id: "2014-brown-bear" }).src);
+assert.equal(A.assetFor({ id: "srd-manticore", kind: "monster" }).src, "assets/portraits/monsters/manticore.webp");
+assert.equal(A.assetFor({ id: "srd-hippopotamus", kind: "monster" }).src, "assets/portraits/monsters/hippopotamus.webp");
+assert.equal(A.assetFor({ id: "2014-minotaur", kind: "monster" }).src, "assets/portraits/monsters/minotaur.webp");
+assert.equal(A.assetFor({ id: "srd-minotaur-skeleton", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "srd-goblin-minion", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "srd-goblin-boss", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "srd-ogre-zombie", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "srd-giant-crocodile", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "2014-minotaur-skeleton", kind: "monster" }), null);
+assert.match(A.markup({ id: "2014-wyvern", kind: "monster", name: "Wyvern" }), /portrait-image-monster/);
+assert.doesNotMatch(A.markup({ id: "2014-wyvern", kind: "monster", name: "Wyvern" }), /portrait-image-hero/);
+
+const monsterFiles = [
+  "berserker", "blue-dragon-wyrmling", "brown-bear", "crocodile", "dire-wolf", "elephant",
+  "giant-ape", "giant-constrictor-snake", "giant-scorpion", "goblin", "hell-hound",
+  "hippopotamus", "manticore", "minotaur", "owlbear", "red-dragon-wyrmling", "roc",
+  "skeleton", "triceratops", "tyrannosaurus-rex", "unicorn", "warhorse-skeleton",
+  "wyvern", "young-black-dragon", "young-red-dragon", "zombie",
+];
+for (const fileId of monsterFiles) {
+  const rel = `assets/portraits/monsters/${fileId}.webp`;
+  const abs = path.join(__dirname, rel);
+  assert.ok(fs.existsSync(abs), rel);
+  assert.ok(fs.statSync(abs).size <= 100000, `${rel} must stay at or under 100KB`);
+  assert.equal(A.assetFor({ id: fileId, kind: "monster" }).src, rel);
+}
 
 assert.throws(() => A.register([{ template_id: "broken", src: "x.webp" }]));
 assert.throws(() => A.register([{

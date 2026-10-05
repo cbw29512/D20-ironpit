@@ -27,9 +27,15 @@
   function candidateIds(template) {
     const ids = [];
     const push = (value) => { if (value && !ids.includes(value)) ids.push(value); };
+    const raw = String(template?.id || "");
     push(portraitId(template));
     push(template?.id);
-    push(String(template?.id || "").replace(/-l\d+$/i, ""));
+    push(raw.replace(/-l\d+$/i, ""));
+    push(raw.replace(/^catalog-/, ""));
+    push(raw.replace(/^catalog-2014-/, ""));
+    push(raw.replace(/^2014-/, ""));
+    push(raw.replace(/^srd-5\.2\.1-2024-monster-/, ""));
+    push(raw.replace(/^srd-/, ""));
     return ids;
   }
 
@@ -118,6 +124,54 @@
     return entries;
   }
 
+  // file, printed name, extra roster/catalog ids. Same raster serves both editions.
+  const MONSTER_ART = [
+    ["berserker", "Berserker", ["2014-berserker", "srd-5.2.1-2024-monster-berserker"]],
+    ["blue-dragon-wyrmling", "Blue Dragon Wyrmling", ["2014-blue-dragon-wyrmling", "srd-blue-dragon-wyrmling"]],
+    ["brown-bear", "Brown Bear", ["2014-brown-bear", "srd-brown-bear"]],
+    ["crocodile", "Crocodile", ["2014-crocodile", "srd-crocodile"]],
+    ["dire-wolf", "Dire Wolf", ["2014-dire-wolf", "srd-dire-wolf"]],
+    ["elephant", "Elephant", ["2014-elephant", "srd-5.2.1-2024-monster-elephant"]],
+    ["giant-ape", "Giant Ape", ["2014-giant-ape", "srd-5.2.1-2024-monster-giant-ape"]],
+    ["giant-constrictor-snake", "Giant Constrictor Snake", ["2014-giant-constrictor-snake", "srd-giant-constrictor-snake"]],
+    ["giant-scorpion", "Giant Scorpion", ["2014-giant-scorpion", "srd-giant-scorpion"]],
+    ["goblin", "Goblin", ["2014-goblin", "srd-goblin-warrior", "srd-5.2.1-2024-monster-goblin-warrior"]],
+    ["hell-hound", "Hell Hound", ["2014-hell-hound", "srd-hell-hound"]],
+    ["hippopotamus", "Hippopotamus", ["srd-hippopotamus"]],
+    ["manticore", "Manticore", ["srd-manticore"]],
+    ["minotaur", "Minotaur", ["2014-minotaur"]],
+    ["owlbear", "Owlbear", ["2014-owlbear", "srd-owlbear"]],
+    ["red-dragon-wyrmling", "Red Dragon Wyrmling", ["2014-red-dragon-wyrmling", "srd-red-dragon-wyrmling"]],
+    ["roc", "Roc", ["2014-roc", "srd-5.2.1-2024-monster-roc"]],
+    ["skeleton", "Skeleton", ["2014-skeleton", "srd-skeleton"]],
+    ["triceratops", "Triceratops", ["2014-triceratops", "srd-triceratops"]],
+    ["tyrannosaurus-rex", "Tyrannosaurus Rex", ["2014-tyrannosaurus-rex", "srd-tyrannosaurus-rex"]],
+    ["unicorn", "Unicorn", ["2014-unicorn", "srd-5.2.1-2024-monster-unicorn"]],
+    ["warhorse-skeleton", "Warhorse Skeleton", ["2014-warhorse-skeleton", "srd-warhorse-skeleton"]],
+    ["wyvern", "Wyvern", ["2014-wyvern", "srd-wyvern"]],
+    ["young-black-dragon", "Young Black Dragon", ["2014-young-black-dragon", "srd-young-black-dragon"]],
+    ["young-red-dragon", "Young Red Dragon", ["2014-young-red-dragon", "srd-young-red-dragon"]],
+    ["zombie", "Zombie", ["2014-zombie", "srd-zombie"]],
+  ];
+
+  function monsterPortraits() {
+    const entries = [];
+    for (const [fileId, name, ids] of MONSTER_ART) {
+      const src = `assets/portraits/monsters/${fileId}.webp`;
+      const keys = new Set([fileId, `srd-5.2.1-2024-monster-${fileId}`, ...ids]);
+      for (const id of ids) { if (id.startsWith("2014-")) keys.add(`catalog-${id}`); }
+      for (const key of keys) {
+        entries.push({
+          portrait_id: key, src, alt: name,
+          license: "Iron Pit monster silhouette",
+          source: "Chris-approved monster silhouettes",
+        });
+      }
+    }
+    return entries;
+  }
+
   register(heroPortraits());
+  register(monsterPortraits());
   window.IRON_PIT_COMBATANT_ART = { assetFor, candidateIds, markup, portraitId, provenance, register };
 })();

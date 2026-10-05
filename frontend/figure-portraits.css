@@ -80,10 +80,11 @@
   filter:none;
 }
 .portrait-image-monster{
-  object-fit:contain;
-  object-position:center 18%;
-  filter:drop-shadow(0 0 0.6px #f3d08b);
+  object-fit:cover;
+  object-position:center center;
+  filter:none;
 }
+.fighter-portrait.monster-art.has-art{background:#120c07}
 .portrait-image.is-broken{display:none}
 .fighter-portrait.has-art:not(.art-broken) .portrait-svg,
 .fighter-portrait.has-art:not(:has(.portrait-image.is-broken)) .portrait-svg{

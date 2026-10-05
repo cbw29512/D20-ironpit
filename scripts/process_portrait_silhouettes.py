@@ -24,6 +24,9 @@ INK = (12, 10, 8, 255)
 OUTLINE = (201, 163, 90, 255)
 BACKGROUND_DISTANCE = 38
 SUPPORTED = {".png", ".jpg", ".jpeg", ".webp"}
+VIGNETTE_INNER = (196, 122, 42)
+VIGNETTE_OUTER = (10, 6, 3)
+SAFE_SQUARE = 456
 
 
 def _distance(pixel: tuple[int, int, int, int], color: tuple[int, int, int]) -> int:
@@ -127,6 +130,94 @@ def silhouette_from_image(image: Image.Image) -> Image.Image:
         raise
 
 
+def _is_gold_rim(pixel: tuple[int, int, int, int]) -> bool:
+    red, green, blue = pixel[:3]
+    return red >= 120 and 70 <= green <= 210 and blue <= 110 and (red - blue) >= 40
+
+
+def _subject_bbox(image: Image.Image) -> tuple[int, int, int, int]:
+    try:
+        rgba = image.convert("RGBA")
+        width, height = rgba.size
+        pixels = rgba.load()
+        left, top, right, bottom = width, height, 0, 0
+        found = False
+        step = 2
+        for y in range(0, height, step):
+            for x in range(0, width, step):
+                if _is_gold_rim(pixels[x, y]):
+                    found = True
+                    left = min(left, x)
+                    top = min(top, y)
+                    right = max(right, x + step)
+                    bottom = max(bottom, y + step)
+        if not found:
+            box = rgba.getbbox()
+            if box is None:
+                raise ValueError("Approved silhouette has no visible subject.")
+            return box
+        return (left, top, right + 1, bottom + 1)
+    except Exception:
+        logger.exception("Failed to measure a monster silhouette subject.")
+        raise
+
+
+def _expand_box(box: tuple[int, int, int, int], size: tuple[int, int], ratio: float) -> tuple[int, int, int, int]:
+    left, top, right, bottom = box
+    pad = max(8, int(max(right - left, bottom - top) * ratio))
+    return (
+        max(0, left - pad),
+        max(0, top - pad),
+        min(size[0], right + pad),
+        min(size[1], bottom + pad),
+    )
+
+
+def _vignette_canvas(size: tuple[int, int], inner: tuple[int, int, int], outer: tuple[int, int, int]) -> Image.Image:
+    try:
+        width, height = size
+        canvas = Image.new("RGB", size, outer)
+        pixels = canvas.load()
+        cx, cy = (width - 1) / 2, height * 0.46
+        max_dist = (cx ** 2 + (height * 0.72) ** 2) ** 0.5
+        for y in range(height):
+            for x in range(width):
+                t = min(1.0, (((x - cx) ** 2 + (y - cy) ** 2) ** 0.5) / max_dist)
+                falloff = t * t * (3 - 2 * t)
+                pixels[x, y] = tuple(int(inner[i] * (1 - falloff) + outer[i] * falloff) for i in range(3))
+        return canvas.convert("RGBA")
+    except Exception:
+        logger.exception("Failed to paint an amber vignette canvas.")
+        raise
+
+
+def frame_monster_vignette(image: Image.Image) -> Image.Image:
+    try:
+        rgba = image.convert("RGBA")
+        box = _expand_box(_subject_bbox(rgba), rgba.size, 0.06)
+        subject = rgba.crop(box)
+        scale = min(SAFE_SQUARE / max(1, subject.width), SAFE_SQUARE / max(1, subject.height))
+        fitted = subject.resize(
+            (max(1, int(subject.width * scale)), max(1, int(subject.height * scale))),
+            Image.Resampling.LANCZOS,
+        )
+        canvas = _vignette_canvas(HERO_CANVAS, VIGNETTE_INNER, VIGNETTE_OUTER)
+        faded = fitted.convert("RGBA")
+        mask = Image.new("L", faded.size, 0)
+        inset = max(18, min(faded.size) // 12)
+        ImageDraw.Draw(mask).rectangle(
+            (inset, inset, faded.width - inset - 1, faded.height - inset - 1), fill=255,
+        )
+        faded.putalpha(mask.filter(ImageFilter.GaussianBlur(22)))
+        left = (HERO_CANVAS[0] - faded.width) // 2
+        top = (HERO_CANVAS[1] - faded.height) // 2
+        canvas.alpha_composite(faded, (left, top))
+        return canvas.convert("RGB")
+    except Exception:
+        logger.exception("Failed to frame a monster silhouette without clipping.")
+        raise
+
+
 def frame_hero_portrait(image: Image.Image) -> Image.Image:
     try:
         rgba = image.convert("RGBA")
@@ -148,6 +239,14 @@ def frame_hero_portrait(image: Image.Image) -> Image.Image:
         raise
 
 
+def _process_image(image: Image.Image, mode: str) -> Image.Image:
+    if mode == "color-frame":
+        return frame_hero_portrait(image)
+    if mode == "vignette-contain":
+        return frame_monster_vignette(image)
+    return silhouette_from_image(image)
+
+
 def process_file(source: Path, destination: Path, mode: str = "silhouette", quality: int = 80) -> Path:
     try:
         if source.resolve() == destination.resolve():
@@ -156,7 +255,7 @@ def process_file(source: Path, destination: Path, mode: str = "silhouette", qual
         if destination.exists():
             destination.unlink()
         with Image.open(source) as image:
-            processed = frame_hero_portrait(image) if mode == "color-frame" else silhouette_from_image(image)
+            processed = _process_image(image, mode)
             save_quality = 92 if mode == "silhouette" else quality
             processed.save(destination, "WEBP", quality=save_quality, method=6)
         logger.info("Wrote %s %s from %s", mode, destination, source)
@@ -170,8 +269,8 @@ def process_tree(source_dir: Path, destination_dir: Path, mode: str = "silhouett
     try:
         if source_dir.resolve() == destination_dir.resolve():
             raise ValueError("Input and output directories must be different so originals stay intact.")
-        if mode not in {"silhouette", "color-frame"}:
-            raise ValueError("Mode must be silhouette for monsters or color-frame for heroes.")
+        if mode not in {"silhouette", "color-frame", "vignette-contain"}:
+            raise ValueError("Mode must be silhouette, color-frame, or vignette-contain.")
         written: list[Path] = []
         for source in sorted(source_dir.rglob("*")):
             if source.suffix.lower() not in SUPPORTED or not source.is_file():
@@ -217,6 +316,18 @@ def _self_test() -> None:
                 raise RuntimeError("Silhouette fill is not ink-dark.")
             if max(pixel[2] for pixel in color.getdata()) < 80:
                 raise RuntimeError("Hero color-frame lost its color.")
+            wide = Image.new("RGB", (320, 160), (12, 7, 3))
+            draw = ImageDraw.Draw(wide)
+            draw.ellipse((20, 30, 300, 130), fill=(8, 6, 4), outline=(201, 163, 90), width=3)
+            wide_path = source_dir / "wide-wyvern.jpg"
+            wide.save(wide_path)
+            contained_dir = Path(raw) / "monsters"
+            contained = process_tree(source_dir, contained_dir, "vignette-contain")
+            framed_monster = Image.open(next(path for path in contained if path.stem == "wide-wyvern")).convert("RGB")
+            if framed_monster.size != HERO_CANVAS:
+                raise RuntimeError(f"Vignette-contain canvas was {framed_monster.size}, expected {HERO_CANVAS}.")
+            if framed_monster.getpixel((8, 8))[0] < 8:
+                raise RuntimeError("Vignette-contain did not extend the amber background.")
             logger.info("Portrait pipeline self-test passed.")
     except Exception:
         logger.exception("Portrait silhouette self-test failed.")
@@ -227,8 +338,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, help="Directory of original portraits")
     parser.add_argument("--output", type=Path, help="Directory for new processed assets")
-    parser.add_argument("--mode", choices=("silhouette", "color-frame"), default="silhouette",
-                        help="silhouette = monsters only; color-frame = hero portraits")
+    parser.add_argument("--mode", choices=("silhouette", "color-frame", "vignette-contain"), default="silhouette",
+                        help="silhouette = ink cutout; color-frame = hero portraits; vignette-contain = approved silhouettes")
     parser.add_argument("--quality", type=int, default=80, help="WebP quality for processed assets")
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args(argv)

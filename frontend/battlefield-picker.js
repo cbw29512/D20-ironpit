@@ -18,7 +18,7 @@
   }
 
   function runtimeTemplate(card, side) {
-    if (!card?.runnable_template_id) return { name: card?.name, kind: card?.kind, class_id: card?.class_id, ruleset: card?.ruleset };
+    if (!card?.runnable_template_id) return { id: card?.id, name: card?.name, kind: card?.kind, class_id: card?.class_id, ruleset: card?.ruleset };
     if (card.ruleset === "2014") {
       return side === "heroes"
         ? window.IRON_PIT_BROWSER_HEROES?.[card.runnable_template_id] || card
