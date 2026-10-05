@@ -36,14 +36,16 @@ def test_magic_resistance_reuses_contextual_save_advantage() -> None:
 def test_troll_limb_regeneration_source_shape_is_certifiable() -> None:
     from app.content.monsters_zero_engine import build_zero_engine_monsters
 
-    limb = next(item for item in build_zero_engine_monsters() if item.name == "Troll Limb")
+    raw = next(item for item in build_zero_engine_monsters() if item.name == "Troll Limb")
+    assert raw.regeneration is None
+    limb = bind_monster_source_traits_2024(raw)
     row = _row("Troll Limb")
     assert limb.regeneration is not None
     assert limb.regeneration.amount == 5
     assert {item.value for item in limb.regeneration.suppressed_by_damage_types} == {"acid", "fire"}
     assert limb.regeneration.survives_zero_until_turn is True
-    fingerprinted = limb.model_copy(update={"source_trait_names": ["Regeneration", "Troll Spawn"]})
-    assert trait_issues(fingerprinted, row) == []
+    assert limb.source_trait_names == ["Regeneration", "Troll Spawn"]
+    assert trait_issues(limb, row) == []
 
 
 def test_troll_limb_is_raw_ready_in_production_roster() -> None:
