@@ -67,8 +67,9 @@ const karnok1 = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-2014-l1"];
 const karnok3 = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-2014-l3"];
 const karnok5 = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-2014-l5"];
 assert.ok(karnok1 && karnok3 && karnok5, "2014 Karnok loadout snapshots must exist");
-assert.ok(manufacturedQualifiers(karnok1).every((item) => !item.includes("silvered") && !item.includes("magical")));
-assert.ok(manufacturedQualifiers(karnok3).every((item) => item.includes("silvered")));
-assert.ok(manufacturedQualifiers(karnok5).every((item) => item.includes("magical")));
+const dmgUncommon = (item) => item.includes("silvered") && item.includes("adamantine") && item.includes("magical");
+assert.ok(manufacturedQualifiers(karnok1).every(dmgUncommon));
+assert.ok(manufacturedQualifiers(karnok3).every(dmgUncommon));
+assert.ok(manufacturedQualifiers(karnok5).every(dmgUncommon));
 
 console.log("2014 conditional damage-defense browser regression passed.");

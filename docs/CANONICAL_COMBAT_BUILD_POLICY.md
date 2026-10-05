@@ -123,7 +123,7 @@ If RAW requires a noncombat choice that cannot affect the arena, choose a legal 
 - A caster extends one deterministic class spell package as levels unlock more prepared/known spells and slots; do not create a new spellbook for each level.
 - Role variants may select different legal spell packages while sharing the same class slot progression.
 - Equipment changes only when a legal progression choice materially improves or is required by the canonical combat build.
-- Canonical manufactured weapons follow the Iron Pit loadout band in `IRON_PIT_RULES_CONTRACT.md` §23: levels 1–2 mundane, levels 3–4 silvered, levels 5–20 magical. Unarmed Strikes are not manufactured weapons and keep only class-feature qualifiers such as Ki-Empowered Strikes. This band exists so later-level pregens can actually hurt printed nonmagical/silvered/adamantine monster defenses; those monster defenses are never stripped.
+- Canonical manufactured weapons follow the Dungeon Master's Guide tables cited in `IRON_PIT_RULES_CONTRACT.md` §23 (2014 Magic Item Rarity p.135; 2024 Magic Items Awarded by Level / Random Magic Item Rarity). Uncommon armaments, silvered special material, and adamantine are legal from 1st level; do not invent a later homemade band. Unarmed Strikes keep only class-feature qualifiers such as Ki-Empowered Strikes. Printed monster nonmagical/silvered/adamantine defenses are never stripped.
 - Once a canonical subclass is selected for a compiled character track, progression remains on that subclass through level 20 unless the user explicitly changes the project architecture.
 
 ## Universal Combat Capability rule

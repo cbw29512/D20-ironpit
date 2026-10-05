@@ -7,17 +7,31 @@ from app.domain.models import CombatantTemplate, WeaponAttack
 
 logger = logging.getLogger(__name__)
 _UNARMED_WEAPON_IDS = frozenset({"unarmed-strike"})
+# 2014 DMG Magic Item Rarity p.135: Common and Uncommon = 1st or higher.
+_UNCOMMON_FROM_LEVEL = 1
+_DMG_TIER_MANUFACTURED = (
+    DamageSourceQualifier.SILVERED,
+    DamageSourceQualifier.ADAMANTINE,
+    DamageSourceQualifier.MAGICAL,
+)
 
 
 def canonical_pregen_weapon_source_qualifiers(level: int) -> list[DamageSourceQualifier]:
-    """Return Iron Pit canonical manufactured-weapon source qualifiers for one pregen level."""
+    """Return DMG-table manufactured-weapon source qualifiers for one pregen level.
+
+    Cited tables, not the 1-2/3-4/5+ example band:
+    - 2014 DMG Magic Item Rarity (p.135): Uncommon is appropriate at 1st or higher.
+      Weapon +1 and adamantine armaments are Uncommon.
+    - 2024 DMG Magic Items Awarded by Level and Random Magic Item Rarity: Uncommon
+      items are awarded in the 1-4 tier.
+    - PHB silvered weapons are special materials, not magic items, so they are
+      legal from 1st as well.
+    """
     try:
         if level not in range(1, 21):
             raise ValueError("Canonical pregen weapon qualifiers cover levels 1 through 20.")
-        if level >= 5:
-            return [DamageSourceQualifier.MAGICAL]
-        if level >= 3:
-            return [DamageSourceQualifier.SILVERED]
+        if level >= _UNCOMMON_FROM_LEVEL:
+            return list(_DMG_TIER_MANUFACTURED)
         return []
     except ValueError:
         raise
