@@ -100,6 +100,10 @@ def _build_seraphine(level: int) -> CombatantTemplate:
         ],
         persistent_save_zone_actions=build_seraphine_save_zones(level, save_dc),
         effect_removal_actions=[DISPEL_MAGIC.model_copy(deep=True)] if level >= 5 else [],
+        support_action_modes=(
+            ["turn-undead", "divine-spark", *(["preserve-life"] if level >= 3 else [])]
+            if level >= 2 else []
+        ),
         progression_features=ProgressionCombatFeatures(
             turning_failure_damage=(
                 AbilityScaledDamageRider(
