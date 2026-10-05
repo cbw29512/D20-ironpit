@@ -180,6 +180,8 @@
           sequence, round, member, setup, `${round}:${member.combatant_id}`, "end_turn",
         );
         if (endZones) { events.push(...endZones.events); sequence = endZones.sequence; }
+        const triggered = window.IRON_PIT_BROWSER_TRIGGERED_EXTRA_ATTACKS?.resolveAfterTurn(sequence, round, member, setup);
+        if (triggered) { events.push(...triggered.events); sequence = triggered.sequence; }
         const legend = window.IRON_PIT_BROWSER_LEGENDARY_ACTIONS?.resolveAfterTurn(sequence, round, member, setup);
         if (legend) { events.push(...legend.events); sequence = legend.sequence; }
         window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.expireCurrentTurnTypeResistances(setup);
