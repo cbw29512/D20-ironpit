@@ -53,6 +53,7 @@ def apply_spell_attack_damage_outcome(
             damage_types={part.damage_type for part in damage_components if part.applied_total},
             dice=dice,
             affected_states=affected_states,
+            damage_components=damage_components,
         )
         applied_conditions: list[str] = []
         if hit and target.state.is_alive and not target.state.is_dead:
