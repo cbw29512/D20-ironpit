@@ -1,3 +1,4 @@
+from app.combat.activation_movement import resolve_activation_movement
 from app.combat.concentration import start_concentration
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
@@ -6,7 +7,6 @@ from app.combat.modifier_stack import add_modifier
 from app.combat.movement import take_dash
 from app.combat.orc import use_adrenaline_rush
 from app.combat.state import begin_turn, build_combatant_state
-from app.combat.tactical_shift import resolve_tactical_shift
 from app.content.audited_barbarian import build_rokhan_stonefury
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.demo import build_goblin_warrior
@@ -60,16 +60,22 @@ def test_adrenaline_rush_keeps_resource_and_temp_hp_but_abstracts_dash_movement(
     assert state.temporary_hp == 2
 
 
-def test_tactical_shift_is_arena_neutral_under_fixed_formation() -> None:
+def test_activation_movement_fraction_uses_effective_speed() -> None:
     hero = _member("hero-1", "heroes", 0, build_karnok_stoneward_level(5))
     monster = _member("monster-1", "monsters", 35, build_goblin_warrior())
     setup = EncounterSetup(heroes=[hero], monsters=[monster], hero_total_levels=5, monster_total_cr="1/4")
     add_modifier(hero.state, _speed_modifier())
+    hero.state.movement_remaining_ft = 20
 
-    event = resolve_tactical_shift(1, 1, hero, setup)
+    events, sequence = resolve_activation_movement(
+        1, 1, hero, setup, FixedDiceProvider([1]), speed_fraction=0.5,
+        provokes_opportunity_attacks=False,
+    )
 
-    assert event is None
-    assert hero.position_ft == 0
+    assert sequence == 2
+    assert hero.position_ft == 10
+    assert hero.state.movement_remaining_ft == 20
+    assert events[-1].movement_ft == 10
 
 
 def test_failed_concentration_save_from_encounter_attack_cleans_ally_modifier() -> None:
