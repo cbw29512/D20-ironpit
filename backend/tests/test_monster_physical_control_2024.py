@@ -56,6 +56,19 @@ def test_chimera_unconditional_prone_on_hit_compiles() -> None:
     assert binding.knocks_prone
 
 
+
+def test_giant_ape_descriptive_save_action_recovers_heading() -> None:
+    binding = next(
+        item for item in compile_physical_controls(_row("Giant Ape"))
+        if item.action_name == "Boulder Toss"
+    )
+
+    assert binding.source_kind == "save"
+    assert binding.save_ability == "dexterity"
+    assert binding.save_dc == 17
+    assert binding.knocks_prone
+
+
 def test_reference_only_condition_words_do_not_create_false_blocker() -> None:
     names = {str(row["name"]) for row in load_monster_rows()}
 
@@ -67,7 +80,7 @@ def test_reference_only_condition_words_do_not_create_false_blocker() -> None:
 def test_complex_or_capacity_controls_stay_fail_closed() -> None:
     names = {str(row["name"]) for row in load_monster_rows()}
 
-    for monster in ("Glabrezu", "Elephant", "Fire Giant", "Water Elemental", "Lamia"):
+    for monster in ("Glabrezu", "Elephant", "Fire Giant", "Kraken", "Water Elemental", "Lamia"):
         assert not physical_control_coverage_matches(_row(monster))
         assert "condition-or-control" in _source_blockers(_row(monster), names)
 
