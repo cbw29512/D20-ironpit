@@ -490,6 +490,10 @@ A source may declare a normal `SavingThrowAction` with `max_targets > 1`. The sh
 
 A timed effect may declare `turn_behavior="single_activity"`. On each affected turn, the first voluntary category actually used—movement, Action, or Bonus Action—becomes that turn's sole voluntary category. Choosing movement removes Action and Bonus Action availability; choosing an Action removes Bonus Action availability and voluntary movement; choosing a Bonus Action removes Action availability and voluntary movement. Reactions are not affected. Multiple attacks that belong to one Attack action remain inside the chosen Action, but an effect that grants an additional Action cannot bypass the single-Action limit. The claim resets at the start of each turn and disappears when the owning timed-effect group expires or is removed.
 
+## Committed timed activities
+
+A `DelayedResourceRefill` is a committed timed activity, not an end-of-turn auto-timer. The creature spends its Action to begin. Fresh per-fight state records the start and completion rounds. While that state exists, the shared suppression helpers block Action, Bonus Action, and voluntary movement; they do not block Reactions. End-of-turn resolution restores the declared resources only at the recorded completion round, and only if the creature is still able to perform the activity. Incapacitated or dead creatures stop without restore. The printed source name remains presentation and audit metadata; engine dispatch uses the declarative activity, not a class or feature-name branch.
+
 
 ## Finite healing pools and named condition removal
 

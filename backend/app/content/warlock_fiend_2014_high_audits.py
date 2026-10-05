@@ -75,8 +75,10 @@ def build_varek_fiend_2014_high_audits(level: int) -> list[FeatureAudit]:
                 source_reference="D&D Basic Rules 2014: Warlock 20",
                 category="class", combat_relevant=True, automated=True,
                 notes=(
-                    "Uses the universal delayed resource-refill lifecycle: once Pact Magic is depleted, "
-                    "a 10-round source-owned timer restores all Pact slots and consumes the once-per-long-rest use."
+                    "Uses the universal committed 1-minute resource-refill activity: the creature spends an "
+                    "Action to entreat its patron, cannot take unrelated Actions, Bonus Actions, or voluntary "
+                    "movement while performing it, and restores all Pact slots only if the minute finishes. "
+                    "Printed text lists no damage interrupt."
                 ),
             )
         )

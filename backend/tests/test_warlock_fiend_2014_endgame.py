@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from app.combat.action_economy import is_available
 from app.combat.delayed_resource_refill import resolve_delayed_resource_refill_end_turn
-from app.combat.state import build_combatant_state
+from app.combat.delayed_resource_refill_start import start_delayed_resource_refill
+from app.combat.state import begin_turn, build_combatant_state
 from app.content.warlock_2014_progression import warlock_2014_level
 from app.content.warlock_fiend_2014_profile import build_varek_ashenmark_2014_profile
 from app.content.warlock_fiend_2014_runtime import build_varek_ashenmark_2014
@@ -46,21 +48,25 @@ def test_varek_level_nineteen_caps_constitution_and_keeps_four_pact_slots() -> N
     assert audits["ability-score-improvement-l19"].automated is True
 
 
-def test_varek_level_twenty_eldritch_master_arms_then_restores_pact_slots_after_ten_rounds() -> None:
+def test_varek_level_twenty_eldritch_master_is_a_committed_minute() -> None:
     varek = _member(20)
     pact = next(item for item in varek.state.resources if item.id == "spell-slot-5")
     master = next(item for item in varek.state.resources if item.id == "eldritch-master")
 
     pact.current_uses = 1
-    events, sequence = resolve_delayed_resource_refill_end_turn(1, 1, varek)
+    events, sequence = start_delayed_resource_refill(1, 1, varek)
     assert len(events) == 1
     assert events[0].feature_id == "eldritch-master"
     assert events[0].resource_remaining == 0
     assert pact.current_uses == 1
     assert master.current_uses == 0
     assert varek.state.delayed_resource_refills[0].completes_round == 11
+    assert is_available(varek.state, "action") is False
+    assert is_available(varek.state, "bonus_action") is False
 
     for round_number in range(2, 11):
+        begin_turn(varek.state)
+        assert is_available(varek.state, "action") is False
         events, sequence = resolve_delayed_resource_refill_end_turn(sequence, round_number, varek)
         assert events == []
         assert pact.current_uses == 1
@@ -77,8 +83,9 @@ def test_varek_level_twenty_eldritch_master_arms_then_restores_pact_slots_after_
     assert varek.state.delayed_resource_refills == []
 
 
-def test_varek_level_twenty_does_not_waste_eldritch_master_when_pact_slots_are_full() -> None:
+def test_varek_level_twenty_does_not_auto_start_eldritch_master_at_end_of_turn() -> None:
     varek = _member(20)
+    next(item for item in varek.state.resources if item.id == "spell-slot-5").current_uses = 0
     events, _ = resolve_delayed_resource_refill_end_turn(1, 1, varek)
 
     assert events == []
