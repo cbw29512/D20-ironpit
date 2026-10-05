@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.modifier_stack import effective_speed
+from app.combat.grapple import speed_is_zero
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -31,7 +32,7 @@ def resolve_activation_movement(
         if not living:
             return [], sequence
         target = min(living, key=lambda member: (abs(member.position_ft - mover.position_ft), member.combatant_id))
-        allowance = int(effective_speed(mover.state) * speed_fraction)
+        allowance = 0 if speed_is_zero(mover.state) else int(effective_speed(mover.state) * speed_fraction)
         if allowance <= 0:
             return [], sequence
 
