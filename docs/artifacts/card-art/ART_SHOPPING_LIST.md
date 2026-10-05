@@ -4,6 +4,8 @@ Generated from this presentation branch. Hero pregens have framed color portrait
 
 **Real-art inventory:** `docs/artifacts/card-art/REAL_ART_INVENTORY.md`. All 24 unique pregens now have framed color portraits. Monsters still ship SVG glyphs only. Do not treat pipeline demo drawings as source pictures.
 
+Live example: `docs/artifacts/card-art/before-after-2014-2024-karnok-seraphine.png` (2014 Karnok, 2024 Karnok, 2014 Seraphine).
+
 - **Heroes keep full-color portraits**, one per character per edition, reused across levels 1–20. Frame/crop with `--mode color-frame`.
 - **Only monsters** are converted to shadow-box silhouettes (`--mode silhouette`).
 

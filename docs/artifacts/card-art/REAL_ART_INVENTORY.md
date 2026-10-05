@@ -4,6 +4,15 @@ Hero pregens have Chris-approved full-color painterly portraits. Monsters still 
 
 Processed hero assets are `frontend/assets/portraits/heroes/hero-{2014|2024}-{class}.webp` (3:4, about 50–85 KB). One file per character per edition is reused across levels 1–20.
 
+Live fight-board screenshots of the wired portraits:
+
+- `docs/artifacts/card-art/before-after-2014-2024-karnok-seraphine.png` — 2014 Karnok, 2024 Karnok, and 2014 Seraphine
+- `docs/artifacts/card-art/2014-karnok-card.png` / `2024-karnok-card.png`
+- `docs/artifacts/card-art/2014-seraphine-card.png` / `2024-seraphine-card.png`
+- `docs/artifacts/card-art/2014-sample-board.png` / `2024-sample-board.png`
+- `docs/artifacts/card-art/2014-picker-karnok.png` — roster/selection dialog
+- `docs/artifacts/card-art/load-combat-board.png` — Load Combat board after a recorded monk duel
+
 ## Heroes — 24 of 24 have real color portraits
 
 One portrait per character per edition, reused across levels 1–20.
