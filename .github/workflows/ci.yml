@@ -497,6 +497,7 @@ jobs:
           node frontend/browser-group-healing-area.test.cjs
           node frontend/browser-cleric-2024-leftover-spells.test.cjs
           node frontend/browser-regeneration-legendary-resistance.test.cjs
+          node frontend/browser-triggered-extra-attacks.test.cjs
           node frontend/browser-legendary-actions.test.cjs
           node frontend/browser-ability-check-escape.test.cjs
           node frontend/browser-unicorn-2014.test.cjs
