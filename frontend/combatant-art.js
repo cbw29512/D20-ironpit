@@ -83,7 +83,7 @@
       const alt = attr(asset.alt || template?.name || "Combatant artwork");
       const sizes = attr(asset.sizes || "(max-width: 620px) 42vw, 12rem");
       const kind = template?.kind === "character" ? "portrait-image-hero" : "portrait-image-monster";
-      return `<img class="portrait-image ${kind}" src="${attr(asset.src)}"${srcset} sizes="${sizes}" alt="${alt}" loading="lazy" decoding="async" onerror="this.classList.add('is-broken');this.removeAttribute('src');const frame=this.closest('.fighter-portrait');if(frame)frame.classList.add('art-broken');"${position}>`;
+      return `<img class="portrait-image ${kind}" src="${attr(asset.src)}"${srcset} sizes="${sizes}" width="480" height="640" alt="${alt}" loading="lazy" decoding="async" onerror="this.classList.add('is-broken');this.removeAttribute('src');const frame=this.closest('.fighter-portrait');if(frame)frame.classList.add('art-broken');"${position}>`;
     } catch (error) {
       console.error("Failed to render combatant artwork", { templateId: template?.id, error });
       throw error;

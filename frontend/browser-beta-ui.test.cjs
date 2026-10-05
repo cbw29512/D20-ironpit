@@ -25,9 +25,11 @@ const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
 const rootHtml = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 for (const page of [html, rootHtml]) {
   const sections = [...page.matchAll(/<section\b[^>]*>/g)].map((match) => match[0]);
-  assert.match(sections[0], /class="battlefield"/, "board must be first");
-  assert.match(sections[1], /class="log-panel"/, "log must directly follow the board");
-  assert.match(sections[2], /class="preset-panel"/, "prebuilt fights must directly follow the log");
+  const board = sections.findIndex((section) => /class="battlefield"/.test(section));
+  assert.ok(board >= 0, "board must exist");
+  assert.match(sections[board], /id="pit"/, "primary CTA must land on the live board");
+  assert.match(sections[board + 1], /class="log-panel"/, "log must directly follow the board");
+  assert.match(sections[board + 2], /class="preset-panel"/, "prebuilt fights must directly follow the log");
 }
 const elements = new Map([...html.matchAll(/\bid="([^"]+)"/g)].map((match) => [match[1], node()]));
 const el = (id) => { assert.ok(elements.has(id), `missing page element #${id}`); return elements.get(id); };

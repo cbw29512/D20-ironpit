@@ -37,7 +37,7 @@
     const node = document.createElement("button");
     const addLabel = side === "monsters" ? "ADD MONSTER" : "ADD PREGEN";
     node.type = "button"; node.className = `battle-card empty-slot ${side}`; node.dataset.slotIndex = String(index);
-    node.innerHTML = `<span class="slot-number">${index + 1}</span><b>＋</b><strong>${addLabel}</strong><small>Click to choose a card</small>`;
+    node.innerHTML = `<span class="slot-number">${index + 1}</span><b aria-hidden="true">＋</b><strong>${addLabel}</strong><small>Click to choose a card</small>`;
     node.addEventListener("click", () => onOpen(side, index)); return node;
   }
 

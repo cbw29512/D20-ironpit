@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- loc values use the planned origin from frontend/site-origin.js (IRON_PIT_SITE_URL). -->
+<!-- https://ironpit.app is planned, not live, until Chris buys the domain and publishes. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://ironpit.app/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>
