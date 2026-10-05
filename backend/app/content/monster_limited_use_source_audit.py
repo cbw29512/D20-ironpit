@@ -8,7 +8,6 @@ from app.content.monster_catalog import load_monster_rows
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
-_ARENA_NEUTRAL_LIMITED_USE = frozenset({"traits:Loathsome Limbs (4/Day)"})
 _FIELDS = ("traits", "actions", "bonusActions", "reactions")
 _CONNECTORS = frozenset({"a", "an", "and", "of", "or", "the", "to"})
 _MARKER = re.compile(r"\((?:[^)]*(?:Recharge\s+\d(?:\s*[-–]\s*\d)?|\d+\s*/\s*Day)[^)]*)\)", re.I)
@@ -80,8 +79,13 @@ def limited_use_issues(template: CombatantTemplate, row: dict[str, object]) -> l
     if template.source_limited_use_names != expected:
         issues.append("source-limited-use-fingerprint-mismatch")
     for name in expected:
-        if name in _ARENA_NEUTRAL_LIMITED_USE:
-            continue
+        if name == "traits:Loathsome Limbs (4/Day)":
+            stacks = [
+                item for item in template.triggered_extra_attack_stacks
+                if item.source_id == "loathsome-limbs" and item.max_uses == 4
+            ]
+            if len(stacks) == 1:
+                continue
         if _recharge_binding_matches(template, name):
             continue
         slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
