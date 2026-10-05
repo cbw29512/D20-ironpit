@@ -30,11 +30,13 @@ def apply_zero_hp_save_damage_rider(
     rider = effect.zero_hp_rider
     if rider is None:
         return
+    if defender.is_dead and defender.template.kind == "character":
+        return
     round_text, separator, source_id = turn_key.partition(":")
     if not separator or not source_id:
         raise ValueError("Zero-HP save-damage riders require a round:source turn key.")
     round_number = int(round_text)
-    stabilize_at_zero(defender)
+    stabilize_at_zero(defender, intercept_zero_hp=True)
     source_effect_id = f"{effect.source}:zero-hp-save-damage"
     for condition_id in rider.condition_ids:
         apply_timed_condition(

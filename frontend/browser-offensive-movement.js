@@ -32,8 +32,10 @@
       for (const target of F().targetOrder(member, setup)) {
         if (!target.state.position) throw new Error("Grid offensive movement requires authoritative target positions.");
         const distance = S().distance(member, target);
+        const preferredMelee = O().tightestUsableMeleeReach?.(member, target) ?? null;
         for (const option of O().rangesForTarget(member, target, turnKey)) {
-          if (distance <= option.range) {
+          const goal = option.family === "melee" && preferredMelee != null ? preferredMelee : option.range;
+          if (distance <= goal) {
             if (option.family === "melee") meleeNow = true;
             else otherNow = true;
             continue;
@@ -43,7 +45,7 @@
             member,
             target,
             members,
-            option.range,
+            goal,
             member.state.movement_remaining_ft,
             setup.persistent_barriers || [],
           );
@@ -53,9 +55,9 @@
             distance,
             targetId: target.combatant_id,
             family: option.family,
-            range: option.range,
+            range: goal,
           };
-          if (option.family === "melee" && plan.final_distance_ft <= option.range) meleeReach.push(row);
+          if (option.family === "melee" && plan.final_distance_ft <= goal) meleeReach.push(row);
           else if (option.family === "melee" && plan.final_distance_ft < distance) meleeProgress.push(row);
           else if (plan.final_distance_ft < distance) rangedProgress.push(row);
         }

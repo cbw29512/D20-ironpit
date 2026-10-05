@@ -8,7 +8,7 @@ from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.formation_rows import member_is_backline
 from app.combat.grid_pathing import plan_movement_toward
 from app.combat.modifier_stack import effective_speed
-from app.combat.offensive_ranges import offensive_ranges_for_target
+from app.combat.offensive_ranges import offensive_ranges_for_target, tightest_usable_melee_reach_ft
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import OffensiveMovementIntent
@@ -38,8 +38,10 @@ def choose_offensive_movement_intent(
             if target.state.position is None:
                 raise ValueError("Grid offensive movement requires authoritative target positions.")
             distance = combatant_distance(attacker, target)
+            preferred_melee = tightest_usable_melee_reach_ft(attacker, target)
             for family, desired_distance in offensive_ranges_for_target(attacker, target, turn_key):
-                if distance <= desired_distance:
+                goal = preferred_melee if family == "melee" and preferred_melee is not None else desired_distance
+                if distance <= goal:
                     if family == "melee":
                         melee_legal_now = True
                     else:
@@ -50,7 +52,7 @@ def choose_offensive_movement_intent(
                     attacker,
                     target,
                     members,
-                    desired_distance,
+                    goal,
                     attacker.state.movement_remaining_ft,
                     setup.persistent_barriers,
                     setup.temporary_terrain_zones,
@@ -62,9 +64,9 @@ def choose_offensive_movement_intent(
                     distance,
                     target.combatant_id,
                     family,
-                    desired_distance,
+                    goal,
                 )
-                if family == "melee" and plan.final_distance_ft <= desired_distance:
+                if family == "melee" and plan.final_distance_ft <= goal:
                     melee_reach.append(row)
                 elif family == "melee" and plan.final_distance_ft < distance:
                     melee_progress.append(row)

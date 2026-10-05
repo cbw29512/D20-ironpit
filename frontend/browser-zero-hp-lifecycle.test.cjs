@@ -73,4 +73,38 @@ function downedHero() {
   assert.equal(E.available(state, "reaction"), true, "after healing, the already-refreshed Reaction is usable before the next turn");
 }
 
+{
+  const state = S.buildState(structuredClone(heroTemplate));
+  state.resources["relentless-endurance"] = 0;
+  state.current_hp = 1;
+  assert.equal(A.applyDamage(state, 1, false), "unconscious");
+  assert.equal(state.current_hp, 0);
+  assert.equal(state.is_dead, false);
+  assert.equal(state.is_unconscious, true);
+  assert.equal(state.is_alive, true);
+  assert.equal(state.death_save_failures, 0);
+}
+
+{
+  const state = downedHero();
+  state.death_save_successes = 2;
+  A.applyDamage(state, 4, true);
+  assert.equal(state.death_save_failures, 2);
+  assert.equal(state.death_save_successes, 2);
+  assert.equal(state.is_dead, false);
+  assert.equal(state.is_unconscious, true);
+}
+
+{
+  const Z = window.IRON_PIT_BROWSER_ZERO_HP;
+  const state = S.buildState(structuredClone(heroTemplate));
+  state.resources["relentless-endurance"] = 0;
+  assert.equal(A.applyDamage(state, state.current_hp + state.template.max_hp, false), "dead");
+  assert.equal(state.is_dead, true);
+  assert.equal(Z.stabilizeAtZero(state), "dead");
+  assert.equal(state.is_dead, true);
+  assert.equal(state.is_alive, false);
+  assert.equal(state.is_unconscious, false);
+}
+
 console.log("Browser zero-HP and start-turn lifecycle regressions passed.");

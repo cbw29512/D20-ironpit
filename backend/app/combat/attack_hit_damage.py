@@ -147,7 +147,8 @@ def resolve_attack_hit_damage(
     ):
         assert effect is not None
         apply_zero_hp_save_damage_rider(defender, effect, turn_key, affected_states)
-        outcome = "unconscious"
+        if not defender.is_dead:
+            outcome = "unconscious"
     cunning_strike_trip = resolve_trip(attacker, defender, dice, turn_key)
     cunning_strike_obscure = resolve_obscure(attacker, defender, dice, turn_key)
     return AttackHitDamageResolution(

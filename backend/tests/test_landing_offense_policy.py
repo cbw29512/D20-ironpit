@@ -217,6 +217,33 @@ def test_highest_damage_melee_wins_among_melee_options() -> None:
     assert pick.payload[1].id == "test-bite"
 
 
+def test_multiattack_beats_equal_damage_standalone_when_only_one_slot_can_land() -> None:
+    bite = _bite()
+    bite.weapon.reach_ft = 10
+    claw = _claw()
+    attacker = _member(
+        _caster_monster(extra_attacks=[claw]).model_copy(update={
+            "weapon_attack": bite,
+            "auto_hit_spell_actions": [],
+            "attack_action": AttackActionDefinition(
+                id="test-multiattack",
+                name="Multiattack",
+                slots=[
+                    AttackActionSlot(attack_ids=["test-bite"], save_action_ids=[]),
+                    AttackActionSlot(attack_ids=["test-claw"], save_action_ids=[]),
+                ],
+            ),
+        }),
+        "monster",
+        "monsters",
+        0,
+    )
+    target = _member(build_commoner(), "hero", "heroes", 10)
+    begin_turn(attacker.state)
+    pick = decide_post_move_offense(attacker, _setup(attacker, target), "1:monster")
+    assert pick.family == "attack-action"
+
+
 def test_spent_action_does_not_choose_another_attack() -> None:
     attacker = _member(_caster_monster(), "monster", "monsters", 0)
     target = _member(build_commoner(), "hero", "heroes", 5)

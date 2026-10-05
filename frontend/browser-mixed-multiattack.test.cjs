@@ -141,4 +141,27 @@ function rangedHybridSetup(protectedByFrontline) {
   assert.deepEqual(attacks.map((event) => event.weapon_id), ["sword", "sword"], "adjacent unscreened ranged Multiattack switches to melee");
 }
 
+load("browser-offensive-ranges.js");
+{
+  const attacker = member("monster-reach", "monsters", {
+    id: "reach-bird", name: "Reach Bird", kind: "monster", ruleset: "2014", size: "large",
+    armor_class: 15, max_hp: 80, speed_ft: 120, initiative_bonus: 0, primary_attack_id: "beak",
+    traits: [], resources: {}, saving_throw_actions: [],
+    attacks: [
+      { id: "beak", name: "Beak", kind: "melee", bonus: 13, reach: 10, diceCount: 4, diceSize: 8, damageBonus: 9, damageType: "piercing" },
+      { id: "talons", name: "Talons", kind: "melee", bonus: 13, reach: 5, diceCount: 4, diceSize: 6, damageBonus: 9, damageType: "slashing" },
+    ],
+    attack_action: { id: "multiattack", name: "Multiattack", slots: [
+      { attackIds: ["beak"], saveActionIds: [] },
+      { attackIds: ["talons"], saveActionIds: [] },
+    ] },
+  }, 10);
+  const target = member("hero-1", "heroes", heroes["karnok-stoneward-l1"], 5);
+  assert.equal(window.IRON_PIT_BROWSER_OFFENSIVE_RANGES.tightestUsableMeleeReach(attacker, target), 5);
+  assert.ok(
+    window.IRON_PIT_BROWSER_MULTIATTACK.expectedDamage(attacker, { heroes: [target], monsters: [attacker] })
+      > window.IRON_PIT_BROWSER_FORMATION.weaponMeanDamage(attacker.state.template.attacks[0]),
+  );
+}
+
 console.log("Browser range-aware mixed Multiattack regressions passed.");

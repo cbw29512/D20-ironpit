@@ -44,7 +44,8 @@
     RF()?.revertIfIncapacitated(state);
   }
 
-  function stabilizeAtZero(state) {
+  function stabilizeAtZero(state, interceptZeroHp = false) {
+    if (state.is_dead && !interceptZeroHp) return "dead";
     state.current_hp = 0;
     state.is_alive = true;
     state.is_dead = false;

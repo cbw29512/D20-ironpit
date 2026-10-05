@@ -186,7 +186,7 @@ def decide_post_move_offense(
             return max(damage, key=lambda item: (
                 item.expected_damage,
                 1 if melee_now and item.family in {"attack-action", "standard-attack"} else 0,
-                item.family,
+                item.family == "attack-action", item.family,
             ))
         target = living_opponents(attacker, setup)[0] if living_opponents(attacker, setup) else None
         if target is not None and can_use_presence(attacker, target):

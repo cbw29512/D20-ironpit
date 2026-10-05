@@ -24,6 +24,9 @@
 
   function deathSave(sequence, round, member) {
     const state = member.state;
+    if (state.template.kind !== "character" || state.current_hp !== 0 || state.is_dead || state.is_stable) {
+      throw new Error("This character does not currently make a Death Saving Throw.");
+    }
     const advantage = Boolean(state.template.death_save_advantage)
       || Boolean(window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.deathSaveAdvantage(state));
     const deathRoll = window.IRON_PIT_BROWSER_ROLLS.d20(0, advantage ? "advantage" : "normal"), natural = deathRoll.selected_roll;

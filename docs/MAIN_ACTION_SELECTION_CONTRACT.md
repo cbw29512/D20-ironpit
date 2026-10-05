@@ -82,9 +82,11 @@ Python and browser use the same landing-damage Action policy for heroes and mons
 2. pre-move replacement-form setup, then pre-move spell offense only when a melee attack cannot land this turn after useful legal approach movement;
 3. charge/closing and offensive movement: front-row melee closes or makes useful progress toward melee even when backup range can already land; back-row ranged/casters hold when they can already shoot or cast;
 4. recompute HP-threshold Actions after movement;
-5. compare landable damaging options (melee Attack/Multiattack, spell, area/save Action) and take the highest printed damage; Multiattack printed damage includes every landable slot (weapon attacks and save actions); if melee can land, exclude ranged weapon attacks and let melee win equal-damage ties;
+5. compare landable damaging options (melee Attack/Multiattack, spell, area/save Action) and take the highest printed damage; Multiattack printed damage includes every landable slot (weapon attacks and save actions); if melee can land, exclude ranged weapon attacks and let melee win equal-damage ties; when printed damage ties, prefer Attack/Multiattack over a standalone weapon attack;
 6. charm, Intimidating Presence, and other control only when no damaging option can land;
 7. Dodge fallback when no supported offensive option can be used.
+
+Front-row melee closing uses the tightest currently legal melee reach among Attack/Multiattack slots so every landable slot can fire. A longer-reach slot already in range does not freeze the combatant short of a still-usable shorter-reach slot. Dodge remains only the fallback after no supported offense can land.
 
 Among legal damage spells, highest-level first, then down the list. Most damage still wins when comparing a spell to another landable option. The initial migration used a static family walk; this landing-damage rule supersedes that walk for ordinary offense. Signature threshold Actions remain ahead of ordinary offense.
 

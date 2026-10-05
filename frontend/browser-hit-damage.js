@@ -53,9 +53,10 @@
     const roundNumber = Number.parseInt(turnKey.slice(0, separator), 10);
     const sourceId = turnKey.slice(separator + 1);
     if (!Number.isInteger(roundNumber)) throw new Error("Zero-HP save-damage rider round must be an integer.");
+    if (defender.is_dead && defender.template?.kind === "character") return;
     if (!Z()?.stabilizeAtZero) throw new Error("Browser zero-HP stabilization runtime is not loaded.");
     if (!T()?.apply) throw new Error("Browser timed-condition runtime is not loaded.");
-    Z().stabilizeAtZero(defender);
+    Z().stabilizeAtZero(defender, true);
     const sourceEffectId = `${effect.source}:zero-hp-save-damage`;
     for (const conditionId of rider.conditionIds || []) {
       T().apply(defender, conditionId, sourceId, {
@@ -173,7 +174,7 @@
       hpBufferBefore, appliedTotal, damageComponents, effect, saveComponentPresent,
     )) {
       applyZeroHpSaveDamageRider(defender, effect, turnKey);
-      damageOutcome = "unconscious";
+      if (!defender.is_dead) damageOutcome = "unconscious";
     }
     const cunningStrikeTrip = window.IRON_PIT_BROWSER_SNEAK_ATTACK?.resolveTrip(
       attacker, defender, turnKey,

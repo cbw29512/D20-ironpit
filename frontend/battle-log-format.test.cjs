@@ -29,14 +29,56 @@ const L = window.IRON_PIT_BATTLE_LOG;
 
 {
   const text = L.format({
-    event_type: "attack", actor_name: "Bandit", target_name: "Fighter", attack_name: "Scimitar",
-    target_ac: 18, hit: true, critical: false,
-    attack_roll: { selected_roll: 16, rolls: [16], modifier: 3, total: 19, mode: "normal" },
-    damage_roll: { total: 6 }, damage_components: [{ total: 6, applied_total: 6, damage_type: "slashing" }],
-    hp_before: 12, hp_after: 6, death_save_failures_before: 0, death_save_failures: 0,
-    applied_condition_ids: [], is_dead: false,
+    event_type: "attack", actor_name: "Roc", target_name: "Karnok Stoneward", attack_name: "Beak",
+    target_ac: 17, hit: true, critical: false,
+    attack_roll: { selected_roll: 12, rolls: [12], modifier: 13, total: 25, mode: "normal" },
+    damage_roll: { total: 27 }, damage_components: [{ total: 27, applied_total: 27, damage_type: "piercing" }],
+    hp_before: 12, hp_after: 0, death_save_failures_before: 0, death_save_failures: 0,
+    applied_condition_ids: ["prone"], is_dead: false,
   });
-  assert.match(text, /Bandit → Fighter/); assert.match(text, /19 vs AC 18/); assert.match(text, /6 slashing/); assert.match(text, /HP 12→6/);
+  assert.match(text, /Roc → Karnok Stoneward/);
+  assert.match(text, /Beak/);
+  assert.match(text, /UNCONSCIOUS/);
+  assert.doesNotMatch(text, /DEAD/);
+}
+
+{
+  const text = L.format({
+    event_type: "attack", actor_name: "Roc", target_name: "Seraphine Dawnshield", attack_name: "Talons",
+    target_ac: 18, hit: true, critical: true,
+    attack_roll: { selected_roll: 20, rolls: [20], modifier: 13, total: 33, mode: "normal" },
+    damage_roll: { total: 8 }, damage_components: [{ total: 8, applied_total: 8, damage_type: "slashing" }],
+    hp_before: 0, hp_after: 0, death_save_successes_before: 2, death_save_successes: 2,
+    death_save_failures_before: 0, death_save_failures: 2, applied_condition_ids: [], is_dead: false,
+  });
+  assert.match(text, /Talons/);
+  assert.match(text, /\+2 Death failures \(0→2\)/);
+  assert.match(text, /UNCONSCIOUS/);
+  assert.doesNotMatch(text, /now 0/);
+  assert.doesNotMatch(text, /DEAD/);
+}
+
+{
+  const text = L.format({
+    event_type: "attack", actor_name: "Roc", target_name: "Seraphine Dawnshield", attack_name: "Talons",
+    target_ac: 18, hit: true, critical: true,
+    attack_roll: { selected_roll: 20, rolls: [20], modifier: 13, total: 33, mode: "normal" },
+    damage_roll: { total: 40 }, damage_components: [{ total: 40, applied_total: 40, damage_type: "slashing" }],
+    hp_before: 0, hp_after: 0, death_save_successes_before: 2, death_save_successes: 2,
+    death_save_failures_before: 0, death_save_failures: 0, applied_condition_ids: [], is_dead: true,
+  });
+  assert.match(text, /instant death \(damage ≥ max HP\)/);
+  assert.match(text, /DEAD/);
+  assert.doesNotMatch(text, /\+2 Death failures \(now 0\)/);
+}
+
+{
+  const text = L.format({
+    event_type: "attack", actor_name: "Roc", target_name: "Karnok Stoneward", attack_name: "Beak",
+    hit: true, critical: false, hp_before: 0, hp_after: 0, is_dead: true, is_stable: false,
+  });
+  assert.match(text, /DEAD/);
+  assert.doesNotMatch(text, /UNCONSCIOUS/);
 }
 
 {
@@ -135,6 +177,20 @@ const L = window.IRON_PIT_BATTLE_LOG;
   assert.match(text, /6 slashing/);
   assert.match(text, /To hit: 16 \+ 3 = 19 vs AC 18/);
   assert.doesNotMatch(text, /placeholder|lorem|example fight/i);
+  const spamBattle = {
+    events: [{
+      round_number: 1, event_type: "attack", actor_name: "Roc", target_name: "Karnok", attack_name: "Beak",
+      hit: true, critical: false, hp_before: 12, hp_after: 0, is_dead: false,
+      audit: { steps: [
+        { phase: "action_selection", kind: "rule", label: "Roc: Beak" },
+        { rule: "Resolution", detail: "Applied." },
+        { step: "Resolution", outcome: "Applied." },
+      ] },
+    }],
+  };
+  const downloaded = exportLog.textFromBattle(spamBattle);
+  assert.match(downloaded, /Roc: Beak/);
+  assert.doesNotMatch(downloaded, /Resolution: Applied/);
   exportLog.remember({ events: [] });
   assert.equal(button.disabled, true);
 }

@@ -30,9 +30,14 @@
   }
 
   function attackDeathLabel(event) {
-    if (!event.hit || event.hp_before !== 0 || event.death_save_failures == null) return "";
-    const added = event.critical ? 2 : 1;
-    return `damage at 0 HP: +${added} Death failure${added === 1 ? "" : "s"} (now ${event.death_save_failures})`;
+    if (!event.hit || event.hp_before !== 0) return "";
+    const before = event.death_save_failures_before, after = event.death_save_failures;
+    const added = before == null || after == null ? 0 : after - before;
+    if (added > 0) {
+      return `damage at 0 HP: +${added} Death failure${added === 1 ? "" : "s"} (${before}→${after})`;
+    }
+    if (event.is_dead) return "damage at 0 HP: instant death (damage ≥ max HP)";
+    return "";
   }
 
   function appendState(pieces, event, damaged = true) {
@@ -42,6 +47,7 @@
     if (event.removed_condition_ids?.length) pieces.push(`ended ${event.removed_condition_ids.map(sourceLabel).join(", ")}`);
     const concentration = concentrationLabel(event); if (concentration) pieces.push(concentration);
     if (event.is_dead) pieces.push("DEAD");
+    else if (event.hp_after === 0) pieces.push(event.is_stable ? "STABLE" : "UNCONSCIOUS");
   }
 
   function formatInitiative(event) {

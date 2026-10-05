@@ -59,6 +59,15 @@ def parse_movement_profile(source_speed: object) -> MovementModes:
     )
 
 
+def standard_arena_closing_speed_from_modes(modes: MovementModes) -> int:
+    """Fastest printed walk/fly speed legal in the open, flat standard Iron Pit."""
+    try:
+        return max(getattr(modes, _MODE_FIELDS[mode]) for mode in _STANDARD_ARENA_MODES)
+    except Exception:
+        logger.exception("Failed standard-arena closing speed from movement modes.")
+        raise
+
+
 def standard_arena_closing_speed(source_speed: object) -> int:
     """Fastest printed mode legal in the open, flat standard Iron Pit."""
     modes = parse_movement_modes(source_speed)

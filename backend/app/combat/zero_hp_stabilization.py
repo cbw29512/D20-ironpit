@@ -10,9 +10,11 @@ _DODGE_EFFECT_ID = "dodge"
 _PRONE_EFFECT_ID = "prone"
 
 
-def stabilize_at_zero(state: CombatantState) -> str:
+def stabilize_at_zero(state: CombatantState, *, intercept_zero_hp: bool = False) -> str:
     """Force a source-declared stable 0-HP state after ordinary damage resolution."""
     try:
+        if state.is_dead and not intercept_zero_hp:
+            return "dead"
         state.current_hp = 0
         state.is_alive = True
         state.is_dead = False

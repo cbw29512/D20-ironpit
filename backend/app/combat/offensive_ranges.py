@@ -105,6 +105,43 @@ def _spell_ranges(attacker: EncounterCombatant, turn_key: str) -> list[Offensive
         raise
 
 
+def tightest_usable_melee_reach_ft(
+    attacker: EncounterCombatant,
+    target: EncounterCombatant,
+) -> int | None:
+    """Smallest currently legal melee reach among Attack/Multiattack slots, else any melee."""
+    try:
+        attacks = [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
+        by_id = {attack.id: attack for attack in attacks}
+        reaches: list[int] = []
+        definition = attacker.state.template.attack_action
+        if definition is not None:
+            for slot in definition.slots:
+                for attack_id in slot.attack_ids:
+                    attack = by_id.get(attack_id)
+                    if (
+                        attack is not None
+                        and attack.weapon.attack_kind is WeaponAttackKind.MELEE
+                        and attack_allowed_against(attack, attacker.combatant_id, target.state)
+                    ):
+                        reaches.append(attack.weapon.reach_ft)
+        if not reaches:
+            for attack in attacks:
+                if (
+                    attack.weapon.attack_kind is WeaponAttackKind.MELEE
+                    and attack_allowed_against(attack, attacker.combatant_id, target.state)
+                ):
+                    reaches.append(attack.weapon.reach_ft)
+        return min(reaches) if reaches else None
+    except Exception:
+        logger.exception(
+            "Failed tightest melee-reach probe for %s against %s.",
+            attacker.combatant_id,
+            target.combatant_id,
+        )
+        raise
+
+
 def offensive_ranges_for_target(
     attacker: EncounterCombatant,
     target: EncounterCombatant,
