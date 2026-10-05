@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Literal
 
+from app.combat.turn_damage import note_single_type_turn_damage
 from app.combat.concentration import resolve_concentration_damage
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
@@ -157,6 +158,7 @@ def apply_damage(
         incoming = amount
         types = damage_types or set()
         note_incoming_damage_types(state, types)
+        note_single_type_turn_damage(state, incoming, types)
         amount = _after_temporary_hp(state, amount)
         amount, _ = apply_replacement_form_damage(state, amount)
         if state.current_hp == 0:
