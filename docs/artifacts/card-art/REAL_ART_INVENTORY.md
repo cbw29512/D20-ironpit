@@ -1,6 +1,6 @@
 # Real card-art inventory
 
-Hero pregens have Chris-approved full-color painterly portraits. Two hundred forty approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
+Hero pregens have Chris-approved full-color painterly portraits. Two hundred ninety-four approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
 
 Processed hero assets are `frontend/assets/portraits/heroes/hero-{2014|2024}-{class}.webp` (3:4, about 50–85 KB). One file per character per edition is reused across levels 1–20.
 
@@ -46,7 +46,7 @@ One portrait per character per edition, reused across levels 1–20.
 | `hero-2024-warlock` | Varek Ashenmark | Warlock | `frontend/assets/portraits/heroes/hero-2024-warlock.webp` |
 | `hero-2024-wizard` | Elian Starweaver | Wizard | `frontend/assets/portraits/heroes/hero-2024-wizard.webp` |
 
-## Monsters — 240 approved silhouettes; remaining cards keep the SVG glyph
+## Monsters — 294 approved silhouettes; remaining cards keep the SVG glyph
 
 Live fight-board / picker captures of the wired silhouettes:
 
@@ -63,7 +63,7 @@ The same creature image is registered to the real 2014 runtime id (`2014-{slug}`
 
 Not mapped, even when a similar name exists:
 
-- Goblin art is not used for Goblin Minion, Goblin Boss, or Hobgoblin; those three now have their own files
+- Goblin art is not used for Goblin Warrior, Goblin Minion, Goblin Boss, or Hobgoblin; those four now have their own files
 - 2014 Minotaur art is not used for Minotaur of Baphomet or Minotaur Skeleton
 - Skeleton / Zombie / Crocodile / Wolf / Boar / Guard / Spider / Ape / Snake / Rat / Hawk / Bandit / Cultist / Priest / Mage / Vampire / Pegasus / Medusa art is not reused for Warhorse Skeleton, Ogre Zombie, Giant Crocodile, Dire Wolf, Winter Wolf, Giant Boar, Guard Captain, Giant Wolf Spider, Giant Ape, Giant Constrictor Snake, Giant Rat, Blood Hawk vs Hawk, Bandit Captain, Cultist Fanatic, Priest Acolyte, Archmage, Vampire, Unicorn, or Gorgon
 - Hippopotamus and Manticore exist in the 2024 roster only
@@ -82,17 +82,18 @@ Not mapped, even when a similar name exists:
 - `beholder.webp` was processed but is not registered: neither the 2014 certified roster, the 2024 certified roster, nor the 330-name 2024 catalog has `beholder`
 - `drow.webp`, `duergar.webp`, `displacer-beast.webp`, `flumph.webp`, `froghemoth.webp`, and `galeb-duhr.webp` were processed but are not registered: none of those slugs exist in the 2014 certified roster, the 2024 certified roster, or the 330-name 2024 catalog
 - Guard Captain is distinct from Guard
-- Giant Venomous Snake is distinct from Constrictor Snake, Flying Snake, and Giant Constrictor Snake; the same raster serves 2014 Giant Poisonous Snake
-- 2014 Giant Sea Horse uses `giant-seahorse.webp` (edition spelling of the same creature)
+- Giant Venomous Snake is distinct from Constrictor Snake, Flying Snake, Giant Constrictor Snake, and 2014 Giant Poisonous Snake; each renamed edition snake has its own raster
+- 2014 Giant Sea Horse uses `giant-sea-horse.webp`; 2024 Giant Seahorse keeps `giant-seahorse.webp`
 - Green Dragon Wyrmling and Gold Dragon Wyrmling are distinct from their Adult counterparts
 - Gnoll Warrior is the 2024 catalog id; there is no plain `gnoll` roster row
 - Hawk is distinct from Blood Hawk; Owl is distinct from Giant Owl and Owlbear; Hyena / Lizard / Octopus / Hunter Shark are distinct from their Giant counterparts
 - Hobgoblin Captain is distinct from Hobgoblin Warrior; Ice Mephit is distinct from Magma Mephit and Dust Mephit
-- 2014 Kobold and 2024 Kobold Warrior share `kobold-warrior.webp`; 2014 Merfolk and 2024 Merfolk Skirmisher share `merfolk.webp`
+- 2014 Kobold uses `kobold.webp`; 2024 Kobold Warrior uses `kobold-warrior.webp`
+- 2014 Merfolk uses `merfolk.webp`; 2024 Merfolk Skirmisher uses `merfolk-skirmisher.webp`
 
 | File | 2014 runtime | 2024 runtime | 2024 catalog |
 |---|---|---|---|
-| `goblin.webp` | `2014-goblin` | `srd-goblin-warrior` | `srd-5.2.1-2024-monster-goblin-warrior` |
+| `goblin.webp` | `2014-goblin` | — | — |
 | `berserker.webp` | `2014-berserker` | — | `srd-5.2.1-2024-monster-berserker` |
 | `brown-bear.webp` | `2014-brown-bear` | `srd-brown-bear` | `srd-5.2.1-2024-monster-brown-bear` |
 | `dire-wolf.webp` | `2014-dire-wolf` | `srd-dire-wolf` | `srd-5.2.1-2024-monster-dire-wolf` |
@@ -270,10 +271,10 @@ Not mapped, even when a similar name exists:
 | `giant-hyena.webp` | — | — | `srd-5.2.1-2024-monster-giant-hyena` |
 | `giant-lizard.webp` | `2014-giant-lizard` | `srd-giant-lizard` | `srd-5.2.1-2024-monster-giant-lizard` |
 | `giant-octopus.webp` | — | — | `srd-5.2.1-2024-monster-giant-octopus` |
-| `giant-seahorse.webp` | `2014-giant-sea-horse` | — | `srd-5.2.1-2024-monster-giant-seahorse` |
+| `giant-seahorse.webp` | — | — | `srd-5.2.1-2024-monster-giant-seahorse` |
 | `giant-shark.webp` | `2014-giant-shark` | `srd-giant-shark` | `srd-5.2.1-2024-monster-giant-shark` |
 | `giant-toad.webp` | — | — | `srd-5.2.1-2024-monster-giant-toad` |
-| `giant-venomous-snake.webp` | `2014-giant-poisonous-snake` | `srd-giant-venomous-snake` | `srd-5.2.1-2024-monster-giant-venomous-snake` |
+| `giant-venomous-snake.webp` | — | `srd-giant-venomous-snake` | `srd-5.2.1-2024-monster-giant-venomous-snake` |
 | `giant-vulture.webp` | `2014-giant-vulture` | `srd-giant-vulture` | `srd-5.2.1-2024-monster-giant-vulture` |
 | `giant-wasp.webp` | `2014-giant-wasp` | `srd-giant-wasp` | `srd-5.2.1-2024-monster-giant-wasp` |
 | `giant-weasel.webp` | `2014-giant-weasel` | `srd-giant-weasel` | `srd-5.2.1-2024-monster-giant-weasel` |
@@ -305,7 +306,8 @@ Not mapped, even when a similar name exists:
 | `iron-golem.webp` | — | — | `srd-5.2.1-2024-monster-iron-golem` |
 | `jackal.webp` | `2014-jackal` | `srd-jackal` | `srd-5.2.1-2024-monster-jackal` |
 | `killer-whale.webp` | `2014-killer-whale` | `srd-killer-whale` | `srd-5.2.1-2024-monster-killer-whale` |
-| `kobold-warrior.webp` | `2014-kobold` | `srd-kobold-warrior` | `srd-5.2.1-2024-monster-kobold-warrior` |
+| `kobold.webp` | `2014-kobold` | — | — |
+| `kobold-warrior.webp` | — | `srd-kobold-warrior` | `srd-5.2.1-2024-monster-kobold-warrior` |
 | `kraken.webp` | — | — | `srd-5.2.1-2024-monster-kraken` |
 | `lamia.webp` | — | — | `srd-5.2.1-2024-monster-lamia` |
 | `lemure.webp` | — | `srd-lemure` | `srd-5.2.1-2024-monster-lemure` |
@@ -317,7 +319,8 @@ Not mapped, even when a similar name exists:
 | `mammoth.webp` | `2014-mammoth` | — | `srd-5.2.1-2024-monster-mammoth` |
 | `marilith.webp` | — | — | `srd-5.2.1-2024-monster-marilith` |
 | `mastiff.webp` | `2014-mastiff` | `srd-mastiff` | `srd-5.2.1-2024-monster-mastiff` |
-| `merfolk.webp` | `2014-merfolk` | `srd-merfolk-skirmisher` | `srd-5.2.1-2024-monster-merfolk-skirmisher` |
+| `merfolk.webp` | `2014-merfolk` | — | — |
+| `merfolk-skirmisher.webp` | — | `srd-merfolk-skirmisher` | `srd-5.2.1-2024-monster-merfolk-skirmisher` |
 | `merrow.webp` | — | — | `srd-5.2.1-2024-monster-merrow` |
 | `mimic.webp` | — | — | `srd-5.2.1-2024-monster-mimic` |
 | `mule.webp` | `2014-mule` | `srd-mule` | `srd-5.2.1-2024-monster-mule` |
@@ -332,5 +335,57 @@ Not mapped, even when a similar name exists:
 | `otyugh.webp` | — | — | `srd-5.2.1-2024-monster-otyugh` |
 | `owl.webp` | `2014-owl` | `srd-owl` | `srd-5.2.1-2024-monster-owl` |
 | `phase-spider.webp` | — | — | `srd-5.2.1-2024-monster-phase-spider` |
+| `crab.webp` | `2014-crab` | `srd-crab` | `srd-5.2.1-2024-monster-crab` |
+| `giant-poisonous-snake.webp` | `2014-giant-poisonous-snake` | — | — |
+| `giant-sea-horse.webp` | `2014-giant-sea-horse` | — | — |
+| `goblin-warrior.webp` | — | `srd-goblin-warrior` | `srd-5.2.1-2024-monster-goblin-warrior` |
+| `ice-devil.webp` | — | — | `srd-5.2.1-2024-monster-ice-devil` |
+| `panther.webp` | `2014-panther` | `srd-panther` | `srd-5.2.1-2024-monster-panther` |
+| `piranha.webp` | — | `srd-piranha` | `srd-5.2.1-2024-monster-piranha` |
+| `plesiosaurus.webp` | `2014-plesiosaurus` | `srd-plesiosaurus` | `srd-5.2.1-2024-monster-plesiosaurus` |
+| `poisonous-snake.webp` | `2014-poisonous-snake` | — | — |
+| `polar-bear.webp` | `2014-polar-bear` | `srd-polar-bear` | `srd-5.2.1-2024-monster-polar-bear` |
+| `pony.webp` | `2014-pony` | `srd-pony` | `srd-5.2.1-2024-monster-pony` |
+| `pteranodon.webp` | `2014-pteranodon` | `srd-pteranodon` | `srd-5.2.1-2024-monster-pteranodon` |
+| `quipper.webp` | `2014-quipper` | — | — |
+| `rat.webp` | `2014-rat` | `srd-rat` | `srd-5.2.1-2024-monster-rat` |
+| `raven.webp` | `2014-raven` | `srd-raven` | `srd-5.2.1-2024-monster-raven` |
+| `reef-shark.webp` | `2014-reef-shark` | `srd-reef-shark` | `srd-5.2.1-2024-monster-reef-shark` |
+| `rhinoceros.webp` | `2014-rhinoceros` | `srd-rhinoceros` | `srd-5.2.1-2024-monster-rhinoceros` |
+| `riding-horse.webp` | `2014-riding-horse` | `srd-riding-horse` | `srd-5.2.1-2024-monster-riding-horse` |
+| `saber-toothed-tiger.webp` | `2014-saber-toothed-tiger` | `srd-saber-toothed-tiger` | `srd-5.2.1-2024-monster-saber-toothed-tiger` |
+| `sahuagin-warrior.webp` | — | `srd-sahuagin-warrior` | `srd-5.2.1-2024-monster-sahuagin-warrior` |
+| `satyr.webp` | `2014-satyr` | — | `srd-5.2.1-2024-monster-satyr` |
+| `scorpion.webp` | `2014-scorpion` | `srd-scorpion` | `srd-5.2.1-2024-monster-scorpion` |
+| `scout.webp` | — | `srd-scout` | `srd-5.2.1-2024-monster-scout` |
+| `spider.webp` | `2014-spider` | `srd-spider` | `srd-5.2.1-2024-monster-spider` |
+| `spy.webp` | `2014-spy` | `srd-spy` | `srd-5.2.1-2024-monster-spy` |
+| `swarm-of-bats.webp` | `2014-swarm-of-bats` | `srd-swarm-of-bats` | `srd-5.2.1-2024-monster-swarm-of-bats` |
+| `swarm-of-crawling-claws.webp` | — | `srd-swarm-of-crawling-claws` | `srd-5.2.1-2024-monster-swarm-of-crawling-claws` |
+| `swarm-of-insects.webp` | `2014-swarm-of-insects` | `srd-swarm-of-insects` | `srd-5.2.1-2024-monster-swarm-of-insects` |
+| `swarm-of-piranhas.webp` | — | `srd-swarm-of-piranhas` | `srd-5.2.1-2024-monster-swarm-of-piranhas` |
+| `swarm-of-poisonous-snakes.webp` | `2014-swarm-of-poisonous-snakes` | — | — |
+| `swarm-of-quippers.webp` | `2014-swarm-of-quippers` | — | — |
+| `swarm-of-rats.webp` | `2014-swarm-of-rats` | `srd-swarm-of-rats` | `srd-5.2.1-2024-monster-swarm-of-rats` |
+| `swarm-of-ravens.webp` | `2014-swarm-of-ravens` | — | `srd-5.2.1-2024-monster-swarm-of-ravens` |
+| `swarm-of-venomous-snakes.webp` | — | `srd-swarm-of-venomous-snakes` | `srd-5.2.1-2024-monster-swarm-of-venomous-snakes` |
+| `thug.webp` | `2014-thug` | — | — |
+| `tiger.webp` | `2014-tiger` | `srd-tiger` | `srd-5.2.1-2024-monster-tiger` |
+| `tough.webp` | — | `srd-tough` | `srd-5.2.1-2024-monster-tough` |
+| `tribal-warrior.webp` | `2014-tribal-warrior` | — | — |
+| `twig-blight.webp` | `2014-twig-blight` | — | — |
+| `venomous-snake.webp` | — | `srd-venomous-snake` | `srd-5.2.1-2024-monster-venomous-snake` |
+| `violet-fungus.webp` | — | `srd-violet-fungus` | `srd-5.2.1-2024-monster-violet-fungus` |
+| `vulture.webp` | `2014-vulture` | `srd-vulture` | `srd-5.2.1-2024-monster-vulture` |
+| `warhorse.webp` | `2014-warhorse` | `srd-warhorse` | `srd-5.2.1-2024-monster-warhorse` |
+| `warrior-infantry.webp` | — | `srd-warrior-infantry` | `srd-5.2.1-2024-monster-warrior-infantry` |
+| `warrior-veteran.webp` | — | `srd-warrior-veteran` | `srd-5.2.1-2024-monster-warrior-veteran` |
+| `weasel.webp` | `2014-weasel` | `srd-weasel` | `srd-5.2.1-2024-monster-weasel` |
+| `white-dragon-wyrmling.webp` | `2014-white-dragon-wyrmling` | `srd-white-dragon-wyrmling` | `srd-5.2.1-2024-monster-white-dragon-wyrmling` |
+| `winter-wolf.webp` | `2014-winter-wolf` | — | `srd-5.2.1-2024-monster-winter-wolf` |
+| `xorn.webp` | — | `srd-xorn` | `srd-5.2.1-2024-monster-xorn` |
+| `young-blue-dragon.webp` | `2014-young-blue-dragon` | `srd-young-blue-dragon` | `srd-5.2.1-2024-monster-young-blue-dragon` |
+| `young-green-dragon.webp` | `2014-young-green-dragon` | `srd-young-green-dragon` | `srd-5.2.1-2024-monster-young-green-dragon` |
+| `young-white-dragon.webp` | `2014-young-white-dragon` | `srd-young-white-dragon` | `srd-5.2.1-2024-monster-young-white-dragon` |
 
 Every other monster still uses `figure-portraits.js`. See `ART_SHOPPING_LIST.md` for the remaining missing/inaccurate table.
