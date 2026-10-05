@@ -50,7 +50,7 @@ jobs:
       - name: Generate certification manifest candidates
         run: python scripts/verify_certification_manifests.py --write
       - name: Refresh generated hero progression artifacts
-        if: startsWith(github.event.pull_request.head.ref, 'feat/2024-paladin-') || startsWith(github.event.pull_request.head.ref, 'feat/2024-ranger-')
+        if: startsWith(github.event.pull_request.head.ref, 'feat/2024-paladin-') || startsWith(github.event.pull_request.head.ref, 'feat/2024-ranger-') || github.event.pull_request.head.ref == 'refactor/second-wind-universal-healing-v2'
         run: |
           python scripts/prepare_static_site.py
           git config user.name "iron-pit-certification"
