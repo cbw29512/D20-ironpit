@@ -37,6 +37,7 @@
     const node = document.createElement("button");
     const addLabel = side === "monsters" ? "ADD MONSTER" : "ADD PREGEN";
     node.type = "button"; node.className = `battle-card empty-slot ${side}`; node.dataset.slotIndex = String(index);
+    node.setAttribute("aria-label", `${side === "monsters" ? "Monster" : "Hero"} slot ${index + 1}, empty. Add a card.`);
     node.innerHTML = `<span class="slot-number">${index + 1}</span><b>＋</b><strong>${addLabel}</strong><small>Click to choose a card</small>`;
     node.addEventListener("click", () => onOpen(side, index)); return node;
   }
@@ -45,6 +46,7 @@
     const template = runtimeTemplate(card, side), node = document.createElement("button");
     const monsterCard = card.kind === "monster";
     node.type = "button"; node.className = `battle-card occupied ${side}`; node.dataset.slotIndex = String(index);
+    node.setAttribute("aria-label", `${card.name}, ${side === "monsters" ? "monster" : "hero"} slot ${index + 1}`);
     node.innerHTML = `<span class="slot-number">${index + 1}</span><span class="initiative-badge" aria-label="Initiative">—</span>${figureMarkup(template)}<strong class="card-name"></strong><small class="card-meta"></small><div class="card-status-lanes"><div class="card-status-lane card-status-buffs" aria-label="Buffs"><small>BUFFS</small><div class="card-concentration" hidden></div><div class="card-buffs"></div></div><div class="card-status-lane card-status-debuffs" aria-label="Debuffs"><small>DEBUFFS</small><div class="card-debuffs"></div></div></div><div class="card-hp"><span></span></div><small class="hp-text"></small><span class="death-stamp">✕ DEAD</span>`;
     node.querySelector(".card-name").textContent = card.name;
     node.querySelector(".card-meta").textContent = monsterCard ? `${card.monster_type} · CR ${card.challenge_rating}` : `${card.class_name} · Level ${card.level} · ${card.build_name}`;
