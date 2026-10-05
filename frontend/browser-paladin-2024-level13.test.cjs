@@ -20,7 +20,7 @@ try {
   assert.equal(hero.name, previous.name);
   assert.deepEqual(hero.ability_scores, previous.ability_scores);
   assert.equal(hero.max_hp, 108);
-  assert.equal(hero.attacks.find(a => a.id === hero.primary_attack_id).bonus, 10);
+  assert.equal(hero.attacks.find(a => a.id === hero.primary_attack_id).bonus, 12);
   assert.equal(hero.saving_throw_bonuses.charisma, 8);
   assert.equal(hero.skill_bonuses.persuasion, 8);
   assert.equal(hero.saving_throw_actions[0].dc, 16);
@@ -81,9 +81,9 @@ try {
   };
   const hit = window.IRON_PIT_BROWSER_ROLLS.weaponDamage(attacker, thrown, true, "normal", "1:aurelia", null, target);
   assert.deepEqual(hit.components.map(c => [c.source, c.notation]), [
-    ["Javelin", "2d6+5"], ["Radiant Strikes", "2d8+0"], ["Blinding Smite", "8d8+0"],
+    ["Javelin", "2d6+7"], ["Radiant Strikes", "2d8+0"], ["Blinding Smite", "8d8+0"],
   ]);
-  assert.equal(hit.roll.total, 45);
+  assert.equal(hit.roll.total, 47);
   assert.equal(attacker.bonus_action_available, false);
   assert.equal(attacker.resources["paladins-smite-free-cast"], 1);
   assert.equal(attacker.resources["spell-slot-4"], 0);

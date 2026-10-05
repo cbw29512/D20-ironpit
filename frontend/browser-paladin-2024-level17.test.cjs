@@ -23,7 +23,7 @@ try {
   assert.equal(hero.resources["spell-slot-5"], 1);
   const primaryAttack = hero.attacks.find(item => item.id === hero.primary_attack_id);
   assert.ok(primaryAttack);
-  assert.equal(primaryAttack.bonus, 11);
+  assert.equal(primaryAttack.bonus, 14);
 
   const flameStrike = hero.spell_save_actions.find(item => item.id === "flame-strike");
   assert.ok(flameStrike);

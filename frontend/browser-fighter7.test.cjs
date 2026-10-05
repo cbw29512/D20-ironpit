@@ -18,11 +18,11 @@ const greatsword = fighter.attacks.find((attack) => attack.id === "karnok-greats
 const shortbow = fighter.attacks.find((attack) => attack.id === "karnok-shortbow");
 assert.ok(greatsword);
 assert.ok(shortbow);
-assert.equal(greatsword.bonus, 8);
-assert.equal(greatsword.damageBonus, 5);
+assert.equal(greatsword.bonus, 9);
+assert.equal(greatsword.damageBonus, 6);
 assert.equal(greatsword.damageDieMinimum, 3);
-assert.equal(shortbow.bonus, 4);
-assert.equal(shortbow.damageBonus, 1);
+assert.equal(shortbow.bonus, 5);
+assert.equal(shortbow.damageBonus, 2);
 assert.equal(shortbow.damageDieMinimum, undefined);
 
 function setDice(values) {
@@ -43,7 +43,7 @@ function setDice(values) {
   state.feature_last_turn_keys["savage-attacker"] = "used";
   setDice([1, 2]);
   const damage = R.weaponDamage(state, greatsword, false, "normal", "used");
-  assert.equal(damage.roll.total, 11);
+  assert.equal(damage.roll.total, 12);
   assert.deepEqual(damage.components[0].rolls, [3, 3]);
 }
 
@@ -52,7 +52,7 @@ function setDice(values) {
   state.feature_last_turn_keys["savage-attacker"] = "used";
   setDice([1, 2, 1, 2]);
   const damage = R.weaponDamage(state, greatsword, true, "normal", "used");
-  assert.equal(damage.roll.total, 17);
+  assert.equal(damage.roll.total, 18);
   assert.deepEqual(damage.components[0].rolls, [3, 3, 3, 3]);
 }
 
@@ -61,7 +61,7 @@ function setDice(values) {
   state.feature_last_turn_keys["savage-attacker"] = "used";
   setDice([1]);
   const damage = R.weaponDamage(state, shortbow, false, "normal", "used");
-  assert.equal(damage.roll.total, 2);
+  assert.equal(damage.roll.total, 3);
   assert.deepEqual(damage.components[0].rolls, [1]);
 }
 
@@ -69,7 +69,7 @@ function setDice(values) {
   const state = S.buildState(structuredClone(fighter));
   setDice([1, 2, 1, 6]);
   const damage = R.weaponDamage(state, greatsword, false, "normal", "turn-1:karnok");
-  assert.equal(damage.roll.total, 14);
+  assert.equal(damage.roll.total, 15);
   assert.deepEqual(damage.components[0].rolls, [3, 6]);
   assert.equal(state.feature_last_turn_keys["savage-attacker"], "turn-1:karnok");
 }

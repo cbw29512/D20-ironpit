@@ -14,6 +14,7 @@ class DamageSourceQualifier(StrEnum):
     RANGED = "ranged"
     MAGICAL = "magical"
     SILVERED = "silvered"
+    ADAMANTINE = "adamantine"
 
 
 class DamageDefenseKind(StrEnum):

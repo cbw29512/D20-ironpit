@@ -9,6 +9,7 @@ from app.content.grapple_escape_skill_bonuses import complete_template_grapple_e
 from app.content.hero_progressions import CANONICAL_BUILD_ID
 from app.content.pregen_combat_audit import assert_pregen_combat_stats
 from app.content.pregen_combat_profiles import PregenCombatProfile
+from app.content.pregen_weapon_source_qualifiers import apply_canonical_pregen_weapon_source_qualifiers
 from app.content.unarmed_opportunity_profiles import complete_unarmed_opportunity_profiles
 from app.domain.character_builds import CharacterBuildProfile
 from app.domain.models import CombatantTemplate
@@ -35,6 +36,7 @@ def _validated(
         [template],
         character_combat_profiles=combat_profiles,
     )[0]
+    template = apply_canonical_pregen_weapon_source_qualifiers(template)
     build_id = CANONICAL_BUILD_ID if profile.ruleset == "2024" else f"{CANONICAL_BUILD_ID}-2014"
     return (profile.class_id, profile.level, build_id), template
 

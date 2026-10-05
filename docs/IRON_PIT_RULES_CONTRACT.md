@@ -398,7 +398,7 @@ Resolve each damage component separately and preserve source qualifiers.
 Universal dimensions include:
 
 - damage type;
-- magical/nonmagical or other source qualifiers when relevant;
+- magical/nonmagical or other source qualifiers when relevant, including silvered and adamantine;
 - weapon/spell/melee/ranged qualifiers;
 - resistance, immunity, vulnerability;
 - flat/rolled reductions;
@@ -662,6 +662,8 @@ Weapon properties, masteries, fighting styles, feats, and two-weapon rules are u
 - Dual wield/off-hand/Nick/Vex/Graze/Cleave/Push/Topple/Sap/Slow and similar properties use exact edition rules when supported.
 - Equipment removal/destruction/suppression during combat immediately changes derived stats/access as RAW requires and is visible on the card.
 - Temporary equipment state resets after the match.
+- Printed monster defenses that apply only to nonmagical attacks, including silvered and adamantine bypasses, stay on the card. Iron Pit does not strip those defenses to make fights easier. They bind to the shared `ConditionalDamageDefense` primitive with `DamageSourceQualifier` values `magical`, `silvered`, and `adamantine`.
+- Canonical pregen manufactured weapons use a **fixed level ladder**, never a random hoard d100. The bands match **2014 DMG Treasure Hoard** CR 0–4 / 5–10 / 11–16 / 17+ (p.137–138), which are the same character-level tiers. **Levels 1–4:** PHB silvered weapon (special material cost, not a magic-item table). Qualifier `silvered` only; +0 to hit and damage. Table F can appear on a 0–4 hoard at 86–97, but that is not the scheduled 1–4 loadout. **Levels 5–10:** Magic Item **Table F Weapon +1** (p.146): +1 to attack and damage rolls, `magical`. **Levels 11–16:** **Table G Weapon +2** (p.147): +2 / +2, `magical`. **Levels 17–20:** **Table H Weapon +3** (p.148): +3 / +3, `magical`. A Weapon +N is not silvered and not adamantine. Adamantine Armor appears on Tables F/G/H; core DMG/SRD does not print a separate adamantine weapon +N, so pregens do not invent one. Same pregen level always gets the same gear. Weapon dice stay the mundane catalog dice. Magical Weapon +N attacks bypass printed “from nonmagical attacks” clauses, including silvered and adamantine variants, because those clauses forbid magical sources. Unarmed Strikes are not manufactured magic weapons and keep only class-feature qualifiers such as Ki-Empowered Strikes.
 
 ## 24. Canonical pregens
 

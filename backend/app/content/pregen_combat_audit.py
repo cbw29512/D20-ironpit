@@ -1,9 +1,34 @@
 from __future__ import annotations
 
+import logging
+
 from app.content.pregen_combat_profiles import PregenCombatProfile
-from app.domain.models import CombatantTemplate
+from app.content.pregen_weapon_source_qualifiers import canonical_pregen_weapon_plus_bonus
+from app.domain.damage_sources import DamageSourceQualifier
+from app.domain.models import CombatantTemplate, WeaponAttack
+
+logger = logging.getLogger(__name__)
+_ABILITIES = ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma")
+_UNARMED_WEAPON_IDS = frozenset({"unarmed-strike"})
 
 _ABILITIES = ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma")
+
+
+def _printed_weapon_plus(template: CombatantTemplate, attack: WeaponAttack) -> int:
+    """Return the stamped Weapon +N once a manufactured attack is magical."""
+    try:
+        if attack.weapon.id in _UNARMED_WEAPON_IDS or attack.weapon.name.casefold() == "unarmed strike":
+            return 0
+        if DamageSourceQualifier.MAGICAL not in attack.damage_source_qualifiers:
+            return 0
+        if template.level is None:
+            return 0
+        return canonical_pregen_weapon_plus_bonus(template.level)
+    except ValueError:
+        raise
+    except Exception as extra:
+        logger.exception("Failed to resolve printed weapon plus for %s.", template.id)
+        raise RuntimeError("Printed weapon plus could not be audited.") from extra
 
 
 def _proficiency_bonus(level: int) -> int:
@@ -31,15 +56,16 @@ def _attack_issues(template: CombatantTemplate, profile: PregenCombatProfile) ->
         prefix = f"attack:{expected.weapon_id}"
         weapon = attack.weapon
         ability_mod = profile.abilities.modifier(expected.ability)
+        plus = _printed_weapon_plus(template, attack)
         if weapon.id != expected.weapon_id:
             issues.append(f"{prefix}:weapon-id-mismatch")
         if (weapon.dice_count, weapon.dice_size, weapon.damage_type.value) != (
             expected.dice_count, expected.dice_size, expected.damage_type,
         ):
             issues.append(f"{prefix}:damage-dice-or-type-mismatch")
-        if attack.attack_bonus != ability_mod + pb + expected.style_attack_bonus:
+        if attack.attack_bonus != ability_mod + pb + expected.style_attack_bonus + plus:
             issues.append(f"{prefix}:attack-bonus-mismatch")
-        if attack.damage_bonus != ability_mod:
+        if attack.damage_bonus != ability_mod + plus:
             issues.append(f"{prefix}:damage-bonus-mismatch")
         if attack.damage_die_minimum != expected.damage_die_minimum:
             issues.append(f"{prefix}:damage-die-minimum-mismatch")

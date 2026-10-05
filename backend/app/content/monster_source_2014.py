@@ -66,6 +66,8 @@ class SourceMonster2014(BaseModel):
     damage_immunities: list[str] = Field(default_factory=list)
     damage_vulnerabilities: list[str] = Field(default_factory=list)
     condition_immunities: list[str] = Field(default_factory=list)
+    damage_resistances_text: str | None = None
+    damage_immunities_text: str | None = None
     unsupported_defense_text: list[str] = Field(default_factory=list)
     challenge_rating: str | None = None
     attacks: list[SourceAttack2014] = Field(default_factory=list)
