@@ -73,15 +73,30 @@
     return (member.state.template.attack_action?.slots || []).some((slot) =>
       Boolean(F().chooseAttack(member, setup, slotData(slot).attackIds, "melee")));
   }
+  function printedSave(action) {
+    return (action.damageDiceCount || 0) * ((action.damageDiceSize || 6) + 1) / 2 + (action.damageBonus || 0);
+  }
   function expectedDamage(member, setup) {
-    let total = 0;
-    for (const slot of member.state.template.attack_action?.slots || []) {
-      const data = slotData(slot);
-      const chosen = F().chooseAttack(member, setup, data.attackIds, "melee")
-        || F().chooseAttack(member, setup, data.attackIds, "ranged");
-      if (chosen) total += F().weaponMeanDamage(chosen.attack);
+    try {
+      let total = 0;
+      for (const slot of member.state.template.attack_action?.slots || []) {
+        const data = slotData(slot);
+        const chosen = F().chooseAttack(member, setup, data.attackIds, "melee")
+          || F().chooseAttack(member, setup, data.attackIds, "ranged");
+        if (chosen) {
+          total += F().weaponMeanDamage(chosen.attack);
+          continue;
+        }
+        const saved = saveChoice(member, setup, data);
+        if (saved) total += printedSave(saved.save);
+      }
+      return total;
+    } catch (error) {
+      console.error("Failed to score browser Attack/Multiattack expected damage", {
+        member: member.combatant_id, error,
+      });
+      throw error;
     }
-    return total;
   }
 
   function resolveAttackAction(sequence, round, member, setup) {

@@ -56,6 +56,13 @@ require("./combat-preset-recipes.js"); require("./combat-presets.js");
     fired.push(`${recipe.id}@${recipe.seed}:${recipe.aspects.map((spec) => spec.kind).join("+")}`);
     if (recipe.id === "goblins") { assert.equal(difficulty, "Medium"); assert.equal(adjusted, 200); }
     if (recipe.id === "party") { assert.equal(difficulty, "Hard"); assert.equal(adjusted, 26100); }
+    if (recipe.id === "2024-undead") {
+      assert.ok(battle.events.some((event) => event.feature_id === "guiding-bolt"), "2024-undead must keep Guiding Bolt legal");
+      assert.ok(
+        !recipe.aspects.some((spec) => spec.kind === "text" && spec.value === "Undead Fortitude"),
+        "2024-undead must not require Fortitude after a legal radiant kill",
+      );
+    }
   }
   assert.equal(classes["2014"].size, 12);
   assert.equal(classes["2024"].size, 12);
