@@ -116,6 +116,7 @@ def build_seraphine_dawnshield_2014(level: int) -> CombatantTemplate:
                 else list(bound.condition_removals)
             ),
             effect_removal_actions=list(bound.effect_removals),
+            support_action_modes=(["turn-undead", "preserve-life"] if level >= 2 else []),
             saving_throw_bonuses=saving_throw_bonuses(
                 scores,
                 level,
