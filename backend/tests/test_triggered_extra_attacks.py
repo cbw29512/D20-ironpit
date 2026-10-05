@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
+from app.combat.turn_damage import clear_turn_damage
 from app.combat.triggered_extra_attacks import (
     clear_regeneration_owned_stacks,
     resolve_triggered_extra_attacks_after_turn,
@@ -133,6 +134,43 @@ def test_stacks_add_one_attack_each_and_cap_at_four(monkeypatch) -> None:
     assert troll.state.feature_use_counts["loathsome-limbs"] == 4
     assert troll.state.exhaustion_level == 4
     assert len(calls) == 4
+
+
+def test_trigger_checks_every_owner_after_any_turn(monkeypatch) -> None:
+    troll, target, setup = _setup()
+    calls = []
+
+    def fake_attack(sequence, round_number, attacker, target, attack, distance, dice, setup, **kwargs):
+        calls.append((attacker.combatant_id, attack.id))
+        return BattleEvent(
+            sequence=sequence, round_number=round_number, event_type="attack",
+            actor_id=attacker.combatant_id, actor_name=attacker.state.template.name,
+            target_id=target.combatant_id, target_name=target.state.template.name,
+            attack_id=attack.id, attack_name=attack.weapon.name, animation="strike",
+            description="attached attack",
+        )
+
+    monkeypatch.setattr("app.combat.triggered_extra_attacks.resolve_encounter_attack", fake_attack)
+    troll.state.current_hp = 40
+    troll.state.damage_taken_this_turn_by_type = {"slashing": 15}
+
+    events, sequence = resolve_triggered_extra_attacks_after_turn(
+        1, 1, target, setup, FixedDiceProvider([10]),
+    )
+    assert [event.event_type for event in events] == ["feature"]
+    assert troll.state.triggered_extra_attack_stack_counts["loathsome-limbs"] == 1
+    assert calls == []
+
+    clear_turn_damage(setup)
+    assert troll.state.damage_taken_this_turn_by_type == {}
+    assert target.state.damage_taken_this_turn_by_type == {}
+
+    events, _ = resolve_triggered_extra_attacks_after_turn(
+        sequence, 1, troll, setup, FixedDiceProvider([10]),
+    )
+    assert [event.event_type for event in events] == ["attack"]
+    assert troll.state.triggered_extra_attack_stack_counts["loathsome-limbs"] == 1
+    assert calls == [(troll.combatant_id, "attached-limb-rend")]
 
 
 def test_regeneration_clear_removes_only_source_owned_exhaustion() -> None:
