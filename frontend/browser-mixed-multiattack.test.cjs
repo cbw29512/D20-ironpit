@@ -47,6 +47,9 @@ assert.equal(Object.keys(monsters).length, 63, "mixed Multiattack batch must bri
   const setup = { heroes: [hero], monsters: [snake] };
   window.IRON_PIT_DICE = queuedDice([15, 1, 1, 1, 1, 1]);
 
+  const multiattackDamage = window.IRON_PIT_BROWSER_MULTIATTACK.expectedDamage(snake, setup);
+  assert.ok(multiattackDamage > 13, "Bite-plus-Constrict Multiattack must outscore Constrict alone");
+
   const result = T.resolveTurn(1, 1, snake, setup);
   const combat = result.events.filter((event) => event.event_type === "attack" || event.event_type === "saving_throw");
 
