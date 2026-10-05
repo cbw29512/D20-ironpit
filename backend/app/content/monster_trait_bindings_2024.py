@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_regeneration_2024 import regeneration_trait_2024
+from app.content.monster_loathsome_limbs_2024 import loathsome_limbs_stack_2024
 from app.content.monster_trait_source_audit import source_trait_names
 from app.domain.models import CombatantTemplate
 from app.domain.progression import SavingThrowAdvantageGrant
@@ -42,11 +43,14 @@ def bind_monster_source_traits_2024(template: CombatantTemplate) -> CombatantTem
                 requires_magical_effect=True,
             ))
         features.saving_throw_advantage_grants = grants
-        regeneration = regeneration_trait_2024(_source_traits(template.name))
+        source_traits = _source_traits(template.name)
+        regeneration = regeneration_trait_2024(source_traits)
+        limb_stack = loathsome_limbs_stack_2024(source_traits)
         return template.model_copy(update={
             "source_trait_names": names,
             "progression_features": features,
             "regeneration": regeneration,
+            "triggered_extra_attack_stacks": [limb_stack] if limb_stack is not None else [],
         })
     except Exception:
         logger.exception("Failed to bind 2024 source traits for %s.", template.name)
