@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.combat.turn_damage import clear_turn_damage
+from app.combat.zero_hp import apply_damage
 from app.combat.triggered_extra_attacks import (
     clear_regeneration_owned_stacks,
     resolve_triggered_extra_attacks_after_turn,
@@ -10,6 +11,7 @@ from app.combat.triggered_extra_attacks import (
 from app.content.audited_fighter import build_karnok_stoneward
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent
+from app.domain.models import DamageRollComponent
 from app.domain.triggered_extra_attacks import TriggeredExtraAttackStack
 from app.domain.weapons import DamageType, Weapon, WeaponAttack, WeaponAttackKind
 
@@ -134,6 +136,33 @@ def test_stacks_add_one_attack_each_and_cap_at_four(monkeypatch) -> None:
     assert troll.state.feature_use_counts["loathsome-limbs"] == 4
     assert troll.state.exhaustion_level == 4
     assert len(calls) == 4
+
+
+def test_mixed_damage_tracks_each_applied_type() -> None:
+    troll, target, setup = _setup()
+    troll.state.current_hp = 40
+    components = [
+        DamageRollComponent(
+            source="Test Slash", notation="15", rolls=[], modifier=0,
+            damage_type=DamageType.SLASHING, total=15, applied_total=15,
+        ),
+        DamageRollComponent(
+            source="Test Radiant", notation="5", rolls=[], modifier=0,
+            damage_type=DamageType.RADIANT, total=5, applied_total=5,
+        ),
+    ]
+    apply_damage(
+        troll.state, 20,
+        damage_types={DamageType.SLASHING, DamageType.RADIANT},
+        damage_components=components,
+    )
+    assert troll.state.damage_taken_this_turn_by_type == {"slashing": 15, "radiant": 5}
+
+    events, _ = resolve_triggered_extra_attacks_after_turn(
+        1, 1, target, setup, FixedDiceProvider([10]),
+    )
+    assert [event.event_type for event in events] == ["feature"]
+    assert troll.state.triggered_extra_attack_stack_counts["loathsome-limbs"] == 1
 
 
 def test_trigger_checks_every_owner_after_any_turn(monkeypatch) -> None:
