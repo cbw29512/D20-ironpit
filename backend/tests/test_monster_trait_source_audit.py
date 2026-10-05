@@ -73,15 +73,15 @@ def test_environmental_breathing_traits_are_arena_neutral() -> None:
         raise
 
 
-def test_unknown_outcome_changing_trait_fails_closed() -> None:
+def test_magic_resistance_fails_closed_without_runtime_binding() -> None:
     try:
         wolf = _monster("Wolf")
         row = dict(_row("Wolf"))
         row["traits"] = "Magic Resistance. The wolf has Advantage on saving throws against spells and magical effects."
         drifted = wolf.model_copy(update={"source_trait_names": ["Magic Resistance"], "combat_traits": []})
-        assert "uncertified-trait:magic-resistance" in trait_issues(drifted, row)
+        assert "trait-runtime-missing:magic-resistance" in trait_issues(drifted, row)
     except Exception:
-        logger.exception("Unknown outcome-changing trait fail-closed regression failed.")
+        logger.exception("Missing Magic Resistance runtime binding fail-closed regression failed.")
         raise
 
 
