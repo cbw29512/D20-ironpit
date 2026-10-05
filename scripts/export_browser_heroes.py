@@ -562,7 +562,6 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
         "damage_immunities": [item.value for item in template.damage_immunities],
         "condition_immunities": list(template.condition_immunities),
-        "support_action_modes": list(template.support_action_modes),
             "wearing_metal_armor": template.wearing_metal_armor,
         "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
         "timed_self_buff_actions": [_timed_self_buff(item) for item in template.timed_self_buff_actions],
@@ -952,6 +951,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                                 "isAttackAction": template.attack_action.is_attack_action,
                                 "slots": [{"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
                                           for slot in template.attack_action.slots]}
+    if template.support_action_modes:
+        row["support_action_modes"] = list(template.support_action_modes)
     if template.environment_context_reactions:
         row["environment_context_reactions"] = [
             item.model_dump(mode="json") for item in template.environment_context_reactions
