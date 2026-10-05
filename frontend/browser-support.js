@@ -13,9 +13,9 @@
   const F = () => window.IRON_PIT_BROWSER_BONUS_ACTION_FOLLOW_UP;
 
   function appendFollowUps(events, sequence, round, member, setup, triggerId, turnKey) {
-    const tactical = F()?.resolve(sequence, round, member, triggerId, turnKey);
+    const tactical = F()?.resolve?.(sequence, round, member, triggerId, turnKey);
     if (tactical) { events.push(tactical); sequence += 1; }
-    const moved = F()?.resolveMovement(sequence, round, member, setup, triggerId, turnKey);
+    const moved = F()?.resolveMovement?.(sequence, round, member, setup, triggerId, turnKey);
     if (moved) { events.push(...moved.events); sequence = moved.sequence; }
     return { events, sequence };
   }
