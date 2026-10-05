@@ -136,7 +136,7 @@ Progression PRs whose completed behavior is already present on current `main` ar
 
 ## Publishing
 
-Netlify automatic publishing remains locked. Production publish is deliberate/manual only. Do not restore a push-triggered Netlify production publish.
+Chris approved a one-shot production publish for friend testing (2026-10-05): merge #557 / #562 / #564, then clear the `netlify.toml` ignore lock so `main` deploys once to https://ironpit.netlify.app/. Do not buy or attach `ironpit.app`. Restore `ignore = "exit 0"` after that live deploy finishes unless Chris changes the policy.
 
 ## Verification truth
 
