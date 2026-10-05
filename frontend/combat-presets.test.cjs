@@ -24,6 +24,7 @@ require("./combat-preset-recipes.js"); require("./combat-presets.js");
     assert.ok(recipe.purpose.length > 10, recipe.id);
     assert.ok(recipe.aspects.length > 0, recipe.id);
     assert.ok(Object.isFrozen(recipe) && Object.isFrozen(recipe.classes) && Object.isFrozen(recipe.monsters));
+    assert.equal(recipe.openingConditions, undefined, `${recipe.id} must not seed a player-loaded starting debuff`);
     const selection = {
       ruleset: recipe.ruleset,
       hero_ids: heroes.map((card) => card.runnable_template_id),
@@ -34,6 +35,10 @@ require("./combat-preset-recipes.js"); require("./combat-presets.js");
     assert.ok(["heroes_win", "monsters_win", "draw"].includes(battle.outcome), `${recipe.id} ${battle.outcome}`);
     assert.equal(battle.setup.heroes.length, heroes.length);
     assert.equal(battle.setup.monsters.length, monsters.length);
+    assert.ok(
+      !battle.events.some((event) => event.feature_id === "opening-condition"),
+      `${recipe.id} must not seed a player-loaded starting debuff`,
+    );
     const banned = /teleport|plane.?shift|dimension-door|misty-step|summon|flies vertically/i;
     for (const event of battle.events) {
       assert.doesNotMatch(

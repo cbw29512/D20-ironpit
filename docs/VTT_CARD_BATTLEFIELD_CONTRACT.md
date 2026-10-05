@@ -39,6 +39,17 @@ The standard map uses two mirrored 8 x 12 deployment zones and an 8-column open 
 - Frontline/backline preference may influence packing order/placement inside the legal zone, but it never changes grid legality or grants free movement.
 - After combat starts, these zones have no movement restriction. They are setup regions only.
 
+### Front row and back row (Iron Pit positioning rule)
+
+This is a locked Pit positioning rule for the universal engine. Creature names never assign rows.
+
+- **Front row is always melee.** Melee-primary combatants start here. When several mixed melee-and-ranged combatants share a side, the first in roster order starts in front and fights as melee; later mixed combatants start in back.
+- **Back row is ranged and/or casters.** Ranged-primary combatants and spell-offense combatants start here.
+- A back-row combatant that has a legal ranged attack or spell uses that ranged option and holds the back row while a living front-row ally remains, and also after the front row dies if it still has a ranged attack.
+- A back-row melee creature with **no** ranged attack moves to the front row when the last living front-row ally dies. Until that step-up is legal, it Dodges in the back.
+- Front-row combatants close to melee even when they own a backup thrown or ranged attack. Backup range does not keep a front-row combatant in place.
+- The website shows current front-row and back-row occupancy and updates it when a back-row melee creature steps up. Per-square `moves 5 feet` log lines remain one event per 5-foot step.
+
 ## Creature footprint
 
 Printed creature size determines occupied grid footprint; monster names never do.

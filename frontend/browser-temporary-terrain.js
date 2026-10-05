@@ -20,6 +20,11 @@
       .some(([x, y]) => cellIsDifficult(zones, { x, y }, mover));
   }
 
+  function spellTerrainSupported(action) {
+    if (!action.createsDifficultTerrain && !action.creates_difficult_terrain) return true;
+    return Boolean(action.area?.radiusFt || action.area?.radius_ft || action.areaRadius);
+  }
+
   function applySpellTerrain(setup, caster, action, center, round) {
     if (!action.createsDifficultTerrain && !action.creates_difficult_terrain) return null;
     const radius = action.area?.radiusFt || action.area?.radius_ft || action.areaRadius;
@@ -45,6 +50,6 @@
   }
 
   window.IRON_PIT_BROWSER_TEMPORARY_TERRAIN = {
-    destinationIsDifficult, applySpellTerrain, expireSource,
+    destinationIsDifficult, applySpellTerrain, expireSource, spellTerrainSupported,
   };
 })();

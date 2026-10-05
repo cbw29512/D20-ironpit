@@ -20,7 +20,7 @@
 
   function approachesFearSource(mover, destination, setup) {
     try {
-      if (!mover.state.active_effect_ids.includes("frightened")) return false;
+      if (!window.IRON_PIT_BROWSER_CONDITION_RULES?.has(mover.state, "frightened")) return false;
       if (!mover.state.position) throw new Error(`${mover.combatant_id} has no grid position.`);
       const sourceIds = new Set((mover.state.timed_effects || [])
         .filter((effect) => effect.effect_id === "frightened")

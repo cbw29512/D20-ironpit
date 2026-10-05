@@ -25,10 +25,14 @@ Thirteen 2014 fights and twelve 2024 fights cover every class and party sizes
 1v1 through 6v6: melee, spells, healing, conditions, undead defenses,
 legendary actions, and high-level resources. 2024 recipes use certified 2024
 pregen snapshots and certified `srd-` monster templates only. The 2014
-`legendary` recipe is Karnok versus the certified 2014 Unicorn and asserts
-that a printed legendary action actually fires. Teleport and Dispel Evil and
-Good Dismissal stay omitted under the pit bans; the remaining printed Unicorn
-block is bound.
+`legendary` recipe is Karnok versus the certified 2014 Unicorn and a 2014
+Berserker ally. The player-loaded preset does not start anyone frightened,
+charmed, or otherwise debuffed. Opening buffs are a separate pit rule:
+each combatant may use one highest-level legal buff as a free action
+before initiative. It asserts that a printed legendary action
+fires. Seeded fear for Calm Emotions is an engine-test harness only. Teleport
+and Dispel Evil and Good Dismissal stay omitted under the pit bans; the
+remaining printed Unicorn block is bound.
 
 Difficulty labels use the 2014 XP thresholds and monster-count multipliers
 as a rough estimate. They do not promise equal win rates.

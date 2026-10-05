@@ -7,14 +7,26 @@ from app.combat.encounter_setup import build_encounter_setup
 from app.combat.healing import choose_healing_action, choose_healing_target, resolve_healing
 from app.combat.state import begin_turn
 from app.combat.zero_hp import apply_damage
+from app.domain.grid import GridPosition
 from app.domain.models import EncounterSelection, HealingAction
 
 
+def _place_adjacent(actor, ally) -> None:
+    origin = actor.state.position
+    if origin is None:
+        ally.position_ft = actor.position_ft
+        return
+    ally.state.position = GridPosition(x=origin.x + 1, y=origin.y)
+
+
 def _setup():
-    return build_encounter_setup(EncounterSelection(
+    setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1", "rokhan-stonefury-l1"],
         monster_ids=["srd-goblin-warrior"],
     ))
+    if len(setup.heroes) > 1:
+        _place_adjacent(setup.heroes[0], setup.heroes[1])
+    return setup
 
 
 def test_reaction_spends_once_and_refreshes_at_start_of_next_turn() -> None:

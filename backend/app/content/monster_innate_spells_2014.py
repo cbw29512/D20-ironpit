@@ -89,6 +89,7 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
                     area=AreaTargeting(shape="radius", origin="point", radius_ft=20),
                     save_ability="charisma",
                     dc=dc,
+                    required_target_creature_types=["humanoid"],
                     failed_save_modifier_effects=[
                         SpellModifierEffect(kind="condition-immunity", condition_id="charmed"),
                         SpellModifierEffect(kind="condition-immunity", condition_id="frightened"),

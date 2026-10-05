@@ -220,13 +220,15 @@ Normal initiative bonuses and ruleset-specific initiative mechanics apply, with 
 
 ## 7.1 Opening buff on arena entry
 
-- Before initiative is rolled, each combatant may activate **one legal available combat buff** as its opening buff.
-- This opening activation is free in action economy: it does not consume the combatant's Action, Bonus Action, or Reaction.
+- Before initiative is rolled, each combatant that has a legal available combat buff **must activate exactly one** as its opening buff. This is an Iron Pit pit rule, not a seeded starting condition and not a starting debuff.
+- If the combatant knows or can legally activate more than one combat buff, it uses the **highest-level** one only. Non-spell abilities compete as level 0. Same-level ties use the existing declarative priority, then registration order. Do not apply every buff the combatant knows.
+- This opening activation is a free action in the pit: it does not consume the combatant's Action, Bonus Action, or Reaction, and it does not spend the first-turn Action.
 - The buff still pays every other printed cost and requirement that remains meaningful in Iron Pit, including spell slots, charges, class resources, target/range legality, and Concentration.
 - **Explicit Foresight arena exception:** when a Druid of level 17+ selects **Foresight** as its one opening buff, the precombat cast does **not** expend the level-9 spell slot. This is an Iron Pit arena override recorded here, not a change to 2024 RAW. The spell otherwise keeps its legal target, duration, and effect semantics. Other opening-buff spells continue to pay their printed spell-slot/resource costs unless this contract records another explicit exception.
 - A combatant receives only one opening-buff activation per fight. A spell, class feature, subclass feature, species feature, item effect, or other source competes for that same single opening-buff opportunity when it is otherwise legal.
 - The opening buff resolves in the precombat phase before initiative. Its normal duration/lifecycle begins there; source-turn timing continues normally once round 1 starts. An effect that lasts until the end of the source's next turn therefore expires at the end of that combatant's first turn.
 - Opening-buff selection is universal Arena policy. Do not create class-, spell-, or source-name exceptions in resolver logic; explicit arena overrides recorded in this contract must be represented as declarative source parameters consumed by the shared precombat pipeline. The source ability supplies its exact player-facing name and parameters; the shared precombat buff pipeline supplies the activation.
+- Production presets and player-loaded fights start with no debuffs. A test harness may seed a buff or debuff so a combination can be asserted. The opening-buff pit rule is not that harness.
 - Buffs that require a separate combat entity, an unavailable target, an unsupported outcome-changing mechanic, or another illegal precondition remain unavailable and do not bypass normal certification gates.
 
 ## 8. Action economy
@@ -263,8 +265,25 @@ A flavor-only d6 may narrate the fumble; it has no additional mechanical effect.
 ### Attack natural 20
 
 - Use the selected edition's RAW automatic-hit/critical behavior.
+- Critical hits and automatic hits use the kept/selected natural die after Advantage or Disadvantage. A discarded 20 is never a critical or automatic hit.
 - A flavor-only d6 may narrate the critical; it has no additional mechanical effect.
 - Saving throw natural 1/20 values have no extra Iron Pit rule unless RAW for the specific rule says otherwise.
+
+### Turn-start buff versus debuff
+
+At the start of each creature's turn, the engine reads that creature's live debuffs before it acts. A legal matching buff answers the debuff:
+
+- Bloodied (current HP at or below half of maximum) is answered by healing.
+- Charmed or Frightened is answered by a condition-immunity or debuff-counter buff for that same condition.
+- An already-active matching counter-buff suppresses the current condition and causes a new copy of that debuff to fail closed. It does not land.
+
+Arena AI selects the answering buff only when the matching debuff is present on a legal friend. A printed suppression that would do nothing is not selected. Pairing is by condition identity and modifier kind, never by spell name, monster name, or class name.
+
+A test harness may start a buff or debuff so a combination can be asserted. Purpose-built production fights and any matchup a player loads must not begin with a debuff. Seeded fear for Calm Emotions lives only in the engine test, never on the website legendary preset.
+
+### Calm Emotions
+
+2014 Calm Emotions binds the printed charm/frighten suppression option through the shared condition-immunity and debuff-counter primitives. Allies may choose to fail the save to receive that beneficial suppression. The printed indifference option is not a supported targeting-gate primitive. Do not apply Charmed or invent a hostility shutdown to fake the missing option.
 
 ## 9. Advantage and Disadvantage
 
@@ -298,6 +317,7 @@ Permanent arena rules:
 - Printed Walk, Fly, Climb, Swim, Burrow, Hover, and base-speed data remain source-derived and must not be rewritten merely to make a creature usable in the Pit.
 - Movement modes never become roster-eligibility filters. The magical Pit remains hospitable to aquatic, flying, burrowing, climbing, unusual-biology, breathing, and atmosphere requirements. Every combatant may use its printed movement modes and make attacks as though the Pit were a valid native environment for those modes and its normal biology. Environmental hospitality removes habitat-only penalties such as underwater movement or attack penalties; it does not grant extra Speed, a movement mode the source does not have, free movement, altitude-based immunity, or protection from RAW combat effects that explicitly create Difficult Terrain, Speed penalties, conditions, or other debuffs.
 - Flying movement remains horizontal-only in the standard Iron Pit. Flyers may use their printed Fly Speed across the battlefield but may not gain altitude to become permanently unreachable.
+- Front row is melee. Back row is ranged and/or casters. Mixed melee-and-ranged cards on one side split: one starts in front as melee, extras start in back as ranged. A back-row melee creature uses a ranged attack when it has one; if it has none, it steps to the front when a front creature dies, or Dodges until it can move up. Front-row combatants close to melee even when they have backup thrown/ranged attacks. Creature names never assign rows.
 - Starting placement is deterministic and footprint-aware. Future manual legal placement is authoritative when explicitly selected by the user.
 - No environmental cover by default.
 - Clear line of sight by default; only combat effects such as Darkness, Fog Cloud, Blindness, Invisibility, or similar supported mechanics alter visibility.

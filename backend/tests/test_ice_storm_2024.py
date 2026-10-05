@@ -118,3 +118,14 @@ def test_ice_storm_places_magical_difficult_terrain_until_end_of_next_turn() -> 
     assert setup.temporary_terrain_zones
     assert expire_source_terrain(setup, caster.combatant_id, 2) == [zone.zone_id]
     assert setup.temporary_terrain_zones == []
+
+
+def test_cube_difficult_terrain_without_radius_fails_closed() -> None:
+    from app.combat.temporary_terrain import spell_terrain_is_supported
+    from app.content.monster_innate_spells_2014 import innate_spell_save_actions_2014
+    from app.content.monster_source_2014 import load_monster_source_2014
+
+    unicorn = next(item for item in load_monster_source_2014() if item.id == "unicorn")
+    entangle = next(item for item in innate_spell_save_actions_2014(unicorn) if item.id == "entangle")
+    assert spell_terrain_is_supported(build_ice_storm_2024(17)) is True
+    assert spell_terrain_is_supported(entangle) is False

@@ -5,6 +5,7 @@ from dataclasses import replace
 
 from app.combat.action_economy import is_available
 from app.combat.alternate_spell_casts import available_alternate_casts
+from app.combat.debuff_answers import failed_save_is_beneficial
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_damage_maximizers import safe_maximizer_for_spell
 from app.combat.spell_policy_targeting import (
@@ -14,6 +15,7 @@ from app.combat.spell_policy_targeting import (
     single_target_spell_choice,
 )
 from app.combat.spellcasting import legal_slot_levels
+from app.combat.temporary_terrain import spell_terrain_is_supported
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
 
@@ -104,6 +106,8 @@ def choose_spell(
                 or action.repeat_only
                 or (action.concentration and caster.state.concentration is not None)
                 or not is_available(caster.state, action.action_cost)
+                or not spell_terrain_is_supported(action)
+                or failed_save_is_beneficial(action)
             ):
                 continue
             cast_options = [

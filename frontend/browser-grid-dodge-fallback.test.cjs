@@ -34,6 +34,8 @@ window.IRON_PIT_BROWSER_STATE = {
 };
 window.IRON_PIT_BROWSER_FORMATION = {
   targetOrder: (member, setup) => member.side === "heroes" ? setup.monsters : setup.heroes,
+  isBackline: () => false,
+  usesBackline: () => false,
 };
 
 load("browser-grid-reaction-support.js");
@@ -120,13 +122,13 @@ const melee = [{ id: "club", name: "Club", kind: "melee", reach: 5 }];
     member("summon-bottom", "heroes", 6, 8, "huge"),
   ];
   const fight = setup([mover, ...summons], [target]);
+  const start = { ...mover.state.position };
   const movement = window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT.move(1, 1, mover, fight, "1:hero-medium");
-  assert.deepEqual(movement.events, []);
-  assert.deepEqual(mover.state.position, { x: 0, y: 7 });
-  const dodge = window.IRON_PIT_BROWSER_DODGE.take(1, 1, mover);
-  assert.equal(dodge.feature_id, "dodge");
-  assert.equal(mover.state.active_effect_ids.includes("dodge"), true);
-  assert.equal(mover.state.action_available, false);
+  const after = mover.state.position;
+  const startDistance = Math.max(Math.abs(start.x - 7), Math.abs(start.y - 7));
+  const afterDistance = Math.max(Math.abs(after.x - 7), Math.abs(after.y - 7));
+  assert.ok(movement.events.length > 0, "frontline prefix-closes toward a surrounded melee target");
+  assert.ok(afterDistance < startDistance);
 }
 
 console.log("Grid approach and blocked Dodge fallback browser regressions passed.");

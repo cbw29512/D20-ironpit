@@ -13,11 +13,22 @@ from app.domain.persistent_save_zones import PersistentSaveZoneState
 from app.domain.temporary_terrain import TemporaryTerrainZone
 from app.domain.suppression_zones import PersistentSuppressionZoneState
 from app.domain.rulesets import DEFAULT_RULESET, RulesetId
+from app.domain.action_types import ConditionName
 from app.domain.runtime import CombatantState
 
 
 EncounterSide = Literal["heroes", "monsters"]
 EncounterOutcome = Literal["active", "heroes_win", "monsters_win", "draw"]
+
+
+class OpeningConditionBinding(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    side: EncounterSide
+    roster_index: int = Field(ge=1, le=6)
+    condition_id: ConditionName
+    source_side: EncounterSide
+    source_roster_index: int = Field(ge=1, le=6)
 
 
 class EncounterSelection(BaseModel):
@@ -26,6 +37,7 @@ class EncounterSelection(BaseModel):
     ruleset: RulesetId = DEFAULT_RULESET
     hero_ids: list[str] = Field(min_length=1, max_length=6)
     monster_ids: list[str] = Field(min_length=1, max_length=6)
+    opening_conditions: list[OpeningConditionBinding] = Field(default_factory=list)
 
 
 class EncounterCombatant(BaseModel):

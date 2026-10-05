@@ -27,7 +27,7 @@
 
   function writeProgress(session) {
     const events = session.battle.events.slice(0, session.eventIndex);
-    view().writeLog({ events });
+    view().writeLog({ events, setup: session.battle.setup });
   }
 
   function finishSession(state, session, prefix = null) {

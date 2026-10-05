@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.condition_rules import has_condition
 from app.combat.grid_geometry import footprint_distance_ft
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
@@ -35,6 +36,8 @@ def approaches_fear_source(
     setup: EncounterSetup,
 ) -> bool:
     try:
+        if not has_condition(mover.state, FRIGHTENED_EFFECT_ID):
+            return False
         source_ids = {
             effect.source_id for effect in mover.state.timed_effects
             if effect.effect_id == FRIGHTENED_EFFECT_ID

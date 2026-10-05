@@ -41,7 +41,7 @@
     window.IRON_PIT_COMBAT_REVIEW?.hide?.();
     actions()?.syncControls(state); updateControls();
   }
-  function render() { if (state.catalog) view().render(state, openSlot); updateControls(); actions()?.syncControls(state); }
+  function render() { if (state.catalog) view().render(state, openSlot); window.IRON_PIT_FORMATION_BOARD?.renderPreview(state); updateControls(); actions()?.syncControls(state); }
   function setSlot(side, index, card) { (side === "heroes" ? state.heroSlots : state.monsterSlots)[index] = card; window.IRON_PIT_COMBAT_PRESETS?.clear?.(); invalidateRun(); clearResult(); render(); }
   function removeSlot(side, index) { (side === "heroes" ? state.heroSlots : state.monsterSlots)[index] = null; window.IRON_PIT_COMBAT_PRESETS?.clear?.(); invalidateRun(); clearResult(); render(); }
   function openSlot(side, index) {
