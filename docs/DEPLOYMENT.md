@@ -4,7 +4,9 @@
 
 Netlify is reserved for deliberate production deployment and real production bandwidth testing.
 
-**ONE-SHOT UNLOCK (2026-10-05):** Chris approved a friend-test production publish of current `main` (art #557, landing #562, 2014 Sunlight/Flyby #564) to https://ironpit.netlify.app/. Git-connected production builds are temporarily allowed. Restore `ignore = "exit 0"` after that deploy finishes. Do not buy or attach `ironpit.app`.
+**AUTOPUBLISH LOCKED:** Git-connected Netlify builds are disabled for every deploy context. Pushing or merging code must not consume Netlify build credits or publish Iron Pit.
+
+**2026-10-05 friend-test stack:** #557 / #562 / #564 are on `main`. Production Git deploy `6ac3ad986aa5ba000860741b` is ready but unpublished; https://ironpit.netlify.app/ remains pinned to locked upload `6ac38c99dc0482af1a20136b`. Publish that ready deploy in the Netlify UI. Do not buy or attach `ironpit.app`. Same stack preview: https://deploy-preview-565--ironpit.netlify.app/
 
 - [ ] Production branch remains `main`, but branch selection does not authorize deployment.
 - [ ] Deploy Previews are disabled.
