@@ -31,7 +31,10 @@ assert.equal(hero.resources["wholeness-of-body"], 1);
 assert.equal(hero.saving_throw_bonuses.strength, 8);
 assert.equal(hero.saving_throw_bonuses.wisdom, 11);
 assert.equal(hero.skill_bonuses.insight, 11);
-assert.ok(hero.attacks.every((attack) => attack.bonus === 11));
+const unarmed = hero.attacks.find((attack) => attack.weaponId === "unarmed-strike");
+const shortsword = hero.attacks.find((attack) => attack.weaponId === "shortsword");
+assert.equal(unarmed.bonus, 11);
+assert.equal(shortsword.bonus, 14);
 assert.equal(hero.deferred_save_effect.save_dc, 19);
 assert.equal(hero.opening_targeting_ward.save_dc, 19);
 
