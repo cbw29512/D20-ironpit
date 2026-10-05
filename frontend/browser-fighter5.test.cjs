@@ -16,7 +16,7 @@ for (const file of [
   "browser-action-economy.js", "browser-grapple.js", "browser-state.js",
   "browser-rolls.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js", "browser-saves.js", "browser-charge.js",
   "browser-formation.js", "browser-multiattack.js", "browser-healing-policy.js", "browser-healing-resolution.js", "browser-healing.js",
-  "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-action-surge.js", "browser-support.js", "browser-tactical-shift.js",
+  "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-action-surge.js", "browser-support.js",
 ]) load(file);
 
 const fighter = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l5"];
@@ -29,7 +29,14 @@ assert.equal(fighter.critical_hit_minimum, 19);
 assert.equal(fighter.initiative_advantage, true);
 assert.equal(fighter.athletics_advantage, true);
 assert.equal(fighter.critical_move_fraction, 0.5);
-assert.equal(fighter.tactical_shift_fraction, 0.5);
+assert.deepEqual(fighter.bonus_action_follow_up_movement_grants, [{
+  source_id: "tactical-shift",
+  source_name: "Tactical Shift",
+  required_trigger_ids: ["second-wind"],
+  speed_fraction: 0.5,
+  desired_distance_ft: 5,
+  provokes_opportunity_attacks: false,
+}]);
 assert.deepEqual(fighter.weapon_masteries, ["flail", "javelin", "spear", "longsword"]);
 assert.equal(fighter.saving_throw_bonuses.strength, 7);
 assert.equal(fighter.saving_throw_bonuses.constitution, 6);
@@ -85,21 +92,8 @@ const targetTemplate = {
   assert.equal(hero.state.resources["second-wind"], 2);
   assert.equal(hero.state.bonus_action_available, false);
 
-  const shift = window.IRON_PIT_BROWSER_TACTICAL_SHIFT.resolve(2, 1, hero, setup);
-  assert.equal(shift, null, "Tactical Shift movement is arena-neutral in fixed Pit formation");
   assert.equal(hero.position_ft, 0);
   assert.equal(hero.state.movement_remaining_ft, 30);
-  assert.equal(target.state.reaction_available, true);
-}
-
-{
-  const hero = member("hero-grappled", "heroes", fighter, 0);
-  const target = member("monster-grappler", "monsters", targetTemplate, 35);
-  const setup = { heroes: [hero], monsters: [target] };
-  G.apply(hero.state, target.combatant_id, 12, 40);
-  const shift = window.IRON_PIT_BROWSER_TACTICAL_SHIFT.resolve(1, 1, hero, setup);
-  assert.equal(shift, null, "Tactical Shift remains arena-neutral when effective Speed is zero");
-  assert.equal(hero.position_ft, 0);
   assert.equal(target.state.reaction_available, true);
 }
 
