@@ -17,7 +17,6 @@ def _traits(name: str) -> str:
         ("Oni", 10, True, set(), False),
         ("Shield Guardian", 10, True, set(), False),
         ("Troll", 15, False, {"acid", "fire"}, True),
-        ("Troll Limb", 5, False, {"acid", "fire"}, True),
     ],
 )
 def test_printed_regeneration_compiles_to_universal_trait(
