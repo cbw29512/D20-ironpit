@@ -66,5 +66,13 @@ def test_compiler_covers_large_repeated_source_family() -> None:
     }
     action_count = sum(len(actions) for actions in compiled.values())
 
-    assert action_count >= 44
-    assert sum(bool(actions) for actions in compiled.values()) >= 40
+    assert action_count >= 43
+    assert sum(bool(actions) for actions in compiled.values()) >= 39
+
+
+def test_grapple_prerequisite_save_stays_out_of_simple_compiler() -> None:
+    glabrezu = _row("Glabrezu")
+    names = {str(row["name"]) for row in load_monster_rows()}
+
+    assert compile_save_for_half_actions(glabrezu) == []
+    assert "save-or-complex-action" in _source_blockers(glabrezu, names)
