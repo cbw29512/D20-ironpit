@@ -1,6 +1,5 @@
 (() => {
   "use strict";
-
   const SIZE_RANK = { tiny: 0, small: 1, medium: 2, large: 3, huge: 4, gargantuan: 5 };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const T = () => window.IRON_PIT_BROWSER_TIMED || {
@@ -69,6 +68,7 @@
 
   function beginTurn(state) {
     state.turn_terminated = false; state.turn_termination_reason = null; state.disengaged_this_turn = false; state.voluntary_turn_activity = null;
+    state.damage_taken_this_turn_by_type = {};
     const incapacitated = Q().incapacitated(state);
     state.action_available = !incapacitated;
     state.bonus_action_available = !incapacitated;
