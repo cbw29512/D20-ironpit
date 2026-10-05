@@ -180,7 +180,7 @@ class ResourceBackedOnHitExile(BaseModel):
 
 
 class DelayedResourceRefill(BaseModel):
-    """Automatically arm a source-owned timer when declared resources are below maximum."""
+    """Committed timed activity that restores declared resources only if it finishes."""
 
     source_id: str = Field(min_length=1)
     source_name: str = Field(min_length=1)

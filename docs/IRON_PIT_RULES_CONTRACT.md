@@ -209,6 +209,15 @@ Audit annotation is evidence-only and must never change combat resolution.
 - If a printed delay or required trigger is genuinely longer than a plausible Iron Pit fight, classify and re-evaluate the mechanic before certification. Do not silently wait out combat, silently fire it early, or ignore an outcome-changing delayed effect.
 - Delayed mechanics must use fresh per-fight runtime state and reset completely between matches.
 
+### 6.2 Committed timed activities
+
+- A printed activity that requires the creature to spend a duration performing it is a committed timed activity, not a delayed callback that leaves the creature free to fight.
+- Starting it spends the declared Action. While it is being performed, the creature cannot take unrelated Actions, Bonus Actions, or voluntary movement that would contradict spending that time on the activity.
+- Reactions remain available unless the printed rule removes them.
+- The printed 2024 Magical Cunning text is: “You can perform an esoteric rite for 1 minute. At the end of it, you regain expended Pact Magic spell slots but no more than a number equal to half your maximum (round up).” It does not list a damage interrupt, Concentration, or any other cancellation trigger. This contract does not invent one.
+- Slots or other declared resources return only if the creature performs the activity for the full printed duration. If the creature is Incapacitated or dead, it is not performing the activity, so the activity ends without restore. Damage alone does not cancel it.
+- Arena AI does not start a multi-round committed activity while the creature still has a printed damaging option. Damage-first. A 1-minute rite is not a substitute for a landable attack.
+
 ## 7. Initiative
 
 Initiative is a Dexterity check. Normal initiative bonuses and ruleset-specific Initiative mechanics apply, including Advantage and Disadvantage on Initiative.

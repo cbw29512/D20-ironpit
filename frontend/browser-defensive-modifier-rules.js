@@ -6,18 +6,35 @@
     const types = item.source_creature_types || [];
     return !types.length || types.map((value) => value.toLowerCase()).includes(baseType(template));
   };
-  const senseBypasses = (item, attackerTemplate, distance) => {
-    if (distance == null) return false;
-    const ranges = {
-      blindsight: Number(attackerTemplate?.blindsight_ft || 0),
-      truesight: Number(attackerTemplate?.truesight_ft || 0),
+  const asSenseObserver = (attacker) => {
+    if (attacker && attacker.template && Array.isArray(attacker.active_effect_ids)) return attacker;
+    if (attacker && Array.isArray(attacker.active_effect_ids)) return attacker;
+    return {
+      template: attacker || {},
+      active_effect_ids: [],
+      active_modifiers: [],
+      timed_effects: [],
     };
-    return (item.bypass_attacker_senses || []).some((sense) => ranges[sense] >= distance);
   };
-  const attacksAgainstDisadvantage = (state, attackerTemplate, distance = null) => (state.active_modifiers || [])
+  const effectiveSenseRange = (attacker, senseId) => {
+    const observer = asSenseObserver(attacker);
+    const senses = window.IRON_PIT_BROWSER_EFFECTIVE_SENSES;
+    if (senses && senses.effectiveSenseRangeFt) return senses.effectiveSenseRangeFt(observer, senseId);
+    const rules = window.IRON_PIT_BROWSER_CONDITION_RULES;
+    if (rules && rules.effectiveSenseRangeFt) return rules.effectiveSenseRangeFt(observer, senseId);
+    const template = observer.template || attacker || {};
+    if (senseId === "blindsight") return Math.max(0, Number(template.blindsight_ft || 0));
+    if (senseId === "truesight") return Math.max(0, Number(template.truesight_ft || 0));
+    return 0;
+  };
+  const senseBypasses = (item, attacker, distance) => {
+    if (distance == null) return false;
+    return (item.bypass_attacker_senses || []).some((sense) => effectiveSenseRange(attacker, sense) >= distance);
+  };
+  const attacksAgainstDisadvantage = (state, attacker, distance = null) => (state.active_modifiers || [])
     .filter((item) => item.kind === "attacks-against-disadvantage"
-      && sourceMatches(item, attackerTemplate)
-      && !senseBypasses(item, attackerTemplate, distance)).length;
+      && sourceMatches(item, attacker && attacker.template ? attacker.template : attacker)
+      && !senseBypasses(item, attacker, distance)).length;
   function saveAdvantageModifiers(state, ability, context = {}) {
     try {
       const contextTags = new Set(

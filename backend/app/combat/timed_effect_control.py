@@ -1,14 +1,17 @@
 from __future__ import annotations
 
+from app.combat.committed_activity import committed_activity_active
 from app.domain.models import CombatantState
 
 
 def suppresses_action(state: CombatantState) -> bool:
-    return any(effect.suppress_action for effect in state.timed_effects)
+    return committed_activity_active(state) or any(effect.suppress_action for effect in state.timed_effects)
 
 
 def suppresses_bonus_action(state: CombatantState) -> bool:
-    return any(effect.suppress_bonus_action for effect in state.timed_effects)
+    return committed_activity_active(state) or any(
+        effect.suppress_bonus_action for effect in state.timed_effects
+    )
 
 
 def suppresses_reactions(state: CombatantState) -> bool:
@@ -16,7 +19,7 @@ def suppresses_reactions(state: CombatantState) -> bool:
 
 
 def suppresses_movement(state: CombatantState) -> bool:
-    return any(effect.suppress_movement for effect in state.timed_effects)
+    return committed_activity_active(state) or any(effect.suppress_movement for effect in state.timed_effects)
 
 
 def suppresses_voluntary_turn(state: CombatantState) -> bool:

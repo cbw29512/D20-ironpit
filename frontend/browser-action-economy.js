@@ -23,11 +23,12 @@
     else { state.action_available = false; state.movement_remaining_ft = 0; }
   }
 
+  const committedActivity = (state) => Boolean((state.delayed_resource_refills || []).length);
   function available(state, cost) {
     if (state.is_dead || Q().incapacitated(state)) return false;
     if (state.turn_terminated && cost !== "reaction") return false;
-    if (cost === "action") return Boolean(state.action_available) && !T().suppressesAction(state) && voluntaryActivityAvailable(state, "action");
-    if (cost === "bonus_action") return Boolean(state.bonus_action_available) && !T().suppressesBonusAction(state) && voluntaryActivityAvailable(state, "bonus_action");
+    if (cost === "action") return Boolean(state.action_available) && !committedActivity(state) && !T().suppressesAction(state) && voluntaryActivityAvailable(state, "action");
+    if (cost === "bonus_action") return Boolean(state.bonus_action_available) && !committedActivity(state) && !T().suppressesBonusAction(state) && voluntaryActivityAvailable(state, "bonus_action");
     if (cost === "reaction") return Boolean(state.reaction_available) && !T().suppressesReactions(state);
     throw new Error(`Unknown action cost: ${cost}`);
   }

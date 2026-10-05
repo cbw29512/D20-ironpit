@@ -66,7 +66,12 @@ def build_varek_fiend_2024_low_audits(level: int) -> list[FeatureAudit]:
         if level >= 2:
             audits += [
                 _audit("magical-cunning", "Magical Cunning", "class", combat_relevant=True, automated=True,
-                       notes="1-minute DelayedResourceRefill restores half of maximum Pact slots, rounded up."),
+                       notes=(
+                           "Committed 1-minute DelayedResourceRefill: the creature performs the rite and cannot "
+                           "take unrelated Actions, Bonus Actions, or voluntary movement. Slots restore only if "
+                           "the minute finishes. Printed text lists no damage interrupt. Half of maximum Pact "
+                           "slots, rounded up."
+                       )),
                 _audit("agonizing-blast", "Agonizing Blast", "class", combat_relevant=True, automated=True,
                        notes="Adds Charisma modifier to each certified Eldritch Blast beam."),
                 _audit("eldritch-spear", "Eldritch Spear", "class", combat_relevant=True, automated=True,
