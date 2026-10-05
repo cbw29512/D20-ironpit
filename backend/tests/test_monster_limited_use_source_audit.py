@@ -42,3 +42,15 @@ def test_unimplemented_recharge_economy_fails_closed() -> None:
 def test_limited_use_fingerprint_drift_is_detected() -> None:
     wolf = _monster("Wolf").model_copy(update={"source_limited_use_names": ["actions:Howl (Recharge 5-6)"]})
     assert "source-limited-use-fingerprint-mismatch" in limited_use_issues(wolf, _row("Wolf"))
+
+
+def test_troll_loathsome_limbs_is_explicit_arena_neutral_simplification() -> None:
+    wolf = _monster("Wolf")
+    row = _row("Troll")
+    expected = parse_limited_use_names(row)
+    assert "traits:Loathsome Limbs (4/Day)" in expected
+    stand_in = wolf.model_copy(update={
+        "name": "Troll",
+        "source_limited_use_names": expected,
+    })
+    assert limited_use_issues(stand_in, row) == []
