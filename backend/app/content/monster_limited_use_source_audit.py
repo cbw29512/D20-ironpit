@@ -72,18 +72,48 @@ def _recharge_binding_matches(template: CombatantTemplate, source_name: str) -> 
     return len(resources) == 1 and len(rules) == 1
 
 
+def _per_day_stack_binding_matches(template: CombatantTemplate, source_name: str) -> bool:
+    try:
+        marker = re.search(r"\((\d+)\s*/\s*Day\)", source_name, re.I)
+        if marker is None or not source_name.startswith("traits:"):
+            return False
+        use_cap = int(marker.group(1))
+        trait_name = re.sub(
+            r"\s*\([^)]*\)$", "", source_name.split(":", 1)[-1]
+        ).strip()
+        matches = [
+            rule
+            for rule in template.triggered_extra_attack_stacks
+            if rule.source_name.casefold() == trait_name.casefold()
+            and rule.max_uses == use_cap
+        ]
+        return len(matches) == 1
+    except Exception:
+        logger.exception(
+            "Failed to certify per-day triggered stack binding for %s.",
+            template.name,
+        )
+        raise
+
+
 def limited_use_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Certify only explicitly bound Recharge save actions; all other limited use fails closed."""
-    expected = parse_limited_use_names(row)
-    issues: list[str] = []
-    if template.source_limited_use_names != expected:
-        issues.append("source-limited-use-fingerprint-mismatch")
-    for name in expected:
-        if _recharge_binding_matches(template, name):
-            continue
-        slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
-        issues.append(f"uncertified-limited-use:{slug}")
-    return issues
+    """Certify source limited-use markers only when a matching generic resource is bound."""
+    try:
+        expected = parse_limited_use_names(row)
+        issues: list[str] = []
+        if template.source_limited_use_names != expected:
+            issues.append("source-limited-use-fingerprint-mismatch")
+        for name in expected:
+            if _recharge_binding_matches(template, name):
+                continue
+            if _per_day_stack_binding_matches(template, name):
+                continue
+            slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+            issues.append(f"uncertified-limited-use:{slug}")
+        return issues
+    except Exception:
+        logger.exception("Failed limited-use source audit for %s.", template.name)
+        raise
 
 
 @lru_cache(maxsize=1)
