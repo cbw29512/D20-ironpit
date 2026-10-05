@@ -59,6 +59,7 @@ def test_anatomically_distinct_monsters_do_not_share_humanoid_fallbacks() -> Non
         "Swarm of Rats": "swarm",
         "Swarm of Venomous Snakes": "swarm",
         "Triceratops": "reptile",
+        "Troll": "brute",
         "Tyrannosaurus Rex": "theropod",
         "Worg": "quadruped",
     }
@@ -103,6 +104,7 @@ def test_new_batch_has_specific_reviewed_details() -> None:
         "Swarm of Rats": "rats",
         "Swarm of Venomous Snakes": "venomous-snakes",
         "Triceratops": "triceratops",
+        "Troll": "troll",
         "Violet Fungus": "violet-fungus",
         "Worg": "canine",
         "Xorn": "xorn",

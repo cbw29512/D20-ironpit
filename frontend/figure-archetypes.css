@@ -135,3 +135,13 @@
 .stick-figure[data-form="plant"][data-detail="violet-fungus"] .legs{display:none}
 .stick-figure[data-form="plant"][data-detail="violet-fungus"] .feature-one{display:block;width:35px;height:5px;left:12px;top:89px;background:currentColor;border-radius:50%}
 
+/* Troll: hunched giant-type humanoid with long dangling clawed arms, not a bulky ogre. */
+.stick-figure[data-form="brute"][data-detail="troll"] .weapon{display:none}
+.stick-figure[data-form="brute"][data-detail="troll"] .head{width:24px;height:24px;left:18px;top:22px;border-width:4px}
+.stick-figure[data-form="brute"][data-detail="troll"] .body{width:6px;height:46px;left:27px;top:44px;transform:rotate(10deg)}
+.stick-figure[data-form="brute"][data-detail="troll"] .arms{width:64px;height:5px;left:-2px;top:52px;transform:rotate(18deg)}
+.stick-figure[data-form="brute"][data-detail="troll"] .legs{width:4px;height:32px;left:20px;top:78px;transform:rotate(18deg);box-shadow:18px 0 0 currentColor}
+.stick-figure[data-form="brute"][data-detail="troll"] .feature-one{display:block;width:12px;height:9px;left:-8px;top:68px;background:currentColor;clip-path:polygon(0 0,100% 40%,20% 100%)}
+.stick-figure[data-form="brute"][data-detail="troll"] .feature-two{display:block;width:12px;height:9px;right:-8px;top:74px;background:currentColor;clip-path:polygon(100% 0,0 40%,80% 100%)}
+.stick-figure[data-form="brute"][data-detail="troll"] .tail{display:block;width:8px;height:14px;left:28px;top:14px;background:currentColor;clip-path:polygon(30% 100%,70% 100%,90% 0,10% 20%)}
+
