@@ -544,6 +544,19 @@ Iron Pit lair-action ownership house rule:
 - Split/spawn mechanics printed on an existing creature are not automatically classified as summons; they require their own explicit audit.
 - Swallow/engulf/banishment/ethereal/possession and similar mechanics use universal location/control/life-state structures rather than creature-name branches.
 
+### 20.1 2024 Troll Loathsome Limbs arena abstraction
+
+2024 RAW Loathsome Limbs normally creates separate Troll Limb creatures. Iron Pit does not create dynamic limb combatants for this feature. Instead, the source behavior is represented by a source-owned stack on the Troll:
+
+- At the end of the Troll's turn, if the Troll is Bloodied and took **15 or more Slashing damage during that turn**, it gains one **Loathsome Limbs** stack, subject to the printed **4/Day** limit and a maximum of four active stacks.
+- Each active stack gives the Troll **1 Exhaustion level**, preserving the printed missing-limb penalty.
+- Immediately after the Troll's turn, each active stack makes one attached limb attack using the source Troll Limb Rend profile: **+6 to hit, reach 5 ft., 2d4 + 4 Slashing**.
+- These attached attacks use the normal universal attack resolver. They do not create separate initiative entries, positions, Hit Point pools, movement, targeting bodies, or spawned combatants.
+- The Troll's ordinary Multiattack remains three Rends. The attached attacks are additional post-turn attacks representing the severed limbs.
+- Troll **Regeneration remains otherwise source-correct**: 15 HP at the start of its turn; Acid or Fire damage suppresses it on the next turn; the Troll dies at 0 HP only when it starts its turn unable to regenerate.
+- When Regeneration actually restores Hit Points, all active Loathsome Limbs stacks and only the Exhaustion levels owned by those stacks are removed. Unrelated Exhaustion is preserved.
+- This representation is an explicit Iron Pit arena abstraction of the RAW spawned-creature mechanic; it is not a claim that RAW treats severed limbs as buffs.
+
 ## 21. Combat AI: legality first
 
 Separate RAW legality from tactical policy.
