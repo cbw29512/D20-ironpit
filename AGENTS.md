@@ -1,5 +1,9 @@
 # D20 Iron Pit repository instructions
 
+## Multi-agent coordination
+
+When Chris has more than one assistant working on Iron Pit concurrently, read and follow `docs/TWO_AGENT_COORDINATION.md` before editing any production combat subsystem. One subsystem has one writer at a time; read-only auditing may proceed in parallel.
+
 ## Authority order
 
 Before changing combat code, read:
