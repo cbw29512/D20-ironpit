@@ -1,6 +1,6 @@
 # Real card-art inventory
 
-Hero pregens have Chris-approved full-color painterly portraits. One hundred ninety-nine approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
+Hero pregens have Chris-approved full-color painterly portraits. Two hundred forty approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
 
 Processed hero assets are `frontend/assets/portraits/heroes/hero-{2014|2024}-{class}.webp` (3:4, about 50–85 KB). One file per character per edition is reused across levels 1–20.
 
@@ -46,7 +46,7 @@ One portrait per character per edition, reused across levels 1–20.
 | `hero-2024-warlock` | Varek Ashenmark | Warlock | `frontend/assets/portraits/heroes/hero-2024-warlock.webp` |
 | `hero-2024-wizard` | Elian Starweaver | Wizard | `frontend/assets/portraits/heroes/hero-2024-wizard.webp` |
 
-## Monsters — 199 approved silhouettes; remaining cards keep the SVG glyph
+## Monsters — 240 approved silhouettes; remaining cards keep the SVG glyph
 
 Live fight-board / picker captures of the wired silhouettes:
 
@@ -78,6 +78,7 @@ Not mapped, even when a similar name exists:
 - Fire Giant and Frost Giant are distinct; monster Druid art is not the hero Druid portrait
 - 2024 Azer Sentinel uses `azer.webp`; 2024 Centaur Trooper uses `centaur.webp`
 - `orc.webp` was processed but is not registered: neither the 2014 certified roster, the 2024 certified roster, nor the 330-name 2024 catalog has `orc` / `orc-warrior`
+- `mind-flayer.webp` was processed but is not registered: neither the 2014 certified roster, the 2024 certified roster, nor the 330-name 2024 catalog has `mind-flayer`
 - `beholder.webp` was processed but is not registered: neither the 2014 certified roster, the 2024 certified roster, nor the 330-name 2024 catalog has `beholder`
 - `drow.webp`, `duergar.webp`, `displacer-beast.webp`, `flumph.webp`, `froghemoth.webp`, and `galeb-duhr.webp` were processed but are not registered: none of those slugs exist in the 2014 certified roster, the 2024 certified roster, or the 330-name 2024 catalog
 - Guard Captain is distinct from Guard
@@ -85,6 +86,9 @@ Not mapped, even when a similar name exists:
 - 2014 Giant Sea Horse uses `giant-seahorse.webp` (edition spelling of the same creature)
 - Green Dragon Wyrmling and Gold Dragon Wyrmling are distinct from their Adult counterparts
 - Gnoll Warrior is the 2024 catalog id; there is no plain `gnoll` roster row
+- Hawk is distinct from Blood Hawk; Owl is distinct from Giant Owl and Owlbear; Hyena / Lizard / Octopus / Hunter Shark are distinct from their Giant counterparts
+- Hobgoblin Captain is distinct from Hobgoblin Warrior; Ice Mephit is distinct from Magma Mephit and Dust Mephit
+- 2014 Kobold and 2024 Kobold Warrior share `kobold-warrior.webp`; 2014 Merfolk and 2024 Merfolk Skirmisher share `merfolk.webp`
 
 | File | 2014 runtime | 2024 runtime | 2024 catalog |
 |---|---|---|---|
@@ -287,5 +291,46 @@ Not mapped, even when a similar name exists:
 | `guard-captain.webp` | — | `srd-guard-captain` | `srd-5.2.1-2024-monster-guard-captain` |
 | `guardian-naga.webp` | — | — | `srd-5.2.1-2024-monster-guardian-naga` |
 | `half-dragon.webp` | — | — | `srd-5.2.1-2024-monster-half-dragon` |
+| `hawk.webp` | `2014-hawk` | `srd-hawk` | `srd-5.2.1-2024-monster-hawk` |
+| `hezrou.webp` | — | — | `srd-5.2.1-2024-monster-hezrou` |
+| `hill-giant.webp` | `2014-hill-giant` | `srd-hill-giant` | `srd-5.2.1-2024-monster-hill-giant` |
+| `hobgoblin-captain.webp` | — | — | `srd-5.2.1-2024-monster-hobgoblin-captain` |
+| `homunculus.webp` | — | — | `srd-5.2.1-2024-monster-homunculus` |
+| `horned-devil.webp` | — | — | `srd-5.2.1-2024-monster-horned-devil` |
+| `hunter-shark.webp` | `2014-hunter-shark` | `srd-hunter-shark` | `srd-5.2.1-2024-monster-hunter-shark` |
+| `hyena.webp` | `2014-hyena` | `srd-hyena` | `srd-5.2.1-2024-monster-hyena` |
+| `ice-mephit.webp` | — | — | `srd-5.2.1-2024-monster-ice-mephit` |
+| `incubus.webp` | — | — | `srd-5.2.1-2024-monster-incubus` |
+| `invisible-stalker.webp` | — | — | `srd-5.2.1-2024-monster-invisible-stalker` |
+| `iron-golem.webp` | — | — | `srd-5.2.1-2024-monster-iron-golem` |
+| `jackal.webp` | `2014-jackal` | `srd-jackal` | `srd-5.2.1-2024-monster-jackal` |
+| `killer-whale.webp` | `2014-killer-whale` | `srd-killer-whale` | `srd-5.2.1-2024-monster-killer-whale` |
+| `kobold-warrior.webp` | `2014-kobold` | `srd-kobold-warrior` | `srd-5.2.1-2024-monster-kobold-warrior` |
+| `kraken.webp` | — | — | `srd-5.2.1-2024-monster-kraken` |
+| `lamia.webp` | — | — | `srd-5.2.1-2024-monster-lamia` |
+| `lemure.webp` | — | `srd-lemure` | `srd-5.2.1-2024-monster-lemure` |
+| `lich.webp` | — | — | `srd-5.2.1-2024-monster-lich` |
+| `lion.webp` | `2014-lion` | — | `srd-5.2.1-2024-monster-lion` |
+| `lizard.webp` | `2014-lizard` | `srd-lizard` | `srd-5.2.1-2024-monster-lizard` |
+| `magma-mephit.webp` | — | — | `srd-5.2.1-2024-monster-magma-mephit` |
+| `magmin.webp` | — | — | `srd-5.2.1-2024-monster-magmin` |
+| `mammoth.webp` | `2014-mammoth` | — | `srd-5.2.1-2024-monster-mammoth` |
+| `marilith.webp` | — | — | `srd-5.2.1-2024-monster-marilith` |
+| `mastiff.webp` | `2014-mastiff` | `srd-mastiff` | `srd-5.2.1-2024-monster-mastiff` |
+| `merfolk.webp` | `2014-merfolk` | `srd-merfolk-skirmisher` | `srd-5.2.1-2024-monster-merfolk-skirmisher` |
+| `merrow.webp` | — | — | `srd-5.2.1-2024-monster-merrow` |
+| `mimic.webp` | — | — | `srd-5.2.1-2024-monster-mimic` |
+| `mule.webp` | `2014-mule` | `srd-mule` | `srd-5.2.1-2024-monster-mule` |
+| `mummy.webp` | — | — | `srd-5.2.1-2024-monster-mummy` |
+| `nalfeshnee.webp` | — | — | `srd-5.2.1-2024-monster-nalfeshnee` |
+| `night-hag.webp` | — | — | `srd-5.2.1-2024-monster-night-hag` |
+| `nightmare.webp` | — | — | `srd-5.2.1-2024-monster-nightmare` |
+| `noble.webp` | `2014-noble` | `srd-noble` | `srd-5.2.1-2024-monster-noble` |
+| `ochre-jelly.webp` | — | — | `srd-5.2.1-2024-monster-ochre-jelly` |
+| `octopus.webp` | — | — | `srd-5.2.1-2024-monster-octopus` |
+| `oni.webp` | — | — | `srd-5.2.1-2024-monster-oni` |
+| `otyugh.webp` | — | — | `srd-5.2.1-2024-monster-otyugh` |
+| `owl.webp` | `2014-owl` | `srd-owl` | `srd-5.2.1-2024-monster-owl` |
+| `phase-spider.webp` | — | — | `srd-5.2.1-2024-monster-phase-spider` |
 
 Every other monster still uses `figure-portraits.js`. See `ART_SHOPPING_LIST.md` for the remaining missing/inaccurate table.
