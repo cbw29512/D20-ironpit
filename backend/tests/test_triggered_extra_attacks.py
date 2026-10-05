@@ -203,7 +203,7 @@ def test_trigger_checks_every_owner_after_any_turn(monkeypatch) -> None:
 
 
 def test_regeneration_clear_removes_only_source_owned_exhaustion() -> None:
-    troll, _target, _setup = _setup()
+    troll, _target, _unused_setup = _setup()
     troll.state.triggered_extra_attack_stack_counts["loathsome-limbs"] = 2
     troll.state.source_owned_exhaustion_levels["loathsome-limbs"] = 2
     troll.state.exhaustion_level = 3

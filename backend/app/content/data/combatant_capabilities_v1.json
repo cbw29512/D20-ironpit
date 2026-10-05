@@ -17934,7 +17934,58 @@
     "rage_damage_bonus": 0,
     "resources": [],
     "recharge_rules": [],
-    "triggered_extra_attack_stacks": [],
+    "regeneration": {
+      "amount": 15,
+      "requires_positive_hp": false,
+      "suppressed_by_damage_types": [
+        "acid",
+        "fire"
+      ],
+      "survives_zero_until_turn": true,
+      "source_name": "Regeneration"
+    },
+    "triggered_extra_attack_stacks": [
+      {
+        "source_id": "loathsome-limbs",
+        "source_name": "Loathsome Limbs",
+        "trigger_damage_type": "slashing",
+        "trigger_damage_minimum": 15,
+        "requires_bloodied": true,
+        "max_stacks": 4,
+        "max_uses": 4,
+        "exhaustion_per_stack": 1,
+        "attack": {
+          "id": "iron-pit-attached-troll-limb-rend",
+          "weapon": {
+            "id": "iron-pit-attached-troll-limb-rend-weapon",
+            "name": "Rend",
+            "attack_kind": "melee",
+            "dice_count": 2,
+            "dice_size": 4,
+            "damage_type": "slashing",
+            "damage_type_choices": [],
+            "animation": "strike",
+            "reach_ft": 5,
+            "light": false,
+            "finesse": false,
+            "heavy": false,
+            "two_handed": false,
+            "versatile": false
+          },
+          "attack_bonus": 6,
+          "damage_bonus": 4,
+          "conditional_damage": [],
+          "conditional_attack_advantage": [],
+          "on_hit_damage": [],
+          "on_hit_modifier_effects": [],
+          "rage_eligible": false,
+          "sneak_attack_eligible": false,
+          "forbid_target_grappled_by_self": false,
+          "damage_source_qualifiers": []
+        },
+        "clears_on_regeneration_heal": true
+      }
+    ],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
