@@ -15,6 +15,7 @@
   const side = (m, setup, allies) => allies === (m.side === "heroes") ? setup.heroes : setup.monsters;
   const baseType = (m) => String(m.state.template.creature_type || "").split(" (")[0].toLowerCase();
   const capacity = (m) => PH().capacity(m, 1, 2);
+  const supports = (m, mode) => (m.state.template.support_action_modes || []).includes(mode);
 
   function saveDc(cleric) {
     const dcs = [...new Set((cleric.state.template.spell_save_actions || []).map((a) => a.dc))];
@@ -32,7 +33,7 @@
   }
 
   function preserveTargets(cleric, setup) {
-    if (!cleric.state.template.traits?.includes("life-domain")) return [];
+    if (!supports(cleric, PRESERVE)) return [];
     const is2014 = cleric.state.template.ruleset === "2014";
     return side(cleric, setup, true).filter((m) => living(m) && S().distance(cleric, m) <= 30
       && (!is2014 || !["undead", "construct"].includes(baseType(m))) && capacity(m) > 0)
@@ -43,6 +44,7 @@
   }
 
   function choose(cleric, setup) {
+    if (!(cleric.state.template.support_action_modes || []).length) return null;
     if (!E().available(cleric.state, "action") || !(cleric.state.resources[CHANNEL] > 0)) return null;
     const preserve = preserveTargets(cleric, setup);
     if (preserve.length && (preserve.length >= 2 || preserve.some((m) => m.state.current_hp === 0 || m.combatant_id === cleric.combatant_id))) {
@@ -52,11 +54,11 @@
     const allies = side(cleric, setup, true).filter(living);
     const downed = allies.filter((m) => m.combatant_id !== cleric.combatant_id && m.state.current_hp === 0 && S().distance(cleric, m) <= 30)
       .sort((a, b) => b.state.death_save_failures - a.state.death_save_failures || a.combatant_id.localeCompare(b.combatant_id));
-    if (!is2014 && downed.length && !slotsRemain(cleric)) return { kind: "divine-spark-heal", targets: [downed[0]] };
+    if (supports(cleric, SPARK) && !is2014 && downed.length && !slotsRemain(cleric)) return { kind: "divine-spark-heal", targets: [downed[0]] };
     const enemies = side(cleric, setup, false).filter((m) => living(m) && m.state.current_hp > 0 && S().distance(cleric, m) <= 30);
     const undead = enemies.filter((m) => baseType(m) === "undead").sort((a, b) => S().distance(cleric, a) - S().distance(cleric, b) || a.combatant_id.localeCompare(b.combatant_id));
-    if (undead.length) return { kind: TURN, targets: undead };
-    if (is2014 || slotsRemain(cleric)) return null;
+    if (supports(cleric, TURN) && undead.length) return { kind: TURN, targets: undead };
+    if (!supports(cleric, SPARK) || is2014 || slotsRemain(cleric)) return null;
     enemies.sort((a, b) => S().distance(cleric, a) - S().distance(cleric, b) || a.combatant_id.localeCompare(b.combatant_id));
     return enemies.length ? { kind: "divine-spark-damage", targets: [enemies[0]] } : null;
   }
