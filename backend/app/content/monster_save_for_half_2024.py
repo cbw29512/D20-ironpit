@@ -67,7 +67,7 @@ def compile_save_for_half_actions(row: dict[str, object]) -> list[SavingThrowAct
         for match in _SAVE_FOR_HALF.finditer(actions):
             name = match.group("name").strip()
             target = match.group("target")
-            if re.search(r"\\bGrappled by the\\b", target, re.I):
+            if re.search(r"\bGrappled by the\b", target, re.I):
                 continue
             range_ft, area = _targeting(target)
             bonus = int(match.group("bonus") or 0)
