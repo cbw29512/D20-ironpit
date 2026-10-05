@@ -1,6 +1,46 @@
 (() => {
   "use strict";
 
+  const IMMUNITY_ROUNDS_24H = 14400;
+
+  function immunityId(actionId, sourceId) {
+    return `${actionId}:success-immunity:${sourceId}`;
+  }
+
+  function isImmune(target, action, sourceId) {
+    try {
+      const id = immunityId(action.id, sourceId);
+      return (target.state.timed_effects || []).some((effect) => effect.effect_id === id);
+    } catch (error) {
+      console.error("Failed source-effect immunity lookup", { actionId: action?.id, sourceId, error });
+      throw error;
+    }
+  }
+
+  function grantImmunity(state, actionId, sourceId, round, options = {}) {
+    try {
+      const rounds = options.rounds ?? IMMUNITY_ROUNDS_24H;
+      if (!rounds) return null;
+      const id = immunityId(actionId, sourceId);
+      if ((state.timed_effects || []).some((effect) => effect.effect_id === id)) return id;
+      const timed = window.IRON_PIT_BROWSER_TIMED;
+      if (!timed) throw new Error("Source-effect immunity requires browser-timed-conditions.js.");
+      return timed.apply(state, id, sourceId, {
+        sourceEffectId: `${actionId}:success-immunity`,
+        sourceTemplate: options.sourceTemplate || null,
+        sourceIsMagical: Boolean(options.sourceIsMagical),
+        appliedRound: round,
+        expiresRound: round + rounds,
+        expiryTiming: "source_turn_start",
+        expiresAtStartOfSourceTurn: true,
+        useDefaultPoisonRecovery: false,
+      });
+    } catch (error) {
+      console.error("Failed source-effect immunity grant", { actionId, sourceId, error });
+      throw error;
+    }
+  }
+
   function apply(actor, target, action, rider, round) {
     try {
       const timed = window.IRON_PIT_BROWSER_TIMED;
@@ -29,6 +69,7 @@
           && rider.effectId === "restrained"
         )),
         endsOnTeleport: Boolean(rider.endsOnTeleport || rider.groundContact),
+        sourceEffectImmunityRounds: rider.sourceEffectImmunityOnEnd ? IMMUNITY_ROUNDS_24H : 0,
       });
     } catch (error) {
       console.error("Failed browser failed-save timed rider application", {
@@ -38,5 +79,7 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS = { apply };
+  window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS = {
+    apply, isImmune, grantImmunity, immunityId, IMMUNITY_ROUNDS_24H,
+  };
 })();

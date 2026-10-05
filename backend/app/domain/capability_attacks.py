@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ConditionName
 from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, GrappleEffectDefinition
+from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
 from app.domain.weapons import (
@@ -115,6 +116,8 @@ class SaveCapabilityDefinition(BaseModel):
     requires_no_active_grapple: bool = False
     magical_effect: bool = False
     effect_tags: list[str] = Field(default_factory=list)
+    failed_save_timed_effect: FailedSaveTimedEffect | None = None
+    source_effect_immunity_on_success: bool = False
     animation: str = "save-effect"
 
     @model_validator(mode="after")

@@ -11419,6 +11419,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_on_success": false,
         "animation": "constrict"
       }
     ],
@@ -14096,6 +14097,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_on_success": false,
         "animation": "constrict"
       }
     ],
@@ -19987,6 +19989,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_on_success": false,
         "animation": "save-effect"
       }
     ],
@@ -20210,6 +20213,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_on_success": false,
         "animation": "save-effect"
       }
     ],
@@ -20431,6 +20435,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_on_success": false,
         "animation": "save-effect"
       }
     ],
@@ -20649,6 +20654,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_on_success": false,
         "animation": "save-effect"
       }
     ],
@@ -20871,6 +20877,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_on_success": false,
         "animation": "save-effect"
       }
     ],
@@ -21089,6 +21096,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_on_success": false,
         "animation": "save-effect"
       }
     ],
@@ -21316,6 +21324,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_on_success": false,
         "animation": "save-effect"
       }
     ],
@@ -21543,6 +21552,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_on_success": false,
         "animation": "save-effect"
       }
     ],
@@ -21767,6 +21777,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_on_success": false,
         "animation": "save-effect"
       }
     ],
@@ -21995,6 +22006,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_on_success": false,
         "animation": "save-effect"
       }
     ],
@@ -22219,6 +22231,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_on_success": false,
         "animation": "save-effect"
       }
     ],

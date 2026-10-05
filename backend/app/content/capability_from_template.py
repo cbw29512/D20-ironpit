@@ -97,6 +97,10 @@ def _save(action) -> dict[str, object]:
             "kind": "grapple", "escape_dc": action.grapple_escape_dc,
             "max_target_size": action.target_max_size, "restrains": action.restrains_while_grappled,
         }
+    if action.failed_save_timed_effect is not None:
+        result["failed_save_timed_effect"] = action.failed_save_timed_effect.model_dump(mode="json")
+    if action.source_effect_immunity_on_success:
+        result["source_effect_immunity_on_success"] = True
     return result
 
 
