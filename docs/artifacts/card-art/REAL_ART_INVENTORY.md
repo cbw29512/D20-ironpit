@@ -1,6 +1,6 @@
 # Real card-art inventory
 
-Hero pregens have Chris-approved full-color painterly portraits. Ninety-seven approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
+Hero pregens have Chris-approved full-color painterly portraits. One hundred twenty-three approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
 
 Processed hero assets are `frontend/assets/portraits/heroes/hero-{2014|2024}-{class}.webp` (3:4, about 50–85 KB). One file per character per edition is reused across levels 1–20.
 
@@ -46,7 +46,7 @@ One portrait per character per edition, reused across levels 1–20.
 | `hero-2024-warlock` | Varek Ashenmark | Warlock | `frontend/assets/portraits/heroes/hero-2024-warlock.webp` |
 | `hero-2024-wizard` | Elian Starweaver | Wizard | `frontend/assets/portraits/heroes/hero-2024-wizard.webp` |
 
-## Monsters — 97 approved silhouettes; remaining cards keep the SVG glyph
+## Monsters — 123 approved silhouettes; remaining cards keep the SVG glyph
 
 Live fight-board / picker captures of the wired silhouettes:
 
@@ -68,11 +68,13 @@ Not mapped, even when a similar name exists:
 - Skeleton / Zombie / Crocodile / Wolf / Boar / Guard / Spider / Ape / Snake / Rat / Hawk / Bandit / Cultist / Priest / Mage / Vampire / Pegasus / Medusa art is not reused for Warhorse Skeleton, Ogre Zombie, Giant Crocodile, Dire Wolf, Winter Wolf, Giant Boar, Guard Captain, Giant Wolf Spider, Giant Ape, Giant Constrictor Snake, Giant Rat, Blood Hawk vs Hawk, Bandit Captain, Cultist Fanatic, Priest Acolyte, Archmage, Vampire, Unicorn, or Gorgon
 - Hippopotamus and Manticore exist in the 2024 roster only
 - Berserker, Elephant, Giant Ape, Unicorn, Roc, and Troll have 2014 runtime ids plus 2024 catalog ids; Troll is not in the certified 2024 runtime subset
-- Adult dragon art is not used for the matching young, wyrmling, or ancient rows
+- Adult dragon art is not used for the matching young, wyrmling, or ancient rows; each age category has its own raster
 - Air / Earth / Fire / Water Elemental each have their own raster
+- Mage and Archmage are distinct; Flying Snake is distinct from Constrictor Snake; Giant Eagle and Giant Owl are distinct from Eagle and Owl
 - 2024 Azer Sentinel uses `azer.webp`; 2024 Centaur Trooper uses `centaur.webp`
 - `orc.webp` was processed but is not registered: neither the 2014 certified roster, the 2024 certified roster, nor the 330-name 2024 catalog has `orc` / `orc-warrior`
 - `beholder.webp` was processed but is not registered: neither the 2014 certified roster, the 2024 certified roster, nor the 330-name 2024 catalog has `beholder`
+- `drow.webp`, `duergar.webp`, `displacer-beast.webp`, `flumph.webp`, `froghemoth.webp`, and `galeb-duhr.webp` were processed but are not registered: none of those slugs exist in the 2014 certified roster, the 2024 certified roster, or the 330-name 2024 catalog
 
 | File | 2014 runtime | 2024 runtime | 2024 catalog |
 |---|---|---|---|
@@ -173,5 +175,31 @@ Not mapped, even when a similar name exists:
 | `fire-elemental.webp` | — | — | `srd-5.2.1-2024-monster-fire-elemental` |
 | `pit-fiend.webp` | — | — | `srd-5.2.1-2024-monster-pit-fiend` |
 | `water-elemental.webp` | — | — | `srd-5.2.1-2024-monster-water-elemental` |
+| `allosaurus.webp` | `2014-allosaurus` | `srd-allosaurus` | `srd-5.2.1-2024-monster-allosaurus` |
+| `ancient-black-dragon.webp` | — | — | `srd-5.2.1-2024-monster-ancient-black-dragon` |
+| `ancient-blue-dragon.webp` | — | — | `srd-5.2.1-2024-monster-ancient-blue-dragon` |
+| `ancient-gold-dragon.webp` | — | — | `srd-5.2.1-2024-monster-ancient-gold-dragon` |
+| `ancient-green-dragon.webp` | — | — | `srd-5.2.1-2024-monster-ancient-green-dragon` |
+| `ancient-red-dragon.webp` | — | — | `srd-5.2.1-2024-monster-ancient-red-dragon` |
+| `ancient-white-dragon.webp` | — | — | `srd-5.2.1-2024-monster-ancient-white-dragon` |
+| `ankylosaurus.webp` | `2014-ankylosaurus` | `srd-ankylosaurus` | `srd-5.2.1-2024-monster-ankylosaurus` |
+| `archmage.webp` | — | — | `srd-5.2.1-2024-monster-archmage` |
+| `assassin.webp` | — | — | `srd-5.2.1-2024-monster-assassin` |
+| `axe-beak.webp` | `2014-axe-beak` | `srd-axe-beak` | `srd-5.2.1-2024-monster-axe-beak` |
+| `behir.webp` | — | — | `srd-5.2.1-2024-monster-behir` |
+| `blink-dog.webp` | — | — | `srd-5.2.1-2024-monster-blink-dog` |
+| `bulette.webp` | — | — | `srd-5.2.1-2024-monster-bulette` |
+| `chain-devil.webp` | — | — | `srd-5.2.1-2024-monster-chain-devil` |
+| `clay-golem.webp` | — | — | `srd-5.2.1-2024-monster-clay-golem` |
+| `couatl.webp` | — | — | `srd-5.2.1-2024-monster-couatl` |
+| `darkmantle.webp` | — | — | `srd-5.2.1-2024-monster-darkmantle` |
+| `death-dog.webp` | — | — | `srd-5.2.1-2024-monster-death-dog` |
+| `dryad.webp` | — | — | `srd-5.2.1-2024-monster-dryad` |
+| `ettin.webp` | — | — | `srd-5.2.1-2024-monster-ettin` |
+| `flying-snake.webp` | `2014-flying-snake` | `srd-flying-snake` | `srd-5.2.1-2024-monster-flying-snake` |
+| `gargoyle.webp` | — | `srd-gargoyle` | `srd-5.2.1-2024-monster-gargoyle` |
+| `gelatinous-cube.webp` | — | — | `srd-5.2.1-2024-monster-gelatinous-cube` |
+| `giant-eagle.webp` | `2014-giant-eagle` | `srd-giant-eagle` | `srd-5.2.1-2024-monster-giant-eagle` |
+| `giant-owl.webp` | `2014-giant-owl` | `srd-giant-owl` | `srd-5.2.1-2024-monster-giant-owl` |
 
 Every other monster still uses `figure-portraits.js`. See `ART_SHOPPING_LIST.md` for the remaining missing/inaccurate table.
