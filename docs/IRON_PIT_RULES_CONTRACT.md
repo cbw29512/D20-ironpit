@@ -436,7 +436,7 @@ Universal life-state model must distinguish states needed by mechanics, includin
 
 Specific 0-HP replacement/prevention/lethal rules are checked before the generic death/death-save path.
 
-No resurrection is available during an Iron Pit fight. Dead/disintegrated combatants remain out for the match; the Pit deity restores them only after combat.
+Dead is a terminal fight debuff. Once a combatant is Dead, they are out of that deathmatch: no resurrection, rebirth, revive, return, ordinary healing, later stabilization, regeneration, or Death Saving Throw restores them. Death Saving Throws occur only while a character is Unconscious/dying at 0 HP and not Dead. Printed 0-HP replacements (Death Ward, Undead Fortitude, Relentless Endurance, poison riders that stabilize instead of death) intercept the drop to 0 in the same resolution and never leave the combatant Dead first. No current roster ability is a true instant self-resurrection; do not invent a revive path. Logs and UI keep Dead as Dead for the rest of the match. The Pit deity restores combatants only after combat.
 
 ### Disintegration
 

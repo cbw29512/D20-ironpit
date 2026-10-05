@@ -74,6 +74,15 @@ const L = window.IRON_PIT_BATTLE_LOG;
 
 {
   const text = L.format({
+    event_type: "attack", actor_name: "Roc", target_name: "Karnok Stoneward", attack_name: "Beak",
+    hit: true, critical: false, hp_before: 0, hp_after: 0, is_dead: true, is_stable: false,
+  });
+  assert.match(text, /DEAD/);
+  assert.doesNotMatch(text, /UNCONSCIOUS/);
+}
+
+{
+  const text = L.format({
     event_type: "attack", actor_name: "Fighter", target_name: "Ogre", attack_name: "Battleaxe",
     target_ac: 11, hit: true, critical: false,
     attack_roll: { selected_roll: 15, rolls: [15], modifier: 5, total: 20, mode: "normal" },

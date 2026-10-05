@@ -95,4 +95,16 @@ function downedHero() {
   assert.equal(state.is_unconscious, true);
 }
 
+{
+  const Z = window.IRON_PIT_BROWSER_ZERO_HP;
+  const state = S.buildState(structuredClone(heroTemplate));
+  state.resources["relentless-endurance"] = 0;
+  assert.equal(A.applyDamage(state, state.current_hp + state.template.max_hp, false), "dead");
+  assert.equal(state.is_dead, true);
+  assert.equal(Z.stabilizeAtZero(state), "dead");
+  assert.equal(state.is_dead, true);
+  assert.equal(state.is_alive, false);
+  assert.equal(state.is_unconscious, false);
+}
+
 console.log("Browser zero-HP and start-turn lifecycle regressions passed.");

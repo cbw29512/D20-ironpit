@@ -1,9 +1,12 @@
+import pytest
+
 from app.combat.attacks import resolve_attack
 from app.combat.conditions import attack_roll_condition_sources
 from app.combat.death_saves import resolve_death_save
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
-from app.combat.zero_hp import apply_damage
+from app.combat.zero_hp import apply_damage, restore_hit_points
+from app.combat.zero_hp_stabilization import stabilize_at_zero
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.domain.models import RollMode
 from app.domain.modifiers import CombatModifier, ModifierKind
@@ -210,3 +213,30 @@ def test_damage_at_zero_equal_to_max_hp_kills_without_fake_failure_increment() -
     assert state.is_dead is True
     assert state.death_save_failures == 0
     assert state.death_save_successes == 2
+
+
+def test_later_stabilization_does_not_revive_the_dead() -> None:
+    state = build_combatant_state(build_goblin_warrior())
+    apply_damage(state, state.current_hp)
+    assert state.is_dead is True
+    assert stabilize_at_zero(state) == "dead"
+    assert state.is_dead is True
+    assert state.is_alive is False
+    assert state.is_unconscious is False
+
+
+def test_ordinary_healing_does_not_revive_the_dead() -> None:
+    state = build_combatant_state(build_goblin_warrior())
+    apply_damage(state, state.current_hp)
+    assert restore_hit_points(state, 20) == 0
+    assert state.is_dead is True
+    assert state.current_hp == 0
+    assert state.is_alive is False
+
+
+def test_death_save_is_refused_after_terminal_death() -> None:
+    state = _downed_character()
+    apply_damage(state, state.template.max_hp)
+    assert state.is_dead is True
+    with pytest.raises(ValueError, match="Death Saving Throw"):
+        resolve_death_save(1, 1, "hero-1", state, FixedDiceProvider([10]))

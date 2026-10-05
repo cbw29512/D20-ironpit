@@ -4,7 +4,7 @@ from app.combat.attack_hit_damage import resolve_attack_hit_damage
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
-from app.content.demo import build_goblin_warrior
+from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.domain.models import DamageType, RollMode, Weapon
 from app.domain.weapons import OnHitSaveDamage, WeaponAttack, WeaponAttackKind
 from app.domain.zero_hp_effects import ZeroHpSaveDamageRider
@@ -99,4 +99,23 @@ def test_rider_does_not_fire_when_weapon_damage_alone_causes_zero_hp() -> None:
     assert not any(
         effect.source_effect_id == "Sting poison:zero-hp-save-damage"
         for effect in target.timed_effects
+    )
+
+
+def test_rider_does_not_revive_a_character_killed_by_massive_damage() -> None:
+    source = build_demo_fighter()
+    bonuses = dict(source.saving_throw_bonuses)
+    bonuses["constitution"] = 0
+    defender = build_combatant_state(source.model_copy(
+        update={"max_hp": 12, "saving_throw_bonuses": bonuses},
+        deep=True,
+    ))
+    defender.current_hp = 1
+    result = _resolve(defender, [4, 1, 6, 6])
+    assert defender.is_dead is True
+    assert defender.is_alive is False
+    assert result.damage_outcome == "dead"
+    assert not any(
+        effect.source_effect_id == "Sting poison:zero-hp-save-damage"
+        for effect in defender.timed_effects
     )
