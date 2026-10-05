@@ -85,6 +85,21 @@ Content compiles into reusable combat primitives such as:
 
 If a needed mechanic is missing, add one reusable primitive whenever possible rather than adding a class-name, hero-name, monster-name, or stat-block-name special case.
 
+
+### Recharge is one universal random availability mechanic
+
+Treat Recharge as a simple random availability state on an ability, conceptually similar to a temporary random buff that says whether that ability is available this turn.
+
+- A Recharge ability starts the fight available unless its source explicitly says otherwise.
+- When the creature legally uses the ability, that Recharge availability is expended.
+- While the ability is expended, roll the printed Recharge die at the start of each later turn of that creature.
+- If the die meets the printed threshold, the ability becomes available again. Otherwise it remains expended.
+- Example: **Recharge 5–6** uses one d6. Results 1–4 do nothing; results 5–6 restore availability.
+- Example: **Recharge 6** uses one d6. Results 1–5 do nothing; result 6 restores availability.
+- A successful Recharge roll restores availability only. It does not grant an extra Action or automatically execute the ability; the creature still uses the printed Action, Bonus Action, Reaction, or other timing when the ability is selected.
+- Recharge is source-agnostic. Breath weapons, attacks, save actions, spells, and other abilities all point at the same universal Recharge resource/lifecycle when their printed mechanics are equivalent.
+- Do not create monster-name or ability-name Recharge resolvers. The source card supplies the die and threshold; the universal engine owns the ready/expended state and start-of-turn roll.
+
 Summon/conjure/create-a-separate-combat-entity options are currently arena-unavailable by Iron Pit contract. Preserve them in RAW/source audits, never silently rename or replace mandatory source features, and do not let an otherwise complete pregen or monster remain blocked solely because its summon option is unavailable. Prepared casters may select another legal non-summoning combat spell when RAW allows preparation changes.
 
 ## 6. Mandatory content intake pipeline
