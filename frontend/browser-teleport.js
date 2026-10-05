@@ -61,7 +61,14 @@
       if (!caster || !setup || !String(turnKey || "").trim()) {
         throw new Error("Teleport choice requires a caster, setup, and turn key.");
       }
-      return null;
+      if (!caster.state.position) return null;
+      const cancel = window.IRON_PIT_BROWSER_TELEPORT_CANCEL;
+      if (!cancel?.cancelableIds(caster.state).length) return null;
+      const actions = (caster.state.template.teleport_actions || []).filter((action) =>
+        E().available(caster.state, action.actionCost || action.action_cost));
+      if (!actions.length) return null;
+      const action = actions.slice().sort((a, b) => (a.level - b.level) || String(a.id).localeCompare(b.id))[0];
+      return { action, destination: { ...caster.state.position } };
     } catch (error) {
       console.error("Failed browser teleport choice", { caster: caster?.combatant_id, error });
       throw error;
@@ -73,7 +80,7 @@
       throw new Error(`${action.name} cannot be cast inside a Silence effect.`);
     }
     if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.actionCost} is unavailable for ${action.name}.`);
-    if (action.expendsSpellSlot) P().markSlotSpellCast(caster.state, turnKey);
+    if (action.expendsSpellSlot) P()?.markSlotSpellCast?.(caster.state, turnKey);
     E().spend(caster.state, action.actionCost);
     if (action.resourceId) caster.state.resources[action.resourceId] -= action.resourceCost || 1;
     const travelers = [caster, ...passengers(caster, setup, action)];
@@ -100,20 +107,39 @@
       return { events, sequence };
     }
     const origin = { ...caster.state.position };
-    const offsetX = destination.x - origin.x;
-    const offsetY = destination.y - origin.y;
-    for (const traveler of travelers) {
-      if (!traveler.state.position) continue;
-      traveler.state.position = { x: traveler.state.position.x + offsetX, y: traveler.state.position.y + offsetY };
+    const staysInPlace = destination.x === origin.x && destination.y === origin.y;
+    const removed = [];
+    if (staysInPlace) {
+      for (const traveler of travelers) {
+        for (const conditionId of (window.IRON_PIT_BROWSER_TELEPORT_CANCEL?.clear(traveler) || [])) {
+          if (!removed.includes(conditionId)) removed.push(conditionId);
+        }
+      }
+    } else {
+      const offsetX = destination.x - origin.x;
+      const offsetY = destination.y - origin.y;
+      for (const traveler of travelers) {
+        if (!traveler.state.position) continue;
+        traveler.state.position = { x: traveler.state.position.x + offsetX, y: traveler.state.position.y + offsetY };
+        for (const conditionId of (window.IRON_PIT_BROWSER_TELEPORT_CANCEL?.clear(traveler) || [])) {
+          if (!removed.includes(conditionId)) removed.push(conditionId);
+        }
+      }
+    }
+    const names = removed.map((id) => id.replace(/_/g, " ").replace(/\b\w/g, (ch) => ch.toUpperCase())).join(", ");
+    let description = `${caster.state.template.name} teleports with ${action.name}.`;
+    if (staysInPlace) {
+      description = `${caster.state.template.name} uses ${action.name} without leaving its spot.`;
+      if (names) description += ` ${names} ends.`;
     }
     events.push({
-      sequence, round_number: round, event_type: "movement",
+      sequence, round_number: round, event_type: staysInPlace ? "feature" : "movement",
       actor_id: caster.combatant_id, actor_name: caster.state.template.name,
-      feature_id: action.id,
+      feature_id: action.id, removed_condition_ids: removed,
       resource_remaining: action.resourceId ? caster.state.resources[action.resourceId] : null,
-      grid_position_before: origin, grid_position_after: { ...destination },
+      grid_position_before: origin, grid_position_after: staysInPlace ? origin : { ...destination },
       animation: action.animation || "teleport",
-      description: `${caster.state.template.name} teleports with ${action.name}.`,
+      description,
     });
     return { events, sequence: sequence + 1 };
   }

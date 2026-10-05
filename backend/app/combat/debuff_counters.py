@@ -85,8 +85,12 @@ def difficult_terrain_multiplier(
     source_is_magical: bool = False,
 ) -> int:
     """Return the ordinary 2x difficult-terrain cost unless a buff counters it."""
-    return 1 if debuff_is_countered(
+    from app.combat.flight_ground_immunity import combatant_is_flying
+
+    if combatant_is_flying(state) or debuff_is_countered(
         state,
         "difficult-terrain",
         source_is_magical=source_is_magical,
-    ) else 2
+    ):
+        return 1
+    return 2

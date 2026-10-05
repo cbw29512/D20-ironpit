@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.debuff_counters import debuff_is_countered
 from app.combat.defensive_modifier_rules import condition_immunity_modifier_applies
+from app.combat.flight_ground_immunity import flying_counters_ground_contact
 from app.domain.models import CombatantState, CombatantTemplate
 
 
@@ -11,6 +12,7 @@ def condition_is_immune(
     source: CombatantTemplate | None = None,
     *,
     source_is_magical: bool = False,
+    ground_contact: bool = False,
 ) -> bool:
     """Return static and runtime condition immunities, including source-typed wards.
 
@@ -20,6 +22,8 @@ def condition_is_immune(
     condition immunity and lets nonmagical sources continue to function.
     """
     if condition_id in state.template.condition_immunities:
+        return True
+    if flying_counters_ground_contact(state, ground_contact=ground_contact):
         return True
     if debuff_is_countered(
         state,

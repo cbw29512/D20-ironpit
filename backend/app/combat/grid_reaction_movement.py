@@ -42,6 +42,7 @@ def move_toward_on_grid(
         if movement_source == "speed" and not voluntary_activity_available(mover.state, "movement"):
             return [], sequence, None
         members = [*setup.heroes, *setup.monsters]
+        allow_leave_melee = movement_source == "forced"
         plan = plan_movement_toward(
             setup.map_definition,
             mover,
@@ -51,6 +52,7 @@ def move_toward_on_grid(
             mover.state.movement_remaining_ft,
             setup.persistent_barriers,
             setup.temporary_terrain_zones,
+            allow_leave_melee=allow_leave_melee,
         )
         if not plan.path:
             return [], sequence, None

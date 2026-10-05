@@ -29,6 +29,14 @@ def compile_spell_save_action(choice: SpellChoice) -> SavingThrowAction:
         spell = spell_at_slot(choice.action, choice.slot_level)
         multiplier = choice.range_modifier.range_multiplier if choice.range_modifier is not None else 1
         target_range = (spell.range_ft + (spell.area_radius_ft or 0)) * multiplier
+        rider = spell.failed_save_timed_effect
+        if (
+            rider is not None
+            and spell.creates_difficult_terrain
+            and rider.effect_id == "restrained"
+            and not rider.ground_contact
+        ):
+            rider = rider.model_copy(update={"ground_contact": True, "ends_on_teleport": True})
         return SavingThrowAction(
             id=spell.id,
             name=spell.name,
@@ -47,7 +55,7 @@ def compile_spell_save_action(choice: SpellChoice) -> SavingThrowAction:
             automatic_failure_creature_types=list(spell.automatic_failure_creature_types),
             requires_target_hearing=spell.requires_target_hearing,
             requires_target_sight=spell.requires_target_sight,
-            failed_save_timed_effect=spell.failed_save_timed_effect,
+            failed_save_timed_effect=rider,
             failed_save_push_ft=spell.failed_save_push_ft,
             required_target_creature_types=list(spell.required_target_creature_types),
             excluded_target_creature_types=list(spell.excluded_target_creature_types),
