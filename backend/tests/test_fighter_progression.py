@@ -3,7 +3,7 @@ from app.combat.action_surge import action_surge_available, use_action_surge
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_action_surge import resolve_action_surge_attack
 from app.combat.state import build_combatant_state
-from app.combat.tactical_mind import apply_tactical_mind
+from app.combat.ability_checks import resolve_ability_check_outcome
 from app.combat.timed_conditions import apply_timed_condition
 from app.content.fighter_progression import build_karnok_stoneward_level
 from app.content.level_resources import fighter_action_surge_uses, fixed_class_hit_points
@@ -90,17 +90,19 @@ def _failed_check(total: int) -> DiceRoll:
     return DiceRoll(notation="1d20", rolls=[total - 5], selected_roll=total - 5, modifier=5, total=total)
 
 
-def test_tactical_mind_spends_second_wind_only_when_it_turns_failure_into_success() -> None:
+def test_tactical_mind_reuses_universal_resource_backed_d20_bonus() -> None:
     success_state = build_combatant_state(build_karnok_stoneward_level(2))
-    success_roll, used, succeeded = apply_tactical_mind(
-        success_state, _failed_check(10), 15, FixedDiceProvider([5]),
+    success_roll, succeeded = resolve_ability_check_outcome(
+        success_state, "strength", _failed_check(10), 15, dice=FixedDiceProvider([5]),
     )
-    assert used is True and succeeded is True and success_roll.total == 15
+    assert succeeded is True and success_roll.total == 15
+    assert "[Tactical Mind]" in success_roll.notation
     assert next(item for item in success_state.resources if item.id == "second-wind").current_uses == 1
 
     failure_state = build_combatant_state(build_karnok_stoneward_level(2))
-    failure_roll, used, succeeded = apply_tactical_mind(
-        failure_state, _failed_check(10), 15, FixedDiceProvider([1]),
+    failure_roll, succeeded = resolve_ability_check_outcome(
+        failure_state, "strength", _failed_check(10), 15, dice=FixedDiceProvider([1]),
     )
-    assert used is True and succeeded is False and failure_roll.total == 11
+    assert succeeded is False and failure_roll.total == 11
+    assert "[Tactical Mind]" in failure_roll.notation
     assert next(item for item in failure_state.resources if item.id == "second-wind").current_uses == 2
