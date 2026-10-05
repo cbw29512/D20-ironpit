@@ -67,9 +67,14 @@ const karnok1 = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-2014-l1"];
 const karnok3 = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-2014-l3"];
 const karnok5 = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-2014-l5"];
 assert.ok(karnok1 && karnok3 && karnok5, "2014 Karnok loadout snapshots must exist");
-const dmgUncommon = (item) => item.includes("silvered") && item.includes("adamantine") && item.includes("magical");
-assert.ok(manufacturedQualifiers(karnok1).every(dmgUncommon));
-assert.ok(manufacturedQualifiers(karnok3).every(dmgUncommon));
-assert.ok(manufacturedQualifiers(karnok5).every(dmgUncommon));
+const silveredOnly = (item) => item.includes("silvered") && !item.includes("magical") && !item.includes("adamantine");
+const printedMagic = (item) => item.includes("magical") && !item.includes("silvered") && !item.includes("adamantine");
+assert.ok(manufacturedQualifiers(karnok1).every(silveredOnly));
+assert.ok(manufacturedQualifiers(karnok3).every(silveredOnly));
+assert.ok(manufacturedQualifiers(karnok5).every(printedMagic));
+assert.equal(karnok1.attacks.find((attack) => attack.weaponId === "greatsword").bonus, 5);
+assert.equal(karnok1.attacks.find((attack) => attack.weaponId === "greatsword").damageBonus, 3);
+assert.equal(karnok5.attacks.find((attack) => attack.weaponId === "greatsword").bonus, 8);
+assert.equal(karnok5.attacks.find((attack) => attack.weaponId === "greatsword").damageBonus, 5);
 
 console.log("2014 conditional damage-defense browser regression passed.");

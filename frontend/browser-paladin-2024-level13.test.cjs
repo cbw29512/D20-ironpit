@@ -20,7 +20,7 @@ try {
   assert.equal(hero.name, previous.name);
   assert.deepEqual(hero.ability_scores, previous.ability_scores);
   assert.equal(hero.max_hp, 108);
-  assert.equal(hero.attacks.find(a => a.id === hero.primary_attack_id).bonus, 10);
+  assert.equal(hero.attacks.find(a => a.id === hero.primary_attack_id).bonus, 12);
   assert.equal(hero.saving_throw_bonuses.charisma, 8);
   assert.equal(hero.skill_bonuses.persuasion, 8);
   assert.equal(hero.saving_throw_actions[0].dc, 16);

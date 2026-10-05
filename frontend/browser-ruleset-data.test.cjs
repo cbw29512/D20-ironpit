@@ -60,7 +60,7 @@ assert.deepEqual(
 );
 assert.equal(barbarian12.resources.rage, 5);
 assert.equal(barbarian13.brutal_critical_dice, 2);
-assert.equal(barbarian13.attacks[0].bonus, 10);
+assert.equal(barbarian13.attacks[0].bonus, 12);
 const rogue2 = rogues2014.find((hero) => hero.level === 2);
 const rogue5 = rogues2014.find((hero) => hero.level === 5);
 const rogue7 = rogues2014.find((hero) => hero.level === 7);

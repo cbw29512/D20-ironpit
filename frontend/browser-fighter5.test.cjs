@@ -53,10 +53,10 @@ const greatsword = fighter.attacks.find((attack) => attack.id === "karnok-greats
 const shortbow = fighter.attacks.find((attack) => attack.id === "karnok-shortbow");
 assert.ok(greatsword);
 assert.ok(shortbow);
-assert.equal(greatsword.bonus, 7);
-assert.equal(greatsword.damageBonus, 4);
-assert.equal(shortbow.bonus, 4);
-assert.equal(shortbow.damageBonus, 1);
+assert.equal(greatsword.bonus, 8);
+assert.equal(greatsword.damageBonus, 5);
+assert.equal(shortbow.bonus, 5);
+assert.equal(shortbow.damageBonus, 2);
 assert.equal(fighter.attack_action.id, "extra-attack");
 assert.deepEqual(fighter.attack_action.slots, [
   { attackIds: ["karnok-greatsword", "karnok-shortbow"], saveActionIds: [] },

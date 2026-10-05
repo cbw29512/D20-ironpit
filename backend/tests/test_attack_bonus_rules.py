@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import pytest
 
-from app.content.attack_bonus_rules import archery_fighting_style_bonus, compile_weapon_attack_bonus
+from app.content.attack_bonus_rules import (
+    archery_fighting_style_bonus,
+    compile_weapon_attack_bonus,
+    printed_magic_weapon_attack_damage_bonus,
+)
 from app.content.pregens import build_brom_ironmark, build_selene_asharrow
 from app.domain.models import WeaponAttackKind
 
@@ -26,6 +30,17 @@ def test_archery_does_not_change_melee_attack_bonus() -> None:
     brom = build_brom_ironmark()
     assert brom.weapon_attack.weapon.attack_kind is WeaponAttackKind.MELEE
     assert brom.weapon_attack.attack_bonus == 5
+
+
+def test_printed_magic_weapon_bonus_follows_table_f_g_h_bands() -> None:
+    assert printed_magic_weapon_attack_damage_bonus(1) == 0
+    assert printed_magic_weapon_attack_damage_bonus(4) == 0
+    assert printed_magic_weapon_attack_damage_bonus(5) == 1
+    assert printed_magic_weapon_attack_damage_bonus(10) == 1
+    assert printed_magic_weapon_attack_damage_bonus(11) == 2
+    assert printed_magic_weapon_attack_damage_bonus(16) == 2
+    assert printed_magic_weapon_attack_damage_bonus(17) == 3
+    assert printed_magic_weapon_attack_damage_bonus(20) == 3
 
 
 def test_archery_rejects_untyped_weapon_kind() -> None:

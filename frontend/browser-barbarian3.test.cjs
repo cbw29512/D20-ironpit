@@ -86,10 +86,10 @@ function rage(hero) {
   assert.equal(template.saving_throw_bonuses.strength, 7);
   assert.equal(template.saving_throw_bonuses.constitution, 6);
   assert.equal(template.skill_bonuses.athletics, 7);
-  assert.equal(template.attacks[0].bonus, 7);
-  assert.equal(template.attacks[0].damageBonus, 4);
-  assert.equal(template.attacks[1].bonus, 7);
-  assert.equal(template.attacks[1].damageBonus, 4);
+  assert.equal(template.attacks[0].bonus, 8);
+  assert.equal(template.attacks[0].damageBonus, 5);
+  assert.equal(template.attacks[1].bonus, 8);
+  assert.equal(template.attacks[1].damageBonus, 5);
   assert.equal(template.attack_action.slots.length, 2);
 }
 

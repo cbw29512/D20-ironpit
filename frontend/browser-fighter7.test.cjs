@@ -18,11 +18,11 @@ const greatsword = fighter.attacks.find((attack) => attack.id === "karnok-greats
 const shortbow = fighter.attacks.find((attack) => attack.id === "karnok-shortbow");
 assert.ok(greatsword);
 assert.ok(shortbow);
-assert.equal(greatsword.bonus, 8);
-assert.equal(greatsword.damageBonus, 5);
+assert.equal(greatsword.bonus, 9);
+assert.equal(greatsword.damageBonus, 6);
 assert.equal(greatsword.damageDieMinimum, 3);
-assert.equal(shortbow.bonus, 4);
-assert.equal(shortbow.damageBonus, 1);
+assert.equal(shortbow.bonus, 5);
+assert.equal(shortbow.damageBonus, 2);
 assert.equal(shortbow.damageDieMinimum, undefined);
 
 function setDice(values) {
