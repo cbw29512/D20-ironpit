@@ -50,10 +50,10 @@
     const bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "postAction", events);
     events.push(...bonus.events); sequence = bonus.sequence;
     if (bonus.events.length) {
-      const followUp = BF()?.resolve(
-        sequence, round, member, bonus.events[bonus.events.length - 1].feature_id, turnKey,
+      sequence = appendFollowUps(
+        events, sequence, round, member, setup,
+        bonus.events[bonus.events.length - 1].feature_id, turnKey,
       );
-      if (followUp) { events.push(followUp); sequence += 1; }
     }
     const hooks = AH();
     const cleanup = hooks.runPhase(hooks.PHASES.TURN_FINALIZE, {
@@ -61,6 +61,15 @@
     });
     events.push(...cleanup.events); sequence = cleanup.sequence;
     return { events, sequence };
+  }
+
+  function appendFollowUps(events, sequence, round, member, setup, triggerId, turnKey) {
+    if (!triggerId) return sequence;
+    const tactical = BF()?.resolve(sequence, round, member, triggerId, turnKey);
+    if (tactical) { events.push(tactical); sequence += 1; }
+    const moved = BF()?.resolveMovement(sequence, round, member, setup, triggerId, turnKey);
+    if (moved) { events.push(...moved.events); sequence = moved.sequence; }
+    return sequence;
   }
 
   function resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, bonusActionCheckpoint, turnEvents = []) {
@@ -118,20 +127,9 @@
         return finalize(events, sequence, round, member, setup, turnKey, false);
       }
       if (O()?.forcedRetreatActive(member.state)) { events.push(O().event(sequence++, round, member)); return finalize(events, sequence, round, member, setup, turnKey, false); }
-      const supportBonusBefore = member.state.bonus_action_available;
       const support = P()?.resolve(sequence, round, member, setup, turnKey);
       if (support) {
         events.push(...support.events); sequence = support.sequence;
-        if (supportBonusBefore && !member.state.bonus_action_available && support.events.length) {
-          const followUp = BF()?.resolve(
-            sequence,
-            round,
-            member,
-            support.events[support.events.length - 1].feature_id,
-            turnKey,
-          );
-          if (followUp) { events.push(followUp); sequence += 1; }
-        }
       }
       // Signature actions resolve before optional Bonus Action spell setup.
       const signature = resolveMainActionOpportunity("signatureThreshold", sequence, round, member, setup, turnKey);
@@ -140,20 +138,20 @@
       let bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "beforeEscape");
       events.push(...bonus.events); sequence = bonus.sequence;
       if (bonus.events.length) {
-        const followUp = BF()?.resolve(
-          sequence, round, member, bonus.events[bonus.events.length - 1].feature_id, turnKey,
+        sequence = appendFollowUps(
+          events, sequence, round, member, setup,
+          bonus.events[bonus.events.length - 1].feature_id, turnKey,
         );
-        if (followUp) { events.push(followUp); sequence += 1; }
       }
       if (H().shouldEscape(member.state)) { events.push(H().escape(sequence++, round, member, setup)); return finalize(events, sequence, round, member, setup, turnKey); }
       if (ACE().shouldEscape(member.state)) { events.push(ACE().resolve(sequence++, round, member, setup)); return finalize(events, sequence, round, member, setup, turnKey); }
       bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "afterEscape");
       events.push(...bonus.events); sequence = bonus.sequence;
       if (bonus.events.length) {
-        const followUp = BF()?.resolve(
-          sequence, round, member, bonus.events[bonus.events.length - 1].feature_id, turnKey,
+        sequence = appendFollowUps(
+          events, sequence, round, member, setup,
+          bonus.events[bonus.events.length - 1].feature_id, turnKey,
         );
-        if (followUp) { events.push(followUp); sequence += 1; }
       }
       const preMove = resolveMainActionOpportunity("normalPreMove", sequence, round, member, setup, turnKey);
       events.push(...preMove.events); sequence = preMove.sequence;
