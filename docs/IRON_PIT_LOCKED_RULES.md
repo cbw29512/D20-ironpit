@@ -83,7 +83,6 @@ Standing instruction: park, record, continue. Revisit this list after the rest o
 |---|---|---|---|---|
 | Assassin | leftover trait | `source:trait` | Shortsword/crossbow poison save-damage already compiles. Assassinate / Evasion / Sneak Attack remain. | Leftover-trait lane for those three traits |
 | Basilisk | leftover trait | `source:trait` | Bite poison damage already compiles. Petrifying Gaze remains. | Gaze / petrify machine, shared with Cockatrice / Gorgon |
-| Death Dog | leftover trait | `source:trait` | Bite Poisoned save already compiles. Two-Headed remains. | Leftover-trait bind for Two-Headed |
 | Phase Spider | leftover trait | `source:trait` | Bite poison save-damage already compiles. Ethereal Jaunt remains. | Ethereal / jaunt policy |
 | Ettercap; Giant Spider | web / recharge | `attack:complex`, `attack:damage-type`, `mechanic:recharge` | Bite poison already compiles. Web is a breakable restraint plus recharge. | Shared web / breakable-restraint primitive |
 | Otyugh | incomplete slam | `attack:incomplete`, `source:extra-action`, `source:trait` | Bite Poisoned save already compiles. Tentacle Slam and Limited Telepathy remain. | Finish Tentacle Slam, then leftover trait |
@@ -115,3 +114,5 @@ Standing instruction: park, record, continue. Revisit this list after the rest o
 | Blink Dog | Teleport + extra attack | Recharge Teleport also grants a Bite | `TeleportAction` has no extra-attack rider. In-place teleport (10.1) plus a parameterized extra-attack grant. Do not drop the Bite. | Extra-attack grant on teleport |
 
 2024 counterparts after the 2014 octopus unlock stay blocked on their own source. 2024 Giant Octopus Tentacles still need Grappled+Restrained, but Ink Cloud is a 1/Day underwater damage-triggered reaction plus Swim movement. 2024 Octopus Tentacles are damage-only (no grapple) and its Ink Cloud is a different 1/Day underwater reaction. Do not copy 2014 Ink Cloud absence into those 2024 reaction machines.
+
+2024 Death Dog and Ettin stay independently blocked after the 2014 Two Heads bind. 2024 Death Dog Bite is a multi-step disease rider, not Two-Headed. 2024 Ettin Battleaxe knocks Prone and Morningstar imposes next-attack Disadvantage; it has no Two Heads trait. Do not copy 2014 Two Heads grants onto those 2024 actions.
