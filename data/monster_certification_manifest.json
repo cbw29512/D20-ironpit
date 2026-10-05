@@ -1676,7 +1676,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -1685,7 +1684,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -1792,7 +1790,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
@@ -1800,7 +1797,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "unsupported_mechanics": [],
@@ -2416,13 +2412,11 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "condition-or-control",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
         "attack-roll",
         "condition-or-control",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "unsupported_mechanics": [],
@@ -3735,14 +3729,12 @@
         "attack-roll",
         "condition-or-control",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
         "attack-roll",
         "condition-or-control",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "unsupported_mechanics": [],
@@ -4629,7 +4621,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -4638,7 +4629,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -4926,7 +4916,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -4935,7 +4924,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -7188,7 +7176,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
@@ -7196,7 +7183,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "unsupported_mechanics": [],
@@ -9370,7 +9356,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -9379,7 +9364,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -9631,7 +9615,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -9640,7 +9623,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -9662,7 +9644,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
@@ -9670,7 +9651,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "unsupported_mechanics": [],
@@ -9837,7 +9817,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -9846,7 +9825,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -9868,7 +9846,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "supported_mechanics": [
@@ -9876,7 +9853,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action"
       ],
       "unsupported_mechanics": [],
@@ -9934,7 +9910,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
@@ -9943,7 +9918,6 @@
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
-        "save-or-complex-action",
         "saving-throw-action",
         "trait"
       ],
