@@ -144,6 +144,7 @@ class CombatantTemplate(BaseModel):
     source_limited_use_names: list[str] = Field(default_factory=list)
     source_legendary_action_names: list[str] = Field(default_factory=list)
     source_spellcasting_fingerprint: str | None = None
+    support_action_modes: list[str] = Field(default_factory=list)
     attack_damage_reduction_reaction: AttackDamageReductionReaction | None = None
     incoming_damage_type_resistance_reaction: IncomingDamageTypeResistanceReaction | None = None
     parry_reaction: ParryReaction | None = None
