@@ -45,6 +45,10 @@ assert.equal(A.assetFor(level1).src, A.assetFor(level20).src);
 assert.equal(A.assetFor(level1).src, "assets/portraits/heroes/hero-2014-fighter.webp");
 assert.match(A.markup(level1), /portrait-image-hero/);
 assert.doesNotMatch(A.markup(level1), /portrait-image-monster/);
+assert.match(A.markup(level1), /art-broken/, "Broken portraits must reveal the fallback glyph.");
+const css = fs.readFileSync(path.join(__dirname, "figure-portraits.css"), "utf8");
+assert.match(css, /\.fighter-portrait\.has-art[^{]*\.portrait-svg/, "Legacy SVG layer must hide when a portrait asset exists.");
+assert.match(css, /\.picker-portrait-frame\{position:relative\}|\.picker-portrait-frame\{[^}]*position:relative/, "Picker portrait images must stay inside the frame.");
 
 assert.throws(() => A.register([{ template_id: "broken", src: "x.webp" }]));
 assert.throws(() => A.register([{

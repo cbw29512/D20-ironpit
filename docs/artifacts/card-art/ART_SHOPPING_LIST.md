@@ -2,6 +2,8 @@
 
 Generated from this presentation branch. There are **no licensed raster portraits** in the repository.
 
+**Real-art inventory:** `docs/artifacts/card-art/REAL_ART_INVENTORY.md`. All 24 unique pregens and every certified monster currently ship an SVG glyph only. Do not treat pipeline demo drawings as source pictures.
+
 - **Heroes keep full-color portraits**, one per character per edition, reused across levels 1–20. Frame/crop with `--mode color-frame`.
 - **Only monsters** are converted to shadow-box silhouettes (`--mode silhouette`).
 

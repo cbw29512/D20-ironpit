@@ -63,10 +63,12 @@
   overflow:visible;
   filter:drop-shadow(0 0 0.6px #f3d08b) drop-shadow(0 6px 6px rgba(0,0,0,.45));
 }
+.fighter-portrait,
+.picker-portrait-frame{position:relative}
 .portrait-image{
   position:absolute;
   inset:0;
-  z-index:1;
+  z-index:3;
   width:100%;
   height:100%;
   image-rendering:auto;
@@ -83,6 +85,10 @@
   filter:drop-shadow(0 0 0.6px #f3d08b);
 }
 .portrait-image.is-broken{display:none}
+.fighter-portrait.has-art:not(.art-broken) .portrait-svg,
+.fighter-portrait.has-art:not(:has(.portrait-image.is-broken)) .portrait-svg{
+  display:none;
+}
 .fighter-portrait.hero-art.has-art{background:#1a1f28}
 .portrait-ink{fill:#0c0a08;stroke:#0c0a08;stroke-linejoin:round}
 .picker-portrait-frame{

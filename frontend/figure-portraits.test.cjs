@@ -28,6 +28,8 @@ assert.equal(P.keyFor(monster("Skeleton"), { form: "humanoid", detail: "skeleton
 assert.equal(P.keyFor(monster("Unicorn", "large"), { form: "unknown", detail: "none" }), "unicorn");
 assert.equal(P.keyFor(monster("Giant Shark", "huge"), { form: "fish", detail: "shark" }), "fish");
 assert.notEqual(P.markup(monster("Goblin")), P.markup(monster("Skeleton")));
+assert.match(P.markup(monster("Goblin")), /M28 22 18 10/, "Goblin portrait must keep pointed ears.");
+assert.match(P.markup(monster("Goblin")), /M64 50c16-12/, "Goblin portrait must include a scimitar.");
 assert.notEqual(P.markup(monster("Unicorn", "large")), P.markup(monster("Riding Horse", "large")));
 
 const hero = P.markup({
