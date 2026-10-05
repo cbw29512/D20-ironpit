@@ -1,8 +1,10 @@
 [build]
   command = "python3 -m pip install -e ./backend && python3 scripts/prepare_static_site.py"
   publish = "frontend"
-  # One-shot unlock: Chris-approved roster production publish 2026-10-05.
-  # Stack on main through soft QA #591 (2964a4257): monster card art
-  # #557/#581/#584/#583/#591, landing/site #562+, Pit UI #569.
-  # ironpit.app remains unpurchased — do not buy or attach a domain.
-  # Restore `ignore = "exit 0"` after the live deploy finishes.
+  # AUTOPUBLISH LOCK: Netlify ignore commands return 0 to skip a build.
+  # 2026-10-05 roster production Git deploy is ready but unpublished:
+  #   deploy 6ac3e995b21bb000098a0bdd (main 2292ba324, unlock merge #592)
+  # Production URL is still pinned/locked to #569 deploy 6ac3b69534351e0007b460d0.
+  # Publishing the new ready deploy is a Netlify UI/API action; this lock only
+  # stops further Git-connected builds. ironpit.app remains unpurchased.
+  ignore = "exit 0"

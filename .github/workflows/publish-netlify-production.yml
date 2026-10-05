@@ -6,7 +6,7 @@ on:
       deploy_id:
         description: Netlify deploy id to publish to ironpit.netlify.app
         required: true
-        default: "6ac3b69534351e0007b460d0"
+        default: "6ac3e995b21bb000098a0bdd"
 
 jobs:
   publish:
@@ -17,8 +17,8 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
-          DEPLOY_ID: ${{ github.event.inputs.deploy_id || '6ac3b69534351e0007b460d0' }}
-          LOCKED_DEPLOY_ID: "6ac38c99dc0482af1a20136b"
+          DEPLOY_ID: ${{ github.event.inputs.deploy_id || '6ac3e995b21bb000098a0bdd' }}
+          LOCKED_DEPLOY_ID: "6ac3b69534351e0007b460d0"
         run: |
           set -euo pipefail
           TOKEN="${NETLIFY_AUTH_TOKEN:-${NETLIFY_TOKEN:-}}"
