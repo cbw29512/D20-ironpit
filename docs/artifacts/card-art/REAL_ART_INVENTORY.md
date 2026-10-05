@@ -1,6 +1,6 @@
 # Real card-art inventory
 
-Hero pregens have Chris-approved full-color painterly portraits. One hundred twenty-three approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
+Hero pregens have Chris-approved full-color painterly portraits. One hundred forty-nine approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
 
 Processed hero assets are `frontend/assets/portraits/heroes/hero-{2014|2024}-{class}.webp` (3:4, about 50–85 KB). One file per character per edition is reused across levels 1–20.
 
@@ -46,7 +46,7 @@ One portrait per character per edition, reused across levels 1–20.
 | `hero-2024-warlock` | Varek Ashenmark | Warlock | `frontend/assets/portraits/heroes/hero-2024-warlock.webp` |
 | `hero-2024-wizard` | Elian Starweaver | Wizard | `frontend/assets/portraits/heroes/hero-2024-wizard.webp` |
 
-## Monsters — 123 approved silhouettes; remaining cards keep the SVG glyph
+## Monsters — 149 approved silhouettes; remaining cards keep the SVG glyph
 
 Live fight-board / picker captures of the wired silhouettes:
 
@@ -71,6 +71,9 @@ Not mapped, even when a similar name exists:
 - Adult dragon art is not used for the matching young, wyrmling, or ancient rows; each age category has its own raster
 - Air / Earth / Fire / Water Elemental each have their own raster
 - Mage and Archmage are distinct; Flying Snake is distinct from Constrictor Snake; Giant Eagle and Giant Owl are distinct from Eagle and Owl
+- Bandit and Bandit Captain are distinct; Cultist and Cultist Fanatic are distinct
+- Animated Armor, Animated Flying Sword, and Animated Rug of Smothering are distinct
+- Bugbear Stalker is distinct from Bugbear Warrior
 - 2024 Azer Sentinel uses `azer.webp`; 2024 Centaur Trooper uses `centaur.webp`
 - `orc.webp` was processed but is not registered: neither the 2014 certified roster, the 2024 certified roster, nor the 330-name 2024 catalog has `orc` / `orc-warrior`
 - `beholder.webp` was processed but is not registered: neither the 2014 certified roster, the 2024 certified roster, nor the 330-name 2024 catalog has `beholder`
@@ -201,5 +204,31 @@ Not mapped, even when a similar name exists:
 | `gelatinous-cube.webp` | — | — | `srd-5.2.1-2024-monster-gelatinous-cube` |
 | `giant-eagle.webp` | `2014-giant-eagle` | `srd-giant-eagle` | `srd-5.2.1-2024-monster-giant-eagle` |
 | `giant-owl.webp` | `2014-giant-owl` | `srd-giant-owl` | `srd-5.2.1-2024-monster-giant-owl` |
+| `ancient-brass-dragon.webp` | — | — | `srd-5.2.1-2024-monster-ancient-brass-dragon` |
+| `ancient-bronze-dragon.webp` | — | — | `srd-5.2.1-2024-monster-ancient-bronze-dragon` |
+| `ancient-copper-dragon.webp` | — | — | `srd-5.2.1-2024-monster-ancient-copper-dragon` |
+| `ancient-silver-dragon.webp` | — | — | `srd-5.2.1-2024-monster-ancient-silver-dragon` |
+| `animated-flying-sword.webp` | — | `srd-animated-flying-sword` | `srd-5.2.1-2024-monster-animated-flying-sword` |
+| `animated-rug-of-smothering.webp` | — | — | `srd-5.2.1-2024-monster-animated-rug-of-smothering` |
+| `archelon.webp` | — | `srd-archelon` | `srd-5.2.1-2024-monster-archelon` |
+| `awakened-shrub.webp` | `2014-awakened-shrub` | `srd-awakened-shrub` | `srd-5.2.1-2024-monster-awakened-shrub` |
+| `awakened-tree.webp` | `2014-awakened-tree` | `srd-awakened-tree` | `srd-5.2.1-2024-monster-awakened-tree` |
+| `baboon.webp` | `2014-baboon` | `srd-baboon` | `srd-5.2.1-2024-monster-baboon` |
+| `badger.webp` | `2014-badger` | `srd-badger` | `srd-5.2.1-2024-monster-badger` |
+| `bandit-captain.webp` | — | `srd-bandit-captain` | `srd-5.2.1-2024-monster-bandit-captain` |
+| `bat.webp` | `2014-bat` | `srd-bat` | `srd-5.2.1-2024-monster-bat` |
+| `black-dragon-wyrmling.webp` | `2014-black-dragon-wyrmling` | `srd-black-dragon-wyrmling` | `srd-5.2.1-2024-monster-black-dragon-wyrmling` |
+| `brass-dragon-wyrmling.webp` | — | — | `srd-5.2.1-2024-monster-brass-dragon-wyrmling` |
+| `bronze-dragon-wyrmling.webp` | — | — | `srd-5.2.1-2024-monster-bronze-dragon-wyrmling` |
+| `bugbear-stalker.webp` | — | — | `srd-5.2.1-2024-monster-bugbear-stalker` |
+| `camel.webp` | `2014-camel` | `srd-camel` | `srd-5.2.1-2024-monster-camel` |
+| `cat.webp` | `2014-cat` | `srd-cat` | `srd-5.2.1-2024-monster-cat` |
+| `cloud-giant.webp` | — | — | `srd-5.2.1-2024-monster-cloud-giant` |
+| `commoner.webp` | `2014-commoner` | `srd-commoner` | `srd-5.2.1-2024-monster-commoner` |
+| `copper-dragon-wyrmling.webp` | — | — | `srd-5.2.1-2024-monster-copper-dragon-wyrmling` |
+| `cultist-fanatic.webp` | — | — | `srd-5.2.1-2024-monster-cultist-fanatic` |
+| `deer.webp` | `2014-deer` | `srd-deer` | `srd-5.2.1-2024-monster-deer` |
+| `deva.webp` | — | — | `srd-5.2.1-2024-monster-deva` |
+| `dragon-turtle.webp` | — | — | `srd-5.2.1-2024-monster-dragon-turtle` |
 
 Every other monster still uses `figure-portraits.js`. See `ART_SHOPPING_LIST.md` for the remaining missing/inaccurate table.

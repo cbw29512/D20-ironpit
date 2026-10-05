@@ -1,6 +1,6 @@
 # Iron Pit card-art shopping list
 
-Generated from this presentation branch. Hero pregens have framed color portraits. One hundred twenty-three approved monster silhouettes are framed to 3:4; remaining monsters keep SVG glyphs.
+Generated from this presentation branch. Hero pregens have framed color portraits. One hundred forty-nine approved monster silhouettes are framed to 3:4; remaining monsters keep SVG glyphs.
 
 **Real-art inventory:** `docs/artifacts/card-art/REAL_ART_INVENTORY.md`. All 24 unique pregens have framed color portraits. Do not treat pipeline demo drawings as source pictures.
 
@@ -76,27 +76,27 @@ Edition isolation is mandatory: do not reuse a 2014 portrait for the 2024 counte
 | `2014-allosaurus` | Allosaurus | beast | 2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-ankylosaurus` | Ankylosaurus | beast | 3 | good | Chris-approved 3:4 silhouette; club tail and armor plates, distinct from Allosaurus. |
 | `2014-ape` | Ape | beast | 1/2 | good | Chris-approved 3:4 silhouette; distinct from Giant Ape. |
-| `2014-awakened-shrub` | Awakened Shrub | plant | 0 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-awakened-tree` | Awakened Tree | plant | 2 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-awakened-shrub` | Awakened Shrub | plant | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-awakened-tree` | Awakened Tree | plant | 2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-axe-beak` | Axe Beak | beast | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-baboon` | Baboon | beast | 0 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-badger` | Badger | beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-baboon` | Baboon | beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-badger` | Badger | beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-bandit` | Bandit | humanoid | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-bat` | Bat | beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-bat` | Bat | beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-berserker` | Berserker | humanoid | 2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-black-bear` | Black Bear | beast | 1/2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-black-dragon-wyrmling` | Black Dragon Wyrmling | dragon | 2 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-black-dragon-wyrmling` | Black Dragon Wyrmling | dragon | 2 | good | Chris-approved 3:4 silhouette; distinct from young and ancient Black Dragon. |
 | `2014-blood-hawk` | Blood Hawk | beast | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-blue-dragon-wyrmling` | Blue Dragon Wyrmling | dragon | 3 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-brown-bear` | Brown Bear | beast | 1 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-camel` | Camel | beast | 1/8 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-cat` | Cat | beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-camel` | Camel | beast | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-cat` | Cat | beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-chimera` | Chimera | monstrosity | 6 | good | Chris-approved 3:4 silhouette; three-headed lion/goat/dragon anatomy. |
-| `2014-commoner` | Commoner | humanoid | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-commoner` | Commoner | humanoid | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-constrictor-snake` | Constrictor Snake | beast | 1/4 | good | Chris-approved 3:4 silhouette; distinct from Giant Constrictor Snake. |
 | `2014-crab` | Crab | beast | 0 | missing | Needs a licensed source picture of this printed creature. |
 | `2014-crocodile` | Crocodile | beast | 1/2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-deer` | Deer | beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-deer` | Deer | beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-dire-wolf` | Dire Wolf | beast | 1 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-draft-horse` | Draft Horse | beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
 | `2014-eagle` | Eagle | beast | 0 | missing | Needs a licensed source picture of this printed creature. |
@@ -211,31 +211,31 @@ Edition isolation is mandatory: do not reuse a 2014 portrait for the 2024 counte
 |---|---|---|---|---|---|
 | `srd-allosaurus` | Allosaurus | Beast (Dinosaur) | 2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-animated-armor` | Animated Armor | Construct | 1 | good | Chris-approved 3:4 silhouette; empty plate, distinct from other constructs. |
-| `srd-animated-flying-sword` | Animated Flying Sword | Construct | 1/4 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-animated-flying-sword` | Animated Flying Sword | Construct | 1/4 | good | Chris-approved 3:4 silhouette; distinct from Animated Armor. |
 | `srd-ankylosaurus` | Ankylosaurus | Beast (Dinosaur) | 3 | good | Chris-approved 3:4 silhouette; club tail and armor plates, distinct from Allosaurus. |
-| `srd-archelon` | Archelon | Beast (Dinosaur) | 4 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-awakened-shrub` | Awakened Shrub | Plant | 0 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-awakened-tree` | Awakened Tree | Plant | 2 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-archelon` | Archelon | Beast (Dinosaur) | 4 | good | Chris-approved 3:4 silhouette; 2024 runtime plus catalog. |
+| `srd-awakened-shrub` | Awakened Shrub | Plant | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `srd-awakened-tree` | Awakened Tree | Plant | 2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-axe-beak` | Axe Beak | Monstrosity | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `srd-baboon` | Baboon | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-badger` | Badger | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-baboon` | Baboon | Beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `srd-badger` | Badger | Beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-bandit` | Bandit | Humanoid | 1/8 | good | Chris-approved 3:4 silhouette; distinct from Bandit Captain. |
-| `srd-bandit-captain` | Bandit Captain | Humanoid | 2 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-bat` | Bat | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-bandit-captain` | Bandit Captain | Humanoid | 2 | good | Chris-approved 3:4 silhouette; distinct from Bandit. |
+| `srd-bat` | Bat | Beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-black-bear` | Black Bear | Beast | 1/2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `srd-black-dragon-wyrmling` | Black Dragon Wyrmling | Dragon (Chromatic) | 2 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-black-dragon-wyrmling` | Black Dragon Wyrmling | Dragon (Chromatic) | 2 | good | Chris-approved 3:4 silhouette; distinct from young and ancient Black Dragon. |
 | `srd-blood-hawk` | Blood Hawk | Beast | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-blue-dragon-wyrmling` | Blue Dragon Wyrmling | Dragon (Chromatic) | 3 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-boar` | Boar | Beast | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-brown-bear` | Brown Bear | Beast | 1 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `srd-camel` | Camel | Beast | 1/8 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-cat` | Cat | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-commoner` | Commoner | Humanoid | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-camel` | Camel | Beast | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `srd-cat` | Cat | Beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `srd-commoner` | Commoner | Humanoid | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-constrictor-snake` | Constrictor Snake | Beast | 1/4 | good | Chris-approved 3:4 silhouette; distinct from Giant Constrictor Snake. |
 | `srd-crab` | Crab | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
 | `srd-crocodile` | Crocodile | Beast | 1/2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-cultist` | Cultist | Humanoid | 1/8 | good | Chris-approved 3:4 silhouette; distinct from Cultist Fanatic. |
-| `srd-deer` | Deer | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-deer` | Deer | Beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-dire-wolf` | Dire Wolf | Beast | 1 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-draft-horse` | Draft Horse | Beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
 | `srd-druid` | Druid | Humanoid (Druid) | 2 | missing | Needs a licensed source picture of this printed creature. |
