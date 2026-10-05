@@ -2,6 +2,7 @@
   "use strict";
 
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
 
@@ -31,12 +32,17 @@
   }
 
   function target(member, setup, attack) {
-    const candidate = S().nearestTarget(member, setup);
-    if (!candidate) return null;
-    const distance = S().distance(member, candidate);
-    if (attack.kind === "melee" && distance > (attack.reach || 5)) return null;
-    if (attack.kind === "ranged" && distance > (attack.long || attack.normal || 0)) return null;
-    return { candidate, distance };
+    if (!F()) throw new Error("Triggered extra attacks require browser-formation.js.");
+    for (const candidate of F().targetOrder(member, setup)) {
+      if (window.IRON_PIT_BROWSER_GRID_BARRIERS
+          && !window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(member, candidate, setup)) continue;
+      if (!F().targetAllowed(member, candidate, attack)) continue;
+      const distance = F().attackDistance(member, candidate);
+      if (attack.kind === "melee" && distance > (attack.reach || 5)) continue;
+      if (attack.kind === "ranged" && distance > (attack.long || attack.normal || 0)) continue;
+      return { candidate, distance };
+    }
+    return null;
   }
 
   function resolveAfterTurn(sequence, round, justActed, setup) {
