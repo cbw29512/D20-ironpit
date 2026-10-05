@@ -65,6 +65,7 @@ const action = {
   saveAbility: "wisdom",
   dc: 16,
   range: 120,
+  sourceEffectImmunityOnSuccess: true,
   failedSaveTimedEffect: {
     effectId: "frightened",
     durationRounds: 10,
@@ -72,6 +73,7 @@ const action = {
     repeatSaveAbility: "wisdom",
     repeatSaveDc: 16,
     repeatSaveTiming: "target_turn_end",
+    sourceEffectImmunityOnEnd: true,
   },
   animation: "fear",
 };
@@ -99,10 +101,14 @@ assert.equal(event.save_succeeded, true);
 assert.ok(!hero.state.active_effect_ids.includes("frightened"));
 assert.match(event.description, /Frightful Presence/);
 assert.equal(
-  (hero.state.timed_effects || []).some((item) => String(item.effect_id).includes("success-immunity")),
-  false,
+  window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS.isImmune(hero, action, dragon.combatant_id),
+  true,
 );
-assert.equal(window.IRON_PIT_BROWSER_SAVES.legalAction(action, hero, 10), true);
+const immunity = hero.state.timed_effects.find((item) => String(item.effect_id).includes("success-immunity"));
+assert.equal(immunity.expires_round, null);
+assert.equal(immunity.expires_at_start_of_source_turn, false);
+assert.equal(window.IRON_PIT_BROWSER_SAVES.legalAction(action, hero, 10, dragon.combatant_id), false);
+assert.equal(window.IRON_PIT_BROWSER_SAVES.legalAction(action, hero, 10, "other-dragon"), true);
 
 ({ dragon, hero } = setupPair());
 window.__saveRoll = 1;
@@ -114,8 +120,9 @@ const lifecycle = window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE.resolveTargetTimin
 assert.equal(lifecycle.events[0].save_succeeded, true);
 assert.ok(!hero.state.active_effect_ids.includes("frightened"));
 assert.equal(
-  (hero.state.timed_effects || []).some((item) => String(item.effect_id).includes("success-immunity")),
-  false,
+  window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS.isImmune(hero, action, dragon.combatant_id),
+  true,
 );
-assert.equal(window.IRON_PIT_BROWSER_SAVES.legalAction(action, hero, 10), true);
-console.log("Frightful Presence failed-save Frightened and printed name stay universal without cross-fight immunity.");
+const endImmunity = hero.state.timed_effects.find((item) => String(item.effect_id).includes("success-immunity"));
+assert.equal(endImmunity.expires_round, null);
+console.log("Frightful Presence failed-save Frightened, match-scoped source immunity, and printed name stay universal.");

@@ -3,6 +3,7 @@ from __future__ import annotations
 from app.combat.condition_lifecycle import resolve_target_condition_timing
 from app.combat.dice import FixedDiceProvider
 from app.combat.saving_throws import legal_save_action, resolve_save_action
+from app.combat.source_effect_immunity import has_source_effect_immunity, immunity_effect_id
 from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.capability_compiler import compile_combatant
@@ -65,18 +66,20 @@ def test_chromatic_adult_ancient_dragons_are_single_family_unlocked() -> None:
     assert len(roster_ids) == 141
 
 
-def test_frightful_presence_binds_failed_save_frightened() -> None:
+def test_frightful_presence_binds_failed_save_frightened_and_match_immunity() -> None:
     action = next(item for item in _dragon().saving_throw_actions if item.id == "frightful-presence")
     rider = action.failed_save_timed_effect
     assert action.name == "Frightful Presence"
     assert action.save_ability == "wisdom"
     assert action.dc == 16
+    assert action.source_effect_immunity_on_success is True
     assert rider is not None
     assert rider.effect_id == "frightened"
     assert rider.duration_rounds == 10
     assert rider.repeat_save_ability == "wisdom"
     assert rider.repeat_save_dc == 16
     assert rider.repeat_save_timing == "target_turn_end"
+    assert rider.source_effect_immunity_on_end is True
     assert "frightened" in action.effect_tags
 
 
@@ -90,22 +93,35 @@ def test_failed_save_applies_frightened_and_prints_ability_name() -> None:
     assert event.feature_id == "frightful-presence"
 
 
-def test_successful_save_does_not_grant_cross_fight_immunity() -> None:
+def test_successful_save_grants_match_scoped_source_immunity() -> None:
     dragon, hero, _setup, action = _presence_setup()
     event = resolve_save_action(1, 1, dragon, hero, action, 10, FixedDiceProvider([20]))
     assert event.save_succeeded is True
     assert "frightened" not in hero.state.active_effect_ids
     assert "Frightful Presence" in event.description
-    assert all(":success-immunity" not in item.effect_id for item in hero.state.timed_effects)
-    assert legal_save_action(action, hero, 10) is True
+    assert has_source_effect_immunity(hero.state, action.id, dragon.combatant_id)
+    immunity = next(
+        item for item in hero.state.timed_effects
+        if item.effect_id == immunity_effect_id(action.id, dragon.combatant_id)
+    )
+    assert immunity.expires_round is None
+    assert immunity.expires_at_start_of_source_turn is False
+    assert legal_save_action(action, hero, 10, source_id=dragon.combatant_id) is False
+    other = _member(_dragon(), "monster:other-dragon", "monsters", 6)
+    assert legal_save_action(action, hero, 10, source_id=other.combatant_id) is True
 
 
-def test_repeat_save_success_ends_frightened_without_immunity() -> None:
+def test_repeat_save_success_ends_frightened_and_grants_match_immunity() -> None:
     dragon, hero, _setup, action = _presence_setup()
     resolve_save_action(1, 1, dragon, hero, action, 10, FixedDiceProvider([1]))
     assert "frightened" in hero.state.active_effect_ids
     events, _ = resolve_target_condition_timing(2, 1, hero, "target_turn_end", FixedDiceProvider([20]))
     assert events[0].save_succeeded is True
     assert "frightened" not in hero.state.active_effect_ids
-    assert all(":success-immunity" not in item.effect_id for item in hero.state.timed_effects)
-    assert legal_save_action(action, hero, 10) is True
+    assert has_source_effect_immunity(hero.state, action.id, dragon.combatant_id)
+    immunity = next(
+        item for item in hero.state.timed_effects
+        if item.effect_id == immunity_effect_id(action.id, dragon.combatant_id)
+    )
+    assert immunity.expires_round is None
+    assert legal_save_action(action, hero, 10, source_id=dragon.combatant_id) is False

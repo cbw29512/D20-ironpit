@@ -33,7 +33,7 @@ def save_choice(
                 if action.id not in allowed:
                     continue
                 distance = save_distance(attacker, target, action.range_ft)
-                if legal_save_action(action, target, distance):
+                if legal_save_action(action, target, distance, source_id=attacker.combatant_id):
                     return target, action, distance
         return None
     except Exception:

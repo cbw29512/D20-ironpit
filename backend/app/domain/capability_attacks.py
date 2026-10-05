@@ -117,6 +117,7 @@ class SaveCapabilityDefinition(BaseModel):
     magical_effect: bool = False
     effect_tags: list[str] = Field(default_factory=list)
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
+    source_effect_immunity_on_success: bool = False
     animation: str = "save-effect"
 
     @model_validator(mode="after")

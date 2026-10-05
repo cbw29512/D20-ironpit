@@ -212,6 +212,8 @@ def _save(action: Any) -> dict[str, Any]:
         }
     if action.failed_save_timed_effect is not None:
         row["failedSaveTimedEffect"] = _failed_save_timed_effect(action.failed_save_timed_effect)
+    if action.source_effect_immunity_on_success:
+        row["sourceEffectImmunityOnSuccess"] = True
     if action.grapple_escape_dc is not None:
         row["grappleEscapeDc"] = action.grapple_escape_dc
     if action.restrains_while_grappled:
@@ -295,6 +297,8 @@ def _failed_save_timed_effect(rider: Any) -> dict[str, Any]:
     if rider.escape_check_ability:
         row["escapeCheckAbility"] = rider.escape_check_ability
         row["escapeCheckDc"] = rider.escape_check_dc
+    if rider.source_effect_immunity_on_end:
+        row["sourceEffectImmunityOnEnd"] = True
     return row
 
 

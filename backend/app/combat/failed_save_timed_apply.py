@@ -51,6 +51,7 @@ def apply_failed_save_timed_effect(
             escape_check_dc=rider.escape_check_dc,
             ground_contact=ground_contact,
             ends_on_teleport=ends_on_teleport,
+            source_effect_immunity_on_end=rider.source_effect_immunity_on_end,
         )
     except Exception:
         logger.exception(

@@ -22,24 +22,39 @@ def remove_effect_instance(state: CombatantState, effect: TimedEffect) -> bool:
 
 def remove_effect_group(state: CombatantState, effect: TimedEffect) -> list[str]:
     try:
+        grant_immunity = effect.source_effect_immunity_on_end
+        action_id = effect.source_effect_id
+        source_id = effect.source_id
+        round_number = state.current_round or 1
+        source_is_magical = effect.source_is_magical
         if effect.source_effect_id is None:
-            return [effect.effect_id] if remove_effect_instance(state, effect) else []
-        grouped = [
-            item for item in list(state.timed_effects)
-            if item.source_id == effect.source_id
-            and item.source_effect_id == effect.source_effect_id
-        ]
-        removed: list[str] = []
-        for item in grouped:
-            if remove_effect_instance(state, item):
-                removed.append(item.effect_id)
-        state.active_modifiers = [
-            item for item in state.active_modifiers
-            if not (
-                item.source_id == effect.source_id
+            removed = [effect.effect_id] if remove_effect_instance(state, effect) else []
+        else:
+            grouped = [
+                item for item in list(state.timed_effects)
+                if item.source_id == effect.source_id
                 and item.source_effect_id == effect.source_effect_id
+            ]
+            removed = []
+            for item in grouped:
+                if remove_effect_instance(state, item):
+                    removed.append(item.effect_id)
+            state.active_modifiers = [
+                item for item in state.active_modifiers
+                if not (
+                    item.source_id == effect.source_id
+                    and item.source_effect_id == effect.source_effect_id
+                )
+            ]
+        if (
+            removed and grant_immunity
+            and action_id and ":success-immunity" not in action_id
+        ):
+            from app.combat.source_effect_immunity import grant_source_effect_immunity
+            grant_source_effect_immunity(
+                state, action_id, source_id, round_number,
+                source_is_magical=source_is_magical,
             )
-        ]
         return removed
     except Exception:
         logger.exception(
