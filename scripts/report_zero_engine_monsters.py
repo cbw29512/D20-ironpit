@@ -11,7 +11,8 @@ from app.content.monster_bonus_action_source_audit import (
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
-from app.content.monster_source_audit import _save_ownership_matches
+from app.content.monster_save_for_half_2024 import compiled_save_signatures
+from app.content.monster_source_audit import _save_ownership_matches, _source_save_signatures
 from app.content.roster import build_arena_roster
 from app.content.monster_reaction_source_audit import (
     parse_parry_ac_bonus,
@@ -126,8 +127,10 @@ def _source_blockers(
     if not _ATTACK_ROLL.search(actions):
         blockers.append("no-attack-roll")
     save_text = bool(_SAVE_TEXT.search(actions))
+    source_save_signatures = _source_save_signatures(actions)
     save_is_modeled = bool(
-        runtime_template is not None and _save_ownership_matches(runtime_template, actions)
+        (runtime_template is not None and _save_ownership_matches(runtime_template, actions))
+        or (source_save_signatures and compiled_save_signatures(row) == source_save_signatures)
     )
     if _NON_SAVE_COMPLEX_ACTION.search(actions) or (save_text and not save_is_modeled):
         blockers.append("save-or-complex-action")
