@@ -32,6 +32,23 @@ const setup = (healer, ally) => ({ heroes: [healer, ally], monsters: [] });
   }
 }
 {
+  const fighter = member("zero-hp-fighter");
+  const action = (fighter.state.template.healingActions || []).find((item) => item.id === "second-wind");
+  assert.ok(action, "Second Wind must be declared as a generic healing action");
+  fighter.state.resources["second-wind"] = 1;
+  fighter.state.current_hp = 0;
+  fighter.state.is_alive = true;
+  fighter.state.is_unconscious = true;
+  const fight = { heroes: [fighter], monsters: [] };
+  assert.equal(E.available(fighter.state, "bonus_action"), false);
+  assert.equal(H.chooseTarget(fighter, fight, action), null);
+  assert.equal(H.chooseAction(fighter, fight), null);
+  window.IRON_PIT_DICE = { roll: () => 10 };
+  assert.throws(() => H.resolve(1, 1, fighter, fighter, action));
+  assert.equal(fighter.state.resources["second-wind"], 1);
+  assert.equal(fighter.state.current_hp, 0);
+}
+{
   const healer = member("hero-1"), ally = member("hero-2");
   healer.state.current_hp = Math.floor(healer.state.template.max_hp / 2);
   ally.state.current_hp = 0; ally.state.is_unconscious = true; ally.state.death_save_failures = 2;
