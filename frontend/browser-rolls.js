@@ -45,12 +45,13 @@
   function damageComponent(spec, critical) {
     const modifier = spec.damageBonus || 0;
     if (spec.diceCount === 0) {
-      return { source: spec.source, damage_type: spec.damageType, notation: String(modifier), rolls: [], modifier: 0, total: modifier };
+      return { source: spec.source, source_effect_id: spec.sourceId || null, damage_type: spec.damageType, notation: String(modifier), rolls: [], modifier: 0, total: modifier };
     }
     const count = spec.diceCount * (critical ? 2 : 1);
     const rolls = dice().rollMany(count, spec.diceSize);
     return {
       source: spec.source,
+      source_effect_id: spec.sourceId || null,
       damage_type: spec.damageType,
       notation: `${count}d${spec.diceSize}+${modifier}`,
       rolls,
