@@ -25,7 +25,8 @@
         || '<svg class="portrait-svg" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="32"/></svg>';
       const artwork = A()?.markup(template) || "";
       const hasArt = artwork ? " has-art" : "";
-      return `<div class="stick-figure fighter-portrait${hasArt}" aria-hidden="true">${artwork}${fallback}</div>`;
+      const kind = template?.kind === "character" ? " hero-art" : " monster-art";
+      return `<div class="stick-figure fighter-portrait${hasArt}${kind}" aria-hidden="true">${artwork}${fallback}</div>`;
     } catch (error) {
       console.error("Failed to render battlefield combatant visual", { templateId: template?.id, error });
       throw error;

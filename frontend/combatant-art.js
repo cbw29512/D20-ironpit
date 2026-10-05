@@ -76,7 +76,8 @@
       const position = asset.object_position ? ` style="object-position:${attr(asset.object_position)}"` : "";
       const alt = attr(asset.alt || template?.name || "Combatant artwork");
       const sizes = attr(asset.sizes || "(max-width: 620px) 42vw, 12rem");
-      return `<img class="portrait-image" src="${attr(asset.src)}"${srcset} sizes="${sizes}" alt="${alt}" loading="lazy" decoding="async" onerror="this.classList.add('is-broken');this.removeAttribute('src');"${position}>`;
+      const kind = template?.kind === "character" ? "portrait-image-hero" : "portrait-image-monster";
+      return `<img class="portrait-image ${kind}" src="${attr(asset.src)}"${srcset} sizes="${sizes}" alt="${alt}" loading="lazy" decoding="async" onerror="this.classList.add('is-broken');this.removeAttribute('src');"${position}>`;
     } catch (error) {
       console.error("Failed to render combatant artwork", { templateId: template?.id, error });
       throw error;

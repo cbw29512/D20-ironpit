@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Convert original portraits into shadow-box silhouettes without overwriting sources."""
+"""Process original portraits without overwriting sources.
+
+Heroes keep full-color framed crops. Only monsters are converted to
+shadow-box silhouettes.
+"""
 
 from __future__ import annotations
 
@@ -122,7 +126,28 @@ def silhouette_from_image(image: Image.Image) -> Image.Image:
         raise
 
 
-def process_file(source: Path, destination: Path) -> Path:
+def frame_hero_portrait(image: Image.Image) -> Image.Image:
+    try:
+        rgba = image.convert("RGBA")
+        width, height = rgba.size
+        target = CANVAS[0] / CANVAS[1]
+        current = width / max(1, height)
+        if current > target:
+            new_width = max(1, int(height * target))
+            left = (width - new_width) // 2
+            box = (left, 0, left + new_width, height)
+        else:
+            new_height = max(1, int(width / target))
+            top = max(0, int((height - new_height) * 0.18))
+            box = (0, top, width, min(height, top + new_height))
+        cropped = rgba.crop(box).resize(CANVAS, Image.Resampling.LANCZOS)
+        return cropped.filter(ImageFilter.UnsharpMask(radius=1.2, percent=80, threshold=2))
+    except Exception:
+        logger.exception("Failed to frame a hero portrait.")
+        raise
+
+
+def process_file(source: Path, destination: Path, mode: str = "silhouette") -> Path:
     try:
         if source.resolve() == destination.resolve():
             raise ValueError("Refusing to overwrite an original portrait.")
@@ -130,27 +155,30 @@ def process_file(source: Path, destination: Path) -> Path:
         if destination.exists():
             destination.unlink()
         with Image.open(source) as image:
-            silhouette_from_image(image).save(destination, "WEBP", quality=92, method=6)
-        logger.info("Wrote silhouette %s from %s", destination, source)
+            processed = frame_hero_portrait(image) if mode == "color-frame" else silhouette_from_image(image)
+            processed.save(destination, "WEBP", quality=92, method=6)
+        logger.info("Wrote %s %s from %s", mode, destination, source)
         return destination
     except Exception:
         logger.exception("Failed to process portrait %s", source)
         raise
 
 
-def process_tree(source_dir: Path, destination_dir: Path) -> list[Path]:
+def process_tree(source_dir: Path, destination_dir: Path, mode: str = "silhouette") -> list[Path]:
     try:
         if source_dir.resolve() == destination_dir.resolve():
             raise ValueError("Input and output directories must be different so originals stay intact.")
+        if mode not in {"silhouette", "color-frame"}:
+            raise ValueError("Mode must be silhouette for monsters or color-frame for heroes.")
         written: list[Path] = []
         for source in sorted(source_dir.rglob("*")):
             if source.suffix.lower() not in SUPPORTED or not source.is_file():
                 continue
             relative = source.relative_to(source_dir).with_suffix(".webp")
-            written.append(process_file(source, destination_dir / relative))
+            written.append(process_file(source, destination_dir / relative, mode))
         return written
     except Exception:
-        logger.exception("Portrait silhouette export failed for %s", source_dir)
+        logger.exception("Portrait export failed for %s", source_dir)
         raise
 
 
@@ -168,21 +196,26 @@ def _self_test() -> None:
             source.write_bytes(b"")
             original.save(source)
             before = source.read_bytes()
-            written = process_tree(source_dir, output_dir)
+            silhouettes = process_tree(source_dir, output_dir, "silhouette")
+            framed_dir = Path(raw) / "heroes"
+            framed = process_tree(source_dir, framed_dir, "color-frame")
             after = source.read_bytes()
             if before != after:
                 raise RuntimeError("Pipeline overwrote an original portrait.")
-            if len(written) != 1:
-                raise RuntimeError("Pipeline did not write exactly one silhouette.")
-            result = Image.open(written[0]).convert("RGBA")
-            if result.size != CANVAS:
-                raise RuntimeError(f"Silhouette canvas was {result.size}, expected {CANVAS}.")
+            if len(silhouettes) != 1 or len(framed) != 1:
+                raise RuntimeError("Pipeline did not write one silhouette and one color frame.")
+            result = Image.open(silhouettes[0]).convert("RGBA")
+            color = Image.open(framed[0]).convert("RGBA")
+            if result.size != CANVAS or color.size != CANVAS:
+                raise RuntimeError(f"Canvas was {result.size}/{color.size}, expected {CANVAS}.")
             opaque = [pixel for pixel in result.getdata() if pixel[3] > 200]
             if len(opaque) < 4000:
                 raise RuntimeError("Silhouette is empty.")
             if any(pixel[0] > 40 and pixel[3] > 200 for pixel in opaque if pixel[1] < 40):
                 raise RuntimeError("Silhouette fill is not ink-dark.")
-            logger.info("Portrait silhouette self-test passed.")
+            if max(pixel[2] for pixel in color.getdata()) < 80:
+                raise RuntimeError("Hero color-frame lost its color.")
+            logger.info("Portrait pipeline self-test passed.")
     except Exception:
         logger.exception("Portrait silhouette self-test failed.")
         raise
@@ -191,7 +224,9 @@ def _self_test() -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, help="Directory of original portraits")
-    parser.add_argument("--output", type=Path, help="Directory for new silhouette assets")
+    parser.add_argument("--output", type=Path, help="Directory for new processed assets")
+    parser.add_argument("--mode", choices=("silhouette", "color-frame"), default="silhouette",
+                        help="silhouette = monsters only; color-frame = hero portraits")
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
@@ -201,11 +236,11 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if not args.input or not args.output:
             raise ValueError("Provide --input and --output, or use --self-test.")
-        written = process_tree(args.input, args.output)
-        logger.info("Processed %s portrait(s).", len(written))
+        written = process_tree(args.input, args.output, args.mode)
+        logger.info("Processed %s portrait(s) as %s.", len(written), args.mode)
         return 0
     except Exception:
-        logger.exception("Portrait silhouette pipeline failed.")
+        logger.exception("Portrait pipeline failed.")
         return 1
 
 

@@ -37,7 +37,9 @@
     const artwork = window.IRON_PIT_COMBATANT_ART?.markup(template) || "";
     const fallback = window.IRON_PIT_FIGURE_PORTRAITS?.markup(template) || "";
     frame.hidden = false;
-    frame.className = `picker-portrait-frame fighter-portrait ${side}`;
+    const kind = side === "heroes" ? "hero-art" : "monster-art";
+    const hasArt = artwork ? " has-art" : "";
+    frame.className = `picker-portrait-frame fighter-portrait ${side} ${kind}${hasArt}`;
     frame.innerHTML = `${artwork}${fallback}`;
     window.IRON_PIT_FIGURE_VISUALS?.decorate(frame, template);
   }

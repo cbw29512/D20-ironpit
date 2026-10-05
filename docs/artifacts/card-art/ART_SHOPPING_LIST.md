@@ -1,14 +1,29 @@
 # Iron Pit card-art shopping list
 
-Generated from this presentation branch. There are **no licensed raster portraits** in the repository. Cards use shadow-box silhouette fallbacks until originals are dropped into `frontend/assets/portraits/originals/` and processed with `scripts/process_portrait_silhouettes.py`.
+Generated from this presentation branch. There are **no licensed raster portraits** in the repository.
 
-One portrait per pregen character per edition, reused for that character's levels 1–20. One portrait per monster per edition.
+- **Heroes keep full-color portraits**, one per character per edition, reused across levels 1–20. Frame/crop with `--mode color-frame`.
+- **Only monsters** are converted to shadow-box silhouettes (`--mode silhouette`).
+
+Keep licensed originals and processed assets in separate folders. Never overwrite originals.
+
+```bash
+python scripts/process_portrait_silhouettes.py \
+  --mode color-frame \
+  --input frontend/assets/portraits/originals/heroes \
+  --output frontend/assets/portraits/heroes
+
+python scripts/process_portrait_silhouettes.py \
+  --mode silhouette \
+  --input frontend/assets/portraits/originals/monsters \
+  --output frontend/assets/portraits/silhouettes
+```
 
 Status key:
 
-- `missing` — no licensed portrait; current shadow-box fallback is a generic but not wrong-species outline
-- `inaccurate` — current on-card silhouette still depicts the wrong creature or omits a printed defining feature
-- `good` — licensed portrait processed to an accurate silhouette (none yet)
+- `missing` — no licensed source picture yet
+- `inaccurate` — current on-card fallback still depicts the wrong creature or omits a printed defining feature
+- `good` — licensed source is framed (hero) or silhouetted (monster) correctly (none yet)
 
 ## Unique pregens (one portrait each, reused for levels 1–20)
 

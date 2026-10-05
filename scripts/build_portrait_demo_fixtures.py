@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Paint two reproducible demo originals for the silhouette pipeline example."""
+"""Paint two reproducible demo originals: color hero + monster source."""
 
 from __future__ import annotations
 
@@ -43,8 +43,8 @@ def paint_goblin(path: Path) -> None:
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     try:
-        karnok = DEST / "karnok-stoneward-demo.png"
-        goblin = DEST / "goblin-demo.png"
+        karnok = DEST / "heroes" / "karnok-stoneward-demo.png"
+        goblin = DEST / "monsters" / "goblin-demo.png"
         paint_karnok(karnok)
         paint_goblin(goblin)
         logger.info("Wrote demo originals to %s", DEST)
