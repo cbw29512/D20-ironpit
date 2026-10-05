@@ -68,6 +68,9 @@ def test_level_20_is_incremental_holy_nimbus_progression() -> None:
         nimbus.start_turn_emanation_damage.fixed_damage,
         nimbus.start_turn_emanation_damage.damage_type,
     ) == (30, 10, DamageType.RADIANT)
+    assert [(item.context_id, item.radius_ft) for item in nimbus.emitted_environment_contexts] == [
+        ("sunlight", 30),
+    ]
     grant = nimbus.saving_throw_advantage_grants[0]
     assert grant.requires_spell_effect is True
     assert grant.source_creature_types == ["fiend", "undead"]

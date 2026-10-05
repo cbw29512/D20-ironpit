@@ -26,7 +26,7 @@ def resolve_control_support(
     dice,
     turn_key: str,
 ) -> tuple[list[BattleEvent], int]:
-    """Cast a still-free support Action. Teleport stays arena-unavailable under the pit limits."""
+    """Cast a still-free support Action. Teleport movement stays arena-unavailable."""
     try:
         events: list[BattleEvent] = []
         teleport = choose_teleport_action(member, setup, turn_key)

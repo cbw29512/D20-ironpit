@@ -24,6 +24,11 @@
         repeatSaveFailuresToLock: rider.repeatSaveFailuresToLock || null,
         escapeCheckAbility: rider.escapeCheckAbility || null,
         escapeCheckDc: rider.escapeCheckDc ?? null,
+        groundContact: Boolean(rider.groundContact || (
+          (action.createsDifficultTerrain || action.creates_difficult_terrain)
+          && rider.effectId === "restrained"
+        )),
+        endsOnTeleport: Boolean(rider.endsOnTeleport || rider.groundContact),
       });
     } catch (error) {
       console.error("Failed browser failed-save timed rider application", {

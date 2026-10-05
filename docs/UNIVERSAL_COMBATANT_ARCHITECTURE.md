@@ -113,7 +113,7 @@ If an existing engine primitive can express the outcome, do not create another m
 Examples:
 
 - Advantage is one engine primitive. Hidden, Pack Tactics, Vex, a target missing any HP, and legal Prone attack geometry are Advantage sources/triggers; they do not get separate Advantage engines.
-- Disadvantage is one engine primitive. Poisoned, Frightened, long range, or other qualifying states are Disadvantage sources/triggers.
+- Disadvantage is one engine primitive. Poisoned, Frightened, long range, or a live source-owned environment context such as sunlight with matching target-owned reaction data are Disadvantage sources/triggers.
 - Damage is one engine primitive. Slashing, Piercing, Fire, and similar values are damage types; resistance, immunity, and vulnerability modify that same damage pipeline.
 - Saving Throw is one engine primitive. Ability, DC, success/failure effect, repeat timing, and recharge/use limits are declarative parameters around the shared save resolver.
 - Contextual save defenses stay defender-owned and declarative. A source may require semantic effect tags such as `poison`; the incoming save/effect supplies those tags, and the shared save modifier stack performs the match alongside magical/spell/source-creature qualifiers. Never branch on race, class, monster, spell, or feature names to grant that Advantage.

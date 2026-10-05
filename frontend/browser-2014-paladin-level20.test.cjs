@@ -19,6 +19,7 @@ for (const file of [
   "browser-ability-hooks.js",
   "browser-modifier-validation.js", "browser-modifiers.js",
   "browser-timed-conditions.js",
+  "browser-timed-self-buff-policy.js",
   "browser-timed-self-buffs.js",
   "browser-state.js",
   "browser-zero-hp.js",
@@ -57,12 +58,13 @@ assert.equal(nimbus.resourceId, "holy-nimbus");
 assert.equal(nimbus.resourceCost, 1);
 assert.equal(nimbus.durationRounds, 10);
 assert.equal(nimbus.expiryTiming, "source_turn_start");
-assert.deepEqual(nimbus.startTurnEmanationDamage, {
-  trigger: "enemy_turn_start",
-  radius_ft: 30,
-  fixed_damage: 10,
-  damage_type: "radiant",
-});
+assert.equal(nimbus.startTurnEmanationDamage.trigger, "enemy_turn_start");
+assert.equal(nimbus.startTurnEmanationDamage.radius_ft, 30);
+assert.equal(nimbus.startTurnEmanationDamage.fixed_damage, 10);
+assert.equal(nimbus.startTurnEmanationDamage.damage_type, "radiant");
+assert.deepEqual(nimbus.emittedEnvironmentContexts, [
+  { context_id: "sunlight", radius_ft: 30 },
+]);
 
 assert.equal(nimbus.savingThrowAdvantageGrants.length, 1);
 const saveGrant = nimbus.savingThrowAdvantageGrants[0];

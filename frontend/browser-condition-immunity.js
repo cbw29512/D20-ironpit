@@ -6,6 +6,9 @@
   function immune(state, conditionId, sourceTemplate = null, options = {}) {
     try {
       if (state.template.condition_immunities?.includes(conditionId) === true) return true;
+      if (window.IRON_PIT_BROWSER_FLIGHT_GROUND?.countersGroundContact(state, options.groundContact === true)) {
+        return true;
+      }
       if (C().prevented(state, conditionId, { sourceIsMagical: options.sourceIsMagical === true })) return true;
       if (window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.conditionImmune(state, conditionId, sourceTemplate)) return true;
       if (state.template.ruleset !== "2014" && state.template.mindless_rage

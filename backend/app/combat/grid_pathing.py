@@ -5,6 +5,7 @@ import logging
 from app.combat.grid_geometry import footprint_distance_ft
 from app.combat.grid_path_search import search_path_toward
 from app.combat.grid_pathing_support import movement_step_cost_ft, overlapping_occupants, position_for
+from app.combat.pit_engagement import clamp_voluntary_melee_desired_distance_ft
 from app.domain.encounters import EncounterCombatant
 from app.domain.grid import BattleMapDefinition, GridMovementPlan, GridPosition
 from app.domain.persistent_barriers import PersistentBarrierState
@@ -63,17 +64,24 @@ def plan_movement_toward(
     movement_budget_ft: int,
     barriers: list[PersistentBarrierState] | None = None,
     terrain_zones=None,
+    allow_leave_melee: bool = False,
 ) -> GridMovementPlan:
     """Search the full route first, then walk the affordable legal prefix this turn."""
     try:
         if desired_distance_ft < 0 or movement_budget_ft < 0:
             raise ValueError("Desired distance and movement budget cannot be negative.")
+        planned_distance_ft = clamp_voluntary_melee_desired_distance_ft(
+            mover,
+            target,
+            desired_distance_ft,
+            allow_leave_melee=allow_leave_melee,
+        )
         route = search_path_toward(
             map_definition,
             mover,
             target,
             members,
-            desired_distance_ft,
+            planned_distance_ft,
             barriers,
             terrain_zones,
         )
@@ -85,7 +93,7 @@ def plan_movement_toward(
             target_position,
             target.state.template.size,
         )
-        goal_reachable = route_goal_distance <= desired_distance_ft
+        goal_reachable = route_goal_distance <= planned_distance_ft
         path, cost = _affordable_legal_prefix(
             map_definition,
             mover,

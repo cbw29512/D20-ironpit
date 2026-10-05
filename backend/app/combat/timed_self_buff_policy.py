@@ -48,6 +48,7 @@ def concentration_grant_only(action: TimedSelfBuffAction) -> bool:
             or action.friendly_recovery_aura
             or action.hostile_start_turn_condition_aura
             or action.start_turn_emanation_damage
+            or action.emitted_environment_contexts
             or action.melee_hit_retaliation
             or action.spell_save_dc_bonus
             or action.spell_attack_advantage

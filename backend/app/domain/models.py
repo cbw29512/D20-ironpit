@@ -48,6 +48,7 @@ from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
 from app.domain.persistent_spell_attacks import PersistentSpellAttackAction, PersistentSpellAttackState
 from app.domain.runtime import ArenaRoster, BattlefieldState, CombatantState, DemoRoster, ResourceState, TimedEffect
+from app.domain.environment_contexts import EmittedEnvironmentContext, EnvironmentContextReaction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.traits import CombatTrait
 from app.domain.turbo import (
@@ -90,6 +91,8 @@ __all__ = [
     "EncounterSetup",
     "OpeningConditionBinding",
     "EncounterSide",
+    "EmittedEnvironmentContext",
+    "EnvironmentContextReaction",
     "EventAudit",
     "GrappleSource",
     "GridPosition",

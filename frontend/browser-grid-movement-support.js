@@ -80,7 +80,9 @@
     }
   }
 
-  function movementStepCostFt(map, mover, destination, members, origin = null, barriers = null, terrainZones = null) {
+  function movementStepCostFt(
+    map, mover, destination, members, origin = null, barriers = null, terrainZones = null,
+  ) {
     try {
       if (!geometry().inBounds(map, destination, mover.state.template.size)) return null;
       if (origin && window.IRON_PIT_BROWSER_GRID_BARRIERS?.blocksTransition(origin, destination, barriers)) {

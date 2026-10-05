@@ -441,6 +441,10 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["concentration"] = True
     if action.start_turn_emanation_damage is not None:
         row["startTurnEmanationDamage"] = action.start_turn_emanation_damage.model_dump(mode="json")
+    if action.emitted_environment_contexts:
+        row["emittedEnvironmentContexts"] = [
+            item.model_dump(mode="json") for item in action.emitted_environment_contexts
+        ]
     if action.melee_hit_retaliation is not None:
         row["meleeHitRetaliation"] = {
             "rangeFt": action.melee_hit_retaliation.range_ft,
@@ -947,6 +951,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                                 "isAttackAction": template.attack_action.is_attack_action,
                                 "slots": [{"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
                                           for slot in template.attack_action.slots]}
+    if template.environment_context_reactions:
+        row["environment_context_reactions"] = [
+            item.model_dump(mode="json") for item in template.environment_context_reactions
+        ]
     return row
 
 
