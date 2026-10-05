@@ -167,7 +167,7 @@ def save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
                 if not resource_available(attacker.state, action.resource_id, action.resource_cost):
                     continue
                 distance = save_distance(attacker, target, action.range_ft)
-                if legal_save_action(action, target, distance, source_id=attacker.combatant_id):
+                if legal_save_action(action, target, distance):
                     return target, action, distance
         return None
     except Exception:

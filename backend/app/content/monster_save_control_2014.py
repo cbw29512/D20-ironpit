@@ -62,8 +62,8 @@ def compile_failed_save_control_2014(action: dict[str, object]) -> FailedSaveTim
             kwargs["ends_if_source_incapacitated"] = True
         if control.get("ends_if_source_dead"):
             kwargs["ends_if_source_dead"] = True
-        if control.get("source_effect_immunity_on_end"):
-            kwargs["source_effect_immunity_on_end"] = True
+        # source_effect_immunity_on_end stays in _CONTROL_KEYS so printed
+        # 24h/cross-fight flags do not fail-closed, but they are never compiled.
         return FailedSaveTimedEffect(**kwargs)
     except Exception:
         logger.exception("Failed to compile a 2014 failed-save control rider.")

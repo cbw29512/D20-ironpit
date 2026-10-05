@@ -33,7 +33,6 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         requires_no_active_grapple=definition.requires_no_active_grapple,
         magical_effect=definition.magical_effect, effect_tags=list(definition.effect_tags),
         failed_save_timed_effect=definition.failed_save_timed_effect,
-        source_effect_immunity_on_success=definition.source_effect_immunity_on_success,
         animation=definition.animation,
     )
 

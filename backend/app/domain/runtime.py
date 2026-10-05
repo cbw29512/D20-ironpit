@@ -89,7 +89,6 @@ class TimedEffect(BaseModel):
     escape_check_dc: int | None = Field(default=None, ge=1, le=40)
     ground_contact: bool = False
     ends_on_teleport: bool = False
-    source_effect_immunity_rounds: int = Field(default=0, ge=0)
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":

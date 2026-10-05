@@ -39,7 +39,7 @@
         }
         for (const target of F().targetOrder(member, setup)) {
           const distance = F().saveDistance(member, target, action.range);
-          if (V().legalAction(action, target, distance, member.combatant_id)) {
+          if (V().legalAction(action, target, distance)) {
             candidates.push({ action, placement: null, target, distance });
             break;
           }

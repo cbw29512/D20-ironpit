@@ -143,6 +143,16 @@ Until the 2014 profile is implemented and certified, the public product remains 
 - Fictionally, the Iron Pit deity fully restores every combatant between fights, regardless of how long the required recovery would normally take.
 - Mundane ammunition is unlimited. Special ammunition/consumables exist only when explicitly part of the immutable loadout and reset to the card quantity after the match.
 
+### 3.1 Printed 24-hour / cross-fight success immunities
+
+Pit matches end when one side wins. The combat instance is discarded. The next fight starts every card completely fresh.
+
+Printed 24-hour, until-a-long-rest, or other cross-fight immunities from a successful save against a source ability — including 2014 Frightful Presence ("On a successful save, the creature is immune to the dragon's Frightful Presence for 24 hours") — are source/audit text only. Do not bind them into runtime combat state. Do not simulate them as in-fight 14400-round timers. Cards stay immutable; only temporary in-fight state exists.
+
+Keep the in-fight failed-save condition. For Frightful Presence that is: failed Wisdom save applies Frightened for the printed in-fight duration and repeat-save window. Preserve the printed ability name in the combat log.
+
+`source_effect_immunity_on_success` and `source_effect_immunity_on_end` may remain on immutable source cards as printed-parameter evidence. Compilers must skip those flags; they are not runtime capabilities. A successful save against Frightful Presence does not grant later in-fight immunity to that same source.
+
 ## 4. One combat engine, four execution modes
 
 All modes consume the same canonical resolution path:

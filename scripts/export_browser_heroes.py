@@ -127,10 +127,6 @@ def _save(action: Any) -> dict[str, Any]:
             "endsIfSourceDead": action.failed_save_timed_effect.ends_if_source_dead,
             "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
         }
-    if action.failed_save_timed_effect is not None and action.failed_save_timed_effect.source_effect_immunity_on_end:
-        row["failedSaveTimedEffect"]["sourceEffectImmunityOnEnd"] = True
-    if action.source_effect_immunity_on_success:
-        row["sourceEffectImmunityOnSuccess"] = True
     return row
 
 
@@ -185,10 +181,6 @@ def _spell(action: Any) -> dict[str, Any]:
             "endsIfSourceDead": action.failed_save_timed_effect.ends_if_source_dead,
             "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
         }
-    if action.failed_save_timed_effect is not None and action.failed_save_timed_effect.source_effect_immunity_on_end:
-        row["failedSaveTimedEffect"]["sourceEffectImmunityOnEnd"] = True
-    if getattr(action, "source_effect_immunity_on_success", False):
-        row["sourceEffectImmunityOnSuccess"] = True
     if action.required_target_creature_types:
         row["requiredTargetCreatureTypes"] = list(action.required_target_creature_types)
     if action.excluded_target_creature_types:

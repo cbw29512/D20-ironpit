@@ -21,9 +21,7 @@ def legal_area_save_placements(
     ):
         targets = tuple(
             target_id for target_id in placement.target_ids
-            if (target := by_id.get(target_id)) is not None and legal_save_action(
-                action, target, 0, source_id=actor.combatant_id,
-            )
+            if (target := by_id.get(target_id)) is not None and legal_save_action(action, target, 0)
         )
         placement_key = (
             targets if action.area_healing_rider is None

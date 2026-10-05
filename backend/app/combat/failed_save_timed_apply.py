@@ -3,7 +3,6 @@ from __future__ import annotations
 import logging
 
 from app.combat.timed_conditions import apply_timed_condition
-from app.combat.source_effect_immunity import SOURCE_EFFECT_IMMUNITY_ROUNDS_24H
 from app.domain.actions import SavingThrowAction
 from app.domain.encounters import EncounterCombatant
 from app.domain.runtime import CombatantState
@@ -52,9 +51,6 @@ def apply_failed_save_timed_effect(
             escape_check_dc=rider.escape_check_dc,
             ground_contact=ground_contact,
             ends_on_teleport=ends_on_teleport,
-            source_effect_immunity_rounds=(
-                SOURCE_EFFECT_IMMUNITY_ROUNDS_24H if rider.source_effect_immunity_on_end else 0
-            ),
         )
     except Exception:
         logger.exception(

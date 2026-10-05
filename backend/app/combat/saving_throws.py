@@ -11,10 +11,6 @@ from app.combat.grapple import apply_grapple
 from app.combat.forced_movement import push_straight_away
 from app.combat.failed_save_timed_apply import apply_failed_save_timed_effect
 from app.combat.failed_d20_test_override import source_name_for_roll
-from app.combat.source_effect_immunity import (
-    grant_source_effect_immunity,
-    has_source_effect_immunity,
-)
 from app.combat.defensive_modifier_rules import saving_throw_advantage_source_names
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
@@ -32,11 +28,8 @@ def legal_save_action(
     action: SavingThrowAction,
     target: EncounterCombatant,
     distance_ft: int,
-    source_id: str | None = None,
 ) -> bool:
     template = target.state.template
-    if source_id and has_source_effect_immunity(target.state, action.id, source_id):
-        return False
     if distance_ft > action.range_ft or (
         action.requires_target_hearing and "deafened" in target.state.active_effect_ids
     ):
@@ -62,7 +55,7 @@ def resolve_save_action(
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, action.action_cost):
         raise ValueError(f"{action.action_cost} is not available for {action.name}.")
-    if not legal_save_action(action, target, distance_ft, source_id=actor.combatant_id):
+    if not legal_save_action(action, target, distance_ft):
         raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
     if action.requires_target_sight and not can_see(actor.state, target.state):
         raise ValueError(f"{action.name} requires the actor to see the target.")
@@ -131,11 +124,6 @@ def resolve_save_action(
             from app.combat.restoration_riders import apply_hit_point_maximum_reduction
             apply_hit_point_maximum_reduction(target, incoming)
     applied_conditions: list[str] = []
-    if succeeded and action.source_effect_immunity_on_success:
-        grant_source_effect_immunity(
-            target.state, action.id, actor.combatant_id, round_number,
-            source_template=actor.state.template, source_is_magical=action.magical_effect,
-        )
     if not succeeded and target.state.is_alive and not target.state.is_dead:
         applied = apply_failed_save_timed_effect(
             target, actor, action, round_number, affected_states,

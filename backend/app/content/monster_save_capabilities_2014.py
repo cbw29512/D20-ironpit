@@ -105,9 +105,6 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                 magical_effect=bool(action.get("magical_effect", False)),
                 effect_tags=sorted(effect_tags),
                 failed_save_timed_effect=rider,
-                source_effect_immunity_on_success=bool(
-                    action.get("source_effect_immunity_on_success", False)
-                ),
                 animation=str(action.get("animation", "save-effect")),
             ))
         return result

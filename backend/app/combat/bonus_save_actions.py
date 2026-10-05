@@ -52,7 +52,7 @@ def choose_bonus_save_action(
                 continue
             for target in target_order(actor, setup):
                 distance = save_distance(actor, target, action.range_ft)
-                if legal_save_action(action, target, distance, source_id=actor.combatant_id):
+                if legal_save_action(action, target, distance):
                     return action, None, target, distance
         return None
     except Exception:
