@@ -39,11 +39,18 @@ def supports_recharge_rules_2014(monster: SourceMonster2014) -> bool:
     try:
         if monster.rest_recharge_action_ids:
             return False
-        supported_ids = {
-            str(action.get("id")) for action in monster.saving_throw_actions
+        supported = [
+            action for action in monster.saving_throw_actions
             if supports_save_action_2014(action) and isinstance(action, dict)
+        ]
+        supported_ids = {str(action.get("id")) for action in supported}
+        supported_resources = {
+            str(action.get("resource_id")) for action in supported if action.get("resource_id")
         }
-        return all(action_id in supported_ids for action_id in monster.action_recharges)
+        return all(
+            action_id in supported_ids or action_id in supported_resources
+            for action_id in monster.action_recharges
+        )
     except Exception:
         logger.exception("Failed to classify 2014 Recharge rules for %s.", monster.name)
         raise
@@ -69,6 +76,8 @@ def unsupported_source_actions_2014(monster: SourceMonster2014) -> list[str]:
     )
     if monster.multiattack_slots:
         allowed.add("multiattack")
+    if supports_recharge_rules_2014(monster):
+        allowed.add("breath weapons")
     return [name for name in monster.action_names if action_label_2014(name) not in allowed]
 
 def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDefinition]:
