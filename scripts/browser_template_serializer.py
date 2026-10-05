@@ -841,7 +841,6 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "armor_class": template.armor_class, "max_hp": template.max_hp,
             "speed_ft": template.speed_ft, "movement_modes": template.movement_modes.model_dump(),
             "initiative_bonus": template.initiative_bonus,
-            "support_action_modes": list(template.support_action_modes),
         "blindsight_ft": template.blindsight_ft, "truesight_ft": template.truesight_ft,
             "saving_throw_bonuses": template.saving_throw_bonuses, "skill_bonuses": template.skill_bonuses,
             "attacks": [attack_row(item, traits) for item in attacks], "primary_attack_id": template.weapon_attack.id,
@@ -894,6 +893,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        if template.support_action_modes:
+            row["support_action_modes"] = list(template.support_action_modes)
         if template.environment_context_reactions:
             row["environment_context_reactions"] = [
                 item.model_dump(mode="json") for item in template.environment_context_reactions
