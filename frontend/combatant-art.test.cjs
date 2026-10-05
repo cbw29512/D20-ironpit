@@ -66,21 +66,43 @@ assert.equal(A.assetFor({ id: "srd-brown-bear", kind: "monster" }).src, A.assetF
 assert.equal(A.assetFor({ id: "srd-manticore", kind: "monster" }).src, "assets/portraits/monsters/manticore.webp");
 assert.equal(A.assetFor({ id: "srd-hippopotamus", kind: "monster" }).src, "assets/portraits/monsters/hippopotamus.webp");
 assert.equal(A.assetFor({ id: "2014-minotaur", kind: "monster" }).src, "assets/portraits/monsters/minotaur.webp");
-assert.equal(A.assetFor({ id: "srd-minotaur-skeleton", kind: "monster" }), null);
-assert.equal(A.assetFor({ id: "srd-goblin-minion", kind: "monster" }), null);
-assert.equal(A.assetFor({ id: "srd-goblin-boss", kind: "monster" }), null);
-assert.equal(A.assetFor({ id: "srd-ogre-zombie", kind: "monster" }), null);
-assert.equal(A.assetFor({ id: "srd-giant-crocodile", kind: "monster" }), null);
-assert.equal(A.assetFor({ id: "2014-minotaur-skeleton", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "srd-minotaur-skeleton", kind: "monster" }).src, "assets/portraits/monsters/minotaur-skeleton.webp");
+assert.equal(A.assetFor({ id: "2014-minotaur-skeleton", kind: "monster" }).src, "assets/portraits/monsters/minotaur-skeleton.webp");
+assert.equal(A.assetFor({ id: "srd-goblin-minion", kind: "monster" }).src, "assets/portraits/monsters/goblin-minion.webp");
+assert.equal(A.assetFor({ id: "srd-goblin-boss", kind: "monster" }).src, "assets/portraits/monsters/goblin-boss.webp");
+assert.equal(A.assetFor({ id: "srd-hobgoblin-warrior", kind: "monster" }).src, "assets/portraits/monsters/hobgoblin-warrior.webp");
+assert.equal(A.assetFor({ id: "srd-ogre-zombie", kind: "monster" }).src, "assets/portraits/monsters/ogre-zombie.webp");
+assert.equal(A.assetFor({ id: "srd-giant-crocodile", kind: "monster" }).src, "assets/portraits/monsters/giant-crocodile.webp");
+assert.equal(A.assetFor({ id: "2014-wolf", kind: "monster" }).src, "assets/portraits/monsters/wolf.webp");
+assert.equal(A.assetFor({ id: "srd-wolf", kind: "monster" }).src, "assets/portraits/monsters/wolf.webp");
+assert.equal(A.assetFor({ id: "2014-troll", kind: "monster" }).src, "assets/portraits/monsters/troll.webp");
+assert.equal(A.assetFor({ id: "srd-5.2.1-2024-monster-harpy", kind: "monster" }).src, "assets/portraits/monsters/harpy.webp");
+assert.notEqual(A.assetFor({ id: "srd-goblin-minion", kind: "monster" }).src, goblinSrc);
+assert.notEqual(A.assetFor({ id: "srd-goblin-boss", kind: "monster" }).src, goblinSrc);
+assert.notEqual(A.assetFor({ id: "srd-minotaur-skeleton", kind: "monster" }).src, "assets/portraits/monsters/minotaur.webp");
+assert.notEqual(A.assetFor({ id: "srd-minotaur-of-baphomet", kind: "monster" }).src, "assets/portraits/monsters/minotaur.webp");
+assert.notEqual(A.assetFor({ id: "srd-giant-crocodile", kind: "monster" }).src, "assets/portraits/monsters/crocodile.webp");
+assert.notEqual(A.assetFor({ id: "srd-ogre-zombie", kind: "monster" }).src, "assets/portraits/monsters/ogre.webp");
+assert.notEqual(A.assetFor({ id: "srd-wolf", kind: "monster" }).src, "assets/portraits/monsters/dire-wolf.webp");
+assert.equal(A.assetFor({ id: "srd-orc", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "2014-orc", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "srd-guard-captain", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "srd-giant-boar", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "2014-winter-wolf", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "srd-spider", kind: "monster" }), null);
 assert.match(A.markup({ id: "2014-wyvern", kind: "monster", name: "Wyvern" }), /portrait-image-monster/);
 assert.doesNotMatch(A.markup({ id: "2014-wyvern", kind: "monster", name: "Wyvern" }), /portrait-image-hero/);
 
 const monsterFiles = [
-  "berserker", "blue-dragon-wyrmling", "brown-bear", "crocodile", "dire-wolf", "elephant",
-  "giant-ape", "giant-constrictor-snake", "giant-scorpion", "goblin", "hell-hound",
-  "hippopotamus", "manticore", "minotaur", "owlbear", "red-dragon-wyrmling", "roc",
-  "skeleton", "triceratops", "tyrannosaurus-rex", "unicorn", "warhorse-skeleton",
-  "wyvern", "young-black-dragon", "young-red-dragon", "zombie",
+  "berserker", "black-bear", "blue-dragon-wyrmling", "boar", "brown-bear",
+  "bugbear-warrior", "crocodile", "dire-wolf", "elephant", "ghoul", "giant-ape",
+  "giant-constrictor-snake", "giant-crocodile", "giant-scorpion", "giant-spider",
+  "goblin", "goblin-boss", "goblin-minion", "guard", "harpy", "hell-hound",
+  "hippopotamus", "hobgoblin-warrior", "manticore", "minotaur", "minotaur-of-baphomet",
+  "minotaur-skeleton", "ogre", "ogre-zombie", "owlbear", "red-dragon-wyrmling", "roc",
+  "skeleton", "stirge", "triceratops", "troll", "tyrannosaurus-rex", "unicorn",
+  "warhorse-skeleton", "wolf", "worg", "wyvern", "young-black-dragon",
+  "young-red-dragon", "zombie",
 ];
 for (const fileId of monsterFiles) {
   const rel = `assets/portraits/monsters/${fileId}.webp`;

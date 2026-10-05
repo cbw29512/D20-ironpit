@@ -1,6 +1,6 @@
 # Real card-art inventory
 
-Hero pregens have Chris-approved full-color painterly portraits. Twenty-six approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
+Hero pregens have Chris-approved full-color painterly portraits. Forty-five approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
 
 Processed hero assets are `frontend/assets/portraits/heroes/hero-{2014|2024}-{class}.webp` (3:4, about 50–85 KB). One file per character per edition is reused across levels 1–20.
 
@@ -46,23 +46,26 @@ One portrait per character per edition, reused across levels 1–20.
 | `hero-2024-warlock` | Varek Ashenmark | Warlock | `frontend/assets/portraits/heroes/hero-2024-warlock.webp` |
 | `hero-2024-wizard` | Elian Starweaver | Wizard | `frontend/assets/portraits/heroes/hero-2024-wizard.webp` |
 
-## Monsters — 26 approved silhouettes; remaining cards keep the SVG glyph
+## Monsters — 45 approved silhouettes; remaining cards keep the SVG glyph
 
 Live fight-board / picker captures of the wired silhouettes:
 
 - `docs/artifacts/card-art/before-after-monsters.png`
 - `docs/artifacts/card-art/2014-monster-sample-board.png`
 - `docs/artifacts/card-art/2024-monster-sample-board.png`
+- `docs/artifacts/card-art/2024-batch2-sample-board.png`
+- `docs/artifacts/card-art/2014-batch2-sample-board.png`
 
 The same creature image is registered to the real 2014 runtime id (`2014-{slug}`), the 2024 certified runtime id (`srd-{slug}`, or `srd-goblin-warrior` for Goblin), and the 2024 catalog id (`srd-5.2.1-2024-monster-{slug}`) when that row is genuinely the same creature.
 
 Not mapped, even when a similar name exists:
 
-- Goblin art is not used for Goblin Minion, Goblin Boss, or Hobgoblin
-- Minotaur art is 2014-only; 2024 has Minotaur of Baphomet and Minotaur Skeleton, which are different creatures
-- Skeleton / Zombie / Crocodile art is not used for Warhorse Skeleton, Minotaur Skeleton, Ogre Zombie, or Giant Crocodile
+- Goblin art is not used for Goblin Minion, Goblin Boss, or Hobgoblin; those three now have their own files
+- 2014 Minotaur art is not used for Minotaur of Baphomet or Minotaur Skeleton
+- Skeleton / Zombie / Crocodile / Wolf / Boar / Guard / Spider art is not reused for Warhorse Skeleton, Ogre Zombie, Giant Crocodile, Dire Wolf, Winter Wolf, Giant Boar, Guard Captain, or Giant Wolf Spider
 - Hippopotamus and Manticore exist in the 2024 roster only
-- Berserker, Elephant, Giant Ape, Unicorn, and Roc have 2014 runtime ids plus 2024 catalog ids; they are not in the certified 2024 runtime subset
+- Berserker, Elephant, Giant Ape, Unicorn, Roc, and Troll have 2014 runtime ids plus 2024 catalog ids; Troll is not in the certified 2024 runtime subset
+- `orc.webp` was processed but is not registered: neither the 2014 certified roster, the 2024 certified roster, nor the 330-name 2024 catalog has `orc` / `orc-warrior`
 
 | File | 2014 runtime | 2024 runtime | 2024 catalog |
 |---|---|---|---|
@@ -92,5 +95,24 @@ Not mapped, even when a similar name exists:
 | `tyrannosaurus-rex.webp` | `2014-tyrannosaurus-rex` | `srd-tyrannosaurus-rex` | `srd-5.2.1-2024-monster-tyrannosaurus-rex` |
 | `warhorse-skeleton.webp` | `2014-warhorse-skeleton` | `srd-warhorse-skeleton` | `srd-5.2.1-2024-monster-warhorse-skeleton` |
 | `wyvern.webp` | `2014-wyvern` | `srd-wyvern` | `srd-5.2.1-2024-monster-wyvern` |
+| `wolf.webp` | `2014-wolf` | `srd-wolf` | `srd-5.2.1-2024-monster-wolf` |
+| `worg.webp` | `2014-worg` | `srd-worg` | `srd-5.2.1-2024-monster-worg` |
+| `goblin-minion.webp` | — | `srd-goblin-minion` | `srd-5.2.1-2024-monster-goblin-minion` |
+| `goblin-boss.webp` | — | `srd-goblin-boss` | `srd-5.2.1-2024-monster-goblin-boss` |
+| `hobgoblin-warrior.webp` | — | `srd-hobgoblin-warrior` | `srd-5.2.1-2024-monster-hobgoblin-warrior` |
+| `bugbear-warrior.webp` | — | — | `srd-5.2.1-2024-monster-bugbear-warrior` |
+| `ogre.webp` | `2014-ogre` | `srd-ogre` | `srd-5.2.1-2024-monster-ogre` |
+| `ogre-zombie.webp` | `2014-ogre-zombie` | `srd-ogre-zombie` | `srd-5.2.1-2024-monster-ogre-zombie` |
+| `giant-crocodile.webp` | `2014-giant-crocodile` | `srd-giant-crocodile` | `srd-5.2.1-2024-monster-giant-crocodile` |
+| `minotaur-of-baphomet.webp` | — | — | `srd-5.2.1-2024-monster-minotaur-of-baphomet` |
+| `minotaur-skeleton.webp` | `2014-minotaur-skeleton` | `srd-minotaur-skeleton` | `srd-5.2.1-2024-monster-minotaur-skeleton` |
+| `ghoul.webp` | — | — | `srd-5.2.1-2024-monster-ghoul` |
+| `giant-spider.webp` | — | — | `srd-5.2.1-2024-monster-giant-spider` |
+| `troll.webp` | `2014-troll` | — | `srd-5.2.1-2024-monster-troll` |
+| `boar.webp` | — | `srd-boar` | `srd-5.2.1-2024-monster-boar` |
+| `black-bear.webp` | `2014-black-bear` | `srd-black-bear` | `srd-5.2.1-2024-monster-black-bear` |
+| `harpy.webp` | — | — | `srd-5.2.1-2024-monster-harpy` |
+| `stirge.webp` | — | — | `srd-5.2.1-2024-monster-stirge` |
+| `guard.webp` | `2014-guard` | `srd-guard` | `srd-5.2.1-2024-monster-guard` |
 
 Every other monster still uses `figure-portraits.js`. See `ART_SHOPPING_LIST.md` for the remaining missing/inaccurate table.
