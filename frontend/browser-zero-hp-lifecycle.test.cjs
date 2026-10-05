@@ -49,6 +49,20 @@ function downedHero() {
 }
 
 {
+  const state = S.buildState(structuredClone(heroTemplate));
+  state.damage_taken_this_turn_by_type = {};
+  A.applyDamage(state, 20, false, ["slashing", "radiant"], [], null, [
+    { damage_type: "slashing", applied_total: 15 },
+    { damage_type: "radiant", applied_total: 5 },
+  ]);
+  assert.deepEqual(
+    state.damage_taken_this_turn_by_type,
+    { slashing: 15, radiant: 5 },
+    "mixed damage components are tracked by their applied type totals",
+  );
+}
+
+{
   const state = downedHero();
   state.reaction_available = false;
   S.refreshReaction(state);
