@@ -1041,12 +1041,14 @@
       "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "limited-use",
         "saving-throw-action",
         "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
@@ -1552,6 +1554,7 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
+        "condition-or-control",
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
@@ -1560,6 +1563,7 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
         "multiattack",
         "saving-throw-action"
@@ -1928,11 +1932,13 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
+        "condition-or-control",
         "multiattack",
         "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack"
       ],
       "unsupported_mechanics": [
@@ -1957,10 +1963,12 @@
       "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "trait"
       ],
       "supported_mechanics": [
-        "attack-roll"
+        "attack-roll",
+        "condition-or-control"
       ],
       "unsupported_mechanics": [
         "trait"
@@ -2126,6 +2134,7 @@
       "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "limited-use",
         "multiattack",
         "saving-throw-action",
@@ -2133,6 +2142,7 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack",
         "saving-throw-action"
       ],
@@ -2769,6 +2779,7 @@
       "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
@@ -2777,6 +2788,7 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
         "multiattack",
         "saving-throw-action",
@@ -3175,12 +3187,14 @@
       "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
         "multiattack",
         "unsupported-action-rider"
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
         "multiattack"
       ],
@@ -3547,6 +3561,7 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
+        "condition-or-control",
         "limited-use",
         "multiattack",
         "save-or-complex-action",
@@ -3555,6 +3570,7 @@
       "supported_mechanics": [
         "attack-roll",
         "bonus-action",
+        "condition-or-control",
         "multiattack",
         "saving-throw-action"
       ],
@@ -4301,6 +4317,7 @@
       "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack",
         "reaction",
         "save-or-complex-action",
@@ -4308,6 +4325,7 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack",
         "reaction",
         "saving-throw-action"
@@ -5816,6 +5834,7 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
+        "condition-or-control",
         "damage-or-condition-defense",
         "limited-use",
         "multiattack",
@@ -5826,6 +5845,7 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
         "multiattack",
         "reaction",
@@ -6931,11 +6951,13 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
+        "condition-or-control",
         "multiattack",
         "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack"
       ],
       "unsupported_mechanics": [
@@ -7138,11 +7160,13 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
+        "condition-or-control",
         "damage-or-condition-defense",
         "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense"
       ],
       "unsupported_mechanics": [
@@ -7359,6 +7383,7 @@
       "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
         "multiattack",
         "save-or-complex-action",
@@ -7367,6 +7392,7 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
         "multiattack",
         "saving-throw-action"
@@ -7466,6 +7492,7 @@
       "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "limited-use",
         "save-or-complex-action",
         "saving-throw-action",
@@ -7474,6 +7501,7 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
@@ -8085,12 +8113,14 @@
       "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "limited-use",
         "multiattack",
         "reaction"
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "multiattack"
       ],
       "unsupported_mechanics": [
@@ -8193,6 +8223,7 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
+        "condition-or-control",
         "damage-or-condition-defense",
         "multiattack",
         "saving-throw-action",
@@ -8202,6 +8233,7 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
         "multiattack",
         "saving-throw-action"
@@ -9343,6 +9375,7 @@
       "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
         "limited-use",
         "saving-throw-action",
@@ -9350,6 +9383,7 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "condition-or-control",
         "damage-or-condition-defense",
         "saving-throw-action",
         "trait"
