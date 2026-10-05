@@ -1,6 +1,6 @@
 # Real card-art inventory
 
-Hero pregens have Chris-approved full-color painterly portraits. One hundred seventy-four approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
+Hero pregens have Chris-approved full-color painterly portraits. One hundred ninety-nine approved monster silhouettes are framed to 3:4 WebP and wired for both editions when the roster creature matches.
 
 Processed hero assets are `frontend/assets/portraits/heroes/hero-{2014|2024}-{class}.webp` (3:4, about 50–85 KB). One file per character per edition is reused across levels 1–20.
 
@@ -46,7 +46,7 @@ One portrait per character per edition, reused across levels 1–20.
 | `hero-2024-warlock` | Varek Ashenmark | Warlock | `frontend/assets/portraits/heroes/hero-2024-warlock.webp` |
 | `hero-2024-wizard` | Elian Starweaver | Wizard | `frontend/assets/portraits/heroes/hero-2024-wizard.webp` |
 
-## Monsters — 174 approved silhouettes; remaining cards keep the SVG glyph
+## Monsters — 199 approved silhouettes; remaining cards keep the SVG glyph
 
 Live fight-board / picker captures of the wired silhouettes:
 
@@ -74,12 +74,17 @@ Not mapped, even when a similar name exists:
 - Bandit and Bandit Captain are distinct; Cultist and Cultist Fanatic are distinct
 - Animated Armor, Animated Flying Sword, and Animated Rug of Smothering are distinct
 - Bugbear Stalker is distinct from Bugbear Warrior
-- Eagle / Elk / Frog / Boar / Badger / Bat are distinct from their Giant counterparts
+- Eagle / Elk / Frog / Boar / Badger / Bat / Goat are distinct from their Giant counterparts
 - Fire Giant and Frost Giant are distinct; monster Druid art is not the hero Druid portrait
 - 2024 Azer Sentinel uses `azer.webp`; 2024 Centaur Trooper uses `centaur.webp`
 - `orc.webp` was processed but is not registered: neither the 2014 certified roster, the 2024 certified roster, nor the 330-name 2024 catalog has `orc` / `orc-warrior`
 - `beholder.webp` was processed but is not registered: neither the 2014 certified roster, the 2024 certified roster, nor the 330-name 2024 catalog has `beholder`
 - `drow.webp`, `duergar.webp`, `displacer-beast.webp`, `flumph.webp`, `froghemoth.webp`, and `galeb-duhr.webp` were processed but are not registered: none of those slugs exist in the 2014 certified roster, the 2024 certified roster, or the 330-name 2024 catalog
+- Guard Captain is distinct from Guard
+- Giant Venomous Snake is distinct from Constrictor Snake, Flying Snake, and Giant Constrictor Snake; the same raster serves 2014 Giant Poisonous Snake
+- 2014 Giant Sea Horse uses `giant-seahorse.webp` (edition spelling of the same creature)
+- Green Dragon Wyrmling and Gold Dragon Wyrmling are distinct from their Adult counterparts
+- Gnoll Warrior is the 2024 catalog id; there is no plain `gnoll` roster row
 
 | File | 2014 runtime | 2024 runtime | 2024 catalog |
 |---|---|---|---|
@@ -257,5 +262,30 @@ Not mapped, even when a similar name exists:
 | `giant-elk.webp` | `2014-giant-elk` | `srd-giant-elk` | `srd-5.2.1-2024-monster-giant-elk` |
 | `giant-fire-beetle.webp` | `2014-giant-fire-beetle` | `srd-giant-fire-beetle` | `srd-5.2.1-2024-monster-giant-fire-beetle` |
 | `giant-frog.webp` | — | — | `srd-5.2.1-2024-monster-giant-frog` |
+| `giant-goat.webp` | `2014-giant-goat` | `srd-giant-goat` | `srd-5.2.1-2024-monster-giant-goat` |
+| `giant-hyena.webp` | — | — | `srd-5.2.1-2024-monster-giant-hyena` |
+| `giant-lizard.webp` | `2014-giant-lizard` | `srd-giant-lizard` | `srd-5.2.1-2024-monster-giant-lizard` |
+| `giant-octopus.webp` | — | — | `srd-5.2.1-2024-monster-giant-octopus` |
+| `giant-seahorse.webp` | `2014-giant-sea-horse` | — | `srd-5.2.1-2024-monster-giant-seahorse` |
+| `giant-shark.webp` | `2014-giant-shark` | `srd-giant-shark` | `srd-5.2.1-2024-monster-giant-shark` |
+| `giant-toad.webp` | — | — | `srd-5.2.1-2024-monster-giant-toad` |
+| `giant-venomous-snake.webp` | `2014-giant-poisonous-snake` | `srd-giant-venomous-snake` | `srd-5.2.1-2024-monster-giant-venomous-snake` |
+| `giant-vulture.webp` | `2014-giant-vulture` | `srd-giant-vulture` | `srd-5.2.1-2024-monster-giant-vulture` |
+| `giant-wasp.webp` | `2014-giant-wasp` | `srd-giant-wasp` | `srd-5.2.1-2024-monster-giant-wasp` |
+| `giant-weasel.webp` | `2014-giant-weasel` | `srd-giant-weasel` | `srd-5.2.1-2024-monster-giant-weasel` |
+| `gibbering-mouther.webp` | — | — | `srd-5.2.1-2024-monster-gibbering-mouther` |
+| `glabrezu.webp` | — | — | `srd-5.2.1-2024-monster-glabrezu` |
+| `gladiator.webp` | — | — | `srd-5.2.1-2024-monster-gladiator` |
+| `gnoll-warrior.webp` | — | — | `srd-5.2.1-2024-monster-gnoll-warrior` |
+| `goat.webp` | `2014-goat` | `srd-goat` | `srd-5.2.1-2024-monster-goat` |
+| `gold-dragon-wyrmling.webp` | — | — | `srd-5.2.1-2024-monster-gold-dragon-wyrmling` |
+| `gray-ooze.webp` | — | — | `srd-5.2.1-2024-monster-gray-ooze` |
+| `green-dragon-wyrmling.webp` | `2014-green-dragon-wyrmling` | `srd-green-dragon-wyrmling` | `srd-5.2.1-2024-monster-green-dragon-wyrmling` |
+| `green-hag.webp` | — | — | `srd-5.2.1-2024-monster-green-hag` |
+| `grick.webp` | — | `srd-grick` | `srd-5.2.1-2024-monster-grick` |
+| `grimlock.webp` | — | `srd-grimlock` | `srd-5.2.1-2024-monster-grimlock` |
+| `guard-captain.webp` | — | `srd-guard-captain` | `srd-5.2.1-2024-monster-guard-captain` |
+| `guardian-naga.webp` | — | — | `srd-5.2.1-2024-monster-guardian-naga` |
+| `half-dragon.webp` | — | — | `srd-5.2.1-2024-monster-half-dragon` |
 
 Every other monster still uses `figure-portraits.js`. See `ART_SHOPPING_LIST.md` for the remaining missing/inaccurate table.

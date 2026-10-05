@@ -1,6 +1,6 @@
 # Iron Pit card-art shopping list
 
-Generated from this presentation branch. Hero pregens have framed color portraits. One hundred seventy-four approved monster silhouettes are framed to 3:4; remaining monsters keep SVG glyphs.
+Generated from this presentation branch. Hero pregens have framed color portraits. One hundred ninety-nine approved monster silhouettes are framed to 3:4; remaining monsters keep SVG glyphs.
 
 **Real-art inventory:** `docs/artifacts/card-art/REAL_ART_INVENTORY.md`. All 24 unique pregens have framed color portraits. Do not treat pipeline demo drawings as source pictures.
 
@@ -115,21 +115,21 @@ Edition isolation is mandatory: do not reuse a 2014 portrait for the 2024 counte
 | `2014-giant-eagle` | Giant Eagle | beast | 1 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-giant-elk` | Giant Elk | beast | 2 | good | Chris-approved 3:4 silhouette; distinct from Elk. |
 | `2014-giant-fire-beetle` | Giant Fire Beetle | beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-giant-goat` | Giant Goat | beast | 1/2 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-giant-lizard` | Giant Lizard | beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-giant-goat` | Giant Goat | beast | 1/2 | good | Chris-approved 3:4 silhouette; distinct from Goat. |
+| `2014-giant-lizard` | Giant Lizard | beast | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-giant-owl` | Giant Owl | beast | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-giant-poisonous-snake` | Giant Poisonous Snake | beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-giant-poisonous-snake` | Giant Poisonous Snake | beast | 1/4 | good | Chris-approved 3:4 silhouette; same raster as 2024 Giant Venomous Snake. |
 | `2014-giant-rat` | Giant Rat | beast | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-giant-scorpion` | Giant Scorpion | beast | 3 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-giant-sea-horse` | Giant Sea Horse | beast | 1/2 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-giant-shark` | Giant Shark | beast | 5 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-giant-vulture` | Giant Vulture | beast | 1 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-giant-wasp` | Giant Wasp | beast | 1/2 | missing | Needs a licensed source picture of this printed creature. |
-| `2014-giant-weasel` | Giant Weasel | beast | 1/8 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-giant-sea-horse` | Giant Sea Horse | beast | 1/2 | good | Chris-approved 3:4 silhouette; same raster as 2024 Giant Seahorse. |
+| `2014-giant-shark` | Giant Shark | beast | 5 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-giant-vulture` | Giant Vulture | beast | 1 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-giant-wasp` | Giant Wasp | beast | 1/2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `2014-giant-weasel` | Giant Weasel | beast | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-giant-wolf-spider` | Giant Wolf Spider | beast | 1/4 | good | Chris-approved 3:4 silhouette; distinct from Giant Spider. |
-| `2014-goat` | Goat | beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-goat` | Goat | beast | 0 | good | Chris-approved 3:4 silhouette; distinct from Giant Goat. |
 | `2014-goblin` | Goblin | humanoid | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `2014-green-dragon-wyrmling` | Green Dragon Wyrmling | dragon | 2 | missing | Needs a licensed source picture of this printed creature. |
+| `2014-green-dragon-wyrmling` | Green Dragon Wyrmling | dragon | 2 | good | Chris-approved 3:4 silhouette; distinct from Adult Green Dragon. |
 | `2014-griffon` | Griffon | monstrosity | 2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-guard` | Guard | humanoid | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `2014-hawk` | Hawk | beast | 0 | missing | Needs a licensed source picture of this printed creature. |
@@ -255,27 +255,27 @@ Edition isolation is mandatory: do not reuse a 2014 portrait for the 2024 counte
 | `srd-giant-eagle` | Giant Eagle | Celestial | 1 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-giant-elk` | Giant Elk | Celestial | 2 | good | Chris-approved 3:4 silhouette; distinct from Elk. |
 | `srd-giant-fire-beetle` | Giant Fire Beetle | Beast | 0 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `srd-giant-goat` | Giant Goat | Beast | 1/2 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-giant-lizard` | Giant Lizard | Beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-giant-goat` | Giant Goat | Beast | 1/2 | good | Chris-approved 3:4 silhouette; distinct from Goat. |
+| `srd-giant-lizard` | Giant Lizard | Beast | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-giant-owl` | Giant Owl | Celestial | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-giant-rat` | Giant Rat | Beast | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-giant-scorpion` | Giant Scorpion | Beast | 3 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `srd-giant-shark` | Giant Shark | Beast | 5 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-giant-venomous-snake` | Giant Venomous Snake | Beast | 1/4 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-giant-vulture` | Giant Vulture | Monstrosity | 1 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-giant-wasp` | Giant Wasp | Beast | 1/2 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-giant-weasel` | Giant Weasel | Beast | 1/8 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-giant-shark` | Giant Shark | Beast | 5 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `srd-giant-venomous-snake` | Giant Venomous Snake | Beast | 1/4 | good | Chris-approved 3:4 silhouette; same raster as 2014 Giant Poisonous Snake; distinct from other snakes. |
+| `srd-giant-vulture` | Giant Vulture | Monstrosity | 1 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `srd-giant-wasp` | Giant Wasp | Beast | 1/2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
+| `srd-giant-weasel` | Giant Weasel | Beast | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-giant-wolf-spider` | Giant Wolf Spider | Beast | 1/4 | good | Chris-approved 3:4 silhouette; distinct from Giant Spider. |
-| `srd-goat` | Goat | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-goat` | Goat | Beast | 0 | good | Chris-approved 3:4 silhouette; distinct from Giant Goat. |
 | `srd-goblin-boss` | Goblin Boss | Fey (Goblinoid) | 1 | good | Chris-approved 3:4 silhouette; distinct from Goblin Warrior and Goblin Minion. |
 | `srd-goblin-minion` | Goblin Minion | Fey (Goblinoid) | 1/8 | good | Chris-approved 3:4 silhouette; distinct from Goblin Warrior and Goblin Boss. |
 | `srd-goblin-warrior` | Goblin Warrior | Fey (Goblinoid) | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `srd-green-dragon-wyrmling` | Green Dragon Wyrmling | Dragon (Chromatic) | 2 | missing | Needs a licensed source picture of this printed creature. |
-| `srd-grick` | Grick | Aberration | 2 | inaccurate | Snake coil is the wrong anatomy for a tentacled worm-like aberration. |
+| `srd-green-dragon-wyrmling` | Green Dragon Wyrmling | Dragon (Chromatic) | 2 | good | Chris-approved 3:4 silhouette; distinct from Adult Green Dragon. |
+| `srd-grick` | Grick | Aberration | 2 | good | Chris-approved 3:4 silhouette; tentacled worm-like aberration. |
 | `srd-griffon` | Griffon | Monstrosity | 2 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `srd-grimlock` | Grimlock | Aberration | 1/4 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-grimlock` | Grimlock | Aberration | 1/4 | good | Chris-approved 3:4 silhouette; same raster as the matching catalog row. |
 | `srd-guard` | Guard | Humanoid | 1/8 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
-| `srd-guard-captain` | Guard Captain | Humanoid | 4 | missing | Needs a licensed source picture of this printed creature. |
+| `srd-guard-captain` | Guard Captain | Humanoid | 4 | good | Chris-approved 3:4 silhouette; distinct from Guard. |
 | `srd-hawk` | Hawk | Beast | 0 | missing | Needs a licensed source picture of this printed creature. |
 | `srd-hell-hound` | Hell Hound | Fiend | 3 | good | Chris-approved 3:4 silhouette; same raster as the matching edition counterpart. |
 | `srd-hill-giant` | Hill Giant | Giant | 5 | missing | Needs a licensed source picture of this printed creature. |

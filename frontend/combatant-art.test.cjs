@@ -119,7 +119,8 @@ assert.notEqual(
   A.assetFor({ id: "srd-5.2.1-2024-monster-fire-elemental", kind: "monster" }).src,
   A.assetFor({ id: "srd-5.2.1-2024-monster-water-elemental", kind: "monster" }).src,
 );
-assert.equal(A.assetFor({ id: "srd-guard-captain", kind: "monster" }), null);
+assert.equal(A.assetFor({ id: "srd-guard-captain", kind: "monster" }).src, "assets/portraits/monsters/guard-captain.webp");
+assert.notEqual(A.assetFor({ id: "srd-guard-captain", kind: "monster" }).src, A.assetFor({ id: "srd-guard", kind: "monster" }).src);
 assert.equal(A.assetFor({ id: "srd-giant-boar", kind: "monster" }).src, "assets/portraits/monsters/giant-boar.webp");
 assert.notEqual(A.assetFor({ id: "srd-giant-boar", kind: "monster" }).src, A.assetFor({ id: "srd-boar", kind: "monster" }).src);
 assert.equal(A.assetFor({ id: "2014-winter-wolf", kind: "monster" }), null);
@@ -203,6 +204,29 @@ assert.notEqual(A.assetFor({ id: "srd-pegasus", kind: "monster" }).src, A.assetF
 assert.equal(A.assetFor({ id: "srd-5.2.1-2024-monster-medusa", kind: "monster" }).src, "assets/portraits/monsters/medusa.webp");
 assert.equal(A.assetFor({ id: "srd-5.2.1-2024-monster-gorgon", kind: "monster" }).src, "assets/portraits/monsters/gorgon.webp");
 assert.notEqual(A.assetFor({ id: "srd-medusa", kind: "monster" }).src, A.assetFor({ id: "srd-gorgon", kind: "monster" }).src);
+assert.equal(A.assetFor({ id: "srd-goat", kind: "monster" }).src, "assets/portraits/monsters/goat.webp");
+assert.equal(A.assetFor({ id: "2014-goat", kind: "monster" }).src, "assets/portraits/monsters/goat.webp");
+assert.notEqual(A.assetFor({ id: "srd-goat", kind: "monster" }).src, A.assetFor({ id: "srd-giant-goat", kind: "monster" }).src);
+assert.equal(A.assetFor({ id: "srd-giant-venomous-snake", kind: "monster" }).src, "assets/portraits/monsters/giant-venomous-snake.webp");
+assert.equal(A.assetFor({ id: "2014-giant-poisonous-snake", kind: "monster" }).src, "assets/portraits/monsters/giant-venomous-snake.webp");
+assert.notEqual(A.assetFor({ id: "srd-giant-venomous-snake", kind: "monster" }).src, A.assetFor({ id: "srd-constrictor-snake", kind: "monster" }).src);
+assert.notEqual(A.assetFor({ id: "srd-giant-venomous-snake", kind: "monster" }).src, A.assetFor({ id: "srd-flying-snake", kind: "monster" }).src);
+assert.notEqual(A.assetFor({ id: "srd-giant-venomous-snake", kind: "monster" }).src, A.assetFor({ id: "srd-giant-constrictor-snake", kind: "monster" }).src);
+assert.equal(A.assetFor({ id: "2014-giant-sea-horse", kind: "monster" }).src, "assets/portraits/monsters/giant-seahorse.webp");
+assert.equal(A.assetFor({ id: "srd-5.2.1-2024-monster-giant-seahorse", kind: "monster" }).src, "assets/portraits/monsters/giant-seahorse.webp");
+assert.equal(A.assetFor({ id: "srd-green-dragon-wyrmling", kind: "monster" }).src, "assets/portraits/monsters/green-dragon-wyrmling.webp");
+assert.notEqual(
+  A.assetFor({ id: "srd-green-dragon-wyrmling", kind: "monster" }).src,
+  A.assetFor({ id: "srd-5.2.1-2024-monster-adult-green-dragon", kind: "monster" }).src,
+);
+assert.notEqual(
+  A.assetFor({ id: "srd-5.2.1-2024-monster-gold-dragon-wyrmling", kind: "monster" }).src,
+  A.assetFor({ id: "srd-5.2.1-2024-monster-adult-gold-dragon", kind: "monster" }).src,
+);
+assert.equal(A.assetFor({ id: "srd-grick", kind: "monster" }).src, "assets/portraits/monsters/grick.webp");
+assert.equal(A.assetFor({ id: "srd-grimlock", kind: "monster" }).src, "assets/portraits/monsters/grimlock.webp");
+assert.equal(A.assetFor({ id: "srd-5.2.1-2024-monster-gnoll-warrior", kind: "monster" }).src, "assets/portraits/monsters/gnoll-warrior.webp");
+assert.equal(A.assetFor({ id: "srd-gnoll", kind: "monster" }), null);
 assert.equal(A.assetFor({ id: "srd-hawk", kind: "monster" }), null);
 assert.equal(A.assetFor({ id: "srd-rat", kind: "monster" }), null);
 assert.equal(A.assetFor({ id: "2014-chimera", kind: "monster" }).src, "assets/portraits/monsters/chimera.webp");
@@ -235,9 +259,14 @@ const monsterFiles = [
   "frost-giant", "gargoyle", "gelatinous-cube", "ghast", "ghost",
   "ghoul", "giant-ape", "giant-badger", "giant-bat", "giant-boar",
   "giant-centipede", "giant-constrictor-snake", "giant-crab", "giant-crocodile", "giant-eagle",
-  "giant-elk", "giant-fire-beetle", "giant-frog", "giant-owl", "giant-rat",
-  "giant-scorpion", "giant-spider", "giant-wolf-spider", "goblin", "goblin-boss",
-  "goblin-minion", "gorgon", "griffon", "guard", "harpy",
+  "giant-elk", "giant-fire-beetle", "giant-frog", "giant-goat", "giant-hyena",
+  "giant-lizard", "giant-octopus", "giant-owl", "giant-rat", "giant-scorpion",
+  "giant-seahorse", "giant-shark", "giant-spider", "giant-toad", "giant-venomous-snake",
+  "giant-vulture", "giant-wasp", "giant-weasel", "giant-wolf-spider", "gibbering-mouther",
+  "glabrezu", "gladiator", "gnoll-warrior", "goat", "goblin",
+  "goblin-boss", "goblin-minion", "gold-dragon-wyrmling", "gorgon", "gray-ooze",
+  "green-dragon-wyrmling", "green-hag", "grick", "griffon", "grimlock",
+  "guard", "guard-captain", "guardian-naga", "half-dragon", "harpy",
   "hell-hound", "hippogriff", "hippopotamus", "hobgoblin-warrior", "hydra",
   "imp", "knight", "mage", "manticore", "medusa",
   "minotaur", "minotaur-of-baphomet", "minotaur-skeleton", "ogre", "ogre-zombie",
