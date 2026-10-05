@@ -4,6 +4,7 @@
   const R = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
+  const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
 
   function resolve(sequence, round, mover, setup, options = {}) {
     try {
@@ -15,7 +16,7 @@
       if (!living.length) return { events: [], sequence };
       living.sort((a, b) => S().distance(mover, a) - S().distance(mover, b) || a.combatant_id.localeCompare(b.combatant_id));
       const target = living[0];
-      const allowance = Math.floor(M().effectiveSpeed(mover.state) * speedFraction);
+      const allowance = G()?.speedIsZero?.(mover.state) ? 0 : Math.floor(M().effectiveSpeed(mover.state) * speedFraction);
       if (allowance <= 0) return { events: [], sequence };
       const normalRemaining = mover.state.movement_remaining_ft;
       mover.state.movement_remaining_ft = allowance;
