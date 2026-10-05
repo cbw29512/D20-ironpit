@@ -66,40 +66,45 @@ def _maybe_add_stack(
 def resolve_triggered_extra_attacks_after_turn(
     sequence: int,
     round_number: int,
-    member: EncounterCombatant,
+    just_acted: EncounterCombatant,
     setup: EncounterSetup,
     dice,
 ) -> tuple[list[BattleEvent], int]:
-    """Resolve source-driven post-turn stack triggers and one attack per active stack."""
+    """Check every owner at turn end; attack stacks fire only after their owner's turn."""
     try:
         events: list[BattleEvent] = []
-        for rule in member.state.template.triggered_extra_attack_stacks:
-            added = _maybe_add_stack(member, rule)
-            stacks = member.state.triggered_extra_attack_stack_counts.get(rule.source_id, 0)
-            if added:
+        combatants = [*setup.heroes, *setup.monsters]
+        for owner in combatants:
+            for rule in owner.state.template.triggered_extra_attack_stacks:
+                if not _maybe_add_stack(owner, rule):
+                    continue
+                stacks = owner.state.triggered_extra_attack_stack_counts.get(rule.source_id, 0)
                 events.append(BattleEvent(
                     sequence=sequence,
                     round_number=round_number,
                     event_type="feature",
-                    actor_id=member.combatant_id,
-                    actor_name=member.state.template.name,
+                    actor_id=owner.combatant_id,
+                    actor_name=owner.state.template.name,
                     feature_id=rule.source_id,
                     animation="feature",
                     description=(
-                        f"{member.state.template.name} gains one {rule.source_name} stack "
+                        f"{owner.state.template.name} gains one {rule.source_name} stack "
                         f"({stacks}/{rule.max_stacks})."
                     ),
                 ))
                 sequence += 1
+
+        for rule in just_acted.state.template.triggered_extra_attack_stacks:
+            stacks = just_acted.state.triggered_extra_attack_stack_counts.get(rule.source_id, 0)
             for _ in range(stacks):
-                choice = _legal_target(member, setup, rule)
-                if choice is None or member.state.is_dead:
+                choice = _legal_target(just_acted, setup, rule)
+                if choice is None or just_acted.state.is_dead:
                     break
                 target, distance = choice
                 event = resolve_encounter_attack(
                     sequence,
                     round_number,
-                    member,
+                    just_acted,
                     target,
                     rule.attack,
                     distance,
@@ -107,7 +112,7 @@ def resolve_triggered_extra_attacks_after_turn(
                     setup,
                     spend_action=False,
                     feature_id=rule.source_id,
-                    turn_key=f"{round_number}:{member.combatant_id}:post-turn",
+                    turn_key=f"{round_number}:{just_acted.combatant_id}:post-turn",
                     allow_reckless=False,
                     close_enemy_active=False,
                     off_turn=True,
@@ -117,9 +122,8 @@ def resolve_triggered_extra_attacks_after_turn(
                 sequence += 1
         return events, sequence
     except Exception:
-        logger.exception("Triggered post-turn extra attacks failed for %s.", member.combatant_id)
+        logger.exception("Triggered post-turn extra attacks failed after %s.", just_acted.combatant_id)
         raise
-
 
 def clear_regeneration_owned_stacks(state) -> list[tuple[str, int]]:
     """Clear stacks and only the Exhaustion levels owned by sources that regrow on healing."""
