@@ -9,7 +9,6 @@
   const B = () => window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS;
   const BI = () => window.IRON_PIT_BROWSER_D20_BONUS_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
-  const D = () => window.IRON_PIT_DICE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
 
   function resolve(sequence, round, member, setup, turnKey) {
@@ -102,19 +101,6 @@
     return { events, sequence };
   }
 
-  function secondWind(sequence, round, member) {
-    const state = member.state, uses = state.resources["second-wind"] || 0;
-    if (!uses || !E().available(state, "bonus_action") || state.current_hp <= 0 || state.current_hp > Math.floor(state.template.max_hp / 2)) return null;
-    const die = D().roll(10), total = die + state.template.level, before = state.current_hp;
-    state.current_hp = Math.min(state.template.max_hp, state.current_hp + total);
-    state.resources["second-wind"] -= 1; E().spend(state, "bonus_action");
-    return { sequence, round_number: round, event_type: "healing", actor_id: member.combatant_id, actor_name: state.template.name,
-      target_id: member.combatant_id, target_name: state.template.name, hp_before: before, hp_after: state.current_hp,
-      healing_roll: { notation: `1d10+${state.template.level}`, rolls: [die], modifier: state.template.level, total },
-      feature_id: "second-wind", resource_remaining: state.resources["second-wind"], animation: "second-wind",
-      description: `${state.template.name} uses Second Wind and regains ${state.current_hp - before} HP.` };
-  }
-
   function adrenaline(sequence, round, member) {
     const state = member.state, pb = 2 + Math.floor((state.template.level - 1) / 4);
     if (!state.template.traits?.includes("adrenaline-rush") || !E().available(state, "bonus_action")
@@ -132,22 +118,6 @@
     const phase = hooks.PHASES.BONUS_ACTION_WINDOW;
     const existing = () => new Set(hooks.abilitiesFor(phase).map((item) => item.id));
 
-    if (!existing().has("second-wind")) hooks.registerAbility(phase, {
-      id: "second-wind", priority: 20, rulesets: ["2014", "2024"],
-      appliesTo: (_member, ctx) => ctx.bonusActionCheckpoint === "beforeEscape",
-      resolve: ({ sequence, round, member, setup }) => {
-        const wind = secondWind(sequence, round, member);
-        if (!wind) return null;
-        const events = [wind]; let nextSequence = sequence + 1;
-        const shift = window.IRON_PIT_BROWSER_TACTICAL_SHIFT?.resolve(nextSequence, round, member, setup);
-        if (shift) {
-          events.push(shift); nextSequence += 1;
-          window.IRON_PIT_BROWSER_PALADIN_AURAS_2014?.sync(setup);
-        }
-        return { events, sequence: nextSequence, claimed: true };
-      },
-    });
-
     if (!existing().has("adrenaline-rush")) hooks.registerAbility(phase, {
       id: "adrenaline-rush", priority: 30, rulesets: ["2024"],
       appliesTo: (_member, ctx) => ctx.bonusActionCheckpoint === "afterEscape",
@@ -158,5 +128,5 @@
     });
   }
 
-  window.IRON_PIT_BROWSER_SUPPORT = { adrenaline, resolve, secondWind, installAbilityHooks };
+  window.IRON_PIT_BROWSER_SUPPORT = { adrenaline, resolve, installAbilityHooks };
 })();
