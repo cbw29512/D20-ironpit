@@ -3,9 +3,7 @@ from __future__ import annotations
 from app.content.demo import build_goblin_warrior
 from app.content.monster_trait_bindings_2024 import bind_monster_source_traits_2024
 from app.content.monster_trait_source_audit import trait_issues
-from app.content.monster_catalog import build_monster_catalog, load_monster_rows
-from app.content.roster import build_arena_roster
-from app.domain.catalog import CoverageStatus
+from app.content.monster_catalog import load_monster_rows
 
 
 def _row(name: str) -> dict[str, object]:
@@ -33,25 +31,18 @@ def test_magic_resistance_reuses_contextual_save_advantage() -> None:
     }
 
 
-def test_troll_limb_regeneration_source_shape_is_certifiable() -> None:
-    from app.content.monsters_zero_engine import build_zero_engine_monsters
-
-    raw = next(item for item in build_zero_engine_monsters() if item.name == "Troll Limb")
-    assert raw.regeneration is None
-    limb = bind_monster_source_traits_2024(raw)
-    row = _row("Troll Limb")
-    assert limb.regeneration is not None
-    assert limb.regeneration.amount == 5
-    assert {item.value for item in limb.regeneration.suppressed_by_damage_types} == {"acid", "fire"}
-    assert limb.regeneration.survives_zero_until_turn is True
-    assert limb.source_trait_names == ["Regeneration", "Troll Spawn"]
-    assert trait_issues(limb, row) == []
-
-
-def test_troll_limb_is_raw_ready_in_production_roster() -> None:
-    monster = next(item for item in build_arena_roster("2024").monsters if item.name == "Troll Limb")
-    assert monster.id == "srd-troll-limb"
-    card = next(item for item in build_monster_catalog() if item.name == "Troll Limb")
-    assert card.coverage_status is CoverageStatus.RAW_READY
-    assert card.runnable_template_id == "srd-troll-limb"
-    assert card.blockers == []
+def test_troll_keeps_regeneration_while_loathsome_limbs_is_arena_neutral() -> None:
+    source = build_goblin_warrior().model_copy(update={
+        "name": "Troll",
+        "ruleset": "2024",
+        "source_trait_names": [],
+    })
+    troll = bind_monster_source_traits_2024(source)
+    row = _row("Troll")
+    assert troll.regeneration is not None
+    assert troll.regeneration.amount == 15
+    assert {item.value for item in troll.regeneration.suppressed_by_damage_types} == {"acid", "fire"}
+    assert troll.regeneration.survives_zero_until_turn is True
+    issues = trait_issues(troll, row)
+    assert "uncertified-trait:loathsome-limbs" not in issues
+    assert not any("regeneration" in issue for issue in issues)
