@@ -1,8 +1,8 @@
 # Iron Pit card-art shopping list
 
-Generated from this presentation branch. There are **no licensed raster portraits** in the repository.
+Generated from this presentation branch. Hero pregens have framed color portraits. Monsters still need licensed rasters.
 
-**Real-art inventory:** `docs/artifacts/card-art/REAL_ART_INVENTORY.md`. All 24 unique pregens and every certified monster currently ship an SVG glyph only. Do not treat pipeline demo drawings as source pictures.
+**Real-art inventory:** `docs/artifacts/card-art/REAL_ART_INVENTORY.md`. All 24 unique pregens now have framed color portraits. Monsters still ship SVG glyphs only. Do not treat pipeline demo drawings as source pictures.
 
 - **Heroes keep full-color portraits**, one per character per edition, reused across levels 1–20. Frame/crop with `--mode color-frame`.
 - **Only monsters** are converted to shadow-box silhouettes (`--mode silhouette`).
@@ -25,7 +25,7 @@ Status key:
 
 - `missing` — no licensed source picture yet
 - `inaccurate` — current on-card fallback still depicts the wrong creature or omits a printed defining feature
-- `good` — licensed source is framed (hero) or silhouetted (monster) correctly (none yet)
+- `good` — licensed source is framed (hero) or silhouetted (monster) correctly
 
 ## Unique pregens (one portrait each, reused for levels 1–20)
 
@@ -33,35 +33,35 @@ Status key:
 
 | Portrait id | Name | Class | Status |
 |---|---|---|---|
-| `hero-2014-barbarian` | Rokhan Stonefury | Barbarian | missing |
-| `hero-2014-bard` | Lyra Silverstring | Bard | missing |
-| `hero-2014-cleric` | Seraphine Dawnshield | Cleric | missing |
-| `hero-2014-druid` | Thalen Greenbough | Druid | missing |
-| `hero-2014-fighter` | Karnok Stoneward | Fighter | missing |
-| `hero-2014-monk` | Kael Stillwater | Monk | missing |
-| `hero-2014-paladin` | Aurelia Brightshield | Paladin | missing |
-| `hero-2014-ranger` | Rowan Ashtrail | Ranger | missing |
-| `hero-2014-rogue` | Mara Quickstep | Rogue | missing |
-| `hero-2014-sorcerer` | Nyra Emberveil | Sorcerer | missing |
-| `hero-2014-warlock` | Varek Ashenmark | Warlock | missing |
-| `hero-2014-wizard` | Elian Starweaver | Wizard | missing |
+| `hero-2014-barbarian` | Rokhan Stonefury | Barbarian | good |
+| `hero-2014-bard` | Lyra Silverstring | Bard | good |
+| `hero-2014-cleric` | Seraphine Dawnshield | Cleric | good |
+| `hero-2014-druid` | Thalen Greenbough | Druid | good |
+| `hero-2014-fighter` | Karnok Stoneward | Fighter | good |
+| `hero-2014-monk` | Kael Stillwater | Monk | good |
+| `hero-2014-paladin` | Aurelia Brightshield | Paladin | good |
+| `hero-2014-ranger` | Rowan Ashtrail | Ranger | good |
+| `hero-2014-rogue` | Mara Quickstep | Rogue | good |
+| `hero-2014-sorcerer` | Nyra Emberveil | Sorcerer | good |
+| `hero-2014-warlock` | Varek Ashenmark | Warlock | good |
+| `hero-2014-wizard` | Elian Starweaver | Wizard | good |
 
 ### 2024 — 12 characters
 
 | Portrait id | Name | Class | Status |
 |---|---|---|---|
-| `hero-2024-barbarian` | Rokhan Stonefury | Barbarian | missing |
-| `hero-2024-bard` | Lyra Silverstring | Bard | missing |
-| `hero-2024-cleric` | Seraphine Dawnshield | Cleric | missing |
-| `hero-2024-druid` | Thalen Greenbough | Druid | missing |
-| `hero-2024-fighter` | Karnok Stoneward | Fighter | missing |
-| `hero-2024-monk` | Kael Stillwater | Monk | missing |
-| `hero-2024-paladin` | Aurelia Brightshield | Paladin | missing |
-| `hero-2024-ranger` | Rowan Ashtrail | Ranger | missing |
-| `hero-2024-rogue` | Mara Quickstep | Rogue | missing |
-| `hero-2024-sorcerer` | Nyra Emberveil | Sorcerer | missing |
-| `hero-2024-warlock` | Varek Ashenmark | Warlock | missing |
-| `hero-2024-wizard` | Elian Starweaver | Wizard | missing |
+| `hero-2024-barbarian` | Rokhan Stonefury | Barbarian | good |
+| `hero-2024-bard` | Lyra Silverstring | Bard | good |
+| `hero-2024-cleric` | Seraphine Dawnshield | Cleric | good |
+| `hero-2024-druid` | Thalen Greenbough | Druid | good |
+| `hero-2024-fighter` | Karnok Stoneward | Fighter | good |
+| `hero-2024-monk` | Kael Stillwater | Monk | good |
+| `hero-2024-paladin` | Aurelia Brightshield | Paladin | good |
+| `hero-2024-ranger` | Rowan Ashtrail | Ranger | good |
+| `hero-2024-rogue` | Mara Quickstep | Rogue | good |
+| `hero-2024-sorcerer` | Nyra Emberveil | Sorcerer | good |
+| `hero-2024-warlock` | Varek Ashenmark | Warlock | good |
+| `hero-2024-wizard` | Elian Starweaver | Wizard | good |
 
 Edition isolation is mandatory: do not reuse a 2014 portrait for the 2024 counterpart.
 

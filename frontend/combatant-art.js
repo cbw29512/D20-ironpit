@@ -95,5 +95,29 @@
     }
   }
 
+  const HERO_NAMES = {
+    barbarian: "Rokhan Stonefury", bard: "Lyra Silverstring", cleric: "Seraphine Dawnshield",
+    druid: "Thalen Greenbough", fighter: "Karnok Stoneward", monk: "Kael Stillwater",
+    paladin: "Aurelia Brightshield", ranger: "Rowan Ashtrail", rogue: "Mara Quickstep",
+    sorcerer: "Nyra Emberveil", warlock: "Varek Ashenmark", wizard: "Elian Starweaver",
+  };
+
+  function heroPortraits() {
+    const entries = [];
+    for (const ruleset of ["2014", "2024"]) {
+      for (const [classId, name] of Object.entries(HERO_NAMES)) {
+        entries.push({
+          portrait_id: `hero-${ruleset}-${classId}`,
+          src: `assets/portraits/heroes/hero-${ruleset}-${classId}.webp`,
+          alt: `${name} ${ruleset}`,
+          license: "Iron Pit pregen portrait",
+          source: "Chris-approved painterly pregen portraits",
+        });
+      }
+    }
+    return entries;
+  }
+
+  register(heroPortraits());
   window.IRON_PIT_COMBATANT_ART = { assetFor, candidateIds, markup, portraitId, provenance, register };
 })();

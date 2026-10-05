@@ -18,6 +18,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageOps
 logger = logging.getLogger(__name__)
 
 CANVAS = (512, 640)
+HERO_CANVAS = (480, 640)
 PADDING_RATIO = 0.08
 INK = (12, 10, 8, 255)
 OUTLINE = (201, 163, 90, 255)
@@ -130,7 +131,7 @@ def frame_hero_portrait(image: Image.Image) -> Image.Image:
     try:
         rgba = image.convert("RGBA")
         width, height = rgba.size
-        target = CANVAS[0] / CANVAS[1]
+        target = HERO_CANVAS[0] / HERO_CANVAS[1]
         current = width / max(1, height)
         if current > target:
             new_width = max(1, int(height * target))
@@ -138,16 +139,16 @@ def frame_hero_portrait(image: Image.Image) -> Image.Image:
             box = (left, 0, left + new_width, height)
         else:
             new_height = max(1, int(width / target))
-            top = max(0, int((height - new_height) * 0.18))
+            top = max(0, int((height - new_height) * 0.12))
             box = (0, top, width, min(height, top + new_height))
-        cropped = rgba.crop(box).resize(CANVAS, Image.Resampling.LANCZOS)
-        return cropped.filter(ImageFilter.UnsharpMask(radius=1.2, percent=80, threshold=2))
+        cropped = rgba.crop(box).resize(HERO_CANVAS, Image.Resampling.LANCZOS)
+        return cropped.filter(ImageFilter.UnsharpMask(radius=1.1, percent=70, threshold=2))
     except Exception:
         logger.exception("Failed to frame a hero portrait.")
         raise
 
 
-def process_file(source: Path, destination: Path, mode: str = "silhouette") -> Path:
+def process_file(source: Path, destination: Path, mode: str = "silhouette", quality: int = 80) -> Path:
     try:
         if source.resolve() == destination.resolve():
             raise ValueError("Refusing to overwrite an original portrait.")
@@ -156,7 +157,8 @@ def process_file(source: Path, destination: Path, mode: str = "silhouette") -> P
             destination.unlink()
         with Image.open(source) as image:
             processed = frame_hero_portrait(image) if mode == "color-frame" else silhouette_from_image(image)
-            processed.save(destination, "WEBP", quality=92, method=6)
+            save_quality = 92 if mode == "silhouette" else quality
+            processed.save(destination, "WEBP", quality=save_quality, method=6)
         logger.info("Wrote %s %s from %s", mode, destination, source)
         return destination
     except Exception:
@@ -164,7 +166,7 @@ def process_file(source: Path, destination: Path, mode: str = "silhouette") -> P
         raise
 
 
-def process_tree(source_dir: Path, destination_dir: Path, mode: str = "silhouette") -> list[Path]:
+def process_tree(source_dir: Path, destination_dir: Path, mode: str = "silhouette", quality: int = 80) -> list[Path]:
     try:
         if source_dir.resolve() == destination_dir.resolve():
             raise ValueError("Input and output directories must be different so originals stay intact.")
@@ -175,7 +177,7 @@ def process_tree(source_dir: Path, destination_dir: Path, mode: str = "silhouett
             if source.suffix.lower() not in SUPPORTED or not source.is_file():
                 continue
             relative = source.relative_to(source_dir).with_suffix(".webp")
-            written.append(process_file(source, destination_dir / relative, mode))
+            written.append(process_file(source, destination_dir / relative, mode, quality))
         return written
     except Exception:
         logger.exception("Portrait export failed for %s", source_dir)
@@ -206,8 +208,8 @@ def _self_test() -> None:
                 raise RuntimeError("Pipeline did not write one silhouette and one color frame.")
             result = Image.open(silhouettes[0]).convert("RGBA")
             color = Image.open(framed[0]).convert("RGBA")
-            if result.size != CANVAS or color.size != CANVAS:
-                raise RuntimeError(f"Canvas was {result.size}/{color.size}, expected {CANVAS}.")
+            if result.size != CANVAS or color.size != HERO_CANVAS:
+                raise RuntimeError(f"Canvas was {result.size}/{color.size}, expected {CANVAS}/{HERO_CANVAS}.")
             opaque = [pixel for pixel in result.getdata() if pixel[3] > 200]
             if len(opaque) < 4000:
                 raise RuntimeError("Silhouette is empty.")
@@ -227,6 +229,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, help="Directory for new processed assets")
     parser.add_argument("--mode", choices=("silhouette", "color-frame"), default="silhouette",
                         help="silhouette = monsters only; color-frame = hero portraits")
+    parser.add_argument("--quality", type=int, default=80, help="WebP quality for processed assets")
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
@@ -236,7 +239,7 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if not args.input or not args.output:
             raise ValueError("Provide --input and --output, or use --self-test.")
-        written = process_tree(args.input, args.output, args.mode)
+        written = process_tree(args.input, args.output, args.mode, args.quality)
         logger.info("Processed %s portrait(s) as %s.", len(written), args.mode)
         return 0
     except Exception:
