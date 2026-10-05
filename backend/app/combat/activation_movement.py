@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.modifier_stack import effective_speed
 from app.combat.reaction_movement import move_toward_with_reactions
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -19,6 +20,7 @@ def resolve_activation_movement(
     speed_fraction: float,
     desired_distance_ft: int = 5,
     turn_key: str | None = None,
+    provokes_opportunity_attacks: bool = True,
 ) -> tuple[list[BattleEvent], int]:
     """Resolve optional movement granted by activating a feature without spending normal turn movement."""
     try:
@@ -29,12 +31,12 @@ def resolve_activation_movement(
         if not living:
             return [], sequence
         target = min(living, key=lambda member: (abs(member.position_ft - mover.position_ft), member.combatant_id))
-        allowance = int(mover.state.template.speed_ft * speed_fraction)
+        allowance = int(effective_speed(mover.state) * speed_fraction)
         if allowance <= 0:
             return [], sequence
 
         normal_remaining = mover.state.movement_remaining_ft
-        mover.state.movement_remaining_ft = normal_remaining + allowance
+        mover.state.movement_remaining_ft = allowance
         try:
             events, sequence, _ = move_toward_with_reactions(
                 sequence,
@@ -44,6 +46,7 @@ def resolve_activation_movement(
                 setup,
                 desired_distance_ft,
                 dice,
+                disengaged=not provokes_opportunity_attacks,
                 turn_key=turn_key,
             )
         finally:
