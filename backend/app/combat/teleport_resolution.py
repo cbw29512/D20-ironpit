@@ -4,17 +4,13 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.encounter_targeting import combatant_distance
-from app.combat.grid_geometry import footprint_distance_ft
-from app.combat.grid_pathing_support import overlapping_occupants
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.combat.suppression_zone_geometry import verbal_casting_blocked
 from app.combat.teleport_cancel import clear_teleport_cancelable_effects
-from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.events import BattleEvent, DamageRollComponent, DiceRoll
+from app.domain.events import BattleEvent
 from app.domain.grid import GridPosition
 from app.domain.teleport_actions import TeleportAction
-from app.domain.weapons_base import DamageType
 
 logger = logging.getLogger(__name__)
 
@@ -55,21 +51,19 @@ def resolve_teleport(
     dice,
     turn_key: str,
 ) -> tuple[list[BattleEvent], int]:
-    """Teleport the caster and optional passenger, or deal 4d6 force and fail if occupied."""
+    """Resolve a pit-banned teleport in place. Destination never changes grid x/y."""
     try:
         if verbal_casting_blocked(caster, setup):
             raise ValueError(f"{action.name} cannot be cast inside a Silence effect.")
         if setup.map_definition is None or caster.state.position is None:
             raise ValueError(f"{action.name} requires the authoritative grid.")
+        if destination is None:
+            raise ValueError(f"{action.name} requires a destination argument.")
         if not is_available(caster.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")
-        if footprint_distance_ft(
-            caster.state.position,
-            caster.state.template.size,
-            destination,
-            caster.state.template.size,
-        ) > action.range_ft:
-            raise ValueError(f"{action.name} destination exceeds its range.")
+        origin = caster.state.position.model_copy(deep=True)
+        # Iron Pit: supplied destinations are ignored; teleport never changes x/y.
+        _ = (destination, dice)
         resource = _resource(caster, action.resource_id)
         if action.resource_id and (resource is None or resource.current_uses < action.resource_cost):
             raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
@@ -78,90 +72,30 @@ def resolve_teleport(
         spend(caster.state, action.action_cost)
         if resource is not None:
             resource.current_uses -= action.resource_cost
-        members = [*setup.heroes, *setup.monsters]
-        occupied = overlapping_occupants(caster, destination, members)
         travelers = [caster, *_passengers(caster, setup, action)]
-        events: list[BattleEvent] = []
-        if occupied:
-            for traveler in travelers:
-                rolls = [dice.roll(6) for _ in range(4)]
-                amount = sum(rolls)
-                hp_before = traveler.state.current_hp
-                apply_damage(
-                    traveler.state,
-                    amount,
-                    damage_types={DamageType.FORCE},
-                    dice=dice,
-                    affected_states=[member.state for member in members],
-                    setup=setup,
-                )
-                events.append(BattleEvent(
-                    sequence=sequence,
-                    round_number=round_number,
-                    event_type="feature",
-                    actor_id=caster.combatant_id,
-                    actor_name=caster.state.template.name,
-                    target_id=traveler.combatant_id,
-                    target_name=traveler.state.template.name,
-                    damage_roll=DiceRoll(notation="4d6", rolls=rolls, modifier=0, total=amount),
-                    damage_components=[DamageRollComponent(
-                        source=action.name, notation="4d6", rolls=rolls, modifier=0,
-                        damage_type=DamageType.FORCE, total=amount, applied_total=amount,
-                    )],
-                    hp_before=hp_before,
-                    hp_after=traveler.state.current_hp,
-                    feature_id=action.id,
-                    animation=action.animation,
-                    description=(
-                        f"{traveler.state.template.name} takes {amount} force damage as "
-                        f"{action.name} fails in an occupied space."
-                    ),
-                ))
-                sequence += 1
-            return events, sequence
-        origin = caster.state.position.model_copy(deep=True)
-        stays_in_place = destination.x == origin.x and destination.y == origin.y
         removed: list[str] = []
-        if stays_in_place:
-            for traveler in travelers:
-                for condition_id in clear_teleport_cancelable_effects(traveler):
-                    if condition_id not in removed:
-                        removed.append(condition_id)
-        else:
-            offset_x = destination.x - origin.x
-            offset_y = destination.y - origin.y
-            for traveler in travelers:
-                if traveler.state.position is None:
-                    continue
-                traveler.state.position = GridPosition(
-                    x=traveler.state.position.x + offset_x,
-                    y=traveler.state.position.y + offset_y,
-                )
-                for condition_id in clear_teleport_cancelable_effects(traveler):
-                    if condition_id not in removed:
-                        removed.append(condition_id)
+        for traveler in travelers:
+            for condition_id in clear_teleport_cancelable_effects(traveler):
+                if condition_id not in removed:
+                    removed.append(condition_id)
         names = ", ".join(item.replace("_", " ").title() for item in removed)
-        description = f"{caster.state.template.name} teleports with {action.name}."
-        if stays_in_place:
-            description = (
-                f"{caster.state.template.name} uses {action.name} without leaving its spot."
-            )
-            if names:
-                description += f" {names} ends."
-        events.append(BattleEvent(
+        description = f"{caster.state.template.name} uses {action.name} without leaving its spot."
+        if names:
+            description += f" {names} ends."
+        events = [BattleEvent(
             sequence=sequence,
             round_number=round_number,
-            event_type="feature" if stays_in_place else "movement",
+            event_type="feature",
             actor_id=caster.combatant_id,
             actor_name=caster.state.template.name,
             feature_id=action.id,
             removed_condition_ids=removed,
             resource_remaining=resource.current_uses if resource is not None else None,
             grid_position_before=origin,
-            grid_position_after=origin if stays_in_place else destination.model_copy(deep=True),
+            grid_position_after=origin,
             animation=action.animation,
             description=description,
-        ))
+        )]
         return events, sequence + 1
     except ValueError:
         raise

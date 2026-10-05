@@ -5,12 +5,13 @@ from app.combat.grapple import apply_grapple
 from app.combat.grid_pathing import movement_step_cost_ft, plan_movement_toward
 from app.combat.pit_engagement import voluntary_destination_leaves_melee
 from app.combat.state import begin_turn, build_combatant_state
-from app.combat.teleport_policy import choose_teleport_action
+from app.combat.teleport_policy import choose_teleport_action, choose_teleport_destination
 from app.combat.teleport_resolution import resolve_teleport
 from app.combat.temporary_terrain import destination_is_difficult_terrain
 from app.combat.timed_conditions import apply_timed_condition
 from app.content.arena_map import build_standard_iron_pit_map
 from app.content.demo import build_goblin_warrior
+from app.content.shared_teleport_spells_2014 import dimension_door_2014
 from app.domain.combatants import ResourceDefinition
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import BattleMapDefinition, GridPosition
@@ -42,17 +43,20 @@ def _member(
     *,
     fly_ft: int = 0,
     teleport: bool = False,
+    teleport_action: TeleportAction | None = None,
 ) -> EncounterCombatant:
     updates: dict[str, object] = {
         "id": combatant_id,
         "name": combatant_id,
         "movement_modes": MovementModes(walk_ft=30, fly_ft=fly_ft),
     }
-    if teleport:
-        updates["teleport_actions"] = [_misty_step()]
-        updates["resources"] = [
-            ResourceDefinition(id="spell-slot-2", name="2nd-level Slot", max_uses=1),
-        ]
+    action = teleport_action or (_misty_step() if teleport else None)
+    if action is not None:
+        updates["teleport_actions"] = [action]
+        if action.resource_id:
+            updates["resources"] = [
+                ResourceDefinition(id=action.resource_id, name=action.resource_id, max_uses=1),
+            ]
     template = build_goblin_warrior().model_copy(update=updates)
     state = build_combatant_state(template)
     state.position = GridPosition(x=x, y=y)
@@ -184,6 +188,42 @@ def test_misty_step_clears_teleport_cancelable_debuff_without_moving() -> None:
     assert events[0].event_type == "feature"
     assert "restrained" in events[0].removed_condition_ids
     assert "without leaving its spot" in events[0].description
+
+
+def test_dimension_door_clears_teleport_cancelable_debuff_without_moving() -> None:
+    action = dimension_door_2014()
+    caster = _member("caster", "heroes", 6, 6, teleport_action=action)
+    enemy = _member("enemy", "monsters", 7, 6)
+    setup = _setup(caster, enemy)
+    origin = caster.state.position.model_copy(deep=True)
+    assert apply_timed_condition(
+        caster.state,
+        "restrained",
+        "enemy",
+        source_effect_id="ground-snare",
+        source_is_magical=True,
+        ground_contact=True,
+        ends_on_teleport=True,
+        use_default_poison_recovery=False,
+    ) == "restrained"
+    apply_grapple(caster.state, "enemy", 12, 5, restrains=True)
+    begin_turn(caster.state)
+
+    events, _ = resolve_teleport(
+        1, 1, caster, setup, action, GridPosition(x=2, y=2),
+        FixedDiceProvider([1]), "1:caster",
+    )
+
+    assert caster.state.position == origin
+    assert caster.state.position != GridPosition(x=2, y=2)
+    assert "restrained" not in caster.state.active_effect_ids
+    assert caster.state.grapple_sources == []
+    assert events[0].feature_id == "dimension-door"
+    assert events[0].event_type == "feature"
+    assert "Dimension Door" in events[0].description
+    assert "without leaving its spot" in events[0].description
+    assert "restrained" in events[0].removed_condition_ids
+    assert choose_teleport_destination(caster, setup, action) == origin
 
 
 def test_creature_cannot_kite_out_of_melee_by_flying_or_running() -> None:

@@ -2,7 +2,6 @@
   "use strict";
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
-  const G = () => window.IRON_PIT_BROWSER_GRID_GEOMETRY;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const P = () => window.IRON_PIT_BROWSER_SPELLCASTING;
 
@@ -16,44 +15,15 @@
       .slice(0, action.passengerCount);
   }
 
-  function occupied(caster, destination, setup) {
-    return [...setup.heroes, ...setup.monsters].some((member) =>
-      member.combatant_id !== caster.combatant_id && member.state.is_alive && !member.state.is_dead
-      && member.state.position
-      && G().footprintDistanceFt(
-        destination, caster.state.template.size, member.state.position, member.state.template.size,
-      ) === 0);
-  }
-
   function chooseDestination(caster, setup, action) {
-    if (!setup.map_definition || !caster.state.position) return null;
-    const enemies = caster.side === "heroes" ? setup.monsters : setup.heroes;
-    const living = enemies.filter((enemy) => enemy.state.is_alive && !enemy.state.is_dead && enemy.state.position);
-    if (!living.length) return null;
-    const target = living.slice().sort((a, b) =>
-      S().distance(caster, a) - S().distance(caster, b) || a.combatant_id.localeCompare(b.combatant_id))[0];
-    if (S().distance(caster, target) <= 5) return null;
-    let best = null;
-    let bestKey = null;
-    for (let x = 0; x < setup.map_definition.width_squares; x += 1) {
-      for (let y = 0; y < setup.map_definition.height_squares; y += 1) {
-        const destination = { x, y };
-        if (occupied(caster, destination, setup)) continue;
-        if (G().footprintDistanceFt(
-          caster.state.position, caster.state.template.size, destination, caster.state.template.size,
-        ) > action.range) continue;
-        const distance = G().footprintDistanceFt(
-          destination, caster.state.template.size, target.state.position, target.state.template.size,
-        );
-        const better = bestKey == null
-          || distance < bestKey[0] || (distance === bestKey[0] && (x < bestKey[1] || (x === bestKey[1] && y < bestKey[2])));
-        if (better) {
-          best = destination;
-          bestKey = [distance, x, y];
-        }
-      }
+    try {
+      if (!setup || !action) throw new Error("Teleport destination choice requires a setup and action.");
+      if (!caster?.state?.position) return null;
+      return { ...caster.state.position };
+    } catch (error) {
+      console.error("Failed browser teleport destination", { caster: caster?.combatant_id, error });
+      throw error;
     }
-    return best;
   }
 
   function choose(caster, setup, turnKey) {
@@ -76,73 +46,43 @@
   }
 
   function resolve(sequence, round, caster, setup, action, destination, turnKey) {
-    if (window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.verbalBlocked(caster, setup)) {
-      throw new Error(`${action.name} cannot be cast inside a Silence effect.`);
-    }
-    if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.actionCost} is unavailable for ${action.name}.`);
-    if (action.expendsSpellSlot) P()?.markSlotSpellCast?.(caster.state, turnKey);
-    E().spend(caster.state, action.actionCost);
-    if (action.resourceId) caster.state.resources[action.resourceId] -= action.resourceCost || 1;
-    const travelers = [caster, ...passengers(caster, setup, action)];
-    const events = [];
-    if (occupied(caster, destination, setup)) {
-      for (const traveler of travelers) {
-        const rolls = window.IRON_PIT_DICE.rollMany(4, 6);
-        const amount = rolls.reduce((sum, roll) => sum + roll, 0);
-        const hpBefore = traveler.state.current_hp;
-        window.IRON_PIT_BROWSER_ATTACK.applyDamage(
-          traveler.state, amount, false, ["force"],
-          [...setup.heroes, ...setup.monsters].map((member) => member.state), setup,
-        );
-        events.push({
-          sequence: sequence++, round_number: round, event_type: "feature",
-          actor_id: caster.combatant_id, actor_name: caster.state.template.name,
-          target_id: traveler.combatant_id, target_name: traveler.state.template.name,
-          damage_roll: { notation: "4d6", rolls, modifier: 0, total: amount },
-          hp_before: hpBefore, hp_after: traveler.state.current_hp,
-          feature_id: action.id, animation: action.animation || "teleport",
-          description: `${traveler.state.template.name} takes ${amount} force damage as ${action.name} fails in an occupied space.`,
-        });
+    try {
+      if (window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.verbalBlocked(caster, setup)) {
+        throw new Error(`${action.name} cannot be cast inside a Silence effect.`);
       }
-      return { events, sequence };
-    }
-    const origin = { ...caster.state.position };
-    const staysInPlace = destination.x === origin.x && destination.y === origin.y;
-    const removed = [];
-    if (staysInPlace) {
+      if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.actionCost} is unavailable for ${action.name}.`);
+      if (!destination) throw new Error(`${action.name} requires a destination argument.`);
+      if (action.expendsSpellSlot) P()?.markSlotSpellCast?.(caster.state, turnKey);
+      E().spend(caster.state, action.actionCost);
+      if (action.resourceId) caster.state.resources[action.resourceId] -= action.resourceCost || 1;
+      const travelers = [caster, ...passengers(caster, setup, action)];
+      const origin = { ...caster.state.position };
+      const removed = [];
       for (const traveler of travelers) {
         for (const conditionId of (window.IRON_PIT_BROWSER_TELEPORT_CANCEL?.clear(traveler) || [])) {
           if (!removed.includes(conditionId)) removed.push(conditionId);
         }
       }
-    } else {
-      const offsetX = destination.x - origin.x;
-      const offsetY = destination.y - origin.y;
-      for (const traveler of travelers) {
-        if (!traveler.state.position) continue;
-        traveler.state.position = { x: traveler.state.position.x + offsetX, y: traveler.state.position.y + offsetY };
-        for (const conditionId of (window.IRON_PIT_BROWSER_TELEPORT_CANCEL?.clear(traveler) || [])) {
-          if (!removed.includes(conditionId)) removed.push(conditionId);
-        }
-      }
-    }
-    const names = removed.map((id) => id.replace(/_/g, " ").replace(/\b\w/g, (ch) => ch.toUpperCase())).join(", ");
-    let description = `${caster.state.template.name} teleports with ${action.name}.`;
-    if (staysInPlace) {
-      description = `${caster.state.template.name} uses ${action.name} without leaving its spot.`;
+      const names = removed.map((id) => id.replace(/_/g, " ").replace(/\b\w/g, (ch) => ch.toUpperCase())).join(", ");
+      let description = `${caster.state.template.name} uses ${action.name} without leaving its spot.`;
       if (names) description += ` ${names} ends.`;
+      return {
+        events: [{
+          sequence, round_number: round, event_type: "feature",
+          actor_id: caster.combatant_id, actor_name: caster.state.template.name,
+          feature_id: action.id, removed_condition_ids: removed,
+          resource_remaining: action.resourceId ? caster.state.resources[action.resourceId] : null,
+          grid_position_before: origin, grid_position_after: origin,
+          animation: action.animation || "teleport",
+          description,
+        }],
+        sequence: sequence + 1,
+      };
+    } catch (error) {
+      console.error("Failed browser teleport resolve", { caster: caster?.combatant_id, error });
+      throw error;
     }
-    events.push({
-      sequence, round_number: round, event_type: staysInPlace ? "feature" : "movement",
-      actor_id: caster.combatant_id, actor_name: caster.state.template.name,
-      feature_id: action.id, removed_condition_ids: removed,
-      resource_remaining: action.resourceId ? caster.state.resources[action.resourceId] : null,
-      grid_position_before: origin, grid_position_after: staysInPlace ? origin : { ...destination },
-      animation: action.animation || "teleport",
-      description,
-    });
-    return { events, sequence: sequence + 1 };
   }
 
-  window.IRON_PIT_BROWSER_TELEPORT = { choose, resolve };
+  window.IRON_PIT_BROWSER_TELEPORT = { choose, chooseDestination, resolve };
 })();
