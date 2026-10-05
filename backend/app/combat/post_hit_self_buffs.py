@@ -25,7 +25,7 @@ def apply_triggered_post_hit_self_buff(
         rule = member.state.template.progression_features.resource_backed_post_hit_damage
         if rule is None or rule.post_hit_self_buff_action_id is None:
             return None
-        if not any(component.source == rule.source_name for component in attack_event.damage_components):
+        if not any(component.source_effect_id == rule.source_id for component in attack_event.damage_components):
             return None
         action = next(
             (
