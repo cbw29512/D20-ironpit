@@ -18,11 +18,11 @@ _MODELED_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _DECLARATIVE_ATTACK_TRAITS = frozenset({"Blood Frenzy"})
-_DECLARATIVE_TEMPLATE_TRAITS = frozenset({"Magic Resistance", "Regeneration"})
+_DECLARATIVE_TEMPLATE_TRAITS = frozenset({"Loathsome Limbs", "Magic Resistance", "Regeneration"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hellish Restoration",
     "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
-    "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness", "Loathsome Limbs", "Mimicry",
+    "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness", "Mimicry",
     "Earth Glide", "Running Leap", "Shark Telepathy", "Spider Climb", "Standing Leap", "Sunlight Sensitivity",
     "Siege Monster", "Training", "Treasure Sense", "Troll Spawn", "Water Breathing", "Web Walker",
 })
@@ -86,6 +86,27 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             issues.append("trait-runtime-mismatch:regeneration")
     elif template.regeneration is not None:
         issues.append("trait-source-missing:regeneration")
+    if "Loathsome Limbs" in expected:
+        matches = [
+            item for item in template.triggered_extra_attack_stacks
+            if item.source_id == "loathsome-limbs"
+        ]
+        if len(matches) != 1:
+            issues.append("trait-runtime-missing:loathsome-limbs")
+        else:
+            item = matches[0]
+            if (
+                item.trigger_damage_type.value != "slashing"
+                or item.trigger_damage_minimum != 15
+                or not item.requires_bloodied
+                or item.max_stacks != 4
+                or item.max_uses != 4
+                or item.exhaustion_per_stack != 1
+                or not item.clears_on_regeneration_heal
+            ):
+                issues.append("trait-runtime-mismatch:loathsome-limbs")
+    elif any(item.source_id == "loathsome-limbs" for item in template.triggered_extra_attack_stacks):
+        issues.append("trait-source-missing:loathsome-limbs")
     if "Blood Frenzy" in expected:
         attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
         if not attacks or any(
