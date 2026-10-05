@@ -71,6 +71,7 @@
           + (extra.option.dice_per_slot_above || 0) * (extra.slot - extra.option.level);
         return {
           source: extra.option.name,
+          sourceId: extra.option.id,
           diceCount: count,
           diceSize: extra.option.dice_size,
           damageBonus: 0,
@@ -92,6 +93,7 @@
       }
       return {
         source: rule.source_name,
+        sourceId: rule.source_id,
         diceCount: count,
         diceSize: rule.dice_size,
         damageBonus: 0,
@@ -109,7 +111,7 @@
       const actionId = rule?.post_hit_self_buff_action_id;
       if (!actionId) return null;
       const outcome = window.IRON_PIT_BROWSER_ATTACK_OUTCOME.requireOutcome(ctx);
-      if (!(outcome.damageComponents || []).some((component) => component.source === rule.source_name)) return null;
+      if (!(outcome.damageComponents || []).some((component) => component.source_effect_id === rule.source_id)) return null;
       const action = (ctx.member.state.template.timed_self_buff_actions || [])
         .find((item) => item.id === actionId);
       if (!action) throw new Error(`Post-hit buff action ${actionId} is not declared.`);
