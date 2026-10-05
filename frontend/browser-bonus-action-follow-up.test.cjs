@@ -23,6 +23,16 @@ window.IRON_PIT_DICE = { roll: () => 4 };
 window.IRON_PIT_BROWSER_TACTICAL_ACTIONS = {
   grants: (member) => member.state.template.bonusTacticalActionGrants || [],
 };
+let movementOptions = null;
+window.IRON_PIT_BROWSER_ACTIVATION_MOVEMENT = {
+  resolve(sequence, round, _member, _setup, options) {
+    movementOptions = options;
+    return {
+      events: [{ sequence, round_number: round, event_type: "movement", description: "moves 15 feet." }],
+      sequence: sequence + 1,
+    };
+  },
+};
 
 load("browser-bonus-action-follow-up.js");
 
@@ -38,6 +48,16 @@ const member = {
           name: "Step of the Wind",
           effects: ["dash"],
           resourceId: null,
+        },
+      ],
+      bonus_action_follow_up_movement_grants: [
+        {
+          source_id: "tactical-shift",
+          source_name: "Tactical Shift",
+          required_trigger_ids: ["second-wind"],
+          speed_fraction: 0.5,
+          desired_distance_ft: 5,
+          provokes_opportunity_attacks: false,
         },
       ],
       bonus_action_follow_up_tactical_grants: [
@@ -87,3 +107,23 @@ const member = {
 }
 
 console.log("Browser Bonus Action follow-up regressions passed.");
+
+
+{
+  member.state.feature_last_turn_keys = {};
+  const moved = window.IRON_PIT_BROWSER_BONUS_ACTION_FOLLOW_UP.resolveMovement(
+    4, 2, member, { heroes: [member], monsters: [] }, "second-wind", "2:kael",
+  );
+  assert.equal(moved.events.length, 1);
+  assert.equal(moved.events[0].feature_id, "tactical-shift");
+  assert.match(moved.events[0].description, /^Tactical Shift:/);
+  assert.equal(movementOptions.speedFraction, 0.5);
+  assert.equal(movementOptions.provokesOpportunityAttacks, false);
+  assert.equal(member.state.feature_last_turn_keys["tactical-shift"], "2:kael");
+
+  member.state.feature_last_turn_keys = {};
+  const wrongTrigger = window.IRON_PIT_BROWSER_BONUS_ACTION_FOLLOW_UP.resolveMovement(
+    5, 2, member, { heroes: [member], monsters: [] }, "adrenaline-rush", "3:kael",
+  );
+  assert.deepEqual(wrongTrigger.events, []);
+}
