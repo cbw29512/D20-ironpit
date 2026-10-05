@@ -72,6 +72,7 @@ class DiceRoll(BaseModel):
 
 class DamageRollComponent(BaseModel):
     source: str
+    source_effect_id: str | None = None
     notation: str
     rolls: list[int]
     modifier: int = 0
