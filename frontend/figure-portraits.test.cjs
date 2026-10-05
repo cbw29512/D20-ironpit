@@ -23,6 +23,12 @@ assert.match(owlbear, /<ellipse|<circle|<path/);
 assert.doesNotMatch(owlbear, /class="head"|class="body"|class="arms"|class="legs"/);
 assert.notEqual(owlbear, owl, "Owlbear and Giant Owl must not share the same portrait silhouette.");
 assert.match(snake, /stroke-linecap="round"/, "Snake portrait should use a coiled silhouette.");
+assert.equal(P.keyFor(monster("Goblin"), { form: "unknown", detail: "none" }), "goblin");
+assert.equal(P.keyFor(monster("Skeleton"), { form: "humanoid", detail: "skeleton" }), "skeleton");
+assert.equal(P.keyFor(monster("Unicorn", "large"), { form: "unknown", detail: "none" }), "unicorn");
+assert.equal(P.keyFor(monster("Giant Shark", "huge"), { form: "fish", detail: "shark" }), "fish");
+assert.notEqual(P.markup(monster("Goblin")), P.markup(monster("Skeleton")));
+assert.notEqual(P.markup(monster("Unicorn", "large")), P.markup(monster("Riding Horse", "large")));
 
 const hero = P.markup({
   name: "Audited Paladin", kind: "character", size: "medium", archetype: "Paladin",

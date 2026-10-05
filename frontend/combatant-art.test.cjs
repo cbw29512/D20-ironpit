@@ -27,6 +27,23 @@ assert.deepEqual(A.provenance(registered), {
   license: "CC-BY-4.0",
   source: "https://example.invalid/source",
 });
+assert.match(A.markup(registered), /class="portrait-image"/);
+assert.match(A.markup(registered), /sizes="/);
+assert.match(A.markup(registered), /onerror=/);
+
+A.register([{
+  portrait_id: "hero-2014-fighter",
+  src: "assets/portraits/silhouettes/hero-2014-fighter.webp",
+  license: "CC0-1.0",
+  source: "level-1 shared portrait",
+}]);
+const level1 = { id: "karnok-stoneward-2014-l1", kind: "character", class_id: "fighter", ruleset: "2014", name: "Karnok Stoneward" };
+const level20 = { id: "karnok-stoneward-2014-l20", kind: "character", class_id: "fighter", ruleset: "2014", name: "Karnok Stoneward" };
+assert.equal(A.portraitId(level1), "hero-2014-fighter");
+assert.equal(A.portraitId(level20), "hero-2014-fighter");
+assert.equal(A.assetFor(level1).src, A.assetFor(level20).src);
+assert.equal(A.assetFor(level1).src, "assets/portraits/silhouettes/hero-2014-fighter.webp");
+
 assert.throws(() => A.register([{ template_id: "broken", src: "x.webp" }]));
 assert.throws(() => A.register([{
   template_id: "srd-test-art", src: "other.webp", license: "MIT", source: "test",
