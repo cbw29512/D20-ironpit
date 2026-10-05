@@ -4,6 +4,7 @@ import logging
 
 from app.combat.defensive_modifier_lifecycle import consume_saving_throw_modifiers, remove_owner_attack_ending_modifiers
 
+from app.combat.effective_senses import effective_sense_range_ft
 from app.content.monster_creature_types import base_creature_type
 from app.domain.models import CombatantState, CombatantTemplate
 from app.domain.modifiers import CombatModifier, ModifierKind
@@ -12,28 +13,45 @@ from app.domain.saving_throw_context import SavingThrowContext
 
 logger = logging.getLogger(__name__)
 
-def _source_type_matches(modifier: CombatModifier, source: CombatantTemplate | None) -> bool:
+def _attacker_template(attacker: CombatantState | CombatantTemplate | None) -> CombatantTemplate | None:
+    try:
+        nested = getattr(attacker, "template", None)
+        if nested is not None and hasattr(nested, "creature_type"):
+            return nested
+        if attacker is not None and hasattr(attacker, "creature_type"):
+            return attacker
+        return None
+    except Exception:
+        logger.exception("Failed to resolve attacker template for defensive modifiers.")
+        raise
+
+
+def _source_type_matches(modifier: CombatModifier, source: CombatantState | CombatantTemplate | None) -> bool:
     if not modifier.source_creature_types:
         return True
-    source_type = base_creature_type(source.creature_type) if source is not None else None
+    template = _attacker_template(source)
+    source_type = base_creature_type(template.creature_type) if template is not None else None
     return source_type is not None and source_type in {item.casefold() for item in modifier.source_creature_types}
 
 def _attacker_sense_bypasses(
     modifier: CombatModifier,
-    attacker: CombatantTemplate,
+    attacker: CombatantState | CombatantTemplate,
     distance_ft: int | None,
 ) -> bool:
-    if distance_ft is None:
-        return False
-    ranges = {
-        "blindsight": attacker.blindsight_ft,
-        "truesight": attacker.truesight_ft,
-    }
-    return any(ranges[sense] >= distance_ft for sense in modifier.bypass_attacker_senses)
+    try:
+        if distance_ft is None:
+            return False
+        return any(
+            effective_sense_range_ft(attacker, sense) >= distance_ft
+            for sense in modifier.bypass_attacker_senses
+        )
+    except Exception:
+        logger.exception("Failed to resolve attacker sense bypass for %s.", modifier.id)
+        raise
 
 def attacks_against_disadvantage_sources(
     defender: CombatantState,
-    attacker: CombatantTemplate,
+    attacker: CombatantState | CombatantTemplate,
     distance_ft: int | None = None,
 ) -> int:
     return sum(

@@ -16,8 +16,10 @@
   );
 
   function sourceSenseRangeFt(observer, senseId) {
+    const senses = window.IRON_PIT_BROWSER_EFFECTIVE_SENSES;
+    if (senses && senses.sourceSenseRangeFt) return senses.sourceSenseRangeFt(observer, senseId);
     try {
-      const template = observer?.template || {};
+      const template = observer?.template || observer || {};
       if (senseId === "blindsight") return Math.max(0, Number(template.blindsight_ft || 0));
       if (senseId === "truesight") return Math.max(0, Number(template.truesight_ft || 0));
       return 0;
@@ -27,10 +29,18 @@
     }
   }
 
+  function hearingBlindsightSuppressed(observer) {
+    const flag = Boolean(observer?.blindsight_requires_hearing || observer?.template?.blindsight_requires_hearing);
+    return flag && has(observer, "deafened");
+  }
+
   function senseIsSuppressed(observer, senseId) {
+    const senses = window.IRON_PIT_BROWSER_EFFECTIVE_SENSES;
+    if (senses && senses.senseIsSuppressed) return senses.senseIsSuppressed(observer, senseId);
     try {
       const modifiers = observer?.active_modifiers || [];
       if (modifiers.some((item) => item.suppressed_sense_id === senseId)) return true;
+      if (senseId === "blindsight" && hearingBlindsightSuppressed(observer)) return true;
       const grants = observer?.template?.sense_suppressors || [];
       return grants.some((grant) => grant.sense_id === senseId
         && (grant.suppressed_while_conditions || []).some((conditionId) => has(observer, conditionId)));
@@ -41,6 +51,8 @@
   }
 
   function effectiveSenseRangeFt(observer, senseId) {
+    const senses = window.IRON_PIT_BROWSER_EFFECTIVE_SENSES;
+    if (senses && senses.effectiveSenseRangeFt) return senses.effectiveSenseRangeFt(observer, senseId);
     try {
       return senseIsSuppressed(observer, senseId) ? 0 : sourceSenseRangeFt(observer, senseId);
     } catch (error) {

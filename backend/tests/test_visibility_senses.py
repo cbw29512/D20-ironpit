@@ -60,6 +60,22 @@ def test_effective_sense_hook_defaults_to_source_range() -> None:
     assert effective_sense_range_ft(observer, "truesight") == 60
 
 
+def test_hearing_flag_suppresses_effective_blindsight_while_deafened() -> None:
+    observer, target = _states(blindsight_ft=30)
+    object.__setattr__(observer.template, "blindsight_requires_hearing", True)
+    object.__setattr__(observer, "blindsight_requires_hearing", True)
+    target.active_effect_ids.append("invisible")
+
+    assert effective_sense_range_ft(observer, "blindsight") == 30
+    assert can_see(observer, target, 30) is True
+    observer.active_effect_ids.append("deafened")
+    assert effective_sense_range_ft(observer, "blindsight") == 0
+    assert can_see(observer, target, 30) is False
+    observer.active_effect_ids.remove("deafened")
+    assert observer.template.blindsight_ft == 30
+    assert effective_sense_range_ft(observer, "blindsight") == 30
+
+
 def test_truesight_removes_unseen_attack_penalty_inside_range() -> None:
     observer, target = _states(truesight_ft=60)
     ordinary, _ = _states()
