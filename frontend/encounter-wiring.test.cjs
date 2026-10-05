@@ -8,7 +8,7 @@ const root = __dirname;
 const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]));
 
-for (const file of ["app.js", "battle-actions.js", "battlefield-picker.js", "battlefield-view.js", "battlefield-replay.js", "turbo-view.js", "combat-review.js"]) {
+for (const file of ["app.js", "battle-actions.js", "battlefield-picker.js", "battlefield-view.js", "battlefield-replay.js", "turbo-view.js", "combat-review.js", "battle-log-export.js"]) {
   const source = fs.readFileSync(path.join(root, file), "utf8");
   const referenced = [
     ...source.matchAll(/\bel\("([^"]+)"\)/g),
@@ -20,7 +20,7 @@ for (const file of ["app.js", "battle-actions.js", "battlefield-picker.js", "bat
 for (const id of [
   "hero-slots", "monster-slots", "fight-button", "step-fight-button", "pit-round", "status",
   "step-session-actions", "next-event-button", "watch-rest-button",
-  "quick-test", "rerun-button", "reset-fight", "load-combat-button",
+  "quick-test", "rerun-button", "reset-fight", "load-combat-button", "download-log-button",
   "combat-review", "combat-review-title", "combat-review-meta", "combat-review-log", "combat-review-close",
   "lab-summary",
   "turbo-count", "turbo-button", "turbo-panel", "turbo-result-title", "turbo-result-summary",
@@ -33,10 +33,18 @@ assert.equal(ids.has("battle-seed"), false, "production battlefield must not exp
 assert.equal(ids.has("instant-mode"), false, "production battlefield must not expose a test-only instant path");
 assert.equal(ids.has("picker-hero"), false, "canonical heroes must not expose a redundant build selector");
 assert.equal(ids.has("distance"), false, "formation combat must not expose a starting-distance control");
-assert.match(html, /<button id="quick-test" type="button">LOAD SAMPLE<\/button>/);
-assert.match(html, /<button id="load-combat-button"[^>]*>Load Combat<\/button>/);
+assert.match(html, /<button id="quick-test" type="button">Sample<\/button>/);
+assert.match(html, /<button id="load-combat-button"[^>]*>Review log<\/button>/);
 assert.match(html, /combat-review\.js/); assert.match(html, /combat-review\.css/);
 assert.match(html, /id="step-fight-button"/); assert.match(html, /id="turbo-count"[^>]+value="100"/);
+assert.match(html, /battle-log-export\.js/);
+assert.match(html, /id="download-log-button"/);
+assert.match(html, />Download log</);
+assert.match(html, /class="pit-options-bar"/);
+assert.ok(html.indexOf('class="pit-options-bar"') < html.indexOf('class="formation-board"'), "options bar sits directly below the six-slot arena");
+assert.ok(html.indexOf('id="pit"') < html.indexOf('id="how-heading"'));
+assert.doesNotMatch(html, /Enter the Pit/);
+assert.match(html, /Pick cards, then press Fight/);
 assert.match(html, /browser-turbo\.js/); assert.match(html, /browser-execution\.js/); assert.match(html, /battle-actions\.js/);
 assert.match(html, /browser-ability-hooks\.js/);
 assert.match(html, /browser-main-action-profiles\.js/); assert.match(html, /browser-main-action-selection\.js/); assert.match(html, /browser-main-action-providers\.js/);
@@ -46,7 +54,7 @@ assert.match(html, /browser-arena-map\.js/); assert.match(html, /browser-grid-ge
 assert.match(html, /browser-grid-movement-support\.js/); assert.match(html, /browser-grid-path-search-support\.js/);
 assert.match(html, /browser-grid-path-search\.js/); assert.match(html, /browser-grid-movement\.js/);
 assert.match(html, /browser-grid-placement\.js/); assert.match(html, /combatant-art\.js/);
-assert.match(html, /2014 Beta combat path · secure Web Crypto dice/);
+assert.match(html, /Ready when both sides have cards/);
 assert.match(html, /browser-offense-value\.js/); assert.match(html, /browser-spell-offense\.js/);
 
 const view = fs.readFileSync(path.join(root, "battlefield-view.js"), "utf8");
@@ -62,9 +70,12 @@ const turbo = fs.readFileSync(path.join(root, "browser-turbo.js"), "utf8");
 const css = fs.readFileSync(path.join(root, "battlefield.css"), "utf8");
 
 assert.match(view, /MAX_SLOTS = 6/); assert.match(app, /MAX_SLOTS = 6/);
+assert.match(view, /class="card-trash"/); assert.match(view, /aria-label="Remove /);
+assert.match(app, /view\(\)\.render\(state, openSlot, removeSlot\)/);
+assert.match(css, /\.card-trash/);
 assert.match(view, /card-concentration/); assert.match(replay, /CONCENTRATING/);
 assert.match(view, /IRON_PIT_COMBATANT_ART/);
-assert.match(app, /Iron Pit ready\. Choose certified pregens and monsters, or load a preset\./);
+assert.match(app, /Iron Pit ready\. Pick heroes and monsters, then press Fight\./);
 assert.match(app, /IRON_PIT_EXECUTION/); assert.match(app, /IRON_PIT_BATTLE_ACTIONS/);
 assert.match(actions, /startLive/); assert.match(actions, /nextEvent/); assert.match(actions, /watchRest/); assert.match(actions, /replayTurbo/);
 assert.match(execution, /function createSession/); assert.match(execution, /function resolveLive/); assert.match(execution, /function resolveReplay/); assert.match(execution, /async function runTurbo/);
@@ -79,6 +90,8 @@ assert.match(engine, /map_definition/); assert.match(engine, /IRON_PIT_BROWSER_A
 assert.match(formation, /HERO_FRONT = 5/); assert.match(formation, /MONSTER_FRONT = 10/);
 assert.match(replay, /initiative-badge/); assert.match(replay, /critical-screen/); assert.match(replay, /fumble-blackout/);
 assert.match(css, /\.battle-card\.turn-active/); assert.match(css, /card-turn-shake/); assert.match(css, /\.battle-card\.battle-dead/);
+assert.match(css, /min-width:720px/); assert.match(css, /min-width:1100px/);
+assert.match(css, /grid-template-columns:1fr/);
 assert.ok(html.indexOf("browser-action-economy.js") < html.indexOf("browser-ability-hooks.js"));
 assert.ok(html.indexOf("browser-ability-hooks.js") < html.indexOf("browser-main-action-profiles.js"));
 assert.ok(html.indexOf("browser-main-action-profiles.js") < html.indexOf("browser-main-action-selection.js"));
@@ -113,7 +126,8 @@ assert.ok(html.indexOf("browser-grid-placement.js") < html.indexOf("browser-engi
 assert.ok(html.indexOf("figure-portraits.js") < html.indexOf("combatant-art.js"));
 assert.ok(html.indexOf("combatant-art.js") < html.indexOf("battlefield-view.js"));
 assert.ok(html.indexOf("battlefield-picker.js") < html.indexOf("app.js"));
-assert.ok(html.indexOf("battlefield-view.js") < html.indexOf("app.js"));
+assert.ok(html.indexOf("battlefield-view.js") < html.indexOf("battle-log-export.js"));
+assert.ok(html.indexOf("battle-log-export.js") < html.indexOf("app.js"));
 assert.ok(html.indexOf("battlefield-replay.js") < html.indexOf("browser-execution.js"));
 assert.ok(html.indexOf("browser-turbo.js") < html.indexOf("browser-execution.js"));
 assert.ok(html.indexOf("turbo-view.js") < html.indexOf("browser-execution.js"));

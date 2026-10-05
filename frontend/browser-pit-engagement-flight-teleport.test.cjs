@@ -32,6 +32,7 @@ for (const file of [
   "browser-grid-movement.js",
   "browser-teleport-cancel.js",
   "browser-teleport.js",
+  "browser-monsters-2014.js",
 ]) load(file);
 
 const C = window.IRON_PIT_BROWSER_DEBUFF_COUNTERS;
@@ -159,5 +160,22 @@ function member(id, side, x, y, extras = {}) {
   assert.ok(closePlan.path.length);
   assert.ok(closePlan.final_distance_ft <= 5);
   assert.equal(P.leavesMelee(runner, [runner, enemy, closer], closePlan.path[0]), true);
+}
+
+{
+  const footprint = { tiny: 1, small: 1, medium: 1, large: 2, huge: 3, gargantuan: 4 };
+  for (const id of ["2014-flying-snake", "2014-giant-owl", "2014-owl", "2014-pteranodon"]) {
+    const template = window.IRON_PIT_BROWSER_MONSTERS_2014[id];
+    const state = S.buildState(structuredClone(template));
+    state.position = { x: 6, y: 6 };
+    const flyer = { combatant_id: id, side: "monsters", state };
+    const side = footprint[String(template.size).toLowerCase()] || 1;
+    const hero = member("hero-anchor", "heroes", 6 + side, 6);
+    assert.equal((template.movement_modes || {}).fly_ft, 60, `${id} must keep printed fly 60`);
+    assert.equal(F.isFlying(flyer.state), true);
+    assert.equal(P.leavesMelee(flyer, [flyer, hero], { x: 4, y: 6 }), true);
+    assert.deepEqual(M.planToward(map, flyer, hero, [flyer, hero], 40, 60).path, []);
+    assert.deepEqual(flyer.state.position, { x: 6, y: 6 });
+  }
 }
 console.log("Browser pit engagement, flight, and in-place teleport regressions passed.");

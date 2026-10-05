@@ -1,0 +1,7 @@
+# Crawl rules for the planned Iron Pit origin.
+# Origin is the single value window.IRON_PIT_SITE_URL in site-origin.js
+# (planned domain https://ironpit.app — not live until purchased and published).
+User-agent: *
+Allow: /
+
+Sitemap: https://ironpit.app/sitemap.xml

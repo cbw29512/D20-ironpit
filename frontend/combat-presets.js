@@ -102,8 +102,8 @@
         "2024": await window.IRON_PIT_BROWSER_CATALOG.buildCatalog("2024"),
       };
       host.replaceChildren();
-      renderGroup(host, "2014 certified fights", allRecipes().filter((recipe) => recipe.ruleset === "2014"), catalogs, api);
-      renderGroup(host, "2024 certified fights", allRecipes().filter((recipe) => recipe.ruleset === "2024"), catalogs, api);
+      renderGroup(host, "2014 fights", allRecipes().filter((recipe) => recipe.ruleset === "2014"), catalogs, api);
+      renderGroup(host, "2024 fights", allRecipes().filter((recipe) => recipe.ruleset === "2024"), catalogs, api);
     } catch (error) {
       console.error("Combat preset panel initialization failed", error);
       throw error;

@@ -11,6 +11,11 @@ from app.content.monster_bonus_action_source_audit import (
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
+from app.content.monster_save_for_half_2024 import compiled_save_signatures
+from app.content.monster_recharge_save_2024 import recharge_save_coverage_matches
+from app.content.monster_physical_control_2024 import physical_control_coverage_matches
+from app.content.monster_source_audit import _save_ownership_matches, _source_save_signatures
+from app.content.roster import build_arena_roster
 from app.content.monster_reaction_source_audit import (
     parse_parry_ac_bonus,
     parse_reaction_names,
@@ -30,9 +35,9 @@ _CONDITION_OR_CONTROL = re.compile(
     r"\b(blinded|charmed|deafened|frightened|grappled|incapacitated|paralyzed|petrified|poisoned|prone|restrained|stunned|unconscious|push(?:es|ed)?|pull(?:s|ed)?|swallow(?:s|ed)?)\b",
     re.I,
 )
-_COMPLEX_ACTION = re.compile(
-    r"\b(Saving Throw|Failure:|Success:|Temporary Hit Points?|regains?\s+\d+|teleport|Concentration)\b",
-    re.I,
+_SAVE_TEXT = re.compile(r"\b(?:Saving Throw|Failure:|Success:)\b", re.I)
+_NON_SAVE_COMPLEX_ACTION = re.compile(
+    r"\b(?:Temporary Hit Points?|regains?\s+\d+|teleport|Concentration)\b", re.I,
 )
 _DAMAGE_TYPES = r"Acid|Bludgeoning|Cold|Fire|Force|Lightning|Necrotic|Piercing|Poison|Psychic|Radiant|Slashing|Thunder"
 _SUPPORTED_BLOODIED_REPLACEMENT = re.compile(
@@ -79,7 +84,9 @@ def _unmodeled_action_rider(actions: str) -> bool:
     return bool(_HIDDEN_RIDER.search(sanitized))
 
 
-def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[str]:
+def _source_blockers(
+    row: dict[str, object], monster_names: set[str], runtime_template: object | None = None,
+) -> list[str]:
     blockers: list[str] = []
     try:
         traits = parse_trait_names(row.get("traits", ""))
@@ -100,7 +107,8 @@ def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[st
     except ValueError:
         blockers.append("bonus-action-parse")
     try:
-        if parse_limited_use_names(row):
+        limited_use = parse_limited_use_names(row)
+        if limited_use and not recharge_save_coverage_matches(row):
             blockers.append("limited-use")
     except ValueError:
         blockers.append("limited-use-parse")
@@ -121,9 +129,15 @@ def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[st
         blockers.append("dynamic-combatant-lifecycle")
     if not _ATTACK_ROLL.search(actions):
         blockers.append("no-attack-roll")
-    if _COMPLEX_ACTION.search(actions):
+    save_text = bool(_SAVE_TEXT.search(actions))
+    source_save_signatures = _source_save_signatures(actions)
+    save_is_modeled = bool(
+        (runtime_template is not None and _save_ownership_matches(runtime_template, actions))
+        or (source_save_signatures and compiled_save_signatures(row) == source_save_signatures)
+    )
+    if _NON_SAVE_COMPLEX_ACTION.search(actions) or (save_text and not save_is_modeled):
         blockers.append("save-or-complex-action")
-    if _CONDITION_OR_CONTROL.search(actions):
+    if _CONDITION_OR_CONTROL.search(actions) and not physical_control_coverage_matches(row):
         blockers.append("condition-or-control")
     if _unmodeled_action_rider(actions):
         blockers.append("unsupported-action-rider")
@@ -141,6 +155,7 @@ def main() -> None:
             for card in build_monster_catalog()
             if card.coverage_status is CoverageStatus.RAW_READY
         }
+        runtime_by_name = {template.name: template for template in build_arena_roster().monsters}
         safe: list[dict[str, object]] = []
         already_ready: list[str] = []
         blocker_counts: dict[str, int] = {}
@@ -149,7 +164,7 @@ def main() -> None:
         rider_details: list[dict[str, object]] = []
         for row in rows:
             name = str(row["name"])
-            blockers = _source_blockers(row, monster_names)
+            blockers = _source_blockers(row, monster_names, runtime_by_name.get(name))
             for blocker in set(blockers):
                 blocker_counts[blocker] = blocker_counts.get(blocker, 0) + 1
                 blocker_names.setdefault(blocker, []).append(name)

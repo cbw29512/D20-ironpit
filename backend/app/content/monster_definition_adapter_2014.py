@@ -17,9 +17,8 @@ from app.content.monster_innate_support_2014 import (
 from app.content.monster_legendary_bindings_2014 import legendary_action_options_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.content.monster_trait_bindings_2014 import (
-    conditional_attack_advantage_2014,
-    progression_features_2014,
-    sneak_attack_eligible_2014,
+    conditional_attack_advantage_2014, environment_context_reactions_2014,
+    progression_features_2014, sneak_attack_eligible_2014,
 )
 from app.content.monster_legendary_resistance_2014 import (
     legendary_resistance_override_2014,
@@ -184,6 +183,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         regeneration=regeneration_trait_2014(monster),
         save_success_overrides=[legendary_override] if legendary_override else [],
         combat_traits=modeled_combat_traits_2014(monster),
+        environment_context_reactions=environment_context_reactions_2014(monster),
         progression_features=features,
         saving_throw_bonuses=_save_bonuses(monster, scores),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},

@@ -332,6 +332,14 @@ def _detected_monster_mechanics(row: dict[str, object], source_blockers: list[st
         detected.add("multiattack")
     if re.search(r"\bSaving Throw:", actions, re.I):
         detected.add("saving-throw-action")
+    if re.search(
+        r"\b(blinded|charmed|deafened|frightened|grappled|incapacitated|paralyzed|"
+        r"petrified|poisoned|prone|restrained|stunned|unconscious|"
+        r"push(?:es|ed)?|pull(?:s|ed)?|swallow(?:s|ed)?)\b",
+        actions,
+        re.I,
+    ):
+        detected.add("condition-or-control")
     if str(row.get("traits", "")).strip():
         detected.add("trait")
     if str(row.get("bonusActions", "")).strip():
@@ -340,6 +348,16 @@ def _detected_monster_mechanics(row: dict[str, object], source_blockers: list[st
         detected.add("reaction")
     if str(row.get("legendaryActions", "")).strip():
         detected.add("legendary")
+    limited_source = " ".join(
+        str(row.get(field, ""))
+        for field in ("traits", "actions", "bonusActions", "reactions")
+    )
+    if re.search(
+        r"\((?:[^)]*(?:Recharge\s+\d(?:\s*[-–]\s*\d)?|\d+\s*/\s*Day)[^)]*)\)",
+        limited_source,
+        re.I,
+    ):
+        detected.add("limited-use")
     if re.search(r"\b(?:Vulnerabilities|Resistances|Immunities)\b", str(row.get("rawText", "")), re.I):
         detected.add("damage-or-condition-defense")
     return sorted(detected)
@@ -357,7 +375,7 @@ def build_monster_manifest() -> dict[str, Any]:
         name = str(row["name"])
         card = cards[name]
         ready = card.coverage_status is CoverageStatus.RAW_READY
-        source_blockers = _source_blockers(row, monster_names)
+        source_blockers = _source_blockers(row, monster_names, runtime_by_name.get(name))
         blockers = [] if ready else sorted(set([*card.blockers, *source_blockers]))
         detected = _detected_monster_mechanics(row, source_blockers)
         unsupported = [] if ready else sorted(set(source_blockers or card.blockers))

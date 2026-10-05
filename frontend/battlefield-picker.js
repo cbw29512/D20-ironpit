@@ -54,10 +54,10 @@
     function refresh() {
       const chosen = chosenHero(state);
       el("picker-note").textContent = ready(chosen)
-        ? `${chosen.name} · ${chosen.class_name} ${chosen.level} is RAW-certified for automated combat.`
-        : `${chosen?.name || "This hero"} level ${levelSelect.value} is not RAW-certified yet.`;
+        ? `${chosen.name} · ${chosen.class_name} ${chosen.level} is ready to fight.`
+        : `${chosen?.name || "This hero"} level ${levelSelect.value} is not available yet.`;
       el("confirm-card").disabled = !ready(chosen);
-      el("confirm-card").textContent = ready(chosen) ? "Add to Slot" : "Certification Pending";
+      el("confirm-card").textContent = ready(chosen) ? "Add to slot" : "Not available";
       renderPreview(chosen, "heroes");
     }
     heroSelect.value = fallback.class_id; levelSelect.value = String(fallback.level);
@@ -67,9 +67,9 @@
   function monsterNote(state, rows, chosen) {
     const certified = rows.filter(ready).length;
     if (!rows.length) return "No monsters exist at this Challenge Rating.";
-    if (chosen && !ready(chosen)) return `${chosen.name} is in the catalog, but its outcome-changing combat mechanics are still being RAW-certified.`;
-    if (state.ruleset === "2014") return `${rows.length} certified 2014 test monster${rows.length === 1 ? "" : "s"} available in this lane.`;
-    return `${rows.length} SRD monster${rows.length === 1 ? "" : "s"} shown · ${certified} RAW-ready for automated combat.`;
+    if (chosen && !ready(chosen)) return `${chosen.name} is listed, but is not ready to fight yet.`;
+    if (state.ruleset === "2014") return `${rows.length} 2014 monster${rows.length === 1 ? "" : "s"} at this Challenge Rating.`;
+    return `${rows.length} monster${rows.length === 1 ? "" : "s"} shown · ${certified} ready to fight.`;
   }
 
   function populateMonster(state, existing, side = "monsters") {
@@ -81,13 +81,13 @@
       const chosen = rows.find((monster) => monster.id === monsterSelect.value) || null;
       el("picker-note").textContent = monsterNote(state, rows, chosen);
       el("confirm-card").disabled = !ready(chosen);
-      el("confirm-card").textContent = ready(chosen) ? "Add to Slot" : "Certification Pending";
+      el("confirm-card").textContent = ready(chosen) ? "Add to slot" : "Not available";
       renderPreview(chosen, "monsters");
     }
     function refreshMonsters() {
       const rows = P().sortedMonsters(all, crSelect.value); monsterSelect.replaceChildren();
       rows.forEach((monster) => monsterSelect.append(option(
-        monster.id, `CR ${monster.challenge_rating} · ${monster.name}${ready(monster) ? " · RAW READY" : " · certification pending"}`,
+        monster.id, `CR ${monster.challenge_rating} · ${monster.name}${ready(monster) ? "" : " · not available"}`,
         monster.id === existing?.id,
       )));
       const existingShown = existing && rows.some((monster) => monster.id === existing.id), firstReady = rows.find(ready);
@@ -116,7 +116,7 @@
     el("picker-title").textContent = existing ? `Change ${existing.name}` : side === "monsters" ? "Choose a monster" : "Choose a hero";
     const useMonsterPicker = side === "monsters";
     el("hero-picker-fields").hidden = useMonsterPicker; el("monster-picker-fields").hidden = !useMonsterPicker;
-    el("remove-card").hidden = !existing; el("confirm-card").textContent = "Add to Slot";
+    el("remove-card").hidden = !existing; el("confirm-card").textContent = "Add to slot";
     if (useMonsterPicker) populateMonster(state, existing, side); else populateHero(state, existing);
     el("card-picker").showModal();
   }

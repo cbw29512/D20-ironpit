@@ -1,0 +1,7 @@
+# GitHub Pages root copy. Canonical published files live in frontend/.
+# Origin is the single value window.IRON_PIT_SITE_URL in frontend/site-origin.js
+# (planned domain https://ironpit.app — not live until purchased and published).
+User-agent: *
+Allow: /
+
+Sitemap: https://ironpit.app/sitemap.xml

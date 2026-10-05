@@ -9,8 +9,8 @@ _ARENA_NEUTRAL_IDS = {
     "awakened-shrub": "False Appearance",
     "awakened-tree": "False Appearance",
     "giant-fire-beetle": "Illumination",
+    "flying-snake": "Flyby",
     "giant-owl": "Flyby",
-    "kobold": "Sunlight Sensitivity",
     "mule": "Beast of Burden",
     "owl": "Flyby",
     "pteranodon": "Flyby",
@@ -28,9 +28,7 @@ def test_established_arena_neutral_traits_admit_exact_source_monsters():
         assert template.ruleset == "2014"
         assert template.id == f"2014-{monster_id}"
         assert template.source_trait_names == monster.trait_names
-        if monster_id == "kobold":
-            assert CombatTrait.PACK_TACTICS in template.combat_traits
-        elif monster_id == "mule":
+        if monster_id == "mule":
             assert template.combat_traits == [CombatTrait.SURE_FOOTED]
         else:
             assert template.combat_traits == []

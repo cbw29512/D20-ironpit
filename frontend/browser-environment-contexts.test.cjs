@@ -163,4 +163,23 @@ const activeSetup = { heroes: [paladin], monsters: [plain], ruleset: "2014" };
 S.beginTurn(paladin.state);
 assert.equal(E.disadvantageSources(plain, activeSetup, "attack_rolls"), 0);
 
+load("browser-monsters-2014.js");
+const koboldTemplate = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-kobold"];
+assert.ok(koboldTemplate);
+assert.deepEqual(koboldTemplate.environment_context_reactions, [sunlightReaction]);
+const boundKobold = member("kobold", "monsters", koboldTemplate, 5);
+const boundPaladin = member("aurelia-bound", "heroes", hero, 0);
+const boundSetup = { heroes: [boundPaladin], monsters: [boundKobold], ruleset: "2014" };
+S.beginTurn(boundPaladin.state);
+B.resolve(1, 1, boundPaladin, nimbus);
+assert.equal(E.inside(boundKobold, boundSetup, "sunlight"), true);
+assert.equal(E.disadvantageSources(boundKobold, boundSetup, "attack_rolls"), 1);
+S.beginTurn(boundKobold.state);
+window.IRON_PIT_DICE = queuedDice([3, 17, 4]);
+const koboldAttack = A.resolveAttack(
+  2, 1, boundKobold, boundPaladin, boundKobold.state.template.attacks[0], 5, { setup: boundSetup },
+);
+assert.equal(koboldAttack.attack_roll.mode, "disadvantage");
+assert.equal(koboldAttack.attack_roll.selected_roll, 3);
+
 console.log("environment context sunlight reaction parity passed.");
