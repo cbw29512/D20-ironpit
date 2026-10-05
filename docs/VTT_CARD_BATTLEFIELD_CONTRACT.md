@@ -193,13 +193,20 @@ may discard a paused Step/replay session; they are disabled while a resolution
 or animation operation is running, preventing stale callbacks from restoring
 discarded results.
 
-The battlefield and its Fight control come immediately after the site
-header. Secondary options that change how a fight runs live on a bar
-directly below the six-slot arena, still inside the battlefield landmark:
-Turbo, sample, reset, step, and review-log. The Fight log comes directly
-below the battlefield, followed by ready-made fights. Result and Turbo
-panels follow those fights. Both website entry pages use this same
-section order.
+The live Pit is the first thing on the page. Compact chrome (title and
+ruleset) sits above it. There is no splash, landing gate, or "Enter the
+Pit" control before the six slots and Fight. Marketing copy may sit
+below the arena after the fight log and ready-made fights.
+
+Layout is mobile-first. Phones stack compact three-across card grids
+with a large Fight control between the hero and monster sides. Tablets
+and desktops use the three-column arena (heroes | Fight | monsters) with
+readable cards. Secondary options that change how a fight runs live on a
+bar directly below the six-slot arena, still inside the battlefield
+landmark: Turbo, sample, reset, step, and review-log. Formation rows
+follow that bar. The Fight log comes directly below the battlefield,
+followed by ready-made fights. Result and Turbo panels follow those
+fights. Both website entry pages use this same section order.
 
 The live Pit is a product arena, not a developer console. Center copy
 and button names tell a buyer what to do: pick heroes and monsters, press

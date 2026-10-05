@@ -21,7 +21,11 @@ for (const page of ["index.html", "frontend/index.html"]) {
   assert.match(html, /<option value="2024">2024<\/option>/);
   assert.match(html, /combat-preset-recipes\.js/);
   assert.match(html, /A pocket dimension where heroes and monsters are drawn in to battle for the enjoyment of an audience/);
-  assert.match(html, /Enter the Pit/);
+  assert.doesNotMatch(html, /Enter the Pit/);
+  assert.match(html, /class="pit-chrome"/);
+  assert.match(html, /How to use the Pit/);
+  assert.ok(html.indexOf('id="pit"') < html.indexOf('id="how-heading"'), "arena must appear before marketing copy");
+  assert.ok(html.indexOf("</main>") < html.indexOf('id="how-heading"'), "marketing copy must sit below the pit");
   assert.match(html, /The laws of the Pit/);
   assert.match(html, /Skip to the Pit/);
   assert.match(html, /<link rel="canonical" href="https:\/\/ironpit\.app\/">/);

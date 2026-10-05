@@ -2,11 +2,11 @@
   display:flex;
   flex-direction:column;
   align-items:stretch;
-  padding:10px 10px 8px;
-  min-height:268px;
+  padding:8px 6px 6px;
+  min-height:132px;
 }
-.battle-card .card-name{padding:2px 36px 0;order:2}
-.battle-card .card-meta{order:3;min-height:2.1em;margin-bottom:2px}
+.battle-card .card-name{padding:2px 24px 0;order:2}
+.battle-card .card-meta{order:3;min-height:0;margin-bottom:1px}
 .battle-card .card-status-lanes{order:4}
 .battle-card .card-hp{order:5}
 .battle-card .hp-text{order:6}
@@ -16,10 +16,10 @@
   place-items:center;
   order:1;
   width:100%;
-  aspect-ratio:1/1;
-  height:auto;
-  max-height:210px;
-  margin:18px 0 6px;
+  height:58px;
+  aspect-ratio:auto;
+  max-height:58px;
+  margin:12px 0 4px;
   transform:none!important;
   overflow:hidden;
   color:#0c0a08;
@@ -120,8 +120,14 @@
 @keyframes portrait-swipe{50%{transform:rotate(-8deg) scale(1.08)}}
 @keyframes portrait-coil{50%{transform:rotate(8deg) scale(.93,1.08)}}
 @keyframes portrait-strike{50%{transform:rotate(-10deg) translateY(-5px) scale(1.06)}}
-@media(max-width:620px){
-  .battle-card.occupied{min-height:236px}
-  .battle-card .fighter-portrait{max-height:148px;margin-top:16px}
+@media(min-width:720px){
+  .battle-card.occupied{min-height:220px;padding:10px}
+  .battle-card .card-name{padding:2px 36px 0}
+  .battle-card .card-meta{min-height:2.1em;margin-bottom:2px}
+  .battle-card .fighter-portrait{aspect-ratio:1/1;height:auto;max-height:140px;margin:16px 0 6px}
+}
+@media(min-width:1100px){
+  .battle-card.occupied{min-height:268px}
+  .battle-card .fighter-portrait{max-height:210px;margin:18px 0 6px}
 }
 @media(prefers-reduced-motion:reduce){.pit-fighter .fighter-portrait .portrait-svg{animation:none!important}}

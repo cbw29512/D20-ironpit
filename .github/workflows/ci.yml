@@ -140,6 +140,8 @@ jobs:
           grep -q 'id="download-log-button"' index.html
           grep -q '>Download log<' index.html
           grep -q 'id="rerun-button"' index.html
+          grep -q 'class="pit-chrome"' index.html
+          ! grep -q 'Enter the Pit' index.html
           ! grep -q 'id="battle-seed"' index.html
           ! grep -q 'id="instant-mode"' index.html
           ! grep -q 'id="distance"' index.html
@@ -256,6 +258,8 @@ jobs:
           grep -q 'id="download-log-button"' frontend/index.html
           grep -q '>Download log<' frontend/index.html
           grep -q 'id="rerun-button"' frontend/index.html
+          grep -q 'class="pit-chrome"' frontend/index.html
+          ! grep -q 'Enter the Pit' frontend/index.html
           grep -q 'id="step-fight-button"' frontend/index.html
           grep -q 'id="next-event-button"' frontend/index.html
           grep -q 'id="watch-rest-button"' frontend/index.html

@@ -41,6 +41,9 @@ assert.match(html, /battle-log-export\.js/);
 assert.match(html, /id="download-log-button"/);
 assert.match(html, />Download log</);
 assert.match(html, /class="pit-options-bar"/);
+assert.ok(html.indexOf('class="pit-options-bar"') < html.indexOf('class="formation-board"'), "options bar sits directly below the six-slot arena");
+assert.ok(html.indexOf('id="pit"') < html.indexOf('id="how-heading"'));
+assert.doesNotMatch(html, /Enter the Pit/);
 assert.match(html, /Pick cards, then press Fight/);
 assert.match(html, /browser-turbo\.js/); assert.match(html, /browser-execution\.js/); assert.match(html, /battle-actions\.js/);
 assert.match(html, /browser-ability-hooks\.js/);
@@ -84,6 +87,8 @@ assert.match(engine, /map_definition/); assert.match(engine, /IRON_PIT_BROWSER_A
 assert.match(formation, /HERO_FRONT = 5/); assert.match(formation, /MONSTER_FRONT = 10/);
 assert.match(replay, /initiative-badge/); assert.match(replay, /critical-screen/); assert.match(replay, /fumble-blackout/);
 assert.match(css, /\.battle-card\.turn-active/); assert.match(css, /card-turn-shake/); assert.match(css, /\.battle-card\.battle-dead/);
+assert.match(css, /min-width:720px/); assert.match(css, /min-width:1100px/);
+assert.match(css, /grid-template-columns:1fr/);
 assert.ok(html.indexOf("browser-action-economy.js") < html.indexOf("browser-ability-hooks.js"));
 assert.ok(html.indexOf("browser-ability-hooks.js") < html.indexOf("browser-main-action-profiles.js"));
 assert.ok(html.indexOf("browser-main-action-profiles.js") < html.indexOf("browser-main-action-selection.js"));

@@ -27,7 +27,8 @@ for (const page of [html, rootHtml]) {
   const sections = [...page.matchAll(/<section\b[^>]*>/g)].map((match) => match[0]);
   const board = sections.findIndex((section) => /class="battlefield"/.test(section));
   assert.ok(board >= 0, "board must exist");
-  assert.match(sections[board], /id="pit"/, "primary CTA must land on the live board");
+  assert.ok(board === 0, "the live arena must be the first section on the page");
+  assert.match(sections[board], /id="pit"/, "the live board is the first visible product surface");
   assert.match(sections[board + 1], /class="log-panel"/, "log must directly follow the board");
   assert.match(sections[board + 2], /class="preset-panel"/, "prebuilt fights must directly follow the log");
 }

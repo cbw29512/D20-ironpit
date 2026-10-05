@@ -33,7 +33,7 @@
   function update(state) {
     try {
       const is2014 = state.ruleset === "2014";
-      const eyebrow = el("ruleset-eyebrow") || document.querySelector("header.hero p.eyebrow");
+      const eyebrow = el("ruleset-eyebrow") || document.querySelector("header.pit-chrome p.eyebrow, header.hero p.eyebrow");
       const editionNote = el("ruleset-edition-note");
       if (eyebrow) eyebrow.textContent = is2014 ? "D&D 5e 2014" : "D&D 5e 2024";
       if (editionNote) editionNote.textContent = is2014
