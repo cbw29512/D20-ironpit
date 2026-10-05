@@ -17,3 +17,4 @@ When #602 lands a Parked blockers section, fold this table there and delete this
 | Attach / Blood Drain | Stirge | Ongoing attach, source-attack lock, detach movement, HP-loss end | New attach rider, not a Grapple rename |
 | Reel / pull | Roper | Tendril attach + pull toward source | Forced-movement pull primitive; only push exists |
 | Engulf | Gelatinous Cube, Shambling Mound | Cube/mound engulf is swallow-shaped plus form-specific extras | Same swallow machine, then extras |
+| Teleport + extra attack | Blink Dog | Recharge Teleport also grants a Bite before or after; `TeleportAction` has no extra-attack rider | In-place teleport (10.1) plus a parameterized extra-attack grant; do not drop the Bite |
