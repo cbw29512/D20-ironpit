@@ -75,8 +75,43 @@ Authority: `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md`; `docs/IRON_PIT_RULES_CONTRAC
 
 ## Parked blockers
 
-Standing instruction: park, record, continue. Revisit this list after the rest of the current family is finished.
+Standing instruction: park, record, continue. Revisit this list after the rest of the current family is finished. Folded from the short-lived `docs/PARKED_BLOCKERS.md` working list after #602/#603/#604.
+
+**2014 poison family (this lane).** Extra poison damage, Poisoned on a failed Con save, repeat-save timing, and half-on-success save-damage already compile through the shared on-hit save / `FailedSaveTimedEffect` / typed-damage primitives. Breath weapons stay out of this family. Remaining poison-named cards are parked because a different family still blocks READY:
 
 | Card / item | Family | Blocker | Why parked | Needed to unpark |
 |---|---|---|---|---|
-| — | — | — | None parked on this commit. | — |
+| Assassin | leftover trait | `source:trait` | Shortsword/crossbow poison save-damage already compiles. Assassinate / Evasion / Sneak Attack remain. | Leftover-trait lane for those three traits |
+| Basilisk | leftover trait | `source:trait` | Bite poison damage already compiles. Petrifying Gaze remains. | Gaze / petrify machine, shared with Cockatrice / Gorgon |
+| Death Dog | leftover trait | `source:trait` | Bite Poisoned save already compiles. Two-Headed remains. | Leftover-trait bind for Two-Headed |
+| Phase Spider | leftover trait | `source:trait` | Bite poison save-damage already compiles. Ethereal Jaunt remains. | Ethereal / jaunt policy |
+| Ettercap; Giant Spider | web / recharge | `attack:complex`, `attack:damage-type`, `mechanic:recharge` | Bite poison already compiles. Web is a breakable restraint plus recharge. | Shared web / breakable-restraint primitive |
+| Otyugh | incomplete slam | `attack:incomplete`, `source:extra-action`, `source:trait` | Bite Poisoned save already compiles. Tentacle Slam and Limited Telepathy remain. | Finish Tentacle Slam, then leftover trait |
+| Giant Toad; Purple Worm | swallow | `mechanic:swallow` | Poison riders compile or are incidental. Swallow/attach is another lane. | Swallow / attach / pull owner |
+| Iron Golem | breath + multiattack | `multiattack:choice-or-binding`, `source:trait` | Poison Breath is out of this family by standing instruction. | Recharge-breath or multiattack-choice lane |
+| Quasit | combined save | `attack:complex` plus Shapechanger / Scare | Same Con save wants fail-only poison damage **and** Poisoned. Still blocked after a bind. | Widen on-hit save to compose save-damage + save-condition; still need extra-action / trait |
+| Homunculus; Sprite; Pseudodragon; Drow | fail-by-5 sleep poison | `failure_margin_escalation` plus Unconscious / `wake-sleeper` | Same missing machine as Sleep Breath. Each card also has another leftover. | Extend FailedSaveTimedEffect with fail-margin + generic wake-sleeper Action |
+| Drider; Deep Gnome; Guardian Naga; Spirit Naga; and other poison casters | spellcasting | `mechanic:spellcasting` plus leftover trait | Poison riders compile where printed on the weapon. Innate/slot spellcasting remains. | Spellcasting family (highest-level / damage-first) |
+
+**2014 recharge-breath leftovers (from #603).** Do not invent these in a poison or defense lane:
+
+| Card / item | Family | Blocker | Why parked | Needed to unpark |
+|---|---|---|---|---|
+| Brass wyrmling / young / adult / ancient | Sleep Breath | Failed-save Unconscious + `wake-sleeper` | No wake-sleeper Action exists. | Same FailedSaveTimedEffect + wake-sleeper machine as the sleep-poison cards |
+| Copper dragons; Stone Golem | Slowing Breath / Slow | `slowed` is not a universal condition | Speed, reactions, action/bonus exclusive, max attacks. | Parameterized slow rider, not a new condition name |
+| Gold dragons | Weakening Breath | `weakened-strength` is not a universal condition | Strength-check / attack Disadvantage needs a timed grant. | Existing Disadvantage grant if it can be timed and repeat-saved |
+| Gorgon | Petrifying Breath | `repeat_save_failure_condition_id: petrified` | Same petrify escalation as Cockatrice. | Shared petrify machine; do not invent here |
+| Adult / ancient metallic dragons | Change Shape | Extra Action that replaces the combatant | Form-replace is arena-unavailable until that policy opens. | Polymorph / form-replace policy |
+| Gibbering Mouther | Blinding Spittle | Recharge + Blinded already compile | Leftover multiattack / extra-action / trait. | Multiattack-complex lane |
+
+**2014 swallow / attach / pull (from #604).** Do not fake these as Grappled. Another agent owns this family:
+
+| Card / item | Family | Blocker | Why parked | Needed to unpark |
+|---|---|---|---|---|
+| Giant Frog; Giant Toad; Purple Worm; Remorhaz; Behir; Kraken; Tarrasque | swallow | Swallowed state | Blinded + Restrained + total cover + start-turn acid + death/regurgitate exit. | New swallow machine |
+| Stirge | attach / Blood Drain | Ongoing attach | Source-attack lock, detach movement, HP-loss end. | New attach rider, not a Grapple rename |
+| Roper | Reel / pull | Tendril attach + pull | Forced-movement pull; only push exists. | Pull primitive |
+| Gelatinous Cube; Shambling Mound | Engulf | Swallow-shaped plus form extras | Same swallow machine, then extras. | Swallow machine first |
+| Blink Dog | Teleport + extra attack | Recharge Teleport also grants a Bite | `TeleportAction` has no extra-attack rider. In-place teleport (10.1) plus a parameterized extra-attack grant. Do not drop the Bite. | Extra-attack grant on teleport |
+
+2024 counterparts after the 2014 octopus unlock stay blocked on their own source. 2024 Giant Octopus Tentacles still need Grappled+Restrained, but Ink Cloud is a 1/Day underwater damage-triggered reaction plus Swim movement. 2024 Octopus Tentacles are damage-only (no grapple) and its Ink Cloud is a different 1/Day underwater reaction. Do not copy 2014 Ink Cloud absence into those 2024 reaction machines.
