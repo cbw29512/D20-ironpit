@@ -3,7 +3,9 @@ from __future__ import annotations
 from app.content.demo import build_goblin_warrior
 from app.content.monster_trait_bindings_2024 import bind_monster_source_traits_2024
 from app.content.monster_trait_source_audit import trait_issues
-from app.content.monster_catalog import load_monster_rows
+from app.content.monster_catalog import build_monster_catalog, load_monster_rows
+from app.content.roster import build_arena_roster
+from app.domain.catalog import CoverageStatus
 
 
 def _row(name: str) -> dict[str, object]:
@@ -42,3 +44,12 @@ def test_troll_limb_regeneration_source_shape_is_certifiable() -> None:
     assert limb.regeneration.survives_zero_until_turn is True
     fingerprinted = limb.model_copy(update={"source_trait_names": ["Regeneration", "Troll Spawn"]})
     assert trait_issues(fingerprinted, row) == []
+
+
+def test_troll_limb_is_raw_ready_in_production_roster() -> None:
+    monster = next(item for item in build_arena_roster("2024").monsters if item.name == "Troll Limb")
+    assert monster.id == "srd-troll-limb"
+    card = next(item for item in build_monster_catalog() if item.name == "Troll Limb")
+    assert card.coverage_status is CoverageStatus.RAW_READY
+    assert card.runnable_template_id == "srd-troll-limb"
+    assert card.blockers == []
