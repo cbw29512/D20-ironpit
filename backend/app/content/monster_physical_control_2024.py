@@ -96,7 +96,6 @@ def compile_physical_controls(row: dict[str, object]) -> list[PhysicalControlBin
     for index, marker in enumerate(markers):
         end = markers[index + 1].start() if index + 1 < len(markers) else len(actions)
         segment = actions[marker.start():end]
-        name = _action_name(actions, marker.start())
         if "Attack Roll:" in marker.group():
             if _UNSUPPORTED_GRAPPLE_DETAIL.search(segment):
                 grapple = None
@@ -105,7 +104,7 @@ def compile_physical_controls(row: dict[str, object]) -> list[PhysicalControlBin
             prone = bool(_PRONE.search(segment) and not _CHARGE_PRONE.search(segment))
             if grapple or prone:
                 compiled.append(PhysicalControlBinding(
-                    action_name=name,
+                    action_name=_action_name(actions, marker.start()),
                     source_kind="attack",
                     max_target_size=_max_size(segment),
                     grapple_escape_dc=int(grapple.group(1)) if grapple else None,
@@ -122,7 +121,7 @@ def compile_physical_controls(row: dict[str, object]) -> list[PhysicalControlBin
         prone = bool(_PRONE.search(segment))
         if grapple or prone:
             compiled.append(PhysicalControlBinding(
-                action_name=name,
+                action_name=_action_name(actions, marker.start()),
                 source_kind="save",
                 max_target_size=_max_size(segment),
                 grapple_escape_dc=int(grapple.group(1)) if grapple else None,
