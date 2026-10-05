@@ -10,7 +10,7 @@ from app.domain.models import CombatantState, DamageType, WeaponAttack
 from app.domain.post_hit_damage import ResourceBackedPostHitDamage
 
 logger = logging.getLogger(__name__)
-BonusDamageSpec = tuple[str, int, int, int, DamageType]
+BonusDamageSpec = tuple[str, int, int, int, DamageType, str]
 
 
 def _payment(
@@ -71,7 +71,7 @@ def post_hit_resource_bonus_damage(
             option, slot_level = extra
             pay_post_hit_spell(attacker, option, slot_level, turn_key)
             count = option.base_dice_count + option.dice_per_slot_above * (slot_level - option.level)
-            return option.name, count, option.dice_size, 0, DamageType(option.damage_type)
+            return option.name, count, option.dice_size, 0, DamageType(option.damage_type), option.id
         if not divine_ready:
             return None
         payment = _payment(attacker, rule, turn_key)
@@ -89,7 +89,7 @@ def post_hit_resource_bonus_damage(
         )
         if base_creature_type(target.template.creature_type) in rule.bonus_target_creature_types:
             count += rule.bonus_target_dice_count
-        return rule.source_name, count, rule.dice_size, 0, DamageType(rule.damage_type)
+        return rule.source_name, count, rule.dice_size, 0, DamageType(rule.damage_type), rule.source_id
     except ValueError:
         raise
     except Exception as exc:
