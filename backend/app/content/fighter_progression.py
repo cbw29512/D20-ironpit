@@ -4,6 +4,7 @@ from app.content.audited_fighter import build_karnok_stoneward
 from app.content.canonical_class_combat_spines import canonical_combat_features
 from app.content.canonical_progression import advance_template_data
 from app.content.fighter_combat_levels import FIGHTER_COMBAT_LEVELS
+from app.content.fighter_second_wind import second_wind_healing_action
 from app.content.hero_combat_feature_registry import (
     compile_progression_feature_fields,
     unsupported_hero_engine_features,
@@ -81,6 +82,7 @@ def _apply_row(data: dict[str, object], level: int) -> None:
         initiative_bonus=dexterity_mod,
         weapon_masteries=list(row.weapon_masteries),
         resources=[item.model_dump() for item in _resources(level)],
+        healing_actions=[second_wind_healing_action(level).model_dump()],
         attack_action=attack_action,
         saving_throw_bonuses={
             "strength": row.proficiency_bonus + strength_mod,
