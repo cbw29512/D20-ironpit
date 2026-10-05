@@ -134,9 +134,11 @@ jobs:
           grep -q 'id="next-event-button"' index.html
           grep -q 'id="watch-rest-button"' index.html
           grep -q 'id="quick-test"' index.html
-          grep -q '>LOAD SAMPLE<' index.html
+          grep -q '>Sample<' index.html
           grep -q 'id="load-combat-button"' index.html
-          grep -q '>Load Combat<' index.html
+          grep -q '>Review log<' index.html
+          grep -q 'id="download-log-button"' index.html
+          grep -q '>Download log<' index.html
           grep -q 'id="rerun-button"' index.html
           ! grep -q 'id="battle-seed"' index.html
           ! grep -q 'id="instant-mode"' index.html
@@ -248,9 +250,11 @@ jobs:
           grep -q 'id="card-picker"' frontend/index.html
           grep -q 'id="combat-fx-overlay"' frontend/index.html
           grep -q 'id="quick-test"' frontend/index.html
-          grep -q '>LOAD SAMPLE<' frontend/index.html
+          grep -q '>Sample<' frontend/index.html
           grep -q 'id="load-combat-button"' frontend/index.html
-          grep -q '>Load Combat<' frontend/index.html
+          grep -q '>Review log<' frontend/index.html
+          grep -q 'id="download-log-button"' frontend/index.html
+          grep -q '>Download log<' frontend/index.html
           grep -q 'id="rerun-button"' frontend/index.html
           grep -q 'id="step-fight-button"' frontend/index.html
           grep -q 'id="next-event-button"' frontend/index.html
@@ -278,6 +282,7 @@ jobs:
           grep -q 'battle-log-format.js' frontend/index.html
           grep -q 'battlefield-picker.js' frontend/index.html
           grep -q 'battlefield-view.js' frontend/index.html
+          grep -q 'battle-log-export.js' frontend/index.html
           grep -q 'battlefield-replay.js' frontend/index.html
           grep -q 'browser-condition-immunity.js' frontend/index.html
           grep -q 'browser-condition-rules.js' frontend/index.html

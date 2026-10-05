@@ -61,7 +61,7 @@
   async function loadCombat(api) {
     const recipe = presets().selected();
     if (!recipe) {
-      el("status").textContent = "Select a purpose-built test fight first.";
+      el("status").textContent = "Select a ready-made fight first.";
       return;
     }
     if (api.state.fighting || (api.state.session && !api.state.session.complete)) return;
@@ -86,7 +86,7 @@
       view().writeLog(session.battle);
       view().showResult(session.battle);
       api.state.hasRun = true;
-      el("lab-summary").textContent = `Load Combat · recorded seed ${recipe.seed} · ${session.rolls.length} deterministic dice rolls.`;
+      el("lab-summary").textContent = `Review log · recorded seed ${recipe.seed} · ${session.rolls.length} dice rolls.`;
       open(recipe, session);
       el("status").textContent = `${recipe.title} recorded log ready for review.`;
     } catch (error) {

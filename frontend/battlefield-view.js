@@ -35,9 +35,9 @@
 
   function emptySlot(side, index, onOpen, _ruleset) {
     const node = document.createElement("button");
-    const addLabel = side === "monsters" ? "ADD MONSTER" : "ADD PREGEN";
+    const addLabel = side === "monsters" ? "Add monster" : "Add hero";
     node.type = "button"; node.className = `battle-card empty-slot ${side}`; node.dataset.slotIndex = String(index);
-    node.innerHTML = `<span class="slot-number">${index + 1}</span><b aria-hidden="true">＋</b><strong>${addLabel}</strong><small>Click to choose a card</small>`;
+    node.innerHTML = `<span class="slot-number">${index + 1}</span><b aria-hidden="true">＋</b><strong>${addLabel}</strong><small>Click to choose</small>`;
     node.addEventListener("click", () => onOpen(side, index)); return node;
   }
 
@@ -89,7 +89,7 @@
     const steps = event.audit?.steps || [];
     if (!steps.length) return null;
     const details = document.createElement("details"), heading = document.createElement("summary"), body = document.createElement("div");
-    details.className = "rules-audit"; heading.textContent = `RULES AUDIT · ${steps.length} step${steps.length === 1 ? "" : "s"}`; body.className = "rules-audit-steps";
+    details.className = "rules-audit"; heading.textContent = `Details · ${steps.length} step${steps.length === 1 ? "" : "s"}`; body.className = "rules-audit-steps";
     steps.forEach((item, index) => {
       const row = document.createElement("div"); row.className = "rules-audit-step";
       row.innerHTML = `<span>${index + 1}</span><b></b><p></p>`;
@@ -117,6 +117,7 @@
       // Replace the visible projection; Step supplies a prefix, Watch the full stream.
       el("battle-log").replaceChildren();
       appendEvents(battle.events || []);
+      window.IRON_PIT_BATTLE_LOG_EXPORT?.remember?.(battle);
       window.IRON_PIT_FORMATION_BOARD?.renderBattle(battle.setup, battle.events || []);
     } catch (error) {
       console.error("Battle event log could not be rendered", error);
@@ -126,6 +127,7 @@
 
   function resetBattleView() {
     el("battle-log").replaceChildren(); el("result-panel").hidden = true;
+    window.IRON_PIT_BATTLE_LOG_EXPORT?.remember?.(null);
     window.IRON_PIT_FORMATION_BOARD?.renderBattle({ heroes: [], monsters: [] }, []);
     for (const node of document.querySelectorAll(".battle-card.occupied")) {
       node.classList.remove("dead"); node.querySelector(".initiative-badge").textContent = "—";

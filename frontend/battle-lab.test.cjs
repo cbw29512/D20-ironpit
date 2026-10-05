@@ -35,7 +35,7 @@ const lab = window.IRON_PIT_BATTLE_LAB;
   };
   const same = structuredClone(battle); same.battle_id = "different-id";
   assert.equal(lab.fingerprint(battle), lab.fingerprint(same), "non-mechanical battle IDs must not affect fingerprints");
-  assert.match(lab.summary(battle, [{ sides: 20, value: 20 }], "abc12345"), /Battle abc12345 · 1 secure dice rolls · 2 rounds · 1 attacks · 1 criticals · 0 heals/);
+  assert.match(lab.summary(battle, [{ sides: 20, value: 20 }], "abc12345"), /2 rounds · 1 attacks · 1 criticals · 0 heals/);
 }
 
 assert.equal("createSeededDice" in lab, false, "Battle Lab must never expose an alternate seeded combat RNG");

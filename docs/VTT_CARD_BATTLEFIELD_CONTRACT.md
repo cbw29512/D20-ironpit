@@ -193,14 +193,24 @@ may discard a paused Step/replay session; they are disabled while a resolution
 or animation operation is running, preventing stale callbacks from restoring
 discarded results.
 
-The battlefield and its fight/reset controls come immediately after the site
-header. The Battle Log comes directly below the battlefield, followed by
-purpose-built/custom fight presets (Chris’s 2026-09-30 layout correction).
-Result and Turbo panels follow the presets. Both website entry pages use
-this same section order.
+The battlefield and its Fight control come immediately after the site
+header. Secondary options that change how a fight runs live on a bar
+directly below the six-slot arena, still inside the battlefield landmark:
+Turbo, sample, reset, step, and review-log. The Fight log comes directly
+below the battlefield, followed by ready-made fights. Result and Turbo
+panels follow those fights. Both website entry pages use this same
+section order.
 
-**Load Combat** (2026-10-04) is a review control in the live-battle action
-cluster. It does not change this section order. When a purpose-built fight is
-selected, it opens a dedicated dialog with that fight's full recorded event
-log so the log can be read without stepping the live board or hunting through
-the page. FIGHT, STEP FIGHT, and TURBO remain the live execution controls.
+The live Pit is a product arena, not a developer console. Center copy
+and button names tell a buyer what to do: pick heroes and monsters, press
+Fight, watch the result, and download the log. Options that change how
+fights run stay on the lower bar. Certification, engine, and beta jargon
+do not belong in the main Pit.
+
+**Review log** (formerly Load Combat, 2026-10-04) is a review control on
+the options bar. It does not change this section order. When a ready-made
+fight is selected, it opens a dedicated dialog with that fight's full
+recorded event log so the log can be read without stepping the live board
+or hunting through the page. Fight, Step, and Turbo remain the live
+execution controls. Download log exports the same recorded fight events
+the on-page log shows; it never invents log text.

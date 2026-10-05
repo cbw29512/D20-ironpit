@@ -20,7 +20,7 @@ function node() {
 const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
 const rootHtml = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 for (const page of [html, rootHtml]) {
-  assert.match(page, />Load Combat</);
+  assert.match(page, />Review log</);
   assert.match(page, /id="load-combat-button"/);
   assert.match(page, /id="combat-review"/);
   assert.match(page, /combat-review\.js/);
@@ -101,7 +101,7 @@ assert.equal(typeof elements.get("load-combat-button").listeners.click, "functio
   assert.match(elements.get("combat-review-title").textContent, /Barbarian vs two Goblins/);
   assert.match(elements.get("combat-review-meta").textContent, /HEROES WIN/);
   assert.match(elements.get("combat-review-meta").textContent, /recorded seed 1701/);
-  assert.match(elements.get("lab-summary").textContent, /Load Combat · recorded seed 1701/);
+  assert.match(elements.get("lab-summary").textContent, /Review log · recorded seed 1701/);
   await elements.get("combat-review-close").listeners.click();
   assert.equal(elements.get("combat-review").hidden, true);
   console.log("Load Combat review presents the recorded seed log without a live step session.");
