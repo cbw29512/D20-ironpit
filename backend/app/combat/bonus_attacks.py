@@ -6,6 +6,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
 from app.combat.damage_reaction_wrappers import resolve_attack_event_chain
 from app.combat.pit_policy import choose_attack
+from app.combat.timed_attack_cap import turn_attack_allowed
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -38,7 +39,7 @@ def resolve_bonus_attack_grant(
             spend_action_resource(state, grant)
             events: list[BattleEvent] = []
             for strike_index in range(grant.attack_count):
-                if state.turn_terminated:
+                if state.turn_terminated or not turn_attack_allowed(state):
                     break
                 current = choice if strike_index == 0 else choose_attack(attacker, setup, grant.attack_ids)
                 if current is None:

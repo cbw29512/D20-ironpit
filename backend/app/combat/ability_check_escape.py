@@ -59,7 +59,7 @@ def resolve_escape_check(
         dc = effect.escape_check_dc
         if ability is None or dc is None:
             raise ValueError(f"{actor.state.template.name} escape check is missing ability or DC.")
-        disadvantage = ability_check_disadvantage_sources(actor.state)
+        disadvantage = ability_check_disadvantage_sources(actor.state, ability)
         disadvantage += int(
             has_condition(actor.state, POISONED_EFFECT_ID)
             or has_condition(actor.state, FRIGHTENED_EFFECT_ID)

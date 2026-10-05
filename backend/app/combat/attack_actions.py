@@ -19,6 +19,7 @@ from app.combat.opening_burst import opening_feature_id
 from app.combat.pit_policy import flexible_slot_has_both
 from app.combat.saving_throws import resolve_save_action
 from app.combat.stunning_strike_2014 import resolve_stunning_strike
+from app.combat.timed_attack_cap import turn_attack_allowed
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack, WeaponAttackKind
 
@@ -77,6 +78,8 @@ def resolve_attack_action(
                 continue
             chosen_attack = attack_choice(attacker, setup, slot, ranged_backline=split_this_slot)
             if chosen_attack is not None:
+                if not turn_attack_allowed(attacker.state):
+                    break
                 target, attack, distance = chosen_attack
                 if split_this_slot and attack.weapon.attack_kind is WeaponAttackKind.RANGED:
                     ranged_split_used = True

@@ -4,6 +4,7 @@ from app.combat.undead_fortitude import consume_survival_save_log
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 import logging
 from app.combat.action_economy import is_available, spend
+from app.combat.timed_attack_cap import register_turn_attack
 from app.combat.attack_roll_resolution import resolve_attack_roll
 from app.combat.attack_d20_outcome import resolve_attack_d20_outcome
 from app.combat.attack_effect_resolution import resolve_attack_effects
@@ -32,6 +33,7 @@ def resolve_attack(
     reaction_roller: EncounterCombatant | None = None,
 ) -> BattleEvent:
     try:
+        register_turn_attack(attacker, off_turn=off_turn)
         if spend_action and not is_available(attacker, "action"):
             raise ValueError("Action is not available for an attack.")
         weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id

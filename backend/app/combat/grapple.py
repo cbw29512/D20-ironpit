@@ -130,7 +130,7 @@ def _check_mode(state: CombatantState, strength_check: bool) -> RollMode:
     advantage = int(strength_check and (
         rage_active(state) or state.template.progression_features.athletics_advantage
     ))
-    disadvantage = ability_check_disadvantage_sources(state)
+    disadvantage = ability_check_disadvantage_sources(state, "strength" if strength_check else "dexterity")
     disadvantage += int(has_condition(state, POISONED_EFFECT_ID) or has_condition(state, FRIGHTENED_EFFECT_ID))
     return ability_check_roll_mode(
         state,

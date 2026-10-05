@@ -111,7 +111,8 @@
     const base = Math.max(0, state.template.speed_ft + speedDelta);
     const multiplier = (state.active_modifiers || []).filter((item) => item.kind === "speed-multiplier")
       .reduce((value, item) => value * (item.multiplier ?? 1), 1);
-    const adjusted = Math.max(0, Math.trunc(base * multiplier));
+    const timedMultiplier = window.IRON_PIT_BROWSER_TIMED_CONTROL?.speedMultiplier(state) ?? 1;
+    const adjusted = Math.max(0, Math.trunc(base * multiplier * timedMultiplier));
     return X()?.effectiveSpeed(state, adjusted) ?? adjusted;
   };
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;

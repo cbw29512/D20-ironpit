@@ -65,7 +65,7 @@
   }
 
   function beginTurn(state) {
-    state.turn_terminated = false; state.turn_termination_reason = null; state.disengaged_this_turn = false; state.voluntary_turn_activity = null;
+    state.turn_terminated = false; state.turn_termination_reason = null; state.disengaged_this_turn = false; state.voluntary_turn_activity = null; state.attacks_this_turn = 0;
     const incapacitated = Q().incapacitated(state);
     state.action_available = !incapacitated;
     state.bonus_action_available = !incapacitated;

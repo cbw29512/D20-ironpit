@@ -66,6 +66,7 @@ def apply_timed_condition(
     ground_contact: bool = False,
     ends_on_teleport: bool = False,
     source_effect_immunity_on_end: bool = False,
+    control_limits=None,
 ) -> str | None:
     """Apply one source-owned timed condition and its optional passive defenses.
 
@@ -136,6 +137,7 @@ def apply_timed_condition(
             ground_contact=ground_contact,
             ends_on_teleport=ends_on_teleport or ground_contact,
             source_effect_immunity_on_end=source_effect_immunity_on_end,
+            control_limits=control_limits,
         ))
         if effect_id not in state.active_effect_ids:
             state.active_effect_ids.append(effect_id)
