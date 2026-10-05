@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.bonus_action_follow_up import BonusActionFollowUpTacticalGrant
+from app.domain.bonus_action_follow_up import BonusActionFollowUpMovementGrant, BonusActionFollowUpTacticalGrant
 from app.domain.character_builds import AbilityName
 from app.domain.debuffs import DebuffCounter
 from app.domain.deferred_save_effect import DeferredSaveEffect
@@ -114,6 +114,7 @@ class ProgressionCombatFeatures(BaseModel):
     delayed_resource_refill: DelayedResourceRefill | None = None
     end_turn_condition_removal: EndTurnConditionRemovalGrant | None = None
     bonus_action_follow_up_tactical_grants: list[BonusActionFollowUpTacticalGrant] = Field(default_factory=list)
+    bonus_action_follow_up_movement_grants: list[BonusActionFollowUpMovementGrant] = Field(default_factory=list)
     deferred_save_effect: DeferredSaveEffect | None = None
     area_spell_ally_protection: AreaSpellAllyProtectionGrant | None = None
     alternate_spell_cast_grants: list[AlternateSpellCastGrant] = Field(default_factory=list)
@@ -178,4 +179,3 @@ class ProgressionCombatFeatures(BaseModel):
     death_save_advantage: bool = False
     death_save_recovery_minimum: int = Field(default=20, ge=2, le=20)
     critical_move_fraction: float = Field(default=0.0, ge=0.0, le=1.0)
-    tactical_shift_fraction: float = Field(default=0.0, ge=0.0, le=1.0)

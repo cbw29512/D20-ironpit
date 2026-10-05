@@ -6,7 +6,7 @@ from app.combat.resources import resource_available
 
 from app.combat.area_save_actions import choose_area_save, resolve_area_save
 from app.combat.barbarian import finalize_rage_turn
-from app.combat.bonus_action_follow_up import resolve_bonus_action_follow_up
+from app.combat.bonus_action_follow_up import resolve_bonus_action_follow_up, resolve_bonus_action_follow_up_movement
 from app.combat.bonus_attacks import resolve_bonus_attack_grant
 from app.combat.condition_counter_policy import choose_condition_counter_spell
 from app.combat.cleric_channel_support import resolve_channel_support
@@ -30,6 +30,22 @@ from app.domain.models import BattleEvent
 logger = logging.getLogger(__name__)
 
 
+def _resolve_bonus_action_follow_ups(
+    events, sequence, round_number, member, setup, triggering_feature_id, turn_key, dice,
+):
+    tactical = resolve_bonus_action_follow_up(
+        sequence, round_number, member, triggering_feature_id, turn_key, dice,
+    )
+    if tactical is not None:
+        events.append(tactical)
+        sequence += 1
+    movement_events, sequence = resolve_bonus_action_follow_up_movement(
+        sequence, round_number, member, setup, triggering_feature_id, turn_key, dice,
+    )
+    events.extend(movement_events)
+    return events, sequence
+
+
 def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=True):
     try:
         if allow_surge:
@@ -42,32 +58,18 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
         )
         events.extend(bonus_attack_events)
         if bonus_attack_events:
-            follow_up = resolve_bonus_action_follow_up(
-                sequence,
-                round_number,
-                attacker,
-                bonus_attack_events[-1].feature_id,
-                turn_key,
-                dice,
+            events, sequence = _resolve_bonus_action_follow_ups(
+                events, sequence, round_number, attacker, setup,
+                bonus_attack_events[-1].feature_id, turn_key, dice,
             )
-            if follow_up is not None:
-                events.append(follow_up)
-                sequence += 1
         defensive = resolve_defensive_tactical_grant(sequence, round_number, attacker, dice)
         if defensive is not None:
             events.append(defensive)
             sequence += 1
-            follow_up = resolve_bonus_action_follow_up(
-                sequence,
-                round_number,
-                attacker,
-                defensive.feature_id,
-                turn_key,
-                dice,
+            events, sequence = _resolve_bonus_action_follow_ups(
+                events, sequence, round_number, attacker, setup,
+                defensive.feature_id, turn_key, dice,
             )
-            if follow_up is not None:
-                events.append(follow_up)
-                sequence += 1
         monk_events, sequence = resolve_monk_bonus_attacks(
             sequence,
             round_number,
@@ -102,12 +104,10 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
         )
         events.extend(healing_events)
         if bonus_before and not member.state.bonus_action_available and healing_events:
-            follow_up = resolve_bonus_action_follow_up(
-                sequence, round_number, member, healing_events[-1].feature_id, turn_key, dice,
+            events, sequence = _resolve_bonus_action_follow_ups(
+                events, sequence, round_number, member, setup,
+                healing_events[-1].feature_id, turn_key, dice,
             )
-            if follow_up is not None:
-                events.append(follow_up)
-                sequence += 1
         removal_choice = choose_condition_removal_action(member, setup, turn_key)
         if removal_choice is not None:
             action, target, conditions = removal_choice
@@ -119,12 +119,10 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
         )
         events.extend(healing_events)
         if bonus_before and not member.state.bonus_action_available and healing_events:
-            follow_up = resolve_bonus_action_follow_up(
-                sequence, round_number, member, healing_events[-1].feature_id, turn_key, dice,
+            events, sequence = _resolve_bonus_action_follow_ups(
+                events, sequence, round_number, member, setup,
+                healing_events[-1].feature_id, turn_key, dice,
             )
-            if follow_up is not None:
-                events.append(follow_up)
-                sequence += 1
         counter = choose_condition_counter_spell(member, setup, turn_key)
         if counter is not None:
             countered, sequence = resolve_spell(

@@ -12,7 +12,7 @@ assert.equal(fighter.level, 7);
 assert.equal(fighter.max_hp, 67);
 assert.equal(fighter.great_weapon_fighting, true);
 assert.equal(fighter.critical_hit_minimum, 19);
-assert.equal(fighter.tactical_shift_fraction, 0.5);
+assert.equal(fighter.bonus_action_follow_up_movement_grants[0].source_id, "tactical-shift");
 
 const greatsword = fighter.attacks.find((attack) => attack.id === "karnok-greatsword");
 const shortbow = fighter.attacks.find((attack) => attack.id === "karnok-shortbow");

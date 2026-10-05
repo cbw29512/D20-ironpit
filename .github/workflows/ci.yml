@@ -188,7 +188,6 @@ jobs:
           grep -q 'browser-damage-reaction-dispatch.js' index.html
           grep -q 'browser-activation-movement.js' index.html
           grep -q 'browser-champion.js' index.html
-          grep -q 'browser-tactical-shift.js' index.html
           grep -q 'browser-undead-fortitude.js' index.html
           grep -q 'browser-zero-hp.js' index.html
           grep -q 'browser-timed-conditions.js' index.html
@@ -320,7 +319,6 @@ jobs:
           grep -q 'browser-grapple.js' frontend/index.html
           grep -q 'browser-ability-check-escape.js' frontend/index.html
           grep -q 'browser-champion.js' frontend/index.html
-          grep -q 'browser-tactical-shift.js' frontend/index.html
           grep -q 'browser-undead-fortitude.js' frontend/index.html
           grep -q 'browser-zero-hp.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html

@@ -6,6 +6,7 @@
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_ACTIONS;
+  const A = () => window.IRON_PIT_BROWSER_ACTIVATION_MOVEMENT;
 
   function resolve(sequence, round, member, triggeringFeatureId, turnKey) {
     try {
@@ -74,6 +75,41 @@
       throw error;
     }
   }
+  
 
-  window.IRON_PIT_BROWSER_BONUS_ACTION_FOLLOW_UP = { resolve };
+  function resolveMovement(sequence, round, member, setup, triggeringFeatureId, turnKey) {
+    try {
+      if (!triggeringFeatureId || member.state.bonus_action_available) return { events: [], sequence };
+      const rules = member.state.template.bonus_action_follow_up_movement_grants || [];
+      for (const rule of rules) {
+        if (!(rule.required_trigger_ids || []).includes(triggeringFeatureId)) continue;
+        if (member.state.feature_last_turn_keys?.[rule.source_id] === turnKey) continue;
+        if (!A()) throw new Error(`${rule.source_name} requires browser-activation-movement.js.`);
+        const moved = A().resolve(sequence, round, member, setup, {
+          speedFraction: rule.speed_fraction,
+          desiredDistanceFt: rule.desired_distance_ft,
+          provokesOpportunityAttacks: rule.provokes_opportunity_attacks !== false,
+          turnKey,
+        });
+        if (!moved.events.length) return { events: [], sequence };
+        for (const event of moved.events) {
+          if (event.event_type === "movement") {
+            event.feature_id = rule.source_id;
+            event.description = `${rule.source_name}: ${event.description}`;
+          }
+        }
+        member.state.feature_last_turn_keys = member.state.feature_last_turn_keys || {};
+        member.state.feature_last_turn_keys[rule.source_id] = turnKey;
+        return moved;
+      }
+      return { events: [], sequence };
+    } catch (error) {
+      console.error("Failed browser Bonus Action follow-up movement", {
+        member: member?.combatant_id, triggeringFeatureId, error,
+      });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_BONUS_ACTION_FOLLOW_UP = { resolve, resolveMovement };
 })();

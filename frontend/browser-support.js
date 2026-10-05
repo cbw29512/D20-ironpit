@@ -10,9 +10,19 @@
   const BI = () => window.IRON_PIT_BROWSER_D20_BONUS_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const F = () => window.IRON_PIT_BROWSER_BONUS_ACTION_FOLLOW_UP;
+
+  function appendFollowUps(events, sequence, round, member, setup, triggerId, turnKey) {
+    const tactical = F()?.resolve?.(sequence, round, member, triggerId, turnKey);
+    if (tactical) { events.push(tactical); sequence += 1; }
+    const moved = F()?.resolveMovement?.(sequence, round, member, setup, triggerId, turnKey);
+    if (moved) { events.push(...moved.events); sequence = moved.sequence; }
+    return { events, sequence };
+  }
 
   function resolve(sequence, round, member, setup, turnKey) {
     const events = [];
+    let bonusBefore = member.state.bonus_action_available;
     let healing = H()?.chooseAction(member, setup, turnKey);
     if (healing?.target.state.current_hp === 0) {
       if ((healing.action.maxTargets || 1) > 1) {
@@ -29,10 +39,14 @@
         if (rider) events.push(rider), sequence += 1;
       }
     }
+    if (bonusBefore && !member.state.bonus_action_available && healing) {
+      ({ sequence } = appendFollowUps(events, sequence, round, member, setup, healing.action.id, turnKey));
+    }
     const removal = C()?.chooseAction(member, setup, turnKey);
     if (removal) {
       events.push(C().resolve(sequence++, round, member, removal.target, removal.action, removal.conditions, turnKey));
     }
+    bonusBefore = member.state.bonus_action_available;
     healing = H()?.chooseAction(member, setup, turnKey);
     if (healing) {
       if ((healing.action.maxTargets || 1) > 1) {
@@ -48,6 +62,9 @@
           healing.target.combatant_id !== member.combatant_id && healing.target.state.current_hp > before);
         if (rider) events.push(rider), sequence += 1;
       }
+    }
+    if (bonusBefore && !member.state.bonus_action_available && healing) {
+      ({ sequence } = appendFollowUps(events, sequence, round, member, setup, healing.action.id, turnKey));
     }
     const counter = window.IRON_PIT_BROWSER_CONDITION_COUNTER?.choose(member, setup, turnKey);
     if (counter) {

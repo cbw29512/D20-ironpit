@@ -670,7 +670,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "bloodied_start_turn_heal_amount": progression.bloodied_start_turn_heal_amount,
         "death_save_advantage": progression.death_save_advantage,
         "death_save_recovery_minimum": progression.death_save_recovery_minimum,
-        "critical_move_fraction": progression.critical_move_fraction, "tactical_shift_fraction": progression.tactical_shift_fraction,
+        "critical_move_fraction": progression.critical_move_fraction,
         "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
                    "off_hand": template.visual.off_hand, "body_style": template.visual.body_style,
                    "figure_form": template.visual.body_style, "role": template.archetype.lower()},
@@ -750,6 +750,10 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
     if progression.bonus_action_follow_up_tactical_grants:
         row["bonus_action_follow_up_tactical_grants"] = [
             item.model_dump(mode="json") for item in progression.bonus_action_follow_up_tactical_grants
+        ]
+    if progression.bonus_action_follow_up_movement_grants:
+        row["bonus_action_follow_up_movement_grants"] = [
+            item.model_dump(mode="json") for item in progression.bonus_action_follow_up_movement_grants
         ]
     if template.unlimited_resource_ids:
         row["unlimited_resources"] = list(template.unlimited_resource_ids)

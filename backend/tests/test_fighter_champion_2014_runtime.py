@@ -88,5 +88,5 @@ def test_2014_champion_has_no_2024_only_progression_features() -> None:
     assert progression.athletics_advantage is False
     assert progression.heroic_warrior is False
     assert progression.tactical_master_sap_weapon_ids == []
-    assert progression.tactical_shift_fraction == 0.0
+    assert progression.bonus_action_follow_up_movement_grants == []
     assert progression.critical_move_fraction == 0.0

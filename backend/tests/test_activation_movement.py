@@ -18,6 +18,7 @@ def test_activation_movement_grants_extra_movement_without_spending_normal_budge
     mover = _member("hero", "heroes", 0)
     target = _member("monster", "monsters", 60)
     setup = EncounterSetup(heroes=[mover], monsters=[target], hero_total_levels=1, monster_total_cr="1")
+    mover.state.movement_remaining_ft = 30
     normal_remaining = mover.state.movement_remaining_ft
 
     events, sequence = resolve_activation_movement(
@@ -41,3 +42,26 @@ def test_activation_movement_fails_closed_on_invalid_fraction() -> None:
         assert "speed_fraction" in str(exc)
     else:
         raise AssertionError("Invalid activation movement fraction must fail closed.")
+
+
+
+def test_activation_movement_can_suppress_opportunity_attacks_without_marking_disengage() -> None:
+    mover = _member("hero", "heroes", 5)
+    primary = _member("a-primary", "monsters", 0)
+    reactor = _member("b-reactor", "monsters", 10)
+    setup = EncounterSetup(
+        heroes=[mover], monsters=[primary, reactor], hero_total_levels=1, monster_total_cr="2",
+    )
+    mover.state.movement_remaining_ft = 30
+    hp_before = mover.state.current_hp
+
+    events, _ = resolve_activation_movement(
+        1, 1, mover, setup, FixedDiceProvider([20, 1, 1]),
+        speed_fraction=0.5, desired_distance_ft=0, provokes_opportunity_attacks=False,
+    )
+
+    assert mover.position_ft == 0
+    assert mover.state.current_hp == hp_before
+    assert reactor.state.reaction_available is True
+    assert mover.state.disengaged_this_turn is False
+    assert any(event.event_type == "movement" for event in events)
