@@ -58,6 +58,25 @@ def test_arena_neutral_trait_remains_fingerprinted() -> None:
         raise
 
 
+def test_post_combat_restoration_traits_are_arena_neutral() -> None:
+    try:
+        wolf = _monster("Wolf")
+        for trait_name in (
+            "Diabolical Restoration",
+            "Demonic Restoration",
+            "Eldritch Restoration",
+            "Elemental Restoration",
+            "Exalted Restoration",
+            "Fiendish Restoration",
+        ):
+            row = {"traits": f"{trait_name}. If the creature dies, it returns outside the current arena fight."}
+            synthetic = wolf.model_copy(update={"source_trait_names": [trait_name], "combat_traits": []})
+            assert trait_issues(synthetic, row) == []
+    except Exception:
+        logger.exception("Post-combat Restoration trait neutrality regression failed.")
+        raise
+
+
 def test_environmental_breathing_traits_are_arena_neutral() -> None:
     try:
         wolf = _monster("Wolf")
