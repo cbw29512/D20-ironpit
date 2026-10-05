@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
-from app.content.monster_trait_source_audit import parse_trait_names, trait_issues
+from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints, parse_trait_names, trait_issues
 from app.content.roster import build_arena_roster
 from app.domain.catalog import CoverageStatus
 from app.domain.traits import CombatTrait
@@ -73,15 +73,33 @@ def test_environmental_breathing_traits_are_arena_neutral() -> None:
         raise
 
 
-def test_unknown_outcome_changing_trait_fails_closed() -> None:
+def test_magic_resistance_binds_to_universal_save_advantage() -> None:
+    try:
+        wolf = _monster("Wolf")
+        imp_shell = wolf.model_copy(update={"name": "Imp", "id": "magic-resistance-test"})
+        completed = complete_monster_trait_fingerprints([imp_shell])[0]
+        grants = completed.progression_features.saving_throw_advantage_grants
+        magic = next(grant for grant in grants if grant.source_id == "magic-resistance")
+        assert magic.source_name == "Magic Resistance"
+        assert magic.requires_magical_effect is True
+        assert set(magic.abilities) == {
+            "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",
+        }
+        assert trait_issues(completed, _row("Imp")) == []
+    except Exception:
+        logger.exception("2024 Magic Resistance binding regression failed.")
+        raise
+
+
+def test_magic_resistance_missing_runtime_binding_fails_closed() -> None:
     try:
         wolf = _monster("Wolf")
         row = dict(_row("Wolf"))
         row["traits"] = "Magic Resistance. The wolf has Advantage on saving throws against spells and magical effects."
         drifted = wolf.model_copy(update={"source_trait_names": ["Magic Resistance"], "combat_traits": []})
-        assert "uncertified-trait:magic-resistance" in trait_issues(drifted, row)
+        assert "trait-runtime-missing:magic-resistance" in trait_issues(drifted, row)
     except Exception:
-        logger.exception("Unknown outcome-changing trait fail-closed regression failed.")
+        logger.exception("Missing Magic Resistance runtime binding fail-closed regression failed.")
         raise
 
 
