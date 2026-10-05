@@ -1095,6 +1095,22 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             ]}
         if template.regeneration is not None:
             row["regeneration"] = template.regeneration.model_dump(mode="json")
+        if template.triggered_extra_attack_stacks:
+            row["triggered_extra_attack_stacks"] = [
+                {
+                    "sourceId": item.source_id,
+                    "sourceName": item.source_name,
+                    "triggerDamageType": item.trigger_damage_type.value,
+                    "triggerDamageMinimum": item.trigger_damage_minimum,
+                    "requiresBloodied": item.requires_bloodied,
+                    "maxStacks": item.max_stacks,
+                    "maxUses": item.max_uses,
+                    "exhaustionPerStack": item.exhaustion_per_stack,
+                    "attack": attack_row(item.attack, set()),
+                    "clearsOnRegenerationHeal": item.clears_on_regeneration_heal,
+                }
+                for item in template.triggered_extra_attack_stacks
+            ]
         if template.legendary_actions:
             row["legendary_actions"] = [item.model_dump(mode="json") for item in template.legendary_actions]
         if template.save_success_overrides:
