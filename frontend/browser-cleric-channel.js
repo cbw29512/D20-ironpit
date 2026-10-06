@@ -124,7 +124,9 @@
     const event = { sequence, round_number: round, event_type: "saving_throw", actor_id: cleric.combatant_id, actor_name: cleric.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll, save_ability: "constitution", save_dc: dc,
       save_succeeded: save.succeeded, damage_roll: { notation, rolls: [die], modifier: mod, total: applied },
-      damage_components: [{ source: "Divine Spark", notation, rolls: [die], modifier: mod, damage_type: type, total: raw, applied_total: applied }],
+      damage_components: [{ source: "Divine Spark", notation, rolls: [die], modifier: mod, damage_type: type, total: raw,
+        applied_total: applied, absorbed_healing: resolvedDamage.healed || 0,
+        absorption_source_name: resolvedDamage.sourceName || null }],
       hp_before: before, hp_after: target.state.current_hp, feature_id: SPARK, resource_remaining: remaining, animation: SPARK,
       description: `${target.state.template.name} takes ${applied} ${type} damage from Divine Spark.`
         + (resolvedDamage.sourceName ? ` ${resolvedDamage.sourceName} restores ${resolvedDamage.healed} HP.` : "")
