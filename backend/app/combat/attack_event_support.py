@@ -75,6 +75,7 @@ def build_attack_description(
     save_damage: Any,
     on_hit_save: Any,
     on_hit_maximum_hp_save: Any,
+    contested_movement: Any,
     cunning_strike_obscure: Any,
     cunning_strike: Any,
     topple: Any,
