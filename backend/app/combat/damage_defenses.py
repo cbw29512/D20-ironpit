@@ -127,6 +127,8 @@ def resolve_damage_amount(
 ) -> tuple[int, int, str | None]:
     """Resolve one actual typed component, including Reactions and damage-to-healing replacement."""
     try:
+        if amount < 0:
+            raise ValueError("Damage cannot be negative.")
         absorption = _matching_absorption(target, damage_type)
         if absorption is not None:
             if amount <= 0:
