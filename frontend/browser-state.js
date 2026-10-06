@@ -26,7 +26,7 @@
       turn_terminated: false, turn_termination_reason: null,
       dash_uses_this_turn: 0, movement_remaining_ft: 0, voluntary_turn_activity: null, resources: { ...(template.resources || {}) },
       heroic_inspiration: Boolean(template.starts_with_heroic_inspiration),
-      active_effect_ids: [], active_buff_effect_ids: [], opening_buff_id: null,
+      active_effect_ids: [...(template.starting_condition_ids || [])], active_buff_effect_ids: [], opening_buff_id: null,
       grapple_sources: [], timed_effects: [], deferred_effects: [], delayed_resource_refills: [], persistent_spell_attacks: [], active_modifiers: OM().build(template),
       current_round: null, active_d20_bonus_dice: [], targeting_gate_immunity_keys: [], concentration: null, replacement_form: null,
       survival_save_uses: {}, pending_survival_save_logs: [], pending_zero_hp_replacement_logs: [],
