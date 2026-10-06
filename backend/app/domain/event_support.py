@@ -78,5 +78,7 @@ class DamageRollComponent(BaseModel):
     damage_type: DamageType
     total: int
     applied_total: int | None = Field(default=None, ge=0)
+    absorbed_healing: int = Field(default=0, ge=0)
+    absorption_source_name: str | None = None
     source_qualifiers: list[DamageSourceQualifier] = Field(default_factory=list)
     revisions: list[RollRevision] = Field(default_factory=list)
