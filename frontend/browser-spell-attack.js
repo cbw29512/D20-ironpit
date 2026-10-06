@@ -115,7 +115,7 @@
       }
       damageComponents = rolledComponents.map((part) => ({
         ...part,
-        applied_total: A().adjustedDamage(target.state, part.total, part.damage_type),
+        applied_total: (A().resolveDamage ? A().resolveDamage(target.state, part.total, part.damage_type).applied : A().adjustedDamage(target.state, part.total, part.damage_type)),
       }));
       const applied = damageComponents.reduce((sum, part) => sum + part.applied_total, 0);
       damageRoll = damageComponents.length ? {
