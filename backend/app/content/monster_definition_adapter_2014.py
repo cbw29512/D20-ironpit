@@ -31,6 +31,7 @@ from app.content.monster_zero_hp_prevention_2014 import (
 )
 from app.content.monster_trait_bindings_2014 import (
     aggressive_tactical_grants_2014, bonus_attack_grants_2014, conditional_attack_advantage_2014,
+    passive_trait_timed_self_buffs_2014,
     environment_context_reactions_2014, progression_features_2014, sneak_attack_eligible_2014,
 )
 from app.content.monster_legendary_resistance_2014 import (
@@ -134,7 +135,10 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         primary_attack_id=attacks[0].id, attack_action=multiattack_2014(monster),
         save_actions=save_capabilities_2014(monster),
         spell_save_actions=innate_spell_save_actions_2014(monster),
-        timed_self_buff_actions=innate_timed_self_buffs_2014(monster),
+        timed_self_buff_actions=[
+            *innate_timed_self_buffs_2014(monster),
+            *passive_trait_timed_self_buffs_2014(monster),
+        ],
         healing_actions=healing_actions_2014(monster),
         condition_removal_actions=innate_condition_removal_2014(monster),
         legendary_actions=legendary_options,
