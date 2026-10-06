@@ -34,7 +34,7 @@
         }
         const raw = rolls.reduce((sum, roll) => sum + roll, 0) + (spec.damageBonus || 0);
         const total = R().evasionDamage(state, action.saveAbility, succeeded, action.successDamage, raw);
-        const applied = A().resolveDamage(state, Math.max(0, total), spec.damageType).applied;
+        const applied = (A().resolveDamage ? A().resolveDamage(state, Math.max(0, total), spec.damageType).applied : A().adjustedDamage(state, Math.max(0, total), spec.damageType));
         return { source: action.name, notation: `${spec.diceCount}d${spec.diceSize}+${spec.damageBonus || 0}`,
           rolls, modifier: spec.damageBonus || 0, damage_type: spec.damageType, total: Math.max(0, total), applied_total: applied };
       });
