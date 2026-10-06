@@ -4,10 +4,30 @@ import logging
 
 from app.combat.condition_rules import has_condition
 from app.combat.incoming_damage_resistance import apply_incoming_damage_type_resistance
+from app.combat.zero_hp import restore_hit_points
 from app.domain.models import CombatantState, DamageRollComponent, DamageType
 from app.domain.damage_sources import DamageDefenseKind, DamageSourceQualifier
 
 logger = logging.getLogger(__name__)
+
+
+def _matching_absorption(target: CombatantState, damage_type: DamageType):
+    """Return the one typed damage-absorption rule that applies, if any."""
+    try:
+        matches = [
+            rule for rule in target.template.damage_absorptions
+            if rule.damage_type == damage_type
+        ]
+        if len(matches) > 1:
+            raise ValueError(
+                f"{target.template.name} has multiple absorption rules for {damage_type.value}."
+            )
+        return matches[0] if matches else None
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Damage absorption lookup failed for %s.", target.template.name)
+        raise RuntimeError("Damage absorption could not be resolved.") from exc
 
 
 def _active_timed_resistances(target: CombatantState) -> set[DamageType]:
@@ -59,7 +79,8 @@ def adjusted_damage_amount(
         template = target.template
         conditional = _matching_conditional_defenses(target, damage_type, source_qualifiers or set())
         if (
-            damage_type in template.damage_immunities
+            _matching_absorption(target, damage_type) is not None
+            or damage_type in template.damage_immunities
             or damage_type in target.zone_damage_immunities
             or DamageDefenseKind.IMMUNITY in conditional
         ):
@@ -91,6 +112,37 @@ def adjusted_damage_amount(
         raise RuntimeError("Damage defenses could not be resolved.") from exc
 
 
+def resolve_damage_amount(
+    amount: int,
+    damage_type: DamageType,
+    target: CombatantState,
+    *,
+    allow_vulnerability: bool = True,
+    source_qualifiers: set[DamageSourceQualifier] | None = None,
+    ignored_resistance_types: set[DamageType] | None = None,
+) -> tuple[int, int, str | None]:
+    """Resolve one actual damage component, including damage-to-healing replacement."""
+    try:
+        applied = adjusted_damage_amount(
+            amount,
+            damage_type,
+            target,
+            allow_vulnerability=allow_vulnerability,
+            source_qualifiers=source_qualifiers,
+            ignored_resistance_types=ignored_resistance_types,
+        )
+        absorption = _matching_absorption(target, damage_type)
+        if absorption is None or amount <= 0:
+            return applied, 0, None
+        healed = restore_hit_points(target, amount)
+        return 0, healed, absorption.source_name
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Damage amount resolution failed for %s.", target.template.name)
+        raise RuntimeError("Damage amount could not be resolved.") from exc
+
+
 def apply_damage_defenses(
     target: CombatantState,
     components: list[DamageRollComponent],
@@ -103,7 +155,7 @@ def apply_damage_defenses(
         adjusted_components: list[DamageRollComponent] = []
         applied_total = 0
         for component in components:
-            applied = adjusted_damage_amount(
+            applied, _healed, _absorption_source = resolve_damage_amount(
                 component.total,
                 component.damage_type,
                 target,
