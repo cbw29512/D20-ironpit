@@ -86,6 +86,7 @@ class TimedEffect(BaseModel):
     prevent_hit_point_maximum_reduction: bool = False
     repeat_save_failure_count: int = Field(default=0, ge=0)
     repeat_save_failures_to_lock: int | None = Field(default=None, ge=1, le=10)
+    repeat_save_failure_condition_id: str | None = None
     escape_check_ability: AbilityName | None = None
     escape_check_dc: int | None = Field(default=None, ge=1, le=40)
     ground_contact: bool = False
