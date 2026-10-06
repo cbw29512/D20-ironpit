@@ -34,9 +34,11 @@ window.IRON_PIT_BROWSER_TIMED = {
 window.IRON_PIT_BROWSER_MODIFIERS = {
   add: (_state, modifier) => { callOrder.push(modifier.source_effect_id); },
 };
+window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES = {
+  resolveDamage: (_target, amount) => ({ applied: amount, healed: 0, sourceName: null }),
+};
 window.IRON_PIT_BROWSER_ATTACK = {
   adjustedDamage: (_target, amount) => amount,
-  resolveDamage: (_target, amount) => ({ applied: amount, healed: 0, sourceName: null }),
   applyDamage: (target, amount) => {
     callOrder.push("graze");
     target.current_hp -= amount;
