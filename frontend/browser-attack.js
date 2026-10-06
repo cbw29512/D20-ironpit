@@ -157,6 +157,7 @@
     if (!hit && damageRoll !== null) description += ` Graze deals ${damageRoll.total} ${attack.damageType} damage.`;
     if (studiedApplied) description += ` Studied Attacks primes the next attack against ${target.state.template.name}.`;
     if (outcome.damageReductionReaction) description += ` ${actualTarget.state.template.name} uses ${outcome.damageReductionReaction.damageReductionReactionSourceName || "Reaction"} to reduce the attack's damage by ${outcome.damageReductionReaction.damageReductionReactionReduction}.`;
+    for (const part of damageComponents || []) if (part.absorption_source_name) description += ` ${actualTarget.state.template.name}'s ${part.absorption_source_name} absorbs the ${part.damage_type} damage and restores ${part.absorbed_healing || 0} HP.`;
     if (recklessStarted) description += ` ${attacker.state.template.name} uses Reckless Attack.`; if (outcome.brutalStrikeEffects?.length) description += ` Brutal Strike applies ${outcome.brutalStrikeEffects.map((item) => item.replaceAll("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())).join(", ")}.`;
     if (redirected) description += ` ${target.state.template.name} uses Redirect Attack; ${actualTarget.state.template.name} becomes the target.`;
     if (parry.used) description += ` ${actualTarget.state.template.name} uses Parry.`;
