@@ -6,7 +6,7 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.timed_attack_cap import register_turn_attack
 from app.combat.attack_roll_resolution import resolve_attack_roll
-from app.combat.attack_legality import attack_allowed_against
+from app.combat.attack_legality import attack_allowed_against, attack_is_automatic_hit
 from app.combat.attack_d20_outcome import resolve_attack_d20_outcome
 from app.combat.attack_effect_resolution import resolve_attack_effects
 from app.combat.attack_event_support import attack_damage_reduction_description, build_attack_description, primary_attack_save_fields
@@ -17,7 +17,7 @@ from app.combat.dice import DiceProvider
 from app.combat.modifier_stack import effective_armor_class
 from app.combat.reaction_roll_penalties import apply_reaction_roll_penalty_if_useful, reaction_penalty_description
 from app.combat.state import terminate_turn
-from app.domain.models import BattleEvent, CombatantState, WeaponAttack
+from app.domain.models import BattleEvent, CombatantState, RollMode, WeaponAttack
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 logger = logging.getLogger(__name__)
 
@@ -41,60 +41,94 @@ def resolve_attack(
         attacker_event_id = actor_event_id or attacker.template.id
         if not attack_allowed_against(attack, attacker_event_id, defender, affected_states):
             raise ValueError(f"{attack.id} cannot target {defender_event_id} under its current target policy.")
-        roll_resolution = resolve_attack_roll(
-            attacker,
-            defender,
-            attack,
-            distance_ft,
-            dice,
-            defender_event_id=defender_event_id,
-            attacker_event_id=attacker_event_id,
-            round_number=round_number,
-            turn_key=turn_key,
-            advantage_sources=advantage_sources,
-            other_disadvantage_sources=other_disadvantage_sources,
-            close_enemy_active=close_enemy_active,
-        )
-        attack_roll = roll_resolution.roll
-        mode = roll_resolution.mode
-        heroic_reroll = roll_resolution.heroic_reroll
-        brutal_strike_disadvantage = roll_resolution.brutal_strike_disadvantage
-        d20_bonus_source_name = roll_resolution.d20_bonus_source_name
+        automatic_hit = attack_is_automatic_hit(attack, attacker_event_id, defender)
+        attack_roll = None
+        mode = RollMode.NORMAL
+        heroic_reroll = False
+        brutal_strike_disadvantage = 0
+        d20_bonus_source_name = None
         reaction_penalty = None
-        if reaction_setup is not None and reaction_roller is not None:
-            reaction_penalty = apply_reaction_roll_penalty_if_useful(
-                reaction_roller,
-                reaction_setup,
-                "attack",
-                attack_roll,
-                dice,
-                threshold=effective_armor_class(defender),
-            )
-            if reaction_penalty is not None:
-                attack_roll = reaction_penalty.roll
-        if spend_action: spend(attacker, "action")
         actual_defender, actual_event_id, redirect_used = defender, defender_event_id, False
-        if redirect_target is not None and redirect_target is not defender and defender.template.redirect_attack_reaction is not None and is_available(defender, "reaction"):
-            spend(defender, "reaction"); actual_defender = redirect_target
-            actual_event_id = redirect_target_event_id or redirect_target.template.id; redirect_used = True
-        d20_outcome = resolve_attack_d20_outcome(
-            attacker,
-            actual_defender,
-            attack,
-            attack_roll,
-            effective_armor_class(actual_defender),
-            encounter_roller=reaction_roller,
-            setup=reaction_setup,
-            dice=dice,
-        )
-        attack_roll, target_ac, hit = d20_outcome.roll, d20_outcome.target_ac, d20_outcome.hit
+        parry_used = False
+        d20_override_feature_id = d20_override_name = None
+        miss_override_feature_id = miss_override_name = None
+        outcome_adjustment_feature_id = outcome_adjustment_name = None
+        natural = 0
+        target_ac = effective_armor_class(defender)
+        hit = automatic_hit
+
+        if not automatic_hit:
+            roll_resolution = resolve_attack_roll(
+                attacker,
+                defender,
+                attack,
+                distance_ft,
+                dice,
+                defender_event_id=defender_event_id,
+                attacker_event_id=attacker_event_id,
+                round_number=round_number,
+                turn_key=turn_key,
+                advantage_sources=advantage_sources,
+                other_disadvantage_sources=other_disadvantage_sources,
+                close_enemy_active=close_enemy_active,
+            )
+            attack_roll = roll_resolution.roll
+            mode = roll_resolution.mode
+            heroic_reroll = roll_resolution.heroic_reroll
+            brutal_strike_disadvantage = roll_resolution.brutal_strike_disadvantage
+            d20_bonus_source_name = roll_resolution.d20_bonus_source_name
+            if reaction_setup is not None and reaction_roller is not None:
+                reaction_penalty = apply_reaction_roll_penalty_if_useful(
+                    reaction_roller,
+                    reaction_setup,
+                    "attack",
+                    attack_roll,
+                    dice,
+                    threshold=effective_armor_class(defender),
+                )
+                if reaction_penalty is not None:
+                    attack_roll = reaction_penalty.roll
+
+        if spend_action:
+            spend(attacker, "action")
+
+        if not automatic_hit:
+            if (
+                redirect_target is not None
+                and redirect_target is not defender
+                and defender.template.redirect_attack_reaction is not None
+                and is_available(defender, "reaction")
+            ):
+                spend(defender, "reaction")
+                actual_defender = redirect_target
+                actual_event_id = redirect_target_event_id or redirect_target.template.id
+                redirect_used = True
+            assert attack_roll is not None
+            d20_outcome = resolve_attack_d20_outcome(
+                attacker,
+                actual_defender,
+                attack,
+                attack_roll,
+                effective_armor_class(actual_defender),
+                encounter_roller=reaction_roller,
+                setup=reaction_setup,
+                dice=dice,
+            )
+            attack_roll, target_ac, hit = d20_outcome.roll, d20_outcome.target_ac, d20_outcome.hit
+            natural, parry_used = d20_outcome.natural, d20_outcome.parry_used
+            d20_override_feature_id, d20_override_name = (
+                d20_outcome.d20_override_feature_id,
+                d20_outcome.d20_override_source_name,
+            )
+            miss_override_feature_id, miss_override_name = (
+                d20_outcome.miss_override_feature_id,
+                d20_outcome.miss_override_source_name,
+            )
+            outcome_adjustment_feature_id = d20_outcome.outcome_adjustment_feature_id
+            outcome_adjustment_name = d20_outcome.outcome_adjustment_source_name
+
         if not hit:
             clear_brutal_strike_pending(attacker, turn_key)
-        natural, parry_used = d20_outcome.natural, d20_outcome.parry_used
-        d20_override_feature_id, d20_override_name = d20_outcome.d20_override_feature_id, d20_outcome.d20_override_source_name
-        miss_override_feature_id, miss_override_name = d20_outcome.miss_override_feature_id, d20_outcome.miss_override_source_name
-        outcome_adjustment_feature_id = d20_outcome.outcome_adjustment_feature_id
-        outcome_adjustment_name = d20_outcome.outcome_adjustment_source_name
         natural_1 = natural == 1
         expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
         natural_1_ends_turn = natural_1 and not off_turn and not (
@@ -153,6 +187,8 @@ def resolve_attack(
             topple=topple, damage_outcome=damage_outcome, applied_conditions=applied_conditions,
             deferred_effect_armed=deferred_effect_armed,
         )
+        if automatic_hit:
+            description += " The attack automatically hits its source-owned Grappled target."
         description += attack_damage_reduction_description(effects, actual_defender.template.name)
         if d20_bonus_source_name:
             description += f" {d20_bonus_source_name} adds its bonus die to the attack roll."
