@@ -18,6 +18,7 @@ from app.content.monster_zero_hp_prevention_2014 import bound_zero_hp_trait_name
 from app.domain.bonus_attacks import BonusAttackGrant
 from app.domain.environment_contexts import EnvironmentContextReaction
 from app.domain.progression import ProgressionCombatFeatures
+from app.domain.timed_self_buffs import TimedHostileConditionAura, TimedSelfBuffAction
 from app.domain.weapons import ConditionalAttackAdvantage
 
 logger = logging.getLogger(__name__)
@@ -29,7 +30,13 @@ _MAGIC_WEAPONS = "Magic Weapons"
 _INNATE_SPELLCASTING = "Innate Spellcasting"
 _SUNLIGHT_SENSITIVITY = "Sunlight Sensitivity"
 _RAMPAGE = "Rampage"
+_STENCH = "Stench"
 _FINESSE_WEAPON_NAMES_2014 = frozenset({"Dagger", "Rapier", "Scimitar", "Shortsword", "Whip"})
+_STENCH_PROFILE = re.compile(
+    r"Stench\..*?starts its turn within\s+(\d+)\s+feet.*?DC\s+(\d+)\s+Constitution saving throw"
+    r".*?poisoned until the start of its next turn.*?successful saving throw.*?immune.*?Stench.*?24 hours",
+    re.IGNORECASE | re.DOTALL,
+)
 _SNEAK_ATTACK_D6 = re.compile(
     r"Sneak Attack \(1/Turn\).*?extra\s+\d+\s+\((\d+)d6\)",
     re.IGNORECASE | re.DOTALL,
@@ -118,6 +125,38 @@ def bonus_attack_grants_2014(monster: SourceMonster2014) -> list[BonusAttackGran
         logger.exception("Failed to bind 2014 Rampage for %s.", monster.name)
         raise
 
+
+def passive_trait_timed_self_buffs_2014(monster: SourceMonster2014) -> list[TimedSelfBuffAction]:
+    """Bind always-on source traits to shared passive aura primitives without mutating the card."""
+    try:
+        if _STENCH not in monster.trait_names:
+            return []
+        plain = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", monster.source_traits or "")).strip()
+        match = _STENCH_PROFILE.search(plain)
+        if match is None:
+            raise ValueError(f"{monster.name} has Stench without a parseable radius/DC/lifecycle payload.")
+        radius_ft, save_dc = (int(match.group(1)), int(match.group(2)))
+        return [TimedSelfBuffAction(
+            id=f"{monster.id}-stench",
+            name=_STENCH,
+            activation_timing="passive",
+            duration_rounds=1,
+            expiry_timing="target_turn_start",
+            hostile_start_turn_condition_aura=TimedHostileConditionAura(
+                trigger="enemy_turn_start",
+                radius_ft=radius_ft,
+                save_ability="constitution",
+                save_dc=save_dc,
+                condition_id="poisoned",
+                success_immunity=True,
+                source_is_magical=False,
+            ),
+            animation="stench",
+        )]
+    except Exception:
+        logger.exception("Failed to bind 2014 Stench for %s.", monster.name)
+        raise
+
 def environment_context_reactions_2014(
     monster: SourceMonster2014,
 ) -> list[EnvironmentContextReaction]:
@@ -161,6 +200,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(_SUNLIGHT_SENSITIVITY)
         if bonus_attack_grants_2014(monster):
             bound.add(_RAMPAGE)
+        if passive_trait_timed_self_buffs_2014(monster):
+            bound.add(_STENCH)
         if supports_regeneration_2014(monster):
             bound.add("Regeneration")
         resistance = legendary_resistance_trait_name_2014(monster)
