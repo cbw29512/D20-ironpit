@@ -60,19 +60,43 @@ def apply_restoration_riders(
         raise
 
 
-def apply_hit_point_maximum_reduction(target: EncounterCombatant, amount: int) -> int:
+def apply_hit_point_maximum_reduction_state(
+    state,
+    amount: int,
+    *,
+    zero_max_hp_kills: bool = False,
+) -> int:
+    """Apply a generic hit-point maximum reduction to one combatant state."""
     try:
         if amount < 0:
             raise ValueError("Hit point maximum reduction cannot be negative.")
         if amount == 0:
             return 0
-        if any(effect.prevent_hit_point_maximum_reduction for effect in target.state.timed_effects):
+        if any(effect.prevent_hit_point_maximum_reduction for effect in state.timed_effects):
             return 0
-        target.state.hit_point_maximum_reduction += amount
-        maximum = effective_max_hp(target.state)
-        if target.state.current_hp > maximum:
-            target.state.current_hp = maximum
+        state.hit_point_maximum_reduction += amount
+        raw_maximum = state.template.max_hp + state.max_hp_bonus - state.hit_point_maximum_reduction
+        if zero_max_hp_kills and raw_maximum <= 0:
+            state.current_hp = 0
+            state.is_alive = False
+            state.is_dead = True
+            state.is_unconscious = False
+            state.is_stable = False
+            state.death_save_successes = 0
+            state.death_save_failures = 0
+            return amount
+        maximum = effective_max_hp(state)
+        if state.current_hp > maximum:
+            state.current_hp = maximum
         return amount
+    except Exception:
+        logger.exception("Failed to reduce hit point maximum for %s.", state.template.name)
+        raise
+
+
+def apply_hit_point_maximum_reduction(target: EncounterCombatant, amount: int) -> int:
+    try:
+        return apply_hit_point_maximum_reduction_state(target.state, amount)
     except Exception:
         logger.exception("Failed to reduce hit point maximum for %s.", target.combatant_id)
         raise
