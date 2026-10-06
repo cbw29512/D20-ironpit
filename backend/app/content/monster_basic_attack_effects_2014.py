@@ -15,6 +15,7 @@ from app.content.monster_zero_hp_save_rider_2014 import (
 )
 from app.domain.capability_effects import (
     AttackEffectDefinition,
+    ContestedMovementEffectDefinition,
     DamageEffectDefinition,
     DiceSpec,
     GrappleEffectDefinition,
@@ -135,6 +136,22 @@ def _supported_save_max_hp_reduction(value: object) -> bool:
     )
 
 
+def _supported_contested_movement(value: object) -> bool:
+    if not isinstance(value, dict):
+        return False
+    if set(value) != {"source_ability", "target_ability", "max_target_size", "distance_ft", "direction"}:
+        return False
+    return (
+        str(value["source_ability"]).lower() in _ABILITIES
+        and str(value["target_ability"]).lower() in _ABILITIES
+        and _optional_size(value.get("max_target_size"))
+        and isinstance(value["distance_ft"], int)
+        and int(value["distance_ft"]) >= 0
+        and int(value["distance_ft"]) % 5 == 0
+        and value["direction"] in {"toward_source", "away_from_source"}
+    )
+
+
 def source_conditional_attack_advantage_2014(attack: SourceAttack2014) -> list[ConditionalAttackAdvantage]:
     specs: list[ConditionalAttackAdvantage] = []
     for value in attack.conditional_attack_advantage:
@@ -160,7 +177,11 @@ def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
         or _supported_save_max_hp_reduction(attack.on_hit_save_effect)
     ):
         return False
-    if attack.on_hit_contested_movement or attack.ongoing_damage_effect:
+    if attack.on_hit_contested_movement is not None and not _supported_contested_movement(
+        attack.on_hit_contested_movement
+    ):
+        return False
+    if attack.ongoing_damage_effect:
         return False
     if attack.resource_id or attack.breakable_restraint:
         return False
@@ -225,6 +246,17 @@ def basic_attack_effects_2014(attack: SourceAttack2014) -> list[AttackEffectDefi
                 damage_type=DamageType(str(row["damage_type"]).lower()), success_damage=str(row["success_damage"]),
                 zero_hp_rider=zero_hp_save_rider_2014(row),
             ))
+    if attack.on_hit_contested_movement is not None:
+        row = attack.on_hit_contested_movement
+        assert isinstance(row, dict)
+        max_size = row.get("max_target_size")
+        effects.append(ContestedMovementEffectDefinition(
+            source_ability=str(row["source_ability"]).lower(),
+            target_ability=str(row["target_ability"]).lower(),
+            max_target_size=CreatureSize(str(max_size).lower()) if max_size is not None else None,
+            distance_ft=int(row["distance_ft"]),
+            direction=str(row["direction"]),
+        ))
     if attack.control_effect is not None:
         row = attack.control_effect
         assert isinstance(row, dict)
