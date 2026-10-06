@@ -105,6 +105,23 @@ Do not revive a stale branch merely because it contains useful historical work.
 
 Extract or reimplement only the still-correct behavior on current main.
 
+### Tranche-size / anti-drift rule
+
+For monster completion, one PR owns **one semantic mechanic family**.
+
+A family may unlock many monsters, but it must share one universal behavior. Do not combine unrelated traits, attack policies, state initialization, generated-data repairs, and engine refactors merely because they were discovered in the same audit.
+
+If a branch needs a second independent primitive family, split it before continuing.
+
+Generated artifacts and count sentinels belong in the same PR only when they are direct outputs of that PR's source changes. Regenerate them from the exact head; never hand-edit generated monster bundles to make a count pass.
+
+A monster tranche is not complete until:
+1. source classification/binding is explicit;
+2. Python behavior is tested;
+3. browser behavior is tested when production execution is affected;
+4. generated artifacts are current;
+5. 2014 Basic Roster, Paired Edition Monster Report, CI, and 2014 Hero Certification are green on the same exact head.
+
 ## 7. Universal-mechanic gate
 
 Before implementing any class, subclass, feat, spell, item, monster, legendary action, reaction, trait, or combat ability:
@@ -209,15 +226,16 @@ If an A-class issue is found:
 
 ## 13. Current coordination snapshot
 
-At the time this contract was introduced:
+Baseline reset recorded after merged PR #624:
 
-- current audited main: `1676a9a3bf8ba41e6c845561f027abc8217e3346`;
+- clean baseline main: `007453194fcd5621c0130ffcabf25d3b132a1a07`;
+- exact-head source PR #624 was green on CI, 2014 Basic Roster, Paired Edition Monster Report, and 2014 Hero Certification;
 - 2014 pregens: 240/240;
 - 2024 pregens: 240/240;
-- 2024 monsters: 140/330;
-- Grok owns active combat/content work in PR #530;
-- ChatGPT owns audit/repository-hygiene work in PR #531;
-- Issue #532 records the current-main 2014 Flyby / Opportunity Attack defect;
+- 2014 monsters: 177/327 runnable on the clean baseline;
+- 2024 monsters: 141/330 runnable on the clean baseline;
+- PR #625 is closed unmerged and is reference-only because it grew across multiple semantic families;
+- monster work resumes from clean `main`, one semantic mechanic family per PR;
 - Netlify production publishing remains manual/locked.
 
-This snapshot becomes stale whenever main changes. Rebuild ownership and status from repository truth rather than copying it forward.
+This snapshot becomes stale whenever main changes. Rebuild ownership, counts, and status from repository truth rather than copying it forward.
