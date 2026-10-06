@@ -16,7 +16,11 @@ def primary_attack_save_fields(
 ) -> tuple[Any, str | None, int | None, bool | None]:
     """Choose the primary save evidence exposed on the attack event."""
     try:
-        primary = save_damage if save_damage and save_damage.save_dc is not None else on_hit_save
+        primary = (
+            save_damage if save_damage and save_damage.save_dc is not None
+            else on_hit_save if on_hit_save and on_hit_save.save_dc is not None
+            else on_hit_maximum_hp_save
+        )
         if primary and primary.save_dc is not None:
             return primary.save_roll, primary.save_ability, primary.save_dc, primary.save_succeeded
         if cunning_strike_obscure and cunning_strike_obscure.save_dc is not None:
@@ -69,6 +73,7 @@ def build_attack_description(
     vex_applied: bool,
     save_damage: Any,
     on_hit_save: Any,
+    on_hit_maximum_hp_save: Any,
     cunning_strike_obscure: Any,
     cunning_strike: Any,
     topple: Any,
