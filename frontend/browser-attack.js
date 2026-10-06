@@ -48,6 +48,11 @@
     if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2;
     return value;
   }
+  function resolveDamage(target, amount, type, allowVulnerability = true, sourceQualifiers = [], ignoreResistance = false) {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (rules?.resolveDamage) return rules.resolveDamage(target, amount, type, allowVulnerability, sourceQualifiers, ignoreResistance);
+    return { applied: adjustedDamage(target, amount, type, allowVulnerability, sourceQualifiers, ignoreResistance), healed: 0, sourceName: null };
+  }
   function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null, damageComponents = []) {
     const lifecycle = Z(); if (!lifecycle) throw new Error("Browser zero-HP runtime is not loaded.");
     return lifecycle.applyDamage(state, amount, critical, damageTypes, affectedStates, setup, damageComponents);
@@ -197,4 +202,4 @@
       animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description: description + survivalLog + (window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT?.consumeLog(actualTarget.state) || "") };
     if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, attacker.state.template.name);
     return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;
-  }  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, conditionSources, rangedCloseThreat, resolveAttack }; })();
+  }  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, resolveDamage, applyDamage, conditionSources, rangedCloseThreat, resolveAttack }; })();
