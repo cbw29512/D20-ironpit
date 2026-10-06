@@ -6,11 +6,9 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const P = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const Z = () => window.IRON_PIT_BROWSER_SUPPRESSION_ZONES;
-  const DD = () => {
-    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
-    if (!rules?.resolveDamage) throw new Error("Save-zone damage requires the shared damage resolver.");
-    return rules;
-  };
+  const DD = () => window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.resolveDamage
+    ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES
+    : (() => { throw new Error("Save-zone damage requires the shared damage resolver."); })();
 
   function memberInZone(member, zone) {
     if (!member.state.position || !zone.position) return false;
