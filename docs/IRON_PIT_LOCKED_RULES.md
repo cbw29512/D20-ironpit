@@ -16,6 +16,7 @@ Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §1.1, §2, §25; `SOUL.md`; `AGENT
 
 ## Death and dying
 
+- **Petrified is terminal in the Iron Pit.** When the Petrified debuff is successfully applied, that combatant is immediately Dead for the rest of the match. This is an explicit Iron Pit arena rule, not a statement of tabletop RAW. The universal condition engine owns this consequence; monster/ability names must not dispatch it.
 - **Dead is terminal.** No resurrection, rebirth, revive, later stabilization, regeneration, or Death Saving Throw restores a Dead combatant in that match. The Pit deity restores combatants only after combat.
 - **Death Saving Throws only while dying.** They occur only while a character is Unconscious/dying at 0 HP and not Dead. Printed 0-HP replacements intercept the drop to 0 in the same resolution and never leave the combatant Dead first.
 
