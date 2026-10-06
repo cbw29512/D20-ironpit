@@ -152,5 +152,5 @@ class WeaponAttack(BaseModel):
     knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
     forbid_target_grappled_by_self: bool = False
-    grapple_target_policy: Literal["normal", "own_grapple_only"] = "normal"
+    grapple_target_policy: Literal["normal", "own_grapple_only", "auto_hit_own_grapple"] = "normal"
     damage_source_qualifiers: list[DamageSourceQualifier] = Field(default_factory=list)
