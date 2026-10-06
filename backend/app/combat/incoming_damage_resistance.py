@@ -5,7 +5,7 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.timed_conditions import apply_timed_condition, remove_effect_instance
 from app.domain.encounters import EncounterSetup
-from app.domain.models import CombatantState, DamageRollComponent, DamageType
+from app.domain.models import CombatantState, DamageType
 
 logger = logging.getLogger(__name__)
 INCOMING_RESISTANCE_EFFECT_ID = "incoming-damage-type-resistance"
@@ -37,25 +37,6 @@ def apply_incoming_damage_type_resistance_amount(
         return applied is not None
     except Exception:
         logger.exception("Incoming damage-type resistance failed for %s.", target.template.name)
-        raise
-
-
-def apply_incoming_damage_type_resistance(
-    target: CombatantState,
-    components: list[DamageRollComponent],
-) -> bool:
-    """Compatibility wrapper that selects the first positive typed component."""
-    try:
-        component = next((item for item in components if item.total > 0), None)
-        if component is None:
-            return False
-        return apply_incoming_damage_type_resistance_amount(
-            target,
-            component.total,
-            component.damage_type,
-        )
-    except Exception:
-        logger.exception("Incoming damage-type resistance component selection failed for %s.", target.template.name)
         raise
 
 

@@ -102,15 +102,15 @@ result = D.resolveDamage(target, 10, "fire");
 assert.deepEqual(result, { applied: 0, healed: 3, sourceName: "Fire Absorption" });
 assert.equal(target.current_hp, 20, "absorption healing resolves before accepted mixed damage is applied");
 const accepted = D.resolveDamage(target, 5, "slashing");
-assert.equal(accepted.applied, 5);
+// Absorption preserved the Reaction, so the next nonabsorbed type can use it.
+assert.equal(accepted.applied, 2);
+assert.equal(target.reaction_available, false);
+assert.deepEqual(target.timed_effects[0].ownedDamageResistances, ["slashing"]);
 target.current_hp -= accepted.applied;
-assert.equal(target.current_hp, 15);
+assert.equal(target.current_hp, 18);
 
 assert.throws(() => D.adjustedDamage(target, -1, "fire"), /Damage cannot be negative/);
 assert.throws(() => D.resolveDamage(target, -1, "fire"), /Damage cannot be negative/);
-
-console.log("Browser damage absorption regressions passed.");
-
 
 target = state();
 target.template.damage_resistances = ["fire"];
@@ -118,6 +118,8 @@ result = D.resolveDamage(target, 8, "fire");
 assert.deepEqual(result, { applied: 4, healed: 0, sourceName: null });
 assert.equal(target.reaction_available, true, "redundant resistance must preserve the reaction");
 assert.equal(target.timed_effects.length, 0);
+
+console.log("Browser damage absorption regressions passed.");
 
 target = state();
 result = D.resolveDamage(target, 8, "fire", true, [], true);
