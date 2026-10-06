@@ -35,6 +35,24 @@
       .find((member) => member.combatant_id === id) || null;
   }
 
+
+  function markSourceZeroHpBonusAttackTriggers(source, triggeringEvent, setup, round, turnKey) {
+    const grants = (source?.state?.template?.bonusAttackGrants || [])
+      .filter((grant) => grant.trigger === "source_melee_zero_hp_this_turn");
+    if (!grants.length || turnKey !== `${round}:${source.combatant_id}`) return;
+    if (triggeringEvent.event_type !== "attack" || !triggeringEvent.attack_id) return;
+    const target = memberById(setup, triggeringEvent.target_id);
+    if (!target || target.combatant_id === source.combatant_id || target.side === source.side) return;
+    if (!Number.isFinite(triggeringEvent.hp_before) || !Number.isFinite(triggeringEvent.hp_after)) return;
+    if (triggeringEvent.hp_before <= 0 || triggeringEvent.hp_after !== 0) return;
+    const attack = (source.state.template.attacks || []).find((item) => item.id === triggeringEvent.attack_id);
+    if (!attack || attack.kind !== "melee") return;
+    source.state.feature_last_turn_keys ||= {};
+    for (const grant of grants) {
+      source.state.feature_last_turn_keys[`bonus-attack-trigger:${grant.id}`] = turnKey;
+    }
+  }
+
   function resolveSourceZeroHpTrigger(sequence, round, source, triggeringEvent, setup) {
     const rule = source?.state?.template?.source_reduces_hostile_to_zero_hp_temporary_hp;
     if (!rule) return { events: [], sequence };
@@ -92,6 +110,7 @@
       }
       const hit = hitRuntime?.resolveEvent(sequence, round, source, triggeringEvent, setup, turnKey)
         || { events: [], sequence };
+      markSourceZeroHpBonusAttackTriggers(source, triggeringEvent, setup, round, turnKey);
       const sourceTrigger = resolveSourceZeroHpTrigger(hit.sequence, round, source, triggeringEvent, setup);
       sourceTrigger.events.unshift(...hit.events);
       sequence = sourceTrigger.sequence;
