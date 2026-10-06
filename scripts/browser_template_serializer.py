@@ -110,6 +110,15 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                     "durationRounds": rider.duration_rounds,
                 }
             row["onHitSaveDamage"] = save_damage
+        if attack.on_hit_contested_movement:
+            effect = attack.on_hit_contested_movement
+            row["onHitContestedMovement"] = {
+                "sourceAbility": _value(effect.source_ability),
+                "targetAbility": _value(effect.target_ability),
+                "maxTargetSize": _value(effect.max_target_size) if effect.max_target_size else None,
+                "distanceFt": effect.distance_ft,
+                "direction": effect.direction,
+            }
         if attack.on_hit_maximum_hp_save:
             effect = attack.on_hit_maximum_hp_save
             row["onHitMaximumHpSave"] = {
