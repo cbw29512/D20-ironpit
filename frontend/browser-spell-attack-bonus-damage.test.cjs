@@ -6,6 +6,15 @@ const path = require("node:path");
 const vm = require("node:vm");
 
 global.window = globalThis;
+window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES = {
+  resolveDamage: (state, amount, type, allowVulnerability = true, sourceQualifiers = [], ignoreResistance = false) => ({
+    applied: window.IRON_PIT_BROWSER_ATTACK?.adjustedDamage
+      ? window.IRON_PIT_BROWSER_ATTACK.adjustedDamage(state, amount, type, allowVulnerability, sourceQualifiers, ignoreResistance)
+      : amount,
+    healed: 0,
+    sourceName: null,
+  }),
+};
 const load = (name) => vm.runInThisContext(
   fs.readFileSync(path.join(__dirname, name), "utf8"),
   { filename: name },
