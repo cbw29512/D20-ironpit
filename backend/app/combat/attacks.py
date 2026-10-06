@@ -128,6 +128,7 @@ def resolve_attack(
         damage_roll, damage_components, damage_outcome = effects.damage_roll, effects.damage_components, effects.damage_outcome
         applied_conditions, save_damage, on_hit_save = effects.applied_conditions, effects.save_damage, effects.on_hit_save
         on_hit_maximum_hp_save = effects.on_hit_maximum_hp_save
+        contested_movement = effects.contested_movement
         cunning_strike, cunning_strike_obscure, topple = effects.cunning_strike, effects.cunning_strike_obscure, effects.topple
         weapon_sap_applied, tactical_sap_applied = effects.weapon_sap_applied, effects.tactical_sap_applied
         vex_applied, studied_applied = effects.vex_applied, effects.studied_applied
@@ -158,6 +159,7 @@ def resolve_attack(
             save_damage=save_damage,
             on_hit_save=on_hit_save,
             on_hit_maximum_hp_save=on_hit_maximum_hp_save,
+            contested_movement=contested_movement,
             cunning_strike_obscure=cunning_strike_obscure,
             cunning_strike=cunning_strike,
             topple=topple,
@@ -183,6 +185,10 @@ def resolve_attack(
             target_id=actual_event_id, target_name=actual_defender.template.name, attack_name=weapon.name, target_ac=target_ac,
             attack_roll=attack_roll, saving_throw_roll=save_roll, save_ability=save_ability, save_dc=save_dc, save_succeeded=save_succeeded,
             damage_roll=damage_roll, damage_components=damage_components, applied_condition_ids=applied_conditions,
+            ability_check_roll=contested_movement.target_roll if contested_movement else None,
+            check_ability=contested_movement.target_ability if contested_movement else None,
+            check_dc=contested_movement.source_roll.total if contested_movement and contested_movement.source_roll else None,
+            check_succeeded=contested_movement.target_succeeded if contested_movement else None,
             hit=hit, critical=critical, damage_reduction_zeroed_attack=effects.damage_reduction_zeroed_attack,
             turn_terminated=natural_1_ends_turn,
             turn_termination_reason="iron-pit-natural-1-attack" if natural_1_ends_turn else None,
