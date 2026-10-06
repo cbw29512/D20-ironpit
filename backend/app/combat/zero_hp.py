@@ -13,14 +13,14 @@ from app.combat.replacement_form_lifecycle import apply_replacement_form_damage,
 from app.combat.source_bound_effects import end_damage_sensitive_effects
 from app.combat.regeneration_lifecycle import delay_zero_hp_death, note_incoming_damage_types
 from app.combat.undead_fortitude import resolve_undead_fortitude, resolve_effect_bound_survival_save
-from app.combat.zero_hp_replacement import consume_zero_hp_replacement
+from app.combat.zero_hp_replacement import consume_damage_threshold_zero_hp_replacement, consume_zero_hp_replacement
 from app.domain.models import CombatantState, DamageRollComponent, DamageType
 from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 ZeroHpOutcome = Literal[
     "damaged", "unconscious", "dead", "unchanged", "relentless_endurance", "undead_fortitude",
-    "survival_save", "zero_hp_replacement",
+    "survival_save", "zero_hp_replacement", "damage_threshold_zero_hp_replacement",
 ]
 DODGE_EFFECT_ID = "dodge"
 PRONE_EFFECT_ID = "prone"
@@ -171,6 +171,8 @@ def apply_damage(
             state.current_hp = max(0, hp_before - amount)
             if state.current_hp > 0:
                 outcome = _finish_damage(state, "damaged", incoming, dice, affected_states)
+            elif consume_damage_threshold_zero_hp_replacement(state, incoming):
+                outcome = _finish_damage(state, "damage_threshold_zero_hp_replacement", incoming, dice, affected_states)
             elif consume_zero_hp_replacement(state):
                 outcome = _finish_damage(state, "zero_hp_replacement", incoming, dice, affected_states)
             elif resolve_undead_fortitude(state, incoming, types, critical=critical, dice=dice):
