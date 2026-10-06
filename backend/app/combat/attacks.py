@@ -6,6 +6,7 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.timed_attack_cap import register_turn_attack
 from app.combat.attack_roll_resolution import resolve_attack_roll
+from app.combat.attack_legality import attack_allowed_against
 from app.combat.attack_d20_outcome import resolve_attack_d20_outcome
 from app.combat.attack_effect_resolution import resolve_attack_effects
 from app.combat.attack_event_support import attack_damage_reduction_description, build_attack_description, primary_attack_save_fields
@@ -38,6 +39,8 @@ def resolve_attack(
             raise ValueError("Action is not available for an attack.")
         weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id
         attacker_event_id = actor_event_id or attacker.template.id
+        if not attack_allowed_against(attack, attacker_event_id, defender, affected_states):
+            raise ValueError(f"{attack.id} cannot target {defender_event_id} under its current target policy.")
         roll_resolution = resolve_attack_roll(
             attacker,
             defender,
