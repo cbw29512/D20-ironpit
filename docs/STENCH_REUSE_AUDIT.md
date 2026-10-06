@@ -57,6 +57,15 @@ Starting generated counts: 2014 175/327; 2024 141/330; heroes 240/240 each.
 Current-main report independently compiles all 175 2014 candidates.
 Ghast still has Turning Defiance; binding Stench alone must not certify it.
 Hezrou is the immediate 2014 trait-only unlock.
-Exact new-head certification is pending implementation and required verification.
-Existing aura Python save context lacks magical/condition qualifiers; browser
-context supplies only the condition tag. Fix that parity debt in this tranche.
+Implementation and the touched-subsystem debt audit are complete. Current local
+generated counts are 2014 176/327 and 2024 141/330; heroes remain 240/240 each.
+The full Python suite passed (2,632 tests), all 213 browser CI regression commands
+passed, and final focused source/lifecycle tests passed (22 tests). Exporters,
+manifest parity, capability checks and source limits passed. Exact PR-head GitHub
+Actions certification remains pending; local results do not substitute for it.
+
+Resolved parity debt: both aura runtimes now supply complete saving-throw context,
+honor condition immunity before dice, and use the existing target-turn-start
+lifecycle (including another turn in the same round). Passive source discovery
+uses the existing aura mechanism without source timers, resources or activation.
+No open A-class correctness or B-class architecture debt remains in this tranche.
