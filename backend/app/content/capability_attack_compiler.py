@@ -5,6 +5,7 @@ from app.domain.actions import HitControlEffect
 from app.domain.capabilities import AttackCapabilityDefinition
 from app.domain.capability_effects import (
     ConditionEffectDefinition,
+    ContestedMovementEffectDefinition,
     DamageEffectDefinition,
     GrappleEffectDefinition,
     ProneEffectDefinition,
@@ -14,7 +15,7 @@ from app.domain.capability_effects import (
 )
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
-from app.domain.weapons import OnHitConditionSave, OnHitMaximumHpSave, OnHitSaveDamage
+from app.domain.weapons import OnHitConditionSave, OnHitContestedMovement, OnHitMaximumHpSave, OnHitSaveDamage
 
 
 class UnsupportedCapabilityError(ValueError):
@@ -69,6 +70,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
     on_hit_save = None
     on_hit_save_damage = None
     on_hit_maximum_hp_save = None
+    on_hit_contested_movement = None
     for effect in definition.effects:
         if isinstance(effect, DamageEffectDefinition):
             if effect.trigger == "on_hit":
@@ -94,6 +96,14 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                 dice_count=effect.dice.count, dice_size=effect.dice.size, damage_bonus=effect.dice.bonus,
                 damage_type=effect.damage_type, success_damage=effect.success_damage,
                 zero_hp_rider=effect.zero_hp_rider,
+            )
+        elif isinstance(effect, ContestedMovementEffectDefinition):
+            on_hit_contested_movement = OnHitContestedMovement(
+                source_ability=effect.source_ability,
+                target_ability=effect.target_ability,
+                max_target_size=effect.max_target_size,
+                distance_ft=effect.distance_ft,
+                direction=effect.direction,
             )
         elif isinstance(effect, SaveMaximumHpReductionEffectDefinition):
             on_hit_maximum_hp_save = OnHitMaximumHpSave(
@@ -137,6 +147,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         on_hit_save_damage=on_hit_save_damage,
         on_hit_condition_save=on_hit_save,
         on_hit_maximum_hp_save=on_hit_maximum_hp_save,
+        on_hit_contested_movement=on_hit_contested_movement,
         on_hit_modifier_effects=on_hit_modifiers,
         charge_profile=compile_charge(definition.charge_profile),
         knocks_prone_max_size=prone_size,
