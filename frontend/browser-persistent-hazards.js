@@ -89,7 +89,7 @@
       item.triggeredTurnKeys[mover.combatant_id] = turnKey;
       const save = S().resolveSavingThrow(mover.state, item.saveAbility, item.dc);
       const raw = save.succeeded ? item.successDamage : item.failureDamage;
-      const applied = A().adjustedDamage(mover.state, raw, item.damageType);
+      const applied = A().resolveDamage(mover.state, raw, item.damageType).applied;
       const before = mover.state.current_hp;
       if (applied > 0) A().applyDamage(mover.state, applied, false, [item.damageType], states);
       item.remainingDamageCapacity = Math.max(0, item.remainingDamageCapacity - applied);
