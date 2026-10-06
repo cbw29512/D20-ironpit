@@ -10,5 +10,8 @@ assert.equal(window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE.sources(attack, target(20)
 assert.equal(window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE.sources(attack, target(19)), 1);
 assert.equal(window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE.sources(attack, target(25, 5)), 0);
 assert.equal(window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE.sources(attack, target(24, 5)), 1);
+const held = target(20); held.grapple_sources = [{ source_id: "ankheg" }];
+assert.equal(window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE.sources({ conditionalAttackAdvantage: [{ trigger: "target_grappled_by_self" }] }, held, "ankheg"), 1);
+assert.equal(window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE.sources({ conditionalAttackAdvantage: [{ trigger: "target_grappled_by_self" }] }, held, "other"), 0);
 assert.throws(() => window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE.sources({ conditionalAttackAdvantage: [{ trigger: "bad" }] }, target(19)));
 console.log("Browser target-not-full-HP conditional attack Advantage regressions passed.");
