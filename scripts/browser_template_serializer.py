@@ -121,6 +121,10 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                 save_row["durationRounds"] = effect.duration_rounds
             if effect.repeat_save_timing is not None:
                 save_row["repeatSaveTiming"] = _value(effect.repeat_save_timing)
+            if effect.repeat_save_failure_condition_id:
+                save_row["repeatSaveFailureConditionId"] = effect.repeat_save_failure_condition_id
+            if effect.failure_push_ft:
+                save_row["failurePushFt"] = effect.failure_push_ft
             if effect.excluded_creature_types:
                 save_row["excludedCreatureTypes"] = list(effect.excluded_creature_types)
             if effect.excluded_creature_subtypes:
