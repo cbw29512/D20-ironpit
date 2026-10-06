@@ -2,11 +2,9 @@
   "use strict";
 
   const EFFECT = "banished";
-  const DD = () => {
-    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
-    if (!rules?.resolveDamage) throw new Error("Exile damage requires the shared damage resolver.");
-    return rules;
-  };
+  const DD = () => window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.resolveDamage
+    ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES
+    : (() => { throw new Error("Exile damage requires the shared damage resolver."); })();
 
   function removed(state) {
     return (state.timed_effects || []).some((effect) => effect.removed_from_battlefield === true);
