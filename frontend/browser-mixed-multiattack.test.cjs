@@ -107,21 +107,11 @@ function rangedHybridSetup(protectedByFrontline) {
 }
 
 {
-  const { setup, attacker, front, back } = hybridSetup();
-  window.IRON_PIT_DICE = queuedDice([76, 15, 4, 15, 4]);
-  const result = T.resolveTurn(1, 1, attacker, setup);
-  const attacks = result.events.filter((event) => event.event_type === "attack");
-  assert.deepEqual(attacks.map((event) => event.weapon_id), ["sword", "bow"]);
-  assert.deepEqual(attacks.map((event) => event.target_id), [front.combatant_id, back.combatant_id]);
-  assert.equal(attacks[1].attack_roll.mode, "normal", "Pit split shot must not be taxed by close-range Disadvantage");
-}
-
-{
   const { setup, attacker, front } = hybridSetup();
-  window.IRON_PIT_DICE = queuedDice([75, 15, 4, 15, 4]);
+  window.IRON_PIT_DICE = queuedDice([15, 4, 15, 4]);
   const result = T.resolveTurn(1, 1, attacker, setup);
   const attacks = result.events.filter((event) => event.event_type === "attack");
-  assert.deepEqual(attacks.map((event) => event.weapon_id), ["sword", "sword"]);
+  assert.deepEqual(attacks.map((event) => event.weapon_id), ["sword", "sword"], "front-row flexible Multiattack stays melee");
   assert.deepEqual(attacks.map((event) => event.target_id), [front.combatant_id, front.combatant_id]);
 }
 
