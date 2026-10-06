@@ -118,10 +118,15 @@
           total: riderRolls.reduce((sum, value) => sum + value, 0),
         });
       }
-      damageComponents = rolledComponents.map((part) => ({
-        ...part,
-        applied_total: DD().resolveDamage(target.state, part.total, part.damage_type).applied,
-      }));
+      damageComponents = rolledComponents.map((part) => {
+        const resolved = DD().resolveDamage(target.state, part.total, part.damage_type);
+        return {
+          ...part,
+          applied_total: resolved.applied,
+          absorbed_healing: resolved.healed || 0,
+          absorption_source_name: resolved.sourceName || null,
+        };
+      });
       const applied = damageComponents.reduce((sum, part) => sum + part.applied_total, 0);
       damageRoll = damageComponents.length ? {
         notation: damageComponents.map((part) => part.notation).join(" + "),
