@@ -129,9 +129,11 @@
       const rolls = damageRolls(action, count, options.sharedDamageRolls);
       const rawTotal = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
       const total = RD().evasionDamage(target.state, action.saveAbility, save.succeeded, action.successDamage, rawTotal);
-      const applied = DD().resolveDamage(target.state, Math.max(0, total), action.damageType).applied;
+      const resolvedDamage = DD().resolveDamage(target.state, Math.max(0, total), action.damageType);
+      const applied = resolvedDamage.applied;
       damageComponents = [{ source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
-        rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied }];
+        rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied,
+        absorbed_healing: resolvedDamage.healed || 0, absorption_source_name: resolvedDamage.sourceName || null }];
       damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
       if (applied) {
         const affectedStates = states(options.setup);
