@@ -86,7 +86,7 @@
     if (hit) {
       const affectedStates = states(extra.setup), damage = HD().resolve(attacker.state, actualTarget.state, attack, critical, mode,
         extra.turnKey || `${round}:${attacker.combatant_id}`, { bonusDamage: extra.bonusDamage || null,
-          targetId: actualTarget.combatant_id, sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false, affectedStates, setup: extra.setup || null, naturalRoll: natural });
+          targetId: actualTarget.combatant_id, sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup, actualTarget) || false, affectedStates, setup: extra.setup || null, naturalRoll: natural });
       damageComponents = damage.damageComponents; damageRoll = damage.damageRoll; damageOutcome = damage.damageOutcome; saveDamage = damage.saveDamage; outcome.damageReductionReaction = damage.damageReductionReactionUsed ? damage : null;
       cunningStrikeTrip = damage.cunningStrikeTrip || null;
       cunningStrikeObscure = damage.cunningStrikeObscure || null;
