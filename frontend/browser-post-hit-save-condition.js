@@ -95,10 +95,10 @@
           + action.start_of_turn_dice_per_slot_above * Math.max(0, slot - action.level);
         const total = D().rollMany(count, action.start_of_turn_dice_size)
           .reduce((sum, roll) => sum + roll, 0);
+        const hpBefore = member.state.current_hp;
         const applied = A().resolveDamage
           ? A().resolveDamage(member.state, total, action.start_of_turn_damage_type).applied
           : A().adjustedDamage(member.state, total, action.start_of_turn_damage_type);
-        const hpBefore = member.state.current_hp;
         A().applyDamage(
           member.state, applied, false, [action.start_of_turn_damage_type],
           members(setup).map((item) => item.state), setup,
