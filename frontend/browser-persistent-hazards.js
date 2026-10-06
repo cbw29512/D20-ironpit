@@ -89,8 +89,8 @@
       item.triggeredTurnKeys[mover.combatant_id] = turnKey;
       const save = S().resolveSavingThrow(mover.state, item.saveAbility, item.dc);
       const raw = save.succeeded ? item.successDamage : item.failureDamage;
-      const applied = A().adjustedDamage(mover.state, raw, item.damageType);
       const before = mover.state.current_hp;
+      const applied = (A().resolveDamage ? A().resolveDamage(mover.state, raw, item.damageType).applied : A().adjustedDamage(mover.state, raw, item.damageType));
       if (applied > 0) A().applyDamage(mover.state, applied, false, [item.damageType], states);
       item.remainingDamageCapacity = Math.max(0, item.remainingDamageCapacity - applied);
       const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(mover.state) || "";
