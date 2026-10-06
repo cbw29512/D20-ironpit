@@ -10,6 +10,7 @@ def primary_attack_save_fields(
     save_damage: Any,
     on_hit_save: Any,
     on_hit_maximum_hp_save: Any,
+    contested_movement: Any,
     cunning_strike_obscure: Any,
     cunning_strike: Any,
     topple: Any,
@@ -139,6 +140,18 @@ def build_attack_description(
                 if getattr(resolution, "killed_by_zero_maximum", False):
                     description += f" {actual_defender_name} dies as its hit point maximum reaches 0."
 
+        if contested_movement and contested_movement.target_roll is not None:
+            result = "wins" if contested_movement.target_succeeded else "loses"
+            description += (
+                f" {actual_defender_name} {result} the "
+                f"{contested_movement.target_ability.title()} contest "
+                f"({contested_movement.target_roll.total} vs {contested_movement.source_roll.total})."
+            )
+            if contested_movement.movement_ft:
+                direction = "toward the source" if contested_movement.target_succeeded is False else ""
+                description += (
+                    f" {actual_defender_name} is moved {contested_movement.movement_ft} feet {direction}."
+                )
         if damage_outcome == "relentless_endurance":
             description += f" {actual_defender_name} uses Relentless Endurance and remains at 1 HP."
         if damage_outcome == "undead_fortitude":
