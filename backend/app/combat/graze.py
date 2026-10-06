@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.damage_defenses import adjusted_damage_amount
+from app.combat.damage_defenses import resolve_damage_amount
 from app.combat.dice import DiceProvider
 from app.combat.weapon_mastery import weapon_mastery_active
 from app.combat.zero_hp import ZeroHpOutcome, apply_damage
@@ -41,7 +41,7 @@ def resolve_graze_miss(
             damage_type=attack.weapon.damage_type,
             total=raw_damage,
         )
-        applied = adjusted_damage_amount(
+        applied, _healed, _absorption_source = resolve_damage_amount(
             raw_damage,
             attack.weapon.damage_type,
             defender,
