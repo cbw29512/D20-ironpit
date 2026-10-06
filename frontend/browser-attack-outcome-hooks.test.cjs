@@ -36,6 +36,7 @@ window.IRON_PIT_BROWSER_MODIFIERS = {
 };
 window.IRON_PIT_BROWSER_ATTACK = {
   adjustedDamage: (_target, amount) => amount,
+  resolveDamage: (_target, amount) => ({ applied: amount, healed: 0, sourceName: null }),
   applyDamage: (target, amount) => {
     callOrder.push("graze");
     target.current_hp -= amount;
