@@ -89,7 +89,8 @@
     const eligible = (item) => !item.save_ability || !ability || item.save_ability === ability;
     const matching = (state.active_modifiers || []).filter(eligible);
     return matching.filter((item) => item.kind === "saving-throw-flat").reduce((sum, item) => sum + (item.flat_bonus || 0), 0)
-      + Math.max(0, ...matching.filter((item) => item.kind === "cover-saving-throw-flat").map((item) => item.flat_bonus || 0));
+      + Math.max(0, ...matching.filter((item) => item.kind === "cover-saving-throw-flat").map((item) => item.flat_bonus || 0))
+      + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.savingThrowFlat(state, ability) || 0);
   }; function damageSourceQualifiers(state, attack) {
     const qualifiers = new Set(["attack", "weapon", attack.kind, ...(attack.damageSourceQualifiers || [])]);
     for (const item of state.active_modifiers || []) {
@@ -99,7 +100,7 @@
     }
     return qualifiers;
   }
-  const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class") + Math.max(0, ...(state.active_modifiers || []).filter((item) => item.kind === "cover-armor-class").map((item) => item.flat_bonus || 0)), ...(state.active_modifiers || []).filter((item) => item.kind === "armor-class-minimum").map((item) => item.minimum_value || 0));
+  const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class") + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.armorClassBonus(state) || 0) + Math.max(0, ...(state.active_modifiers || []).filter((item) => item.kind === "cover-armor-class").map((item) => item.flat_bonus || 0)), ...(state.active_modifiers || []).filter((item) => item.kind === "armor-class-minimum").map((item) => item.minimum_value || 0));
   const effectiveSpeed = (state) => {
     const speedDelta = (state.active_modifiers || []).filter((item) => item.kind === "speed")
       .reduce((sum, item) => sum + (
@@ -111,7 +112,8 @@
     const base = Math.max(0, state.template.speed_ft + speedDelta);
     const multiplier = (state.active_modifiers || []).filter((item) => item.kind === "speed-multiplier")
       .reduce((value, item) => value * (item.multiplier ?? 1), 1);
-    const adjusted = Math.max(0, Math.trunc(base * multiplier));
+    const timedMultiplier = window.IRON_PIT_BROWSER_TIMED_CONTROL?.speedMultiplier(state) ?? 1;
+    const adjusted = Math.max(0, Math.trunc(base * multiplier * timedMultiplier));
     return X()?.effectiveSpeed(state, adjusted) ?? adjusted;
   };
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;

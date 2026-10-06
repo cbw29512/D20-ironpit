@@ -500,6 +500,19 @@ A source may declare a normal `SavingThrowAction` with `max_targets > 1`. The sh
 
 A timed effect may declare `turn_behavior="single_activity"`. On each affected turn, the first voluntary category actually used—movement, Action, or Bonus Action—becomes that turn's sole voluntary category. Choosing movement removes Action and Bonus Action availability; choosing an Action removes Bonus Action availability and voluntary movement; choosing a Bonus Action removes Action availability and voluntary movement. Reactions are not affected. Multiple attacks that belong to one Attack action remain inside the chosen Action, but an effect that grants an additional Action cannot bypass the single-Action limit. The claim resets at the start of each turn and disappears when the owning timed-effect group expires or is removed.
 
+## Parameterized timed control limits
+
+A timed effect may carry `control_limits` without becoming a named `ConditionName`. Effect ids such as `slowed` and `weakened-strength` are rider identities, not conditions.
+
+- `speed_multiplier` multiplies effective speed. Halved speed is `0.5`. This is not Exhaustion's speed track.
+- `action_bonus_exclusive` lets the creature use an Action or a Bonus Action on its turn, but not both. Movement remains available. This is not `single_activity`, which zeros remaining movement after an Action or Bonus Action.
+- `max_attacks_per_turn` caps attacks on the affected creature's own turn. Extra Attack, remaining Multiattack slots, Cleave, and bonus-action attacks are additional attacks and stop once the cap is reached. Off-turn attacks are not counted.
+- `d20_disadvantage_abilities` imposes Disadvantage on matching ability checks, ability-based attack rolls, and saving throws. Weakening Breath binds Strength.
+
+A failed-save rider may declare `blocks_reactions`, which maps to the existing `suppress_reactions` flag. Optional `armor_class_bonus` and `saving_throw_flat_bonuses` apply only when a source prints those penalties. Bind each 2014 Slow/Weaken rider from its own SRD stat block: Copper Slowing Breath and Stone Golem Slow share the combat-economy limits and do not print −2 AC or −2 Dexterity saves; Gold Weakening Breath prints Strength-based attack/check/save Disadvantage only. The 2014 *Slow* spell’s −2 penalties stay on sources that print them. Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §14.1.
+
+Catalog Slowing Breath, Stone Golem Slow, and Weakening Breath already carry their own printed keys; the 2014 failed-save control classifier stays closed to them until a later unlock tranche binds those catalog payloads.
+
 ## Committed timed activities
 
 A `DelayedResourceRefill` is a committed timed activity, not an end-of-turn auto-timer. The creature spends its Action to begin. Fresh per-fight state records the start and completion rounds. While that state exists, the shared suppression helpers block Action, Bonus Action, and voluntary movement; they do not block Reactions. End-of-turn resolution restores the declared resources only at the recorded completion round, and only if the creature is still able to perform the activity. Incapacitated or dead creatures stop without restore. The printed source name remains presentation and audit metadata; engine dispatch uses the declarative activity, not a class or feature-name branch.

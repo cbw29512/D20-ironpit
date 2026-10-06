@@ -14,6 +14,7 @@ from app.domain.modifiers import CombatModifier, ConcentrationState
 from app.domain.movement import MovementModeGrant
 from app.domain.persistent_spell_attacks import PersistentSpellAttackState
 from app.domain.replacement_forms import ReplacementFormState
+from app.domain.timed_control_limits import TimedControlLimits
 
 TimedTurnBehavior = Literal["normal", "forced_retreat", "single_activity"]
 
@@ -90,6 +91,7 @@ class TimedEffect(BaseModel):
     ground_contact: bool = False
     ends_on_teleport: bool = False
     source_effect_immunity_on_end: bool = False
+    control_limits: TimedControlLimits | None = None
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "TimedEffect":
@@ -141,6 +143,7 @@ class CombatantState(BaseModel):
     turn_termination_reason: str | None = None
     heroic_inspiration: bool = False
     dash_uses_this_turn: int = Field(default=0, ge=0)
+    attacks_this_turn: int = Field(default=0, ge=0)
     movement_remaining_ft: int = Field(default=0, ge=0)
     voluntary_turn_activity: Literal["movement", "action", "bonus_action"] | None = None
     resources: list[ResourceState] = Field(default_factory=list)

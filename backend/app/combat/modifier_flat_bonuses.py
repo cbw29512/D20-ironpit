@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.cover_modifiers import strongest_cover_bonus
+from app.combat.timed_control_bonuses import timed_saving_throw_flat_bonus
 from app.domain.modifiers import ModifierKind
 from app.domain.runtime import CombatantState
 
@@ -27,4 +28,6 @@ def saving_throw_flat_bonus(state: CombatantState, ability: str | None = None) -
         if item.kind is ModifierKind.SAVING_THROW_FLAT
         and (item.save_ability is None or ability is None or item.save_ability == ability)
     )
-    return stacking_bonus + strongest_cover_bonus(state, ModifierKind.COVER_SAVING_THROW_FLAT, ability)
+    return stacking_bonus + timed_saving_throw_flat_bonus(state, ability) + strongest_cover_bonus(
+        state, ModifierKind.COVER_SAVING_THROW_FLAT, ability,
+    )

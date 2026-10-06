@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
 from app.combat.attacks import resolve_attack
+from app.combat.timed_attack_cap import turn_attack_allowed
 from app.combat.barbarian import FRENZY_2014_EFFECT_ID, rage_active
 from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import combatant_distance
@@ -45,6 +46,7 @@ def resolve_frenzy_bonus_attack(
         or FRENZY_2014_EFFECT_ID not in state.active_effect_ids
         or not rage_active(state)
         or not is_available(state, "bonus_action")
+        or not turn_attack_allowed(state)
     ):
         return [], sequence
     for target in target_order(attacker, setup):

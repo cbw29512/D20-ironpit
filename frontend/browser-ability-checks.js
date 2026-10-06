@@ -11,8 +11,9 @@
           ) || 0)
           : 0
       );
+      const timed = window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(state, options.ability) || 0;
       return window.IRON_PIT_BROWSER_ROLLS.modeFromSources(
-        advantageSources + generic, disadvantageSources + context,
+        advantageSources + generic, disadvantageSources + context + timed,
       );
     } catch (error) {
       console.error("Browser ability-check roll mode failed", { combatant: state?.template?.name, error });

@@ -6,6 +6,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
 from app.combat.damage_reaction_wrappers import resolve_attack_event_chain
 from app.combat.light_weapons import mark_light_extra_attack_used, plan_light_extra_attack
+from app.combat.timed_attack_cap import turn_attack_allowed
 from app.combat.pit_policy import choose_attack
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack
@@ -25,7 +26,7 @@ def resolve_light_extra_attack(
     """Resolve the Light extra attack in fixed Pit formation; Nick changes timing, never attack count."""
     try:
         plan = plan_light_extra_attack(attacker.state, trigger_attack, turn_key)
-        if plan is None:
+        if plan is None or not turn_attack_allowed(attacker.state):
             return [], sequence
         if plan.uses_bonus_action and not is_available(attacker.state, "bonus_action"):
             return [], sequence

@@ -57,6 +57,7 @@
       ground_contact: Boolean(options.groundContact),
       ends_on_teleport: Boolean(options.endsOnTeleport || options.groundContact),
       source_effect_immunity_on_end: Boolean(options.sourceEffectImmunityOnEnd),
+      control_limits: options.controlLimits || null,
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
     RF()?.revertIfIncapacitated(state);

@@ -47,6 +47,7 @@
   function resolveCleave(sequence, round, member, triggeringEvent, attack, setup, turnKey) {
     try {
       if (!triggeringEvent?.hit || attack?.kind !== "melee" || !active(member.state, attack, "Cleave")) return { events: [], sequence };
+      if (window.IRON_PIT_BROWSER_TIMED_CONTROL?.turnAttackAllowed(member.state) === false) return { events: [], sequence };
       if (member.state.feature_last_turn_keys?.[CLEAVE_FEATURE_ID] === turnKey) return { events: [], sequence };
       const members = [...setup.heroes, ...setup.monsters];
       const firstTarget = members.find((target) => target.combatant_id === triggeringEvent.target_id);
