@@ -6,7 +6,6 @@
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const DMR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const DE = () => window.IRON_PIT_BROWSER_DEFERRED_ATTACK_SLOT;
-  const D = () => window.IRON_PIT_DICE;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const MK = () => window.IRON_PIT_BROWSER_MONK_2014;
   const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
@@ -14,168 +13,93 @@
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const WM = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY || { resolveCleave: (sequence) => ({ events: [], sequence }) };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s) => s.action_available, spend: (s) => { s.action_available = false; } };
-  const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [] }
-    : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [] };
+  const MC = window.IRON_PIT_BROWSER_MULTIATTACK_CHOICES;
+  if (!MC) throw new Error("Multiattack requires browser-multiattack-choices.js.");
 
-  function saveChoice(member, setup, data) {
-    const allowed = new Set(data.saveActionIds);
-    for (const target of F().targetOrder(member, setup)) {
-      const action = (member.state.template.saving_throw_actions || []).find((item) => {
-        const distance = F().saveDistance(member, target, item.range);
-        return allowed.has(item.id) && V().legalAction(item, target, distance, member.combatant_id);
-      });
-      if (action) return { target, save: action, distance: F().saveDistance(member, target, action.range) };
-    }
-    return null;
-  }
-  function attackChoice(member, setup, data, rangedBackline = false) {
-    if (rangedBackline) {
-      const ranged = F().chooseAttack(member, setup, data.attackIds, "ranged", true);
-      if (ranged) return ranged;
-    }
-    if (F().isBackline(member) && F().alliedFrontlineActive(member, setup)) {
-      const ranged = F().chooseAttack(member, setup, data.attackIds, "ranged");
-      if (ranged) return ranged;
-    }
-    return F().chooseAttack(member, setup, data.attackIds, "melee")
-      || F().chooseAttack(member, setup, data.attackIds, "ranged");
-  }
-  function slotHasLegalChoice(member, setup, slot) {
-    try {
-      const data = slotData(slot);
-      return Boolean(attackChoice(member, setup, data) || saveChoice(member, setup, data));
-    } catch (error) {
-      console.error("Failed to prove browser Attack/Multiattack slot legality", { member: member.combatant_id, error });
-      throw error;
-    }
-  }
-  function useRangedSplit(member, setup, slots) {
-    if (F().isBackline(member)) return false;
-    if (!F().hasFrontlineTarget(member, setup) || !F().hasBacklineTarget(member, setup)) return false;
-    if (!slots.slice(1).some((slot) => F().flexibleSlotHasBoth(member, slotData(slot).attackIds))) return false;
-    return D().roll(100) >= 76;
-  }
   function eventTarget(event, fallback, setup) {
     return [...setup.heroes, ...setup.monsters].find((item) => item.combatant_id === event.target_id) || fallback;
   }
 
-  function legalChoiceAvailable(member, setup) {
-    const definition = member.state.template.attack_action, slots = definition?.slots;
-    return Boolean(slots?.length
-      && F().targetOrder(member, setup).length
-      && slots.some((slot) => slotHasLegalChoice(member, setup, slot)));
-  }
-
-  function available(member, setup) {
-    return Boolean(E().available(member.state, "action") && legalChoiceAvailable(member, setup));
-  }
-  function meleeAvailable(member, setup) {
-    return (member.state.template.attack_action?.slots || []).some((slot) =>
-      Boolean(F().chooseAttack(member, setup, slotData(slot).attackIds, "melee")));
-  }
-  function printedSave(action) {
-    return (action.damageDiceCount || 0) * ((action.damageDiceSize || 6) + 1) / 2 + (action.damageBonus || 0);
-  }
-  function expectedDamage(member, setup) {
+  function resolveAttackAction(sequence, round, member, setup) {
     try {
-      let total = 0;
-      for (const slot of member.state.template.attack_action?.slots || []) {
-        const data = slotData(slot);
-        const chosen = F().chooseAttack(member, setup, data.attackIds, "melee")
-          || F().chooseAttack(member, setup, data.attackIds, "ranged");
-        if (chosen) {
-          total += F().weaponMeanDamage(chosen.attack);
+      const definition = member.state.template.attack_action, slots = definition?.slots;
+      if (!MC.available(member, setup)) return { events: [], sequence };
+      const events = [];
+      E().spend(member.state, "action");
+      const attackBuff = AWB()?.resolve(sequence, round, member) || null;
+      if (attackBuff) { events.push(attackBuff); sequence += 1; }
+      let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
+      let lightTrigger = null;
+      const turnKey = `${round}:${member.combatant_id}`;
+
+      for (let index = 0; index < slots.length; index += 1) {
+        if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
+        const data = MC.slotData(slots[index]);
+        const deferred = DE()?.resolve(sequence, round, member, setup) || null;
+        if (deferred) {
+          events.push(deferred); sequence += 1; openingFeature = null;
           continue;
         }
-        const saved = saveChoice(member, setup, data);
-        if (saved) total += printedSave(saved.save);
+        const choice = F().chooseSlotAttack(member, setup, data.attackIds);
+        if (choice) {
+          if (window.IRON_PIT_BROWSER_TIMED_CONTROL?.turnAttackAllowed(member.state) === false) break;
+          const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
+          const featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
+          const event = A().resolveAttack(sequence, round, member, choice.target, choice.attack, choice.distance, {
+            spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey,
+            allowReckless: true, ignoreCloseThreat: true,
+          });
+          sequence += 1;
+          if (event.event_type === "saving_throw" && !event.attack_roll) {
+            const chain = DMR()?.chain(sequence, round, member, event, setup, turnKey) || { events: [event], sequence };
+            events.push(...chain.events); sequence = chain.sequence; openingFeature = null;
+            if (member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
+            continue;
+          }
+          events.push(event);
+          if (event.hit) {
+            const actualTarget = eventTarget(event, choice.target, setup);
+            if (MK()?.resolveStunning) {
+              const stun = MK().resolveStunning(sequence, round, member, actualTarget, choice.attack);
+              if (stun) { events.push(stun); sequence += 1; }
+            }
+          }
+          const chain = DMR()?.chain(sequence, round, member, event, setup, turnKey) || { events: [event], sequence };
+          events.push(...chain.events.slice(1)); sequence = chain.sequence;
+          if (member.state.turn_terminated || member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
+          const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
+          events.push(...cleave.events); sequence = cleave.sequence;
+          if (member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
+          if (definition.isAttackAction && !lightTrigger && choice.attack.light) lightTrigger = choice.attack;
+          openingFeature = null;
+          continue;
+        }
+        const saved = MC.saveChoice(member, setup, data);
+        if (saved) {
+          const event = V().resolveAction(sequence, round, member, saved.target, saved.save, saved.distance, {
+            spendAction: false, setup,
+          });
+          sequence += 1;
+          const chain = DMR()?.chain(sequence, round, member, event, setup, turnKey) || { events: [event], sequence };
+          events.push(...chain.events); sequence = chain.sequence;
+          if (member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
+        }
       }
-      return total;
+
+      if (definition.isAttackAction && lightTrigger && !member.state.turn_terminated
+        && !member.state.is_dead && !Q()?.incapacitated?.(member.state)) {
+        const extra = R().resolve(sequence, round, member, setup, lightTrigger, turnKey);
+        events.push(...extra.events); sequence = extra.sequence;
+      }
+      return { events, sequence };
     } catch (error) {
-      console.error("Failed to score browser Attack/Multiattack expected damage", {
-        member: member.combatant_id, error,
-      });
+      console.error("Browser Multiattack resolution failed", { id: member?.combatant_id, error });
       throw error;
     }
   }
 
-  function resolveAttackAction(sequence, round, member, setup) {
-    const definition = member.state.template.attack_action, slots = definition?.slots;
-    if (!available(member, setup)) return { events: [], sequence };
-    const events = [];
-    E().spend(member.state, "action");
-    const attackBuff = AWB()?.resolve(sequence, round, member) || null;
-    if (attackBuff) { events.push(attackBuff); sequence += 1; }
-    let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
-    let lightTrigger = null, rangedSplitUsed = false;
-    const rangedSplit = useRangedSplit(member, setup, slots);
-    const turnKey = `${round}:${member.combatant_id}`;
-
-    for (let index = 0; index < slots.length; index += 1) {
-      if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
-      const data = slotData(slots[index]);
-      const splitThis = index > 0 && rangedSplit && !rangedSplitUsed && F().flexibleSlotHasBoth(member, data.attackIds);
-      const deferred = DE()?.resolve(sequence, round, member, setup) || null;
-      if (deferred) {
-        events.push(deferred); sequence += 1; openingFeature = null;
-        continue;
-      }
-      const choice = attackChoice(member, setup, data, splitThis);
-      if (choice) {
-        if (window.IRON_PIT_BROWSER_TIMED_CONTROL?.turnAttackAllowed(member.state) === false) break;
-        if (splitThis && choice.attack.kind === "ranged") rangedSplitUsed = true;
-        const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
-        const featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
-        const event = A().resolveAttack(sequence, round, member, choice.target, choice.attack, choice.distance, {
-          spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey,
-          allowReckless: true, ignoreCloseThreat: true,
-        });
-        sequence += 1;
-        if (event.event_type === "saving_throw" && !event.attack_roll) {
-          const chain = DMR()?.chain(sequence, round, member, event, setup, turnKey) || { events: [event], sequence };
-          events.push(...chain.events); sequence = chain.sequence; openingFeature = null;
-          if (member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
-          continue;
-        }
-        events.push(event);
-        if (event.hit) {
-          const actualTarget = eventTarget(event, choice.target, setup);
-          if (MK()?.resolveStunning) {
-            const stun = MK().resolveStunning(sequence, round, member, actualTarget, choice.attack);
-            if (stun) { events.push(stun); sequence += 1; }
-          }
-        }
-        const chain = DMR()?.chain(sequence, round, member, event, setup, turnKey) || { events: [event], sequence };
-        events.push(...chain.events.slice(1)); sequence = chain.sequence;
-        if (member.state.turn_terminated || member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
-        const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
-        events.push(...cleave.events); sequence = cleave.sequence;
-        if (member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
-        if (definition.isAttackAction && !lightTrigger && choice.attack.light) lightTrigger = choice.attack;
-        openingFeature = null;
-        continue;
-      }
-      const saved = saveChoice(member, setup, data);
-      if (saved) {
-        const event = V().resolveAction(sequence, round, member, saved.target, saved.save, saved.distance, {
-          spendAction: false, setup,
-        });
-        sequence += 1;
-        const chain = DMR()?.chain(sequence, round, member, event, setup, turnKey) || { events: [event], sequence };
-        events.push(...chain.events); sequence = chain.sequence;
-        if (member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
-      }
-    }
-
-    if (definition.isAttackAction && lightTrigger && !member.state.turn_terminated
-      && !member.state.is_dead && !Q()?.incapacitated?.(member.state)) {
-      const extra = R().resolve(sequence, round, member, setup, lightTrigger, turnKey);
-      events.push(...extra.events); sequence = extra.sequence;
-    }
-    return { events, sequence };
-  }
-
   window.IRON_PIT_BROWSER_MULTIATTACK = {
-    available, legalChoiceAvailable, meleeAvailable, expectedDamage, resolveAttackAction,
+    available: MC.available, legalChoiceAvailable: MC.legalChoiceAvailable,
+    meleeAvailable: MC.meleeAvailable, expectedDamage: MC.expectedDamage, resolveAttackAction,
   };
 })();

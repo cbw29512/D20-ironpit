@@ -23,30 +23,23 @@ from app.content.monster_innate_support_2014 import (
 )
 from app.content.monster_legendary_bindings_2014 import legendary_action_options_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
+from app.content.monster_multiattack_2014 import multiattack_2014
 from app.content.monster_trait_bindings_2014 import (
     aggressive_tactical_grants_2014, conditional_attack_advantage_2014,
     environment_context_reactions_2014, progression_features_2014, sneak_attack_eligible_2014,
 )
 from app.content.monster_legendary_resistance_2014 import (
-    legendary_resistance_override_2014,
-    legendary_resistance_resource_2014,
+    legendary_resistance_override_2014, legendary_resistance_resource_2014,
 )
 from app.content.movement_modes import standard_arena_closing_speed_from_modes
 from app.content.monster_regeneration_2014 import regeneration_trait_2014
-from app.content.monster_save_capabilities_2014 import (
-    recharge_rules_2014, save_capabilities_2014, save_resources_2014,
-)
+from app.content.monster_save_capabilities_2014 import recharge_rules_2014, save_capabilities_2014, save_resources_2014
 from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.weapons import DamageSourceQualifier
 from app.domain.capabilities import CombatantDefinition
-from app.domain.capability_attacks import (
-    AttackCapabilityDefinition,
-    CapabilityActionSlot,
-    MultiattackCapabilityDefinition,
-)
+from app.domain.capability_attacks import AttackCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
 from app.domain.character_builds import AbilityScores
-from app.domain.movement import MovementModes
 from app.domain.reactions import ParryReaction
 from app.domain.size import CreatureSize
 
@@ -90,18 +83,6 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
     return AttackCapabilityDefinition(**kwargs)
 
 
-def _multiattack(monster: SourceMonster2014) -> MultiattackCapabilityDefinition | None:
-    if not monster.multiattack_slots:
-        return None
-    attack_by_source = {attack.id: attack_id_2014(monster, attack.id) for attack in monster.attacks}
-    return MultiattackCapabilityDefinition(
-        id=f"2014-{monster.id}-multiattack",
-        name="Multiattack",
-        is_attack_action=True,
-        slots=[CapabilityActionSlot(attack_ids=[attack_by_source[slot[0]]]) for slot in monster.multiattack_slots],
-    )
-
-
 def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     blockers = basic_blockers_2014(monster)
     if blockers:
@@ -143,7 +124,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         size=CreatureSize(monster.size.lower()), ability_scores=scores,
         armor_class=monster.armor_class, max_hp=monster.max_hp, speed_ft=standard_arena_closing_speed_from_modes(movement),
         movement_modes=movement, initiative_bonus=scores.modifier("dexterity"), attacks=attacks,
-        primary_attack_id=attacks[0].id, attack_action=_multiattack(monster),
+        primary_attack_id=attacks[0].id, attack_action=multiattack_2014(monster),
         save_actions=save_capabilities_2014(monster),
         spell_save_actions=innate_spell_save_actions_2014(monster),
         timed_self_buff_actions=innate_timed_self_buffs_2014(monster),

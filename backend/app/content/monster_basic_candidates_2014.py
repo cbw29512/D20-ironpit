@@ -13,6 +13,7 @@ from app.content.monster_healing_2014 import healing_action_names_2014, supports
 from app.content.monster_innate_support_2014 import innate_spell_names_2014, supports_innate_spellcasting_2014
 from app.content.monster_legendary_bindings_2014 import supports_legendary_actions_2014
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_multiattack_2014 import multiattack_blockers_2014
 from app.content.monster_save_capabilities_2014 import supports_recharge_rules_2014, unsupported_save_actions_2014, unsupported_source_actions_2014
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_trait_bindings_2014 import bound_trait_names_2014, supports_reckless_2014
@@ -63,15 +64,6 @@ def _attack_blockers(monster: SourceMonster2014) -> list[str]:
         ):
             blockers.append("attack:range")
     return blockers
-
-
-def _multiattack_blockers(monster: SourceMonster2014) -> list[str]:
-    if monster.multiattack_policy is not None or monster.multiattack_binding is not None:
-        return ["multiattack:complex"]
-    attack_ids = {attack.id for attack in monster.attacks}
-    if any(len(slot) != 1 or slot[0] not in attack_ids for slot in monster.multiattack_slots):
-        return ["multiattack:choice-or-binding"]
-    return []
 
 
 def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
@@ -147,7 +139,7 @@ def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     if not monster.attacks:
         blockers.append("attack:none")
     blockers.extend(_attack_blockers(monster))
-    blockers.extend(_multiattack_blockers(monster))
+    blockers.extend(multiattack_blockers_2014(monster))
     blockers.extend(_source_name_blockers(monster))
     bound_limited = set()
     if supports_healing_2014(monster):

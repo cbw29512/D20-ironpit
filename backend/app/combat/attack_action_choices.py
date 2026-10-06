@@ -2,17 +2,15 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.dice import DiceProvider
 from app.combat.pit_policy import (
     allied_frontline_active,
     choose_attack,
     flexible_slot_has_both,
-    has_backline_target,
-    has_frontline_target,
     is_backline,
     save_distance,
     target_order,
 )
+from app.combat.printed_damage import weapon_mean_damage, save_mean_damage as _save_mean_damage
 from app.combat.saving_throws import legal_save_action
 from app.domain.actions import AttackActionSlot
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -45,21 +43,20 @@ def attack_choice(
     attacker: EncounterCombatant,
     setup: EncounterSetup,
     slot: AttackActionSlot,
-    *,
-    ranged_backline: bool = False,
 ):
+    """Choose a printed Multiattack option using deterministic formation-row policy."""
     try:
-        if ranged_backline:
-            choice = choose_attack(
-                attacker, setup, slot.attack_ids,
-                kind=WeaponAttackKind.RANGED, prefer_backline=True,
-            )
-            if choice is not None:
-                return choice
-        if is_backline(attacker) and allied_frontline_active(attacker, setup):
-            ranged = choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED)
-            if ranged is not None:
-                return ranged
+        if flexible_slot_has_both(attacker, slot.attack_ids):
+            if is_backline(attacker):
+                preferred = (
+                    WeaponAttackKind.RANGED
+                    if allied_frontline_active(attacker, setup)
+                    else WeaponAttackKind.MELEE
+                )
+            else:
+                preferred = WeaponAttackKind.MELEE
+            return choose_attack(attacker, setup, slot.attack_ids, kind=preferred)
+
         melee = choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.MELEE)
         if melee is not None:
             return melee
@@ -81,21 +78,32 @@ def slot_has_legal_choice(
         raise
 
 
-def use_ranged_split(
-    attacker: EncounterCombatant,
-    setup: EncounterSetup,
-    slots: list[AttackActionSlot],
-    dice: DiceProvider,
-) -> bool:
-    """Frontline mixed attackers have a 25% chance for one later shot at the enemy backline."""
+def attack_action_melee_legal(attacker: EncounterCombatant, setup: EncounterSetup) -> bool:
     try:
-        if is_backline(attacker):
+        definition = attacker.state.template.attack_action
+        if definition is None:
             return False
-        if not has_frontline_target(attacker, setup) or not has_backline_target(attacker, setup):
-            return False
-        if not any(flexible_slot_has_both(attacker, slot.attack_ids) for slot in slots[1:]):
-            return False
-        return dice.roll(100) >= 76
+        for slot in definition.slots:
+            choice = attack_choice(attacker, setup, slot)
+            if choice is not None and choice[1].weapon.attack_kind is WeaponAttackKind.MELEE:
+                return True
+        return False
     except Exception:
-        logger.exception("Failed to evaluate ranged split for %s.", attacker.combatant_id)
+        logger.exception("Failed melee Attack-action probe for %s.", attacker.combatant_id)
+        raise
+
+
+def attack_action_damage(attacker: EncounterCombatant, setup: EncounterSetup) -> float:
+    try:
+        definition = attacker.state.template.attack_action
+        if definition is None:
+            return 0.0
+        total = 0.0
+        for slot in definition.slots:
+            chosen = attack_choice(attacker, setup, slot)
+            saved = save_choice(attacker, setup, slot) if chosen is None else None
+            total += weapon_mean_damage(chosen[1]) if chosen else _save_mean_damage(saved[1]) if saved else 0.0
+        return total
+    except Exception:
+        logger.exception("Failed Attack/Multiattack damage scoring for %s.", attacker.combatant_id)
         raise

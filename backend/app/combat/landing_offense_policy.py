@@ -7,20 +7,21 @@ from dataclasses import dataclass
 from app.combat.action_economy import is_available
 from app.combat.area_save_actions import choose_area_save
 from app.combat.area_weapon_attacks import choose_area_weapon_attack
-from app.combat.attack_action_choices import attack_choice, save_choice
+from app.combat.attack_action_choices import attack_action_melee_legal, attack_action_damage as _attack_action_damage
 from app.combat.auto_hit_spell_policy import choose_auto_hit_spell
 from app.combat.concentration_repeat_saves import choose_concentration_repeat_save
 from app.combat.encounter_targeting import living_opponents
 from app.combat.intimidating_presence_2014 import can_use_presence
 from app.combat.multi_target_save_actions import choose_multi_target_save_action
-from app.combat.pit_policy import choose_attack, save_distance, target_order
+from app.combat.pit_policy import choose_standard_attack, save_distance, target_order
+from app.combat.printed_damage import weapon_mean_damage, save_mean_damage as _save_mean_damage
 from app.combat.resources import resource_available
 from app.combat.saving_throws import legal_save_action
 from app.combat.spell_attack_policy import choose_spell_attack
 from app.combat.save_zone_landing import choose_damaging_save_zone
 from app.combat.spell_policy import choose_spell
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.models import WeaponAttack, WeaponAttackKind
+from app.domain.models import WeaponAttackKind
 
 logger = logging.getLogger(__name__)
 
@@ -32,69 +33,13 @@ class OffensePick:
     payload: object | None = None
 
 
-def weapon_mean_damage(attack: WeaponAttack) -> float:
-    try:
-        return attack.weapon.dice_count * (attack.weapon.dice_size + 1) / 2 + attack.damage_bonus
-    except Exception:
-        logger.exception("Failed printed weapon damage for %s.", attack.id)
-        raise
-
-
-def _save_mean_damage(action) -> float:
-    try:
-        parts = action.damage_components or (
-            [action] if getattr(action, "damage_dice_count", 0) else []
-        )
-        total = 0.0
-        for part in parts:
-            count = getattr(part, "dice_count", getattr(part, "damage_dice_count", 0))
-            size = getattr(part, "dice_size", getattr(part, "damage_dice_size", 0))
-            bonus = getattr(part, "damage_bonus", 0)
-            if count:
-                total += count * (size + 1) / 2 + bonus
-        return total
-    except Exception:
-        logger.exception("Failed printed save-action damage for %s.", getattr(action, "id", "?"))
-        raise
-
-
 def melee_can_land_now(attacker: EncounterCombatant, setup: EncounterSetup) -> bool:
     try:
-        ids = [
-            attacker.state.template.weapon_attack.id,
-            *(item.id for item in attacker.state.template.alternate_weapon_attacks),
-        ]
-        return choose_attack(attacker, setup, ids, kind=WeaponAttackKind.MELEE) is not None
+        choice = choose_standard_attack(attacker, setup)
+        return choice is not None and choice[1].weapon.attack_kind is WeaponAttackKind.MELEE
     except Exception:
         logger.exception("Failed melee-landing probe for %s.", attacker.combatant_id)
         raise
-
-
-def attack_action_melee_legal(attacker: EncounterCombatant, setup: EncounterSetup) -> bool:
-    try:
-        definition = attacker.state.template.attack_action
-        if definition is None:
-            return False
-        return any(
-            attack_choice(attacker, setup, slot) is not None
-            and choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.MELEE) is not None
-            for slot in definition.slots
-        )
-    except Exception:
-        logger.exception("Failed melee Attack-action probe for %s.", attacker.combatant_id)
-        raise
-
-
-def _attack_action_damage(attacker: EncounterCombatant, setup: EncounterSetup) -> float:
-    definition = attacker.state.template.attack_action
-    if definition is None:
-        return 0.0
-    total = 0.0
-    for slot in definition.slots:
-        chosen = attack_choice(attacker, setup, slot)
-        saved = save_choice(attacker, setup, slot) if chosen is None else None
-        total += weapon_mean_damage(chosen[1]) if chosen else _save_mean_damage(saved[1]) if saved else 0.0
-    return total
 
 
 def _spell_offense_score(caster: EncounterCombatant, setup: EncounterSetup, turn_key: str) -> float:
@@ -127,14 +72,7 @@ def decide_post_move_offense(
             attack_action_score = _attack_action_damage(attacker, setup)
             if attacker.state.template.attack_action is not None and attack_action_score > 0:
                 picks.append(OffensePick("attack-action", attack_action_score))
-        ids = [
-            attacker.state.template.weapon_attack.id,
-            *(item.id for item in attacker.state.template.alternate_weapon_attacks),
-        ]
-        weapon = choose_attack(
-            attacker, setup, ids,
-            kind=WeaponAttackKind.MELEE if melee_now else WeaponAttackKind.RANGED,
-        )
+        weapon = choose_standard_attack(attacker, setup)
         if weapon is not None:
             picks.append(OffensePick("standard-attack", weapon_mean_damage(weapon[1]), weapon))
         if not melee_now:

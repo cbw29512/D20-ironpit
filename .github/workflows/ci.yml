@@ -366,6 +366,7 @@ jobs:
           grep -q 'browser-spell-effects.js' frontend/index.html
           grep -q 'browser-spell-modifiers.js' frontend/index.html
           grep -q 'browser-multiattack.js' frontend/index.html
+          grep -q 'browser-multiattack-choices.js' frontend/index.html
           grep -q 'browser-healing.js' frontend/index.html
           grep -q 'browser-healing-policy.js' frontend/index.html
           grep -q 'browser-healing-resolution.js' frontend/index.html
