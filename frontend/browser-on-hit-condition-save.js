@@ -50,6 +50,7 @@
         }) || null;
       } else if (!target.state.active_effect_ids.includes(effect.conditionId)) {
         target.state.active_effect_ids.push(effect.conditionId);
+        T()?.applyTerminalOutcome?.(target.state, effect.conditionId);
         appliedCondition = effect.conditionId;
       }
     }
