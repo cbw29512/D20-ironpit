@@ -1,6 +1,11 @@
 (() => {
   "use strict";
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Save resolution damage requires the shared damage resolver.");
+    return rules;
+  };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const FM = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
   const S = () => window.IRON_PIT_BROWSER_STATE;
@@ -124,7 +129,7 @@
       const rolls = damageRolls(action, count, options.sharedDamageRolls);
       const rawTotal = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
       const total = RD().evasionDamage(target.state, action.saveAbility, save.succeeded, action.successDamage, rawTotal);
-      const applied = (A().resolveDamage ? A().resolveDamage(target.state, Math.max(0, total), action.damageType).applied : A().adjustedDamage(target.state, Math.max(0, total), action.damageType));
+      const applied = DD().resolveDamage(target.state, Math.max(0, total), action.damageType).applied;
       damageComponents = [{ source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
         rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied }];
       damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
