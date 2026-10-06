@@ -5,6 +5,11 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const D = () => window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+  const DD = () => {
+    const rules = D();
+    if (!rules?.resolveDamage) throw new Error("HP-threshold fallback damage requires the shared damage resolver.");
+    return rules;
+  };
 
   function legal(member, target, action) {
     try {
@@ -58,9 +63,7 @@
     if (fallback) {
       const rolls = window.IRON_PIT_DICE.rollMany(action.fallbackDamageDiceCount, action.fallbackDamageDiceSize);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (action.fallbackDamageBonus || 0);
-      const applied = D().resolveDamage
-        ? D().resolveDamage(target.state, raw, action.fallbackDamageType).applied
-        : D().adjustedDamage(target.state, raw, action.fallbackDamageType);
+      const applied = DD().resolveDamage(target.state, raw, action.fallbackDamageType).applied;
       damageRoll = {
         notation: `${action.fallbackDamageDiceCount}d${action.fallbackDamageDiceSize}`,
         rolls, modifier: action.fallbackDamageBonus || 0, total: applied,
