@@ -71,17 +71,48 @@ def _grant_zero_hp_temporary_hp(
     )
 
 
+
+def _mark_source_zero_hp_bonus_attack_triggers(
+    source: EncounterCombatant,
+    triggering_event: BattleEvent,
+    *,
+    round_number: int,
+    turn_key: str | None,
+) -> None:
+    """Mark fight-state eligibility for source-owned Bonus Action attacks after a qualifying melee kill."""
+    grants = [
+        grant
+        for grant in source.state.template.bonus_attack_grants
+        if grant.trigger == "source_melee_zero_hp_this_turn"
+    ]
+    if not grants or turn_key != f"{round_number}:{source.combatant_id}":
+        return
+    if triggering_event.event_type != "attack" or not triggering_event.attack_id:
+        return
+    attacks = [source.state.template.weapon_attack, *source.state.template.alternate_weapon_attacks]
+    attack = next((item for item in attacks if item.id == triggering_event.attack_id), None)
+    if attack is None or attack.weapon.attack_kind.value != "melee":
+        return
+    for grant in grants:
+        source.state.feature_last_turn_keys[f"bonus-attack-trigger:{grant.id}"] = turn_key
+
 def resolve_source_zero_hp_triggers(
     sequence: int,
     round_number: int,
     source: EncounterCombatant,
     triggering_event: BattleEvent,
     setup: EncounterSetup,
+    *,
+    turn_key: str | None = None,
 ) -> tuple[list[BattleEvent], int]:
     """Resolve source-owned effects triggered by reducing a hostile creature to 0 HP."""
     try:
         rule = source.state.template.progression_features.source_reduces_hostile_to_zero_hp_temporary_hp
-        if rule is None:
+        has_bonus_trigger = any(
+            grant.trigger == "source_melee_zero_hp_this_turn"
+            for grant in source.state.template.bonus_attack_grants
+        )
+        if rule is None and not has_bonus_trigger:
             return [], sequence
         if triggering_event.actor_id != source.combatant_id:
             raise ValueError("Zero-HP trigger source must match the triggering event actor.")
@@ -92,6 +123,12 @@ def resolve_source_zero_hp_triggers(
         if triggering_event.hp_before is None or triggering_event.hp_after is None:
             return [], sequence
         if triggering_event.hp_before <= 0 or triggering_event.hp_after != 0:
+            return [], sequence
+
+        _mark_source_zero_hp_bonus_attack_triggers(
+            source, triggering_event, round_number=round_number, turn_key=turn_key,
+        )
+        if rule is None:
             return [], sequence
 
         event = _grant_zero_hp_temporary_hp(sequence, round_number, source, rule, ally_kill=False)
