@@ -53,9 +53,24 @@
     const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
     return allies.some((ally) => ally !== member && alive(ally) && !isBackline(ally));
   }
-  function targetAllowed(member, target, attack) {
-    if (!attack.forbidSelfGrappledTarget) return true;
-    return !target.state.grapple_sources.some((source) => source.source_id === member.combatant_id);
+  function targetAllowed(member, target, attack, setup = null) {
+    try {
+      const ownsTarget = (target.state.grapple_sources || []).some(
+        (source) => source.source_id === member.combatant_id,
+      );
+      if (attack.forbidSelfGrappledTarget && ownsTarget) return false;
+      const policy = attack.grappleTargetPolicy || "normal";
+      if (policy === "normal") return true;
+      if (policy !== "own_grapple_only") throw new Error(`Unsupported grapple target policy: ${policy}`);
+      if (ownsTarget) return true;
+      if (!setup) return true;
+      return ![...setup.heroes, ...setup.monsters].some((candidate) =>
+        (candidate.state.grapple_sources || []).some((source) => source.source_id === member.combatant_id),
+      );
+    } catch (error) {
+      console.error("Failed browser attack target policy", { member: member?.combatant_id, target: target?.combatant_id, error });
+      throw error;
+    }
   }
   function attackDistance(member, target) {
     try {
@@ -91,7 +106,7 @@
     const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id) && (!kind || attack.kind === kind));
     for (const target of targetOrder(member, setup, preferBackline)) {
       const distance = attackDistance(member, target);
-      const legal = profiles.filter((profile) => (!window.IRON_PIT_BROWSER_GRID_BARRIERS || window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(member, target, setup)) && targetAllowed(member, target, profile) && attackInRange(profile, distance));
+      const legal = profiles.filter((profile) => (!window.IRON_PIT_BROWSER_GRID_BARRIERS || window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(member, target, setup)) && targetAllowed(member, target, profile, setup) && attackInRange(profile, distance));
       if (legal.length) {
         legal.sort((a, b) => weaponMeanDamage(b) - weaponMeanDamage(a));
         return { target, attack: legal[0], distance };
