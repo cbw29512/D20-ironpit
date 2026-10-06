@@ -85,12 +85,15 @@
       let damageRoll = null, damageComponents = [];
       if (!save.succeeded && rider) {
         const raw = sharedRolls.reduce((sum, value) => sum + value, 0);
-        const appliedDamage = DD().resolveDamage(target.state, raw, rider.damage_type).applied;
+        const resolvedDamage = DD().resolveDamage(target.state, raw, rider.damage_type);
+        const appliedDamage = resolvedDamage.applied;
         if (appliedDamage) A().applyDamage(target.state, appliedDamage, false, [rider.damage_type], affectedStates);
         damageRoll = { notation: `${sharedRolls.length}d${rider.dice_size}`, rolls: [...sharedRolls], modifier: 0, total: appliedDamage };
         damageComponents = [{
           source: rider.source_id, notation: damageRoll.notation, rolls: [...sharedRolls], modifier: 0,
           damage_type: rider.damage_type, total: raw, applied_total: appliedDamage,
+          absorbed_healing: resolvedDamage.healed || 0,
+          absorption_source_name: resolvedDamage.sourceName || null,
         }];
       }
       let destroyed = false;
