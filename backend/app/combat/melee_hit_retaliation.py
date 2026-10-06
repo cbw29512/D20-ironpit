@@ -17,6 +17,8 @@ def active_melee_hit_retaliation(defender: CombatantState) -> tuple[TimedSelfBuf
         for action in defender.template.timed_self_buff_actions:
             if action.melee_hit_retaliation is None:
                 continue
+            if action.activation_timing == "passive":
+                return action, action.melee_hit_retaliation
             if any(effect.source_effect_id == action.id for effect in defender.timed_effects):
                 return action, action.melee_hit_retaliation
         return None
