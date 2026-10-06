@@ -175,6 +175,9 @@
     if (saveContext.disadvantageSources.length) description += ` ${saveContext.disadvantageSources.join(" and ")} imposes Disadvantage on the save.`;
     const d20OverrideName = save.roll ? DO().sourceNameForRoll(target.state, save.roll) : null;
     if (d20OverrideName) description += ` ${d20OverrideName} turns the failed saving throw roll into a 20.`;
+    if (save.roll?.outcome_override_name) {
+      description += ` ${save.roll.outcome_override_name} turns the failure into a success (${save.roll.outcome_override_uses_remaining} uses remain).`;
+    }
     if (target.state.template.evasion && action.saveAbility === "dexterity" && action.successDamage === "half") description += " Evasion reduces the damage.";
     if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
