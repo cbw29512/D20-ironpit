@@ -86,5 +86,5 @@
     return result ? ` ${result}` : "";
   }
 
-  window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT = { consumeInstantDeath, consumeLog, consumeZero };
+  window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT = { consumeDamageThreshold, consumeInstantDeath, consumeLog, consumeZero };
 })();
