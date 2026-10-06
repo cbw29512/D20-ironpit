@@ -16,6 +16,7 @@ from app.combat.post_hit_spell_riders import resolve_paid_post_hit_spell_riders
 from app.combat.melee_hit_retaliation import apply_melee_hit_retaliation
 from app.combat.melee_hit_save_retaliation import apply_melee_hit_save_retaliation
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
+from app.combat.on_hit_contested_movement import resolve_on_hit_contested_movement
 from app.combat.on_hit_maximum_hp_save import resolve_on_hit_maximum_hp_save
 from app.combat.sap import apply_weapon_sap
 from app.combat.slow import apply_weapon_slow
@@ -37,6 +38,7 @@ class AttackEffectResolution:
     save_damage: Any = None
     on_hit_save: Any = None
     on_hit_maximum_hp_save: Any = None
+    contested_movement: Any = None
     cunning_strike: Any = None
     cunning_strike_obscure: Any = None
     topple: Any = None
@@ -132,6 +134,22 @@ def resolve_attack_effects(
         result.on_hit_maximum_hp_save = resolve_on_hit_maximum_hp_save(
             defender, attack, dice, damage_taken,
         )
+        if attack.on_hit_contested_movement is not None:
+            if setup is None:
+                raise ValueError("Contested forced movement requires encounter setup.")
+            members = {item.combatant_id: item for item in [*setup.heroes, *setup.monsters]}
+            source_member = members.get(attacker_event_id)
+            target_member = members.get(actual_event_id)
+            if source_member is None or target_member is None:
+                raise ValueError("Contested forced movement combatants are missing from encounter setup.")
+            result.contested_movement = resolve_on_hit_contested_movement(
+                source_member,
+                target_member,
+                attack,
+                dice,
+                setup,
+                round_number=round_number,
+            )
         if (
             result.on_hit_save.applied_condition
             and result.on_hit_save.applied_condition not in result.applied_conditions
