@@ -110,9 +110,11 @@ def innate_alternate_spell_casts_2014(monster) -> list[AlternateSpellCastGrant]:
 
 
 def innate_spell_names_2014(monster) -> set[str]:
+    from app.content.monster_charm_control import charm_control_spell_actions_2014
     names = {action.name.casefold() for action in innate_spell_save_actions_2014(monster)}
     names.update(action.name.casefold() for action in innate_timed_self_buffs_2014(monster))
     names.update(action.name.casefold() for action in innate_condition_removal_2014(monster))
+    names.update(action.name.casefold() for action in charm_control_spell_actions_2014(monster))
     return names
 
 
@@ -127,7 +129,8 @@ def supports_innate_spellcasting_2014(monster) -> bool:
         known = {str(spell.get("id") or "") for spell in _spells(monster)}
         if not known:
             return False
-        bound = ARENA_NEUTRAL_INNATE_SPELLS_2014 | _PIT_BANNED_INNATE_SPELLS_2014 | {
+        from app.content.monster_charm_control import CHARM_CONTROL_SPELL_IDS
+        bound = ARENA_NEUTRAL_INNATE_SPELLS_2014 | _PIT_BANNED_INNATE_SPELLS_2014 | CHARM_CONTROL_SPELL_IDS | {
             action.id for action in innate_spell_save_actions_2014(monster)
         } | {
             action.id for action in innate_timed_self_buffs_2014(monster)

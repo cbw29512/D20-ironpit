@@ -96,6 +96,16 @@ def _per_day_stack_binding_matches(template: CombatantTemplate, source_name: str
         raise
 
 
+def _legendary_resistance_binding_matches(template: CombatantTemplate, source_name: str) -> bool:
+    from app.content.monster_legendary_resistance_2014 import RESOURCE_ID, is_legendary_resistance_trait
+    heading = source_name.split(":", 1)[-1].strip()
+    if not is_legendary_resistance_trait(heading):
+        return False
+    resources = [item for item in template.resources if item.id == RESOURCE_ID]
+    overrides = [item for item in template.save_success_overrides if item.source_id == RESOURCE_ID]
+    return len(resources) == 1 and len(overrides) == 1
+
+
 def limited_use_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     """Certify source limited-use markers only when a matching generic resource is bound."""
     try:
@@ -107,6 +117,8 @@ def limited_use_issues(template: CombatantTemplate, row: dict[str, object]) -> l
             if _recharge_binding_matches(template, name):
                 continue
             if _per_day_stack_binding_matches(template, name):
+                continue
+            if _legendary_resistance_binding_matches(template, name):
                 continue
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
             issues.append(f"uncertified-limited-use:{slug}")

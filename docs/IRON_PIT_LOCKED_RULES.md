@@ -56,6 +56,41 @@ Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §3, §8 Turn-start buff versus deb
 
 Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §8, §22, §23; `docs/CANONICAL_COMBAT_BUILD_POLICY.md`.
 
+## INACTIVE in the Pit
+
+Any printed ability that does **not** change combat math (damage, to-hit, AC, saves, HP, conditions, action economy) stays printed on the card, is marked **INACTIVE** in the Pit, and must **not** block the monster. Data remains on the monster for later use. Only park an ability when it actually changes combat math and lacks a primitive.
+
+Confirmed INACTIVE families (keep printed names; do not strip the card):
+
+- **Form / disguise.** Change Shape, Shapechanger, Illusory Appearance (hag, Oni, Lamia, Couatl, metallic dragons, Mimic). The creature fights in its natural / true form. Object-form-only Mimic traits are inactive while true form is locked.
+- **Telepathy, senses, communication, insight.** Limited Telepathy, Telepathic Bond, Probing Telepathy, Read Thoughts, Divine Awareness, Inscrutable, Shielded Mind, Sense Magic, Speak with Beasts/Plants, Ethereal Sight, Blind Senses, Echolocation, Keen Senses.
+- **Environment / appearance / post-fight flavor.** False Appearance, Rejuvenation, Siege Monster, Incorporeal Movement, Web Sense, Web Walker, Mimicry, Antimagic Susceptibility, Immutable Form, Amphibious, Spider Climb, Water Breathing, Hold Breath, Elemental Demise, Create Spawn and other after-fight curses (spawn / thrall / lycanthropy transmission).
+- **Lair Actions and Regional Effects.** The standard Pit has no lair and no regional overlay. Keep the printed data; do not block.
+- **Utility innate spells.** Detect Magic, Disguise Self, Speak with Dead, Tongues, and other printed utility that cannot change a fight.
+- **Summon actions.** Summoning is pit-banned. Keep the RAW option in source/audit data; Arena AI never selects it and it does not block.
+
+Do **not** mark these INACTIVE: Gnome Cunning (save Advantage), Grappler, Horrific Appearance, Invisible Passage, Etherealness / Ethereal Jaunt, Invisibility, Scare, Tree Stride, Evasion, and any other leftover that changes combat math.
+
+Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §1, §10, §20, §25.
+
+## Opening burst
+
+Surprise / charge openers (Charge, Pounce, Trampling Charge, Running Leap, and later Assassinate / Ambusher / Surprise Attack) reuse the existing `opening_burst_available` hook: if the creature **wins initiative** over every enemy it uses the opener on its first turn; if it loses or ties, it fights normally without it. No monster-name dispatch. Charge / Pounce / Trampling Charge already bind through `CombatTrait.CHARGE`. Assassinate / Ambusher / Surprise Attack remain parked until their first-turn Advantage / extra damage / auto-crit riders bind to that same gate — they are combat math, not INACTIVE.
+
+Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §7.1, §8; `backend/app/combat/opening_burst.py`.
+
+## Legendary Resistance
+
+**ACTIVE.** One shared primitive (`FailedSaveSuccessOverride`): whenever the creature fails a saving throw and has uses left, it automatically spends one use and succeeds. No decision logic. Uses = the printed count (non-lair number when a lair alternate is printed). Per match; resources reset at match end. The log shows the printed name `Legendary Resistance (n/Day)` and remaining uses. Bind every 2014 stat block that prints it, then the matching 2024 blocks.
+
+Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §19.
+
+## Charm / Possession / Dominate
+
+**ACTIVE.** Vampire Charm, Ghost Possession, Dominate Person / Monster, and similar printed control reuse one shared `FailedSaveTimedEffect`: the affected creature is **incapacitated** (stands and does nothing) until it is hit / takes damage, succeeds on a save, or the printed duration ends. Pit rule overriding printed text: every charmed / possessed / dominated creature gets a repeat save vs the printed DC at the end of each of its turns, even if the stat block gives none. No infinite charm-locks. Caster AI still prefers highest-level / simple damage; these actions are used only when that policy already picks them. No monster-name dispatch.
+
+Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §8, §16, §22.
+
 ## Attack resolution flow
 
 1. To-hit bonus + d20 versus AC.
@@ -81,15 +116,15 @@ Standing instruction: park, record, continue. Revisit this list after the rest o
 
 | Card / item | Family | Blocker | Why parked | Needed to unpark |
 |---|---|---|---|---|
-| Assassin | leftover trait | `source:trait` | Shortsword/crossbow poison save-damage already compiles. Assassinate / Evasion / Sneak Attack remain. | Leftover-trait lane for those three traits |
+| Assassin | leftover trait | `source:trait` | Shortsword/crossbow poison and Sneak Attack already compile. Assassinate is an opening-burst rider (Advantage / auto-crit), not INACTIVE. Evasion remains. | Bind Assassinate to `opening_burst_available`; leftover-trait Evasion |
 | Basilisk | leftover trait | `source:trait` | Bite poison damage already compiles. Petrifying Gaze remains. | Gaze / petrify machine, shared with Cockatrice / Gorgon |
 | Death Dog | leftover trait | `source:trait` | Bite Poisoned save already compiles. Two-Headed remains. | Leftover-trait bind for Two-Headed |
 | Phase Spider | leftover trait | `source:trait` | Bite poison save-damage already compiles. Ethereal Jaunt remains. | Ethereal / jaunt policy |
 | Ettercap; Giant Spider | web / recharge | `attack:complex`, `attack:damage-type`, `mechanic:recharge` | Bite poison already compiles. Web is a breakable restraint plus recharge. | Shared web / breakable-restraint primitive |
-| Otyugh | incomplete slam | `attack:incomplete`, `source:extra-action`, `source:trait` | Bite Poisoned save already compiles. Tentacle Slam and Limited Telepathy remain. | Finish Tentacle Slam, then leftover trait |
+| Otyugh | incomplete slam | `attack:incomplete`, `source:extra-action` | Bite Poisoned save already compiles. Limited Telepathy is INACTIVE. Tentacle Slam remains. | Finish Tentacle Slam |
 | Giant Toad; Purple Worm | swallow | `mechanic:swallow` | Poison riders compile or are incidental. Swallow/attach is another lane. | Swallow / attach / pull owner |
 | Iron Golem | breath + multiattack | `multiattack:choice-or-binding`, `source:trait` | Poison Breath is out of this family by standing instruction. | Recharge-breath or multiattack-choice lane |
-| Quasit | combined save | `attack:complex` plus Shapechanger / Scare | Same Con save wants fail-only poison damage **and** Poisoned. Still blocked after a bind. | Widen on-hit save to compose save-damage + save-condition; still need extra-action / trait |
+| Quasit | combined save | `attack:complex` plus Scare | Shapechanger is INACTIVE (true form). Same Con save wants fail-only poison damage **and** Poisoned. Scare remains. | Widen on-hit save to compose save-damage + save-condition; leftover Scare |
 | Homunculus; Sprite; Pseudodragon; Drow | fail-by-5 sleep poison | `failure_margin_escalation` plus Unconscious / `wake-sleeper` | Same missing machine as Sleep Breath. Each card also has another leftover. | Extend FailedSaveTimedEffect with fail-margin + generic wake-sleeper Action |
 | Drider; Deep Gnome; Guardian Naga; Spirit Naga; and other poison casters | spellcasting | `mechanic:spellcasting` plus leftover trait | Poison riders compile where printed on the weapon. Innate/slot spellcasting remains. | Spellcasting family (highest-level / damage-first) |
 
@@ -101,7 +136,7 @@ Standing instruction: park, record, continue. Revisit this list after the rest o
 | Copper dragons; Stone Golem | Slowing Breath / Slow | `slowed` is not a universal condition | Speed, reactions, action/bonus exclusive, max attacks. | Parameterized slow rider, not a new condition name |
 | Gold dragons | Weakening Breath | `weakened-strength` is not a universal condition | Strength-check / attack Disadvantage needs a timed grant. | Existing Disadvantage grant if it can be timed and repeat-saved |
 | Gorgon | Petrifying Breath | `repeat_save_failure_condition_id: petrified` | Same petrify escalation as Cockatrice. | Shared petrify machine; do not invent here |
-| Adult / ancient metallic dragons | Change Shape | Extra Action that replaces the combatant | Form-replace is arena-unavailable until that policy opens. | Polymorph / form-replace policy |
+| Adult / ancient metallic dragons | leftover combat | legendary / breath / multiattack | Change Shape is INACTIVE (natural form). Remaining blockers are combat math. | Legendary-action / breath / multiattack lanes |
 | Gibbering Mouther | Blinding Spittle | Recharge + Blinded already compile | Leftover multiattack / extra-action / trait. | Multiattack-complex lane |
 
 **2014 swallow / attach / pull (from #604).** Do not fake these as Grappled. Another agent owns this family:

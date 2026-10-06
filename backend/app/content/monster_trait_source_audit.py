@@ -5,6 +5,8 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_inactive_pit_abilities import INACTIVE_PIT_TRAITS, is_inactive_pit_trait
+from app.content.monster_legendary_resistance_2014 import is_legendary_resistance_trait
 from app.content.monster_regeneration_2024 import regeneration_trait_2024
 from app.domain.models import CombatantTemplate
 from app.domain.traits import CombatTrait
@@ -114,9 +116,17 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             for attack in attacks
         ):
             issues.append("trait-runtime-missing:blood-frenzy")
-    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_DECLARATIVE_TEMPLATE_TRAITS) | set(_ARENA_NEUTRAL_TRAITS)
+    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(_DECLARATIVE_TEMPLATE_TRAITS) | set(_ARENA_NEUTRAL_TRAITS) | set(INACTIVE_PIT_TRAITS)
     for name in expected:
-        if name not in certified:
+        if is_legendary_resistance_trait(name):
+            overrides = [
+                item for item in template.save_success_overrides
+                if item.source_id == "legendary-resistance"
+            ]
+            if len(overrides) != 1:
+                issues.append("trait-runtime-missing:legendary-resistance")
+            continue
+        if name not in certified and not is_inactive_pit_trait(name):
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
             issues.append(f"uncertified-trait:{slug}")
     return issues

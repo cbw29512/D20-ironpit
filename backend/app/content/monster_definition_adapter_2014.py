@@ -8,6 +8,7 @@ from app.content.monster_charge_profile_2014 import charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_conditional_damage_defenses_2014 import template_defense_fields_2014
 from app.content.monster_healing_2014 import healing_actions_2014, healing_resources_2014
+from app.content.monster_charm_control import charm_control_spell_actions_2014
 from app.content.monster_innate_spells_2014 import innate_spell_save_actions_2014
 from app.content.monster_innate_support_2014 import (
     innate_alternate_spell_casts_2014,
@@ -175,7 +176,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         movement_modes=movement, initiative_bonus=scores.modifier("dexterity"), attacks=attacks,
         primary_attack_id=attacks[0].id, attack_action=_multiattack(monster),
         save_actions=save_capabilities_2014(monster),
-        spell_save_actions=innate_spell_save_actions_2014(monster),
+        spell_save_actions=[*innate_spell_save_actions_2014(monster), *charm_control_spell_actions_2014(monster)],
         timed_self_buff_actions=innate_timed_self_buffs_2014(monster),
         healing_actions=healing_actions_2014(monster),
         condition_removal_actions=innate_condition_removal_2014(monster),

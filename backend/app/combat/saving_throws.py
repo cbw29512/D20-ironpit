@@ -165,6 +165,12 @@ def resolve_save_action(
         )
     else:
         description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
+        if save_roll is not None and save_roll.outcome_override_name:
+            remaining = save_roll.outcome_override_uses_remaining
+            description += (
+                f" {save_roll.outcome_override_name} turns the failure into a success"
+                f" ({remaining} uses remain)."
+            )
     if advantage_sources:
         source_text = " and ".join(advantage_sources)
         description += f" {source_text} grants Advantage on the save."

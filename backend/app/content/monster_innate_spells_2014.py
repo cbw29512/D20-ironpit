@@ -13,15 +13,28 @@ logger = logging.getLogger(__name__)
 
 # These printed innate spells do not change Iron Pit combat state.
 ARENA_NEUTRAL_INNATE_SPELLS_2014 = frozenset({
-    "detect-evil-and-good",
-    "druidcraft",
-    "pass-without-trace",
+    "alarm", "animal-friendship", "animal-messenger", "arcane-eye", "augury",
+    "clairvoyance", "commune", "comprehend-languages", "create-food-and-water",
+    "dancing-lights", "detect-evil-and-good", "detect-magic", "detect-thoughts",
+    "disguise-self", "divination", "druidcraft", "identify", "legend-lore",
+    "light", "locate-creature", "locate-object", "mage-hand", "mending",
+    "message", "minor-illusion", "pass-without-trace", "prestidigitation",
+    "see-invisibility", "speak-with-animals", "speak-with-dead",
+    "speak-with-plants", "thaumaturgy", "tongues", "true-seeing",
+    "unseen-servant",
 })
 _PIT_BANNED_INNATE_SPELLS_2014 = frozenset({
     "teleport",
     "plane-shift",
     "dimension-door",
     "misty-step",
+    "animate-dead",
+    "create-undead",
+    "conjure-animals",
+    "conjure-elemental",
+    "conjure-fey",
+    "conjure-minor-elementals",
+    "conjure-woodland-beings",
 })
 _DISPEL_ATTACKER_TYPES_2014 = ("celestial", "elemental", "fey", "fiend", "undead")
 

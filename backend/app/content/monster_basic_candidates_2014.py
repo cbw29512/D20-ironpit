@@ -5,6 +5,7 @@ import logging
 
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014
+from app.content.monster_inactive_pit_abilities import is_inactive_pit_action, is_inactive_pit_trait
 from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
@@ -77,7 +78,9 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
             certified.update(_CHARGE_TRAIT_NAMES)
         return tuple(
             name for name in monster.trait_names
-            if name not in certified and not is_arena_neutral_bonus_action(name)
+            if name not in certified
+            and not is_arena_neutral_bonus_action(name)
+            and not is_inactive_pit_trait(name)
         )
     except Exception:
         logger.exception("Failed to identify unsupported 2014 traits for %s.", monster.name)
@@ -103,6 +106,7 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
     extras = [
         name for name in extras
         if action_label_from_name(name) not in allowed_extras
+        and not is_inactive_pit_action(name)
     ]
     blockers = []
     if extras:

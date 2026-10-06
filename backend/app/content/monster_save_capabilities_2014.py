@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.content.monster_charm_control import CHARM_CONTROL_ACTION_LABELS, charm_control_save_actions_2014
 from app.content.monster_save_control_2014 import (
     compile_failed_save_control_2014,
     supports_failed_save_control_2014,
@@ -47,6 +48,11 @@ def supports_recharge_rules_2014(monster: SourceMonster2014) -> bool:
         supported_resources = {
             str(action.get("resource_id")) for action in supported if action.get("resource_id")
         }
+        from app.content.monster_charm_control import charm_control_save_actions_2014
+        for action in charm_control_save_actions_2014(monster):
+            supported_ids.add(action.id)
+            if action.resource_id:
+                supported_resources.add(action.resource_id)
         return all(
             action_id in supported_ids or action_id in supported_resources
             for action_id in monster.action_recharges
@@ -78,6 +84,8 @@ def unsupported_source_actions_2014(monster: SourceMonster2014) -> list[str]:
         allowed.add("multiattack")
     if supports_recharge_rules_2014(monster):
         allowed.add("breath weapons")
+    allowed.update(CHARM_CONTROL_ACTION_LABELS)
+    allowed.update(action.name.casefold() for action in charm_control_save_actions_2014(monster))
     return [name for name in monster.action_names if action_label_2014(name) not in allowed]
 
 def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDefinition]:
@@ -119,6 +127,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                 ),
                 animation=str(action.get("animation", "save-effect")),
             ))
+        result.extend(charm_control_save_actions_2014(monster))
         return result
     except Exception:
         logger.exception("Failed to adapt 2014 save actions for %s.", monster.name)

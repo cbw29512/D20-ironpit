@@ -68,6 +68,8 @@ class DiceRoll(BaseModel):
     mode: RollMode = RollMode.NORMAL
     total: int
     revisions: list[RollRevision] = Field(default_factory=list)
+    outcome_override_name: str | None = None
+    outcome_override_uses_remaining: int | None = None
 
 
 class DamageRollComponent(BaseModel):

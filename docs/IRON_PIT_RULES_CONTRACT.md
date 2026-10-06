@@ -24,6 +24,7 @@ This supersedes the old operating-status exclusion of Javelin from 2024 Smite an
 - Unsupported outcome-changing mechanics fail closed. Never approximate, silently ignore, or invent a combat-relevant mechanic merely to make a card runnable.
 - Python is the reference/certification oracle. The browser engine is the production fight engine. Supported capabilities require behavioral parity and permanent regression coverage.
 - Noncombat-only rules may be omitted from runtime only when they cannot alter an Iron Pit combat outcome.
+- **INACTIVE in the Pit.** A printed ability that does not change combat math (damage, to-hit, AC, saves, HP, conditions, action economy) stays on the card, is marked INACTIVE, and must not block certification. The creature fights in its natural / true form. Form-replace, disguise, telepathy, senses, communication, insight, environment-only movement flavor, Lair Actions, Regional Effects, utility innate spells, after-fight spawn/curse transmission, and pit-banned summons are INACTIVE unless a supported combat effect makes them outcome-changing. Only park an ability when it actually changes combat math and lacks a primitive. Index: `docs/IRON_PIT_LOCKED_RULES.md`.
 
 ### 1.1 Mandatory semantic-mechanic reuse gate
 
@@ -535,7 +536,7 @@ Reactions use exact trigger windows and costs. Reaction handling must support un
 
 ## 19. Boss mechanics
 
-- Legendary Resistance is universal RAW resource/override behavior.
+- Legendary Resistance is universal RAW resource/override behavior. Whenever the creature fails a saving throw and has uses left, it automatically spends one use and succeeds. No decision logic. Uses equal the printed count (the non-lair number when a lair alternate is printed). The log shows the printed name `Legendary Resistance (n/Day)` and remaining uses. Bind every printed 2014 block, then matching 2024 blocks.
 - Legendary Actions are universal RAW timing/cost behavior.
 - Mythic/phase transitions should be data-driven universal triggers/actions when possible.
 
@@ -555,7 +556,8 @@ Iron Pit lair-action ownership house rule:
 - Do not create summoned combatants, companion bodies, summoned guardians, or a Summoning Annex.
 - A source with a summon option keeps the exact RAW name and audit record, but Arena AI never selects that option.
 - When a canonical caster may legally prepare a different non-summoning combat spell instead, prefer that legal replacement for the Iron Pit combat loadout while retaining mandatory always-prepared summon spells in source metadata as arena-unavailable.
-- Transformations/Wild Shape/Polymorph are replacement forms, not summons, and remain separately governed by their own support status.
+- Transformations/Wild Shape/Polymorph are replacement forms, not summons. Change Shape / Shapechanger / Illusory Appearance stay printed and are INACTIVE: the combatant fights in its natural / true form.
+- Charm, Possession, Dominate Person / Monster, and similar printed control use one shared incapacitated-until-hit-or-save rider. The affected creature stands and does nothing until it takes damage, succeeds on a save, or the duration ends. Pit rule: every such creature repeats the save vs the printed DC at the end of each of its turns, even if the source prints none.
 - Split/spawn mechanics printed on an existing creature are not automatically classified as summons; they require their own explicit audit.
 - Swallow/engulf/banishment/ethereal/possession and similar mechanics use universal location/control/life-state structures rather than creature-name branches.
 

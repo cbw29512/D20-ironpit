@@ -121,7 +121,7 @@ def test_legendary_resistance_turns_a_failed_save_into_success() -> None:
         resources=[ResourceDefinition(id="legendary-resistance", name="Legendary Resistance", max_uses=3)],
         save_success_overrides=[FailedSaveSuccessOverride(
             source_id="legendary-resistance",
-            source_name="Legendary Resistance",
+            source_name="Legendary Resistance (3/Day)",
             resource_id="legendary-resistance",
         )],
     )
@@ -129,6 +129,8 @@ def test_legendary_resistance_turns_a_failed_save_into_success() -> None:
     roll, succeeded = resolve_saving_throw(state, "wisdom", 20, FixedDiceProvider([1]))
     assert succeeded is True
     assert roll is not None and roll.total < 20
+    assert roll.outcome_override_name == "Legendary Resistance (3/Day)"
+    assert roll.outcome_override_uses_remaining == 2
     assert state.resources[0].current_uses == 2
     state.resources[0].current_uses = 0
     _, failed = resolve_saving_throw(state, "wisdom", 20, FixedDiceProvider([1]))
