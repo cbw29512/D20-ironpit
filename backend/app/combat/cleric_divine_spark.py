@@ -65,7 +65,11 @@ def resolve_divine_spark(
     applied_total, absorbed_healing, absorption_source = resolve_damage_amount(
         component.total, damage_type, target.state,
     )
-    components = [component.model_copy(update={"applied_total": applied_total})]
+    components = [component.model_copy(update={
+        "applied_total": applied_total,
+        "absorbed_healing": absorbed_healing,
+        "absorption_source_name": absorption_source,
+    })]
     if applied_total:
         states = [member.state for member in [*setup.heroes, *setup.monsters]]
         apply_damage(target.state, applied_total, damage_types={damage_type}, dice=dice, affected_states=states)
