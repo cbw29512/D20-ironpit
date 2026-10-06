@@ -5,11 +5,9 @@
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
-  const DD = () => {
-    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
-    if (!rules?.resolveDamage) throw new Error("Spell attack damage requires the shared damage resolver.");
-    return rules;
-  };
+  const DD = () => window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.resolveDamage
+    ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES
+    : (() => { throw new Error("Spell attack damage requires the shared damage resolver."); })();
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
