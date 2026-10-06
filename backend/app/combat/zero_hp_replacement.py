@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.modifier_stack import remove_source_modifiers
+from app.combat.resources import resource_available, spend_resource
 from app.domain.modifiers import ModifierKind
 from app.domain.runtime import CombatantState
 
@@ -50,6 +51,53 @@ def consume_zero_hp_replacement(state: CombatantState) -> bool:
         return True
     except Exception:
         logger.exception("Zero-HP replacement failed for %s.", state.template.id)
+        raise
+
+
+
+def consume_damage_threshold_zero_hp_replacement(
+    state: CombatantState,
+    incoming_damage: int,
+) -> bool:
+    """Consume the narrowest eligible source-owned thresholded 0-HP replacement."""
+    try:
+        if incoming_damage < 0:
+            raise ValueError("Incoming damage cannot be negative.")
+        choices = [
+            rule for rule in state.template.damage_threshold_zero_hp_replacements
+            if incoming_damage <= rule.max_trigger_damage
+            and resource_available(state, rule.resource_id, rule.resource_cost)
+        ]
+        if not choices:
+            return False
+        rule = min(
+            choices,
+            key=lambda item: (
+                item.max_trigger_damage,
+                -item.replacement_hp,
+                item.source_id,
+            ),
+        )
+        spend_resource(state, rule.resource_id, rule.resource_cost)
+        state.current_hp = rule.replacement_hp
+        state.is_alive = True
+        state.is_dead = False
+        state.is_unconscious = False
+        state.is_stable = False
+        state.death_save_successes = 0
+        state.death_save_failures = 0
+        state.pending_zero_hp_replacement_logs.append(
+            f"{rule.source_name} prevents the drop to 0 HP; "
+            f"{state.template.name} remains at {rule.replacement_hp} HP."
+        )
+        return True
+    except ValueError:
+        raise
+    except Exception:
+        logger.exception(
+            "Thresholded zero-HP replacement failed for %s.",
+            state.template.id,
+        )
         raise
 
 
