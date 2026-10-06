@@ -86,9 +86,15 @@ def resolve_attack_roll(
             reckless_advantage=reckless_advantage,
             disadvantage_sources=disadvantage_total + range_disadvantage,
         )
+        first_turn_unacted = int(
+            attacker.template.progression_features.first_turn_attack_advantage_against_unacted_target
+            and round_number == 1
+            and defender.current_round is None
+        )
         attack_advantage = apply_defender_advantage_suppression(
             defender,
             advantage_sources
+            + first_turn_unacted
             + condition_advantage
             + bloodied_fury_advantage(attacker, attack)
             + attacks_against_advantage_sources(defender)
