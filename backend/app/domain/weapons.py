@@ -52,6 +52,20 @@ class OnHitSaveDamage(BaseModel):
     zero_hp_rider: ZeroHpSaveDamageRider | None = None
 
 
+class OnHitContestedMovement(BaseModel):
+    source_ability: AbilityName
+    target_ability: AbilityName
+    max_target_size: CreatureSize | None = None
+    distance_ft: int = Field(ge=0)
+    direction: Literal["toward_source", "away_from_source"]
+
+    @model_validator(mode="after")
+    def validate_grid_distance(self) -> "OnHitContestedMovement":
+        if self.distance_ft % 5:
+            raise ValueError("Contested forced movement must use 5-foot grid increments.")
+        return self
+
+
 class OnHitMaximumHpSave(BaseModel):
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
@@ -130,6 +144,7 @@ class WeaponAttack(BaseModel):
     on_hit_save_damage: OnHitSaveDamage | None = None
     on_hit_condition_save: OnHitConditionSave | None = None
     on_hit_maximum_hp_save: OnHitMaximumHpSave | None = None
+    on_hit_contested_movement: OnHitContestedMovement | None = None
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
     charge_profile: AttackChargeProfile | None = None
     rage_eligible: bool = False
