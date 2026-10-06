@@ -5,6 +5,11 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Browser Divine Spark damage requires the shared damage resolver.");
+    return rules;
+  };
   const H = () => window.IRON_PIT_BROWSER_HEALING;
   const PH = () => window.IRON_PIT_BROWSER_POOLED_HEALING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
@@ -114,7 +119,7 @@
     const dc = saveDc(cleric), save = V().resolveSavingThrow(target.state, "constitution", dc);
     const type = A().adjustedDamage(target.state, 2, "radiant") >= A().adjustedDamage(target.state, 2, "necrotic") ? "radiant" : "necrotic";
     const raw = save.succeeded ? Math.floor(total / 2) : total, before = target.state.current_hp;
-    const resolvedDamage = A().resolveDamage(target.state, raw, type), applied = resolvedDamage.applied;
+    const resolvedDamage = DD().resolveDamage(target.state, raw, type), applied = resolvedDamage.applied;
     if (applied) A().applyDamage(target.state, applied, false, [type], [...setup.heroes, ...setup.monsters].map((m) => m.state));
     const event = { sequence, round_number: round, event_type: "saving_throw", actor_id: cleric.combatant_id, actor_name: cleric.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll, save_ability: "constitution", save_dc: dc,
