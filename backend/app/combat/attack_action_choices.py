@@ -39,22 +39,24 @@ def save_choice(
         raise
 
 
+def flexible_attack_mode(attacker: EncounterCombatant, setup: EncounterSetup) -> WeaponAttackKind:
+    try:
+        return WeaponAttackKind.RANGED if is_backline(attacker) and allied_frontline_active(attacker, setup) else WeaponAttackKind.MELEE
+    except Exception:
+        logger.exception("Failed flexible attack mode for %s.", attacker.combatant_id)
+        raise
+
+
 def attack_choice(
     attacker: EncounterCombatant,
     setup: EncounterSetup,
     slot: AttackActionSlot,
+    *, mode: WeaponAttackKind | None = None,
 ):
     """Choose a printed Multiattack option using deterministic formation-row policy."""
     try:
         if flexible_slot_has_both(attacker, slot.attack_ids):
-            if is_backline(attacker):
-                preferred = (
-                    WeaponAttackKind.RANGED
-                    if allied_frontline_active(attacker, setup)
-                    else WeaponAttackKind.MELEE
-                )
-            else:
-                preferred = WeaponAttackKind.MELEE
+            preferred = mode or flexible_attack_mode(attacker, setup)
             return choose_attack(attacker, setup, slot.attack_ids, kind=preferred)
 
         melee = choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.MELEE)

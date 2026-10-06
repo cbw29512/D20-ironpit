@@ -5,7 +5,6 @@
   const attacks = (template) => template?.attacks || [];
   const alive = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0
     && !window.IRON_PIT_BROWSER_EXILE?.removed(member.state);
-
   function hasRangedWeaponOffense(template) {
     return attacks(template).some((attack) => attack.kind === "ranged" && Number.isFinite(attack.long) && attack.long > 5);
   }
@@ -125,11 +124,12 @@
     const allowed = new Set(ids), kinds = new Set(attacks(member.state.template).filter((a) => allowed.has(a.id)).map((a) => a.kind));
     return kinds.has("melee") && kinds.has("ranged");
   }
-  function chooseSlotAttack(member, setup, ids) {
+  const flexibleAttackMode = (member, setup) => isBackline(member) && alliedFrontlineActive(member, setup) ? "ranged" : "melee";
+  function chooseSlotAttack(member, setup, ids, mode = null) {
     try {
       // Select the permitted mode before damage scoring or actual resolution.
       if (flexibleSlotHasBoth(member, ids)) {
-        const kind = isBackline(member) && alliedFrontlineActive(member, setup) ? "ranged" : "melee";
+        const kind = mode || flexibleAttackMode(member, setup);
         return chooseAttack(member, setup, ids, kind);
       }
       return chooseAttack(member, setup, ids, "melee") || chooseAttack(member, setup, ids, "ranged");
@@ -145,6 +145,6 @@
     hasRangedWeaponOffense, hasTrueRangeOffense, usesBackline, isBackline, startingPosition,
     targetOrder, alliedFrontlineActive, targetAllowed,
     attackDistance, saveDistance, weaponMeanDamage, chooseAttack, chooseStandardAttack, meleeCanLandNow,
-    flexibleSlotHasBoth, chooseSlotAttack, backlineHoldsPosition,
+    flexibleSlotHasBoth, flexibleAttackMode, chooseSlotAttack, backlineHoldsPosition,
   };
 })();

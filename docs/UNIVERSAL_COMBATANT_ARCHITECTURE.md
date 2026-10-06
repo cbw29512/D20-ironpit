@@ -175,7 +175,7 @@ The 24 x 16 arena therefore uses a capable pathfinder with deliberately simple d
 
 ### Source-preserving flexible attack slots
 
-Immutable `CapabilityActionSlot` / `AttackActionSlot` lists retain every printed alternative in each ordered slot. Current formation row and living-frontline state choose the mode; there is no new resource, random weapon-choice roll, or persistent choice state. Fresh fight state resets formation and Action availability normally. Coupled source policies and unknown or empty slots remain blockers.
+Immutable `CapabilityActionSlot` / `AttackActionSlot` lists retain every printed alternative in each ordered slot. Formation row and living-frontline state at Action selection choose the mode, which remains fixed within that Action; there is no new resource, random weapon-choice roll, or persistent choice state. Fresh fight state resets formation and Action availability normally. Different melee/ranged attack counts, drawn-offhand requirements, other coupled source policies, and unknown or empty slots remain blockers. Source audit must compare parsed slots against the preserved printed text; a parse that grants an extra attack is not certification evidence.
 
 Python `attack_action_choices.attack_choice` supplies both landing-damage selection and `attack_actions.resolve_attack_action`. Browser `formation.chooseSlotAttack` supplies `browser-multiattack-choices` queries and `browser-multiattack` resolution. Preview delivery and damage must describe the same selected attack that will execute. Validate every slot before spending an Action; never execute a supported prefix of malformed data. Both editions use this path with their own immutable source attacks.
 

@@ -30,6 +30,7 @@
       if (attackBuff) { events.push(attackBuff); sequence += 1; }
       let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
       let lightTrigger = null;
+      const mode = F().flexibleAttackMode(member, setup);
       const turnKey = `${round}:${member.combatant_id}`;
 
       for (let index = 0; index < slots.length; index += 1) {
@@ -40,7 +41,7 @@
           events.push(deferred); sequence += 1; openingFeature = null;
           continue;
         }
-        const choice = F().chooseSlotAttack(member, setup, data.attackIds);
+        const choice = F().chooseSlotAttack(member, setup, data.attackIds, mode);
         if (choice) {
           if (window.IRON_PIT_BROWSER_TIMED_CONTROL?.turnAttackAllowed(member.state) === false) break;
           const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);

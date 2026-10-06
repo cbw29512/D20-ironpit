@@ -4,7 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
-from app.combat.attack_action_choices import attack_choice, save_choice, slot_has_legal_choice
+from app.combat.attack_action_choices import attack_choice, save_choice, slot_has_legal_choice, flexible_attack_mode
 from app.combat.attack_action_event_target import event_target
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.attack_action_weapon_buffs import resolve_attack_action_weapon_buff
@@ -50,6 +50,7 @@ def resolve_attack_action(
         opening_feature = opening_feature_id(round_number, attacker, setup)
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
         light_trigger: WeaponAttack | None = None
+        mode = flexible_attack_mode(attacker, setup)
         turn_key = f"{round_number}:{attacker.combatant_id}"
 
         for index, slot in enumerate(definition.slots):
@@ -67,7 +68,7 @@ def resolve_attack_action(
                 sequence += 1
                 opening_feature = None
                 continue
-            chosen_attack = attack_choice(attacker, setup, slot)
+            chosen_attack = attack_choice(attacker, setup, slot, mode=mode)
             if chosen_attack is not None:
                 if not turn_attack_allowed(attacker.state):
                     break

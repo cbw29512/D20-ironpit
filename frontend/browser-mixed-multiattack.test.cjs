@@ -201,3 +201,20 @@ for (const edition of ["2014", "2024"]) {
 }
 
 console.log("Browser range-aware mixed Multiattack regressions passed.");
+
+
+{
+  const { setup, attacker } = hybridSetup();
+  attacker.state.formation_row = "back";
+  const guard = member("sequence-guard", "monsters", monsterGuard, 10);
+  setup.monsters.push(guard);
+  guard.state.formation_row = "front";
+  const A = window.IRON_PIT_BROWSER_ATTACK, original = A.resolveAttack;
+  A.resolveAttack = (...args) => { const event = original(...args); guard.state.is_dead = true; return event; };
+  try {
+    window.IRON_PIT_DICE = queuedDice([15, 1, 15, 1]);
+    const result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, attacker, setup);
+    assert.deepEqual(result.events.filter((event) => event.event_type === "attack").map((event) => event.weapon_id), ["bow", "bow"]);
+    assert.equal(window.IRON_PIT_BROWSER_FORMATION.flexibleAttackMode(attacker, setup), "melee");
+  } finally { A.resolveAttack = original; }
+}

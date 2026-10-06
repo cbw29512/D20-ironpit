@@ -127,3 +127,23 @@ def test_unknown_slot_fails_before_any_action_or_damage_is_spent():
     except Exception:
         logger.exception("Unknown slot did not fail before mutation.")
         raise
+
+
+@pytest.mark.parametrize("edition", ["2014", "2024"])
+def test_mode_stays_fixed_within_printed_sequence_when_frontline_dies(monkeypatch, edition):
+    try:
+        from app.combat import attack_actions
+        setup, attacker = _setup(edition, "back", True)
+        original = attack_actions.resolve_encounter_attack
+        def after_attack(*args, **kwargs):
+            event = original(*args, **kwargs)
+            setup.monsters[1].state.is_dead = True
+            return event
+        monkeypatch.setattr(attack_actions, "resolve_encounter_attack", after_attack)
+        events, _ = resolve_attack_action(1, 1, attacker, setup, RecordingDice())
+        assert [event.weapon_id for event in events if event.event_type == "attack"] == ["bow", "bow"]
+        from app.combat.attack_action_choices import flexible_attack_mode
+        assert flexible_attack_mode(attacker, setup) is WeaponAttackKind.MELEE
+    except Exception:
+        logger.exception("Multiattack changed its selected source mode mid-Action.")
+        raise
