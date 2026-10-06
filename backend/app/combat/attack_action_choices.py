@@ -5,6 +5,7 @@ import logging
 from app.combat.pit_policy import (
     allied_frontline_active,
     choose_attack,
+    flexible_slot_has_both,
     is_backline,
     save_distance,
     target_order,
@@ -41,21 +42,20 @@ def attack_choice(
     attacker: EncounterCombatant,
     setup: EncounterSetup,
     slot: AttackActionSlot,
-    *,
-    ranged_backline: bool = False,
 ):
+    """Choose a printed Multiattack option using deterministic formation-row policy."""
     try:
-        if ranged_backline:
-            choice = choose_attack(
-                attacker, setup, slot.attack_ids,
-                kind=WeaponAttackKind.RANGED, prefer_backline=True,
-            )
-            if choice is not None:
-                return choice
-        if is_backline(attacker) and allied_frontline_active(attacker, setup):
-            ranged = choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED)
-            if ranged is not None:
-                return ranged
+        if flexible_slot_has_both(attacker, slot.attack_ids):
+            if is_backline(attacker):
+                preferred = (
+                    WeaponAttackKind.RANGED
+                    if allied_frontline_active(attacker, setup)
+                    else WeaponAttackKind.MELEE
+                )
+            else:
+                preferred = WeaponAttackKind.MELEE
+            return choose_attack(attacker, setup, slot.attack_ids, kind=preferred)
+
         melee = choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.MELEE)
         if melee is not None:
             return melee
