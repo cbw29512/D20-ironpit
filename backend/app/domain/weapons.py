@@ -52,6 +52,13 @@ class OnHitSaveDamage(BaseModel):
     zero_hp_rider: ZeroHpSaveDamageRider | None = None
 
 
+class OnHitMaximumHpSave(BaseModel):
+    save_ability: AbilityName
+    dc: int = Field(ge=1, le=40)
+    reduction: Literal["damage_taken"] = "damage_taken"
+    zero_max_hp_kills: bool = False
+
+
 class OnHitConditionSave(BaseModel):
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
@@ -122,6 +129,7 @@ class WeaponAttack(BaseModel):
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_save_damage: OnHitSaveDamage | None = None
     on_hit_condition_save: OnHitConditionSave | None = None
+    on_hit_maximum_hp_save: OnHitMaximumHpSave | None = None
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
     charge_profile: AttackChargeProfile | None = None
     rage_eligible: bool = False
