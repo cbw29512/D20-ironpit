@@ -59,13 +59,23 @@ class OnHitConditionSave(BaseModel):
     max_target_size: CreatureSize | None = None
     duration_rounds: int | None = Field(default=None, ge=1, le=100800)
     repeat_save_timing: ConditionTiming | None = None
+    repeat_save_failure_condition_id: ConditionName | None = None
+    failure_push_ft: int = Field(default=0, ge=0)
     excluded_creature_types: list[str] = Field(default_factory=list)
     excluded_creature_subtypes: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_condition_lifecycle(self) -> "OnHitConditionSave":
-        if self.repeat_save_timing is not None and self.duration_rounds is None:
-            raise ValueError("On-hit repeat-save riders require a printed duration.")
+        if (
+            self.repeat_save_timing is not None
+            and self.duration_rounds is None
+            and self.repeat_save_failure_condition_id is None
+        ):
+            raise ValueError(
+                "On-hit repeat saves require a duration or a failure escalation condition."
+            )
+        if self.repeat_save_failure_condition_id is not None and self.repeat_save_timing is None:
+            raise ValueError("Failure escalation requires a repeat-save timing.")
         return self
 
 
