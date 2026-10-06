@@ -15,6 +15,7 @@
     const resourceId = `spell-slot-${choice.slotLevel}`;
     if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains for ${action.name}.`);
 
+    const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const components = [], allRolls = [];
     let total = 0;
     for (let index = 0; index < choice.projectileCount; index += 1) {
@@ -22,7 +23,7 @@
         ? C().maximizedRolls(action.damageDiceCount || 1, action.damageDiceSize || 4)
         : window.IRON_PIT_DICE.rollMany(action.damageDiceCount || 1, action.damageDiceSize || 4);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (action.damageBonus || 0);
-      const applied = A().adjustedDamage(target.state, raw, action.damageType);
+      const applied = (A().resolveDamage ? A().resolveDamage(target.state, raw, action.damageType).applied : A().adjustedDamage(target.state, raw, action.damageType));
       allRolls.push(...rolls);
       total += applied;
       components.push({
@@ -33,7 +34,6 @@
       });
     }
 
-    const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
     A().applyDamage(target.state, total, false, total > 0 ? [action.damageType] : [], states, setup, components);
     C().markSlotSpellCast(caster.state, turnKey);
