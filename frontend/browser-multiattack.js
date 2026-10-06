@@ -6,7 +6,6 @@
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const DMR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const DE = () => window.IRON_PIT_BROWSER_DEFERRED_ATTACK_SLOT;
-  const D = () => window.IRON_PIT_DICE;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const MK = () => window.IRON_PIT_BROWSER_MONK_2014;
   const R = () => window.IRON_PIT_BROWSER_LIGHT_ATTACK;
@@ -28,14 +27,12 @@
     }
     return null;
   }
-  function attackChoice(member, setup, data, rangedBackline = false) {
-    if (rangedBackline) {
-      const ranged = F().chooseAttack(member, setup, data.attackIds, "ranged", true);
-      if (ranged) return ranged;
-    }
-    if (F().isBackline(member) && F().alliedFrontlineActive(member, setup)) {
-      const ranged = F().chooseAttack(member, setup, data.attackIds, "ranged");
-      if (ranged) return ranged;
+  function attackChoice(member, setup, data) {
+    if (F().flexibleSlotHasBoth(member, data.attackIds)) {
+      const preferred = F().isBackline(member)
+        ? (F().alliedFrontlineActive(member, setup) ? "ranged" : "melee")
+        : "melee";
+      return F().chooseAttack(member, setup, data.attackIds, preferred);
     }
     return F().chooseAttack(member, setup, data.attackIds, "melee")
       || F().chooseAttack(member, setup, data.attackIds, "ranged");
@@ -48,12 +45,6 @@
       console.error("Failed to prove browser Attack/Multiattack slot legality", { member: member.combatant_id, error });
       throw error;
     }
-  }
-  function useRangedSplit(member, setup, slots) {
-    if (F().isBackline(member)) return false;
-    if (!F().hasFrontlineTarget(member, setup) || !F().hasBacklineTarget(member, setup)) return false;
-    if (!slots.slice(1).some((slot) => F().flexibleSlotHasBoth(member, slotData(slot).attackIds))) return false;
-    return D().roll(100) >= 76;
   }
   function eventTarget(event, fallback, setup) {
     return [...setup.heroes, ...setup.monsters].find((item) => item.combatant_id === event.target_id) || fallback;
@@ -107,23 +98,20 @@
     const attackBuff = AWB()?.resolve(sequence, round, member) || null;
     if (attackBuff) { events.push(attackBuff); sequence += 1; }
     let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
-    let lightTrigger = null, rangedSplitUsed = false;
-    const rangedSplit = useRangedSplit(member, setup, slots);
+    let lightTrigger = null;
     const turnKey = `${round}:${member.combatant_id}`;
 
     for (let index = 0; index < slots.length; index += 1) {
       if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
       const data = slotData(slots[index]);
-      const splitThis = index > 0 && rangedSplit && !rangedSplitUsed && F().flexibleSlotHasBoth(member, data.attackIds);
       const deferred = DE()?.resolve(sequence, round, member, setup) || null;
       if (deferred) {
         events.push(deferred); sequence += 1; openingFeature = null;
         continue;
       }
-      const choice = attackChoice(member, setup, data, splitThis);
+      const choice = attackChoice(member, setup, data);
       if (choice) {
         if (window.IRON_PIT_BROWSER_TIMED_CONTROL?.turnAttackAllowed(member.state) === false) break;
-        if (splitThis && choice.attack.kind === "ranged") rangedSplitUsed = true;
         const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
         const featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
         const event = A().resolveAttack(sequence, round, member, choice.target, choice.attack, choice.distance, {
