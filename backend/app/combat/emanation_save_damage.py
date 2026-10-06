@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.damage_defenses import adjusted_damage_amount
+from app.combat.damage_defenses import resolve_damage_amount
 from app.combat.dice import DiceProvider
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.saving_throw_rolls import resolve_saving_throw
@@ -61,7 +61,7 @@ def resolve_emanation_hit(
                 raw = 0
             elif succeeded and emanation.success_damage == "half":
                 raw //= 2
-        applied = adjusted_damage_amount(raw, emanation.damage_type, target.state) if raw else 0
+        applied, _healed, _absorption_source = resolve_damage_amount(raw, emanation.damage_type, target.state) if raw else (0, 0, None)
         hp_before = target.state.current_hp
         if applied:
             apply_damage(
