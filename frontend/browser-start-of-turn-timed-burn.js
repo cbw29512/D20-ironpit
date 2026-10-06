@@ -24,7 +24,8 @@
         }
         const damageType = effect.start_of_turn_damage_type;
         const hpBefore = member.state.current_hp;
-        const applied = DD().resolveDamage(member.state, total, damageType).applied;
+        const resolvedDamage = DD().resolveDamage(member.state, total, damageType);
+        const applied = resolvedDamage.applied;
         A().applyDamage(
           member.state, applied, false, [damageType], states, setup,
         );
@@ -41,7 +42,8 @@
           hp_before: hpBefore,
           hp_after: member.state.current_hp,
           animation: "feature",
-          description: `${name} deals ${applied} ${damageType} damage to ${member.state.template.name} at the start of the turn.`,
+          description: `${name} deals ${applied} ${damageType} damage to ${member.state.template.name} at the start of the turn.`
+            + (resolvedDamage.sourceName ? ` ${resolvedDamage.sourceName} restores ${resolvedDamage.healed} HP.` : ""),
         });
         if (!(effect.start_of_turn_save_ends && effect.start_of_turn_save_ability && effect.start_of_turn_save_dc)) {
           continue;
