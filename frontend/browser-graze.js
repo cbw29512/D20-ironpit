@@ -38,6 +38,8 @@
     outcome.damageComponents = [{
       source: `${ctx.attack.name} (Graze)`, notation: String(raw), rolls: [], modifier: 0,
       damage_type: ctx.attack.damageType, total: raw, applied_total: appliedTotal,
+      absorbed_healing: resolvedDamage.healed || 0,
+      absorption_source_name: resolvedDamage.sourceName || null,
     }];
     outcome.damageRoll = {
       notation: String(raw), rolls: [], modifier: 0, selected_roll: null, mode: "normal", total: appliedTotal,
