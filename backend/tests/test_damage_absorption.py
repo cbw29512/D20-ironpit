@@ -72,6 +72,10 @@ def test_component_absorption_composes_with_other_damage_types() -> None:
 
     assert applied == 5
     assert [component.applied_total for component in components] == [0, 5]
+    assert components[0].absorption_source_name == "Acid Absorption"
+    assert components[0].absorbed_healing == 6
+    assert components[1].absorption_source_name is None
+    assert components[1].absorbed_healing == 0
     assert target.current_hp == target.template.max_hp - 4
 
 
