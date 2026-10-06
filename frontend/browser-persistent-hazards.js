@@ -2,6 +2,11 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Persistent hazard damage requires the shared damage resolver.");
+    return rules;
+  };
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const G = () => window.IRON_PIT_BROWSER_GRID_GEOMETRY;
   const S = () => window.IRON_PIT_BROWSER_SAVES;
@@ -90,7 +95,7 @@
       const save = S().resolveSavingThrow(mover.state, item.saveAbility, item.dc);
       const raw = save.succeeded ? item.successDamage : item.failureDamage;
       const before = mover.state.current_hp;
-      const applied = (A().resolveDamage ? A().resolveDamage(mover.state, raw, item.damageType).applied : A().adjustedDamage(mover.state, raw, item.damageType));
+      const applied = DD().resolveDamage(mover.state, raw, item.damageType).applied;
       if (applied > 0) A().applyDamage(mover.state, applied, false, [item.damageType], states);
       item.remainingDamageCapacity = Math.max(0, item.remainingDamageCapacity - applied);
       const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(mover.state) || "";
