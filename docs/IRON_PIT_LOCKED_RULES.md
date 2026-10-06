@@ -108,7 +108,7 @@ Standing instruction: park, record, continue. Revisit this list after the rest o
 | Card / item | Family | Blocker | Why parked | Needed to unpark |
 |---|---|---|---|---|
 | Giant Frog; Giant Toad; Purple Worm; Remorhaz; Behir; Kraken; Tarrasque | swallow | Swallowed state | Blinded + Restrained + total cover + start-turn acid + death/regurgitate exit. | New swallow machine |
-| Stirge | attach / Blood Drain | Ongoing attach | Source-attack lock, detach movement, HP-loss end. | New attach rider, not a Grapple rename |
+| Stirge | removed from Iron Pit roster | Product decision | Attachment/Blood Drain is not worth a dedicated subsystem for the automated arena. Keep the source record for audit provenance but never compile it into the runnable roster. | None; intentionally excluded |
 | Roper | Reel / pull | Tendril attach + pull | Forced-movement pull; only push exists. | Pull primitive |
 | Gelatinous Cube; Shambling Mound | Engulf | Swallow-shaped plus form extras | Same swallow machine, then extras. | Swallow machine first |
 | Blink Dog | Teleport + extra attack | Recharge Teleport also grants a Bite | `TeleportAction` has no extra-attack rider. In-place teleport (10.1) plus a parameterized extra-attack grant. Do not drop the Bite. | Extra-attack grant on teleport |
