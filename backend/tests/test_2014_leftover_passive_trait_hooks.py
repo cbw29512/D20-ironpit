@@ -88,6 +88,44 @@ def test_devils_sight_unlocks_lemure_as_arena_neutral() -> None:
     assert template.id == "2014-lemure"
 
 
+def test_two_heads_unlocks_ettin_and_death_dog() -> None:
+    expected = {
+        "death-dog": "Two-Headed",
+        "ettin": "Two Heads",
+    }
+    roster_ids = {
+        f"2014-{monster.id}"
+        for monster in load_monster_source_2014()
+        if not basic_blockers_2014(monster)
+    }
+    for monster_id, trait_name in expected.items():
+        source = _source_by_id()[monster_id]
+        assert trait_name in source.trait_names
+        if monster_id == "ettin":
+            assert "Wakeful" in source.trait_names
+        assert unsupported_traits_2014(source) == ()
+        assert basic_blockers_2014(source) == ()
+        assert f"2014-{monster_id}" in roster_ids
+        template = _compile(monster_id)
+        grants = template.progression_features.saving_throw_advantage_grants
+        assert {grant.source_name for grant in grants} == {trait_name}
+        tagged = {tuple(grant.required_effect_tags) for grant in grants}
+        assert tagged == {
+            ("blinded",), ("charm",), ("charmed",), ("deafened",),
+            ("frightened",), ("stunned",), ("unconscious",),
+        }
+        state = build_combatant_state(template)
+        roll, _ = resolve_saving_throw(
+            state, "wisdom", 99, FixedDiceProvider([2, 17]),
+            SavingThrowContext(effect_tags=frozenset({"frightened"})),
+        )
+        assert roll is not None
+        assert roll.mode == "advantage"
+        ordinary, _ = resolve_saving_throw(state, "wisdom", 99, FixedDiceProvider([10]))
+        assert ordinary is not None
+        assert ordinary.mode == "normal"
+
+
 def test_brave_binds_without_unlocking_remaining_knight_blockers() -> None:
     source = _source_by_id()["knight"]
     assert "Brave" in source.trait_names

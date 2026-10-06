@@ -5,6 +5,8 @@ does not grant a leave-reach opportunity-attack exemption. Sunlight Sensitivity 
 not listed; it binds to the shared sunlight environment-context reaction.
 Devil's Sight stays listed: the standard Pit has no Dim Light/Darkness state and no
 Darkness-producing combat effect, so magical-darkness sight cannot change a fight.
+Wakeful stays listed: Iron Pit fights do not start with a sleeper head, so a second
+awake head cannot change surprise or sleep. Two Heads save-Advantage is bound separately.
 Earth Glide, Tunneler, and Treasure Sense stay listed: the Pit has no destructible
 earth/rock or hidden metal/treasure for those traits to act on.
 """
@@ -17,4 +19,5 @@ ARENA_NEUTRAL_TRAITS_2014 = frozenset({
     "Mimicry", "Earth Glide", "Running Leap", "Shark Telepathy", "Snow Camouflage", "Stone Camouflage",
     "Spider Climb", "Treasure Sense", "Tunneler", "Water Breathing", "Devil's Sight",
     "Underwater Camouflage", "Web Sense", "Web Walker", "Rejuvenation", "Hellish Rejuvenation",
+    "Wakeful",
 })
