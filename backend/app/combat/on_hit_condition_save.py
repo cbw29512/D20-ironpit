@@ -7,7 +7,7 @@ from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.forced_movement import push_straight_away
 from app.combat.saving_throw_rolls import resolve_saving_throw
-from app.combat.timed_conditions import apply_timed_condition
+from app.combat.timed_conditions import apply_terminal_condition_outcome, apply_timed_condition
 from app.content.monster_creature_types import creature_matches_kind
 from app.domain.models import CombatantState, CombatantTemplate, DiceRoll, WeaponAttack
 from app.domain.saving_throw_context import SavingThrowContext
@@ -93,6 +93,9 @@ def resolve_on_hit_condition_save(
                 )
             elif effect.condition_id not in defender.active_effect_ids:
                 defender.active_effect_ids.append(effect.condition_id)
+                apply_terminal_condition_outcome(
+                    defender, effect.condition_id, affected_states=affected_states
+                )
                 applied = effect.condition_id
         moved = 0
         if not succeeded and effect.failure_push_ft:
