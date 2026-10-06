@@ -3,7 +3,7 @@ name: Sync Generated Certification Artifacts
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, fix/2014-complex-attack-riders]
 
 permissions:
   contents: write
