@@ -6,17 +6,10 @@ const path = require("node:path");
 const vm = require("node:vm");
 
 global.window = globalThis;
-window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES = {
-  resolveDamage: (state, amount, type, allowVulnerability = true, sourceQualifiers = [], ignoreResistance = false) => ({
-    applied: window.IRON_PIT_BROWSER_ATTACK?.adjustedDamage
-      ? window.IRON_PIT_BROWSER_ATTACK.adjustedDamage(state, amount, type, allowVulnerability, sourceQualifiers, ignoreResistance)
-      : amount,
-    healed: 0,
-    sourceName: null,
-  }),
-};
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
+// Use production defenses so previews and actual resolution share the same rules.
 for (const file of [
+  "browser-damage-defense-rules.js",
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-timed-conditions.js", "browser-weapon-mastery.js", "browser-tactical-master.js",
   "browser-barbarian2.js", "browser-modifier-validation.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",

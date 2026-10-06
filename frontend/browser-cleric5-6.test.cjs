@@ -11,7 +11,9 @@ const load = (name) => vm.runInThisContext(
   { filename: name },
 );
 
+// Exercise the production typed-defense resolver rather than an attack-backed stub.
 for (const file of [
+  "browser-damage-defense-rules.js",
   "browser-heroes.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-state.js", "browser-spellcasting.js", "browser-spell-area.js",
   "browser-healing-policy.js", "browser-group-healing.js", "browser-healing.js",

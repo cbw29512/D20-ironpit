@@ -6,17 +6,10 @@ const path = require("node:path");
 const vm = require("node:vm");
 
 global.window = globalThis;
-window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES = {
-  resolveDamage: (state, amount, type, allowVulnerability = true, sourceQualifiers = [], ignoreResistance = false) => ({
-    applied: window.IRON_PIT_BROWSER_ATTACK?.adjustedDamage
-      ? window.IRON_PIT_BROWSER_ATTACK.adjustedDamage(state, amount, type, allowVulnerability, sourceQualifiers, ignoreResistance)
-      : amount,
-    healed: 0,
-    sourceName: null,
-  }),
-};
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
+// Exercise the production typed-defense resolver rather than an attack-backed stub.
 for (const file of [
+  "browser-damage-defense-rules.js",
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-modifier-validation.js", "browser-modifiers.js", "browser-state.js", "browser-rolls.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js",
   "browser-saving-throws.js", "browser-saves.js", "browser-concentration.js", "browser-spell-modifiers.js", "browser-spellcasting.js",
