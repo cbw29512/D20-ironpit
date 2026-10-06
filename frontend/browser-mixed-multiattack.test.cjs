@@ -12,7 +12,7 @@ for (const file of [
   "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-monsters-poison.js", "browser-monsters-venom.js",
   "browser-monsters-mixed.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-grapple.js",
   "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
-  "browser-attack-outcome.js", "browser-attack.js", "browser-damage-defense-rules.js", "browser-saving-throws.js", "browser-saves.js", "browser-charge.js", "browser-formation.js", "browser-multiattack.js", "browser-ability-hooks.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-spell-offense.js", "browser-turn.js",
+  "browser-attack-outcome.js", "browser-attack.js", "browser-damage-defense-rules.js", "browser-saving-throws.js", "browser-saves.js", "browser-charge.js", "browser-formation.js", "browser-multiattack-choices.js", "browser-multiattack.js", "browser-ability-hooks.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-spell-offense.js", "browser-turn.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
@@ -107,21 +107,11 @@ function rangedHybridSetup(protectedByFrontline) {
 }
 
 {
-  const { setup, attacker, front, back } = hybridSetup();
-  window.IRON_PIT_DICE = queuedDice([76, 15, 4, 15, 4]);
-  const result = T.resolveTurn(1, 1, attacker, setup);
-  const attacks = result.events.filter((event) => event.event_type === "attack");
-  assert.deepEqual(attacks.map((event) => event.weapon_id), ["sword", "bow"]);
-  assert.deepEqual(attacks.map((event) => event.target_id), [front.combatant_id, back.combatant_id]);
-  assert.equal(attacks[1].attack_roll.mode, "normal", "Pit split shot must not be taxed by close-range Disadvantage");
-}
-
-{
   const { setup, attacker, front } = hybridSetup();
-  window.IRON_PIT_DICE = queuedDice([75, 15, 4, 15, 4]);
+  window.IRON_PIT_DICE = queuedDice([15, 4, 15, 4]);
   const result = T.resolveTurn(1, 1, attacker, setup);
   const attacks = result.events.filter((event) => event.event_type === "attack");
-  assert.deepEqual(attacks.map((event) => event.weapon_id), ["sword", "sword"]);
+  assert.deepEqual(attacks.map((event) => event.weapon_id), ["sword", "sword"], "front-row flexible Multiattack stays melee");
   assert.deepEqual(attacks.map((event) => event.target_id), [front.combatant_id, front.combatant_id]);
 }
 
@@ -142,6 +132,52 @@ function rangedHybridSetup(protectedByFrontline) {
 }
 
 load("browser-offensive-ranges.js");
+
+for (const edition of ["2014", "2024"]) {
+  for (const [row, protectedByFrontline, weaponId, score] of [
+    ["front", true, "sword", 13], ["back", true, "bow", 28], ["back", false, "sword", 13],
+  ]) {
+    const template = structuredClone(hybrid);
+    template.ruleset = edition;
+    template.attack_action.isAttackAction = false;
+    template.attacks[0].light = true;
+    Object.assign(template.attacks[1], { diceCount: 2, diceSize: 8, damageBonus: 5 });
+    const attacker = member("row-actor", "monsters", template, 10);
+    attacker.state.formation_row = row;
+    const target = member("row-target", "heroes", { ...frontTarget, ruleset: edition, max_hp: 100 }, 5);
+    const guard = member("row-guard", "monsters", { ...monsterGuard, ruleset: edition }, 10);
+    guard.state.formation_row = "front";
+    const setup = { heroes: [target], monsters: protectedByFrontline ? [guard, attacker] : [attacker] };
+    const M = window.IRON_PIT_BROWSER_MULTIATTACK;
+    const before = structuredClone(attacker.state);
+    assert.equal(M.expectedDamage(attacker, setup), score, "preview scores only the row-selected mode");
+    assert.equal(M.meleeAvailable(attacker, setup), weaponId === "sword");
+    assert.deepEqual(attacker.state, before, "choice and damage previews never spend or mutate");
+    const calls = [];
+    const roll = (sides) => { calls.push(sides); return sides === 20 ? 15 : 1; };
+    window.IRON_PIT_DICE = { roll, rollMany: (count, sides) => Array.from({ length: count }, () => roll(sides)) };
+    const result = T.resolveTurn(1, 1, attacker, setup);
+    assert.deepEqual(result.events.filter((event) => event.event_type === "attack").map((event) => event.weapon_id),
+      [weaponId, weaponId], "resolver uses the mode and slot count shown by the preview");
+    assert.equal(calls.includes(100), false, "row choice never consumes a random split roll");
+    assert.equal(attacker.state.action_available, false);
+    assert.equal(attacker.state.bonus_action_available, true, "Multiattack does not spend a Light extra attack");
+  }
+}
+
+{
+  const { setup, attacker } = hybridSetup();
+  attacker.state.template.attack_action.slots[1] = { attackIds: ["unbound"], saveActionIds: [] };
+  const before = structuredClone(attacker.state);
+  const errors = [], originalError = console.error;
+  console.error = (...items) => errors.push(items);
+  try {
+    assert.throws(() => window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, attacker, setup), /Unknown Multiattack IDs/);
+    assert.deepEqual(attacker.state, before, "invalid later slot fails before resolving the legal first slot");
+    assert.ok(errors.length, "failures retain contextual diagnostics");
+  } finally { console.error = originalError; }
+}
+
 {
   const attacker = member("monster-reach", "monsters", {
     id: "reach-bird", name: "Reach Bird", kind: "monster", ruleset: "2014", size: "large",
@@ -165,3 +201,20 @@ load("browser-offensive-ranges.js");
 }
 
 console.log("Browser range-aware mixed Multiattack regressions passed.");
+
+
+{
+  const { setup, attacker } = hybridSetup();
+  attacker.state.formation_row = "back";
+  const guard = member("sequence-guard", "monsters", monsterGuard, 10);
+  setup.monsters.push(guard);
+  guard.state.formation_row = "front";
+  const A = window.IRON_PIT_BROWSER_ATTACK, original = A.resolveAttack;
+  A.resolveAttack = (...args) => { const event = original(...args); guard.state.is_dead = true; return event; };
+  try {
+    window.IRON_PIT_DICE = queuedDice([15, 1, 15, 1]);
+    const result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, attacker, setup);
+    assert.deepEqual(result.events.filter((event) => event.event_type === "attack").map((event) => event.weapon_id), ["bow", "bow"]);
+    assert.equal(window.IRON_PIT_BROWSER_FORMATION.flexibleAttackMode(attacker, setup), "melee");
+  } finally { A.resolveAttack = original; }
+}

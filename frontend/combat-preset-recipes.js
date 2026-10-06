@@ -49,7 +49,7 @@
     R("2024-pressure", "2024", "2024 5v5 · Breath and trampling", 11, ["barbarian", "rogue", "cleric", "monk", "wizard"], ["hippopotamus", "triceratops", "red-dragon-wyrmling", "red-dragon-wyrmling", "red-dragon-wyrmling"],
       "Rage, Sneak Attack, and healing.", 11, [A("feature", "rage"), A("source", "Sneak Attack"), A("event", "healing")]),
     R("2024-party", "2024", "2024 6v6 · Full party stress test", 15, ["ranger", "cleric", "bard", "sorcerer", "warlock", "wizard"], ["blue-dragon-wyrmling", "blue-dragon-wyrmling", "blue-dragon-wyrmling", "blue-dragon-wyrmling", "blue-dragon-wyrmling", "blue-dragon-wyrmling"],
-      "Dragon breath, Extra Attack, and healing.", 6, [A("anyFeature", ["lightning-breath", "srd-blue-dragon-wyrmling-lightning-breath"]), A("feature", "extra-attack"), A("event", "healing")]),
+      "Dragon breath, Extra Attack, and healing.", 8, [A("anyFeature", ["lightning-breath", "srd-blue-dragon-wyrmling-lightning-breath"]), A("feature", "extra-attack"), A("event", "healing")]),
     R("2024-grapple", "2024", "2024 2v2 · Escape the jaws", 4, ["monk", "rogue"], ["crocodile", "crocodile"],
       "Grappled, Restrained, and a grapple escape.", 7, [A("condition", "grappled"), A("condition", "restrained"), A("feature", "escape-grapple")]),
     R("2024-poison", "2024", "2024 3v3 · Poison and recovery", 6, ["paladin", "cleric", "ranger"], ["giant-scorpion", "giant-scorpion", "giant-scorpion"],

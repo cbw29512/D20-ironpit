@@ -15,7 +15,7 @@ for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js",
   "browser-action-economy.js", "browser-grapple.js", "browser-state.js",
   "browser-rolls.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js", "browser-saves.js", "browser-charge.js",
-  "browser-formation.js", "browser-multiattack.js", "browser-healing-policy.js", "browser-healing-resolution.js", "browser-healing.js",
+  "browser-formation.js", "browser-multiattack-choices.js", "browser-multiattack.js", "browser-healing-policy.js", "browser-healing-resolution.js", "browser-healing.js",
   "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-action-surge.js",
   "browser-bonus-action-follow-up.js", "browser-support.js",
 ]) load(file);

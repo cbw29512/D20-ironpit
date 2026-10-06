@@ -4,7 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
-from app.combat.attack_action_choices import attack_choice, save_choice, slot_has_legal_choice, use_ranged_split
+from app.combat.attack_action_choices import attack_choice, save_choice, slot_has_legal_choice, flexible_attack_mode
 from app.combat.attack_action_event_target import event_target
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.attack_action_weapon_buffs import resolve_attack_action_weapon_buff
@@ -16,12 +16,11 @@ from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.light_attack_resolution import resolve_light_extra_attack
 from app.combat.opening_burst import opening_feature_id
-from app.combat.pit_policy import flexible_slot_has_both
 from app.combat.saving_throws import resolve_save_action
 from app.combat.stunning_strike_2014 import resolve_stunning_strike
 from app.combat.timed_attack_cap import turn_attack_allowed
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.models import BattleEvent, WeaponAttack, WeaponAttackKind
+from app.domain.models import BattleEvent, WeaponAttack
 
 logger = logging.getLogger(__name__)
 
@@ -51,19 +50,12 @@ def resolve_attack_action(
         opening_feature = opening_feature_id(round_number, attacker, setup)
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
         light_trigger: WeaponAttack | None = None
-        ranged_split = use_ranged_split(attacker, setup, definition.slots, dice)
-        ranged_split_used = False
+        mode = flexible_attack_mode(attacker, setup)
         turn_key = f"{round_number}:{attacker.combatant_id}"
 
         for index, slot in enumerate(definition.slots):
             if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
                 break
-            split_this_slot = (
-                index > 0
-                and ranged_split
-                and not ranged_split_used
-                and flexible_slot_has_both(attacker, slot.attack_ids)
-            )
             deferred = resolve_deferred_effect_attack_slot(
                 sequence,
                 round_number,
@@ -76,13 +68,11 @@ def resolve_attack_action(
                 sequence += 1
                 opening_feature = None
                 continue
-            chosen_attack = attack_choice(attacker, setup, slot, ranged_backline=split_this_slot)
+            chosen_attack = attack_choice(attacker, setup, slot, mode=mode)
             if chosen_attack is not None:
                 if not turn_attack_allowed(attacker.state):
                     break
                 target, attack, distance = chosen_attack
-                if split_this_slot and attack.weapon.attack_kind is WeaponAttackKind.RANGED:
-                    ranged_split_used = True
                 pack = pack_tactics_active(attacker, target, setup)
                 feature_id = opening_feature or ("pack-tactics" if pack else definition.id)
                 event = resolve_encounter_attack(

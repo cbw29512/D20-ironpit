@@ -31,6 +31,8 @@ Providers are static module metadata only. They must not store combat state.
 
 `discover(ctx)` is an eligibility/choice query and must not spend actions, resources, movement, or mutate combat state. It may perform the existing **within-family** choice, such as best spell, best area placement, or best standard attack.
 
+Attack/Multiattack discovery and resolution share the same row-based slot choice under `IRON_PIT_RULES_CONTRACT.md` §10. Candidate delivery and printed damage are derived from that selected attack; a protected back-row flexible slot cannot be scored as melee and later resolved as ranged. Multiattack is a separate Action, not the Attack action; only a source-declared Attack action may trigger Light/Nick extra attacks.
+
 The ephemeral candidate returned to the selector is:
 
 ```text

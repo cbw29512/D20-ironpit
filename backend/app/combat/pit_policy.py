@@ -30,14 +30,6 @@ def target_order(
     return [*back, *front] if prefer_backline else [*front, *back]
 
 
-def has_frontline_target(attacker: EncounterCombatant, setup: EncounterSetup) -> bool:
-    return any(not is_backline(target) for target in living_opponents(attacker, setup))
-
-
-def has_backline_target(attacker: EncounterCombatant, setup: EncounterSetup) -> bool:
-    return any(is_backline(target) for target in living_opponents(attacker, setup))
-
-
 def allied_frontline_active(attacker: EncounterCombatant, setup: EncounterSetup) -> bool:
     allies = setup.heroes if attacker.side == "heroes" else setup.monsters
     return any(
