@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_damage_absorption import damage_absorptions_2024
+from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_regeneration_2024 import regeneration_trait_2024
 from app.content.monster_loathsome_limbs_2024 import loathsome_limbs_stack_2024
 from app.content.monster_trait_source_audit import source_trait_names
@@ -52,11 +53,17 @@ def bind_monster_source_traits_2024(template: CombatantTemplate) -> CombatantTem
         source_traits = row.get("traits", "")
         regeneration = regeneration_trait_2024(source_traits)
         limb_stack = loathsome_limbs_stack_2024(source_traits)
+        auras = condition_auras_from_source(source_traits, "2024")
+        aura_ids = {action.id for action in auras}
         return template.model_copy(update={
             "source_trait_names": names,
             "progression_features": features,
             "regeneration": regeneration,
             "damage_absorptions": damage_absorptions_2024(row),
+            "timed_self_buff_actions": [
+                *[action for action in template.timed_self_buff_actions if action.id not in aura_ids],
+                *auras,
+            ],
             "triggered_extra_attack_stacks": [limb_stack] if limb_stack is not None else [],
         })
     except Exception:

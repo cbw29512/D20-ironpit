@@ -5,7 +5,6 @@
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const P = () => window.IRON_PIT_BROWSER_TIMED_SELF_BUFF_POLICY;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
-
   function active(member, action) {
     return P().active(member, action);
   }
@@ -16,6 +15,7 @@
 
   function resolve(sequence, round, member, action, options = {}) {
     try {
+      if (action.activationTiming === "passive") throw new Error("Passive auras cannot be activated.");
       const spendActionCost = options.spendActionCost !== false;
       if (spendActionCost && !E().available(member.state, action.actionCost)) throw new Error(`${action.name} action cost is unavailable.`);
       if (action.resourceId != null && (member.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);

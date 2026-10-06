@@ -5,6 +5,7 @@ import re
 
 from app.content.environment_context_reactions import sunlight_sensitivity_2014
 from app.content.monster_damage_absorption import damage_absorptions_from_source
+from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.content.monster_legendary_resistance_2014 import legendary_resistance_trait_name_2014
 from app.content.monster_passive_grants_2014 import (
@@ -138,6 +139,7 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
     """Return source traits that are fully bound to existing universal primitives."""
     try:
         bound: set[str] = set()
+        bound.update(action.name for action in condition_auras_from_source(monster.source_traits, "2014"))
         bound.update(rule.source_name for rule in damage_absorptions_from_source(
             monster.source_traits, {item.lower() for item in monster.damage_immunities},
         ))

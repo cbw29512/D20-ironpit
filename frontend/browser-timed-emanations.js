@@ -12,7 +12,8 @@
         .filter((effect) => effect.source_id === source.combatant_id && effect.source_effect_id)
         .map((effect) => effect.source_effect_id));
       return (source.state.template.timed_self_buff_actions || [])
-        .filter((action) => activeIds.has(action.id)
+        .filter((action) => (activeIds.has(action.id)
+          || (action.activationTiming === "passive" && source.state.is_alive && !source.state.is_dead))
           && (action.startTurnEmanationDamage || action.hostileStartTurnConditionAura));
     } catch (error) {
       console.error("Failed browser timed emanation discovery.", { combatant: source?.combatant_id, error });
@@ -32,7 +33,12 @@
           if (aura && aura.trigger === "enemy_turn_start" && distance <= aura.radius_ft) {
             const immunityId = `${action.id}:success-immunity:${source.combatant_id}`;
             const immune = (target.state.timed_effects || []).some((effect) => effect.effect_id === immunityId);
-            if (!immune) {
+            const conditionImmunity = window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
+            if (!conditionImmunity?.immune) throw new Error("Condition aura requires condition-immunity runtime.");
+            if (!immune && !target.state.is_dead && !conditionImmunity.immune(
+              target.state, aura.condition_id, source.state.template,
+              { sourceIsMagical: Boolean(aura.source_is_magical) },
+            )) {
               const saveRuntime = window.IRON_PIT_BROWSER_SAVES;
               const timed = window.IRON_PIT_BROWSER_TIMED;
               if (!saveRuntime?.resolveSavingThrow || !timed?.apply) {
@@ -40,27 +46,33 @@
               }
               const save = saveRuntime.resolveSavingThrow(target.state, aura.save_ability, aura.save_dc, {
                 magicalEffect: Boolean(aura.source_is_magical),
-                effectTags: [aura.condition_id],
+                conditionId: aura.condition_id,
+                sourceCreatureType: source.state.template.creature_type,
+                effectTags: [aura.condition_id, ...(aura.effect_tags || [])],
+                roundNumber: round, encounterRoller: target, setup,
               });
               const applied = [];
+              let immunityGranted = false;
               if (save.succeeded) {
                 if (aura.success_immunity || aura.successImmunity) {
                   const granted = window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS?.grantImmunity;
                   if (!granted) throw new Error("Hostile condition aura immunity requires failed-save timed-effect runtime.");
-                  granted(target.state, action.id, source.combatant_id, round, {
+                  immunityGranted = granted(target.state, action.id, source.combatant_id, round, {
                     sourceTemplate: source.state.template,
                     sourceIsMagical: Boolean(aura.source_is_magical),
-                  });
+                  }) != null;
                 }
               } else {
+                const duration = aura.condition_duration_rounds ?? action.durationRounds;
+                const expiry = aura.condition_expiry_timing ?? action.expiryTiming ?? "source_turn_start";
                 const condition = timed.apply(target.state, aura.condition_id, source.combatant_id, {
                   sourceEffectId: action.id,
                   sourceTemplate: source.state.template,
                   sourceIsMagical: Boolean(aura.source_is_magical),
                   appliedRound: round,
-                  expiresRound: round + action.durationRounds,
-                  expiryTiming: action.expiryTiming || "source_turn_start",
-                  expiresAtStartOfSourceTurn: (action.expiryTiming || "source_turn_start") === "source_turn_start",
+                  expiresRound: duration == null ? null : round + duration,
+                  expiryTiming: expiry,
+                  expiresAtStartOfSourceTurn: expiry === "source_turn_start",
                   endsIfSourceIncapacitated: Boolean(action.endsIfSourceIncapacitated),
                   endsIfSourceDead: Boolean(action.endsIfSourceDead),
                   useDefaultPoisonRecovery: false,
@@ -75,7 +87,8 @@
                 save_dc: aura.save_dc, save_succeeded: save.succeeded,
                 applied_condition_ids: applied, distance_before_ft: distance,
                 feature_id: action.id, animation: action.animation || "aura",
-                description: `${target.state.template.name} starts its turn within ${distance} feet of ${source.state.template.name}'s ${action.name} and ${save.succeeded ? "resists" : "fails against"} its aura.`,
+                description: `${target.state.template.name} starts its turn within ${distance} feet of ${source.state.template.name}'s ${action.name} and ${save.succeeded ? "resists" : "fails against"} its aura.`
+                  + (immunityGranted ? ` Immune to this source's ${action.name} for the rest of the match.` : ""),
               });
             }
           }

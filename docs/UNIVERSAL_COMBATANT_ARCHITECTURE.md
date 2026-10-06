@@ -465,6 +465,17 @@ For an `enemy_turn_start` emanation, the universal turn-start phase discovers ac
 
 Python and browser implementations must preserve behavioral parity. A new named class, spell, monster, or item feature that has the same timing/range/damage semantics binds to this component instead of adding another resolver.
 
+Condition emanations also reuse this discovery and turn-start resolver. A source
+may declare `activation_timing="passive"` for an always-present condition aura;
+discovery reads that immutable payload directly while its source is alive, even
+before the source's first turn. It does not spend an activation or create source
+timers. Activation-owned self effects/resources are invalid on this passive form.
+The aura's target condition duration/expiry are independent parameters, with the
+existing timed-source lifetime as the default for previously bound active auras.
+Condition immunity is checked before dice; the shared save receives condition,
+magical/source-type and semantic effect tags. Failures use ordinary timed
+conditions; successes use match-scoped source immunity only when printed.
+
 ## Finite modifier spells and threshold targeting (2014 audit correction)
 
 HP-threshold source actions declare `requires_target_sight`; legality consumes the ordinary universal visibility predicate before any resource or Action spending. The browser serializers preserve the same flag. 2014 Power Word Kill/Stun require sight; other sources retain their independently audited parameters.

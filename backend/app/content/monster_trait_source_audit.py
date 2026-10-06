@@ -6,6 +6,7 @@ from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_damage_absorption import damage_absorptions_2024
+from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_regeneration_2024 import regeneration_trait_2024
 from app.domain.models import CombatantTemplate
 from app.domain.traits import CombatTrait
@@ -120,6 +121,11 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
     if template.damage_absorptions != expected_absorptions:
         issues.append("trait-runtime-mismatch:damage-absorption")
     certified.update(rule.source_name for rule in expected_absorptions)
+    expected_auras = condition_auras_from_source(row.get("traits", ""), "2024")
+    actual_auras = [action for action in template.timed_self_buff_actions if action.activation_timing == "passive"]
+    if actual_auras != expected_auras:
+        issues.append("trait-runtime-mismatch:passive-condition-aura")
+    certified.update(action.name for action in expected_auras)
     for name in expected:
         if name not in certified:
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
