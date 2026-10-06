@@ -64,6 +64,7 @@
     if (event.attack_roll) pieces.push(`${rollLabel(event.attack_roll)}${event.target_ac == null ? "" : ` vs AC ${event.target_ac}`}`);
     if (event.save_dc != null) pieces.push(`${event.target_name} ${event.save_succeeded ? "SUCCEEDS" : "FAILS"} ${String(event.save_ability || "save").toUpperCase()} save: ${rollLabel(event.saving_throw_roll)} vs DC ${event.save_dc}`);
     const damage = damageLabel(event); if (damage) pieces.push(damage);
+    if (event.saving_throw_roll?.outcome_override_name) pieces.push(`${event.saving_throw_roll.outcome_override_name}: success override (${event.saving_throw_roll.outcome_override_uses_remaining} uses remain)`);
     appendState(pieces, event, Boolean(event.hit));
     const death = attackDeathLabel(event); if (death) pieces.push(death);
     return pieces.join(" · ");
@@ -76,6 +77,7 @@
     const pieces = [`${event.target_name} ${result} ${ability} save vs ${event.actor_name}'s ${source}`];
     pieces.push(`${rollLabel(event.saving_throw_roll)} vs DC ${event.save_dc}`);
     const damage = damageLabel(event); if (damage) pieces.push(damage);
+    if (event.saving_throw_roll?.outcome_override_name) pieces.push(`${event.saving_throw_roll.outcome_override_name}: success override (${event.saving_throw_roll.outcome_override_uses_remaining} uses remain)`);
     appendState(pieces, event, Boolean(event.damage_roll));
     return pieces.join(" · ");
   }
