@@ -95,7 +95,8 @@
       const save = S().resolveSavingThrow(mover.state, item.saveAbility, item.dc);
       const raw = save.succeeded ? item.successDamage : item.failureDamage;
       const before = mover.state.current_hp;
-      const applied = DD().resolveDamage(mover.state, raw, item.damageType).applied;
+      const resolved = DD().resolveDamage(mover.state, raw, item.damageType);
+      const applied = resolved.applied;
       if (applied > 0) A().applyDamage(mover.state, applied, false, [item.damageType], states);
       item.remainingDamageCapacity = Math.max(0, item.remainingDamageCapacity - applied);
       const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(mover.state) || "";
@@ -109,6 +110,8 @@
         damage_components: [{
           source: item.actionName, notation: String(raw), rolls: [], modifier: 0,
           damage_type: item.damageType, total: raw, applied_total: applied,
+          absorbed_healing: resolved.healed || 0,
+          absorption_source_name: resolved.sourceName || null,
         }],
         hp_before: before, hp_after: mover.state.current_hp, is_dead: mover.state.is_dead,
         feature_id: item.actionId, animation: item.animation,
