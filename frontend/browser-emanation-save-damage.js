@@ -33,7 +33,7 @@
         else if (succeeded && emanation.success_damage === "half") raw = Math.floor(raw / 2);
       }
       const applied = raw
-        ? window.IRON_PIT_BROWSER_ATTACK.resolveDamage(target.state, raw, emanation.damage_type).applied
+        ? (window.IRON_PIT_BROWSER_ATTACK.resolveDamage ? window.IRON_PIT_BROWSER_ATTACK.resolveDamage(target.state, raw, emanation.damage_type).applied : window.IRON_PIT_BROWSER_ATTACK.adjustedDamage(target.state, raw, emanation.damage_type))
         : 0;
       const hpBefore = target.state.current_hp;
       if (applied) {
