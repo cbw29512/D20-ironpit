@@ -14,8 +14,7 @@ _CUNNING_ACTION = "Cunning Action"
 _ASSASSINATE = "Assassinate"
 _EVASION = "Evasion"
 _SNEAK_ATTACK_NAMES = frozenset({"Sneak Attack", "Sneak Attack (1/Turn)"})
-_MARTIAL_ADVANTAGE = "Martial Advantage"
-_INVISIBILITY = "Invisibility"
+_MARTIAL_ADVANTAGE, _INVISIBILITY = "Martial Advantage", "Invisibility"
 _FINESSE_WEAPON_NAMES_2014 = frozenset({"Dagger", "Rapier", "Scimitar", "Shortsword", "Whip"})
 _SNEAK_ATTACK_D6 = re.compile(
     r"Sneak Attack(?: \(1/Turn\))?.*?extra\s+\d+\s+\((\d+)d6\)",
@@ -26,14 +25,12 @@ _MARTIAL_ADVANTAGE_DAMAGE = re.compile(
     re.IGNORECASE | re.DOTALL,
 )
 
-
 def supports_cunning_action_2014(monster: SourceMonster2014) -> bool:
     try:
         return _CUNNING_ACTION in monster.trait_names
     except Exception:
         logger.exception("Failed to classify 2014 Cunning Action for %s.", monster.name)
         raise
-
 
 def _base_sneak_attack_eligible(attack: SourceAttack2014) -> bool:
     try:
@@ -44,7 +41,6 @@ def _base_sneak_attack_eligible(attack: SourceAttack2014) -> bool:
         logger.exception("Failed to classify Sneak Attack eligibility for %s.", attack.name)
         raise
 
-
 def _sneak_attack_trait_name(monster: SourceMonster2014) -> str | None:
     try:
         names = [name for name in monster.trait_names if name in _SNEAK_ATTACK_NAMES]
@@ -54,7 +50,6 @@ def _sneak_attack_trait_name(monster: SourceMonster2014) -> str | None:
     except Exception:
         logger.exception("Failed to classify Sneak Attack heading for %s.", monster.name)
         raise
-
 
 def sneak_attack_d6_2014(monster: SourceMonster2014) -> int:
     """Parse printed Sneak Attack dice from pinned SRD trait text."""
@@ -74,7 +69,6 @@ def sneak_attack_d6_2014(monster: SourceMonster2014) -> int:
         logger.exception("Failed to parse 2014 Sneak Attack for %s.", monster.name)
         raise
 
-
 def sneak_attack_eligible_2014(
     monster: SourceMonster2014,
     attack: SourceAttack2014,
@@ -88,7 +82,6 @@ def sneak_attack_eligible_2014(
             attack.name,
         )
         raise
-
 
 def martial_advantage_rider_2014(
     monster: SourceMonster2014,
@@ -111,7 +104,6 @@ def martial_advantage_rider_2014(
         logger.exception("Failed to bind 2014 Martial Advantage for %s.", monster.name)
         raise
 
-
 def starting_condition_ids_2014(monster: SourceMonster2014) -> list[str]:
     """Return source-owned conditions present when a fight state is created."""
     try:
@@ -119,7 +111,6 @@ def starting_condition_ids_2014(monster: SourceMonster2014) -> list[str]:
     except Exception:
         logger.exception("Failed to bind starting conditions for %s.", monster.name)
         raise
-
 
 def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFeatures:
     """Translate printed traits into existing universal progression feature fields."""
@@ -136,7 +127,6 @@ def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFe
     except Exception:
         logger.exception("Failed to compile 2014 progression features for %s.", monster.name)
         raise
-
 
 def bound_progression_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
     try:
