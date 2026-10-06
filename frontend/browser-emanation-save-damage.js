@@ -60,6 +60,8 @@
           damage_components: [{
             source: action.name, notation, rolls, modifier: 0,
             damage_type: emanation.damage_type, total: raw, applied_total: applied,
+            absorbed_healing: resolvedDamage.healed || 0,
+            absorption_source_name: resolvedDamage.sourceName || null,
           }],
           hp_before: hpBefore, hp_after: target.state.current_hp,
           feature_id: action.id, animation: action.animation || "radiant-aura",
