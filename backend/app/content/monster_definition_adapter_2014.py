@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014
+from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014, source_conditional_attack_advantage_2014
 from app.content.monster_basic_candidates_2014 import (
     basic_blockers_2014, modeled_combat_traits_2014, supports_parry_reaction_2014,
 )
@@ -94,7 +94,10 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "attack_bonus": attack.attack_bonus,
         "attack_ability": attack.attack_ability,
         "sneak_attack_eligible": sneak_attack_eligible_2014(monster, attack),
-        "conditional_attack_advantage": conditional_attack_advantage_2014(monster, attack),
+        "conditional_attack_advantage": [
+            *conditional_attack_advantage_2014(monster, attack),
+            *source_conditional_attack_advantage_2014(attack),
+        ],
         "damage_type": str(attack.damage.type).lower(),
         "animation": "projectile" if attack.kind == "ranged" else "slash",
         "reach_ft": attack.reach_ft,
