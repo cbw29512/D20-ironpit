@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.attacks import resolve_attack
+from app.combat.condition_lifecycle import resolve_target_condition_timing
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
@@ -8,6 +9,7 @@ from app.content.capability_compiler import compile_combatant
 from app.content.demo import build_goblin_warrior
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
+from app.domain.encounters import EncounterCombatant
 from app.domain.size import CreatureSize
 from app.domain.weapons import OnHitConditionSave
 
@@ -122,3 +124,44 @@ def test_compiled_ghoul_claws_use_printed_name_and_shared_paralysis_save() -> No
     assert "paralyzed" in event.applied_condition_ids
     assert "HIT with Claws" in event.description
     assert "Paralyzed" in event.description
+
+
+def test_petrified_is_terminal_regardless_of_source_name() -> None:
+    effect = OnHitConditionSave(save_ability="constitution", dc=12, condition_id="petrified")
+    target = _target(save_ability="constitution")
+    event = _hit(target, [15, 4, 4, 1], effect)
+    assert event.save_succeeded is False
+    assert "petrified" in target.active_effect_ids
+    assert target.is_dead is True
+    assert target.is_alive is False
+    assert target.current_hp == 0
+
+
+def test_staged_restrained_to_petrified_uses_same_terminal_condition_rule() -> None:
+    effect = OnHitConditionSave(
+        save_ability="constitution",
+        dc=12,
+        condition_id="restrained",
+        repeat_save_timing="target_turn_end",
+        repeat_save_failure_condition_id="petrified",
+    )
+    target = _target(save_ability="constitution")
+    first = _hit(target, [15, 4, 4, 1], effect)
+    assert first.save_succeeded is False
+    assert "restrained" in target.active_effect_ids
+    assert target.is_dead is False
+
+    member = EncounterCombatant(
+        combatant_id="target",
+        side="monsters",
+        position_ft=5,
+        state=target,
+    )
+    events, _ = resolve_target_condition_timing(
+        2, 1, member, "target_turn_end", FixedDiceProvider([1])
+    )
+    assert events[0].save_succeeded is False
+    assert "restrained" not in target.active_effect_ids
+    assert "petrified" in target.active_effect_ids
+    assert target.is_dead is True
+    assert target.current_hp == 0

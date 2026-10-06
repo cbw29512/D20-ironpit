@@ -16,6 +16,7 @@ Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §1.1, §2, §25; `SOUL.md`; `AGENT
 
 ## Death and dying
 
+- **Petrified is terminal in the Iron Pit.** When the Petrified debuff is successfully applied, that combatant is immediately Dead for the rest of the match. This is an explicit Iron Pit arena rule, not a statement of tabletop RAW. The universal condition engine owns this consequence; monster/ability names must not dispatch it.
 - **Dead is terminal.** No resurrection, rebirth, revive, later stabilization, regeneration, or Death Saving Throw restores a Dead combatant in that match. The Pit deity restores combatants only after combat.
 - **Death Saving Throws only while dying.** They occur only while a character is Unconscious/dying at 0 HP and not Dead. Printed 0-HP replacements intercept the drop to 0 in the same resolution and never leave the combatant Dead first.
 
@@ -107,7 +108,7 @@ Standing instruction: park, record, continue. Revisit this list after the rest o
 | Card / item | Family | Blocker | Why parked | Needed to unpark |
 |---|---|---|---|---|
 | Giant Frog; Giant Toad; Purple Worm; Remorhaz; Behir; Kraken; Tarrasque | swallow | Swallowed state | Blinded + Restrained + total cover + start-turn acid + death/regurgitate exit. | New swallow machine |
-| Stirge | attach / Blood Drain | Ongoing attach | Source-attack lock, detach movement, HP-loss end. | New attach rider, not a Grapple rename |
+| Stirge | removed from Iron Pit roster | Product decision | Attachment/Blood Drain is not worth a dedicated subsystem for the automated arena. Keep the source record for audit provenance but never compile it into the runnable roster. | None; intentionally excluded |
 | Roper | Reel / pull | Tendril attach + pull | Forced-movement pull; only push exists. | Pull primitive |
 | Gelatinous Cube; Shambling Mound | Engulf | Swallow-shaped plus form extras | Same swallow machine, then extras. | Swallow machine first |
 | Blink Dog | Teleport + extra attack | Recharge Teleport also grants a Bite | `TeleportAction` has no extra-attack rider. In-place teleport (10.1) plus a parameterized extra-attack grant. Do not drop the Bite. | Extra-attack grant on teleport |

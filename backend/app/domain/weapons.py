@@ -23,7 +23,7 @@ class ConditionalDamage(BaseModel):
 
 
 class ConditionalAttackAdvantage(BaseModel):
-    trigger: Literal["target_not_full_hp"]
+    trigger: Literal["target_not_full_hp", "target_grappled_by_self"]
 
 
 class OnHitDamage(BaseModel):
@@ -52,6 +52,27 @@ class OnHitSaveDamage(BaseModel):
     zero_hp_rider: ZeroHpSaveDamageRider | None = None
 
 
+class OnHitContestedMovement(BaseModel):
+    source_ability: AbilityName
+    target_ability: AbilityName
+    max_target_size: CreatureSize | None = None
+    distance_ft: int = Field(ge=0)
+    direction: Literal["toward_source", "away_from_source"]
+
+    @model_validator(mode="after")
+    def validate_grid_distance(self) -> "OnHitContestedMovement":
+        if self.distance_ft % 5:
+            raise ValueError("Contested forced movement must use 5-foot grid increments.")
+        return self
+
+
+class OnHitMaximumHpSave(BaseModel):
+    save_ability: AbilityName
+    dc: int = Field(ge=1, le=40)
+    reduction: Literal["damage_taken"] = "damage_taken"
+    zero_max_hp_kills: bool = False
+
+
 class OnHitConditionSave(BaseModel):
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
@@ -59,13 +80,23 @@ class OnHitConditionSave(BaseModel):
     max_target_size: CreatureSize | None = None
     duration_rounds: int | None = Field(default=None, ge=1, le=100800)
     repeat_save_timing: ConditionTiming | None = None
+    repeat_save_failure_condition_id: ConditionName | None = None
+    failure_push_ft: int = Field(default=0, ge=0)
     excluded_creature_types: list[str] = Field(default_factory=list)
     excluded_creature_subtypes: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_condition_lifecycle(self) -> "OnHitConditionSave":
-        if self.repeat_save_timing is not None and self.duration_rounds is None:
-            raise ValueError("On-hit repeat-save riders require a printed duration.")
+        if (
+            self.repeat_save_timing is not None
+            and self.duration_rounds is None
+            and self.repeat_save_failure_condition_id is None
+        ):
+            raise ValueError(
+                "On-hit repeat saves require a duration or a failure escalation condition."
+            )
+        if self.repeat_save_failure_condition_id is not None and self.repeat_save_timing is None:
+            raise ValueError("Failure escalation requires a repeat-save timing.")
         return self
 
 
@@ -112,6 +143,8 @@ class WeaponAttack(BaseModel):
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_save_damage: OnHitSaveDamage | None = None
     on_hit_condition_save: OnHitConditionSave | None = None
+    on_hit_maximum_hp_save: OnHitMaximumHpSave | None = None
+    on_hit_contested_movement: OnHitContestedMovement | None = None
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
     charge_profile: AttackChargeProfile | None = None
     rage_eligible: bool = False
@@ -119,4 +152,5 @@ class WeaponAttack(BaseModel):
     knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
     forbid_target_grappled_by_self: bool = False
+    grapple_target_policy: Literal["normal", "own_grapple_only"] = "normal"
     damage_source_qualifiers: list[DamageSourceQualifier] = Field(default_factory=list)

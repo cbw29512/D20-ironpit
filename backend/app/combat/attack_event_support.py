@@ -9,13 +9,19 @@ logger = logging.getLogger(__name__)
 def primary_attack_save_fields(
     save_damage: Any,
     on_hit_save: Any,
+    on_hit_maximum_hp_save: Any,
+    contested_movement: Any,
     cunning_strike_obscure: Any,
     cunning_strike: Any,
     topple: Any,
 ) -> tuple[Any, str | None, int | None, bool | None]:
     """Choose the primary save evidence exposed on the attack event."""
     try:
-        primary = save_damage if save_damage and save_damage.save_dc is not None else on_hit_save
+        primary = (
+            save_damage if save_damage and save_damage.save_dc is not None
+            else on_hit_save if on_hit_save and on_hit_save.save_dc is not None
+            else on_hit_maximum_hp_save
+        )
         if primary and primary.save_dc is not None:
             return primary.save_roll, primary.save_ability, primary.save_dc, primary.save_succeeded
         if cunning_strike_obscure and cunning_strike_obscure.save_dc is not None:
@@ -68,6 +74,8 @@ def build_attack_description(
     vex_applied: bool,
     save_damage: Any,
     on_hit_save: Any,
+    on_hit_maximum_hp_save: Any,
+    contested_movement: Any,
     cunning_strike_obscure: Any,
     cunning_strike: Any,
     topple: Any,
@@ -112,6 +120,7 @@ def build_attack_description(
         for label, resolution in (
             ("", save_damage),
             ("", on_hit_save),
+            ("", on_hit_maximum_hp_save),
             ("Devious Strike Obscure", cunning_strike_obscure),
             ("Cunning Strike Trip", cunning_strike),
             ("Topple", topple),
@@ -121,7 +130,33 @@ def build_attack_description(
                 prefix = label or (ability.title() if ability else "")
                 succeeded = "succeeds" if resolution.save_succeeded else "fails"
                 description += f" {prefix} save DC {resolution.save_dc}: {actual_defender_name} {succeeded}."
+                moved = getattr(resolution, "forced_movement_ft", 0)
+                if moved:
+                    description += f" {actual_defender_name} is pushed {moved} feet away."
+                reduction = getattr(resolution, "reduction_applied", 0)
+                if reduction:
+                    description += (
+                        f" {actual_defender_name}'s hit point maximum is reduced by {reduction}."
+                    )
+                if getattr(resolution, "killed_by_zero_maximum", False):
+                    description += f" {actual_defender_name} dies as its hit point maximum reaches 0."
 
+        if contested_movement and contested_movement.target_roll is not None:
+            result = "wins" if contested_movement.target_succeeded else "loses"
+            description += (
+                f" {actual_defender_name} {result} the "
+                f"{contested_movement.target_ability.title()} contest "
+                f"({contested_movement.target_roll.total} vs {contested_movement.source_roll.total})."
+            )
+            if contested_movement.movement_ft:
+                direction = (
+                    "toward the source"
+                    if contested_movement.direction == "toward_source"
+                    else "away from the source"
+                )
+                description += (
+                    f" {actual_defender_name} is moved {contested_movement.movement_ft} feet {direction}."
+                )
         if damage_outcome == "relentless_endurance":
             description += f" {actual_defender_name} uses Relentless Endurance and remains at 1 HP."
         if damage_outcome == "undead_fortitude":

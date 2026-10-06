@@ -5,15 +5,17 @@ from app.domain.actions import HitControlEffect
 from app.domain.capabilities import AttackCapabilityDefinition
 from app.domain.capability_effects import (
     ConditionEffectDefinition,
+    ContestedMovementEffectDefinition,
     DamageEffectDefinition,
     GrappleEffectDefinition,
     ProneEffectDefinition,
     SaveConditionEffectDefinition,
     SaveDamageEffectDefinition,
+    SaveMaximumHpReductionEffectDefinition,
 )
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
-from app.domain.weapons import OnHitConditionSave, OnHitSaveDamage
+from app.domain.weapons import OnHitConditionSave, OnHitContestedMovement, OnHitMaximumHpSave, OnHitSaveDamage
 
 
 class UnsupportedCapabilityError(ValueError):
@@ -67,6 +69,8 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
     control = None
     on_hit_save = None
     on_hit_save_damage = None
+    on_hit_maximum_hp_save = None
+    on_hit_contested_movement = None
     for effect in definition.effects:
         if isinstance(effect, DamageEffectDefinition):
             if effect.trigger == "on_hit":
@@ -93,6 +97,21 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                 damage_type=effect.damage_type, success_damage=effect.success_damage,
                 zero_hp_rider=effect.zero_hp_rider,
             )
+        elif isinstance(effect, ContestedMovementEffectDefinition):
+            on_hit_contested_movement = OnHitContestedMovement(
+                source_ability=effect.source_ability,
+                target_ability=effect.target_ability,
+                max_target_size=effect.max_target_size,
+                distance_ft=effect.distance_ft,
+                direction=effect.direction,
+            )
+        elif isinstance(effect, SaveMaximumHpReductionEffectDefinition):
+            on_hit_maximum_hp_save = OnHitMaximumHpSave(
+                save_ability=effect.save_ability,
+                dc=effect.dc,
+                reduction=effect.reduction,
+                zero_max_hp_kills=effect.zero_max_hp_kills,
+            )
         elif isinstance(effect, ProneEffectDefinition):
             prone_size = effect.max_target_size
         elif isinstance(effect, SaveConditionEffectDefinition):
@@ -101,6 +120,8 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                 condition_id=effect.condition, max_target_size=effect.max_target_size,
                 duration_rounds=effect.duration_rounds,
                 repeat_save_timing=effect.repeat_save_timing,
+                repeat_save_failure_condition_id=effect.repeat_save_failure_condition,
+                failure_push_ft=effect.failure_push_ft,
                 excluded_creature_types=list(effect.excluded_creature_types),
                 excluded_creature_subtypes=list(effect.excluded_creature_subtypes),
             )
@@ -125,10 +146,13 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         on_hit_damage=on_hit,
         on_hit_save_damage=on_hit_save_damage,
         on_hit_condition_save=on_hit_save,
+        on_hit_maximum_hp_save=on_hit_maximum_hp_save,
+        on_hit_contested_movement=on_hit_contested_movement,
         on_hit_modifier_effects=on_hit_modifiers,
         charge_profile=compile_charge(definition.charge_profile),
         knocks_prone_max_size=prone_size,
         control_effect=control,
         forbid_target_grappled_by_self=definition.forbid_target_grappled_by_self,
+        grapple_target_policy=definition.grapple_target_policy,
         damage_source_qualifiers=list(definition.damage_source_qualifiers),
     )

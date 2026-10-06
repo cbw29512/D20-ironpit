@@ -5,23 +5,12 @@ import logging
 from typing import Any
 
 from app.combat.attack_hit_damage import resolve_attack_hit_damage
+from app.combat.attack_hit_riders import resolve_attack_hit_riders
 from app.combat.barbarian import end_rage_if_incapacitated
-from app.combat.conditions import apply_hit_conditions
 from app.combat.damage import BonusDamageSpec
-from app.combat.deferred_save_effect import arm_deferred_save_effect
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
-from app.combat.exile import apply_on_hit_exile
-from app.combat.post_hit_spell_riders import resolve_paid_post_hit_spell_riders
-from app.combat.melee_hit_retaliation import apply_melee_hit_retaliation
-from app.combat.melee_hit_save_retaliation import apply_melee_hit_save_retaliation
-from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
-from app.combat.sap import apply_weapon_sap
-from app.combat.slow import apply_weapon_slow
 from app.combat.studied_attacks import apply_studied_attack_miss
-from app.combat.tactical_master import apply_tactical_master_sap
-from app.combat.topple import resolve_topple_hit
-from app.combat.vex import apply_vex_mastery
 from app.domain.models import CombatantState, RollMode, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -35,6 +24,8 @@ class AttackEffectResolution:
     applied_conditions: list[str] = field(default_factory=list)
     save_damage: Any = None
     on_hit_save: Any = None
+    on_hit_maximum_hp_save: Any = None
+    contested_movement: Any = None
     cunning_strike: Any = None
     cunning_strike_obscure: Any = None
     topple: Any = None
@@ -50,6 +41,25 @@ class AttackEffectResolution:
     damage_reduction_zeroed_attack: bool = False
     deferred_effect_armed: Any = None
     exile_applied: Any = None
+
+
+def _copy_hit_damage(result: AttackEffectResolution, hit_damage, defender) -> None:
+    result.damage_roll = hit_damage.damage_roll
+    result.damage_components = hit_damage.damage_components
+    result.damage_outcome = hit_damage.damage_outcome
+    result.save_damage = hit_damage.save_damage
+    result.damage_reduction_reaction_used = hit_damage.damage_reduction_reaction_used
+    result.damage_reduction_reaction_source_id = hit_damage.damage_reduction_reaction_source_id
+    result.damage_reduction_reaction_source_name = (
+        defender.template.attack_damage_reduction_reaction.source_name
+        if hit_damage.damage_reduction_reaction_used
+        and defender.template.attack_damage_reduction_reaction is not None
+        else None
+    )
+    result.damage_reduction_reaction_reduction = hit_damage.damage_reduction_reaction_reduction
+    result.damage_reduction_zeroed_attack = hit_damage.damage_reduction_zeroed_attack
+    result.cunning_strike = hit_damage.cunning_strike_trip
+    result.cunning_strike_obscure = hit_damage.cunning_strike_obscure
 
 
 def resolve_attack_effects(
@@ -73,7 +83,7 @@ def resolve_attack_effects(
     natural_roll: int | None = None,
     setup=None,
 ) -> AttackEffectResolution:
-    """Resolve shared on-hit/on-miss effects after the final attack outcome is known."""
+    """Resolve shared attack damage and generic rider composition."""
     try:
         result = AttackEffectResolution()
         if not hit:
@@ -82,117 +92,42 @@ def resolve_attack_effects(
                 result.damage_roll, result.damage_components, result.damage_outcome = graze
                 end_rage_if_incapacitated(defender)
             result.studied_applied = apply_studied_attack_miss(
-                attacker, attacker_event_id, defender_event_id, round_number,
+                attacker, attacker_event_id, defender_event_id, round_number
             )
             return result
 
         active_turn_key = turn_key or f"{round_number}:{attacker_event_id}"
         hit_damage = resolve_attack_hit_damage(
-            attacker, defender, attack, dice, critical, mode, active_turn_key,
-            bonus_damage, affected_states, sneak_attack_ally_available,
+            attacker,
+            defender,
+            attack,
+            dice,
+            critical,
+            mode,
+            active_turn_key,
+            bonus_damage,
+            affected_states,
+            sneak_attack_ally_available,
             target_event_id=actual_event_id,
             brutal_strike_disadvantage=brutal_strike_disadvantage,
             natural_roll=natural_roll,
             setup=setup,
         )
-        result.damage_roll = hit_damage.damage_roll
-        result.damage_components = hit_damage.damage_components
-        result.damage_outcome = hit_damage.damage_outcome
-        result.save_damage = hit_damage.save_damage
-        result.damage_reduction_reaction_used = hit_damage.damage_reduction_reaction_used
-        result.damage_reduction_reaction_source_id = hit_damage.damage_reduction_reaction_source_id
-        result.damage_reduction_reaction_source_name = (
-            defender.template.attack_damage_reduction_reaction.source_name
-            if hit_damage.damage_reduction_reaction_used
-            and defender.template.attack_damage_reduction_reaction is not None
-            else None
-        )
-        result.damage_reduction_reaction_reduction = hit_damage.damage_reduction_reaction_reduction
-        result.damage_reduction_zeroed_attack = hit_damage.damage_reduction_zeroed_attack
-        result.cunning_strike = hit_damage.cunning_strike_trip
-        result.cunning_strike_obscure = hit_damage.cunning_strike_obscure
-        if result.cunning_strike.applied:
-            result.applied_conditions.append("prone")
-        if result.cunning_strike_obscure.applied:
-            result.applied_conditions.append("blinded")
-        result.applied_conditions.extend(
-            apply_hit_conditions(
-                attack, defender, attacker_event_id, round_number,
-                affected_states, attacker.template,
-            )
-        )
-        result.on_hit_save = resolve_on_hit_condition_save(
-            defender, attack, dice, attacker.template,
-            source_id=attacker_event_id, round_number=round_number, affected_states=affected_states,
-        )
-        if (
-            result.on_hit_save.applied_condition
-            and result.on_hit_save.applied_condition not in result.applied_conditions
-        ):
-            result.applied_conditions.append(result.on_hit_save.applied_condition)
-        result.topple = resolve_topple_hit(attacker, defender, attack, dice)
-        if result.topple.applied and "prone" not in result.applied_conditions:
-            result.applied_conditions.append("prone")
-        result.weapon_sap_applied = apply_weapon_sap(
-            attacker, attacker_event_id, defender, attack, round_number,
-        )
-        result.weapon_slow_applied = apply_weapon_slow(
-            attacker, attacker_event_id, defender, attack, round_number,
-        )
-        if not result.weapon_sap_applied:
-            result.tactical_sap_applied = apply_tactical_master_sap(
-                attacker, attacker_event_id, defender, attack, round_number,
-            )
-        applied_total = sum(
-            component.applied_total or 0 for component in result.damage_components
-        )
-        result.vex_applied = apply_vex_mastery(
-            attacker, attacker_event_id, actual_event_id, attack, round_number, applied_total,
-        )
-        result.deferred_effect_armed = arm_deferred_save_effect(
-            attacker, defender, actual_event_id, attack, round_number,
-        )
-        result.exile_applied = apply_on_hit_exile(
-            attacker, defender, attack,
-            attacker_id=attacker_event_id,
+        _copy_hit_damage(result, hit_damage, defender)
+        resolve_attack_hit_riders(
+            result,
+            attacker,
+            defender,
+            attack,
+            dice,
             round_number=round_number,
+            attacker_event_id=attacker_event_id,
+            defender_event_id=defender_event_id,
+            actual_event_id=actual_event_id,
+            active_turn_key=active_turn_key,
             affected_states=affected_states,
-            dice=dice,
-            turn_key=active_turn_key,
+            setup=setup,
         )
-        if setup is not None:
-            members = {item.combatant_id: item for item in [*setup.heroes, *setup.monsters]}
-            attacker_member = members.get(attacker_event_id)
-            defender_member = members.get(defender_event_id)
-            if attacker_member is not None and defender_member is not None:
-                result.applied_conditions.extend(
-                    resolve_paid_post_hit_spell_riders(
-                        attacker_member,
-                        defender_member,
-                        setup,
-                        dice,
-                        round_number=round_number,
-                        turn_key=active_turn_key,
-                        affected_states=affected_states,
-                    )
-                )
-                melee = attack.weapon.attack_kind.value == "melee"
-                apply_melee_hit_retaliation(
-                    attacker_member,
-                    defender_member,
-                    melee=melee,
-                    dice=dice,
-                    affected_states=affected_states,
-                )
-                apply_melee_hit_save_retaliation(
-                    attacker_member,
-                    defender_member,
-                    melee=melee,
-                    dice=dice,
-                    setup=setup,
-                    round_number=round_number,
-                    affected_states=affected_states,
-                )
         end_rage_if_incapacitated(defender)
         return result
     except Exception as exc:

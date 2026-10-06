@@ -5,7 +5,20 @@
   const C = () => window.IRON_PIT_BROWSER_DEBUFF_COUNTERS || { movementCost: () => null };
   const RF = () => window.IRON_PIT_BROWSER_REPLACEMENT_FORMS;
   const POISONED = "poisoned";
+  const TERMINAL = new Set(["petrified"]);
   const POISON_RECOVERY_DC = 10;
+
+  function applyTerminalOutcome(state, effectId, affectedStates = []) {
+    if (!TERMINAL.has(effectId) || state.is_dead) return false;
+    state.current_hp = 0;
+    state.is_alive = false;
+    state.is_dead = true;
+    state.is_unconscious = false;
+    state.is_stable = false;
+    state.active_effect_ids = (state.active_effect_ids || []).filter((id) => id !== "dodge");
+    window.IRON_PIT_BROWSER_CONCENTRATION?.endIfIncapacitated?.(state, affectedStates);
+    return true;
+  }
 
   function apply(state, effectId, sourceId, options = {}) {
     if (I().immune(state, effectId, options.sourceTemplate || null, {
@@ -52,6 +65,7 @@
       return_damage_excluded_creature_types: [...(options.returnDamageExcludedCreatureTypes || [])],
       repeat_save_failure_count: 0,
       repeat_save_failures_to_lock: options.repeatSaveFailuresToLock || null,
+      repeat_save_failure_condition_id: options.repeatSaveFailureConditionId || null,
       escape_check_ability: options.escapeCheckAbility || null,
       escape_check_dc: options.escapeCheckDc ?? null,
       ground_contact: Boolean(options.groundContact),
@@ -60,6 +74,7 @@
       control_limits: options.controlLimits || null,
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
+    applyTerminalOutcome(state, effectId, options.affectedStates || []);
     RF()?.revertIfIncapacitated(state);
     return effectId;
   }
@@ -158,7 +173,7 @@
   }
 
   window.IRON_PIT_BROWSER_TIMED = {
-    apply, consumeNextAttackDisadvantage, expireSourceStart, nextAttackDisadvantage, ownsDamageResistance,
+    apply, applyTerminalOutcome, consumeNextAttackDisadvantage, expireSourceStart, nextAttackDisadvantage, ownsDamageResistance,
     removeEffect, removeGroup, resolveMovementCounters, suppressesAction, suppressesBonusAction,
     suppressesMovement, suppressesReactions, suppressesVoluntaryTurn,
   };

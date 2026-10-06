@@ -21,6 +21,26 @@ logger = logging.getLogger(__name__)
 
 POISONED_EFFECT_ID = "poisoned"
 ARENA_POISON_RECOVERY_DC = 10
+TERMINAL_CONDITIONS = frozenset({"petrified"})
+
+
+def apply_terminal_condition_outcome(
+    state: CombatantState,
+    effect_id: str,
+    *,
+    affected_states: list[CombatantState] | None = None,
+) -> bool:
+    """Apply Iron Pit terminal consequences for semantic condition states."""
+    if effect_id not in TERMINAL_CONDITIONS or state.is_dead:
+        return False
+    state.current_hp = 0
+    state.is_alive = False
+    state.is_dead = True
+    state.is_unconscious = False
+    state.is_stable = False
+    state.active_effect_ids = [item for item in state.active_effect_ids if item != "dodge"]
+    end_concentration_if_incapacitated(state, affected_states)
+    return True
 
 
 def apply_timed_condition(
@@ -61,6 +81,7 @@ def apply_timed_condition(
     return_damage_excluded_creature_types: list[str] | None = None,
     use_default_poison_recovery: bool = True,
     repeat_save_failures_to_lock: int | None = None,
+    repeat_save_failure_condition_id: str | None = None,
     escape_check_ability: AbilityName | None = None,
     escape_check_dc: int | None = None,
     ground_contact: bool = False,
@@ -132,6 +153,7 @@ def apply_timed_condition(
             return_damage_type=return_damage_type,
             return_damage_excluded_creature_types=return_damage_excluded_creature_types or [],
             repeat_save_failures_to_lock=repeat_save_failures_to_lock,
+            repeat_save_failure_condition_id=repeat_save_failure_condition_id,
             escape_check_ability=escape_check_ability,
             escape_check_dc=escape_check_dc,
             ground_contact=ground_contact,
@@ -141,6 +163,7 @@ def apply_timed_condition(
         ))
         if effect_id not in state.active_effect_ids:
             state.active_effect_ids.append(effect_id)
+        apply_terminal_condition_outcome(state, effect_id, affected_states=affected_states)
         revert_replacement_form_if_incapacitated(state)
         end_concentration_if_incapacitated(state, affected_states)
         return effect_id

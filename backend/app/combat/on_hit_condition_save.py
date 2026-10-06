@@ -5,8 +5,9 @@ import logging
 
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
+from app.combat.forced_movement import push_straight_away
 from app.combat.saving_throw_rolls import resolve_saving_throw
-from app.combat.timed_conditions import apply_timed_condition
+from app.combat.timed_conditions import apply_terminal_condition_outcome, apply_timed_condition
 from app.content.monster_creature_types import creature_matches_kind
 from app.domain.models import CombatantState, CombatantTemplate, DiceRoll, WeaponAttack
 from app.domain.saving_throw_context import SavingThrowContext
@@ -22,6 +23,7 @@ class OnHitConditionSaveResolution:
     save_dc: int | None = None
     save_succeeded: bool | None = None
     applied_condition: str | None = None
+    forced_movement_ft: int = 0
 
 
 def _excluded_target(defender: CombatantState, effect) -> bool:
@@ -42,6 +44,8 @@ def resolve_on_hit_condition_save(
     source_id: str | None = None,
     round_number: int | None = None,
     affected_states: list[CombatantState] | None = None,
+    setup=None,
+    target_id: str | None = None,
 ) -> OnHitConditionSaveResolution:
     try:
         effect = attack.on_hit_condition_save
@@ -82,13 +86,33 @@ def resolve_on_hit_condition_save(
                     repeat_save_ability=effect.save_ability if effect.repeat_save_timing else None,
                     repeat_save_dc=effect.dc if effect.repeat_save_timing else None,
                     repeat_save_timing=effect.repeat_save_timing,
+                    repeat_save_failure_condition_id=effect.repeat_save_failure_condition_id,
+                    expires_at_start_of_source_turn=False,
                     affected_states=affected_states,
                     use_default_poison_recovery=False,
                 )
             elif effect.condition_id not in defender.active_effect_ids:
                 defender.active_effect_ids.append(effect.condition_id)
+                apply_terminal_condition_outcome(
+                    defender, effect.condition_id, affected_states=affected_states
+                )
                 applied = effect.condition_id
-        return OnHitConditionSaveResolution(save_roll, effect.save_ability, effect.dc, succeeded, applied)
+        moved = 0
+        if not succeeded and effect.failure_push_ft:
+            if setup is None or target_id is None or source_id is None:
+                raise ValueError("Failed-save forced movement requires encounter identities and setup.")
+            members = {item.combatant_id: item for item in [*setup.heroes, *setup.monsters]}
+            source_member = members.get(source_id)
+            target_member = members.get(target_id)
+            if source_member is None or target_member is None:
+                raise ValueError("Failed-save forced movement combatants are missing from encounter setup.")
+            moved = push_straight_away(
+                target_member, source_member, setup, effect.failure_push_ft,
+                round_number=round_number or 1,
+            )
+        return OnHitConditionSaveResolution(
+            save_roll, effect.save_ability, effect.dc, succeeded, applied, moved
+        )
     except Exception:
         logger.exception("Failed to resolve on-hit condition save for %s.", defender.template.name)
         raise

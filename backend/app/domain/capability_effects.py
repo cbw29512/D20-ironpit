@@ -37,6 +37,29 @@ class SaveDamageEffectDefinition(BaseModel):
     zero_hp_rider: ZeroHpSaveDamageRider | None = None
 
 
+class SaveMaximumHpReductionEffectDefinition(BaseModel):
+    kind: Literal["save_max_hp_reduction"] = "save_max_hp_reduction"
+    save_ability: AbilityName
+    dc: int = Field(ge=1, le=40)
+    reduction: Literal["damage_taken"] = "damage_taken"
+    zero_max_hp_kills: bool = False
+
+
+class ContestedMovementEffectDefinition(BaseModel):
+    kind: Literal["contested_movement"] = "contested_movement"
+    source_ability: AbilityName
+    target_ability: AbilityName
+    max_target_size: CreatureSize | None = None
+    distance_ft: int = Field(ge=0)
+    direction: Literal["toward_source", "away_from_source"]
+
+    @model_validator(mode="after")
+    def validate_grid_distance(self) -> "ContestedMovementEffectDefinition":
+        if self.distance_ft % 5:
+            raise ValueError("Contested forced movement must use 5-foot grid increments.")
+        return self
+
+
 class ProneEffectDefinition(BaseModel):
     kind: Literal["prone"] = "prone"
     max_target_size: CreatureSize | None = None
@@ -50,13 +73,23 @@ class SaveConditionEffectDefinition(BaseModel):
     max_target_size: CreatureSize | None = None
     duration_rounds: int | None = Field(default=None, ge=1, le=100800)
     repeat_save_timing: ConditionTiming | None = None
+    repeat_save_failure_condition: ConditionName | None = None
+    failure_push_ft: int = Field(default=0, ge=0)
     excluded_creature_types: list[str] = Field(default_factory=list)
     excluded_creature_subtypes: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_condition_lifecycle(self) -> "SaveConditionEffectDefinition":
-        if self.repeat_save_timing is not None and self.duration_rounds is None:
-            raise ValueError("Save-condition repeat-save riders require a printed duration.")
+        if (
+            self.repeat_save_timing is not None
+            and self.duration_rounds is None
+            and self.repeat_save_failure_condition is None
+        ):
+            raise ValueError(
+                "Save-condition repeat saves require a duration or a failure escalation condition."
+            )
+        if self.repeat_save_failure_condition is not None and self.repeat_save_timing is None:
+            raise ValueError("Failure escalation requires a repeat-save timing.")
         return self
 
 
@@ -80,7 +113,7 @@ class ConditionEffectDefinition(BaseModel):
 
 
 AttackEffectDefinition = Annotated[
-    DamageEffectDefinition | SaveDamageEffectDefinition | ProneEffectDefinition | SaveConditionEffectDefinition |
+    DamageEffectDefinition | SaveDamageEffectDefinition | SaveMaximumHpReductionEffectDefinition | ContestedMovementEffectDefinition | ProneEffectDefinition | SaveConditionEffectDefinition |
     GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
     Field(discriminator="kind"),
 ]

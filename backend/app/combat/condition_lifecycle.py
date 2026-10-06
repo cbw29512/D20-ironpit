@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_removal import remove_condition
 from app.combat.modifier_stack import expire_target_turn_modifiers
 from app.combat.saving_throw_rolls import resolve_saving_throw
-from app.combat.timed_conditions import remove_effect_group
+from app.combat.timed_conditions import apply_terminal_condition_outcome, remove_effect_group
 from app.domain.actions import ConditionTiming
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -39,6 +40,7 @@ def resolve_target_condition_timing(
     target: EncounterCombatant,
     timing: ConditionTiming,
     dice,
+    setup: EncounterSetup | None = None,
 ) -> tuple[list[BattleEvent], int]:
     """Resolve expiry and one repeat save per grouped source effect on the affected creature's turn."""
     try:
@@ -54,8 +56,23 @@ def resolve_target_condition_timing(
                     dice,
                 )
                 removed = remove_effect_group(target.state, effect) if succeeded else []
+                applied: list[str] = []
                 if not succeeded:
                     effect.repeat_save_failure_count += 1
+                    if effect.repeat_save_failure_condition_id is not None:
+                        removed = remove_effect_group(target.state, effect)
+                        escalated = effect.repeat_save_failure_condition_id
+                        if not condition_is_immune(target.state, escalated):
+                            if escalated not in target.state.active_effect_ids:
+                                target.state.active_effect_ids.append(escalated)
+                            affected_states = (
+                                [item.state for item in [*setup.heroes, *setup.monsters]]
+                                if setup is not None else None
+                            )
+                            apply_terminal_condition_outcome(
+                                target.state, escalated, affected_states=affected_states
+                            )
+                            applied.append(escalated)
                 events.append(BattleEvent(
                     sequence=sequence,
                     round_number=round_number,
@@ -68,6 +85,7 @@ def resolve_target_condition_timing(
                     save_ability=effect.repeat_save_ability,
                     save_dc=effect.repeat_save_dc,
                     save_succeeded=succeeded,
+                    applied_condition_ids=applied,
                     removed_condition_ids=removed,
                     feature_id=effect.source_effect_id or "condition-repeat-save",
                     animation="condition-save",

@@ -106,6 +106,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -149,6 +150,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -296,6 +298,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -325,6 +328,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -471,6 +475,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -513,6 +518,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -661,6 +667,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -690,6 +697,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -853,6 +861,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -896,6 +905,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -1071,6 +1081,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -1100,6 +1111,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -1244,6 +1256,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -1390,6 +1403,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -1419,6 +1433,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -1563,6 +1578,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -1711,6 +1727,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -1868,6 +1885,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -2016,6 +2034,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -2160,6 +2179,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -2319,6 +2339,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -2472,6 +2493,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -2620,6 +2642,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -2791,6 +2814,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -2822,6 +2846,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -2985,6 +3010,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -3133,6 +3159,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -3277,6 +3304,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -3423,6 +3451,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -3567,6 +3596,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -3713,6 +3743,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -3857,6 +3888,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -4006,6 +4038,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -4152,6 +4185,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -4301,6 +4335,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -4327,6 +4362,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -4480,6 +4516,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -4645,6 +4682,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -4798,6 +4836,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -4824,6 +4863,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -4968,6 +5008,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -5137,6 +5178,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -5183,6 +5225,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -5342,6 +5385,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -5370,6 +5414,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -5658,6 +5703,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -5819,6 +5865,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -5963,6 +6010,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -6105,6 +6153,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -6245,6 +6294,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -6387,6 +6437,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -6529,6 +6580,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -6672,6 +6724,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -6812,6 +6865,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -6954,6 +7008,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -7096,6 +7151,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -7238,6 +7294,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -7380,6 +7437,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -7524,6 +7582,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -7668,6 +7727,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -7814,6 +7874,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -7960,6 +8021,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -8125,6 +8187,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -8269,6 +8332,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -8415,6 +8479,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -8564,6 +8629,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -8710,6 +8776,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -8854,6 +8921,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -9002,6 +9070,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -9148,6 +9217,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -9298,6 +9368,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -9446,6 +9517,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -9595,6 +9667,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -9739,6 +9812,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -9885,6 +9959,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -10031,6 +10106,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -10177,6 +10253,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -10203,6 +10280,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -10231,6 +10309,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -10375,6 +10454,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -10538,6 +10618,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -10707,6 +10788,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -10733,6 +10815,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -10898,6 +10981,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -10926,6 +11010,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -11081,6 +11166,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -11237,6 +11323,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -11386,6 +11473,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -11567,6 +11655,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -11606,6 +11695,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -11778,6 +11868,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -11811,6 +11902,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -11985,6 +12077,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -12160,6 +12253,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -12315,6 +12409,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -12467,6 +12562,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -12513,6 +12609,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -12691,6 +12788,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -12852,6 +12950,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -13014,6 +13113,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -13165,6 +13265,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -13335,6 +13436,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -13511,6 +13613,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -13690,6 +13793,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -13846,6 +13950,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -13877,6 +13982,7 @@
           }
         ],
         "forbid_target_grappled_by_self": true,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -14044,6 +14150,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -14245,6 +14352,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -14276,6 +14384,7 @@
           }
         ],
         "forbid_target_grappled_by_self": true,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -14441,6 +14550,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -14615,6 +14725,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -14770,6 +14881,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -14803,6 +14915,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -14981,6 +15094,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -15143,6 +15257,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -15296,6 +15411,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -15442,6 +15558,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -15626,6 +15743,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -15770,6 +15888,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -15798,6 +15917,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -15824,6 +15944,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -15991,6 +16112,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -16161,6 +16283,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -16197,6 +16320,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -16362,6 +16486,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -16508,6 +16633,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -16663,6 +16789,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -16691,6 +16818,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -16863,6 +16991,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -17029,6 +17158,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -17182,6 +17312,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -17326,6 +17457,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -17354,6 +17486,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -17514,6 +17647,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -17674,6 +17808,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -17715,6 +17850,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -17861,6 +17997,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -17981,6 +18118,7 @@
           "rage_eligible": false,
           "sneak_attack_eligible": false,
           "forbid_target_grappled_by_self": false,
+          "grapple_target_policy": "normal",
           "damage_source_qualifiers": []
         },
         "clears_on_regeneration_heal": true
@@ -18088,6 +18226,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -18116,6 +18255,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -18277,6 +18417,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -18421,6 +18562,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -18589,6 +18731,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -18615,6 +18758,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -18801,6 +18945,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -18958,6 +19103,7 @@
         ],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -19127,6 +19273,7 @@
         ],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -19273,6 +19420,7 @@
         ],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -19419,6 +19567,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -19572,6 +19721,7 @@
         ],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -19761,6 +19911,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -19936,6 +20087,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -20158,6 +20310,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -20379,6 +20532,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -20598,6 +20752,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -20820,6 +20975,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -21038,6 +21194,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -21258,6 +21415,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -21485,6 +21643,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -21710,6 +21869,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -21938,6 +22098,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -22162,6 +22323,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -22383,6 +22545,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -22542,6 +22705,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -22716,6 +22880,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -22894,6 +23059,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -23061,6 +23227,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -23090,6 +23257,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -23273,6 +23441,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -23315,6 +23484,7 @@
           }
         ],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -23487,6 +23657,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],
@@ -23636,6 +23807,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       },
       {
@@ -23665,6 +23837,7 @@
         "conditional_attack_advantage": [],
         "effects": [],
         "forbid_target_grappled_by_self": false,
+        "grapple_target_policy": "normal",
         "damage_source_qualifiers": []
       }
     ],

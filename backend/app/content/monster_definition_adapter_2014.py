@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014
+from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014, source_conditional_attack_advantage_2014
 from app.content.monster_basic_candidates_2014 import (
     basic_blockers_2014, modeled_combat_traits_2014, supports_parry_reaction_2014,
 )
@@ -8,6 +8,12 @@ from app.content.monster_charge_profile_2014 import charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_conditional_damage_defenses_2014 import template_defense_fields_2014
 from app.content.monster_healing_2014 import healing_actions_2014, healing_resources_2014
+from app.content.monster_definition_adapter_support_2014 import (
+    ability_values_2014,
+    attack_id_2014,
+    movement_modes_2014,
+    save_bonuses_2014,
+)
 from app.content.monster_innate_spells_2014 import innate_spell_save_actions_2014
 from app.content.monster_innate_support_2014 import (
     innate_alternate_spell_casts_2014,
@@ -44,63 +50,27 @@ from app.domain.movement import MovementModes
 from app.domain.reactions import ParryReaction
 from app.domain.size import CreatureSize
 
-_ABILITY_KEYS = {
-    "str": "strength", "dex": "dexterity", "con": "constitution",
-    "int": "intelligence", "wis": "wisdom", "cha": "charisma",
-}
-_FULL_ABILITIES = tuple(_ABILITY_KEYS.values())
-
-
-def _ability_values(monster: SourceMonster2014) -> dict[str, int]:
-    normalized = {_ABILITY_KEYS.get(key.lower(), key.lower()): value for key, value in monster.abilities.items()}
-    missing = set(_FULL_ABILITIES) - set(normalized)
-    if missing:
-        raise ValueError(f"{monster.id} is missing ability scores: {sorted(missing)}")
-    return {name: int(normalized[name]) for name in _FULL_ABILITIES}
-
-
-def _save_bonuses(monster: SourceMonster2014, scores: AbilityScores) -> dict[str, int]:
-    bonuses = {name: scores.modifier(name) for name in _FULL_ABILITIES}
-    for key, value in monster.saving_throws.items():
-        name = _ABILITY_KEYS.get(key.lower(), key.lower())
-        if name not in bonuses:
-            raise ValueError(f"{monster.id} has unknown saving throw ability {key!r}")
-        bonuses[name] = int(value)
-    return bonuses
-
-
-def _movement(monster: SourceMonster2014) -> MovementModes:
-    speed = {key.lower().replace("_ft", ""): int(value) for key, value in monster.speed.items()}
-    return MovementModes(
-        walk_ft=speed.get("walk", speed.get("speed", 0)),
-        fly_ft=speed.get("fly", 0),
-        climb_ft=speed.get("climb", 0),
-        swim_ft=speed.get("swim", 0),
-        burrow_ft=speed.get("burrow", 0),
-    )
-
-
-def _attack_id(monster: SourceMonster2014, attack: SourceAttack2014) -> str:
-    return f"2014-{monster.id}-{attack.id}".replace("--", "-")
-
-
 def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapabilityDefinition:
     charge_source = corrected_charge_profile_2014(monster, attack)
     kwargs = {
-        "id": _attack_id(monster, attack),
-        "weapon_id": _attack_id(monster, attack),
+        "id": attack_id_2014(monster, attack.id),
+        "weapon_id": attack_id_2014(monster, attack.id),
         "name": attack.name,
         "attack_kind": attack.kind,
         "attack_bonus": attack.attack_bonus,
         "attack_ability": attack.attack_ability,
         "sneak_attack_eligible": sneak_attack_eligible_2014(monster, attack),
-        "conditional_attack_advantage": conditional_attack_advantage_2014(monster, attack),
+        "conditional_attack_advantage": [
+            *conditional_attack_advantage_2014(monster, attack),
+            *source_conditional_attack_advantage_2014(attack),
+        ],
         "damage_type": str(attack.damage.type).lower(),
         "animation": "projectile" if attack.kind == "ranged" else "slash",
         "reach_ft": attack.reach_ft,
         "effects": basic_attack_effects_2014(attack),
         "charge_profile": charge_profile_2014(charge_source, monster_id=monster.id),
         "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
+        "grapple_target_policy": attack.grapple_target_policy,
         "damage_source_qualifiers": (
             [DamageSourceQualifier.MAGICAL] if "Magic Weapons" in monster.trait_names else []
         ),
@@ -123,7 +93,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
 def _multiattack(monster: SourceMonster2014) -> MultiattackCapabilityDefinition | None:
     if not monster.multiattack_slots:
         return None
-    attack_by_source = {attack.id: _attack_id(monster, attack) for attack in monster.attacks}
+    attack_by_source = {attack.id: attack_id_2014(monster, attack.id) for attack in monster.attacks}
     return MultiattackCapabilityDefinition(
         id=f"2014-{monster.id}-multiattack",
         name="Multiattack",
@@ -136,8 +106,8 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     blockers = basic_blockers_2014(monster)
     if blockers:
         raise ValueError(f"{monster.id} is not a basic 2014 candidate: {', '.join(blockers)}")
-    scores = AbilityScores(**_ability_values(monster))
-    movement = _movement(monster)
+    scores = AbilityScores(**ability_values_2014(monster))
+    movement = movement_modes_2014(monster)
     attacks = [_attack(monster, attack) for attack in monster.attacks]
     resources = list(save_resources_2014(monster))
     resources.extend(healing_resources_2014(monster))
@@ -186,7 +156,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         combat_traits=modeled_combat_traits_2014(monster),
         environment_context_reactions=environment_context_reactions_2014(monster),
         progression_features=features, bonus_tactical_action_grants=aggressive_tactical_grants_2014(monster),
-        saving_throw_bonuses=_save_bonuses(monster, scores),
+        saving_throw_bonuses=save_bonuses_2014(monster, scores),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
         source_legendary_action_names=list(monster.legendary_action_names),

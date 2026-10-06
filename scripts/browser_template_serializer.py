@@ -84,6 +84,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row["proneMaxSize"] = attack.knocks_prone_max_size.value
         if attack.forbid_target_grappled_by_self:
             row["forbidSelfGrappledTarget"] = True
+        if attack.grapple_target_policy != "normal":
+            row["grappleTargetPolicy"] = attack.grapple_target_policy
         if attack.conditional_attack_advantage:
             row["conditionalAttackAdvantage"] = [
                 {"trigger": spec.trigger} for spec in attack.conditional_attack_advantage
@@ -110,6 +112,23 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                     "durationRounds": rider.duration_rounds,
                 }
             row["onHitSaveDamage"] = save_damage
+        if attack.on_hit_contested_movement:
+            effect = attack.on_hit_contested_movement
+            row["onHitContestedMovement"] = {
+                "sourceAbility": _value(effect.source_ability),
+                "targetAbility": _value(effect.target_ability),
+                "maxTargetSize": _value(effect.max_target_size) if effect.max_target_size else None,
+                "distanceFt": effect.distance_ft,
+                "direction": effect.direction,
+            }
+        if attack.on_hit_maximum_hp_save:
+            effect = attack.on_hit_maximum_hp_save
+            row["onHitMaximumHpSave"] = {
+                "saveAbility": _value(effect.save_ability),
+                "dc": effect.dc,
+                "reduction": effect.reduction,
+                "zeroMaxHpKills": effect.zero_max_hp_kills,
+            }
         if attack.on_hit_condition_save:
             effect = attack.on_hit_condition_save
             save_row = {
@@ -121,6 +140,10 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                 save_row["durationRounds"] = effect.duration_rounds
             if effect.repeat_save_timing is not None:
                 save_row["repeatSaveTiming"] = _value(effect.repeat_save_timing)
+            if effect.repeat_save_failure_condition_id:
+                save_row["repeatSaveFailureConditionId"] = effect.repeat_save_failure_condition_id
+            if effect.failure_push_ft:
+                save_row["failurePushFt"] = effect.failure_push_ft
             if effect.excluded_creature_types:
                 save_row["excludedCreatureTypes"] = list(effect.excluded_creature_types)
             if effect.excluded_creature_subtypes:

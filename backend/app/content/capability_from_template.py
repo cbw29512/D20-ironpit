@@ -64,9 +64,32 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
             row["repeat_save_timing"] = save.repeat_save_timing
         if save.excluded_creature_types:
             row["excluded_creature_types"] = list(save.excluded_creature_types)
+        if save.repeat_save_failure_condition_id is not None:
+            row["repeat_save_failure_condition"] = save.repeat_save_failure_condition_id
+        if save.failure_push_ft:
+            row["failure_push_ft"] = save.failure_push_ft
         if save.excluded_creature_subtypes:
             row["excluded_creature_subtypes"] = list(save.excluded_creature_subtypes)
         effects.append(row)
+    if attack.on_hit_maximum_hp_save is not None:
+        save = attack.on_hit_maximum_hp_save
+        effects.append({
+            "kind": "save_max_hp_reduction",
+            "save_ability": save.save_ability,
+            "dc": save.dc,
+            "reduction": save.reduction,
+            "zero_max_hp_kills": save.zero_max_hp_kills,
+        })
+    if attack.on_hit_contested_movement is not None:
+        movement = attack.on_hit_contested_movement
+        effects.append({
+            "kind": "contested_movement",
+            "source_ability": movement.source_ability,
+            "target_ability": movement.target_ability,
+            "max_target_size": movement.max_target_size,
+            "distance_ft": movement.distance_ft,
+            "direction": movement.direction,
+        })
     if attack.control_effect is not None:
         effects.append(_control_effect(attack.control_effect))
     result: dict[str, object] = {
@@ -83,6 +106,7 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
         "rage_eligible": attack.rage_eligible,
         "conditional_attack_advantage": [spec.model_dump(mode="json") for spec in attack.conditional_attack_advantage],
         "effects": effects, "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
+        "grapple_target_policy": attack.grapple_target_policy,
     }
     if attack.fixed_damage is None:
         result["damage"] = _dice(weapon.dice_count, weapon.dice_size, attack.damage_bonus)

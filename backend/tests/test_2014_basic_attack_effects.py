@@ -44,10 +44,10 @@ def _enum_value(value):
     return value.value if hasattr(value, "value") else value
 
 
-def test_basic_attack_effect_tranche_is_exactly_163_and_ruleset_isolated():
+def test_basic_attack_effect_tranche_is_exactly_166_and_ruleset_isolated():
     source = load_monster_source_2014()
     ready = [monster for monster in source if not basic_blockers_2014(monster)]
-    assert len(ready) == 163
+    assert len(ready) == 166
     expected = (
         _ATTACK_EFFECT_IDS | _SAVE_PRONE_IDS | _SAVE_CONDITION_IDS | _SAVE_DAMAGE_IDS | _CHARGE_IDS |
         _SURE_FOOTED_IDS | _SWARM_IDS
@@ -193,3 +193,14 @@ def test_special_zero_hp_poison_riders_are_source_bound_and_certified():
         assert rider.stable is True
         assert list(rider.condition_ids) == expected["zero_hp_condition_ids"]
         assert rider.duration_rounds == expected["zero_hp_duration_rounds"]
+
+
+def test_ankheg_reuses_shared_grapple_and_self_grapple_advantage() -> None:
+    monster = next(item for item in load_monster_source_2014() if item.id == "ankheg")
+    assert basic_blockers_2014(monster) == ()
+    template = compile_combatant(adapt_basic_monster_2014(monster))
+    bite = _runtime_attacks(template)[_attack_id("ankheg", "bite")]
+    assert bite.control_effect is not None
+    assert bite.control_effect.grapple_escape_dc == 13
+    assert [item.trigger for item in bite.conditional_attack_advantage] == ["target_grappled_by_self"]
+    assert bite.on_hit_damage and _enum_value(bite.on_hit_damage[0].damage_type) == "acid"

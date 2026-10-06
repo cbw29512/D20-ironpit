@@ -109,7 +109,7 @@ def choose_attack(
                 for attack in profiles
                 if (
                     clear_line_between_members(attacker, target, setup)
-                    and attack_allowed_against(attack, attacker.combatant_id, target.state)
+                    and attack_allowed_against(attack, attacker.combatant_id, target.state, [item.state for item in [*setup.heroes, *setup.monsters]])
                     and _attack_in_range(attack, distance)
                 )
             ]

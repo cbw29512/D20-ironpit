@@ -38,11 +38,11 @@ def test_blink_dog_teleport_plus_bite_stays_parked() -> None:
     assert "2014-blink-dog" not in {item.id for item in build_basic_2014_monsters()}
 
 
-def test_swallow_attach_and_pull_remain_parked() -> None:
+def test_swallow_attach_and_pull_or_removal_remain_explicit() -> None:
     parked = {
         "giant-frog": "mechanic:swallow",
         "giant-toad": "mechanic:swallow",
-        "stirge": "attack:complex",
+        "stirge": "arena:removed",
         "roper": "source:extra-action",
         "blink-dog": "mechanic:recharge",
     }
