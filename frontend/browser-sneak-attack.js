@@ -9,11 +9,14 @@
   const TRIP = "cunning-strike-trip";
   const OBSCURE = "cunning-strike-obscure";
 
-  function allyAvailable(attacker, setup) {
-    if (!setup) return false;
+  function allyAvailable(attacker, setup, target) {
+    if (!setup || !target) return false;
     const allies = attacker.side === "heroes" ? setup.heroes : setup.monsters;
+    const distance = window.IRON_PIT_BROWSER_STATE?.distance;
+    if (!distance) throw new Error("Sneak Attack adjacency requires browser state distance.");
     return allies.some((ally) => ally.combatant_id !== attacker.combatant_id
-      && ally.state.is_alive && !ally.state.is_dead && ally.state.current_hp > 0 && !Q().incapacitated(ally.state));
+      && ally.state.is_alive && !ally.state.is_dead && ally.state.current_hp > 0
+      && !Q().incapacitated(ally.state) && distance(ally, target) <= 5);
   }
 
   function obscureDieCost(attacker, target, turnKey) {
