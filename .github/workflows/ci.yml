@@ -191,6 +191,7 @@ jobs:
           grep -q 'browser-undead-fortitude.js' index.html
           grep -q 'browser-zero-hp.js' index.html
           grep -q 'browser-timed-conditions.js' index.html
+          grep -q 'browser-timed-control-limits.js' index.html
           grep -q 'browser-on-hit-condition-save.js' index.html
           grep -q 'browser-timed-self-buffs.js' index.html
           grep -q 'browser-environment-contexts.js' index.html
@@ -323,6 +324,7 @@ jobs:
           grep -q 'browser-undead-fortitude.js' frontend/index.html
           grep -q 'browser-zero-hp.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
+          grep -q 'browser-timed-control-limits.js' frontend/index.html
           grep -q 'browser-timed-self-buffs.js' frontend/index.html
           grep -q 'browser-environment-contexts.js' frontend/index.html
           grep -q 'browser-friendly-weapon-damage-auras.js' frontend/index.html
