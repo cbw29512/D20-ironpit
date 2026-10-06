@@ -56,7 +56,9 @@
       if (attack.forbidSelfGrappledTarget && ownsTarget) return false;
       const policy = attack.grappleTargetPolicy || "normal";
       if (policy === "normal") return true;
-      if (policy !== "own_grapple_only") throw new Error(`Unsupported grapple target policy: ${policy}`);
+      if (!["own_grapple_only", "auto_hit_own_grapple"].includes(policy)) {
+        throw new Error(`Unsupported grapple target policy: ${policy}`);
+      }
       if (ownsTarget) return true;
       if (!setup) return true;
       return ![...setup.heroes, ...setup.monsters].some((candidate) =>
@@ -66,6 +68,12 @@
       console.error("Failed browser attack target policy", { member: member?.combatant_id, target: target?.combatant_id, error });
       throw error;
     }
+  }
+  function automaticHit(member, target, attack) {
+    return (attack.grappleTargetPolicy || "normal") === "auto_hit_own_grapple"
+      && (target.state.grapple_sources || []).some(
+        (source) => source.source_id === member.combatant_id,
+      );
   }
   function attackDistance(member, target) {
     try {
@@ -143,7 +151,7 @@
   }
   window.IRON_PIT_BROWSER_FORMATION = {
     hasRangedWeaponOffense, hasTrueRangeOffense, usesBackline, isBackline, startingPosition,
-    targetOrder, alliedFrontlineActive, targetAllowed,
+    targetOrder, alliedFrontlineActive, targetAllowed, automaticHit,
     attackDistance, saveDistance, weaponMeanDamage, chooseAttack, chooseStandardAttack, meleeCanLandNow,
     flexibleSlotHasBoth, flexibleAttackMode, chooseSlotAttack, backlineHoldsPosition,
   };
