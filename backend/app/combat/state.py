@@ -27,6 +27,7 @@ def build_combatant_state(template: CombatantTemplate) -> CombatantState:
                 ResourceState(id=r.id, name=r.name, current_uses=r.max_uses, max_uses=r.max_uses)
                 for r in template.resources
             ],
+            active_effect_ids=list(template.starting_condition_ids),
             active_modifiers=opening_modifiers(template),
         )
     except Exception as exc:
