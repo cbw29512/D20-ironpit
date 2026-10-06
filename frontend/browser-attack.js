@@ -104,6 +104,7 @@
     const concentrationBefore = actualTarget.state.concentration?.effect_id || null;
     const outcome = O().create();
     let { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, topple, sapApplied, vexApplied, studiedApplied, deferredEffectArmed, exileApplied } = outcome;
+    let maximumHpSave = null;
     let cunningStrikeTrip = null, cunningStrikeObscure = null;
     const applied = outcome.appliedConditions;
     if (hit) {
@@ -129,7 +130,9 @@
       if (living) M().applyHitEffects?.(actualTarget.state, attacker.combatant_id, attack);
       hitSave = living ? window.IRON_PIT_BROWSER_SAVES?.resolveOnHitConditionSave(actualTarget, attack, attacker.state.template, round, extra.setup, attacker) || null : null;
       if (hitSave?.appliedCondition && !applied.includes(hitSave.appliedCondition)) applied.push(hitSave.appliedCondition);
-      Object.assign(outcome, { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage });
+      const appliedDamage = (damageComponents || []).reduce((total, component) => total + (component.appliedTotal || 0), 0);
+      maximumHpSave = living ? window.IRON_PIT_BROWSER_MAXIMUM_HP?.resolve(actualTarget, attack, appliedDamage) || null : null;
+      Object.assign(outcome, { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, maximumHpSave });
       const phase = H().runPhase(H().PHASES.ON_HIT, {
         sequence, round, member: attacker, target: actualTarget, originalTarget: target, attack,
         setup: extra.setup, turnKey: extra.turnKey, attackOutcome: outcome, events: [],
@@ -151,6 +154,7 @@
     }
     const attackSave = saveDamage?.saveDc != null ? saveDamage
       : hitSave?.saveDc != null ? hitSave
+      : maximumHpSave?.saveDc != null ? maximumHpSave
       : cunningStrikeObscure?.saveDc != null ? {
           saveRoll: cunningStrikeObscure.saveRoll, saveAbility: "dexterity",
           saveDc: cunningStrikeObscure.saveDc, saveSucceeded: cunningStrikeObscure.saveSucceeded,
@@ -179,7 +183,11 @@
     if (deferredEffectArmed) description += ` ${deferredEffectArmed.sourceName} is armed on ${actualTarget.state.template.name}; ${deferredEffectArmed.resourceRemaining} uses remain.`;
     if (exileApplied) description += ` ${actualTarget.state.template.name} is Banished by ${exileApplied.sourceName} until the source-relative return point.`;
     if (outcome.postHitSelfBuffApplied) description += ` ${outcome.postHitSelfBuffApplied.sourceName} activates.`;
-    if (attackSave) description += ` ${attackSave.saveAbility} save DC ${attackSave.saveDc}: ${actualTarget.state.template.name} ${attackSave.saveSucceeded ? "succeeds" : "fails"}.`; if (topple.saveDc !== null) description += ` Topple save DC ${topple.saveDc}: ${actualTarget.state.template.name} ${topple.saveSucceeded ? "succeeds" : "fails"}.`;
+    if (attackSave) description += ` ${attackSave.saveAbility} save DC ${attackSave.saveDc}: ${actualTarget.state.template.name} ${attackSave.saveSucceeded ? "succeeds" : "fails"}.`;
+    if (hitSave?.forcedMovementFt) description += ` ${actualTarget.state.template.name} is pushed ${hitSave.forcedMovementFt} feet away.`;
+    if (maximumHpSave?.reductionApplied) description += ` ${actualTarget.state.template.name}'s hit point maximum is reduced by ${maximumHpSave.reductionApplied}.`;
+    if (maximumHpSave?.killedByZeroMaximum) description += ` ${actualTarget.state.template.name} dies as its hit point maximum reaches 0.`;
+    if (topple.saveDc !== null) description += ` Topple save DC ${topple.saveDc}: ${actualTarget.state.template.name} ${topple.saveSucceeded ? "succeeds" : "fails"}.`;
     if (damageOutcome === "relentless_endurance") description += ` ${actualTarget.state.template.name} uses Relentless Endurance and remains at 1 HP.`;
     if (damageOutcome === "undead_fortitude") description += ` ${actualTarget.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     for (const condition of [...new Set(applied)]) description += ` ${actualTarget.state.template.name} is ${condition === "prone" ? "knocked Prone" : condition === "restrained" ? "Restrained while Grappled" : condition.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}.`;
