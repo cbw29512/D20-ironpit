@@ -128,10 +128,8 @@ def _multiattack(monster: SourceMonster2014) -> MultiattackCapabilityDefinition 
         id=f"2014-{monster.id}-multiattack",
         name="Multiattack",
         is_attack_action=True,
-        slots=[
-            CapabilityActionSlot(attack_ids=[attack_by_source[attack_id] for attack_id in slot])
-            for slot in monster.multiattack_slots
-        ],
+        slots=[CapabilityActionSlot(attack_ids=[attack_by_source[attack_id] for attack_id in slot])
+               for slot in monster.multiattack_slots],
     )
 
 
