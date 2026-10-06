@@ -29,6 +29,10 @@ def resolve_bonus_attack_grant(
             return [], sequence
         grants = sorted(state.template.bonus_attack_grants, key=lambda item: (item.priority, item.id))
         for grant in grants:
+            if grant.trigger == "source_melee_zero_hp_this_turn" and (
+                state.feature_last_turn_keys.get(f"bonus-attack-trigger:{grant.id}") != turn_key
+            ):
+                continue
             if not action_resource_available(state, grant):
                 continue
             choice = choose_attack(attacker, setup, grant.attack_ids)
