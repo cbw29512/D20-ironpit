@@ -46,8 +46,8 @@ def resolve_start_of_turn_save_condition_damage_events(
                 damage_type=DamageType(damage_type),
                 total=total,
             )
-            applied, adjusted = apply_damage_defenses(member.state, [component])
             hp_before = member.state.current_hp
+            applied, adjusted = apply_damage_defenses(member.state, [component])
             apply_damage(
                 member.state, applied, critical=False,
                 damage_types={component.damage_type}, dice=dice,
