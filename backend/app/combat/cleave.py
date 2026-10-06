@@ -4,6 +4,7 @@ import logging
 
 from app.combat.damage_reaction_wrappers import resolve_attack_event_chain
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.timed_attack_cap import turn_attack_allowed
 from app.combat.weapon_mastery import weapon_mastery_active
 from app.combat.dice import DiceProvider
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -71,6 +72,8 @@ def resolve_cleave_extra_attack(
         if not triggering_event.hit or attack.weapon.attack_kind != WeaponAttackKind.MELEE:
             return [], sequence
         if not weapon_mastery_active(attacker.state, attack, "Cleave"):
+            return [], sequence
+        if not turn_attack_allowed(attacker.state):
             return [], sequence
         if attacker.state.feature_last_turn_keys.get(CLEAVE_FEATURE_ID) == turn_key:
             return [], sequence

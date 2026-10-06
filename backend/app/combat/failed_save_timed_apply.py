@@ -44,6 +44,8 @@ def apply_failed_save_timed_effect(
             ends_if_source_incapacitated=rider.ends_if_source_incapacitated,
             ends_if_source_dead=rider.ends_if_source_dead,
             next_attack_disadvantage=rider.next_attack_disadvantage,
+            suppress_reactions=rider.blocks_reactions,
+            control_limits=rider.compiled_limits(),
             affected_states=affected_states,
             use_default_poison_recovery=False,
             repeat_save_failures_to_lock=rider.repeat_save_failures_to_lock,

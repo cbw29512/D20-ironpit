@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.timed_ability_d20 import timed_ability_d20_disadvantage_sources
 from app.domain.models import CombatantState
 
 
@@ -10,9 +11,12 @@ def d20_modifier(state: CombatantState) -> int:
     return 0
 
 
-def ability_check_disadvantage_sources(state: CombatantState) -> int:
-    """2014 Exhaustion level 1+: Disadvantage on ability checks."""
-    return int(state.template.ruleset == "2014" and state.exhaustion_level >= 1)
+def ability_check_disadvantage_sources(state: CombatantState, ability: str | None = None) -> int:
+    """2014 Exhaustion plus timed ability-scoped D20 Disadvantage on checks."""
+    return (
+        int(state.template.ruleset == "2014" and state.exhaustion_level >= 1)
+        + timed_ability_d20_disadvantage_sources(state, ability)
+    )
 
 
 def attack_disadvantage_sources(state: CombatantState) -> int:

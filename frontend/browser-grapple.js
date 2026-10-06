@@ -90,10 +90,11 @@
     const bonus = useAthletics ? athletics : acrobatics;
     const ability = useAthletics ? "strength" : "dexterity";
     const advantage = useAthletics && (state.active_effect_ids.includes("rage") || state.template.athletics_advantage) ? 1 : 0;
-    const disadvantage = state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0;
+    const disadvantage = (state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0)
+      + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(state, ability) || 0);
     let roll = R().d20(
       bonus,
-      A()?.mode ? A().mode(state, advantage, disadvantage) : R().modeFromSources(advantage, disadvantage),
+      A()?.mode ? A().mode(state, advantage, disadvantage, { ability }) : R().modeFromSources(advantage, disadvantage),
     );
     const needsCheckRuntime = (state.template.ability_check_minimums || []).some(
       (rule) => rule.ability === ability,

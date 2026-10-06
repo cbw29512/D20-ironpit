@@ -37,6 +37,26 @@
     }
   }
 
+  function controlLimitsFrom(rider) {
+    if (rider.controlLimits) return rider.controlLimits;
+    const abilities = [...(rider.d20DisadvantageAbilities || [])];
+    if (rider.disadvantageStrengthD20Tests && !abilities.includes("strength")) abilities.push("strength");
+    const speed = rider.speedMultiplier == null ? 1 : rider.speedMultiplier;
+    const acBonus = rider.armorClassBonus || 0;
+    const saveFlats = [...(rider.savingThrowFlatBonuses || [])];
+    if (speed === 1 && !rider.actionBonusExclusive && rider.maxAttacksPerTurn == null && !abilities.length && !acBonus && !saveFlats.length) {
+      return null;
+    }
+    return {
+      speed_multiplier: speed,
+      action_bonus_exclusive: Boolean(rider.actionBonusExclusive),
+      max_attacks_per_turn: rider.maxAttacksPerTurn ?? null,
+      d20_disadvantage_abilities: abilities,
+      armor_class_bonus: acBonus,
+      saving_throw_flat_bonuses: saveFlats,
+    };
+  }
+
   function apply(actor, target, action, rider, round) {
     try {
       const timed = window.IRON_PIT_BROWSER_TIMED;
@@ -56,6 +76,8 @@
         endsIfSourceIncapacitated: Boolean(rider.endsIfSourceIncapacitated),
         endsIfSourceDead: Boolean(rider.endsIfSourceDead),
         nextAttackDisadvantage: Boolean(rider.nextAttackDisadvantage),
+        suppressReactions: Boolean(rider.blocksReactions),
+        controlLimits: controlLimitsFrom(rider),
         useDefaultPoisonRecovery: false,
         repeatSaveFailuresToLock: rider.repeatSaveFailuresToLock || null,
         escapeCheckAbility: rider.escapeCheckAbility || null,

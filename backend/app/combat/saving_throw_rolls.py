@@ -19,6 +19,7 @@ from app.combat.failed_d20_test_override import apply_failed_d20_test_override
 from app.combat.save_success_override import apply_save_success_override
 from app.combat.failed_save_reroll import apply_failed_save_reroll
 from app.combat.grapple import RESTRAINED_EFFECT_ID
+from app.combat.timed_ability_d20 import timed_ability_d20_disadvantage_sources
 from app.combat.modifier_stack import apply_d20_bonus_dice, saving_throw_flat_bonus
 from app.combat.rolls import roll_d20
 from app.combat.saving_throw_minimum import apply_saving_throw_minimum
@@ -48,6 +49,7 @@ def saving_throw_mode(
         disadvantage = (
             saving_throw_disadvantage_sources(state)
             + modifier_save_disadvantage_sources(state, ability)
+            + timed_ability_d20_disadvantage_sources(state, ability)
             + len(context.disadvantage_sources if context is not None else ())
         )
         if ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids:

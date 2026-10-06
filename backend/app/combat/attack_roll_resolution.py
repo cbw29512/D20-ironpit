@@ -31,6 +31,7 @@ from app.combat.modifier_stack import (
     next_attack_against_advantage_sources,
 )
 from app.combat.range import attack_range_disadvantage_sources, resolve_attack_roll_mode
+from app.combat.timed_ability_d20 import timed_ability_d20_disadvantage_sources
 from app.combat.reckless_attack import attacks_against_reckless_advantage, reckless_attack_advantage
 from app.combat.rolls import roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
@@ -74,6 +75,7 @@ def resolve_attack_roll(
             + condition_disadvantage
             + sap_disadvantage(attacker)
             + next_attack_disadvantage_sources(attacker)
+            + timed_ability_d20_disadvantage_sources(attacker, attack.attack_ability)
         )
         range_disadvantage = attack_range_disadvantage_sources(attack.weapon, distance_ft, close_enemy_active)
         reckless_advantage = reckless_attack_advantage(attacker, attack)

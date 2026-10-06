@@ -479,6 +479,15 @@ Support all selected-edition combat-relevant conditions as needed, including Bli
 - Do not invent a default DC or default recovery save.
 - Buffs/debuffs/conditions remain visibly attached to cards while active.
 
+### 14.1 Parameterized Slow / Weaken riders
+
+`slowed` and `weakened-strength` are timed rider identities, not `ConditionName` values. Bind each source from its own printed 2014 SRD stat block. Do not copy one Slow bundle onto every similarly named action.
+
+- **2014 Copper Slowing Breath** (wyrmling, young, adult, and ancient; Constitution save; printed cone and DC): the target cannot use reactions, its speed is halved, it cannot make more than one attack on its turn, and it can use an Action or a Bonus Action on its turn but not both. Duration is 1 minute. Repeat the Constitution save at the end of each of its turns.
+- **2014 Stone Golem Slow** (Wisdom DC 17; creatures the golem can see within 10 feet): the same combat-economy limits as Copper Slowing Breath. Duration is 1 minute. Repeat the Wisdom save at the end of each of its turns. The printed golem action does **not** apply a −2 penalty to AC or Dexterity saving throws.
+- **2014 Gold Weakening Breath** (wyrmling, young, adult, and ancient; Strength save; printed cone and DC): Disadvantage on Strength-based attack rolls, Strength checks, and Strength saving throws only. Duration is 1 minute. Repeat the Strength save at the end of each of its turns. No speed, reaction, attack-cap, or Action/Bonus Action limits.
+- The 2014 *Slow* spell’s −2 AC and −2 Dexterity saving-throw penalties apply only when a source prints those penalties. Optional `armor_class_bonus` / `saving_throw_flat_bonuses` exist for that case and stay off Copper, Gold, and Stone Golem.
+
 ## 15. Concentration
 
 Use selected-edition RAW:

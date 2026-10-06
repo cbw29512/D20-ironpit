@@ -9,6 +9,7 @@ from app.combat.encounter_targeting import combatant_distance
 from app.combat.open_hand_technique_2014 import resolve_open_hand_technique
 from app.combat.pit_policy import target_order
 from app.combat.stunning_strike_2014 import resolve_stunning_strike
+from app.combat.timed_attack_cap import turn_attack_allowed
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -77,7 +78,7 @@ def resolve_monk_bonus_attacks(
                 target for target in target_order(actor, setup)
                 if combatant_distance(actor, target) <= attack.weapon.reach_ft
             ]
-            if not legal_targets or state.turn_terminated:
+            if not legal_targets or state.turn_terminated or not turn_attack_allowed(state):
                 break
             target = legal_targets[0]
             event = resolve_attack(
