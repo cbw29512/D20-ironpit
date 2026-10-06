@@ -134,6 +134,8 @@ Before adding any primitive, classify each blocker as:
 
 Only `ENGINE_TRULY_MISSING` justifies a new universal engine primitive.
 
+Current classification example: the 2014 Frog is `ARENA_NEUTRAL`. Its 2014 SRD source explicitly has no effective attacks, so it remains in the 327-record audit corpus but is not a runnable arena combatant. Do not backport the 2024 Frog Bite into 2014.
+
 ## Stale PR policy
 
 Progression PRs whose completed behavior is already present on current `main` are superseded and should be closed, not rebased. Any older universal-engine PR must be re-audited against current source before reuse because its useful behavior may already have landed through a later implementation.
