@@ -5,6 +5,7 @@ import re
 
 from app.content.environment_context_reactions import sunlight_sensitivity_2014
 from app.content.monster_damage_absorption import damage_absorptions_from_source
+from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.content.monster_legendary_resistance_2014 import legendary_resistance_trait_name_2014
 from app.content.monster_passive_grants_2014 import (
     aggressive_tactical_grants_2014,
@@ -14,6 +15,7 @@ from app.content.monster_passive_grants_2014 import (
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.content.monster_zero_hp_prevention_2014 import bound_zero_hp_trait_names_2014
+from app.domain.bonus_attacks import BonusAttackGrant
 from app.domain.environment_contexts import EnvironmentContextReaction
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.weapons import ConditionalAttackAdvantage
@@ -26,6 +28,7 @@ _SNEAK_ATTACK = "Sneak Attack (1/Turn)"
 _MAGIC_WEAPONS = "Magic Weapons"
 _INNATE_SPELLCASTING = "Innate Spellcasting"
 _SUNLIGHT_SENSITIVITY = "Sunlight Sensitivity"
+_RAMPAGE = "Rampage"
 _FINESSE_WEAPON_NAMES_2014 = frozenset({"Dagger", "Rapier", "Scimitar", "Shortsword", "Whip"})
 _SNEAK_ATTACK_D6 = re.compile(
     r"Sneak Attack \(1/Turn\).*?extra\s+\d+\s+\((\d+)d6\)",
@@ -94,6 +97,27 @@ def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFe
         raise
 
 
+
+def bonus_attack_grants_2014(monster: SourceMonster2014) -> list[BonusAttackGrant]:
+    """Bind printed kill-triggered Bonus Action attacks to the shared grant primitive."""
+    try:
+        if _RAMPAGE not in monster.trait_names:
+            return []
+        bites = [attack for attack in monster.attacks if attack.kind == "melee" and attack.name == "Bite"]
+        if len(bites) != 1:
+            raise ValueError(f"{monster.name} Rampage requires exactly one melee Bite attack.")
+        return [BonusAttackGrant(
+            id=f"{monster.id}-rampage",
+            name=_RAMPAGE,
+            attack_ids=[attack_id_2014(monster, bites[0].id)],
+            attack_count=1,
+            trigger="source_melee_zero_hp_this_turn",
+            priority=10,
+        )]
+    except Exception:
+        logger.exception("Failed to bind 2014 Rampage for %s.", monster.name)
+        raise
+
 def environment_context_reactions_2014(
     monster: SourceMonster2014,
 ) -> list[EnvironmentContextReaction]:
@@ -135,6 +159,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
                 bound.add(_INNATE_SPELLCASTING)
         if _SUNLIGHT_SENSITIVITY in monster.trait_names:
             bound.add(_SUNLIGHT_SENSITIVITY)
+        if bonus_attack_grants_2014(monster):
+            bound.add(_RAMPAGE)
         if supports_regeneration_2014(monster):
             bound.add("Regeneration")
         resistance = legendary_resistance_trait_name_2014(monster)
