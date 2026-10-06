@@ -76,7 +76,7 @@ load("browser-weapon-mastery.js");
 load("browser-ability-hooks.js");
 load("browser-attack-outcome.js");
 load("browser-tactical-master.js");
-load("browser-graze.js");
+load("browser-damage-defense-rules.js", "browser-graze.js");
 load("browser-modifier-validation.js");
 load("browser-modifiers.js");
 load("browser-attack.js");
