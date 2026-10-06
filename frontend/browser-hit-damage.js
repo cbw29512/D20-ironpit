@@ -5,6 +5,11 @@
   const S = () => window.IRON_PIT_BROWSER_SAVES;
   const D = () => window.IRON_PIT_DICE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Browser actual damage resolution requires browser-damage-defense-rules.js.");
+    return rules;
+  };
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const P = () => window.IRON_PIT_BROWSER_PALADIN_2014;
@@ -152,9 +157,9 @@
     const reduction = ADR()?.apply(defender, attack, rolled) || { components: rolled, used: false, reduction: 0, sourceId: null, sourceName: null };
     const uncanny = RD().applyUncannyDodge(attacker, defender, reduction.components);
     const bypassTypes = resistanceBypassTypes(attacker);
-    const damageComponents = uncanny.components.map((part) => { const resolved = A().resolveDamage
-      ? A().resolveDamage(defender, part.total, part.damage_type, true, part.source_qualifiers || [], bypassTypes.has(part.damage_type))
-      : { applied: A().adjustedDamage(defender, part.total, part.damage_type, true, part.source_qualifiers || [], bypassTypes.has(part.damage_type)), healed: 0, sourceName: null };
+    const damageComponents = uncanny.components.map((part) => { const resolved = DD().resolveDamage(
+      defender, part.total, part.damage_type, true, part.source_qualifiers || [], bypassTypes.has(part.damage_type),
+    );
       return { ...part, applied_total: resolved.applied, absorbed_healing: resolved.healed || 0,
         absorption_source_name: resolved.sourceName || null }; });
     const appliedTotal = damageComponents.reduce((sum, part) => sum + part.applied_total, 0);
