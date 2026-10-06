@@ -10,7 +10,9 @@
       const rolls = Array.from({ length: diceCount }, () => D().roll(diceSize));
       const rolledTotal = rolls.reduce((sum, value) => sum + value, 0);
       const scaledTotal = Math.floor(rolledTotal * multiplier);
-      const applied = A().adjustedDamage(targetState, scaledTotal, damageType);
+      const applied = A().resolveDamage
+        ? A().resolveDamage(targetState, scaledTotal, damageType).applied
+        : A().adjustedDamage(targetState, scaledTotal, damageType);
       const component = {
         source: rule.source_name,
         notation: `${diceCount}d${diceSize}`,
