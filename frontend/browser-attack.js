@@ -25,25 +25,10 @@
     const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES; if (rules) return rules.adjustedDamage(target, amount, type, allowVulnerability, sourceQualifiers, ignoreResistance); if (target.template.damage_immunities?.includes(type)) return 0; let value = amount; if (!ignoreResistance && (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type) || T()?.ownsDamageResistance?.(target, type) || Q().has(target, "petrified"))) value = Math.floor(value / 2); if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2; return value;
   }
   function resolveDamage(target, amount, type, allowVulnerability = true, sourceQualifiers = [], ignoreResistance = false) {
-    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
-    if (rules?.resolveDamage) {
-      return rules.resolveDamage(target, amount, type, allowVulnerability, sourceQualifiers, ignoreResistance);
-    }
-    const advancedDefenseDeclared = Boolean(
-      target.template.damage_absorptions?.length
-      || target.template.incomingDamageTypeResistanceReaction
-      || target.template.conditional_damage_defenses?.length
-      || target.active_conditional_damage_defenses?.length
-      || target.zone_damage_immunities?.length
-    );
-    if (advancedDefenseDeclared) {
-      throw new Error("Declared advanced damage defense requires browser-damage-defense-rules.js.");
-    }
-    return {
-      applied: adjustedDamage(target, amount, type, allowVulnerability, sourceQualifiers, ignoreResistance),
-      healed: 0,
-      sourceName: null,
-    };
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES; if (rules?.resolveDamage) return rules.resolveDamage(target, amount, type, allowVulnerability, sourceQualifiers, ignoreResistance);
+    const advanced = target.template.damage_absorptions?.length || target.template.incomingDamageTypeResistanceReaction || target.template.conditional_damage_defenses?.length || target.active_conditional_damage_defenses?.length || target.zone_damage_immunities?.length;
+    if (advanced) throw new Error("Declared advanced damage defense requires browser-damage-defense-rules.js.");
+    return { applied: adjustedDamage(target, amount, type, allowVulnerability, sourceQualifiers, ignoreResistance), healed: 0, sourceName: null };
   }
   function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null, damageComponents = []) { const lifecycle = Z(); if (!lifecycle) throw new Error("Browser zero-HP runtime is not loaded."); return lifecycle.applyDamage(state, amount, critical, damageTypes, affectedStates, setup, damageComponents); }
   function legacyHitDamage(attacker, defender, attack, critical, mode, turnKey, options = {}) {
