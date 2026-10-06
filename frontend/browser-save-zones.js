@@ -73,10 +73,12 @@
       let rawTotal = rolls.reduce((sum, value) => sum + value, 0);
       if (save.succeeded && zone.successDamage === "none") rawTotal = 0;
       else if (save.succeeded && zone.successDamage === "half") rawTotal = Math.floor(rawTotal / 2);
-      const applied = DD().resolveDamage(target.state, rawTotal, zone.damageType).applied;
+      const resolved = DD().resolveDamage(target.state, rawTotal, zone.damageType);
+      const applied = resolved.applied;
       damageComponents = [{
         source: zone.action_id, notation: `${zone.damageDiceCount}d${zone.damageDiceSize}`,
         rolls, modifier: 0, damage_type: zone.damageType, total: rawTotal, applied_total: applied,
+        absorbed_healing: resolved.healed || 0, absorption_source_name: resolved.sourceName || null,
       }];
       damageRoll = { notation: damageComponents[0].notation, rolls, modifier: 0, total: applied };
       if (applied) {
