@@ -14,6 +14,7 @@ class OncePerTurnWeaponHitDamageRider(BaseModel):
     damage_type: str | None = Field(default=None, min_length=1)
     requires_target_below_max_hp: bool = False
     target_creature_types: list[str] = Field(default_factory=list)
+    requires_ally_within_5_ft_of_target: bool = False
 
     @model_validator(mode="after")
     def validate_damage_and_targets(self) -> "OncePerTurnWeaponHitDamageRider":
