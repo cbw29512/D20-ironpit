@@ -180,7 +180,7 @@ def resolve_attack(
         if exile_applied is not None:
             description += f" {actual_defender.template.name} is Banished until the source-relative return point."
         save_roll, save_ability, save_dc, save_succeeded = primary_attack_save_fields(
-            save_damage, on_hit_save, on_hit_maximum_hp_save,
+            save_damage, on_hit_save, on_hit_maximum_hp_save, contested_movement,
             cunning_strike_obscure, cunning_strike, topple,
         )
         return BattleEvent(
