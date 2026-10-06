@@ -11,7 +11,7 @@ for (const file of [
   "browser-heroes.js", "browser-monsters-generated.js", "browser-condition-immunity.js", "browser-condition-rules.js",
   "browser-action-economy.js", "browser-modifier-validation.js", "browser-modifiers.js", "browser-grapple.js", "browser-grid-geometry.js", "browser-state.js", "browser-rolls.js",
   "browser-timed-conditions.js", "browser-source-bound-effects.js", "browser-undead-fortitude.js", "browser-zero-hp.js",
-  "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js", "browser-saves.js", "browser-healing-policy.js", "browser-healing.js", "browser-turn-creature-effects.js", "browser-cleric-channel.js",
+  "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-damage-defense-rules.js", "browser-attack.js", "browser-saving-throws.js", "browser-saves.js", "browser-healing-policy.js", "browser-healing.js", "browser-turn-creature-effects.js", "browser-cleric-channel.js",
 ]) load(file);
 
 const H = window.IRON_PIT_BROWSER_HEROES;
@@ -136,6 +136,24 @@ const fixedDice = (values) => {
   assert.equal(result.events[0].damage_roll.notation, "1d8+3");
   assert.equal(result.events[0].damage_roll.total, 5);
   assert.equal(cleric.state.resources["channel-divinity"], 1);
+}
+
+{
+  const { cleric, setup } = makeSetup();
+  const absorberTemplate = structuredClone(M["srd-goblin-warrior"]);
+  absorberTemplate.damage_absorptions = [
+    { sourceId: "radiant-absorption", sourceName: "Radiant Absorption", damageType: "radiant" },
+    { sourceId: "necrotic-absorption", sourceName: "Necrotic Absorption", damageType: "necrotic" },
+  ];
+  const absorber = member(absorberTemplate, "absorber", "monsters", 10);
+  absorber.state.current_hp = absorber.state.template.max_hp - 6;
+  setup.monsters = [absorber];
+  cleric.state.resources["spell-slot-1"] = 0;
+  fixedDice([8, 1]);
+  const result = C.resolve(1, 1, cleric, setup);
+  assert.equal(result.events[0].damage_roll.total, 0);
+  assert.equal(absorber.state.current_hp, absorber.state.template.max_hp);
+  assert.match(result.events[0].description, /Radiant Absorption restores 6 HP/);
 }
 
 {
