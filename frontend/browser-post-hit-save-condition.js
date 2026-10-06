@@ -101,7 +101,8 @@
         const total = D().rollMany(count, action.start_of_turn_dice_size)
           .reduce((sum, roll) => sum + roll, 0);
         const hpBefore = member.state.current_hp;
-        const applied = DD().resolveDamage(member.state, total, action.start_of_turn_damage_type).applied;
+        const resolvedDamage = DD().resolveDamage(member.state, total, action.start_of_turn_damage_type);
+        const applied = resolvedDamage.applied;
         A().applyDamage(
           member.state, applied, false, [action.start_of_turn_damage_type],
           members(setup).map((item) => item.state), setup,
@@ -111,7 +112,8 @@
           actor_id: member.combatant_id, actor_name: member.state.template.name,
           target_id: member.combatant_id, target_name: member.state.template.name,
           feature_id: action.name, hp_before: hpBefore, hp_after: member.state.current_hp,
-          description: `${action.name} deals ${applied} ${action.start_of_turn_damage_type} damage to ${member.state.template.name} at the start of the turn.`,
+          description: `${action.name} deals ${applied} ${action.start_of_turn_damage_type} damage to ${member.state.template.name} at the start of the turn.`
+            + (resolvedDamage.sourceName ? ` ${resolvedDamage.sourceName} restores ${resolvedDamage.healed} HP.` : ""),
         });
       }
       const burns = window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN?.resolve(sequence, round, member, setup);
