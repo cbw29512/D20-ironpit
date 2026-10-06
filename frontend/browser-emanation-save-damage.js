@@ -32,10 +32,13 @@
         if (succeeded && emanation.success_damage === "none") raw = 0;
         else if (succeeded && emanation.success_damage === "half") raw = Math.floor(raw / 2);
       }
-      const applied = raw
-        ? window.IRON_PIT_BROWSER_ATTACK.adjustedDamage(target.state, raw, emanation.damage_type)
-        : 0;
       const hpBefore = target.state.current_hp;
+      const resolvedDamage = raw
+        ? (window.IRON_PIT_BROWSER_ATTACK.resolveDamage
+          ? window.IRON_PIT_BROWSER_ATTACK.resolveDamage(target.state, raw, emanation.damage_type)
+          : { applied: window.IRON_PIT_BROWSER_ATTACK.adjustedDamage(target.state, raw, emanation.damage_type), healed: 0, sourceName: null })
+        : { applied: 0, healed: 0, sourceName: null };
+      const applied = resolvedDamage.applied;
       if (applied) {
         window.IRON_PIT_BROWSER_ATTACK.applyDamage(
           target.state, applied, false, [emanation.damage_type],
@@ -57,7 +60,8 @@
           hp_before: hpBefore, hp_after: target.state.current_hp,
           feature_id: action.id, animation: action.animation || "radiant-aura",
           distance_before_ft: distance,
-          description: `${target.state.template.name} is caught in ${source.state.template.name}'s ${action.name} and takes ${applied} ${emanation.damage_type} damage.`,
+          description: `${target.state.template.name} is caught in ${source.state.template.name}'s ${action.name} and takes ${applied} ${emanation.damage_type} damage.`
+            + (resolvedDamage.sourceName ? ` ${resolvedDamage.sourceName} restores ${resolvedDamage.healed} HP.` : ""),
         },
         sequence: sequence + 1,
       };
