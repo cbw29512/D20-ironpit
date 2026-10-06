@@ -193,3 +193,14 @@ def test_special_zero_hp_poison_riders_are_source_bound_and_certified():
         assert rider.stable is True
         assert list(rider.condition_ids) == expected["zero_hp_condition_ids"]
         assert rider.duration_rounds == expected["zero_hp_duration_rounds"]
+
+
+def test_ankheg_reuses_shared_grapple_and_self_grapple_advantage() -> None:
+    monster = next(item for item in load_monster_source_2014() if item.id == "ankheg")
+    assert basic_blockers_2014(monster) == ()
+    template = compile_combatant(adapt_basic_monster_2014(monster))
+    bite = _runtime_attacks(template)[_attack_id("ankheg", "bite")]
+    assert bite.control_effect is not None
+    assert bite.control_effect.grapple_escape_dc == 13
+    assert [item.trigger for item in bite.conditional_attack_advantage] == ["target_grappled_by_self"]
+    assert bite.on_hit_damage and _enum_value(bite.on_hit_damage[0].damage_type) == "acid"
