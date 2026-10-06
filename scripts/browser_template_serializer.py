@@ -865,6 +865,41 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
     return row
 
 
+
+def _bonus_attack_grant(item: Any) -> dict[str, Any]:
+    row: dict[str, Any] = {
+        "id": item.id,
+        "name": item.name,
+        "attackIds": list(item.attack_ids),
+        "attackCount": item.attack_count,
+        "trigger": item.trigger,
+        "resourceId": item.resource_id,
+        "resourceCost": item.resource_cost,
+        "priority": item.priority,
+    }
+    if item.on_hit_condition_save is not None:
+        effect = item.on_hit_condition_save
+        save_row: dict[str, Any] = {
+            "saveAbility": effect.save_ability,
+            "dc": effect.dc,
+            "conditionId": effect.condition_id,
+            "maxTargetSize": _value(effect.max_target_size) if effect.max_target_size else None,
+        }
+        if effect.duration_rounds is not None:
+            save_row["durationRounds"] = effect.duration_rounds
+        if effect.repeat_save_timing is not None:
+            save_row["repeatSaveTiming"] = _value(effect.repeat_save_timing)
+        if effect.repeat_save_failure_condition_id:
+            save_row["repeatSaveFailureConditionId"] = effect.repeat_save_failure_condition_id
+        if effect.failure_push_ft:
+            save_row["failurePushFt"] = effect.failure_push_ft
+        if effect.excluded_creature_types:
+            save_row["excludedCreatureTypes"] = list(effect.excluded_creature_types)
+        if effect.excluded_creature_subtypes:
+            save_row["excludedCreatureSubtypes"] = list(effect.excluded_creature_subtypes)
+        row["onHitConditionSave"] = save_row
+    return row
+
 def template_row(template: CombatantTemplate) -> dict[str, Any]:
     try:
         traits = {item.value for item in template.combat_traits}
@@ -957,6 +992,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                     and (key != "healing_rider" or value is not None)
                 } for item in template.initiative_resource_refill_grants
             ]
+        if template.bonus_attack_grants:
+            row["bonusAttackGrants"] = [_bonus_attack_grant(item) for item in template.bonus_attack_grants]
         if template.bonus_tactical_action_grants:
             row["bonusTacticalActionGrants"] = [
                 {

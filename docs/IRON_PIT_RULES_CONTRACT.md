@@ -722,6 +722,12 @@ Monster promotion path:
 - A creature becomes runnable only when every outcome-changing printed mechanic is supported or explicitly proven irrelevant under the permanent arena contract.
 - Never use a richer/partially parsed stat block to certify a simpler approximation.
 
+### 25.2 2014 Rampage arena simplification
+
+2014 Rampage uses an explicit Iron Pit arena simplification. When the creature reduces a hostile combatant to 0 HP with a melee attack on its own turn, and a legal Bite target exists, it spends its available Bonus Action to make exactly one declared Bite attack. Iron Pit omits Rampage's printed move-up-to-half-speed portion; no movement is granted or required by this trigger.
+
+Rampage is implemented as a generic source-melee-zero-HP trigger feeding the universal Bonus Action attack resolver. The source card remains immutable; the qualifying trigger marker and Bonus Action availability exist only in temporary combat state and reset with the match. Player-facing logs preserve the printed ability name. Do not infer 2024 behavior from this 2014 arena rule without separate source reconciliation.
+
 ## 26. Homebrew target architecture
 
 Future homebrew uses the same rules engine:

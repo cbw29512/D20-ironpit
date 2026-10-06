@@ -33,7 +33,7 @@ These are explicit arena overrides, not RAW changes outside the Pit.
 
 Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §7, Attack natural 1, §10.1, §20.
 
-## Buffs, debuffs, and match lifecycle
+- **2014 Rampage omits its movement rider in the Pit.** A qualifying own-turn melee reduction to 0 HP grants exactly one Bite through the creature's available Bonus Action when a legal target exists; no Rampage movement is granted or required. This is an explicit Iron Pit arena simplification, not tabletop RAW. Runtime uses the generic zero-HP trigger plus Bonus Action attack primitive; cards remain immutable.\n\nAuthority: `docs/IRON_PIT_RULES_CONTRACT.md` §25.2.\n\n## Buffs, debuffs, and match lifecycle
 
 - **A buff cancels the matching debuff.** Pairing is by condition identity and modifier kind, never by spell/monster/class name. An already-active matching counter-buff suppresses the current condition and causes a new copy of that debuff to fail closed.
 - **Debuffs are checked at the start of the creature's turn** before it acts.

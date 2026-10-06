@@ -913,6 +913,7 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             {
                 "id": item.id, "name": item.name,
                 "attackIds": list(item.attack_ids), "attackCount": item.attack_count,
+                "trigger": item.trigger,
                 "resourceId": item.resource_id, "resourceCost": item.resource_cost,
                 "priority": item.priority,
                 **(

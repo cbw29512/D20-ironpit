@@ -36,7 +36,7 @@ def resolve_damage_event_reactions(
             sequence, round_number, source, triggering_event, setup, dice, turn_key,
         )
         source_events, sequence = resolve_source_zero_hp_triggers(
-            sequence, round_number, source, triggering_event, setup,
+            sequence, round_number, source, triggering_event, setup, turn_key=turn_key,
         )
         witnessed_events, sequence = resolve_witnessed_zero_hp_triggers(
             sequence, round_number, source, triggering_event, setup,

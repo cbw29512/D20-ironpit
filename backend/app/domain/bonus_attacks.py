@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -16,6 +17,7 @@ class BonusAttackGrant(BaseModel):
     name: str = Field(min_length=1)
     attack_ids: list[str] = Field(min_length=1, max_length=16)
     attack_count: int = Field(default=1, ge=1, le=8)
+    trigger: Literal["always", "source_melee_zero_hp_this_turn"] = "always"
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     priority: int = Field(default=100, ge=0, le=1000)

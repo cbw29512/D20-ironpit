@@ -281,3 +281,27 @@ console.log("Browser universal post-damage reaction parity passed.");
   assert.equal(source.state.temporary_hp, 10);
   assert.equal(result.sequence, 3);
 }
+
+
+{
+  const source = member("rampage-source", "monsters", 5, false);
+  const target = member("rampage-victim", "heroes", 0, false);
+  source.state.template.bonusAttackGrants = [{
+    id: "rampage", name: "Rampage", attackIds: ["bite"], attackCount: 1,
+    trigger: "source_melee_zero_hp_this_turn", priority: 10,
+  }];
+  target.state.current_hp = 0;
+  const setup = { heroes: [target], monsters: [source] };
+  const event = damageEvent(source, target, 1);
+  event.event_type = "attack";
+  event.attack_id = "greataxe";
+  event.hp_before = 1;
+  event.hp_after = 0;
+  window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH.resolve(
+    2, 1, source, event, setup, "1:rampage-source",
+  );
+  assert.equal(
+    source.state.feature_last_turn_keys["bonus-attack-trigger:rampage"],
+    "1:rampage-source",
+  );
+}
