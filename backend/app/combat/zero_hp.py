@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 from typing import Literal
-
 from app.combat.turn_damage import note_turn_damage
 from app.combat.concentration import resolve_concentration_damage
 from app.combat.condition_immunity import condition_is_immune
