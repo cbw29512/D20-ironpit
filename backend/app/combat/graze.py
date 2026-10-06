@@ -41,13 +41,17 @@ def resolve_graze_miss(
             damage_type=attack.weapon.damage_type,
             total=raw_damage,
         )
-        applied, _healed, _absorption_source = resolve_damage_amount(
+        applied, healed, absorption_source = resolve_damage_amount(
             raw_damage,
             attack.weapon.damage_type,
             defender,
             allow_vulnerability=False,
         )
-        applied_component = component.model_copy(update={"applied_total": applied})
+        applied_component = component.model_copy(update={
+            "applied_total": applied,
+            "absorbed_healing": healed,
+            "absorption_source_name": absorption_source,
+        })
         roll = DiceRoll(notation=str(raw_damage), rolls=[], modifier=0, total=applied)
         damage_types = {attack.weapon.damage_type} if applied > 0 else set()
         outcome = apply_damage(
