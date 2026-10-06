@@ -27,7 +27,7 @@ def _active_emanations(source: EncounterCombatant):
         return [
             action
             for action in source.state.template.timed_self_buff_actions
-            if action.id in active_effect_ids
+            if (action.activation_timing == "passive" or action.id in active_effect_ids)
             and (
                 action.start_turn_emanation_damage is not None
                 or action.hostile_start_turn_condition_aura is not None
@@ -52,7 +52,7 @@ def resolve_target_turn_start_emanations(
         sync_emanation_speed(setup)
         active_turn = turn_key or f"{round_number}:{target.combatant_id}"
         for source in [*setup.heroes, *setup.monsters]:
-            if not _opposing(source, target):
+            if source.state.is_dead or not source.state.is_alive or not _opposing(source, target):
                 continue
             for action in _active_emanations(source):
                 distance = combatant_distance(source, target)
