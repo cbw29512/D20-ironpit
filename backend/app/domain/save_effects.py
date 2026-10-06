@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Literal
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, model_serializer, model_validator
 
 from app.domain.character_builds import AbilityName
 from app.domain.timed_control_limits import TimedControlLimits, TimedSaveFlatBonus, compiled_control_limits
@@ -46,6 +46,29 @@ class FailedSaveTimedEffect(BaseModel):
     disadvantage_strength_d20_tests: bool = False
     armor_class_bonus: int = 0
     saving_throw_flat_bonuses: list[TimedSaveFlatBonus] = Field(default_factory=list)
+
+    @model_serializer(mode="wrap")
+    def serialize_without_default_control_limits(self, handler):
+        """Keep unused Slow/Weaken keys out of generated capability dumps."""
+        try:
+            data = handler(self)
+            defaults = {
+                "speed_multiplier": 1.0,
+                "blocks_reactions": False,
+                "action_bonus_exclusive": False,
+                "max_attacks_per_turn": None,
+                "d20_disadvantage_abilities": [],
+                "disadvantage_strength_d20_tests": False,
+                "armor_class_bonus": 0,
+                "saving_throw_flat_bonuses": [],
+            }
+            for key, default in defaults.items():
+                if data.get(key) == default:
+                    data.pop(key, None)
+            return data
+        except Exception:
+            logger.exception("Failed to serialize failed-save timed rider %s.", self.effect_id)
+            raise
 
     def compiled_limits(self) -> TimedControlLimits | None:
         return compiled_control_limits(

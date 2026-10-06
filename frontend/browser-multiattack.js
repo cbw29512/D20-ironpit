@@ -122,7 +122,7 @@
       }
       const choice = attackChoice(member, setup, data, splitThis);
       if (choice) {
-        if (!window.IRON_PIT_BROWSER_TIMED_CONTROL?.turnAttackAllowed(member.state)) break;
+        if (window.IRON_PIT_BROWSER_TIMED_CONTROL?.turnAttackAllowed(member.state) === false) break;
         if (splitThis && choice.attack.kind === "ranged") rangedSplitUsed = true;
         const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
         const featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
