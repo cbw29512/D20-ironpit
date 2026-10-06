@@ -113,6 +113,19 @@ Standing instruction: park, record, continue. Revisit this list after the rest o
 | Gelatinous Cube; Shambling Mound | Engulf | Swallow-shaped plus form extras | Same swallow machine, then extras. | Swallow machine first |
 | Blink Dog | Teleport + extra attack | Recharge Teleport also grants a Bite | `TeleportAction` has no extra-attack rider. In-place teleport (10.1) plus a parameterized extra-attack grant. Do not drop the Bite. | Extra-attack grant on teleport |
 
+**2014 legendary / X/Day leftovers.** Do not invent these here, and do not skip Cast a Spell:
+
+| Card / item | Family | Blocker | Why parked | Needed to unpark |
+|---|---|---|---|---|
+| Dretch | Fetid Cloud (1/Day) | Poisoned plus action/bonus exclusive and no reactions | Existing Poisoned does not include Slow-like action economy | Parameterized poisoned rider or compose Slow + Poisoned |
+| Knight | Leadership (rest recharge) | Ally d4 on attacks/saves for 1 minute | No shared Leadership/bless-die grant for monsters | Reuse Bless/Bardic Inspiration die if one exists, else new ally d4 aura |
+| Aboleth | Psychic Drain legendary | Unstructured legendary drain | Attack/Detect already compile | Legendary save/heal-drain option |
+| Androsphinx / Gynosphinx | Cast a Spell legendary | Spellcasting lane | Teleport is pit-banned; Claw Attack compiles | Other agent's spellcasting bind; do not skip Cast a Spell |
+| Vampire / Tarrasque | Legendary Move | Move up to speed on another turn, sometimes without OA | No `move` legendary kind | Legendary movement option |
+| Solar / Lich / Mummy Lord / Kraken | Remaining legendary menus | Mixed save/gaze/spell/swallow options | Not a single reuse | Bind each compiled option; park the rest |
+
 2024 counterparts after the 2014 octopus unlock stay blocked on their own source. 2024 Giant Octopus Tentacles still need Grappled+Restrained, but Ink Cloud is a 1/Day underwater damage-triggered reaction plus Swim movement. 2024 Octopus Tentacles are damage-only (no grapple) and its Ink Cloud is a different 1/Day underwater reaction. Do not copy 2014 Ink Cloud absence into those 2024 reaction machines.
 
 2024 Death Dog and Ettin stay independently blocked after the 2014 Two Heads bind. 2024 Death Dog Bite is a multi-step disease rider, not Two-Headed. 2024 Ettin Battleaxe knocks Prone and Morningstar imposes next-attack Disadvantage; it has no Two Heads trait. Do not copy 2014 Two Heads grants onto those 2024 actions.
+
+2024 Treant stays independently blocked (`dynamic-combatant-lifecycle` / limited-use). Do not copy the 2014 Animate Trees arena-unavailable extra into that 2024 lifecycle machine. There is no 2024 Nothic counterpart in SRD 5.2.1.
