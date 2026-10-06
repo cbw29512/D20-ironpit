@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014, source_conditional_attack_advantage_2014
+from app.content.monster_attack_source_corrections_2014 import corrected_attack_range_2014
 from app.content.monster_basic_candidates_2014 import (
     basic_blockers_2014, modeled_combat_traits_2014, supports_parry_reaction_2014,
 )
@@ -45,6 +46,7 @@ from app.domain.size import CreatureSize
 
 def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapabilityDefinition:
     charge_source = corrected_charge_profile_2014(monster, attack)
+    normal_range_ft, long_range_ft = corrected_attack_range_2014(monster, attack)
     kwargs = {
         "id": attack_id_2014(monster, attack.id),
         "weapon_id": attack_id_2014(monster, attack.id),
@@ -77,8 +79,8 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
     else:
         kwargs["fixed_damage"] = attack.damage.average
     if attack.kind == "ranged":
-        kwargs["normal_range_ft"] = attack.normal_range_ft
-        kwargs["long_range_ft"] = attack.long_range_ft
+        kwargs["normal_range_ft"] = normal_range_ft
+        kwargs["long_range_ft"] = long_range_ft
         kwargs["projectile"] = "projectile"
     return AttackCapabilityDefinition(**kwargs)
 
