@@ -16,6 +16,7 @@ from app.combat.post_hit_spell_riders import resolve_paid_post_hit_spell_riders
 from app.combat.melee_hit_retaliation import apply_melee_hit_retaliation
 from app.combat.melee_hit_save_retaliation import apply_melee_hit_save_retaliation
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
+from app.combat.on_hit_maximum_hp_save import resolve_on_hit_maximum_hp_save
 from app.combat.sap import apply_weapon_sap
 from app.combat.slow import apply_weapon_slow
 from app.combat.studied_attacks import apply_studied_attack_miss
@@ -35,6 +36,7 @@ class AttackEffectResolution:
     applied_conditions: list[str] = field(default_factory=list)
     save_damage: Any = None
     on_hit_save: Any = None
+    on_hit_maximum_hp_save: Any = None
     cunning_strike: Any = None
     cunning_strike_obscure: Any = None
     topple: Any = None
@@ -125,6 +127,10 @@ def resolve_attack_effects(
             defender, attack, dice, attacker.template,
             source_id=attacker_event_id, round_number=round_number, affected_states=affected_states,
             setup=setup, target_id=actual_event_id,
+        )
+        damage_taken = sum(component.applied_total or 0 for component in result.damage_components)
+        result.on_hit_maximum_hp_save = resolve_on_hit_maximum_hp_save(
+            defender, attack, dice, damage_taken,
         )
         if (
             result.on_hit_save.applied_condition
