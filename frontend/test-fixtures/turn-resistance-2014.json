@@ -1,0 +1,22 @@
+{
+  "saving_throw_advantage_grants": [
+    {
+      "source_id": "turn-resistance",
+      "source_name": "Turn Resistance",
+      "abilities": [
+        "strength",
+        "dexterity",
+        "constitution",
+        "intelligence",
+        "wisdom",
+        "charisma"
+      ],
+      "requires_magical_effect": false,
+      "requires_spell_effect": false,
+      "source_creature_types": [],
+      "required_effect_tags": [
+        "turning"
+      ]
+    }
+  ]
+}

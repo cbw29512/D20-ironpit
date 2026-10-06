@@ -5,8 +5,7 @@
   const COVER_PREFIX = "friendly-cover-aura:";
   const CONDITION_PREFIX = "friendly-condition-aura:";
   const ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"];
-  const S = () => window.IRON_PIT_BROWSER_STATE;
-  const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
+  const S = () => window.IRON_PIT_BROWSER_STATE, M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || {
     has: (state, id) => state.active_effect_ids?.includes(id) || false,
     incapacitated: (state) => state.is_unconscious || state.active_effect_ids?.includes("incapacitated"),
@@ -14,30 +13,20 @@
 
   const members = (setup) => [...(setup?.heroes || []), ...(setup?.monsters || [])];
 
-  function active(source, action) {
+  function active(source, action, passive = false) {
     try {
       const state = source.state;
-      if (state.is_dead || !state.is_alive || state.current_hp <= 0 || Q().incapacitated(state)) return false;
+      if (state.is_dead || !state.is_alive || state.current_hp <= 0) return false;
+      if (passive) {
+        return !(action.inactive_while_incapacitated && Q().incapacitated(state))
+          && !(action.inactive_while_unconscious && (state.is_unconscious || Q().has(state, "unconscious")));
+      }
+      if (action.activationTiming === "passive") return true;
+      if (Q().incapacitated(state)) return false;
       return (state.timed_effects || []).some((effect) =>
         effect.source_id === source.combatant_id && effect.source_effect_id === action.id);
     } catch (error) {
       console.error("Failed browser friendly save-aura source check.", { combatant: source?.combatant_id, error });
-      throw error;
-    }
-  }
-
-  function passiveActive(source, aura) {
-    try {
-      const state = source.state;
-      if (state.is_dead || !state.is_alive || state.current_hp <= 0) return false;
-      if (aura.inactive_while_incapacitated && Q().incapacitated(state)) return false;
-      if (aura.inactive_while_unconscious
-          && (state.is_unconscious || Q().has(state, "unconscious"))) return false;
-      return true;
-    } catch (error) {
-      console.error("Failed browser passive friendly save-aura source check.", {
-        combatant: source?.combatant_id, error,
-      });
       throw error;
     }
   }
@@ -64,10 +53,13 @@
         for (const action of actions) {
           const saveAura = action.friendlySaveAdvantageAura;
           const coverAura = action.friendlyCoverAura;
-          for (const target of allies) {
+          for (const target of saveAura?.recipient_scope === "all" ? allMembers : allies) {
             if (target.state.is_dead || !target.state.is_alive) continue;
-            if (saveAura && S().distance(source, target) <= saveAura.radius_ft
-                && !(saveAura.requires_hearing && Q().has(target.state, "deafened"))) {
+            if (saveAura && (saveAura.covers_arena || S().distance(source, target) <= saveAura.radius_ft)
+                && !(saveAura.requires_hearing && Q().has(target.state, "deafened"))
+                && (!(saveAura.target_template_ids || []).length
+                  || saveAura.target_template_ids.includes(target.state.template.id)
+                  || (saveAura.includes_source && source.combatant_id === target.combatant_id))) {
               const tags = saveAura.all_saves ? [""] : (saveAura.required_effect_tags || []);
               for (const ability of ABILITIES) {
                 for (const tag of tags) {
@@ -92,7 +84,7 @@
                 });
               }
             }
-            if (coverAura && S().distance(source, target) <= coverAura.radius_ft) {
+            if (coverAura && target.side === source.side && S().distance(source, target) <= coverAura.radius_ft) {
               M().add(target.state, {
                 id: `${COVER_PREFIX}${source.combatant_id}:${action.id}:${target.combatant_id}:ac`,
                 source_id: source.combatant_id, source_effect_id: action.id, source_name: action.name,
@@ -113,7 +105,7 @@
         const candidates = [];
         for (const source of allies) {
           const aura = source.state.template.friendly_saving_throw_aura;
-          if (!aura || !passiveActive(source, aura)) continue;
+          if (!aura || !active(source, aura, true)) continue;
           if (S().distance(source, target) > aura.radius_ft) continue;
           candidates.push([aura.flat_bonus, source.combatant_id, source, aura]);
         }
@@ -132,7 +124,7 @@
 
         for (const source of allies) {
           for (const aura of source.state.template.friendly_condition_immunity_auras || []) {
-            if (!passiveActive(source, aura)) continue;
+            if (!active(source, aura, true)) continue;
             if (S().distance(source, target) > aura.radius_ft) continue;
             if ((target.state.template.condition_immunities || []).includes(aura.condition_id)) continue;
             M().add(target.state, {

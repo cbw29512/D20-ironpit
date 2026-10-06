@@ -10,6 +10,7 @@ from app.content.monster_charge_source_corrections_2014 import corrected_charge_
 from app.content.monster_conditional_damage_defenses_2014 import template_defense_fields_2014
 from app.content.monster_healing_2014 import healing_actions_2014, healing_resources_2014
 from app.content.monster_condition_auras import condition_auras_from_source
+from app.content.monster_contextual_save_defenses import contextual_save_defenses_2014
 from app.content.monster_definition_adapter_support_2014 import (
     ability_values_2014,
     attack_id_2014,
@@ -136,7 +137,8 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         save_actions=save_capabilities_2014(monster),
         spell_save_actions=innate_spell_save_actions_2014(monster),
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
-            *condition_auras_from_source(monster.source_traits, "2014")],
+            *condition_auras_from_source(monster.source_traits, "2014"),
+            *contextual_save_defenses_2014(monster)[0]],
         healing_actions=healing_actions_2014(monster),
         condition_removal_actions=innate_condition_removal_2014(monster),
         legendary_actions=legendary_options,

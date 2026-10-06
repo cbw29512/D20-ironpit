@@ -47,7 +47,7 @@ def _enum_value(value):
 def test_basic_attack_effect_tranche_is_exactly_173_and_ruleset_isolated():
     source = load_monster_source_2014()
     ready = [monster for monster in source if not basic_blockers_2014(monster)]
-    assert len(ready) == 176
+    assert len(ready) == 177
     expected = (
         _ATTACK_EFFECT_IDS | _SAVE_PRONE_IDS | _SAVE_CONDITION_IDS | _SAVE_DAMAGE_IDS | _CHARGE_IDS |
         _SURE_FOOTED_IDS | _SWARM_IDS

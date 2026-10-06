@@ -47,11 +47,12 @@ def test_passive_schema_requires_explicit_target_lifetime_and_no_activation_cost
         TimedSelfBuffAction.model_validate(data)
 
 
-def test_binding_unlocks_hezrou_but_preserves_ghast_unrelated_blocker():
+def test_condition_aura_binding_is_retained_on_unlocked_hezrou_and_ghast():
     hezrou = next(m for m in load_monster_source_2014() if m.name == "Hezrou")
     ghast = next(m for m in load_monster_source_2014() if m.name == "Ghast")
     assert basic_blockers_2014(hezrou) == ()
-    assert unsupported_traits_2014(ghast) == ("Turning Defiance",)
+    assert unsupported_traits_2014(ghast) == ()
+    assert basic_blockers_2014(ghast) == ()
     template = compile_combatant(adapt_basic_monster_2014(hezrou))
     assert template.timed_self_buff_actions == condition_auras_from_source(hezrou.source_traits, "2014")
 

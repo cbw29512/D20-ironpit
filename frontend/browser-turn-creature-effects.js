@@ -36,7 +36,7 @@
     const expiresRounds = Object.prototype.hasOwnProperty.call(options, "expiresRounds") ? options.expiresRounds : 10;
     const expiryTiming = Object.prototype.hasOwnProperty.call(options, "expiryTiming") ? options.expiryTiming : "source_turn_start";
     const common = {
-      sourceEffectId, appliedRound: round,
+      sourceEffectId, appliedRound: round, sourceTemplate: source.state.template, sourceIsMagical: true,
       expiresRound: expiresRounds == null ? null : round + expiresRounds,
       expiryTiming, endsOnDamage: true,
       endsIfSourceIncapacitated: options.endsIfSourceIncapacitated !== false,
@@ -54,6 +54,10 @@
         repeatSaveAbility: options.repeatSaveTiming ? "wisdom" : null,
         repeatSaveDc: options.repeatSaveTiming ? options.saveDc : null,
         repeatSaveTiming: options.repeatSaveTiming || null,
+        repeatSaveContext: options.repeatSaveTiming ? { magical_effect: true,
+          source_creature_type: source.state.template.creature_type,
+          condition_id: options.includeFrightened === false ? null : "frightened",
+          effect_tags: ["turning", ...(options.includeFrightened === false ? [] : ["frightened"])] } : null,
       },
     )];
     const conditions = [];
@@ -68,6 +72,7 @@
   }
 
   function resolve(sequence, round, source, targets, saveDc, sourceEffectId, turnedEffectId, resourceRemaining, featureName, options = {}) {
+    try {
     const events = [];
     const rider = source.state.template.turning_failure_damage || null;
     const destroyMaxCr = source.state.template.turning_failure_destroy_max_cr || null;
@@ -81,7 +86,18 @@
     const affectedStates = options.affectedStates || targets.map((target) => target.state);
     for (const target of targets) {
       const hpBefore = target.state.current_hp;
-      const save = V().resolveSavingThrow(target.state, "wisdom", saveDc);
+      const setup = options.setup;
+      const auraRuntime = window.IRON_PIT_BROWSER_FRIENDLY_SAVE_AURAS;
+      const members = setup ? [...setup.heroes, ...setup.monsters] : targets;
+      if (members.some((m) => (m.state.template.timed_self_buff_actions || []).some((a) => a.friendlySaveAdvantageAura))
+          && (!setup || !auraRuntime)) throw new Error("Turning save buffs require encounter and aura runtime.");
+      if (setup && auraRuntime) auraRuntime.sync(setup);
+      const context = { magicalEffect: true, sourceCreatureType: source.state.template.creature_type,
+        conditionId: options.includeFrightened === false ? null : "frightened",
+        effectTags: ["turning", ...(options.includeFrightened === false ? [] : ["frightened"])],
+        roundNumber: round, encounterRoller: target, setup };
+      const buffs = window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.saveAdvantageSourceNames?.(target.state, "wisdom", context) || [];
+      const save = V().resolveSavingThrow(target.state, "wisdom", saveDc, context);
       let damageRoll = null, damageComponents = [];
       if (!save.succeeded && rider) {
         const raw = sharedRolls.reduce((sum, value) => sum + value, 0);
@@ -116,10 +132,15 @@
         animation: "turn-undead",
         description: target.state.template.name + " " + (save.succeeded ? "resists" : "fails")
           + " " + source.state.template.name + "'s " + featureName
-          + (destroyed ? " and is destroyed." : "."),
+          + (destroyed ? " and is destroyed." : ".")
+          + (buffs.length ? ` Save Advantage: ${buffs.join(", ")}.` : ""),
       });
     }
     return { events, sequence };
+    } catch (error) {
+      console.error("Failed browser turning saves.", { source: source?.combatant_id, round, error });
+      throw error;
+    }
   }
 
   window.IRON_PIT_BROWSER_TURN_CREATURE_EFFECTS = { apply, resolve };

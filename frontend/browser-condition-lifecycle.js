@@ -14,12 +14,28 @@
     return effect.expiry_timing === timing && (effect.expires_round == null || round >= effect.expires_round);
   }
 
+  function repeatSave(target, effect, round, setup) {
+    try {
+      if (setup && window.IRON_PIT_BROWSER_FRIENDLY_SAVE_AURAS) window.IRON_PIT_BROWSER_FRIENDLY_SAVE_AURAS.sync(setup);
+      const stored = effect.repeat_save_context || {};
+      const context = { conditionId: stored.condition_id ?? effect.effect_id,
+        magicalEffect: stored.magical_effect ?? Boolean(effect.source_is_magical),
+        sourceCreatureType: stored.source_creature_type || null, spellEffect: Boolean(stored.spell_effect),
+        effectTags: stored.effect_tags || [], roundNumber: round, encounterRoller: target, setup };
+      const buffs = window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.saveAdvantageSourceNames?.(target.state, effect.repeat_save_ability, context) || [];
+      return { ...V().resolveSavingThrow(target.state, effect.repeat_save_ability, effect.repeat_save_dc, context), buffs };
+    } catch (error) {
+      console.error("Failed timed condition repeat save.", { target: target?.combatant_id, effect: effect?.source_effect_id, error });
+      throw error;
+    }
+  }
+
   function resolveTargetTiming(sequence, round, target, timing, setup = null) {
     const events = [];
     for (const effect of [...target.state.timed_effects]) {
       if (!target.state.timed_effects.includes(effect)) continue;
       if (repeatSaveDue(effect, round, timing)) {
-        const save = V().resolveSavingThrow(target.state, effect.repeat_save_ability, effect.repeat_save_dc);
+        const save = repeatSave(target, effect, round, setup);
         let removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
         const applied = [];
         if (!save.succeeded) {
@@ -44,7 +60,8 @@
           save_dc: effect.repeat_save_dc, save_succeeded: save.succeeded,
           applied_condition_ids: applied, removed_condition_ids: removed,
           feature_id: effect.source_effect_id || "condition-repeat-save", animation: "condition-save",
-          description: `${target.state.template.name} repeats the ${effect.repeat_save_ability} save against ${label(effect.source_effect_id || effect.effect_id)}: ${save.succeeded ? "SUCCESS" : "FAILURE"}.`,
+          description: `${target.state.template.name} repeats the ${effect.repeat_save_ability} save against ${label(effect.source_effect_id || effect.effect_id)}: ${save.succeeded ? "SUCCESS" : "FAILURE"}.`
+            + (save.buffs.length ? ` Save Advantage: ${save.buffs.join(", ")}.` : ""),
         });
         if (save.succeeded) continue;
       }

@@ -71,19 +71,21 @@ class TimedSelfBuffAction(BaseModel):
         try:
             if self.activation_timing == "passive":
                 # Passive source data is discovered directly, never cast/spent.
-                if self.hostile_start_turn_condition_aura is None:
-                    raise ValueError("Passive activation requires a condition aura.")
+                if sum(aura is not None for aura in (
+                    self.hostile_start_turn_condition_aura, self.friendly_save_advantage_aura,
+                )) != 1:
+                    raise ValueError("Passive activation requires exactly one condition or friendly-save aura.")
                 if self.resource_id or self.concentration or self.duration_rounds is not None or self.ends_if_source_incapacitated:
                     raise ValueError("Passive condition auras cannot own activation resources or a source timer.")
                 if any((self.condition_ids, self.damage_resistances, self.melee_hit_retaliation,
                     self.debuff_counters, self.saving_throw_advantage_grants, self.movement_mode_grants,
-                    self.friendly_save_advantage_aura, self.friendly_cover_aura,
+                    self.friendly_cover_aura,
                     self.friendly_weapon_damage_aura, self.friendly_recovery_aura,
                     self.start_turn_emanation_damage, self.emitted_environment_contexts,
                     self.spell_save_dc_bonus, self.spell_attack_advantage, self.modifier_effects)):
                     raise ValueError("Passive condition aura cannot silently omit activation-owned effects.")
                 aura = self.hostile_start_turn_condition_aura
-                if aura.condition_expiry_timing is None:
+                if aura is not None and aura.condition_expiry_timing is None:
                     raise ValueError("Passive condition auras require explicit target expiry.")
             if self.action_cost == "reaction":
                 raise ValueError("Timed self-buff Actions currently require an on-turn Action or Bonus Action.")

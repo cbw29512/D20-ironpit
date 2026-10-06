@@ -4,6 +4,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_contextual_save_defenses import contextual_save_defenses_2014
 from app.domain.progression import SavingThrowAdvantageGrant
 from app.domain.tactical_actions import BonusActionTacticalGrant
 
@@ -61,6 +62,7 @@ def saving_throw_advantage_grants_2014(monster: SourceMonster2014) -> list[Savin
                 trait_name,
                 _TWO_HEAD_SAVE_TAGS,
             ))
+        grants.extend(contextual_save_defenses_2014(monster)[1])
         return grants
     except Exception:
         logger.exception("Failed to bind 2014 save-Advantage traits for %s.", monster.name)
@@ -88,6 +90,9 @@ def bound_passive_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]
     """Return printed traits fully represented by the shared grant primitives above."""
     try:
         bound: set[str] = set()
+        actions, grants = contextual_save_defenses_2014(monster)
+        bound.update(item.name for item in actions)
+        bound.update(item.source_name for item in grants)
         if _MAGIC_RESISTANCE in monster.trait_names:
             bound.add(_MAGIC_RESISTANCE)
         if _DARK_DEVOTION in monster.trait_names:

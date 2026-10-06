@@ -84,17 +84,27 @@ class TimedFriendlySaveAura(BaseModel):
     requires_hearing: bool = False
     all_saves: bool = False
     attacks_against_disadvantage: bool = False
+    target_template_ids: list[str] = Field(default_factory=list)
+    includes_source: bool = False
+    recipient_scope: Literal["allies", "all"] = "allies"
+    covers_arena: bool = False
     melee_hit_save_retaliation: MeleeHitSaveRetaliation | None = None
 
     @model_validator(mode="after")
     def validate_tags(self) -> "TimedFriendlySaveAura":
-        tags = [item.strip().casefold() for item in self.required_effect_tags]
-        if any(not item for item in tags) or len(set(tags)) != len(tags):
-            raise ValueError("Timed friendly save-aura effect tags must be non-empty and unique.")
-        if self.all_saves and tags:
-            raise ValueError("All-save auras cannot also require effect tags.")
-        if not self.all_saves and not tags and not self.attacks_against_disadvantage:
-            raise ValueError("Timed friendly save-aura requires tags, all-saves, or attacks-against Disadvantage.")
-        self.required_effect_tags = tags
-        return self
-
+        try:
+            ids = self.target_template_ids
+            if any(not value.strip() for value in ids) or len(set(ids)) != len(ids):
+                raise ValueError("Friendly aura recipient template IDs must be non-empty and unique.")
+            tags = [item.strip().casefold() for item in self.required_effect_tags]
+            if any(not item for item in tags) or len(set(tags)) != len(tags):
+                raise ValueError("Timed friendly save-aura effect tags must be non-empty and unique.")
+            if self.all_saves and tags:
+                raise ValueError("All-save auras cannot also require effect tags.")
+            if not self.all_saves and not tags and not self.attacks_against_disadvantage:
+                raise ValueError("Timed friendly save-aura requires tags, all-saves, or attacks-against Disadvantage.")
+            self.required_effect_tags = tags
+            return self
+        except Exception:
+            logger.exception("Failed friendly save-aura schema validation.")
+            raise

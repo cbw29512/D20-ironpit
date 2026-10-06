@@ -10,6 +10,7 @@ from app.domain.actions import AbilityName, ConditionTiming
 from app.domain.combatants import DamageType
 from app.domain.models import CombatantState, CombatantTemplate, DebuffCounter, TimedEffect
 from app.domain.movement import MovementModeGrant
+from app.domain.saving_throw_context import SavingThrowContext
 from app.domain.runtime import TimedTurnBehavior
 from app.combat.timed_condition_lifecycle import (
     expire_start_of_turn_conditions,
@@ -51,6 +52,7 @@ def apply_timed_condition(
     source_effect_id: str | None = None,
     source_template: CombatantTemplate | None = None,
     source_is_magical: bool = False,
+    repeat_save_context: SavingThrowContext | None = None,
     suppress_action: bool = False,
     suppress_bonus_action: bool = False,
     suppress_reactions: bool = False,
@@ -89,12 +91,7 @@ def apply_timed_condition(
     source_effect_immunity_on_end: bool = False,
     control_limits=None,
 ) -> str | None:
-    """Apply one source-owned timed condition and its optional passive defenses.
-
-    Passive defenses live on the same TimedEffect as the condition so normal
-    lifecycle cleanup removes only state owned by this source. Callers supply
-    source-specific parameters; damage math and expiry remain universal.
-    """
+    """Apply defenses and repeat-save context through one source-owned lifecycle."""
     try:
         if condition_is_immune(
             state,
@@ -137,6 +134,7 @@ def apply_timed_condition(
             ends_if_source_incapacitated=ends_if_source_incapacitated,
             ends_if_source_dead=ends_if_source_dead,
             source_is_magical=source_is_magical,
+            repeat_save_context=repeat_save_context,
             suppress_action=suppress_action,
             suppress_bonus_action=suppress_bonus_action,
             suppress_reactions=suppress_reactions,

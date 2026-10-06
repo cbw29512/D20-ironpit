@@ -322,6 +322,7 @@ A test harness may start a buff or debuff so a combination can be asserted. Purp
 - Only Advantage sources = Advantage.
 - Only Disadvantage sources = Disadvantage.
 - Removing one source must recompute from the remaining active sources.
+- Conditional save buffs match the incoming effect's declared context on initial and repeat saves. A turning-save buff grants Advantage against turning; an ordinary Frightened save does not qualify. Printed recipient scope, radius and source lifetime remain source parameters. **Pit override:** a turning-save aura with a printed 30-foot radius covers the entire Iron Pit; every eligible creature in the fight is in that range.
 
 ## 10. Arena and movement
 
