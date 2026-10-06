@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from app.combat.undead_fortitude import consume_survival_save_log
-from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.timed_attack_cap import register_turn_attack
@@ -9,13 +7,13 @@ from app.combat.attack_roll_resolution import resolve_attack_roll
 from app.combat.attack_legality import attack_allowed_against, attack_is_automatic_hit
 from app.combat.attack_d20_outcome import resolve_attack_d20_outcome
 from app.combat.attack_effect_resolution import resolve_attack_effects
-from app.combat.attack_event_support import attack_damage_reduction_description, build_attack_description, primary_attack_save_fields
+from app.combat.attack_event_builder import build_resolved_attack_event
 from app.combat.brutal_strike import clear_brutal_strike_pending
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.modifier_stack import effective_armor_class
-from app.combat.reaction_roll_penalties import apply_reaction_roll_penalty_if_useful, reaction_penalty_description
+from app.combat.reaction_roll_penalties import apply_reaction_roll_penalty_if_useful
 from app.combat.state import terminate_turn
 from app.domain.models import BattleEvent, CombatantState, RollMode, WeaponAttack
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -37,7 +35,7 @@ def resolve_attack(
         register_turn_attack(attacker, off_turn=off_turn)
         if spend_action and not is_available(attacker, "action"):
             raise ValueError("Action is not available for an attack.")
-        weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id
+        defender_event_id = target_event_id or defender.template.id
         attacker_event_id = actor_event_id or attacker.template.id
         if not attack_allowed_against(attack, attacker_event_id, defender, affected_states):
             raise ValueError(f"{attack.id} cannot target {defender_event_id} under its current target policy.")
@@ -162,69 +160,21 @@ def resolve_attack(
             natural_roll=natural,
             setup=reaction_setup,
         )
-        damage_roll, damage_components, damage_outcome = effects.damage_roll, effects.damage_components, effects.damage_outcome
-        applied_conditions, save_damage, on_hit_save = effects.applied_conditions, effects.save_damage, effects.on_hit_save
-        on_hit_maximum_hp_save = effects.on_hit_maximum_hp_save
-        contested_movement = effects.contested_movement
-        cunning_strike, cunning_strike_obscure, topple = effects.cunning_strike, effects.cunning_strike_obscure, effects.topple
-        weapon_sap_applied, tactical_sap_applied = effects.weapon_sap_applied, effects.tactical_sap_applied
-        vex_applied, studied_applied = effects.vex_applied, effects.studied_applied
-        deferred_effect_armed = effects.deferred_effect_armed
-        exile_applied = effects.exile_applied
-        description = build_attack_description(
-            attacker_name=attacker.template.name, defender_name=defender.template.name,
-            actual_defender_name=actual_defender.template.name, weapon_name=weapon.name,
-            damage_type=weapon.damage_type.value, hit=hit, critical=critical,
-            natural_1=natural_1, natural_1_ends_turn=natural_1_ends_turn,
+        return build_resolved_attack_event(
+            sequence=sequence, round_number=round_number, attacker=attacker, defender=defender,
+            actual_defender=actual_defender, attack=attack, attacker_event_id=attacker_event_id,
+            actual_event_id=actual_event_id, target_ac=target_ac, attack_roll=attack_roll,
+            hit=hit, critical=critical, natural_1=natural_1,
+            natural_1_ends_turn=natural_1_ends_turn, automatic_hit=automatic_hit,
             heroic_reroll=heroic_reroll, redirect_used=redirect_used, parry_used=parry_used,
             d20_override_feature_id=d20_override_feature_id, d20_override_name=d20_override_name,
             miss_override_feature_id=miss_override_feature_id, miss_override_name=miss_override_name,
-            damage_roll=damage_roll, studied_applied=studied_applied,
-            weapon_sap_applied=weapon_sap_applied, tactical_sap_applied=tactical_sap_applied,
-            vex_applied=vex_applied, save_damage=save_damage, on_hit_save=on_hit_save,
-            on_hit_maximum_hp_save=on_hit_maximum_hp_save, contested_movement=contested_movement,
-            cunning_strike_obscure=cunning_strike_obscure, cunning_strike=cunning_strike,
-            topple=topple, damage_outcome=damage_outcome, applied_conditions=applied_conditions,
-            deferred_effect_armed=deferred_effect_armed,
-        )
-        if automatic_hit:
-            description += " The attack automatically hits its source-owned Grappled target."
-        description += attack_damage_reduction_description(effects, actual_defender.template.name)
-        if d20_bonus_source_name:
-            description += f" {d20_bonus_source_name} adds its bonus die to the attack roll."
-        if outcome_adjustment_name:
-            description += f" {outcome_adjustment_name} adjusts the resolved D20 Test."
-        if reaction_penalty is not None:
-            description += reaction_penalty_description(reaction_penalty)
-        if exile_applied is not None:
-            description += f" {actual_defender.template.name} is Banished until the source-relative return point."
-        save_roll, save_ability, save_dc, save_succeeded = primary_attack_save_fields(
-            save_damage, on_hit_save, on_hit_maximum_hp_save, contested_movement,
-            cunning_strike_obscure, cunning_strike, topple,
-        )
-        return BattleEvent(
-            sequence=sequence, round_number=round_number, event_type="attack", actor_id=attacker_event_id, actor_name=attacker.template.name,
-            target_id=actual_event_id, target_name=actual_defender.template.name, attack_name=weapon.name, target_ac=target_ac,
-            attack_roll=attack_roll, saving_throw_roll=save_roll, save_ability=save_ability, save_dc=save_dc, save_succeeded=save_succeeded,
-            damage_roll=damage_roll, damage_components=damage_components, applied_condition_ids=applied_conditions,
-            ability_check_roll=contested_movement.target_roll if contested_movement else None,
-            check_ability=contested_movement.target_ability if contested_movement else None,
-            check_dc=contested_movement.source_roll.total if contested_movement and contested_movement.source_roll else None,
-            check_succeeded=contested_movement.target_succeeded if contested_movement else None,
-            hit=hit, critical=critical, damage_reduction_zeroed_attack=effects.damage_reduction_zeroed_attack,
-            turn_terminated=natural_1_ends_turn,
-            turn_termination_reason="iron-pit-natural-1-attack" if natural_1_ends_turn else None,
-            hp_before=hp_before, hp_after=actual_defender.current_hp,
-            temporary_hp_before=temporary_hp_before, temporary_hp_after=actual_defender.temporary_hp,
-            death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
-            death_save_successes=actual_defender.death_save_successes, death_save_failures=actual_defender.death_save_failures,
-            is_stable=actual_defender.is_stable, is_dead=actual_defender.is_dead, attack_id=attack.id, weapon_id=weapon.id, projectile=weapon.projectile,
-            feature_id=d20_override_feature_id or miss_override_feature_id or outcome_adjustment_feature_id or feature_id, concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
-            resource_remaining=(
-                exile_applied[1] if exile_applied is not None
-                else deferred_effect_armed.resource_remaining if deferred_effect_armed is not None else None
-            ),
-            animation=weapon.animation, description=description + consume_survival_save_log(actual_defender) + consume_zero_hp_replacement_log(actual_defender),
+            outcome_adjustment_feature_id=outcome_adjustment_feature_id,
+            outcome_adjustment_name=outcome_adjustment_name,
+            d20_bonus_source_name=d20_bonus_source_name, reaction_penalty=reaction_penalty,
+            feature_id=feature_id, effects=effects, hp_before=hp_before,
+            temporary_hp_before=temporary_hp_before, death_success_before=death_success_before,
+            death_failure_before=death_failure_before, concentration_before=concentration_before,
         )
     except Exception as exc:
         logger.exception("Attack failed: %s -> %s.", attacker.template.name, defender.template.name)
