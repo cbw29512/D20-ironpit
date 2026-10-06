@@ -15,7 +15,8 @@
       const rolls = Array.from({ length: diceCount }, () => D().roll(diceSize));
       const rolledTotal = rolls.reduce((sum, value) => sum + value, 0);
       const scaledTotal = Math.floor(rolledTotal * multiplier);
-      const applied = DD().resolveDamage(targetState, scaledTotal, damageType).applied;
+      const resolved = DD().resolveDamage(targetState, scaledTotal, damageType);
+      const applied = resolved.applied;
       const component = {
         source: rule.source_name,
         notation: `${diceCount}d${diceSize}`,
@@ -24,6 +25,8 @@
         damage_type: damageType,
         total: scaledTotal,
         applied_total: applied,
+        absorbed_healing: resolved.healed || 0,
+        absorption_source_name: resolved.sourceName || null,
       };
       A().applyDamage(targetState, applied, false, [damageType], affectedStates);
       return {
