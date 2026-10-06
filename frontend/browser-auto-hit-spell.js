@@ -28,7 +28,8 @@
         ? C().maximizedRolls(action.damageDiceCount || 1, action.damageDiceSize || 4)
         : window.IRON_PIT_DICE.rollMany(action.damageDiceCount || 1, action.damageDiceSize || 4);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (action.damageBonus || 0);
-      const applied = DD().resolveDamage(target.state, raw, action.damageType).applied;
+      const resolved = DD().resolveDamage(target.state, raw, action.damageType);
+      const applied = resolved.applied;
       allRolls.push(...rolls);
       total += applied;
       components.push({
@@ -36,6 +37,7 @@
         notation: `${action.damageDiceCount || 1}d${action.damageDiceSize || 4}+${action.damageBonus || 0}`,
         rolls, modifier: action.damageBonus || 0, damage_type: action.damageType,
         total: raw, applied_total: applied,
+        absorbed_healing: resolved.healed || 0, absorption_source_name: resolved.sourceName || null,
       });
     }
 
