@@ -62,7 +62,7 @@ def resolve_emanation_hit(
             elif succeeded and emanation.success_damage == "half":
                 raw //= 2
         hp_before = target.state.current_hp
-        applied, _healed, _absorption_source = resolve_damage_amount(raw, emanation.damage_type, target.state) if raw else (0, 0, None)
+        applied, absorbed_healing, absorption_source = resolve_damage_amount(raw, emanation.damage_type, target.state) if raw else (0, 0, None)
         if applied:
             apply_damage(
                 target.state,
@@ -103,6 +103,7 @@ def resolve_emanation_hit(
             description=(
                 f"{target.state.template.name} is caught in {source.state.template.name}'s "
                 f"{action.name} and takes {applied} {emanation.damage_type.value} damage."
+                + (f" {absorption_source} restores {absorbed_healing} HP." if absorption_source else "")
             ),
         )
         return event, sequence + 1
