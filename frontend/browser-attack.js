@@ -48,7 +48,9 @@
     const brutalSuppression = BS()?.advantageSuppression(
       attacker.state, attack, extra.turnKey, disadvantage > 0 || rangedDisadvantage,
     ) || 0;
-    const unsuppressedAdvantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
+    const firstTurnUnacted = attacker.state.template.first_turn_attack_advantage_against_unacted_target
+      && round === 1 && actualTarget?.state?.current_round == null ? 1 : 0;
+    const unsuppressedAdvantage = (extra.advantage || 0) + firstTurnUnacted + conditions.advantage + bloodiedFury(attacker.state, attack)
       + Math.max(0, recklessAdvantage - brutalSuppression) + A().sources(attack, target.state, attacker.combatant_id)
       + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id) + (attacker.state.template.advantage_against_marked_effect_id && attacker.state.active_modifiers?.some((item) => item.source_effect_id === attacker.state.template.advantage_against_marked_effect_id && item.target_id === target.combatant_id) ? 1 : 0);
     const advantage = Q().suppressAttackAdvantage?.(target.state) ? 0 : unsuppressedAdvantage;
