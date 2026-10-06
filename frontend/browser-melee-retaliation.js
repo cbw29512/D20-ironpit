@@ -11,6 +11,9 @@
     try {
       for (const action of defender.state.template.timed_self_buff_actions || []) {
         if (!action.meleeHitRetaliation) continue;
+        if (action.activationTiming === "passive") {
+          return { action, rule: action.meleeHitRetaliation };
+        }
         if ((defender.state.timed_effects || []).some((effect) => effect.source_effect_id === action.id)) {
           return { action, rule: action.meleeHitRetaliation };
         }
