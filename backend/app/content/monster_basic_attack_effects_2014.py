@@ -23,7 +23,7 @@ from app.domain.capability_effects import (
 )
 from app.domain.size import CreatureSize
 from app.domain.action_types import ConditionName, ConditionTiming
-from app.domain.weapons import DamageType
+from app.domain.weapons import ConditionalAttackAdvantage, DamageType
 
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 _DAMAGE_KEYS = frozenset({"average", "bonus", "dice_count", "dice_size", "type"})
@@ -39,6 +39,7 @@ _SAVE_DAMAGE_KEYS = frozenset({
 _ABILITIES = frozenset({"strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"})
 _CONDITIONS = frozenset(get_args(ConditionName))
 _TIMINGS = frozenset(get_args(ConditionTiming))
+_ADVANTAGE_TRIGGERS = frozenset({"target_grappled_by_self"})
 
 
 def _supported_damage_row(value: object) -> bool:
@@ -110,8 +111,22 @@ def _supported_save_damage(value: object) -> bool:
     )
 
 
+def source_conditional_attack_advantage_2014(attack: SourceAttack2014) -> list[ConditionalAttackAdvantage]:
+    specs: list[ConditionalAttackAdvantage] = []
+    for value in attack.conditional_attack_advantage:
+        if not isinstance(value, dict) or set(value) != {"trigger"}:
+            raise ValueError(f"{attack.id} has unsupported conditional attack Advantage data")
+        trigger = str(value["trigger"]).lower()
+        if trigger not in _ADVANTAGE_TRIGGERS:
+            raise ValueError(f"{attack.id} has unsupported conditional attack Advantage trigger {trigger!r}")
+        specs.append(ConditionalAttackAdvantage(trigger=trigger))
+    return specs
+
+
 def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
-    if attack.conditional_attack_advantage:
+    try:
+        source_conditional_attack_advantage_2014(attack)
+    except ValueError:
         return False
     if attack.conditional_damage and not all(supports_conditional_damage_2014(row) for row in attack.conditional_damage):
         return False
