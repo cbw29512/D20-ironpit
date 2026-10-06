@@ -93,6 +93,22 @@ result = D.resolveDamage(target, 10, "lightning");
 assert.deepEqual(result, { applied: 0, healed: 1, sourceName: "Lightning Absorption" });
 assert.equal(target.current_hp, 20);
 
+target = state();
+target.current_hp = 17;
+target.template.damage_absorptions = [
+  { sourceId: "fire-absorption", sourceName: "Fire Absorption", damageType: "fire" },
+];
+result = D.resolveDamage(target, 10, "fire");
+assert.deepEqual(result, { applied: 0, healed: 3, sourceName: "Fire Absorption" });
+assert.equal(target.current_hp, 20, "absorption healing resolves before accepted mixed damage is applied");
+const accepted = D.resolveDamage(target, 5, "slashing");
+assert.equal(accepted.applied, 5);
+target.current_hp -= accepted.applied;
+assert.equal(target.current_hp, 15);
+
+assert.throws(() => D.adjustedDamage(target, -1, "fire"), /Damage cannot be negative/);
+assert.throws(() => D.resolveDamage(target, -1, "fire"), /Damage cannot be negative/);
+
 console.log("Browser damage absorption regressions passed.");
 
 
