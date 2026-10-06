@@ -94,6 +94,8 @@ def resolve_emanation_hit(
                 damage_type=emanation.damage_type,
                 total=raw,
                 applied_total=applied,
+                absorbed_healing=absorbed_healing,
+                absorption_source_name=absorption_source,
             )],
             hp_before=hp_before,
             hp_after=target.state.current_hp,
