@@ -52,6 +52,7 @@ from app.domain.regeneration import RegenerationTrait
 from app.domain.save_success_overrides import FailedSaveSuccessOverride
 from app.domain.tactical_actions import BonusActionTacticalGrant
 from app.domain.traits import CombatTrait
+from app.domain.zero_hp_effects import DamageThresholdZeroHpReplacement
 from app.domain.unarmed import UnarmedStrikeDamage
 from app.domain.weapons import (
     ConditionalAttackAdvantage,
@@ -168,6 +169,7 @@ class CombatantTemplate(BaseModel):
     unlimited_resource_ids: list[str] = Field(default_factory=list)
     recharge_rules: list[RechargeRule] = Field(default_factory=list)
     regeneration: RegenerationTrait | None = None
+    damage_threshold_zero_hp_replacements: list[DamageThresholdZeroHpReplacement] = Field(default_factory=list)
     triggered_extra_attack_stacks: list[TriggeredExtraAttackStack] = Field(default_factory=list)
     save_success_overrides: list[FailedSaveSuccessOverride] = Field(default_factory=list)
     legendary_actions: list[LegendaryActionOption] = Field(default_factory=list)
