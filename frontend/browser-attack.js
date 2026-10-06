@@ -105,6 +105,7 @@
     const outcome = O().create();
     let { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, topple, sapApplied, vexApplied, studiedApplied, deferredEffectArmed, exileApplied } = outcome;
     let maximumHpSave = null;
+    let contestedMovement = null;
     let cunningStrikeTrip = null, cunningStrikeObscure = null;
     const applied = outcome.appliedConditions;
     if (hit) {
@@ -132,7 +133,10 @@
       if (hitSave?.appliedCondition && !applied.includes(hitSave.appliedCondition)) applied.push(hitSave.appliedCondition);
       const appliedDamage = (damageComponents || []).reduce((total, component) => total + (component.appliedTotal || 0), 0);
       maximumHpSave = living ? window.IRON_PIT_BROWSER_MAXIMUM_HP?.resolve(actualTarget, attack, appliedDamage) || null : null;
-      Object.assign(outcome, { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, maximumHpSave });
+      contestedMovement = living ? window.IRON_PIT_BROWSER_CONTESTED_MOVEMENT?.resolve(
+        attacker, actualTarget, attack, extra.setup, round,
+      ) || null : null;
+      Object.assign(outcome, { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, maximumHpSave, contestedMovement });
       const phase = H().runPhase(H().PHASES.ON_HIT, {
         sequence, round, member: attacker, target: actualTarget, originalTarget: target, attack,
         setup: extra.setup, turnKey: extra.turnKey, attackOutcome: outcome, events: [],
@@ -187,6 +191,13 @@
     if (hitSave?.forcedMovementFt) description += ` ${actualTarget.state.template.name} is pushed ${hitSave.forcedMovementFt} feet away.`;
     if (maximumHpSave?.reductionApplied) description += ` ${actualTarget.state.template.name}'s hit point maximum is reduced by ${maximumHpSave.reductionApplied}.`;
     if (maximumHpSave?.killedByZeroMaximum) description += ` ${actualTarget.state.template.name} dies as its hit point maximum reaches 0.`;
+    if (contestedMovement?.targetRoll) {
+      description += ` ${actualTarget.state.template.name} ${contestedMovement.targetSucceeded ? "wins" : "loses"} the ${contestedMovement.targetAbility} contest (${contestedMovement.targetRoll.total} vs ${contestedMovement.sourceRoll.total}).`;
+      if (contestedMovement.movementFt) {
+        const direction = contestedMovement.direction === "toward_source" ? "toward the source" : "away from the source";
+        description += ` ${actualTarget.state.template.name} is moved ${contestedMovement.movementFt} feet ${direction}.`;
+      }
+    }
     if (topple.saveDc !== null) description += ` Topple save DC ${topple.saveDc}: ${actualTarget.state.template.name} ${topple.saveSucceeded ? "succeeds" : "fails"}.`;
     if (damageOutcome === "relentless_endurance") description += ` ${actualTarget.state.template.name} uses Relentless Endurance and remains at 1 HP.`;
     if (damageOutcome === "undead_fortitude") description += ` ${actualTarget.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
