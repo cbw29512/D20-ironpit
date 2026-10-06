@@ -890,14 +890,6 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "damage_resistances": [item.value for item in template.damage_resistances],
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
             "damage_immunities": [item.value for item in template.damage_immunities],
-            "damage_absorptions": [
-                {
-                    "sourceId": item.source_id,
-                    "sourceName": item.source_name,
-                    "damageType": _value(item.damage_type),
-                }
-                for item in template.damage_absorptions
-            ],
             "conditional_damage_defenses": [
                 {
                     "id": item.id, "kind": _value(item.kind),
@@ -914,6 +906,11 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        if template.damage_absorptions:
+            row["damage_absorptions"] = [
+                {"sourceId": item.source_id, "sourceName": item.source_name, "damageType": _value(item.damage_type)}
+                for item in template.damage_absorptions
+            ]
         if template.support_action_modes:
             row["support_action_modes"] = list(template.support_action_modes)
         if template.environment_context_reactions:
