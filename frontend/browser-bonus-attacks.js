@@ -19,6 +19,8 @@
           || String(a.id).localeCompare(String(b.id)));
 
       for (const grant of grants) {
+        if (grant.trigger === "source_melee_zero_hp_this_turn"
+          && state.feature_last_turn_keys?.[`bonus-attack-trigger:${grant.id}`] !== turnKey) continue;
         const cost = grant.resourceCost || 1;
         if (!R().available(state, grant.resourceId, cost)) continue;
         const formation = F();
