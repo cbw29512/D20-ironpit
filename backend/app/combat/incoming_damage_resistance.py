@@ -5,25 +5,23 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.timed_conditions import apply_timed_condition, remove_effect_instance
 from app.domain.encounters import EncounterSetup
-from app.domain.models import CombatantState, DamageRollComponent
+from app.domain.models import CombatantState, DamageRollComponent, DamageType
 
 logger = logging.getLogger(__name__)
 INCOMING_RESISTANCE_EFFECT_ID = "incoming-damage-type-resistance"
 
 
-def apply_incoming_damage_type_resistance(
+def apply_incoming_damage_type_resistance_amount(
     target: CombatantState,
-    components: list[DamageRollComponent],
+    amount: int,
+    damage_type: DamageType,
 ) -> bool:
-    """Spend a Reaction to resist the triggering damage type until the current turn ends."""
+    """Spend a Reaction to resist one actual incoming damage type until the current turn ends."""
     try:
         rule = target.template.incoming_damage_type_resistance_reaction
-        if rule is None or target.current_hp <= 0 or target.is_dead:
+        if rule is None or amount <= 0 or target.current_hp <= 0 or target.is_dead:
             return False
         if not is_available(target, "reaction"):
-            return False
-        damage_type = next((item.damage_type for item in components if item.total > 0), None)
-        if damage_type is None:
             return False
         spend(target, "reaction")
         applied = apply_timed_condition(
@@ -39,6 +37,25 @@ def apply_incoming_damage_type_resistance(
         return applied is not None
     except Exception:
         logger.exception("Incoming damage-type resistance failed for %s.", target.template.name)
+        raise
+
+
+def apply_incoming_damage_type_resistance(
+    target: CombatantState,
+    components: list[DamageRollComponent],
+) -> bool:
+    """Compatibility wrapper that selects the first positive typed component."""
+    try:
+        component = next((item for item in components if item.total > 0), None)
+        if component is None:
+            return False
+        return apply_incoming_damage_type_resistance_amount(
+            target,
+            component.total,
+            component.damage_type,
+        )
+    except Exception:
+        logger.exception("Incoming damage-type resistance component selection failed for %s.", target.template.name)
         raise
 
 
