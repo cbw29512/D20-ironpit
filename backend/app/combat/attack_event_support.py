@@ -121,6 +121,9 @@ def build_attack_description(
                 prefix = label or (ability.title() if ability else "")
                 succeeded = "succeeds" if resolution.save_succeeded else "fails"
                 description += f" {prefix} save DC {resolution.save_dc}: {actual_defender_name} {succeeded}."
+                moved = getattr(resolution, "forced_movement_ft", 0)
+                if moved:
+                    description += f" {actual_defender_name} is pushed {moved} feet away."
 
         if damage_outcome == "relentless_endurance":
             description += f" {actual_defender_name} uses Relentless Endurance and remains at 1 HP."
