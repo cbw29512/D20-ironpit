@@ -38,6 +38,7 @@ _ARENA_UNAVAILABLE_SUMMON_ACTION_LABELS = frozenset({
 _ARENA_NEUTRAL_MIND_ACTION_LABELS = frozenset({"weird insight"})
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 _PIT_REMOVED_MONSTER_IDS_2014 = frozenset({"stirge"})
+_PIT_ARENA_NEUTRAL_MONSTER_IDS_2014 = frozenset({"frog"})
 
 
 def _supported_charge(monster: SourceMonster2014) -> bool:
@@ -134,9 +135,15 @@ def modeled_combat_traits_2014(monster: SourceMonster2014) -> list[CombatTrait]:
     return traits
 
 
+def is_arena_neutral_monster_2014(monster: SourceMonster2014) -> bool:
+    return monster.id in _PIT_ARENA_NEUTRAL_MONSTER_IDS_2014
+
+
 def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     if monster.id in _PIT_REMOVED_MONSTER_IDS_2014:
         return ("arena:removed",)
+    if is_arena_neutral_monster_2014(monster):
+        return ("arena:neutral",)
     blockers: list[str] = []
     if not monster.attacks:
         blockers.append("attack:none")

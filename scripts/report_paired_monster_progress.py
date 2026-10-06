@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import logging
 import re
 
-from app.content.monster_basic_candidates_2014 import basic_blockers_2014, unsupported_traits_2014
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014, is_arena_neutral_monster_2014, unsupported_traits_2014
 from app.content.monster_catalog import build_monster_catalog
 from app.content.monster_roster_2014 import build_basic_2014_monsters
 from app.content.monster_source_2014 import SourceMonster2014, load_monster_source_2014
@@ -25,6 +25,7 @@ class PairedMonsterStatus:
     blockers_2014: tuple[str, ...]
     blockers_2024: tuple[str, ...]
     unsupported_traits_2014: tuple[str, ...]
+    arena_neutral_2014: bool
 
 
 def _pair_key(name: str) -> str:
@@ -76,6 +77,7 @@ def _paired_statuses() -> tuple[list[PairedMonsterStatus], list[str], list[str]]
                 ready_2024=card_2024.coverage_status is CoverageStatus.RAW_READY,
                 blockers_2014=blockers_2014, blockers_2024=tuple(card_2024.blockers),
                 unsupported_traits_2014=unsupported_traits_2014(monster_2014),
+                arena_neutral_2014=is_arena_neutral_monster_2014(monster_2014),
             ))
         only_2014 = sorted(by_2014[key].name for key in set(by_2014) - set(by_2024))
         only_2024 = sorted(by_2024[key].name for key in set(by_2024) - set(by_2014))
@@ -107,9 +109,10 @@ def main() -> None:
         total_ready_2014 = len(build_basic_2014_monsters())
         total_ready_2024 = sum(card.coverage_status is CoverageStatus.RAW_READY for card in build_monster_catalog())
         both_ready = [item for item in statuses if item.ready_2014 and item.ready_2024]
-        catchup_2014 = [item for item in statuses if item.ready_2024 and not item.ready_2014]
+        arena_neutral_2014 = [item for item in statuses if item.arena_neutral_2014]
+        catchup_2014 = [item for item in statuses if item.ready_2024 and not item.ready_2014 and not item.arena_neutral_2014]
         ahead_2014 = [item for item in statuses if item.ready_2014 and not item.ready_2024]
-        both_blocked = [item for item in statuses if not item.ready_2014 and not item.ready_2024]
+        both_blocked = [item for item in statuses if not item.ready_2014 and not item.ready_2024 and not item.arena_neutral_2014]
         print(
             "PAIRED_BASELINE"
             f"\t2014_ready={total_ready_2014}/327\t2024_ready={total_ready_2024}/330"
@@ -119,7 +122,10 @@ def main() -> None:
             "PAIRED_STATUS"
             f"\tboth_ready={len(both_ready)}\tcatchup_2014={len(catchup_2014)}"
             f"\t2014_ahead={len(ahead_2014)}\tboth_blocked={len(both_blocked)}"
+            f"\tarena_neutral_2014={len(arena_neutral_2014)}"
         )
+        for item in sorted(arena_neutral_2014, key=lambda row: row.name_2014):
+            print(f"PAIRED_ARENA_NEUTRAL_2014\t{item.name_2014}\t{_blocker_text(item.blockers_2014)}")
         _report_trait_yields(catchup_2014)
         for item in sorted(catchup_2014, key=lambda row: (len(row.blockers_2014), row.blockers_2014, row.name_2014))[:_REPORT_LIMIT]:
             traits = ",".join(item.unsupported_traits_2014) or "none"
