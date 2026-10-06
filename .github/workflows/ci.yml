@@ -425,6 +425,7 @@ jobs:
           node frontend/browser-recharge.test.cjs
           node frontend/browser-turn-start-hooks.test.cjs
           node frontend/browser-condition-auras.test.cjs
+          node frontend/browser-turn-resistance-buffs.test.cjs
           node frontend/browser-main-action-selection.test.cjs
           node frontend/browser-main-action-pre-move.test.cjs
           node frontend/browser-main-action-post-move.test.cjs

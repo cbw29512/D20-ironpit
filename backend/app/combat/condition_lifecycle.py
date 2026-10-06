@@ -5,7 +5,7 @@ import logging
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_removal import remove_condition
 from app.combat.modifier_stack import expire_target_turn_modifiers
-from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.combat.timed_condition_saves import resolve_repeat_save
 from app.combat.timed_conditions import apply_terminal_condition_outcome, remove_effect_group
 from app.domain.actions import ConditionTiming
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -49,12 +49,7 @@ def resolve_target_condition_timing(
             if effect not in target.state.timed_effects:
                 continue
             if _repeat_save_due(effect, round_number, timing):
-                roll, succeeded = resolve_saving_throw(
-                    target.state,
-                    effect.repeat_save_ability,
-                    effect.repeat_save_dc,
-                    dice,
-                )
+                roll, succeeded, buffs = resolve_repeat_save(target, effect, dice, round_number, setup)
                 removed = remove_effect_group(target.state, effect) if succeeded else []
                 applied: list[str] = []
                 if not succeeded:
@@ -93,6 +88,7 @@ def resolve_target_condition_timing(
                         f"{target.state.template.name} repeats the {effect.repeat_save_ability.title()} save "
                         f"against {_condition_name(effect.source_effect_id or effect.effect_id)}: "
                         f"{'SUCCESS' if succeeded else 'FAILURE'}."
+                        + (f" Save Advantage: {', '.join(buffs)}." if buffs else "")
                     ),
                 ))
                 sequence += 1

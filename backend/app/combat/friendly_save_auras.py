@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.condition_rules import has_condition, is_incapacitated
+from app.combat.condition_rules import has_condition
+from app.combat.friendly_aura_sources import _active, _passive_active, _clear
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.modifier_stack import add_modifier
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -19,46 +20,6 @@ def _members(setup: EncounterSetup) -> list[EncounterCombatant]:
     return [*setup.heroes, *setup.monsters]
 
 
-def _active(source: EncounterCombatant, action_id: str) -> bool:
-    try:
-        state = source.state
-        if state.is_dead or not state.is_alive or state.current_hp <= 0 or is_incapacitated(state):
-            return False
-        return any(
-            effect.source_id == source.combatant_id and effect.source_effect_id == action_id
-            for effect in state.timed_effects
-        )
-    except Exception:
-        logger.exception("Failed to evaluate friendly save-aura source %s.", source.combatant_id)
-        raise
-
-
-def _passive_active(source: EncounterCombatant, aura) -> bool:
-    try:
-        state = source.state
-        if state.is_dead or not state.is_alive or state.current_hp <= 0:
-            return False
-        if aura.inactive_while_incapacitated and is_incapacitated(state):
-            return False
-        if aura.inactive_while_unconscious and (
-            state.is_unconscious or has_condition(state, "unconscious")
-        ):
-            return False
-        return True
-    except Exception:
-        logger.exception("Failed to evaluate passive friendly save-aura source %s.", source.combatant_id)
-        raise
-
-
-def _clear(setup: EncounterSetup) -> None:
-    for member in _members(setup):
-        member.state.active_modifiers = [
-            item for item in member.state.active_modifiers
-            if not item.id.startswith(_PREFIX) and not item.id.startswith(_COVER_PREFIX)
-            and not item.id.startswith(_CONDITION_PREFIX)
-        ]
-
-
 def sync_friendly_save_auras(setup: EncounterSetup) -> None:
     """Refresh active source-owned friendly save auras from live positions and state."""
     try:
@@ -71,7 +32,7 @@ def sync_friendly_save_auras(setup: EncounterSetup) -> None:
                     action.friendly_save_advantage_aura is not None
                     or action.friendly_cover_aura is not None
                 )
-                and _active(source, action.id)
+                and _active(source, action.id, action.activation_timing == "passive")
             ]
             if not actions:
                 continue
@@ -79,10 +40,14 @@ def sync_friendly_save_auras(setup: EncounterSetup) -> None:
             for action in actions:
                 save_aura = action.friendly_save_advantage_aura
                 cover_aura = action.friendly_cover_aura
-                for target in allies:
+                recipients = all_members if save_aura is not None and save_aura.recipient_scope == "all" else allies
+                for target in recipients:
                     if target.state.is_dead or not target.state.is_alive:
                         continue
-                    if save_aura is not None and combatant_distance(source, target) <= save_aura.radius_ft:
+                    if (save_aura is not None and (save_aura.covers_arena or combatant_distance(source, target) <= save_aura.radius_ft)
+                        and (not save_aura.target_template_ids
+                            or target.state.template.id in save_aura.target_template_ids
+                            or (save_aura.includes_source and target.combatant_id == source.combatant_id))):
                         if not (save_aura.requires_hearing and has_condition(target.state, "deafened")):
                             tags = [""] if save_aura.all_saves else save_aura.required_effect_tags
                             for ability in _ABILITIES:
@@ -104,7 +69,7 @@ def sync_friendly_save_auras(setup: EncounterSetup) -> None:
                                     source_name=action.name,
                                     kind=ModifierKind.ATTACKS_AGAINST_DISADVANTAGE,
                                 ))
-                    if cover_aura is not None and combatant_distance(source, target) <= cover_aura.radius_ft:
+                    if cover_aura is not None and target.side == source.side and combatant_distance(source, target) <= cover_aura.radius_ft:
                         add_modifier(target.state, CombatModifier(
                             id=f"{_COVER_PREFIX}{source.combatant_id}:{action.id}:{target.combatant_id}:ac",
                             source_id=source.combatant_id,

@@ -54,6 +54,7 @@
       ends_if_source_incapacitated: Boolean(options.endsIfSourceIncapacitated),
       ends_if_source_dead: Boolean(options.endsIfSourceDead),
       source_is_magical: Boolean(options.sourceIsMagical),
+      repeat_save_context: options.repeatSaveContext ? structuredClone(options.repeatSaveContext) : null,
       owned_damage_resistances: [...(options.ownedDamageResistances || [])],
       owned_debuff_counters: [...(options.ownedDebuffCounters || [])],
       owned_movement_mode_grants: [...(options.ownedMovementModeGrants || [])],

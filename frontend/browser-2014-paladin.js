@@ -57,7 +57,9 @@
     E().spend(member.state, "action"); member.state.resources[CHANNEL] -= 1;
     return T().resolve(
       sequence, round, member, targets, saveDc(member), TURN, TURNED,
-      member.state.resources[CHANNEL], "Turn the Unholy",
+      member.state.resources[CHANNEL], "Turn the Unholy", {
+        setup, affectedStates: [...setup.heroes, ...setup.monsters].map((target) => target.state),
+      },
     );
   }
 

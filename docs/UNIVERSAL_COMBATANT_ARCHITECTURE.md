@@ -516,6 +516,9 @@ Passive and timed ally auras share the same live-position synchronization layer.
 
 ### Saving-throw auras
 
+- Conditional Advantage auras reuse `TimedFriendlySaveAura` with passive or timed activation. Optional recipient template IDs restrict species eligibility; `includes_source` independently includes the owner. `recipient_scope` distinguishes allied recipients from recipients on either side. Empty recipient IDs retain the existing all-allies scope by default.
+- Passive declarations create no activation, resource spend or source timer. Live synchronization installs source-owned conditional save modifiers and removes them when a recipient leaves range or the source dies. Declarative `covers_arena` implements the §9 Pit override: the printed 30-foot turning aura covers all eligible encounter recipients, regardless of position. Other radius-based auras retain live footprint range. Printed scope supplies the parameters: 2014 Turning Defiance includes its owner and ghouls within 30 feet; self-only Turn Resistance reuses `SavingThrowAdvantageGrant`.
+- Initial and repeat saves consume semantic effect context through the shared save resolver. `TimedEffect.repeat_save_context` retains the immutable incoming context; live aura eligibility is refreshed before each save, including when an earlier target's save destroys an aura owner. Display names do not select save behavior.
 - Passive flat-bonus auras declare source id/name, radius, flat bonus, and source-state deactivation rules.
 - The runtime recomputes eligible same-side recipients from current grid positions whenever aura state is synchronized; recipients are never snapshotted.
 - Overlapping flat-bonus auras use only the strongest eligible bonus.

@@ -102,7 +102,7 @@
       expiryTiming: is2014 ? null : "source_turn_start",
       endsIfSourceIncapacitated: !is2014,
       endsIfSourceDead: !is2014,
-      affectedStates: [...setup.heroes, ...setup.monsters].map((member) => member.state),
+      setup, affectedStates: [...setup.heroes, ...setup.monsters].map((member) => member.state),
     });
   }
 

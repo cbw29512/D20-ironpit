@@ -131,3 +131,14 @@ Standing instruction: park, record, continue. Revisit this list after the rest o
 2024 Death Dog and Ettin stay independently blocked after the 2014 Two Heads bind. 2024 Death Dog Bite is a multi-step disease rider, not Two-Headed. 2024 Ettin Battleaxe knocks Prone and Morningstar imposes next-attack Disadvantage; it has no Two Heads trait. Do not copy 2014 Two Heads grants onto those 2024 actions.
 
 2024 Treant stays independently blocked (`dynamic-combatant-lifecycle` / limited-use). Do not copy the 2014 Animate Trees arena-unavailable extra into that 2024 lifecycle machine. There is no 2024 Nothic counterpart in SRD 5.2.1.
+
+Conditional turning-save buffs use the shared conditional Advantage machinery
+(architecture: Universal friendly auras / Saving-throw auras; rules contract §9).
+The matched 2014 family is Turning Defiance (Ghast, self and ghouls within 30 ft)
+and Turn Resistance (Lich, self). Both initial and repeat turning saves preserve
+semantic context. Neither 2024 counterpart prints this trait; no edition backport.
+
+Chris's Pit range instruction: a 30-foot turning-save aura covers the whole Pit.
+Preserve its printed radius as source metadata and declare `covers_arena` on the
+shared aura payload; all eligible recipients in the encounter qualify regardless
+of grid separation. This is the explicit arena override in rules contract §9.
