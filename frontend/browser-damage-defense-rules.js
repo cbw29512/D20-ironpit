@@ -97,7 +97,15 @@
       );
       if (beforeReaction <= 0) return { applied: beforeReaction, healed: 0, sourceName: null };
 
-      applyIncomingTypeResistance(target, amount, type);
+      const conditional = conditionalKinds(target, type, sourceQualifiers);
+      const timed = window.IRON_PIT_BROWSER_TIMED;
+      const conditions = window.IRON_PIT_BROWSER_CONDITION_RULES;
+      const alreadyResisted = target.template.damage_resistances?.includes(type)
+        || target.temporary_damage_resistances?.includes(type)
+        || timed?.ownsDamageResistance?.(target, type)
+        || conditional.has("resistance")
+        || conditions?.has?.(target, "petrified");
+      if (!ignoreResistance && !alreadyResisted) applyIncomingTypeResistance(target, amount, type);
       const applied = adjustedDamage(
         target, amount, type, allowVulnerability, sourceQualifiers, ignoreResistance,
       );
