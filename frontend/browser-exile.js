@@ -46,7 +46,9 @@
       const rolls = window.IRON_PIT_DICE.rollMany(rule.hit_damage_dice_count, rule.hit_damage_dice_size);
       const raw = rolls.reduce((sum, roll) => sum + roll, 0);
       const applied = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES
-        ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.adjustedDamage(target.state, raw, rule.hit_damage_type)
+        ? (window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.resolveDamage
+          ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.resolveDamage(target.state, raw, rule.hit_damage_type).applied
+          : window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.adjustedDamage(target.state, raw, rule.hit_damage_type))
         : raw;
       if (applied) {
         const affected = [...(ctx.setup?.heroes || []), ...(ctx.setup?.monsters || [])]
@@ -117,7 +119,9 @@
           const rolls = window.IRON_PIT_DICE.rollMany(effect.return_damage_dice_count, effect.return_damage_dice_size);
           const raw = rolls.reduce((a, b) => a + b, 0) + (effect.return_damage_bonus || 0);
           const applied = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES
-            ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.adjustedDamage(target.state, raw, effect.return_damage_type)
+            ? (window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.resolveDamage
+              ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.resolveDamage(target.state, raw, effect.return_damage_type).applied
+              : window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.adjustedDamage(target.state, raw, effect.return_damage_type))
             : raw;
           damageComponents = [{
             source: effect.source_effect_id || effect.effect_id,
