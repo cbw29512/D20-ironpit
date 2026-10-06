@@ -10,7 +10,6 @@ from app.combat.attack_legality import attack_allowed_against
 from app.combat.attack_d20_outcome import resolve_attack_d20_outcome
 from app.combat.attack_effect_resolution import resolve_attack_effects
 from app.combat.attack_event_support import attack_damage_reduction_description, build_attack_description, primary_attack_save_fields
-from app.combat.damage_absorption_log import damage_absorption_description
 from app.combat.brutal_strike import clear_brutal_strike_pending
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.damage import BonusDamageSpec
@@ -155,7 +154,6 @@ def resolve_attack(
             deferred_effect_armed=deferred_effect_armed,
         )
         description += attack_damage_reduction_description(effects, actual_defender.template.name)
-        description += damage_absorption_description(damage_components, actual_defender.template.name)
         if d20_bonus_source_name:
             description += f" {d20_bonus_source_name} adds its bonus die to the attack roll."
         if outcome_adjustment_name:
