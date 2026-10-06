@@ -114,6 +114,74 @@ assert.equal(auraResult.events[0].feature_id, "draconic-presence-fear");
 assert.equal(auraResult.events[0].save_succeeded, false);
 assert.ok(auraTarget.state.active_effect_ids.includes("frightened"));
 
+
+const passiveSource = {
+  combatant_id: "hezrou", side: "monsters", position_ft: 0,
+  state: {
+    is_alive: true, is_dead: false, timed_effects: [],
+    template: {
+      name: "Hezrou",
+      timed_self_buff_actions: [{
+        id: "hezrou-stench", name: "Stench", activationTiming: "passive",
+        durationRounds: 1, expiryTiming: "target_turn_start", animation: "stench",
+        hostileStartTurnConditionAura: {
+          trigger: "enemy_turn_start",
+          radius_ft: 10,
+          save_ability: "constitution",
+          save_dc: 14,
+          condition_id: "poisoned",
+          success_immunity: true,
+          source_is_magical: false,
+        },
+      }],
+    },
+  },
+};
+const passiveTarget = {
+  combatant_id: "stench-target", side: "heroes", position_ft: 5,
+  state: {
+    is_alive: true, is_dead: false, active_effect_ids: [], timed_effects: [],
+    template: {
+      name: "Stench Target",
+      saving_throw_bonuses: { constitution: 0 },
+      condition_immunities: [],
+    },
+  },
+};
+const passiveActionBefore = JSON.stringify(passiveSource.state.template.timed_self_buff_actions[0]);
+const passiveResult = window.IRON_PIT_BROWSER_TIMED_EMANATIONS.resolveStartOfTurn(
+  auraResult.sequence,
+  2,
+  passiveTarget,
+  { heroes: [passiveTarget], monsters: [passiveSource] },
+);
+assert.equal(passiveResult.events.length, 1);
+assert.equal(passiveResult.events[0].feature_id, "hezrou-stench");
+assert.equal(passiveResult.events[0].save_succeeded, false);
+assert.ok(passiveTarget.state.active_effect_ids.includes("poisoned"));
+assert.equal(passiveTarget.state.timed_effects[0].expiry_timing, "target_turn_start");
+assert.equal(passiveTarget.state.timed_effects[0].expires_round, 3);
+assert.equal(JSON.stringify(passiveSource.state.template.timed_self_buff_actions[0]), passiveActionBefore);
+
+passiveSource.state.is_alive = false;
+passiveSource.state.is_dead = true;
+const deadSourceTarget = {
+  ...passiveTarget,
+  combatant_id: "dead-source-target",
+  state: {
+    ...passiveTarget.state,
+    active_effect_ids: [],
+    timed_effects: [],
+  },
+};
+const deadSourceResult = window.IRON_PIT_BROWSER_TIMED_EMANATIONS.resolveStartOfTurn(
+  passiveResult.sequence,
+  3,
+  deadSourceTarget,
+  { heroes: [deadSourceTarget], monsters: [passiveSource] },
+);
+assert.deepEqual(deadSourceResult.events, []);
+
 const turnSource = fs.readFileSync(path.join(__dirname, "browser-turn.js"), "utf8");
 assert.equal(turnSource.includes("resolveStartOfTurn"), false);
 assert.match(turnSource, /PHASES\.TURN_START/);
