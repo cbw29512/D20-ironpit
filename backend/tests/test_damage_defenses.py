@@ -1,9 +1,10 @@
 from app.combat.attacks import resolve_attack
-from app.combat.damage_defenses import adjusted_damage_amount, apply_damage_defenses
+from app.combat.damage_defenses import adjusted_damage_amount, apply_damage_defenses, resolve_damage_amount
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.combat.zero_hp import apply_damage
 from app.content.demo import build_demo_fighter, build_goblin_warrior
+from app.domain.damage_absorption import DamageAbsorptionRule
 from app.domain.models import DamageRollComponent, DamageType, TimedEffect
 
 
@@ -143,3 +144,74 @@ def test_immune_critical_at_zero_causes_no_death_save_failure() -> None:
     assert event.damage_roll.total == 0
     assert defender.death_save_failures == 0
     assert defender.is_dead is False
+
+
+def test_damage_absorption_estimation_is_pure_but_resolution_heals() -> None:
+    target = build_combatant_state(build_demo_fighter())
+    target.current_hp = target.template.max_hp - 10
+    target.template.damage_absorptions = [
+        DamageAbsorptionRule(
+            source_id="fire-absorption",
+            source_name="Fire Absorption",
+            damage_type=DamageType.FIRE,
+        )
+    ]
+
+    before = target.current_hp
+    assert adjusted_damage_amount(7, DamageType.FIRE, target) == 0
+    assert target.current_hp == before
+
+    applied, healed, source_name = resolve_damage_amount(7, DamageType.FIRE, target)
+
+    assert applied == 0
+    assert healed == 7
+    assert source_name == "Fire Absorption"
+    assert target.current_hp == before + 7
+
+
+def test_damage_absorption_caps_healing_and_ignores_nonmatching_types() -> None:
+    target = build_combatant_state(build_demo_fighter())
+    target.current_hp = target.template.max_hp - 3
+    target.template.damage_absorptions = [
+        DamageAbsorptionRule(
+            source_id="lightning-absorption",
+            source_name="Lightning Absorption",
+            damage_type=DamageType.LIGHTNING,
+        )
+    ]
+
+    applied, healed, source_name = resolve_damage_amount(10, DamageType.LIGHTNING, target)
+    assert applied == 0
+    assert healed == 3
+    assert source_name == "Lightning Absorption"
+    assert target.current_hp == target.template.max_hp
+
+    target.current_hp -= 5
+    applied, healed, source_name = resolve_damage_amount(4, DamageType.COLD, target)
+    assert applied == 4
+    assert healed == 0
+    assert source_name is None
+
+
+def test_component_damage_absorption_composes_with_other_damage_types() -> None:
+    target = build_combatant_state(build_demo_fighter())
+    target.current_hp = target.template.max_hp - 10
+    target.template.damage_absorptions = [
+        DamageAbsorptionRule(
+            source_id="acid-absorption",
+            source_name="Acid Absorption",
+            damage_type=DamageType.ACID,
+        )
+    ]
+
+    applied, components = apply_damage_defenses(
+        target,
+        [
+            _component(6, DamageType.ACID),
+            _component(5, DamageType.SLASHING),
+        ],
+    )
+
+    assert applied == 5
+    assert [component.applied_total for component in components] == [0, 5]
+    assert target.current_hp == target.template.max_hp - 4
