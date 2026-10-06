@@ -428,6 +428,27 @@ Before initiative, each combatant that has a legal combat buff uses **exactly on
 
 The start-of-turn phase reads the acting creature's live conditions before voluntary actions. Condition identity is absolute: Frightened is Frightened, Charmed is Charmed. A beneficial failed-save modifier of kind `condition-immunity` or `debuff-counter` answers the matching condition on a legal friend. Bloodied (current HP at or below half of maximum) is answered by healing. An already-active matching counter-buff keeps the printed condition instance in state but `has_condition` is false, and a new application of that same condition fails closed. Selection is by modifier kind and condition id, never by spell or monster name. A test harness may seed a starting buff or debuff. Player-loaded fights and website presets must pass an empty opening-condition list.
 
+## Typed damage-to-healing replacement
+
+`DamageAbsorptionRule` is immutable source data: source id, printed source name,
+and damage type. Matching actual typed damage becomes zero applied damage plus
+ordinary healing of the matching pre-defense amount, capped by effective maximum
+HP and subject to the existing terminal-death/healing rules. It owns no new
+mutable pool or resource. Fresh combat state resets HP normally.
+
+Pure damage estimates never heal or spend a Reaction. Actual damage routes through
+Python `damage_defenses.resolve_damage_amount` and browser
+`browser-damage-defense-rules.resolveDamage`. Resolve replacement healing while
+evaluating components, then apply the sum of accepted damage to Temporary HP/HP.
+Absorbed components do not spend incoming-type resistance Reactions. Retain the
+exact printed trait name and actual restored HP in damage-component evidence.
+
+Source intake validates the typed equal-healing clause. A source that omits the
+explicit no-damage sentence must independently print matching damage Immunity;
+the label alone never implies prevention. Both editions reuse this same resolver
+with their own source parameters. Unrelated unsupported traits/actions continue
+to block certification.
+
 ## Timed source-owned emanations
 
 Timed self effects may declare a source-owned emanation that resolves against opposing combatants at a fixed lifecycle window. The source ability supplies declarative parameters such as trigger, radius, fixed damage, and damage type; engine dispatch must not branch on the source ability name.

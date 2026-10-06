@@ -4,6 +4,7 @@ import logging
 import re
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_damage_absorption import damage_absorptions_from_source
 from app.domain.damage_sources import (
     ConditionalDamageDefense,
     DamageDefenseKind,
@@ -103,6 +104,9 @@ def template_defense_fields_2014(monster: SourceMonster2014) -> dict[str, object
             "damage_resistances": [item.lower() for item in monster.damage_resistances],
             "damage_vulnerabilities": [item.lower() for item in monster.damage_vulnerabilities],
             "damage_immunities": [item.lower() for item in monster.damage_immunities],
+            "damage_absorptions": damage_absorptions_from_source(
+                monster.source_traits, {item.lower() for item in monster.damage_immunities},
+            ),
             "condition_immunities": [item.lower() for item in monster.condition_immunities],
             "conditional_damage_defenses": conditional_damage_defenses_2014(monster),
         }
