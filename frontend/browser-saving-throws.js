@@ -123,8 +123,16 @@
         throw new Error("Failed-D20 override runtime is not loaded for a declared saving-throw capability.");
       }
       roll = DO().apply(state, roll, roll.total < dc, "saving_throw").roll;
-      if (roll.total < dc && window.IRON_PIT_BROWSER_SAVE_SUCCESS_OVERRIDE?.apply(state)) {
-        return { roll, succeeded: true };
+      if (roll.total < dc) {
+        const override = window.IRON_PIT_BROWSER_SAVE_SUCCESS_OVERRIDE?.apply(state) || null;
+        if (override) {
+          roll = {
+            ...roll,
+            outcome_override_name: override.sourceName,
+            outcome_override_uses_remaining: override.remaining,
+          };
+          return { roll, succeeded: true };
+        }
       }
       return { roll, succeeded: roll.total >= dc };
     } catch (error) {
