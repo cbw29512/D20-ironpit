@@ -194,3 +194,4 @@ def attack_damage_reduction_description(effects: Any, defender_name: str) -> str
     except Exception as exc:
         logger.exception("Failed to describe attack damage reduction for %s.", defender_name)
         raise RuntimeError("Attack damage reduction description could not be built.") from exc
+
