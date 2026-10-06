@@ -1,6 +1,5 @@
 (() => {
   "use strict";
-
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const S = () => window.IRON_PIT_BROWSER_SAVES;
   const D = () => window.IRON_PIT_DICE;
@@ -15,7 +14,6 @@
     applyUncannyDodge: (_attacker, _defender, components) => ({ components, used: false }),
     evasionDamage: (_state, _ability, succeeded, successDamage, total) => succeeded && successDamage === "half" ? Math.floor(total / 2) : total,
   };
-
   function resolveSaveDamage(defender, attack) {
     const effect = attack.onHitSaveDamage;
     if (!effect) return { component: null, saveRoll: null, saveAbility: null, saveDc: null, saveSucceeded: null };
