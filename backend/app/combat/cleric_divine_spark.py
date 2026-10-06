@@ -61,8 +61,8 @@ def resolve_divine_spark(
         source="Divine Spark", notation=notation, rolls=[roll], modifier=modifier,
         damage_type=damage_type, total=total // 2 if succeeded else total,
     )
-    applied_total, components = apply_damage_defenses(target.state, [component])
     before = target.state.current_hp
+    applied_total, components = apply_damage_defenses(target.state, [component])
     if applied_total:
         states = [member.state for member in [*setup.heroes, *setup.monsters]]
         apply_damage(target.state, applied_total, damage_types={damage_type}, dice=dice, affected_states=states)
