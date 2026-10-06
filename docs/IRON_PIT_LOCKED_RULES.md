@@ -27,7 +27,7 @@ Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §13.
 These are explicit arena overrides, not RAW changes outside the Pit.
 
 - **No Flyby leave-reach exemption.** An opportunity-attack exemption does not authorize leaving engagement.
-- **No teleport relocation, plane shift, summoning, or vertical flight.**
+- **No teleport relocation, plane shift, ethereal/incorporeal movement state, summoning, or vertical flight.**
 - **Natural 1 ends the turn.** A natural 1 on an attack roll is an automatic miss and immediately ends that creature's current turn. It does not undo earlier resolutions.
 - **Teleport only clears matching movement debuffs in place.** Grappled, Restrained, and other `ends_on_teleport` / ground-snare effects may end. Grid x/y does not change.
 
