@@ -63,7 +63,8 @@
     if (fallback) {
       const rolls = window.IRON_PIT_DICE.rollMany(action.fallbackDamageDiceCount, action.fallbackDamageDiceSize);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (action.fallbackDamageBonus || 0);
-      const applied = DD().resolveDamage(target.state, raw, action.fallbackDamageType).applied;
+      const resolved = DD().resolveDamage(target.state, raw, action.fallbackDamageType);
+      const applied = resolved.applied;
       damageRoll = {
         notation: `${action.fallbackDamageDiceCount}d${action.fallbackDamageDiceSize}`,
         rolls, modifier: action.fallbackDamageBonus || 0, total: applied,
@@ -72,6 +73,8 @@
         source: action.name, notation: damageRoll.notation, rolls,
         modifier: action.fallbackDamageBonus || 0, damage_type: action.fallbackDamageType,
         total: raw, applied_total: applied,
+        absorbed_healing: resolved.healed || 0,
+        absorption_source_name: resolved.sourceName || null,
       }];
       if (applied) Z().applyDamage(target.state, applied, false, [action.fallbackDamageType], states);
     } else {
