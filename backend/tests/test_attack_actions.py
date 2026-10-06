@@ -5,7 +5,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.state import begin_turn
 from app.domain.grid import GridPosition
-from app.domain.models import AttackActionDefinition, AttackActionSlot, EncounterSelection, RollMode, WeaponAttackKind
+from app.domain.models import AttackActionDefinition, AttackActionSlot, EncounterSelection, WeaponAttackKind
 
 
 class MaxDiceProvider:
@@ -89,13 +89,13 @@ def test_distant_melee_multiattack_preserves_action_when_no_slot_is_legal() -> N
     assert attacker.state.action_available is True
 
 
-def test_mixed_multiattack_uses_ranged_when_melee_is_not_legal() -> None:
+def test_front_row_flexible_multiattack_does_not_fall_back_to_ranged() -> None:
     setup, attacker = _mixed_attack_setup(30)
+    attacker.state.formation_row = "front"
     events, _ = resolve_attack_action(1, 1, attacker, setup, FixedDiceProvider([10, 4, 10, 4]))
 
-    attacks = [event for event in events if event.event_type == "attack"]
-    assert len(attacks) == 2
-    assert [event.weapon_id for event in attacks] == ["light-crossbow", "light-crossbow"]
+    assert not [event for event in events if event.event_type == "attack"]
+    assert attacker.state.action_available is True
     assert not any(event.event_type in {"movement", "dash"} for event in events)
 
 
@@ -108,25 +108,23 @@ def test_mixed_multiattack_stays_melee_when_engaged() -> None:
     assert [event.weapon_id for event in attacks] == ["scimitar", "scimitar"]
 
 
-def _ranged_split_setup():
+
+def _backline_mixed_setup(*, protected: bool):
+    monster_ids = ["srd-commoner", "srd-bandit"] if protected else ["srd-bandit"]
     setup = build_encounter_setup(EncounterSelection(
-        hero_ids=["karnok-stoneward-l1", "mara-quickstep-l1"], monster_ids=["srd-bandit"],
+        hero_ids=["karnok-stoneward-l1"], monster_ids=monster_ids,
     ))
-    attacker = setup.monsters[0]
-    frontline, backline = setup.heroes
-    attacker.state.position = GridPosition(x=8, y=6)
-    frontline.state.position = GridPosition(x=7, y=6)
-    backline.state.position = GridPosition(x=3, y=6)
-    ranged = next(
-        attack for attack in [backline.state.template.weapon_attack, *backline.state.template.alternate_weapon_attacks]
-        if attack.weapon.attack_kind is WeaponAttackKind.RANGED
-    )
-    current_primary = backline.state.template.weapon_attack
-    backline.state.template.weapon_attack = ranged
-    backline.state.template.alternate_weapon_attacks = [
-        attack for attack in [current_primary, *backline.state.template.alternate_weapon_attacks]
-        if attack.id != ranged.id
-    ]
+    attacker = setup.monsters[-1]
+    target = setup.heroes[0]
+    target.state.position = GridPosition(x=5, y=6)
+    attacker.state.position = GridPosition(x=7, y=6)
+    attacker.state.formation_row = "back"
+    attacker.state.initial_formation_row = "back"
+    if protected:
+        guard = setup.monsters[0]
+        guard.state.position = GridPosition(x=6, y=6)
+        guard.state.formation_row = "front"
+        guard.state.initial_formation_row = "front"
     attacker.state.template.attack_action = AttackActionDefinition(
         id="mixed-multiattack",
         name="Mixed Multiattack",
@@ -136,34 +134,31 @@ def _ranged_split_setup():
         ],
     )
     begin_turn(attacker.state)
-    return setup, attacker, frontline, backline
+    return setup, attacker, target
 
 
-def test_mixed_multiattack_uses_one_ranged_backline_shot_on_76_to_100() -> None:
-    setup, attacker, frontline, backline = _ranged_split_setup()
+def test_back_row_flexible_multiattack_uses_ranged_while_frontline_ally_is_active() -> None:
+    setup, attacker, target = _backline_mixed_setup(protected=True)
 
     events, _ = resolve_attack_action(
-        1, 1, attacker, setup, FixedDiceProvider([76, 12, 4, 12, 4]),
+        1, 1, attacker, setup, FixedDiceProvider([12, 4, 12, 4]),
     )
     attacks = [event for event in events if event.event_type == "attack"]
 
-    assert [event.weapon_id for event in attacks] == ["scimitar", "light-crossbow"]
-    assert attacks[0].target_id == frontline.combatant_id
-    assert attacks[1].target_id == backline.combatant_id
-    assert attacks[1].attack_roll is not None
-    assert attacks[1].attack_roll.mode is RollMode.NORMAL
+    assert [event.weapon_id for event in attacks] == ["light-crossbow", "light-crossbow"]
+    assert all(event.target_id == target.combatant_id for event in attacks)
 
 
-def test_mixed_multiattack_keeps_all_attacks_melee_on_1_to_75() -> None:
-    setup, attacker, frontline, _backline = _ranged_split_setup()
+def test_back_row_flexible_multiattack_switches_to_melee_without_frontline_ally() -> None:
+    setup, attacker, target = _backline_mixed_setup(protected=False)
 
     events, _ = resolve_attack_action(
-        1, 1, attacker, setup, FixedDiceProvider([75, 12, 4, 12, 4]),
+        1, 1, attacker, setup, FixedDiceProvider([12, 4, 12, 4]),
     )
     attacks = [event for event in events if event.event_type == "attack"]
 
     assert [event.weapon_id for event in attacks] == ["scimitar", "scimitar"]
-    assert all(event.target_id == frontline.combatant_id for event in attacks)
+    assert all(event.target_id == target.combatant_id for event in attacks)
 
 
 def test_giant_constrictor_snake_multiattack_is_bite_then_constrict() -> None:
