@@ -11,8 +11,9 @@
       const activeIds = new Set((source.state.timed_effects || [])
         .filter((effect) => effect.source_id === source.combatant_id && effect.source_effect_id)
         .map((effect) => effect.source_effect_id));
+      if (source.state.is_dead || source.state.is_alive === false) return [];
       return (source.state.template.timed_self_buff_actions || [])
-        .filter((action) => activeIds.has(action.id)
+        .filter((action) => (action.activationTiming === "passive" || activeIds.has(action.id))
           && (action.startTurnEmanationDamage || action.hostileStartTurnConditionAura));
     } catch (error) {
       console.error("Failed browser timed emanation discovery.", { combatant: source?.combatant_id, error });
