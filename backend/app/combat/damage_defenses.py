@@ -143,7 +143,17 @@ def resolve_damage_amount(
         if before_reaction <= 0:
             return before_reaction, 0, None
 
-        apply_incoming_damage_type_resistance_amount(target, amount, damage_type)
+        conditional = _matching_conditional_defenses(target, damage_type, source_qualifiers or set())
+        resistance_ignored = damage_type in (ignored_resistance_types or set())
+        already_resisted = (
+            damage_type in target.template.damage_resistances
+            or damage_type in target.temporary_damage_resistances
+            or damage_type in _active_timed_resistances(target)
+            or DamageDefenseKind.RESISTANCE in conditional
+            or has_condition(target, "petrified")
+        )
+        if not resistance_ignored and not already_resisted:
+            apply_incoming_damage_type_resistance_amount(target, amount, damage_type)
         applied = adjusted_damage_amount(amount, damage_type, target, **kwargs)
         return applied, 0, None
     except ValueError:
