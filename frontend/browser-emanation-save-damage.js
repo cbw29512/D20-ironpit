@@ -1,6 +1,12 @@
 (() => {
   "use strict";
 
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Emanation damage requires the shared damage resolver.");
+    return rules;
+  };
+
   function resolveHit(sequence, round, source, target, action, setup, turnKey) {
     try {
       const emanation = action.startTurnEmanationDamage;
@@ -34,9 +40,7 @@
       }
       const hpBefore = target.state.current_hp;
       const resolvedDamage = raw
-        ? (window.IRON_PIT_BROWSER_ATTACK.resolveDamage
-          ? window.IRON_PIT_BROWSER_ATTACK.resolveDamage(target.state, raw, emanation.damage_type)
-          : { applied: window.IRON_PIT_BROWSER_ATTACK.adjustedDamage(target.state, raw, emanation.damage_type), healed: 0, sourceName: null })
+        ? DD().resolveDamage(target.state, raw, emanation.damage_type)
         : { applied: 0, healed: 0, sourceName: null };
       const applied = resolvedDamage.applied;
       if (applied) {
