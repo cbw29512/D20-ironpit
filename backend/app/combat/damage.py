@@ -149,7 +149,9 @@ def resolve_weapon_damage(
             post_hit_resource_bonus_damage(attacker, target, attack, turn_key),
             critical=critical,
         )
-        for rider_damage in once_per_turn_weapon_hit_bonus_damages(attacker, attack, turn_key, target):
+        for rider_damage in once_per_turn_weapon_hit_bonus_damages(
+            attacker, attack, turn_key, target, sneak_attack_ally_available,
+        ):
             _append_bonus_component(
                 components, dice, rider_damage, critical=critical,
             )
