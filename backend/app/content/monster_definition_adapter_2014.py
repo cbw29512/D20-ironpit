@@ -9,6 +9,7 @@ from app.content.monster_charge_profile_2014 import charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_conditional_damage_defenses_2014 import template_defense_fields_2014
 from app.content.monster_healing_2014 import healing_actions_2014, healing_resources_2014
+from app.content.monster_heat_traits_2014 import heated_body_action_2014
 from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_contextual_save_defenses import contextual_save_defenses_2014
 from app.content.monster_definition_adapter_support_2014 import (
@@ -126,6 +127,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         ]
     if feature_update:
         features = features.model_copy(update=feature_update)
+    heated_body = heated_body_action_2014(monster)
     return CombatantDefinition(
         id=f"2014-{monster.id}", name=monster.name, archetype=f"2014 {monster.creature_type}",
         challenge_rating=monster.challenge_rating, kind="monster", ruleset="2014",
@@ -138,7 +140,8 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         spell_save_actions=innate_spell_save_actions_2014(monster),
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
             *condition_auras_from_source(monster.source_traits, "2014"),
-            *contextual_save_defenses_2014(monster)[0]],
+            *contextual_save_defenses_2014(monster)[0],
+            *([heated_body] if heated_body is not None else [])],
         healing_actions=healing_actions_2014(monster),
         condition_removal_actions=innate_condition_removal_2014(monster),
         legendary_actions=legendary_options,
