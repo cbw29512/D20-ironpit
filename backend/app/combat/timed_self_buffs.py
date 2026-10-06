@@ -33,6 +33,8 @@ def resolve_timed_self_buff(
 ) -> BattleEvent:
     """Spend source-defined economy/resources and apply one source-owned timed buff."""
     try:
+        if action.activation_timing == "passive":
+            raise ValueError("Passive auras are discovered directly and cannot be activated.")
         resource = timed_self_buff_resource(member, action)
         if spend_action_cost and not is_available(member.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")

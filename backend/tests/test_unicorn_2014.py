@@ -51,9 +51,9 @@ def test_unicorn_binds_printed_block_and_omits_pit_banned_teleport() -> None:
     assert all("teleport" not in item.name.casefold() for item in options)
 
 
-def test_2014_roster_includes_unicorn_at_175() -> None:
+def test_2014_roster_includes_unicorn_at_176() -> None:
     roster = build_basic_2014_monsters()
-    assert len(roster) == 175
+    assert len(roster) == 176
     unicorn = next(item for item in roster if item.id == "2014-unicorn")
     assert unicorn.source_legendary_action_names == [
         "Hooves",
