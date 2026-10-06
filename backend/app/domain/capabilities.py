@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import ConditionName, ConditionRemovalAction, HealingAction
 from app.domain.area_weapon_attacks import AreaWeaponAttackAction
+from app.domain.bonus_attacks import BonusAttackGrant
 from app.domain.capability_attacks import (
     AttackCapabilityDefinition,
     CapabilityActionSlot,
@@ -58,6 +59,7 @@ class CombatantDefinition(BaseModel):
     truesight_ft: int = Field(default=0, ge=0)
     progression_features: ProgressionCombatFeatures = Field(default_factory=ProgressionCombatFeatures)
     environment_context_reactions: list[EnvironmentContextReaction] = Field(default_factory=list)
+    bonus_attack_grants: list[BonusAttackGrant] = Field(default_factory=list)
     bonus_tactical_action_grants: list[BonusActionTacticalGrant] = Field(default_factory=list)
     attacks: list[AttackCapabilityDefinition] = Field(min_length=1)
     primary_attack_id: str
