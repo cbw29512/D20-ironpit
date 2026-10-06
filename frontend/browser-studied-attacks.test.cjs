@@ -16,7 +16,7 @@ for (const htmlPath of [path.join(__dirname, "index.html"), path.join(__dirname,
 for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-grapple.js", "browser-modifier-validation.js", "browser-modifiers.js",
-  "browser-weapon-mastery.js", "browser-graze.js", "browser-studied-attacks.js", "browser-heroic-inspiration.js",
+  "browser-weapon-mastery.js", "browser-damage-defense-rules.js", "browser-graze.js", "browser-studied-attacks.js", "browser-heroic-inspiration.js",
   "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-undead-fortitude.js",
   "browser-zero-hp.js", "browser-attack.js",
 ]) load(file);
