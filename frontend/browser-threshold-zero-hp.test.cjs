@@ -18,6 +18,8 @@ window.IRON_PIT_BROWSER_STATE = { effectiveMaxHp: (state) => state.template.max_
 window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
 window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS = { endDamageSensitive: () => {} };
 
+assert.equal(typeof window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT.consumeDamageThreshold, "function");
+
 function state(threshold = 7) {
   return {
     template: {
@@ -60,6 +62,13 @@ function state(threshold = 7) {
   const target = state();
   assert.equal(window.IRON_PIT_BROWSER_ZERO_HP.reduceToZero(target), "dead");
   assert.equal(target.resources.relentless, 1);
+}
+
+{
+  const runtime = window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT;
+  window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT = undefined;
+  assert.throws(() => window.IRON_PIT_BROWSER_ZERO_HP.applyDamage(state(), 5), /runtime is not loaded/);
+  window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT = runtime;
 }
 
 console.log("Universal browser thresholded zero-HP replacement passed.");
