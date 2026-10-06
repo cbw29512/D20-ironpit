@@ -68,7 +68,10 @@ def _multiattack_blockers(monster: SourceMonster2014) -> list[str]:
     if monster.multiattack_policy is not None or monster.multiattack_binding is not None:
         return ["multiattack:complex"]
     attack_ids = {attack.id for attack in monster.attacks}
-    if any(len(slot) != 1 or slot[0] not in attack_ids for slot in monster.multiattack_slots):
+    if any(
+        not slot or any(attack_id not in attack_ids for attack_id in slot)
+        for slot in monster.multiattack_slots
+    ):
         return ["multiattack:choice-or-binding"]
     return []
 
