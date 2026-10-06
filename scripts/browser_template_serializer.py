@@ -858,6 +858,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["rage_persists_without_maintenance"] = True
     if features.cunning_action:
         row["cunning_action"] = True
+    if features.first_turn_attack_advantage_against_unacted_target:
+        row["first_turn_attack_advantage_against_unacted_target"] = True
     if features.sneak_attack_d6:
         row["sneak_attack_d6"] = features.sneak_attack_d6
     if features.cunning_strike_obscure_die_cost:
@@ -958,6 +960,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 for item in template.conditional_damage_defenses
             ],
             "condition_immunities": list(template.condition_immunities),
+            "starting_condition_ids": list(template.starting_condition_ids),
             "wearing_metal_armor": template.wearing_metal_armor,
             "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
             "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
