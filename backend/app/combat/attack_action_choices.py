@@ -2,13 +2,9 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.dice import DiceProvider
 from app.combat.pit_policy import (
     allied_frontline_active,
     choose_attack,
-    flexible_slot_has_both,
-    has_backline_target,
-    has_frontline_target,
     is_backline,
     save_distance,
     target_order,
@@ -78,24 +74,4 @@ def slot_has_legal_choice(
         return attack_choice(attacker, setup, slot) is not None or save_choice(attacker, setup, slot) is not None
     except Exception:
         logger.exception("Failed to prove legal Attack/Multiattack slot for %s.", attacker.combatant_id)
-        raise
-
-
-def use_ranged_split(
-    attacker: EncounterCombatant,
-    setup: EncounterSetup,
-    slots: list[AttackActionSlot],
-    dice: DiceProvider,
-) -> bool:
-    """Frontline mixed attackers have a 25% chance for one later shot at the enemy backline."""
-    try:
-        if is_backline(attacker):
-            return False
-        if not has_frontline_target(attacker, setup) or not has_backline_target(attacker, setup):
-            return False
-        if not any(flexible_slot_has_both(attacker, slot.attack_ids) for slot in slots[1:]):
-            return False
-        return dice.roll(100) >= 76
-    except Exception:
-        logger.exception("Failed to evaluate ranged split for %s.", attacker.combatant_id)
         raise
