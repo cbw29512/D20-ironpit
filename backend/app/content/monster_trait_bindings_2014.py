@@ -13,6 +13,7 @@ from app.content.monster_passive_grants_2014 import (
 )
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
+from app.content.monster_zero_hp_prevention_2014 import bound_zero_hp_trait_names_2014
 from app.domain.environment_contexts import EnvironmentContextReaction
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.weapons import ConditionalAttackAdvantage
@@ -125,6 +126,7 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         if sneak_attack_d6_2014(monster) > 0:
             bound.add(_SNEAK_ATTACK)
         bound.update(bound_passive_trait_names_2014(monster))
+        bound.update(bound_zero_hp_trait_names_2014(monster))
         if _MAGIC_WEAPONS in monster.trait_names:
             bound.add(_MAGIC_WEAPONS)
         if _INNATE_SPELLCASTING in monster.trait_names:
