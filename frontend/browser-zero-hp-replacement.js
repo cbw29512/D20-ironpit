@@ -1,6 +1,7 @@
 (() => {
   "use strict";
 
+  const R = () => window.IRON_PIT_BROWSER_RESOURCES;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
 
   function replacement(state) {
@@ -33,6 +34,41 @@
       `prevents the drop to 0 HP; ${state.template.name} remains at ${modifier.replacement_hp} HP.`,
     );
     return true;
+  }
+
+
+  function consumeDamageThreshold(state, incoming) {
+    try {
+      const rules = state.template.damage_threshold_zero_hp_replacements || [];
+      const eligible = rules.filter((rule) => {
+        const cost = rule.resource_cost || 1;
+        const available = R()?.available
+          ? R().available(state, rule.resource_id, cost)
+          : (state.resources?.[rule.resource_id] || 0) >= cost;
+        return incoming <= rule.max_trigger_damage && available;
+      });
+      if (!eligible.length) return false;
+      eligible.sort((a, b) =>
+        a.max_trigger_damage - b.max_trigger_damage
+        || (b.replacement_hp || 0) - (a.replacement_hp || 0)
+        || String(a.source_id).localeCompare(String(b.source_id))
+      );
+      const rule = eligible[0], cost = rule.resource_cost || 1;
+      if (R()?.spend) R().spend(state, rule.resource_id, cost);
+      else state.resources[rule.resource_id] -= cost;
+      state.current_hp = rule.replacement_hp;
+      state.is_alive = true; state.is_dead = false;
+      state.is_unconscious = false; state.is_stable = false;
+      state.death_save_successes = 0; state.death_save_failures = 0;
+      state.pending_zero_hp_replacement_logs ||= [];
+      state.pending_zero_hp_replacement_logs.push(
+        `${rule.source_name} prevents the drop to 0 HP; ${state.template.name} remains at ${rule.replacement_hp} HP.`
+      );
+      return true;
+    } catch (error) {
+      console.error("Thresholded zero-HP replacement failed", { combatant: state?.template?.name, error });
+      throw error;
+    }
   }
 
   function consumeInstantDeath(state) {
