@@ -5,6 +5,9 @@
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.resolveDamage
+    ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES
+    : (() => { throw new Error("Spell attack damage requires the shared damage resolver."); })();
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
@@ -113,10 +116,15 @@
           total: riderRolls.reduce((sum, value) => sum + value, 0),
         });
       }
-      damageComponents = rolledComponents.map((part) => ({
-        ...part,
-        applied_total: A().adjustedDamage(target.state, part.total, part.damage_type),
-      }));
+      damageComponents = rolledComponents.map((part) => {
+        const resolved = DD().resolveDamage(target.state, part.total, part.damage_type);
+        return {
+          ...part,
+          applied_total: resolved.applied,
+          absorbed_healing: resolved.healed || 0,
+          absorption_source_name: resolved.sourceName || null,
+        };
+      });
       const applied = damageComponents.reduce((sum, part) => sum + part.applied_total, 0);
       damageRoll = damageComponents.length ? {
         notation: damageComponents.map((part) => part.notation).join(" + "),

@@ -33,6 +33,7 @@ window.IRON_PIT_BROWSER_ZERO_HP = {
 load("browser-action-economy.js");
 load("browser-ability-hooks.js");
 load("browser-attack-outcome.js");
+load("browser-damage-defense-rules.js");
 load("browser-deferred-save-effect-outcomes.js");
 load("browser-deferred-save-effect.js");
 window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT.installAbilityHooks();

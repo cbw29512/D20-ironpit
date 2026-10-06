@@ -52,8 +52,8 @@ def resolve_persistent_hazard_entries(
             component = fixed_damage_component(
                 hazard.action_name, raw_damage, DamageType(hazard.damage_type),
             )
-            applied_total, components = apply_damage_defenses(mover.state, [component])
             hp_before = mover.state.current_hp
+            applied_total, components = apply_damage_defenses(mover.state, [component])
             if applied_total:
                 apply_damage(
                     mover.state,

@@ -4,6 +4,11 @@
   const W = () => window.IRON_PIT_BROWSER_WEAPON_MASTERY;
   const O = () => window.IRON_PIT_BROWSER_ATTACK_OUTCOME;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Browser Graze damage requires the shared damage resolver.");
+    return rules;
+  };
 
   function active(attacker, attack) {
     return W().active(attacker, attack, "Graze");
@@ -28,10 +33,13 @@
     const raw = rawDamage(ctx.member.state, ctx.attack);
     if (raw === null) return null;
     const target = ctx.target.state;
-    const appliedTotal = A().adjustedDamage(target, raw, ctx.attack.damageType, false);
+    const resolvedDamage = DD().resolveDamage(target, raw, ctx.attack.damageType, false);
+    const appliedTotal = resolvedDamage.applied;
     outcome.damageComponents = [{
       source: `${ctx.attack.name} (Graze)`, notation: String(raw), rolls: [], modifier: 0,
       damage_type: ctx.attack.damageType, total: raw, applied_total: appliedTotal,
+      absorbed_healing: resolvedDamage.healed || 0,
+      absorption_source_name: resolvedDamage.sourceName || null,
     }];
     outcome.damageRoll = {
       notation: String(raw), rolls: [], modifier: 0, selected_roll: null, mode: "normal", total: appliedTotal,

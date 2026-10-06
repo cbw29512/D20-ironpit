@@ -1,6 +1,12 @@
 (() => {
   "use strict";
 
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Melee retaliation damage requires the shared damage resolver.");
+    return rules;
+  };
+
   function active(defender) {
     try {
       for (const action of defender.state.template.timed_self_buff_actions || []) {
@@ -25,7 +31,7 @@
       if (distance > (bound.rule.rangeFt || 5)) return 0;
       const rolls = window.IRON_PIT_DICE.rollMany(bound.rule.diceCount, bound.rule.diceSize);
       const raw = rolls.reduce((sum, value) => sum + value, 0);
-      const applied = window.IRON_PIT_BROWSER_ATTACK.adjustedDamage(attacker.state, raw, bound.rule.damageType);
+      const applied = DD().resolveDamage(attacker.state, raw, bound.rule.damageType).applied;
       if (applied) {
         const states = options.setup
           ? [...options.setup.heroes, ...options.setup.monsters].map((member) => member.state)

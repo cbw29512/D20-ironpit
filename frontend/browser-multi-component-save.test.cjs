@@ -32,6 +32,7 @@ window.IRON_PIT_DICE = {
 };
 window.__rolls = [[6], [4]];
 
+load("browser-damage-defense-rules.js");
 load("browser-save-damage.js");
 load("browser-saving-throws.js");
 load("browser-saves.js");

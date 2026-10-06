@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.damage_defenses import adjusted_damage_amount
+from app.combat.damage_defenses import resolve_damage_amount
 from app.combat.dice import DiceProvider
 from app.combat.weapon_mastery import weapon_mastery_active
 from app.combat.zero_hp import ZeroHpOutcome, apply_damage
@@ -41,13 +41,17 @@ def resolve_graze_miss(
             damage_type=attack.weapon.damage_type,
             total=raw_damage,
         )
-        applied = adjusted_damage_amount(
+        applied, healed, absorption_source = resolve_damage_amount(
             raw_damage,
             attack.weapon.damage_type,
             defender,
             allow_vulnerability=False,
         )
-        applied_component = component.model_copy(update={"applied_total": applied})
+        applied_component = component.model_copy(update={
+            "applied_total": applied,
+            "absorbed_healing": healed,
+            "absorption_source_name": absorption_source,
+        })
         roll = DiceRoll(notation=str(raw_damage), rolls=[], modifier=0, total=applied)
         damage_types = {attack.weapon.damage_type} if applied > 0 else set()
         outcome = apply_damage(

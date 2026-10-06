@@ -23,6 +23,7 @@ window.IRON_PIT_BROWSER_ATTACK = {
 window.IRON_PIT_BROWSER_ZERO_HP = { reduceToZero: (state) => { state.current_hp = 0; } };
 
 load("browser-action-economy.js");
+load("browser-damage-defense-rules.js");
 load("browser-deferred-save-effect-outcomes.js");
 load("browser-deferred-save-effect.js");
 load("browser-deferred-save-effect-attack-slot.js");

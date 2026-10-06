@@ -18,6 +18,7 @@ for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-modifier-validation.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-sneak-attack.js",
   "browser-rolls.js", "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-weapon-mastery.js",
+  "browser-healing-policy.js", "browser-healing.js", "browser-damage-defense-rules.js",
   "browser-graze.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js",
 ]) load(file);
 
@@ -52,6 +53,9 @@ function member(id, side, options = {}) {
     damage_resistances: options.resistant ? ["slashing"] : [],
     damage_vulnerabilities: options.vulnerable ? ["slashing"] : [],
     damage_immunities: options.immune ? ["slashing"] : [],
+    damage_absorptions: options.absorbs ? [
+      { sourceId: "slashing-absorption", sourceName: "Slashing Absorption", damageType: "slashing" },
+    ] : [],
   });
   return { combatant_id: id, side, position_ft: side === "heroes" ? 0 : 5, state: S.buildState(template) };
 }
@@ -99,6 +103,16 @@ function miss(attacker, target) {
   assert.equal(event.damage_roll.total, 0);
   assert.equal(event.damage_components[0].applied_total, 0);
   assert.equal(immune.state.current_hp, before);
+}
+
+{
+  const fighter = member("fighter", "heroes"), absorber = member("absorber", "monsters", { absorbs: true });
+  absorber.state.current_hp = absorber.state.template.max_hp - 5;
+  const before = absorber.state.current_hp;
+  const event = miss(fighter, absorber);
+  assert.equal(event.damage_roll.total, 0);
+  assert.equal(event.damage_components[0].applied_total, 0);
+  assert.equal(absorber.state.current_hp, before + 3, "Graze matching absorption must heal instead of dealing damage");
 }
 
 {

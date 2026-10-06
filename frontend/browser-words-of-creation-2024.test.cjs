@@ -32,7 +32,9 @@ window.IRON_PIT_DICE = {
   rollMany: (count) => Array(count).fill(1),
 };
 
+// Exercise the production typed-defense resolver rather than an attack-backed stub.
 for (const file of [
+  "browser-damage-defense-rules.js",
   "browser-state.js",
   "browser-timed-conditions.js",
   "browser-condition-removal.js",
@@ -114,7 +116,7 @@ window.IRON_PIT_BROWSER_FORMATION = {
   saveDistance: (a, b) => Math.abs(a.position_ft - b.position_ft),
   targetOrder: (member, setup) => (member.side === "heroes" ? setup.monsters : setup.heroes),
 };
-window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES = { adjustedDamage: (_state, amount) => amount };
+load("browser-damage-defense-rules.js");
 window.IRON_PIT_BROWSER_ZERO_HP = {
   applyDamage: (state, amount) => {
     state.current_hp = Math.max(0, state.current_hp - amount);

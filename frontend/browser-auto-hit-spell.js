@@ -2,6 +2,11 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Browser auto-hit spell damage requires the shared damage resolver.");
+    return rules;
+  };
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
@@ -15,6 +20,7 @@
     const resourceId = `spell-slot-${choice.slotLevel}`;
     if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains for ${action.name}.`);
 
+    const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const components = [], allRolls = [];
     let total = 0;
     for (let index = 0; index < choice.projectileCount; index += 1) {
@@ -22,7 +28,8 @@
         ? C().maximizedRolls(action.damageDiceCount || 1, action.damageDiceSize || 4)
         : window.IRON_PIT_DICE.rollMany(action.damageDiceCount || 1, action.damageDiceSize || 4);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (action.damageBonus || 0);
-      const applied = A().adjustedDamage(target.state, raw, action.damageType);
+      const resolved = DD().resolveDamage(target.state, raw, action.damageType);
+      const applied = resolved.applied;
       allRolls.push(...rolls);
       total += applied;
       components.push({
@@ -30,10 +37,10 @@
         notation: `${action.damageDiceCount || 1}d${action.damageDiceSize || 4}+${action.damageBonus || 0}`,
         rolls, modifier: action.damageBonus || 0, damage_type: action.damageType,
         total: raw, applied_total: applied,
+        absorbed_healing: resolved.healed || 0, absorption_source_name: resolved.sourceName || null,
       });
     }
 
-    const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
     A().applyDamage(target.state, total, false, total > 0 ? [action.damageType] : [], states, setup, components);
     C().markSlotSpellCast(caster.state, turnKey);

@@ -29,6 +29,7 @@ window.IRON_PIT_BROWSER_ATTACK = {
     if (state.current_hp === 0) { state.is_dead = true; state.is_alive = false; }
   },
 };
+load("browser-damage-defense-rules.js");
 load("browser-persistent-hazards.js");
 const H = window.IRON_PIT_BROWSER_PERSISTENT_HAZARDS;
 

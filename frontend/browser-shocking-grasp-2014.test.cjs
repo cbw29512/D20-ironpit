@@ -10,7 +10,9 @@ const load = (name) => vm.runInThisContext(
   fs.readFileSync(path.join(__dirname, name), "utf8"),
   { filename: name },
 );
+// Exercise the production typed-defense resolver rather than an attack-backed stub.
 for (const file of [
+  "browser-damage-defense-rules.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-timed-conditions.js", "browser-grapple.js", "browser-modifier-validation.js", "browser-modifiers.js", "browser-state.js",
   "browser-rage.js", "browser-rolls.js", "browser-undead-fortitude.js", "browser-zero-hp.js",

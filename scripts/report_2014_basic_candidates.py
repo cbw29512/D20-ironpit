@@ -10,9 +10,7 @@ BACKEND = ROOT / "backend"
 if str(BACKEND) not in sys.path:
     sys.path.insert(0, str(BACKEND))
 
-from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.capability_compiler import compile_combatant
-from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014, unsupported_traits_2014
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
@@ -73,10 +71,9 @@ def _trait_only_details(monsters):
     for monster in monsters:
         if basic_blockers_2014(monster) != ("source:trait",):
             continue
-        unsupported = [
-            trait for trait in monster.trait_names
-            if trait not in ARENA_NEUTRAL_TRAITS_2014 and not is_arena_neutral_bonus_action(trait)
-        ]
+        # Show actual remaining bindings, rather than every printed trait on a
+        # blocked creature (which wrongly implicates supported Magic Resistance).
+        unsupported = list(unsupported_traits_2014(monster))
         rows.append((monster.name, unsupported))
     return rows
 

@@ -1,6 +1,12 @@
 (() => {
   "use strict";
 
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Emanation damage requires the shared damage resolver.");
+    return rules;
+  };
+
   function resolveHit(sequence, round, source, target, action, setup, turnKey) {
     try {
       const emanation = action.startTurnEmanationDamage;
@@ -32,10 +38,11 @@
         if (succeeded && emanation.success_damage === "none") raw = 0;
         else if (succeeded && emanation.success_damage === "half") raw = Math.floor(raw / 2);
       }
-      const applied = raw
-        ? window.IRON_PIT_BROWSER_ATTACK.adjustedDamage(target.state, raw, emanation.damage_type)
-        : 0;
       const hpBefore = target.state.current_hp;
+      const resolvedDamage = raw
+        ? DD().resolveDamage(target.state, raw, emanation.damage_type)
+        : { applied: 0, healed: 0, sourceName: null };
+      const applied = resolvedDamage.applied;
       if (applied) {
         window.IRON_PIT_BROWSER_ATTACK.applyDamage(
           target.state, applied, false, [emanation.damage_type],
@@ -53,11 +60,14 @@
           damage_components: [{
             source: action.name, notation, rolls, modifier: 0,
             damage_type: emanation.damage_type, total: raw, applied_total: applied,
+            absorbed_healing: resolvedDamage.healed || 0,
+            absorption_source_name: resolvedDamage.sourceName || null,
           }],
           hp_before: hpBefore, hp_after: target.state.current_hp,
           feature_id: action.id, animation: action.animation || "radiant-aura",
           distance_before_ft: distance,
-          description: `${target.state.template.name} is caught in ${source.state.template.name}'s ${action.name} and takes ${applied} ${emanation.damage_type} damage.`,
+          description: `${target.state.template.name} is caught in ${source.state.template.name}'s ${action.name} and takes ${applied} ${emanation.damage_type} damage.`
+            + (resolvedDamage.sourceName ? ` ${resolvedDamage.sourceName} restores ${resolvedDamage.healed} HP.` : ""),
         },
         sequence: sequence + 1,
       };
