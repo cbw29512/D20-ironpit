@@ -154,9 +154,9 @@
     const bypassTypes = resistanceBypassTypes(attacker);
     const damageComponents = uncanny.components.map((part) => ({
       ...part,
-      applied_total: A().adjustedDamage(
+      applied_total: A().resolveDamage(
         defender, part.total, part.damage_type, true, part.source_qualifiers || [], bypassTypes.has(part.damage_type),
-      ),
+      ).applied,
     }));
     const appliedTotal = damageComponents.reduce((sum, part) => sum + part.applied_total, 0);
     const damageRoll = { ...aggregate(uncanny.components), total: appliedTotal };
