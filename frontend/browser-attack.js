@@ -1,74 +1,40 @@
 (() => {
   "use strict"; const S = () => window.IRON_PIT_BROWSER_STATE, R = () => window.IRON_PIT_BROWSER_ROLLS, A = () => window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE || { sources: () => 0 };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP, BS = () => window.IRON_PIT_BROWSER_BRUTAL_STRIKE; const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
-  const H = () => {
-    const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
-    if (!hooks) throw new Error("Browser attack resolution requires browser-ability-hooks.js."); return hooks;
-  };
-  const O = () => {
-    const outcome = window.IRON_PIT_BROWSER_ATTACK_OUTCOME;
-    if (!outcome) throw new Error("Browser attack resolution requires browser-attack-outcome.js.");
-    return outcome;
-  }; const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) }, B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { activate: () => false, attackAdvantage: () => 0, attacksAgainstAdvantage: () => 0 };
+  const H = () => { const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS; if (!hooks) throw new Error("Browser attack resolution requires browser-ability-hooks.js."); return hooks; };
+  const O = () => { const outcome = window.IRON_PIT_BROWSER_ATTACK_OUTCOME; if (!outcome) throw new Error("Browser attack resolution requires browser-attack-outcome.js."); return outcome; }; const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) }, B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { activate: () => false, attackAdvantage: () => 0, attacksAgainstAdvantage: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { attacksAgainstAdvantage: () => 0, consumeAttacksAgainstAdvantage: () => 0, nextAttackAgainstAdvantage: () => 0, consumeNextAttackAgainstAdvantage: () => 0,
     effectiveArmorClass: (state) => state.template.armor_class, effectiveSpeed: (state) => state.template.speed_ft, attackRollFlat: () => 0, applyD20Bonus: (_state, _kind, roll) => roll };
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false }, X = () => window.IRON_PIT_BROWSER_EXHAUSTION || { attackDisadvantage: () => 0 }, DB = () => window.IRON_PIT_BROWSER_D20_BONUS_DICE;
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { attackAdvantage: (state) => state.is_unconscious, autoCritical: (state) => state.is_unconscious,
-    has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious, suppressAttackAdvantage: () => false,
-    canSee: (observer, target) => !observer.active_effect_ids.includes("blinded") && !target.active_effect_ids.includes("invisible") };
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { attackAdvantage: (state) => state.is_unconscious, autoCritical: (state) => state.is_unconscious, has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious, suppressAttackAdvantage: () => false, canSee: (observer, target) => !observer.active_effect_ids.includes("blinded") && !target.active_effect_ids.includes("invisible") };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function conditionSources(attacker, defender, distance, targetId) {
-    let advantage = M().attacksAgainstAdvantage(defender) + B2().attacksAgainstAdvantage(defender) + (M().d20TestAdvantage?.(attacker) || 0), disadvantage = X().attackDisadvantage(attacker) + (window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.attacksAgainstDisadvantage(defender, attacker, distance) || 0);
-    const ignoresUnseen = Boolean(attacker.template.ignore_unseen_target_attack_disadvantage);
-    if (Q().has(attacker, "blinded") && !ignoresUnseen) disadvantage += 1;
-    if (Q().has(attacker, "invisible") && !Q().canSee(defender, attacker, distance)) advantage += 1;
-    if (attacker.active_effect_ids.includes("prone")) disadvantage += 1;
-    if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1;
-    if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1;
-    disadvantage += G()?.attackDisadvantage(attacker, targetId) || 0;
-    if (defender.active_effect_ids.includes("dodge") && !Q().incapacitated(defender) && M().effectiveSpeed(defender) > 0 && !G()?.speedIsZero(defender)) disadvantage += 1;
-    if (Q().attackAdvantage(defender)) advantage += 1;
-    if (Q().has(defender, "invisible") && !ignoresUnseen && !Q().canSee(attacker, defender, distance)) disadvantage += 1;
-    if (defender.active_effect_ids.includes("restrained")) advantage += 1;
-    if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
+    let advantage = M().attacksAgainstAdvantage(defender) + B2().attacksAgainstAdvantage(defender) + (M().d20TestAdvantage?.(attacker) || 0), disadvantage = X().attackDisadvantage(attacker) + (window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.attacksAgainstDisadvantage(defender, attacker, distance) || 0); const ignoresUnseen = Boolean(attacker.template.ignore_unseen_target_attack_disadvantage);
+    if (Q().has(attacker, "blinded") && !ignoresUnseen) disadvantage += 1; if (Q().has(attacker, "invisible") && !Q().canSee(defender, attacker, distance)) advantage += 1;
+    if (attacker.active_effect_ids.includes("prone")) disadvantage += 1; if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1; if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1; disadvantage += G()?.attackDisadvantage(attacker, targetId) || 0;
+    if (defender.active_effect_ids.includes("dodge") && !Q().incapacitated(defender) && M().effectiveSpeed(defender) > 0 && !G()?.speedIsZero(defender)) disadvantage += 1; if (Q().attackAdvantage(defender)) advantage += 1;
+    if (Q().has(defender, "invisible") && !ignoresUnseen && !Q().canSee(attacker, defender, distance)) disadvantage += 1; if (defender.active_effect_ids.includes("restrained")) advantage += 1; if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
     return { advantage, disadvantage };
   }
   function rangedCloseThreat(attacker, target, distance, setup) {
-    if (distance > 5 && !setup) return false;
-    if (!setup) return distance <= 5 && !Q().incapacitated(target.state);
-    const enemies = attacker.side === "heroes" ? setup.monsters : setup.heroes;
-    return enemies.some((enemy) => enemy.state.is_alive && !enemy.state.is_dead && enemy.state.current_hp > 0 && !Q().incapacitated(enemy.state) && S().distance(attacker, enemy) <= 5);
+    if (!setup) return distance <= 5 && !Q().incapacitated(target.state); const enemies = attacker.side === "heroes" ? setup.monsters : setup.heroes; return enemies.some((enemy) => enemy.state.is_alive && !enemy.state.is_dead && enemy.state.current_hp > 0 && !Q().incapacitated(enemy.state) && S().distance(attacker, enemy) <= 5);
   }
   const bloodiedFury = (state, attack) => state.template.traits?.includes("bloodied-fury") && attack.kind === "melee" && state.current_hp * 2 <= state.template.max_hp ? 1 : 0;
   function adjustedDamage(target, amount, type, allowVulnerability = true, sourceQualifiers = [], ignoreResistance = false) {
-    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES; if (rules) return rules.adjustedDamage(target, amount, type, allowVulnerability, sourceQualifiers, ignoreResistance);
-    if (target.template.damage_immunities?.includes(type)) return 0; let value = amount;
-    if (!ignoreResistance && (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type) || T()?.ownsDamageResistance?.(target, type) || Q().has(target, "petrified"))) value = Math.floor(value / 2);
-    if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2;
-    return value;
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES; if (rules) return rules.adjustedDamage(target, amount, type, allowVulnerability, sourceQualifiers, ignoreResistance); if (target.template.damage_immunities?.includes(type)) return 0; let value = amount; if (!ignoreResistance && (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type) || T()?.ownsDamageResistance?.(target, type) || Q().has(target, "petrified"))) value = Math.floor(value / 2); if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2; return value;
   }
-  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null, damageComponents = []) {
-    const lifecycle = Z(); if (!lifecycle) throw new Error("Browser zero-HP runtime is not loaded.");
-    return lifecycle.applyDamage(state, amount, critical, damageTypes, affectedStates, setup, damageComponents);
-  }
+  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null, damageComponents = []) { const lifecycle = Z(); if (!lifecycle) throw new Error("Browser zero-HP runtime is not loaded."); return lifecycle.applyDamage(state, amount, critical, damageTypes, affectedStates, setup, damageComponents); }
   function legacyHitDamage(attacker, defender, attack, critical, mode, turnKey, options = {}) {
-    if (attack.onHitSaveDamage) throw new Error("Save-dependent hit damage requires the browser hit-damage runtime.");
-    const base = R().weaponDamage(attacker, attack, critical, mode, turnKey, options.bonusDamage || null, defender, Boolean(options.sneakAttackAllyAvailable)), damageComponents = base.components.map((part) => ({ ...part, applied_total: adjustedDamage(defender, part.total, part.damage_type, true, part.source_qualifiers || []) }));
-    const appliedTotal = damageComponents.reduce((sum, part) => sum + part.applied_total, 0), damageRoll = { ...base.roll, total: appliedTotal }, appliedTypes = [...new Set(damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type))];
-    return { damageRoll, damageComponents, damageOutcome: applyDamage(defender, appliedTotal, critical, appliedTypes, options.affectedStates || [], options.setup || null, damageComponents), appliedTotal, saveDamage: null };
+    if (attack.onHitSaveDamage) throw new Error("Save-dependent hit damage requires the browser hit-damage runtime."); const base = R().weaponDamage(attacker, attack, critical, mode, turnKey, options.bonusDamage || null, defender, Boolean(options.sneakAttackAllyAvailable)), damageComponents = base.components.map((part) => ({ ...part, applied_total: adjustedDamage(defender, part.total, part.damage_type, true, part.source_qualifiers || []) })); const appliedTotal = damageComponents.reduce((sum, part) => sum + part.applied_total, 0), damageRoll = { ...base.roll, total: appliedTotal }, appliedTypes = [...new Set(damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type))]; return { damageRoll, damageComponents, damageOutcome: applyDamage(defender, appliedTotal, critical, appliedTypes, options.affectedStates || [], options.setup || null, damageComponents), appliedTotal, saveDamage: null };
   }
   const HD = () => window.IRON_PIT_BROWSER_HIT_DAMAGE || { resolve: legacyHitDamage };
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
     if (extra.brutalStrikeEffectIds != null) BS()?.selectEffects?.(attacker.state, extra.brutalStrikeEffectIds); const spendAction = extra.spendAction !== false; window.IRON_PIT_BROWSER_TIMED_CONTROL?.registerTurnAttack(attacker.state, extra.offTurn === true);
     if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
     const formation = window.IRON_PIT_BROWSER_FORMATION;
-    if (formation?.targetAllowed && !formation.targetAllowed(attacker, target, attack, extra.setup || null)) {
-      throw new Error(`${attack.id} cannot target ${target.combatant_id} under its current target policy.`);
-    }
-    if (!formation?.targetAllowed && (attack.grappleTargetPolicy || "normal") !== "normal") {
-      throw new Error("Nonstandard attack target policy requires browser-formation.js.");
-    }
+    if (formation?.targetAllowed && !formation.targetAllowed(attacker, target, attack, extra.setup || null)) throw new Error(`${attack.id} cannot target ${target.combatant_id} under its current target policy.`);
+    if (!formation?.targetAllowed && (attack.grappleTargetPolicy || "normal") !== "normal") throw new Error("Nonstandard attack target policy requires browser-formation.js.");
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(attacker, target) || null;
     if (ward && !ward.succeeded) { if (spendAction) E().spend(attacker.state, "action"); return window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, attacker, target, attack.name, ward); }
     const recklessStarted = extra.allowReckless === true && B2().activate(attacker, attack, round);
