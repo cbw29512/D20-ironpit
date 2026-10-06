@@ -5,7 +5,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.state import begin_turn
 from app.domain.grid import GridPosition
-from app.domain.models import AttackActionDefinition, AttackActionSlot, EncounterSelection, WeaponAttackKind
+from app.domain.models import AttackActionDefinition, AttackActionSlot, EncounterSelection
 
 
 class MaxDiceProvider:
