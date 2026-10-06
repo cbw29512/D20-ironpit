@@ -113,3 +113,29 @@ def test_absorption_does_not_spend_incoming_resistance_reaction() -> None:
     assert (applied, healed, source_name) == (0, 4, "Fire Absorption")
     assert target.reaction_available is True
     assert target.timed_effects == []
+
+
+def test_existing_resistance_does_not_spend_incoming_resistance_reaction() -> None:
+    target = build_combatant_state(build_rowan_ashtrail_2024(15))
+    target.template.damage_resistances = [DamageType.FIRE]
+
+    applied, healed, source_name = resolve_damage_amount(8, DamageType.FIRE, target)
+
+    assert (applied, healed, source_name) == (4, 0, None)
+    assert target.reaction_available is True
+    assert target.timed_effects == []
+
+
+def test_resistance_bypass_does_not_waste_incoming_resistance_reaction() -> None:
+    target = build_combatant_state(build_rowan_ashtrail_2024(15))
+
+    applied, healed, source_name = resolve_damage_amount(
+        8,
+        DamageType.FIRE,
+        target,
+        ignored_resistance_types={DamageType.FIRE},
+    )
+
+    assert (applied, healed, source_name) == (8, 0, None)
+    assert target.reaction_available is True
+    assert target.timed_effects == []
