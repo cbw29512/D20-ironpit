@@ -1146,6 +1146,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             ]}
         if template.regeneration is not None:
             row["regeneration"] = template.regeneration.model_dump(mode="json")
+        if template.damage_threshold_zero_hp_replacements:
+            row["damage_threshold_zero_hp_replacements"] = [
+                item.model_dump(mode="json") for item in template.damage_threshold_zero_hp_replacements
+            ]
         if template.triggered_extra_attack_stacks:
             row["triggered_extra_attack_stacks"] = [
                 {
