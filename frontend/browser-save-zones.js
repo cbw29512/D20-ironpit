@@ -68,7 +68,9 @@
       let rawTotal = rolls.reduce((sum, value) => sum + value, 0);
       if (save.succeeded && zone.successDamage === "none") rawTotal = 0;
       else if (save.succeeded && zone.successDamage === "half") rawTotal = Math.floor(rawTotal / 2);
-      const applied = window.IRON_PIT_BROWSER_ATTACK.adjustedDamage(target.state, rawTotal, zone.damageType);
+      const applied = window.IRON_PIT_BROWSER_ATTACK.resolveDamage
+        ? window.IRON_PIT_BROWSER_ATTACK.resolveDamage(target.state, rawTotal, zone.damageType).applied
+        : window.IRON_PIT_BROWSER_ATTACK.adjustedDamage(target.state, rawTotal, zone.damageType);
       damageComponents = [{
         source: zone.action_id, notation: `${zone.damageDiceCount}d${zone.damageDiceSize}`,
         rolls, modifier: 0, damage_type: zone.damageType, total: rawTotal, applied_total: applied,
