@@ -5,11 +5,7 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const D = () => window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
-  const DD = () => {
-    const rules = D();
-    if (!rules?.resolveDamage) throw new Error("HP-threshold fallback damage requires the shared damage resolver.");
-    return rules;
-  };
+  const DD = () => D()?.resolveDamage ? D() : (() => { throw new Error("HP-threshold fallback damage requires the shared damage resolver."); })();
 
   function legal(member, target, action) {
     try {
