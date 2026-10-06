@@ -20,6 +20,7 @@ from app.domain.capability_effects import (
     GrappleEffectDefinition,
     SaveConditionEffectDefinition,
     SaveDamageEffectDefinition,
+    SaveMaximumHpReductionEffectDefinition,
 )
 from app.domain.size import CreatureSize
 from app.domain.action_types import ConditionName, ConditionTiming
@@ -119,6 +120,21 @@ def _supported_save_damage(value: object) -> bool:
     )
 
 
+def _supported_save_max_hp_reduction(value: object) -> bool:
+    if not isinstance(value, dict):
+        return False
+    allowed = {
+        "save_ability", "dc", "max_hp_reduction_equals_damage_taken", "zero_max_hp_kills",
+    }
+    if not set(value) <= allowed or value.get("max_hp_reduction_equals_damage_taken") is not True:
+        return False
+    return (
+        str(value.get("save_ability", "")).lower() in _ABILITIES
+        and isinstance(value.get("dc"), int) and 0 < int(value["dc"]) <= 40
+        and isinstance(value.get("zero_max_hp_kills", False), bool)
+    )
+
+
 def source_conditional_attack_advantage_2014(attack: SourceAttack2014) -> list[ConditionalAttackAdvantage]:
     specs: list[ConditionalAttackAdvantage] = []
     for value in attack.conditional_attack_advantage:
@@ -139,7 +155,9 @@ def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
     if attack.conditional_damage and not all(supports_conditional_damage_2014(row) for row in attack.conditional_damage):
         return False
     if attack.on_hit_save_effect is not None and not (
-        _supported_save_condition(attack.on_hit_save_effect) or _supported_save_damage(attack.on_hit_save_effect)
+        _supported_save_condition(attack.on_hit_save_effect)
+        or _supported_save_damage(attack.on_hit_save_effect)
+        or _supported_save_max_hp_reduction(attack.on_hit_save_effect)
     ):
         return False
     if attack.on_hit_contested_movement or attack.ongoing_damage_effect:
@@ -175,7 +193,14 @@ def basic_attack_effects_2014(attack: SourceAttack2014) -> list[AttackEffectDefi
     if attack.on_hit_save_effect is not None:
         row = attack.on_hit_save_effect
         assert isinstance(row, dict)
-        if _supported_save_condition(row):
+        if _supported_save_max_hp_reduction(row):
+            effects.append(SaveMaximumHpReductionEffectDefinition(
+                save_ability=str(row["save_ability"]).lower(),
+                dc=int(row["dc"]),
+                reduction="damage_taken",
+                zero_max_hp_kills=bool(row.get("zero_max_hp_kills", False)),
+            ))
+        elif _supported_save_condition(row):
             max_size = row.get("max_target_size")
             duration = row.get("duration_rounds")
             timing = row.get("repeat_save_timing")
