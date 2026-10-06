@@ -6,7 +6,7 @@ from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_removal import remove_condition
 from app.combat.modifier_stack import expire_target_turn_modifiers
 from app.combat.saving_throw_rolls import resolve_saving_throw
-from app.combat.timed_conditions import remove_effect_group
+from app.combat.timed_conditions import apply_terminal_condition_outcome, remove_effect_group
 from app.domain.actions import ConditionTiming
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -64,6 +64,7 @@ def resolve_target_condition_timing(
                         if not condition_is_immune(target.state, escalated):
                             if escalated not in target.state.active_effect_ids:
                                 target.state.active_effect_ids.append(escalated)
+                            apply_terminal_condition_outcome(target.state, escalated)
                             applied.append(escalated)
                 events.append(BattleEvent(
                     sequence=sequence,
