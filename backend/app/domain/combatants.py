@@ -10,6 +10,7 @@ from app.domain.bonus_attacks import BonusAttackGrant
 from app.domain.area_weapon_attacks import AreaWeaponAttackAction
 from app.domain.attack_action_weapon_buffs import AttackActionWeaponBuff
 from app.domain.character_builds import AbilityScores
+from app.domain.combatant_support import ResourceDefinition, VisualLoadout
 from app.domain.damage_absorption import DamageAbsorptionRule
 from app.domain.damage_sources import ConditionalDamageDefense
 from app.domain.effect_removal import EffectRemovalAction
@@ -63,18 +64,6 @@ from app.domain.weapons import (
     WeaponAttack,
     WeaponAttackKind,
 )
-class VisualLoadout(BaseModel):
-    armor: str
-    main_hand: str
-    off_hand: str | None = None
-    body_style: str = "humanoid"
-
-class ResourceDefinition(BaseModel):
-    id: str
-    name: str
-    max_uses: int = Field(ge=0)
-
-
 class CombatantTemplate(BaseModel):
     id: str
     name: str
