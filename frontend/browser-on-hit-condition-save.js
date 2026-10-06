@@ -45,6 +45,7 @@
           repeatSaveAbility: effect.repeatSaveTiming ? effect.saveAbility : null,
           repeatSaveDc: effect.repeatSaveTiming ? effect.dc : null,
           repeatSaveTiming: effect.repeatSaveTiming || null,
+          repeatSaveFailureConditionId: effect.repeatSaveFailureConditionId || null,
           useDefaultPoisonRecovery: false,
         }) || null;
       } else if (!target.state.active_effect_ids.includes(effect.conditionId)) {
@@ -52,9 +53,16 @@
         appliedCondition = effect.conditionId;
       }
     }
+    let forcedMovementFt = 0;
+    if (!save.succeeded && (effect.failurePushFt || 0) > 0) {
+      if (!setup || !attacker) throw new Error("Failed-save forced movement requires encounter setup and attacker.");
+      forcedMovementFt = window.IRON_PIT_BROWSER_FORCED_MOVEMENT.pushStraightAway(
+        target, attacker, setup, effect.failurePushFt,
+      );
+    }
     return {
       saveRoll: save.roll, saveAbility: effect.saveAbility, saveDc: effect.dc,
-      saveSucceeded: save.succeeded, appliedCondition,
+      saveSucceeded: save.succeeded, appliedCondition, forcedMovementFt,
     };
   }
 
