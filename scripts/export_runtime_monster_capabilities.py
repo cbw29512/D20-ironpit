@@ -45,6 +45,8 @@ def _strip_extension_defaults(value):
             continue
         if key == "source_effect_immunity_on_end" and item is False:
             continue
+        if key == "first_turn_attack_advantage_against_unacted_target" and item is False:
+            continue
         if key in {
             "effect_tags",
             "required_effect_tags",
@@ -57,6 +59,7 @@ def _strip_extension_defaults(value):
             "conditional_damage_defenses",
             "damage_absorptions",
             "damage_threshold_zero_hp_replacements",
+            "starting_condition_ids",
         } and item == []:
             continue
         if key == "replacement_form_actions" and item == []:
