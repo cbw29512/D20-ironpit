@@ -75,6 +75,7 @@ class AttackCapabilityDefinition(BaseModel):
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
     charge_profile: ChargeProfileDefinition | None = None
     forbid_target_grappled_by_self: bool = False
+    grapple_target_policy: Literal["normal", "own_grapple_only"] = "normal"
     damage_source_qualifiers: list[DamageSourceQualifier] = Field(default_factory=list)
 
     @model_validator(mode="after")
