@@ -11,7 +11,9 @@ const load = (name) => vm.runInThisContext(
   { filename: name },
 );
 
+// Use production defenses so previews and actual resolution share the same rules.
 for (const file of [
+  "browser-damage-defense-rules.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-timed-conditions.js", "browser-grapple.js", "browser-modifier-validation.js", "browser-modifiers.js", "browser-state.js",
   "browser-rage.js", "browser-rolls.js", "browser-undead-fortitude.js", "browser-zero-hp.js",

@@ -2,6 +2,11 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Persistent hazard damage requires the shared damage resolver.");
+    return rules;
+  };
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const G = () => window.IRON_PIT_BROWSER_GRID_GEOMETRY;
   const S = () => window.IRON_PIT_BROWSER_SAVES;
@@ -89,8 +94,9 @@
       item.triggeredTurnKeys[mover.combatant_id] = turnKey;
       const save = S().resolveSavingThrow(mover.state, item.saveAbility, item.dc);
       const raw = save.succeeded ? item.successDamage : item.failureDamage;
-      const applied = A().adjustedDamage(mover.state, raw, item.damageType);
       const before = mover.state.current_hp;
+      const resolved = DD().resolveDamage(mover.state, raw, item.damageType);
+      const applied = resolved.applied;
       if (applied > 0) A().applyDamage(mover.state, applied, false, [item.damageType], states);
       item.remainingDamageCapacity = Math.max(0, item.remainingDamageCapacity - applied);
       const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(mover.state) || "";
@@ -104,6 +110,8 @@
         damage_components: [{
           source: item.actionName, notation: String(raw), rolls: [], modifier: 0,
           damage_type: item.damageType, total: raw, applied_total: applied,
+          absorbed_healing: resolved.healed || 0,
+          absorption_source_name: resolved.sourceName || null,
         }],
         hp_before: before, hp_after: mover.state.current_hp, is_dead: mover.state.is_dead,
         feature_id: item.actionId, animation: item.animation,

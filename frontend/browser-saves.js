@@ -1,6 +1,7 @@
 (() => {
   "use strict";
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.resolveDamage ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES : (() => { throw new Error("Save resolution damage requires the shared damage resolver."); })();
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const FM = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
   const S = () => window.IRON_PIT_BROWSER_STATE;
@@ -19,7 +20,6 @@
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   const resolveSavingThrow = (...args) => window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow(...args);
   const saveMode = (...args) => window.IRON_PIT_BROWSER_SAVING_THROWS.saveMode(...args);
-
   function resolveOnHitConditionSave(target, attack, sourceTemplate = null, round = null, setup = null, attacker = null) {
     const impl = window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE;
     if (impl) return impl.resolve(target, attack, sourceTemplate, round, setup, attacker);
@@ -41,7 +41,6 @@
     return { saveRoll: save.roll, saveAbility: effect.saveAbility, saveDc: effect.dc,
       saveSucceeded: save.succeeded, appliedCondition };
   }
-
   function legalAction(action, target, distance, sourceId) {
     if (distance > action.range) return false;
     if (sourceId && window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS?.isImmune(target, action, sourceId)) return false;
@@ -124,9 +123,11 @@
       const rolls = damageRolls(action, count, options.sharedDamageRolls);
       const rawTotal = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
       const total = RD().evasionDamage(target.state, action.saveAbility, save.succeeded, action.successDamage, rawTotal);
-      const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType);
+      const resolvedDamage = DD().resolveDamage(target.state, Math.max(0, total), action.damageType);
+      const applied = resolvedDamage.applied;
       damageComponents = [{ source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
-        rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied }];
+        rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied,
+        absorbed_healing: resolvedDamage.healed || 0, absorption_source_name: resolvedDamage.sourceName || null }];
       damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
       if (applied) {
         const affectedStates = states(options.setup);

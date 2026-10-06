@@ -36,6 +36,8 @@ window.IRON_PIT_BROWSER_SAVING_THROWS = {
   },
 };
 
+// Timed damage now uses the same typed-defense resolver as every other damage path.
+load("browser-damage-defense-rules.js");
 load("browser-start-of-turn-timed-burn.js");
 
 function member() {

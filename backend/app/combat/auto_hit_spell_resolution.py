@@ -74,10 +74,10 @@ def resolve_auto_hit_spell(
                 total=subtotal,
             ))
 
-        applied_total, applied_components = apply_damage_defenses(target.state, components)
-        affected_states = [entry.state for entry in [*setup.heroes, *setup.monsters]]
         hp_before = target.state.current_hp
         temp_before = target.state.temporary_hp
+        applied_total, applied_components = apply_damage_defenses(target.state, components)
+        affected_states = [entry.state for entry in [*setup.heroes, *setup.monsters]]
         apply_damage(
             target.state,
             applied_total,

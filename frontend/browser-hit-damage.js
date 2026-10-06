@@ -1,10 +1,10 @@
 (() => {
   "use strict";
-
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const S = () => window.IRON_PIT_BROWSER_SAVES;
   const D = () => window.IRON_PIT_DICE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.resolveDamage ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES : (() => { throw new Error("Browser actual damage resolution requires browser-damage-defense-rules.js."); })();
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const P = () => window.IRON_PIT_BROWSER_PALADIN_2014;
@@ -14,7 +14,6 @@
     applyUncannyDodge: (_attacker, _defender, components) => ({ components, used: false }),
     evasionDamage: (_state, _ability, succeeded, successDamage, total) => succeeded && successDamage === "half" ? Math.floor(total / 2) : total,
   };
-
   function resolveSaveDamage(defender, attack) {
     const effect = attack.onHitSaveDamage;
     if (!effect) return { component: null, saveRoll: null, saveAbility: null, saveDc: null, saveSucceeded: null };
@@ -152,12 +151,11 @@
     const reduction = ADR()?.apply(defender, attack, rolled) || { components: rolled, used: false, reduction: 0, sourceId: null, sourceName: null };
     const uncanny = RD().applyUncannyDodge(attacker, defender, reduction.components);
     const bypassTypes = resistanceBypassTypes(attacker);
-    const damageComponents = uncanny.components.map((part) => ({
-      ...part,
-      applied_total: A().adjustedDamage(
-        defender, part.total, part.damage_type, true, part.source_qualifiers || [], bypassTypes.has(part.damage_type),
-      ),
-    }));
+    const damageComponents = uncanny.components.map((part) => { const resolved = DD().resolveDamage(
+      defender, part.total, part.damage_type, true, part.source_qualifiers || [], bypassTypes.has(part.damage_type),
+    );
+      return { ...part, applied_total: resolved.applied, absorbed_healing: resolved.healed || 0,
+        absorption_source_name: resolved.sourceName || null }; });
     const appliedTotal = damageComponents.reduce((sum, part) => sum + part.applied_total, 0);
     const damageRoll = { ...aggregate(uncanny.components), total: appliedTotal };
     const appliedTypes = [...new Set(

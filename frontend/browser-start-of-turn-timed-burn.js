@@ -3,6 +3,11 @@
 
   const D = () => window.IRON_PIT_DICE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Start-of-turn damage requires the shared damage resolver.");
+    return rules;
+  };
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const members = (setup) => [...(setup?.heroes || []), ...(setup?.monsters || [])];
@@ -18,8 +23,9 @@
           total += D().roll(effect.start_of_turn_dice_size || 6);
         }
         const damageType = effect.start_of_turn_damage_type;
-        const applied = A().adjustedDamage(member.state, total, damageType);
         const hpBefore = member.state.current_hp;
+        const resolvedDamage = DD().resolveDamage(member.state, total, damageType);
+        const applied = resolvedDamage.applied;
         A().applyDamage(
           member.state, applied, false, [damageType], states, setup,
         );
@@ -36,7 +42,8 @@
           hp_before: hpBefore,
           hp_after: member.state.current_hp,
           animation: "feature",
-          description: `${name} deals ${applied} ${damageType} damage to ${member.state.template.name} at the start of the turn.`,
+          description: `${name} deals ${applied} ${damageType} damage to ${member.state.template.name} at the start of the turn.`
+            + (resolvedDamage.sourceName ? ` ${resolvedDamage.sourceName} restores ${resolvedDamage.healed} HP.` : ""),
         });
         if (!(effect.start_of_turn_save_ends && effect.start_of_turn_save_ability && effect.start_of_turn_save_dc)) {
           continue;

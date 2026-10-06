@@ -40,6 +40,7 @@ window.IRON_PIT_DICE = {
   },
 };
 
+load("browser-damage-defense-rules.js");
 load("browser-save-damage.js");
 load("browser-saving-throws.js");
 load("browser-saves.js");

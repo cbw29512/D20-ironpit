@@ -42,6 +42,7 @@ window.IRON_PIT_BROWSER_OFFENSE_VALUE = {
 };
 
 load("browser-auto-hit-spell-policy.js");
+load("browser-damage-defense-rules.js");
 load("browser-auto-hit-spell.js");
 
 const S = window.IRON_PIT_BROWSER_STATE;

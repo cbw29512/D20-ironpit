@@ -54,6 +54,7 @@ def _strip_extension_defaults(value):
             "environment_context_reactions",
             "bonus_tactical_action_grants",
             "conditional_damage_defenses",
+            "damage_absorptions",
         } and item == []:
             continue
         if key == "replacement_form_actions" and item == []:

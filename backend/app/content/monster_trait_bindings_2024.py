@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.content.monster_damage_absorption import damage_absorptions_2024
 from app.content.monster_regeneration_2024 import regeneration_trait_2024
 from app.content.monster_loathsome_limbs_2024 import loathsome_limbs_stack_2024
 from app.content.monster_trait_source_audit import source_trait_names
@@ -10,12 +11,16 @@ from app.domain.progression import SavingThrowAdvantageGrant
 
 logger = logging.getLogger(__name__)
 _MAGIC_RESISTANCE = "Magic Resistance"
-def _source_traits(name: str) -> object:
-    from app.content.monster_catalog import load_monster_rows
-    rows = [row for row in load_monster_rows() if row["name"] == name]
-    if len(rows) != 1:
-        raise ValueError(f"Expected one SRD 5.2.1 row for {name!r}; found {len(rows)}.")
-    return rows[0].get("traits", "")
+def _source_row(name: str) -> dict[str, object]:
+    try:
+        from app.content.monster_catalog import load_monster_rows
+        rows = [row for row in load_monster_rows() if row["name"] == name]
+        if len(rows) != 1:
+            raise ValueError(f"Expected one SRD 5.2.1 row for {name!r}; found {len(rows)}.")
+        return rows[0]
+    except Exception:
+        logger.exception("Failed to retrieve 2024 trait source for %s.", name)
+        raise
 
 
 _ALL_SAVE_ABILITIES = (
@@ -43,13 +48,15 @@ def bind_monster_source_traits_2024(template: CombatantTemplate) -> CombatantTem
                 requires_magical_effect=True,
             ))
         features.saving_throw_advantage_grants = grants
-        source_traits = _source_traits(template.name)
+        row = _source_row(template.name)
+        source_traits = row.get("traits", "")
         regeneration = regeneration_trait_2024(source_traits)
         limb_stack = loathsome_limbs_stack_2024(source_traits)
         return template.model_copy(update={
             "source_trait_names": names,
             "progression_features": features,
             "regeneration": regeneration,
+            "damage_absorptions": damage_absorptions_2024(row),
             "triggered_extra_attack_stacks": [limb_stack] if limb_stack is not None else [],
         })
     except Exception:

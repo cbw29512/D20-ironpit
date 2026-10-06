@@ -3,7 +3,7 @@ from __future__ import annotations
 from app.combat.undead_fortitude import consume_survival_save_log
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 
-from app.combat.damage_defenses import adjusted_damage_amount, apply_damage_defenses
+from app.combat.damage_defenses import adjusted_damage_amount, resolve_damage_amount
 from app.combat.dice import DiceProvider
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage, restore_hit_points
@@ -61,8 +61,15 @@ def resolve_divine_spark(
         source="Divine Spark", notation=notation, rolls=[roll], modifier=modifier,
         damage_type=damage_type, total=total // 2 if succeeded else total,
     )
-    applied_total, components = apply_damage_defenses(target.state, [component])
     before = target.state.current_hp
+    applied_total, absorbed_healing, absorption_source = resolve_damage_amount(
+        component.total, damage_type, target.state,
+    )
+    components = [component.model_copy(update={
+        "applied_total": applied_total,
+        "absorbed_healing": absorbed_healing,
+        "absorption_source_name": absorption_source,
+    })]
     if applied_total:
         states = [member.state for member in [*setup.heroes, *setup.monsters]]
         apply_damage(target.state, applied_total, damage_types={damage_type}, dice=dice, affected_states=states)
@@ -74,5 +81,10 @@ def resolve_divine_spark(
         damage_roll=DiceRoll(notation=notation, rolls=[roll], modifier=modifier, total=applied_total),
         damage_components=components, hp_before=before, hp_after=target.state.current_hp,
         feature_id=DIVINE_SPARK, resource_remaining=resource_remaining, animation="divine-spark",
-        description=f"{target.state.template.name} takes {applied_total} {damage_type.value} damage from Divine Spark." + consume_survival_save_log(target.state) + consume_zero_hp_replacement_log(target.state),
+        description=(
+            f"{target.state.template.name} takes {applied_total} {damage_type.value} damage from Divine Spark."
+            + (f" {absorption_source} restores {absorbed_healing} HP." if absorption_source else "")
+            + consume_survival_save_log(target.state)
+            + consume_zero_hp_replacement_log(target.state)
+        ),
     )

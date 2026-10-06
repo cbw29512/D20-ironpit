@@ -2,6 +2,11 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Save damage requires the shared damage resolver.");
+    return rules;
+  };
   const D = () => window.IRON_PIT_DICE;
   const R = () => window.IRON_PIT_BROWSER_ROGUE_DEFENSES || {
     evasionDamage: (_state, _ability, succeeded, successDamage, total) =>
@@ -34,9 +39,11 @@
         }
         const raw = rolls.reduce((sum, roll) => sum + roll, 0) + (spec.damageBonus || 0);
         const total = R().evasionDamage(state, action.saveAbility, succeeded, action.successDamage, raw);
-        const applied = A().adjustedDamage(state, Math.max(0, total), spec.damageType);
+        const resolved = DD().resolveDamage(state, Math.max(0, total), spec.damageType);
+        const applied = resolved.applied;
         return { source: action.name, notation: `${spec.diceCount}d${spec.diceSize}+${spec.damageBonus || 0}`,
-          rolls, modifier: spec.damageBonus || 0, damage_type: spec.damageType, total: Math.max(0, total), applied_total: applied };
+          rolls, modifier: spec.damageBonus || 0, damage_type: spec.damageType, total: Math.max(0, total), applied_total: applied,
+          absorbed_healing: resolved.healed || 0, absorption_source_name: resolved.sourceName || null };
       });
       const appliedTotal = components.reduce((sum, part) => sum + part.applied_total, 0);
       const roll = { notation: components.map((part) => part.notation).join(" + "),

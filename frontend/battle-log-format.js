@@ -20,6 +20,7 @@
     if (!event.damage_roll) return "";
     const parts = (event.damage_components || []).map((part) => {
       const applied = part.applied_total ?? part.total, type = part.damage_type || "damage";
+      if (part.absorption_source_name) return `0 ${type} (${part.absorption_source_name} absorbs ${part.total}; restores ${part.absorbed_healing || 0} HP)`;
       return applied === part.total ? `${applied} ${type}` : `${applied} ${type} (${part.total} before defenses → ${applied} after defenses)`;
     });
     return parts.length ? parts.join(" + ") : `${event.damage_roll.total} damage`;

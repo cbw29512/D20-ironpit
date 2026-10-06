@@ -163,15 +163,23 @@ Default Iron Pit voluntary movement policy is intentionally simple:
 
 1. The combatant's goal is to engage and defeat a living opponent; it does not wander around the arena without an action-driven reason.
 2. If a legal melee attack can be made this turn after useful legal approach movement, the combatant closes to that melee reach, then uses the highest-damage option that can actually land from there. A landable area/save Action or damage spell beats weaker melee. Multiattack printed damage includes every landable slot.
-3. Front-row combatants are melee. They make useful legal progress toward melee even when a backup thrown/ranged attack could already land. After that approach, if melee still cannot land, they use the highest-damage option that can land.
-4. Back-row combatants are ranged and/or casters. They stay in place when a legal ranged or spell option can already land. A back-row melee creature with no ranged attack steps to the front when the last front-row ally dies, or Dodges until that step-up is legal.
-5. If a ranged combatant is already in melee and has a legal melee option, it uses the legal melee option rather than retreating merely to preserve range.
+3. Front-row combatants are melee. They make useful legal progress toward melee even when a backup thrown/ranged attack could already land. For an Attack/Multiattack slot that explicitly offers both melee and ranged alternatives, the front row selects the melee alternative; it does not randomly switch a later slot to ranged.
+4. Back-row combatants are ranged and/or casters. While at least one living allied front-row combatant remains, a flexible Attack/Multiattack slot that offers both melee and ranged alternatives selects ranged. When no living allied front-row combatant remains, that same flexible slot switches to melee and the combatant advances through the normal formation/movement policy. A fixed printed slot with only one attack kind remains fixed; row policy never invents a different attack.
+5. Flexible Attack/Multiattack slots follow row policy even when both alternatives can reach. Other choices prefer legal melee when engaged rather than retreating merely to preserve range.
 6. A caster does not retreat or hold range merely to preserve a spell. It casts from its current square when that spell is the highest-damage option that can land, including after it has already closed.
-7. A mixed combatant uses the landing-damage rule after row policy: the highest-damage option that can actually land; melee when in reach instead of a ranged weapon; Dodge only if nothing lands.
+7. A mixed combatant uses the landing-damage rule only after the deterministic row policy has narrowed any flexible melee/ranged Attack or Multiattack choices. Row policy decides the weapon mode; damage scoring does not override that row choice. Dodge remains the final fallback when no legal offensive option can be made usable.
 8. Default Arena AI does not voluntarily kite, circle, run to map edges, seek cover, disperse, or retreat merely for positional optimization.
 9. Specific printed features, conditions, forced movement, explicit retreat effects, or other RAW mechanics may require movement that overrides this default policy; those effects still use the same universal movement engine.
 
 The 24 x 16 arena therefore uses a capable pathfinder with deliberately simple destination policy. Pathfinding solves **how to reach a legal action position**; it does not invent tactical goals.
+
+### Source-preserving flexible attack slots
+
+Immutable `CapabilityActionSlot` / `AttackActionSlot` lists retain every printed alternative in each ordered slot. Formation row and living-frontline state at Action selection choose the mode, which remains fixed within that Action; there is no new resource, random weapon-choice roll, or persistent choice state. Fresh fight state resets formation and Action availability normally. Different melee/ranged attack counts, drawn-offhand requirements, other coupled source policies, and unknown or empty slots remain blockers. Source audit must compare parsed slots against the preserved printed text; a parse that grants an extra attack is not certification evidence.
+
+Python `attack_action_choices.attack_choice` supplies both landing-damage selection and `attack_actions.resolve_attack_action`. Browser `formation.chooseSlotAttack` supplies `browser-multiattack-choices` queries and `browser-multiattack` resolution. Preview delivery and damage must describe the same selected attack that will execute. Validate every slot before spending an Action; never execute a supported prefix of malformed data. Both editions use this path with their own immutable source attacks.
+
+Monster Multiattack is a separate Action, not the player Attack action. Its `is_attack_action` / `isAttackAction` flag is false. Only a genuine Attack action may invoke Light/Nick follow-ups. Permanent source roundtrip and Python/browser row-policy regressions protect slot count, alternatives, mode, Action cost, preview purity, and fresh-state reset.
 
 ### Offensive exhaustion before Dodge
 
@@ -427,6 +435,27 @@ Before initiative, each combatant that has a legal combat buff uses **exactly on
 ## Turn-start debuff answers
 
 The start-of-turn phase reads the acting creature's live conditions before voluntary actions. Condition identity is absolute: Frightened is Frightened, Charmed is Charmed. A beneficial failed-save modifier of kind `condition-immunity` or `debuff-counter` answers the matching condition on a legal friend. Bloodied (current HP at or below half of maximum) is answered by healing. An already-active matching counter-buff keeps the printed condition instance in state but `has_condition` is false, and a new application of that same condition fails closed. Selection is by modifier kind and condition id, never by spell or monster name. A test harness may seed a starting buff or debuff. Player-loaded fights and website presets must pass an empty opening-condition list.
+
+## Typed damage-to-healing replacement
+
+`DamageAbsorptionRule` is immutable source data: source id, printed source name,
+and damage type. Matching actual typed damage becomes zero applied damage plus
+ordinary healing of the matching pre-defense amount, capped by effective maximum
+HP and subject to the existing terminal-death/healing rules. It owns no new
+mutable pool or resource. Fresh combat state resets HP normally.
+
+Pure damage estimates never heal or spend a Reaction. Actual damage routes through
+Python `damage_defenses.resolve_damage_amount` and browser
+`browser-damage-defense-rules.resolveDamage`. Resolve replacement healing while
+evaluating components, then apply the sum of accepted damage to Temporary HP/HP.
+Absorbed components do not spend incoming-type resistance Reactions. Retain the
+exact printed trait name and actual restored HP in damage-component evidence.
+
+Source intake validates the typed equal-healing clause. A source that omits the
+explicit no-damage sentence must independently print matching damage Immunity;
+the label alone never implies prevention. Both editions reuse this same resolver
+with their own source parameters. Unrelated unsupported traits/actions continue
+to block certification.
 
 ## Timed source-owned emanations
 

@@ -59,6 +59,8 @@ Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §8, §22, §23; `docs/CANONICAL_CO
 
 ## Attack resolution flow
 
+- **Flexible Attack/Multiattack choices follow the current row deterministically.** See `docs/IRON_PIT_RULES_CONTRACT.md` §10 and `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md` Arena movement policy; fixed printed slots remain fixed.
+
 1. To-hit bonus + d20 versus AC.
 2. Natural 20 is a critical: automatic hit; double all damage dice required by the selected ruleset. Natural 1 is a miss and ends the turn.
 3. Apply per-type resistance, vulnerability, and immunity to base damage and to each rider separately.

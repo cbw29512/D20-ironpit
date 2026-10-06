@@ -36,6 +36,9 @@ window.IRON_PIT_BROWSER_MODIFIERS = {
   consumeAttacksAgainstAdvantage: () => {},
   add: () => {},
 };
+window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES = {
+  resolveDamage: (_state, amount) => ({ applied: amount, healed: 0, sourceName: null }),
+};
 window.IRON_PIT_BROWSER_ATTACK = {
   conditionSources: () => ({ advantage: 0, disadvantage: 0 }),
   rangedCloseThreat: () => false,

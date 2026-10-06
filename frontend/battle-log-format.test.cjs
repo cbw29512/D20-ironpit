@@ -122,6 +122,23 @@ const L = window.IRON_PIT_BATTLE_LOG;
 
 {
   const text = L.format({
+    event_type: "attack", actor_name: "Wizard", target_name: "Iron Golem", attack_name: "Shocking Grasp",
+    target_ac: 20, hit: true, critical: false,
+    attack_roll: { selected_roll: 18, rolls: [18], modifier: 8, total: 26, mode: "normal" },
+    damage_roll: { total: 0 },
+    damage_components: [{
+      total: 12, applied_total: 0, damage_type: "lightning",
+      absorption_source_name: "Lightning Absorption", absorbed_healing: 7,
+    }],
+    hp_before: 203, hp_after: 210, applied_condition_ids: [], is_dead: false,
+  });
+  assert.match(text, /Lightning Absorption absorbs 12/);
+  assert.match(text, /restores 7 HP/);
+  assert.match(text, /HP 203→210/);
+}
+
+{
+  const text = L.format({
     event_type: "saving_throw", actor_name: "Seraphine Dawnshield", target_name: "Wolf",
     feature_id: "sacred-flame", save_ability: "dexterity", save_dc: 13, save_succeeded: false,
     saving_throw_roll: { selected_roll: 7, rolls: [7, 2], modifier: 2, total: 11, mode: "normal",

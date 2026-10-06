@@ -3,6 +3,11 @@
 
   const MARK_SOURCES = new Set(["hunter's mark", "hunters-mark"]);
   const SPLASH_KEY = "superior-hunters-prey";
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Hunter's Mark splash damage requires the shared damage resolver.");
+    return rules;
+  };
 
   function members(setup) {
     return [...(setup?.heroes || []), ...(setup?.monsters || [])];
@@ -39,9 +44,9 @@
       );
       if (!splashTarget) return null;
       attacker.feature_last_turn_keys[SPLASH_KEY] = turnKey;
-      const applied = window.IRON_PIT_BROWSER_ATTACK.adjustedDamage(
+      const applied = DD().resolveDamage(
         splashTarget.state, mark.applied_total || mark.total, mark.damage_type,
-      );
+      ).applied;
       window.IRON_PIT_BROWSER_ATTACK.applyDamage(
         splashTarget.state, applied, false, [mark.damage_type],
         members(setup).map((item) => item.state), setup,
