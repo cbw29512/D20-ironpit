@@ -62,6 +62,10 @@
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
     if (extra.brutalStrikeEffectIds != null) BS()?.selectEffects?.(attacker.state, extra.brutalStrikeEffectIds); const spendAction = extra.spendAction !== false; window.IRON_PIT_BROWSER_TIMED_CONTROL?.registerTurnAttack(attacker.state, extra.offTurn === true);
     if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
+    const formation = window.IRON_PIT_BROWSER_FORMATION;
+    if (formation && !formation.targetAllowed(attacker, target, attack, extra.setup || null)) {
+      throw new Error(`${attack.id} cannot target ${target.combatant_id} under its current target policy.`);
+    }
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(attacker, target) || null;
     if (ward && !ward.succeeded) { if (spendAction) E().spend(attacker.state, "action"); return window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, attacker, target, attack.name, ward); }
     const recklessStarted = extra.allowReckless === true && B2().activate(attacker, attack, round);
