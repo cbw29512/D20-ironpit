@@ -1,131 +1,67 @@
 # Current operating status
 
-Recorded 2026-10-04 after the 2024 canonical-pregen completion and website preset publish work.
-Main baseline audited: `1676a9a3bf8ba41e6c845561f027abc8217e3346`.
+Recorded 2026-10-06 after the monster-work baseline reset.
+Main baseline audited: `007453194fcd5621c0130ffcabf25d3b132a1a07`.
 
 This file is operating authority for **what to work on next**. Combat rules remain authoritative in `docs/IRON_PIT_RULES_CONTRACT.md`. Generated certification manifests and exact current source/tests determine counts and readiness. Repository truth overrides chat summaries and older milestone prose.
 
-## Owner split / collision rule
+## Clean baseline
 
-- Iron Pit remains the only combat-engine lane in this repository.
-- Multiple agents may assist only when their work is deliberately non-overlapping.
-- The active combat/content worker owns its touched combat subsystem until handoff or merge.
-- Audit/documentation/repository-hygiene work may proceed separately when it does not edit the active combat subsystem.
-- Never rebase or merge a stale progression PR merely to preserve its history; reconcile useful behavior against current `main` first.
+The last accepted monster baseline is merged PR #624. Its exact head passed all four required gates before merge:
+
+- CI;
+- 2014 Basic Roster;
+- Paired Edition Monster Report;
+- 2014 Hero Certification.
+
+PR #625 is **closed unmerged**. It remains reference material only. It demonstrated useful mechanics, but it crossed too many semantic families to be a trustworthy merge unit.
+
+Do not revive or extend #625. Reimplement only still-correct pieces from current `main` in small semantic batches.
 
 ## Verified current certification
-
-Generated authority on the audited main baseline reports:
 
 | Edition | Content | READY / target |
 |---|---|---:|
 | 2014 | Canonical pregens | **240 / 240** |
 | 2024 | Canonical pregens | **240 / 240** |
-| 2024 | SRD monsters | **140 / 330** |
-| 2014 | Browser monster roster | **130 certified** (per permanent roster assertion) |
+| 2014 | Source monsters | **177 / 327** |
+| 2024 | SRD monsters | **141 / 330** |
 
-### Canonical pregen status
-
-All twelve canonical classes are complete through level 20 in both editions:
-
-- Fighter (Champion)
-- Barbarian (Berserker)
-- Bard (Lore)
-- Cleric (Life)
-- Druid (Land)
-- Monk (Open Hand)
-- Paladin (Devotion)
-- Ranger (Hunter)
-- Rogue (Thief)
-- Sorcerer (Draconic)
-- Warlock (Fiend)
-- Wizard (Evoker)
-
-Do **not** reopen class-progression work merely because an older PR or chat summary claims a lower certified count.
+Counts above are the clean-baseline counts. Recompute them after every merged monster tranche.
 
 ## Current completion order
 
-Owner-requested order is now:
+1. Finish the 2014 source monster roster first.
+2. Classify blockers by semantic behavior, not printed trait name.
+3. Choose the largest coherent blocker family that maps to **one** universal primitive family.
+4. Reuse an existing primitive whenever semantics match.
+5. Keep one semantic mechanic family per PR.
+6. Regenerate all derived data from that exact branch head.
+7. Require Python/browser parity and all four exact-head gates before merge.
+8. After each merge, re-audit all 327 2014 monsters and update the blocker counts.
+9. Immediately audit 2024 for direct reuse of the completed primitive.
+10. Do not expand independent 2024 mechanics while 2014 remains incomplete.
 
-1. **Finish the 2014 source monster roster first.**
-2. For each 2014 blocker family, reuse/extend one universal mechanic and certify the 2014 source behavior.
-3. Immediately audit 2024 for direct reuse of that completed 2014-backed primitive.
-4. Do not expand independent 2024 monster mechanics while 2014 remains incomplete.
-5. After 2014 monster completion, process only the remaining genuine 2024 semantic deltas.
-6. Complete paired-edition monster certification and final RAW audit.
-7. Finish website visual/design polish after combat correctness and roster work are stable.
+Pregens are complete and are not the active expansion lane.
 
-Mechanic identity is edition-agnostic. Regeneration is Regeneration; Magic Resistance is Magic Resistance; a save is a save; resistance is resistance. Edition cards/source data supply the printed parameters and qualifiers.
+## Anti-drift rules
 
-Pregens are complete and are no longer the active expansion lane.
+- No monster-name or ability-name resolvers.
+- No second primitive for behavior already represented by the engine.
+- No hand-edited generated monster bundles.
+- No count-only fixes that hide a blocker.
+- No mixing unrelated mechanic families in one PR.
+- No carrying CI or certification claims across a changed head SHA.
+- No stale branch rebases merely to preserve work.
+- No lair actions; monsters are not in their lairs.
+- No ethereal/incorporeal arena escape behavior.
+- Source cards/templates remain immutable; fight-only buffs/debuffs live in combat state and reset with the fight.
 
-## Active work
+If a branch exposes an unrelated blocker, record it for the next tranche rather than absorbing it unless it is strictly required for the current family to become runnable.
 
-At the time of this status refresh:
+## Monster blocker classification
 
-- **PR #530 — Add Load Combat review for purpose-built test fights** is current work based directly on the audited `main` baseline.
-- Do not edit the same combat/runtime files from a second branch while #530 is active.
-- Separate repository-hygiene/documentation work may proceed without touching its subsystem.
-
-## Universal-engine audit priorities
-
-Audit by semantic mechanic, not by source ability name:
-
-1. **Attacks / saves / checks**
-   - legality and targeting;
-   - Advantage/Disadvantage;
-   - modifiers;
-   - DC/AC comparison;
-   - result propagation.
-
-2. **Damage / healing**
-   - typed components;
-   - resistance/immunity/vulnerability;
-   - Temporary HP and replacement effects;
-   - critical hits;
-   - zero-HP transitions.
-
-3. **Conditions / buffs / debuffs**
-   - one universal state identity per condition;
-   - source-specific parameters only;
-   - duration/expiry;
-   - immunity/suppression/removal.
-
-4. **Movement / geometry**
-   - authoritative grid position;
-   - printed movement modes;
-   - reach/range/areas;
-   - Opportunity Attacks;
-   - forced movement and movement debuffs.
-
-5. **Resources / action economy**
-   - availability before spending;
-   - Action/Bonus Action/Reaction legality;
-   - limited-use/recharge resources;
-   - reset semantics.
-
-6. **Hooks / reactions / timing**
-   - generic timing windows;
-   - no class/monster/ability-name resolver switches;
-   - deterministic ordering;
-   - Python/browser parity.
-
-7. **Edition isolation**
-   - explicit 2014 versus 2024 data/fingerprints;
-   - same-name features/spells do not imply same behavior.
-
-## Monster lane after engine audit
-
-2024 currently has **190 blocked monster slots**. Work them by shared blocker families rather than one monster at a time. Current recurring blocker classes include:
-
-- legendary actions;
-- limited-use/recharge behavior;
-- complex save/action effects;
-- spellcasting;
-- condition/control mechanics;
-- trait parsing/binding.
-
-Before adding any primitive, classify each blocker as:
+Before implementation classify each unresolved behavior as exactly one of:
 
 - `ENGINE_EXISTS_BINDING_MISSING`
 - `ENGINE_EXISTS_CERTIFICATION_MISSING`
@@ -134,15 +70,15 @@ Before adding any primitive, classify each blocker as:
 
 Only `ENGINE_TRULY_MISSING` justifies a new universal engine primitive.
 
-Current classification example: the 2014 Frog is `ARENA_NEUTRAL`. Its 2014 SRD source explicitly has no effective attacks, so it remains in the 327-record audit corpus but is not a runnable arena combatant. Do not backport the 2024 Frog Bite into 2014.
+## Immediate next action
 
-## Stale PR policy
+Run the full 2014 blocker audit from clean main `007453194...`, group the remaining blockers by semantic mechanic, and take the largest **single-family** batch first.
 
-Progression PRs whose completed behavior is already present on current `main` are superseded and should be closed, not rebased. Any older universal-engine PR must be re-audited against current source before reuse because its useful behavior may already have landed through a later implementation.
+Historical work from #625 may be used as evidence, but every reused behavior must be revalidated against current main and implemented in a fresh branch.
 
 ## Publishing
 
-Chris approved a one-shot roster production publish (2026-10-05). Unlock merge is `2292ba324` (#592); relock merge is `0963fff45` (#594). Git-connected ignore is restored. https://ironpit.netlify.app/ is serving production Git deploy `6ac3e995b21bb000098a0bdd` (`main` `2292ba324`) and that deploy is locked. Do not buy or attach `ironpit.app`.
+Netlify production publishing remains manual/locked. Do not spend Netlify credits for monster-development validation.
 
 ## Verification truth
 
