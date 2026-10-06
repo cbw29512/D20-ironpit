@@ -50,13 +50,23 @@ class SaveConditionEffectDefinition(BaseModel):
     max_target_size: CreatureSize | None = None
     duration_rounds: int | None = Field(default=None, ge=1, le=100800)
     repeat_save_timing: ConditionTiming | None = None
+    repeat_save_failure_condition: ConditionName | None = None
+    failure_push_ft: int = Field(default=0, ge=0)
     excluded_creature_types: list[str] = Field(default_factory=list)
     excluded_creature_subtypes: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_condition_lifecycle(self) -> "SaveConditionEffectDefinition":
-        if self.repeat_save_timing is not None and self.duration_rounds is None:
-            raise ValueError("Save-condition repeat-save riders require a printed duration.")
+        if (
+            self.repeat_save_timing is not None
+            and self.duration_rounds is None
+            and self.repeat_save_failure_condition is None
+        ):
+            raise ValueError(
+                "Save-condition repeat saves require a duration or a failure escalation condition."
+            )
+        if self.repeat_save_failure_condition is not None and self.repeat_save_timing is None:
+            raise ValueError("Failure escalation requires a repeat-save timing.")
         return self
 
 
