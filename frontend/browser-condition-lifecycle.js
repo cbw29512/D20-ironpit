@@ -30,6 +30,7 @@
             const immune = window.IRON_PIT_BROWSER_CONDITION_IMMUNITY?.immune(target.state, escalated, null) || false;
             if (!immune) {
               if (!target.state.active_effect_ids.includes(escalated)) target.state.active_effect_ids.push(escalated);
+              T().applyTerminalOutcome(target.state, escalated);
               applied.push(escalated);
             }
           }
