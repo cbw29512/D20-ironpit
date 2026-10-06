@@ -2,6 +2,11 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Deferred damage requires the shared damage resolver.");
+    return rules;
+  };
   const D = () => window.IRON_PIT_DICE;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
 
@@ -10,9 +15,7 @@
       const rolls = Array.from({ length: diceCount }, () => D().roll(diceSize));
       const rolledTotal = rolls.reduce((sum, value) => sum + value, 0);
       const scaledTotal = Math.floor(rolledTotal * multiplier);
-      const applied = A().resolveDamage
-        ? A().resolveDamage(targetState, scaledTotal, damageType).applied
-        : A().adjustedDamage(targetState, scaledTotal, damageType);
+      const applied = DD().resolveDamage(targetState, scaledTotal, damageType).applied;
       const component = {
         source: rule.source_name,
         notation: `${diceCount}d${diceSize}`,
