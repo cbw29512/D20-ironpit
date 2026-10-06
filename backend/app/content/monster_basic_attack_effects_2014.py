@@ -73,7 +73,7 @@ def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
         and not supports_charge_profile_2014(attack.charge_profile)
     ):
         return False
-    if attack.grapple_target_policy not in {"normal", "own_grapple_only"}:
+    if attack.grapple_target_policy not in {"normal", "own_grapple_only", "auto_hit_own_grapple"}:
         return False
     if attack.on_hit_damage and not all(
         supported_damage_row_2014(row) for row in attack.on_hit_damage
