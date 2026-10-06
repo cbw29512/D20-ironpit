@@ -5,6 +5,11 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Turn-creature damage requires the shared damage resolver.");
+    return rules;
+  };
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const D = () => window.IRON_PIT_DICE;
 
@@ -80,9 +85,7 @@
       let damageRoll = null, damageComponents = [];
       if (!save.succeeded && rider) {
         const raw = sharedRolls.reduce((sum, value) => sum + value, 0);
-        const appliedDamage = A().resolveDamage
-          ? A().resolveDamage(target.state, raw, rider.damage_type).applied
-          : A().adjustedDamage(target.state, raw, rider.damage_type);
+        const appliedDamage = DD().resolveDamage(target.state, raw, rider.damage_type).applied;
         if (appliedDamage) A().applyDamage(target.state, appliedDamage, false, [rider.damage_type], affectedStates);
         damageRoll = { notation: `${sharedRolls.length}d${rider.dice_size}`, rolls: [...sharedRolls], modifier: 0, total: appliedDamage };
         damageComponents = [{
