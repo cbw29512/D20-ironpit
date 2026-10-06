@@ -84,6 +84,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row["proneMaxSize"] = attack.knocks_prone_max_size.value
         if attack.forbid_target_grappled_by_self:
             row["forbidSelfGrappledTarget"] = True
+        if attack.grapple_target_policy != "normal":
+            row["grappleTargetPolicy"] = attack.grapple_target_policy
         if attack.conditional_attack_advantage:
             row["conditionalAttackAdvantage"] = [
                 {"trigger": spec.trigger} for spec in attack.conditional_attack_advantage
