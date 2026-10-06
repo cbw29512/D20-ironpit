@@ -105,7 +105,7 @@ class TimedSelfBuffAction(BaseModel):
     id: str
     name: str
     action_cost: ActionCost = "action"
-    activation_timing: Literal["action", "start_turn"] = "action"
+    activation_timing: Literal["action", "start_turn", "passive"] = "action"
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=200)
     duration_rounds: int | None = Field(default=None, ge=1, le=600)
@@ -137,6 +137,8 @@ class TimedSelfBuffAction(BaseModel):
         try:
             if self.action_cost == "reaction":
                 raise ValueError("Timed self-buff Actions currently require an on-turn Action or Bonus Action.")
+            if self.hostile_start_turn_condition_aura is not None and self.duration_rounds is None:
+                raise ValueError("Hostile condition auras require an explicit condition duration.")
             if len(set(self.condition_ids)) != len(self.condition_ids):
                 raise ValueError("Timed self-buff condition ids must be unique.")
             if len(set(self.damage_resistances)) != len(self.damage_resistances):
