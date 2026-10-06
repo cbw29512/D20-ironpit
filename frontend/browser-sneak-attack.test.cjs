@@ -57,12 +57,37 @@ const ineligible = { ...attack, id: "test-club", name: "Club", sneakAttackEligib
 }
 
 {
-  const attacker = { combatant_id: "rogue", side: "heroes", state: rogue() };
-  const ally = { combatant_id: "fighter", side: "heroes", state: { is_alive: true, is_dead: false, current_hp: 10, is_unconscious: false } };
-  const downAlly = { combatant_id: "cleric", side: "heroes", state: { is_alive: true, is_dead: false, current_hp: 0, is_unconscious: true } };
-  assert.equal(window.IRON_PIT_BROWSER_SNEAK_ATTACK.allyAvailable(attacker, { heroes: [attacker, ally], monsters: [] }), true,
-    "Iron Pit treats any other active ally as the adjacent-ally Sneak Attack path");
-  assert.equal(window.IRON_PIT_BROWSER_SNEAK_ATTACK.allyAvailable(attacker, { heroes: [attacker, downAlly], monsters: [] }), false);
+  window.IRON_PIT_BROWSER_STATE = {
+    distance: (left, right) => Math.abs(left.position_ft - right.position_ft),
+  };
+  const attacker = { combatant_id: "rogue", side: "heroes", position_ft: 0, state: rogue() };
+  const ally = { combatant_id: "fighter", side: "heroes", position_ft: 5,
+    state: { is_alive: true, is_dead: false, current_hp: 10, is_unconscious: false } };
+  const downAlly = { combatant_id: "cleric", side: "heroes", position_ft: 5,
+    state: { is_alive: true, is_dead: false, current_hp: 0, is_unconscious: true } };
+  const target = { combatant_id: "target", side: "monsters", position_ft: 10, state: {} };
+  assert.equal(
+    window.IRON_PIT_BROWSER_SNEAK_ATTACK.allyAvailable(
+      attacker, { heroes: [attacker, ally], monsters: [target] }, target,
+    ),
+    true,
+    "an active ally within 5 feet of the target enables Sneak Attack",
+  );
+  ally.position_ft = 20;
+  assert.equal(
+    window.IRON_PIT_BROWSER_SNEAK_ATTACK.allyAvailable(
+      attacker, { heroes: [attacker, ally], monsters: [target] }, target,
+    ),
+    false,
+    "a distant ally must not enable Sneak Attack",
+  );
+  assert.equal(
+    window.IRON_PIT_BROWSER_SNEAK_ATTACK.allyAvailable(
+      attacker, { heroes: [attacker, downAlly], monsters: [target] }, target,
+    ),
+    false,
+    "an incapacitated ally must not enable Sneak Attack",
+  );
 }
 
 {
