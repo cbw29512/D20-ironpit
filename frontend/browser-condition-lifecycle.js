@@ -14,7 +14,7 @@
     return effect.expiry_timing === timing && (effect.expires_round == null || round >= effect.expires_round);
   }
 
-  function resolveTargetTiming(sequence, round, target, timing) {
+  function resolveTargetTiming(sequence, round, target, timing, setup = null) {
     const events = [];
     for (const effect of [...target.state.timed_effects]) {
       if (!target.state.timed_effects.includes(effect)) continue;
@@ -30,7 +30,8 @@
             const immune = window.IRON_PIT_BROWSER_CONDITION_IMMUNITY?.immune(target.state, escalated, null) || false;
             if (!immune) {
               if (!target.state.active_effect_ids.includes(escalated)) target.state.active_effect_ids.push(escalated);
-              T().applyTerminalOutcome(target.state, escalated);
+              const affectedStates = setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
+              T().applyTerminalOutcome(target.state, escalated, affectedStates);
               applied.push(escalated);
             }
           }
