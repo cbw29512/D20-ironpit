@@ -70,6 +70,8 @@ Do not create a second resolver because a differently named source produces the 
 
 Do not copy same-name 2014 and 2024 behavior across editions without source evidence. Edition source data stays isolated even when both editions bind to the same universal primitive.
 
+Do not invent or backport combat capability for a source creature that explicitly has no effective attack or combat action. Keep the source record in the audit corpus and classify it `ARENA_NEUTRAL`/non-runnable unless product policy explicitly removes it.
+
 ## Universal runtime model
 
 Combat behavior follows:
