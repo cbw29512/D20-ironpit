@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 def primary_attack_save_fields(
     save_damage: Any,
     on_hit_save: Any,
+    on_hit_maximum_hp_save: Any,
     cunning_strike_obscure: Any,
     cunning_strike: Any,
     topple: Any,
@@ -112,6 +113,7 @@ def build_attack_description(
         for label, resolution in (
             ("", save_damage),
             ("", on_hit_save),
+            ("", on_hit_maximum_hp_save),
             ("Devious Strike Obscure", cunning_strike_obscure),
             ("Cunning Strike Trip", cunning_strike),
             ("Topple", topple),
@@ -124,6 +126,13 @@ def build_attack_description(
                 moved = getattr(resolution, "forced_movement_ft", 0)
                 if moved:
                     description += f" {actual_defender_name} is pushed {moved} feet away."
+                reduction = getattr(resolution, "reduction_applied", 0)
+                if reduction:
+                    description += (
+                        f" {actual_defender_name}'s hit point maximum is reduced by {reduction}."
+                    )
+                if getattr(resolution, "killed_by_zero_maximum", False):
+                    description += f" {actual_defender_name} dies as its hit point maximum reaches 0."
 
         if damage_outcome == "relentless_endurance":
             description += f" {actual_defender_name} uses Relentless Endurance and remains at 1 HP."
