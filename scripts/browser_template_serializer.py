@@ -890,6 +890,14 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "damage_resistances": [item.value for item in template.damage_resistances],
             "damage_vulnerabilities": [item.value for item in template.damage_vulnerabilities],
             "damage_immunities": [item.value for item in template.damage_immunities],
+            "damage_absorptions": [
+                {
+                    "sourceId": item.source_id,
+                    "sourceName": item.source_name,
+                    "damageType": _value(item.damage_type),
+                }
+                for item in template.damage_absorptions
+            ],
             "conditional_damage_defenses": [
                 {
                     "id": item.id, "kind": _value(item.kind),
