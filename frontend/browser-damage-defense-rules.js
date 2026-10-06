@@ -59,6 +59,7 @@
 
   function adjustedDamage(target, amount, type, allowVulnerability = true, sourceQualifiers = [], ignoreResistance = false) {
     try {
+      if (amount < 0) throw new Error("Damage cannot be negative.");
       const conditional = conditionalKinds(target, type, sourceQualifiers);
       if (absorptionRule(target, type) || target.template.damage_immunities?.includes(type)
           || (target.zone_damage_immunities || []).includes(type) || conditional.has("immunity")) return 0;
@@ -83,6 +84,7 @@
 
   function resolveDamage(target, amount, type, allowVulnerability = true, sourceQualifiers = [], ignoreResistance = false) {
     try {
+      if (amount < 0) throw new Error("Damage cannot be negative.");
       const absorption = absorptionRule(target, type);
       if (absorption) {
         if (amount <= 0) return { applied: 0, healed: 0, sourceName: absorption.sourceName };
