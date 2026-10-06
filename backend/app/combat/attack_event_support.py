@@ -148,7 +148,11 @@ def build_attack_description(
                 f"({contested_movement.target_roll.total} vs {contested_movement.source_roll.total})."
             )
             if contested_movement.movement_ft:
-                direction = "toward the source" if contested_movement.target_succeeded is False else ""
+                direction = (
+                    "toward the source"
+                    if contested_movement.direction == "toward_source"
+                    else "away from the source"
+                )
                 description += (
                     f" {actual_defender_name} is moved {contested_movement.movement_ft} feet {direction}."
                 )
