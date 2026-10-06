@@ -67,7 +67,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "goblin-scimitar",
@@ -274,7 +273,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "goblin-minion-dagger-melee",
@@ -452,7 +450,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "hobgoblin-longsword",
@@ -645,7 +642,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "kobold-warrior-dagger-melee",
@@ -826,7 +822,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "goblin-boss-scimitar",
@@ -1060,7 +1055,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "bandit-scimitar",
@@ -1237,7 +1231,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "commoner-club",
@@ -1385,7 +1378,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "guard-spear-melee",
@@ -1561,7 +1553,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-rat-bite",
@@ -1711,7 +1702,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-weasel-bite",
@@ -1857,7 +1847,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-blood-hawk-beak",
@@ -2020,7 +2009,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "axe-beak-beak",
@@ -2166,7 +2154,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-lizard-bite",
@@ -2322,7 +2309,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "wolf-bite",
@@ -2477,7 +2463,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "dire-wolf-bite",
@@ -2632,7 +2617,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "black-bear-rend",
@@ -2805,7 +2789,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "brown-bear-bite",
@@ -3002,7 +2985,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "baboon-bite",
@@ -3152,7 +3134,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "camel-bite",
@@ -3298,7 +3279,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "deer-ram",
@@ -3446,7 +3426,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "draft-horse-hooves",
@@ -3592,7 +3571,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-badger-bite",
@@ -3740,7 +3718,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "jackal-bite",
@@ -3886,7 +3863,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "boar-gore",
@@ -4037,7 +4013,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "elk-ram",
@@ -4185,7 +4160,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-boar-gore",
@@ -4336,7 +4310,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "minotaur-skeleton-gore",
@@ -4518,7 +4491,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "triceratops-gore",
@@ -4685,7 +4657,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "warhorse-skeleton-hooves",
@@ -4840,7 +4811,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "allosaurus-bite",
@@ -5017,7 +4987,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "goat-ram",
@@ -5161,7 +5130,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "merfolk-skirmisher-ocean-spear-ranged",
@@ -5379,7 +5347,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-druid-vine-staff",
@@ -5711,7 +5678,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "hippogriff-rend",
@@ -5878,7 +5844,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "awakened-shrub-rake",
@@ -6024,7 +5989,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "badger-bite",
@@ -6168,7 +6132,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "bat-bite",
@@ -6310,7 +6273,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "cat-scratch",
@@ -6454,7 +6416,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "crab-claw",
@@ -6598,7 +6559,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "frog-bite",
@@ -6743,7 +6703,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "hawk-talons",
@@ -6885,7 +6844,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "lizard-bite",
@@ -7029,7 +6987,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "owl-talons",
@@ -7173,7 +7130,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "rat-bite",
@@ -7317,7 +7273,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "raven-beak",
@@ -7461,7 +7416,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "weasel-bite",
@@ -7603,7 +7557,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "eagle-talons",
@@ -7749,7 +7702,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "panther-rend",
@@ -7897,7 +7849,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "plesiosaurus-bite",
@@ -8045,7 +7996,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "polar-bear-rend",
@@ -8212,7 +8162,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "pony-hooves",
@@ -8358,7 +8307,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "pteranodon-bite",
@@ -8506,7 +8454,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "riding-horse-hooves",
@@ -8652,7 +8599,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "tiger-rend",
@@ -8805,7 +8751,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "vulture-beak",
@@ -8955,7 +8900,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-fire-beetle-bite",
@@ -9101,7 +9045,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-goat-ram",
@@ -9249,7 +9192,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-owl-talons",
@@ -9401,7 +9343,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "hyena-bite",
@@ -9551,7 +9492,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-bat-bite",
@@ -9697,7 +9637,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "mastiff-bite",
@@ -9848,7 +9787,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "mule-hooves",
@@ -9996,7 +9934,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "rhinoceros-gore",
@@ -10144,7 +10081,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "warhorse-hooves",
@@ -10292,7 +10228,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "ogre-greatclub",
@@ -10494,7 +10429,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "owlbear-rend",
@@ -10659,7 +10593,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "saber-toothed-tiger-rend",
@@ -10828,7 +10761,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "scout-longbow",
@@ -11024,7 +10956,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "warrior-infantry-spear-melee",
@@ -11203,7 +11134,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "crocodile-bite",
@@ -11361,7 +11291,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-crab-claw",
@@ -11519,7 +11448,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "constrictor-snake-bite",
@@ -11695,7 +11623,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-giant-scorpion-claw",
@@ -11916,7 +11843,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-grick-beak",
@@ -12119,7 +12045,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-griffon-rend",
@@ -12295,7 +12220,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-centipede-bite",
@@ -12452,7 +12376,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-vulture-gouge",
@@ -12614,7 +12537,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "wyvern-bite",
@@ -12828,7 +12750,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-venomous-snake-bite",
@@ -12991,7 +12912,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-wasp-sting",
@@ -13155,7 +13075,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-wolf-spider-bite",
@@ -13321,7 +13240,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "archelon-bite",
@@ -13488,7 +13406,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "ankylosaurus-tail",
@@ -13658,7 +13575,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-eagle-rend",
@@ -13839,7 +13755,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-elk-ram",
@@ -14003,7 +13918,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-crocodile-bite",
@@ -14211,7 +14125,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "giant-constrictor-snake-bite",
@@ -14407,7 +14320,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "tyrannosaurus-rex-bite",
@@ -14613,7 +14525,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-animated-armor-slam",
@@ -14789,7 +14700,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-animated-flying-sword-slash",
@@ -14946,7 +14856,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-earth-elemental-slam",
@@ -15160,7 +15069,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-awakened-tree-slam",
@@ -15311,7 +15219,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-cultist-ritual-sickle",
@@ -15470,7 +15377,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-flying-snake-bite",
@@ -15627,7 +15533,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-gargoyle-claw",
@@ -15800,7 +15705,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-grimlock-bone-cudgel",
@@ -15959,7 +15863,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-guard-captain-javelin-melee",
@@ -16184,7 +16087,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-hippopotamus-bite",
@@ -16351,7 +16253,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-hill-giant-tree-club",
@@ -16560,7 +16461,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-killer-whale-bite",
@@ -16708,7 +16608,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-lemure-vile-slime",
@@ -16865,7 +16764,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-manticore-rend",
@@ -17068,7 +16966,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-ogre-zombie-slam",
@@ -17223,7 +17120,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-pegasus-hooves",
@@ -17382,7 +17278,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-scorpion-sting",
@@ -17537,7 +17432,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-skeleton-shortsword",
@@ -17719,7 +17613,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-spider-bite",
@@ -17877,7 +17770,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-spy-shortsword",
@@ -18080,7 +17972,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-troll-rend",
@@ -18310,7 +18201,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-tough-mace",
@@ -18489,7 +18379,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-venomous-snake-bite",
@@ -18648,7 +18537,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-violet-fungus-rotting-touch",
@@ -18818,7 +18706,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-xorn-bite",
@@ -19033,7 +18920,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-zombie-slam",
@@ -19188,7 +19074,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-giant-shark-bite",
@@ -19359,7 +19244,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-hunter-shark-bite",
@@ -19511,7 +19395,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-piranha-bite",
@@ -19659,7 +19542,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-reef-shark-bite",
@@ -19810,7 +19692,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-sahuagin-warrior-claw",
@@ -19988,7 +19869,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-swarm-of-piranhas-bites",
@@ -20169,7 +20049,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-hell-hound-bite",
@@ -20393,7 +20272,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-black-dragon-wyrmling-rend",
@@ -20616,7 +20494,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-blue-dragon-wyrmling-rend",
@@ -20837,7 +20714,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-green-dragon-wyrmling-rend",
@@ -21061,7 +20937,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-red-dragon-wyrmling-rend",
@@ -21281,7 +21156,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-white-dragon-wyrmling-rend",
@@ -21503,7 +21377,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-young-black-dragon-rend",
@@ -21732,7 +21605,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-young-blue-dragon-rend",
@@ -21959,7 +21831,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-young-green-dragon-rend",
@@ -22189,7 +22060,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-young-red-dragon-rend",
@@ -22415,7 +22285,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-young-white-dragon-rend",
@@ -22643,7 +22512,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-worg-bite",
@@ -22799,7 +22667,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-swarm-of-bats-bites",
@@ -22975,7 +22842,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-swarm-of-rats-bites",
@@ -23151,7 +23017,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-swarm-of-crawling-claws-swarm-of-grasping-hands",
@@ -23337,7 +23202,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-bandit-captain-scimitar",
@@ -23539,7 +23403,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-knight-greatsword",
@@ -23769,7 +23632,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-noble-rapier",
@@ -23920,7 +23782,6 @@
       "death_save_recovery_minimum": 20,
       "critical_move_fraction": 0.0
     },
-    "bonus_attack_grants": [],
     "attacks": [
       {
         "id": "srd-warrior-veteran-greatsword",
