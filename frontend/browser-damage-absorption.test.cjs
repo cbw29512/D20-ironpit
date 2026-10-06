@@ -94,3 +94,17 @@ assert.deepEqual(result, { applied: 0, healed: 1, sourceName: "Lightning Absorpt
 assert.equal(target.current_hp, 20);
 
 console.log("Browser damage absorption regressions passed.");
+
+
+target = state();
+target.template.damage_resistances = ["fire"];
+result = D.resolveDamage(target, 8, "fire");
+assert.deepEqual(result, { applied: 4, healed: 0, sourceName: null });
+assert.equal(target.reaction_available, true, "redundant resistance must preserve the reaction");
+assert.equal(target.timed_effects.length, 0);
+
+target = state();
+result = D.resolveDamage(target, 8, "fire", true, [], true);
+assert.deepEqual(result, { applied: 8, healed: 0, sourceName: null });
+assert.equal(target.reaction_available, true, "bypassed resistance must preserve the reaction");
+assert.equal(target.timed_effects.length, 0);
