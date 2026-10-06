@@ -152,17 +152,11 @@
     const reduction = ADR()?.apply(defender, attack, rolled) || { components: rolled, used: false, reduction: 0, sourceId: null, sourceName: null };
     const uncanny = RD().applyUncannyDodge(attacker, defender, reduction.components);
     const bypassTypes = resistanceBypassTypes(attacker);
-    const damageComponents = uncanny.components.map((part) => {
-      const resolved = A().resolveDamage
-        ? A().resolveDamage(defender, part.total, part.damage_type, true, part.source_qualifiers || [], bypassTypes.has(part.damage_type))
-        : { applied: A().adjustedDamage(defender, part.total, part.damage_type, true, part.source_qualifiers || [], bypassTypes.has(part.damage_type)), healed: 0, sourceName: null };
-      return {
-        ...part,
-        applied_total: resolved.applied,
-        absorbed_healing: resolved.healed || 0,
-        absorption_source_name: resolved.sourceName || null,
-      };
-    });
+    const damageComponents = uncanny.components.map((part) => { const resolved = A().resolveDamage
+      ? A().resolveDamage(defender, part.total, part.damage_type, true, part.source_qualifiers || [], bypassTypes.has(part.damage_type))
+      : { applied: A().adjustedDamage(defender, part.total, part.damage_type, true, part.source_qualifiers || [], bypassTypes.has(part.damage_type)), healed: 0, sourceName: null };
+      return { ...part, applied_total: resolved.applied, absorbed_healing: resolved.healed || 0,
+        absorption_source_name: resolved.sourceName || null }; });
     const appliedTotal = damageComponents.reduce((sum, part) => sum + part.applied_total, 0);
     const damageRoll = { ...aggregate(uncanny.components), total: appliedTotal };
     const appliedTypes = [...new Set(
