@@ -101,6 +101,8 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                 condition_id=effect.condition, max_target_size=effect.max_target_size,
                 duration_rounds=effect.duration_rounds,
                 repeat_save_timing=effect.repeat_save_timing,
+                repeat_save_failure_condition_id=effect.repeat_save_failure_condition,
+                failure_push_ft=effect.failure_push_ft,
                 excluded_creature_types=list(effect.excluded_creature_types),
                 excluded_creature_subtypes=list(effect.excluded_creature_subtypes),
             )
