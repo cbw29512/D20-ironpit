@@ -7,6 +7,7 @@ from app.combat.conditional_attack_advantage import conditional_attack_advantage
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.content.demo import build_demo_fighter, build_goblin_warrior
+from app.domain.actions import GrappleSource
 from app.domain.models import ConditionalAttackAdvantage, RollMode
 
 logger = logging.getLogger(__name__)
@@ -50,3 +51,17 @@ def test_target_not_full_hp_advantage_enters_canonical_attack_roll_mode() -> Non
     except Exception:
         logger.exception("Canonical attack-roll conditional Advantage regression failed.")
         raise
+
+
+def test_target_grappled_by_self_advantage_requires_matching_grapple_source() -> None:
+    target = build_combatant_state(build_demo_fighter())
+    attack = _attack().model_copy(update={
+        "conditional_attack_advantage": [
+            ConditionalAttackAdvantage(trigger="target_grappled_by_self"),
+        ],
+    })
+    assert conditional_attack_advantage_sources(attack, target, "ankheg") == 0
+    target.grapple_sources.append(GrappleSource(source_id="other", escape_dc=12))
+    assert conditional_attack_advantage_sources(attack, target, "ankheg") == 0
+    target.grapple_sources.append(GrappleSource(source_id="ankheg", escape_dc=13))
+    assert conditional_attack_advantage_sources(attack, target, "ankheg") == 1
