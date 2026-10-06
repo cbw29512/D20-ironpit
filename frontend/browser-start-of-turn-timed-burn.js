@@ -18,8 +18,8 @@
           total += D().roll(effect.start_of_turn_dice_size || 6);
         }
         const damageType = effect.start_of_turn_damage_type;
-        const applied = (A().resolveDamage ? A().resolveDamage(member.state, total, damageType).applied : A().adjustedDamage(member.state, total, damageType));
         const hpBefore = member.state.current_hp;
+        const applied = (A().resolveDamage ? A().resolveDamage(member.state, total, damageType).applied : A().adjustedDamage(member.state, total, damageType));
         A().applyDamage(
           member.state, applied, false, [damageType], states, setup,
         );
