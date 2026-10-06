@@ -10,10 +10,11 @@ from app.domain.capability_effects import (
     ProneEffectDefinition,
     SaveConditionEffectDefinition,
     SaveDamageEffectDefinition,
+    SaveMaximumHpReductionEffectDefinition,
 )
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
-from app.domain.weapons import OnHitConditionSave, OnHitSaveDamage
+from app.domain.weapons import OnHitConditionSave, OnHitMaximumHpSave, OnHitSaveDamage
 
 
 class UnsupportedCapabilityError(ValueError):
@@ -67,6 +68,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
     control = None
     on_hit_save = None
     on_hit_save_damage = None
+    on_hit_maximum_hp_save = None
     for effect in definition.effects:
         if isinstance(effect, DamageEffectDefinition):
             if effect.trigger == "on_hit":
@@ -92,6 +94,13 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                 dice_count=effect.dice.count, dice_size=effect.dice.size, damage_bonus=effect.dice.bonus,
                 damage_type=effect.damage_type, success_damage=effect.success_damage,
                 zero_hp_rider=effect.zero_hp_rider,
+            )
+        elif isinstance(effect, SaveMaximumHpReductionEffectDefinition):
+            on_hit_maximum_hp_save = OnHitMaximumHpSave(
+                save_ability=effect.save_ability,
+                dc=effect.dc,
+                reduction=effect.reduction,
+                zero_max_hp_kills=effect.zero_max_hp_kills,
             )
         elif isinstance(effect, ProneEffectDefinition):
             prone_size = effect.max_target_size
@@ -127,6 +136,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         on_hit_damage=on_hit,
         on_hit_save_damage=on_hit_save_damage,
         on_hit_condition_save=on_hit_save,
+        on_hit_maximum_hp_save=on_hit_maximum_hp_save,
         on_hit_modifier_effects=on_hit_modifiers,
         charge_profile=compile_charge(definition.charge_profile),
         knocks_prone_max_size=prone_size,
