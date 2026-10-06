@@ -46,10 +46,20 @@
     }
   }
 
+  function absorptionRule(target, type) {
+    try {
+      const matches = (target.template.damage_absorptions || []).filter((rule) => rule.damageType === type);
+      if (matches.length > 1) throw new Error(`${target.template.name} has multiple absorption rules for ${type}.`);
+      return matches[0] || null;
+    } catch (error) {
+      throw new Error(`Damage absorption lookup failed: ${error.message}`);
+    }
+  }
+
   function adjustedDamage(target, amount, type, allowVulnerability = true, sourceQualifiers = [], ignoreResistance = false) {
     applyIncomingTypeResistance(target, amount, type);
     const conditional = conditionalKinds(target, type, sourceQualifiers);
-    if (target.template.damage_immunities?.includes(type) || (target.zone_damage_immunities || []).includes(type) || conditional.has("immunity")) return 0;
+    if (absorptionRule(target, type) || target.template.damage_immunities?.includes(type) || (target.zone_damage_immunities || []).includes(type) || conditional.has("immunity")) return 0;
     let value = amount;
     const timed = window.IRON_PIT_BROWSER_TIMED;
     const conditions = window.IRON_PIT_BROWSER_CONDITION_RULES;
@@ -65,7 +75,21 @@
     return value;
   }
 
+  function resolveDamage(target, amount, type, allowVulnerability = true, sourceQualifiers = [], ignoreResistance = false) {
+    try {
+      const applied = adjustedDamage(target, amount, type, allowVulnerability, sourceQualifiers, ignoreResistance);
+      const absorption = absorptionRule(target, type);
+      if (!absorption || amount <= 0) return { applied, healed: 0, sourceName: null };
+      const healing = window.IRON_PIT_BROWSER_HEALING;
+      if (!healing?.restore) throw new Error("Browser healing runtime is required for damage absorption.");
+      const healed = healing.restore(target, amount);
+      return { applied: 0, healed, sourceName: absorption.sourceName };
+    } catch (error) {
+      throw new Error(`Damage amount resolution failed: ${error.message}`);
+    }
+  }
+
   window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES = {
-    adjustedDamage, applyIncomingTypeResistance, conditionalKinds, expireCurrentTurnTypeResistances,
+    adjustedDamage, resolveDamage, applyIncomingTypeResistance, conditionalKinds, expireCurrentTurnTypeResistances,
   };
 })();
