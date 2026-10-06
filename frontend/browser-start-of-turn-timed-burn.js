@@ -3,6 +3,11 @@
 
   const D = () => window.IRON_PIT_DICE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Start-of-turn damage requires the shared damage resolver.");
+    return rules;
+  };
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const members = (setup) => [...(setup?.heroes || []), ...(setup?.monsters || [])];
@@ -19,7 +24,7 @@
         }
         const damageType = effect.start_of_turn_damage_type;
         const hpBefore = member.state.current_hp;
-        const applied = (A().resolveDamage ? A().resolveDamage(member.state, total, damageType).applied : A().adjustedDamage(member.state, total, damageType));
+        const applied = DD().resolveDamage(member.state, total, damageType).applied;
         A().applyDamage(
           member.state, applied, false, [damageType], states, setup,
         );
