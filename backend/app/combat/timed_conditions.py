@@ -21,6 +21,26 @@ logger = logging.getLogger(__name__)
 
 POISONED_EFFECT_ID = "poisoned"
 ARENA_POISON_RECOVERY_DC = 10
+TERMINAL_CONDITIONS = frozenset({"petrified"})
+
+
+def apply_terminal_condition_outcome(
+    state: CombatantState,
+    effect_id: str,
+    *,
+    affected_states: list[CombatantState] | None = None,
+) -> bool:
+    """Apply Iron Pit terminal consequences for semantic condition states."""
+    if effect_id not in TERMINAL_CONDITIONS or state.is_dead:
+        return False
+    state.current_hp = 0
+    state.is_alive = False
+    state.is_dead = True
+    state.is_unconscious = False
+    state.is_stable = False
+    state.active_effect_ids = [item for item in state.active_effect_ids if item != "dodge"]
+    end_concentration_if_incapacitated(state, affected_states)
+    return True
 
 
 def apply_timed_condition(
@@ -143,6 +163,7 @@ def apply_timed_condition(
         ))
         if effect_id not in state.active_effect_ids:
             state.active_effect_ids.append(effect_id)
+        apply_terminal_condition_outcome(state, effect_id, affected_states=affected_states)
         revert_replacement_form_if_incapacitated(state)
         end_concentration_if_incapacitated(state, affected_states)
         return effect_id
