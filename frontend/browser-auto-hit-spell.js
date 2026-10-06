@@ -2,6 +2,11 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Browser auto-hit spell damage requires the shared damage resolver.");
+    return rules;
+  };
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const S = () => window.IRON_PIT_BROWSER_STATE;
@@ -23,7 +28,7 @@
         ? C().maximizedRolls(action.damageDiceCount || 1, action.damageDiceSize || 4)
         : window.IRON_PIT_DICE.rollMany(action.damageDiceCount || 1, action.damageDiceSize || 4);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (action.damageBonus || 0);
-      const applied = (A().resolveDamage ? A().resolveDamage(target.state, raw, action.damageType).applied : A().adjustedDamage(target.state, raw, action.damageType));
+      const applied = DD().resolveDamage(target.state, raw, action.damageType).applied;
       allRolls.push(...rolls);
       total += applied;
       components.push({
