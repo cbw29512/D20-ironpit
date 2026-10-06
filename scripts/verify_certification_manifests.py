@@ -195,6 +195,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("heroic-warrior")
     if features.studied_attacks:
         mechanics.add("studied-attacks")
+    if features.first_turn_attack_advantage_against_unacted_target:
+        mechanics.add("first-turn-attack-advantage-against-unacted-target")
     if features.sneak_attack_d6:
         mechanics.add("sneak-attack")
     if features.cunning_action:
