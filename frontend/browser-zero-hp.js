@@ -6,6 +6,7 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT;
+  const R = () => window.IRON_PIT_BROWSER_RESOURCES;
   const RF = () => window.IRON_PIT_BROWSER_REPLACEMENT_FORMS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const DODGE = "dodge";
@@ -19,6 +20,40 @@
     state.is_alive = true;
     state.is_unconscious = false;
     state.is_stable = false;
+    return true;
+  }
+
+
+  function useDamageThresholdZeroHpReplacement(state, incoming) {
+    const rules = state.template.damage_threshold_zero_hp_replacements || [];
+    const eligible = rules.filter((rule) => {
+      const cost = rule.resource_cost || 1;
+      const available = R()?.available
+        ? R().available(state, rule.resource_id, cost)
+        : (state.resources?.[rule.resource_id] || 0) >= cost;
+      return incoming <= rule.max_trigger_damage && available;
+    });
+    if (!eligible.length) return false;
+    eligible.sort((a, b) =>
+      a.max_trigger_damage - b.max_trigger_damage
+      || (b.replacement_hp || 0) - (a.replacement_hp || 0)
+      || String(a.source_id).localeCompare(String(b.source_id))
+    );
+    const rule = eligible[0];
+    const cost = rule.resource_cost || 1;
+    if (R()?.spend) R().spend(state, rule.resource_id, cost);
+    else state.resources[rule.resource_id] -= cost;
+    state.current_hp = rule.replacement_hp;
+    state.is_alive = true;
+    state.is_dead = false;
+    state.is_unconscious = false;
+    state.is_stable = false;
+    state.death_save_successes = 0;
+    state.death_save_failures = 0;
+    state.pending_zero_hp_replacement_logs ||= [];
+    state.pending_zero_hp_replacement_logs.push(
+      `${rule.source_name} prevents the drop to 0 HP; ${state.template.name} remains at ${rule.replacement_hp} HP.`
+    );
     return true;
   }
 
@@ -174,6 +209,7 @@
     const before = state.current_hp;
     state.current_hp = Math.max(0, before - amount);
     if (state.current_hp > 0) return finish(state, "damaged", incoming, affectedStates, setup);
+    if (useDamageThresholdZeroHpReplacement(state, incoming)) return finish(state, "damage_threshold_zero_hp_replacement", incoming, affectedStates, setup);
     if (Z()?.consumeZero(state)) return finish(state, "zero_hp_replacement", incoming, affectedStates, setup);
     if (useUndeadFortitude(state, incoming, damageTypes, critical)) return finish(state, "undead_fortitude", incoming, affectedStates, setup);
     if (state.template.kind === "monster") {
