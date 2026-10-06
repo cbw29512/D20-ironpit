@@ -160,7 +160,9 @@
     if (frenzy) components.push(bonusComponent(frenzy, critical));
     const postHit = window.IRON_PIT_BROWSER_POST_HIT_DAMAGE?.bonusDamage(attacker, attack, turnKey, target);
     if (postHit) components.push(bonusComponent(postHit, critical));
-    const oncePerTurnHits = window.IRON_PIT_BROWSER_ONCE_PER_TURN_HIT_DAMAGE?.bonusDamages(attacker, turnKey, target, attack) || [];
+    const oncePerTurnHits = window.IRON_PIT_BROWSER_ONCE_PER_TURN_HIT_DAMAGE?.bonusDamages(
+      attacker, turnKey, target, attack, sneakAllyAvailable,
+    ) || [];
     for (const oncePerTurnHit of oncePerTurnHits) components.push(bonusComponent(oncePerTurnHit, critical));
     const brutalStrike = window.IRON_PIT_BROWSER_BRUTAL_STRIKE?.bonusDamage(
       attacker, attack, turnKey, mode === "disadvantage",
