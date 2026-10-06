@@ -2,6 +2,11 @@
   "use strict";
 
   const EFFECT = "banished";
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Exile damage requires the shared damage resolver.");
+    return rules;
+  };
 
   function removed(state) {
     return (state.timed_effects || []).some((effect) => effect.removed_from_battlefield === true);
@@ -45,11 +50,7 @@
     if (rule.hit_damage_type && rule.hit_damage_dice_count && !hitExcluded) {
       const rolls = window.IRON_PIT_DICE.rollMany(rule.hit_damage_dice_count, rule.hit_damage_dice_size);
       const raw = rolls.reduce((sum, roll) => sum + roll, 0);
-      const applied = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES
-        ? (window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.resolveDamage
-          ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.resolveDamage(target.state, raw, rule.hit_damage_type).applied
-          : window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.adjustedDamage(target.state, raw, rule.hit_damage_type))
-        : raw;
+      const applied = DD().resolveDamage(target.state, raw, rule.hit_damage_type).applied;
       if (applied) {
         const affected = [...(ctx.setup?.heroes || []), ...(ctx.setup?.monsters || [])]
           .map((item) => item.state);
@@ -118,11 +119,7 @@
         if (effect.return_damage_type && effect.return_damage_dice_count && !excluded) {
           const rolls = window.IRON_PIT_DICE.rollMany(effect.return_damage_dice_count, effect.return_damage_dice_size);
           const raw = rolls.reduce((a, b) => a + b, 0) + (effect.return_damage_bonus || 0);
-          const applied = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES
-            ? (window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.resolveDamage
-              ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.resolveDamage(target.state, raw, effect.return_damage_type).applied
-              : window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.adjustedDamage(target.state, raw, effect.return_damage_type))
-            : raw;
+          const applied = DD().resolveDamage(target.state, raw, effect.return_damage_type).applied;
           damageComponents = [{
             source: effect.source_effect_id || effect.effect_id,
             notation: `${effect.return_damage_dice_count}d${effect.return_damage_dice_size}+${effect.return_damage_bonus || 0}`,
