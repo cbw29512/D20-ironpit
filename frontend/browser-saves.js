@@ -20,7 +20,6 @@
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   const resolveSavingThrow = (...args) => window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow(...args);
   const saveMode = (...args) => window.IRON_PIT_BROWSER_SAVING_THROWS.saveMode(...args);
-
   function resolveOnHitConditionSave(target, attack, sourceTemplate = null, round = null, setup = null, attacker = null) {
     const impl = window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE;
     if (impl) return impl.resolve(target, attack, sourceTemplate, round, setup, attacker);
@@ -42,7 +41,6 @@
     return { saveRoll: save.roll, saveAbility: effect.saveAbility, saveDc: effect.dc,
       saveSucceeded: save.succeeded, appliedCondition };
   }
-
   function legalAction(action, target, distance, sourceId) {
     if (distance > action.range) return false;
     if (sourceId && window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS?.isImmune(target, action, sourceId)) return false;
