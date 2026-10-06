@@ -5,11 +5,9 @@
   const S = () => window.IRON_PIT_BROWSER_SAVES;
   const D = () => window.IRON_PIT_DICE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
-  const DD = () => {
-    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
-    if (!rules?.resolveDamage) throw new Error("Browser actual damage resolution requires browser-damage-defense-rules.js.");
-    return rules;
-  };
+  const DD = () => window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.resolveDamage
+    ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES
+    : (() => { throw new Error("Browser actual damage resolution requires browser-damage-defense-rules.js."); })();
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const P = () => window.IRON_PIT_BROWSER_PALADIN_2014;
