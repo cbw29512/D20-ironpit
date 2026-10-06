@@ -13,7 +13,19 @@ const deterministicDice = (seed = 2014) => {
 };
 
 assert.equal(window.IRON_PIT_2014_MVP_READY, true, "2014 browser test roster must be loaded");
-assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 170);
+assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 171);
+const scout2014 = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-scout"];
+assert.ok(scout2014, "2014 Scout must be in the certified browser roster");
+const scoutLongbow2014 = scout2014.attacks.find((attack) => attack.id === "2014-scout-longbow");
+assert.ok(scoutLongbow2014, "2014 Scout must expose its Longbow");
+assert.deepEqual(
+  [scoutLongbow2014.kind, scoutLongbow2014.normal, scoutLongbow2014.long, scoutLongbow2014.bonus, scoutLongbow2014.diceCount, scoutLongbow2014.diceSize, scoutLongbow2014.damageBonus],
+  ["ranged", 150, 600, 4, 1, 8, 2],
+);
+assert.deepEqual(
+  scout2014.attack_action.slots.map((slot) => slot.attackIds),
+  [["2014-scout-shortsword", "2014-scout-longbow"], ["2014-scout-shortsword", "2014-scout-longbow"]],
+);
 const heroes2014 = Object.values(window.IRON_PIT_BROWSER_HEROES).filter((hero) => hero.ruleset === "2014");
 const fighters2014 = heroes2014.filter((hero) => hero.class_id === "fighter");
 const barbarians2014 = heroes2014.filter((hero) => hero.class_id === "barbarian");
