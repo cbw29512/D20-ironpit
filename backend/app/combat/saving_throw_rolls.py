@@ -145,8 +145,15 @@ def resolve_saving_throw(
         roll, _, _ = apply_failed_d20_test_override(
             state, roll, failed=roll.total < dc, test_kind="saving_throw",
         )
-        if roll.total < dc and apply_save_success_override(state):
-            return roll, True
+        if roll.total < dc:
+            override = apply_save_success_override(state)
+            if override is not None:
+                name, remaining = override
+                roll = roll.model_copy(update={
+                    "outcome_override_name": name,
+                    "outcome_override_uses_remaining": remaining,
+                })
+                return roll, True
         return roll, roll.total >= dc
     except ValueError:
         raise

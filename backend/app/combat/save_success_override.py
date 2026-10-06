@@ -8,14 +8,19 @@ from app.domain.models import CombatantState
 logger = logging.getLogger(__name__)
 
 
-def apply_save_success_override(state: CombatantState) -> str | None:
-    """Spend one declared override to turn a failed saving throw into a success."""
+def apply_save_success_override(state: CombatantState) -> tuple[str, int] | None:
+    """Spend one declared override and return its printed name plus remaining uses."""
     try:
         for grant in state.template.save_success_overrides:
             if not resource_available(state, grant.resource_id, grant.resource_cost):
                 continue
             spend_resource(state, grant.resource_id, grant.resource_cost)
-            return grant.source_id
+            remaining = next(
+                resource.current_uses
+                for resource in state.resources
+                if resource.id == grant.resource_id
+            )
+            return grant.source_name, remaining
         return None
     except Exception:
         logger.exception("Failed save-success override for %s.", state.template.name)

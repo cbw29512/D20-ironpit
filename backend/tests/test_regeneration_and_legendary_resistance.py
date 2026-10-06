@@ -4,6 +4,7 @@ from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.state import build_combatant_state
 from app.combat.zero_hp import apply_damage
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+from app.content.monster_legendary_resistance_2014 import legendary_resistance_uses_from_names
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.domain.encounters import EncounterCombatant
 from app.domain.grid import GridPosition
@@ -121,7 +122,7 @@ def test_legendary_resistance_turns_a_failed_save_into_success() -> None:
         resources=[ResourceDefinition(id="legendary-resistance", name="Legendary Resistance", max_uses=3)],
         save_success_overrides=[FailedSaveSuccessOverride(
             source_id="legendary-resistance",
-            source_name="Legendary Resistance",
+            source_name="Legendary Resistance (3/Day)",
             resource_id="legendary-resistance",
         )],
     )
@@ -129,6 +130,8 @@ def test_legendary_resistance_turns_a_failed_save_into_success() -> None:
     roll, succeeded = resolve_saving_throw(state, "wisdom", 20, FixedDiceProvider([1]))
     assert succeeded is True
     assert roll is not None and roll.total < 20
+    assert roll.outcome_override_name == "Legendary Resistance (3/Day)"
+    assert roll.outcome_override_uses_remaining == 2
     assert state.resources[0].current_uses == 2
     state.resources[0].current_uses = 0
     _, failed = resolve_saving_throw(state, "wisdom", 20, FixedDiceProvider([1]))
@@ -140,3 +143,10 @@ def test_2014_troll_is_no_longer_blocked_only_by_regeneration() -> None:
     assert "mechanic:regeneration" not in basic_blockers_2014(troll)
     assert "source:trait" not in basic_blockers_2014(troll)
     assert basic_blockers_2014(troll) == ()
+
+
+def test_legendary_resistance_lair_variant_uses_non_lair_count() -> None:
+    assert legendary_resistance_uses_from_names(
+        ["Legendary Resistance (3/Day, or 4/Day in Lair)"],
+        owner="test-monster",
+    ) == 3

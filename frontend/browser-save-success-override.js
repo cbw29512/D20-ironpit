@@ -8,7 +8,10 @@
         const cost = grant.resource_cost || 1;
         if (remaining < cost) continue;
         state.resources[grant.resource_id] = remaining - cost;
-        return grant.source_id;
+        return {
+          sourceName: grant.source_name || grant.source_id,
+          remaining: state.resources[grant.resource_id],
+        };
       }
       return null;
     } catch (error) {
