@@ -1,9 +1,7 @@
 (() => {
   "use strict";
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
-  const DD = () => window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.resolveDamage
-    ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES
-    : (() => { throw new Error("Save resolution damage requires the shared damage resolver."); })();
+  const DD = () => window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.resolveDamage ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES : (() => { throw new Error("Save resolution damage requires the shared damage resolver."); })();
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const FM = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
   const S = () => window.IRON_PIT_BROWSER_STATE;
