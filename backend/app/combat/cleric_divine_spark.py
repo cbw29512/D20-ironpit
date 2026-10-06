@@ -3,7 +3,7 @@ from __future__ import annotations
 from app.combat.undead_fortitude import consume_survival_save_log
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 
-from app.combat.damage_defenses import adjusted_damage_amount, apply_damage_defenses
+from app.combat.damage_defenses import adjusted_damage_amount, apply_damage_defenses, resolve_damage_amount
 from app.combat.dice import DiceProvider
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage, restore_hit_points
