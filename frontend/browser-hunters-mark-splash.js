@@ -39,9 +39,9 @@
       );
       if (!splashTarget) return null;
       attacker.feature_last_turn_keys[SPLASH_KEY] = turnKey;
-      const applied = window.IRON_PIT_BROWSER_ATTACK.adjustedDamage(
+      const applied = window.IRON_PIT_BROWSER_ATTACK.resolveDamage(
         splashTarget.state, mark.applied_total || mark.total, mark.damage_type,
-      );
+      ).applied;
       window.IRON_PIT_BROWSER_ATTACK.applyDamage(
         splashTarget.state, applied, false, [mark.damage_type],
         members(setup).map((item) => item.state), setup,
