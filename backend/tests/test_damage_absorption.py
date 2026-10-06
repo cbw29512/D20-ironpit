@@ -1,5 +1,6 @@
 from app.combat.damage_defenses import adjusted_damage_amount, apply_damage_defenses, resolve_damage_amount
 from app.combat.state import build_combatant_state
+from app.combat.zero_hp import apply_damage
 from app.content.demo import build_demo_fighter
 from app.content.ranger_hunter_2024_runtime import build_rowan_ashtrail_2024
 from app.domain.damage_absorption import DamageAbsorptionRule
@@ -77,6 +78,36 @@ def test_component_absorption_composes_with_other_damage_types() -> None:
     assert components[1].absorption_source_name is None
     assert components[1].absorbed_healing == 0
     assert target.current_hp == target.template.max_hp - 4
+
+
+def test_absorption_heals_before_accepted_mixed_damage_is_applied() -> None:
+    target = build_combatant_state(build_demo_fighter())
+    target.current_hp = target.template.max_hp - 3
+    _absorb(target, DamageType.FIRE)
+
+    applied, components = apply_damage_defenses(
+        target,
+        [_component(10, DamageType.FIRE), _component(5, DamageType.SLASHING)],
+    )
+
+    assert applied == 5
+    assert components[0].absorbed_healing == 3
+    assert target.current_hp == target.template.max_hp
+
+    apply_damage(target, applied, damage_types={DamageType.SLASHING}, damage_components=components)
+    assert target.current_hp == target.template.max_hp - 5
+
+
+def test_negative_damage_is_rejected_before_absorption() -> None:
+    target = build_combatant_state(build_demo_fighter())
+    _absorb(target, DamageType.FIRE)
+
+    try:
+        resolve_damage_amount(-1, DamageType.FIRE, target)
+    except ValueError as exc:
+        assert str(exc) == "Damage cannot be negative."
+    else:
+        raise AssertionError("Negative resolved damage must fail closed.")
 
 
 def test_damage_estimation_does_not_spend_incoming_resistance_reaction() -> None:
