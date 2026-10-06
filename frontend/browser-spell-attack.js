@@ -5,6 +5,11 @@
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Spell attack damage requires the shared damage resolver.");
+    return rules;
+  };
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
@@ -115,7 +120,7 @@
       }
       damageComponents = rolledComponents.map((part) => ({
         ...part,
-        applied_total: (A().resolveDamage ? A().resolveDamage(target.state, part.total, part.damage_type).applied : A().adjustedDamage(target.state, part.total, part.damage_type)),
+        applied_total: DD().resolveDamage(target.state, part.total, part.damage_type).applied,
       }));
       const applied = damageComponents.reduce((sum, part) => sum + part.applied_total, 0);
       damageRoll = damageComponents.length ? {
