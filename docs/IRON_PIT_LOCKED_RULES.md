@@ -97,10 +97,9 @@ Standing instruction: park, record, continue. Revisit this list after the rest o
 | Card / item | Family | Blocker | Why parked | Needed to unpark |
 |---|---|---|---|---|
 | Brass wyrmling / young / adult / ancient | Sleep Breath | Failed-save Unconscious + `wake-sleeper` | No wake-sleeper Action exists. | Same FailedSaveTimedEffect + wake-sleeper machine as the sleep-poison cards |
-| Copper dragons; Stone Golem | Slowing Breath / Slow | `slowed` is not a universal condition | Speed, reactions, action/bonus exclusive, max attacks. | Parameterized slow rider, not a new condition name |
-| Gold dragons | Weakening Breath | `weakened-strength` is not a universal condition | Strength-check / attack Disadvantage needs a timed grant. | Existing Disadvantage grant if it can be timed and repeat-saved |
+| Stone Golem | Immutable Form | `source:trait` | Slow now compiles, including Recharge 5–6. Immutable Form remains. | Form-alter immunity trait, not a new Slow rider |
 | Gorgon | Petrifying Breath | `repeat_save_failure_condition_id: petrified` | Same petrify escalation as Cockatrice. | Shared petrify machine; do not invent here |
-| Adult / ancient metallic dragons | Change Shape | Extra Action that replaces the combatant | Form-replace is arena-unavailable until that policy opens. | Polymorph / form-replace policy |
+| Adult / ancient metallic dragons | Change Shape | Extra Action that replaces the combatant | Slowing Breath and Weakening Breath now compile. Form-replace stays parked. | Polymorph / form-replace policy |
 | Gibbering Mouther | Blinding Spittle | Recharge + Blinded already compile | Leftover multiattack / extra-action / trait. | Multiattack-complex lane |
 
 **2014 swallow / attach / pull (from #604).** Do not fake these as Grappled. Another agent owns this family:

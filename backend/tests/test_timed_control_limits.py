@@ -17,6 +17,7 @@ from app.combat.timed_attack_cap import turn_attack_allowed
 from app.combat.timed_conditions import apply_timed_condition
 from app.combat.exhaustion import ability_check_disadvantage_sources
 from app.content.fighter_progression import build_karnok_stoneward_level
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_save_control_2014 import (
     compile_failed_save_control_2014,
     supports_failed_save_control_2014,
@@ -98,14 +99,25 @@ def _rider_from_catalog(action: dict) -> FailedSaveTimedEffect:
     )
 
 
-def test_2014_classifier_still_rejects_catalog_slow_and_weaken() -> None:
+def test_2014_classifier_compiles_catalog_slow_and_weaken() -> None:
     for monster_id in (*_COPPER, *_GOLD, "stone-golem"):
         action_id = "slow" if monster_id == "stone-golem" else (
             "slowing-breath" if monster_id in _COPPER else "weakening-breath"
         )
         action = _catalog_action(monster_id, action_id)
-        assert supports_failed_save_control_2014(action) is False
-        assert compile_failed_save_control_2014(action) is None
+        assert supports_failed_save_control_2014(action) is True
+        rider = compile_failed_save_control_2014(action)
+        assert rider is not None
+        compiled = rider.compiled_limits()
+        assert compiled is not None
+        if monster_id in _COPPER or monster_id == "stone-golem":
+            assert (compiled.speed_multiplier, compiled.action_bonus_exclusive, compiled.max_attacks_per_turn) == (0.5, True, 1)
+            assert compiled.d20_disadvantage_abilities == []
+            assert compiled.armor_class_bonus == 0
+        else:
+            assert compiled.d20_disadvantage_abilities == ["strength"]
+            assert compiled.speed_multiplier == 1.0
+            assert compiled.max_attacks_per_turn is None
 
 
 def test_copper_slowing_breath_payloads_match_printed_text() -> None:
@@ -188,6 +200,26 @@ def test_printed_2014_slow_weaken_stat_blocks_are_not_one_bundle() -> None:
         assert "can't make more than one attack" not in text
         assert "bonus action" not in text.casefold()
         assert "-2" not in text
+
+
+def test_2014_slow_weaken_unlocks_only_save_action_only_cards() -> None:
+    unlocked = {
+        "copper-dragon-wyrmling", "young-copper-dragon", "adult-copper-dragon",
+        "gold-dragon-wyrmling", "young-gold-dragon",
+    }
+    parked = {
+        "ancient-copper-dragon": "source:extra-action",
+        "adult-gold-dragon": "source:extra-action",
+        "ancient-gold-dragon": "source:extra-action",
+        "stone-golem": "source:trait",
+    }
+    by_id = {monster.id: monster for monster in load_monster_source_2014()}
+    for monster_id in unlocked:
+        assert basic_blockers_2014(by_id[monster_id]) == ()
+    for monster_id, blocker in parked.items():
+        remaining = basic_blockers_2014(by_id[monster_id])
+        assert blocker in remaining
+        assert "mechanic:save-action" not in remaining
 
 
 def test_copper_slowing_breath_applies_only_printed_combat_limits() -> None:
