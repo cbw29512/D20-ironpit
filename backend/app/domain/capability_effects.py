@@ -37,6 +37,14 @@ class SaveDamageEffectDefinition(BaseModel):
     zero_hp_rider: ZeroHpSaveDamageRider | None = None
 
 
+class SaveMaximumHpReductionEffectDefinition(BaseModel):
+    kind: Literal["save_max_hp_reduction"] = "save_max_hp_reduction"
+    save_ability: AbilityName
+    dc: int = Field(ge=1, le=40)
+    reduction: Literal["damage_taken"] = "damage_taken"
+    zero_max_hp_kills: bool = False
+
+
 class ProneEffectDefinition(BaseModel):
     kind: Literal["prone"] = "prone"
     max_target_size: CreatureSize | None = None
@@ -90,7 +98,7 @@ class ConditionEffectDefinition(BaseModel):
 
 
 AttackEffectDefinition = Annotated[
-    DamageEffectDefinition | SaveDamageEffectDefinition | ProneEffectDefinition | SaveConditionEffectDefinition |
+    DamageEffectDefinition | SaveDamageEffectDefinition | SaveMaximumHpReductionEffectDefinition | ProneEffectDefinition | SaveConditionEffectDefinition |
     GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
     Field(discriminator="kind"),
 ]
