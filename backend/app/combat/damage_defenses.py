@@ -164,14 +164,18 @@ def apply_damage_defenses(
         adjusted_components: list[DamageRollComponent] = []
         applied_total = 0
         for component in components:
-            applied, _healed, _absorption_source = resolve_damage_amount(
+            applied, healed, absorption_source = resolve_damage_amount(
                 component.total,
                 component.damage_type,
                 target,
                 source_qualifiers=set(component.source_qualifiers),
                 ignored_resistance_types=ignored_resistance_types,
             )
-            adjusted_components.append(component.model_copy(update={"applied_total": applied}))
+            adjusted_components.append(component.model_copy(update={
+                "applied_total": applied,
+                "absorbed_healing": healed,
+                "absorption_source_name": absorption_source,
+            }))
             applied_total += applied
         return applied_total, adjusted_components
     except Exception as exc:
