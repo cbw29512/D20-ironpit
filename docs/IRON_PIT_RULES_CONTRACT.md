@@ -465,7 +465,7 @@ A source that says reaching 0 causes disintegration must intercept generic PC de
 
 ### Petrification
 
-Staged petrification effects use a universal progression/state machine with the exact source saves, stages, timing, immunities, and termination rules. Petrified is not treated as dead unless a rule explicitly makes that consequence apply.
+Staged petrification effects use a universal progression/state machine with the exact source saves, stages, timing, and immunities. **Iron Pit arena override:** once the Petrified condition is successfully applied, the affected combatant is immediately Dead for the rest of the match. This consequence belongs to the universal condition engine, not to Cockatrice, Gorgon, Basilisk, or any other named source.
 
 ## 14. Conditions and effect lifecycle
 
