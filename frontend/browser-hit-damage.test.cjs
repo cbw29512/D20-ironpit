@@ -61,6 +61,7 @@ window.IRON_PIT_ACTION_ECONOMY = { available: () => true, spend: () => {} };
 
 load("browser-ability-hooks.js");
 load("browser-attack-outcome.js");
+load("browser-damage-defense-rules.js");
 load("browser-attack.js");
 load("browser-hit-damage.js");
 
