@@ -91,13 +91,15 @@ function monster(extra = {}) {
   const state = monster({
     regeneration: null,
     save_success_overrides: [{
-      source_id: "legendary-resistance", source_name: "Legendary Resistance",
+      source_id: "legendary-resistance", source_name: "Legendary Resistance (3/Day)",
       resource_id: "legendary-resistance", resource_cost: 1,
     }],
     resources: { "legendary-resistance": 3 },
   });
   const first = window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow(state, "wisdom", 20, {});
   assert.equal(first.succeeded, true);
+  assert.equal(first.roll.outcome_override_name, "Legendary Resistance (3/Day)");
+  assert.equal(first.roll.outcome_override_uses_remaining, 2);
   assert.equal(state.resources["legendary-resistance"], 2);
   state.resources["legendary-resistance"] = 0;
   const second = window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow(state, "wisdom", 20, {});
