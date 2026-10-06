@@ -52,6 +52,7 @@
       return_damage_excluded_creature_types: [...(options.returnDamageExcludedCreatureTypes || [])],
       repeat_save_failure_count: 0,
       repeat_save_failures_to_lock: options.repeatSaveFailuresToLock || null,
+      repeat_save_failure_condition_id: options.repeatSaveFailureConditionId || null,
       escape_check_ability: options.escapeCheckAbility || null,
       escape_check_dc: options.escapeCheckDc ?? null,
       ground_contact: Boolean(options.groundContact),
