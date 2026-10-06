@@ -18,6 +18,7 @@ from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.content.monster_zero_hp_prevention_2014 import bound_zero_hp_trait_names_2014
 from app.domain.bonus_attacks import BonusAttackGrant
+from app.domain.damage_riders import OncePerTurnWeaponHitDamageRider
 from app.domain.environment_contexts import EnvironmentContextReaction
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.weapons import ConditionalAttackAdvantage
@@ -26,14 +27,23 @@ logger = logging.getLogger(__name__)
 _BLOOD_FRENZY = "Blood Frenzy"
 _RECKLESS = "Reckless"
 _CUNNING_ACTION = "Cunning Action"
-_SNEAK_ATTACK = "Sneak Attack (1/Turn)"
+_ASSASSINATE = "Assassinate"
+_EVASION = "Evasion"
+_SNEAK_ATTACK_NAMES = frozenset({"Sneak Attack", "Sneak Attack (1/Turn)"})
+_MARTIAL_ADVANTAGE = "Martial Advantage"
+_POOR_DEPTH_PERCEPTION = "Poor Depth Perception"
+_INVISIBILITY = "Invisibility"
 _MAGIC_WEAPONS = "Magic Weapons"
 _INNATE_SPELLCASTING = "Innate Spellcasting"
 _SUNLIGHT_SENSITIVITY = "Sunlight Sensitivity"
 _RAMPAGE = "Rampage"
 _FINESSE_WEAPON_NAMES_2014 = frozenset({"Dagger", "Rapier", "Scimitar", "Shortsword", "Whip"})
 _SNEAK_ATTACK_D6 = re.compile(
-    r"Sneak Attack \(1/Turn\).*?extra\s+\d+\s+\((\d+)d6\)",
+    r"Sneak Attack(?: \(1/Turn\))?.*?extra\s+\d+\s+\((\d+)d6\)",
+    re.IGNORECASE | re.DOTALL,
+)
+_MARTIAL_ADVANTAGE_DAMAGE = re.compile(
+    r"Martial Advantage\..*?extra\s+\d+\s+\((\d+)d(\d+)\)\s+damage",
     re.IGNORECASE | re.DOTALL,
 )
 
@@ -61,10 +71,17 @@ def _base_sneak_attack_eligible(attack: SourceAttack2014) -> bool:
     )
 
 
+def _sneak_attack_trait_name(monster: SourceMonster2014) -> str | None:
+    names = [name for name in monster.trait_names if name in _SNEAK_ATTACK_NAMES]
+    if len(names) > 1:
+        raise ValueError(f"{monster.name} declares duplicate Sneak Attack headings.")
+    return names[0] if names else None
+
+
 def sneak_attack_d6_2014(monster: SourceMonster2014) -> int:
     """Parse printed Sneak Attack dice from pinned SRD trait text."""
     try:
-        if _SNEAK_ATTACK not in monster.trait_names:
+        if _sneak_attack_trait_name(monster) is None:
             return 0
         if not any(_base_sneak_attack_eligible(attack) for attack in monster.attacks):
             return 0
@@ -86,12 +103,58 @@ def sneak_attack_eligible_2014(monster: SourceMonster2014, attack: SourceAttack2
     return sneak_attack_d6_2014(monster) > 0 and _base_sneak_attack_eligible(attack)
 
 
+def martial_advantage_rider_2014(
+    monster: SourceMonster2014,
+) -> OncePerTurnWeaponHitDamageRider | None:
+    """Bind adjacency-gated once-per-turn weapon damage to the shared hit-rider primitive."""
+    try:
+        if _MARTIAL_ADVANTAGE not in monster.trait_names:
+            return None
+        match = _MARTIAL_ADVANTAGE_DAMAGE.search(monster.source_traits or "")
+        if match is None:
+            raise ValueError(f"{monster.name} Martial Advantage damage is not parseable.")
+        return OncePerTurnWeaponHitDamageRider(
+            source_id=f"{monster.id}-martial-advantage",
+            source_name=_MARTIAL_ADVANTAGE,
+            dice_count=int(match.group(1)),
+            dice_size=int(match.group(2)),
+            requires_ally_within_5_ft_of_target=True,
+        )
+    except Exception:
+        logger.exception("Failed to bind 2014 Martial Advantage for %s.", monster.name)
+        raise
+
+
+def supports_poor_depth_perception_2014(monster: SourceMonster2014) -> bool:
+    """Existing range rules already impose the printed beyond-30-foot Disadvantage."""
+    try:
+        if _POOR_DEPTH_PERCEPTION not in monster.trait_names:
+            return False
+        ranged = [attack for attack in monster.attacks if attack.kind == "ranged"]
+        return bool(ranged) and all(
+            attack.normal_range_ft is not None and attack.normal_range_ft <= 30
+            for attack in ranged
+        )
+    except Exception:
+        logger.exception("Failed Poor Depth Perception classification for %s.", monster.name)
+        raise
+
+
+def starting_condition_ids_2014(monster: SourceMonster2014) -> list[str]:
+    """Return permanent source-owned conditions present when a fight state is created."""
+    return ["invisible"] if _INVISIBILITY in monster.trait_names else []
+
+
 def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFeatures:
     """Translate printed 2014 traits into reusable progression feature fields."""
     try:
+        martial = martial_advantage_rider_2014(monster)
         return ProgressionCombatFeatures(
             cunning_action=supports_cunning_action_2014(monster),
+            first_turn_attack_advantage_against_unacted_target=_ASSASSINATE in monster.trait_names,
             sneak_attack_d6=sneak_attack_d6_2014(monster),
+            evasion=_EVASION in monster.trait_names,
+            once_per_turn_weapon_hit_damage_riders=[martial] if martial is not None else [],
             saving_throw_advantage_grants=saving_throw_advantage_grants_2014(monster),
         )
     except Exception:
@@ -150,8 +213,19 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(_RECKLESS)
         if supports_cunning_action_2014(monster):
             bound.add(_CUNNING_ACTION)
-        if sneak_attack_d6_2014(monster) > 0:
-            bound.add(_SNEAK_ATTACK)
+        sneak_name = _sneak_attack_trait_name(monster)
+        if sneak_name is not None and sneak_attack_d6_2014(monster) > 0:
+            bound.add(sneak_name)
+        if _ASSASSINATE in monster.trait_names:
+            bound.add(_ASSASSINATE)
+        if _EVASION in monster.trait_names:
+            bound.add(_EVASION)
+        if martial_advantage_rider_2014(monster) is not None:
+            bound.add(_MARTIAL_ADVANTAGE)
+        if supports_poor_depth_perception_2014(monster):
+            bound.add(_POOR_DEPTH_PERCEPTION)
+        if starting_condition_ids_2014(monster):
+            bound.add(_INVISIBILITY)
         bound.update(bound_passive_trait_names_2014(monster))
         bound.update(bound_heat_trait_names_2014(monster))
         bound.update(bound_zero_hp_trait_names_2014(monster))
