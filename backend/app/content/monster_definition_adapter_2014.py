@@ -104,6 +104,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "effects": basic_attack_effects_2014(attack),
         "charge_profile": charge_profile_2014(charge_source, monster_id=monster.id),
         "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
+        "grapple_target_policy": attack.grapple_target_policy,
         "damage_source_qualifiers": (
             [DamageSourceQualifier.MAGICAL] if "Magic Weapons" in monster.trait_names else []
         ),
