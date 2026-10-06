@@ -127,6 +127,7 @@ def resolve_attack(
         )
         damage_roll, damage_components, damage_outcome = effects.damage_roll, effects.damage_components, effects.damage_outcome
         applied_conditions, save_damage, on_hit_save = effects.applied_conditions, effects.save_damage, effects.on_hit_save
+        on_hit_maximum_hp_save = effects.on_hit_maximum_hp_save
         cunning_strike, cunning_strike_obscure, topple = effects.cunning_strike, effects.cunning_strike_obscure, effects.topple
         weapon_sap_applied, tactical_sap_applied = effects.weapon_sap_applied, effects.tactical_sap_applied
         vex_applied, studied_applied = effects.vex_applied, effects.studied_applied
@@ -156,6 +157,7 @@ def resolve_attack(
             vex_applied=vex_applied,
             save_damage=save_damage,
             on_hit_save=on_hit_save,
+            on_hit_maximum_hp_save=on_hit_maximum_hp_save,
             cunning_strike_obscure=cunning_strike_obscure,
             cunning_strike=cunning_strike,
             topple=topple,
@@ -173,7 +175,8 @@ def resolve_attack(
         if exile_applied is not None:
             description += f" {actual_defender.template.name} is Banished until the source-relative return point."
         save_roll, save_ability, save_dc, save_succeeded = primary_attack_save_fields(
-            save_damage, on_hit_save, cunning_strike_obscure, cunning_strike, topple,
+            save_damage, on_hit_save, on_hit_maximum_hp_save,
+            cunning_strike_obscure, cunning_strike, topple,
         )
         return BattleEvent(
             sequence=sequence, round_number=round_number, event_type="attack", actor_id=attacker_event_id, actor_name=attacker.template.name,
