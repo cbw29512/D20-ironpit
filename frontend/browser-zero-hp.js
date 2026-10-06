@@ -22,6 +22,8 @@
     return true;
   }
 
+
+
   function useUndeadFortitude(state, incoming, damageTypes, critical) {
     if (!state.template.traits?.includes("undead-fortitude")) return false;
     const resolver = U();
@@ -174,6 +176,7 @@
     const before = state.current_hp;
     state.current_hp = Math.max(0, before - amount);
     if (state.current_hp > 0) return finish(state, "damaged", incoming, affectedStates, setup);
+    if ((state.template.damage_threshold_zero_hp_replacements || []).length && !Z()?.consumeDamageThreshold) { console.error("Thresholded zero-HP replacement runtime is not loaded.", { combatant: state?.template?.name }); throw new Error("Thresholded zero-HP replacement runtime is not loaded."); } if (Z()?.consumeDamageThreshold?.(state, incoming)) return finish(state, "damage_threshold_zero_hp_replacement", incoming, affectedStates, setup);
     if (Z()?.consumeZero(state)) return finish(state, "zero_hp_replacement", incoming, affectedStates, setup);
     if (useUndeadFortitude(state, incoming, damageTypes, critical)) return finish(state, "undead_fortitude", incoming, affectedStates, setup);
     if (state.template.kind === "monster") {

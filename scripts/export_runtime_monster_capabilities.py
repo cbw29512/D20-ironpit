@@ -55,6 +55,7 @@ def _strip_extension_defaults(value):
             "bonus_tactical_action_grants",
             "conditional_damage_defenses",
             "damage_absorptions",
+            "damage_threshold_zero_hp_replacements",
         } and item == []:
             continue
         if key == "replacement_form_actions" and item == []:
