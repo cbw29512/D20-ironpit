@@ -24,6 +24,7 @@ class OnHitContestedMovementResolution:
     target_ability: str | None = None
     target_succeeded: bool | None = None
     movement_ft: int = 0
+    direction: str | None = None
 
 
 def _contest_disadvantage(member: EncounterCombatant, ability: str) -> int:
@@ -104,6 +105,7 @@ def resolve_on_hit_contested_movement(
             target_ability=effect.target_ability,
             target_succeeded=target_succeeded,
             movement_ft=moved,
+            direction=effect.direction,
         )
     except Exception:
         logger.exception(
