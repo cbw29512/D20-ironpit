@@ -61,8 +61,8 @@ def resolve_emanation_hit(
                 raw = 0
             elif succeeded and emanation.success_damage == "half":
                 raw //= 2
-        applied, _healed, _absorption_source = resolve_damage_amount(raw, emanation.damage_type, target.state) if raw else (0, 0, None)
         hp_before = target.state.current_hp
+        applied, _healed, _absorption_source = resolve_damage_amount(raw, emanation.damage_type, target.state) if raw else (0, 0, None)
         if applied:
             apply_damage(
                 target.state,
