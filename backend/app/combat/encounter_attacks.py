@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.combat.action_economy import spend
-from app.combat.ally_context import active_allies
+from app.combat.ally_context import has_adjacent_active_ally
 from app.combat.attacks import resolve_attack
 from app.combat.environment_contexts import environment_context_disadvantage_sources
 from app.combat.champion import apply_critical_closing_move
@@ -57,7 +57,7 @@ def resolve_encounter_attack(
     if close_enemy is None:
         close_enemy = False if setup is not None else True
     affected_states = [member.state for member in [*setup.heroes, *setup.monsters]] if setup is not None else None
-    sneak_ally = setup is not None and bool(active_allies(attacker, setup))
+    sneak_ally = setup is not None and has_adjacent_active_ally(attacker, target, setup)
     context_disadvantage = environment_context_disadvantage_sources(
         attacker, setup, "attack_rolls",
     )
