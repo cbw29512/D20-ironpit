@@ -40,6 +40,7 @@ def resolve_target_condition_timing(
     target: EncounterCombatant,
     timing: ConditionTiming,
     dice,
+    setup: EncounterSetup | None = None,
 ) -> tuple[list[BattleEvent], int]:
     """Resolve expiry and one repeat save per grouped source effect on the affected creature's turn."""
     try:
@@ -64,7 +65,13 @@ def resolve_target_condition_timing(
                         if not condition_is_immune(target.state, escalated):
                             if escalated not in target.state.active_effect_ids:
                                 target.state.active_effect_ids.append(escalated)
-                            apply_terminal_condition_outcome(target.state, escalated)
+                            affected_states = (
+                                [item.state for item in [*setup.heroes, *setup.monsters]]
+                                if setup is not None else None
+                            )
+                            apply_terminal_condition_outcome(
+                                target.state, escalated, affected_states=affected_states
+                            )
                             applied.append(escalated)
                 events.append(BattleEvent(
                     sequence=sequence,
