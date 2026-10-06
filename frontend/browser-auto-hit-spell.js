@@ -22,7 +22,7 @@
         ? C().maximizedRolls(action.damageDiceCount || 1, action.damageDiceSize || 4)
         : window.IRON_PIT_DICE.rollMany(action.damageDiceCount || 1, action.damageDiceSize || 4);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (action.damageBonus || 0);
-      const applied = A().resolveDamage(target.state, raw, action.damageType).applied;
+      const applied = (A().resolveDamage ? A().resolveDamage(target.state, raw, action.damageType).applied : A().adjustedDamage(target.state, raw, action.damageType));
       allRolls.push(...rolls);
       total += applied;
       components.push({
