@@ -64,7 +64,7 @@ def _resolve_zero_hp_turn(
 def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
     events, sequence = end_invalid_presence(sequence, round_number, member, setup)
     lifecycle, sequence = resolve_target_condition_timing(
-        sequence, round_number, member, "target_turn_end", dice,
+        sequence, round_number, member, "target_turn_end", dice, setup,
     )
     events.extend(lifecycle)
     exile_events, sequence = resolve_source_exile_returns(
@@ -145,7 +145,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 )
                 events.extend(save_dot_events)
                 lifecycle_events, sequence = resolve_target_condition_timing(
-                    sequence, round_number, member, "target_turn_start", dice,
+                    sequence, round_number, member, "target_turn_start", dice, setup,
                 )
                 events.extend(lifecycle_events)
                 expire_suppression_zones(setup, round_number)
