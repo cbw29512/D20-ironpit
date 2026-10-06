@@ -150,4 +150,32 @@ const setup = { heroes: [actor], monsters: [blocked, target] };
   assert.equal(legacy.state.bonus_action_available, true);
 }
 
+
+{
+  const rampager = structuredClone(actor);
+  rampager.combatant_id = "rampager";
+  rampager.state.bonus_action_available = true;
+  rampager.state.feature_last_turn_keys = {};
+  rampager.state.template.bonusAttackGrants = [{
+    id: "rampage", name: "Rampage",
+    attackIds: ["kael-2024-unarmed"], attackCount: 1,
+    trigger: "source_melee_zero_hp_this_turn",
+    resourceId: null, resourceCost: 1, priority: 10,
+  }];
+  const rampageSetup = { heroes: [rampager], monsters: [target] };
+  let result = window.IRON_PIT_BROWSER_BONUS_ATTACKS.resolve(
+    1, 1, rampager, rampageSetup, "1:rampager",
+  );
+  assert.deepEqual(result.events, []);
+  assert.equal(rampager.state.bonus_action_available, true);
+
+  rampager.state.feature_last_turn_keys["bonus-attack-trigger:rampage"] = "1:rampager";
+  result = window.IRON_PIT_BROWSER_BONUS_ATTACKS.resolve(
+    1, 1, rampager, rampageSetup, "1:rampager",
+  );
+  assert.equal(result.events.length, 1);
+  assert.equal(result.events[0].feature_id, "rampage");
+  assert.equal(rampager.state.bonus_action_available, false);
+}
+
 console.log("Browser universal Bonus Action attack regressions passed.");
