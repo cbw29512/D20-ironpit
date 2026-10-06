@@ -45,6 +45,21 @@ class SaveMaximumHpReductionEffectDefinition(BaseModel):
     zero_max_hp_kills: bool = False
 
 
+class ContestedMovementEffectDefinition(BaseModel):
+    kind: Literal["contested_movement"] = "contested_movement"
+    source_ability: AbilityName
+    target_ability: AbilityName
+    max_target_size: CreatureSize | None = None
+    distance_ft: int = Field(ge=0)
+    direction: Literal["toward_source", "away_from_source"]
+
+    @model_validator(mode="after")
+    def validate_grid_distance(self) -> "ContestedMovementEffectDefinition":
+        if self.distance_ft % 5:
+            raise ValueError("Contested forced movement must use 5-foot grid increments.")
+        return self
+
+
 class ProneEffectDefinition(BaseModel):
     kind: Literal["prone"] = "prone"
     max_target_size: CreatureSize | None = None
@@ -98,7 +113,7 @@ class ConditionEffectDefinition(BaseModel):
 
 
 AttackEffectDefinition = Annotated[
-    DamageEffectDefinition | SaveDamageEffectDefinition | SaveMaximumHpReductionEffectDefinition | ProneEffectDefinition | SaveConditionEffectDefinition |
+    DamageEffectDefinition | SaveDamageEffectDefinition | SaveMaximumHpReductionEffectDefinition | ContestedMovementEffectDefinition | ProneEffectDefinition | SaveConditionEffectDefinition |
     GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
     Field(discriminator="kind"),
 ]
