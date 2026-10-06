@@ -9,6 +9,11 @@
   const SC = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const D = () => window.IRON_PIT_DICE;
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const DD = () => {
+    const rules = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+    if (!rules?.resolveDamage) throw new Error("Timed condition damage requires the shared damage resolver.");
+    return rules;
+  };
 
   function members(setup) {
     return [...(setup?.heroes || []), ...(setup?.monsters || [])];
@@ -96,9 +101,7 @@
         const total = D().rollMany(count, action.start_of_turn_dice_size)
           .reduce((sum, roll) => sum + roll, 0);
         const hpBefore = member.state.current_hp;
-        const applied = A().resolveDamage
-          ? A().resolveDamage(member.state, total, action.start_of_turn_damage_type).applied
-          : A().adjustedDamage(member.state, total, action.start_of_turn_damage_type);
+        const applied = DD().resolveDamage(member.state, total, action.start_of_turn_damage_type).applied;
         A().applyDamage(
           member.state, applied, false, [action.start_of_turn_damage_type],
           members(setup).map((item) => item.state), setup,
