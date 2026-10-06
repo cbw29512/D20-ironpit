@@ -20,15 +20,27 @@
       if (!target.state.timed_effects.includes(effect)) continue;
       if (repeatSaveDue(effect, round, timing)) {
         const save = V().resolveSavingThrow(target.state, effect.repeat_save_ability, effect.repeat_save_dc);
-        const removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
-        if (!save.succeeded) effect.repeat_save_failure_count = (effect.repeat_save_failure_count || 0) + 1;
+        let removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
+        const applied = [];
+        if (!save.succeeded) {
+          effect.repeat_save_failure_count = (effect.repeat_save_failure_count || 0) + 1;
+          if (effect.repeat_save_failure_condition_id) {
+            removed = T().removeGroup(target.state, effect);
+            const escalated = effect.repeat_save_failure_condition_id;
+            const immune = window.IRON_PIT_BROWSER_CONDITION_IMMUNITY?.immune(target.state, escalated, null) || false;
+            if (!immune) {
+              if (!target.state.active_effect_ids.includes(escalated)) target.state.active_effect_ids.push(escalated);
+              applied.push(escalated);
+            }
+          }
+        }
         events.push({
           sequence: sequence++, round_number: round, event_type: "saving_throw",
           actor_id: target.combatant_id, actor_name: target.state.template.name,
           target_id: target.combatant_id, target_name: target.state.template.name,
           saving_throw_roll: save.roll, save_ability: effect.repeat_save_ability,
           save_dc: effect.repeat_save_dc, save_succeeded: save.succeeded,
-          removed_condition_ids: removed,
+          applied_condition_ids: applied, removed_condition_ids: removed,
           feature_id: effect.source_effect_id || "condition-repeat-save", animation: "condition-save",
           description: `${target.state.template.name} repeats the ${effect.repeat_save_ability} save against ${label(effect.source_effect_id || effect.effect_id)}: ${save.succeeded ? "SUCCESS" : "FAILURE"}.`,
         });
