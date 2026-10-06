@@ -25,7 +25,7 @@
       if (distance > (bound.rule.rangeFt || 5)) return 0;
       const rolls = window.IRON_PIT_DICE.rollMany(bound.rule.diceCount, bound.rule.diceSize);
       const raw = rolls.reduce((sum, value) => sum + value, 0);
-      const applied = window.IRON_PIT_BROWSER_ATTACK.resolveDamage(attacker.state, raw, bound.rule.damageType).applied;
+      const applied = (window.IRON_PIT_BROWSER_ATTACK.resolveDamage ? window.IRON_PIT_BROWSER_ATTACK.resolveDamage(attacker.state, raw, bound.rule.damageType).applied : window.IRON_PIT_BROWSER_ATTACK.adjustedDamage(attacker.state, raw, bound.rule.damageType));
       if (applied) {
         const states = options.setup
           ? [...options.setup.heroes, ...options.setup.monsters].map((member) => member.state)
