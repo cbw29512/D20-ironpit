@@ -30,7 +30,7 @@ _DAMAGE_KEYS = frozenset({"average", "bonus", "dice_count", "dice_size", "type"}
 _CONTROL_KEYS = frozenset({"grapple_escape_dc", "max_target_size", "restrains_while_grappled"})
 _SAVE_CONDITION_KEYS = frozenset({
     "condition_id", "dc", "max_target_size", "save_ability",
-    "duration_rounds", "repeat_save_timing",
+    "duration_rounds", "repeat_save_timing", "repeat_save_failure_condition_id", "failure_push_ft",
     "excluded_creature_types", "excluded_creature_subtypes",
 })
 _SAVE_DAMAGE_KEYS = frozenset({
@@ -80,7 +80,15 @@ def _supported_save_condition(value: object) -> bool:
         return False
     duration = value.get("duration_rounds")
     timing = value.get("repeat_save_timing")
-    if timing is not None and duration is None:
+    escalation = value.get("repeat_save_failure_condition_id")
+    if timing is not None and duration is None and escalation is None:
+        return False
+    if escalation is not None and (
+        timing is None or str(escalation).lower() not in _CONDITIONS
+    ):
+        return False
+    push = value.get("failure_push_ft", 0)
+    if not isinstance(push, int) or push < 0 or push % 5:
         return False
     return (
         str(value.get("condition_id", "")).lower() in _CONDITIONS
@@ -177,6 +185,11 @@ def basic_attack_effects_2014(attack: SourceAttack2014) -> list[AttackEffectDefi
                 max_target_size=CreatureSize(str(max_size).lower()) if max_size is not None else None,
                 duration_rounds=int(duration) if duration is not None else None,
                 repeat_save_timing=str(timing).lower() if timing is not None else None,
+                repeat_save_failure_condition=(
+                    str(row["repeat_save_failure_condition_id"]).lower()
+                    if row.get("repeat_save_failure_condition_id") is not None else None
+                ),
+                failure_push_ft=int(row.get("failure_push_ft", 0)),
                 excluded_creature_types=[str(item) for item in row.get("excluded_creature_types") or []],
                 excluded_creature_subtypes=[str(item) for item in row.get("excluded_creature_subtypes") or []],
             ))
