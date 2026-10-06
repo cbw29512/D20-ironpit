@@ -9,6 +9,10 @@ Wakeful stays listed: Iron Pit fights do not start with a sleeper head, so a sec
 awake head cannot change surprise or sleep. Two Heads save-Advantage is bound separately.
 Earth Glide, Tunneler, and Treasure Sense stay listed: the Pit has no destructible
 earth/rock or hidden metal/treasure for those traits to act on.
+Immutable Form is neutral while hostile form-altering actions remain outside the Pit action
+surface. Ethereal Jaunt and Incorporeal Movement are arena-disabled planar/structure
+movement. Faultless Tracker is exploration-only. Blind Senses has no live suppression
+case because the Pit has no unable-to-smell state; printed Blindsight remains authoritative.
 """
 from __future__ import annotations
 
@@ -19,5 +23,6 @@ ARENA_NEUTRAL_TRAITS_2014 = frozenset({
     "Mimicry", "Earth Glide", "Running Leap", "Shark Telepathy", "Snow Camouflage", "Stone Camouflage",
     "Spider Climb", "Treasure Sense", "Tunneler", "Water Breathing", "Devil's Sight",
     "Underwater Camouflage", "Web Sense", "Web Walker", "Rejuvenation", "Hellish Rejuvenation",
-    "Wakeful",
+    "Wakeful", "Immutable Form", "Ethereal Jaunt", "Incorporeal Movement",
+    "Faultless Tracker", "Blind Senses",
 })
