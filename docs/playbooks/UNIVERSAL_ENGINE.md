@@ -59,6 +59,7 @@ This is the search checklist before new engine code.
 | Recharge | restore expended capability from recharge rule | threshold/timing | `domain/recharge.py`, `browser-recharge.js` |
 | Targeting/areas | legal target geometry | range, cone/line/radius/target count | `domain/targeting.py`, `combat/area_targeting.py`, browser area targeting |
 | Movement | legal grid movement and speed consumption | speeds, reach, forced distance | grid/movement/reaction modules; battlefield contract |
+| Failed-save forced movement | on a failed save, send declared distance through shared forced-movement/grid legality | source `failure_push_ft` -> `SaveCapabilityDefinition.failed_save_push_ft` -> `SavingThrowAction.failed_save_push_ft` | `combat/saving_throws.py`, shared forced-movement module, `browser-saves.js` |
 | Reactions/OA | trigger legality and reaction spend | trigger, reach/range, qualifiers | shared reaction/movement modules |
 | Concentration | start, maintain, save, end | effect id, duration, DC rules | `combat/concentration*.py`, `browser-concentration*.js` |
 | Zero HP/death | unconscious/death/stabilization lifecycle | source-specific riders/qualifiers | `combat/zero_hp*.py`, death/instant-death modules, browser zero-HP |
@@ -74,6 +75,8 @@ Current shared condition vocabulary is defined in `backend/app/domain/action_typ
 `blinded, charmed, deafened, exhaustion, frightened, grappled, incapacitated, invisible, paralyzed, petrified, poisoned, prone, restrained, stunned, unconscious`.
 
 A source that applies one of these binds to that condition. It does not create a source-specific version.
+
+Likewise, source-declared forced movement is data, not a named ability subsystem. For example, a breath weapon that says a failed save pushes a target supplies the save/DC/area/push distance; the generic save and forced-movement engines own resolution.
 
 ## Before adding a primitive
 
