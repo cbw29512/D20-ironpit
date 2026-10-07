@@ -71,6 +71,7 @@
         repeatSaveAbility: rider.repeatSaveAbility || null,
         repeatSaveDc: rider.repeatSaveDc ?? null,
         repeatSaveTiming: rider.repeatSaveTiming || null,
+        allowedRemovalActionIds: [...(rider.allowedRemovalActionIds || [])],
         turnBehavior: rider.turnBehavior || "normal",
         endsOnDamage: Boolean(rider.endsOnDamage),
         endsIfSourceIncapacitated: Boolean(rider.endsIfSourceIncapacitated),
