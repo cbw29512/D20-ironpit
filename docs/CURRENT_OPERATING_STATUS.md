@@ -1,7 +1,7 @@
 # Current operating status
 
-Updated 2026-10-07 after PR #637 merge.
-Merged source baseline audited: `403ec045b27391c50a4ca1cfb3cd2cac632e1291`. See the fix tracker for exact-head workflow evidence.
+Updated 2026-10-07 after PR #641 merge.
+Merged source baseline audited: `50c4e528a9db4987f5e57c40c89602556a4f2217`. See the fix tracker for exact-head workflow evidence.
 Active fix queue: [Monster fix tracker](MONSTER_FIX_TRACKER.md).
 Per-monster source blockers: [Generated 2014 list](MONSTER_BLOCKERS_2014.md).
 
@@ -9,7 +9,7 @@ This file is operating authority for **what to work on next**. Combat rules rema
 
 ## Clean baseline
 
-PR #624 is the historical reset point. PR #637 is the latest accepted monster tranche. Brass Dragon Wyrmling, Young Brass Dragon, and Adult Brass Dragon now bind Sleep Breath through shared save-area, recharge, timed Unconscious, damage-expiry, and generic wake-sleeper mechanics. All four final-head gates passed; 2014 is 194/327. #635 cleared Violet Fungus; #633 cleared Grick; #632 cleared both Veterans; #631 cleared Bandit Captain, Gladiator and Lizardfolk.
+PR #624 is the historical reset point. PR #641 is the latest accepted monster tranche. #640 cleared Bronze Dragon Repulsion Breath through shared failed-save forced movement; #641 cleared Gorgon Petrifying Breath through shared staged condition escalation. All four final-head gates passed on both tranches; 2014 is 197/327. #637 cleared Brass Sleep Breath; #635 cleared Violet Fungus; #633 cleared Grick; #632 cleared both Veterans; #631 cleared Bandit Captain, Gladiator and Lizardfolk.
 The required gates for every new mechanic tranche are:
 
 - CI;
@@ -27,10 +27,10 @@ Do not revive or extend #625. Reimplement only still-correct pieces from current
 |---|---|---:|
 | 2014 | Canonical pregens | **240 / 240** |
 | 2024 | Canonical pregens | **240 / 240** |
-| 2014 | Source monsters | **194 / 327** |
+| 2014 | Source monsters | **197 / 327** |
 | 2024 | SRD monsters | **141 / 330** |
 
-Counts above were verified on the #637 merged source baseline. The tracker records exact-head gates. Later documentation-only commits add no combat behavior and do not inherit exact-head CI.
+Counts above were verified on the #641 merged source baseline. The tracker records exact-head gates. Later documentation-only commits add no combat behavior and do not inherit exact-head CI.
 
 ## Current completion order
 
@@ -75,9 +75,9 @@ Only `ENGINE_TRULY_MISSING` justifies a new universal engine primitive.
 
 ## Immediate next action
 
-Next: M-016 Bronze Dragon save-action family. Bronze Dragon Wyrmling and Young Bronze Dragon each retain only `mechanic:save-action`; Adult and Ancient Bronze Dragon retain `mechanic:save-action` plus an independent `source:extra-action` blocker. Read the exact 2014 source action first, decompose it into existing universal save/movement/timing pieces, and bind only if current primitives represent the behavior exactly. If any semantic is genuinely missing, park that piece and continue the family rather than inventing behavior.
+Next: M-018 Cyclops Poor Depth Perception. Cyclops is a single-blocker `source:trait` card. Bind its printed distance threshold as source data to a generic distance-based attack-roll Disadvantage source. The engine must not dispatch on Cyclops or Rock. Exact source threshold remains content data.
 
-#637 is complete: Brass Dragon Wyrmling, Young Brass Dragon, and Adult Brass Dragon are admitted; Ancient Brass retains only its unrelated extra-action blocker. The generated blocker report now shows **194/327 admitted and 133 blocked**. Medusa still needs Petrifying Gaze.
+#641 is complete: Gorgon is admitted through shared staged condition escalation. #640 cleared Bronze Dragon Wyrmling and Young Bronze Dragon; Adult and Ancient Bronze lost their Repulsion Breath blocker but remain parked on independent extra-action behavior. Generated current-main blockers show **197/327 admitted and 130 blocked**.
 
 Verification follows the single-batch policy in AGENTS.md: one focused changed-family check and one required final-head CI pass. Do not duplicate full CI locally or restart clean validation while monsters await implementation.
 
