@@ -30,11 +30,6 @@ def has_condition(state: CombatantState, condition_id: str) -> bool:
     return not condition_is_immune(state, condition_id)
 
 
-
-def is_unconscious(state: CombatantState) -> bool:
-    """Return universal Unconscious regardless of whether HP loss or a timed effect caused it."""
-    return state.is_unconscious or has_condition(state, UNCONSCIOUS)
-
 def invisibility_benefits_suppressed(state: CombatantState) -> bool:
     return any(
         item.kind is ModifierKind.INVISIBILITY_BENEFITS_SUPPRESSED
@@ -53,7 +48,7 @@ def is_incapacitated(state: CombatantState) -> bool:
     if condition_is_immune(state, INCAPACITATED):
         return False
     return (
-        is_unconscious(state)
+        (state.is_unconscious or has_condition(state, UNCONSCIOUS))
         or has_condition(state, INCAPACITATED)
         or has_condition(state, PARALYZED)
         or has_condition(state, PETRIFIED)
@@ -63,7 +58,7 @@ def is_incapacitated(state: CombatantState) -> bool:
 
 def automatically_fails_strength_dexterity_save(state: CombatantState) -> bool:
     return (
-        is_unconscious(state)
+        (state.is_unconscious or has_condition(state, UNCONSCIOUS))
         or has_condition(state, PARALYZED)
         or has_condition(state, PETRIFIED)
         or has_condition(state, STUNNED)
@@ -72,7 +67,7 @@ def automatically_fails_strength_dexterity_save(state: CombatantState) -> bool:
 
 def attacks_have_advantage_against(state: CombatantState) -> bool:
     return (
-        is_unconscious(state)
+        (state.is_unconscious or has_condition(state, UNCONSCIOUS))
         or has_condition(state, BLINDED)
         or has_condition(state, PARALYZED)
         or has_condition(state, PETRIFIED)
@@ -81,12 +76,12 @@ def attacks_have_advantage_against(state: CombatantState) -> bool:
 
 
 def close_hit_is_automatic_critical(state: CombatantState) -> bool:
-    return is_unconscious(state) or has_condition(state, PARALYZED)
+    return (state.is_unconscious or has_condition(state, UNCONSCIOUS)) or has_condition(state, PARALYZED)
 
 
 def condition_speed_is_zero(state: CombatantState) -> bool:
     return (
-        is_unconscious(state)
+        (state.is_unconscious or has_condition(state, UNCONSCIOUS))
         or has_condition(state, PARALYZED)
         or has_condition(state, PETRIFIED)
         or has_condition(state, RESTRAINED)
