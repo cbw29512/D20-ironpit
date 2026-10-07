@@ -60,7 +60,8 @@ uses 2d6 fire. Native 2024 bindings and readiness remain unchanged.
 Permanent evidence: `backend/tests/test_included_weapon_traits_2014.py` covers all
 seven cards, mismatched source/riders, thrown/two-handed values, and fail-closed
 remaining blockers. `frontend/browser-included-weapon-damage.test.cjs` consumes
-`scripts/included_weapon_damage_parity_fixture.py`: ten source-derived attacks
+`scripts/included_weapon_damage_parity_fixture.py` generates a checked-in fixture,
+verified for freshness by the Python suite: ten source-derived attacks
 through the real compiler/serializer and both production resolvers, with fixed
 independent totals for normal/critical damage, magical bypass, fire immunity,
 radiant resistance, immutable parameters, and fight reset. It runs in CI.
@@ -72,8 +73,9 @@ runtime payload, certification manifest, hero, or art data changed. The generate
 fix list changes `source:trait` from 97 to 96 affected cards (other cards still
 have different unbound traits).
 
-Passed: 62 focused source/compiler tests; ten source-derived production parity
-cases; source-size/coverage checks; deterministic capability/blocker exports;
+Passed: 63 focused source/compiler tests; ten source-derived production parity
+cases; checked-in fixture freshness verified by Python tests so the browser
+CI job requires no Python installation; source-size/coverage checks; deterministic capability/blocker exports;
 manifest/static regeneration; production wiring/backend-free checks and Netlify
 lock verification. Full local Python/browser suites are running. All four new
 exact-head workflow gates are pending; no prior-head success is carried forward.

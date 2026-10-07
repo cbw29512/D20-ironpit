@@ -3,11 +3,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
-const { execFileSync } = require("node:child_process");
-const root = path.join(__dirname, "..");
-const cases = JSON.parse(execFileSync(process.env.PYTHON || "python", [
-  "scripts/included_weapon_damage_parity_fixture.py",
-], { cwd: root, env: { ...process.env, PYTHONPATH: path.join(root, "backend") }, encoding: "utf8" }));
+const cases = JSON.parse(fs.readFileSync(path.join(__dirname, "test-fixtures/included-weapon-damage.json"), "utf8"));
 global.window = globalThis;
 for (const file of [
   "browser-modifier-validation.js", "browser-modifiers.js", "browser-damage-defense-rules.js",

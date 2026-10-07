@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import sys
 
 import pytest
 
@@ -102,3 +103,11 @@ def test_2024_native_source_has_no_included_weapon_traits_to_copy():
     rows = json.loads((Path(__file__).parents[1] / 'app/content/data/srd_5_2_1_monsters.json').read_text())
     for row in rows:
         assert not any(name in row['traits'] for name in set(FAMILY.values()))
+
+
+def test_source_derived_browser_parity_fixture_is_current():
+    root = Path(__file__).parents[2]
+    sys.path.insert(0, str(root / 'scripts'))
+    from included_weapon_damage_parity_fixture import fixture
+    saved = json.loads((root / 'frontend/test-fixtures/included-weapon-damage.json').read_text())
+    assert fixture() == saved
