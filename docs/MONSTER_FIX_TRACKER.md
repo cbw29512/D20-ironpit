@@ -15,7 +15,7 @@ sets the work lane. Rules live in the rules contract, not this tracker.
 | P0 M-003 | Complete, merged #629 | Terminal resolver extraction left three browser test loaders missing their production dependency. | Shared runtime loaded; all 217 CI browser commands passed. |
 | P0 M-004 | Complete, merged #629 | Touched Stunned primitive omitted 2014 movement restriction. | Edition-aware shared speed predicates and permanent regressions passed in both runtimes. |
 | P1 M-005 | Deferred | Rug of Smothering remains blocked by attack representation, extra action, and Damage Transfer. | Audit each behavior and classify reuse before implementation. Susceptibility alone does not certify the rug. |
-| P1 M-006 | Next: M-015 | Remaining 2014 source roster is incomplete. | Generated blockers are current after #635: 191/327 READY, 136 blocked. Continue source bindings through certified primitives. |
+| P1 M-006 | Next: M-016 | Remaining 2014 source roster is incomplete. | Generated blockers are current after #637: 194/327 admitted, 133 blocked. Continue source bindings through certified primitives. |
 | P1 M-007 | Audited for #629/#630 | Check 2024 source reuse without inventing matching traits. | Native 2024 constructs have no susceptibility; all 330 native trait texts lack the included weapon traits. No 2014 trait/qualifier copied. Repeat per family. |
 | P1 D-001 | Complete | Operating status still referenced PR #624 and 177/327 despite newer main. | Current merged baseline and final-head verification recorded below and in operating status. |
 | P1 M-008 | Complete, merged #630 | Seven 2014 source traits already include their damage: Brute (Bugbear/Gladiator), Heated Weapons (Azer/Salamander), Angelic Weapons (Deva/Planetar/Solar). | Pinned source validation, shared typed damage/magical qualifier, critical/defense/reset parity, and all four exact-head gates passed. Seven traits resolved; other card blockers remain. [Audit](INCLUDED_WEAPON_DAMAGE_AUDIT.md). |
@@ -29,13 +29,14 @@ sets the work lane. Rules live in the rules contract, not this tracker.
 | P1 M-013 | Complete, merged #633 | Tentacles hit permits one Beak attack against the same target. The printed dependency is now represented by immutable slot facts. | Generic previous-hit/actual-target requirements bind Grick. 58 focused Python cases, eight browser scenarios, and all four final-head gates passed. [Audit](GRICK_SEQUENCE_AUDIT.md). |
 | P1 M-014 | Complete, merged #635 | Violet Fungus rolls 1d4 Rotting Touch attacks. | One logged count roll and one Action, ordinary attacks/retarget/interruption/reset. 70 focused Python cases, seven new browser scenarios, affected prior fixtures and all four final-head gates passed. [Audit](FUNGUS_SEQUENCE_AUDIT.md). |
 
-| P1 M-015 | Queued, Brass Dragon sleep save family | Wyrmling/Young/Adult Brass Dragon only lack Sleep Breath binding. Ancient Brass has another extra-action blocker. | Reuse timed Unconscious, ends-on-damage and save-area/resource primitives; audit the printed Action-to-wake exit before source binding. Exact DC/durations/cones differ. |
+| P1 M-015 | Complete, merged #637 | Brass Dragon Sleep Breath for Wyrmling/Young/Adult required failed-save Unconscious with damage expiry and a printed ally Action to wake; Ancient Brass also had an unrelated extra-action blocker. | Reused save-area, shared breath recharge, timed Unconscious, ends-on-damage, and generic `wake-sleeper`; source parameters remain edition/card data. All four exact-head gates passed. |
+| P1 M-016 | Queued, Bronze Dragon save-action family | Wyrmling/Young each retain only `mechanic:save-action`; Adult/Ancient also retain independent `source:extra-action`. | Read exact 2014 source action, decompose behavior, reuse existing universal save/movement/timing primitives where exact; park any genuinely missing semantic instead of inventing a Bronze-specific resolver. |
 
 ## Current evidence
 
-Merged source baseline `f351f8ca725b2fea8789bbb0a79757b7a99b57de` from [PR #635](https://github.com/cbw29512/D20-ironpit/pull/635).
-Verified feature head `4508f7747a9f51df306b9ae8d4c12a0c6d2cc0ff`: all four required exact-head gates passed.
-2014 monsters **191/327 READY**, **136 blocked**; native 2024 **141/330**; heroes **240/240** each edition.
+Merged source baseline `403ec045b27391c50a4ca1cfb3cd2cac632e1291` from [PR #637](https://github.com/cbw29512/D20-ironpit/pull/637).
+Verified feature head `af78af31111fd2c1f99396fc2d4639c13dbdebf4`: all four required exact-head gates passed.
+2014 monsters **194/327 admitted**, **133 blocked**; native 2024 **141/330**; heroes **240/240** each edition.
 CI passed **2800 Python tests** and **222 browser commands**. Local focused evidence: 70 Python cases, seven new browser scenarios and affected existing sequence fixtures. All required generated source/runtime/browser outputs agree. No duplicate full local suites.
 
 - [CI](https://github.com/cbw29512/D20-ironpit/actions/runs/37572593683): success on `4508f7747a9f51df306b9ae8d4c12a0c6d2cc0ff`.
@@ -81,3 +82,7 @@ M-012 completed #632. Fixed compatible printed offhand preparation follows rules
 ## M-014 completion record
 
 #635 completed printed random sequence repetition through shared dice and ordinary attack resolution. The count is logged and local to one Action, with normal retarget/interruption/fresh reset. Native 2024 Violet Fungus keeps fixed two attacks. Detailed source/lifecycle/parity evidence is in FUNGUS_SEQUENCE_AUDIT.md.
+
+## M-015 completion record
+
+#637 completed the Brass Dragon Sleep Breath family for Wyrmling, Young, and Adult through shared save-area, recharge, timed Unconscious, ends-on-damage, and generic wake-sleeper behavior. Ancient Brass lost the save-action blocker but remains parked on its independent extra-action blocker. The implementation manuals were split into their own merged PR #638 before #637 merged, so combat and documentation ownership remain clean.
