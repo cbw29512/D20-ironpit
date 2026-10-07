@@ -78,7 +78,7 @@ def test_active_override_targets_nearest_visible_creature_even_when_ally() -> No
     golem = _member("golem", "monsters", 0)
     ally = _member("ally", "monsters", 5)
     enemy = _member("enemy", "heroes", 20)
-    setup = EncounterSetup(heroes=[enemy], monsters=[golem, ally])
+    setup = EncounterSetup(heroes=[enemy], monsters=[golem, ally], hero_total_levels=1, monster_total_cr="1")
     golem.state.active_targeting_override_ids = ["test-berserk"]
 
     assert select_nearest_target(golem, setup) is ally
