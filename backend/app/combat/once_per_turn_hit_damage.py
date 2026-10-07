@@ -13,7 +13,10 @@ BonusDamageSpec = tuple[str, int, int, int, DamageType]
 def _qualified(
     rider: OncePerTurnWeaponHitDamageRider,
     target: CombatantState | None,
+    active_ally_adjacent_to_target: bool = False,
 ) -> bool:
+    if rider.requires_active_ally_adjacent_to_target and not active_ally_adjacent_to_target:
+        return False
     if rider.requires_target_below_max_hp:
         if target is None:
             raise ValueError(f"{rider.source_name} requires target state for its hit qualification.")
@@ -46,6 +49,7 @@ def once_per_turn_weapon_hit_bonus_damages(
     attack: WeaponAttack,
     turn_key: str | None,
     target: CombatantState | None = None,
+    active_ally_adjacent_to_target: bool = False,
 ) -> list[BonusDamageSpec]:
     """Return every independently qualifying generic once-per-turn weapon-hit rider."""
     try:
@@ -67,7 +71,7 @@ def once_per_turn_weapon_hit_bonus_damages(
             seen_ids.add(rider.source_id)
             if attacker.feature_last_turn_keys.get(rider.source_id) == turn_key:
                 continue
-            if not _qualified(rider, target):
+            if not _qualified(rider, target, active_ally_adjacent_to_target):
                 continue
             attacker.feature_last_turn_keys[rider.source_id] = turn_key
             result.append(_spec(rider, attack))
@@ -84,7 +88,10 @@ def once_per_turn_weapon_hit_bonus_damage(
     attack: WeaponAttack,
     turn_key: str | None,
     target: CombatantState | None = None,
+    active_ally_adjacent_to_target: bool = False,
 ) -> BonusDamageSpec | None:
     """Compatibility wrapper for callers expecting at most one rider."""
-    values = once_per_turn_weapon_hit_bonus_damages(attacker, attack, turn_key, target)
+    values = once_per_turn_weapon_hit_bonus_damages(
+        attacker, attack, turn_key, target, active_ally_adjacent_to_target,
+    )
     return values[0] if values else None
