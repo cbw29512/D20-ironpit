@@ -958,6 +958,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 for item in template.conditional_damage_defenses
             ],
             "condition_immunities": list(template.condition_immunities),
+            "terminal_effect_tags": list(template.terminal_effect_tags),
             "wearing_metal_armor": template.wearing_metal_armor,
             "passive_modifier_grants": [_passive_modifier_grant(item) for item in template.passive_modifier_grants],
             "visual": {"armor": template.visual.armor, "main_hand": template.visual.main_hand,
