@@ -33,8 +33,9 @@ from app.content.monster_zero_hp_prevention_2014 import (
     damage_threshold_zero_hp_replacements_2014,
     zero_hp_prevention_resources_2014,
 )
+from app.content.monster_passive_grants_2014 import aggressive_tactical_grants_2014
 from app.content.monster_trait_bindings_2014 import (
-    aggressive_tactical_grants_2014, bonus_attack_grants_2014, conditional_attack_advantage_2014,
+    bonus_attack_grants_2014, conditional_attack_advantage_2014,
     environment_context_reactions_2014, progression_features_2014, sneak_attack_eligible_2014,
 )
 from app.content.monster_terminal_effects_2014 import effect_tag_condition_grants_2014, terminal_effect_tags_2014
