@@ -41,6 +41,9 @@
         if (data.requiresPreviousHit && !previousEvent?.hit) {
           previousEvent = null; previousTarget = null; continue;
         }
+        if (data.sameTargetAsPrevious && !previousTarget) {
+          previousEvent = null; continue;
+        }
         const targetOverride = data.sameTargetAsPrevious ? previousTarget : null;
         const deferred = DE()?.resolve(sequence, round, member, setup) || null;
         if (deferred) {
