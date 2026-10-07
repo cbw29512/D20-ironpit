@@ -1,7 +1,7 @@
 # Current operating status
 
-Updated 2026-10-07 after PR #635 merge.
-Merged source baseline audited: `f351f8ca725b2fea8789bbb0a79757b7a99b57de`. See the fix tracker for exact-head workflow evidence.
+Updated 2026-10-07 after PR #637 merge.
+Merged source baseline audited: `403ec045b27391c50a4ca1cfb3cd2cac632e1291`. See the fix tracker for exact-head workflow evidence.
 Active fix queue: [Monster fix tracker](MONSTER_FIX_TRACKER.md).
 Per-monster source blockers: [Generated 2014 list](MONSTER_BLOCKERS_2014.md).
 
@@ -9,7 +9,7 @@ This file is operating authority for **what to work on next**. Combat rules rema
 
 ## Clean baseline
 
-PR #624 is the historical reset point. PR #635 is the latest accepted monster tranche. Violet Fungus now rolls its printed attack count once through shared dice and ordinary attack resolution. All four final-head gates passed; 2014 is 191/327. #633 cleared Grick; #632 cleared both Veterans; #631 cleared Bandit Captain, Gladiator and Lizardfolk.
+PR #624 is the historical reset point. PR #637 is the latest accepted monster tranche. Brass Dragon Wyrmling, Young Brass Dragon, and Adult Brass Dragon now bind Sleep Breath through shared save-area, recharge, timed Unconscious, damage-expiry, and generic wake-sleeper mechanics. All four final-head gates passed; 2014 is 194/327. #635 cleared Violet Fungus; #633 cleared Grick; #632 cleared both Veterans; #631 cleared Bandit Captain, Gladiator and Lizardfolk.
 The required gates for every new mechanic tranche are:
 
 - CI;
@@ -27,10 +27,10 @@ Do not revive or extend #625. Reimplement only still-correct pieces from current
 |---|---|---:|
 | 2014 | Canonical pregens | **240 / 240** |
 | 2024 | Canonical pregens | **240 / 240** |
-| 2014 | Source monsters | **191 / 327** |
+| 2014 | Source monsters | **194 / 327** |
 | 2024 | SRD monsters | **141 / 330** |
 
-Counts above were verified on the #635 merged source baseline. The tracker records exact-head gates. Later documentation-only commits add no combat behavior and do not inherit exact-head CI.
+Counts above were verified on the #637 merged source baseline. The tracker records exact-head gates. Later documentation-only commits add no combat behavior and do not inherit exact-head CI.
 
 ## Current completion order
 
@@ -75,9 +75,9 @@ Only `ENGINE_TRULY_MISSING` justifies a new universal engine primitive.
 
 ## Immediate next action
 
-Next: M-015 Brass Dragon Sleep Breath. Brass Dragon Wyrmling, Young Brass Dragon and Adult Brass Dragon each have only `mechanic:save-action` left. Shared timed Unconscious and `ends_on_damage` facts already exist. Audit/reuse their save-area/condition lifecycle plus the printed Action-to-wake exit; bind exact source DC, cone, duration and shared breath recharge. Ancient Brass also has an independent extra-action blocker. Do not copy parameters from native 2024.
+Next: M-016 Bronze Dragon save-action family. Bronze Dragon Wyrmling and Young Bronze Dragon each retain only `mechanic:save-action`; Adult and Ancient Bronze Dragon retain `mechanic:save-action` plus an independent `source:extra-action` blocker. Read the exact 2014 source action first, decompose it into existing universal save/movement/timing pieces, and bind only if current primitives represent the behavior exactly. If any semantic is genuinely missing, park that piece and continue the family rather than inventing behavior.
 
-#635 is complete: Violet Fungus is READY. #633 cleared Grick; #632 cleared both Veterans. [136 blocked 2014 cards](MONSTER_BLOCKERS_2014.md) retain other mechanics. Medusa still needs Petrifying Gaze.
+#637 is complete: Brass Dragon Wyrmling, Young Brass Dragon, and Adult Brass Dragon are admitted; Ancient Brass retains only its unrelated extra-action blocker. The generated blocker report now shows **194/327 admitted and 133 blocked**. Medusa still needs Petrifying Gaze.
 
 Verification follows the single-batch policy in AGENTS.md: one focused changed-family check and one required final-head CI pass. Do not duplicate full CI locally or restart clean validation while monsters await implementation.
 
