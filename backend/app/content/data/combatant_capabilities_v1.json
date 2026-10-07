@@ -931,14 +931,18 @@
             "goblin-boss-scimitar",
             "goblin-boss-shortbow"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "goblin-boss-scimitar",
             "goblin-boss-shortbow"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -2690,13 +2694,17 @@
           "attack_ids": [
             "black-bear-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "black-bear-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -2897,13 +2905,17 @@
           "attack_ids": [
             "brown-bear-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "brown-bear-claw"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -4590,13 +4602,17 @@
           "attack_ids": [
             "triceratops-gore"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "triceratops-gore"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -5500,14 +5516,18 @@
             "srd-druid-vine-staff",
             "srd-druid-verdant-wisp"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-druid-vine-staff",
             "srd-druid-verdant-wisp"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -5791,13 +5811,17 @@
           "attack_ids": [
             "hippogriff-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "hippogriff-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -8142,13 +8166,17 @@
           "attack_ids": [
             "polar-bear-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "polar-bear-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -10608,13 +10636,17 @@
           "attack_ids": [
             "owlbear-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "owlbear-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -10775,13 +10807,17 @@
           "attack_ids": [
             "saber-toothed-tiger-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "saber-toothed-tiger-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -10976,14 +11012,18 @@
             "scout-longbow",
             "scout-shortsword"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "scout-longbow",
             "scout-shortsword"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -11866,19 +11906,25 @@
           "attack_ids": [
             "srd-giant-scorpion-claw"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-giant-scorpion-claw"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-giant-scorpion-sting"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -12076,13 +12122,17 @@
           "attack_ids": [
             "srd-grick-beak"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-grick-tentacles"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -12254,13 +12304,17 @@
           "attack_ids": [
             "srd-griffon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-griffon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -12793,13 +12847,17 @@
           "attack_ids": [
             "wyvern-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "wyvern-sting"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -13458,13 +13516,17 @@
           "attack_ids": [
             "archelon-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "archelon-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -13632,13 +13694,17 @@
           "attack_ids": [
             "ankylosaurus-tail"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "ankylosaurus-tail"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -13812,13 +13878,17 @@
           "attack_ids": [
             "giant-eagle-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "giant-eagle-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -14186,13 +14256,17 @@
           "attack_ids": [
             "giant-crocodile-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "giant-crocodile-tail"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -14357,13 +14431,17 @@
           "attack_ids": [
             "giant-constrictor-snake-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [],
           "save_action_ids": [
             "giant-constrictor-snake-constrict"
-          ]
+          ],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -14594,13 +14672,17 @@
           "attack_ids": [
             "tyrannosaurus-rex-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "tyrannosaurus-rex-tail"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -14763,13 +14845,17 @@
           "attack_ids": [
             "srd-animated-armor-slam"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-animated-armor-slam"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -15134,14 +15220,18 @@
             "srd-earth-elemental-slam",
             "srd-earth-elemental-rock-launch"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-earth-elemental-slam",
             "srd-earth-elemental-rock-launch"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -15785,13 +15875,17 @@
           "attack_ids": [
             "srd-gargoyle-claw"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-gargoyle-claw"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -16178,7 +16272,9 @@
             "srd-guard-captain-javelin-ranged",
             "srd-guard-captain-longsword"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
@@ -16186,7 +16282,9 @@
             "srd-guard-captain-javelin-ranged",
             "srd-guard-captain-longsword"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -16347,13 +16445,17 @@
           "attack_ids": [
             "srd-hippopotamus-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-hippopotamus-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -16559,14 +16661,18 @@
             "srd-hill-giant-tree-club",
             "srd-hill-giant-trash-lob"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-hill-giant-tree-club",
             "srd-hill-giant-trash-lob"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -17064,21 +17170,27 @@
             "srd-manticore-rend",
             "srd-manticore-tail-spike"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-manticore-rend",
             "srd-manticore-tail-spike"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-manticore-rend",
             "srd-manticore-tail-spike"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -18257,19 +18369,25 @@
           "attack_ids": [
             "srd-troll-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-troll-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-troll-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -18829,13 +18947,17 @@
           "attack_ids": [
             "srd-violet-fungus-rotting-touch"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-violet-fungus-rotting-touch"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -19028,25 +19150,33 @@
           "attack_ids": [
             "srd-xorn-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-xorn-claw"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-xorn-claw"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-xorn-claw"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -19378,13 +19508,17 @@
           "attack_ids": [
             "srd-giant-shark-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-giant-shark-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -20005,13 +20139,17 @@
           "attack_ids": [
             "srd-sahuagin-warrior-claw"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-sahuagin-warrior-claw"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -20376,13 +20514,17 @@
           "attack_ids": [
             "srd-hell-hound-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-hell-hound-bite"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -20602,13 +20744,17 @@
           "attack_ids": [
             "srd-black-dragon-wyrmling-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-black-dragon-wyrmling-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -20827,13 +20973,17 @@
           "attack_ids": [
             "srd-blue-dragon-wyrmling-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-blue-dragon-wyrmling-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -21050,13 +21200,17 @@
           "attack_ids": [
             "srd-green-dragon-wyrmling-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-green-dragon-wyrmling-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -21276,13 +21430,17 @@
           "attack_ids": [
             "srd-red-dragon-wyrmling-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-red-dragon-wyrmling-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -21498,13 +21656,17 @@
           "attack_ids": [
             "srd-white-dragon-wyrmling-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-white-dragon-wyrmling-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -21722,19 +21884,25 @@
           "attack_ids": [
             "srd-young-black-dragon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-young-black-dragon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-young-black-dragon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -21953,19 +22121,25 @@
           "attack_ids": [
             "srd-young-blue-dragon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-young-blue-dragon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-young-blue-dragon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -22182,19 +22356,25 @@
           "attack_ids": [
             "srd-young-green-dragon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-young-green-dragon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-young-green-dragon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -22414,19 +22594,25 @@
           "attack_ids": [
             "srd-young-red-dragon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-young-red-dragon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-young-red-dragon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -22642,19 +22828,25 @@
           "attack_ids": [
             "srd-young-white-dragon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-young-white-dragon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-young-white-dragon-rend"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -23588,14 +23780,18 @@
             "srd-bandit-captain-scimitar",
             "srd-bandit-captain-pistol"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-bandit-captain-scimitar",
             "srd-bandit-captain-pistol"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -23818,14 +24014,18 @@
             "srd-knight-greatsword",
             "srd-knight-heavy-crossbow"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-knight-greatsword",
             "srd-knight-heavy-crossbow"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
@@ -24176,14 +24376,18 @@
             "srd-warrior-veteran-greatsword",
             "srd-warrior-veteran-heavy-crossbow"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         },
         {
           "attack_ids": [
             "srd-warrior-veteran-greatsword",
             "srd-warrior-veteran-heavy-crossbow"
           ],
-          "save_action_ids": []
+          "save_action_ids": [],
+          "requires_previous_hit": false,
+          "same_target_as_previous": false
         }
       ],
       "variants": [],
