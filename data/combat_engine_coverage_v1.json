@@ -932,6 +932,22 @@
         "backend/tests/test_warlock_fiend_2014_endgame.py",
         "frontend/browser-eldritch-master-2014.test.cjs"
       ]
+    },
+    {
+      "id": "turn-start-targeting-override",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/turn_start_targeting_overrides.py",
+        "backend/app/combat/encounter_targeting.py"
+      ],
+      "browser": [
+        "frontend/browser-targeting-overrides.js",
+        "frontend/browser-formation.js"
+      ],
+      "tests": [
+        "backend/tests/test_turn_start_targeting_overrides.py",
+        "frontend/browser-targeting-overrides.test.cjs"
+      ]
     }
   ]
 }
