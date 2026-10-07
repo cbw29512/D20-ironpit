@@ -37,7 +37,7 @@ for (const file of [
   "browser-damage-defense-rules.js",
   "browser-state.js",
   "browser-timed-conditions.js",
-  "browser-condition-removal.js",
+  "browser-condition-removal-policy.js", "browser-condition-removal.js",
   "browser-healing-policy.js",
   "browser-healing-resolution.js",
   "browser-healing.js",
