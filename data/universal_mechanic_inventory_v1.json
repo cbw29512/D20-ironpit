@@ -137,10 +137,7 @@
       {
         "id": "complete-condition-semantics",
         "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed. Never approximate, silently ignore, or invent a combat-relevant mechanic merely to make a card runnable.' Conditions that are bound (Prone, Blinded, Grappled, Poisoned, and others) resolve through the shared condition identity. Arbitrary remaining printed conditions and every cross-condition interaction stay fail-closed until each is certified.",
-        "python": [],
-        "browser": [],
-        "tests": []
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed. Never approximate, silently ignore, or invent a combat-relevant mechanic merely to make a card runnable.' Conditions that are bound (Prone, Blinded, Grappled, Poisoned, and others) resolve through the shared condition identity. Arbitrary remaining printed conditions and every cross-condition interaction stay fail-closed until each is certified."
       },
       {
         "id": "concentration",
@@ -206,10 +203,7 @@
       {
         "id": "cover-line-of-sight-obscurement",
         "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'No environmental cover by default.' 'Clear line of sight by default; only combat effects such as Darkness, Fog Cloud, Blindness, Invisibility, or similar supported mechanics alter visibility.' Do not invent a default cover engine.",
-        "python": [],
-        "browser": [],
-        "tests": []
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'No environmental cover by default.' 'Clear line of sight by default; only combat effects such as Darkness, Fog Cloud, Blindness, Invisibility, or similar supported mechanics alter visibility.' Do not invent a default cover engine."
       },
       {
         "id": "defense-style",
@@ -265,10 +259,7 @@
       {
         "id": "forced-movement-push-pull-teleport",
         "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Opportunity Attacks, forced movement, Disengage consequences, speed changes, Grappled/Prone movement effects, Frightened movement restrictions, and other combat-relevant movement rules remain RAW where applicable.' Printed save/attack push already resolves. Teleport stays banned: pit limits are no teleport, no plane shift, no summoning, and no vertical flight. A generic pull/teleport compiler is not required to invent those missing printings.",
-        "python": [],
-        "browser": [],
-        "tests": []
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Opportunity Attacks, forced movement, Disengage consequences, speed changes, Grappled/Prone movement effects, Frightened movement restrictions, and other combat-relevant movement rules remain RAW where applicable.' Printed save/attack push already resolves. Teleport stays banned: pit limits are no teleport, no plane shift, no summoning, and no vertical flight. A generic pull/teleport compiler is not required to invent those missing printings."
       },
       {
         "id": "generic-buff-debuff-modifier-stack",
@@ -288,26 +279,17 @@
       {
         "id": "generic-death-triggers",
         "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed.' Undead Fortitude and Death Ward already use shared zero-HP primitives. Arbitrary uncertified on-zero/on-death printings stay fail-closed.",
-        "python": [],
-        "browser": [],
-        "tests": []
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed.' Undead Fortitude and Death Ward already use shared zero-HP primitives. Arbitrary uncertified on-zero/on-death printings stay fail-closed."
       },
       {
         "id": "generic-limited-use-resources",
         "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed.' Shared resources already cover bound limited-use features. Arbitrary uncompiled SRD limited-use Actions stay fail-closed rather than being approximated into the resource table.",
-        "python": [],
-        "browser": [],
-        "tests": []
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed.' Shared resources already cover bound limited-use features. Arbitrary uncompiled SRD limited-use Actions stay fail-closed rather than being approximated into the resource table."
       },
       {
         "id": "generic-reaction-trigger-grammar",
         "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Reactions use exact trigger windows and costs.' Opportunity Attack, Parry, Redirect Attack, and other bound reactions already use those windows. Arbitrary uncertified trigger/response composition stays fail-closed.",
-        "python": [],
-        "browser": [],
-        "tests": []
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Reactions use exact trigger windows and costs.' Opportunity Attack, Parry, Redirect Attack, and other bound reactions already use those windows. Arbitrary uncertified trigger/response composition stays fail-closed."
       },
       {
         "id": "grappled-restrained-escape",
@@ -518,10 +500,7 @@
       {
         "id": "multiple-persistent-riders-on-one-attack",
         "status": "unsupported",
-        "blocker": "AttackCapabilityDefinition fails closed on purpose: 'Current runtime supports one persistent control rider per attack.' IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed.' No printed 2014 catalog attack that a fight currently needs carries two persistent control riders; extra on-hit damage plus one grapple or one save rider already compiles.",
-        "python": [],
-        "browser": [],
-        "tests": []
+        "blocker": "AttackCapabilityDefinition fails closed on purpose: 'Current runtime supports one persistent control rider per attack.' IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed.' No printed 2014 catalog attack that a fight currently needs carries two persistent control riders; extra on-hit damage plus one grapple or one save rider already compiles."
       },
       {
         "id": "natural-1-natural-20-critical",
@@ -746,10 +725,7 @@
       {
         "id": "simultaneous-effect-ordering",
         "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Specific source wording beats generic behavior. Resolve each subevent fully and update state before resolving the next.' Bound simultaneous cases already follow that. A speculative universal effect-batch transaction layer is not added merely to clear the label.",
-        "python": [],
-        "browser": [],
-        "tests": []
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Specific source wording beats generic behavior. Resolve each subevent fully and update state before resolving the next.' Bound simultaneous cases already follow that. A speculative universal effect-batch transaction layer is not added merely to clear the label."
       },
       {
         "id": "simultaneous-save-shared-damage-roll",
@@ -805,18 +781,12 @@
       {
         "id": "standard-tactical-actions-dash-dodge-disengage-ready-help",
         "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Dash/Disengage/Hide/Ready/Help/Search are not generic tactical spam; use them only when a supported combat identity or legal fallback requires them.' 'Dodge is the default when no supported offensive option can be used or made legal after any useful legal approach movement available this turn.' Ready and Help are not implemented because Dodge is the only required fallback.",
-        "python": [],
-        "browser": [],
-        "tests": []
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Dash/Disengage/Hide/Ready/Help/Search are not generic tactical spam; use them only when a supported combat identity or legal fallback requires them.' 'Dodge is the default when no supported offensive option can be used or made legal after any useful legal approach movement available this turn.' Ready and Help are not implemented because Dodge is the only required fallback."
       },
       {
         "id": "summons-transformations-splitting",
         "status": "unsupported",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Summoning is currently disabled in Iron Pit.' 'Do not create summoned combatants, companion bodies, summoned guardians, or a Summoning Annex.' Transformations remain separately governed and are not summons.",
-        "python": [],
-        "browser": [],
-        "tests": []
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Summoning is currently disabled in Iron Pit.' 'Do not create summoned combatants, companion bodies, summoned guardians, or a Summoning Annex.' Transformations remain separately governed and are not summons."
       },
       {
         "id": "tactical-master",
@@ -920,10 +890,7 @@
       {
         "id": "unarmed-grapple-shove-options",
         "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Prefer raw damage that is easy to calculate over charm and other control. Control remains legal only when no damaging option can land.' Monster grapples that are printed on attacks already bind. Universal player Grapple/Shove is not invented as a default Action because landing-damage already prefers a damaging melee that can land.",
-        "python": [],
-        "browser": [],
-        "tests": []
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Prefer raw damage that is easy to calculate over charm and other control. Control remains legal only when no damaging option can land.' Monster grapples that are printed on attacks already bind. Universal player Grapple/Shove is not invented as a default Action because landing-damage already prefers a damaging melee that can land."
       },
       {
         "id": "undead-fortitude",
