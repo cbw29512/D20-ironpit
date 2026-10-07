@@ -56,8 +56,43 @@ for (const fixture of cases) {
   assert.equal(result.events.filter((e) => e.event_type === "attack").length, 1);
   assert.equal(actor.state.turn_terminated, true);
 }
+
+{
+  const fixture = cases.find((item) => item.id === "lizardfolk-5");
+  const { actor, setup } = setupFor(fixture);
+  actor.state.template.attack_action.variants = [structuredClone(actor.state.template.attack_action.variants[0])];
+  const slots = actor.state.template.attack_action.variants[0].slots;
+  slots[1].requiresPreviousHit = true;
+  slots[1].sameTargetAsPrevious = true;
+  const calls = [];
+  const roll = (sides) => { calls.push(sides); return sides === 20 ? 2 : 1; };
+  window.IRON_PIT_DICE = { roll, rollMany: (n, sides) => Array.from({ length: n }, () => roll(sides)) };
+  const result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, actor, setup);
+  const attacks = result.events.filter((event) => event.event_type === "attack");
+  assert.equal(attacks.length, 1);
+  assert.equal(attacks[0].hit, false);
+  assert.equal(actor.state.turn_terminated, false);
+}
+{
+  const fixture = cases.find((item) => item.id === "lizardfolk-5");
+  const { actor, target, setup } = setupFor(fixture);
+  actor.state.template.attack_action.variants = [structuredClone(actor.state.template.attack_action.variants[0])];
+  const slots = actor.state.template.attack_action.variants[0].slots;
+  slots[1].requiresPreviousHit = true;
+  slots[1].sameTargetAsPrevious = true;
+  target.state.current_hp = 1;
+  const other = { combatant_id: "other", side: "heroes", state: S.buildState(structuredClone(fixture.target)) };
+  other.state.position = { x: 5, y: 6 };
+  setup.heroes.push(other);
+  const otherHp = other.state.current_hp, roll = (sides) => sides === 20 ? 15 : 1;
+  window.IRON_PIT_DICE = { roll, rollMany: (n, sides) => Array.from({ length: n }, () => roll(sides)) };
+  const result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, actor, setup);
+  assert.equal(result.events.filter((event) => event.event_type === "attack").length, 1);
+  assert.equal(target.state.current_hp, 0);
+  assert.equal(other.state.current_hp, otherHp);
+}
 assert.equal(cases.length, 6);
-console.log("Source Multiattack counts, highest legal damage, fixed shield, interruption, reset, atomic validation, and Python/browser parity passed.");
+console.log("Source Multiattack counts, conditional hit/same-target slots, highest legal damage, fixed shield, interruption, reset, atomic validation, and Python/browser parity passed.");
 
 for (const corrupt of [(action) => { delete action.variants[1].id; }, (action) => { action.variants[1].attackKind = "melee"; }]) {
   const { actor, setup } = setupFor(cases[0]);
