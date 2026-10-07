@@ -155,6 +155,11 @@
     if (!incoming || state.is_dead) return "damaged";
     noteRegenTypes(state, damageTypes);
     noteTurnDamage(state, incoming, damageTypes, damageComponents);
+    if ((state.template.damage_triggered_d20_debuffs || []).length) {
+      const runtime = window.IRON_PIT_BROWSER_DAMAGE_TRIGGERED_D20_DEBUFF;
+      if (!runtime?.apply) throw new Error("Damage-triggered D20 debuff runtime is not loaded.");
+      runtime.apply(state, incoming, damageTypes, damageComponents);
+    }
     const absorbed = Math.min(state.temporary_hp, amount);
     state.temporary_hp -= absorbed;
     amount -= absorbed;
