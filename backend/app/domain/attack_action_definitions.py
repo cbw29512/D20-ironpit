@@ -43,6 +43,12 @@ class AttackActionDefinition(BaseModel):
                 raise ValueError("Attack action requires either slots or complete variants.")
             if len({v.id for v in self.variants}) != len(self.variants):
                 raise ValueError("Attack-action variant IDs must be unique.")
+            sequences = [self.slots, *(variant.slots for variant in self.variants)]
+            if any(
+                slots and (slots[0].requires_previous_hit or slots[0].same_target_as_previous)
+                for slots in sequences
+            ):
+                raise ValueError("The first attack-action slot cannot depend on a previous slot.")
             return self
         except Exception:
             logger.exception("Invalid attack-action sequences for %s.", self.id)
