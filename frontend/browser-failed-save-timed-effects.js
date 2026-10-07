@@ -75,6 +75,7 @@
         endsOnDamage: Boolean(rider.endsOnDamage),
         endsIfSourceIncapacitated: Boolean(rider.endsIfSourceIncapacitated),
         endsIfSourceDead: Boolean(rider.endsIfSourceDead),
+        allowedRemovalActionIds: [...(rider.allowedRemovalActionIds || [])],
         nextAttackDisadvantage: Boolean(rider.nextAttackDisadvantage),
         suppressReactions: Boolean(rider.blocksReactions),
         controlLimits: controlLimitsFrom(rider),
