@@ -77,7 +77,8 @@ def resolve_weapon_damage(
     attack_mode: RollMode, turn_key: str | None = None,
     bonus_damage: BonusDamageSpec | None = None, target: CombatantState | None = None,
     target_event_id: str | None = None,
-    sneak_attack_ally_available: bool = False, brutal_strike_disadvantage: bool = False,
+    sneak_attack_ally_available: bool = False, active_ally_adjacent_to_target: bool = False,
+    brutal_strike_disadvantage: bool = False,
 ) -> tuple[DiceRoll, list[DamageRollComponent]]:
     """Resolve weapon dice or fixed damage plus certified hit-specific riders."""
     try:
@@ -149,7 +150,9 @@ def resolve_weapon_damage(
             post_hit_resource_bonus_damage(attacker, target, attack, turn_key),
             critical=critical,
         )
-        for rider_damage in once_per_turn_weapon_hit_bonus_damages(attacker, attack, turn_key, target):
+        for rider_damage in once_per_turn_weapon_hit_bonus_damages(
+            attacker, attack, turn_key, target, active_ally_adjacent_to_target,
+        ):
             _append_bonus_component(
                 components, dice, rider_damage, critical=critical,
             )
