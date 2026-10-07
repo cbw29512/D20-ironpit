@@ -60,3 +60,21 @@ def pack_tactics_active(
     except Exception as exc:
         logger.exception("Pack Tactics evaluation failed for %s.", attacker.combatant_id)
         raise RuntimeError("Pack Tactics could not be evaluated.") from exc
+
+
+def has_adjacent_active_ally_for_states(
+    attacker_state,
+    target_state,
+    setup: EncounterSetup,
+) -> bool:
+    """Reuse target-adjacent ally logic when only runtime states are available."""
+    try:
+        members = [*setup.heroes, *setup.monsters]
+        attacker = next((item for item in members if item.state is attacker_state), None)
+        target = next((item for item in members if item.state is target_state), None)
+        if attacker is None or target is None:
+            raise ValueError("Adjacent-ally qualification requires encounter combatants.")
+        return has_adjacent_active_ally(attacker, target, setup)
+    except Exception as exc:
+        logger.exception("State-based adjacent ally lookup failed.")
+        raise RuntimeError("Adjacent ally state could not be evaluated.") from exc
