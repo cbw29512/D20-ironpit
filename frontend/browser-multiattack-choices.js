@@ -22,6 +22,8 @@
         if (definition.variants?.length && typeof variant.id !== "string") throw new Error("Invalid Multiattack variant ID.");
         if (![null, undefined, "melee", "ranged"].includes(variant.attackKind)) throw new Error("Invalid sequence mode.");
         if (!Array.isArray(variant.slots) || !variant.slots.length || variant.slots.length > 8) throw new Error("Invalid Multiattack slots.");
+        const first = slotData(variant.slots[0]);
+        if (first.requiresPreviousHit || first.sameTargetAsPrevious) throw new Error("First Multiattack slot cannot depend on a previous slot.");
       }
       const slots = variants.flatMap((v) => v.slots);
       const attacks = new Set((member.state.template.attacks || []).map((item) => item.id));
@@ -51,7 +53,8 @@
   function saveChoice(member, setup, data, targetOverride = null) {
     try {
       const allowed = new Set(data.saveActionIds);
-      const targets = targetOverride ? [targetOverride] : F().targetOrder(member, setup);
+      const normalTargets = F().targetOrder(member, setup);
+      const targets = targetOverride ? (normalTargets.includes(targetOverride) ? [targetOverride] : []) : normalTargets;
       for (const target of targets) {
         const action = (member.state.template.saving_throw_actions || []).find((item) =>
           allowed.has(item.id) && V().legalAction(item, target, F().saveDistance(member, target, item.range), member.combatant_id));
@@ -71,6 +74,9 @@
         const data = slotData(slot);
         if (data.requiresPreviousHit && !previousAttackAvailable) {
           previousTarget = null; previousAttackAvailable = false; continue;
+        }
+        if (data.sameTargetAsPrevious && !previousTarget) {
+          previousAttackAvailable = false; continue;
         }
         const targetOverride = data.sameTargetAsPrevious ? previousTarget : null;
         const choice = F().chooseSlotAttack(member, setup, data.attackIds, mode, targetOverride);
