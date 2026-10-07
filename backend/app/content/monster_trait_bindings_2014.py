@@ -32,6 +32,11 @@ _MAGIC_WEAPONS = "Magic Weapons"
 _INNATE_SPELLCASTING = "Innate Spellcasting"
 _SUNLIGHT_SENSITIVITY = "Sunlight Sensitivity"
 _RAMPAGE = "Rampage"
+_POOR_DEPTH_PERCEPTION = "Poor Depth Perception"
+_POOR_DEPTH_DISTANCE = re.compile(
+    r"Poor Depth Perception.*?more than\s+(\d+)\s+feet",
+    re.IGNORECASE | re.DOTALL,
+)
 _FINESSE_WEAPON_NAMES_2014 = frozenset({"Dagger", "Rapier", "Scimitar", "Shortsword", "Whip"})
 _SNEAK_ATTACK_D6 = re.compile(
     r"Sneak Attack \(1/Turn\).*?extra\s+\d+\s+\((\d+)d6\)",
@@ -87,6 +92,29 @@ def sneak_attack_eligible_2014(monster: SourceMonster2014, attack: SourceAttack2
     return sneak_attack_d6_2014(monster) > 0 and _base_sneak_attack_eligible(attack)
 
 
+def attack_disadvantage_beyond_ft_2014(monster: SourceMonster2014) -> int:
+    """Parse a source-owned distance threshold for all-attack Disadvantage."""
+    try:
+        if _POOR_DEPTH_PERCEPTION not in monster.trait_names:
+            return 0
+        match = _POOR_DEPTH_DISTANCE.search(monster.source_traits or "")
+        if match is None:
+            raise ValueError(
+                f"{monster.name} has Poor Depth Perception without a parseable distance threshold."
+            )
+        distance_ft = int(match.group(1))
+        if distance_ft <= 0:
+            raise ValueError(
+                f"{monster.name} has invalid Poor Depth Perception distance {distance_ft}."
+            )
+        return distance_ft
+    except Exception:
+        logger.exception(
+            "Failed to parse distance-based attack Disadvantage for %s.", monster.name
+        )
+        raise
+
+
 def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFeatures:
     """Translate printed 2014 traits into reusable progression feature fields."""
     try:
@@ -94,6 +122,7 @@ def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFe
             cunning_action=supports_cunning_action_2014(monster),
             sneak_attack_d6=sneak_attack_d6_2014(monster),
             saving_throw_advantage_grants=saving_throw_advantage_grants_2014(monster),
+            attack_disadvantage_beyond_ft=attack_disadvantage_beyond_ft_2014(monster),
         )
     except Exception:
         logger.exception("Failed to compile 2014 progression features for %s.", monster.name)
@@ -166,6 +195,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(_SUNLIGHT_SENSITIVITY)
         if bonus_attack_grants_2014(monster):
             bound.add(_RAMPAGE)
+        if attack_disadvantage_beyond_ft_2014(monster) > 0:
+            bound.add(_POOR_DEPTH_PERCEPTION)
         bound.update(bound_terminal_effect_trait_names_2014(monster))
         if supports_regeneration_2014(monster):
             bound.add("Regeneration")
