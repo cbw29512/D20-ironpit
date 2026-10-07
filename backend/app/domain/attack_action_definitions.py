@@ -1,12 +1,29 @@
 """Immutable ordered slots or complete source alternatives; no fight state."""
 from __future__ import annotations
 import logging
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, model_validator
 from app.domain.weapons_base import WeaponAttackKind
 logger = logging.getLogger(__name__)
 
 
+class PreviousAttackRequirement(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    hit: StrictBool = False
+    same_target: StrictBool = False
+
+    @model_validator(mode="after")
+    def require_constraint(self):
+        try:
+            if not self.hit and not self.same_target:
+                raise ValueError("Previous-attack requirement needs a hit or target constraint.")
+            return self
+        except Exception:
+            logger.exception("Invalid empty previous-attack requirement.")
+            raise
+
+
 class AttackActionSlot(BaseModel):
+    previous_attack: PreviousAttackRequirement | None = None
     attack_ids: list[str] = Field(default_factory=list, max_length=16)
     save_action_ids: list[str] = Field(default_factory=list, max_length=16)
 
@@ -41,6 +58,11 @@ class AttackActionDefinition(BaseModel):
                 raise ValueError("Attack action requires either slots or complete variants.")
             if len({v.id for v in self.variants}) != len(self.variants):
                 raise ValueError("Attack-action variant IDs must be unique.")
+            for sequence in ([self.slots] if self.slots else [v.slots for v in self.variants]):
+                for index, slot in enumerate(sequence):
+                    if slot.previous_attack and (index == 0 or not slot.attack_ids or slot.save_action_ids
+                            or not sequence[index-1].attack_ids or sequence[index-1].save_action_ids):
+                        raise ValueError("Previous-attack slots require an immediately preceding attack-only slot.")
             return self
         except Exception:
             logger.exception("Invalid attack-action sequences for %s.", self.id)

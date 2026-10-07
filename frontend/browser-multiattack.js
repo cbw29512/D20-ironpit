@@ -32,18 +32,21 @@
       const attackBuff = AWB()?.resolve(sequence, round, member) || null;
       if (attackBuff) { events.push(attackBuff); sequence += 1; }
       let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
-      let lightTrigger = null;
+      let lightTrigger = null, previousAttack = null;
       const turnKey = `${round}:${member.combatant_id}`;
 
       for (let index = 0; index < slots.length; index += 1) {
         if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
         const data = MC.slotData(slots[index]);
+        const followup = MC.followupTarget(data, previousAttack?.event_type === "attack" ? previousAttack.hit : null, previousAttack?.target_id);
+        previousAttack = null;
+        if (!followup.eligible) continue;
         const deferred = DE()?.resolve(sequence, round, member, setup) || null;
         if (deferred) {
           events.push(deferred); sequence += 1; openingFeature = null;
           continue;
         }
-        const choice = F().chooseSlotAttack(member, setup, data.attackIds, mode);
+        const choice = F().chooseSlotAttack(member, setup, data.attackIds, mode, followup.targetId);
         if (choice) {
           if (window.IRON_PIT_BROWSER_TIMED_CONTROL?.turnAttackAllowed(member.state) === false) break;
           const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
@@ -59,7 +62,7 @@
             if (member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
             continue;
           }
-          events.push(event);
+          events.push(event); previousAttack = event;
           if (event.hit) {
             const actualTarget = eventTarget(event, choice.target, setup);
             if (MK()?.resolveStunning) {

@@ -50,3 +50,7 @@ M-013: audit the existing hook/sequence primitives for Grick's previous-hit requ
 ## Do not carry forward
 
 Old 187/327 baseline as current, Veterans blocked claims, prior-head CI status, row-based attack choice, or unmerged #625 implementations. Repository truth supersedes cached handoffs.
+
+## Active M-013 branch
+
+`feat/2014-grick-followup` is based on exact merged documentation main `ec84f726f799f03db78beacfe433c85b353f270f`. Grick uses generic previous-hit/same-actual-target slot predicates, sharing ordinary attack selection/resolution. Focused 58 Python cases plus eight new browser scenarios and affected sequence fixtures passed. Generated branch roster is 190/327, pending exact-head CI; accepted baseline above remains 189/327. Next action: allow four final-head gates to finish and merge on success. Source details and native 2024 audit are in GRICK_SEQUENCE_AUDIT.md.

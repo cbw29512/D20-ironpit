@@ -72,3 +72,7 @@ M-011 is merged and certified; see the complete sequence audit.
 M-012 starts from exact main `14f0762205a4267c3cc43291a2ed2fe6bd772f70`. Scope: source-only offhand binding and immutable availability facts; Python/browser sequence resolvers are unchanged. Source wording proves two Longswords plus optional drawn Shortsword, with the strongest compatible fixed loadout selected under §10. One focused parity/source pass, then final-head CI.
 
 M-012 completed #632. Fixed compatible printed offhand preparation follows rules contract §10; native 2024 Warrior Veteran and Half-Dragon were audited independently. Roster gate source-path filter now includes every 2014 monster binder.
+
+## M-013 active build (2026-10-07)
+
+Owner ChatGPT; branch `feat/2014-grick-followup`, anchored to merged #632 closeout main `ec84f726f799f03db78beacfe433c85b353f270f`. Source: Grick one Tentacles, then Beak only if Tentacles hits, same target. Existing schema and hook search found no previous-slot hit/target predicates. Classification: `ENGINE_TRULY_MISSING` for those two narrow immutable sequence facts only; ordinary attack/legality/reactions/cost/reset already exist and are reused. No new attack resolver. Preserve source fields and fail closed on malformed bindings. Focused acceptance: hit/miss/natural-1, same target after redirect/reordering, dead/out-of-range follow-up rejection, no retarget, one Action, immutable card/fresh reset, Python/browser parity. Native 2024 source audited separately before final gate.

@@ -9,8 +9,10 @@ from app.domain.traits import CombatTrait
 
 try:
     from scripts.browser_recharge_serializer import recharge_rows
+    from scripts.browser_attack_action_slots import attack_slot_row
 except ModuleNotFoundError:
     from browser_recharge_serializer import recharge_rows
+    from browser_attack_action_slots import attack_slot_row
 
 logger = logging.getLogger(__name__)
 
@@ -1182,13 +1184,13 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             ]
         if template.attack_action:
             row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name, "slots": [
-                {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
+                attack_slot_row(slot)
                 for slot in template.attack_action.slots
             ]}
         if template.attack_action and template.attack_action.variants:
             row["attack_action"]["variants"] = [
                 {"id": variant.id, "attackKind": _value(variant.attack_kind) if variant.attack_kind else None,
-                 "slots": [{"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
+                 "slots": [attack_slot_row(slot)
                            for slot in variant.slots]}
                 for variant in template.attack_action.variants
             ]

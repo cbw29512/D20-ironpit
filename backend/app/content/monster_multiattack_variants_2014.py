@@ -4,6 +4,7 @@ from itertools import permutations
 import logging
 import re
 from app.content.monster_source_sections_2014 import source_sections_2014, requires_two_hands_2014
+from app.content.monster_hit_followup_2014 import hit_followup_variants_2014
 from app.content.monster_offhand_loadout_2014 import offhand_variants_2014, offhand_unavailable_reason_2014
 from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.domain.attack_action_definitions import AttackActionSlot, AttackActionVariant
@@ -27,6 +28,8 @@ def source_variants_2014(monster):
             return []
         if policy.get("kind") == "drawn-offhand-additional-attack":
             return offhand_variants_2014(monster)
+        if "requires_previous_hit_slots" in policy or "same_target_as_previous_slots" in policy:
+            return hit_followup_variants_2014(monster)
         branches = []
         if policy == {"distinct_attack_ids": True}:
             if not re.fullmatch(r"The .+? makes two melee attacks, each one with a different weapon\.", text):
