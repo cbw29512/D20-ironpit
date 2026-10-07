@@ -120,13 +120,7 @@ const lesserRestoration = {
 
 
 {
-  const wakeSleeper = {
-    id: "wake-sleeper", name: "Wake Sleeper", actionCost: "action", range: 5,
-    targetMode: "ally", removableConditions: ["unconscious"], maxConditionsPerUse: 1,
-    resourceCosts: {}, resourceCostsPerCondition: {}, expendsSpellSlot: false,
-    requiresExplicitEffectPermission: true,
-  };
-  const remover = member("waker", [], {}, [wakeSleeper]);
+  const remover = member("waker", [], {}, []);
   const ally = member("sleeper", ["unconscious"]);
   const setup = { heroes: [remover, ally], monsters: [] }, turnKey = key(1, remover);
 
