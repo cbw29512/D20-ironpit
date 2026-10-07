@@ -14,6 +14,8 @@ It does **not** replace `docs/IRON_PIT_RULES_CONTRACT.md`. That file remains the
 
 Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §1.1, §2, §25; `SOUL.md`; `AGENTS.md` semantic-reuse, 2014-first monster order, and uncertainty gate.
 
+- **2014 Immutable Form is arena-neutral only while no supported hostile form-alter effect exists.** The current replacement-form system changes the acting combatant's own form; it does not alter an opposing golem. Keep the printed trait in source/card/log metadata. If a hostile Polymorph/form-alter capability becomes supported, remove this arena-neutral classification and bind the universal form-alter immunity before certifying affected golems.
+
 ## Death and dying
 
 - **Petrified is terminal in the Iron Pit.** When the Petrified debuff is successfully applied, that combatant is immediately Dead for the rest of the match. This is an explicit Iron Pit arena rule, not a statement of tabletop RAW. The universal condition engine owns this consequence; monster/ability names must not dispatch it.
@@ -90,7 +92,6 @@ Standing instruction: park, record, continue. Revisit this list after the rest o
 | Ettercap; Giant Spider | web / recharge | `attack:complex`, `attack:damage-type`, `mechanic:recharge` | Bite poison already compiles. Web is a breakable restraint plus recharge. | Shared web / breakable-restraint primitive |
 | Otyugh | incomplete slam | `attack:incomplete`, `source:extra-action`, `source:trait` | Bite Poisoned save already compiles. Tentacle Slam and Limited Telepathy remain. | Finish Tentacle Slam, then leftover trait |
 | Giant Toad; Purple Worm | swallow | `mechanic:swallow` | Poison riders compile or are incidental. Swallow/attach is another lane. | Swallow / attach / pull owner |
-| Iron Golem | breath + multiattack | `multiattack:choice-or-binding`, `source:trait` | Poison Breath is out of this family by standing instruction. | Recharge-breath or multiattack-choice lane |
 | Quasit | combined save | `attack:complex` plus Shapechanger / Scare | Same Con save wants fail-only poison damage **and** Poisoned. Still blocked after a bind. | Widen on-hit save to compose save-damage + save-condition; still need extra-action / trait |
 | Homunculus; Sprite; Pseudodragon; Drow | fail-by-5 sleep poison | `failure_margin_escalation` plus Unconscious / `wake-sleeper` | Same missing machine as Sleep Breath. Each card also has another leftover. | Extend FailedSaveTimedEffect with fail-margin + generic wake-sleeper Action |
 | Drider; Deep Gnome; Guardian Naga; Spirit Naga; and other poison casters | spellcasting | `mechanic:spellcasting` plus leftover trait | Poison riders compile where printed on the weapon. Innate/slot spellcasting remains. | Spellcasting family (highest-level / damage-first) |
@@ -100,7 +101,6 @@ Standing instruction: park, record, continue. Revisit this list after the rest o
 | Card / item | Family | Blocker | Why parked | Needed to unpark |
 |---|---|---|---|---|
 | Brass wyrmling / young / adult / ancient | Sleep Breath | Failed-save Unconscious + `wake-sleeper` | No wake-sleeper Action exists. | Same FailedSaveTimedEffect + wake-sleeper machine as the sleep-poison cards |
-| Stone Golem | Immutable Form | `source:trait` | Slow now compiles, including Recharge 5–6. Immutable Form remains. | Form-alter immunity trait, not a new Slow rider |
 | Gorgon | Petrifying Breath | `repeat_save_failure_condition_id: petrified` | Same petrify escalation as Cockatrice. | Shared petrify machine; do not invent here |
 | Adult / ancient metallic dragons | Change Shape | Extra Action that replaces the combatant | Slowing Breath and Weakening Breath now compile. Form-replace stays parked. | Polymorph / form-replace policy |
 | Gibbering Mouther | Blinding Spittle | Recharge + Blinded already compile | Leftover multiattack / extra-action / trait. | Multiattack-complex lane |
