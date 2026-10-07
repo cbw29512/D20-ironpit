@@ -1191,7 +1191,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["attack_action"]["variants"] = [
                 {"id": variant.id, "attackKind": _value(variant.attack_kind) if variant.attack_kind else None,
                  "slots": [attack_slot_row(slot)
-                           for slot in variant.slots]}
+                           for slot in variant.slots],
+                 **({"repetitions": {"diceCount": variant.repetitions.dice_count, "diceSize": variant.repetitions.dice_size}} if variant.repetitions else {})}
                 for variant in template.attack_action.variants
             ]
         if template.regeneration is not None:

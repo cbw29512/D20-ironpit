@@ -35,3 +35,7 @@ Re-anchor completed M-014 source/schema/parity work to merged #633 closeout main
 ## Do not carry forward
 
 Older 189/327 count as current, Grick blocked claims, initial #633 collection-failure head, prior-head CI statuses, row-based selection, or unmerged #625 code. Repository truth supersedes cached handoffs.
+
+## M-014 final branch
+
+`feat/2014-violet-fungus-repeat` is re-anchored to exact merged documentation main `8a5d37360aaf49f65198f4b145fe32a5af42e251`. Generated branch roster is 191/327, 136 blocked; focused 70 Python cases/seven new browser scenarios and affected prior fixtures passed. Exact final-head CI pending. Next action: let required four gates complete and merge on success. FUNGUS_SEQUENCE_AUDIT.md records source, lifecycle, roll evidence and native 2024 differences.

@@ -75,7 +75,7 @@ Only `ENGINE_TRULY_MISSING` justifies a new universal engine primitive.
 
 ## Immediate next action
 
-Next: M-014 Violet Fungus random 1d4 attack count. The active branch `feat/2014-violet-fungus-repeat` has implemented immutable random sequence repetition and shared dice/ordinary slot resolution; focused parity passed. Re-anchor it to merged #633 closeout main, finish required generation, and submit its final head once.
+Active M-014: Violet Fungus random 1d4 attack count is built on `feat/2014-violet-fungus-repeat` from merged documentation main `8a5d37360aaf49f65198f4b145fe32a5af42e251`. Shared dice/ordinary slot resolution, logged count, focused parity and generation passed. Branch roster is 191/327 pending four final-head gates; accepted baseline remains 190/327. Merge after success without duplicate local full suites.
 
 #633 is complete: Grick is READY. #632 cleared both Veterans; #631 cleared Bandit Captain, Gladiator and Lizardfolk. [137 blocked 2014 cards](MONSTER_BLOCKERS_2014.md) retain other mechanics. Medusa still needs Petrifying Gaze.
 

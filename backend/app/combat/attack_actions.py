@@ -5,7 +5,7 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_action_choices import attack_choice, save_choice, followup_target
-from app.combat.attack_action_sequences import select_sequence
+from app.combat.attack_action_sequences import select_sequence, expanded_sequence_slots
 from app.combat.attack_action_event_target import event_target
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.attack_action_weapon_buffs import resolve_attack_action_weapon_buff
@@ -22,6 +22,7 @@ from app.combat.stunning_strike_2014 import resolve_stunning_strike
 from app.combat.timed_attack_cap import turn_attack_allowed
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, WeaponAttack
+from app.domain.event_support import AuditPhase, AuditStep, EventAudit
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,17 @@ def resolve_attack_action(
             return [], sequence
 
         spend(attacker.state, "action")
+        variant, mode = selected
+        slots, repetition_roll = expanded_sequence_slots(variant, dice)
         events: list[BattleEvent] = []
+        if repetition_roll is not None:
+            events.append(BattleEvent(sequence=sequence, round_number=round_number, event_type="feature",
+                actor_id=attacker.combatant_id, actor_name=attacker.state.template.name,
+                feature_id=variant.id, feature_roll=repetition_roll, animation="feature",
+                description=f"{attacker.state.template.name}: {definition.name} rolls {repetition_roll.notation} = {repetition_roll.total}.",
+                audit=EventAudit(steps=[AuditStep(phase=AuditPhase.ROLL, kind="roll", label="Printed sequence repetition")]))
+            )
+            sequence += 1
         attack_buff = resolve_attack_action_weapon_buff(
             sequence,
             round_number,
@@ -52,11 +63,10 @@ def resolve_attack_action(
         opening_feature = opening_feature_id(round_number, attacker, setup)
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
         light_trigger: WeaponAttack | None = None
-        variant, mode = selected
         turn_key = f"{round_number}:{attacker.combatant_id}"
 
         previous_attack = None
-        for index, slot in enumerate(variant.slots):
+        for index, slot in enumerate(slots):
             if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
                 break
             eligible, target_id = followup_target(slot, previous_attack.hit if previous_attack and previous_attack.event_type == "attack" else None,
