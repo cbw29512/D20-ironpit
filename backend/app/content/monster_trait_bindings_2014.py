@@ -8,6 +8,10 @@ from app.content.monster_damage_absorption import damage_absorptions_from_source
 from app.content.monster_included_weapon_traits_2014 import included_weapon_trait_names_2014
 from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_definition_adapter_support_2014 import attack_id_2014
+from app.content.monster_distance_attack_disadvantage_2014 import (
+    attack_disadvantage_beyond_ft_2014,
+    bound_distance_attack_disadvantage_traits_2014,
+)
 from app.content.monster_legendary_resistance_2014 import legendary_resistance_trait_name_2014
 from app.content.monster_passive_grants_2014 import (
     aggressive_tactical_grants_2014,
@@ -32,11 +36,6 @@ _MAGIC_WEAPONS = "Magic Weapons"
 _INNATE_SPELLCASTING = "Innate Spellcasting"
 _SUNLIGHT_SENSITIVITY = "Sunlight Sensitivity"
 _RAMPAGE = "Rampage"
-_POOR_DEPTH_PERCEPTION = "Poor Depth Perception"
-_POOR_DEPTH_DISTANCE = re.compile(
-    r"Poor Depth Perception.*?more than\s+(\d+)\s+feet",
-    re.IGNORECASE | re.DOTALL,
-)
 _FINESSE_WEAPON_NAMES_2014 = frozenset({"Dagger", "Rapier", "Scimitar", "Shortsword", "Whip"})
 _SNEAK_ATTACK_D6 = re.compile(
     r"Sneak Attack \(1/Turn\).*?extra\s+\d+\s+\((\d+)d6\)",
@@ -90,29 +89,6 @@ def sneak_attack_d6_2014(monster: SourceMonster2014) -> int:
 def sneak_attack_eligible_2014(monster: SourceMonster2014, attack: SourceAttack2014) -> bool:
     """Mark only attacks that satisfy the shared ranged-or-Dexterity Sneak Attack profile."""
     return sneak_attack_d6_2014(monster) > 0 and _base_sneak_attack_eligible(attack)
-
-
-def attack_disadvantage_beyond_ft_2014(monster: SourceMonster2014) -> int:
-    """Parse a source-owned distance threshold for all-attack Disadvantage."""
-    try:
-        if _POOR_DEPTH_PERCEPTION not in monster.trait_names:
-            return 0
-        match = _POOR_DEPTH_DISTANCE.search(monster.source_traits or "")
-        if match is None:
-            raise ValueError(
-                f"{monster.name} has Poor Depth Perception without a parseable distance threshold."
-            )
-        distance_ft = int(match.group(1))
-        if distance_ft <= 0:
-            raise ValueError(
-                f"{monster.name} has invalid Poor Depth Perception distance {distance_ft}."
-            )
-        return distance_ft
-    except Exception:
-        logger.exception(
-            "Failed to parse distance-based attack Disadvantage for %s.", monster.name
-        )
-        raise
 
 
 def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFeatures:
@@ -195,8 +171,7 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(_SUNLIGHT_SENSITIVITY)
         if bonus_attack_grants_2014(monster):
             bound.add(_RAMPAGE)
-        if attack_disadvantage_beyond_ft_2014(monster) > 0:
-            bound.add(_POOR_DEPTH_PERCEPTION)
+        bound.update(bound_distance_attack_disadvantage_traits_2014(monster))
         bound.update(bound_terminal_effect_trait_names_2014(monster))
         if supports_regeneration_2014(monster):
             bound.add("Regeneration")
