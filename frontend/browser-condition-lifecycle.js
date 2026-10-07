@@ -10,8 +10,13 @@
     if (effect.repeat_save_timing !== timing) return false;
     return !(effect.effect_id === "poisoned" && effect.applied_round != null && round <= effect.applied_round);
   }
-  function expiryDue(effect, round, timing) {
-    return effect.expiry_timing === timing && (effect.expires_round == null || round >= effect.expires_round);
+  function expiryDue(effect, round, timing, targetTurnsStarted = null) {
+    if (effect.expiry_timing !== timing) return false;
+    if (effect.expires_round != null && round < effect.expires_round) return false;
+    if (effect.expires_target_turn_count != null) {
+      return targetTurnsStarted != null && targetTurnsStarted >= effect.expires_target_turn_count;
+    }
+    return true;
   }
 
   function repeatSave(target, effect, round, setup) {
@@ -65,7 +70,7 @@
         });
         if (save.succeeded) continue;
       }
-      if (expiryDue(effect, round, timing)) {
+      if (expiryDue(effect, round, timing, target.state.turns_started || 0)) {
         const removed = T().removeGroup(target.state, effect); if (!removed.length) continue;
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
