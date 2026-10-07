@@ -745,7 +745,6 @@ def _removal(action: Any) -> dict[str, Any]:
         "targetMode": action.target_mode, "removableConditions": list(action.removable_conditions),
         "excludedCreatureTypes": list(action.excluded_creature_types),
         "maxConditionsPerUse": action.max_conditions_per_use, "resourceCosts": dict(action.resource_costs),
-        "requiresExplicitEffectPermission": action.requires_explicit_effect_permission,
         "resourceCostsPerCondition": dict(action.resource_costs_per_condition),
         "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
     }
