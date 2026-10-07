@@ -4,13 +4,11 @@ import logging
 import re
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_source_sections_2014 import source_sections_2014
 
 logger = logging.getLogger(__name__)
 _POOR_DEPTH_PERCEPTION = "Poor Depth Perception"
-_POOR_DEPTH_DISTANCE = re.compile(
-    r"Poor Depth Perception\\..*?more than\\s+(\\d+)\\s+feet away",
-    re.IGNORECASE | re.DOTALL,
-)
+_POOR_DEPTH_DISTANCE = re.compile(r"more than\\s+(\\d+)\\s+feet away", re.IGNORECASE)
 
 
 def supports_poor_depth_perception_2014(monster: SourceMonster2014) -> bool:
@@ -18,10 +16,11 @@ def supports_poor_depth_perception_2014(monster: SourceMonster2014) -> bool:
     try:
         if _POOR_DEPTH_PERCEPTION not in monster.trait_names:
             return False
-        match = _POOR_DEPTH_DISTANCE.search(monster.source_traits or "")
+        body = source_sections_2014(monster.source_traits).get(_POOR_DEPTH_PERCEPTION, "")
+        match = _POOR_DEPTH_DISTANCE.search(body)
         if match is None:
             raise ValueError(
-                f"{monster.name} has Poor Depth Perception without a parseable distance."
+                f"{monster.name} has Poor Depth Perception without a parseable source section."
             )
         threshold_ft = int(match.group(1))
         for attack in monster.attacks:
