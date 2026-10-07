@@ -8,7 +8,7 @@ from app.content.monster_source_sections_2014 import source_sections_2014
 
 logger = logging.getLogger(__name__)
 _POOR_DEPTH_PERCEPTION = "Poor Depth Perception"
-_POOR_DEPTH_DISTANCE = re.compile(r"more than\\s+(\\d+)\\s+feet away", re.IGNORECASE)
+_POOR_DEPTH_DISTANCE = re.compile(r"more than\s+(\d+)\s+feet away", re.IGNORECASE)
 
 
 def supports_poor_depth_perception_2014(monster: SourceMonster2014) -> bool:
