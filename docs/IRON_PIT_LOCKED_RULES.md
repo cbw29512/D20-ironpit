@@ -82,6 +82,9 @@ Authority: `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md`; `docs/IRON_PIT_RULES_CONTRAC
 
 ## Parked blockers
 
+- **2014 Golem Berserk side clauses — parked.** The shared low-HP d6 activation, nearest-visible-creature targeting, persistence, and full-HP exit are represented by the universal targeting-override core. Do not certify the complete Berserk trait yet: Flesh Golem additionally allows its creator to attempt a calming Charisma (Persuasion) check, and both printed versions fall back to attacking an object when no creature can be reached and attacked. The current Pit has no declared creator relationship or generic attackable-object target model. Preserve these clauses and keep the trait blocked until explicitly resolved.
+
+
 Standing instruction: park, record, continue. Revisit this list after the rest of the current family is finished. Folded from the short-lived `docs/PARKED_BLOCKERS.md` working list after #602/#603/#604.
 
 **2014 poison family (this lane).** Extra poison damage, Poisoned on a failed Con save, repeat-save timing, and half-on-success save-damage already compile through the shared on-hit save / `FailedSaveTimedEffect` / typed-damage primitives. Breath weapons stay out of this family. Remaining poison-named cards are parked because a different family still blocks READY:
