@@ -9,7 +9,7 @@ When Chris has more than one assistant working on Iron Pit concurrently, read an
 Before changing combat code, read:
 
 1. `SOUL.md` — first-read product philosophy: semantic mechanics over source names; universal reuse is mandatory.
-2. `docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md` — small execution guide with monster, universal-engine, and pregen examples. Use this to stay on the implementation path without repeatedly loading every long contract.
+2. `docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md` — small router. Read only the task guide it points to: Monsters, Universal Engine, or Pregens.
 3. `docs/CURRENT_OPERATING_STATUS.md` — current lane, certified counts, parked PRs, CI spend rules.
 4. `docs/IRON_PIT_LOCKED_RULES.md` — Chris-locked product rules index. Do not duplicate it.
 5. `docs/IRON_PIT_RULES_CONTRACT.md` — detailed product/combat contract those locks cite; open when the playbook is insufficient or a rule is uncertain.
@@ -97,6 +97,7 @@ Before **every** class, subclass, feat, spell, item, monster, legendary action, 
 
 - `SOUL.md`
 - `docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md`
+- the single task guide it routes to (`docs/playbooks/MONSTERS.md`, `docs/playbooks/UNIVERSAL_ENGINE.md`, or `docs/playbooks/PREGENS.md`)
 - the relevant current source/card data
 
 Do **not** repeatedly reload every long architecture contract when the playbook already answers the implementation pattern. Open the detailed authority file when the mechanic touches that subsystem, the playbook points to it, a rule is uncertain, or implementation conflicts with existing code/tests.
