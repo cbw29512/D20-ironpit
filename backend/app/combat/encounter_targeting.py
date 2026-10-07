@@ -3,8 +3,9 @@ from __future__ import annotations
 import logging
 
 from app.combat.charmed_targeting import charmed_blocks_hostile_target
-from app.combat.condition_rules import is_incapacitated
+from app.combat.condition_rules import can_see, is_incapacitated
 from app.combat.grid_geometry import footprint_distance_ft
+from app.combat.turn_start_targeting_overrides import active_targeting_override
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 logger = logging.getLogger(__name__)
@@ -67,16 +68,38 @@ def _target_priority(member: EncounterCombatant) -> int | None:
 
 
 def living_opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
-    """Return only the highest-priority eligible target class under deterministic Pit policy."""
-    candidates = [
-        member for member in _opponents(attacker, setup)
-        if _target_priority(member) is not None
-        and not charmed_blocks_hostile_target(attacker.state, member.combatant_id)
-    ]
-    if not candidates:
-        return []
-    priority = min(_target_priority(member) for member in candidates)
-    return [member for member in candidates if _target_priority(member) == priority]
+    """Return the current legal target pool, honoring source-owned targeting overrides."""
+    try:
+        override = active_targeting_override(attacker.state)
+        if override is not None:
+            if override.target_mode != "nearest_visible_creature":
+                raise ValueError(f"Unsupported targeting override mode: {override.target_mode}.")
+            candidates = [
+                member for member in [*setup.heroes, *setup.monsters]
+                if member.combatant_id != attacker.combatant_id
+                and _target_priority(member) is not None
+                and not charmed_blocks_hostile_target(attacker.state, member.combatant_id)
+                and can_see(attacker.state, member.state, combatant_distance(attacker, member))
+            ]
+            if not candidates:
+                return []
+            nearest = min(
+                candidates,
+                key=lambda member: (combatant_distance(attacker, member), member.combatant_id),
+            )
+            return [nearest]
+        candidates = [
+            member for member in _opponents(attacker, setup)
+            if _target_priority(member) is not None
+            and not charmed_blocks_hostile_target(attacker.state, member.combatant_id)
+        ]
+        if not candidates:
+            return []
+        priority = min(_target_priority(member) for member in candidates)
+        return [member for member in candidates if _target_priority(member) == priority]
+    except Exception:
+        logger.exception("Failed target-pool selection for %s.", attacker.combatant_id)
+        raise
 
 
 def select_nearest_target(attacker: EncounterCombatant, setup: EncounterSetup) -> EncounterCombatant | None:
