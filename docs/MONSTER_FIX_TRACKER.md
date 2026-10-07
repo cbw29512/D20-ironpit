@@ -34,6 +34,8 @@ sets the work lane. Rules live in the rules contract, not this tracker.
 | P1 M-017 | Complete, merged #641 | Gorgon Petrifying Breath reused staged Restrained -> repeat save -> Petrified lifecycle. | Generic failed-save escalation data now carries through the shared save pipeline; all four exact-head gates passed. |
 | P1 M-018 | Complete, merged #643 | Cyclops Poor Depth Perception is Disadvantage beyond 30 ft.; Rock is 30/120, so universal long-range Disadvantage already represents the complete combat effect. | Source threshold/ranges were proved; no duplicate modifier primitive. All four exact-head gates passed. 2014 source classifier moved to 198/327. |
 | P1 M-019 | Active | Hobgoblin Martial Advantage uses the same target-adjacent active-ally requirement as Pack Tactics, but produces once-per-turn +2d6 weapon-hit damage instead of Advantage. | Reuse shared adjacency plus generic once-per-turn hit rider; source text supplies dice and printed name. |
+| P1 M-020 | Active, PR #645 | Yeti Fear of Fire: applied fire damage causes Disadvantage on attack rolls and ability checks until the end of its next turn. | Shared typed-damage trigger + timed attack/check Disadvantage; source name retained. Exact-head CI rerun after fixing an invalid empty FixedDiceProvider in the regression. |
+| P1 M-021 | Active, stacked on M-020 | Flesh Golem Aversion of Fire has the same printed combat semantics as Fear of Fire. | Bind the same universal fire-triggered timed Disadvantage rule under the printed name Aversion of Fire. Flesh Golem remains blocked only by Berserk. |
 
 ## Current evidence
 
