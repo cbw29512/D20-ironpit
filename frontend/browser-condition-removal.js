@@ -46,16 +46,22 @@
     return Object.entries(costs(action, count)).every(([id, cost]) => (member.state.resources[id] || 0) >= cost);
   }
 
-  function effectAllows(target, conditionId, actionId) {
-    return target.state.timed_effects.filter((effect) => effect.effect_id === conditionId).every((effect) =>
-      !effect.allowed_removal_action_ids?.length || effect.allowed_removal_action_ids.includes(actionId),
+  function effectAllows(target, conditionId, action) {
+    const effects = target.state.timed_effects.filter((effect) => effect.effect_id === conditionId);
+    if (action.requiresExplicitEffectPermission) {
+      return effects.length > 0 && effects.every((effect) =>
+        (effect.allowed_removal_action_ids || []).includes(action.id),
+      );
+    }
+    return effects.every((effect) =>
+      !effect.allowed_removal_action_ids?.length || effect.allowed_removal_action_ids.includes(action.id),
     );
   }
 
   function removable(target, action) {
     const allowed = new Set(action.removableConditions || []);
     const effects = [...new Set(target.state.active_effect_ids)]
-      .filter((id) => allowed.has(id) && effectAllows(target, id, action.id));
+      .filter((id) => allowed.has(id) && effectAllows(target, id, action));
     if (action.reducesExhaustionLevels && target.state.exhaustion_level) effects.push("exhaustion");
     if ((action.removesCurses || action.removesAllCurses) && target.state.active_curses?.length) effects.push("curse");
     if (action.removesAbilityScoreReductions && Object.keys(target.state.ability_score_reductions || {}).length) {
