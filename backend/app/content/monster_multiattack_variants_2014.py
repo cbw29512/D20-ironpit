@@ -13,6 +13,11 @@ _MODE_SOURCE = re.compile(
     r"The (.+?) makes (?:either )?(\w+) melee attacks"
     r"(?:: (.+?)\. Or the \1 makes |--(.+?)--or | or )"
     r"(\w+) ranged attacks(?: with its (.+?))?\.", re.I)
+_HIT_FOLLOW_UP_SOURCE = re.compile(
+    r"The (.+?) makes one attack with (?:its )?(.+?)\. "
+    r"If that attack hits, the \1 can make one (.+?) attack against the same target\.",
+    re.I,
+)
 
 
 def source_variants_2014(monster):
@@ -27,6 +32,39 @@ def source_variants_2014(monster):
             return []
         if policy.get("kind") == "drawn-offhand-additional-attack":
             return offhand_variants_2014(monster)
+        if set(policy) <= {"requires_previous_hit_slots", "same_target_as_previous_slots"}:
+            match = _HIT_FOLLOW_UP_SOURCE.fullmatch(text)
+            hit_slots = policy.get("requires_previous_hit_slots", [])
+            same_target_slots = policy.get("same_target_as_previous_slots", [])
+            if (
+                not match
+                or hit_slots != [1]
+                or same_target_slots != [1]
+                or len(slots) != 2
+                or any(len(slot) != 1 for slot in slots)
+            ):
+                return []
+            first, follow_up = attacks[slots[0][0]], attacks[slots[1][0]]
+            normalized = lambda value: value.lower().rstrip("s")
+            if (
+                normalized(first.name) != normalized(match[2])
+                or normalized(follow_up.name) != normalized(match[3])
+            ):
+                return []
+            kinds = {first.kind, follow_up.kind}
+            mode = next(iter(kinds)) if len(kinds) == 1 else None
+            return [AttackActionVariant(
+                id=f"2014-{monster.id}-multiattack-hit-follow-up",
+                attack_kind=mode,
+                slots=[
+                    AttackActionSlot(attack_ids=[attack_id_2014(monster, first.id)]),
+                    AttackActionSlot(
+                        attack_ids=[attack_id_2014(monster, follow_up.id)],
+                        requires_previous_hit=True,
+                        same_target_as_previous=True,
+                    ),
+                ],
+            )]
         branches = []
         if policy == {"distinct_attack_ids": True}:
             if not re.fullmatch(r"The .+? makes two melee attacks, each one with a different weapon\.", text):
