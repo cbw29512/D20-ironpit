@@ -54,10 +54,16 @@ def resolve_attack_action(
         light_trigger: WeaponAttack | None = None
         variant, mode = selected
         turn_key = f"{round_number}:{attacker.combatant_id}"
+        previous_event = None
+        previous_target = None
 
         for index, slot in enumerate(variant.slots):
             if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
                 break
+            if slot.requires_previous_hit and not getattr(previous_event, "hit", False):
+                previous_event = previous_target = None
+                continue
+            target_override = previous_target if slot.same_target_as_previous else None
             deferred = resolve_deferred_effect_attack_slot(
                 sequence,
                 round_number,
@@ -68,9 +74,13 @@ def resolve_attack_action(
             if deferred is not None:
                 events.append(deferred)
                 sequence += 1
+                previous_event = deferred
+                previous_target = event_target(deferred, setup)
                 opening_feature = None
                 continue
-            chosen_attack = attack_choice(attacker, setup, slot, mode=mode)
+            chosen_attack = attack_choice(
+                attacker, setup, slot, mode=mode, target_override=target_override,
+            )
             if chosen_attack is not None:
                 if not turn_attack_allowed(attacker.state):
                     break
@@ -85,8 +95,10 @@ def resolve_attack_action(
                 )
                 events.append(event)
                 sequence += 1
+                previous_event = event
+                previous_target = event_target(event, setup) or target
                 if event.hit:
-                    actual_target = event_target(event, setup) or target
+                    actual_target = previous_target
                     stun = resolve_stunning_strike(
                         sequence,
                         round_number,
@@ -116,7 +128,9 @@ def resolve_attack_action(
                 opening_feature = None
                 continue
 
-            chosen_save = save_choice(attacker, setup, slot)
+            chosen_save = save_choice(
+                attacker, setup, slot, target_override=target_override,
+            )
             if chosen_save is not None:
                 target, save_action, distance = chosen_save
                 event = resolve_save_action(
@@ -129,12 +143,16 @@ def resolve_attack_action(
                 )
                 events.append(event)
                 sequence += 1
+                previous_event = event
+                previous_target = event_target(event, setup) or target
                 reactions, sequence = resolve_damage_event_reactions(
                     sequence, round_number, attacker, event, setup, dice, turn_key=turn_key,
                 )
                 events.extend(reactions)
                 if attacker.state.is_dead or is_incapacitated(attacker.state):
                     break
+                continue
+            previous_event = previous_target = None
 
         if (
             definition.is_attack_action and light_trigger is not None
