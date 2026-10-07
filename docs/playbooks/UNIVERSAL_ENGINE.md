@@ -60,6 +60,7 @@ This is the search checklist before new engine code.
 | Targeting/areas | legal target geometry | range, cone/line/radius/target count | `domain/targeting.py`, `combat/area_targeting.py`, browser area targeting |
 | Movement | legal grid movement and speed consumption | speeds, reach, forced distance | grid/movement/reaction modules; battlefield contract |
 | Failed-save forced movement | on a failed save, send declared distance through shared forced-movement/grid legality | source `failure_push_ft` -> `SaveCapabilityDefinition.failed_save_push_ft` -> `SavingThrowAction.failed_save_push_ft` | `combat/saving_throws.py`, shared forced-movement module, `browser-saves.js` |
+| Staged condition escalation | apply one condition, repeat a save at source timing, and replace it with another canonical condition on failure | `FailedSaveTimedEffect.repeat_save_failure_condition_id`; same timed-condition lifecycle used by on-hit condition saves | failed-save timed apply + condition lifecycle in Python/browser |
 | Reactions/OA | trigger legality and reaction spend | trigger, reach/range, qualifiers | shared reaction/movement modules |
 | Concentration | start, maintain, save, end | effect id, duration, DC rules | `combat/concentration*.py`, `browser-concentration*.js` |
 | Zero HP/death | unconscious/death/stabilization lifecycle | source-specific riders/qualifiers | `combat/zero_hp*.py`, death/instant-death modules, browser zero-HP |
@@ -77,6 +78,8 @@ Current shared condition vocabulary is defined in `backend/app/domain/action_typ
 A source that applies one of these binds to that condition. It does not create a source-specific version.
 
 Likewise, source-declared forced movement is data, not a named ability subsystem. For example, a breath weapon that says a failed save pushes a target supplies the save/DC/area/push distance; the generic save and forced-movement engines own resolution.
+
+Staged conditions follow the same rule. If a source applies Restrained, calls for a later repeat save, and changes that state to Petrified on failure, bind the canonical condition IDs and repeat-save timing through `repeat_save_failure_condition_id`. Do not create a source-specific petrification resolver.
 
 ## Before adding a primitive
 

@@ -5,6 +5,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_serializer, model_validator
 
+from app.domain.action_types import ConditionName
 from app.domain.character_builds import AbilityName
 from app.domain.timed_control_limits import TimedControlLimits, TimedSaveFlatBonus, compiled_control_limits
 
@@ -27,6 +28,7 @@ class FailedSaveTimedEffect(BaseModel):
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: SaveEffectTiming | None = None
+    repeat_save_failure_condition_id: ConditionName | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     next_attack_disadvantage: bool = False
     turn_behavior: Literal["normal", "forced_retreat", "single_activity"] = "normal"
@@ -63,6 +65,7 @@ class FailedSaveTimedEffect(BaseModel):
                 "armor_class_bonus": 0,
                 "saving_throw_flat_bonuses": [],
                 "allowed_removal_action_ids": [],
+                "repeat_save_failure_condition_id": None,
             }
             for key, default in defaults.items():
                 if data.get(key) == default:
@@ -93,6 +96,10 @@ class FailedSaveTimedEffect(BaseModel):
             )
             if any(configured) and not all(configured):
                 raise ValueError("Repeat-save riders require ability, DC, and timing together.")
+            if self.repeat_save_failure_condition_id is not None and not all(configured):
+                raise ValueError(
+                    "Repeat-save failure escalation requires ability, DC, and timing."
+                )
             if (self.escape_check_ability is None) != (self.escape_check_dc is None):
                 raise ValueError("Escape-check riders require ability and DC together.")
             return self

@@ -86,8 +86,8 @@ def test_shared_2014_area_save_spends_once_and_shares_damage_rolls() -> None:
     assert save_choice(actor, setup) is not None
 
 
-def test_complex_2014_save_control_remains_fail_closed() -> None:
+def test_gorgon_staged_petrification_no_longer_blocks_save_or_recharge() -> None:
     gorgon = _source()["gorgon"]
     blockers = basic_blockers_2014(gorgon)
-    assert "mechanic:save-action" in blockers
-    assert "mechanic:recharge" in blockers
+    assert "mechanic:save-action" not in blockers
+    assert "mechanic:recharge" not in blockers
