@@ -99,10 +99,13 @@
     const riders = [...(attack.onHitDamage || []), ...(attack.onHitSaveDamage ? [attack.onHitSaveDamage] : [])];
     return (attack.fixedDamage ?? mean(attack)) + riders.reduce((total, part) => total + mean(part), 0);
   }
-  function chooseAttack(member, setup, ids, kind = null, preferBackline = false) {
+  function chooseAttack(member, setup, ids, kind = null, preferBackline = false, targetOverride = null) {
     const allowed = new Set(ids);
     const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id) && (!kind || attack.kind === kind));
-    for (const target of targetOrder(member, setup, preferBackline)) {
+    const targets = targetOverride
+      ? ((targetOverride.state.is_alive && !targetOverride.state.is_dead && targetOverride.state.current_hp > 0) ? [targetOverride] : [])
+      : targetOrder(member, setup, preferBackline);
+    for (const target of targets) {
       const distance = attackDistance(member, target);
       const legal = profiles.filter((profile) => (!window.IRON_PIT_BROWSER_GRID_BARRIERS || window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(member, target, setup)) && targetAllowed(member, target, profile, setup) && attackInRange(profile, distance));
       if (legal.length) {
@@ -124,14 +127,15 @@
     return kinds.has("melee") && kinds.has("ranged");
   }
   const flexibleAttackMode = (member, setup) => chooseAttack(member, setup, attacks(member.state.template).map((a) => a.id), "melee") ? "melee" : "ranged";
-  function chooseSlotAttack(member, setup, ids, mode = null) {
+  function chooseSlotAttack(member, setup, ids, mode = null, targetOverride = null) {
     try {
       // Select the permitted mode before damage scoring or actual resolution.
       if (flexibleSlotHasBoth(member, ids)) {
         const kind = mode || flexibleAttackMode(member, setup);
-        return chooseAttack(member, setup, ids, kind);
+        return chooseAttack(member, setup, ids, kind, false, targetOverride);
       }
-      return chooseAttack(member, setup, ids, "melee") || chooseAttack(member, setup, ids, "ranged");
+      return chooseAttack(member, setup, ids, "melee", false, targetOverride)
+        || chooseAttack(member, setup, ids, "ranged", false, targetOverride);
     } catch (error) {
       console.error("Failed browser range-based attack choice", { id: member?.combatant_id, error });
       throw error;
