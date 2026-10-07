@@ -48,6 +48,7 @@ This is the search checklist before new engine code.
 | Ability check | d20 check and modifiers | ability/skill, DC/contest | search current `backend/app/combat/` check resolvers and browser equivalents |
 | Advantage/Disadvantage | combine universal sources into roll mode | qualifying trigger/source | attack/save modifier modules; never ability-name dispatch |
 | Damage | roll/apply typed damage in order | dice, bonus, type, qualifiers | damage pipeline, `damage_defense_evaluation.py`, browser damage modules |
+| Once-per-turn hit damage | add source-declared bonus damage once per turn after a qualifying weapon hit | dice/flat bonus, damage type, target qualifiers; target-adjacent active-ally qualification reuses the same adjacency predicate as Pack Tactics | `domain/damage_riders.py`, `combat/once_per_turn_hit_damage.py`, browser once-per-turn hit damage |
 | Resistance/Immunity/Vulnerability | modify typed damage | defense type/qualifier | domain capabilities + shared damage-defense pipeline |
 | Healing | restore HP within legal limits | dice/amount/resource/target | `combat/healing.py`, `healing_resolution_support.py`, browser healing |
 | Temporary HP | apply/replace temporary HP | amount/source | combat state + browser state/healing paths |
