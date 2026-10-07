@@ -32,6 +32,7 @@ jobs:
           python scripts/check_combat_engine_coverage.py
           python scripts/export_roster_mechanic_checklist.py --check
           python scripts/export_monster_fix_list_2014.py --check
+          python scripts/export_universal_mechanic_inventory.py --check
       - name: Enforce declarative monster source of truth
         run: |
           python scripts/export_runtime_monster_capabilities.py --check

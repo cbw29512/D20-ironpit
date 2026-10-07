@@ -36,9 +36,10 @@ jobs:
           python scripts/verify_certification_manifests.py --write
           python scripts/export_roster_mechanic_checklist.py
           python scripts/export_monster_fix_list_2014.py
+          python scripts/export_universal_mechanic_inventory.py
       - name: Refuse unexpected generator drift
         run: |
-          unexpected="$(git status --porcelain --untracked-files=all | awk '{print $2}' | grep -Ev '^(backend/app/content/data/combatant_capabilities_v1.json|frontend/browser-heroes.js|frontend/browser-monsters-generated.js|frontend/browser-monsters-2014.js|frontend/browser-spell-effects.js|frontend/figure-profiles.js|frontend/data/srd_5_2_1_monsters.json|data/hero_certification_manifest.json|data/monster_certification_manifest.json|data/roster_combat_mechanics_v1.json|docs/MONSTER_BLOCKERS_2014.md)$' || true)"
+          unexpected="$(git status --porcelain --untracked-files=all | awk '{print $2}' | grep -Ev '^(backend/app/content/data/combatant_capabilities_v1.json|frontend/browser-heroes.js|frontend/browser-monsters-generated.js|frontend/browser-monsters-2014.js|frontend/browser-spell-effects.js|frontend/figure-profiles.js|frontend/data/srd_5_2_1_monsters.json|data/hero_certification_manifest.json|data/monster_certification_manifest.json|data/roster_combat_mechanics_v1.json|data/universal_mechanic_inventory_v1.json|docs/MONSTER_BLOCKERS_2014.md|docs/UNIVERSAL_MECHANIC_INVENTORY.md)$' || true)"
           if [ -n "$unexpected" ]; then
             echo "Generator modified files outside its owned outputs:"
             echo "$unexpected"
@@ -46,7 +47,7 @@ jobs:
           fi
       - name: Commit only generator-owned outputs
         run: |
-          outputs="backend/app/content/data/combatant_capabilities_v1.json frontend/browser-heroes.js frontend/browser-monsters-generated.js frontend/browser-monsters-2014.js frontend/browser-spell-effects.js frontend/figure-profiles.js frontend/data/srd_5_2_1_monsters.json data/hero_certification_manifest.json data/monster_certification_manifest.json data/roster_combat_mechanics_v1.json docs/MONSTER_BLOCKERS_2014.md"
+          outputs="backend/app/content/data/combatant_capabilities_v1.json frontend/browser-heroes.js frontend/browser-monsters-generated.js frontend/browser-monsters-2014.js frontend/browser-spell-effects.js frontend/figure-profiles.js frontend/data/srd_5_2_1_monsters.json data/hero_certification_manifest.json data/monster_certification_manifest.json data/roster_combat_mechanics_v1.json data/universal_mechanic_inventory_v1.json docs/MONSTER_BLOCKERS_2014.md docs/UNIVERSAL_MECHANIC_INVENTORY.md"
           untracked="$(git ls-files --others --exclude-standard -- $outputs)"
           if git diff --quiet -- $outputs && [ -z "$untracked" ]; then
             echo "Generated artifacts already current."
