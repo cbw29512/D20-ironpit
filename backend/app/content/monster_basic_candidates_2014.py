@@ -18,6 +18,7 @@ from app.content.monster_multiattack_2014 import multiattack_blockers_2014
 from app.content.monster_save_capabilities_2014 import supports_recharge_rules_2014, unsupported_save_actions_2014, unsupported_source_actions_2014
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_trait_bindings_2014 import bound_trait_names_2014, supports_reckless_2014
+from app.content.monster_timed_condition_auras_2014 import timed_condition_aura_action_names_2014
 from app.content.monster_zero_hp_prevention_2014 import supports_zero_hp_prevention_2014
 from app.domain.traits import CombatTrait
 from app.domain.weapons import DamageType
@@ -101,6 +102,7 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
         | _ARENA_ABSENT_CONTEXT_ACTION_LABELS
         | _ARENA_UNAVAILABLE_SUMMON_ACTION_LABELS
         | _ARENA_NEUTRAL_MIND_ACTION_LABELS
+        | timed_condition_aura_action_names_2014(monster)
     )
     extras = [
         name for name in extras
