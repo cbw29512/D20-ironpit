@@ -118,4 +118,29 @@ const lesserRestoration = {
   assert.equal(C.chooseReaction(remover, setup, "condition_applied_to_self", ally, turnKey), null);
 }
 
+
+{
+  const wakeSleeper = {
+    id: "wake-sleeper", name: "Wake Sleeper", actionCost: "action", range: 5,
+    targetMode: "ally", removableConditions: ["unconscious"], maxConditionsPerUse: 1,
+    resourceCosts: {}, resourceCostsPerCondition: {}, expendsSpellSlot: false,
+    requiresExplicitEffectPermission: true,
+  };
+  const remover = member("waker", [], {}, [wakeSleeper]);
+  const ally = member("sleeper", ["unconscious"]);
+  const setup = { heroes: [remover, ally], monsters: [] }, turnKey = key(1, remover);
+
+  assert.equal(C.chooseAction(remover, setup, turnKey), null, "wake must not remove unrelated Unconscious effects");
+
+  ally.state.timed_effects[0].allowed_removal_action_ids = ["wake-sleeper"];
+  const choice = C.chooseAction(remover, setup, turnKey);
+  assert.equal(choice.action.id, "wake-sleeper");
+  assert.equal(choice.target, ally);
+  assert.deepEqual(choice.conditions, ["unconscious"]);
+  const event = C.resolve(1, 1, remover, ally, choice.action, choice.conditions, turnKey);
+  assert.equal(remover.state.action_available, false);
+  assert.deepEqual(ally.state.active_effect_ids, []);
+  assert.equal(event.feature_id, "wake-sleeper");
+}
+
 console.log("Browser 2024 condition-removal regressions passed.");
