@@ -1,13 +1,16 @@
 # Current operating status
 
-Recorded 2026-10-06 after the monster-work baseline reset.
-Main baseline audited: `007453194fcd5621c0130ffcabf25d3b132a1a07`.
+Updated 2026-10-06 during PR #629 completion.
+Current main audited: `27ab34be9ac96642015ed1af9c62ea683074f3e1`.
+Active fix queue: [Monster fix tracker](MONSTER_FIX_TRACKER.md).
+Per-monster source blockers: [Generated 2014 list](MONSTER_BLOCKERS_2014.md).
 
 This file is operating authority for **what to work on next**. Combat rules remain authoritative in `docs/IRON_PIT_RULES_CONTRACT.md`. Generated certification manifests and exact current source/tests determine counts and readiness. Repository truth overrides chat summaries and older milestone prose.
 
 ## Clean baseline
 
-The last accepted monster baseline is merged PR #624. Its exact head passed all four required gates before merge:
+PR #624 is the historical reset point. Current main is newer; its 2014 source baseline is 182/327.
+The required gates for every new mechanic tranche are:
 
 - CI;
 - 2014 Basic Roster;
@@ -24,10 +27,10 @@ Do not revive or extend #625. Reimplement only still-correct pieces from current
 |---|---|---:|
 | 2014 | Canonical pregens | **240 / 240** |
 | 2024 | Canonical pregens | **240 / 240** |
-| 2014 | Source monsters | **177 / 327** |
+| 2014 | Source monsters | **182 / 327** |
 | 2024 | SRD monsters | **141 / 330** |
 
-Counts above are the clean-baseline counts. Recompute them after every merged monster tranche.
+Counts above describe the starting main for this tranche. PR #629 currently classifies 184/327 on its working branch; final exact-head verification is pending. Recompute them after every merged monster tranche.
 
 ## Current completion order
 
@@ -72,7 +75,7 @@ Only `ENGINE_TRULY_MISSING` justifies a new universal engine primitive.
 
 ## Immediate next action
 
-Run the full 2014 blocker audit from clean main `007453194...`, group the remaining blockers by semantic mechanic, and take the largest **single-family** batch first.
+Complete PR #629 using the [susceptibility audit](ANTIMAGIC_SUSCEPTIBILITY_AUDIT.md), then refresh the fix tracker and source blocker list from the merged commit. Select the next single semantic family from that verified baseline.
 
 Historical work from #625 may be used as evidence, but every reused behavior must be revalidated against current main and implemented in a fresh branch.
 

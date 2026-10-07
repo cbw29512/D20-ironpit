@@ -478,6 +478,7 @@ def _effect_removal(action: Any) -> dict[str, Any]:
         "actionCost": action.action_cost, "range": action.range_ft,
         "castingAbility": action.casting_ability, "targetMode": action.target_mode,
         "autoRemoveMaxLevel": action.auto_remove_max_level,
+        "effectTags": list(action.effect_tags),
         "resourceId": action.resource_id, "resourceCost": action.resource_cost,
         "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
     }

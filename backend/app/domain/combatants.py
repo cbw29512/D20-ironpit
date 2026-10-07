@@ -12,7 +12,7 @@ from app.domain.attack_action_weapon_buffs import AttackActionWeaponBuff
 from app.domain.character_builds import AbilityScores
 from app.domain.damage_absorption import DamageAbsorptionRule
 from app.domain.damage_sources import ConditionalDamageDefense
-from app.domain.effect_removal import EffectRemovalAction
+from app.domain.effect_removal import EffectRemovalAction, EffectTagConditionGrant
 from app.domain.environment_contexts import EnvironmentContextReaction
 from app.domain.d20_bonus_dice import D20BonusDieAction
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
@@ -68,12 +68,10 @@ class VisualLoadout(BaseModel):
     main_hand: str
     off_hand: str | None = None
     body_style: str = "humanoid"
-
 class ResourceDefinition(BaseModel):
     id: str
     name: str
     max_uses: int = Field(ge=0)
-
 
 class CombatantTemplate(BaseModel):
     id: str
@@ -159,6 +157,8 @@ class CombatantTemplate(BaseModel):
     damage_absorptions: list[DamageAbsorptionRule] = Field(default_factory=list)
     conditional_damage_defenses: list[ConditionalDamageDefense] = Field(default_factory=list)
     condition_immunities: list[ConditionName] = Field(default_factory=list)
+    terminal_effect_tags: list[str] = Field(default_factory=list)
+    effect_tag_condition_grants: list[EffectTagConditionGrant] = Field(default_factory=list)
     wearing_heavy_armor: bool = False
     wearing_metal_armor: bool = False
     rage_damage_bonus: int = Field(default=0, ge=0, le=10)

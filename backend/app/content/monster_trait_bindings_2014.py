@@ -15,6 +15,7 @@ from app.content.monster_passive_grants_2014 import (
 )
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
+from app.content.monster_terminal_effects_2014 import bound_terminal_effect_trait_names_2014
 from app.content.monster_zero_hp_prevention_2014 import bound_zero_hp_trait_names_2014
 from app.domain.bonus_attacks import BonusAttackGrant
 from app.domain.environment_contexts import EnvironmentContextReaction
@@ -163,6 +164,7 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(_SUNLIGHT_SENSITIVITY)
         if bonus_attack_grants_2014(monster):
             bound.add(_RAMPAGE)
+        bound.update(bound_terminal_effect_trait_names_2014(monster))
         if supports_regeneration_2014(monster):
             bound.add("Regeneration")
         resistance = legendary_resistance_trait_name_2014(monster)

@@ -7,6 +7,7 @@
   const P = () => window.IRON_PIT_BROWSER_SPELLCASTING;
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const T = () => window.IRON_PIT_BROWSER_EFFECT_TAG_CONDITIONS;
 
   function spellLevel(source, effectId) {
     const template = source.state.template;
@@ -31,8 +32,13 @@
     const members = [...setup.heroes, ...setup.monsters];
     const byId = Object.fromEntries(members.map((member) => [member.combatant_id, member]));
     const found = new Map();
+    const tagged = [];
     for (const target of members) {
       if (!targetAllowed(remover, target, action)) continue;
+      if ((target.state.template.effect_tag_condition_grants || []).length) {
+        if (!T()) throw new Error("Effect-tag condition runtime is not loaded.");
+        tagged.push(...T().candidates(remover, target, action));
+      }
       for (const modifier of target.state.active_modifiers || []) {
         const source = byId[modifier.source_id]; if (!source) continue;
         const level = spellLevel(source, modifier.source_effect_id); if (level == null) continue;
@@ -40,16 +46,20 @@
         found.set(key, { target, source, effectId: modifier.source_effect_id, spellLevel: level });
       }
     }
-    return [...found.values()].sort((a, b) => b.spellLevel - a.spellLevel
+    tagged.sort((a, b) => S().distance(remover, a.target) - S().distance(remover, b.target)
+      || a.target.combatant_id.localeCompare(b.target.combatant_id) || a.grant.source_id.localeCompare(b.grant.source_id));
+    return [...tagged, ...[...found.values()].sort((a, b) => b.spellLevel - a.spellLevel
       || S().distance(remover, a.target) - S().distance(remover, b.target)
-      || a.effectId.localeCompare(b.effectId));
+      || a.effectId.localeCompare(b.effectId))];
   }
+
+  const available = (remover, action, turnKey) => E().available(remover.state, action.actionCost)
+    && (!action.expendsSpellSlot || P().slotSpellAvailable(remover.state, turnKey))
+    && (!action.resourceId || (remover.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1));
 
   function choose(remover, setup, turnKey) {
     for (const action of remover.state.template.effect_removal_actions || []) {
-      if (!E().available(remover.state, action.actionCost)) continue;
-      if (action.expendsSpellSlot && !P().slotSpellAvailable(remover.state, turnKey)) continue;
-      if (action.resourceId && (remover.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) continue;
+      if (!available(remover, action, turnKey)) continue;
       const candidates = effects(remover, setup, action);
       if (candidates.length) return { action, effect: candidates[0] };
     }
@@ -57,58 +67,67 @@
   }
 
   function resolve(sequence, round, remover, setup, action, effect, turnKey) {
-    if (!effects(remover, setup, action).some((item) =>
-      item.target.combatant_id === effect.target.combatant_id
-      && item.source.combatant_id === effect.source.combatant_id && item.effectId === effect.effectId)) {
-      throw new Error("Tracked spell effect is no longer a legal removal target.");
+    try {
+      if (!available(remover, action, turnKey)) throw new Error("Effect-removal action or resource is no longer available.");
+      if (!effects(remover, setup, action).some((item) =>
+        item.target.combatant_id === effect.target.combatant_id
+        && (item.grant ? JSON.stringify(item.grant) === JSON.stringify(effect.grant)
+          : !effect.grant && item.source.combatant_id === effect.source.combatant_id && item.effectId === effect.effectId))) {
+        throw new Error("Tracked spell effect is no longer a legal removal target.");
+      }
+      if (effect.grant) T().validateRuntime();
+      E().spend(remover.state, action.actionCost);
+      let remaining = null;
+      if (action.resourceId) {
+        if (action.expendsSpellSlot) P().markSlotSpellCast(remover.state, turnKey);
+        remover.state.resources[action.resourceId] -= action.resourceCost || 1;
+        remaining = remover.state.resources[action.resourceId];
+      }
+      if (effect.grant) return T().apply(sequence, round, remover, setup, action, effect, remaining);
+      let check = null, succeeded = true, dc = null;
+      if (effect.spellLevel > (action.autoRemoveMaxLevel ?? 3)) {
+        const score = remover.state.template.ability_scores?.[action.castingAbility];
+        if (!Number.isInteger(score)) throw new Error("Effect removal requires a certified casting ability.");
+        dc = 10 + effect.spellLevel;
+        check = R().d20(
+          Math.floor((score - 10) / 2),
+          A()?.mode ? A().mode(remover.state) : "normal",
+        );
+        const needsCheckRuntime = (remover.state.template.ability_check_minimums || []).some(
+          (rule) => rule.ability === action.castingAbility,
+        ) || (remover.state.template.failed_d20_test_override_grants || []).some(
+          (grant) => (grant.test_kinds || []).includes("ability_check"),
+        );
+        if (needsCheckRuntime && !A()) throw new Error("Ability-check runtime is not loaded.");
+        const resolved = A()?.resolve
+          ? A().resolve(remover.state, action.castingAbility, check, dc, {
+              roller: remover,
+              setup,
+            })
+          : { roll: check, succeeded: check.total >= dc };
+        check = resolved.roll;
+        succeeded = resolved.succeeded;
+      }
+      if (succeeded) {
+        M().removeSource([effect.target.state], effect.source.combatant_id, effect.effectId);
+        effect.target.state.active_buff_effect_ids = (effect.target.state.active_buff_effect_ids || [])
+          .filter((id) => id !== effect.effectId);
+      }
+      return {
+        sequence, round_number: round, event_type: "feature",
+        actor_id: remover.combatant_id, actor_name: remover.state.template.name,
+        target_id: effect.target.combatant_id, target_name: effect.target.state.template.name,
+        ability_check_roll: check, check_ability: action.castingAbility, check_dc: dc,
+        check_succeeded: check ? succeeded : null, feature_id: action.id,
+        resource_remaining: remaining, removed_condition_ids: succeeded ? [effect.effectId] : [],
+        animation: action.animation || "effect-removal",
+        description: remover.state.template.name + " uses " + action.name + " on " + effect.effectId
+          + ": " + (succeeded ? "effect ends." : "ability check fails."),
+      };
+    } catch (error) {
+      console.error(`Effect removal failed for ${remover.combatant_id} using ${action.id}.`, error);
+      throw error;
     }
-    E().spend(remover.state, action.actionCost);
-    let remaining = null;
-    if (action.resourceId) {
-      if (action.expendsSpellSlot) P().markSlotSpellCast(remover.state, turnKey);
-      remover.state.resources[action.resourceId] -= action.resourceCost || 1;
-      remaining = remover.state.resources[action.resourceId];
-    }
-    let check = null, succeeded = true, dc = null;
-    if (effect.spellLevel > (action.autoRemoveMaxLevel ?? 3)) {
-      const score = remover.state.template.ability_scores?.[action.castingAbility];
-      if (!Number.isInteger(score)) throw new Error("Effect removal requires a certified casting ability.");
-      dc = 10 + effect.spellLevel;
-      check = R().d20(
-        Math.floor((score - 10) / 2),
-        A()?.mode ? A().mode(remover.state) : "normal",
-      );
-      const needsCheckRuntime = (remover.state.template.ability_check_minimums || []).some(
-        (rule) => rule.ability === action.castingAbility,
-      ) || (remover.state.template.failed_d20_test_override_grants || []).some(
-        (grant) => (grant.test_kinds || []).includes("ability_check"),
-      );
-      if (needsCheckRuntime && !A()) throw new Error("Ability-check runtime is not loaded.");
-      const resolved = A()?.resolve
-        ? A().resolve(remover.state, action.castingAbility, check, dc, {
-            roller: remover,
-            setup,
-          })
-        : { roll: check, succeeded: check.total >= dc };
-      check = resolved.roll;
-      succeeded = resolved.succeeded;
-    }
-    if (succeeded) {
-      M().removeSource([effect.target.state], effect.source.combatant_id, effect.effectId);
-      effect.target.state.active_buff_effect_ids = (effect.target.state.active_buff_effect_ids || [])
-        .filter((id) => id !== effect.effectId);
-    }
-    return {
-      sequence, round_number: round, event_type: "feature",
-      actor_id: remover.combatant_id, actor_name: remover.state.template.name,
-      target_id: effect.target.combatant_id, target_name: effect.target.state.template.name,
-      ability_check_roll: check, check_ability: action.castingAbility, check_dc: dc,
-      check_succeeded: check ? succeeded : null, feature_id: action.id,
-      resource_remaining: remaining, removed_condition_ids: succeeded ? [effect.effectId] : [],
-      animation: action.animation || "effect-removal",
-      description: remover.state.template.name + " uses " + action.name + " on " + effect.effectId
-        + ": " + (succeeded ? "effect ends." : "ability check fails."),
-    };
   }
 
   window.IRON_PIT_BROWSER_EFFECT_REMOVAL = { choose, effects, resolve };

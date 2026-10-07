@@ -4,20 +4,15 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const C = () => window.IRON_PIT_BROWSER_DEBUFF_COUNTERS || { movementCost: () => null };
   const RF = () => window.IRON_PIT_BROWSER_REPLACEMENT_FORMS;
+  const T = () => window.IRON_PIT_BROWSER_TERMINAL_EFFECTS;
   const POISONED = "poisoned";
   const TERMINAL = new Set(["petrified"]);
   const POISON_RECOVERY_DC = 10;
 
   function applyTerminalOutcome(state, effectId, affectedStates = []) {
     if (!TERMINAL.has(effectId) || state.is_dead) return false;
-    state.current_hp = 0;
-    state.is_alive = false;
-    state.is_dead = true;
-    state.is_unconscious = false;
-    state.is_stable = false;
-    state.active_effect_ids = (state.active_effect_ids || []).filter((id) => id !== "dodge");
-    window.IRON_PIT_BROWSER_CONCENTRATION?.endIfIncapacitated?.(state, affectedStates);
-    return true;
+    if (!T()?.applyTerminalDeath) throw new Error("Browser terminal-effect runtime is not loaded.");
+    return T().applyTerminalDeath(state, affectedStates) === "dead";
   }
 
   function apply(state, effectId, sourceId, options = {}) {

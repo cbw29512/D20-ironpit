@@ -6,6 +6,7 @@
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT;
+  const T = () => window.IRON_PIT_BROWSER_TERMINAL_EFFECTS;
   const RF = () => window.IRON_PIT_BROWSER_REPLACEMENT_FORMS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const DODGE = "dodge";
@@ -99,9 +100,8 @@
   function applyInstantDeath(state, affectedStates = []) {
     if (state.is_dead || !state.is_alive) return "unchanged";
     if (Z()?.consumeInstantDeath(state)) return "zero_hp_replacement";
-    markDead(state);
-    if (state.concentration && C()) C().endIfIncapacitated(state, affectedStates);
-    return "dead";
+    if (!T()?.applyTerminalDeath) throw new Error("Browser terminal-effect runtime is not loaded.");
+    return T().applyTerminalDeath(state, affectedStates);
   }
 
   function reduceToZero(state, affectedStates = []) {
