@@ -1,7 +1,7 @@
 # Current operating status
 
-Updated 2026-10-07 after PR #632 merge.
-Merged source baseline audited: `d84b26ab5f3f3170cb1c4d86721bfbfd38546bea`. See the fix tracker for exact-head workflow evidence.
+Updated 2026-10-07 after PR #633 merge.
+Merged source baseline audited: `72d4a8d3e1aec7d9e70bc9154ec6f03e3cfc0e64`. See the fix tracker for exact-head workflow evidence.
 Active fix queue: [Monster fix tracker](MONSTER_FIX_TRACKER.md).
 Per-monster source blockers: [Generated 2014 list](MONSTER_BLOCKERS_2014.md).
 
@@ -9,7 +9,7 @@ This file is operating authority for **what to work on next**. Combat rules rema
 
 ## Clean baseline
 
-PR #624 is the historical reset point. PR #632 is the latest accepted monster tranche. Veteran and Half-Red Dragon Veteran now use complete compatible sword sequences through the existing engine. Both passed all four final-head gates, bringing 2014 to 189/327. #631 cleared Bandit Captain, Gladiator and Lizardfolk.
+PR #624 is the historical reset point. PR #633 is the latest accepted monster tranche. Grick's previous-hit/same-actual-target follow-up now uses shared immutable slot requirements and normal attack legality/resolution. All four final-head gates passed; 2014 is 190/327. #632 cleared both Veterans; #631 cleared Bandit Captain, Gladiator and Lizardfolk.
 The required gates for every new mechanic tranche are:
 
 - CI;
@@ -27,10 +27,10 @@ Do not revive or extend #625. Reimplement only still-correct pieces from current
 |---|---|---:|
 | 2014 | Canonical pregens | **240 / 240** |
 | 2024 | Canonical pregens | **240 / 240** |
-| 2014 | Source monsters | **189 / 327** |
+| 2014 | Source monsters | **190 / 327** |
 | 2024 | SRD monsters | **141 / 330** |
 
-Counts above were verified on the #632 merged source baseline. The tracker records exact-head gates. Later documentation-only commits add no combat behavior and do not inherit exact-head CI.
+Counts above were verified on the #633 merged source baseline. The tracker records exact-head gates. Later documentation-only commits add no combat behavior and do not inherit exact-head CI.
 
 ## Current completion order
 
@@ -75,9 +75,9 @@ Only `ENGINE_TRULY_MISSING` justifies a new universal engine primitive.
 
 ## Immediate next action
 
-Active M-013: Grick conditional same-target follow-up is built on `feat/2014-grick-followup`, from merged #632 closeout main `ec84f726f799f03db78beacfe433c85b353f270f`. Focused source/schema/Python/browser parity passed; generated branch roster is 190/327. Await four required final-head gates and merge on success. Violet Fungus random 1d4 attack count remains separate queued M-014.
+Next: M-014 Violet Fungus random 1d4 attack count. The active branch `feat/2014-violet-fungus-repeat` has implemented immutable random sequence repetition and shared dice/ordinary slot resolution; focused parity passed. Re-anchor it to merged #633 closeout main, finish required generation, and submit its final head once.
 
-PR #632 is complete: compatible fixed offhand binding cleared Veteran and Half-Red Dragon Veteran. PR #631's complete sequence engine also cleared Bandit Captain, Gladiator, and Lizardfolk. [138 blocked 2014 cards](MONSTER_BLOCKERS_2014.md) retain other mechanics. Medusa's sequence is bound but Petrifying Gaze remains unsupported.
+#633 is complete: Grick is READY. #632 cleared both Veterans; #631 cleared Bandit Captain, Gladiator and Lizardfolk. [137 blocked 2014 cards](MONSTER_BLOCKERS_2014.md) retain other mechanics. Medusa still needs Petrifying Gaze.
 
 Verification follows the single-batch policy in AGENTS.md: one focused changed-family check and one required final-head CI pass. Do not duplicate full CI locally or restart clean validation while monsters await implementation.
 
