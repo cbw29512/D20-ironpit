@@ -25,7 +25,12 @@ def save_choice(
 ):
     try:
         allowed = set(slot.save_action_ids)
-        targets = [target_override] if target_override is not None else target_order(attacker, setup)
+        normal_targets = target_order(attacker, setup)
+        targets = (
+            [target_override] if target_override is not None and target_override in normal_targets
+            else [] if target_override is not None
+            else normal_targets
+        )
         for target in targets:
             for action in attacker.state.template.saving_throw_actions:
                 if action.id not in allowed:
