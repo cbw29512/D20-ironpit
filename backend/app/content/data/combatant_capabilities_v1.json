@@ -197,6 +197,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "leather",
@@ -377,6 +378,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "clothes",
@@ -571,6 +573,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "half-plate",
@@ -753,6 +756,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -988,6 +992,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "chain-shirt",
@@ -1167,6 +1172,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "leather",
@@ -1316,6 +1322,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "clothes",
@@ -1493,6 +1500,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "chain-shirt",
@@ -1644,6 +1652,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "none",
@@ -1791,6 +1800,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "none",
@@ -1955,6 +1965,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "feathers",
@@ -2102,6 +2113,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "none",
@@ -2251,6 +2263,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -2415,6 +2428,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "fur",
@@ -2571,6 +2585,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "fur",
@@ -2738,6 +2753,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "fur",
@@ -2945,6 +2961,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "fur",
@@ -3096,6 +3113,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "fur",
@@ -3243,6 +3261,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "fur",
@@ -3392,6 +3411,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "fur",
@@ -3539,6 +3559,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "fur",
@@ -3688,6 +3709,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "fur",
@@ -3835,6 +3857,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "fur",
@@ -3987,6 +4010,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "hide",
@@ -4136,6 +4160,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "hide",
@@ -4288,6 +4313,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "hide",
@@ -4471,6 +4497,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "bones",
@@ -4640,6 +4667,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "hide",
@@ -4796,6 +4824,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "bones",
@@ -4974,6 +5003,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "hide",
@@ -5119,6 +5149,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -5338,6 +5369,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -5672,6 +5704,7 @@
     ],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "studded-leather",
@@ -5841,6 +5874,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "feathers",
@@ -5988,6 +6022,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -6133,6 +6168,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -6276,6 +6312,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -6421,6 +6458,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -6566,6 +6604,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -6712,6 +6751,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -6855,6 +6895,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -7000,6 +7041,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -7145,6 +7187,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -7290,6 +7333,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -7435,6 +7479,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -7578,6 +7623,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -7725,6 +7771,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -7874,6 +7921,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -8023,6 +8071,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -8192,6 +8241,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -8339,6 +8389,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -8488,6 +8539,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -8635,6 +8687,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -8789,6 +8842,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -8940,6 +8994,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -9087,6 +9142,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -9236,6 +9292,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -9389,6 +9446,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -9540,6 +9598,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -9687,6 +9746,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -9839,6 +9899,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -9988,6 +10049,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -10137,6 +10199,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -10286,6 +10349,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -10489,6 +10553,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -10656,6 +10721,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -10827,6 +10893,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -11025,6 +11092,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "leather",
@@ -11205,6 +11273,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "chain-shirt",
@@ -11364,6 +11433,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -11523,6 +11593,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -11701,6 +11772,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -11924,6 +11996,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -12129,6 +12202,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -12307,6 +12381,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -12465,6 +12540,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -12628,6 +12704,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -12844,6 +12921,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -13008,6 +13086,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -13173,6 +13252,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -13340,6 +13420,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -13509,6 +13590,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "shell",
@@ -13681,6 +13763,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -13864,6 +13947,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "feathers",
@@ -14029,6 +14113,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "fur",
@@ -14239,6 +14324,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -14438,6 +14524,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -14646,6 +14733,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -14824,6 +14912,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -14982,6 +15071,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -15198,6 +15288,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -15350,6 +15441,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -15510,6 +15602,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -15668,6 +15761,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -15843,6 +15937,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -16003,6 +16098,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -16230,6 +16326,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -16399,6 +16496,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -16610,6 +16708,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -16759,6 +16858,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -16917,6 +17017,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -17122,6 +17223,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -17278,6 +17380,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -17438,6 +17541,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -17594,6 +17698,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -17777,6 +17882,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -17936,6 +18042,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -18140,6 +18247,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -18372,6 +18480,7 @@
         "clears_on_regeneration_heal": true
       }
     ],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -18552,6 +18661,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -18712,6 +18822,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -18884,6 +18995,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -19101,6 +19213,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -19257,6 +19370,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -19430,6 +19544,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -19583,6 +19698,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -19732,6 +19848,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -19884,6 +20001,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -20064,6 +20182,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -20246,6 +20365,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -20473,6 +20593,7 @@
       }
     ],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "natural",
@@ -20699,6 +20820,7 @@
       }
     ],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "scales",
@@ -20923,6 +21045,7 @@
       }
     ],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "scales",
@@ -21150,6 +21273,7 @@
       }
     ],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "scales",
@@ -21373,6 +21497,7 @@
       }
     ],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "scales",
@@ -21598,6 +21723,7 @@
       }
     ],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "scales",
@@ -21830,6 +21956,7 @@
       }
     ],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "scales",
@@ -22060,6 +22187,7 @@
       }
     ],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "scales",
@@ -22293,6 +22421,7 @@
       }
     ],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "scales",
@@ -22522,6 +22651,7 @@
       }
     ],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "scales",
@@ -22753,6 +22883,7 @@
       }
     ],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "scales",
@@ -22910,6 +23041,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "fur",
@@ -23087,6 +23219,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "none",
@@ -23264,6 +23397,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "none",
@@ -23451,6 +23585,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "none",
@@ -23655,6 +23790,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "studded-leather",
@@ -23887,6 +24023,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "plate",
@@ -24039,6 +24176,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "breastplate",
@@ -24243,6 +24381,7 @@
     "resources": [],
     "recharge_rules": [],
     "triggered_extra_attack_stacks": [],
+    "damage_taken_timed_effects": [],
     "save_success_overrides": [],
     "visual": {
       "armor": "splint",
