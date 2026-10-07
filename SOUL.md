@@ -46,7 +46,7 @@ Before writing any combat mechanic:
 1. Ignore the printed name temporarily.
 2. Describe the exact RAW behavior.
 3. Break it into trigger/timing, action/resource cost, attack/check/save, damage/healing, condition/state change, range/geometry, duration, movement, recharge/use limit, and lifecycle/reset.
-4. Search both hero and monster implementations for equivalent behavior.
+4. Consult `docs/UNIVERSAL_MECHANIC_INVENTORY.md`, then search both hero and monster implementations for equivalent behavior.
 5. Reuse an existing universal primitive whenever semantics match.
 6. Parameterize differences in source data.
 7. Compose multi-effect abilities from existing primitives.
@@ -55,6 +55,7 @@ Before writing any combat mechanic:
 10. Add a new universal primitive only when the reuse/composition search proves the existing engine cannot represent the behavior accurately.
 11. Keep the exact printed source name in player logs and source/audit records.
 12. Re-audit pregens and monsters after widening a primitive so all equivalent content can bind to it.
+13. Regenerate the universal mechanic inventory so resolved demand disappears and newly reusable capability IDs are visible to monster, pregen, and future homebrew work.
 
 ## Forbidden architecture
 
@@ -90,7 +91,7 @@ Unsupported outcome-changing mechanics fail closed.
 
 ## Homebrew requirement
 
-Future homebrew cards use the same engine. A homebrew ability does not receive a custom resolver merely because it is new or uniquely named. It must bind to existing universal mechanics and provide declarative parameters. A genuinely new behavior may introduce a new primitive only after the semantic-reuse search proves no existing composition can represent it.
+Future homebrew cards use the same engine. `docs/UNIVERSAL_MECHANIC_INVENTORY.md` is the first lookup surface: select one or more supported universal mechanic IDs, then supply source-specific parameters and the printed homebrew name. A homebrew ability does not receive a custom resolver merely because it is new or uniquely named. A genuinely new behavior may introduce a new primitive only after the inventory plus semantic-reuse search proves no existing composition can represent it.
 
 ## Authority
 
