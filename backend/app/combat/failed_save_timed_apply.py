@@ -43,6 +43,7 @@ def apply_failed_save_timed_effect(
             ends_on_damage=rider.ends_on_damage,
             ends_if_source_incapacitated=rider.ends_if_source_incapacitated,
             ends_if_source_dead=rider.ends_if_source_dead,
+            allowed_removal_action_ids=list(rider.allowed_removal_action_ids),
             next_attack_disadvantage=rider.next_attack_disadvantage,
             suppress_reactions=rider.blocks_reactions,
             control_limits=rider.compiled_limits(),
