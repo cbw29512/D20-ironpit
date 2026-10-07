@@ -3,8 +3,8 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
-  const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [] }
-    : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [] };
+  const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [], previousAttack: null }
+    : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [], previousAttack: slot.previousAttack ?? null };
 
   function validatedVariants(member) {
     try {
@@ -17,6 +17,15 @@
         if (definition.variants?.length && typeof variant.id !== "string") throw new Error("Invalid Multiattack variant ID.");
         if (![null, undefined, "melee", "ranged"].includes(variant.attackKind)) throw new Error("Invalid sequence mode.");
         if (!Array.isArray(variant.slots) || !variant.slots.length || variant.slots.length > 8) throw new Error("Invalid Multiattack slots.");
+        variant.slots.forEach((slot, index) => {
+          const data = slotData(slot), rule = data.previousAttack;
+          if (rule !== null) {
+            if (typeof rule !== "object" || Array.isArray(rule) || Object.keys(rule).some(k => !["hit", "sameTarget"].includes(k))
+                || typeof (rule.hit ?? false) !== "boolean" || typeof (rule.sameTarget ?? false) !== "boolean" || !(rule.hit || rule.sameTarget)) throw new Error("Invalid previous-attack requirement.");
+            const previous = index ? slotData(variant.slots[index-1]) : null;
+            if (!previous?.attackIds.length || previous.saveActionIds.length || !data.attackIds.length || data.saveActionIds.length) throw new Error("Previous-attack slots require an immediately preceding attack-only slot.");
+          }
+        });
       }
       const slots = variants.flatMap((v) => v.slots);
       const attacks = new Set((member.state.template.attacks || []).map((item) => item.id));
@@ -54,12 +63,30 @@
     }
   }
 
+  function followupTarget(data, previousHit, previousTargetId) {
+    try {
+      const rule = data.previousAttack;
+      if (rule === null) return { eligible: true, targetId: null };
+      if (previousHit == null || (rule.hit && previousHit !== true) || (rule.sameTarget && !previousTargetId)) return { eligible: false, targetId: null };
+      return { eligible: true, targetId: rule.sameTarget ? previousTargetId : null };
+    } catch (error) { console.error("Failed previous-attack slot condition", { previousTargetId, error }); throw error; }
+  }
+  function sequenceChoices(member, setup, variant, mode) {
+    try {
+      let previous = null;
+      return variant.slots.map(slot => {
+        const data = slotData(slot), followup = followupTarget(data, previous ? true : null, previous?.target.combatant_id);
+        const choice = followup.eligible ? F().chooseSlotAttack(member, setup, data.attackIds, mode, followup.targetId) : null;
+        const saved = followup.eligible && !choice ? saveChoice(member, setup, data) : null;
+        previous = choice;
+        return { choice, saved };
+      });
+    } catch (error) { console.error("Failed conditional sequence preview", { id: member?.combatant_id, error }); throw error; }
+  }
   function sequenceDamage(member, setup, variant, mode) {
     try {
-      return variant.slots.reduce((total, slot) => {
-        const data = slotData(slot), choice = F().chooseSlotAttack(member, setup, data.attackIds, mode);
+      return sequenceChoices(member, setup, variant, mode).reduce((total, { choice, saved }) => {
         if (choice) return total + F().weaponMeanDamage(choice.attack);
-        const saved = saveChoice(member, setup, data);
         const parts = saved?.save.damageComponents?.length ? saved.save.damageComponents : saved ? [saved.save] : [];
         return total + parts.reduce((sum, p) => sum + (p.damageDiceCount ?? p.diceCount ?? 0) * ((p.damageDiceSize ?? p.diceSize ?? 6) + 1) / 2 + (p.damageBonus || 0), 0);
       }, 0);
@@ -69,16 +96,12 @@
   function selectSequence(member, setup) {
     try {
       const variants = validatedVariants(member);
-      const melee = variants.some((v) => (!v.attackKind || v.attackKind === "melee") && v.slots.some((slot) =>
-        F().chooseSlotAttack(member, setup, slotData(slot).attackIds, "melee")?.attack.kind === "melee"));
+      const melee = variants.some(v => (!v.attackKind || v.attackKind === "melee") && sequenceChoices(member, setup, v, "melee").some(({ choice }) => choice?.attack.kind === "melee"));
       const mode = melee ? "melee" : "ranged";
       const candidates = variants.filter((v) => !v.attackKind || v.attackKind === mode);
       candidates.sort((a, b) => sequenceDamage(member, setup, b, mode) - sequenceDamage(member, setup, a, mode));
       const variant = candidates[0];
-      if (!variant || !variant.slots.some((slot) => {
-        const data = slotData(slot);
-        return F().chooseSlotAttack(member, setup, data.attackIds, mode) || saveChoice(member, setup, data);
-      })) return null;
+      if (!variant || !sequenceChoices(member, setup, variant, mode).some(({ choice, saved }) => choice || saved)) return null;
       return { variant, mode, slots: variant.slots };
     } catch (error) { console.error("Failed complete Multiattack selection", { id: member?.combatant_id, error }); throw error; }
   }
@@ -97,8 +120,7 @@
   function meleeAvailable(member, setup) {
     try {
       const selected = selectSequence(member, setup);
-      return Boolean(selected && selected.slots.some((slot) =>
-        F().chooseSlotAttack(member, setup, slotData(slot).attackIds, selected.mode)?.attack.kind === "melee"));
+      return Boolean(selected && sequenceChoices(member, setup, selected.variant, selected.mode).some(({ choice }) => choice?.attack.kind === "melee"));
     } catch (error) {
       console.error("Failed browser Multiattack melee probe", { id: member?.combatant_id, error });
       throw error;
@@ -115,6 +137,6 @@
     }
   }
   window.IRON_PIT_BROWSER_MULTIATTACK_CHOICES = {
-    slotData, saveChoice, selectSequence, validatedVariants, available, legalChoiceAvailable, meleeAvailable, expectedDamage,
+    slotData, followupTarget, saveChoice, selectSequence, validatedVariants, available, legalChoiceAvailable, meleeAvailable, expectedDamage,
   };
 })();

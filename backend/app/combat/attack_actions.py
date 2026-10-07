@@ -4,7 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
-from app.combat.attack_action_choices import attack_choice, save_choice
+from app.combat.attack_action_choices import attack_choice, save_choice, followup_target
 from app.combat.attack_action_sequences import select_sequence
 from app.combat.attack_action_event_target import event_target
 from app.combat.attack_action_rules import validate_attack_action_slots
@@ -55,9 +55,15 @@ def resolve_attack_action(
         variant, mode = selected
         turn_key = f"{round_number}:{attacker.combatant_id}"
 
+        previous_attack = None
         for index, slot in enumerate(variant.slots):
             if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
                 break
+            eligible, target_id = followup_target(slot, previous_attack.hit if previous_attack and previous_attack.event_type == "attack" else None,
+                                                 previous_attack.target_id if previous_attack else None)
+            previous_attack = None
+            if not eligible:
+                continue
             deferred = resolve_deferred_effect_attack_slot(
                 sequence,
                 round_number,
@@ -70,7 +76,7 @@ def resolve_attack_action(
                 sequence += 1
                 opening_feature = None
                 continue
-            chosen_attack = attack_choice(attacker, setup, slot, mode=mode)
+            chosen_attack = attack_choice(attacker, setup, slot, mode=mode, target_id=target_id)
             if chosen_attack is not None:
                 if not turn_attack_allowed(attacker.state):
                     break
@@ -84,6 +90,7 @@ def resolve_attack_action(
                     close_enemy_active=False,
                 )
                 events.append(event)
+                previous_attack = event
                 sequence += 1
                 if event.hit:
                     actual_target = event_target(event, setup) or target

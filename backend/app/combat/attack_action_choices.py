@@ -50,18 +50,34 @@ def attack_choice(
     attacker: EncounterCombatant,
     setup: EncounterSetup,
     slot: AttackActionSlot,
-    *, mode: WeaponAttackKind | None = None,
+    *, mode: WeaponAttackKind | None = None, target_id: str | None = None,
 ):
     """Choose a printed Multiattack option using legal melee reach before damage scoring."""
     try:
         if flexible_slot_has_both(attacker, slot.attack_ids):
             preferred = mode or flexible_attack_mode(attacker, setup)
-            return choose_attack(attacker, setup, slot.attack_ids, kind=preferred)
+            return choose_attack(attacker, setup, slot.attack_ids, kind=preferred, target_id=target_id)
 
-        melee = choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.MELEE)
+        melee = choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.MELEE, target_id=target_id)
         if melee is not None:
             return melee
-        return choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED)
+        return choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED, target_id=target_id)
     except Exception:
         logger.exception("Failed to choose attack slot for %s.", attacker.combatant_id)
+        raise
+
+
+def followup_target(slot, previous_hit, previous_target_id):
+    """Require the immediately preceding slot's attack outcome, then lock if printed."""
+    try:
+        rule = slot.previous_attack
+        if rule is None:
+            return True, None
+        if previous_hit is None or (rule.hit and previous_hit is not True):
+            return False, None
+        if rule.same_target and not previous_target_id:
+            return False, None
+        return True, previous_target_id if rule.same_target else None
+    except Exception:
+        logger.exception("Failed previous-attack slot condition for target %s.", previous_target_id)
         raise

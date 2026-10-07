@@ -75,7 +75,7 @@ Only `ENGINE_TRULY_MISSING` justifies a new universal engine primitive.
 
 ## Immediate next action
 
-Next: M-013 Grick hit-dependent follow-up. Printed Tentacles hit permits one Beak attack against the same target. Audit existing hook/sequence semantics first, then bind or add only the missing generic condition/target relationship. Violet Fungus random 1d4 attack count is a separate queued behavior (M-014). Do not widen one source card into unrelated monster families.
+Active M-013: Grick conditional same-target follow-up is built on `feat/2014-grick-followup`, from merged #632 closeout main `ec84f726f799f03db78beacfe433c85b353f270f`. Focused source/schema/Python/browser parity passed; generated branch roster is 190/327. Await four required final-head gates and merge on success. Violet Fungus random 1d4 attack count remains separate queued M-014.
 
 PR #632 is complete: compatible fixed offhand binding cleared Veteran and Half-Red Dragon Veteran. PR #631's complete sequence engine also cleared Bandit Captain, Gladiator, and Lizardfolk. [138 blocked 2014 cards](MONSTER_BLOCKERS_2014.md) retain other mechanics. Medusa's sequence is bound but Petrifying Gaze remains unsupported.
 
