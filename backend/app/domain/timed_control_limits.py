@@ -36,6 +36,8 @@ class TimedControlLimits(BaseModel):
     action_bonus_exclusive: bool = False
     max_attacks_per_turn: int | None = Field(default=None, ge=1, le=20)
     d20_disadvantage_abilities: list[AbilityName] = Field(default_factory=list)
+    attack_roll_disadvantage: bool = False
+    ability_check_disadvantage: bool = False
     armor_class_bonus: int = 0
     saving_throw_flat_bonuses: list[TimedSaveFlatBonus] = Field(default_factory=list)
 
@@ -64,6 +66,8 @@ def compiled_control_limits(
     max_attacks_per_turn: int | None = None,
     d20_disadvantage_abilities: list[str] | None = None,
     disadvantage_strength_d20_tests: bool = False,
+    attack_roll_disadvantage: bool = False,
+    ability_check_disadvantage: bool = False,
     armor_class_bonus: int = 0,
     saving_throw_flat_bonuses: list[object] | None = None,
 ) -> TimedControlLimits | None:
@@ -81,6 +85,8 @@ def compiled_control_limits(
             and not action_bonus_exclusive
             and max_attacks_per_turn is None
             and not abilities
+            and not attack_roll_disadvantage
+            and not ability_check_disadvantage
             and armor_class_bonus == 0
             and not save_bonuses
         ):
@@ -90,6 +96,8 @@ def compiled_control_limits(
             action_bonus_exclusive=action_bonus_exclusive,
             max_attacks_per_turn=max_attacks_per_turn,
             d20_disadvantage_abilities=abilities,  # type: ignore[arg-type]
+            attack_roll_disadvantage=attack_roll_disadvantage,
+            ability_check_disadvantage=ability_check_disadvantage,
             armor_class_bonus=armor_class_bonus,
             saving_throw_flat_bonuses=save_bonuses,
         )
