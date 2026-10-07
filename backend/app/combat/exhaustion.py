@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 from app.combat.timed_ability_d20 import timed_ability_d20_disadvantage_sources
+from app.combat.damage_triggered_d20 import (
+    ability_check_disadvantage_sources as damage_triggered_ability_check_disadvantage_sources,
+    attack_roll_disadvantage_sources as damage_triggered_attack_roll_disadvantage_sources,
+)
 from app.domain.models import CombatantState
 
 
@@ -16,12 +20,16 @@ def ability_check_disadvantage_sources(state: CombatantState, ability: str | Non
     return (
         int(state.template.ruleset == "2014" and state.exhaustion_level >= 1)
         + timed_ability_d20_disadvantage_sources(state, ability)
+        + damage_triggered_ability_check_disadvantage_sources(state)
     )
 
 
 def attack_disadvantage_sources(state: CombatantState) -> int:
     """2014 Exhaustion level 3+: Disadvantage on attack rolls."""
-    return int(state.template.ruleset == "2014" and state.exhaustion_level >= 3)
+    return (
+        int(state.template.ruleset == "2014" and state.exhaustion_level >= 3)
+        + damage_triggered_attack_roll_disadvantage_sources(state)
+    )
 
 
 def saving_throw_disadvantage_sources(state: CombatantState) -> int:
