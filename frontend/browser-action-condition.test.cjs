@@ -207,6 +207,26 @@ window.IRON_PIT_DICE = { roll: (sides) => sides === 20 ? 19 : 1, rollMany: (coun
   assert.equal(result.roll.revisions.at(-1).replaced_die_index, 1);
 }
 
+
+{
+  const sleeper = member("timed-unconscious");
+  window.IRON_PIT_BROWSER_TIMED.apply(sleeper.state, "unconscious", "sleep-source", {
+    sourceEffectId: "sleep-breath",
+    endsOnDamage: true,
+    allowedRemovalActionIds: ["wake-sleeper"],
+    useDefaultPoisonRecovery: false,
+  });
+  assert.equal(sleeper.state.is_unconscious, false, "sleep is a timed condition, not the zero-HP flag");
+  assert.equal(Q.incapacitated(sleeper.state), true);
+  assert.equal(Q.autoFailStrDex(sleeper.state), true);
+  assert.equal(Q.attackAdvantage(sleeper.state), true);
+  assert.equal(Q.autoCritical(sleeper.state), true);
+  assert.equal(Q.speedZero(sleeper.state), true);
+  S.beginTurn(sleeper.state);
+  for (const cost of ["action", "bonus_action", "reaction"]) assert.equal(E.available(sleeper.state, cost), false);
+  assert.equal(sleeper.state.movement_remaining_ft, 0);
+}
+
 console.log("Browser condition/action-economy integration regressions passed.");
 
 // Keep newer condition/class subsystems inside an already mandatory CI entry point.
