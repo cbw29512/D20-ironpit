@@ -10,7 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js",
   "browser-action-economy.js", "browser-grapple.js", "browser-state.js", "browser-rage.js",
-  "browser-rolls.js", "browser-timed-conditions.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js", "browser-saves.js",
+  "browser-rolls.js", "browser-terminal-effects.js", "browser-timed-conditions.js", "browser-failed-save-timed-effects.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js", "browser-saves.js",
   "browser-condition-lifecycle.js",
 ]) load(file);
 
@@ -103,6 +103,37 @@ window.IRON_PIT_DICE = {
   assert.deepEqual(result.events[0].removed_condition_ids, ["charmed"]);
   assert.equal(target.state.active_effect_ids.includes("charmed"), false);
   assert.equal(target.state.active_effect_ids.includes("poisoned"), true);
+}
+
+{
+  const source = member("gorgon", "monsters");
+  const target = member("gorgon-target");
+  const action = { id: "petrifying-breath", name: "Petrifying Breath", magicalEffect: false };
+  const rider = {
+    effectId: "restrained",
+    repeatSaveAbility: "constitution",
+    repeatSaveDc: 13,
+    repeatSaveTiming: "target_turn_end",
+    repeatSaveFailureConditionId: "petrified",
+  };
+  const applied = window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS.apply(
+    source, target, action, rider, 1,
+  );
+  assert.equal(applied, "restrained");
+  assert.equal(target.state.active_effect_ids.includes("restrained"), true);
+  assert.equal(target.state.is_dead, false);
+
+  d20 = 1;
+  const result = L.resolveTargetTiming(
+    1, 1, target, "target_turn_end", { heroes: [target], monsters: [source] },
+  );
+  assert.equal(result.events.length, 1);
+  assert.equal(result.events[0].save_succeeded, false);
+  assert.deepEqual(result.events[0].applied_condition_ids, ["petrified"]);
+  assert.equal(target.state.active_effect_ids.includes("restrained"), false);
+  assert.equal(target.state.active_effect_ids.includes("petrified"), true);
+  assert.equal(target.state.is_dead, true);
+  assert.equal(target.state.current_hp, 0);
 }
 
 console.log("Browser condition lifecycle regressions passed.");
