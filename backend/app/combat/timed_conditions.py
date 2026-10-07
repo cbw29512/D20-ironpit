@@ -5,6 +5,7 @@ import logging
 from app.combat.concentration import end_concentration_if_incapacitated
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.debuff_counters import movement_counter_cost
+from app.combat.instant_death import apply_terminal_death
 from app.combat.replacement_form_lifecycle import revert_replacement_form_if_incapacitated
 from app.domain.actions import AbilityName, ConditionTiming
 from app.domain.combatants import DamageType
@@ -34,14 +35,7 @@ def apply_terminal_condition_outcome(
     """Apply Iron Pit terminal consequences for semantic condition states."""
     if effect_id not in TERMINAL_CONDITIONS or state.is_dead:
         return False
-    state.current_hp = 0
-    state.is_alive = False
-    state.is_dead = True
-    state.is_unconscious = False
-    state.is_stable = False
-    state.active_effect_ids = [item for item in state.active_effect_ids if item != "dodge"]
-    end_concentration_if_incapacitated(state, affected_states)
-    return True
+    return apply_terminal_death(state, affected_states=affected_states) == "dead"
 
 
 def apply_timed_condition(
