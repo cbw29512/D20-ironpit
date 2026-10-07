@@ -145,4 +145,6 @@ Preserve its printed radius as source metadata and declare `covers_arena` on the
 shared aura payload; all eligible recipients in the encounter qualify regardless
 of grid separation. This is the explicit arena override in rules contract §9.
 
-2014 Veteran/Half-Red Dragon Veteran drawn-offhand compatibility and Grick/Violet Fungus dynamic sequences remain parked for their own source/state audits. No conditional printed attack is stripped to make them READY.
+Grick/Violet Fungus dynamic sequences remain parked for their own source/state audits. Conditional offhand source bindings are the active M-012 tranche; no conditional printed attack is stripped to make a card READY.
+
+- Conditional offhand Multiattack selects the highest-damage compatible fixed source loadout before combat; Veteran/Half-Red Dragon Veteran use one-handed Longsword plus drawn Shortsword. Authority: rules contract §10.

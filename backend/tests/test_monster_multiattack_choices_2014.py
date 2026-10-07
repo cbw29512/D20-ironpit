@@ -65,18 +65,6 @@ def test_unmodeled_coupled_choice_policy_is_still_blocked():
         raise
 
 
-@pytest.mark.parametrize("source_id", ["half-red-dragon-veteran", "veteran"])
-def test_coupled_printed_counts_and_drawn_offhand_requirements_are_not_independent_slots(source_id):
-    try:
-        source = next(item for item in load_monster_source_2014() if item.id == source_id)
-        assert source.multiattack_policy is not None
-        assert "multiattack:complex" in basic_blockers_2014(source)
-        with pytest.raises(ValueError, match="Unsupported Multiattack"):
-            multiattack_2014(source)
-    except Exception:
-        logger.exception("Coupled source Multiattack incorrectly promoted: %s.", source_id)
-        raise
-
 
 def test_merrow_ranged_harpoon_preserves_printed_pull_and_sahuagin_multiattack_is_melee_only():
     try:

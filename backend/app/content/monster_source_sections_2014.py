@@ -19,3 +19,16 @@ def source_sections_2014(source: str | None) -> dict[str, str]:
         raise
 
 
+def requires_two_hands_2014(monster, attack) -> bool:
+    """Recognize the preserved conditional damage profile from printed action text."""
+    try:
+        if attack.kind != "melee":
+            return False
+        text = source_sections_2014(monster.source_actions).get(attack.name, "")
+        match = re.search(r"or \d+ \((\d+)d(\d+) \+ (\d+)\) \w+ damage if used with two hands", text)
+        return bool(match and tuple(map(int, match.groups())) == (
+            attack.damage.dice_count, attack.damage.dice_size, attack.damage.bonus
+        ))
+    except Exception:
+        logger.exception("Failed conditional two-hand source proof for %s / %s.", monster.id, attack.id)
+        raise

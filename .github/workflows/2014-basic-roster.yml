@@ -3,6 +3,7 @@ name: 2014 Basic Roster
 on:
   push:
     paths:
+      - "backend/app/content/monster*_2014.py"
       - "backend/app/content/monster_source_2014.py"
       - "backend/app/content/monster_basic_candidates_2014.py"
       - "backend/app/content/monster_arena_neutral_traits_2014.py"
@@ -20,6 +21,7 @@ on:
       - ".github/workflows/2014-basic-roster.yml"
   pull_request:
     paths:
+      - "backend/app/content/monster*_2014.py"
       - "backend/app/content/monster_source_2014.py"
       - "backend/app/content/monster_basic_candidates_2014.py"
       - "backend/app/content/monster_arena_neutral_traits_2014.py"

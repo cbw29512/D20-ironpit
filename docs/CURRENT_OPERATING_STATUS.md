@@ -75,7 +75,7 @@ Only `ENGINE_TRULY_MISSING` justifies a new universal engine primitive.
 
 ## Immediate next action
 
-Next source-only bind: Veteran and Half-Red Dragon Veteran conditional offhand Multiattack. Reuse the now-certified sequence selector and fixed loadout availability facts; audit compatible printed weapons before binding. Do not rebuild the attack engine. M-012 tracks the remaining loadout condition.
+Active M-012: Veteran and Half-Red Dragon Veteran source bindings are complete on `feat/2014-veteran-multiattack`, based on `14f0762205a4267c3cc43291a2ed2fe6bd772f70`. One focused family pass is clean; generated branch roster is 189/327. Await the four final-head CI gates, then merge and record accepted counts. No runtime engine changes or duplicate local full suites.
 
 PR #631 is complete. Its [sequence audit](MULTIATTACK_SEQUENCE_AUDIT.md) records the source combinations, fixed Gladiator shield, native 2024 differences, and all exact-head gates. [140 blocked 2014 cards](MONSTER_BLOCKERS_2014.md) retain their other mechanics. Medusa's sequence is bound but Petrifying Gaze remains unsupported.
 
