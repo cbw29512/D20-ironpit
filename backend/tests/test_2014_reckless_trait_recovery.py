@@ -5,7 +5,7 @@ from app.combat.reckless_attack import (
 )
 from app.combat.state import build_combatant_state
 from app.content.capability_compiler import compile_combatant
-from app.content.monster_basic_candidates_2014 import basic_blockers_2014, unsupported_traits_2014
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.domain.traits import CombatTrait
@@ -51,10 +51,3 @@ def test_minotaur_recall_and_winter_wolf_camouflage_are_flat_arena_neutral() -> 
     assert CombatTrait.PACK_TACTICS in winter_template.combat_traits
     assert CombatTrait.RECKLESS not in winter_template.combat_traits
 
-
-def test_yeti_stays_blocked_by_fear_of_fire() -> None:
-    yeti = _source()["yeti"]
-    unsupported = set(unsupported_traits_2014(yeti))
-    assert "Snow Camouflage" not in unsupported
-    assert "Fear of Fire" in unsupported
-    assert "source:trait" in basic_blockers_2014(yeti)

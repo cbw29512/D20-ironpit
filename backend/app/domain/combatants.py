@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
@@ -11,7 +10,7 @@ from app.domain.area_weapon_attacks import AreaWeaponAttackAction
 from app.domain.attack_action_weapon_buffs import AttackActionWeaponBuff
 from app.domain.character_builds import AbilityScores
 from app.domain.damage_absorption import DamageAbsorptionRule
-from app.domain.damage_sources import ConditionalDamageDefense
+from app.domain.damage_sources import ConditionalDamageDefense, DamageTakenTimedEffect
 from app.domain.effect_removal import EffectRemovalAction, EffectTagConditionGrant
 from app.domain.environment_contexts import EnvironmentContextReaction
 from app.domain.d20_bonus_dice import D20BonusDieAction
@@ -169,6 +168,7 @@ class CombatantTemplate(BaseModel):
     regeneration: RegenerationTrait | None = None
     damage_threshold_zero_hp_replacements: list[DamageThresholdZeroHpReplacement] = Field(default_factory=list)
     triggered_extra_attack_stacks: list[TriggeredExtraAttackStack] = Field(default_factory=list)
+    damage_taken_timed_effects: list[DamageTakenTimedEffect] = Field(default_factory=list)
     save_success_overrides: list[FailedSaveSuccessOverride] = Field(default_factory=list)
     legendary_actions: list[LegendaryActionOption] = Field(default_factory=list)
     source: str

@@ -60,3 +60,20 @@ def clear_turn_damage(setup: EncounterSetup) -> None:
     except Exception:
         logger.exception("Failed to clear per-turn typed damage state.")
         raise
+
+
+def note_turn_damage_and_trigger(
+    state: CombatantState,
+    amount: int,
+    damage_types: set,
+    damage_components=None,
+) -> None:
+    """Record applied typed damage, then dispatch source-owned damage triggers."""
+    try:
+        before = dict(state.damage_taken_this_turn_by_type)
+        note_turn_damage(state, amount, damage_types, damage_components)
+        from app.combat.damage_taken_effects import apply_damage_taken_timed_effects
+        apply_damage_taken_timed_effects(state, before)
+    except Exception:
+        logger.exception("Failed to dispatch typed-damage triggers for %s.", state.template.name)
+        raise

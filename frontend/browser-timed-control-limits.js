@@ -78,6 +78,18 @@
     }
   }
 
+  function scopedDisadvantage(state, key) {
+    try {
+      return (state.timed_effects || []).filter((effect) => Boolean(limitsOf(effect)?.[key])).length;
+    } catch (error) {
+      console.error("Timed scoped Disadvantage lookup failed.", { key, error });
+      throw error;
+    }
+  }
+
+  const attackRollDisadvantage = (state) => scopedDisadvantage(state, "attack_roll_disadvantage");
+  const abilityCheckDisadvantage = (state) => scopedDisadvantage(state, "ability_check_disadvantage");
+
   function abilityD20Disadvantage(state, ability) {
     try {
       const wanted = String(ability || "").trim().toLowerCase();
@@ -93,7 +105,8 @@
   }
 
   window.IRON_PIT_BROWSER_TIMED_CONTROL = {
-    abilityD20Disadvantage, actionBonusExclusive, armorClassBonus, maxAttacksPerTurn,
+    abilityCheckDisadvantage, abilityD20Disadvantage, actionBonusExclusive, armorClassBonus,
+    attackRollDisadvantage, maxAttacksPerTurn,
     registerTurnAttack, savingThrowFlat, speedMultiplier, turnAttackAllowed,
   };
 })();

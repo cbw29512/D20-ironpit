@@ -260,7 +260,7 @@ assert.equal(result.damageComponents.some((item) => item.source === "Martial Adv
 
 load("browser-monsters-2014.js");
 const roster = window.IRON_PIT_BROWSER_MONSTERS_2014;
-assert.equal(Object.keys(roster).length, 199);
+assert.equal(Object.keys(roster).length, 200);
 for (const id of [
   "giant-centipede", "giant-poisonous-snake", "giant-scorpion", "giant-wasp", "poisonous-snake", "scorpion", "wyvern",
 ]) {
@@ -276,4 +276,4 @@ for (const id of ["giant-centipede", "giant-wasp"]) {
   assert.equal(rider.durationRounds, 600);
 }
 
-console.log("Browser hit damage, including Martial Advantage adjacency, remains certified across the 199-monster 2014 roster.");
+console.log("Browser hit damage, including Martial Advantage adjacency, remains certified across the 200-monster 2014 roster.");

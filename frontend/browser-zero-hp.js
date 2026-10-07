@@ -23,8 +23,6 @@
     return true;
   }
 
-
-
   function useUndeadFortitude(state, incoming, damageTypes, critical) {
     if (!state.template.traits?.includes("undead-fortitude")) return false;
     const resolver = U();
@@ -154,7 +152,11 @@
     const incoming = amount;
     if (!incoming || state.is_dead) return "damaged";
     noteRegenTypes(state, damageTypes);
+    const damageBefore = { ...(state.damage_taken_this_turn_by_type || {}) };
     noteTurnDamage(state, incoming, damageTypes, damageComponents);
+    const damageEffects = state.template.damage_taken_timed_effects || [];
+    if (damageEffects.length && !window.IRON_PIT_BROWSER_DAMAGE_TAKEN_EFFECTS) throw new Error("Declared damage-triggered timed effects require browser-damage-taken-effects.js.");
+    window.IRON_PIT_BROWSER_DAMAGE_TAKEN_EFFECTS?.apply(state, damageBefore);
     const absorbed = Math.min(state.temporary_hp, amount);
     state.temporary_hp -= absorbed;
     amount -= absorbed;

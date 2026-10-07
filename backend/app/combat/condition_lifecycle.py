@@ -7,6 +7,7 @@ from app.combat.condition_removal import remove_condition
 from app.combat.modifier_stack import expire_target_turn_modifiers
 from app.combat.timed_condition_saves import resolve_repeat_save
 from app.combat.timed_conditions import apply_terminal_condition_outcome, remove_effect_group
+from app.combat.timed_effect_expiry import timed_effect_expiry_due
 from app.domain.actions import ConditionTiming
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -27,11 +28,6 @@ def _repeat_save_due(effect, round_number: int, timing: ConditionTiming) -> bool
         and round_number <= effect.applied_round
     )
 
-
-def _expiry_due(effect, round_number: int, timing: ConditionTiming) -> bool:
-    return effect.expiry_timing == timing and (
-        effect.expires_round is None or round_number >= effect.expires_round
-    )
 
 
 def resolve_target_condition_timing(
@@ -94,7 +90,7 @@ def resolve_target_condition_timing(
                 sequence += 1
                 if succeeded:
                     continue
-            if _expiry_due(effect, round_number, timing):
+            if timed_effect_expiry_due(effect, round_number, timing, target.state.turns_started):
                 removed = remove_effect_group(target.state, effect)
                 if removed:
                     events.append(BattleEvent(
@@ -162,7 +158,7 @@ def resolve_source_condition_timing(
         for target in [*setup.heroes, *setup.monsters]:
             expiring = [
                 effect for effect in target.state.timed_effects
-                if effect.source_id == source.combatant_id and _expiry_due(effect, round_number, timing)
+                if effect.source_id == source.combatant_id and timed_effect_expiry_due(effect, round_number, timing)
             ]
             for effect in expiring:
                 if effect not in target.state.timed_effects:

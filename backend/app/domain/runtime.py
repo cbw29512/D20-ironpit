@@ -50,6 +50,7 @@ class CombatantState(BaseModel):
     template: CombatantTemplate
     current_hp: int
     current_round: int | None = Field(default=None, ge=1)
+    turns_started: int = Field(default=0, ge=0)
     max_hp_bonus: int = Field(default=0, ge=0)
     temporary_hp: int = Field(default=0, ge=0)
     position: GridPosition | None = None

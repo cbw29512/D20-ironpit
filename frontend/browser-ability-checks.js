@@ -11,7 +11,8 @@
           ) || 0)
           : 0
       );
-      const timed = window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(state, options.ability) || 0;
+      const timed = (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(state, options.ability) || 0)
+        + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityCheckDisadvantage(state) || 0);
       return window.IRON_PIT_BROWSER_ROLLS.modeFromSources(
         advantageSources + generic, disadvantageSources + context + timed,
       );

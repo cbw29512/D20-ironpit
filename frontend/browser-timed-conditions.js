@@ -33,6 +33,7 @@
       source_effect_id: sourceEffectId,
       applied_round: options.appliedRound ?? null,
       expires_round: options.expiresRound ?? null,
+      expires_target_turn_count: options.expiresTargetTurnCount ?? null,
       expires_at_start_of_source_turn: defaultPoison ? false : expiryTiming === "source_turn_start",
       expiry_timing: expiryTiming,
       repeat_save_ability: defaultPoison ? (options.repeatSaveAbility || "constitution") : (options.repeatSaveAbility || null),
