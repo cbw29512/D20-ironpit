@@ -15,6 +15,7 @@ from app.content.monster_passive_grants_2014 import (
 )
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_range_trait_bindings_2014 import supports_poor_depth_perception_2014
+from app.content.monster_damage_triggered_d20_2014 import damage_triggered_d20_debuffs_2014
 from app.content.monster_once_per_turn_traits_2014 import martial_advantage_rider_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.content.monster_terminal_effects_2014 import bound_terminal_effect_trait_names_2014
@@ -154,6 +155,7 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         martial_advantage = martial_advantage_rider_2014(monster)
         if martial_advantage:
             bound.add(martial_advantage.source_name)
+        bound.update(rule.source_name for rule in damage_triggered_d20_debuffs_2014(monster))
         if sneak_attack_d6_2014(monster) > 0:
             bound.add(_SNEAK_ATTACK)
         bound.update(bound_passive_trait_names_2014(monster))
