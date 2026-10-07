@@ -77,6 +77,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("defender-attack-advantage-suppression")
     if features.ignore_unseen_target_attack_disadvantage:
         mechanics.add("unseen-target-attack-disadvantage-suppression")
+    if features.attack_disadvantage_beyond_ft:
+        mechanics.add("distance-based-attack-disadvantage")
     if features.miss_to_hit_override_resource_id:
         mechanics.add("miss-to-hit-override")
         mechanics.add(features.miss_to_hit_override_resource_id)
