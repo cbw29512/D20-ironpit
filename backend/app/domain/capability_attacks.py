@@ -121,6 +121,7 @@ class SaveCapabilityDefinition(BaseModel):
     effect_tags: list[str] = Field(default_factory=list)
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
     source_effect_immunity_on_success: bool = False
+    failed_save_push_ft: int = Field(default=0, ge=0)
     animation: str = "save-effect"
 
     @model_validator(mode="after")

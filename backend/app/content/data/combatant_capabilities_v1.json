@@ -11659,6 +11659,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "failed_save_push_ft": 0,
         "animation": "constrict"
       }
     ],
@@ -14394,6 +14395,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "failed_save_push_ft": 0,
         "animation": "constrict"
       }
     ],
@@ -20412,6 +20414,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
     ],
@@ -20639,6 +20642,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
     ],
@@ -20864,6 +20868,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
     ],
@@ -21086,6 +21091,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
     ],
@@ -21312,6 +21318,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
     ],
@@ -21534,6 +21541,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
     ],
@@ -21765,6 +21773,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
     ],
@@ -21996,6 +22005,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
     ],
@@ -22224,6 +22234,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
     ],
@@ -22456,6 +22467,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
     ],
@@ -22684,6 +22696,7 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
     ],

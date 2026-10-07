@@ -250,6 +250,8 @@ def _save(action: Any) -> dict[str, Any]:
         row["failedSaveTimedEffect"] = _failed_save_timed_effect(action.failed_save_timed_effect)
     if action.source_effect_immunity_on_success:
         row["sourceEffectImmunityOnSuccess"] = True
+    if action.failed_save_push_ft:
+        row["failedSavePushFt"] = action.failed_save_push_ft
     if action.grapple_escape_dc is not None:
         row["grappleEscapeDc"] = action.grapple_escape_dc
     if action.restrains_while_grappled:

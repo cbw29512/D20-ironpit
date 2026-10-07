@@ -21,7 +21,12 @@ def supports_save_action_2014(action: object) -> bool:
             return False
         if not {"id", "name", "save_ability", "dc", "range_ft"} <= set(action):
             return False
-        if action.get("failure_push_ft"):
+        push_ft = action.get("failure_push_ft", 0)
+        if (
+            isinstance(push_ft, bool)
+            or not isinstance(push_ft, int)
+            or push_ft < 0
+        ):
             return False
         if not supports_failed_save_control_2014(action):
             return False
@@ -117,6 +122,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                 source_effect_immunity_on_success=bool(
                     action.get("source_effect_immunity_on_success", False)
                 ),
+                failed_save_push_ft=int(action.get("failure_push_ft", 0) or 0),
                 animation=str(action.get("animation", "save-effect")),
             ))
         return result

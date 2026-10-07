@@ -63,7 +63,7 @@ def test_chromatic_adult_ancient_dragons_are_single_family_unlocked() -> None:
         assert basic_blockers_2014(source[monster_id]) == ()
     roster_ids = {item.id for item in build_basic_2014_monsters()}
     assert {f"2014-{item}" for item in _CHROMATIC_IDS} <= roster_ids
-    assert len(roster_ids) == 194
+    assert len(roster_ids) == 196
 
 
 def test_frightful_presence_binds_failed_save_frightened_and_match_immunity() -> None:
