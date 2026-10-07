@@ -3,12 +3,7 @@
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const P = () => window.IRON_PIT_BROWSER_SPELLCASTING;
-  const WAKE_SLEEPER_ACTION = {
-    id: "wake-sleeper", name: "Wake Sleeper", actionCost: "action", range: 5,
-    targetMode: "ally", removableConditions: ["unconscious"], maxConditionsPerUse: 1,
-    resourceCosts: {}, resourceCostsPerCondition: {}, expendsSpellSlot: false,
-    requiresExplicitEffectPermission: true, animation: "condition-removal",
-  };
+  const RP = () => window.IRON_PIT_BROWSER_CONDITION_REMOVAL_POLICY || (() => { throw new Error("Condition-removal policy runtime is not loaded."); })();
 
   const PRIORITY = {
     paralyzed: 0, stunned: 0, incapacitated: 0, petrified: 0,
@@ -53,22 +48,10 @@
     return Object.entries(costs(action, count)).every(([id, cost]) => (member.state.resources[id] || 0) >= cost);
   }
 
-  function effectAllows(target, conditionId, action) {
-    const effects = target.state.timed_effects.filter((effect) => effect.effect_id === conditionId);
-    if (action.requiresExplicitEffectPermission) {
-      return effects.length > 0 && effects.every((effect) =>
-        (effect.allowed_removal_action_ids || []).includes(action.id),
-      );
-    }
-    return effects.every((effect) =>
-      !effect.allowed_removal_action_ids?.length || effect.allowed_removal_action_ids.includes(action.id),
-    );
-  }
-
   function removable(target, action) {
     const allowed = new Set(action.removableConditions || []);
     const effects = [...new Set(target.state.active_effect_ids)]
-      .filter((id) => allowed.has(id) && effectAllows(target, id, action));
+      .filter((id) => allowed.has(id) && RP().effectAllows(target, id, action));
     if (action.reducesExhaustionLevels && target.state.exhaustion_level) effects.push("exhaustion");
     if ((action.removesCurses || action.removesAllCurses) && target.state.active_curses?.length) effects.push("curse");
     if (action.removesAbilityScoreReductions && Object.keys(target.state.ability_score_reductions || {}).length) {
@@ -92,7 +75,7 @@
 
   function chooseAction(remover, setup, turnKey) {
     const choices = [];
-    for (const action of [WAKE_SLEEPER_ACTION, ...(remover.state.template.condition_removal_actions || [])]) {
+    for (const action of RP().actions(remover.state.template.condition_removal_actions || [])) {
       if (action.actionCost === "reaction" || !E().available(remover.state, action.actionCost)) continue;
       if (!slotAvailable(remover, action, turnKey)) continue;
       for (const target of allies(remover, setup)) {
