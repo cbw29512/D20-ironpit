@@ -80,7 +80,6 @@ def sneak_attack_d6_2014(monster: SourceMonster2014) -> int:
         logger.exception("Failed to parse 2014 Sneak Attack for %s.", monster.name)
         raise
 
-
 def sneak_attack_eligible_2014(monster: SourceMonster2014, attack: SourceAttack2014) -> bool:
     """Mark only attacks that satisfy the shared ranged-or-Dexterity Sneak Attack profile."""
     return sneak_attack_d6_2014(monster) > 0 and _base_sneak_attack_eligible(attack)
