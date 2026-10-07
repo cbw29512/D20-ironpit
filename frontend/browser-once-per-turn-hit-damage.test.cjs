@@ -120,4 +120,28 @@ result = window.IRON_PIT_BROWSER_ROLLS.weaponDamage(
 );
 assert.deepEqual(result.components.map((part) => part.source), ["Warhammer", "Qualified Rider"]);
 
+attacker.feature_last_turn_keys = {};
+attacker.template.once_per_turn_weapon_hit_damage_riders = [];
+attacker.template.once_per_turn_weapon_hit_damage_rider = {
+  source_id: "martial-advantage",
+  source_name: "Martial Advantage",
+  dice_count: 2,
+  dice_size: 6,
+  damage_type: null,
+  requires_active_ally_adjacent_to_target: true,
+};
+window.IRON_PIT_DICE.rolls = [4];
+result = window.IRON_PIT_BROWSER_ROLLS.weaponDamage(
+  attacker, attack, false, "normal", "6:attacker", null, target, false, false,
+);
+assert.deepEqual(result.components.map((part) => part.source), ["Warhammer"]);
+assert.equal(attacker.feature_last_turn_keys["martial-advantage"], undefined);
+
+window.IRON_PIT_DICE.rolls = [4, 6, 5];
+result = window.IRON_PIT_BROWSER_ROLLS.weaponDamage(
+  attacker, attack, false, "normal", "6:attacker", null, target, false, true,
+);
+assert.deepEqual(result.components.map((part) => part.source), ["Warhammer", "Martial Advantage"]);
+assert.deepEqual(result.components[1].rolls, [6, 5]);
+
 console.log("Browser once-per-turn weapon-hit damage rider regressions passed.");
