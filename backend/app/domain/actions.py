@@ -61,6 +61,7 @@ class ConditionRemovalAction(BaseModel):
     removable_conditions: list[ConditionName] = Field(default_factory=list)
     excluded_creature_types: list[str] = Field(default_factory=list)
     max_conditions_per_use: int = Field(default=1, ge=1, le=16)
+    requires_explicit_effect_permission: bool = False
     resource_costs: dict[str, int] = Field(default_factory=dict)
     resource_costs_per_condition: dict[str, int] = Field(default_factory=dict)
     reaction_trigger: ConditionReactionTrigger | None = None
