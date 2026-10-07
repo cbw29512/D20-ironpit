@@ -1209,6 +1209,19 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["damage_threshold_zero_hp_replacements"] = [
                 item.model_dump(mode="json") for item in template.damage_threshold_zero_hp_replacements
             ]
+        if template.damage_triggered_d20_debuffs:
+            row["damage_triggered_d20_debuffs"] = [
+                {
+                    "sourceId": item.source_id,
+                    "sourceName": item.source_name,
+                    "triggerDamageType": item.trigger_damage_type.value,
+                    "triggerDamageMinimum": item.trigger_damage_minimum,
+                    "attackRollDisadvantage": item.attack_roll_disadvantage,
+                    "abilityCheckDisadvantage": item.ability_check_disadvantage,
+                    "durationTargetTurns": item.duration_target_turns,
+                }
+                for item in template.damage_triggered_d20_debuffs
+            ]
         if template.triggered_extra_attack_stacks:
             row["triggered_extra_attack_stacks"] = [
                 {
