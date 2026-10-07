@@ -11,6 +11,7 @@ from app.combat.cunning_strike import (
     resolve_obscure, resolve_trip,
 )
 from app.combat.attack_damage_reduction import apply_attack_damage_reduction
+from app.combat.ally_context import has_adjacent_active_ally_for_states
 from app.combat.dice import DiceProvider
 from app.combat.on_hit_save_damage import OnHitSaveDamageResolution, resolve_on_hit_save_damage
 from app.combat.rogue_defenses import apply_uncanny_dodge
@@ -105,10 +106,12 @@ def resolve_attack_hit_damage(
     setup=None,
 ) -> AttackHitDamageResolution:
     hp_buffer_before = defender.current_hp + defender.temporary_hp
+    adjacent_ally = bool(setup) and has_adjacent_active_ally_for_states(attacker, defender, setup)
     damage_roll, rolled_components = resolve_weapon_damage(
         attacker, attack, dice, critical, attack_mode, turn_key, bonus_damage=bonus_damage,
         target=defender, target_event_id=target_event_id,
         sneak_attack_ally_available=sneak_attack_ally_available,
+        active_ally_adjacent_to_target=adjacent_ally,
         brutal_strike_disadvantage=brutal_strike_disadvantage,
     )
     rolled_components.extend(_natural_twenty_attack_damage(attacker, attack, natural_roll, rolled_components))
