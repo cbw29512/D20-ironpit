@@ -47,6 +47,7 @@ This is the search checklist before new engine code.
 | Saving throw | d20 save, modifiers, success/failure | ability, DC, success/failure effects; `combat/saving_throws.py`, `browser-saving-throws.js` |
 | Ability check | d20 check and modifiers | ability/skill, DC/contest | search current `backend/app/combat/` check resolvers and browser equivalents |
 | Advantage/Disadvantage | combine universal sources into roll mode | qualifying trigger/source | attack/save modifier modules; never ability-name dispatch |
+| Distance-based attack Disadvantage | add a Disadvantage source when attack distance exceeds a source-owned threshold | `ProgressionCombatFeatures.attack_disadvantage_beyond_ft` | `combat/distance_attack_disadvantage.py`, `browser-distance-attack-disadvantage.js` |
 | Damage | roll/apply typed damage in order | dice, bonus, type, qualifiers | damage pipeline, `damage_defense_evaluation.py`, browser damage modules |
 | Resistance/Immunity/Vulnerability | modify typed damage | defense type/qualifier | domain capabilities + shared damage-defense pipeline |
 | Healing | restore HP within legal limits | dice/amount/resource/target | `combat/healing.py`, `healing_resolution_support.py`, browser healing |
@@ -76,6 +77,8 @@ Current shared condition vocabulary is defined in `backend/app/domain/action_typ
 `blinded, charmed, deafened, exhaustion, frightened, grappled, incapacitated, invisible, paralyzed, petrified, poisoned, prone, restrained, stunned, unconscious`.
 
 A source that applies one of these binds to that condition. It does not create a source-specific version.
+
+Distance thresholds follow the same ownership rule. If source text says attacks beyond a printed distance have Disadvantage, source binding supplies that distance and the shared attack-roll stack consumes it. Do not hardcode the creature name, weapon name, or threshold in the resolver.
 
 Likewise, source-declared forced movement is data, not a named ability subsystem. For example, a breath weapon that says a failed save pushes a target supplies the save/DC/area/push distance; the generic save and forced-movement engines own resolution.
 
