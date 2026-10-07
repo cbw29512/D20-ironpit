@@ -3,7 +3,7 @@ name: Sync Generated Certification Artifacts
 on:
   workflow_dispatch:
   push:
-    branches: [main, m017-gorgon-petrification-current]
+    branches: [main]
 
 permissions:
   contents: write
