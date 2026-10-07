@@ -13,7 +13,7 @@ from app.content.capability_compiler import compile_combatant
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014, unsupported_traits_2014
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
-from app.content.monster_trait_bindings_2014 import terminal_effect_tags_2014
+from app.content.monster_terminal_effects_2014 import terminal_effect_tags_2014
 from scripts.browser_template_serializer import template_row
 
 
