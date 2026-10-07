@@ -4,6 +4,7 @@ import logging, re
 
 from app.content.environment_context_reactions import sunlight_sensitivity_2014
 from app.content.monster_damage_absorption import damage_absorptions_from_source
+from app.content.monster_damage_taken_effects_2014 import damage_taken_timed_effects_2014
 from app.content.monster_included_weapon_traits_2014 import included_weapon_trait_names_2014
 from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_definition_adapter_support_2014 import attack_id_2014
@@ -143,6 +144,7 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         bound.update(rule.source_name for rule in damage_absorptions_from_source(
             monster.source_traits, {item.lower() for item in monster.damage_immunities},
         ))
+        bound.update(rule.source_name for rule in damage_taken_timed_effects_2014(monster))
         if _BLOOD_FRENZY in monster.trait_names and any(attack.kind == "melee" for attack in monster.attacks):
             bound.add(_BLOOD_FRENZY)
         if supports_reckless_2014(monster):
