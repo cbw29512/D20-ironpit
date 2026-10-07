@@ -15,33 +15,35 @@ sets the work lane. Rules live in the rules contract, not this tracker.
 | P0 M-003 | Complete, merged #629 | Terminal resolver extraction left three browser test loaders missing their production dependency. | Shared runtime loaded; all 217 CI browser commands passed. |
 | P0 M-004 | Complete, merged #629 | Touched Stunned primitive omitted 2014 movement restriction. | Edition-aware shared speed predicates and permanent regressions passed in both runtimes. |
 | P1 M-005 | Deferred | Rug of Smothering remains blocked by attack representation, extra action, and Damage Transfer. | Audit each behavior and classify reuse before implementation. Susceptibility alone does not certify the rug. |
-| P1 M-006 | Next: M-014 | Remaining 2014 source roster is incomplete. | Generated blockers are current after #633: 190/327 READY, 137 blocked. Continue source bindings through certified primitives. |
+| P1 M-006 | Next: M-015 | Remaining 2014 source roster is incomplete. | Generated blockers are current after #635: 191/327 READY, 136 blocked. Continue source bindings through certified primitives. |
 | P1 M-007 | Audited for #629/#630 | Check 2024 source reuse without inventing matching traits. | Native 2024 constructs have no susceptibility; all 330 native trait texts lack the included weapon traits. No 2014 trait/qualifier copied. Repeat per family. |
 | P1 D-001 | Complete | Operating status still referenced PR #624 and 177/327 despite newer main. | Current merged baseline and final-head verification recorded below and in operating status. |
 | P1 M-008 | Complete, merged #630 | Seven 2014 source traits already include their damage: Brute (Bugbear/Gladiator), Heated Weapons (Azer/Salamander), Angelic Weapons (Deva/Planetar/Solar). | Pinned source validation, shared typed damage/magical qualifier, critical/defense/reset parity, and all four exact-head gates passed. Seven traits resolved; other card blockers remain. [Audit](INCLUDED_WEAPON_DAMAGE_AUDIT.md). |
 | P1 M-009 | Deferred, separate contact tranche | Heated Body triggers on touching or a melee hit within 5 feet; current retaliation handles only melee hits. | Reuse retaliation damage and add a shared contact trigger only after schema audit. Azer/Salamander/Remorhaz remain blocked. |
 | P1 M-010 | Deferred, separate grapple tranche | Salamander Tail automatically hits its own grappled target and cannot attack others; current policy lacks automatic hit. | Preserve source `auto_hit_own_grapple`; do not replace automatic hit with Advantage. |
-| P1 M-011 | Complete, merged #631 | Gladiator now has only alternative-count Multiattack left (three melee or two ranged attacks). Bandit Captain is a related paired catch-up candidate. | Complete source alternatives bind Bandit Captain, Gladiator, Lizardfolk, and Medusa. First three are READY; Medusa retains Petrifying Gaze. Highest legal damage/reach policy, fixed shield, parity and all gates passed. [Audit](MULTIATTACK_SEQUENCE_AUDIT.md). |
+| P1 M-011 | Complete, merged #631 | Printed alternative-count Multiattack previously blocked Gladiator (three melee or two ranged attacks) and the related Bandit Captain family. | Complete source alternatives bind Bandit Captain, Gladiator, Lizardfolk, and Medusa. First three are READY; Medusa retains Petrifying Gaze. Highest legal damage/reach policy, fixed shield, parity and all gates passed. [Audit](MULTIATTACK_SEQUENCE_AUDIT.md). |
 
 | P1 M-012 | Complete, merged #632 | Veteran and Half-Red Dragon Veteran: two Longsword attacks plus conditional drawn Shortsword; two-handed Longsword is incompatible with held offhand. | Source-only binding, 25 focused Python cases, four browser parity cases, and all four exact-head gates passed. Ranged Crossbow stays one standard attack; AC/breath preserved. [PR #632](https://github.com/cbw29512/D20-ironpit/pull/632); [audit](MULTIATTACK_SEQUENCE_AUDIT.md). |
 | P1 D-002 | Complete, Chris decision | Repeated broad verification displaced monster construction. | AGENTS.md records one focused changed-family pass and one final-head CI pass; no duplicate full local suites. |
 
-| P1 M-013 | Complete, merged #633 | Tentacles hit permits one Beak attack against the same target. The source policy is still fail-closed `multiattack:complex`. | Generic previous-hit/actual-target requirements bind Grick. 58 focused Python cases, eight browser scenarios, and all four final-head gates passed. [Audit](GRICK_SEQUENCE_AUDIT.md). |
-| P1 M-014 | Active, ChatGPT; `feat/2014-violet-fungus-repeat` | Violet Fungus rolls 1d4 Rotting Touch attacks. | Generic repetition/shared dice binding complete; 70 focused Python cases, seven new browser scenarios and affected prior fixtures passed. Generated branch 191/327, 136 blocked; final-head CI pending. |
+| P1 M-013 | Complete, merged #633 | Tentacles hit permits one Beak attack against the same target. The printed dependency is now represented by immutable slot facts. | Generic previous-hit/actual-target requirements bind Grick. 58 focused Python cases, eight browser scenarios, and all four final-head gates passed. [Audit](GRICK_SEQUENCE_AUDIT.md). |
+| P1 M-014 | Complete, merged #635 | Violet Fungus rolls 1d4 Rotting Touch attacks. | One logged count roll and one Action, ordinary attacks/retarget/interruption/reset. 70 focused Python cases, seven new browser scenarios, affected prior fixtures and all four final-head gates passed. [Audit](FUNGUS_SEQUENCE_AUDIT.md). |
+
+| P1 M-015 | Queued, Brass Dragon sleep save family | Wyrmling/Young/Adult Brass Dragon only lack Sleep Breath binding. Ancient Brass has another extra-action blocker. | Reuse timed Unconscious, ends-on-damage and save-area/resource primitives; audit the printed Action-to-wake exit before source binding. Exact DC/durations/cones differ. |
 
 ## Current evidence
 
-Merged source baseline: `72d4a8d3e1aec7d9e70bc9154ec6f03e3cfc0e64` from [PR #633](https://github.com/cbw29512/D20-ironpit/pull/633).
-Verified feature head: `d3c8021d125e2a9f4aa001db89d2cca9758fca6f`. All four required exact-head gates passed.
-2014 monsters **190/327 READY**, **137 blocked**; native 2024 **141/330**; heroes **240/240** each edition.
-CI: **2,788 Python tests**, **221 browser commands**. Local focused proof: 58 Python cases and eight new browser parity scenarios. Generated source/runtime/browser certification agrees. Initial serializer package-import collection failure was corrected; no full local suite was duplicated.
+Merged source baseline `f351f8ca725b2fea8789bbb0a79757b7a99b57de` from [PR #635](https://github.com/cbw29512/D20-ironpit/pull/635).
+Verified feature head `4508f7747a9f51df306b9ae8d4c12a0c6d2cc0ff`: all four required exact-head gates passed.
+2014 monsters **191/327 READY**, **136 blocked**; native 2024 **141/330**; heroes **240/240** each edition.
+CI passed **2800 Python tests** and **222 browser commands**. Local focused evidence: 70 Python cases, seven new browser scenarios and affected existing sequence fixtures. All required generated source/runtime/browser outputs agree. No duplicate full local suites.
 
-- [CI](https://github.com/cbw29512/D20-ironpit/actions/runs/37571348122): success on `d3c8021d125e2a9f4aa001db89d2cca9758fca6f`.
-- [2014 Basic Roster](https://github.com/cbw29512/D20-ironpit/actions/runs/37571348071): success on `d3c8021d125e2a9f4aa001db89d2cca9758fca6f`.
-- [Paired Edition Monster Report](https://github.com/cbw29512/D20-ironpit/actions/runs/37571348171): success on `d3c8021d125e2a9f4aa001db89d2cca9758fca6f`.
-- [2014 Hero Certification](https://github.com/cbw29512/D20-ironpit/actions/runs/37571348073): success on `d3c8021d125e2a9f4aa001db89d2cca9758fca6f`.
+- [CI](https://github.com/cbw29512/D20-ironpit/actions/runs/37572593683): success on `4508f7747a9f51df306b9ae8d4c12a0c6d2cc0ff`.
+- [2014 Basic Roster](https://github.com/cbw29512/D20-ironpit/actions/runs/37572593740): success on `4508f7747a9f51df306b9ae8d4c12a0c6d2cc0ff`.
+- [Paired Edition Monster Report](https://github.com/cbw29512/D20-ironpit/actions/runs/37572593727): success on `4508f7747a9f51df306b9ae8d4c12a0c6d2cc0ff`.
+- [2014 Hero Certification](https://github.com/cbw29512/D20-ironpit/actions/runs/37572593731): success on `4508f7747a9f51df306b9ae8d4c12a0c6d2cc0ff`.
 
-These verify the feature head; later documentation-only successors do not inherit its exact-head CI result.
+These gates verify the feature head; later documentation-only successors do not inherit exact-head CI. Historical tranche evidence is retained in the corresponding audits.
 
 ## Decision record
 
@@ -76,6 +78,6 @@ M-012 completed #632. Fixed compatible printed offhand preparation follows rules
 
 #633 completed the Grick family. Narrow missing sequence predicates compose with existing dice, attacks, costs, target/range/line legality, reactions and fresh reset. Source and native 2024 differences are in the Grick audit.
 
-## M-014 active build (2026-10-07)
+## M-014 completion record
 
-Owner ChatGPT; branch `feat/2014-violet-fungus-repeat`, anchored to merged #633 closeout main `8a5d37360aaf49f65198f4b145fe32a5af42e251`. Source: Violet Fungus makes 1d4 Rotting Touch attacks. Shared dice pools, ordinary repeated slot resolution/costs/retarget/interruption/reset exist; immutable random whole-sequence repetition is missing (`ENGINE_TRULY_MISSING` only for that sequence parameter/expansion). Reuse the ordinary dice service and attack loop; no creature-name resolver. Focused acceptance: each d4 result 1–4, natural 1 interruption, retarget after a kill, out-of-range/no-spend/no-roll, fresh count next fight, preview purity, malformed source/schema fail-closed, Python/browser parity. Native 2024 audited independently.
+#635 completed printed random sequence repetition through shared dice and ordinary attack resolution. The count is logged and local to one Action, with normal retarget/interruption/fresh reset. Native 2024 Violet Fungus keeps fixed two attacks. Detailed source/lifecycle/parity evidence is in FUNGUS_SEQUENCE_AUDIT.md.

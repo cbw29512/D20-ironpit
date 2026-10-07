@@ -28,8 +28,8 @@ Repository truth beats chat summaries, historical counts, old milestone prose, u
 ## Current lane (2026-10-07)
 
 - Both editions have **240 / 240** certified hero snapshots.
-- Accepted monsters: 2014 **190/327**, native 2024 **141/330**, after PR #633.
-- Build the next source monster families through certified primitives; M-013 Grick is complete; next is M-014 Violet Fungus random attack count.
+- Accepted monsters: 2014 **191/327**, native 2024 **141/330**, after PR #635.
+- Build the next source monster families through certified primitives; M-014 Violet Fungus is complete; next is M-015 Brass Dragon Sleep Breath.
 - One focused changed-family pass, then one final-head CI pass. No duplicate full local suites.
 - One agent on this repository at a time. Grok owns art/presentation; Bestiary work stays out of this lane.
 - Heavy GitHub Actions stay gated to `main` / PRs into `main` / `workflow_dispatch`.
