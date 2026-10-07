@@ -92,7 +92,7 @@
         && !(attack.forbidSelfGrappledTarget
           && target.state.grapple_sources.some((source) => source.source_id === member.combatant_id));
       const reaches = [];
-      for (const slot of member.state.template.attack_action?.slots || []) {
+      for (const slot of [...(member.state.template.attack_action?.slots || []), ...(member.state.template.attack_action?.variants || []).flatMap((v) => v.slots)]) {
         for (const id of slot.attackIds || []) {
           const attack = byId[id];
           if (allowed(attack)) reaches.push(attack.reach || 5);

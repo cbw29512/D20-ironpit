@@ -74,6 +74,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row["attackAbility"] = attack.attack_ability
         if weapon.normal_range_ft is not None:
             row.update(normal=weapon.normal_range_ft, long=weapon.long_range_ft, projectile=weapon.projectile)
+        if attack.unavailable_reason is not None:
+            row["unavailableReason"] = attack.unavailable_reason
         if attack.fixed_damage is not None:
             row["fixedDamage"] = attack.fixed_damage
         if attack.rage_eligible:
@@ -1183,6 +1185,13 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
                 for slot in template.attack_action.slots
             ]}
+        if template.attack_action and template.attack_action.variants:
+            row["attack_action"]["variants"] = [
+                {"id": variant.id, "attackKind": _value(variant.attack_kind) if variant.attack_kind else None,
+                 "slots": [{"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
+                           for slot in variant.slots]}
+                for variant in template.attack_action.variants
+            ]
         if template.regeneration is not None:
             row["regeneration"] = template.regeneration.model_dump(mode="json")
         if template.damage_threshold_zero_hp_replacements:

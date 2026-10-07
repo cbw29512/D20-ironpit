@@ -34,13 +34,13 @@ def resolve_attack(
     reaction_roller: EncounterCombatant | None = None,
 ) -> BattleEvent:
     try:
-        register_turn_attack(attacker, off_turn=off_turn)
         if spend_action and not is_available(attacker, "action"):
             raise ValueError("Action is not available for an attack.")
         weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id
         attacker_event_id = actor_event_id or attacker.template.id
         if not attack_allowed_against(attack, attacker_event_id, defender, affected_states):
             raise ValueError(f"{attack.id} cannot target {defender_event_id} under its current target policy.")
+        register_turn_attack(attacker, off_turn=off_turn)
         roll_resolution = resolve_attack_roll(
             attacker,
             defender,

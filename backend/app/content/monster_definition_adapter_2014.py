@@ -47,6 +47,7 @@ from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.capabilities import CombatantDefinition
 from app.domain.capability_attacks import AttackCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
+from app.content.monster_multiattack_variants_2014 import attack_unavailable_reason_2014
 from app.domain.character_builds import AbilityScores
 from app.domain.reactions import ParryReaction
 from app.domain.size import CreatureSize
@@ -73,6 +74,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "charge_profile": charge_profile_2014(charge_source, monster_id=monster.id),
         "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
         "grapple_target_policy": attack.grapple_target_policy,
+        "unavailable_reason": attack_unavailable_reason_2014(monster, attack),
         "damage_source_qualifiers": weapon_damage_source_qualifiers_2014(monster),
     }
     if attack.damage.dice_count:

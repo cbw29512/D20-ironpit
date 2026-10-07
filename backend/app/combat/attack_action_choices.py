@@ -3,14 +3,11 @@ from __future__ import annotations
 import logging
 
 from app.combat.pit_policy import (
-    allied_frontline_active,
     choose_attack,
     flexible_slot_has_both,
-    is_backline,
     save_distance,
     target_order,
 )
-from app.combat.printed_damage import weapon_mean_damage, save_mean_damage as _save_mean_damage
 from app.combat.saving_throws import legal_save_action
 from app.domain.actions import AttackActionSlot
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -41,7 +38,9 @@ def save_choice(
 
 def flexible_attack_mode(attacker: EncounterCombatant, setup: EncounterSetup) -> WeaponAttackKind:
     try:
-        return WeaponAttackKind.RANGED if is_backline(attacker) and allied_frontline_active(attacker, setup) else WeaponAttackKind.MELEE
+        ids = [attacker.state.template.weapon_attack.id,
+               *(a.id for a in attacker.state.template.alternate_weapon_attacks)]
+        return WeaponAttackKind.MELEE if choose_attack(attacker, setup, ids, kind=WeaponAttackKind.MELEE) else WeaponAttackKind.RANGED
     except Exception:
         logger.exception("Failed flexible attack mode for %s.", attacker.combatant_id)
         raise
@@ -53,7 +52,7 @@ def attack_choice(
     slot: AttackActionSlot,
     *, mode: WeaponAttackKind | None = None,
 ):
-    """Choose a printed Multiattack option using deterministic formation-row policy."""
+    """Choose a printed Multiattack option using legal melee reach before damage scoring."""
     try:
         if flexible_slot_has_both(attacker, slot.attack_ids):
             preferred = mode or flexible_attack_mode(attacker, setup)
@@ -65,47 +64,4 @@ def attack_choice(
         return choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED)
     except Exception:
         logger.exception("Failed to choose attack slot for %s.", attacker.combatant_id)
-        raise
-
-
-def slot_has_legal_choice(
-    attacker: EncounterCombatant,
-    setup: EncounterSetup,
-    slot: AttackActionSlot,
-) -> bool:
-    try:
-        return attack_choice(attacker, setup, slot) is not None or save_choice(attacker, setup, slot) is not None
-    except Exception:
-        logger.exception("Failed to prove legal Attack/Multiattack slot for %s.", attacker.combatant_id)
-        raise
-
-
-def attack_action_melee_legal(attacker: EncounterCombatant, setup: EncounterSetup) -> bool:
-    try:
-        definition = attacker.state.template.attack_action
-        if definition is None:
-            return False
-        for slot in definition.slots:
-            choice = attack_choice(attacker, setup, slot)
-            if choice is not None and choice[1].weapon.attack_kind is WeaponAttackKind.MELEE:
-                return True
-        return False
-    except Exception:
-        logger.exception("Failed melee Attack-action probe for %s.", attacker.combatant_id)
-        raise
-
-
-def attack_action_damage(attacker: EncounterCombatant, setup: EncounterSetup) -> float:
-    try:
-        definition = attacker.state.template.attack_action
-        if definition is None:
-            return 0.0
-        total = 0.0
-        for slot in definition.slots:
-            chosen = attack_choice(attacker, setup, slot)
-            saved = save_choice(attacker, setup, slot) if chosen is None else None
-            total += weapon_mean_damage(chosen[1]) if chosen else _save_mean_damage(saved[1]) if saved else 0.0
-        return total
-    except Exception:
-        logger.exception("Failed Attack/Multiattack damage scoring for %s.", attacker.combatant_id)
         raise

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Literal
+from app.domain.attack_action_definitions import AttackActionDefinition, AttackActionSlot
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -51,6 +52,7 @@ class AttackCapabilityDefinition(BaseModel):
     id: str
     name: str
     weapon_id: str | None = None
+    unavailable_reason: str | None = None
     attack_kind: WeaponAttackKind
     attack_bonus: int
     damage: DiceSpec | None = None
@@ -131,19 +133,9 @@ class SaveCapabilityDefinition(BaseModel):
         return self
 
 
-class CapabilityActionSlot(BaseModel):
-    attack_ids: list[str] = Field(default_factory=list, max_length=16)
-    save_action_ids: list[str] = Field(default_factory=list, max_length=16)
-
-    @model_validator(mode="after")
-    def require_choice(self) -> "CapabilityActionSlot":
-        if not self.attack_ids and not self.save_action_ids:
-            raise ValueError("Attack-action slot requires an attack or save action.")
-        return self
+# Both compilation layers use the same immutable sequence schema.
+CapabilityActionSlot = AttackActionSlot
 
 
-class MultiattackCapabilityDefinition(BaseModel):
-    id: str
+class MultiattackCapabilityDefinition(AttackActionDefinition):
     name: str = "Multiattack"
-    is_attack_action: bool = False
-    slots: list[CapabilityActionSlot] = Field(min_length=1, max_length=8)

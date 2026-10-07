@@ -30,7 +30,7 @@ Do not revive or extend #625. Reimplement only still-correct pieces from current
 | 2014 | Source monsters | **184 / 327** |
 | 2024 | SRD monsters | **141 / 330** |
 
-Counts above were recomputed after the #629 merge. Documentation commits that follow this source baseline do not add combat behavior; recheck current repository truth before the next mechanic tranche.
+Counts above describe the #630 source baseline; M-011 branch progress and pending gates are recorded in the fix tracker. Documentation commits that follow this source baseline do not add combat behavior; recheck current repository truth before the next mechanic tranche.
 
 ## Current completion order
 

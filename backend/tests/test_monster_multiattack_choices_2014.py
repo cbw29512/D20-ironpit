@@ -65,7 +65,7 @@ def test_unmodeled_coupled_choice_policy_is_still_blocked():
         raise
 
 
-@pytest.mark.parametrize("source_id", ["bandit-captain", "half-red-dragon-veteran", "veteran", "gladiator", "medusa"])
+@pytest.mark.parametrize("source_id", ["half-red-dragon-veteran", "veteran"])
 def test_coupled_printed_counts_and_drawn_offhand_requirements_are_not_independent_slots(source_id):
     try:
         source = next(item for item in load_monster_source_2014() if item.id == source_id)

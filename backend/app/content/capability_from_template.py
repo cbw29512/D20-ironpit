@@ -107,6 +107,7 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
         "conditional_attack_advantage": [spec.model_dump(mode="json") for spec in attack.conditional_attack_advantage],
         "effects": effects, "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
         "grapple_target_policy": attack.grapple_target_policy,
+        "unavailable_reason": attack.unavailable_reason,
     }
     if attack.fixed_damage is None:
         result["damage"] = _dice(weapon.dice_count, weapon.dice_size, attack.damage_bonus)
@@ -152,9 +153,5 @@ def definition_from_template(template: CombatantTemplate) -> CombatantDefinition
     data["primary_attack_id"] = template.weapon_attack.id
     data["save_actions"] = [_save(action) for action in template.saving_throw_actions]
     if template.attack_action is not None:
-        data["attack_action"] = {
-            "id": template.attack_action.id, "name": template.attack_action.name,
-            "is_attack_action": template.attack_action.is_attack_action,
-            "slots": [slot.model_dump(mode="json") for slot in template.attack_action.slots],
-        }
+        data["attack_action"] = template.attack_action.model_dump(mode="json")
     return CombatantDefinition.model_validate(data)

@@ -75,12 +75,14 @@ def _setup(edition, row, protected, *, fixed=False):
 
 
 @pytest.mark.parametrize("edition", ["2014", "2024"])
-@pytest.mark.parametrize("row,protected,weapon,score", [
-    ("front", True, "blade", 13), ("back", True, "bow", 28), ("back", False, "blade", 13),
+@pytest.mark.parametrize("row,protected,distance,weapon,score", [
+    ("front", True, 5, "blade", 13), ("back", True, 5, "blade", 13),
+    ("back", False, 5, "blade", 13), ("front", False, 20, "bow", 28), ("back", True, 20, "bow", 28),
 ])
-def test_row_choice_preview_and_resolution_agree_without_policy_dice(edition, row, protected, weapon, score):
+def test_range_choice_preview_and_resolution_agree_without_policy_dice(edition, row, protected, distance, weapon, score):
     try:
         setup, attacker = _setup(edition, row, protected)
+        setup.heroes[0].state.position = GridPosition(x=6-distance//5, y=6)
         before = attacker.state.model_dump()
         pick = decide_post_move_offense(attacker, setup, "1:actor")
         assert pick.family == "attack-action"
@@ -130,14 +132,15 @@ def test_unknown_slot_fails_before_any_action_or_damage_is_spent():
 
 
 @pytest.mark.parametrize("edition", ["2014", "2024"])
-def test_mode_stays_fixed_within_printed_sequence_when_frontline_dies(monkeypatch, edition):
+def test_mode_stays_fixed_within_printed_sequence_when_target_moves_into_melee(monkeypatch, edition):
     try:
         from app.combat import attack_actions
         setup, attacker = _setup(edition, "back", True)
+        setup.heroes[0].state.position = GridPosition(x=2, y=6)
         original = attack_actions.resolve_encounter_attack
         def after_attack(*args, **kwargs):
             event = original(*args, **kwargs)
-            setup.monsters[1].state.is_dead = True
+            setup.heroes[0].state.position = GridPosition(x=5, y=6)
             return event
         monkeypatch.setattr(attack_actions, "resolve_encounter_attack", after_attack)
         events, _ = resolve_attack_action(1, 1, attacker, setup, RecordingDice())

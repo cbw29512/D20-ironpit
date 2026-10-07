@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from app.domain.attack_action_definitions import all_action_slots
+
 from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
@@ -134,7 +136,7 @@ class CombatantDefinition(BaseModel):
         if self.primary_attack_id not in attack_ids:
             raise ValueError("primary_attack_id must reference a declared attack.")
         if self.attack_action:
-            for slot in self.attack_action.slots:
+            for slot in all_action_slots(self.attack_action):
                 if not set(slot.attack_ids) <= attack_ids or not set(slot.save_action_ids) <= save_ids:
                     raise ValueError("Multiattack slot references an undeclared capability id.")
         if any(action.attack_id not in attack_ids for action in self.area_weapon_attack_actions):

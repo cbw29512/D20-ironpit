@@ -163,11 +163,11 @@ Default Iron Pit voluntary movement policy is intentionally simple:
 
 1. The combatant's goal is to engage and defeat a living opponent; it does not wander around the arena without an action-driven reason.
 2. If a legal melee attack can be made this turn after useful legal approach movement, the combatant closes to that melee reach, then uses the highest-damage option that can actually land from there. A landable area/save Action or damage spell beats weaker melee. Multiattack printed damage includes every landable slot.
-3. Front-row combatants are melee. They make useful legal progress toward melee even when a backup thrown/ranged attack could already land. For an Attack/Multiattack slot that explicitly offers both melee and ranged alternatives, the front row selects the melee alternative; it does not randomly switch a later slot to ranged.
-4. Back-row combatants are ranged and/or casters. While at least one living allied front-row combatant remains, a flexible Attack/Multiattack slot that offers both melee and ranged alternatives selects ranged. When no living allied front-row combatant remains, that same flexible slot switches to melee and the combatant advances through the normal formation/movement policy. A fixed printed slot with only one attack kind remains fixed; row policy never invents a different attack.
-5. Flexible Attack/Multiattack slots follow row policy even when both alternatives can reach. Other choices prefer legal melee when engaged rather than retreating merely to preserve range.
+3. Front-row combatants make useful legal progress toward melee. Deployment/approach roles do not override legal weapon reach at Action selection.
+4. Flexible Attack/Multiattack chooses melee when a permitted melee attack can reach a legal target; otherwise ranged. The rules contract §10 owns this policy. Printed fixed slots remain fixed.
+5. Highest printed mean damage breaks legal choices within the selected mode, including riders; coupled complete sequences retain their printed counts and combinations.
 6. A caster does not retreat or hold range merely to preserve a spell. It casts from its current square when that spell is the highest-damage option that can land, including after it has already closed.
-7. A mixed combatant uses the landing-damage rule only after the deterministic row policy has narrowed any flexible melee/ranged Attack or Multiattack choices. Row policy decides the weapon mode; damage scoring does not override that row choice. Dodge remains the final fallback when no legal offensive option can be made usable.
+7. A mixed combatant compares landing damage after range policy narrows flexible weapon choices. Dodge remains the final fallback when no legal offensive option can be made usable.
 8. Default Arena AI does not voluntarily kite, circle, run to map edges, seek cover, disperse, or retreat merely for positional optimization.
 9. Specific printed features, conditions, forced movement, explicit retreat effects, or other RAW mechanics may require movement that overrides this default policy; those effects still use the same universal movement engine.
 
@@ -175,28 +175,13 @@ The 24 x 16 arena therefore uses a capable pathfinder with deliberately simple d
 
 ### Source-preserving flexible attack slots
 
-Immutable `CapabilityActionSlot` / `AttackActionSlot` lists retain every printed alternative in each ordered slot. Formation row and living-frontline state at Action selection choose the mode, which remains fixed within that Action; there is no new resource, random weapon-choice roll, or persistent choice state. Fresh fight state resets formation and Action availability normally. Different melee/ranged attack counts, drawn-offhand requirements, other coupled source policies, and unknown or empty slots remain blockers. Source audit must compare parsed slots against the preserved printed text; a parse that grants an extra attack is not certification evidence.
+Immutable `AttackActionSlot` lists retain every printed alternative in each ordered slot. `AttackActionVariant` declares a complete alternative sequence, with an optional melee/ranged delivery kind. A definition has either ordinary slots or complete variants, never both. Select a whole sequence and mode before spending the Action; reuse the ordinary attack/save slot loop. No new resource, random choice roll, or persistent choice state exists. Reset uses fresh ordinary fight state. Validate every variant before spending or rolling, including unselected variants.
 
-Python `attack_action_choices.attack_choice` supplies both landing-damage selection and `attack_actions.resolve_attack_action`. Browser `formation.chooseSlotAttack` supplies `browser-multiattack-choices` queries and `browser-multiattack` resolution. Preview delivery and damage must describe the same selected attack that will execute. Validate every slot before spending an Action; never execute a supported prefix of malformed data. Both editions use this path with their own immutable source attacks.
+Python `attack_action_choices.attack_choice` and `attack_action_sequences.select_sequence` supply preview and `attack_actions.resolve_attack_action`. Browser `formation.chooseSlotAttack` and `browser-multiattack-choices.selectSequence` supply both preview and `browser-multiattack` resolution. Source bindings must independently validate printed counts and mandatory combinations; runtime dispatch never reads source names. Both editions use the same primitive with independently audited source data.
 
-Monster Multiattack is a separate Action, not the player Attack action. Its `is_attack_action` / `isAttackAction` flag is false. Only a genuine Attack action may invoke Light/Nick follow-ups. Permanent source roundtrip and Python/browser row-policy regressions protect slot count, alternatives, mode, Action cost, preview purity, and fresh-state reset.
+A fixed source loadout may declare `unavailable_reason` on a preserved conditional attack. Shared attack legality rejects that profile before any spending/roll. This immutable fact neither mutates card AC nor introduces mutable equipment state. Conditional drawn-offhand and dynamic hit/count policies remain blockers until separately audited.
 
-### Offensive exhaustion before Dodge
-
-Dodge is the final legal-action fallback, never a substitute for a legal offensive option and never a way to hide an engine error.
-
-Before the Arena AI may choose Dodge, it must establish that the combatant cannot produce a legal offensive action this turn in any supported offensive family, including after legal movement that can make the action usable:
-
-1. no legal melee attack;
-2. no legal ranged attack;
-3. no legal offensive spell;
-4. no other legal offensive attack, SavingThrowAction, Multiattack/signature action, or supported damaging/control ability.
-
-This checklist is the Dodge fallback gate. Arena Action selection is the landing-damage rule: take the highest-damage option that can actually land; if melee can land, do not spend the Action on a ranged weapon; if no supported offensive family can be used or made legal, Dodge. Control loses to raw damage. Dodge is never a substitute for a legal offensive option and never hides an engine error.
-
-If the combatant is physically blocked, lacks sufficient movement, has no valid path, has no target in usable range after movement, or otherwise cannot make any supported offensive option legal without violating RAW, it takes the shared Dodge action if its Action is available. This is an ordinary combat outcome, not an engine exception.
-
-Unsupported mechanics, malformed state, mixed position authority, impossible source data, and other engine/rules errors must still fail closed; they must never be converted into Dodge.
+Monster Multiattack is a separate Action, not the player Attack action. Its `is_attack_action` / `isAttackAction` flag is false; only genuine Attack actions trigger Light/Nick. Permanent source and Python/browser regressions protect sequence counts, legal mode, damage selection, Action cost, malformed-data atomicity, interruption, and fresh-state reset.
 
 ## Class -> subclass -> specialization
 

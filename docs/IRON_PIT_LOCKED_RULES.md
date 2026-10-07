@@ -63,7 +63,7 @@ Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §8, §22, §23; `docs/CANONICAL_CO
 
 ## Attack resolution flow
 
-- **Flexible Attack/Multiattack choices follow the current row deterministically.** See `docs/IRON_PIT_RULES_CONTRACT.md` §10 and `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md` Arena movement policy; fixed printed slots remain fixed.
+- **Flexible Attack/Multiattack uses legal melee reach, otherwise ranged, then highest legal damage. Complete printed counts/combinations remain intact. Gladiator keeps its shield.** Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §10; architecture: source-preserving flexible attack slots.
 
 1. To-hit bonus + d20 versus AC.
 2. Natural 20 is a critical: automatic hit; double all damage dice required by the selected ruleset. Natural 1 is a miss and ends the turn.
@@ -144,3 +144,5 @@ Chris's Pit range instruction: a 30-foot turning-save aura covers the whole Pit.
 Preserve its printed radius as source metadata and declare `covers_arena` on the
 shared aura payload; all eligible recipients in the encounter qualify regardless
 of grid separation. This is the explicit arena override in rules contract §9.
+
+2014 Veteran/Half-Red Dragon Veteran drawn-offhand compatibility and Grick/Violet Fungus dynamic sequences remain parked for their own source/state audits. No conditional printed attack is stripped to make them READY.

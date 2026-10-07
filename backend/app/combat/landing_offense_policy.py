@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from app.combat.action_economy import is_available
 from app.combat.area_save_actions import choose_area_save
 from app.combat.area_weapon_attacks import choose_area_weapon_attack
-from app.combat.attack_action_choices import attack_action_melee_legal, attack_action_damage as _attack_action_damage
+from app.combat.attack_action_sequences import attack_action_melee_legal, attack_action_damage as _attack_action_damage
 from app.combat.auto_hit_spell_policy import choose_auto_hit_spell
 from app.combat.concentration_repeat_saves import choose_concentration_repeat_save
 from app.combat.encounter_targeting import living_opponents

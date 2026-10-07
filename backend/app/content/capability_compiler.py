@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.capability_attack_compiler import UnsupportedCapabilityError, compile_attack
-from app.domain.actions import AttackActionDefinition, AttackActionSlot, SavingThrowAction
+from app.domain.actions import AttackActionDefinition, SavingThrowAction
 from app.domain.capabilities import CombatantDefinition, SaveCapabilityDefinition
 from app.domain.models import CombatantTemplate
 
@@ -39,18 +39,12 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
 
 
 def _compile_attack_action(definition: CombatantDefinition) -> AttackActionDefinition | None:
-    action = definition.attack_action
-    if action is None:
-        return None
-    return AttackActionDefinition(
-        id=action.id,
-        name=action.name,
-        is_attack_action=action.is_attack_action,
-        slots=[
-            AttackActionSlot(attack_ids=slot.attack_ids, save_action_ids=slot.save_action_ids)
-            for slot in action.slots
-        ],
-    )
+    try:
+        action = definition.attack_action
+        return AttackActionDefinition.model_validate(action.model_dump()) if action else None
+    except Exception:
+        logger.exception("Failed attack-action compilation for %s.", definition.id)
+        raise
 
 
 def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:

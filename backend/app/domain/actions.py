@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from app.domain.attack_action_definitions import AttackActionDefinition, AttackActionSlot
+
 from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
@@ -161,25 +163,3 @@ class HpThresholdConditionAction(BaseModel):
     resource_cost: int = Field(default=1, ge=1, le=20)
     magical_effect: bool = True
     animation: str = "condition"
-
-
-class AttackActionSlot(BaseModel):
-    """One ordered weapon/save step inside an Attack action or Multiattack."""
-
-    attack_ids: list[str] = Field(default_factory=list, max_length=16)
-    save_action_ids: list[str] = Field(default_factory=list, max_length=16)
-
-    @model_validator(mode="after")
-    def require_choice(self) -> "AttackActionSlot":
-        if not self.attack_ids and not self.save_action_ids:
-            raise ValueError("Attack-action slot must contain a weapon attack or saving-throw action.")
-        return self
-
-
-class AttackActionDefinition(BaseModel):
-    """One or more ordered strikes/effects; only real Attack actions can trigger Light/Nick."""
-
-    id: str
-    name: str
-    slots: list[AttackActionSlot] = Field(min_length=1, max_length=8)
-    is_attack_action: bool = False

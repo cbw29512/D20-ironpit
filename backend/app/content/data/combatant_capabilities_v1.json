@@ -925,7 +925,6 @@
     "attack_action": {
       "id": "goblin-boss-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -941,7 +940,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -2684,7 +2685,6 @@
     "attack_action": {
       "id": "black-bear-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -2698,7 +2698,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -2890,7 +2892,6 @@
     "attack_action": {
       "id": "brown-bear-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -2904,7 +2905,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -4582,7 +4585,6 @@
     "attack_action": {
       "id": "triceratops-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -4596,7 +4598,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -5490,7 +5494,6 @@
     "attack_action": {
       "id": "srd-druid-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -5506,7 +5509,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [
@@ -5781,7 +5786,6 @@
     "attack_action": {
       "id": "hippogriff-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -5795,7 +5799,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -8131,7 +8137,6 @@
     "attack_action": {
       "id": "srd-polar-bear-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -8145,7 +8150,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -10596,7 +10603,6 @@
     "attack_action": {
       "id": "owlbear-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -10610,7 +10616,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -10762,7 +10770,6 @@
     "attack_action": {
       "id": "saber-toothed-tiger-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -10776,7 +10783,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -10961,7 +10970,6 @@
     "attack_action": {
       "id": "scout-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -10977,7 +10985,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -11851,7 +11861,6 @@
     "attack_action": {
       "id": "srd-giant-scorpion-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -11871,7 +11880,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -12060,7 +12071,6 @@
     "attack_action": {
       "id": "srd-grick-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -12074,7 +12084,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -12237,7 +12249,6 @@
     "attack_action": {
       "id": "srd-griffon-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -12251,7 +12262,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -12775,7 +12788,6 @@
     "attack_action": {
       "id": "wyvern-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -12789,7 +12801,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -13439,7 +13453,6 @@
     "attack_action": {
       "id": "archelon-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -13453,7 +13466,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -13612,7 +13627,6 @@
     "attack_action": {
       "id": "ankylosaurus-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -13626,7 +13640,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -13791,7 +13807,6 @@
     "attack_action": {
       "id": "giant-eagle-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -13805,7 +13820,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -14164,7 +14181,6 @@
     "attack_action": {
       "id": "giant-crocodile-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -14178,7 +14194,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -14334,7 +14352,6 @@
     "attack_action": {
       "id": "giant-constrictor-snake-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -14348,7 +14365,9 @@
             "giant-constrictor-snake-constrict"
           ]
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [
       {
@@ -14570,7 +14589,6 @@
     "attack_action": {
       "id": "tyrannosaurus-rex-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -14584,7 +14602,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -14738,7 +14758,6 @@
     "attack_action": {
       "id": "srd-animated-armor-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -14752,7 +14771,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -15107,7 +15128,6 @@
     "attack_action": {
       "id": "srd-earth-elemental-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -15123,7 +15143,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -15758,7 +15780,6 @@
     "attack_action": {
       "id": "srd-gargoyle-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -15772,7 +15793,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -16148,7 +16171,6 @@
     "attack_action": {
       "id": "srd-guard-captain-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -16166,7 +16188,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -16318,7 +16342,6 @@
     "attack_action": {
       "id": "srd-hippopotamus-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -16332,7 +16355,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -16528,7 +16553,6 @@
     "attack_action": {
       "id": "srd-hill-giant-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -16544,7 +16568,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -17032,7 +17058,6 @@
     "attack_action": {
       "id": "srd-manticore-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -17055,7 +17080,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -18225,7 +18252,6 @@
     "attack_action": {
       "id": "srd-troll-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -18245,7 +18271,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -18796,7 +18824,6 @@
     "attack_action": {
       "id": "srd-violet-fungus-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -18810,7 +18837,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -18994,7 +19023,6 @@
     "attack_action": {
       "id": "srd-xorn-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -19020,7 +19048,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -19343,7 +19373,6 @@
     "attack_action": {
       "id": "srd-giant-shark-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -19357,7 +19386,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -19969,7 +20000,6 @@
     "attack_action": {
       "id": "srd-sahuagin-warrior-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -19983,7 +20013,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -20339,7 +20371,6 @@
     "attack_action": {
       "id": "srd-hell-hound-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -20353,7 +20384,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [
       {
@@ -20564,7 +20597,6 @@
     "attack_action": {
       "id": "srd-black-dragon-wyrmling-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -20578,7 +20610,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [
       {
@@ -20788,7 +20822,6 @@
     "attack_action": {
       "id": "srd-blue-dragon-wyrmling-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -20802,7 +20835,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [
       {
@@ -21010,7 +21045,6 @@
     "attack_action": {
       "id": "srd-green-dragon-wyrmling-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -21024,7 +21058,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [
       {
@@ -21235,7 +21271,6 @@
     "attack_action": {
       "id": "srd-red-dragon-wyrmling-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -21249,7 +21284,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [
       {
@@ -21456,7 +21493,6 @@
     "attack_action": {
       "id": "srd-white-dragon-wyrmling-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -21470,7 +21506,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [
       {
@@ -21679,7 +21717,6 @@
     "attack_action": {
       "id": "srd-young-black-dragon-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -21699,7 +21736,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [
       {
@@ -21909,7 +21948,6 @@
     "attack_action": {
       "id": "srd-young-blue-dragon-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -21929,7 +21967,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [
       {
@@ -22137,7 +22177,6 @@
     "attack_action": {
       "id": "srd-young-green-dragon-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -22157,7 +22196,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [
       {
@@ -22368,7 +22409,6 @@
     "attack_action": {
       "id": "srd-young-red-dragon-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -22388,7 +22428,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [
       {
@@ -22595,7 +22637,6 @@
     "attack_action": {
       "id": "srd-young-white-dragon-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -22615,7 +22656,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [
       {
@@ -23539,7 +23582,6 @@
     "attack_action": {
       "id": "srd-bandit-captain-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -23555,7 +23597,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -23768,7 +23812,6 @@
     "attack_action": {
       "id": "srd-knight-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -23784,7 +23827,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -24125,7 +24170,6 @@
     "attack_action": {
       "id": "srd-warrior-veteran-multiattack",
       "name": "Multiattack",
-      "is_attack_action": false,
       "slots": [
         {
           "attack_ids": [
@@ -24141,7 +24185,9 @@
           ],
           "save_action_ids": []
         }
-      ]
+      ],
+      "variants": [],
+      "is_attack_action": false
     },
     "save_actions": [],
     "spell_save_actions": [],

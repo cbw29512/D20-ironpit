@@ -30,6 +30,7 @@
   }
   const HD = () => window.IRON_PIT_BROWSER_HIT_DAMAGE || { resolve: legacyHitDamage };
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
+    if (attack.unavailableReason != null) throw new Error(`${attack.id} unavailable: ${attack.unavailableReason}`);
     if (extra.brutalStrikeEffectIds != null) BS()?.selectEffects?.(attacker.state, extra.brutalStrikeEffectIds); const spendAction = extra.spendAction !== false; window.IRON_PIT_BROWSER_TIMED_CONTROL?.registerTurnAttack(attacker.state, extra.offTurn === true);
     if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
     const formation = window.IRON_PIT_BROWSER_FORMATION;

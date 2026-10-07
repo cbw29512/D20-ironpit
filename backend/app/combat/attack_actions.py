@@ -4,7 +4,8 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
-from app.combat.attack_action_choices import attack_choice, save_choice, slot_has_legal_choice, flexible_attack_mode
+from app.combat.attack_action_choices import attack_choice, save_choice
+from app.combat.attack_action_sequences import select_sequence
 from app.combat.attack_action_event_target import event_target
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.attack_action_weapon_buffs import resolve_attack_action_weapon_buff
@@ -34,7 +35,8 @@ def resolve_attack_action(
         definition = attacker.state.template.attack_action
         if definition is None or not is_available(attacker.state, "action"):
             raise ValueError("Attack action or Multiattack is not available.")
-        if not any(slot_has_legal_choice(attacker, setup, slot) for slot in definition.slots):
+        selected = select_sequence(attacker, setup)
+        if selected is None:
             return [], sequence
 
         spend(attacker.state, "action")
@@ -50,10 +52,10 @@ def resolve_attack_action(
         opening_feature = opening_feature_id(round_number, attacker, setup)
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
         light_trigger: WeaponAttack | None = None
-        mode = flexible_attack_mode(attacker, setup)
+        variant, mode = selected
         turn_key = f"{round_number}:{attacker.combatant_id}"
 
-        for index, slot in enumerate(definition.slots):
+        for index, slot in enumerate(variant.slots):
             if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
                 break
             deferred = resolve_deferred_effect_attack_slot(
@@ -74,7 +76,7 @@ def resolve_attack_action(
                     break
                 target, attack, distance = chosen_attack
                 pack = pack_tactics_active(attacker, target, setup)
-                feature_id = opening_feature or ("pack-tactics" if pack else definition.id)
+                feature_id = opening_feature or ("pack-tactics" if pack else variant.id)
                 event = resolve_encounter_attack(
                     sequence, round_number, attacker, target, attack, distance, dice, setup,
                     spend_action=False, advantage_sources=1 if pack else 0,

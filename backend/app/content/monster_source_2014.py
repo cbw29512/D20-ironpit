@@ -57,6 +57,7 @@ class SourceMonster2014(BaseModel):
     size: str
     creature_type: str
     armor_class: int = Field(ge=1)
+    armor_class_text: str | None = None
     max_hp: int = Field(ge=1)
     speed: dict[str, int]
     abilities: dict[str, int]
