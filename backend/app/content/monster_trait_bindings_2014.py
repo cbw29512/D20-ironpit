@@ -30,6 +30,7 @@ _MAGIC_WEAPONS = "Magic Weapons"
 _INNATE_SPELLCASTING = "Innate Spellcasting"
 _SUNLIGHT_SENSITIVITY = "Sunlight Sensitivity"
 _RAMPAGE = "Rampage"
+_ANTIMAGIC_SUSCEPTIBILITY = "Antimagic Susceptibility"
 _FINESSE_WEAPON_NAMES_2014 = frozenset({"Dagger", "Rapier", "Scimitar", "Shortsword", "Whip"})
 _SNEAK_ATTACK_D6 = re.compile(
     r"Sneak Attack \(1/Turn\).*?extra\s+\d+\s+\((\d+)d6\)",
@@ -119,6 +120,15 @@ def bonus_attack_grants_2014(monster: SourceMonster2014) -> list[BonusAttackGran
         logger.exception("Failed to bind 2014 Rampage for %s.", monster.name)
         raise
 
+def terminal_effect_tags_2014(monster: SourceMonster2014) -> list[str]:
+    """Bind source susceptibility to the shared semantic terminal-effect tag."""
+    try:
+        return ["antimagic"] if _ANTIMAGIC_SUSCEPTIBILITY in monster.trait_names else []
+    except Exception:
+        logger.exception("Failed to bind 2014 terminal-effect tags for %s.", monster.name)
+        raise
+
+
 def environment_context_reactions_2014(
     monster: SourceMonster2014,
 ) -> list[EnvironmentContextReaction]:
@@ -163,6 +173,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(_SUNLIGHT_SENSITIVITY)
         if bonus_attack_grants_2014(monster):
             bound.add(_RAMPAGE)
+        if terminal_effect_tags_2014(monster):
+            bound.add(_ANTIMAGIC_SUSCEPTIBILITY)
         if supports_regeneration_2014(monster):
             bound.add("Regeneration")
         resistance = legendary_resistance_trait_name_2014(monster)
