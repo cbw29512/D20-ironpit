@@ -167,6 +167,7 @@ jobs:
           grep -q 'browser-exile.js' index.html
           grep -q 'browser-delayed-resource-refill.js' index.html
           grep -q 'browser-recharge.js' index.html
+          grep -q 'browser-targeting-overrides.js' index.html
           grep -q 'browser-main-action-profiles.js' index.html
           grep -q 'browser-main-action-selection.js' index.html
           grep -q 'browser-hp-threshold-instant-death.js' index.html
@@ -298,6 +299,7 @@ jobs:
           grep -q 'browser-exile.js' frontend/index.html
           grep -q 'browser-delayed-resource-refill.js' frontend/index.html
           grep -q 'browser-recharge.js' frontend/index.html
+          grep -q 'browser-targeting-overrides.js' frontend/index.html
           grep -q 'browser-main-action-profiles.js' frontend/index.html
           grep -q 'browser-main-action-selection.js' frontend/index.html
           grep -q 'browser-hp-threshold-instant-death.js' frontend/index.html
@@ -427,6 +429,7 @@ jobs:
           node frontend/browser-paladin-2024-level12.test.cjs
           node frontend/browser-ability-hooks.test.cjs
           node frontend/browser-recharge.test.cjs
+          node frontend/browser-targeting-overrides.test.cjs
           node frontend/browser-turn-start-hooks.test.cjs
           node frontend/browser-condition-auras.test.cjs
           node frontend/browser-turn-resistance-buffs.test.cjs
