@@ -8,10 +8,7 @@ from app.content.monster_damage_absorption import damage_absorptions_from_source
 from app.content.monster_included_weapon_traits_2014 import included_weapon_trait_names_2014
 from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_definition_adapter_support_2014 import attack_id_2014
-from app.content.monster_distance_attack_disadvantage_2014 import (
-    attack_disadvantage_beyond_ft_2014,
-    bound_distance_attack_disadvantage_traits_2014,
-)
+from app.content.monster_distance_attack_disadvantage_2014 import attack_disadvantage_beyond_ft_2014, bound_distance_attack_disadvantage_traits_2014
 from app.content.monster_legendary_resistance_2014 import legendary_resistance_trait_name_2014
 from app.content.monster_passive_grants_2014 import (
     aggressive_tactical_grants_2014,
@@ -103,7 +100,6 @@ def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFe
     except Exception:
         logger.exception("Failed to compile 2014 progression features for %s.", monster.name)
         raise
-
 
 
 def bonus_attack_grants_2014(monster: SourceMonster2014) -> list[BonusAttackGrant]:
