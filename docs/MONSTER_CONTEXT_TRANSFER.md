@@ -1,77 +1,52 @@
 # Iron Pit context transfer
 
-generated_at: 2026-10-07, after PR #631 merge
-main_sha: `7c1199a4a4d1c6241b472bc28eadb235d58b8910` (merged source baseline; subsequent closeout documentation changes no combat source)
-active_lane: 2014 monster completion through existing universal primitives
+generated_at: 2026-10-07, after PR #632 merge
+main_sha: `d84b26ab5f3f3170cb1c4d86721bfbfd38546bea` (merged source baseline; subsequent closeout documentation adds no combat behavior)
+active_lane: finish 2014 source monsters through universal primitive reuse
 
 ## Authoritative status
 
-PR #631 merged. Complete source Multiattack alternatives select legal melee reach,
-otherwise ranged, then highest printed damage. Fixed Gladiator shield remains
-AC16; conditional two-handed Spear is preserved and unavailable with that loadout.
-Cards remain immutable; normal attack resolution and fresh fight state own costs,
-interruption, effects, and reset. Production is browser-only. Netlify stays locked.
+#632 cleared Veteran and Half-Red Dragon Veteran through source-only fixed offhand binding. Both begin with one-handed Longsword plus drawn Shortsword; complete melee sequence is two Longswords + one Shortsword (21.5 mean). Two-handed Longsword remains preserved/unavailable; Crossbow is one standalone ranged attack. AC 17/18 and Half-Red Dragon Veteran Fire Breath are unchanged. No runtime resolver changes. Source cards remain immutable; fight state resets normally. Netlify remains locked; Grok owns art/presentation.
 
 ## Active PRs
 
-No remaining active combat PR at closeout. #631 final feature head was
-`7034cf80341cb842c04a1b90a028e33cdb5525ad`; all required gates succeeded before merge.
+#632 completed; no other active combat PR at closeout. Feature head `b3cc251beec8b74e8711590f15a09128528ecc09` passed all four gates before merge.
 
 ## Recent merges
 
-#631: legal reach/highest damage policy and complete Multiattack source alternatives.
-#630: seven included weapon damage traits and magical qualifiers.
-#629: susceptibility Dispel/Stunned and terminal antimagic.
+#632: both 2014 Veterans, generic offhand source proof and source-path gate correction.
+#631: full Multiattack alternatives; cleared Bandit Captain, Gladiator, Lizardfolk.
+#630: included damage traits/qualifiers. #629: Dispel Stunned/terminal antimagic.
 
 ## Verified certification
 
-Source baseline: `7c1199a4a4d1c6241b472bc28eadb235d58b8910`. 2014 monsters 187/327; 2024 monsters
-141/330; heroes 240/240 in each edition. CI: 2,760 Python tests, all 219 browser
-commands. Local final focused pass: 133 tests. [Exact-head gates](MONSTER_FIX_TRACKER.md).
+2014 monsters 189/327, native 2024 monsters 141/330; heroes 240/240 each edition.
+CI passed 2774 Python tests and all 220 browser commands. Focused local source/parity evidence: 25 Python cases, four browser cases. [Exact-head gates](MONSTER_FIX_TRACKER.md). Documentation-only successors carry no exact-head CI claim.
 
 ## Current subsystem
 
-Immutable `AttackActionDefinition` uses ordinary slots or complete variants.
-`unavailable_reason` preserves conditional attacks incompatible with fixed gear.
-Python: attack_action_sequences / attack_action_choices / attack_actions.
-Browser: formation / multiattack-choices / multiattack. Generated path: capability
-registry, browser serializer, static site/exporters, certification manifests.
-Permanent tests: source sequence proof/mutations, source-derived JSON oracle parity,
-range policy in both editions, atomic rejection, natural 1, immutable card/reset.
+Immutable AttackActionDefinition uses ordinary slots or complete variants. Fixed conditional attack availability is source data. New source-only helper `monster_offhand_loadout_2014.py` validates wording/counts/IDs and hand compatibility; shared paragraph/two-hand source proof lives in `monster_source_sections_2014.py`. Existing sequence selectors/resolvers own preview, costs, targets, interruption, reactions and fresh reset. Python/browser parity fixture: `veteran-multiattack.json`; freshness and permanent source mutation tests accompany it. Required generators and manifests are current.
 
 ## Open A-class correctness debt
 
-No unresolved defect in the certified sequence tranche. Unsupported source mechanics
-remain fail-closed blockers: Medusa Petrifying Gaze; Veteran/Half-Red Dragon Veteran
-conditional offhand binding; Grick hit follow-up; Violet Fungus random count.
+No unresolved defect in the accepted Veterans family. Grick remains blocked by hit-dependent same-target Beak follow-up. Violet Fungus remains blocked by random 1d4 attack count. Medusa still lacks Petrifying Gaze. Other unsupported behavior remains fail-closed in generated blocker list (138 cards).
 
 ## Open B-class architecture debt
 
-Future source-only bindings should consume the certified sequence/availability
-schema; do not recreate attack resolution or mutable equipment state.
+Classify reuse before adding conditional sequence/target/repetition support. Never create another attack resolver or source-name dispatch.
 
 ## Parked C-class cleanup
 
-Grok owns art/presentation. No art edits belong in this lane.
+Grok art/presentation stays outside this lane. No repeated broad checking of unchanged engine code.
 
 ## Locked decisions
 
-Rules contract §10: legal reach selects weapon mode, highest legal printed damage,
-printed counts/combinations retained, Gladiator keeps shield. Universal architecture:
-source-preserving slots/variants and fixed availability facts. AGENTS.md: one
-focused changed-family verification and one final-head CI pass; no duplicate full
-local validation.
+Rules contract §10: legal melee reach, otherwise ranged, highest compatible printed damage; printed counts/combinations preserved. Fixed offhand preparation for both Veterans; fixed shield for Gladiator. AGENTS: one focused family pass then one required final-head CI pass, no duplicate local full suites.
 
 ## Next exact action
 
-M-012 source-only Veterans batch is implemented on `feat/2014-veteran-multiattack`
-from documentation main `14f0762205a4267c3cc43291a2ed2fe6bd772f70`. Focused
-source/browser parity passed; generated branch count 189/327 is pending final-head
-CI acceptance. Next action: allow four required gates to finish, merge on success,
-and replace this transfer with accepted exact-head evidence. No engine rebuild.
+M-013: audit the existing hook/sequence primitives for Grick's previous-hit requirement and same-target follow-up, then implement only the missing generic semantics. M-014 Violet Fungus random count is separate.
 
 ## Do not carry forward
 
-Old 184/327 baseline, superseded row-choice assertions, old blocked-card claims,
-prior-head CI results, or unmerged #625 implementations. Reconstruct repository
-truth if main or a feature head changes.
+Old 187/327 baseline as current, Veterans blocked claims, prior-head CI status, row-based attack choice, or unmerged #625 implementations. Repository truth supersedes cached handoffs.

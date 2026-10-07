@@ -24,8 +24,8 @@ melee reach, otherwise ranged, then highest legal damage; Gladiator retains shie
 Pinned source paragraphs prove counts, compulsory weapon combinations, and
 mode. Mutated counts, missing wording, empty choices, and unknown attacks fail
 closed. Source actions/cards remain intact. Veteran/Half-Red Dragon Veteran
-conditional drawn offhand, Grick hit-dependent follow-up, and Violet Fungus random
-count are separate parked behaviors.
+conditional drawn offhand was subsequently completed in M-012 below. Grick
+hit-dependent follow-up and Violet Fungus random count remain queued.
 
 ## Schema, lifecycle, and parity map
 
@@ -90,6 +90,11 @@ Base `14f0762205a4267c3cc43291a2ed2fe6bd772f70`; branch `feat/2014-veteran-multi
 
 Source proof checks wording, count, weapon names/kinds, every ID, and the exact conditional two-hand profile before admitting the whole card. Four source/compiler/browser parity cases cover both cards at 5/20 feet; malformed source variants fail closed. Roster becomes 189/327. One focused verification and one final-head CI pass; no duplicate local full suites.
 
-Native 2024 audit: Warrior Veteran has two Greatsword or Heavy Crossbow attacks, with Greatsword 2d6+3 and Crossbow 2d10+1. Half-Dragon has two Claws with Draconic Origin damage and a distinct DC 14, 8d6, 30-foot Dragon’s Breath. These are different source cards; no 2014 offhand sequence or breath values are copied. 2024 readiness stays 141/330. Final-head gates pending.
+Native 2024 audit: Warrior Veteran has two Greatsword or Heavy Crossbow attacks, with Greatsword 2d6+3 and Crossbow 2d10+1. Half-Dragon has two Claws with Draconic Origin damage and a distinct DC 14, 8d6, 30-foot Dragon’s Breath. These are different source cards; no 2014 offhand sequence or breath values are copied. 2024 readiness stays 141/330. Completed and merged [#632](https://github.com/cbw29512/D20-ironpit/pull/632). Final feature head `b3cc251beec8b74e8711590f15a09128528ecc09`; merged source `d84b26ab5f3f3170cb1c4d86721bfbfd38546bea`. CI passed 2774 Python tests and 220 browser commands; all required final-head gates passed:
+
+- [CI](https://github.com/cbw29512/D20-ironpit/actions/runs/37569499249): success on `b3cc251beec8b74e8711590f15a09128528ecc09`.
+- [2014 Basic Roster](https://github.com/cbw29512/D20-ironpit/actions/runs/37569499169): success on `b3cc251beec8b74e8711590f15a09128528ecc09`.
+- [Paired Edition Monster Report](https://github.com/cbw29512/D20-ironpit/actions/runs/37569499130): success on `b3cc251beec8b74e8711590f15a09128528ecc09`.
+- [2014 Hero Certification](https://github.com/cbw29512/D20-ironpit/actions/runs/37569499153): success on `b3cc251beec8b74e8711590f15a09128528ecc09`.
 
 Roster gate wiring: the historical path filter omitted source Multiattack binders and initially skipped M-012. Added the generic 2014 monster-source module pattern for both PR and push triggers so source-only families automatically receive the required roster gate. No combat code changed for this correction.

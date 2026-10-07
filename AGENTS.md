@@ -28,8 +28,8 @@ Repository truth beats chat summaries, historical counts, old milestone prose, u
 ## Current lane (2026-10-07)
 
 - Both editions have **240 / 240** certified hero snapshots.
-- Accepted monsters: 2014 **187/327**, native 2024 **141/330**, after PR #631.
-- Build the next source monster families through certified primitives; M-012 Veterans is active.
+- Accepted monsters: 2014 **189/327**, native 2024 **141/330**, after PR #632.
+- Build the next source monster families through certified primitives; M-012 Veterans is complete; next is M-013 Grick hit-dependent follow-up.
 - One focused changed-family pass, then one final-head CI pass. No duplicate full local suites.
 - One agent on this repository at a time. Grok owns art/presentation; Bestiary work stays out of this lane.
 - Heavy GitHub Actions stay gated to `main` / PRs into `main` / `workflow_dispatch`.
