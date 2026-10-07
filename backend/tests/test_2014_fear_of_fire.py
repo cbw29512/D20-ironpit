@@ -81,7 +81,7 @@ def test_fear_of_fire_expires_at_end_of_next_actual_yeti_turn() -> None:
     )
     begin_turn(before_turn)
     events, _ = resolve_target_condition_timing(
-        1, 1, member, "target_turn_end", FixedDiceProvider([]),
+        1, 1, member, "target_turn_end", FixedDiceProvider([1]),
     )
     assert events
     assert before_turn.timed_effects == []
@@ -94,14 +94,14 @@ def test_fear_of_fire_expires_at_end_of_next_actual_yeti_turn() -> None:
         combatant_id="yeti-during", side="monsters", position_ft=0, state=during_turn,
     )
     events, _ = resolve_target_condition_timing(
-        1, 1, member, "target_turn_end", FixedDiceProvider([]),
+        1, 1, member, "target_turn_end", FixedDiceProvider([1]),
     )
     assert events == []
     assert len(during_turn.timed_effects) == 1
 
     begin_turn(during_turn)
     events, _ = resolve_target_condition_timing(
-        1, 2, member, "target_turn_end", FixedDiceProvider([]),
+        1, 2, member, "target_turn_end", FixedDiceProvider([1]),
     )
     assert events
     assert during_turn.timed_effects == []
