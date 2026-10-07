@@ -3,7 +3,7 @@ name: Sync Generated Certification Artifacts
 on:
   workflow_dispatch:
   push:
-    branches: [main, m018-cyclops-depth-perception]
+    branches: [main]
 
 permissions:
   contents: write
