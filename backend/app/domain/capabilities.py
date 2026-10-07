@@ -20,6 +20,7 @@ from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.damage_sources import ConditionalDamageDefense, DamageTakenTimedEffect
 from app.domain.damage_absorption import DamageAbsorptionRule
 from app.domain.tactical_actions import BonusActionTacticalGrant
+from app.domain.targeting_overrides import TurnStartTargetingOverrideRule
 from app.domain.effect_removal import EffectRemovalAction, EffectTagConditionGrant
 from app.domain.environment_contexts import EnvironmentContextReaction
 from app.domain.movement import MovementModes
@@ -107,6 +108,7 @@ class CombatantDefinition(BaseModel):
     damage_threshold_zero_hp_replacements: list[DamageThresholdZeroHpReplacement] = Field(default_factory=list)
     triggered_extra_attack_stacks: list[TriggeredExtraAttackStack] = Field(default_factory=list)
     damage_taken_timed_effects: list[DamageTakenTimedEffect] = Field(default_factory=list)
+    turn_start_targeting_overrides: list[TurnStartTargetingOverrideRule] = Field(default_factory=list)
     save_success_overrides: list[FailedSaveSuccessOverride] = Field(default_factory=list)
     visual: VisualLoadout
     source: str
