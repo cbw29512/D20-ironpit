@@ -75,7 +75,7 @@ Only `ENGINE_TRULY_MISSING` justifies a new universal engine primitive.
 
 ## Immediate next action
 
-Use the [fix tracker](MONSTER_FIX_TRACKER.md) and [143 blocked monsters](MONSTER_BLOCKERS_2014.md) to classify semantic reuse and select the next single mechanic family. PR #629 is complete; do not reopen its resolved debt.
+Active tranche: source-validated included weapon damage (Brute, Heated Weapons, Angelic Weapons), covering seven 2014 trait bindings and the existing magical qualifier. See [audit](INCLUDED_WEAPON_DAMAGE_AUDIT.md). PR #629 is complete. The [143 blocked monsters](MONSTER_BLOCKERS_2014.md) retain their other mechanics; this tranche does not claim new READY cards. Full verification and new-head gates are pending.
 
 Historical work from #625 may be used as evidence, but every reused behavior must be revalidated against current main and implemented in a fresh branch.
 

@@ -9,6 +9,7 @@ from app.content.monster_charge_profile_2014 import charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_conditional_damage_defenses_2014 import template_defense_fields_2014
 from app.content.monster_healing_2014 import healing_actions_2014, healing_resources_2014
+from app.content.monster_included_weapon_traits_2014 import weapon_damage_source_qualifiers_2014
 from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_contextual_save_defenses import contextual_save_defenses_2014
 from app.content.monster_definition_adapter_support_2014 import (
@@ -43,7 +44,6 @@ from app.content.movement_modes import standard_arena_closing_speed_from_modes
 from app.content.monster_regeneration_2014 import regeneration_trait_2014
 from app.content.monster_save_capabilities_2014 import recharge_rules_2014, save_capabilities_2014, save_resources_2014
 from app.domain.combatants import ResourceDefinition, VisualLoadout
-from app.domain.weapons import DamageSourceQualifier
 from app.domain.capabilities import CombatantDefinition
 from app.domain.capability_attacks import AttackCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
@@ -73,9 +73,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "charge_profile": charge_profile_2014(charge_source, monster_id=monster.id),
         "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
         "grapple_target_policy": attack.grapple_target_policy,
-        "damage_source_qualifiers": (
-            [DamageSourceQualifier.MAGICAL] if "Magic Weapons" in monster.trait_names else []
-        ),
+        "damage_source_qualifiers": weapon_damage_source_qualifiers_2014(monster),
     }
     if attack.damage.dice_count:
         kwargs["damage"] = DiceSpec(

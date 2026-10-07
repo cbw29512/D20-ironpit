@@ -1,6 +1,6 @@
 # Monster fix tracker
 
-Updated 2026-10-06. Owner: ChatGPT for combat mechanics; Grok retains art/presentation ownership.
+Updated 2026-10-07. Owner: ChatGPT for combat mechanics; Grok retains art/presentation ownership.
 
 This is the maintained work queue. [Every blocked 2014 monster](MONSTER_BLOCKERS_2014.md)
 is generated from current source; [current operating status](CURRENT_OPERATING_STATUS.md)
@@ -15,9 +15,13 @@ sets the work lane. Rules live in the rules contract, not this tracker.
 | P0 M-003 | Complete, merged #629 | Terminal resolver extraction left three browser test loaders missing their production dependency. | Shared runtime loaded; all 217 CI browser commands passed. |
 | P0 M-004 | Complete, merged #629 | Touched Stunned primitive omitted 2014 movement restriction. | Edition-aware shared speed predicates and permanent regressions passed in both runtimes. |
 | P1 M-005 | Deferred | Rug of Smothering remains blocked by attack representation, extra action, and Damage Transfer. | Audit each behavior and classify reuse before implementation. Susceptibility alone does not certify the rug. |
-| P1 M-006 | Queued after #629 | Remaining 2014 source roster is incomplete. | Recompute the generated blocker list after merge; choose the largest coherent semantic family that maps to one shared primitive. Do not batch all `source:trait` mechanics together. |
+| P1 M-006 | In progress: included weapon damage | Remaining 2014 source roster is incomplete. | Recompute the generated blocker list after merge; choose the largest coherent semantic family that maps to one shared primitive. Do not batch all `source:trait` mechanics together. |
 | P1 M-007 | Audited for this family | Check 2024 source reuse without inventing matching traits. | Native 2024 animated armor/sword/rug have no Antimagic Susceptibility; no binding added. Repeat the edition audit for each subsequent family. |
 | P1 D-001 | Complete | Operating status still referenced PR #624 and 177/327 despite newer main. | Current merged baseline and final-head verification recorded below and in operating status. |
+
+| P1 M-008 | In progress, ChatGPT | Seven 2014 source traits already include their damage: Brute (Bugbear/Gladiator), Heated Weapons (Azer/Salamander), Angelic Weapons (Deva/Planetar/Solar). | Validate pinned attack dice; bind existing typed damage; preserve magical qualifier. Acceptance: source rejection, no double counting, critical/defense parity, all exact-head gates. [Audit](INCLUDED_WEAPON_DAMAGE_AUDIT.md). |
+| P1 M-009 | Deferred, separate contact tranche | Heated Body requires both touching and a melee hit within 5 feet; current retaliation handles only melee hits. | Reuse retaliation damage and add a shared contact trigger only after schema audit. Azer/Salamander/Remorhaz remain blocked. |
+| P1 M-010 | Deferred, separate grapple tranche | Salamander Tail automatically hits its own grappled target and cannot attack others; current policy lacks automatic hit. | Preserve source `auto_hit_own_grapple`; do not replace automatic hit with Advantage. |
 
 ## Current evidence
 
