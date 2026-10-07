@@ -67,7 +67,9 @@ Independent 2024 binding expansion remains outside the 2014 completion lane.
 
 Local source audit compiled all 187 admitted 2014 cards. Generated manifests agree:
 240 heroes per edition, 187/327 2014 monsters, 141/330 2024 monsters. These are
-current branch results, not a claim that exact-head CI has passed. Required four
+current branch results, not a claim that exact-head CI has passed. Local validation
+passed 131 focused Python tests, all 219 CI browser commands, and the backend-free,
+Pages entry, battlefield wiring, and Netlify configuration checks. Required four
 exact-head workflow results and merge SHA will be recorded after completion.
 
 Touched debt repaired: row/reach contract conflict; incomplete rider damage scoring;

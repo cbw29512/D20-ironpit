@@ -89,13 +89,14 @@ def test_distant_melee_multiattack_preserves_action_when_no_slot_is_legal() -> N
     assert attacker.state.action_available is True
 
 
-def test_front_row_flexible_multiattack_does_not_fall_back_to_ranged() -> None:
+def test_front_row_flexible_multiattack_uses_ranged_when_melee_cannot_reach() -> None:
     setup, attacker = _mixed_attack_setup(30)
     attacker.state.formation_row = "front"
     events, _ = resolve_attack_action(1, 1, attacker, setup, FixedDiceProvider([10, 4, 10, 4]))
 
-    assert not [event for event in events if event.event_type == "attack"]
-    assert attacker.state.action_available is True
+    attacks = [event for event in events if event.event_type == "attack"]
+    assert [event.weapon_id for event in attacks] == ["light-crossbow", "light-crossbow"]
+    assert attacker.state.action_available is False
     assert not any(event.event_type in {"movement", "dash"} for event in events)
 
 
@@ -137,7 +138,7 @@ def _backline_mixed_setup(*, protected: bool):
     return setup, attacker, target
 
 
-def test_back_row_flexible_multiattack_uses_ranged_while_frontline_ally_is_active() -> None:
+def test_back_row_flexible_multiattack_uses_ranged_when_screened_target_is_out_of_reach() -> None:
     setup, attacker, target = _backline_mixed_setup(protected=True)
 
     events, _ = resolve_attack_action(
@@ -149,7 +150,7 @@ def test_back_row_flexible_multiattack_uses_ranged_while_frontline_ally_is_activ
     assert all(event.target_id == target.combatant_id for event in attacks)
 
 
-def test_back_row_flexible_multiattack_switches_to_melee_without_frontline_ally() -> None:
+def test_back_row_flexible_multiattack_uses_melee_when_target_is_in_reach() -> None:
     setup, attacker, target = _backline_mixed_setup(protected=False)
 
     events, _ = resolve_attack_action(

@@ -57,14 +57,14 @@ def test_scout_and_infantry_match_srd_weapon_options() -> None:
     assert (infantry.alternate_weapon_attacks[0].weapon.normal_range_ft, infantry.alternate_weapon_attacks[0].weapon.long_range_ft) == (20, 60)
 
 
-def _scout_attack_ids(*, protected: bool) -> list[str]:
+def _scout_attack_ids(*, protected: bool, distance: int = 5) -> list[str]:
     monster_ids = ["srd-scout", "srd-warrior-infantry"] if protected else ["srd-scout"]
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=monster_ids,
     ))
     scout = next(member for member in setup.monsters if member.state.template.id == "srd-scout")
     setup.heroes[0].state.position = GridPosition(x=7, y=6)
-    scout.state.position = GridPosition(x=8, y=6)
+    scout.state.position = GridPosition(x=7+distance//5, y=6)
     if protected:
         infantry = next(member for member in setup.monsters if member.state.template.id == "srd-warrior-infantry")
         infantry.state.position = GridPosition(x=9, y=6)
@@ -73,6 +73,11 @@ def _scout_attack_ids(*, protected: bool) -> list[str]:
     return [event.weapon_id for event in events if event.event_type == "attack"]
 
 
-def test_scout_stays_ranged_while_screened_and_switches_to_melee_when_exposed() -> None:
-    assert _scout_attack_ids(protected=True) == ["scout-longbow", "scout-longbow"]
+def test_scout_uses_actual_reach_even_with_a_living_frontline_screen() -> None:
+    assert _scout_attack_ids(protected=True) == ["scout-shortsword", "scout-shortsword"]
     assert _scout_attack_ids(protected=False) == ["scout-shortsword", "scout-shortsword"]
+
+
+def test_scout_uses_ranged_when_melee_cannot_reach_with_or_without_screen():
+    assert _scout_attack_ids(protected=True, distance=20) == ["scout-longbow", "scout-longbow"]
+    assert _scout_attack_ids(protected=False, distance=20) == ["scout-longbow", "scout-longbow"]
