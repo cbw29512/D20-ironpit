@@ -33,9 +33,11 @@ Examples of universal identity:
 - Movement is movement.
 - A buff/debuff is semantic state plus timing and qualifiers.
 
-The source supplies parameters such as ability name, source id, ruleset, DC, save ability, attack bonus, damage dice/type, range, duration, target count, timing, recharge threshold, resource limits, qualifiers, and logging text.
+The source supplies parameters such as ability name, source id, ruleset, AC, DC, save ability, attack bonus, damage dice/type, range, duration, target count, timing, recharge threshold, resource limits, qualifiers, and logging text.
 
-The engine supplies behavior.
+**The engine supplies behavior. The source supplies the exact numbers and facts.**
+
+Examples: the engine defines what Prone does, but the source decides whether an effect applies Prone and with what save/DC/duration. The engine defines attack-roll-versus-AC behavior, but the combatant source supplies AC and attack bonus. The engine defines typed damage resolution, but the source supplies the damage dice, bonus, type, and qualifiers.
 
 ## Mandatory implementation sequence
 
@@ -48,9 +50,11 @@ Before writing any combat mechanic:
 5. Reuse an existing universal primitive whenever semantics match.
 6. Parameterize differences in source data.
 7. Compose multi-effect abilities from existing primitives.
-8. Add a new universal primitive only when the existing engine cannot represent the behavior accurately.
-9. Keep the exact printed source name in player logs and source/audit records.
-10. Re-audit pregens and monsters after widening a primitive so all equivalent content can bind to it.
+8. If exact behavior cannot be represented, park the affected content and record the missing semantic/RAW question. Do not invent behavior during the content pass.
+9. Finish the current family/pass, then return to confirmed engine gaps as deliberate technical debt.
+10. Add a new universal primitive only when the reuse/composition search proves the existing engine cannot represent the behavior accurately.
+11. Keep the exact printed source name in player logs and source/audit records.
+12. Re-audit pregens and monsters after widening a primitive so all equivalent content can bind to it.
 
 ## Forbidden architecture
 
@@ -90,7 +94,7 @@ Future homebrew cards use the same engine. A homebrew ability does not receive a
 
 ## Authority
 
-This file defines the product philosophy and semantic-engine rule. Detailed rules remain in:
+This file defines the product philosophy and semantic-engine rule. Day-to-day implementation starts at `docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md` and exactly one small task guide. Detailed rules remain in:
 
 - `docs/IRON_PIT_RULES_CONTRACT.md`
 - `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`
