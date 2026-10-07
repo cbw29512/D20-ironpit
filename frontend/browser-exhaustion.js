@@ -3,10 +3,11 @@
 
   const level = (state) => state.exhaustion_level || 0;
   const is2014 = (state) => state.template.ruleset === "2014";
+  const D = () => window.IRON_PIT_BROWSER_DAMAGE_TRIGGERED_D20_DEBUFF || { abilityCheckDisadvantage: () => 0, attackDisadvantage: () => 0 };
 
   function d20Modifier(state) { return is2014(state) ? 0 : -2 * level(state); }
-  function abilityCheckDisadvantage(state) { return Number(is2014(state) && level(state) >= 1); }
-  function attackDisadvantage(state) { return Number(is2014(state) && level(state) >= 3); }
+  function abilityCheckDisadvantage(state) { return Number(is2014(state) && level(state) >= 1) + D().abilityCheckDisadvantage(state); }
+  function attackDisadvantage(state) { return Number(is2014(state) && level(state) >= 3) + D().attackDisadvantage(state); }
   function saveDisadvantage(state) { return Number(is2014(state) && level(state) >= 3); }
 
   function effectiveSpeed(state, speed) {
