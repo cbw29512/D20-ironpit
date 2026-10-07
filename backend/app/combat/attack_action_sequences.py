@@ -9,16 +9,58 @@ from app.domain.models import WeaponAttackKind
 logger = logging.getLogger(__name__)
 
 
+def _preview_slot(attacker, setup, slot, mode, previous_target, previous_attack_available):
+    try:
+        if slot.requires_previous_hit and not previous_attack_available:
+            return None, None
+        target = previous_target if slot.same_target_as_previous else None
+        chosen = attack_choice(attacker, setup, slot, mode=mode, target_override=target)
+        saved = save_choice(attacker, setup, slot, target_override=target) if chosen is None else None
+        return chosen, saved
+    except Exception:
+        logger.exception("Failed conditional sequence preview for %s.", attacker.combatant_id)
+        raise
+
+
 def sequence_damage(attacker, setup, variant, mode) -> float:
     try:
         total = 0.0
+        previous_target = None
+        previous_attack_available = False
         for slot in variant.slots:
-            chosen = attack_choice(attacker, setup, slot, mode=mode)
-            saved = save_choice(attacker, setup, slot) if chosen is None else None
-            total += weapon_mean_damage(chosen[1]) if chosen else save_mean_damage(saved[1]) if saved else 0
+            chosen, saved = _preview_slot(
+                attacker, setup, slot, mode, previous_target, previous_attack_available,
+            )
+            if chosen:
+                total += weapon_mean_damage(chosen[1])
+                previous_target, previous_attack_available = chosen[0], True
+            elif saved:
+                total += save_mean_damage(saved[1])
+                previous_target, previous_attack_available = saved[0], False
+            else:
+                previous_target, previous_attack_available = None, False
         return total
     except Exception:
         logger.exception("Failed sequence scoring for %s / %s.", attacker.combatant_id, variant.id)
+        raise
+
+
+def sequence_has_legal_choice(attacker, setup, variant, mode) -> bool:
+    try:
+        previous_target = None
+        previous_attack_available = False
+        for slot in variant.slots:
+            chosen, saved = _preview_slot(
+                attacker, setup, slot, mode, previous_target, previous_attack_available,
+            )
+            if chosen:
+                return True
+            if saved:
+                return True
+            previous_target, previous_attack_available = None, False
+        return False
+    except Exception:
+        logger.exception("Failed sequence legality probe for %s / %s.", attacker.combatant_id, variant.id)
         raise
 
 
@@ -38,9 +80,7 @@ def select_sequence(attacker, setup):
         if not permitted:
             return None
         chosen = max(permitted, key=lambda v: sequence_damage(attacker, setup, v, mode))
-        legal = any(attack_choice(attacker, setup, slot, mode=mode) or save_choice(attacker, setup, slot)
-                    for slot in chosen.slots)
-        return (chosen, mode) if legal else None
+        return (chosen, mode) if sequence_has_legal_choice(attacker, setup, chosen, mode) else None
     except Exception:
         logger.exception("Failed complete attack sequence selection for %s.", attacker.combatant_id)
         raise
