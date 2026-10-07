@@ -90,7 +90,7 @@ Future homebrew cards use the same engine. A homebrew ability does not receive a
 
 ## Authority
 
-This file defines the product philosophy and semantic-engine rule. For day-to-day implementation, route through `docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md` and its small task guides first. Detailed rules remain in:
+This file defines the product philosophy and semantic-engine rule. Detailed rules remain in:
 
 - `docs/IRON_PIT_RULES_CONTRACT.md`
 - `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`
