@@ -64,9 +64,11 @@ local validation.
 
 ## Next exact action
 
-Bind Veteran/Half-Red Dragon Veteran compatible source offhand loadouts through
-existing slots/variants and availability facts (M-012), preserving all conditional
-printed attacks.
+M-012 source-only Veterans batch is implemented on `feat/2014-veteran-multiattack`
+from documentation main `14f0762205a4267c3cc43291a2ed2fe6bd772f70`. Focused
+source/browser parity passed; generated branch count 189/327 is pending final-head
+CI acceptance. Next action: allow four required gates to finish, merge on success,
+and replace this transfer with accepted exact-head evidence. No engine rebuild.
 
 ## Do not carry forward
 

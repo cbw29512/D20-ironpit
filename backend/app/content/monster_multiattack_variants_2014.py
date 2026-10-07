@@ -3,7 +3,8 @@ from __future__ import annotations
 from itertools import permutations
 import logging
 import re
-from app.content.monster_source_sections_2014 import source_sections_2014
+from app.content.monster_source_sections_2014 import source_sections_2014, requires_two_hands_2014
+from app.content.monster_offhand_loadout_2014 import offhand_variants_2014, offhand_unavailable_reason_2014
 from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.domain.attack_action_definitions import AttackActionSlot, AttackActionVariant
 logger = logging.getLogger(__name__)
@@ -24,6 +25,8 @@ def source_variants_2014(monster):
             not slot or any(i not in attacks for i in slot) for slot in slots
         ):
             return []
+        if policy.get("kind") == "drawn-offhand-additional-attack":
+            return offhand_variants_2014(monster)
         branches = []
         if policy == {"distinct_attack_ids": True}:
             if not re.fullmatch(r"The .+? makes two melee attacks, each one with a different weapon\.", text):
@@ -72,13 +75,10 @@ def source_variants_2014(monster):
 def attack_unavailable_reason_2014(monster, attack):
     """Preserve conditional two-hand damage while retaining the printed shield loadout."""
     try:
-        if "shield" not in (monster.armor_class_text or "").lower() or attack.kind != "melee":
-            return None
-        text = source_sections_2014(monster.source_actions).get(attack.name, "")
-        conditional = re.search(r"or \d+ \((\d+)d(\d+) \+ (\d+)\) \w+ damage if used with two hands", text)
-        if conditional and tuple(map(int, conditional.groups())) == (
-            attack.damage.dice_count, attack.damage.dice_size, attack.damage.bonus
-        ):
+        offhand = offhand_unavailable_reason_2014(monster, attack)
+        if offhand:
+            return offhand
+        if "shield" in (monster.armor_class_text or "").lower() and requires_two_hands_2014(monster, attack):
             return "Shield remains equipped; this printed damage requires two hands."
         return None
     except Exception:

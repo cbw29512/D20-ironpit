@@ -25,13 +25,13 @@ Before changing combat code, read:
 
 Repository truth beats chat summaries, historical counts, old milestone prose, uploaded registry dumps, and stale file-library references. External/user-provided files are evidence only until reconciled against the exact current commit.
 
-## Current lane (2026-09-27)
+## Current lane (2026-10-07)
 
-- Canonical 2014 pregens are complete at **240 / 240** registered level snapshots once PR #397 lands.
-- Immediate next lane: **full 2014 READY re-audit plus touched-engine technical-debt cleanup**.
-- Do not begin new 2024 class expansion until the 2014 re-audit is recorded clean.
-- After that gate, resume 2024 by reusing certified 2014 mechanics wherever the underlying behavior is equivalent.
-- One agent on this repository at a time. Coloring-book / Bestiary work stays out of this repo.
+- Both editions have **240 / 240** certified hero snapshots.
+- Accepted monsters: 2014 **187/327**, native 2024 **141/330**, after PR #631.
+- Build the next source monster families through certified primitives; M-012 Veterans is active.
+- One focused changed-family pass, then one final-head CI pass. No duplicate full local suites.
+- One agent on this repository at a time. Grok owns art/presentation; Bestiary work stays out of this lane.
 - Heavy GitHub Actions stay gated to `main` / PRs into `main` / `workflow_dispatch`.
 
 See `docs/CURRENT_OPERATING_STATUS.md`.

@@ -37,12 +37,12 @@ class RecordingDice:
             raise
 
 
-def fixture():
+def fixture(expected=None):
     try:
         source = {m.id: m for m in load_monster_source_2014()}
         base = compile_combatant(adapt_basic_monster_2014(source['commoner'])).model_copy(update={'max_hp': 200})
         cases = []
-        for source_id, distances in _EXPECTED.items():
+        for source_id, distances in (_EXPECTED if expected is None else expected).items():
             card = compile_combatant(adapt_basic_monster_2014(source[source_id]))
             card_before = card.model_dump()
             for distance, (weapons, score) in distances.items():

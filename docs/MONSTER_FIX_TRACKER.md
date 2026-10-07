@@ -23,7 +23,7 @@ sets the work lane. Rules live in the rules contract, not this tracker.
 | P1 M-010 | Deferred, separate grapple tranche | Salamander Tail automatically hits its own grappled target and cannot attack others; current policy lacks automatic hit. | Preserve source `auto_hit_own_grapple`; do not replace automatic hit with Advantage. |
 | P1 M-011 | Complete, merged #631 | Gladiator now has only alternative-count Multiattack left (three melee or two ranged attacks). Bandit Captain is a related paired catch-up candidate. | Complete source alternatives bind Bandit Captain, Gladiator, Lizardfolk, and Medusa. First three are READY; Medusa retains Petrifying Gaze. Highest legal damage/reach policy, fixed shield, parity and all gates passed. [Audit](MULTIATTACK_SEQUENCE_AUDIT.md). |
 
-| P1 M-012 | Queued, source binding | Veteran and Half-Red Dragon Veteran: two Longsword attacks plus conditional drawn Shortsword; two-handed Longsword is incompatible with held offhand. | Existing sequence/availability primitives suffice; source proof and compatible fixed-loadout binding remain. Ranged Crossbow is a standalone action. |
+| P1 M-012 | Active, ChatGPT; `feat/2014-veteran-multiattack` | Veteran and Half-Red Dragon Veteran: two Longsword attacks plus conditional drawn Shortsword; two-handed Longsword is incompatible with held offhand. | Source binding complete; focused source/parity checks passed (25 Python cases across the changed family and reused shield/source helpers; four browser parity cases). Generated branch roster 189/327, 138 blocked. Ranged Crossbow is a standalone action. Required final-head CI pending. |
 | P1 D-002 | Complete, Chris decision | Repeated broad verification displaced monster construction. | AGENTS.md records one focused changed-family pass and one final-head CI pass; no duplicate full local suites. |
 
 ## Current evidence
@@ -68,3 +68,5 @@ tests, and required exact-head gates; keep the PR and audit links.
 M-011 is merged and certified; see the complete sequence audit.
 
 - 2026-10-06: Chris directed us to stop repeatedly checking unchanged code and spend the time building monsters. The operating rule is recorded in AGENTS.md.
+
+M-012 starts from exact main `14f0762205a4267c3cc43291a2ed2fe6bd772f70`. Scope: source-only offhand binding and immutable availability facts; Python/browser sequence resolvers are unchanged. Source wording proves two Longswords plus optional drawn Shortsword, with the strongest compatible fixed loadout selected under §10. One focused parity/source pass, then final-head CI.

@@ -83,3 +83,11 @@ Touched debt repaired: row/reach contract conflict; incomplete rider damage scor
 attack counter mutation before legality; duplicated source paragraph parsing;
 sequence schemas shared by compiler and runtime; legacy area-slot counts preserved;
 catalog/roster sentinels regenerated for the actual three-card admission.
+
+## M012 — Veteran source binding (2026-10-07)
+
+Base `14f0762205a4267c3cc43291a2ed2fe6bd772f70`; branch `feat/2014-veteran-multiattack`. Reuses the merged complete-sequence engine without runtime changes. Both 2014 Veterans start with printed Shortsword drawn and Longsword in one hand. The complete 2 Longsword + 1 Shortsword sequence averages 21.5 damage versus 17 for two two-handed Longsword attacks. The conditional two-handed profile remains present but unavailable. At range, Heavy Crossbow is one standard attack, never a three-shot Multiattack. AC remains 17/18; Half-Red Dragon Veteran keeps its existing DC 15, 7d6 Fire Breath, 15-foot cone, Recharge 5–6.
+
+Source proof checks wording, count, weapon names/kinds, every ID, and the exact conditional two-hand profile before admitting the whole card. Four source/compiler/browser parity cases cover both cards at 5/20 feet; malformed source variants fail closed. Roster becomes 189/327. One focused verification and one final-head CI pass; no duplicate local full suites.
+
+Native 2024 audit: Warrior Veteran has two Greatsword or Heavy Crossbow attacks, with Greatsword 2d6+3 and Crossbow 2d10+1. Half-Dragon has two Claws with Draconic Origin damage and a distinct DC 14, 8d6, 30-foot Dragon’s Breath. These are different source cards; no 2014 offhand sequence or breath values are copied. 2024 readiness stays 141/330. Final-head gates pending.
