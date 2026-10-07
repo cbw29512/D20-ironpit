@@ -31,6 +31,7 @@ jobs:
         run: |
           python scripts/check_combat_engine_coverage.py
           python scripts/export_roster_mechanic_checklist.py --check
+          python scripts/export_monster_fix_list_2014.py --check
       - name: Enforce declarative monster source of truth
         run: |
           python scripts/export_runtime_monster_capabilities.py --check
@@ -417,6 +418,9 @@ jobs:
           for file in frontend/*.js; do node --check "$file"; done
       - name: Run browser combat regressions
         run: |
+          node frontend/browser-2014-antimagic-susceptibility.test.cjs
+          node frontend/browser-terminal-effect-lifecycle.test.cjs
+          node frontend/browser-dispel-susceptibility.test.cjs
           node frontend/browser-paladin-2024-level13.test.cjs
           node frontend/browser-paladin-2024-level14.test.cjs
           node frontend/browser-paladin-2024-level15.test.cjs

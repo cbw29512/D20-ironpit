@@ -18,7 +18,8 @@ Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §1.1, §2, §25; `SOUL.md`; `AGENT
 
 ## Death and dying
 
-- **Antimagic Susceptibility is terminal in the Iron Pit.** When a combat effect with the semantic `antimagic` tag is successfully applied to a susceptible combatant, that combatant immediately becomes Dead for the rest of the match. There is no save, no temporary unconscious state, and no source-name dispatch. The source card keeps the printed trait name; the shared terminal-effect resolver owns the outcome.
+- **Antimagic Susceptibility is terminal in the Iron Pit.** An applied semantic `antimagic` effect kills a susceptible combatant. Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §13, Antimagic susceptibility.
+- **Dispel Magic uses Stunned for susceptible creatures.** Reuse the shared 10-round debuff; this supersedes the earlier Dispel-also-kills choice. Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §13, Antimagic susceptibility.
 - **Petrified is terminal in the Iron Pit.** When the Petrified debuff is successfully applied, that combatant is immediately Dead for the rest of the match. This is an explicit Iron Pit arena rule, not a statement of tabletop RAW. The universal condition engine owns this consequence; monster/ability names must not dispatch it.
 - **Dead is terminal.** No resurrection, rebirth, revive, later stabilization, regeneration, or Death Saving Throw restores a Dead combatant in that match. The Pit deity restores combatants only after combat.
 - **Death Saving Throws only while dying.** They occur only while a character is Unconscious/dying at 0 HP and not Dead. Printed 0-HP replacements intercept the drop to 0 in the same resolution and never leave the combatant Dead first.

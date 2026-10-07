@@ -21,6 +21,7 @@ def dispel_magic_2014(casting_ability: AbilityName) -> EffectRemovalAction:
             casting_ability=casting_ability,
             target_mode="enemy",
             auto_remove_max_level=3,
+            effect_tags=["spell_dispelling"],
             resource_id="spell-slot-3",
             resource_cost=1,
             expends_spell_slot=True,

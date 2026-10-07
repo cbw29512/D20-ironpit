@@ -5,7 +5,8 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.ability_checks import ability_check_roll_mode, resolve_ability_check_outcome
 from app.combat.dice import DiceProvider
-from app.combat.effect_removal_targets import TrackedSpellEffect, tracked_spell_effects
+from app.combat.effect_removal_targets import TrackedSpellEffect, TaggedConditionTarget, removal_targets
+from app.combat.effect_tag_conditions import apply_tagged_condition
 from app.combat.modifier_stack import remove_source_modifiers
 from app.combat.rolls import roll_d20
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
@@ -16,21 +17,24 @@ from app.domain.events import BattleEvent
 logger = logging.getLogger(__name__)
 
 
+def action_available(remover, action, turn_key):
+    if not is_available(remover.state, action.action_cost):
+        return False
+    if action.expends_spell_slot and not slot_spell_available(remover.state, turn_key):
+        return False
+    resource = next((item for item in remover.state.resources if item.id == action.resource_id), None)
+    return action.resource_id is None or (resource is not None and resource.current_uses >= action.resource_cost)
+
+
 def choose_effect_removal_action(
     remover: EncounterCombatant,
     setup: EncounterSetup,
     turn_key: str,
-) -> tuple[EffectRemovalAction, TrackedSpellEffect] | None:
+) -> tuple[EffectRemovalAction, TrackedSpellEffect | TaggedConditionTarget] | None:
     for action in remover.state.template.effect_removal_actions:
-        if not is_available(remover.state, action.action_cost):
+        if not action_available(remover, action, turn_key):
             continue
-        if action.expends_spell_slot and not slot_spell_available(remover.state, turn_key):
-            continue
-        if action.resource_id is not None:
-            resource = next((item for item in remover.state.resources if item.id == action.resource_id), None)
-            if resource is None or resource.current_uses < action.resource_cost:
-                continue
-        effects = tracked_spell_effects(remover, setup, action)
+        effects = removal_targets(remover, setup, action)
         if effects:
             return action, effects[0]
     return None
@@ -42,12 +46,14 @@ def resolve_effect_removal(
     remover: EncounterCombatant,
     setup: EncounterSetup,
     action: EffectRemovalAction,
-    effect: TrackedSpellEffect,
+    effect: TrackedSpellEffect | TaggedConditionTarget,
     dice: DiceProvider,
     turn_key: str,
 ) -> BattleEvent:
     try:
-        if effect not in tracked_spell_effects(remover, setup, action):
+        if not action_available(remover, action, turn_key):
+            raise ValueError("Effect-removal action or resource is no longer available.")
+        if effect not in removal_targets(remover, setup, action):
             raise ValueError("Tracked spell effect is no longer a legal removal target.")
         spend(remover.state, action.action_cost)
         remaining = None
@@ -57,6 +63,8 @@ def resolve_effect_removal(
                 mark_slot_spell_cast(remover.state, turn_key)
             resource.current_uses -= action.resource_cost
             remaining = resource.current_uses
+        if isinstance(effect, TaggedConditionTarget):
+            return apply_tagged_condition(sequence, round_number, remover, setup, action, effect, remaining)
         check = None
         succeeded = True
         dc = None
@@ -102,6 +110,7 @@ def resolve_effect_removal(
             ),
         )
     except ValueError:
+        logger.exception("Invalid effect removal for %s using %s.", remover.combatant_id, action.id)
         raise
     except Exception as exc:
         logger.exception("Effect removal failed for %s.", remover.combatant_id)

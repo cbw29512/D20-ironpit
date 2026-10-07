@@ -35,7 +35,7 @@ from app.content.monster_trait_bindings_2014 import (
     aggressive_tactical_grants_2014, bonus_attack_grants_2014, conditional_attack_advantage_2014,
     environment_context_reactions_2014, progression_features_2014, sneak_attack_eligible_2014,
 )
-from app.content.monster_terminal_effects_2014 import terminal_effect_tags_2014
+from app.content.monster_terminal_effects_2014 import effect_tag_condition_grants_2014, terminal_effect_tags_2014
 from app.content.monster_legendary_resistance_2014 import (
     legendary_resistance_override_2014, legendary_resistance_resource_2014,
 )
@@ -143,6 +143,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         healing_actions=healing_actions_2014(monster),
         condition_removal_actions=innate_condition_removal_2014(monster),
         terminal_effect_tags=terminal_effect_tags_2014(monster),
+        effect_tag_condition_grants=effect_tag_condition_grants_2014(monster),
         legendary_actions=legendary_options,
         resources=resources, recharge_rules=recharge_rules_2014(monster),
         regeneration=regeneration_trait_2014(monster),

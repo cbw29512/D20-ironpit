@@ -23,6 +23,9 @@ def apply_terminal_death(
         state.is_unconscious = False
         state.is_stable = False
         state.active_effect_ids = [effect for effect in state.active_effect_ids if effect != "dodge"]
+        # Terminal death uses the same form lifecycle as incapacitation in combat.
+        from app.combat.replacement_form_lifecycle import revert_replacement_form_if_incapacitated
+        revert_replacement_form_if_incapacitated(state)
         if state.concentration is not None:
             from app.combat.concentration import end_concentration_if_incapacitated
             end_concentration_if_incapacitated(state, affected_states)
@@ -47,10 +50,10 @@ def apply_terminal_effect_tag(
         if normalized not in tags:
             return "not_susceptible"
         return apply_terminal_death(state, affected_states=affected_states)
-    except ValueError:
-        raise
     except Exception as exc:
         logger.exception("Terminal effect-tag resolution failed for %s.", state.template.name)
+        if isinstance(exc, ValueError):
+            raise
         raise RuntimeError("Terminal effect-tag resolution could not be resolved.") from exc
 
 

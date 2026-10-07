@@ -13,7 +13,7 @@ from app.content.capability_compiler import compile_combatant
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014, unsupported_traits_2014
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
-from app.content.monster_terminal_effects_2014 import terminal_effect_tags_2014
+from app.content.monster_terminal_effects_2014 import terminal_effect_tags_2014, effect_tag_condition_grants_2014
 from scripts.browser_template_serializer import template_row
 
 
@@ -37,6 +37,8 @@ def test_antimagic_susceptibility_binds_exact_2014_source_family() -> None:
     for name in _FAMILY:
         monster = source[name]
         assert terminal_effect_tags_2014(monster) == ["antimagic"]
+        grant, = effect_tag_condition_grants_2014(monster)
+        assert (grant.effect_tag, grant.condition_id, grant.duration_rounds) == ("spell_dispelling", "stunned", 10)
         assert _TRAIT not in unsupported_traits_2014(monster)
 
 
@@ -49,6 +51,7 @@ def test_antimagic_family_unlocks_only_the_two_single_blocker_constructs() -> No
         assert template.terminal_effect_tags == ["antimagic"]
         assert _TRAIT in template.source_trait_names
         assert template_row(template)["terminal_effect_tags"] == ["antimagic"]
+        assert template_row(template)["effect_tag_condition_grants"] == [grant.model_dump(mode="json") for grant in template.effect_tag_condition_grants]
 
     rug = source["Rug of Smothering"]
     assert basic_blockers_2014(rug)

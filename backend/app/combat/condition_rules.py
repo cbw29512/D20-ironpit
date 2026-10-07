@@ -84,4 +84,5 @@ def condition_speed_is_zero(state: CombatantState) -> bool:
         or has_condition(state, PARALYZED)
         or has_condition(state, PETRIFIED)
         or has_condition(state, RESTRAINED)
+        or (state.template.ruleset == "2014" and has_condition(state, STUNNED))
     )

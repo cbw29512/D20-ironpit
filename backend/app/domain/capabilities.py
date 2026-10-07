@@ -18,7 +18,7 @@ from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.damage_sources import ConditionalDamageDefense
 from app.domain.damage_absorption import DamageAbsorptionRule
 from app.domain.tactical_actions import BonusActionTacticalGrant
-from app.domain.effect_removal import EffectRemovalAction
+from app.domain.effect_removal import EffectRemovalAction, EffectTagConditionGrant
 from app.domain.environment_contexts import EnvironmentContextReaction
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
@@ -95,6 +95,7 @@ class CombatantDefinition(BaseModel):
     conditional_damage_defenses: list[ConditionalDamageDefense] = Field(default_factory=list)
     condition_immunities: list[ConditionName] = Field(default_factory=list)
     terminal_effect_tags: list[str] = Field(default_factory=list)
+    effect_tag_condition_grants: list[EffectTagConditionGrant] = Field(default_factory=list)
     wearing_heavy_armor: bool = False
     wearing_metal_armor: bool = False
     rage_damage_bonus: int = Field(default=0, ge=0, le=10)

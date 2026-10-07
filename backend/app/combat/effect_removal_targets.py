@@ -3,7 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from app.combat.encounter_targeting import combatant_distance
-from app.domain.effect_removal import EffectRemovalAction
+from app.combat.condition_immunity import condition_is_immune
+from app.combat.condition_rules import has_condition
+from app.domain.effect_removal import EffectRemovalAction, EffectTagConditionGrant
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 
@@ -13,6 +15,27 @@ class TrackedSpellEffect:
     source: EncounterCombatant
     effect_id: str
     spell_level: int
+
+
+@dataclass(frozen=True)
+class TaggedConditionTarget:
+    target: EncounterCombatant
+    grant: EffectTagConditionGrant
+
+
+def removal_targets(remover, setup, action):
+    tagged = []
+    for target in [*setup.heroes, *setup.monsters]:
+        if not _target_allowed(remover, target, action):
+            continue
+        for grant in target.state.template.effect_tag_condition_grants:
+            if grant.effect_tag not in action.effect_tags or has_condition(target.state, grant.condition_id):
+                continue
+            if condition_is_immune(target.state, grant.condition_id, remover.state.template, source_is_magical=True):
+                continue
+            tagged.append(TaggedConditionTarget(target, grant))
+    tagged.sort(key=lambda item: (combatant_distance(remover, item.target), item.target.combatant_id, item.grant.source_id))
+    return [*tagged, *tracked_spell_effects(remover, setup, action)]
 
 
 def _spell_level(source: EncounterCombatant, effect_id: str) -> int | None:

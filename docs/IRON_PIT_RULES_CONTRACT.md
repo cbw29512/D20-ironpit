@@ -470,6 +470,35 @@ A source that says reaching 0 causes disintegration must intercept generic PC de
 
 Staged petrification effects use a universal progression/state machine with the exact source saves, stages, timing, and immunities. **Iron Pit arena override:** once the Petrified condition is successfully applied, the affected combatant is immediately Dead for the rest of the match. This consequence belongs to the universal condition engine, not to Cockatrice, Gorgon, Basilisk, or any other named source.
 
+### Antimagic susceptibility
+
+**Iron Pit arena override:** successfully applying an effect with the semantic
+`antimagic` tag to a combatant whose immutable template declares that
+susceptibility immediately makes it Dead for the rest of the match. There is no
+save, temporary unconscious state, or death-prevention window. This is Chris's
+arena rule, not the tabletop SRD's temporary incapacitation behavior. Casting
+an effect does not affect creatures outside that effect's legal targets/area.
+Unrelated effects and nonsusceptible creatures are unaffected by this rule.
+
+Reuse the terminal-death lifecycle used by Petrified: clear Dodge, end
+Concentration and its dependent effects, and end replacement forms when their
+declared incapacitation lifecycle requires it. No healing or regeneration can
+restore the combatant in this fight. Fresh fight state restores the immutable
+card normally. Printed trait names remain source/card metadata; the terminal
+resolver matches semantic tags only. This binding does not add an otherwise
+unsupported antimagic spell to any combatant's legal action list.
+
+**Dispel Magic is a distinct response** (Chris, 2026-10-06): targeting a creature
+with Antimagic Susceptibility applies the existing Stunned debuff for one minute
+(10 rounds), replacing that trait's printed Unconscious outcome. It does not
+kill the creature or change its HP. The previously chosen no-save arena mapping
+is retained; no repeat save or damage-triggered recovery is added. This mapping
+is scoped to susceptible creatures, not every Dispel Magic target and not other
+sources of Unconsciousness. Stunned immunity and matching counters use the
+normal universal condition defenses. Expiry uses the existing finite timed
+condition lifecycle, at the start of the caster's turn 10 rounds after casting,
+even if that caster is no longer able to act. Cards remain immutable.
+
 ## 14. Conditions and effect lifecycle
 
 Combat-relevant conditions are universal rules, not source-specific implementations. Sources apply/remove/configure them.
