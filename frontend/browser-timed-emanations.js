@@ -26,11 +26,11 @@
       const events = [];
       const all = members(setup);
       for (const source of all) {
-        if (source.side === target.side) continue;
         for (const action of activeEmanations(source)) {
           const distance = S().distance(source, target);
           const aura = action.hostileStartTurnConditionAura;
-          if (aura && aura.trigger === "enemy_turn_start" && distance <= aura.radius_ft) {
+          if (aura && aura.trigger === "enemy_turn_start" && distance <= aura.radius_ft
+            && (aura.recipient_scope === "all" || source.side !== target.side)) {
             const immunityId = `${action.id}:success-immunity:${source.combatant_id}`;
             const immune = (target.state.timed_effects || []).some((effect) => effect.effect_id === immunityId);
             const conditionImmunity = window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
@@ -76,6 +76,8 @@
                   endsIfSourceIncapacitated: Boolean(action.endsIfSourceIncapacitated),
                   endsIfSourceDead: Boolean(action.endsIfSourceDead),
                   useDefaultPoisonRecovery: false,
+                  suppressReactions: Boolean(aura.suppress_reactions),
+                  controlLimits: aura.control_limits || null,
                 });
                 if (condition) applied.push(condition);
               }
@@ -94,7 +96,8 @@
           }
 
           const emanation = action.startTurnEmanationDamage;
-          if (!emanation || !["enemy_turn_start", "enter_or_start"].includes(emanation.trigger || "enemy_turn_start")) continue;
+          if (source.side === target.side || !emanation
+            || !["enemy_turn_start", "enter_or_start"].includes(emanation.trigger || "enemy_turn_start")) continue;
           window.IRON_PIT_BROWSER_EMANATION_SPEED?.sync(setup);
           const hit = window.IRON_PIT_BROWSER_EMANATION_SAVE_DAMAGE.resolveHit(
             sequence, round, source, target, action, setup, `${round}:${target.combatant_id}`,
