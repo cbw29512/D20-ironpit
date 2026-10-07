@@ -8,7 +8,7 @@ from app.content.monster_source_2014 import SourceMonster2014
 logger = logging.getLogger(__name__)
 _POOR_DEPTH_PERCEPTION = "Poor Depth Perception"
 _DISTANCE_PATTERN = re.compile(
-    r"Poor Depth Perception.*?more than\\s+(\\d+)\\s+feet",
+    r"Poor Depth Perception.*?more than\s+(\d+)\s+feet",
     re.IGNORECASE | re.DOTALL,
 )
 
