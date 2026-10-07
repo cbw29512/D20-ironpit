@@ -559,3 +559,24 @@ An immutable attack slot may carry `PreviousAttackRequirement` for a preceding-s
 ## Random sequence repetition
 
 An immutable complete variant may carry `AttackSequenceRepetition` dice. Validate strict positive dice and maximum eight expanded slots before mutation. Select the variant under normal legal reach/printed mean potential, spend its one Action, roll once through shared dice, emit an auditable feature-roll event, and freeze the expanded slot list for the ordinary resolver. The local repetition count is never stored on cards/fight state; every later Action/fight rolls afresh. Preview uses mean repetitions without rolling. Ordinary retargeting, previous-slot conditions, reactions, death/interruption and costs remain owned by existing engine functions. Source names/IDs are labels and immutable inputs only.
+
+## Turn-start persistent targeting overrides
+
+A source may declare a persistent targeting-policy override with immutable source id/name,
+an HP eligibility threshold, a trigger die/threshold, a target mode, and an exit rule.
+Fresh fight state stores only active source ids. The universal start-turn phase rolls only
+for inactive eligible rules; the source name is audit/player-facing metadata and never a
+dispatch key.
+
+The supported target mode `nearest_visible_creature` reuses the ordinary distance,
+visibility, Charmed-target restriction, and live-combatant predicates, but deliberately
+widens candidate scope across both encounter sides. While active, it returns only the
+nearest legal visible creature so downstream movement/action/attack policy cannot replace
+that source-required target with formation preference or damage scoring. Healing that
+restores the source to effective full HP clears rules that declare `ends_on_full_hp`.
+Fresh matches start with no active override ids.
+
+This primitive does not imply support for unrelated clauses such as attacking battlefield
+objects or control by an external creator. Those clauses remain independently classified
+until the arena/source model can represent them exactly.
+
