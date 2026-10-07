@@ -10,6 +10,7 @@ from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import BattleMapDefinition, GridPosition
+from scripts.browser_template_serializer import template_row
 
 
 def _source(monster_id: str):
@@ -84,6 +85,13 @@ def test_gorgon_binds_existing_save_recharge_and_staged_petrification() -> None:
         if rule.resource_id == "petrifying-breath"
     )
     assert recharge.minimum_roll == 5
+
+    browser = template_row(template)
+    browser_action = next(
+        item for item in browser["saving_throw_actions"]
+        if item["id"] == "petrifying-breath"
+    )
+    assert browser_action["failedSaveTimedEffect"]["repeatSaveFailureConditionId"] == "petrified"
 
 
 def test_gorgon_repeat_save_success_removes_restrained() -> None:
