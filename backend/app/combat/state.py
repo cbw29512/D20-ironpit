@@ -66,6 +66,7 @@ def terminate_turn(state: CombatantState, reason: str) -> None:
 def begin_turn(state: CombatantState) -> list[tuple[str, str, int]]:
     try:
         state.turn_terminated = False
+        state.turns_started_count += 1
         state.turn_termination_reason = None
         state.disengaged_this_turn = False
         state.dash_uses_this_turn = 0
