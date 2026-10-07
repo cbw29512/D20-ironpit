@@ -8,20 +8,9 @@ from app.combat.spellcasting import slot_spell_available
 from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import ConditionRemovalAction
+from app.combat.universal_condition_actions import WAKE_SLEEPER_ACTION
 
 logger = logging.getLogger(__name__)
-
-WAKE_SLEEPER_ACTION = ConditionRemovalAction(
-    id="wake-sleeper",
-    name="Wake Sleeper",
-    action_cost="action",
-    range_ft=5,
-    target_mode="ally",
-    removable_conditions=["unconscious"],
-    max_conditions_per_use=1,
-    requires_explicit_effect_permission=True,
-    animation="condition-removal",
-)
 
 
 # Lower is more urgent. This is deterministic Iron Pit AI policy, not a RAW rule.
