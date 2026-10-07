@@ -9,6 +9,8 @@ logger = logging.getLogger(__name__)
 class AttackActionSlot(BaseModel):
     attack_ids: list[str] = Field(default_factory=list, max_length=16)
     save_action_ids: list[str] = Field(default_factory=list, max_length=16)
+    requires_previous_hit: bool = False
+    same_target_as_previous: bool = False
 
     @model_validator(mode="after")
     def require_choice(self) -> "AttackActionSlot":
