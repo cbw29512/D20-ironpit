@@ -255,3 +255,13 @@ Run the complete permanent browser regression command list and production wiring
 - Do not use stale generated counts from memory. Recompute/report from the exact current commit.
 - Do not copy outdated uploaded specs or registry dumps into the repo. If external material conflicts with current repository authority, stop and reconcile the conflict explicitly.
 - **Netlify autopublish is locked.** Never trigger a Netlify deploy, re-enable Git-connected builds, weaken the repository build lock, or publish Iron Pit as a side effect of a push/merge. Routine development and verification stay in repository CI/local-static checks. A production publish requires Chris to explicitly say to publish/unlock Iron Pit; completion of a feature, PR, milestone, certification gate, or merge is not publish approval.
+
+## Verification once per finished monster batch (Chris, 2026-10-06)
+
+Build the monsters; do not repeatedly recheck unchanged engine code. Run one focused
+verification of the changed family while implementing. When that batch is complete,
+push its final head once and let required CI run the full suites. Do not also run
+full local Python/browser suites that CI already covers. Re-run a focused check only
+after a relevant change, failure, or unresolved correctness concern. Generation and
+required final-head gates remain necessary; repeated clean passes are not progress.
+Use CI status reads to learn completion, not as a reason to restart validation.

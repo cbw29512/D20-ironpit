@@ -1,73 +1,75 @@
 # Iron Pit context transfer
 
-generated_at: 2026-10-07, after PR #630 merge
-main_sha: `35684e3d0ae9dd745a62722617ceed23c6d43ef3` (merged source baseline; subsequent closeout documentation changes no combat source)
-active_lane: Complete 2014 source monsters, one semantic family per PR.
+generated_at: 2026-10-07, after PR #631 merge
+main_sha: `7c1199a4a4d1c6241b472bc28eadb235d58b8910` (merged source baseline; subsequent closeout documentation changes no combat source)
+active_lane: 2014 monster completion through existing universal primitives
 
 ## Authoritative status
 
-[Operating status](CURRENT_OPERATING_STATUS.md), [fix tracker](MONSTER_FIX_TRACKER.md),
-[generated blockers](MONSTER_BLOCKERS_2014.md), and [current audit](INCLUDED_WEAPON_DAMAGE_AUDIT.md).
-Repository truth overrides this cache. Netlify is locked; Grok owns art/presentation.
+PR #631 merged. Complete source Multiattack alternatives select legal melee reach,
+otherwise ranged, then highest printed damage. Fixed Gladiator shield remains
+AC16; conditional two-handed Spear is preserved and unavailable with that loadout.
+Cards remain immutable; normal attack resolution and fresh fight state own costs,
+interruption, effects, and reset. Production is browser-only. Netlify stays locked.
 
 ## Active PRs
 
-No active combat PR remains; #630 is merged. Refetch open PRs and exact current
-main before new work; this packet is a cache of the stated source baseline.
+No remaining active combat PR at closeout. #631 final feature head was
+`7034cf80341cb842c04a1b90a028e33cdb5525ad`; all required gates succeeded before merge.
 
 ## Recent merges
 
-#630 included weapon traits is merged after all gates. #629 susceptibility is
-complete. #625 remains closed unmerged reference only.
+#631: legal reach/highest damage policy and complete Multiattack source alternatives.
+#630: seven included weapon damage traits and magical qualifiers.
+#629: susceptibility Dispel/Stunned and terminal antimagic.
 
 ## Verified certification
 
-Recomputed against the actual merged source baseline using source/paired reports and generated
-manifest verification: 184/327 2014 monsters, 141/330 2024 monsters, 240/240 heroes
-per edition. All 143 blocked 2014 cards remain blocked. No promotion in this batch.
-Verified source head: `a9e229601cdce17ecb6cb856a4f8be85e69fbd05`; all four required gates passed,
-including 2,730 Python tests and 218 browser commands. Exact workflow links are
-in the fix tracker. Later documentation-only commits do not inherit its CI status.
+Source baseline: `7c1199a4a4d1c6241b472bc28eadb235d58b8910`. 2014 monsters 187/327; 2024 monsters
+141/330; heroes 240/240 in each edition. CI: 2,760 Python tests, all 219 browser
+commands. Local final focused pass: 133 tests. [Exact-head gates](MONSTER_FIX_TRACKER.md).
 
 ## Current subsystem
 
-- Immutable source: printed trait/action text, base damage and typed on-hit riders.
-- Runtime state: existing temporary fight HP/audit; no new state or lifecycle.
-- Python: generic attack compiler, damage components, conditional defenses.
-- Browser: production attack/mixed damage and conditional defenses.
-- Generated path: ordinary runtime/static exporters and blocker list generator.
-- Tests: source/compiler test and source-derived Python/browser parity fixture.
-- Edition: 2014 bindings only; no matching native 2024 traits were found.
+Immutable `AttackActionDefinition` uses ordinary slots or complete variants.
+`unavailable_reason` preserves conditional attacks incompatible with fixed gear.
+Python: attack_action_sequences / attack_action_choices / attack_actions.
+Browser: formation / multiattack-choices / multiattack. Generated path: capability
+registry, browser serializer, static site/exporters, certification manifests.
+Permanent tests: source sequence proof/mutations, source-derived JSON oracle parity,
+range policy in both editions, atomic rejection, natural 1, immutable card/reset.
 
 ## Open A-class correctness debt
 
-No A-class debt remains in the touched binding subsystem. The Angelic magical
-qualifier omission is fixed and verified in both engines.
-Printed included dice are validated without adding a second damage grant.
-Other card mechanics remain fail-closed, including Surprise Attack, Heated Body,
-Salamander Tail automatic hit, multiattack choice, spells/healing/forms/legendary
-options. See M-005/M-009/M-010 and generated blockers; do not strip those mechanics.
+No unresolved defect in the certified sequence tranche. Unsupported source mechanics
+remain fail-closed blockers: Medusa Petrifying Gaze; Veteran/Half-Red Dragon Veteran
+conditional offhand binding; Grick hit follow-up; Violet Fungus random count.
 
 ## Open B-class architecture debt
 
-The source model now retains action text for independent payload validation.
-No duplicated resolver or new combat primitive is introduced.
+Future source-only bindings should consume the certified sequence/availability
+schema; do not recreate attack resolution or mutable equipment state.
 
 ## Parked C-class cleanup
 
-Unrelated cosmetics/art/presentation remain outside this lane.
+Grok owns art/presentation. No art edits belong in this lane.
 
 ## Locked decisions
 
-Rules contract §13: susceptibility Dispel is existing Stunned for 10 rounds,
-unchanged HP/no save; antimagic is terminal. Global Unconscious is unchanged.
-This batch introduces no new rules interpretation.
+Rules contract §10: legal reach selects weapon mode, highest legal printed damage,
+printed counts/combinations retained, Gladiator keeps shield. Universal architecture:
+source-preserving slots/variants and fixed availability facts. AGENTS.md: one
+focused changed-family verification and one final-head CI pass; no duplicate full
+local validation.
 
 ## Next exact action
 
-Re-anchor exact main/open work, then audit alternative-count Multiattack for
-Gladiator and Bandit Captain against shared action-slot/selection primitives (M-011).
+Bind Veteran/Half-Red Dragon Veteran compatible source offhand loadouts through
+existing slots/variants and availability facts (M-012), preserving all conditional
+printed attacks.
 
 ## Do not carry forward
 
-Stale counts, previous-head workflow success, closed #625 code, or chat-only decisions.
+Old 184/327 baseline, superseded row-choice assertions, old blocked-card claims,
+prior-head CI results, or unmerged #625 implementations. Reconstruct repository
+truth if main or a feature head changes.

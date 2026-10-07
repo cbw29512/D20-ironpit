@@ -1,7 +1,7 @@
 # Current operating status
 
-Updated 2026-10-07 after PR #630 merge.
-Merged source baseline audited: `35684e3d0ae9dd745a62722617ceed23c6d43ef3`. See the fix tracker for exact-head workflow evidence.
+Updated 2026-10-07 after PR #631 merge.
+Merged source baseline audited: `7c1199a4a4d1c6241b472bc28eadb235d58b8910`. See the fix tracker for exact-head workflow evidence.
 Active fix queue: [Monster fix tracker](MONSTER_FIX_TRACKER.md).
 Per-monster source blockers: [Generated 2014 list](MONSTER_BLOCKERS_2014.md).
 
@@ -9,7 +9,7 @@ This file is operating authority for **what to work on next**. Combat rules rema
 
 ## Clean baseline
 
-PR #624 is the historical reset point. PR #630 is the latest accepted monster tranche; source-validated included weapon traits and the magical qualifier passed all four exact-head gates. The 2014 baseline remains 184/327 because these seven cards retain independent blockers.
+PR #624 is the historical reset point. PR #631 is the latest accepted monster tranche. Complete Multiattack alternatives and legal reach/highest damage selection passed all four exact-head gates. Bandit Captain, Gladiator, and Lizardfolk bring the 2014 baseline to 187/327.
 The required gates for every new mechanic tranche are:
 
 - CI;
@@ -27,10 +27,10 @@ Do not revive or extend #625. Reimplement only still-correct pieces from current
 |---|---|---:|
 | 2014 | Canonical pregens | **240 / 240** |
 | 2024 | Canonical pregens | **240 / 240** |
-| 2014 | Source monsters | **184 / 327** |
+| 2014 | Source monsters | **187 / 327** |
 | 2024 | SRD monsters | **141 / 330** |
 
-Counts above describe the #630 source baseline; M-011 branch progress and pending gates are recorded in the fix tracker. Documentation commits that follow this source baseline do not add combat behavior; recheck current repository truth before the next mechanic tranche.
+Counts above were verified on the #631 merged source baseline. The tracker records exact-head gates; documentation-only closeout commits do not add combat behavior. Documentation commits that follow this source baseline do not add combat behavior; recheck current repository truth before the next mechanic tranche.
 
 ## Current completion order
 
@@ -75,12 +75,11 @@ Only `ENGINE_TRULY_MISSING` justifies a new universal engine primitive.
 
 ## Immediate next action
 
-Next source audit: alternative-count Multiattack for Gladiator (three melee or two ranged attacks), with Bandit Captain as a related paired catch-up candidate. Classify against shared action slots/selection before coding. See M-011 in the [fix tracker](MONSTER_FIX_TRACKER.md).
+Next source-only bind: Veteran and Half-Red Dragon Veteran conditional offhand Multiattack. Reuse the now-certified sequence selector and fixed loadout availability facts; audit compatible printed weapons before binding. Do not rebuild the attack engine. M-012 tracks the remaining loadout condition.
 
-PR #630 is complete. Its [included weapon audit](INCLUDED_WEAPON_DAMAGE_AUDIT.md)
-records seven resolved traits, all gates, and the native 2024 check. The [143
-blocked monsters](MONSTER_BLOCKERS_2014.md) still retain their other mechanics.
-Do not reopen resolved #629/#630 debt or treat trait completion as card readiness.
+PR #631 is complete. Its [sequence audit](MULTIATTACK_SEQUENCE_AUDIT.md) records the source combinations, fixed Gladiator shield, native 2024 differences, and all exact-head gates. [140 blocked 2014 cards](MONSTER_BLOCKERS_2014.md) retain their other mechanics. Medusa's sequence is bound but Petrifying Gaze remains unsupported.
+
+Verification follows the single-batch policy in AGENTS.md: one focused changed-family check and one required final-head CI pass. Do not duplicate full CI locally or restart clean validation while monsters await implementation.
 
 Historical work from #625 may be used as evidence, but every reused behavior must be revalidated against current main and implemented in a fresh branch.
 

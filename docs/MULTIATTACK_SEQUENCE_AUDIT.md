@@ -1,6 +1,6 @@
 # Complete Multiattack sequence audit
 
-Owner: ChatGPT. Branch: `fix/2014-multiattack-sequences`. Status: ACTIVE.
+Owner: ChatGPT. Branch: `fix/2014-multiattack-sequences`. Status: DONE, merged #631.
 Starting main: `d9dc236477e85a86dcaacfd99470abdd883ad11f`; no overlapping open PR at intake.
 Scope: immutable sequence schema, shared attack selection/legality, source bindings,
 serializer, generated rosters, and permanent Python/browser tests. Grok's art files
@@ -65,12 +65,19 @@ Independent 2024 binding expansion remains outside the 2014 completion lane.
 
 ## Verification truth
 
-Local source audit compiled all 187 admitted 2014 cards. Generated manifests agree:
-240 heroes per edition, 187/327 2014 monsters, 141/330 2024 monsters. These are
-current branch results, not a claim that exact-head CI has passed. Local validation
-passed 133 focused Python tests, all 219 CI browser commands, and the backend-free,
-Pages entry, battlefield wiring, and Netlify configuration checks. Required four
-exact-head workflow results and merge SHA will be recorded after completion.
+Verified feature head: `7034cf80341cb842c04a1b90a028e33cdb5525ad`. Merged source baseline: `7c1199a4a4d1c6241b472bc28eadb235d58b8910`.
+All 187 admitted 2014 source cards compiled. Generated manifests verify 240 heroes
+per edition, 187/327 2014 monsters, and 141/330 2024 monsters. CI passed 2,760
+Python tests and all 219 browser commands. Local focused verification passed 133
+tests; production wiring/build checks passed. All four final-head gates succeeded:
+
+- [CI](https://github.com/cbw29512/D20-ironpit/actions/runs/37567999836): success on `7034cf80341cb842c04a1b90a028e33cdb5525ad`.
+- [2014 Basic Roster](https://github.com/cbw29512/D20-ironpit/actions/runs/37567999753): success on `7034cf80341cb842c04a1b90a028e33cdb5525ad`.
+- [Paired Edition Monster Report](https://github.com/cbw29512/D20-ironpit/actions/runs/37567999736): success on `7034cf80341cb842c04a1b90a028e33cdb5525ad`.
+- [2014 Hero Certification](https://github.com/cbw29512/D20-ironpit/actions/runs/37567999745): success on `7034cf80341cb842c04a1b90a028e33cdb5525ad`.
+
+These gates certify the feature head. Later documentation-only commits do not
+inherit its CI result. Netlify production remains locked.
 
 Touched debt repaired: row/reach contract conflict; incomplete rider damage scoring;
 attack counter mutation before legality; duplicated source paragraph parsing;
