@@ -18,6 +18,7 @@ from app.domain.capability_attacks import (
 from app.domain.character_builds import AbilityScores
 from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.damage_sources import ConditionalDamageDefense
+from app.domain.damage_taken_effects import DamageTakenTimedEffect
 from app.domain.damage_absorption import DamageAbsorptionRule
 from app.domain.tactical_actions import BonusActionTacticalGrant
 from app.domain.effect_removal import EffectRemovalAction, EffectTagConditionGrant
@@ -106,6 +107,7 @@ class CombatantDefinition(BaseModel):
     regeneration: RegenerationTrait | None = None
     damage_threshold_zero_hp_replacements: list[DamageThresholdZeroHpReplacement] = Field(default_factory=list)
     triggered_extra_attack_stacks: list[TriggeredExtraAttackStack] = Field(default_factory=list)
+    damage_taken_timed_effects: list[DamageTakenTimedEffect] = Field(default_factory=list)
     save_success_overrides: list[FailedSaveSuccessOverride] = Field(default_factory=list)
     visual: VisualLoadout
     source: str
