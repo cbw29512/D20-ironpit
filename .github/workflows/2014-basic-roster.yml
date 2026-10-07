@@ -22,6 +22,7 @@ on:
     paths:
       - "backend/app/content/monster_source_2014.py"
       - "backend/app/content/monster_basic_candidates_2014.py"
+      - "backend/app/content/monster_arena_neutral_traits_2014.py"
       - "backend/app/content/monster_basic_attack_effects_2014.py"
       - "backend/app/content/monster_definition_adapter_2014.py"
       - "backend/app/content/monster_trait_bindings_2014.py"

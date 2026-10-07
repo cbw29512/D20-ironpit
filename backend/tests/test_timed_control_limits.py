@@ -205,13 +205,12 @@ def test_printed_2014_slow_weaken_stat_blocks_are_not_one_bundle() -> None:
 def test_2014_slow_weaken_unlocks_only_save_action_only_cards() -> None:
     unlocked = {
         "copper-dragon-wyrmling", "young-copper-dragon", "adult-copper-dragon",
-        "gold-dragon-wyrmling", "young-gold-dragon",
+        "gold-dragon-wyrmling", "young-gold-dragon", "stone-golem",
     }
     parked = {
         "ancient-copper-dragon": "source:extra-action",
         "adult-gold-dragon": "source:extra-action",
         "ancient-gold-dragon": "source:extra-action",
-        "stone-golem": "source:trait",
     }
     by_id = {monster.id: monster for monster in load_monster_source_2014()}
     for monster_id in unlocked:

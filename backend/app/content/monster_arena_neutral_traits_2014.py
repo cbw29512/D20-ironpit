@@ -11,6 +11,8 @@ Ethereal Jaunt and Incorporeal Movement stay listed because the Pit forbids ente
 an ethereal/incorporeal movement state; those movement-only benefits never activate.
 Earth Glide, Tunneler, and Treasure Sense stay listed: the Pit has no destructible
 earth/rock or hidden metal/treasure for those traits to act on.
+Immutable Form stays listed while the supported combat surface has no hostile form-alter
+effect. Existing replacement-form support changes only the acting combatant's own form.
 """
 from __future__ import annotations
 
@@ -21,5 +23,5 @@ ARENA_NEUTRAL_TRAITS_2014 = frozenset({
     "Mimicry", "Earth Glide", "Running Leap", "Shark Telepathy", "Snow Camouflage", "Stone Camouflage",
     "Spider Climb", "Treasure Sense", "Tunneler", "Water Breathing", "Devil's Sight",
     "Underwater Camouflage", "Web Sense", "Web Walker", "Rejuvenation", "Hellish Rejuvenation",
-    "Wakeful", "Ethereal Jaunt", "Incorporeal Movement",
+    "Wakeful", "Ethereal Jaunt", "Incorporeal Movement", "Immutable Form",
 })
