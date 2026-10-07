@@ -10,6 +10,7 @@ from app.content.monster_charge_source_corrections_2014 import corrected_charge_
 from app.content.monster_conditional_damage_defenses_2014 import template_defense_fields_2014
 from app.content.monster_healing_2014 import healing_actions_2014, healing_resources_2014
 from app.content.monster_damage_taken_effects_2014 import damage_taken_timed_effects_2014
+from app.content.monster_targeting_overrides_2014 import turn_start_targeting_overrides_2014
 from app.content.monster_included_weapon_traits_2014 import weapon_damage_source_qualifiers_2014
 from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_contextual_save_defenses import contextual_save_defenses_2014
@@ -150,6 +151,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         resources=resources, recharge_rules=recharge_rules_2014(monster),
         regeneration=regeneration_trait_2014(monster),
         damage_taken_timed_effects=damage_taken_timed_effects_2014(monster),
+        turn_start_targeting_overrides=turn_start_targeting_overrides_2014(monster),
         damage_threshold_zero_hp_replacements=damage_threshold_zero_hp_replacements_2014(monster),
         save_success_overrides=[legendary_override] if legendary_override else [],
         combat_traits=modeled_combat_traits_2014(monster),
