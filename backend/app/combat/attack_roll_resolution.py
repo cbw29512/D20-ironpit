@@ -11,6 +11,7 @@ from app.combat.conditions import attack_roll_condition_sources
 from app.combat.conditional_attack_advantage import conditional_attack_advantage_sources
 from app.combat.d20_bonus_dice import apply_d20_bonus_die_if_useful
 from app.combat.dice import DiceProvider
+from app.combat.distance_attack_disadvantage import distance_attack_disadvantage_sources
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
 from app.combat.incoming_attack_bonus import (
     consume_next_incoming_attack_roll_flat_bonus,
@@ -76,6 +77,7 @@ def resolve_attack_roll(
             + sap_disadvantage(attacker)
             + next_attack_disadvantage_sources(attacker)
             + timed_ability_d20_disadvantage_sources(attacker, attack.attack_ability)
+            + distance_attack_disadvantage_sources(attacker, distance_ft)
         )
         range_disadvantage = attack_range_disadvantage_sources(attack.weapon, distance_ft, close_enemy_active)
         reckless_advantage = reckless_attack_advantage(attacker, attack)
