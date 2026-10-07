@@ -15,7 +15,7 @@ sets the work lane. Rules live in the rules contract, not this tracker.
 | P0 M-003 | Complete, merged #629 | Terminal resolver extraction left three browser test loaders missing their production dependency. | Shared runtime loaded; all 217 CI browser commands passed. |
 | P0 M-004 | Complete, merged #629 | Touched Stunned primitive omitted 2014 movement restriction. | Edition-aware shared speed predicates and permanent regressions passed in both runtimes. |
 | P1 M-005 | Deferred | Rug of Smothering remains blocked by attack representation, extra action, and Damage Transfer. | Audit each behavior and classify reuse before implementation. Susceptibility alone does not certify the rug. |
-| P1 M-006 | Next: M-016 | Remaining 2014 source roster is incomplete. | Generated blockers are current after #637: 194/327 admitted, 133 blocked. Continue source bindings through certified primitives. |
+| P1 M-006 | Active: M-018 | Remaining 2014 source roster is incomplete. | Generated blockers are current after #641: 197/327 admitted, 130 blocked. Continue source bindings through certified primitives. |
 | P1 M-007 | Audited for #629/#630 | Check 2024 source reuse without inventing matching traits. | Native 2024 constructs have no susceptibility; all 330 native trait texts lack the included weapon traits. No 2014 trait/qualifier copied. Repeat per family. |
 | P1 D-001 | Complete | Operating status still referenced PR #624 and 177/327 despite newer main. | Current merged baseline and final-head verification recorded below and in operating status. |
 | P1 M-008 | Complete, merged #630 | Seven 2014 source traits already include their damage: Brute (Bugbear/Gladiator), Heated Weapons (Azer/Salamander), Angelic Weapons (Deva/Planetar/Solar). | Pinned source validation, shared typed damage/magical qualifier, critical/defense/reset parity, and all four exact-head gates passed. Seven traits resolved; other card blockers remain. [Audit](INCLUDED_WEAPON_DAMAGE_AUDIT.md). |
@@ -30,7 +30,9 @@ sets the work lane. Rules live in the rules contract, not this tracker.
 | P1 M-014 | Complete, merged #635 | Violet Fungus rolls 1d4 Rotting Touch attacks. | One logged count roll and one Action, ordinary attacks/retarget/interruption/reset. 70 focused Python cases, seven new browser scenarios, affected prior fixtures and all four final-head gates passed. [Audit](FUNGUS_SEQUENCE_AUDIT.md). |
 
 | P1 M-015 | Complete, merged #637 | Brass Dragon Sleep Breath for Wyrmling/Young/Adult required failed-save Unconscious with damage expiry and a printed ally Action to wake; Ancient Brass also had an unrelated extra-action blocker. | Reused save-area, shared breath recharge, timed Unconscious, ends-on-damage, and generic `wake-sleeper`; source parameters remain edition/card data. All four exact-head gates passed. |
-| P1 M-016 | Queued, Bronze Dragon save-action family | Wyrmling/Young each retain only `mechanic:save-action`; Adult/Ancient also retain independent `source:extra-action`. | Read exact 2014 source action, decompose behavior, reuse existing universal save/movement/timing primitives where exact; park any genuinely missing semantic instead of inventing a Bronze-specific resolver. |
+| P1 M-016 | Complete, merged #640 | Bronze Dragon Repulsion Breath required failed-save forced movement with source-owned distance. | Reused save-area/recharge and widened the generic save capability to carry push distance through shared forced movement. Wyrmling/Young admitted; Adult/Ancient retain unrelated extra-action blockers. All four exact-head gates passed. |
+| P1 M-017 | Complete, merged #641 | Gorgon Petrifying Breath required Restrained followed by a repeat save that escalates to Petrified on failure. | Reused the shared timed-condition lifecycle and added generic repeat-save failure escalation metadata. Gorgon admitted; all four exact-head gates passed. |
+| P1 M-018 | Active, Cyclops Poor Depth Perception | Cyclops is blocked only by distance-based attack-roll Disadvantage beyond its printed threshold. | Bind source threshold into a generic attack Disadvantage source, prove Python/browser parity, regenerate outputs, then exact-head CI. |
 
 ## Current evidence
 
@@ -86,3 +88,16 @@ M-012 completed #632. Fixed compatible printed offhand preparation follows rules
 ## M-015 completion record
 
 #637 completed the Brass Dragon Sleep Breath family for Wyrmling, Young, and Adult through shared save-area, recharge, timed Unconscious, ends-on-damage, and generic wake-sleeper behavior. Ancient Brass lost the save-action blocker but remains parked on its independent extra-action blocker. The implementation manuals were split into their own merged PR #638 before #637 merged, so combat and documentation ownership remain clean.
+
+
+## M-016 completion record
+
+#640 completed Bronze Dragon Repulsion Breath through a generic failed-save push distance carried by source data into the shared forced-movement engine. Wyrmling/Young became READY; Adult/Ancient remain parked only on unrelated extra-action behavior.
+
+## M-017 completion record
+
+#641 completed Gorgon Petrifying Breath through generic staged condition escalation: Restrained, repeat save at source timing, then Petrified on failure. No Gorgon-specific resolver.
+
+## M-018 active record
+
+Cyclops Poor Depth Perception is a single-blocker source trait. The intended binding is a source-owned distance threshold consumed by a generic attack-roll Disadvantage source in Python/browser parity. No creature-name or weapon-name dispatch.
