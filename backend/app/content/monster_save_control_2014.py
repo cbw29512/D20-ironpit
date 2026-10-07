@@ -20,6 +20,7 @@ _CONTROL_KEYS = frozenset({
     "ends_on_damage",
     "ends_if_source_incapacitated",
     "ends_if_source_dead",
+    "allowed_removal_action_ids",
     "speed_multiplier",
     "blocks_reactions",
     "action_bonus_exclusive",
@@ -80,6 +81,8 @@ def compile_failed_save_control_2014(action: dict[str, object]) -> FailedSaveTim
             kwargs["ends_if_source_incapacitated"] = True
         if control.get("ends_if_source_dead"):
             kwargs["ends_if_source_dead"] = True
+        if control.get("allowed_removal_action_ids"):
+            kwargs["allowed_removal_action_ids"] = list(control["allowed_removal_action_ids"])
         if control.get("source_effect_immunity_on_end"):
             kwargs["source_effect_immunity_on_end"] = True
         if control.get("speed_multiplier") is not None:
