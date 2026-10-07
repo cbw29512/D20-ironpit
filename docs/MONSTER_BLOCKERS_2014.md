@@ -83,7 +83,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Ettercap | attack:complex, attack:damage-type, mechanic:recharge | — |
 | Fire Elemental | attack:complex, source:trait | Fire Form, Water Susceptibility |
 | Flameskull | attack:range, mechanic:spellcasting, source:trait | Spellcasting |
-| Flesh Golem | source:trait | Berserk, Aversion of Fire |
+| Flesh Golem | source:trait | Berserk |
 | Frog | arena:neutral | — |
 | Gelatinous Cube | source:extra-action, source:trait | Ooze Cube, Transparent |
 | Ghost | mechanic:recharge, source:extra-action, source:trait | Ethereal Sight |
