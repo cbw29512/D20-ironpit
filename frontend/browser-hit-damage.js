@@ -34,14 +34,12 @@
     };
     return result;
   }
-
   function saveDamageCausedZero(hpBufferBefore, appliedTotal, components, effect, saveComponentPresent) {
     if (!effect?.zeroHpRider || !saveComponentPresent || !components.length) return false;
     const saveApplied = components[components.length - 1].applied_total;
     const nonSaveApplied = appliedTotal - saveApplied;
     return saveApplied > 0 && hpBufferBefore > nonSaveApplied && hpBufferBefore <= appliedTotal;
   }
-
   function applyZeroHpSaveDamageRider(defender, effect, turnKey) {
     const rider = effect.zeroHpRider;
     if (!rider) return;
@@ -67,7 +65,6 @@
       });
     }
   }
-
   function modifierDamageComponents(attacker, targetId, critical) {
     return M().bonusDamage(attacker, targetId).map((modifier) => {
       const count = modifier.dice_count * (critical ? 2 : 1);
@@ -133,9 +130,12 @@
 
   function resolve(attacker, defender, attack, critical, mode, turnKey, options = {}) {
     const hpBufferBefore = defender.current_hp + defender.temporary_hp;
+    const members = options.setup ? [...options.setup.heroes, ...options.setup.monsters] : [];
+    const sourceMember = members.find((item) => item.state === attacker), targetMember = members.find((item) => item.state === defender);
+    const adjacentAlly = Boolean(sourceMember && targetMember && window.IRON_PIT_BROWSER_STATE?.hasAdjacentActiveAlly(sourceMember, targetMember, options.setup));
     const base = R().weaponDamage(
       attacker, attack, critical, mode, turnKey, options.bonusDamage || null,
-      defender, Boolean(options.sneakAttackAllyAvailable),
+      defender, Boolean(options.sneakAttackAllyAvailable), adjacentAlly,
     );
     const rolled = [
       ...base.components,

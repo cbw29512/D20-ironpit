@@ -112,7 +112,7 @@
     }
   }
 
-  function weaponDamage(attacker, attack, critical, mode, turnKey, bonusDamage = null, target = null, sneakAllyAvailable = false) {
+  function weaponDamage(attacker, attack, critical, mode, turnKey, bonusDamage = null, target = null, sneakAllyAvailable = false, activeAllyAdjacentToTarget = false) {
     const qualifiers = window.IRON_PIT_BROWSER_MODIFIERS?.damageSourceQualifiers?.(attacker, attack)
       || new Set(["attack", "weapon", attack.kind, ...(attack.damageSourceQualifiers || [])]);
     const selectedDamageType = chooseDamageType(attacker, attack, target, [...qualifiers]);
@@ -160,7 +160,7 @@
     if (frenzy) components.push(bonusComponent(frenzy, critical));
     const postHit = window.IRON_PIT_BROWSER_POST_HIT_DAMAGE?.bonusDamage(attacker, attack, turnKey, target);
     if (postHit) components.push(bonusComponent(postHit, critical));
-    const oncePerTurnHits = window.IRON_PIT_BROWSER_ONCE_PER_TURN_HIT_DAMAGE?.bonusDamages(attacker, turnKey, target, attack) || [];
+    const oncePerTurnHits = window.IRON_PIT_BROWSER_ONCE_PER_TURN_HIT_DAMAGE?.bonusDamages(attacker, turnKey, target, attack, activeAllyAdjacentToTarget) || [];
     for (const oncePerTurnHit of oncePerTurnHits) components.push(bonusComponent(oncePerTurnHit, critical));
     const brutalStrike = window.IRON_PIT_BROWSER_BRUTAL_STRIKE?.bonusDamage(
       attacker, attack, turnKey, mode === "disadvantage",

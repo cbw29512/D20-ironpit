@@ -13,6 +13,7 @@ class OncePerTurnWeaponHitDamageRider(BaseModel):
     flat_bonus: int = Field(default=0, ge=0, le=30)
     damage_type: str | None = Field(default=None, min_length=1)
     requires_target_below_max_hp: bool = False
+    requires_active_ally_adjacent_to_target: bool = False
     target_creature_types: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")

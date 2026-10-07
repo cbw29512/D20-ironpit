@@ -15,6 +15,7 @@ from app.content.monster_passive_grants_2014 import (
 )
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_range_trait_bindings_2014 import supports_poor_depth_perception_2014
+from app.content.monster_once_per_turn_traits_2014 import martial_advantage_rider_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.content.monster_terminal_effects_2014 import bound_terminal_effect_trait_names_2014
 from app.content.monster_zero_hp_prevention_2014 import bound_zero_hp_trait_names_2014
@@ -51,17 +52,14 @@ def supports_reckless_2014(monster: SourceMonster2014) -> bool:
         logger.exception("Failed to classify 2014 Reckless support for %s.", monster.name)
         raise
 
-
 def supports_cunning_action_2014(monster: SourceMonster2014) -> bool:
     """Bind printed Cunning Action to the shared bonus-action Dash decision path."""
     return _CUNNING_ACTION in monster.trait_names
-
 
 def _base_sneak_attack_eligible(attack: SourceAttack2014) -> bool:
     return attack.kind == "ranged" or (
         attack.kind == "melee" and attack.name in _FINESSE_WEAPON_NAMES_2014
     )
-
 
 def sneak_attack_d6_2014(monster: SourceMonster2014) -> int:
     """Parse printed Sneak Attack dice from pinned SRD trait text."""
@@ -82,7 +80,6 @@ def sneak_attack_d6_2014(monster: SourceMonster2014) -> int:
         logger.exception("Failed to parse 2014 Sneak Attack for %s.", monster.name)
         raise
 
-
 def sneak_attack_eligible_2014(monster: SourceMonster2014, attack: SourceAttack2014) -> bool:
     """Mark only attacks that satisfy the shared ranged-or-Dexterity Sneak Attack profile."""
     return sneak_attack_d6_2014(monster) > 0 and _base_sneak_attack_eligible(attack)
@@ -95,11 +92,11 @@ def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFe
             cunning_action=supports_cunning_action_2014(monster),
             sneak_attack_d6=sneak_attack_d6_2014(monster),
             saving_throw_advantage_grants=saving_throw_advantage_grants_2014(monster),
+            once_per_turn_weapon_hit_damage_rider=martial_advantage_rider_2014(monster),
         )
     except Exception:
         logger.exception("Failed to compile 2014 progression features for %s.", monster.name)
         raise
-
 
 
 def bonus_attack_grants_2014(monster: SourceMonster2014) -> list[BonusAttackGrant]:
@@ -154,6 +151,9 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(_POOR_DEPTH_PERCEPTION)
         if supports_cunning_action_2014(monster):
             bound.add(_CUNNING_ACTION)
+        martial_advantage = martial_advantage_rider_2014(monster)
+        if martial_advantage:
+            bound.add(martial_advantage.source_name)
         if sneak_attack_d6_2014(monster) > 0:
             bound.add(_SNEAK_ATTACK)
         bound.update(bound_passive_trait_names_2014(monster))
