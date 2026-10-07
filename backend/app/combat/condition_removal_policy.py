@@ -12,8 +12,13 @@ from app.domain.models import ConditionRemovalAction
 logger = logging.getLogger(__name__)
 
 # Lower is more urgent. This is deterministic Iron Pit AI policy, not a RAW rule.
+WAKE_SLEEPER_ACTION = ConditionRemovalAction(
+    id="wake-sleeper", name="Wake Sleeper", action_cost="action", range_ft=5,
+    target_mode="ally", removable_conditions=["unconscious"], animation="condition-ended",
+)
+
 CONDITION_PRIORITY = {
-    "paralyzed": 0, "stunned": 0, "incapacitated": 0, "petrified": 0,
+    "paralyzed": 0, "stunned": 0, "incapacitated": 0, "petrified": 0, "unconscious": 0,
     "blinded": 1, "restrained": 1,
     "poisoned": 2, "frightened": 2, "charmed": 2,
     "deafened": 3, "grappled": 3,
@@ -109,7 +114,7 @@ def choose_condition_removal_action(
     try:
         allies = setup.heroes if remover.side == "heroes" else setup.monsters
         choices: list[tuple[ConditionRemovalAction, EncounterCombatant, list[str]]] = []
-        for action in remover.state.template.condition_removal_actions:
+        for action in [*remover.state.template.condition_removal_actions, WAKE_SLEEPER_ACTION]:
             if action.action_cost == "reaction" or not is_available(remover.state, action.action_cost):
                 continue
             if action.expends_spell_slot and not slot_spell_available(remover.state, turn_key):
