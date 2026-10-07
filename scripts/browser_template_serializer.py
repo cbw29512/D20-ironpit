@@ -1,5 +1,4 @@
 from __future__ import annotations
-from browser_attack_action_slots import attack_slot_row
 
 import logging
 from typing import Any
@@ -10,8 +9,10 @@ from app.domain.traits import CombatTrait
 
 try:
     from scripts.browser_recharge_serializer import recharge_rows
+    from scripts.browser_attack_action_slots import attack_slot_row
 except ModuleNotFoundError:
     from browser_recharge_serializer import recharge_rows
+    from browser_attack_action_slots import attack_slot_row
 
 logger = logging.getLogger(__name__)
 

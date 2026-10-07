@@ -13,3 +13,5 @@ Permanent source/compiler/serializer/browser fixture has eight scenarios: hit, m
 Native 2024 audit: Grick makes one Beak and one Tentacles attack without a previous-hit condition. Beak is 2d6+2 Piercing; Tentacles is 1d10+2 Slashing and has an independently declared Medium-or-smaller grapple rider (escape DC 12). Printed order and numbers differ from 2014. No 2014 predicate/dice/order are copied; normal slots remain unchanged. 2024 readiness stays 141/330.
 
 Focused verification: 58 Python source/schema/sequence cases passed, eight new browser parity scenarios passed, and the existing complete-sequence and Veteran browser fixtures passed through the changed selector. One final-head CI pass follows completed generation/re-anchor.
+
+Initial CI stopped at collection because the extracted slot serializer was imported only as a direct script sibling. Added both package (`scripts.*`) and direct-script import modes, matching the existing recharge serializer convention. Focused imports verify both paths. Monster browser CI was already clean; exact final-head gates remain required after this import correction.
