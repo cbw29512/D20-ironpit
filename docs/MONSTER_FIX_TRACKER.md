@@ -29,7 +29,7 @@ sets the work lane. Rules live in the rules contract, not this tracker.
 | P1 M-013 | Complete, merged #633 | Tentacles hit permits one Beak attack against the same target. The printed dependency is now represented by immutable slot facts. | Generic previous-hit/actual-target requirements bind Grick. 58 focused Python cases, eight browser scenarios, and all four final-head gates passed. [Audit](GRICK_SEQUENCE_AUDIT.md). |
 | P1 M-014 | Complete, merged #635 | Violet Fungus rolls 1d4 Rotting Touch attacks. | One logged count roll and one Action, ordinary attacks/retarget/interruption/reset. 70 focused Python cases, seven new browser scenarios, affected prior fixtures and all four final-head gates passed. [Audit](FUNGUS_SEQUENCE_AUDIT.md). |
 
-| P1 M-015 | Queued, Brass Dragon sleep save family | Wyrmling/Young/Adult Brass Dragon only lack Sleep Breath binding. Ancient Brass has another extra-action blocker. | Reuse timed Unconscious, ends-on-damage and save-area/resource primitives; audit the printed Action-to-wake exit before source binding. Exact DC/durations/cones differ. |
+| P1 M-015 | Active, `feat/2014-brass-sleep-breath` | Wyrmling/Young/Adult Brass Dragon only lack Sleep Breath binding. Ancient Brass has another extra-action blocker. | Reuses shared save/recharge, timed Unconscious, ends-on-damage, effect-specific removal permissions, and universal 5-ft Action-to-wake. Focused source/Python/browser regressions added; final-head CI pending. Expected accepted yield: +3 (194/327), while Ancient retains `source:extra-action`. |
 
 ## Current evidence
 
