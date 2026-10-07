@@ -53,6 +53,7 @@ This is the search checklist before new engine code.
 | Temporary HP | apply/replace temporary HP | amount/source | combat state + browser state/healing paths |
 | Conditions | one canonical semantic state per condition | condition id, duration, exits | `domain/action_types.py`, `combat/condition_rules.py`, browser condition rules |
 | Timed effects | apply, expire and remove temporary effects | duration/timing/exit flags | timed-effect schema + Python/browser timed-condition modules |
+| Repeat-save escalation | after a failed repeat save, replace the current timed condition with another canonical condition | repeat save ability/DC/timing + `repeat_save_failure_condition_id` | `domain/save_effects.py`, `combat/failed_save_timed_apply.py`, `combat/condition_lifecycle.py`, browser timed/lifecycle modules |
 | Condition removal | remove allowed conditions through generic actions | action cost, target, removable ids | `combat/condition_removal*.py`, browser condition removal |
 | Action economy | legal/spent Action, Bonus Action, Reaction | cost/timing | `combat/action_economy.py`, `browser-action-economy.js` |
 | Resources | spend/restore limited or unlimited uses | resource id/count/cost | template resources + temporary runtime state |
@@ -75,6 +76,8 @@ Current shared condition vocabulary is defined in `backend/app/domain/action_typ
 `blinded, charmed, deafened, exhaustion, frightened, grappled, incapacitated, invisible, paralyzed, petrified, poisoned, prone, restrained, stunned, unconscious`.
 
 A source that applies one of these binds to that condition. It does not create a source-specific version.
+
+Staged conditions use the same rule. If a source says a failed save applies Restrained and a later failed repeat save becomes Petrified, the source supplies those condition IDs, DC, ability, and timing; the generic timed-effect/condition-lifecycle engine owns the transition and the universal Petrified consequence.
 
 Likewise, source-declared forced movement is data, not a named ability subsystem. For example, a breath weapon that says a failed save pushes a target supplies the save/DC/area/push distance; the generic save and forced-movement engines own resolution.
 
