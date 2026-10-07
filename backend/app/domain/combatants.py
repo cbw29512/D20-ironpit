@@ -63,6 +63,19 @@ from app.domain.weapons import (
     WeaponAttack,
     WeaponAttackKind,
 )
+WAKE_SLEEPER_ACTION = ConditionRemovalAction(
+    id="wake-sleeper",
+    name="Wake Sleeper",
+    action_cost="action",
+    range_ft=5,
+    target_mode="ally",
+    removable_conditions=["unconscious"],
+    max_conditions_per_use=1,
+    requires_explicit_effect_permission=True,
+    animation="condition-removal",
+)
+
+
 class VisualLoadout(BaseModel):
     armor: str
     main_hand: str
@@ -179,6 +192,14 @@ class CombatantTemplate(BaseModel):
         if not isinstance(values, dict):
             return values
         normalized = dict(values)
+        removal_actions = list(normalized.get("condition_removal_actions") or [])
+        removal_ids = {
+            getattr(item, "id", None) if not isinstance(item, dict) else item.get("id")
+            for item in removal_actions
+        }
+        if WAKE_SLEEPER_ACTION.id not in removal_ids:
+            removal_actions.append(WAKE_SLEEPER_ACTION.model_dump())
+        normalized["condition_removal_actions"] = removal_actions
         if "movement_modes" not in normalized and "speed_ft" in normalized:
             normalized["movement_modes"] = {"walk_ft": normalized["speed_ft"]}
         style = normalized.get("fighting_style")
