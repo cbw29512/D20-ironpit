@@ -6,12 +6,18 @@
   const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [] }
     : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [] };
 
-  function validatedSlots(member) {
+  function validatedVariants(member) {
     try {
       const definition = member.state.template.attack_action;
       if (!definition) return [];
-      const slots = definition.slots;
-      if (!Array.isArray(slots) || !slots.length || slots.length > 8) throw new Error("Invalid Multiattack slots.");
+      if (Boolean(definition.slots?.length) === Boolean(definition.variants?.length)) throw new Error("Multiattack requires slots or variants.");
+      const variants = definition.variants?.length ? definition.variants : [{ id: definition.id, slots: definition.slots }];
+      if (!Array.isArray(variants) || variants.length > 16 || new Set(variants.map((v) => v.id)).size !== variants.length) throw new Error("Invalid Multiattack variants.");
+      for (const variant of variants) {
+        if (![null, undefined, "melee", "ranged"].includes(variant.attackKind)) throw new Error("Invalid sequence mode.");
+        if (!Array.isArray(variant.slots) || !variant.slots.length || variant.slots.length > 8) throw new Error("Invalid Multiattack slots.");
+      }
+      const slots = variants.flatMap((v) => v.slots);
       const attacks = new Set((member.state.template.attacks || []).map((item) => item.id));
       const saves = new Set((member.state.template.saving_throw_actions || []).map((item) => item.id));
       for (const slot of slots) {
@@ -20,7 +26,11 @@
         const unknown = [...data.attackIds.filter((id) => !attacks.has(id)), ...data.saveActionIds.filter((id) => !saves.has(id))];
         if (unknown.length) throw new Error(`Unknown Multiattack IDs: ${unknown.join(", ")}`);
       }
-      return slots;
+      const byId = new Map((member.state.template.attacks || []).map((a) => [a.id, a]));
+      for (const variant of variants) {
+        if (variant.attackKind && variant.slots.some((slot) => slotData(slot).attackIds.some((id) => byId.get(id).kind !== variant.attackKind))) throw new Error("Multiattack variant contradicts its attack kind.");
+      }
+      return variants;
     } catch (error) {
       console.error("Failed browser Multiattack source validation", { id: member?.combatant_id, error });
       throw error;
@@ -42,18 +52,36 @@
     }
   }
 
-  function legalChoiceAvailable(member, setup) {
+  function sequenceDamage(member, setup, variant, mode) {
     try {
-      // Validate every slot before admitting any part of the Action.
-      return validatedSlots(member).some((slot) => {
-        const data = slotData(slot);
-        return Boolean(F().chooseSlotAttack(member, setup, data.attackIds) || saveChoice(member, setup, data));
-      });
-    } catch (error) {
-      console.error("Failed browser Multiattack legality", { id: member?.combatant_id, error });
-      throw error;
-    }
+      return variant.slots.reduce((total, slot) => {
+        const data = slotData(slot), choice = F().chooseSlotAttack(member, setup, data.attackIds, mode);
+        if (choice) return total + F().weaponMeanDamage(choice.attack);
+        const saved = saveChoice(member, setup, data);
+        const parts = saved?.save.damageComponents?.length ? saved.save.damageComponents : saved ? [saved.save] : [];
+        return total + parts.reduce((sum, p) => sum + (p.damageDiceCount ?? p.diceCount ?? 0) * ((p.damageDiceSize ?? p.diceSize ?? 6) + 1) / 2 + (p.damageBonus || 0), 0);
+      }, 0);
+    } catch (error) { console.error("Failed Multiattack sequence scoring", { id: member?.combatant_id, error }); throw error; }
   }
+
+  function selectSequence(member, setup) {
+    try {
+      const variants = validatedVariants(member);
+      const melee = variants.some((v) => (!v.attackKind || v.attackKind === "melee") && v.slots.some((slot) =>
+        F().chooseSlotAttack(member, setup, slotData(slot).attackIds, "melee")?.attack.kind === "melee"));
+      const mode = melee ? "melee" : "ranged";
+      const candidates = variants.filter((v) => !v.attackKind || v.attackKind === mode);
+      candidates.sort((a, b) => sequenceDamage(member, setup, b, mode) - sequenceDamage(member, setup, a, mode));
+      const variant = candidates[0];
+      if (!variant || !variant.slots.some((slot) => {
+        const data = slotData(slot);
+        return F().chooseSlotAttack(member, setup, data.attackIds, mode) || saveChoice(member, setup, data);
+      })) return null;
+      return { variant, mode, slots: variant.slots };
+    } catch (error) { console.error("Failed complete Multiattack selection", { id: member?.combatant_id, error }); throw error; }
+  }
+
+  function legalChoiceAvailable(member, setup) { return Boolean(selectSequence(member, setup)); }
 
   function available(member, setup) {
     try {
@@ -66,8 +94,9 @@
 
   function meleeAvailable(member, setup) {
     try {
-      return validatedSlots(member).some((slot) =>
-        F().chooseSlotAttack(member, setup, slotData(slot).attackIds)?.attack.kind === "melee");
+      const selected = selectSequence(member, setup);
+      return Boolean(selected && selected.slots.some((slot) =>
+        F().chooseSlotAttack(member, setup, slotData(slot).attackIds, selected.mode)?.attack.kind === "melee"));
     } catch (error) {
       console.error("Failed browser Multiattack melee probe", { id: member?.combatant_id, error });
       throw error;
@@ -76,22 +105,14 @@
 
   function expectedDamage(member, setup) {
     try {
-      let total = 0;
-      for (const slot of validatedSlots(member)) {
-        const data = slotData(slot), chosen = F().chooseSlotAttack(member, setup, data.attackIds);
-        if (chosen) total += F().weaponMeanDamage(chosen.attack);
-        else {
-          const saved = saveChoice(member, setup, data);
-          if (saved) total += (saved.save.damageDiceCount || 0) * ((saved.save.damageDiceSize || 6) + 1) / 2 + (saved.save.damageBonus || 0);
-        }
-      }
-      return total;
+      const selected = selectSequence(member, setup);
+      return selected ? sequenceDamage(member, setup, selected.variant, selected.mode) : 0;
     } catch (error) {
       console.error("Failed browser Multiattack damage estimate", { id: member?.combatant_id, error });
       throw error;
     }
   }
   window.IRON_PIT_BROWSER_MULTIATTACK_CHOICES = {
-    slotData, saveChoice, available, legalChoiceAvailable, meleeAvailable, expectedDamage,
+    slotData, saveChoice, selectSequence, validatedVariants, available, legalChoiceAvailable, meleeAvailable, expectedDamage,
   };
 })();

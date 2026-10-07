@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from app.domain.attack_action_definitions import all_action_slots
+
 import logging
 
 from app.combat.action_economy import is_available
@@ -116,7 +118,7 @@ def tightest_usable_melee_reach_ft(
         reaches: list[int] = []
         definition = attacker.state.template.attack_action
         if definition is not None:
-            for slot in definition.slots:
+            for slot in all_action_slots(definition):
                 for attack_id in slot.attack_ids:
                     attack = by_id.get(attack_id)
                     if (

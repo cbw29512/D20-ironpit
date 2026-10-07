@@ -21,7 +21,7 @@ sets the work lane. Rules live in the rules contract, not this tracker.
 | P1 M-008 | Complete, merged #630 | Seven 2014 source traits already include their damage: Brute (Bugbear/Gladiator), Heated Weapons (Azer/Salamander), Angelic Weapons (Deva/Planetar/Solar). | Pinned source validation, shared typed damage/magical qualifier, critical/defense/reset parity, and all four exact-head gates passed. Seven traits resolved; other card blockers remain. [Audit](INCLUDED_WEAPON_DAMAGE_AUDIT.md). |
 | P1 M-009 | Deferred, separate contact tranche | Heated Body triggers on touching or a melee hit within 5 feet; current retaliation handles only melee hits. | Reuse retaliation damage and add a shared contact trigger only after schema audit. Azer/Salamander/Remorhaz remain blocked. |
 | P1 M-010 | Deferred, separate grapple tranche | Salamander Tail automatically hits its own grappled target and cannot attack others; current policy lacks automatic hit. | Preserve source `auto_hit_own_grapple`; do not replace automatic hit with Advantage. |
-| P1 M-011 | Queued, ChatGPT | Gladiator now has only alternative-count Multiattack left (three melee or two ranged attacks). Bandit Captain is a related paired catch-up candidate. | Audit source choice semantics against existing action slots/selection before implementation; classify reuse and audit native 2024 independently. |
+| P1 M-011 | Active, ChatGPT; `fix/2014-multiattack-sequences` | Gladiator now has only alternative-count Multiattack left (three melee or two ranged attacks). Bandit Captain is a related paired catch-up candidate. | ENGINE_EXISTS_PARAMETER_DELTA: extend shared slots with complete alternatives for Bandit Captain, Gladiator, Medusa, and distinct-weapon Lizardfolk. Legal melee reach selects mode; highest damage selects legal choices. Shield stays equipped. Source/preview/resolution parity and native 2024 audit required. |
 
 ## Current evidence
 
@@ -61,3 +61,7 @@ scope. After each change, regenerate `MONSTER_BLOCKERS_2014.md`; CI checks that
 it matches source. After merge, update the operating baseline and verification
 on the actual merged commit. Mark an item complete only with its code, permanent
 tests, and required exact-head gates; keep the PR and audit links.
+
+- 2026-10-07: Chris replaced row-based weapon choices with legal melee reach, otherwise ranged, highest legal damage; rules contract §10 records this and Gladiator’s fixed shield loadout. M-011 does not include drawn-offhand or random/hit-dependent counts.
+
+M-011 schema/source/parity evidence: [Complete sequence audit](MULTIATTACK_SEQUENCE_AUDIT.md). Branch counts are 187/327 admitted/compiled; required exact-head CI remains pending.

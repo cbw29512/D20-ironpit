@@ -6,6 +6,7 @@ from app.combat.barrier_line_of_effect import clear_line_between_members
 from app.combat.attack_legality import attack_allowed_against
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.formation_rows import member_is_backline
+from app.combat.printed_damage import weapon_mean_damage
 from app.combat.range import resolve_attack_roll_mode
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import WeaponAttack, WeaponAttackKind
@@ -108,7 +109,7 @@ def choose_attack(
             if legal:
                 attack = max(
                     legal,
-                    key=lambda item: item.weapon.dice_count * (item.weapon.dice_size + 1) / 2 + item.damage_bonus,
+                    key=weapon_mean_damage,
                 )
                 return target, attack, distance
         return None
@@ -126,10 +127,6 @@ def choose_standard_attack(
         attacker.state.template.weapon_attack.id,
         *(attack.id for attack in attacker.state.template.alternate_weapon_attacks),
     ]
-    if is_backline(attacker) and allied_frontline_active(attacker, setup):
-        ranged = choose_attack(attacker, setup, ids, kind=WeaponAttackKind.RANGED)
-        if ranged is not None:
-            return ranged
     melee = choose_attack(attacker, setup, ids, kind=WeaponAttackKind.MELEE)
     if melee is not None:
         return melee

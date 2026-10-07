@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.attack_action_choices import slot_has_legal_choice
+from app.combat.attack_action_sequences import select_sequence
 from app.combat.deferred_save_effect import (
     deferred_save_effect_candidate,
     resolve_deferred_save_effect,
@@ -23,7 +23,7 @@ def prefer_deferred_effect_attack_slot(
         definition = actor.state.template.attack_action
         if rule is None or not rule.allow_attack_slot_activation or definition is None:
             return False
-        return any(slot_has_legal_choice(actor, setup, slot) for slot in definition.slots)
+        return select_sequence(actor, setup) is not None
     except Exception as exc:
         logger.exception("Failed deferred-effect attack-slot preference for %s.", actor.combatant_id)
         raise RuntimeError("Deferred effect attack-slot preference failed.") from exc

@@ -24,7 +24,13 @@
   function choose(member, setup, requireAction = true) {
     try {
       if (requireAction && !E().available(member.state, "action")) return null;
-      const normalCount = member.state.template.attack_action?.slots?.length || 1;
+      const definition = member.state.template.attack_action;
+      let normalCount = definition?.slots?.length || 1;
+      if (definition?.variants?.length) {
+        const choices = window.IRON_PIT_BROWSER_MULTIATTACK_CHOICES;
+        if (!choices) throw new Error("Complete sequence selection runtime is not loaded.");
+        normalCount = choices.selectSequence(member, setup)?.slots.length || 1;
+      }
       const choices = [];
       for (const action of member.state.template.area_weapon_attack_actions || []) {
         const attackId = action.attackId || action.attack_id;

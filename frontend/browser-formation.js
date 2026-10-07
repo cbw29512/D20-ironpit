@@ -50,6 +50,7 @@
   }
   function targetAllowed(member, target, attack, setup = null) {
     try {
+      if (attack.unavailableReason != null) return false;
       const ownsTarget = (target.state.grapple_sources || []).some(
         (source) => source.source_id === member.combatant_id,
       );
@@ -94,7 +95,9 @@
     }
   }
   function weaponMeanDamage(attack) {
-    return (attack.diceCount || 0) * ((attack.diceSize || 0) + 1) / 2 + (attack.damageBonus || 0);
+    const mean = (p) => (p.diceCount || 0) * ((p.diceSize || 0) + 1) / 2 + (p.damageBonus || 0);
+    const riders = [...(attack.onHitDamage || []), ...(attack.onHitSaveDamage ? [attack.onHitSaveDamage] : [])];
+    return (attack.fixedDamage ?? mean(attack)) + riders.reduce((total, part) => total + mean(part), 0);
   }
   function chooseAttack(member, setup, ids, kind = null, preferBackline = false) {
     const allowed = new Set(ids);
@@ -114,17 +117,13 @@
   }
   function chooseStandardAttack(member, setup) {
     const ids = attacks(member.state.template).map((attack) => attack.id);
-    if (isBackline(member) && alliedFrontlineActive(member, setup)) {
-      const ranged = chooseAttack(member, setup, ids, "ranged");
-      if (ranged) return ranged;
-    }
     return chooseAttack(member, setup, ids, "melee") || chooseAttack(member, setup, ids, "ranged");
   }
   function flexibleSlotHasBoth(member, ids) {
     const allowed = new Set(ids), kinds = new Set(attacks(member.state.template).filter((a) => allowed.has(a.id)).map((a) => a.kind));
     return kinds.has("melee") && kinds.has("ranged");
   }
-  const flexibleAttackMode = (member, setup) => isBackline(member) && alliedFrontlineActive(member, setup) ? "ranged" : "melee";
+  const flexibleAttackMode = (member, setup) => chooseAttack(member, setup, attacks(member.state.template).map((a) => a.id), "melee") ? "melee" : "ranged";
   function chooseSlotAttack(member, setup, ids, mode = null) {
     try {
       // Select the permitted mode before damage scoring or actual resolution.
@@ -134,7 +133,7 @@
       }
       return chooseAttack(member, setup, ids, "melee") || chooseAttack(member, setup, ids, "ranged");
     } catch (error) {
-      console.error("Failed browser row-based attack choice", { id: member?.combatant_id, error });
+      console.error("Failed browser range-based attack choice", { id: member?.combatant_id, error });
       throw error;
     }
   }

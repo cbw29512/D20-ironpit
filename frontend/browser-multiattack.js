@@ -22,15 +22,17 @@
 
   function resolveAttackAction(sequence, round, member, setup) {
     try {
-      const definition = member.state.template.attack_action, slots = definition?.slots;
-      if (!MC.available(member, setup)) return { events: [], sequence };
+      const definition = member.state.template.attack_action;
+      if (!E().available(member.state, "action")) return { events: [], sequence };
+      const selected = MC.selectSequence(member, setup);
+      if (!selected) return { events: [], sequence };
+      const { slots, mode, variant } = selected;
       const events = [];
       E().spend(member.state, "action");
       const attackBuff = AWB()?.resolve(sequence, round, member) || null;
       if (attackBuff) { events.push(attackBuff); sequence += 1; }
       let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
       let lightTrigger = null;
-      const mode = F().flexibleAttackMode(member, setup);
       const turnKey = `${round}:${member.combatant_id}`;
 
       for (let index = 0; index < slots.length; index += 1) {
@@ -45,7 +47,7 @@
         if (choice) {
           if (window.IRON_PIT_BROWSER_TIMED_CONTROL?.turnAttackAllowed(member.state) === false) break;
           const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
-          const featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
+          const featureId = openingFeature || (pack ? "pack-tactics" : variant.id);
           const event = A().resolveAttack(sequence, round, member, choice.target, choice.attack, choice.distance, {
             spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey,
             allowReckless: true, ignoreCloseThreat: true,

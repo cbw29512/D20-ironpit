@@ -8,7 +8,7 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
-  "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
+  "browser-grid-geometry.js", "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
   "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-monsters-poison.js", "browser-monsters-venom.js",
   "browser-monsters-mixed.js", "browser-condition-rules.js", "browser-action-economy.js", "browser-grapple.js",
   "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
@@ -134,8 +134,9 @@ function rangedHybridSetup(protectedByFrontline) {
 load("browser-offensive-ranges.js");
 
 for (const edition of ["2014", "2024"]) {
-  for (const [row, protectedByFrontline, weaponId, score] of [
-    ["front", true, "sword", 13], ["back", true, "bow", 28], ["back", false, "sword", 13],
+  for (const [row, protectedByFrontline, distance, weaponId, score] of [
+    ["front", true, 5, "sword", 13], ["back", true, 5, "sword", 13], ["back", false, 5, "sword", 13],
+    ["front", false, 20, "bow", 28], ["back", true, 20, "bow", 28],
   ]) {
     const template = structuredClone(hybrid);
     template.ruleset = edition;
@@ -148,18 +149,20 @@ for (const edition of ["2014", "2024"]) {
     const guard = member("row-guard", "monsters", { ...monsterGuard, ruleset: edition }, 10);
     guard.state.formation_row = "front";
     const setup = { heroes: [target], monsters: protectedByFrontline ? [guard, attacker] : [attacker] };
+    attacker.state.position = { x: 6, y: 6 }; target.state.position = { x: 6-distance/5, y: 6 };
+    guard.state.position = { x: 6, y: 5 };
     const M = window.IRON_PIT_BROWSER_MULTIATTACK;
     const before = structuredClone(attacker.state);
-    assert.equal(M.expectedDamage(attacker, setup), score, "preview scores only the row-selected mode");
+    assert.equal(M.expectedDamage(attacker, setup), score, "preview scores only the range-selected mode");
     assert.equal(M.meleeAvailable(attacker, setup), weaponId === "sword");
     assert.deepEqual(attacker.state, before, "choice and damage previews never spend or mutate");
     const calls = [];
     const roll = (sides) => { calls.push(sides); return sides === 20 ? 15 : 1; };
     window.IRON_PIT_DICE = { roll, rollMany: (count, sides) => Array.from({ length: count }, () => roll(sides)) };
-    const result = T.resolveTurn(1, 1, attacker, setup);
+    const result = M.resolveAttackAction(1, 1, attacker, setup);
     assert.deepEqual(result.events.filter((event) => event.event_type === "attack").map((event) => event.weapon_id),
       [weaponId, weaponId], "resolver uses the mode and slot count shown by the preview");
-    assert.equal(calls.includes(100), false, "row choice never consumes a random split roll");
+    assert.equal(calls.includes(100), false, "range choice never consumes a random split roll");
     assert.equal(attacker.state.action_available, false);
     assert.equal(attacker.state.bonus_action_available, true, "Multiattack does not spend a Light extra attack");
   }
@@ -210,7 +213,9 @@ console.log("Browser range-aware mixed Multiattack regressions passed.");
   setup.monsters.push(guard);
   guard.state.formation_row = "front";
   const A = window.IRON_PIT_BROWSER_ATTACK, original = A.resolveAttack;
-  A.resolveAttack = (...args) => { const event = original(...args); guard.state.is_dead = true; return event; };
+  attacker.state.position = { x: 6, y: 6 }; guard.state.position = { x: 6, y: 5 };
+  setup.heroes.forEach((m, i) => { m.state.position = { x: 2, y: 6+i }; });
+  A.resolveAttack = (...args) => { const event = original(...args); setup.heroes[0].state.position = { x: 5, y: 6 }; return event; };
   try {
     window.IRON_PIT_DICE = queuedDice([15, 1, 15, 1]);
     const result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, attacker, setup);

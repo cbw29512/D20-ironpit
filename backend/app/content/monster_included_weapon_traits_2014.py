@@ -1,10 +1,10 @@
 """Validate traits whose damage is already included in pinned weapon attacks."""
 from __future__ import annotations
 
-from html import unescape
 import logging
 import re
 
+from app.content.monster_source_sections_2014 import source_sections_2014 as _sections
 from app.content.monster_source_2014 import SourceMonster2014
 from app.domain.weapons import DamageSourceQualifier
 
@@ -26,21 +26,6 @@ _TRAITS = {
     ),
 }
 _DAMAGE = re.compile(r"\((\d+)d(\d+)(?:\s*\+\s*(\d+))?\)\s+(\w+) damage", re.I)
-
-
-def _sections(source: str | None) -> dict[str, str]:
-    try:
-        sections = {}
-        for paragraph in re.findall(r"<p>(.*?)</p>", source or "", re.S):
-            heading = re.search(r"<strong>(.*?)</strong>", paragraph, re.S)
-            if heading:
-                name = unescape(re.sub(r"<[^>]*>", "", heading[1])).rstrip(".")
-                body = re.sub(r"<[^>]*>", "", paragraph[heading.end():])
-                sections[name] = " ".join(unescape(body).split())
-        return sections
-    except Exception:
-        logger.exception("Failed to read included weapon source sections.")
-        raise
 
 
 def _validated_trait(monster: SourceMonster2014, name: str, text: str) -> bool:

@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 
+from app.combat.attack_action_sequences import select_sequence
 from app.combat.action_economy import is_available, spend
 from app.combat.area_targeting import AreaPlacement, legal_area_placements
 from app.combat.condition_rules import is_incapacitated
@@ -55,7 +56,9 @@ def choose_area_weapon_attack(
     try:
         if require_action and not is_available(member.state, "action"):
             return None
-        normal_count = len(member.state.template.attack_action.slots) if member.state.template.attack_action else 1
+        definition = member.state.template.attack_action
+        selected = select_sequence(member, setup) if definition and definition.variants else None
+        normal_count = len(selected[0].slots) if selected else len(definition.slots) if definition and definition.slots else 1
         choices: list[AreaWeaponAttackChoice] = []
         for action in member.state.template.area_weapon_attack_actions:
             attack = _attack_by_id(member, action.attack_id)

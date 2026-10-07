@@ -16,6 +16,8 @@ def attack_allowed_against(
     encounter_states: Iterable[CombatantState] | None = None,
 ) -> bool:
     try:
+        if attack.unavailable_reason is not None:
+            return False
         defender_owned = any(source.source_id == attacker_event_id for source in defender.grapple_sources)
         if attack.forbid_target_grappled_by_self and defender_owned:
             return False
