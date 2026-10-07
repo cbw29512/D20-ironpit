@@ -26,7 +26,7 @@ sets the work lane. Rules live in the rules contract, not this tracker.
 | P1 M-012 | Complete, merged #632 | Veteran and Half-Red Dragon Veteran: two Longsword attacks plus conditional drawn Shortsword; two-handed Longsword is incompatible with held offhand. | Source-only binding, 25 focused Python cases, four browser parity cases, and all four exact-head gates passed. Ranged Crossbow stays one standard attack; AC/breath preserved. [PR #632](https://github.com/cbw29512/D20-ironpit/pull/632); [audit](MULTIATTACK_SEQUENCE_AUDIT.md). |
 | P1 D-002 | Complete, Chris decision | Repeated broad verification displaced monster construction. | AGENTS.md records one focused changed-family pass and one final-head CI pass; no duplicate full local suites. |
 
-| P1 M-013 | Queued, Grick sequence condition | Tentacles hit permits one Beak attack against the same target. The source policy is still fail-closed `multiattack:complex`. | Next: classify reuse of existing hook/sequence conditions and target relationships before implementation. |
+| P1 M-013 | Active, `feat/2014-grick-hit-followup` | Tentacles hit permits one Beak attack against the same target. Source already declares generic previous-hit and same-target slot policy. | Bind those immutable slot constraints through the existing attack sequence/targeting pipeline; focused Python/browser regressions, generated roster, then final-head CI. |
 | P1 M-014 | Queued, separate random-count family | Violet Fungus rolls 1d4 Rotting Touch attacks. | Preserve random printed count; audit generic repetition support after M-013. |
 
 ## Current evidence
