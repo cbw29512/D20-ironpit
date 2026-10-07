@@ -17,6 +17,11 @@
       state.is_stable = false;
       state.death_save_successes = 0;
       state.death_save_failures = 0;
+      if (state.template.turn_start_targeting_overrides?.length) {
+        const runtime = window.IRON_PIT_BROWSER_TARGETING_OVERRIDES;
+        if (!runtime) throw new Error("Healing requires targeting-override lifecycle runtime.");
+        runtime.syncAfterHpChange(state);
+      }
     }
     return healed;
   }
