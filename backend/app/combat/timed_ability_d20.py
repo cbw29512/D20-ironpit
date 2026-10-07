@@ -28,3 +28,29 @@ def timed_ability_d20_disadvantage_sources(state: CombatantState, ability: str |
             ability,
         )
         raise
+
+
+def timed_attack_roll_disadvantage_sources(state: CombatantState) -> int:
+    """Count active timed riders that impose Disadvantage on attack rolls only."""
+    try:
+        return sum(
+            1 for effect in state.timed_effects
+            if effect.control_limits is not None
+            and effect.control_limits.attack_roll_disadvantage
+        )
+    except Exception:
+        logger.exception("Failed timed attack-roll Disadvantage lookup for %s.", state.template.name)
+        raise
+
+
+def timed_ability_check_disadvantage_sources(state: CombatantState) -> int:
+    """Count active timed riders that impose Disadvantage on ability checks only."""
+    try:
+        return sum(
+            1 for effect in state.timed_effects
+            if effect.control_limits is not None
+            and effect.control_limits.ability_check_disadvantage
+        )
+    except Exception:
+        logger.exception("Failed timed ability-check Disadvantage lookup for %s.", state.template.name)
+        raise
