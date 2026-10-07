@@ -749,6 +749,8 @@ def _removal(action: Any) -> dict[str, Any]:
         "resourceCostsPerCondition": dict(action.resource_costs_per_condition),
         "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
     }
+    if action.requires_explicit_effect_permission:
+        row["requiresExplicitEffectPermission"] = True
     if action.reaction_trigger:
         row["reactionTrigger"] = action.reaction_trigger
     if action.reduces_exhaustion_levels:

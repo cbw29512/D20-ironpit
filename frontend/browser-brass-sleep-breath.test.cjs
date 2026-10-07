@@ -100,4 +100,15 @@ assert.equal(sleeper.state.active_effect_ids.includes("unconscious"), false);
 assert.equal(sleeper.state.timed_effects.some((item) => item.effect_id === "unconscious"), false);
 assert.equal(window.IRON_PIT_BROWSER_CONDITION_RULES.incapacitated(sleeper.state), false);
 
+helper.state.action_available = true;
+window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS.apply(
+  dragon, sleeper, { ...action, id: "other-unconscious-effect" },
+  { ...rider, allowedRemovalActionIds: [] }, 1,
+);
+assert.equal(
+  window.IRON_PIT_BROWSER_CONDITION_REMOVAL.chooseAction(helper, setup, "1:helper"),
+  null,
+  "Wake Sleeper requires the effect to explicitly authorize wake-sleeper.",
+);
+
 console.log("Browser Brass Sleep Breath uses universal timed Unconscious and Wake Sleeper action.");

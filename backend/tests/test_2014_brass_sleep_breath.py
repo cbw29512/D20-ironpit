@@ -11,6 +11,7 @@ from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import BattleMapDefinition, GridPosition
+from app.domain.models import TimedEffect
 
 _EXPECTED = {
     "brass-dragon-wyrmling": (11, 15, 10),
@@ -125,3 +126,11 @@ def test_wyrmling_sleep_breath_uses_universal_unconscious_and_wake_action() -> N
     assert "unconscious" not in sleeper.state.active_effect_ids
     assert not any(item.effect_id == "unconscious" for item in sleeper.state.timed_effects)
     assert is_incapacitated(sleeper.state) is False
+
+    helper.state.action_available = True
+    sleeper.state.active_effect_ids.append("unconscious")
+    sleeper.state.timed_effects.append(TimedEffect(
+        effect_id="unconscious",
+        source_id="other-effect",
+    ))
+    assert choose_condition_removal_action(helper, setup, "1:hero:helper") is None

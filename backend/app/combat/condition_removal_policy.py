@@ -14,7 +14,8 @@ logger = logging.getLogger(__name__)
 # Lower is more urgent. This is deterministic Iron Pit AI policy, not a RAW rule.
 WAKE_SLEEPER_ACTION = ConditionRemovalAction(
     id="wake-sleeper", name="Wake Sleeper", action_cost="action", range_ft=5,
-    target_mode="ally", removable_conditions=["unconscious"], animation="condition-ended",
+    target_mode="ally", removable_conditions=["unconscious"],
+    requires_explicit_effect_permission=True, animation="condition-ended",
 )
 
 CONDITION_PRIORITY = {
@@ -70,10 +71,18 @@ def resources_available(member: EncounterCombatant, action: ConditionRemovalActi
     )
 
 
-def _effect_allows_removal(target: EncounterCombatant, condition_id: str, action_id: str) -> bool:
+def _effect_allows_removal(
+    target: EncounterCombatant,
+    condition_id: str,
+    action: ConditionRemovalAction,
+) -> bool:
     effects = [effect for effect in target.state.timed_effects if effect.effect_id == condition_id]
+    if action.requires_explicit_effect_permission:
+        return bool(effects) and all(
+            action.id in effect.allowed_removal_action_ids for effect in effects
+        )
     return all(
-        not effect.allowed_removal_action_ids or action_id in effect.allowed_removal_action_ids
+        not effect.allowed_removal_action_ids or action.id in effect.allowed_removal_action_ids
         for effect in effects
     )
 
@@ -83,7 +92,7 @@ def removable(target: EncounterCombatant, action: ConditionRemovalAction) -> lis
         allowed = set(action.removable_conditions)
         effects = [
             effect for effect in set(target.state.active_effect_ids)
-            if effect in allowed and _effect_allows_removal(target, effect, action.id)
+            if effect in allowed and _effect_allows_removal(target, effect, action)
         ]
         if action.reduces_exhaustion_levels and target.state.exhaustion_level:
             effects.append("exhaustion")
