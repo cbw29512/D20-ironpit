@@ -1,7 +1,7 @@
 # Current operating status
 
-Updated 2026-10-06 during PR #629 completion.
-Current main audited: `27ab34be9ac96642015ed1af9c62ea683074f3e1`.
+Updated 2026-10-06 after PR #629 merge.
+Merged source baseline audited: `58bb5df4c239273588c702ab901775a2d65f0d9e`. See the fix tracker for exact-head workflow evidence.
 Active fix queue: [Monster fix tracker](MONSTER_FIX_TRACKER.md).
 Per-monster source blockers: [Generated 2014 list](MONSTER_BLOCKERS_2014.md).
 
@@ -9,7 +9,7 @@ This file is operating authority for **what to work on next**. Combat rules rema
 
 ## Clean baseline
 
-PR #624 is the historical reset point. Current main is newer; its 2014 source baseline is 182/327.
+PR #624 is the historical reset point. PR #629 is the latest accepted monster tranche; its 2014 baseline is 184/327 and its exact head passed all four required gates.
 The required gates for every new mechanic tranche are:
 
 - CI;
@@ -27,10 +27,10 @@ Do not revive or extend #625. Reimplement only still-correct pieces from current
 |---|---|---:|
 | 2014 | Canonical pregens | **240 / 240** |
 | 2024 | Canonical pregens | **240 / 240** |
-| 2014 | Source monsters | **182 / 327** |
+| 2014 | Source monsters | **184 / 327** |
 | 2024 | SRD monsters | **141 / 330** |
 
-Counts above describe the starting main for this tranche. PR #629 currently classifies 184/327 on its working branch; final exact-head verification is pending. Recompute them after every merged monster tranche.
+Counts above were recomputed after the #629 merge. Documentation commits that follow this source baseline do not add combat behavior; recheck current repository truth before the next mechanic tranche.
 
 ## Current completion order
 
@@ -75,7 +75,7 @@ Only `ENGINE_TRULY_MISSING` justifies a new universal engine primitive.
 
 ## Immediate next action
 
-Complete PR #629 using the [susceptibility audit](ANTIMAGIC_SUSCEPTIBILITY_AUDIT.md), then refresh the fix tracker and source blocker list from the merged commit. Select the next single semantic family from that verified baseline.
+Use the [fix tracker](MONSTER_FIX_TRACKER.md) and [143 blocked monsters](MONSTER_BLOCKERS_2014.md) to classify semantic reuse and select the next single mechanic family. PR #629 is complete; do not reopen its resolved debt.
 
 Historical work from #625 may be used as evidence, but every reused behavior must be revalidated against current main and implemented in a fresh branch.
 

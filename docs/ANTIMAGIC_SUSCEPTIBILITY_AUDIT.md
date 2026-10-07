@@ -6,7 +6,7 @@
 - Subsystem: terminal-effect lifecycle, shared timed Stunned, and the 2014 susceptibility binding.
 - Starting main: `27ab34be9ac96642015ed1af9c62ea683074f3e1`.
 - Resumed head: `81ff8ca871b89827ecfff4c160a2a3af601d64ba`.
-- Status: ACTIVE. No other open PR was returned at session start.
+- Status: COMPLETE; merged PR #629 after all four exact-head gates succeeded. No other open PR was returned at session start.
 - Expected changes: terminal resolver, source binding, permanent tests, contracts,
   CI regression wiring, and directly generated artifacts.
 - Exact resumed-head gates: 2014 Basic Roster, Paired Edition Monster Report,
@@ -62,15 +62,22 @@ remain outside the expansion lane. The vendored 2024 armor, sword, and rug have 
 
 ## Continuous debt and next action
 
-A: regenerate all direct outputs and rerun the full CI command set. Check
-replacement-form and Concentration cleanup parity in the extracted resolver.
-B: require the new browser regression in CI; preserve fail-closed dependency
-handling and contextual logging. Do not grow unrelated mechanics in this PR.
+A: resolved. Direct outputs regenerated; full CI passed. Replacement-form and Concentration cleanup have permanent parity regressions.
+B: resolved. New regressions are required in CI. Dependency checks fail before state mutation; contextual errors are logged.
 C: historical status documents are snapshots, not current counts.
 
-Next exact action: repair PR #629's generated parity and lifecycle evidence.
+Next exact action: classify the next coherent family from the maintained fix tracker.
 Do not carry prior-head CI, old counts, #625 work, or chat-only rules forward.
 
 ## Work queue
 
 [Maintained fix tracker](MONSTER_FIX_TRACKER.md); [all 2014 blocked monsters](MONSTER_BLOCKERS_2014.md). Dispel regression evidence lives in `test_dispel_susceptibility.py` and `browser-dispel-susceptibility.test.cjs`.
+
+## Final verification
+
+Source head: `9ed5e8fe42dc27ebda4aad0b7843be71f8030171`. Merged source baseline: `58bb5df4c239273588c702ab901775a2d65f0d9e`.
+
+- [CI](https://github.com/cbw29512/D20-ironpit/actions/runs/37561811380): success on `9ed5e8fe42dc27ebda4aad0b7843be71f8030171`.
+- [2014 Basic Roster](https://github.com/cbw29512/D20-ironpit/actions/runs/37561811451): success on `9ed5e8fe42dc27ebda4aad0b7843be71f8030171`.
+- [Paired Edition Monster Report](https://github.com/cbw29512/D20-ironpit/actions/runs/37561811366): success on `9ed5e8fe42dc27ebda4aad0b7843be71f8030171`.
+- [2014 Hero Certification](https://github.com/cbw29512/D20-ironpit/actions/runs/37561811402): success on `9ed5e8fe42dc27ebda4aad0b7843be71f8030171`.
