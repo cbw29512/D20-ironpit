@@ -5864,7 +5864,7 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 128,
+    "blocked_monster_count": 127,
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
@@ -5884,7 +5884,7 @@
       "source:extra-action": 68,
       "source:legendary": 9,
       "source:reaction": 7,
-      "source:trait": 94
+      "source:trait": 93
     },
     "unresolved_printed_abilities": [
       {
@@ -6090,13 +6090,6 @@
           "Pit Fiend"
         ],
         "printed_name": "Fear Aura"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Yeti"
-        ],
-        "printed_name": "Fear of Fire"
       },
       {
         "demand_count": 2,
