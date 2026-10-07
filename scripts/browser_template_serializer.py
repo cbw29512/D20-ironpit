@@ -1225,6 +1225,19 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 }
                 for item in template.triggered_extra_attack_stacks
             ]
+        if template.damage_taken_timed_effects:
+            row["damage_taken_timed_effects"] = [
+                {
+                    "sourceId": item.source_id,
+                    "sourceName": item.source_name,
+                    "triggerDamageType": item.trigger_damage_type.value,
+                    "effectId": item.effect_id,
+                    "targetTurns": item.target_turns,
+                    "attackRollDisadvantage": item.attack_roll_disadvantage,
+                    "abilityCheckDisadvantage": item.ability_check_disadvantage,
+                }
+                for item in template.damage_taken_timed_effects
+            ]
         if template.legendary_actions:
             row["legendary_actions"] = [item.model_dump(mode="json") for item in template.legendary_actions]
         if template.save_success_overrides:
