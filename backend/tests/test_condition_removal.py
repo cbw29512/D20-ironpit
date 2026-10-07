@@ -175,3 +175,34 @@ def test_reaction_removal_requires_explicit_trigger_and_is_not_used_on_turn() ->
     )]
     ally.state.active_effect_ids.append("poisoned")
     assert choose_condition_removal_action(remover, setup, _turn_key(1, remover)) is None
+
+
+def test_universal_wake_sleeper_requires_explicit_effect_permission() -> None:
+    setup, remover, ally = _setup()
+    wake = next(action for action in remover.state.template.condition_removal_actions if action.id == "wake-sleeper")
+    assert wake.requires_explicit_effect_permission is True
+    assert wake.removable_conditions == ["unconscious"]
+
+    ally.state.active_effect_ids.append("unconscious")
+    ally.state.timed_effects.append(TimedEffect(
+        effect_id="unconscious",
+        source_id="sleep-source",
+        source_effect_id="sleep-effect",
+    ))
+    assert choose_condition_removal_action(remover, setup, _turn_key(1, remover)) is None
+
+    ally.state.timed_effects[0].allowed_removal_action_ids = ["wake-sleeper"]
+    choice = choose_condition_removal_action(remover, setup, _turn_key(1, remover))
+    assert choice is not None
+    action, target, conditions = choice
+    assert action.id == "wake-sleeper"
+    assert target is ally
+    assert conditions == ["unconscious"]
+
+    event = resolve_condition_removal(
+        1, 1, remover, target, action, conditions, _turn_key(1, remover)
+    )
+    assert remover.state.action_available is False
+    assert "unconscious" not in ally.state.active_effect_ids
+    assert ally.state.timed_effects == []
+    assert event.feature_id == "wake-sleeper"
