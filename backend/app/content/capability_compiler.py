@@ -34,6 +34,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         magical_effect=definition.magical_effect, effect_tags=list(definition.effect_tags),
         failed_save_timed_effect=definition.failed_save_timed_effect,
         source_effect_immunity_on_success=definition.source_effect_immunity_on_success,
+        failed_save_push_ft=definition.failed_save_push_ft,
         animation=definition.animation,
     )
 
