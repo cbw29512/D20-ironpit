@@ -26,11 +26,31 @@ window.IRON_PIT_BROWSER_SAVES = {
   resolveOnHitConditionSave: () => null,
 };
 window.IRON_PIT_BROWSER_ROLLS = {
-  weaponDamage: (_attacker, attack, critical) => {
+  weaponDamage: (attacker, attack, critical, _mode, turnKey, _bonusDamage = null, target = null,
+    _sneakAllyAvailable = false, activeAllyAdjacentToTarget = false) => {
     const rolls = critical ? [4, 4] : [4];
     const component = { source: attack.name, damage_type: attack.damageType,
       notation: `${rolls.length}d4+0`, rolls, modifier: 0, total: rolls.reduce((a, b) => a + b, 0) };
-    return { roll: { notation: component.notation, rolls: [...rolls], modifier: 0, total: component.total }, components: [component] };
+    const components = [component];
+    for (const spec of window.IRON_PIT_BROWSER_ONCE_PER_TURN_HIT_DAMAGE?.bonusDamages(
+      attacker, turnKey, target, attack, activeAllyAdjacentToTarget,
+    ) || []) {
+      const count = spec.diceCount * (critical ? 2 : 1);
+      const riderRolls = window.IRON_PIT_DICE.rollMany(count, spec.diceSize);
+      components.push({
+        source: spec.source, damage_type: spec.damageType, notation: `${count}d${spec.diceSize}+0`,
+        rolls: riderRolls, modifier: 0, total: riderRolls.reduce((a, b) => a + b, 0),
+      });
+    }
+    return {
+      roll: {
+        notation: components.map((item) => item.notation).join(" + "),
+        rolls: components.flatMap((item) => item.rolls),
+        modifier: 0,
+        total: components.reduce((sum, item) => sum + item.total, 0),
+      },
+      components,
+    };
   },
   attackMode: () => "normal",
   d20: (modifier) => ({ notation: "1d20", rolls: [15], modifier, selected_roll: 15, mode: "normal", total: 15 + modifier }),
@@ -56,9 +76,10 @@ window.IRON_PIT_BROWSER_TIMED = {
     return effectId;
   },
 };
-window.IRON_PIT_BROWSER_STATE = { canProne: () => false, terminateTurn: () => {}, sizeAtMost: () => true };
 window.IRON_PIT_ACTION_ECONOMY = { available: () => true, spend: () => {} };
 
+load("browser-state.js");
+load("browser-once-per-turn-hit-damage.js");
 load("browser-ability-hooks.js");
 load("browser-attack-outcome.js");
 load("browser-damage-defense-rules.js");
@@ -196,6 +217,47 @@ result = window.IRON_PIT_BROWSER_HIT_DAMAGE.resolve(
 assert.equal(result.damageComponents.length, 1);
 assert.equal(result.damageComponents[0].applied_total, 4, "combatants without a bypass grant still respect Resistance");
 
+const martialAttackerState = {
+  ...attackerState,
+  template: {
+    ...attackerState.template,
+    once_per_turn_weapon_hit_damage_rider: {
+      source_id: "martial-advantage", source_name: "Martial Advantage",
+      dice_count: 2, dice_size: 6, flat_bonus: 0, damage_type: null,
+      requires_active_ally_adjacent_to_target: true,
+    },
+  },
+  feature_last_turn_keys: {},
+};
+const martialActor = { combatant_id: "hobgoblin", side: "heroes", position_ft: 0, state: martialAttackerState };
+const martialAlly = { combatant_id: "ally", side: "heroes", position_ft: 10, state: state() };
+const martialTarget = { combatant_id: "martial-target", side: "monsters", position_ft: 5, state: state() };
+const martialSetup = { heroes: [martialActor, martialAlly], monsters: [martialTarget] };
+
+queueDice([5, 6]);
+result = window.IRON_PIT_BROWSER_HIT_DAMAGE.resolve(
+  martialAttackerState, martialTarget.state, irresistibleAttack, false, "normal", "1:hobgoblin",
+  { setup: martialSetup },
+);
+assert.equal(result.damageComponents.find((item) => item.source === "Martial Advantage").total, 11);
+
+queueDice([]);
+result = window.IRON_PIT_BROWSER_HIT_DAMAGE.resolve(
+  martialAttackerState, martialTarget.state, irresistibleAttack, false, "normal", "1:hobgoblin",
+  { setup: martialSetup },
+);
+assert.equal(result.damageComponents.some((item) => item.source === "Martial Advantage"), false,
+  "Martial Advantage fires only once on the active turn");
+
+martialAlly.position_ft = 20;
+queueDice([]);
+result = window.IRON_PIT_BROWSER_HIT_DAMAGE.resolve(
+  martialAttackerState, martialTarget.state, irresistibleAttack, false, "normal", "2:hobgoblin",
+  { setup: martialSetup },
+);
+assert.equal(result.damageComponents.some((item) => item.source === "Martial Advantage"), false,
+  "Martial Advantage requires the shared target-adjacent active-ally predicate");
+
 load("browser-monsters-2014.js");
 const roster = window.IRON_PIT_BROWSER_MONSTERS_2014;
 assert.equal(Object.keys(roster).length, 199);
@@ -214,4 +276,4 @@ for (const id of ["giant-centipede", "giant-wasp"]) {
   assert.equal(rider.durationRounds, 600);
 }
 
-console.log("Browser save-dependent hit damage remains certified across the 197-monster 2014 roster.");
+console.log("Browser hit damage, including Martial Advantage adjacency, remains certified across the 199-monster 2014 roster.");
