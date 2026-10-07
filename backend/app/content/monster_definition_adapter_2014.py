@@ -42,6 +42,7 @@ from app.content.monster_legendary_resistance_2014 import (
 )
 from app.content.movement_modes import standard_arena_closing_speed_from_modes
 from app.content.monster_regeneration_2014 import regeneration_trait_2014
+from app.content.monster_damage_triggered_d20_2014 import damage_triggered_d20_debuffs_2014
 from app.content.monster_save_capabilities_2014 import recharge_rules_2014, save_capabilities_2014, save_resources_2014
 from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.capabilities import CombatantDefinition
@@ -147,6 +148,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         legendary_actions=legendary_options,
         resources=resources, recharge_rules=recharge_rules_2014(monster),
         regeneration=regeneration_trait_2014(monster),
+        damage_triggered_d20_debuffs=damage_triggered_d20_debuffs_2014(monster),
         damage_threshold_zero_hp_replacements=damage_threshold_zero_hp_replacements_2014(monster),
         save_success_overrides=[legendary_override] if legendary_override else [],
         combat_traits=modeled_combat_traits_2014(monster),
