@@ -10,8 +10,9 @@ Purpose: let a fresh AI begin productive Iron Pit work with minimal context and 
    - Pregens: `docs/playbooks/PREGENS.md`
    - Monsters: `docs/playbooks/MONSTERS.md`
    - Universal engine: `docs/playbooks/UNIVERSAL_ENGINE.md`
-4. Read the exact source/card and current code/tests for the mechanic being touched.
-5. Open the long contracts only when the selected guide points to them, the mechanic touches that subsystem, or something is uncertain.
+4. Read `docs/UNIVERSAL_MECHANIC_INVENTORY.md` to identify existing engine IDs and all current monster/pregen demand.
+5. Read the exact source/card and current code/tests for the mechanic being touched.
+6. Open the long contracts only when the selected guide points to them, the mechanic touches that subsystem, or something is uncertain.
 
 ## Core ownership rule
 
@@ -41,7 +42,7 @@ Unsupported outcome-changing mechanics fail closed.
 
 ## Standard implementation path
 
-`source -> decompose behavior -> search/reuse primitives -> bind source parameters -> fight state -> Python oracle -> browser parity -> generated artifacts -> certification`
+`source -> decompose behavior -> inventory lookup -> search/reuse primitives -> bind source parameters -> fight state -> Python oracle -> browser parity -> regenerate inventory/artifacts -> certification`
 
 Printed names belong on cards and player logs. Engine dispatch uses universal mechanics.
 
