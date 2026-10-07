@@ -28,10 +28,22 @@ def _repeat_save_due(effect, round_number: int, timing: ConditionTiming) -> bool
     )
 
 
-def _expiry_due(effect, round_number: int, timing: ConditionTiming) -> bool:
-    return effect.expiry_timing == timing and (
-        effect.expires_round is None or round_number >= effect.expires_round
-    )
+def _expiry_due(
+    effect,
+    round_number: int,
+    timing: ConditionTiming,
+    target_turns_started: int | None = None,
+) -> bool:
+    if effect.expiry_timing != timing:
+        return False
+    if effect.expires_round is not None and round_number < effect.expires_round:
+        return False
+    if effect.expires_target_turn_count is not None:
+        return (
+            target_turns_started is not None
+            and target_turns_started >= effect.expires_target_turn_count
+        )
+    return True
 
 
 def resolve_target_condition_timing(
@@ -94,7 +106,7 @@ def resolve_target_condition_timing(
                 sequence += 1
                 if succeeded:
                     continue
-            if _expiry_due(effect, round_number, timing):
+            if _expiry_due(effect, round_number, timing, target.state.turns_started):
                 removed = remove_effect_group(target.state, effect)
                 if removed:
                     events.append(BattleEvent(
