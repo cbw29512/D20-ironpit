@@ -44,6 +44,6 @@ Unsupported outcome-changing mechanics fail closed.
 
 `source -> decompose behavior -> inventory lookup -> search/reuse primitives -> bind source parameters -> fight state -> Python oracle -> browser parity -> regenerate inventory/artifacts -> certification`
 
-Printed names belong on cards and player logs. Engine dispatch uses universal mechanics.
+Printed names and complete source abilities belong on cards/source data and player logs. A unique monster or homebrew ability must still be created/bound correctly even when the engine has no same-named capability. Engine dispatch uses universal mechanics underneath it; only a genuinely new semantic remainder justifies adding a new reusable primitive.
 
 Repository source and permanent tests are the final implementation truth.
