@@ -59,9 +59,9 @@ uses 2d6 fire. Native 2024 bindings and readiness remain unchanged.
 
 Permanent evidence: `backend/tests/test_included_weapon_traits_2014.py` covers all
 seven cards, mismatched source/riders, thrown/two-handed values, and fail-closed
-remaining blockers. `frontend/browser-included-weapon-damage.test.cjs` consumes
-`scripts/included_weapon_damage_parity_fixture.py` generates a checked-in fixture,
-verified for freshness by the Python suite: ten source-derived attacks
+remaining blockers. `scripts/included_weapon_damage_parity_fixture.py` generates a checked-in fixture
+consumed by `frontend/browser-included-weapon-damage.test.cjs` and verified for
+freshness by the Python suite: ten source-derived attacks
 through the real compiler/serializer and both production resolvers, with fixed
 independent totals for normal/critical damage, magical bypass, fire immunity,
 radiant resistance, immutable parameters, and fight reset. It runs in CI.
@@ -77,5 +77,17 @@ Passed: 63 focused source/compiler tests; ten source-derived production parity
 cases; checked-in fixture freshness verified by Python tests so the browser
 CI job requires no Python installation; source-size/coverage checks; deterministic capability/blocker exports;
 manifest/static regeneration; production wiring/backend-free checks and Netlify
-lock verification. Full local Python/browser suites are running. All four new
-exact-head workflow gates are pending; no prior-head success is carried forward.
+lock verification. Local full Python passed 2,729 tests; the added fixture freshness
+check passed in the final 63-test focused run. All 218 browser commands passed.
+Final-head CI passed 2,730 Python tests. All four exact-head gates succeeded on
+`a9e229601cdce17ecb6cb856a4f8be85e69fbd05`; merged #630 baseline is `35684e3d0ae9dd745a62722617ceed23c6d43ef3`.
+Merged source reports and manifest verification confirm the same counts.
+
+- [CI](https://github.com/cbw29512/D20-ironpit/actions/runs/37564118269): success on `a9e229601cdce17ecb6cb856a4f8be85e69fbd05`.
+- [2014 Basic Roster](https://github.com/cbw29512/D20-ironpit/actions/runs/37564118283): success on `a9e229601cdce17ecb6cb856a4f8be85e69fbd05`.
+- [Paired Edition Monster Report](https://github.com/cbw29512/D20-ironpit/actions/runs/37564118297): success on `a9e229601cdce17ecb6cb856a4f8be85e69fbd05`.
+- [2014 Hero Certification](https://github.com/cbw29512/D20-ironpit/actions/runs/37564118259): success on `a9e229601cdce17ecb6cb856a4f8be85e69fbd05`.
+
+No outstanding correctness/architecture debt remains in this binding subsystem.
+Other card mechanics retain their independent blockers in the generated list.
+Gladiator's alternative-count Multiattack is the next queued source audit (M-011).

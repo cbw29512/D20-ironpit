@@ -1,7 +1,7 @@
 # Current operating status
 
-Updated 2026-10-06 after PR #629 merge.
-Merged source baseline audited: `58bb5df4c239273588c702ab901775a2d65f0d9e`. See the fix tracker for exact-head workflow evidence.
+Updated 2026-10-07 after PR #630 merge.
+Merged source baseline audited: `35684e3d0ae9dd745a62722617ceed23c6d43ef3`. See the fix tracker for exact-head workflow evidence.
 Active fix queue: [Monster fix tracker](MONSTER_FIX_TRACKER.md).
 Per-monster source blockers: [Generated 2014 list](MONSTER_BLOCKERS_2014.md).
 
@@ -9,7 +9,7 @@ This file is operating authority for **what to work on next**. Combat rules rema
 
 ## Clean baseline
 
-PR #624 is the historical reset point. PR #629 is the latest accepted monster tranche; its 2014 baseline is 184/327 and its exact head passed all four required gates.
+PR #624 is the historical reset point. PR #630 is the latest accepted monster tranche; source-validated included weapon traits and the magical qualifier passed all four exact-head gates. The 2014 baseline remains 184/327 because these seven cards retain independent blockers.
 The required gates for every new mechanic tranche are:
 
 - CI;
@@ -75,7 +75,12 @@ Only `ENGINE_TRULY_MISSING` justifies a new universal engine primitive.
 
 ## Immediate next action
 
-Active tranche: source-validated included weapon damage (Brute, Heated Weapons, Angelic Weapons), covering seven 2014 trait bindings and the existing magical qualifier. See [audit](INCLUDED_WEAPON_DAMAGE_AUDIT.md). PR #629 is complete. The [143 blocked monsters](MONSTER_BLOCKERS_2014.md) retain their other mechanics; this tranche does not claim new READY cards. Full verification and new-head gates are pending.
+Next source audit: alternative-count Multiattack for Gladiator (three melee or two ranged attacks), with Bandit Captain as a related paired catch-up candidate. Classify against shared action slots/selection before coding. See M-011 in the [fix tracker](MONSTER_FIX_TRACKER.md).
+
+PR #630 is complete. Its [included weapon audit](INCLUDED_WEAPON_DAMAGE_AUDIT.md)
+records seven resolved traits, all gates, and the native 2024 check. The [143
+blocked monsters](MONSTER_BLOCKERS_2014.md) still retain their other mechanics.
+Do not reopen resolved #629/#630 debt or treat trait completion as card readiness.
 
 Historical work from #625 may be used as evidence, but every reused behavior must be revalidated against current main and implemented in a fresh branch.
 
