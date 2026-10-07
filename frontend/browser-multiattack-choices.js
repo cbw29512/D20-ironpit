@@ -17,6 +17,12 @@
         if (definition.variants?.length && typeof variant.id !== "string") throw new Error("Invalid Multiattack variant ID.");
         if (![null, undefined, "melee", "ranged"].includes(variant.attackKind)) throw new Error("Invalid sequence mode.");
         if (!Array.isArray(variant.slots) || !variant.slots.length || variant.slots.length > 8) throw new Error("Invalid Multiattack slots.");
+        if (variant.repetitions != null) {
+          const r = variant.repetitions;
+          if (typeof r !== "object" || Array.isArray(r) || Object.keys(r).some(k => !["diceCount", "diceSize"].includes(k))
+              || !Number.isInteger(r.diceCount) || r.diceCount < 1 || r.diceCount > 4 || !Number.isInteger(r.diceSize) || r.diceSize < 2 || r.diceSize > 8
+              || variant.slots.length*r.diceCount*r.diceSize > 8) throw new Error("Invalid random sequence repetition.");
+        }
         variant.slots.forEach((slot, index) => {
           const data = slotData(slot), rule = data.previousAttack;
           if (rule !== null) {
@@ -85,7 +91,8 @@
   }
   function sequenceDamage(member, setup, variant, mode) {
     try {
-      return sequenceChoices(member, setup, variant, mode).reduce((total, { choice, saved }) => {
+      const multiplier = variant.repetitions ? variant.repetitions.diceCount * (variant.repetitions.diceSize + 1) / 2 : 1;
+      return multiplier * sequenceChoices(member, setup, variant, mode).reduce((total, { choice, saved }) => {
         if (choice) return total + F().weaponMeanDamage(choice.attack);
         const parts = saved?.save.damageComponents?.length ? saved.save.damageComponents : saved ? [saved.save] : [];
         return total + parts.reduce((sum, p) => sum + (p.damageDiceCount ?? p.diceCount ?? 0) * ((p.damageDiceSize ?? p.diceSize ?? 6) + 1) / 2 + (p.damageBonus || 0), 0);
@@ -104,6 +111,16 @@
       if (!variant || !sequenceChoices(member, setup, variant, mode).some(({ choice, saved }) => choice || saved)) return null;
       return { variant, mode, slots: variant.slots };
     } catch (error) { console.error("Failed complete Multiattack selection", { id: member?.combatant_id, error }); throw error; }
+  }
+
+  function expandedSlots(variant) {
+    try {
+      const r = variant.repetitions;
+      if (!r) return { slots: variant.slots, repetitionRoll: null };
+      const rolls = window.IRON_PIT_DICE.rollMany(r.diceCount, r.diceSize), total = rolls.reduce((sum, roll) => sum + roll, 0);
+      return { slots: Array.from({ length: total }, () => variant.slots).flat(),
+        repetitionRoll: { notation: `${r.diceCount}d${r.diceSize}`, rolls, modifier: 0, selected_roll: null, mode: "normal", total, revisions: [], outcome_override_name: null, outcome_override_uses_remaining: null } };
+    } catch (error) { console.error("Failed random sequence repetition", { id: variant?.id, error }); throw error; }
   }
 
   function legalChoiceAvailable(member, setup) { return Boolean(selectSequence(member, setup)); }
@@ -137,6 +154,6 @@
     }
   }
   window.IRON_PIT_BROWSER_MULTIATTACK_CHOICES = {
-    slotData, followupTarget, saveChoice, selectSequence, validatedVariants, available, legalChoiceAvailable, meleeAvailable, expectedDamage,
+    slotData, expandedSlots, followupTarget, saveChoice, selectSequence, validatedVariants, available, legalChoiceAvailable, meleeAvailable, expectedDamage,
   };
 })();

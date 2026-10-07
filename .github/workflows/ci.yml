@@ -514,6 +514,7 @@ jobs:
           node frontend/browser-multiattack-sequences.test.cjs
           node frontend/browser-veteran-multiattack.test.cjs
           node frontend/browser-grick-sequence.test.cjs
+          node frontend/browser-fungus-sequence.test.cjs
           node frontend/browser-venom.test.cjs
           node frontend/browser-mixed-multiattack.test.cjs
           node frontend/browser-expansion.test.cjs

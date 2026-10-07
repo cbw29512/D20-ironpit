@@ -27,7 +27,7 @@ sets the work lane. Rules live in the rules contract, not this tracker.
 | P1 D-002 | Complete, Chris decision | Repeated broad verification displaced monster construction. | AGENTS.md records one focused changed-family pass and one final-head CI pass; no duplicate full local suites. |
 
 | P1 M-013 | Complete, merged #633 | Tentacles hit permits one Beak attack against the same target. The source policy is still fail-closed `multiattack:complex`. | Generic previous-hit/actual-target requirements bind Grick. 58 focused Python cases, eight browser scenarios, and all four final-head gates passed. [Audit](GRICK_SEQUENCE_AUDIT.md). |
-| P1 M-014 | Queued, separate random-count family | Violet Fungus rolls 1d4 Rotting Touch attacks. | Preserve random printed count; audit generic repetition support after M-013. |
+| P1 M-014 | Active, ChatGPT; `feat/2014-violet-fungus-repeat` | Violet Fungus rolls 1d4 Rotting Touch attacks. | Generic repetition/shared dice binding complete; 70 focused Python cases, seven new browser scenarios and affected prior fixtures passed. Generated branch 191/327, 136 blocked; final-head CI pending. |
 
 ## Current evidence
 
@@ -75,3 +75,7 @@ M-012 completed #632. Fixed compatible printed offhand preparation follows rules
 ## M-013 completion record
 
 #633 completed the Grick family. Narrow missing sequence predicates compose with existing dice, attacks, costs, target/range/line legality, reactions and fresh reset. Source and native 2024 differences are in the Grick audit.
+
+## M-014 active build (2026-10-07)
+
+Owner ChatGPT; branch `feat/2014-violet-fungus-repeat`, anchored to merged #633 closeout main `8a5d37360aaf49f65198f4b145fe32a5af42e251`. Source: Violet Fungus makes 1d4 Rotting Touch attacks. Shared dice pools, ordinary repeated slot resolution/costs/retarget/interruption/reset exist; immutable random whole-sequence repetition is missing (`ENGINE_TRULY_MISSING` only for that sequence parameter/expansion). Reuse the ordinary dice service and attack loop; no creature-name resolver. Focused acceptance: each d4 result 1–4, natural 1 interruption, retarget after a kill, out-of-range/no-spend/no-roll, fresh count next fight, preview purity, malformed source/schema fail-closed, Python/browser parity. Native 2024 audited independently.

@@ -26,9 +26,16 @@
       if (!E().available(member.state, "action")) return { events: [], sequence };
       const selected = MC.selectSequence(member, setup);
       if (!selected) return { events: [], sequence };
-      const { slots, mode, variant } = selected;
+      const { mode, variant } = selected;
       const events = [];
       E().spend(member.state, "action");
+      const { slots, repetitionRoll } = MC.expandedSlots(variant);
+      if (repetitionRoll) {
+        events.push({ sequence: sequence++, round_number: round, event_type: "feature", actor_id: member.combatant_id,
+          actor_name: member.state.template.name, feature_id: variant.id, feature_roll: repetitionRoll, animation: "feature",
+          description: `${member.state.template.name}: ${definition.name} rolls ${repetitionRoll.notation} = ${repetitionRoll.total}.`,
+          audit: { schema_version: 1, steps: [{ phase: "roll", kind: "roll", label: "Printed sequence repetition" }] } });
+      }
       const attackBuff = AWB()?.resolve(sequence, round, member) || null;
       if (attackBuff) { events.push(attackBuff); sequence += 1; }
       let openingFeature = C()?.openingFeature?.(round, member, setup) || null;

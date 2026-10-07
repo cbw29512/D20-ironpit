@@ -1,7 +1,7 @@
 """Immutable ordered slots or complete source alternatives; no fight state."""
 from __future__ import annotations
 import logging
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, model_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, model_validator
 from app.domain.weapons_base import WeaponAttackKind
 logger = logging.getLogger(__name__)
 
@@ -38,9 +38,16 @@ class AttackActionSlot(BaseModel):
             raise
 
 
+class AttackSequenceRepetition(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    dice_count: StrictInt = Field(ge=1, le=4)
+    dice_size: StrictInt = Field(ge=2, le=8)
+
+
 class AttackActionVariant(BaseModel):
     id: str
     attack_kind: WeaponAttackKind | None = None
+    repetitions: AttackSequenceRepetition | None = None
     slots: list[AttackActionSlot] = Field(min_length=1, max_length=8)
 
 
@@ -58,6 +65,9 @@ class AttackActionDefinition(BaseModel):
                 raise ValueError("Attack action requires either slots or complete variants.")
             if len({v.id for v in self.variants}) != len(self.variants):
                 raise ValueError("Attack-action variant IDs must be unique.")
+            for variant in self.variants:
+                if variant.repetitions and len(variant.slots) * variant.repetitions.dice_count * variant.repetitions.dice_size > 8:
+                    raise ValueError("Random sequence maximum exceeds eight slots.")
             for sequence in ([self.slots] if self.slots else [v.slots for v in self.variants]):
                 for index, slot in enumerate(sequence):
                     if slot.previous_attack and (index == 0 or not slot.attack_ids or slot.save_action_ids

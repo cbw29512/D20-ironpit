@@ -1,11 +1,12 @@
 """Select one immutable sequence before spending; preview and execution share it."""
 from __future__ import annotations
 import logging
+from app.combat.dice import roll_dice
 from app.combat.attack_action_choices import attack_choice, save_choice, followup_target
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.printed_damage import weapon_mean_damage, save_mean_damage
 from app.domain.attack_action_definitions import AttackActionVariant
-from app.domain.models import WeaponAttackKind
+from app.domain.models import WeaponAttackKind, DiceRoll
 logger = logging.getLogger(__name__)
 
 
@@ -28,7 +29,8 @@ def sequence_choices(attacker, setup, variant, mode):
 
 def sequence_damage(attacker, setup, variant, mode) -> float:
     try:
-        return sum(weapon_mean_damage(chosen[1]) if chosen else save_mean_damage(saved[1]) if saved else 0
+        multiplier = variant.repetitions.dice_count * (variant.repetitions.dice_size + 1) / 2 if variant.repetitions else 1
+        return multiplier * sum(weapon_mean_damage(chosen[1]) if chosen else save_mean_damage(saved[1]) if saved else 0
                    for chosen, saved in sequence_choices(attacker, setup, variant, mode))
     except Exception:
         logger.exception("Failed sequence scoring for %s / %s.", attacker.combatant_id, variant.id)
@@ -74,4 +76,18 @@ def attack_action_damage(attacker, setup) -> float:
         return sequence_damage(attacker, setup, *selected) if selected else 0.0
     except Exception:
         logger.exception("Failed sequence damage probe for %s.", attacker.combatant_id)
+        raise
+
+
+def expanded_sequence_slots(variant, dice):
+    """Freeze a printed random count once, after Action spending, using shared dice."""
+    try:
+        if variant.repetitions is None:
+            return variant.slots, None
+        spec = variant.repetitions
+        rolls = [roll_dice(dice, 1, spec.dice_size) for _ in range(spec.dice_count)]
+        roll = DiceRoll(notation=f"{spec.dice_count}d{spec.dice_size}", rolls=rolls, total=sum(rolls))
+        return variant.slots * roll.total, roll
+    except Exception:
+        logger.exception("Failed sequence repetition for %s.", variant.id)
         raise
