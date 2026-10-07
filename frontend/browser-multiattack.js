@@ -32,18 +32,23 @@
       const attackBuff = AWB()?.resolve(sequence, round, member) || null;
       if (attackBuff) { events.push(attackBuff); sequence += 1; }
       let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
-      let lightTrigger = null;
+      let lightTrigger = null, previousEvent = null, previousTarget = null;
       const turnKey = `${round}:${member.combatant_id}`;
 
       for (let index = 0; index < slots.length; index += 1) {
         if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
         const data = MC.slotData(slots[index]);
+        if (data.requiresPreviousHit && !previousEvent?.hit) {
+          previousEvent = null; previousTarget = null; continue;
+        }
+        const targetOverride = data.sameTargetAsPrevious ? previousTarget : null;
         const deferred = DE()?.resolve(sequence, round, member, setup) || null;
         if (deferred) {
-          events.push(deferred); sequence += 1; openingFeature = null;
+          events.push(deferred); sequence += 1; previousEvent = deferred;
+          previousTarget = eventTarget(deferred, null, setup); openingFeature = null;
           continue;
         }
-        const choice = F().chooseSlotAttack(member, setup, data.attackIds, mode);
+        const choice = F().chooseSlotAttack(member, setup, data.attackIds, mode, targetOverride);
         if (choice) {
           if (window.IRON_PIT_BROWSER_TIMED_CONTROL?.turnAttackAllowed(member.state) === false) break;
           const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
@@ -60,8 +65,10 @@
             continue;
           }
           events.push(event);
+          previousEvent = event;
+          previousTarget = eventTarget(event, choice.target, setup);
           if (event.hit) {
-            const actualTarget = eventTarget(event, choice.target, setup);
+            const actualTarget = previousTarget;
             if (MK()?.resolveStunning) {
               const stun = MK().resolveStunning(sequence, round, member, actualTarget, choice.attack);
               if (stun) { events.push(stun); sequence += 1; }
@@ -77,16 +84,19 @@
           openingFeature = null;
           continue;
         }
-        const saved = MC.saveChoice(member, setup, data);
+        const saved = MC.saveChoice(member, setup, data, targetOverride);
         if (saved) {
           const event = V().resolveAction(sequence, round, member, saved.target, saved.save, saved.distance, {
             spendAction: false, setup,
           });
           sequence += 1;
+          previousEvent = event; previousTarget = eventTarget(event, saved.target, setup);
           const chain = DMR()?.chain(sequence, round, member, event, setup, turnKey) || { events: [event], sequence };
           events.push(...chain.events); sequence = chain.sequence;
           if (member.state.is_dead || Q()?.incapacitated?.(member.state)) break;
+          continue;
         }
+        previousEvent = null; previousTarget = null;
       }
 
       if (definition.isAttackAction && lightTrigger && !member.state.turn_terminated
