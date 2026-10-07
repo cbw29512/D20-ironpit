@@ -13,7 +13,7 @@ const load = (name) => vm.runInThisContext(
 
 window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
 window.IRON_PIT_BROWSER_DEBUFF_COUNTERS = { movementCost: () => null };
-window.IRON_PIT_BROWSER_MODIFIERS = {};
+window.IRON_PIT_BROWSER_MODIFIERS = { expireTargetTurn: () => {} };
 load("browser-terminal-effects.js");
 load("browser-timed-conditions.js");
 load("browser-failed-save-timed-effects.js");
