@@ -21,6 +21,13 @@ def supports_save_action_2014(action: object) -> bool:
             return False
         if not {"id", "name", "save_ability", "dc", "range_ft"} <= set(action):
             return False
+        push_ft = action.get("failure_push_ft", 0)
+        if (
+            isinstance(push_ft, bool)
+            or not isinstance(push_ft, int)
+            or push_ft < 0
+        ):
+            return False
         if not supports_failed_save_control_2014(action):
             return False
         count = int(action.get("damage_dice_count", 0) or 0)
