@@ -3,8 +3,13 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
-  const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [] }
-    : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [] };
+  const slotData = (slot) => Array.isArray(slot)
+    ? { attackIds: slot, saveActionIds: [], requiresPreviousHit: false, sameTargetAsPrevious: false }
+    : {
+      attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [],
+      requiresPreviousHit: Boolean(slot.requiresPreviousHit),
+      sameTargetAsPrevious: Boolean(slot.sameTargetAsPrevious),
+    };
 
   function validatedVariants(member) {
     try {
@@ -25,6 +30,10 @@
         const data = slotData(slot);
         if (!data.attackIds.length && !data.saveActionIds.length) throw new Error("Empty Multiattack slot.");
         if (data.attackIds.length > 16 || data.saveActionIds.length > 16) throw new Error("Invalid Multiattack choice count.");
+        if ((slot.requiresPreviousHit !== undefined && typeof slot.requiresPreviousHit !== "boolean")
+          || (slot.sameTargetAsPrevious !== undefined && typeof slot.sameTargetAsPrevious !== "boolean")) {
+          throw new Error("Invalid conditional Multiattack slot policy.");
+        }
         const unknown = [...data.attackIds.filter((id) => !attacks.has(id)), ...data.saveActionIds.filter((id) => !saves.has(id))];
         if (unknown.length) throw new Error(`Unknown Multiattack IDs: ${unknown.join(", ")}`);
       }
@@ -39,10 +48,11 @@
     }
   }
 
-  function saveChoice(member, setup, data) {
+  function saveChoice(member, setup, data, targetOverride = null) {
     try {
       const allowed = new Set(data.saveActionIds);
-      for (const target of F().targetOrder(member, setup)) {
+      const targets = targetOverride ? [targetOverride] : F().targetOrder(member, setup);
+      for (const target of targets) {
         const action = (member.state.template.saving_throw_actions || []).find((item) =>
           allowed.has(item.id) && V().legalAction(item, target, F().saveDistance(member, target, item.range), member.combatant_id));
         if (action) return { target, save: action, distance: F().saveDistance(member, target, action.range) };
@@ -56,13 +66,24 @@
 
   function sequenceDamage(member, setup, variant, mode) {
     try {
-      return variant.slots.reduce((total, slot) => {
-        const data = slotData(slot), choice = F().chooseSlotAttack(member, setup, data.attackIds, mode);
-        if (choice) return total + F().weaponMeanDamage(choice.attack);
-        const saved = saveChoice(member, setup, data);
+      let total = 0, previousTarget = null, previousAttackAvailable = false;
+      for (const slot of variant.slots) {
+        const data = slotData(slot);
+        if (data.requiresPreviousHit && !previousAttackAvailable) {
+          previousTarget = null; previousAttackAvailable = false; continue;
+        }
+        const targetOverride = data.sameTargetAsPrevious ? previousTarget : null;
+        const choice = F().chooseSlotAttack(member, setup, data.attackIds, mode, targetOverride);
+        if (choice) {
+          total += F().weaponMeanDamage(choice.attack);
+          previousTarget = choice.target; previousAttackAvailable = true; continue;
+        }
+        const saved = saveChoice(member, setup, data, targetOverride);
         const parts = saved?.save.damageComponents?.length ? saved.save.damageComponents : saved ? [saved.save] : [];
-        return total + parts.reduce((sum, p) => sum + (p.damageDiceCount ?? p.diceCount ?? 0) * ((p.damageDiceSize ?? p.diceSize ?? 6) + 1) / 2 + (p.damageBonus || 0), 0);
-      }, 0);
+        total += parts.reduce((sum, p) => sum + (p.damageDiceCount ?? p.diceCount ?? 0) * ((p.damageDiceSize ?? p.diceSize ?? 6) + 1) / 2 + (p.damageBonus || 0), 0);
+        previousTarget = saved?.target || null; previousAttackAvailable = false;
+      }
+      return total;
     } catch (error) { console.error("Failed Multiattack sequence scoring", { id: member?.combatant_id, error }); throw error; }
   }
 
