@@ -5925,13 +5925,6 @@
       {
         "demand_count": 1,
         "monsters": [
-          "Flesh Golem"
-        ],
-        "printed_name": "Aversion of Fire"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
           "Barbed Devil"
         ],
         "printed_name": "Barbed Hide"
