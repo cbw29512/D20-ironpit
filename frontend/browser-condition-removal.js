@@ -3,8 +3,13 @@
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const P = () => window.IRON_PIT_BROWSER_SPELLCASTING;
+  const WAKE_SLEEPER = Object.freeze({
+    id: "wake-sleeper", name: "Wake Sleeper", actionCost: "action", range: 5,
+    targetMode: "ally", removableConditions: ["unconscious"], maxConditionsPerUse: 1,
+    animation: "condition-ended",
+  });
   const PRIORITY = {
-    paralyzed: 0, stunned: 0, incapacitated: 0, petrified: 0,
+    paralyzed: 0, stunned: 0, incapacitated: 0, petrified: 0, unconscious: 0,
     blinded: 1, restrained: 1, poisoned: 2, frightened: 2, charmed: 2,
     deafened: 3, grappled: 3, prone: 4, exhaustion: 4, curse: 4,
     "ability-score-reduction": 5, "hit-point-maximum-reduction": 5,
@@ -79,7 +84,7 @@
 
   function chooseAction(remover, setup, turnKey) {
     const choices = [];
-    for (const action of remover.state.template.condition_removal_actions || []) {
+    for (const action of [...(remover.state.template.condition_removal_actions || []), WAKE_SLEEPER]) {
       if (action.actionCost === "reaction" || !E().available(remover.state, action.actionCost)) continue;
       if (!slotAvailable(remover, action, turnKey)) continue;
       for (const target of allies(remover, setup)) {
