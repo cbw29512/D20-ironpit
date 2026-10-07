@@ -48,6 +48,7 @@ All fight-only mutation lives in temporary combat state and resets after the mat
    - `ENGINE_TRULY_MISSING`
 5. Reuse or compose existing universal primitives.
 6. Bind only the monster's source parameters.
+   If a printed trait is already fully implied by stricter/equivalent universal rules for every legal source action, prove that equivalence from source parameters and certify the trait instead of adding duplicate runtime behavior.
 7. Prove one representative monster.
 8. Expand the same binding to the mechanically identical family.
 9. Run one focused family verification, regenerate owned outputs, then use one final-head CI pass.
