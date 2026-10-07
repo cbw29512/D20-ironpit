@@ -20,10 +20,13 @@ def save_choice(
     attacker: EncounterCombatant,
     setup: EncounterSetup,
     slot: AttackActionSlot,
+    *,
+    target_override: EncounterCombatant | None = None,
 ):
     try:
         allowed = set(slot.save_action_ids)
-        for target in target_order(attacker, setup):
+        targets = [target_override] if target_override is not None else target_order(attacker, setup)
+        for target in targets:
             for action in attacker.state.template.saving_throw_actions:
                 if action.id not in allowed:
                     continue
@@ -50,18 +53,28 @@ def attack_choice(
     attacker: EncounterCombatant,
     setup: EncounterSetup,
     slot: AttackActionSlot,
-    *, mode: WeaponAttackKind | None = None,
+    *,
+    mode: WeaponAttackKind | None = None,
+    target_override: EncounterCombatant | None = None,
 ):
     """Choose a printed Multiattack option using legal melee reach before damage scoring."""
     try:
         if flexible_slot_has_both(attacker, slot.attack_ids):
             preferred = mode or flexible_attack_mode(attacker, setup)
-            return choose_attack(attacker, setup, slot.attack_ids, kind=preferred)
+            return choose_attack(
+                attacker, setup, slot.attack_ids, kind=preferred, target_override=target_override,
+            )
 
-        melee = choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.MELEE)
+        melee = choose_attack(
+            attacker, setup, slot.attack_ids,
+            kind=WeaponAttackKind.MELEE, target_override=target_override,
+        )
         if melee is not None:
             return melee
-        return choose_attack(attacker, setup, slot.attack_ids, kind=WeaponAttackKind.RANGED)
+        return choose_attack(
+            attacker, setup, slot.attack_ids,
+            kind=WeaponAttackKind.RANGED, target_override=target_override,
+        )
     except Exception:
         logger.exception("Failed to choose attack slot for %s.", attacker.combatant_id)
         raise
