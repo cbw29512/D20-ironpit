@@ -3,7 +3,7 @@ name: Sync Generated Certification Artifacts
 on:
   workflow_dispatch:
   push:
-    branches: [main, m016-bronze-repulsion-breath]
+    branches: [main]
 
 permissions:
   contents: write
