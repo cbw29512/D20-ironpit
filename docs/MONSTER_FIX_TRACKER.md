@@ -30,7 +30,9 @@ sets the work lane. Rules live in the rules contract, not this tracker.
 | P1 M-014 | Complete, merged #635 | Violet Fungus rolls 1d4 Rotting Touch attacks. | One logged count roll and one Action, ordinary attacks/retarget/interruption/reset. 70 focused Python cases, seven new browser scenarios, affected prior fixtures and all four final-head gates passed. [Audit](FUNGUS_SEQUENCE_AUDIT.md). |
 
 | P1 M-015 | Complete, merged #637 | Brass Dragon Sleep Breath for Wyrmling/Young/Adult required failed-save Unconscious with damage expiry and a printed ally Action to wake; Ancient Brass also had an unrelated extra-action blocker. | Reused save-area, shared breath recharge, timed Unconscious, ends-on-damage, and generic `wake-sleeper`; source parameters remain edition/card data. All four exact-head gates passed. |
-| P1 M-016 | Queued, Bronze Dragon save-action family | Wyrmling/Young each retain only `mechanic:save-action`; Adult/Ancient also retain independent `source:extra-action`. | Read exact 2014 source action, decompose behavior, reuse existing universal save/movement/timing primitives where exact; park any genuinely missing semantic instead of inventing a Bronze-specific resolver. |
+| P1 M-016 | Complete, merged #640 | Bronze Dragon Repulsion Breath reused shared save-area + forced movement; Wyrmling/Young became READY while Adult/Ancient retain unrelated extra actions. | Exact source push distances flow as source parameters; all four exact-head gates passed. |
+| P1 M-017 | Complete, merged #641 | Gorgon Petrifying Breath reused staged Restrained -> repeat save -> Petrified lifecycle. | Generic failed-save escalation data now carries through the shared save pipeline; all four exact-head gates passed. |
+| P1 M-018 | Active | Cyclops Poor Depth Perception is Disadvantage beyond 30 ft. Its only attack that can legally exceed 30 ft. is Rock (30/120), already covered exactly by universal long-range Disadvantage. | Bind only after proving source threshold and attack ranges; no new attack modifier primitive. |
 
 ## Current evidence
 
