@@ -68,7 +68,6 @@ class VisualLoadout(BaseModel):
     main_hand: str
     off_hand: str | None = None
     body_style: str = "humanoid"
-
 class ResourceDefinition(BaseModel):
     id: str
     name: str
