@@ -13,6 +13,8 @@ def _preview_slot(attacker, setup, slot, mode, previous_target, previous_attack_
     try:
         if slot.requires_previous_hit and not previous_attack_available:
             return None, None
+        if slot.same_target_as_previous and previous_target is None:
+            return None, None
         target = previous_target if slot.same_target_as_previous else None
         chosen = attack_choice(attacker, setup, slot, mode=mode, target_override=target)
         saved = save_choice(attacker, setup, slot, target_override=target) if chosen is None else None
