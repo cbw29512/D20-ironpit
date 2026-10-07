@@ -32,6 +32,8 @@ def resolve_hostile_condition_aura(
         aura = action.hostile_start_turn_condition_aura
         if aura is None or aura.trigger != "enemy_turn_start" or distance > aura.radius_ft:
             return None, sequence
+        if aura.recipient_scope == "enemies" and source.side == target.side:
+            return None, sequence
 
         if target.state.is_dead or condition_is_immune(
             target.state, aura.condition_id, source.state.template,
@@ -78,6 +80,8 @@ def resolve_hostile_condition_aura(
                 ends_if_source_dead=action.ends_if_source_dead,
                 affected_states=affected_states,
                 use_default_poison_recovery=False,
+                suppress_reactions=aura.suppress_reactions,
+                control_limits=aura.control_limits,
             )
             if condition is not None:
                 applied.append(condition)
