@@ -63,6 +63,9 @@ def resolve_attack_action(
             if slot.requires_previous_hit and not getattr(previous_event, "hit", False):
                 previous_event = previous_target = None
                 continue
+            if slot.same_target_as_previous and previous_target is None:
+                previous_event = previous_target = None
+                continue
             target_override = previous_target if slot.same_target_as_previous else None
             deferred = resolve_deferred_effect_attack_slot(
                 sequence,
