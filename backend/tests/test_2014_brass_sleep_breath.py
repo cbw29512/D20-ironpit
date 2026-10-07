@@ -110,6 +110,7 @@ def test_wyrmling_sleep_breath_uses_universal_unconscious_and_wake_action() -> N
     assert effect.allowed_removal_action_ids == ["wake-sleeper"]
     assert is_incapacitated(sleeper.state) is True
     assert condition_speed_is_zero(sleeper.state) is True
+    assert "prone" in sleeper.state.active_effect_ids
 
     choice = choose_condition_removal_action(helper, setup, "1:hero:helper")
     assert choice is not None
@@ -124,6 +125,7 @@ def test_wyrmling_sleep_breath_uses_universal_unconscious_and_wake_action() -> N
     assert helper.state.action_available is False
     assert wake_event.feature_id == "wake-sleeper"
     assert "unconscious" not in sleeper.state.active_effect_ids
+    assert "prone" in sleeper.state.active_effect_ids
     assert not any(item.effect_id == "unconscious" for item in sleeper.state.timed_effects)
     assert is_incapacitated(sleeper.state) is False
 

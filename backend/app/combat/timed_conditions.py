@@ -155,6 +155,12 @@ def apply_timed_condition(
         ))
         if effect_id not in state.active_effect_ids:
             state.active_effect_ids.append(effect_id)
+        if (
+            effect_id == "unconscious"
+            and "prone" not in state.active_effect_ids
+            and not condition_is_immune(state, "prone")
+        ):
+            state.active_effect_ids.append("prone")
         apply_terminal_condition_outcome(state, effect_id, affected_states=affected_states)
         revert_replacement_form_if_incapacitated(state)
         end_concentration_if_incapacitated(state, affected_states)

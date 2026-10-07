@@ -83,6 +83,7 @@ assert.equal(effect.ends_on_damage, true);
 assert.deepEqual(effect.allowed_removal_action_ids, ["wake-sleeper"]);
 assert.equal(window.IRON_PIT_BROWSER_CONDITION_RULES.incapacitated(sleeper.state), true);
 assert.equal(window.IRON_PIT_BROWSER_CONDITION_RULES.speedZero(sleeper.state), true);
+assert.equal(sleeper.state.active_effect_ids.includes("prone"), true);
 
 const setup = { heroes: [helper, sleeper], monsters: [dragon] };
 const choice = window.IRON_PIT_BROWSER_CONDITION_REMOVAL.chooseAction(helper, setup, "1:helper");
@@ -97,6 +98,7 @@ const wake = window.IRON_PIT_BROWSER_CONDITION_REMOVAL.resolve(
 assert.equal(wake.feature_id, "wake-sleeper");
 assert.equal(helper.state.action_available, false);
 assert.equal(sleeper.state.active_effect_ids.includes("unconscious"), false);
+assert.equal(sleeper.state.active_effect_ids.includes("prone"), true);
 assert.equal(sleeper.state.timed_effects.some((item) => item.effect_id === "unconscious"), false);
 assert.equal(window.IRON_PIT_BROWSER_CONDITION_RULES.incapacitated(sleeper.state), false);
 
