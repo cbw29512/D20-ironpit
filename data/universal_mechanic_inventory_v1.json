@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "policy": "Universal behavior is indexed by mechanic id. Source names are presentation/audit metadata. Homebrew must compose supported universal mechanics and source parameters before any new primitive is considered.",
+  "policy": "Universal behavior is indexed by mechanic id. Complete source-specific abilities remain authoritative source data. Homebrew and unique monster abilities compose supported universal mechanics plus source parameters; only a genuinely new semantic remainder justifies a new reusable primitive.",
   "engine": {
     "summary": {
       "partial": 10,
