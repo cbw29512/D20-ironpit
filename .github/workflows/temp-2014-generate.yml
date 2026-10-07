@@ -1,0 +1,44 @@
+name: Temporary 2014 Generated Artifact
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install rules reference
+        working-directory: backend
+        run: pip install -e '.[dev]'
+      - name: Regenerate affected canonical artifacts
+        run: |
+          python scripts/export_monster_fix_list_2014.py
+          python scripts/export_browser_heroes.py
+          python scripts/export_browser_monsters.py
+          python scripts/export_browser_monsters_2014.py
+          python scripts/verify_certification_manifests.py --write
+          python scripts/prepare_static_site.py
+      - name: Upload generated truth
+        uses: actions/upload-artifact@v4
+        with:
+          name: brass-generated-${{ github.event.pull_request.head.sha }}
+          path: |
+            docs/MONSTER_BLOCKERS_2014.md
+            data/hero_certification_manifest.json
+            data/monster_certification_manifest.json
+            frontend/browser-heroes.js
+            frontend/browser-monsters-generated.js
+            frontend/browser-monsters-2014.js
+            frontend/browser-spell-effects.js
+            frontend/data/srd_5_2_1_monsters.json
+          retention-days: 1
