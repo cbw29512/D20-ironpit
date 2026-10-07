@@ -175,6 +175,11 @@
         }
         const end = lifecycle(sequence, round, member, setup, "target_turn_end", "source_turn_end");
         events.push(...end.events); sequence = end.sequence;
+        if ((member.state.active_damage_triggered_d20_debuffs || []).length) {
+          const runtime = window.IRON_PIT_BROWSER_DAMAGE_TRIGGERED_D20_DEBUFF;
+          if (!runtime?.expireTargetTurn) throw new Error("Damage-triggered D20 debuff runtime is not loaded.");
+          runtime.expireTargetTurn(member.state);
+        }
         window.IRON_PIT_BROWSER_TEMPORARY_TERRAIN?.expireSource(setup, member.combatant_id, round);
         const endZones = window.IRON_PIT_BROWSER_SAVE_ZONES?.resolveWindow(
           sequence, round, member, setup, `${round}:${member.combatant_id}`, "end_turn",
