@@ -6,7 +6,7 @@ global.window = globalThis;
 try {
   for (const file of ["browser-heroes.js", "browser-opening-modifiers.js", "browser-condition-immunity.js",
     "browser-condition-rules.js", "browser-action-economy.js", "browser-state.js", "browser-grid-geometry.js",
-    "browser-timed-conditions.js", "browser-spellcasting.js", "browser-condition-removal.js", "browser-pooled-healing.js",
+    "browser-timed-conditions.js", "browser-spellcasting.js", "browser-condition-removal-policy.js", "browser-condition-removal.js", "browser-pooled-healing.js",
     "browser-healing-policy.js", "browser-healing-resolution.js", "browser-healing.js", "browser-support.js"]) {
     vm.runInThisContext(fs.readFileSync(`frontend/${file}`, "utf8"), { filename: file });
   }
