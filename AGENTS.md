@@ -9,20 +9,19 @@ When Chris has more than one assistant working on Iron Pit concurrently, read an
 Before changing combat code, read:
 
 1. `SOUL.md` — first-read product philosophy: semantic mechanics over source names; universal reuse is mandatory.
-2. `docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md` — small router. Read only the task guide it points to: Monsters, Universal Engine, or Pregens.
-3. `docs/CURRENT_OPERATING_STATUS.md` — current lane, certified counts, parked PRs, CI spend rules.
-4. `docs/IRON_PIT_LOCKED_RULES.md` — Chris-locked product rules index. Do not duplicate it.
-5. `docs/IRON_PIT_RULES_CONTRACT.md` — detailed product/combat contract those locks cite; open when the playbook is insufficient or a rule is uncertain.
-6. `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md` — battlefield/card-token/grid authority when the mechanic touches spatial behavior.
-7. `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md` — detailed engine/data authority when adding or widening a shared primitive.
-8. `docs/COMBAT_RESOLUTION_PIPELINE.md` — resolver ordering authority when sequencing is affected.
-9. `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md` — sequencing-phase extension authority when hooks are affected.
-10. `docs/MAIN_ACTION_SELECTION_CONTRACT.md` — action-selection authority when legal/AI action choice is affected.
-11. `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md` — audit/event evidence authority when event shape changes.
-12. `docs/PREGEN_AND_CONTENT_RULES_CONTRACT.md` — detailed content binding authority for pregens/content ambiguity.
-13. `docs/CANONICAL_COMBAT_BUILD_POLICY.md` — canonical pregen construction authority when build choices change.
-14. current source/runtime code and permanent tests.
-15. generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
+2. `docs/CURRENT_OPERATING_STATUS.md` — current lane, certified counts, parked PRs, CI spend rules.
+3. `docs/IRON_PIT_LOCKED_RULES.md` — Chris-locked product rules index. Do not duplicate it.
+4. `docs/IRON_PIT_RULES_CONTRACT.md` — detailed product/combat contract those locks cite.
+5. `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md` — specific battlefield/card-token/grid architecture; it supersedes older fixed-formation/deity-closing assumptions wherever they conflict.
+6. `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md` — durable universal-engine and data-binding architecture.
+7. `docs/COMBAT_RESOLUTION_PIPELINE.md` — canonical checks/modifiers/result/state/audit pipeline and source-name dispatch prohibition.
+8. `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md` — authoritative sequencing-phase extension to the universal architecture.
+9. `docs/MAIN_ACTION_SELECTION_CONTRACT.md` — authoritative separation of legal Action candidates from Arena tactical selection.
+10. `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md` — audit/event evidence contract.
+11. `docs/PREGEN_AND_CONTENT_RULES_CONTRACT.md` — source/content binding contract.
+12. `docs/CANONICAL_COMBAT_BUILD_POLICY.md` — canonical pregen construction.
+13. current source/runtime code and permanent tests.
+14. generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
 
 Repository truth beats chat summaries, historical counts, old milestone prose, uploaded registry dumps, and stale file-library references. External/user-provided files are evidence only until reconciled against the exact current commit.
 
@@ -95,12 +94,10 @@ The transfer packet is a cache; the repository is the database.
 
 Before **every** class, subclass, feat, spell, item, monster, legendary action, lair action, or other combat-mechanic implementation, re-read:
 
-- `SOUL.md`
-- `docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md`
-- the single task guide it routes to (`docs/playbooks/MONSTERS.md`, `docs/playbooks/UNIVERSAL_ENGINE.md`, or `docs/playbooks/PREGENS.md`)
-- the relevant current source/card data
-
-Do **not** repeatedly reload every long architecture contract when the playbook already answers the implementation pattern. Open the detailed authority file when the mechanic touches that subsystem, the playbook points to it, a rule is uncertain, or implementation conflicts with existing code/tests.
+- `docs/IRON_PIT_RULES_CONTRACT.md`
+- `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`
+- `docs/PREGEN_AND_CONTENT_RULES_CONTRACT.md`
+- `docs/CANONICAL_COMBAT_BUILD_POLICY.md`
 
 Then perform this check **before writing code**:
 
