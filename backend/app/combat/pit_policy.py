@@ -91,11 +91,18 @@ def choose_attack(
     *,
     kind: WeaponAttackKind | None = None,
     prefer_backline: bool = False,
+    target_override: EncounterCombatant | None = None,
 ) -> tuple[EncounterCombatant, WeaponAttack, int] | None:
     """Choose an actually legal attack at the combatants' current battlefield positions."""
     try:
         profiles = _attack_profiles(attacker, allowed_ids, kind)
-        for target in target_order(attacker, setup, prefer_backline=prefer_backline):
+        opponents = living_opponents(attacker, setup)
+        targets = (
+            [target_override] if target_override is not None and target_override in opponents
+            else [] if target_override is not None
+            else target_order(attacker, setup, prefer_backline=prefer_backline)
+        )
+        for target in targets:
             distance = combatant_distance(attacker, target)
             legal = [
                 attack
