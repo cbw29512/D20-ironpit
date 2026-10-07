@@ -437,7 +437,6 @@ Blocked monsters: **127**. These are grouped by printed ability name so the rost
 | Air Form | Air Elemental | 1 |
 | Ambusher | Doppelganger | 1 |
 | Assassinate | Assassin | 1 |
-| Aversion of Fire | Flesh Golem | 1 |
 | Barbed Hide | Barbed Devil | 1 |
 | Berserk | Clay Golem, Flesh Golem | 2 |
 | Blind Senses | Grimlock | 1 |
