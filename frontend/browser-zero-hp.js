@@ -96,12 +96,33 @@
     return outcome;
   }
 
+  function applyTerminalDeath(state, affectedStates = []) {
+    if (state.is_dead) return "unchanged";
+    state.current_hp = 0;
+    state.is_alive = false;
+    state.is_dead = true;
+    state.is_unconscious = false;
+    state.is_stable = false;
+    endDodge(state);
+    RF()?.revertIfIncapacitated(state);
+    if (state.concentration && C()) C().endIfIncapacitated(state, affectedStates);
+    return "dead";
+  }
+
+  function applyTerminalEffectTag(state, effectTag, affectedStates = []) {
+    const normalized = String(effectTag || "").trim().toLowerCase();
+    if (!normalized) throw new Error("Terminal effect tag must be non-empty.");
+    const tags = (state.template.terminal_effect_tags || [])
+      .map((item) => String(item).trim().toLowerCase())
+      .filter(Boolean);
+    if (!tags.includes(normalized)) return "not_susceptible";
+    return applyTerminalDeath(state, affectedStates);
+  }
+
   function applyInstantDeath(state, affectedStates = []) {
     if (state.is_dead || !state.is_alive) return "unchanged";
     if (Z()?.consumeInstantDeath(state)) return "zero_hp_replacement";
-    markDead(state);
-    if (state.concentration && C()) C().endIfIncapacitated(state, affectedStates);
-    return "dead";
+    return applyTerminalDeath(state, affectedStates);
   }
 
   function reduceToZero(state, affectedStates = []) {
@@ -194,5 +215,7 @@
     return finish(state, "unconscious", incoming, affectedStates, setup);
   }
 
-  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, applyInstantDeath, reduceToZero, stabilizeAtZero };
+  window.IRON_PIT_BROWSER_ZERO_HP = {
+    applyDamage, applyInstantDeath, applyTerminalDeath, applyTerminalEffectTag, reduceToZero, stabilizeAtZero,
+  };
 })();
