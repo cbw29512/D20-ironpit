@@ -257,3 +257,107 @@ def test_stone_golem_slow_does_not_apply_slow_spell_penalties() -> None:
         dc=17,
         range_ft=10,
         failed_save_timed_effect=_rider_from_catalog(_catalog_action("stone-golem", "slow")),
+    )
+    ac_before = effective_armor_class(hero.state)
+    event = resolve_save_action(1, 1, golem, hero, action, 5, FixedDiceProvider([1]))
+    assert event.save_succeeded is False
+    begin_turn(hero.state)
+    assert effective_speed(hero.state) == 15
+    assert is_available(hero.state, "reaction") is False
+    assert effective_armor_class(hero.state) == ac_before
+    assert saving_throw_flat_bonus(hero.state, "dexterity") == 0
+    assert timed_ability_d20_disadvantage_sources(hero.state, "strength") == 0
+
+
+def test_gold_weakening_breath_applies_strength_disadvantage_only() -> None:
+    dragon = _member(build_commoner().model_copy(update={"ruleset": "2014"}), "gold", "monsters", 0)
+    hero = _member(build_karnok_stoneward_level(5), "hero", "heroes", 5)
+    action = SavingThrowAction(
+        id="weakening-breath",
+        name="Weakening Breath",
+        save_ability="strength",
+        dc=13,
+        range_ft=15,
+        failed_save_timed_effect=_rider_from_catalog(_catalog_action("gold-dragon-wyrmling", "weakening-breath")),
+    )
+    ac_before = effective_armor_class(hero.state)
+    event = resolve_save_action(1, 1, dragon, hero, action, 10, FixedDiceProvider([1]))
+    assert event.save_succeeded is False
+    begin_turn(hero.state)
+    assert effective_speed(hero.state) == 30
+    assert is_available(hero.state, "reaction") is True
+    spend(hero.state, "action")
+    assert is_available(hero.state, "bonus_action") is True
+    assert hero.state.movement_remaining_ft == 30
+    assert timed_ability_d20_disadvantage_sources(hero.state, "strength") == 1
+    assert timed_ability_d20_disadvantage_sources(hero.state, "dexterity") == 0
+    assert ability_check_disadvantage_sources(hero.state, "strength") == 1
+    assert saving_throw_mode(hero.state, "strength") is RollMode.DISADVANTAGE
+    assert saving_throw_mode(hero.state, "dexterity") is RollMode.NORMAL
+    assert effective_armor_class(hero.state) == ac_before
+    assert turn_attack_allowed(hero.state) is True
+
+
+def test_slow_spell_penalties_apply_only_when_printed() -> None:
+    state = build_combatant_state(build_karnok_stoneward_level(5))
+    ac_before = effective_armor_class(state)
+    apply_timed_condition(
+        state,
+        "slowed",
+        "wizard",
+        source_effect_id="slow",
+        suppress_reactions=True,
+        control_limits=TimedControlLimits(
+            speed_multiplier=0.5,
+            action_bonus_exclusive=True,
+            max_attacks_per_turn=1,
+            armor_class_bonus=-2,
+            saving_throw_flat_bonuses=[TimedSaveFlatBonus(ability="dexterity", flat_bonus=-2)],
+        ),
+    )
+    assert effective_armor_class(state) == ac_before - 2
+    assert saving_throw_flat_bonus(state, "dexterity") == -2
+    assert saving_throw_flat_bonus(state, "constitution") == 0
+    assert timed_ability_d20_disadvantage_sources(state, "strength") == 0
+
+
+def test_single_activity_still_zeros_movement_after_an_action() -> None:
+    state = build_combatant_state(build_karnok_stoneward_level(5))
+    apply_timed_condition(
+        state,
+        "frightened",
+        "paladin",
+        source_effect_id="abjure-foes",
+        turn_behavior="single_activity",
+    )
+    begin_turn(state)
+    spend(state, "action")
+    assert state.movement_remaining_ft == 0
+    assert is_available(state, "bonus_action") is False
+
+
+def test_copper_slowing_breath_caps_extra_attack_at_one() -> None:
+    hero = _member(build_karnok_stoneward_level(5), "hero-1:karnok-l5", "heroes", 0)
+    target = _member(
+        build_commoner().model_copy(update={"max_hp": 200, "ruleset": "2014"}),
+        "monster-1",
+        "monsters",
+        5,
+    )
+    setup = EncounterSetup(
+        heroes=[hero], monsters=[target], hero_total_levels=5, monster_total_cr="0", ruleset="2014",
+    )
+    apply_timed_condition(
+        hero.state,
+        "slowed",
+        "copper",
+        source_effect_id="slowing-breath",
+        suppress_reactions=True,
+        control_limits=_rider_from_catalog(
+            _catalog_action("copper-dragon-wyrmling", "slowing-breath")
+        ).compiled_limits(),
+    )
+    begin_turn(hero.state)
+    events, _ = resolve_attack_action(1, 1, hero, setup, FixedDiceProvider([2, 2, 2, 2]))
+    assert len([event for event in events if event.event_type == "attack"]) == 1
+    assert turn_attack_allowed(hero.state) is False
