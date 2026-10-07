@@ -13,8 +13,6 @@ Earth Glide, Tunneler, and Treasure Sense stay listed: the Pit has no destructib
 earth/rock or hidden metal/treasure for those traits to act on.
 Immutable Form stays listed while the supported combat surface has no hostile form-alter
 effect. Existing replacement-form support changes only the acting combatant's own form.
-Immutable Form stays listed while the supported combat surface has no hostile form-alter
-effect. Existing replacement-form support changes only the acting combatant's own form.
 """
 from __future__ import annotations
 
