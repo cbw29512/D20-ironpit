@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
 from app.domain.damage_sources import ConditionalDamageDefense
+from app.domain.damage_triggered_d20 import ActiveDamageTriggeredD20Debuff
 from app.domain.d20_bonus_dice import ActiveD20BonusDieGrant
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
@@ -50,6 +51,7 @@ class CombatantState(BaseModel):
     template: CombatantTemplate
     current_hp: int
     current_round: int | None = Field(default=None, ge=1)
+    turns_started_count: int = Field(default=0, ge=0)
     max_hp_bonus: int = Field(default=0, ge=0)
     temporary_hp: int = Field(default=0, ge=0)
     position: GridPosition | None = None
@@ -110,6 +112,7 @@ class CombatantState(BaseModel):
     damage_types_taken_since_regen: list[str] = Field(default_factory=list)
     damage_taken_this_turn_by_type: dict[str, int] = Field(default_factory=dict)
     triggered_extra_attack_stack_counts: dict[str, int] = Field(default_factory=dict)
+    active_damage_triggered_d20_debuffs: list[ActiveDamageTriggeredD20Debuff] = Field(default_factory=list)
     source_owned_exhaustion_levels: dict[str, int] = Field(default_factory=dict)
 
 
