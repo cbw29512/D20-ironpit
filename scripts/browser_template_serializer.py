@@ -902,6 +902,19 @@ def _bonus_attack_grant(item: Any) -> dict[str, Any]:
         row["onHitConditionSave"] = save_row
     return row
 
+def _attack_action_slot(slot: Any) -> dict[str, Any]:
+    try:
+        row = {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
+        if slot.requires_previous_hit:
+            row["requiresPreviousHit"] = True
+        if slot.same_target_as_previous:
+            row["sameTargetAsPrevious"] = True
+        return row
+    except Exception:
+        logger.exception("Failed to serialize attack-action slot.")
+        raise
+
+
 def template_row(template: CombatantTemplate) -> dict[str, Any]:
     try:
         traits = {item.value for item in template.combat_traits}
@@ -1182,14 +1195,13 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             ]
         if template.attack_action:
             row["attack_action"] = {"id": template.attack_action.id, "name": template.attack_action.name, "slots": [
-                {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
+                _attack_action_slot(slot)
                 for slot in template.attack_action.slots
             ]}
         if template.attack_action and template.attack_action.variants:
             row["attack_action"]["variants"] = [
                 {"id": variant.id, "attackKind": _value(variant.attack_kind) if variant.attack_kind else None,
-                 "slots": [{"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
-                           for slot in variant.slots]}
+                 "slots": [_attack_action_slot(slot) for slot in variant.slots]}
                 for variant in template.attack_action.variants
             ]
         if template.regeneration is not None:
