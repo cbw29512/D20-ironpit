@@ -33,10 +33,31 @@
   }
   function enemies(member, setup) { return member.side === "heroes" ? setup.monsters : setup.heroes; }
   function livingTargets(member, setup) {
-    const pool = enemies(member, setup), active = pool.filter(alive);
-    if (active.length) return active;
-    return pool.filter((target) => target.state.template.kind === "character"
-      && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0);
+    try {
+      const override = window.IRON_PIT_BROWSER_TARGETING_OVERRIDES?.activeRule(member.state) || null;
+      if (override) {
+        if (override.targetMode !== "nearest_visible_creature") {
+          throw new Error(`Unsupported targeting override mode: ${override.targetMode}.`);
+        }
+        const candidates = [...setup.heroes, ...setup.monsters].filter((target) =>
+          target.combatant_id !== member.combatant_id
+          && (alive(target) || (target.state.template.kind === "character"
+            && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0))
+          && !window.IRON_PIT_BROWSER_CHARMED_TARGETING?.blocks(member.state, target.combatant_id)
+          && window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(member.state, target.state, S().distance(member, target)));
+        if (!candidates.length) return [];
+        candidates.sort((a, b) => S().distance(member, a) - S().distance(member, b)
+          || a.combatant_id.localeCompare(b.combatant_id));
+        return [candidates[0]];
+      }
+      const pool = enemies(member, setup), activeTargets = pool.filter(alive);
+      if (activeTargets.length) return activeTargets;
+      return pool.filter((target) => target.state.template.kind === "character"
+        && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0);
+    } catch (error) {
+      console.error("Failed browser living target selection", { member: member?.combatant_id, error });
+      throw error;
+    }
   }
   function targetOrder(member, setup, preferBackline = false) {
     const targets = livingTargets(member, setup);
