@@ -40,7 +40,7 @@ All fight-only mutation lives in temporary combat state and resets after the mat
 1. Read the exact source text and edition.
 2. Rewrite each combat ability without its printed name:
    `trigger/timing -> action/resource -> attack/check/save -> damage/healing -> condition/state -> range/area/movement -> duration -> exits/reset`.
-3. Search existing **monster and pregen** implementations for every semantic piece.
+3. Read `docs/UNIVERSAL_MECHANIC_INVENTORY.md`, then search existing **monster and pregen** implementations for every semantic piece. Use its reverse monster ability index to find every current consumer before scanning source files manually.
 4. Classify the gap:
    - `ENGINE_EXISTS_BINDING_MISSING`
    - `ENGINE_EXISTS_CERTIFICATION_MISSING`
@@ -52,7 +52,7 @@ All fight-only mutation lives in temporary combat state and resets after the mat
 7. Prove one representative monster.
 8. Expand the same binding to the mechanically identical family.
 9. Run one focused family verification, regenerate owned outputs, then use one final-head CI pass.
-10. Update blocker/tracker truth and continue.
+10. Regenerate the universal mechanic inventory plus blocker/tracker truth; resolved ability rows must disappear or shrink before continuing.
 
 ## Hard blocker rule
 
