@@ -62,6 +62,7 @@ class FailedSaveTimedEffect(BaseModel):
                 "disadvantage_strength_d20_tests": False,
                 "armor_class_bonus": 0,
                 "saving_throw_flat_bonuses": [],
+                "allowed_removal_action_ids": [],
             }
             for key, default in defaults.items():
                 if data.get(key) == default:
