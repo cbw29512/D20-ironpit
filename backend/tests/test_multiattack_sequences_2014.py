@@ -66,7 +66,7 @@ def test_distinct_weapons_are_complete_pairs_never_two_copies_of_best_weapon():
     assert choose_standard_attack(actor, setup)[1].id == '2014-lizardfolk-javelin-ranged'
 
 
-@pytest.mark.parametrize('key', ['bandit-captain', 'gladiator', 'medusa', 'lizardfolk'])
+@pytest.mark.parametrize('key', ['bandit-captain', 'gladiator', 'medusa', 'lizardfolk', 'grick'])
 @pytest.mark.parametrize('mutation', ['wording', 'count', 'empty', 'unknown'])
 def test_source_mutations_fail_closed(key, mutation):
     monster = source(key).model_copy(deep=True)
@@ -82,6 +82,55 @@ def test_source_mutations_fail_closed(key, mutation):
     with pytest.raises(ValueError):
         multiattack_2014(monster)
 
+
+
+def test_grick_hit_follow_up_binds_generic_slot_policy():
+    monster = source('grick')
+    before = monster.model_dump()
+    action = multiattack_2014(monster)
+    assert basic_blockers_2014(monster) == ()
+    assert len(action.variants) == 1
+    slots = action.variants[0].slots
+    assert [slot.attack_ids for slot in slots] == [
+        ['2014-grick-tentacles'], ['2014-grick-beak'],
+    ]
+    assert not slots[0].requires_previous_hit and not slots[0].same_target_as_previous
+    assert slots[1].requires_previous_hit and slots[1].same_target_as_previous
+    actor, _, setup = setup_for('grick', 5)
+    assert attack_action_damage(actor, setup) == 14
+    assert monster.model_dump() == before
+
+
+def test_grick_tentacles_miss_skips_beak_without_ending_turn():
+    class MissDice(RecordingDice):
+        def roll(self, sides):
+            self.calls.append(sides)
+            return 2 if sides == 20 else 1
+
+    actor, _, setup = setup_for('grick', 5)
+    events, _ = resolve_attack_action(1, 1, actor, setup, MissDice())
+    attacks = [event for event in events if event.event_type == 'attack']
+    assert [event.weapon_id for event in attacks] == ['2014-grick-tentacles']
+    assert attacks[0].hit is False
+    assert not actor.state.turn_terminated
+
+
+def test_grick_beak_does_not_retarget_after_tentacles_kills_target():
+    actor, target, setup = setup_for('grick', 5)
+    target.state.current_hp = 1
+    other = EncounterCombatant(
+        combatant_id='other', side='heroes', position_ft=0,
+        state=build_combatant_state(target.state.template),
+    )
+    other.state.position = GridPosition(x=5, y=6)
+    setup.heroes.append(other)
+    before_other_hp = other.state.current_hp
+    events, _ = resolve_attack_action(1, 1, actor, setup, RecordingDice())
+    assert [event.weapon_id for event in events if event.event_type == 'attack'] == [
+        '2014-grick-tentacles',
+    ]
+    assert target.state.current_hp == 0
+    assert other.state.current_hp == before_other_hp
 
 def test_fixed_shield_blocks_direct_two_handed_attack_without_mutation_or_dice():
     actor, target, _ = setup_for()
