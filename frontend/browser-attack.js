@@ -1,6 +1,6 @@
 (() => {
   "use strict"; const S = () => window.IRON_PIT_BROWSER_STATE, R = () => window.IRON_PIT_BROWSER_ROLLS, A = () => window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE || { sources: () => 0 };
-  const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP, BS = () => window.IRON_PIT_BROWSER_BRUTAL_STRIKE; const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
+  const G = () => window.IRON_PIT_BROWSER_GRAPPLE, DA = () => window.IRON_PIT_BROWSER_DISTANCE_ATTACK_DISADVANTAGE || { sources: () => 0 }, T = () => window.IRON_PIT_BROWSER_TIMED, Z = () => window.IRON_PIT_BROWSER_ZERO_HP, BS = () => window.IRON_PIT_BROWSER_BRUTAL_STRIKE; const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
   const H = () => { const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS; if (!hooks) throw new Error("Browser attack resolution requires browser-ability-hooks.js."); return hooks; };
   const O = () => { const outcome = window.IRON_PIT_BROWSER_ATTACK_OUTCOME; if (!outcome) throw new Error("Browser attack resolution requires browser-attack-outcome.js."); return outcome; }; const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) }, B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { activate: () => false, attackAdvantage: () => 0, attacksAgainstAdvantage: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { attacksAgainstAdvantage: () => 0, consumeAttacksAgainstAdvantage: () => 0, nextAttackAgainstAdvantage: () => 0, consumeNextAttackAgainstAdvantage: () => 0,
@@ -42,7 +42,8 @@
     if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
     const disadvantage = conditions.disadvantage + SAP().disadvantage(attacker.state)
-      + (T()?.nextAttackDisadvantage(attacker.state) || 0) + (extra.otherDisadvantageSources || 0) + (window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS?.disadvantageSources(attacker, extra.setup, "attack_rolls") || 0) + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(attacker.state, attack.attackAbility || attack.attack_ability) || 0);
+      + (T()?.nextAttackDisadvantage(attacker.state) || 0) + (extra.otherDisadvantageSources || 0) + (window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS?.disadvantageSources(attacker, extra.setup, "attack_rolls") || 0) + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(attacker.state, attack.attackAbility || attack.attack_ability) || 0)
+      + DA().sources(attacker.state, distance);
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
     const rangedDisadvantage = attack.kind === "ranged" && ((attack.normal && distance > attack.normal) || closeThreat);
     const recklessAdvantage = B2().attackAdvantage(attacker.state, attack);
