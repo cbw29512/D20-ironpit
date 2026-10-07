@@ -124,6 +124,7 @@ class ProgressionCombatFeatures(BaseModel):
     first_round_extra_turn_initiative_offset: int | None = Field(default=None, ge=-30, le=30)
     suppress_attack_advantage_while_not_incapacitated: bool = False
     ignore_unseen_target_attack_disadvantage: bool = False
+    attack_disadvantage_beyond_ft: int = Field(default=0, ge=0, le=1000)
     opportunity_attacks_against_disadvantage: bool = False
     concentration_damage_immune_effect_ids: list[str] = Field(default_factory=list)
     advantage_against_marked_effect_id: str | None = None
