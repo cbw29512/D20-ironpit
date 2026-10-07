@@ -16,6 +16,7 @@ _CONTROL_KEYS = frozenset({
     "repeat_save_ability",
     "repeat_save_dc",
     "repeat_save_timing",
+    "allowed_removal_action_ids",
     "source_effect_immunity_on_end",
     "ends_on_damage",
     "ends_if_source_incapacitated",
@@ -74,6 +75,8 @@ def compile_failed_save_control_2014(action: dict[str, object]) -> FailedSaveTim
             kwargs["repeat_save_ability"] = str(control["repeat_save_ability"])
             kwargs["repeat_save_dc"] = int(control["repeat_save_dc"])
             kwargs["repeat_save_timing"] = str(control["repeat_save_timing"])
+        if control.get("allowed_removal_action_ids"):
+            kwargs["allowed_removal_action_ids"] = list(control["allowed_removal_action_ids"])
         if control.get("ends_on_damage"):
             kwargs["ends_on_damage"] = True
         if control.get("ends_if_source_incapacitated"):
