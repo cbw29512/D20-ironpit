@@ -10,7 +10,6 @@ from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.content.monster_legendary_resistance_2014 import legendary_resistance_trait_name_2014
 from app.content.monster_passive_grants_2014 import (
-    aggressive_tactical_grants_2014,
     bound_passive_trait_names_2014,
     saving_throw_advantage_grants_2014,
 )
