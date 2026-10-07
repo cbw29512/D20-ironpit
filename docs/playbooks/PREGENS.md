@@ -33,13 +33,13 @@ Fight-only HP, resources, conditions, buffs/debuffs, concentration, Temporary HP
 2. Reconcile **2014 first** for any shared mechanic.
 3. Decompose every combat feature/spell/item:
    `trigger/timing -> action/resource -> attack/check/save -> damage/healing -> condition/state -> range/target/movement -> duration -> exits/reset`.
-4. Search existing **pregen and monster** mechanics for each semantic piece.
+4. Read `docs/UNIVERSAL_MECHANIC_INVENTORY.md`, then search existing **pregen and monster** mechanics for each semantic piece. Prefer a listed supported capability ID over feature-name-specific code.
 5. Reuse or compose universal primitives.
 6. Bind source/build parameters only.
 7. Advance in legal level order; never expose a higher level that silently omits a mandatory combat feature.
 8. Reuse compatible primitives in 2024; add only genuine 2024 semantic differences.
 9. Refresh generated snapshots/artifacts and prove Python/browser parity.
-10. Update audit/certification truth.
+10. Regenerate the universal mechanic inventory and update audit/certification truth so player demand changes status automatically.
 
 Use `docs/PREGEN_AND_CONTENT_RULES_CONTRACT.md` and `docs/CANONICAL_COMBAT_BUILD_POLICY.md` when build choices or source binding are ambiguous.
 
