@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-import logging
-import re
+import logging, re
 
 from app.content.environment_context_reactions import sunlight_sensitivity_2014
 from app.content.monster_damage_absorption import damage_absorptions_from_source
@@ -15,6 +14,7 @@ from app.content.monster_passive_grants_2014 import (
     saving_throw_advantage_grants_2014,
 )
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
+from app.content.monster_range_trait_bindings_2014 import supports_poor_depth_perception_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.content.monster_terminal_effects_2014 import bound_terminal_effect_trait_names_2014
 from app.content.monster_zero_hp_prevention_2014 import bound_zero_hp_trait_names_2014
@@ -32,6 +32,7 @@ _MAGIC_WEAPONS = "Magic Weapons"
 _INNATE_SPELLCASTING = "Innate Spellcasting"
 _SUNLIGHT_SENSITIVITY = "Sunlight Sensitivity"
 _RAMPAGE = "Rampage"
+_POOR_DEPTH_PERCEPTION = "Poor Depth Perception"
 _FINESSE_WEAPON_NAMES_2014 = frozenset({"Dagger", "Rapier", "Scimitar", "Shortsword", "Whip"})
 _SNEAK_ATTACK_D6 = re.compile(
     r"Sneak Attack \(1/Turn\).*?extra\s+\d+\s+\((\d+)d6\)",
@@ -149,6 +150,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(_BLOOD_FRENZY)
         if supports_reckless_2014(monster):
             bound.add(_RECKLESS)
+        if supports_poor_depth_perception_2014(monster):
+            bound.add(_POOR_DEPTH_PERCEPTION)
         if supports_cunning_action_2014(monster):
             bound.add(_CUNNING_ACTION)
         if sneak_attack_d6_2014(monster) > 0:
