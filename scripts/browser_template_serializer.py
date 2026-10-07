@@ -789,6 +789,8 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["suppress_attack_advantage_while_not_incapacitated"] = True
     if features.ignore_unseen_target_attack_disadvantage:
         row["ignore_unseen_target_attack_disadvantage"] = True
+    if features.attack_disadvantage_beyond_ft:
+        row["attack_disadvantage_beyond_ft"] = features.attack_disadvantage_beyond_ft
     if features.miss_to_hit_override_resource_id:
         row["miss_to_hit_override_resource_id"] = features.miss_to_hit_override_resource_id
     if features.miss_to_hit_override_source_name:
