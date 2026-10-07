@@ -28,12 +28,13 @@
       heroic_inspiration: Boolean(template.starts_with_heroic_inspiration),
       active_effect_ids: [], active_buff_effect_ids: [], opening_buff_id: null,
       grapple_sources: [], timed_effects: [], deferred_effects: [], delayed_resource_refills: [], persistent_spell_attacks: [], active_modifiers: OM().build(template),
-      current_round: null, active_d20_bonus_dice: [], targeting_gate_immunity_keys: [], concentration: null, replacement_form: null,
+      current_round: null, turns_started_count: 0, active_d20_bonus_dice: [], targeting_gate_immunity_keys: [], concentration: null, replacement_form: null,
       survival_save_uses: {}, pending_survival_save_logs: [], pending_zero_hp_replacement_logs: [],
       feature_last_turn_keys: {}, feature_use_counts: {}, spell_slot_expended_turn_key: null,
       temporary_damage_resistances: [], zone_damage_immunities: [], active_conditional_damage_defenses: [],
       hit_point_maximum_reduction: 0, ability_score_reductions: {}, active_curses: [],
       damage_share_source_id: null, damage_share_range_ft: 0, damage_share_effect_id: null, emanation_triggers_this_turn: {},
+      active_damage_triggered_d20_debuffs: [],
       rage_expires_round: null, rage_max_round: null,
     };
   }
@@ -65,6 +66,7 @@
   }
 
   function beginTurn(state) {
+    state.turns_started_count = (state.turns_started_count || 0) + 1;
     state.turn_terminated = false; state.turn_termination_reason = null; state.disengaged_this_turn = false; state.voluntary_turn_activity = null; state.attacks_this_turn = 0;
     const incapacitated = Q().incapacitated(state);
     state.action_available = !incapacitated;
