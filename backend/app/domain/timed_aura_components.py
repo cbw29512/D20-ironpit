@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming
 from app.domain.melee_hit_save_retaliation import MeleeHitSaveRetaliation
+from app.domain.timed_control_limits import TimedControlLimits
 from app.domain.weapons_base import DamageType
 
 logger = logging.getLogger(__name__)
@@ -52,6 +53,9 @@ class TimedHostileConditionAura(BaseModel):
     # Target lifetime is independent of the source aura lifetime.
     condition_duration_rounds: int | None = Field(default=None, ge=1, le=600)
     condition_expiry_timing: ConditionTiming | None = None
+    recipient_scope: Literal["enemies", "all"] = "enemies"
+    suppress_reactions: bool = False
+    control_limits: TimedControlLimits | None = None
     effect_tags: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
