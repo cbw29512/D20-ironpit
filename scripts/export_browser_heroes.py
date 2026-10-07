@@ -121,6 +121,7 @@ def _save(action: Any) -> dict[str, Any]:
             "repeatSaveAbility": action.failed_save_timed_effect.repeat_save_ability,
             "repeatSaveDc": action.failed_save_timed_effect.repeat_save_dc,
             "repeatSaveTiming": action.failed_save_timed_effect.repeat_save_timing,
+            "allowedRemovalActionIds": list(action.failed_save_timed_effect.allowed_removal_action_ids),
             "turnBehavior": action.failed_save_timed_effect.turn_behavior,
             "endsOnDamage": action.failed_save_timed_effect.ends_on_damage,
             "endsIfSourceIncapacitated": action.failed_save_timed_effect.ends_if_source_incapacitated,
