@@ -10,7 +10,7 @@ const load = (name) => vm.runInThisContext(
 );
 
 load("browser-monsters-2014.js");
-load("browser-zero-hp.js");
+load("browser-terminal-effects.js");
 
 const roster = Object.values(window.IRON_PIT_BROWSER_MONSTERS_2014);
 const armor = roster.find((item) => item.name === "Animated Armor");
@@ -29,7 +29,7 @@ for (const template of [armor, sword]) {
     active_effect_ids: ["dodge"],
     concentration: null,
   };
-  assert.equal(window.IRON_PIT_BROWSER_ZERO_HP.applyTerminalEffectTag(state, "antimagic"), "dead");
+  assert.equal(window.IRON_PIT_BROWSER_TERMINAL_EFFECTS.applyTerminalEffectTag(state, "antimagic"), "dead");
   assert.equal(state.current_hp, 0);
   assert.equal(state.is_alive, false);
   assert.equal(state.is_dead, true);
@@ -49,7 +49,7 @@ for (const template of [armor, sword]) {
     active_effect_ids: [],
     concentration: null,
   };
-  assert.equal(window.IRON_PIT_BROWSER_ZERO_HP.applyTerminalEffectTag(state, "fire"), "not_susceptible");
+  assert.equal(window.IRON_PIT_BROWSER_TERMINAL_EFFECTS.applyTerminalEffectTag(state, "fire"), "not_susceptible");
   assert.equal(state.current_hp, armor.max_hp);
   assert.equal(state.is_dead, false);
 }
