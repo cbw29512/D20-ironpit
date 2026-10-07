@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
-from app.domain.damage_taken_effects import DamageTakenTimedEffect
+from app.domain.damage_sources import DamageTakenTimedEffect
 from app.domain.weapons import DamageType
 
 logger = logging.getLogger(__name__)
