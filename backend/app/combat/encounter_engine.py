@@ -34,6 +34,7 @@ from app.combat.suppression_zone_effects import expire_suppression_zones, sync_s
 from app.combat.legendary_actions import resolve_legendary_actions_after_turn
 from app.combat.triggered_extra_attacks import resolve_triggered_extra_attacks_after_turn
 from app.combat.turn_damage import clear_turn_damage
+from app.combat.damage_triggered_d20 import expire_damage_triggered_d20_debuffs
 from app.combat.timed_emanations import resolve_target_turn_start_emanations
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
 from app.domain.models import BattleEvent
@@ -89,6 +90,7 @@ def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
         member.combatant_id,
         round_number,
     )
+    expire_damage_triggered_d20_debuffs(member.state)
     from app.combat.temporary_terrain import expire_source_terrain
     expire_source_terrain(setup, member.combatant_id, round_number)
     expire_current_turn_type_resistances(setup)
