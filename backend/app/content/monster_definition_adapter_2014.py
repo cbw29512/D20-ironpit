@@ -37,6 +37,10 @@ from app.content.monster_trait_bindings_2014 import (
     environment_context_reactions_2014, progression_features_2014, sneak_attack_eligible_2014,
 )
 from app.content.monster_terminal_effects_2014 import effect_tag_condition_grants_2014, terminal_effect_tags_2014
+from app.content.monster_timed_condition_auras_2014 import (
+    timed_condition_aura_actions_2014,
+    timed_condition_aura_resources_2014,
+)
 from app.content.monster_legendary_resistance_2014 import (
     legendary_resistance_override_2014, legendary_resistance_resource_2014,
 )
@@ -103,6 +107,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     resources.extend(healing_resources_2014(monster))
     resources.extend(innate_spell_resources_2014(monster))
     resources.extend(zero_hp_prevention_resources_2014(monster))
+    resources.extend(timed_condition_aura_resources_2014(monster))
     legendary_resource = legendary_resistance_resource_2014(monster)
     if legendary_resource is not None:
         resources.append(legendary_resource)
@@ -138,6 +143,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         save_actions=save_capabilities_2014(monster),
         spell_save_actions=innate_spell_save_actions_2014(monster),
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
+            *timed_condition_aura_actions_2014(monster),
             *condition_auras_from_source(monster.source_traits, "2014"),
             *contextual_save_defenses_2014(monster)[0]],
         healing_actions=healing_actions_2014(monster),
