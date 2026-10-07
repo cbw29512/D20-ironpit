@@ -6,7 +6,7 @@ This file is the first-read architecture rule for every agent and contributor wo
 
 **The engine models what an effect does, not what the source calls it.**
 
-Printed names exist for cards, player-facing logs, source provenance, audits, and certification. They are not combat-dispatch keys.
+Printed names exist for cards, player-facing logs, source provenance, audits, and certification. They are not combat-dispatch keys. A source-specific ability is still a real ability and must be preserved exactly on its monster, pregen, item, spell, or homebrew source even when no engine capability shares its name.
 
 A class feature, subclass feature, feat, spell, item, monster trait, legendary action, lair action, or homebrew ability must be decomposed into universal mechanics before implementation.
 
@@ -91,7 +91,7 @@ Unsupported outcome-changing mechanics fail closed.
 
 ## Homebrew requirement
 
-Future homebrew cards use the same engine. `docs/UNIVERSAL_MECHANIC_INVENTORY.md` is the first lookup surface: select one or more supported universal mechanic IDs, then supply source-specific parameters and the printed homebrew name. A homebrew ability does not receive a custom resolver merely because it is new or uniquely named. A genuinely new behavior may introduce a new primitive only after the inventory plus semantic-reuse search proves no existing composition can represent it.
+Future homebrew cards use the same engine. `docs/UNIVERSAL_MECHANIC_INVENTORY.md` is the first lookup surface: preserve the complete source ability, select one or more supported universal mechanic IDs for every behavior they can represent, then supply source-specific parameters and the printed homebrew name. If a source ability such as a unique monster attack has no matching printed name in the engine, that is normal: the source ability remains source-specific. If part of its actual behavior cannot be represented by existing primitives, add the smallest reusable universal primitive for that genuinely new semantic remainder, then bind the source ability to it. Never omit, rename, weaken, or approximate a source ability merely because the engine has no same-named capability.
 
 ## Authority
 
