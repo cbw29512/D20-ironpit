@@ -169,7 +169,7 @@
   }
   function hasAdjacentActiveAlly(member, target, setup) {
     try {
-      if (!target) throw new Error("Pack Tactics requires a target.");
+      if (!target) throw new Error("Target-adjacent ally evaluation requires a target.");
       const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
       return allies.some((ally) => ally.combatant_id !== member.combatant_id && active(ally) && distance(ally, target) <= 5);
     } catch (error) { console.error("Failed browser target-adjacent ally lookup", { member: member.combatant_id, error }); throw error; }
