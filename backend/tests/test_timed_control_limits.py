@@ -7,6 +7,13 @@ from pathlib import Path
 from app.combat.action_economy import is_available, spend
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.dice import FixedDiceProvider
+from app.combat.condition_rules import (
+    attacks_have_advantage_against,
+    automatically_fails_strength_dexterity_save,
+    close_hit_is_automatic_critical,
+    condition_speed_is_zero,
+    is_incapacitated,
+)
 from app.combat.modifier_flat_bonuses import saving_throw_flat_bonus
 from app.combat.modifier_stack import effective_armor_class, effective_speed
 from app.combat.saving_throw_rolls import saving_throw_mode
@@ -398,3 +405,24 @@ def test_2014_brass_sleep_breath_unlocks_three_cards_without_hiding_ancient_extr
     ancient = basic_blockers_2014(by_id["ancient-brass-dragon"])
     assert "mechanic:save-action" not in ancient
     assert "source:extra-action" in ancient
+
+
+def test_timed_unconscious_uses_the_same_universal_condition_rules_as_zero_hp_unconscious() -> None:
+    state = build_combatant_state(build_karnok_stoneward_level(5))
+    assert state.is_unconscious is False
+
+    apply_timed_condition(
+        state,
+        "unconscious",
+        "sleep-source",
+        source_effect_id="sleep-breath",
+        ends_on_damage=True,
+        allowed_removal_action_ids=["wake-sleeper"],
+        use_default_poison_recovery=False,
+    )
+
+    assert is_incapacitated(state) is True
+    assert automatically_fails_strength_dexterity_save(state) is True
+    assert attacks_have_advantage_against(state) is True
+    assert close_hit_is_automatic_critical(state) is True
+    assert condition_speed_is_zero(state) is True
