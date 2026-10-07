@@ -330,6 +330,8 @@ def _failed_save_timed_effect(rider: Any) -> dict[str, Any]:
         "nextAttackDisadvantage": rider.next_attack_disadvantage,
         "repeatSaveFailuresToLock": rider.repeat_save_failures_to_lock,
     }
+    if rider.allowed_removal_action_ids:
+        row["allowedRemovalActionIds"] = list(rider.allowed_removal_action_ids)
     if rider.escape_check_ability:
         row["escapeCheckAbility"] = rider.escape_check_ability
         row["escapeCheckDc"] = rider.escape_check_dc
@@ -747,6 +749,8 @@ def _removal(action: Any) -> dict[str, Any]:
         "resourceCostsPerCondition": dict(action.resource_costs_per_condition),
         "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
     }
+    if action.requires_explicit_effect_permission:
+        row["requiresExplicitEffectPermission"] = True
     if action.reaction_trigger:
         row["reactionTrigger"] = action.reaction_trigger
     if action.reduces_exhaustion_levels:

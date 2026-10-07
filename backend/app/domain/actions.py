@@ -59,6 +59,7 @@ class ConditionRemovalAction(BaseModel):
     range_ft: int = Field(default=5, ge=0)
     target_mode: ConditionRemovalTargetMode = "self_or_ally"
     removable_conditions: list[ConditionName] = Field(default_factory=list)
+    requires_explicit_effect_permission: bool = False
     excluded_creature_types: list[str] = Field(default_factory=list)
     max_conditions_per_use: int = Field(default=1, ge=1, le=16)
     resource_costs: dict[str, int] = Field(default_factory=dict)

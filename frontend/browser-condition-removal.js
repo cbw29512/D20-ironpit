@@ -3,8 +3,12 @@
 
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const P = () => window.IRON_PIT_BROWSER_SPELLCASTING;
+  const WAKE_SLEEPER = Object.freeze({
+    id: "wake-sleeper", name: "Wake Sleeper", actionCost: "action", range: 5, targetMode: "ally",
+    removableConditions: ["unconscious"], maxConditionsPerUse: 1, requiresExplicitEffectPermission: true, animation: "condition-ended",
+  });
   const PRIORITY = {
-    paralyzed: 0, stunned: 0, incapacitated: 0, petrified: 0,
+    paralyzed: 0, stunned: 0, incapacitated: 0, petrified: 0, unconscious: 0,
     blinded: 1, restrained: 1, poisoned: 2, frightened: 2, charmed: 2,
     deafened: 3, grappled: 3, prone: 4, exhaustion: 4, curse: 4,
     "ability-score-reduction": 5, "hit-point-maximum-reduction": 5,
@@ -12,7 +16,6 @@
 
   const distance = (a, b) => window.IRON_PIT_BROWSER_STATE.distance(a, b);
   const allies = (member, setup) => member.side === "heroes" ? setup.heroes : setup.monsters;
-
   function targetAllowed(remover, target, action) {
     try {
       if (!target.state.is_alive || target.state.is_dead || target.side !== remover.side) return false;
@@ -33,7 +36,6 @@
       throw error;
     }
   }
-
   function costs(action, count) {
     const result = { ...(action.resourceCosts || {}) };
     Object.entries(action.resourceCostsPerCondition || {}).forEach(([id, cost]) => {
@@ -41,21 +43,21 @@
     });
     return result;
   }
-
   function resourcesAvailable(member, action, count) {
     return Object.entries(costs(action, count)).every(([id, cost]) => (member.state.resources[id] || 0) >= cost);
   }
-
-  function effectAllows(target, conditionId, actionId) {
-    return target.state.timed_effects.filter((effect) => effect.effect_id === conditionId).every((effect) =>
-      !effect.allowed_removal_action_ids?.length || effect.allowed_removal_action_ids.includes(actionId),
-    );
+  function effectAllows(target, conditionId, action) {
+    const effects = target.state.timed_effects.filter((effect) => effect.effect_id === conditionId);
+    if (action.requiresExplicitEffectPermission) {
+      return effects.length > 0 && effects.every((effect) => effect.allowed_removal_action_ids?.includes(action.id));
+    }
+    return effects.every((effect) => !effect.allowed_removal_action_ids?.length
+      || effect.allowed_removal_action_ids.includes(action.id));
   }
-
   function removable(target, action) {
     const allowed = new Set(action.removableConditions || []);
     const effects = [...new Set(target.state.active_effect_ids)]
-      .filter((id) => allowed.has(id) && effectAllows(target, id, action.id));
+      .filter((id) => allowed.has(id) && effectAllows(target, id, action));
     if (action.reducesExhaustionLevels && target.state.exhaustion_level) effects.push("exhaustion");
     if ((action.removesCurses || action.removesAllCurses) && target.state.active_curses?.length) effects.push("curse");
     if (action.removesAbilityScoreReductions && Object.keys(target.state.ability_score_reductions || {}).length) {
@@ -66,20 +68,17 @@
     }
     return effects.sort((a, b) => (PRIORITY[a] ?? 9) - (PRIORITY[b] ?? 9) || a.localeCompare(b));
   }
-
   function affordable(member, target, action) {
     const result = removable(target, action).slice(0, action.maxConditionsPerUse || 1);
     while (result.length && !resourcesAvailable(member, action, result.length)) result.pop();
     return result;
   }
-
   function slotAvailable(remover, action, turnKey) {
     return !action.expendsSpellSlot || P().slotSpellAvailable(remover.state, turnKey);
   }
-
   function chooseAction(remover, setup, turnKey) {
     const choices = [];
-    for (const action of remover.state.template.condition_removal_actions || []) {
+    for (const action of [...(remover.state.template.condition_removal_actions || []), WAKE_SLEEPER]) {
       if (action.actionCost === "reaction" || !E().available(remover.state, action.actionCost)) continue;
       if (!slotAvailable(remover, action, turnKey)) continue;
       for (const target of allies(remover, setup)) {
@@ -98,7 +97,6 @@
     });
     return choices[0] || null;
   }
-
   function removeCondition(target, id) {
     try {
       const T = window.IRON_PIT_BROWSER_TIMED;
@@ -116,7 +114,6 @@
       throw error;
     }
   }
-
   function resolve(sequence, round, remover, target, action, conditionIds, turnKey) {
     try {
       if (action.actionCost === "reaction") throw new Error("Reaction cleansing requires a matching trigger.");
@@ -178,7 +175,6 @@
       throw error;
     }
   }
-
   function chooseReaction(remover, setup, trigger, affectedTarget, turnKey) {
     if (!E().available(remover.state, "reaction")) return null;
     const actions = (remover.state.template.condition_removal_actions || []).filter((action) =>

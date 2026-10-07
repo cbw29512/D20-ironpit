@@ -127,6 +127,8 @@ def _save(action: Any) -> dict[str, Any]:
             "endsIfSourceDead": action.failed_save_timed_effect.ends_if_source_dead,
             "nextAttackDisadvantage": action.failed_save_timed_effect.next_attack_disadvantage,
         }
+        if action.failed_save_timed_effect.allowed_removal_action_ids:
+            row["failedSaveTimedEffect"]["allowedRemovalActionIds"] = list(action.failed_save_timed_effect.allowed_removal_action_ids)
     if action.failed_save_timed_effect is not None and action.failed_save_timed_effect.source_effect_immunity_on_end:
         row["failedSaveTimedEffect"]["sourceEffectImmunityOnEnd"] = True
     if action.source_effect_immunity_on_success:

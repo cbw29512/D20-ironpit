@@ -103,14 +103,14 @@
 
   function incapacitated(state) {
     if (I().immune(state, "incapacitated")) return false;
-    return state.is_unconscious || has(state, "incapacitated") || has(state, "paralyzed") || has(state, "petrified") || has(state, "stunned");
+    return state.is_unconscious || has(state, "unconscious") || has(state, "incapacitated") || has(state, "paralyzed") || has(state, "petrified") || has(state, "stunned");
   }
 
-  const autoFailStrDex = (state) => state.is_unconscious || has(state, "paralyzed") || has(state, "petrified") || has(state, "stunned");
-  const attackAdvantage = (state) => state.is_unconscious || has(state, "blinded") || has(state, "paralyzed") || has(state, "petrified") || has(state, "stunned");
-  const autoCritical = (state) => state.is_unconscious || has(state, "paralyzed");
+  const autoFailStrDex = (state) => state.is_unconscious || has(state, "unconscious") || has(state, "paralyzed") || has(state, "petrified") || has(state, "stunned");
+  const attackAdvantage = (state) => state.is_unconscious || has(state, "unconscious") || has(state, "blinded") || has(state, "paralyzed") || has(state, "petrified") || has(state, "stunned");
+  const autoCritical = (state) => state.is_unconscious || has(state, "unconscious") || has(state, "paralyzed");
   const suppressAttackAdvantage = (state) => Boolean(state.template?.suppress_attack_advantage_while_not_incapacitated) && !incapacitated(state);
-  const speedZero = (state) => state.is_unconscious || has(state, "paralyzed") || has(state, "petrified") || has(state, "restrained")
+  const speedZero = (state) => state.is_unconscious || has(state, "unconscious") || has(state, "paralyzed") || has(state, "petrified") || has(state, "restrained")
     || (state.template.ruleset === "2014" && has(state, "stunned"));
 
   window.IRON_PIT_BROWSER_CONDITION_RULES = {

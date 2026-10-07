@@ -70,6 +70,7 @@
       control_limits: options.controlLimits || null,
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
+    if (effectId === "unconscious" && !state.active_effect_ids.includes("prone") && !I().immune(state, "prone")) state.active_effect_ids.push("prone");
     applyTerminalOutcome(state, effectId, options.affectedStates || []);
     RF()?.revertIfIncapacitated(state);
     return effectId;

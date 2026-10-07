@@ -39,6 +39,7 @@ def apply_failed_save_timed_effect(
             repeat_save_ability=rider.repeat_save_ability,
             repeat_save_dc=rider.repeat_save_dc,
             repeat_save_timing=rider.repeat_save_timing,
+            allowed_removal_action_ids=list(rider.allowed_removal_action_ids),
             turn_behavior=rider.turn_behavior,
             ends_on_damage=rider.ends_on_damage,
             ends_if_source_incapacitated=rider.ends_if_source_incapacitated,

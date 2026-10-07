@@ -27,6 +27,7 @@ class FailedSaveTimedEffect(BaseModel):
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: SaveEffectTiming | None = None
+    allowed_removal_action_ids: list[str] = Field(default_factory=list)
     next_attack_disadvantage: bool = False
     turn_behavior: Literal["normal", "forced_retreat", "single_activity"] = "normal"
     ends_on_damage: bool = False
@@ -61,6 +62,7 @@ class FailedSaveTimedEffect(BaseModel):
                 "disadvantage_strength_d20_tests": False,
                 "armor_class_bonus": 0,
                 "saving_throw_flat_bonuses": [],
+                "allowed_removal_action_ids": [],
             }
             for key, default in defaults.items():
                 if data.get(key) == default:
