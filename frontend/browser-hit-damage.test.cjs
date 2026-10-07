@@ -198,7 +198,7 @@ assert.equal(result.damageComponents[0].applied_total, 4, "combatants without a 
 
 load("browser-monsters-2014.js");
 const roster = window.IRON_PIT_BROWSER_MONSTERS_2014;
-assert.equal(Object.keys(roster).length, 198);
+assert.equal(Object.keys(roster).length, 199);
 for (const id of [
   "giant-centipede", "giant-poisonous-snake", "giant-scorpion", "giant-wasp", "poisonous-snake", "scorpion", "wyvern",
 ]) {
