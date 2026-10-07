@@ -16,6 +16,7 @@ _CONTROL_KEYS = frozenset({
     "repeat_save_ability",
     "repeat_save_dc",
     "repeat_save_timing",
+    "repeat_save_failure_condition_id",
     "allowed_removal_action_ids",
     "source_effect_immunity_on_end",
     "ends_on_damage",
@@ -51,8 +52,11 @@ def supports_failed_save_control_2014(action: object) -> bool:
         rider_id = _rider_id(control)
         if not rider_id:
             return False
-        if control.get("condition_id"):
-            return rider_id in _CONDITION_IDS
+        if control.get("condition_id") and rider_id not in _CONDITION_IDS:
+            return False
+        escalated = str(control.get("repeat_save_failure_condition_id") or "").strip().casefold()
+        if escalated and escalated not in _CONDITION_IDS:
+            return False
         return True
     except Exception:
         logger.exception("Failed to classify a 2014 failed-save control rider.")
@@ -75,6 +79,8 @@ def compile_failed_save_control_2014(action: dict[str, object]) -> FailedSaveTim
             kwargs["repeat_save_ability"] = str(control["repeat_save_ability"])
             kwargs["repeat_save_dc"] = int(control["repeat_save_dc"])
             kwargs["repeat_save_timing"] = str(control["repeat_save_timing"])
+        if control.get("repeat_save_failure_condition_id"):
+            kwargs["repeat_save_failure_condition_id"] = str(control["repeat_save_failure_condition_id"]).strip().casefold()
         if control.get("allowed_removal_action_ids"):
             kwargs["allowed_removal_action_ids"] = list(control["allowed_removal_action_ids"])
         if control.get("ends_on_damage"):
