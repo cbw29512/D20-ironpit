@@ -5,6 +5,7 @@ import re
 
 from app.content.environment_context_reactions import sunlight_sensitivity_2014
 from app.content.monster_damage_absorption import damage_absorptions_from_source
+from app.content.monster_included_weapon_traits_2014 import included_weapon_trait_names_2014
 from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.content.monster_legendary_resistance_2014 import legendary_resistance_trait_name_2014
@@ -153,6 +154,7 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         if sneak_attack_d6_2014(monster) > 0:
             bound.add(_SNEAK_ATTACK)
         bound.update(bound_passive_trait_names_2014(monster))
+        bound.update(included_weapon_trait_names_2014(monster))
         bound.update(bound_zero_hp_trait_names_2014(monster))
         if _MAGIC_WEAPONS in monster.trait_names:
             bound.add(_MAGIC_WEAPONS)

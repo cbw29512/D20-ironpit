@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 97 |
+| `source:trait` | 96 |
 | `source:extra-action` | 68 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 25 |
@@ -50,7 +50,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Inscrutable, Spellcasting |
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
 | Assassin | source:trait | Assassinate, Evasion, Sneak Attack |
-| Azer | source:trait | Heated Body, Heated Weapons |
+| Azer | source:trait | Heated Body |
 | Balor | attack:incomplete, source:trait | Death Throes, Fire Aura |
 | Bandit Captain | multiattack:complex | — |
 | Banshee | source:extra-action, source:trait | Detect Life |
@@ -62,7 +62,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Blink Dog | mechanic:recharge | — |
 | Brass Dragon Wyrmling | mechanic:save-action | — |
 | Bronze Dragon Wyrmling | mechanic:save-action | — |
-| Bugbear | attack:complex, source:trait | Brute, Surprise Attack |
+| Bugbear | attack:complex, source:trait | Surprise Attack |
 | Bulette | source:extra-action | — |
 | Chain Devil | attack:complex, source:extra-action, source:reaction | — |
 | Chuul | attack:incomplete, multiattack:complex, source:extra-action, source:trait | Sense Magic |
@@ -74,7 +74,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Cyclops | source:trait | Poor Depth Perception |
 | Darkmantle | attack:incomplete, source:extra-action | — |
 | Deep Gnome (Svirfneblin) | mechanic:spellcasting, source:trait | Gnome Cunning, Innate Spellcasting |
-| Deva | mechanic:spellcasting, source:extra-action, source:trait | Angelic Weapons, Innate Spellcasting |
+| Deva | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Djinni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Elemental Demise, Innate Spellcasting |
 | Doppelganger | attack:complex, source:extra-action, source:trait | Shapechanger, Ambusher, Surprise Attack |
 | Dretch | source:extra-action | — |
@@ -98,7 +98,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Giant Toad | mechanic:swallow, source:extra-action | — |
 | Gibbering Mouther | multiattack:complex, source:extra-action, source:trait | Aberrant Ground, Gibbering |
 | Glabrezu | mechanic:spellcasting, source:trait | Innate Spellcasting |
-| Gladiator | multiattack:complex, source:trait | Brute |
+| Gladiator | multiattack:complex | — |
 | Gorgon | mechanic:recharge, mechanic:save-action | — |
 | Gray Ooze | attack:incomplete, source:trait | Corrode Metal |
 | Green Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
@@ -136,7 +136,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Oni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Otyugh | attack:incomplete, source:extra-action, source:trait | Limited Telepathy |
 | Pit Fiend | attack:incomplete, mechanic:spellcasting, source:trait | Fear Aura, Innate Spellcasting |
-| Planetar | mechanic:spellcasting, source:extra-action, source:trait | Angelic Weapons, Divine Awareness, Innate Spellcasting |
+| Planetar | mechanic:spellcasting, source:extra-action, source:trait | Divine Awareness, Innate Spellcasting |
 | Priest | mechanic:spellcasting, source:trait | Divine Eminence, Spellcasting |
 | Pseudodragon | attack:complex, source:trait | Limited Telepathy |
 | Purple Worm | attack:complex, mechanic:swallow | — |
@@ -146,14 +146,14 @@ Blocker categories overlap: a monster may require several fixes.
 | Roper | source:extra-action, source:trait | Grasping Tendrils |
 | Rug of Smothering | attack:none, source:extra-action, source:trait | Damage Transfer |
 | Rust Monster | source:extra-action, source:trait | Iron Scent, Rust Metal |
-| Salamander | attack:complex, source:trait | Heated Body, Heated Weapons |
+| Salamander | attack:complex, source:trait | Heated Body |
 | Sea Hag | source:extra-action, source:trait | Horrific Appearance |
 | Sea Horse | attack:none | — |
 | Shadow | attack:incomplete, source:trait | Sunlight Weakness |
 | Shambling Mound | mechanic:swallow, multiattack:complex, source:extra-action | — |
 | Shield Guardian | source:reaction, source:trait | Bound, Spell Storing |
 | Shrieker | attack:none, source:reaction | — |
-| Solar | attack:incomplete, mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Angelic Weapons, Divine Awareness, Innate Spellcasting |
+| Solar | attack:incomplete, mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Divine Awareness, Innate Spellcasting |
 | Spectator | source:extra-action, source:reaction | — |
 | Spirit Naga | mechanic:spellcasting, source:trait | Spellcasting |
 | Sprite | attack:complex, source:extra-action | — |

@@ -1,69 +1,69 @@
 # Iron Pit context transfer
 
-generated_at: 2026-10-06, after PR #629 merge
-main_sha: `58bb5df4c239273588c702ab901775a2d65f0d9e` (merged source baseline; later documentation commits have no combat changes)
-active_lane: Complete the 2014 monster roster using one semantic family per PR.
+generated_at: 2026-10-07, included weapon damage implementation
+main_sha: `b63cbfb2e2432b1f8c37fb365500c895f4efb08e`
+active_lane: Complete 2014 source monsters, one semantic family per PR.
 
 ## Authoritative status
 
-[Operating status](CURRENT_OPERATING_STATUS.md); [fix tracker](MONSTER_FIX_TRACKER.md);
-[source blockers](MONSTER_BLOCKERS_2014.md). Repository truth overrides this snapshot.
+[Operating status](CURRENT_OPERATING_STATUS.md), [fix tracker](MONSTER_FIX_TRACKER.md),
+[generated blockers](MONSTER_BLOCKERS_2014.md), and [current audit](INCLUDED_WEAPON_DAMAGE_AUDIT.md).
+Repository truth overrides this cache. Netlify is locked; Grok owns art/presentation.
 
 ## Active PRs
 
-No active combat PR remained at closeout. #629 is merged; #625 remains closed unmerged reference only.
+No open PR at branch creation. Local branch `fix/2014-included-weapon-traits`
+contains source validation and magical qualifier binding; head CI is pending.
 
 ## Recent merges
 
-[PR #629](https://github.com/cbw29512/D20-ironpit/pull/629): susceptibility binds shared terminal death and timed Stunned;
-repairs generated parity and test dependency debt; adds fix tracking with a freshness gate.
+#629 susceptibility is merged. #625 remains closed unmerged reference only.
 
 ## Verified certification
 
-- Source commit: `9ed5e8fe42dc27ebda4aad0b7843be71f8030171`; merged baseline: `58bb5df4c239273588c702ab901775a2d65f0d9e`.
-- 2014 monsters 184/327; 2024 monsters 141/330; heroes 240/240 per edition.
-- Evidence: regenerated manifests, current source reports, and four exact-head workflows.
-
-- [CI](https://github.com/cbw29512/D20-ironpit/actions/runs/37561811380): success on `9ed5e8fe42dc27ebda4aad0b7843be71f8030171`.
-- [2014 Basic Roster](https://github.com/cbw29512/D20-ironpit/actions/runs/37561811451): success on `9ed5e8fe42dc27ebda4aad0b7843be71f8030171`.
-- [Paired Edition Monster Report](https://github.com/cbw29512/D20-ironpit/actions/runs/37561811366): success on `9ed5e8fe42dc27ebda4aad0b7843be71f8030171`.
-- [2014 Hero Certification](https://github.com/cbw29512/D20-ironpit/actions/runs/37561811402): success on `9ed5e8fe42dc27ebda4aad0b7843be71f8030171`.
+Recomputed against current branch source using source/paired reports and generated
+manifest verification: 184/327 2014 monsters, 141/330 2024 monsters, 240/240 heroes
+per edition. All 143 blocked 2014 cards remain blocked. No promotion in this batch.
+Prior-head workflow evidence applies only to the SHA recorded in the fix tracker;
+all new exact-head gates are pending.
 
 ## Current subsystem
 
-- Source data: immutable terminal tags and effect-tag condition grants; incoming action tags.
-- Runtime state: existing HP/Dead, timed effects, Concentration, forms, and resources.
-- Python path: terminal resolver, effect removal, and shared timed conditions.
-- Browser path: terminal effects, effect removal, tagged-condition adapter, and shared timed conditions.
-- Generated path: normal capability and browser exporters; no hand-edited generated data.
-- Tests: susceptibility, terminal lifecycle, Dispel lifecycle, and all permanent CI suites.
-- Edition: exact 2014 family only; native 2024 constructs do not print susceptibility.
+- Immutable source: printed trait/action text, base damage and typed on-hit riders.
+- Runtime state: existing temporary fight HP/audit; no new state or lifecycle.
+- Python: generic attack compiler, damage components, conditional defenses.
+- Browser: production attack/mixed damage and conditional defenses.
+- Generated path: ordinary runtime/static exporters and blocker list generator.
+- Tests: source/compiler test and source-derived Python/browser parity fixture.
+- Edition: 2014 bindings only; no matching native 2024 traits were found.
 
 ## Open A-class correctness debt
 
-None remains in the touched susceptibility subsystem. The 143 remaining 2014 source
-monsters remain blocked, including the rug's independent Damage Transfer/attack debt;
-see the generated list. Do not interpret the roster count as full completion.
+Angelic magical qualifier omission is fixed in the branch, awaiting all gates.
+Printed included dice are validated without adding a second damage grant.
+Other card mechanics remain fail-closed, including Surprise Attack, Heated Body,
+Salamander Tail automatic hit, multiattack choice, spells/healing/forms/legendary
+options. See M-005/M-009/M-010 and generated blockers; do not strip those mechanics.
 
 ## Open B-class architecture debt
 
-None remains in the touched subsystem. The next family requires semantic reuse classification.
+The source model now retains action text for independent payload validation.
+No duplicated resolver or new combat primitive is introduced.
 
 ## Parked C-class cleanup
 
-Unrelated cosmetic cleanup and art/presentation remain outside this mechanic lane.
+Unrelated cosmetics/art/presentation remain outside this lane.
 
 ## Locked decisions
 
-Rules contract §13 Antimagic susceptibility: antimagic is terminal; Dispel applies
-shared Stunned for 10 rounds with unchanged HP and no save. This is a scoped Pit
-override. Publishing remains locked.
+Rules contract §13: susceptibility Dispel is existing Stunned for 10 rounds,
+unchanged HP/no save; antimagic is terminal. Global Unconscious is unchanged.
+This batch introduces no new rules interpretation.
 
 ## Next exact action
 
-Classify the remaining 2014 blocker families against existing hero and monster primitives.
+Finish full verification, publish the coherent PR, and require all four exact-head gates.
 
 ## Do not carry forward
 
-Old counts, prior-head CI, #625 code without revalidation, or chat-only rule decisions.
-Re-anchor main, open PRs, and workflow evidence before the next implementation.
+Stale counts, previous-head workflow success, closed #625 code, or chat-only decisions.
