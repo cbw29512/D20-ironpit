@@ -1,85 +1,78 @@
 {
-  "schema_version": 1,
-  "policy": "Universal behavior is indexed by mechanic id. Complete source-specific abilities remain authoritative source data. Homebrew and unique monster abilities compose supported universal mechanics plus source parameters; only a genuinely new semantic remainder justifies a new reusable primitive.",
   "engine": {
-    "summary": {
-      "partial": 10,
-      "supported": 54,
-      "unsupported": 2
-    },
     "capabilities": [
       {
-        "id": "action-economy",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/action_economy.py"
-        ],
         "browser": [
           "frontend/browser-action-economy.js"
         ],
+        "id": "action-economy",
+        "python": [
+          "backend/app/combat/action_economy.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_action_condition_economy.py",
           "frontend/browser-action-condition.test.cjs"
         ]
       },
       {
+        "browser": [
+          "frontend/browser-rolls.js"
+        ],
         "id": "archery-style",
-        "status": "supported",
         "python": [
           "backend/app/content/attack_bonus_rules.py",
           "backend/app/content/pregen_attacks.py"
         ],
-        "browser": [
-          "frontend/browser-rolls.js"
-        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_attack_bonus_rules.py",
           "frontend/browser-fighter-progression.test.cjs"
         ]
       },
       {
-        "id": "area-target-placement",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/spell_area.py"
-        ],
         "browser": [
           "frontend/browser-spell-area.js"
         ],
+        "id": "area-target-placement",
+        "python": [
+          "backend/app/combat/spell_area.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_spell_area.py",
           "frontend/browser-spell-area.test.cjs"
         ]
       },
       {
-        "id": "attack-roll-advantage-disadvantage",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/rolls.py",
-          "backend/app/combat/attacks.py"
-        ],
         "browser": [
           "frontend/browser-rolls.js",
           "frontend/browser-attack.js"
         ],
+        "id": "attack-roll-advantage-disadvantage",
+        "python": [
+          "backend/app/combat/rolls.py",
+          "backend/app/combat/attacks.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_rolls.py",
           "frontend/browser-engine.test.cjs"
         ]
       },
       {
-        "id": "auras",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/friendly_save_auras.py",
-          "backend/app/combat/friendly_recovery_auras.py",
-          "backend/app/combat/friendly_weapon_damage_auras.py"
-        ],
         "browser": [
           "frontend/browser-friendly-save-auras.js",
           "frontend/browser-friendly-recovery-auras.js",
           "frontend/browser-friendly-weapon-damage-auras.js"
         ],
+        "id": "auras",
+        "python": [
+          "backend/app/combat/friendly_save_auras.py",
+          "backend/app/combat/friendly_recovery_auras.py",
+          "backend/app/combat/friendly_weapon_damage_auras.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_paladin_2024_recovery_auras.py",
           "frontend/browser-friendly-recovery-auras.test.cjs",
@@ -87,251 +80,251 @@
         ]
       },
       {
-        "id": "battlefield-exile",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/exile.py",
-          "backend/app/combat/encounter_targeting.py"
-        ],
         "browser": [
           "frontend/browser-exile.js",
           "frontend/browser-formation.js"
         ],
+        "id": "battlefield-exile",
+        "python": [
+          "backend/app/combat/exile.py",
+          "backend/app/combat/encounter_targeting.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_warlock_fiend_2014_level1.py",
           "frontend/browser-exile-2014.test.cjs"
         ]
       },
       {
-        "id": "blinded",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/condition_rules.py"
-        ],
         "browser": [
           "frontend/browser-condition-rules.js"
         ],
+        "id": "blinded",
+        "python": [
+          "backend/app/combat/condition_rules.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_blinded_condition.py",
           "frontend/browser-condition-immunity.test.cjs"
         ]
       },
       {
-        "id": "cleave-mastery",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/cleave.py",
-          "backend/app/combat/standard_attack_action.py",
-          "backend/app/combat/attack_actions.py"
-        ],
         "browser": [
           "frontend/browser-weapon-mastery.js",
           "frontend/browser-standard-attack-action.js",
           "frontend/browser-multiattack.js"
         ],
+        "id": "cleave-mastery",
+        "python": [
+          "backend/app/combat/cleave.py",
+          "backend/app/combat/standard_attack_action.py",
+          "backend/app/combat/attack_actions.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_cleave.py",
           "frontend/browser-light-weapons.test.cjs"
         ]
       },
       {
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed. Never approximate, silently ignore, or invent a combat-relevant mechanic merely to make a card runnable.' Conditions that are bound (Prone, Blinded, Grappled, Poisoned, and others) resolve through the shared condition identity. Arbitrary remaining printed conditions and every cross-condition interaction stay fail-closed until each is certified.",
         "id": "complete-condition-semantics",
-        "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed. Never approximate, silently ignore, or invent a combat-relevant mechanic merely to make a card runnable.' Conditions that are bound (Prone, Blinded, Grappled, Poisoned, and others) resolve through the shared condition identity. Arbitrary remaining printed conditions and every cross-condition interaction stay fail-closed until each is certified."
+        "status": "partial"
       },
       {
-        "id": "concentration",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/concentration.py",
-          "backend/app/combat/zero_hp.py"
-        ],
         "browser": [
           "frontend/browser-concentration.js",
           "frontend/browser-attack.js",
           "frontend/browser-saves.js"
         ],
+        "id": "concentration",
+        "python": [
+          "backend/app/combat/concentration.py",
+          "backend/app/combat/zero_hp.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_concentration_modifiers.py",
           "frontend/browser-modifiers-concentration.test.cjs"
         ]
       },
       {
-        "id": "concentration-repeat-save-action",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/concentration_repeat_saves.py",
-          "backend/app/combat/spell_save_effect_resolution.py"
-        ],
         "browser": [
           "frontend/browser-concentration-repeat-saves.js",
           "frontend/browser-spell-resolution.js"
         ],
+        "id": "concentration-repeat-save-action",
+        "python": [
+          "backend/app/combat/concentration_repeat_saves.py",
+          "backend/app/combat/spell_save_effect_resolution.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_concentration_repeat_saves.py",
           "frontend/browser-concentration-repeat-saves.test.cjs"
         ]
       },
       {
-        "id": "condition-immunity",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/condition_immunity.py"
-        ],
         "browser": [
           "frontend/browser-condition-immunity.js"
         ],
+        "id": "condition-immunity",
+        "python": [
+          "backend/app/combat/condition_immunity.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_condition_immunities.py",
           "frontend/browser-condition-immunity.test.cjs"
         ]
       },
       {
-        "id": "condition-removal",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/condition_removal.py"
-        ],
         "browser": [
           "frontend/browser-condition-removal.js"
         ],
+        "id": "condition-removal",
+        "python": [
+          "backend/app/combat/condition_removal.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_condition_removal.py",
           "frontend/browser-condition-removal.test.cjs"
         ]
       },
       {
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'No environmental cover by default.' 'Clear line of sight by default; only combat effects such as Darkness, Fog Cloud, Blindness, Invisibility, or similar supported mechanics alter visibility.' Do not invent a default cover engine.",
         "id": "cover-line-of-sight-obscurement",
-        "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'No environmental cover by default.' 'Clear line of sight by default; only combat effects such as Darkness, Fog Cloud, Blindness, Invisibility, or similar supported mechanics alter visibility.' Do not invent a default cover engine."
+        "status": "partial"
       },
       {
+        "browser": [
+          "frontend/browser-heroes.js",
+          "frontend/browser-modifiers.js"
+        ],
         "id": "defense-style",
-        "status": "supported",
         "python": [
           "backend/app/content/armor_class_rules.py",
           "backend/app/content/audited_fighter.py",
           "backend/app/content/fighter_combat_levels.py",
           "backend/app/combat/modifier_stack.py"
         ],
-        "browser": [
-          "frontend/browser-heroes.js",
-          "frontend/browser-modifiers.js"
-        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_armor_class_rules.py",
           "frontend/browser-defense-style.test.cjs"
         ]
       },
       {
-        "id": "deferred-save-effect",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/deferred_save_effect.py",
-          "backend/app/combat/zero_hp.py"
-        ],
         "browser": [
           "frontend/browser-deferred-save-effect.js",
           "frontend/browser-zero-hp.js",
           "frontend/browser-main-action-providers.js"
         ],
+        "id": "deferred-save-effect",
+        "python": [
+          "backend/app/combat/deferred_save_effect.py",
+          "backend/app/combat/zero_hp.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_monk_open_hand_2014_level17.py",
           "frontend/browser-deferred-save-effect.test.cjs"
         ]
       },
       {
-        "id": "delayed-resource-refill",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/delayed_resource_refill.py",
-          "backend/app/domain/runtime.py"
-        ],
         "browser": [
           "frontend/browser-delayed-resource-refill.js",
           "frontend/browser-engine.js"
         ],
+        "id": "delayed-resource-refill",
+        "python": [
+          "backend/app/combat/delayed_resource_refill.py",
+          "backend/app/domain/runtime.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_warlock_fiend_2014_endgame.py",
           "frontend/browser-eldritch-master-2014.test.cjs"
         ]
       },
       {
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Opportunity Attacks, forced movement, Disengage consequences, speed changes, Grappled/Prone movement effects, Frightened movement restrictions, and other combat-relevant movement rules remain RAW where applicable.' Printed save/attack push already resolves. Teleport stays banned: pit limits are no teleport, no plane shift, no summoning, and no vertical flight. A generic pull/teleport compiler is not required to invent those missing printings.",
         "id": "forced-movement-push-pull-teleport",
-        "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Opportunity Attacks, forced movement, Disengage consequences, speed changes, Grappled/Prone movement effects, Frightened movement restrictions, and other combat-relevant movement rules remain RAW where applicable.' Printed save/attack push already resolves. Teleport stays banned: pit limits are no teleport, no plane shift, no summoning, and no vertical flight. A generic pull/teleport compiler is not required to invent those missing printings."
+        "status": "partial"
       },
       {
-        "id": "generic-buff-debuff-modifier-stack",
-        "status": "partial",
         "blocker": "IRON_PIT_RULES_CONTRACT: 'Track every source independently for audit and expiry.' Bound modifiers already do that. A remaining universal ability-check modifier path and every uncertified stacking interaction stay fail-closed: 'Unsupported outcome-changing mechanics fail closed.'",
-        "python": [
-          "backend/app/combat/modifier_stack.py"
-        ],
         "browser": [
           "frontend/browser-modifiers.js"
         ],
+        "id": "generic-buff-debuff-modifier-stack",
+        "python": [
+          "backend/app/combat/modifier_stack.py"
+        ],
+        "status": "partial",
         "tests": [
           "backend/tests/test_concentration_modifiers.py",
           "frontend/browser-modifiers-concentration.test.cjs"
         ]
       },
       {
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed.' Undead Fortitude and Death Ward already use shared zero-HP primitives. Arbitrary uncertified on-zero/on-death printings stay fail-closed.",
         "id": "generic-death-triggers",
-        "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed.' Undead Fortitude and Death Ward already use shared zero-HP primitives. Arbitrary uncertified on-zero/on-death printings stay fail-closed."
+        "status": "partial"
       },
       {
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed.' Shared resources already cover bound limited-use features. Arbitrary uncompiled SRD limited-use Actions stay fail-closed rather than being approximated into the resource table.",
         "id": "generic-limited-use-resources",
-        "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed.' Shared resources already cover bound limited-use features. Arbitrary uncompiled SRD limited-use Actions stay fail-closed rather than being approximated into the resource table."
+        "status": "partial"
       },
       {
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Reactions use exact trigger windows and costs.' Opportunity Attack, Parry, Redirect Attack, and other bound reactions already use those windows. Arbitrary uncertified trigger/response composition stays fail-closed.",
         "id": "generic-reaction-trigger-grammar",
-        "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Reactions use exact trigger windows and costs.' Opportunity Attack, Parry, Redirect Attack, and other bound reactions already use those windows. Arbitrary uncertified trigger/response composition stays fail-closed."
+        "status": "partial"
       },
       {
-        "id": "grappled-restrained-escape",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/grapple.py"
-        ],
         "browser": [
           "frontend/browser-grapple.js"
         ],
+        "id": "grappled-restrained-escape",
+        "python": [
+          "backend/app/combat/grapple.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_grapple_conditions.py",
           "frontend/browser-control.test.cjs"
         ]
       },
       {
-        "id": "graze-mastery",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/graze.py",
-          "backend/app/combat/attacks.py"
-        ],
         "browser": [
           "frontend/browser-graze.js",
           "frontend/browser-attack.js"
         ],
+        "id": "graze-mastery",
+        "python": [
+          "backend/app/combat/graze.py",
+          "backend/app/combat/attacks.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_graze.py",
           "frontend/browser-graze.test.cjs"
         ]
       },
       {
+        "browser": [
+          "frontend/browser-rolls.js"
+        ],
         "id": "great-weapon-fighting",
-        "status": "supported",
         "python": [
           "backend/app/content/fighter_progression.py",
           "backend/app/combat/damage.py",
           "backend/app/combat/savage_attacker.py"
         ],
-        "browser": [
-          "frontend/browser-rolls.js"
-        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_damage.py",
           "backend/tests/test_fighter_progression.py",
@@ -339,78 +332,78 @@
         ]
       },
       {
-        "id": "healing",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/healing.py"
-        ],
         "browser": [
           "frontend/browser-healing.js"
         ],
+        "id": "healing",
+        "python": [
+          "backend/app/combat/healing.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_action_healing.py",
           "frontend/browser-action-healing.test.cjs"
         ]
       },
       {
-        "id": "hp-threshold-condition",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/hp_threshold_condition.py",
-          "backend/app/combat/condition_lifecycle.py"
-        ],
         "browser": [
           "frontend/browser-hp-threshold-condition.js",
           "frontend/browser-timed-conditions.js"
         ],
+        "id": "hp-threshold-condition",
+        "python": [
+          "backend/app/combat/hp_threshold_condition.py",
+          "backend/app/combat/condition_lifecycle.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_warlock_fiend_2014_level1.py",
           "frontend/browser-power-word-stun-2014.test.cjs"
         ]
       },
       {
-        "id": "hp-threshold-instant-death",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/hp_threshold_instant_death.py",
-          "backend/app/combat/zero_hp_replacement.py"
-        ],
         "browser": [
           "frontend/browser-hp-threshold-instant-death.js",
           "frontend/browser-zero-hp-replacement.js"
         ],
+        "id": "hp-threshold-instant-death",
+        "python": [
+          "backend/app/combat/hp_threshold_instant_death.py",
+          "backend/app/combat/zero_hp_replacement.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_warlock_fiend_2014_level1.py",
           "frontend/browser-power-word-kill-2014.test.cjs"
         ]
       },
       {
-        "id": "indomitable",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/indomitable.py",
-          "backend/app/combat/saving_throw_rolls.py"
-        ],
         "browser": [
           "frontend/browser-indomitable.js",
           "frontend/browser-saves.js"
         ],
+        "id": "indomitable",
+        "python": [
+          "backend/app/combat/indomitable.py",
+          "backend/app/combat/saving_throw_rolls.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_fighter_level9.py",
           "frontend/browser-fighter9.test.cjs"
         ]
       },
       {
-        "id": "initiative-resource-refill",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/initiative_resource_refill.py",
-          "backend/app/domain/initiative_resources.py"
-        ],
         "browser": [
           "frontend/browser-initiative-resource-refill.js",
           "frontend/browser-engine.js"
         ],
+        "id": "initiative-resource-refill",
+        "python": [
+          "backend/app/combat/initiative_resource_refill.py",
+          "backend/app/domain/initiative_resources.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_initiative_resource_refill.py",
           "backend/tests/test_monk_open_hand_2014_level20.py",
@@ -420,46 +413,46 @@
         ]
       },
       {
+        "browser": [
+          "frontend/browser-legendary-actions.js"
+        ],
         "id": "legendary-actions",
-        "status": "supported",
         "python": [
           "backend/app/combat/legendary_actions.py",
           "backend/app/combat/legendary_action_choice.py",
           "backend/app/domain/legendary_actions.py"
         ],
-        "browser": [
-          "frontend/browser-legendary-actions.js"
-        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_legendary_actions.py",
           "frontend/browser-legendary-actions.test.cjs"
         ]
       },
       {
-        "id": "legendary-resistance",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/save_success_override.py",
-          "backend/app/combat/saving_throw_rolls.py"
-        ],
         "browser": [
           "frontend/browser-save-success-override.js",
           "frontend/browser-saving-throws.js"
         ],
+        "id": "legendary-resistance",
+        "python": [
+          "backend/app/combat/save_success_override.py",
+          "backend/app/combat/saving_throw_rolls.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_regeneration_and_legendary_resistance.py",
           "frontend/browser-regeneration-legendary-resistance.test.cjs"
         ]
       },
       {
-        "id": "melee-ranged-range-bands",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/range.py"
-        ],
         "browser": [
           "frontend/browser-attack.js"
         ],
+        "id": "melee-ranged-range-bands",
+        "python": [
+          "backend/app/combat/range.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_range.py",
           "backend/tests/test_ranged_close_threat.py",
@@ -467,16 +460,16 @@
         ]
       },
       {
-        "id": "movement-modes-closing",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/movement.py",
-          "backend/app/combat/arena_closing.py"
-        ],
         "browser": [
           "frontend/browser-state.js",
           "frontend/browser-turn.js"
         ],
+        "id": "movement-modes-closing",
+        "python": [
+          "backend/app/combat/movement.py",
+          "backend/app/combat/arena_closing.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_movement.py",
           "backend/tests/test_arena_closing.py",
@@ -484,50 +477,41 @@
         ]
       },
       {
-        "id": "multiattack-extra-attack",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/attack_actions.py"
-        ],
         "browser": [
           "frontend/browser-multiattack.js"
         ],
+        "id": "multiattack-extra-attack",
+        "python": [
+          "backend/app/combat/attack_actions.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_attack_actions.py",
           "frontend/browser-mixed-multiattack.test.cjs"
         ]
       },
       {
+        "blocker": "AttackCapabilityDefinition fails closed on purpose: 'Current runtime supports one persistent control rider per attack.' IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed.' No printed 2014 catalog attack that a fight currently needs carries two persistent control riders; extra on-hit damage plus one grapple or one save rider already compiles.",
         "id": "multiple-persistent-riders-on-one-attack",
-        "status": "unsupported",
-        "blocker": "AttackCapabilityDefinition fails closed on purpose: 'Current runtime supports one persistent control rider per attack.' IRON_PIT_RULES_CONTRACT: 'Unsupported outcome-changing mechanics fail closed.' No printed 2014 catalog attack that a fight currently needs carries two persistent control riders; extra on-hit damage plus one grapple or one save rider already compiles."
+        "status": "unsupported"
       },
       {
-        "id": "natural-1-natural-20-critical",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/rolls.py",
-          "backend/app/combat/attacks.py"
-        ],
         "browser": [
           "frontend/browser-rolls.js",
           "frontend/browser-attack.js"
         ],
+        "id": "natural-1-natural-20-critical",
+        "python": [
+          "backend/app/combat/rolls.py",
+          "backend/app/combat/attacks.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_rolls.py",
           "frontend/browser-engine.test.cjs"
         ]
       },
       {
-        "id": "nick-mastery",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/weapon_mastery.py",
-          "backend/app/combat/light_weapons.py",
-          "backend/app/combat/light_attack_resolution.py",
-          "backend/app/combat/standard_attack_action.py",
-          "backend/app/combat/attack_actions.py"
-        ],
         "browser": [
           "frontend/browser-weapon-mastery.js",
           "frontend/browser-light-weapons.js",
@@ -535,79 +519,88 @@
           "frontend/browser-standard-attack-action.js",
           "frontend/browser-multiattack.js"
         ],
+        "id": "nick-mastery",
+        "python": [
+          "backend/app/combat/weapon_mastery.py",
+          "backend/app/combat/light_weapons.py",
+          "backend/app/combat/light_attack_resolution.py",
+          "backend/app/combat/standard_attack_action.py",
+          "backend/app/combat/attack_actions.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_light_weapons.py",
           "frontend/browser-light-weapons.test.cjs"
         ]
       },
       {
-        "id": "non-concentration-precombat-defense",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/precombat_spells.py"
-        ],
         "browser": [
           "frontend/browser-precombat-spells.js"
         ],
+        "id": "non-concentration-precombat-defense",
+        "python": [
+          "backend/app/combat/precombat_spells.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_precombat_spells.py",
           "frontend/browser-precombat-spells.test.cjs"
         ]
       },
       {
-        "id": "one-slot-spell-per-turn",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/spellcasting.py"
-        ],
         "browser": [
           "frontend/browser-spellcasting.js"
         ],
+        "id": "one-slot-spell-per-turn",
+        "python": [
+          "backend/app/combat/spellcasting.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_spell_policy.py",
           "frontend/browser-spell-policy.test.cjs"
         ]
       },
       {
-        "id": "ongoing-periodic-damage",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/start_of_turn_timed_burn.py"
-        ],
         "browser": [
           "frontend/browser-start-of-turn-timed-burn.js"
         ],
+        "id": "ongoing-periodic-damage",
+        "python": [
+          "backend/app/combat/start_of_turn_timed_burn.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_searing_smite_2024.py",
           "frontend/browser-start-of-turn-timed-burn.test.cjs"
         ]
       },
       {
-        "id": "opportunity-attacks",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/opportunity_attacks.py",
-          "backend/app/combat/opportunity_attack_rules.py"
-        ],
         "browser": [
           "frontend/browser-reactions.js",
           "frontend/browser-reaction-movement.js"
         ],
+        "id": "opportunity-attacks",
+        "python": [
+          "backend/app/combat/opportunity_attacks.py",
+          "backend/app/combat/opportunity_attack_rules.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_opportunity_attacks.py",
           "frontend/browser-reactions.test.cjs"
         ]
       },
       {
+        "browser": [
+          "frontend/browser-reactions.js"
+        ],
         "id": "parry-redirect-reactions",
-        "status": "supported",
         "python": [
           "backend/app/combat/parry.py",
           "backend/app/combat/redirect_attack.py"
         ],
-        "browser": [
-          "frontend/browser-reactions.js"
-        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_parry.py",
           "backend/tests/test_redirect_attack.py",
@@ -615,163 +608,163 @@
         ]
       },
       {
-        "id": "poisoned",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/condition_rules.py",
-          "backend/app/combat/timed_conditions.py"
-        ],
         "browser": [
           "frontend/browser-condition-rules.js",
           "frontend/browser-timed-conditions.js"
         ],
+        "id": "poisoned",
+        "python": [
+          "backend/app/combat/condition_rules.py",
+          "backend/app/combat/timed_conditions.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_poisoned_conditions.py",
           "frontend/browser-poison.test.cjs"
         ]
       },
       {
-        "id": "prone",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/conditions.py",
-          "backend/app/combat/condition_rules.py"
-        ],
         "browser": [
           "frontend/browser-condition-rules.js",
           "frontend/browser-attack.js"
         ],
+        "id": "prone",
+        "python": [
+          "backend/app/combat/conditions.py",
+          "backend/app/combat/condition_rules.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_prone_wolves.py",
           "frontend/browser-control.test.cjs"
         ]
       },
       {
-        "id": "recharge",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/recharge.py"
-        ],
         "browser": [
           "frontend/browser-recharge.js"
         ],
+        "id": "recharge",
+        "python": [
+          "backend/app/combat/recharge.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_recharge.py",
           "frontend/browser-recharge.test.cjs"
         ]
       },
       {
-        "id": "regeneration",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/regeneration.py",
-          "backend/app/combat/regeneration_lifecycle.py"
-        ],
         "browser": [
           "frontend/browser-regeneration.js",
           "frontend/browser-zero-hp.js"
         ],
+        "id": "regeneration",
+        "python": [
+          "backend/app/combat/regeneration.py",
+          "backend/app/combat/regeneration_lifecycle.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_regeneration_and_legendary_resistance.py",
           "frontend/browser-regeneration-legendary-resistance.test.cjs"
         ]
       },
       {
-        "id": "sap-mastery",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/sap.py",
-          "backend/app/combat/attacks.py"
-        ],
         "browser": [
           "frontend/browser-tactical-master.js",
           "frontend/browser-attack.js"
         ],
+        "id": "sap-mastery",
+        "python": [
+          "backend/app/combat/sap.py",
+          "backend/app/combat/attacks.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_fighter_level9.py",
           "frontend/browser-fighter9.test.cjs"
         ]
       },
       {
+        "browser": [
+          "frontend/browser-saves.js"
+        ],
         "id": "saving-throws",
-        "status": "supported",
         "python": [
           "backend/app/combat/saving_throws.py",
           "backend/app/combat/saving_throw_rolls.py"
         ],
-        "browser": [
-          "frontend/browser-saves.js"
-        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_saving_throw_actions.py",
           "frontend/browser-control.test.cjs"
         ]
       },
       {
+        "browser": [
+          "frontend/browser-modifiers.js"
+        ],
         "id": "shield-ac",
-        "status": "supported",
         "python": [
           "backend/app/content/armor_class_rules.py",
           "backend/app/combat/modifier_stack.py"
         ],
-        "browser": [
-          "frontend/browser-modifiers.js"
-        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_armor_class_rules.py",
           "frontend/browser-defense-style.test.cjs"
         ]
       },
       {
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Specific source wording beats generic behavior. Resolve each subevent fully and update state before resolving the next.' Bound simultaneous cases already follow that. A speculative universal effect-batch transaction layer is not added merely to clear the label.",
         "id": "simultaneous-effect-ordering",
-        "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Specific source wording beats generic behavior. Resolve each subevent fully and update state before resolving the next.' Bound simultaneous cases already follow that. A speculative universal effect-batch transaction layer is not added merely to clear the label."
+        "status": "partial"
       },
       {
+        "browser": [
+          "frontend/browser-spell-resolution.js",
+          "frontend/browser-saves.js"
+        ],
         "id": "simultaneous-save-shared-damage-roll",
-        "status": "supported",
         "python": [
           "backend/app/combat/spell_resolution.py",
           "backend/app/combat/spell_save_effect_resolution.py",
           "backend/app/combat/saving_throws.py"
         ],
-        "browser": [
-          "frontend/browser-spell-resolution.js",
-          "frontend/browser-saves.js"
-        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_spell_shared_damage.py",
           "frontend/browser-spell-resolution.test.cjs"
         ]
       },
       {
-        "id": "slow-mastery",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/slow.py",
-          "backend/app/combat/attack_effect_resolution.py",
-          "backend/app/combat/modifier_stack.py"
-        ],
         "browser": [
           "frontend/browser-slow.js",
           "frontend/browser-weapon-mastery.js",
           "frontend/browser-modifiers.js"
         ],
+        "id": "slow-mastery",
+        "python": [
+          "backend/app/combat/slow.py",
+          "backend/app/combat/attack_effect_resolution.py",
+          "backend/app/combat/modifier_stack.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_slow_mastery.py",
           "frontend/browser-slow.test.cjs"
         ]
       },
       {
+        "browser": [
+          "frontend/browser-spell-attack.js"
+        ],
         "id": "spell-attack-rolls",
-        "status": "supported",
         "python": [
           "backend/app/combat/spell_attack_resolution.py",
           "backend/app/domain/spells.py"
         ],
-        "browser": [
-          "frontend/browser-spell-attack.js"
-        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_guiding_bolt.py",
           "backend/tests/test_spell_attack_context.py",
@@ -779,107 +772,107 @@
         ]
       },
       {
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Dash/Disengage/Hide/Ready/Help/Search are not generic tactical spam; use them only when a supported combat identity or legal fallback requires them.' 'Dodge is the default when no supported offensive option can be used or made legal after any useful legal approach movement available this turn.' Ready and Help are not implemented because Dodge is the only required fallback.",
         "id": "standard-tactical-actions-dash-dodge-disengage-ready-help",
-        "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Dash/Disengage/Hide/Ready/Help/Search are not generic tactical spam; use them only when a supported combat identity or legal fallback requires them.' 'Dodge is the default when no supported offensive option can be used or made legal after any useful legal approach movement available this turn.' Ready and Help are not implemented because Dodge is the only required fallback."
+        "status": "partial"
       },
       {
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Summoning is currently disabled in Iron Pit.' 'Do not create summoned combatants, companion bodies, summoned guardians, or a Summoning Annex.' Transformations remain separately governed and are not summons.",
         "id": "summons-transformations-splitting",
-        "status": "unsupported",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Summoning is currently disabled in Iron Pit.' 'Do not create summoned combatants, companion bodies, summoned guardians, or a Summoning Annex.' Transformations remain separately governed and are not summons."
+        "status": "unsupported"
       },
       {
+        "browser": [
+          "frontend/browser-tactical-master.js",
+          "frontend/browser-weapon-mastery.js",
+          "frontend/browser-attack.js"
+        ],
         "id": "tactical-master",
-        "status": "supported",
         "python": [
           "backend/app/combat/tactical_master_policy.py",
           "backend/app/combat/tactical_master.py",
           "backend/app/combat/weapon_mastery.py",
           "backend/app/combat/attacks.py"
         ],
-        "browser": [
-          "frontend/browser-tactical-master.js",
-          "frontend/browser-weapon-mastery.js",
-          "frontend/browser-attack.js"
-        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_fighter_level9.py",
           "frontend/browser-fighter9.test.cjs"
         ]
       },
       {
+        "browser": [
+          "frontend/browser-zero-hp.js"
+        ],
         "id": "temporary-hit-points",
-        "status": "supported",
         "python": [
           "backend/app/combat/temporary_hp.py",
           "backend/app/combat/zero_hp.py"
         ],
-        "browser": [
-          "frontend/browser-zero-hp.js"
-        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_zero_hp.py",
           "frontend/browser-zero-hp-lifecycle.test.cjs"
         ]
       },
       {
-        "id": "timed-condition-lifecycle-repeat-save",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/condition_lifecycle.py",
-          "backend/app/combat/timed_conditions.py"
-        ],
         "browser": [
           "frontend/browser-condition-lifecycle.js",
           "frontend/browser-timed-conditions.js"
         ],
+        "id": "timed-condition-lifecycle-repeat-save",
+        "python": [
+          "backend/app/combat/condition_lifecycle.py",
+          "backend/app/combat/timed_conditions.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_poisoned_conditions.py",
           "frontend/browser-condition-lifecycle.test.cjs"
         ]
       },
       {
-        "id": "topple-mastery",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/topple.py",
-          "backend/app/combat/attacks.py"
-        ],
         "browser": [
           "frontend/browser-topple.js",
           "frontend/browser-attack.js"
         ],
+        "id": "topple-mastery",
+        "python": [
+          "backend/app/combat/topple.py",
+          "backend/app/combat/attacks.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_topple.py",
           "frontend/browser-topple.test.cjs"
         ]
       },
       {
+        "browser": [
+          "frontend/browser-light-weapons.js"
+        ],
         "id": "two-weapon-fighting",
-        "status": "supported",
         "python": [
           "backend/app/content/fighting_style_rules.py",
           "backend/app/combat/light_weapons.py"
         ],
-        "browser": [
-          "frontend/browser-light-weapons.js"
-        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_light_weapons.py",
           "frontend/browser-light-weapons.test.cjs"
         ]
       },
       {
-        "id": "typed-damage-resistance-immunity-vulnerability",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/damage_defenses.py",
-          "backend/app/domain/damage_sources.py"
-        ],
         "browser": [
           "frontend/browser-attack.js",
           "frontend/browser-damage-defense-rules.js"
         ],
+        "id": "typed-damage-resistance-immunity-vulnerability",
+        "python": [
+          "backend/app/combat/damage_defenses.py",
+          "backend/app/domain/damage_sources.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_damage_defenses.py",
           "backend/tests/test_2014_conditional_damage_defenses.py",
@@ -888,67 +881,63 @@
         ]
       },
       {
+        "blocker": "IRON_PIT_RULES_CONTRACT: 'Prefer raw damage that is easy to calculate over charm and other control. Control remains legal only when no damaging option can land.' Monster grapples that are printed on attacks already bind. Universal player Grapple/Shove is not invented as a default Action because landing-damage already prefers a damaging melee that can land.",
         "id": "unarmed-grapple-shove-options",
-        "status": "partial",
-        "blocker": "IRON_PIT_RULES_CONTRACT: 'Prefer raw damage that is easy to calculate over charm and other control. Control remains legal only when no damaging option can land.' Monster grapples that are printed on attacks already bind. Universal player Grapple/Shove is not invented as a default Action because landing-damage already prefers a damaging melee that can land."
+        "status": "partial"
       },
       {
-        "id": "undead-fortitude",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/undead_fortitude.py"
-        ],
         "browser": [
           "frontend/browser-undead-fortitude.js"
         ],
+        "id": "undead-fortitude",
+        "python": [
+          "backend/app/combat/undead_fortitude.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_undead_fortitude.py",
           "frontend/browser-undead-fortitude.test.cjs"
         ]
       },
       {
-        "id": "vex-mastery",
-        "status": "supported",
-        "python": [
-          "backend/app/combat/vex.py",
-          "backend/app/combat/attacks.py"
-        ],
         "browser": [
           "frontend/browser-vex.js",
           "frontend/browser-attack.js"
         ],
+        "id": "vex-mastery",
+        "python": [
+          "backend/app/combat/vex.py",
+          "backend/app/combat/attacks.py"
+        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_vex.py",
           "frontend/browser-vex.test.cjs"
         ]
       },
       {
+        "browser": [
+          "frontend/browser-zero-hp.js"
+        ],
         "id": "zero-hp-death-lifecycle",
-        "status": "supported",
         "python": [
           "backend/app/combat/zero_hp.py",
           "backend/app/combat/death_saves.py"
         ],
-        "browser": [
-          "frontend/browser-zero-hp.js"
-        ],
+        "status": "supported",
         "tests": [
           "backend/tests/test_zero_hp.py",
           "frontend/browser-zero-hp-lifecycle.test.cjs"
         ]
       }
-    ]
+    ],
+    "summary": {
+      "partial": 10,
+      "supported": 54,
+      "unsupported": 2
+    }
   },
   "hero_pregen": {
-    "roster": {
-      "classes": 12,
-      "subclasses": 37
-    },
-    "summary": {
-      "arena_out_of_scope": 27,
-      "planned": 333,
-      "supported": 81
-    },
     "mechanics": [
       {
         "demand_count": 1,
@@ -5863,7 +5852,16 @@
         ],
         "status": "planned"
       }
-    ]
+    ],
+    "roster": {
+      "classes": 12,
+      "subclasses": 37
+    },
+    "summary": {
+      "arena_out_of_scope": 27,
+      "planned": 333,
+      "supported": 81
+    }
   },
   "monster_2014": {
     "blocked_monster_count": 128,
@@ -5890,114 +5888,113 @@
     },
     "unresolved_printed_abilities": [
       {
-        "printed_name": "Aberrant Ground",
         "demand_count": 1,
         "monsters": [
           "Gibbering Mouther"
-        ]
+        ],
+        "printed_name": "Aberrant Ground"
       },
       {
-        "printed_name": "Adhesive (Object Form Only)",
         "demand_count": 1,
         "monsters": [
           "Mimic"
-        ]
+        ],
+        "printed_name": "Adhesive (Object Form Only)"
       },
       {
-        "printed_name": "Air Form",
         "demand_count": 1,
         "monsters": [
           "Air Elemental"
-        ]
+        ],
+        "printed_name": "Air Form"
       },
       {
-        "printed_name": "Ambusher",
         "demand_count": 1,
         "monsters": [
           "Doppelganger"
-        ]
+        ],
+        "printed_name": "Ambusher"
       },
       {
-        "printed_name": "Assassinate",
         "demand_count": 1,
         "monsters": [
           "Assassin"
-        ]
+        ],
+        "printed_name": "Assassinate"
       },
       {
-        "printed_name": "Aversion of Fire",
         "demand_count": 1,
         "monsters": [
           "Flesh Golem"
-        ]
+        ],
+        "printed_name": "Aversion of Fire"
       },
       {
-        "printed_name": "Barbed Hide",
         "demand_count": 1,
         "monsters": [
           "Barbed Devil"
-        ]
+        ],
+        "printed_name": "Barbed Hide"
       },
       {
-        "printed_name": "Berserk",
         "demand_count": 2,
         "monsters": [
           "Clay Golem",
           "Flesh Golem"
-        ]
+        ],
+        "printed_name": "Berserk"
       },
       {
-        "printed_name": "Blind Senses",
         "demand_count": 1,
         "monsters": [
           "Grimlock"
-        ]
+        ],
+        "printed_name": "Blind Senses"
       },
       {
-        "printed_name": "Bound",
         "demand_count": 1,
         "monsters": [
           "Shield Guardian"
-        ]
+        ],
+        "printed_name": "Bound"
       },
       {
-        "printed_name": "Confer Fire Resistance",
         "demand_count": 1,
         "monsters": [
           "Nightmare"
-        ]
+        ],
+        "printed_name": "Confer Fire Resistance"
       },
       {
-        "printed_name": "Consume Life",
         "demand_count": 1,
         "monsters": [
           "Will-o'-Wisp"
-        ]
+        ],
+        "printed_name": "Consume Life"
       },
       {
-        "printed_name": "Corrode Metal",
         "demand_count": 1,
         "monsters": [
           "Gray Ooze"
-        ]
+        ],
+        "printed_name": "Corrode Metal"
       },
       {
-        "printed_name": "Corrosive Form",
         "demand_count": 1,
         "monsters": [
           "Black Pudding"
-        ]
+        ],
+        "printed_name": "Corrosive Form"
       },
       {
-        "printed_name": "Damage Transfer",
         "demand_count": 2,
         "monsters": [
           "Cloaker",
           "Rug of Smothering"
-        ]
+        ],
+        "printed_name": "Damage Transfer"
       },
       {
-        "printed_name": "Death Burst",
         "demand_count": 5,
         "monsters": [
           "Dust Mephit",
@@ -6005,197 +6002,197 @@
           "Magma Mephit",
           "Magmin",
           "Steam Mephit"
-        ]
+        ],
+        "printed_name": "Death Burst"
       },
       {
-        "printed_name": "Death Throes",
         "demand_count": 1,
         "monsters": [
           "Balor"
-        ]
+        ],
+        "printed_name": "Death Throes"
       },
       {
-        "printed_name": "Detect Life",
         "demand_count": 1,
         "monsters": [
           "Banshee"
-        ]
+        ],
+        "printed_name": "Detect Life"
       },
       {
-        "printed_name": "Divine Awareness",
         "demand_count": 2,
         "monsters": [
           "Planetar",
           "Solar"
-        ]
+        ],
+        "printed_name": "Divine Awareness"
       },
       {
-        "printed_name": "Divine Eminence",
         "demand_count": 1,
         "monsters": [
           "Priest"
-        ]
+        ],
+        "printed_name": "Divine Eminence"
       },
       {
-        "printed_name": "Duergar Resilience",
         "demand_count": 1,
         "monsters": [
           "Duergar"
-        ]
+        ],
+        "printed_name": "Duergar Resilience"
       },
       {
-        "printed_name": "Elemental Demise",
         "demand_count": 2,
         "monsters": [
           "Djinni",
           "Efreeti"
-        ]
+        ],
+        "printed_name": "Elemental Demise"
       },
       {
-        "printed_name": "Ephemeral",
         "demand_count": 1,
         "monsters": [
           "Will-o'-Wisp"
-        ]
+        ],
+        "printed_name": "Ephemeral"
       },
       {
-        "printed_name": "Ethereal Sight",
         "demand_count": 1,
         "monsters": [
           "Ghost"
-        ]
+        ],
+        "printed_name": "Ethereal Sight"
       },
       {
-        "printed_name": "Evasion",
         "demand_count": 1,
         "monsters": [
           "Assassin"
-        ]
+        ],
+        "printed_name": "Evasion"
       },
       {
-        "printed_name": "False Appearance (Object Form Only)",
         "demand_count": 1,
         "monsters": [
           "Mimic"
-        ]
+        ],
+        "printed_name": "False Appearance (Object Form Only)"
       },
       {
-        "printed_name": "Faultless Tracker",
         "demand_count": 1,
         "monsters": [
           "Invisible Stalker"
-        ]
+        ],
+        "printed_name": "Faultless Tracker"
       },
       {
-        "printed_name": "Fear Aura",
         "demand_count": 1,
         "monsters": [
           "Pit Fiend"
-        ]
+        ],
+        "printed_name": "Fear Aura"
       },
       {
-        "printed_name": "Fear of Fire",
         "demand_count": 1,
         "monsters": [
           "Yeti"
-        ]
+        ],
+        "printed_name": "Fear of Fire"
       },
       {
-        "printed_name": "Fey Ancestry",
         "demand_count": 2,
         "monsters": [
           "Drider",
           "Drow"
-        ]
+        ],
+        "printed_name": "Fey Ancestry"
       },
       {
-        "printed_name": "Fire Aura",
         "demand_count": 1,
         "monsters": [
           "Balor"
-        ]
+        ],
+        "printed_name": "Fire Aura"
       },
       {
-        "printed_name": "Fire Form",
         "demand_count": 1,
         "monsters": [
           "Fire Elemental"
-        ]
+        ],
+        "printed_name": "Fire Form"
       },
       {
-        "printed_name": "Freedom of Movement",
         "demand_count": 1,
         "monsters": [
           "Kraken"
-        ]
+        ],
+        "printed_name": "Freedom of Movement"
       },
       {
-        "printed_name": "Freeze",
         "demand_count": 1,
         "monsters": [
           "Water Elemental"
-        ]
+        ],
+        "printed_name": "Freeze"
       },
       {
-        "printed_name": "Gibbering",
         "demand_count": 1,
         "monsters": [
           "Gibbering Mouther"
-        ]
+        ],
+        "printed_name": "Gibbering"
       },
       {
-        "printed_name": "Gnome Cunning",
         "demand_count": 1,
         "monsters": [
           "Deep Gnome (Svirfneblin)"
-        ]
+        ],
+        "printed_name": "Gnome Cunning"
       },
       {
-        "printed_name": "Grappler",
         "demand_count": 1,
         "monsters": [
           "Mimic"
-        ]
+        ],
+        "printed_name": "Grappler"
       },
       {
-        "printed_name": "Grasping Tendrils",
         "demand_count": 1,
         "monsters": [
           "Roper"
-        ]
+        ],
+        "printed_name": "Grasping Tendrils"
       },
       {
-        "printed_name": "Heated Body",
         "demand_count": 3,
         "monsters": [
           "Azer",
           "Remorhaz",
           "Salamander"
-        ]
+        ],
+        "printed_name": "Heated Body"
       },
       {
-        "printed_name": "Hellish Weapons",
         "demand_count": 1,
         "monsters": [
           "Erinyes"
-        ]
+        ],
+        "printed_name": "Hellish Weapons"
       },
       {
-        "printed_name": "Horrific Appearance",
         "demand_count": 1,
         "monsters": [
           "Sea Hag"
-        ]
+        ],
+        "printed_name": "Horrific Appearance"
       },
       {
-        "printed_name": "Ignited Illumination",
         "demand_count": 1,
         "monsters": [
           "Magmin"
-        ]
+        ],
+        "printed_name": "Ignited Illumination"
       },
       {
-        "printed_name": "Innate Spellcasting",
         "demand_count": 23,
         "monsters": [
           "Cloud Giant",
@@ -6221,139 +6218,139 @@
           "Solar",
           "Steam Mephit",
           "Storm Giant"
-        ]
+        ],
+        "printed_name": "Innate Spellcasting"
       },
       {
-        "printed_name": "Inscrutable",
         "demand_count": 2,
         "monsters": [
           "Androsphinx",
           "Gynosphinx"
-        ]
+        ],
+        "printed_name": "Inscrutable"
       },
       {
-        "printed_name": "Invisibility",
         "demand_count": 1,
         "monsters": [
           "Invisible Stalker"
-        ]
+        ],
+        "printed_name": "Invisibility"
       },
       {
-        "printed_name": "Iron Scent",
         "demand_count": 1,
         "monsters": [
           "Rust Monster"
-        ]
+        ],
+        "printed_name": "Iron Scent"
       },
       {
-        "printed_name": "Light Sensitivity",
         "demand_count": 1,
         "monsters": [
           "Cloaker"
-        ]
+        ],
+        "printed_name": "Light Sensitivity"
       },
       {
-        "printed_name": "Limited Magic Immunity",
         "demand_count": 1,
         "monsters": [
           "Rakshasa"
-        ]
+        ],
+        "printed_name": "Limited Magic Immunity"
       },
       {
-        "printed_name": "Limited Telepathy",
         "demand_count": 2,
         "monsters": [
           "Otyugh",
           "Pseudodragon"
-        ]
+        ],
+        "printed_name": "Limited Telepathy"
       },
       {
-        "printed_name": "Misty Escape",
         "demand_count": 1,
         "monsters": [
           "Vampire"
-        ]
+        ],
+        "printed_name": "Misty Escape"
       },
       {
-        "printed_name": "Mucous Cloud",
         "demand_count": 1,
         "monsters": [
           "Aboleth"
-        ]
+        ],
+        "printed_name": "Mucous Cloud"
       },
       {
-        "printed_name": "Multiple Heads",
         "demand_count": 1,
         "monsters": [
           "Hydra"
-        ]
+        ],
+        "printed_name": "Multiple Heads"
       },
       {
-        "printed_name": "Ooze Cube",
         "demand_count": 1,
         "monsters": [
           "Gelatinous Cube"
-        ]
+        ],
+        "printed_name": "Ooze Cube"
       },
       {
-        "printed_name": "Petrifying Gaze",
         "demand_count": 2,
         "monsters": [
           "Basilisk",
           "Medusa"
-        ]
+        ],
+        "printed_name": "Petrifying Gaze"
       },
       {
-        "printed_name": "Pounce (Tiger or Hybrid Form Only)",
         "demand_count": 1,
         "monsters": [
           "Weretiger"
-        ]
+        ],
+        "printed_name": "Pounce (Tiger or Hybrid Form Only)"
       },
       {
-        "printed_name": "Probing Telepathy",
         "demand_count": 1,
         "monsters": [
           "Aboleth"
-        ]
+        ],
+        "printed_name": "Probing Telepathy"
       },
       {
-        "printed_name": "Reactive",
         "demand_count": 1,
         "monsters": [
           "Marilith"
-        ]
+        ],
+        "printed_name": "Reactive"
       },
       {
-        "printed_name": "Reactive Heads",
         "demand_count": 1,
         "monsters": [
           "Hydra"
-        ]
+        ],
+        "printed_name": "Reactive Heads"
       },
       {
-        "printed_name": "Reflective Carapace",
         "demand_count": 1,
         "monsters": [
           "Tarrasque"
-        ]
+        ],
+        "printed_name": "Reflective Carapace"
       },
       {
-        "printed_name": "Rust Metal",
         "demand_count": 1,
         "monsters": [
           "Rust Monster"
-        ]
+        ],
+        "printed_name": "Rust Metal"
       },
       {
-        "printed_name": "Sense Magic",
         "demand_count": 1,
         "monsters": [
           "Chuul"
-        ]
+        ],
+        "printed_name": "Sense Magic"
       },
       {
-        "printed_name": "Shapechanger",
         "demand_count": 11,
         "monsters": [
           "Doppelganger",
@@ -6367,38 +6364,38 @@
           "Wererat",
           "Weretiger",
           "Werewolf"
-        ]
+        ],
+        "printed_name": "Shapechanger"
       },
       {
-        "printed_name": "Shielded Mind",
         "demand_count": 1,
         "monsters": [
           "Couatl"
-        ]
+        ],
+        "printed_name": "Shielded Mind"
       },
       {
-        "printed_name": "Sneak Attack",
         "demand_count": 1,
         "monsters": [
           "Assassin"
-        ]
+        ],
+        "printed_name": "Sneak Attack"
       },
       {
-        "printed_name": "Speak with Beasts and Plants",
         "demand_count": 1,
         "monsters": [
           "Dryad"
-        ]
+        ],
+        "printed_name": "Speak with Beasts and Plants"
       },
       {
-        "printed_name": "Spell Storing",
         "demand_count": 1,
         "monsters": [
           "Shield Guardian"
-        ]
+        ],
+        "printed_name": "Spell Storing"
       },
       {
-        "printed_name": "Spellcasting",
         "demand_count": 13,
         "monsters": [
           "Acolyte",
@@ -6414,88 +6411,91 @@
           "Mummy Lord",
           "Priest",
           "Spirit Naga"
-        ]
+        ],
+        "printed_name": "Spellcasting"
       },
       {
-        "printed_name": "Steadfast",
         "demand_count": 1,
         "monsters": [
           "Bearded Devil"
-        ]
+        ],
+        "printed_name": "Steadfast"
       },
       {
-        "printed_name": "Sunlight Weakness",
         "demand_count": 1,
         "monsters": [
           "Shadow"
-        ]
+        ],
+        "printed_name": "Sunlight Weakness"
       },
       {
-        "printed_name": "Surprise Attack",
         "demand_count": 2,
         "monsters": [
           "Bugbear",
           "Doppelganger"
-        ]
+        ],
+        "printed_name": "Surprise Attack"
       },
       {
-        "printed_name": "Tail Spike Regrowth",
         "demand_count": 1,
         "monsters": [
           "Manticore"
-        ]
+        ],
+        "printed_name": "Tail Spike Regrowth"
       },
       {
-        "printed_name": "Telepathic Bond",
         "demand_count": 2,
         "monsters": [
           "Homunculus",
           "Succubus/Incubus"
-        ]
+        ],
+        "printed_name": "Telepathic Bond"
       },
       {
-        "printed_name": "Transparent",
         "demand_count": 1,
         "monsters": [
           "Gelatinous Cube"
-        ]
+        ],
+        "printed_name": "Transparent"
       },
       {
-        "printed_name": "Tree Stride",
         "demand_count": 1,
         "monsters": [
           "Dryad"
-        ]
+        ],
+        "printed_name": "Tree Stride"
       },
       {
-        "printed_name": "Vampire Weaknesses",
         "demand_count": 2,
         "monsters": [
           "Vampire",
           "Vampire Spawn"
-        ]
+        ],
+        "printed_name": "Vampire Weaknesses"
       },
       {
-        "printed_name": "Variable Illumination",
         "demand_count": 1,
         "monsters": [
           "Will-o'-Wisp"
-        ]
+        ],
+        "printed_name": "Variable Illumination"
       },
       {
-        "printed_name": "Water Form",
         "demand_count": 1,
         "monsters": [
           "Water Elemental"
-        ]
+        ],
+        "printed_name": "Water Form"
       },
       {
-        "printed_name": "Water Susceptibility",
         "demand_count": 1,
         "monsters": [
           "Fire Elemental"
-        ]
+        ],
+        "printed_name": "Water Susceptibility"
       }
     ]
-  }
+  },
+  "policy": "Universal behavior is indexed by mechanic id. Complete source-specific abilities remain authoritative source data. Homebrew and unique monster abilities compose supported universal mechanics plus source parameters; only a genuinely new semantic remainder justifies a new reusable primitive.",
+  "schema_version": 1
 }
