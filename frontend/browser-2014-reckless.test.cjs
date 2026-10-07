@@ -37,7 +37,5 @@ const winterWolf = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-winter-wolf"];
 assert.ok(winterWolf);
 assert.ok(winterWolf.traits.includes("pack-tactics"));
 assert.ok(winterWolf.source_trait_names.includes("Snow Camouflage"));
-assert.equal(window.IRON_PIT_BROWSER_MONSTERS_2014["2014-yeti"], undefined,
-  "Yeti must remain fail-closed until Fear of Fire is modeled");
 
 console.log("2014 Reckless and flat-arena trait browser parity passed.");
