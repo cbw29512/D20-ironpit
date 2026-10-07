@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Literal
 from app.combat.turn_damage import note_turn_damage_and_trigger
+from app.combat.turn_start_targeting_overrides import sync_targeting_overrides_after_hp_change
 from app.combat.concentration import resolve_concentration_damage
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
@@ -93,6 +94,7 @@ def restore_hit_points(state: CombatantState, amount: int) -> int:
         state.is_unconscious = False
         state.is_stable = False
         reset_death_saves(state)
+        sync_targeting_overrides_after_hp_change(state)
     return healed
 
 
