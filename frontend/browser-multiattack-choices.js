@@ -14,6 +14,7 @@
       const variants = definition.variants?.length ? definition.variants : [{ id: definition.id, slots: definition.slots }];
       if (!Array.isArray(variants) || variants.length > 16 || new Set(variants.map((v) => v.id)).size !== variants.length) throw new Error("Invalid Multiattack variants.");
       for (const variant of variants) {
+        if (definition.variants?.length && typeof variant.id !== "string") throw new Error("Invalid Multiattack variant ID.");
         if (![null, undefined, "melee", "ranged"].includes(variant.attackKind)) throw new Error("Invalid sequence mode.");
         if (!Array.isArray(variant.slots) || !variant.slots.length || variant.slots.length > 8) throw new Error("Invalid Multiattack slots.");
       }
@@ -23,6 +24,7 @@
       for (const slot of slots) {
         const data = slotData(slot);
         if (!data.attackIds.length && !data.saveActionIds.length) throw new Error("Empty Multiattack slot.");
+        if (data.attackIds.length > 16 || data.saveActionIds.length > 16) throw new Error("Invalid Multiattack choice count.");
         const unknown = [...data.attackIds.filter((id) => !attacks.has(id)), ...data.saveActionIds.filter((id) => !saves.has(id))];
         if (unknown.length) throw new Error(`Unknown Multiattack IDs: ${unknown.join(", ")}`);
       }

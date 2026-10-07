@@ -126,3 +126,20 @@ def test_damage_riders_can_make_lower_base_damage_the_best_legal_choice():
 def test_definition_has_exactly_one_sequence_representation(payload):
     with pytest.raises(ValueError, match='either slots or complete variants'):
         AttackActionDefinition(id='invalid', name='Invalid', **payload)
+
+
+@pytest.mark.parametrize('mutation', ['missing_id', 'wrong_kind'])
+def test_unselected_branch_schema_and_kind_fail_before_mutation(mutation):
+    actor, target, setup = setup_for()
+    action = actor.state.template.attack_action.model_copy(deep=True)
+    if mutation == 'missing_id':
+        action.variants[1].id = None
+    else:
+        action.variants[1].attack_kind = action.variants[0].attack_kind
+    actor.state.template = actor.state.template.model_copy(update={'attack_action': action})
+    before = [actor.state.model_dump(), target.state.model_dump()]
+    dice = RecordingDice()
+    with pytest.raises(ValueError):
+        resolve_attack_action(1, 1, actor, setup, dice)
+    assert not dice.calls
+    assert [actor.state.model_dump(), target.state.model_dump()] == before

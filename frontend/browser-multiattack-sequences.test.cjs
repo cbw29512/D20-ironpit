@@ -58,3 +58,14 @@ for (const fixture of cases) {
 }
 assert.equal(cases.length, 6);
 console.log("Source Multiattack counts, highest legal damage, fixed shield, interruption, reset, atomic validation, and Python/browser parity passed.");
+
+for (const corrupt of [(action) => { delete action.variants[1].id; }, (action) => { action.variants[1].attackKind = "melee"; }]) {
+  const { actor, setup } = setupFor(cases[0]);
+  corrupt(actor.state.template.attack_action);
+  const before = structuredClone(actor.state), original = console.error;
+  console.error = () => {};
+  try {
+    assert.throws(() => M.selectSequence(actor, setup), /Invalid Multiattack variant ID|contradicts its attack kind/);
+    assert.deepEqual(actor.state, before);
+  } finally { console.error = original; }
+}
