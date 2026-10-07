@@ -361,3 +361,40 @@ def test_copper_slowing_breath_caps_extra_attack_at_one() -> None:
     events, _ = resolve_attack_action(1, 1, hero, setup, FixedDiceProvider([2, 2, 2, 2]))
     assert len([event for event in events if event.event_type == "attack"]) == 1
     assert turn_attack_allowed(hero.state) is False
+
+
+_BRASS_SLEEP = {
+    "brass-dragon-wyrmling": {"dc": 11, "cone_ft": 15, "duration_rounds": 10},
+    "young-brass-dragon": {"dc": 14, "cone_ft": 30, "duration_rounds": 50},
+    "adult-brass-dragon": {"dc": 18, "cone_ft": 60, "duration_rounds": 100},
+    "ancient-brass-dragon": {"dc": 21, "cone_ft": 90, "duration_rounds": 100},
+}
+
+
+def test_2014_brass_sleep_breath_reuses_timed_unconscious_and_wake_permission() -> None:
+    for monster_id, expected in _BRASS_SLEEP.items():
+        action = _catalog_action(monster_id, "sleep-breath")
+        assert supports_failed_save_control_2014(action) is True
+        assert action["save_ability"] == "constitution"
+        assert action["dc"] == expected["dc"]
+        assert action["area"]["shape"] == "cone"
+        assert action["area"]["length_ft"] == expected["cone_ft"]
+        control = action["failure_control_effect"]
+        assert control["condition_id"] == "unconscious"
+        assert control["duration_rounds"] == expected["duration_rounds"]
+        assert control["ends_on_damage"] is True
+        assert control["allowed_removal_action_ids"] == ["wake-sleeper"]
+        rider = compile_failed_save_control_2014(action)
+        assert rider is not None
+        assert rider.effect_id == "unconscious"
+        assert rider.ends_on_damage is True
+        assert rider.allowed_removal_action_ids == ["wake-sleeper"]
+
+
+def test_2014_brass_sleep_breath_unlocks_three_cards_without_hiding_ancient_extra_action() -> None:
+    by_id = {monster.id: monster for monster in load_monster_source_2014()}
+    for monster_id in ("brass-dragon-wyrmling", "young-brass-dragon", "adult-brass-dragon"):
+        assert basic_blockers_2014(by_id[monster_id]) == ()
+    ancient = basic_blockers_2014(by_id["ancient-brass-dragon"])
+    assert "mechanic:save-action" not in ancient
+    assert "source:extra-action" in ancient
