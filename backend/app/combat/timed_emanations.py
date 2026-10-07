@@ -58,8 +58,6 @@ def resolve_target_turn_start_emanations(
         sync_emanation_speed(setup)
         active_turn = turn_key or f"{round_number}:{target.combatant_id}"
         for source in [*setup.heroes, *setup.monsters]:
-            if not _opposing(source, target):
-                continue
             for action in _active_emanations(source):
                 distance = combatant_distance(source, target)
                 aura_event, sequence = resolve_hostile_condition_aura(
@@ -69,7 +67,7 @@ def resolve_target_turn_start_emanations(
                 if aura_event is not None:
                     events.append(aura_event)
                 emanation = action.start_turn_emanation_damage
-                if emanation is None:
+                if emanation is None or not _opposing(source, target):
                     continue
                 if emanation.trigger not in {"enemy_turn_start", "enter_or_start"}:
                     continue
