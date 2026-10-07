@@ -32,6 +32,7 @@ class FailedSaveTimedEffect(BaseModel):
     ends_on_damage: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
+    allowed_removal_action_ids: list[str] = Field(default_factory=list)
     repeat_save_failures_to_lock: int | None = Field(default=None, ge=1, le=10)
     escape_check_ability: AbilityName | None = None
     escape_check_dc: int | None = Field(default=None, ge=1, le=40)
