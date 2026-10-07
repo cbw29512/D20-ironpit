@@ -8,20 +8,15 @@ When Chris has more than one assistant working on Iron Pit concurrently, read an
 
 Before changing combat code, read:
 
-1. `SOUL.md` — first-read product philosophy: semantic mechanics over source names; universal reuse is mandatory.
-2. `docs/CURRENT_OPERATING_STATUS.md` — current lane, certified counts, parked PRs, CI spend rules.
-3. `docs/IRON_PIT_LOCKED_RULES.md` — Chris-locked product rules index. Do not duplicate it.
-4. `docs/IRON_PIT_RULES_CONTRACT.md` — detailed product/combat contract those locks cite.
-5. `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md` — specific battlefield/card-token/grid architecture; it supersedes older fixed-formation/deity-closing assumptions wherever they conflict.
-6. `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md` — durable universal-engine and data-binding architecture.
-7. `docs/COMBAT_RESOLUTION_PIPELINE.md` — canonical checks/modifiers/result/state/audit pipeline and source-name dispatch prohibition.
-8. `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md` — authoritative sequencing-phase extension to the universal architecture.
-9. `docs/MAIN_ACTION_SELECTION_CONTRACT.md` — authoritative separation of legal Action candidates from Arena tactical selection.
-10. `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md` — audit/event evidence contract.
-11. `docs/PREGEN_AND_CONTENT_RULES_CONTRACT.md` — source/content binding contract.
-12. `docs/CANONICAL_COMBAT_BUILD_POLICY.md` — canonical pregen construction.
-13. current source/runtime code and permanent tests.
-14. generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
+1. `SOUL.md` — first-read product philosophy.
+2. `docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md` — small router; read only the Pregens, Monsters, or Universal Engine guide needed for the task.
+3. `docs/CURRENT_OPERATING_STATUS.md` — current lane, certified counts, parked PRs, CI spend rules.
+4. `docs/IRON_PIT_LOCKED_RULES.md` — Chris-locked product rules index.
+5. Open detailed contracts only when the selected task guide requires them, the mechanic touches that subsystem, or something is uncertain.
+6. Current source/runtime code and permanent tests.
+7. Generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
+
+Detailed authorities remain available in `docs/IRON_PIT_RULES_CONTRACT.md`, `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md`, `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`, `docs/COMBAT_RESOLUTION_PIPELINE.md`, `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md`, `docs/MAIN_ACTION_SELECTION_CONTRACT.md`, `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md`, `docs/PREGEN_AND_CONTENT_RULES_CONTRACT.md`, and `docs/CANONICAL_COMBAT_BUILD_POLICY.md`.
 
 Repository truth beats chat summaries, historical counts, old milestone prose, uploaded registry dumps, and stale file-library references. External/user-provided files are evidence only until reconciled against the exact current commit.
 
@@ -66,7 +61,7 @@ The transfer packet is a cache; the repository is the database.
 - Error first: every new Python function/state mutation/rules calculation must use explicit `try/except` with meaningful contextual logging. Browser mutations/resolvers must expose explicit failure handling and must not silently recover by changing rules.
 - No shortcuts: no mock combat paths, no monster-name/class-name/hero-name special-case resolvers, no hand-authored readiness flags, no hardcoded bypasses around the universal engine.
 - Unsupported outcome-changing mechanics fail closed.
-- Prefer universal capabilities plus declarative data. A monster/pregen supplies parameters; the engine supplies mechanics.
+- Prefer universal capabilities plus declarative data. **The engine owns behavior; monster/pregen/source data owns exact AC, DC, attack bonus, save ability, damage dice/type, range, duration, recharge/use limits, qualifiers, ruleset, and printed names.** Never hardcode source numbers or identities into universal resolvers.
 - Source cards/templates are immutable. All fight mutation belongs to temporary combat state and resets after every match.
 - Python is the rules-reference/certification oracle; browser JavaScript is the production fight engine. Supported behavior requires parity.
 - Step, Watch, Replay, and Turbo consume the same canonical resolver/event stream. Presentation mode never changes rules.
@@ -92,12 +87,14 @@ The transfer packet is a cache; the repository is the database.
 
 ## Mandatory every-task semantic reuse check
 
-Before **every** class, subclass, feat, spell, item, monster, legendary action, lair action, or other combat-mechanic implementation, re-read:
+Before **every** class, subclass, feat, spell, item, monster, legendary action, lair action, or other combat-mechanic implementation, read:
 
-- `docs/IRON_PIT_RULES_CONTRACT.md`
-- `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`
-- `docs/PREGEN_AND_CONTENT_RULES_CONTRACT.md`
-- `docs/CANONICAL_COMBAT_BUILD_POLICY.md`
+- `SOUL.md`
+- `docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md`
+- exactly one task guide: `docs/playbooks/MONSTERS.md`, `docs/playbooks/PREGENS.md`, or `docs/playbooks/UNIVERSAL_ENGINE.md`
+- the relevant exact source/card data and current implementation/tests
+
+Do not repeatedly reload every long contract for routine work. Open the detailed authority only when the task guide points to it, the touched subsystem requires it, implementation conflicts with current code/tests, or a rule is uncertain.
 
 Then perform this check **before writing code**:
 
@@ -107,9 +104,11 @@ Then perform this check **before writing code**:
 4. Reuse an existing primitive when the behavior matches.
 5. Parameterize differences such as DC, save ability, range, damage, duration, resource count, recharge threshold, ruleset, or timing.
 6. Compose named abilities from multiple existing primitives when appropriate.
-7. Add a new universal primitive only for behavior that still cannot be represented correctly after the search.
-8. Preserve the exact source ability name for cards/player logs; keep generic primitive IDs internally for audit/certification.
-9. After adding or widening a primitive, re-audit both pregens and monsters for other content that can now bind to it.
+7. If behavior still cannot be represented exactly, classify/record the blocker and **park the content instead of inventing engine behavior during the content pass**.
+8. Finish the rest of the current family/pass. Return to parked `ENGINE_TRULY_MISSING` work later as deliberate universal-engine technical debt.
+9. Only then may a genuinely new universal primitive be designed, and only after the reuse/composition search proves it necessary.
+10. Preserve the exact source ability name for cards/player logs; keep generic primitive IDs internally for audit/certification.
+11. After adding or widening a primitive, re-audit both pregens and monsters for other content that can now bind to it.
 
 **Universal state identity is absolute:** Prone is Prone; Grappled is Grappled; Restrained is Restrained; Blinded is Blinded; Frightened is Frightened; Poisoned is Poisoned; Advantage is Advantage; Disadvantage is Disadvantage; a Saving Throw is a Saving Throw. The source card supplies the parameters. The engine supplies the mechanic.
 
@@ -134,7 +133,15 @@ This check is mandatory even when the source comes from a different class, monst
 
 ## Universal mechanic workflow
 
-When a card exposes a missing combat mechanic:
+When content exposes a missing combat mechanic during a monster/pregen pass:
+
+1. search for an existing primitive or exact composition;
+2. if none can represent the behavior, classify it `ENGINE_TRULY_MISSING`;
+3. record the exact missing semantic/RAW question and park the affected content;
+4. keep moving through the rest of the current family/pass;
+5. do not invent a temporary resolver, approximation, source-name branch, or new arena exception.
+
+When the pass is exhausted and parked technical debt is deliberately selected for engine work:
 
 1. identify the smallest reusable mechanic/capability;
 2. define/extend schema, immutable parameters, mutable state, timing, expiry, and reset semantics;
@@ -142,7 +149,7 @@ When a card exposes a missing combat mechanic:
 4. implement browser-runtime parity;
 5. add permanent regression/parity tests and audit evidence;
 6. regenerate native generated artifacts;
-7. rerun capability/source analysis across the full 330-monster roster and canonical hero progressions;
+7. rerun capability/source analysis across monster and canonical hero content;
 8. allow generated certification to promote every newly unblocked card.
 
 Specific source wording beats generic behavior. Resolve each subevent fully and update state before resolving the next.
