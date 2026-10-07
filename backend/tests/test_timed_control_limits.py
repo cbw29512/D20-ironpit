@@ -22,6 +22,7 @@ from app.combat.state import begin_turn, build_combatant_state
 from app.combat.timed_ability_d20 import timed_ability_d20_disadvantage_sources
 from app.combat.timed_attack_cap import turn_attack_allowed
 from app.combat.timed_conditions import apply_timed_condition
+from app.combat.zero_hp import apply_damage
 from app.combat.exhaustion import ability_check_disadvantage_sources
 from app.content.fighter_progression import build_karnok_stoneward_level
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
@@ -426,3 +427,24 @@ def test_timed_unconscious_uses_the_same_universal_condition_rules_as_zero_hp_un
     assert attacks_have_advantage_against(state) is True
     assert close_hit_is_automatic_critical(state) is True
     assert condition_speed_is_zero(state) is True
+
+
+def test_damage_ends_timed_sleep_unconscious_through_shared_damage_lifecycle() -> None:
+    state = build_combatant_state(build_karnok_stoneward_level(5))
+    apply_timed_condition(
+        state,
+        "unconscious",
+        "sleep-source",
+        source_effect_id="sleep-breath",
+        ends_on_damage=True,
+        allowed_removal_action_ids=["wake-sleeper"],
+        use_default_poison_recovery=False,
+    )
+    assert "unconscious" in state.active_effect_ids
+
+    outcome = apply_damage(state, 1)
+
+    assert outcome == "damaged"
+    assert "unconscious" not in state.active_effect_ids
+    assert all(effect.effect_id != "unconscious" for effect in state.timed_effects)
+    assert state.is_unconscious is False
