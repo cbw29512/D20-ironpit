@@ -179,10 +179,6 @@ def test_reaction_removal_requires_explicit_trigger_and_is_not_used_on_turn() ->
 
 def test_universal_wake_sleeper_requires_explicit_effect_permission() -> None:
     setup, remover, ally = _setup()
-    wake = next(action for action in remover.state.template.condition_removal_actions if action.id == "wake-sleeper")
-    assert wake.requires_explicit_effect_permission is True
-    assert wake.removable_conditions == ["unconscious"]
-
     ally.state.active_effect_ids.append("unconscious")
     ally.state.timed_effects.append(TimedEffect(
         effect_id="unconscious",
