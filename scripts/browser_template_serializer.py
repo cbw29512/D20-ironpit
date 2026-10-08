@@ -699,6 +699,15 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         "expiryTiming": action.expiry_timing, "priority": action.priority,
         "animation": action.animation,
     }
+    if action.start_turn_max_current_hp is not None:
+        row["startTurnMaxCurrentHp"] = action.start_turn_max_current_hp
+    if action.start_turn_roll_die_size is not None:
+        row["startTurnRollDieSize"] = action.start_turn_roll_die_size
+        row["startTurnRollMinimum"] = action.start_turn_roll_minimum
+    if action.ends_at_full_hp:
+        row["endsAtFullHp"] = True
+    if action.target_policy != "normal":
+        row["targetPolicy"] = action.target_policy
     if action.debuff_counters:
         row["debuffCounters"] = [item.model_dump(mode="json") for item in action.debuff_counters]
     if action.movement_mode_grants:

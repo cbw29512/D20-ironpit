@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Literal
 from app.combat.turn_damage import note_turn_damage_and_trigger
+from app.combat.self_buff_lifecycle import sync_hp_ended_self_buffs
 from app.combat.concentration import resolve_concentration_damage
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
@@ -19,15 +20,13 @@ from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
 ZeroHpOutcome = Literal[
     "damaged", "unconscious", "dead", "unchanged", "relentless_endurance", "undead_fortitude",
-    "survival_save", "zero_hp_replacement", "damage_threshold_zero_hp_replacement",
-]
+    "survival_save", "zero_hp_replacement", "damage_threshold_zero_hp_replacement"]
 DODGE_EFFECT_ID = "dodge"
 PRONE_EFFECT_ID = "prone"
 
 def reset_death_saves(state: CombatantState) -> None:
     state.death_save_successes = 0
     state.death_save_failures = 0
-
 
 def _mark_dead(state: CombatantState) -> ZeroHpOutcome:
     if delay_zero_hp_death(state):
@@ -41,7 +40,6 @@ def _mark_dead(state: CombatantState) -> ZeroHpOutcome:
     revert_replacement_form_if_incapacitated(state)
     return "dead"
 
-
 def _mark_unconscious(state: CombatantState) -> ZeroHpOutcome:
     state.is_alive = True
     state.is_unconscious = True
@@ -52,12 +50,10 @@ def _mark_unconscious(state: CombatantState) -> ZeroHpOutcome:
     revert_replacement_form_if_incapacitated(state)
     return "unconscious"
 
-
 def _after_temporary_hp(state: CombatantState, amount: int) -> int:
     absorbed = min(state.temporary_hp, amount)
     state.temporary_hp -= absorbed
     return amount - absorbed
-
 
 def _finish_damage(
     state: CombatantState,
@@ -78,7 +74,6 @@ def _finish_damage(
     resolve_concentration_damage(state, damage_taken, dice, affected_states)
     return outcome
 
-
 def restore_hit_points(state: CombatantState, amount: int) -> int:
     """Restore true HP; ordinary healing cannot restore a dead creature or a Swarm."""
     if amount < 0:
@@ -93,8 +88,8 @@ def restore_hit_points(state: CombatantState, amount: int) -> int:
         state.is_unconscious = False
         state.is_stable = False
         reset_death_saves(state)
+        sync_hp_ended_self_buffs(state)
     return healed
-
 
 def _damage_at_zero(state: CombatantState, incoming: int, *, critical: bool) -> ZeroHpOutcome:
     if state.template.kind == "monster" or incoming >= effective_max_hp(state):
@@ -104,7 +99,6 @@ def _damage_at_zero(state: CombatantState, incoming: int, *, critical: bool) -> 
     if state.death_save_failures >= 3:
         return _mark_dead(state)
     return _mark_unconscious(state)
-
 
 def reduce_to_zero_hit_points(
     state: CombatantState,
@@ -134,7 +128,6 @@ def reduce_to_zero_hit_points(
     except Exception as exc:
         logger.exception("Zero-HP reduction failed for %s.", state.template.name)
         raise RuntimeError("Zero-HP reduction could not be resolved.") from exc
-
 
 def apply_damage(
     state: CombatantState,

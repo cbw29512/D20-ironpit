@@ -23,9 +23,9 @@ def test_flesh_golem_aversion_of_fire_reuses_fire_disadvantage_binding() -> None
     assert rule.ability_check_disadvantage is True
 
 
-def test_aversion_is_resolved_while_berserk_remains_the_flesh_golem_trait_blocker() -> None:
+def test_aversion_and_berserk_are_both_bound_for_flesh_golem() -> None:
     source = _flesh_golem()
     unsupported = set(unsupported_traits_2014(source))
     assert "Aversion of Fire" not in unsupported
-    assert unsupported == {"Berserk"}
-    assert basic_blockers_2014(source) == ("source:trait",)
+    assert unsupported == set()
+    assert "source:trait" not in basic_blockers_2014(source)

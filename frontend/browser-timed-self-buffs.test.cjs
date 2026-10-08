@@ -184,4 +184,48 @@ assert.deepEqual(skipped.events, []);
 assert.equal(slotCleric.state.action_available, true);
 assert.equal(slotCleric.state.resources["spell-slot-3"], 1);
 
+
+load("browser-ability-hooks.js");
+window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.installAbilityHooks();
+load("browser-formation.js");
+load("browser-healing-policy.js");
+load("browser-healing.js");
+
+const berserk = {
+  id: "berserk", name: "Berserk", actionCost: "action", activationTiming: "start_turn",
+  resourceId: null, resourceCost: 1, durationRounds: null,
+  conditionIds: [], damageResistances: [], expiryTiming: null, priority: 100, animation: "rage",
+  startTurnMaxCurrentHp: 40, startTurnRollDieSize: 6, startTurnRollMinimum: 6,
+  endsAtFullHp: true, targetPolicy: "nearest_visible_creature",
+};
+const golem = { combatant_id: "golem", side: "monsters", position_ft: 10, state: state("Flesh Golem") };
+const golemAlly = { combatant_id: "golem-ally", side: "monsters", position_ft: 15, state: state("Golem Ally") };
+const golemEnemy = { combatant_id: "golem-enemy", side: "heroes", position_ft: 30, state: state("Golem Enemy") };
+golem.state.template.max_hp = 93;
+golem.state.template.timed_self_buff_actions = [berserk];
+golem.state.current_hp = 40;
+golemAlly.state.template.timed_self_buff_actions = [];
+golemEnemy.state.template.timed_self_buff_actions = [];
+const golemSetup = { heroes: [golemEnemy], monsters: [golem, golemAlly] };
+const queuedBerserkRolls = [5, 6];
+window.IRON_PIT_DICE = { roll: () => queuedBerserkRolls.shift() };
+
+const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+const failedBerserk = hooks.runPhase(hooks.PHASES.TURN_START, {
+  sequence: 70, round: 1, member: golem, setup: golemSetup, events: [],
+});
+assert.equal(failedBerserk.events[0].feature_roll.total, 5);
+assert.equal(golem.state.active_effect_ids.includes("berserk"), false);
+
+const startedBerserk = hooks.runPhase(hooks.PHASES.TURN_START, {
+  sequence: 71, round: 2, member: golem, setup: golemSetup, events: [],
+});
+assert.equal(startedBerserk.events[0].feature_roll.total, 6);
+assert.equal(golem.state.active_effect_ids.includes("berserk"), true);
+assert.equal(window.IRON_PIT_BROWSER_FORMATION.targetOrder(golem, golemSetup)[0], golemAlly);
+
+assert.equal(window.IRON_PIT_BROWSER_HEALING.restore(golem.state, 100), 53);
+assert.equal(golem.state.active_effect_ids.includes("berserk"), false);
+assert.equal(window.IRON_PIT_BROWSER_FORMATION.targetOrder(golem, golemSetup)[0], golemEnemy);
+
 console.log("Browser timed self-buff, invisibility, and owned resistance parity are certified.");

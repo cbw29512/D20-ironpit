@@ -615,6 +615,16 @@ Iron Pit lair-action ownership house rule:
 - When Regeneration actually restores Hit Points, all active Loathsome Limbs stacks and only the Exhaustion levels owned by those stacks are removed. Unrelated Exhaustion is preserved.
 - This representation is an explicit Iron Pit arena abstraction of the RAW spawned-creature mechanic; it is not a claim that RAW treats severed limbs as buffs.
 
+### 20.2 Golem Berserk arena abstraction
+
+Golem Berserk reuses the ordinary fight-local self-buff/effect state used by other combat buffs; it is not a separate Berserk subsystem and it grants no invented attack, damage, resistance, or Rage benefit.
+
+For 2014 Flesh Golem and Clay Golem, the source supplies the printed fixed HP threshold and the start-of-turn d6 gate. On a 6, the shared buff state activates. While active, the creature's target policy becomes **nearest visible living creature regardless of side**; ordinary visibility, movement, attack legality, reach/range, and damage resolution remain unchanged. The 2014 buff ends immediately when the golem regains all of its Hit Points. Fresh combat state clears it between matches.
+
+The standard Pit has no attackable-object fallback model and no creator relationship entity. For this arena abstraction, a Berserk golem with no currently landable creature attack advances toward the nearest visible creature under normal movement policy instead of attacking an object, and the Flesh Golem creator-calming clause is inactive. This is an explicit Iron Pit arena rule, not a statement that tabletop RAW removes those clauses.
+
+2024 Berserk must be bound independently from its own source wording (including Bloodied trigger/exit semantics) before certification; do not inherit the 2014 fixed thresholds.
+
 ## 21. Combat AI: legality first
 
 Separate RAW legality from tactical policy.

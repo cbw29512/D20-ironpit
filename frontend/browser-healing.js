@@ -6,6 +6,20 @@
   const G = () => window.IRON_PIT_BROWSER_GROUP_HEALING;
   const R = () => window.IRON_PIT_BROWSER_HEALING_RESOLUTION;
 
+  function syncHpEndedSelfBuffs(state) {
+    const runtime = window.IRON_PIT_BROWSER_STATE;
+    if (!runtime?.effectiveMaxHp || state.current_hp < runtime.effectiveMaxHp(state)) return [];
+    const ended = (state.template.timed_self_buff_actions || [])
+      .filter((action) => action.endsAtFullHp && (state.active_effect_ids || []).includes(action.id))
+      .map((action) => action.id);
+    if (ended.length) {
+      state.active_effect_ids = (state.active_effect_ids || []).filter((id) => !ended.includes(id));
+      state.timed_effects = (state.timed_effects || [])
+        .filter((effect) => !ended.includes(effect.effect_id) && !ended.includes(effect.source_effect_id));
+    }
+    return ended;
+  }
+
   function restore(state, amount) {
     if (state.is_dead || amount <= 0 || P().swarm(state)) return 0;
     const before = state.current_hp;
@@ -17,6 +31,7 @@
       state.is_stable = false;
       state.death_save_successes = 0;
       state.death_save_failures = 0;
+      syncHpEndedSelfBuffs(state);
     }
     return healed;
   }
@@ -55,7 +70,7 @@
     groupTargets: (...args) => P().groupTargets(...args),
     resolve,
     resolveGroup: (...args) => G().resolveGroup(...args),
-    restore,
+    restore, syncHpEndedSelfBuffs,
     selfRider,
   };
 })();

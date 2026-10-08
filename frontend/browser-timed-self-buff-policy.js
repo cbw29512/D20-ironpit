@@ -5,8 +5,9 @@
 
   function active(member, action) {
     try {
-      return (member.state.timed_effects || []).some((effect) =>
-        effect.source_id === member.combatant_id && effect.source_effect_id === action.id);
+      return (member.state.active_effect_ids || []).includes(action.id)
+        || (member.state.timed_effects || []).some((effect) =>
+          effect.source_id === member.combatant_id && effect.source_effect_id === action.id);
     } catch (error) {
       console.error("Timed self-buff activity lookup failed.", { combatant: member?.combatant_id, error });
       throw error;
@@ -77,6 +78,7 @@
       || action.meleeHitRetaliation
       || action.spellSaveDcBonus
       || action.spellAttackAdvantage
+      || (action.targetPolicy || "normal") !== "normal"
     );
   }
 
@@ -86,6 +88,7 @@
         (action.activationTiming || "action") === activationTiming
         && (activationTiming === "start_turn" || E().available(member.state, action.actionCost))
         && (action.resourceId == null || (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1))
+        && (action.startTurnMaxCurrentHp == null || member.state.current_hp <= action.startTurnMaxCurrentHp)
         && !active(member, action)
         && !concentrationGrantOnly(action)
         && (!action.concentration || !member.state.concentration)
@@ -104,5 +107,20 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_TIMED_SELF_BUFF_POLICY = { active, choose, concentrationGrantOnly };
+  function startTurnTrigger(action) {
+    if (action.startTurnRollDieSize == null) return { passed: true, featureRoll: null };
+    if (!window.IRON_PIT_DICE?.roll) throw new Error(`${action.name} requires the canonical browser dice provider.`);
+    const roll = window.IRON_PIT_DICE.roll(action.startTurnRollDieSize);
+    return {
+      passed: roll >= action.startTurnRollMinimum,
+      featureRoll: {
+        notation: `1d${action.startTurnRollDieSize}`, rolls: [roll],
+        selected_roll: roll, modifier: 0, mode: "normal", total: roll,
+      },
+    };
+  }
+
+  window.IRON_PIT_BROWSER_TIMED_SELF_BUFF_POLICY = {
+    active, choose, concentrationGrantOnly, startTurnTrigger,
+  };
 })();

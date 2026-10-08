@@ -1,18 +1,12 @@
 (() => {
   "use strict";
-
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const P = () => window.IRON_PIT_BROWSER_TIMED_SELF_BUFF_POLICY;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
-  function active(member, action) {
-    return P().active(member, action);
-  }
-
-  function choose(member, setup = null, activationTiming = "action", turnKey = null) {
-    return P().choose(member, setup, activationTiming, turnKey);
-  }
-
+  const active = (member, action) => P().active(member, action);
+  const choose = (member, setup = null, activationTiming = "action", turnKey = null) =>
+    P().choose(member, setup, activationTiming, turnKey);
   function resolve(sequence, round, member, action, options = {}) {
     try {
       if (action.activationTiming === "passive") throw new Error("Passive auras cannot be activated.");
@@ -27,7 +21,6 @@
       if (options.turnKey && action.resourceId && String(action.resourceId).startsWith("spell-slot-")) {
         window.IRON_PIT_BROWSER_SPELLCASTING?.markSlotSpellCast(member.state, options.turnKey);
       }
-
       if (spendActionCost) E().spend(member.state, action.actionCost);
       if (action.resourceId != null) member.state.resources[action.resourceId] -= action.resourceCost || 1;
       const applied = [];
@@ -67,6 +60,7 @@
         || (action.emittedEnvironmentContexts || []).length
         || action.meleeHitRetaliation
         || action.spellSaveDcBonus || action.spellAttackAdvantage || (action.modifierEffects || []).length
+        || (action.targetPolicy || "normal") !== "normal"
       )) {
         T().apply(member.state, action.id, member.combatant_id, {
           sourceEffectId: action.id,
@@ -83,7 +77,10 @@
           useDefaultPoisonRecovery: false,
         });
       }
-
+      if ((action.targetPolicy || "normal") !== "normal"
+        && !(member.state.active_effect_ids || []).includes(action.id)) {
+        member.state.active_effect_ids.push(action.id);
+      }
       if (action.friendlyRecoveryAura) {
         window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS?.activate(member, action, options.setup, round);
       }
@@ -95,28 +92,20 @@
           ? Number.parseInt(String(action.resourceId).slice("spell-slot-".length), 10)
           : null;
         concentration.start(
-          member.state,
-          member.combatant_id,
-          action.id,
-          round,
-          allStates,
-          expiresRound,
+          member.state, member.combatant_id, action.id, round, allStates, expiresRound,
           Number.isInteger(slotLevel) ? slotLevel : null,
         );
       }
-
       if ((action.modifierEffects || []).length) {
         const modifiers = window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
         if (!modifiers) throw new Error("Timed self-buff modifier effects require browser-spell-modifiers.js.");
         for (const [index, effect] of action.modifierEffects.entries()) {
           M().add(member.state, modifiers.build(
             member.combatant_id, member.combatant_id,
-            { id: action.id, name: action.name, concentration: Boolean(action.concentration) },
-            effect, index, round,
+            { id: action.id, name: action.name, concentration: Boolean(action.concentration) }, effect, index, round,
           ));
         }
       }
-
       for (const grant of action.savingThrowAdvantageGrants || []) {
         for (const ability of grant.abilities || []) {
           M().add(member.state, {
@@ -133,7 +122,6 @@
           });
         }
       }
-
       return {
         sequence, round_number: round, event_type: "feature",
         actor_id: member.combatant_id, actor_name: member.state.template.name,
@@ -149,7 +137,6 @@
       throw error;
     }
   }
-
   function installAbilityHooks() {
     try {
       const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
@@ -167,10 +154,26 @@
         resolve: ({ sequence, round, member, setup }) => {
           const action = choose(member, setup, "start_turn");
           if (!action) return null;
+          const trigger = P().startTurnTrigger(action);
+          const featureRoll = trigger.featureRoll;
+          if (!trigger.passed) return {
+            events: [{
+              sequence, round_number: round, event_type: "feature",
+              actor_id: member.combatant_id, actor_name: member.state.template.name,
+              target_id: member.combatant_id, target_name: member.state.template.name,
+              feature_id: action.id, feature_roll: featureRoll, animation: action.animation || "buff",
+              description: `${member.state.template.name} rolls ${featureRoll.total} for ${action.name}; the buff does not activate.`,
+            }],
+            sequence: sequence + 1, claimed: false,
+          };
           const event = resolve(sequence, round, member, action, {
             spendActionCost: false,
             affectedStates: [...setup.heroes, ...setup.monsters].map((entry) => entry.state),
           });
+          if (featureRoll) {
+            event.feature_roll = featureRoll;
+            event.description = `${member.state.template.name} rolls ${featureRoll.total} for ${action.name}; the buff activates.`;
+          }
           return { events: [event], sequence: sequence + 1, claimed: false };
         },
       });
@@ -179,21 +182,18 @@
       throw error;
     }
   }
-
   function spellSaveDcBonus(state) {
     const activeIds = new Set((state.timed_effects || []).map((effect) => effect.source_effect_id));
     return (state.template.timed_self_buff_actions || []).reduce((total, action) => (
       activeIds.has(action.id) ? total + (action.spellSaveDcBonus || 0) : total
     ), 0);
   }
-
   function spellAttackAdvantage(state) {
     const activeIds = new Set((state.timed_effects || []).map((effect) => effect.source_effect_id));
     return (state.template.timed_self_buff_actions || []).some(
       (action) => action.spellAttackAdvantage && activeIds.has(action.id),
     );
   }
-
   window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS = {
     active, choose, installAbilityHooks, resolve, spellSaveDcBonus, spellAttackAdvantage,
   };

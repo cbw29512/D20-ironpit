@@ -63,10 +63,13 @@ def timed_self_buff_active(
     action: TimedSelfBuffAction,
 ) -> bool:
     try:
-        return any(
-            effect.source_id == member.combatant_id
-            and effect.source_effect_id == action.id
-            for effect in member.state.timed_effects
+        return (
+            action.id in member.state.active_effect_ids
+            or any(
+                effect.source_id == member.combatant_id
+                and effect.source_effect_id == action.id
+                for effect in member.state.timed_effects
+            )
         )
     except Exception as exc:
         logger.exception(
@@ -165,6 +168,10 @@ def choose_timed_self_buff_action(
                         resource is not None
                         and resource.current_uses >= action.resource_cost
                     )
+                )
+                and (
+                    action.start_turn_max_current_hp is None
+                    or member.state.current_hp <= action.start_turn_max_current_hp
                 )
                 and not timed_self_buff_active(member, action)
                 and (not action.concentration or member.state.concentration is None)

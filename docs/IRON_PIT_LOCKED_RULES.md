@@ -37,6 +37,7 @@ These are explicit arena overrides, not RAW changes outside the Pit.
 
 Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §7, Attack natural 1, §10.1, §20.
 
+- **Golem Berserk is a shared self-buff state, not a separate subsystem.** It grants no fake combat bonus. 2014 Flesh/Clay use their printed HP threshold + d6 gate, then target the nearest visible living creature regardless of side until full HP; object fallback and Flesh-Golem creator calming are inactive in the standard Pit. Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §20.2.
 - **2014 Rampage omits its movement rider in the Pit.** A qualifying own-turn melee reduction to 0 HP grants exactly one Bite through the creature's available Bonus Action when a legal target exists; no Rampage movement is granted or required. This is an explicit Iron Pit arena simplification, not tabletop RAW. Runtime uses the generic zero-HP trigger plus Bonus Action attack primitive; cards remain immutable.\n\nAuthority: `docs/IRON_PIT_RULES_CONTRACT.md` §25.2.\n\n## Buffs, debuffs, and match lifecycle
 
 - **A buff cancels the matching debuff.** Pairing is by condition identity and modifier kind, never by spell/monster/class name. An already-active matching counter-buff suppresses the current condition and causes a new copy of that debuff to fail closed.
