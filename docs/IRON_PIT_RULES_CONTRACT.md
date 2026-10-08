@@ -591,6 +591,8 @@ Iron Pit lair-action ownership house rule:
 5. ownership never transfers mid-fight;
 6. once selected, the lair action's actual mechanics/timing remain RAW.
 
+**Medicine checks are not available in Iron Pit combat.** No combatant can use a Medicine skill check to heal, stabilize, remove a condition, stop ongoing damage, or end a wound. If a printed effect also ends through magical healing, retain that healing exit. This is an explicit Pit rule applying equally to monsters, pregens, and future homebrew.
+
 ## 20. Summons, forms, splitting, and temporary removal
 
 **Summoning is currently disabled in Iron Pit.** A spell, feature, item, or monster ability that summons, conjures, creates, or calls a separate combat creature/entity is arena-unavailable for now and does not block certification when the rest of the source is fully supported.
