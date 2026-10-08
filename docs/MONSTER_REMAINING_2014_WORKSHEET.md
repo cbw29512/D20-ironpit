@@ -240,6 +240,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Mage Hand — user decision / queued, both editions:** Remains printed on source/card, but never used in arena combat. Universal spell-level policy shared by 2014 and 2024 casters. Not implemented/certified.
 - **Prestidigitation — user decision / queued, both editions:** Preserve original printed spell, but never cast in the Iron Pit arena. Applies as a shared spell-selection ruling across all monsters, pregens, and homebrew; not yet implemented/certified.
 - **Misty Step — user decision / queued:** Combat-relevant Bonus Action escape: counter Grappled and eligible Restrained debuffs using the shared teleport-cancelable (`ends_on_teleport`) effect handling, **without relocating the creature**. Preserve resource cost and source spell text; apply arena-use policy across 2014/2024 while checking each edition's RAW. Not implemented/certified.
+- **Mirror Image — user decision / universal queued:** All 2014/2024 casters reuse one 3-charge, 10-round, no-Concentration defensive interception buff. 2014 d20 redirection 6+/8+/11+ for 3/2/1 images, with redirected attack resolving against image AC 10+Dex; 2024 hit-first and d6 per surviving image, any 3+ intercepts and destroys an image. No combatant spawning. See shared spell policy. Not implemented or certified.
 
 ### 027. Balor
 
