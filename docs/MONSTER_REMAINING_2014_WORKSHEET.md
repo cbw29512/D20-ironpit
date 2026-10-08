@@ -134,6 +134,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:extra-action`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Inspect the named extra action and represent its action cost, exact targeting/save/damage/condition via shared Action capabilities; mark as arena-unavailable only if an existing locked Pit rule actually covers it.
+- **Fetid Cloud user-approved fix queued:** Treat as a source-owned 1/day area poison: shared Poisoned + separate action/bonus exclusivity and reaction suppression, delivered by existing saving throw and timed-effect primitives. Do not change the global Poisoned effect; retain exact printed DC/radius/duration/immunity terms for implementation. Source/card retains the printed name. **Not coded or certified.**
 
 ### 015. Frog
 
