@@ -54,7 +54,7 @@ def test_2014_nonmagical_defense_family_binds_all_printed_clauses() -> None:
     clay = _monster("clay-golem")
     assert remaining_unsupported_defense_text_2014(clay) == []
     assert "mechanic:defense" not in basic_blockers_2014(clay)
-    assert "source:trait" in basic_blockers_2014(clay)
+    assert "source:trait" not in basic_blockers_2014(clay)
 
 
 def test_2014_silvered_and_adamantine_qualifiers_use_shared_forbidden_set() -> None:
