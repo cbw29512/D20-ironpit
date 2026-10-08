@@ -1,6 +1,5 @@
 from __future__ import annotations
 from typing import Literal
-
 from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, HpThresholdConditionAction, HpThresholdInstantDeathAction, SavingThrowAction
 from app.domain.auto_hit_spells import AutoHitSpellAction
@@ -62,18 +61,15 @@ from app.domain.weapons import (
     WeaponAttack,
     WeaponAttackKind,
 )
-
 class VisualLoadout(BaseModel):
     armor: str
     main_hand: str
     off_hand: str | None = None
     body_style: str = "humanoid"
-
 class ResourceDefinition(BaseModel):
     id: str
     name: str
     max_uses: int = Field(ge=0)
-
 class CombatantTemplate(BaseModel):
     id: str
     name: str
