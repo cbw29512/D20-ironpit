@@ -1,0 +1,21 @@
+"use strict";
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const vm = require("node:vm");
+global.window = globalThis;
+const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
+load("browser-opening-modifiers.js");
+load("browser-defensive-modifier-rules.js");
+const template = {id:"ally-ward-test",name:"Ally Ward Test",passive_modifier_grants:[
+  {source_id:"ally-ward",source_name:"Ally Ward",kind:"condition-immunity",
+    condition_id:"frightened",requires_active_ally:true},
+]};
+const state = {template,active_modifiers:window.IRON_PIT_BROWSER_OPENING_MODIFIERS.build(template),active_effect_ids:[]};
+const rules = window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS;
+assert.equal(state.active_modifiers[0].requires_active_ally,true);
+assert.equal(rules.conditionImmune(state,"frightened"),false);
+assert.equal(rules.conditionImmune(state,"frightened",null,{activeAllyPresent:true}),true);
+assert.equal(rules.conditionImmune(state,"frightened",null,{activeAllyPresent:false}),false);
+assert.equal(rules.conditionImmune(state,"charmed",null,{activeAllyPresent:true}),false);
+console.log("Conditional active-ally immunity parity passed.");
