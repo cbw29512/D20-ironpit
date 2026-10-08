@@ -257,6 +257,7 @@ assert.equal(window.IRON_PIT_BROWSER_FORMATION.targetOrder(golem, golemSetup)[0]
     id: "fire-spell", damageType: "fire", damageDiceCount: 6, damageDiceSize: 6,
   }];
   assert.equal(preferred(caster, battle).id, "shield-chill", "fire incoming requires fire resistance");
+  assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(caster, battle).id, "shield-chill", "normal Action casting matches precombat");
 
   enemy.state.template.saving_throw_actions = [{
     id: "cold-spell", damageType: "cold", damageDiceCount: 6, damageDiceSize: 6,
@@ -268,6 +269,7 @@ assert.equal(window.IRON_PIT_BROWSER_FORMATION.targetOrder(golem, golemSetup)[0]
     { id: "cold", damageType: "cold", damageDiceCount: 10, damageDiceSize: 6 },
   ];
   assert.equal(preferred(caster, battle).id, "shield-warm", "mixed threat uses greater incoming damage");
+  assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(caster, battle).id, "shield-warm", "in-fight mixed-threat choice matches");
   assert.equal(caster.state.resources["spell-slot-4"], 1, "selection does not consume slot");
 }
 
