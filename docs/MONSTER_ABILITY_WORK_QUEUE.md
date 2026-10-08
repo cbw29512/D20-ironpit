@@ -58,6 +58,8 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 - [ ] **Archmage — Detect Magic (2014), USER DECISION / QUEUED:** Retain printed spell on source/card; AI never casts it during Iron Pit combat because its magical detection does not provide a combat action or benefit in the arena. Reuse shared noncombat-spell selection exclusion, not an Archmage-specific branch. Not implemented/certified.
 
+- [ ] **Archmage — Identify (2014), USER DECISION / QUEUED:** Keep Identify printed on source/card; AI never casts it in Iron Pit because informational identification has no combat benefit. Handle with shared arena-inert spell filter; do not remove source entry. Not implemented/certified.
+
 ## Status accounting
 
 - `QUEUED`: named blocker only; source/mechanic check not completed.
