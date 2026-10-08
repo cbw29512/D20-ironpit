@@ -199,6 +199,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `attack:none`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Check whether the creature has any legal combat attack; if no, preserve source and classify arena-neutral rather than fabricating one.
+- **USER DECISION / QUEUED:** Sea Horse may be selected and fielded in Iron Pit; it simply deals **0 attack damage**. Do not invent a damaging attack or alter the printed source. Change arena-neutral exclusion/certification behavior to allow a valid non-damaging participant; ensure combat can terminate without stalls. Not implemented/certified.
 
 ### 023. Stirge
 
