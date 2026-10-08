@@ -7,6 +7,7 @@ from typing import Literal
 from app.combat.defensive_spell_resolution import resolve_defensive_spell
 from app.combat.friendly_save_auras import sync_friendly_save_auras
 from app.combat.selectable_damage_resistance import resolve_selectable_damage_resistance
+from app.combat.timed_defense_selection import choose_timed_defense_by_threat
 from app.combat.precombat_spells import (
     choose_defensive_spell,
     select_defensive_targets,
@@ -35,7 +36,7 @@ class OpeningBuffChoice:
     timed_action: TimedSelfBuffAction | None = None
 
 
-def _timed_choice(member: EncounterCombatant) -> TimedSelfBuffAction | None:
+def _timed_choice(member: EncounterCombatant, setup: EncounterSetup) -> TimedSelfBuffAction | None:
     try:
         choices: list[TimedSelfBuffAction] = []
         for action in member.state.template.timed_self_buff_actions:
@@ -51,7 +52,7 @@ def _timed_choice(member: EncounterCombatant) -> TimedSelfBuffAction | None:
             ):
                 continue
             choices.append(action)
-        return max(choices, key=lambda item: item.priority, default=None)
+        return choose_timed_defense_by_threat(member, setup, choices)
     except Exception as exc:
         logger.exception("Opening timed-buff choice failed for %s.", member.combatant_id)
         raise RuntimeError("Opening timed buff could not be selected.") from exc
@@ -84,7 +85,7 @@ def choose_opening_buff(
                 priority=resistance.priority,
             ))
 
-        timed = _timed_choice(member)
+        timed = _timed_choice(member, setup)
         if timed is not None:
             candidates.append(OpeningBuffChoice(
                 kind="timed-self-buff",

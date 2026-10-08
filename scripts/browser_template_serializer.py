@@ -699,6 +699,9 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         "expiryTiming": action.expiry_timing, "priority": action.priority,
         "animation": action.animation,
     }
+    if action.selection_group is not None:
+        row["selectionGroup"] = action.selection_group
+        row["selectionStrategy"] = action.selection_strategy
     if action.start_turn_max_current_hp is not None:
         row["startTurnMaxCurrentHp"] = action.start_turn_max_current_hp
     if action.start_turn_roll_die_size is not None:

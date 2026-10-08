@@ -100,6 +100,11 @@
         && friendlyAuraRelevant(member, action, setup)
         && hostileAuraRelevant(member, action, setup));
       choices.sort((a, b) => (b.priority || 0) - (a.priority || 0));
+      if (choices[0]?.selectionStrategy === "incoming-damage") {
+        const scorer = window.IRON_PIT_BROWSER_SELECTABLE_DAMAGE_RESISTANCE;
+        if (!scorer?.chooseTimed) throw new Error("Threat-aware defense selection is unavailable.");
+        return scorer.chooseTimed(member, setup, choices);
+      }
       return choices[0] || null;
     } catch (error) {
       console.error("Timed self-buff choice failed.", { combatant: member?.combatant_id, error });

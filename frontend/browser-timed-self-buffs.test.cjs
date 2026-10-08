@@ -18,6 +18,7 @@ load("browser-timed-conditions.js");
 load("browser-spellcasting.js");
 load("browser-timed-self-buff-policy.js");
 load("browser-timed-self-buffs.js");
+load("browser-selectable-damage-resistance.js");
 load("browser-precombat-buffs.js");
 load("browser-attack.js");
 
@@ -227,5 +228,60 @@ assert.equal(window.IRON_PIT_BROWSER_FORMATION.targetOrder(golem, golemSetup)[0]
 assert.equal(window.IRON_PIT_BROWSER_HEALING.restore(golem.state, 100), 53);
 assert.equal(golem.state.active_effect_ids.includes("berserk"), false);
 assert.equal(window.IRON_PIT_BROWSER_FORMATION.targetOrder(golem, golemSetup)[0], golemEnemy);
+
+
+{
+  const caster = { combatant_id: "shield-caster", side: "heroes", state: state("Shield Caster") };
+  const enemy = { combatant_id: "shield-enemy", side: "monsters", state: state("Shield Enemy") };
+  caster.state.resources["spell-slot-4"] = 1;
+  caster.state.template.timed_self_buff_actions = [
+    {
+      id: "shield-warm", name: "Fire Shield", actionCost: "action",
+      resourceId: "spell-slot-4", resourceCost: 1, durationRounds: 100,
+      priority: 88, selectionGroup: "elemental-retaliation", selectionStrategy: "incoming-damage",
+      damageResistances: ["cold"], meleeHitRetaliation: { damageType: "fire", diceCount: 2, diceSize: 8, rangeFt: 5 },
+    },
+    {
+      id: "shield-chill", name: "Fire Shield", actionCost: "action",
+      resourceId: "spell-slot-4", resourceCost: 1, durationRounds: 100,
+      priority: 87, selectionGroup: "elemental-retaliation", selectionStrategy: "incoming-damage",
+      damageResistances: ["fire"], meleeHitRetaliation: { damageType: "cold", diceCount: 2, diceSize: 8, rangeFt: 5 },
+    },
+  ];
+  enemy.state.template.saving_throw_actions = [];
+  const battle = { heroes: [caster], monsters: [enemy] };
+  const preferred = window.IRON_PIT_BROWSER_PRECOMBAT_BUFFS.timedChoice;
+  assert.equal(preferred(caster, battle).id, "shield-warm", "unknown threat retains priority");
+
+  enemy.state.template.saving_throw_actions = [{
+    id: "fire-spell", damageType: "fire", damageDiceCount: 6, damageDiceSize: 6,
+  }];
+  assert.equal(preferred(caster, battle).id, "shield-chill", "fire incoming requires fire resistance");
+  assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(caster, battle).id, "shield-chill", "normal Action casting matches precombat");
+
+  enemy.state.template.saving_throw_actions = [];
+  enemy.state.template.attacks = [{
+    id: "burning-weapon", kind: "melee", damageType: "slashing",
+    diceCount: 1, diceSize: 8,
+    onHitDamage: [{ damageType: "fire", diceCount: 3, diceSize: 6 }],
+  }];
+  assert.equal(preferred(caster, battle).id, "shield-chill", "off-type fire rider must count");
+  assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(caster, battle).id, "shield-chill", "rider threat in combat");
+  enemy.state.template.attacks = [];
+
+
+  enemy.state.template.saving_throw_actions = [{
+    id: "cold-spell", damageType: "cold", damageDiceCount: 6, damageDiceSize: 6,
+  }];
+  assert.equal(preferred(caster, battle).id, "shield-warm", "cold incoming requires cold resistance");
+
+  enemy.state.template.saving_throw_actions = [
+    { id: "fire", damageType: "fire", damageDiceCount: 2, damageDiceSize: 6 },
+    { id: "cold", damageType: "cold", damageDiceCount: 10, damageDiceSize: 6 },
+  ];
+  assert.equal(preferred(caster, battle).id, "shield-warm", "mixed threat uses greater incoming damage");
+  assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(caster, battle).id, "shield-warm", "in-fight mixed-threat choice matches");
+  assert.equal(caster.state.resources["spell-slot-4"], 1, "selection does not consume slot");
+}
 
 console.log("Browser timed self-buff, invisibility, and owned resistance parity are certified.");

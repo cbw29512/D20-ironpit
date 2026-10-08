@@ -3,8 +3,8 @@ from __future__ import annotations
 import logging
 
 from app.domain.persistent_save_zones import PersistentSaveZoneAction
-from app.domain.timed_self_buffs import MeleeHitRetaliation, TimedSelfBuffAction
-from app.domain.weapons_base import DamageType
+from app.content.shared_fire_shield import fire_shield_variants
+from app.domain.timed_self_buffs import TimedSelfBuffAction
 
 logger = logging.getLogger(__name__)
 _SOURCE = "D&D Beyond Basic Rules 2024"
@@ -101,42 +101,9 @@ def wall_of_fire_2024(save_dc: int, pact_slot_level: int) -> PersistentSaveZoneA
 
 
 def fire_shield_2024(pact_slot_level: int) -> list[TimedSelfBuffAction]:
-    """2024 Fire Shield: warm or chill, 10 minutes, resistance plus 2d8 melee retaliation."""
+    """2024 Fire Shield delegates to the universal shared typed-resistance variant policy."""
     try:
-        return [
-            TimedSelfBuffAction(
-                id="fire-shield-warm",
-                name="Fire Shield",
-                action_cost="action",
-                resource_id=f"spell-slot-{pact_slot_level}",
-                resource_cost=1,
-                duration_rounds=100,
-                damage_resistances=[DamageType.COLD],
-                melee_hit_retaliation=MeleeHitRetaliation(
-                    range_ft=5, dice_count=2, dice_size=8, damage_type=DamageType.FIRE,
-                ),
-                ends_if_source_dead=True,
-                expiry_timing="source_turn_end",
-                priority=88,
-                animation="fire-shield",
-            ),
-            TimedSelfBuffAction(
-                id="fire-shield-chill",
-                name="Fire Shield",
-                action_cost="action",
-                resource_id=f"spell-slot-{pact_slot_level}",
-                resource_cost=1,
-                duration_rounds=100,
-                damage_resistances=[DamageType.FIRE],
-                melee_hit_retaliation=MeleeHitRetaliation(
-                    range_ft=5, dice_count=2, dice_size=8, damage_type=DamageType.COLD,
-                ),
-                ends_if_source_dead=True,
-                expiry_timing="source_turn_end",
-                priority=87,
-                animation="fire-shield",
-            ),
-        ]
+        return fire_shield_variants(pact_slot_level)
     except Exception:
         logger.exception("Failed to build 2024 Fire Shield.")
         raise
