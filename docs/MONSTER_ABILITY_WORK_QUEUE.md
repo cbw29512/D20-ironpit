@@ -73,6 +73,7 @@ These are **spell-level decisions**, not Archmage-only exceptions. Preserve the 
 | Identify | Never cast in arena; informational/noncombat | Source retained, exclude from AI combat actions |
 | Detect Thoughts | Never cast in arena; informational/noncombat | Source retained, exclude from AI combat actions |
 | Scrying | **User confirmed useless in Iron Pit**; never cast in arena | Source retained, exclude from AI combat actions |
+| Mage Hand | **User confirmed useless in Iron Pit**; never cast in arena in either edition | Source retained, exclude from AI combat actions |
 | Thaumaturgy | Never cast in arena; no relevant combat effect | Source retained, exclude from AI combat actions |
 | Light | **Combat-relevant; keep available when useful** for illumination of ordinary darkness, sight/hiding and bright-light sensitivity; not sunlight and cannot overcome 2014 magical Darkness | Shared light and vision mechanics; no unconditional AI casting |
 
