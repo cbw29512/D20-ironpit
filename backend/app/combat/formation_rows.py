@@ -63,14 +63,12 @@ def _living_frontline(allies: list[EncounterCombatant], current: EncounterCombat
 
 
 def sync_formation_rows(setup: EncounterSetup) -> list[EncounterCombatant]:
-    """Promote back-row melee-only combatants after the last front-row ally dies."""
+    """Promote every surviving backliner once its side loses the entire frontline."""
     try:
         promoted: list[EncounterCombatant] = []
         for side in (setup.heroes, setup.monsters):
             for member in side:
                 if not _alive(member) or member.state.formation_row != "back":
-                    continue
-                if has_ranged_or_spell_offense(member.state.template):
                     continue
                 if _living_frontline(side, member):
                     continue
