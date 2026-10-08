@@ -118,6 +118,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `mechanic:recharge`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Bind printed recharge threshold and trigger to universal resource refill; do not create monster-specific recharge.
+- **Arena ruling queued:** Teleport (Recharge 4–6) remains on the source/card but is never executed in Iron Pit; only the normal Bite is available. Recharge attached solely to the excluded action must not block certification after shared classification, regeneration and gates. Not yet merged/certified.
 
 ### 013. Bulette
 
