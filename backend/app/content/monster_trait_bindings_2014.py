@@ -89,6 +89,8 @@ def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFe
         return ProgressionCombatFeatures(
             cunning_action=supports_cunning_action_2014(monster),
             sneak_attack_d6=sneak_attack_d6_2014(monster),
+            evasion="Evasion" in monster.trait_names,
+            evasion_disabled_while_incapacitated="Evasion" in monster.trait_names,
             saving_throw_advantage_grants=saving_throw_advantage_grants_2014(monster),
             once_per_turn_weapon_hit_damage_rider=martial_advantage_rider_2014(monster),
         )
@@ -154,6 +156,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(martial_advantage.source_name)
         if sneak_attack_d6_2014(monster) > 0:
             bound.add(_SNEAK_ATTACK)
+        if "Evasion" in monster.trait_names and progression_features_2014(monster).evasion:
+            bound.add("Evasion")
         bound.update(bound_passive_trait_names_2014(monster))
         bound.update(included_weapon_trait_names_2014(monster))
         bound.update(bound_zero_hp_trait_names_2014(monster))
