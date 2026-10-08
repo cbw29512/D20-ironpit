@@ -1238,6 +1238,19 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 }
                 for item in template.damage_taken_timed_effects
             ]
+        if template.turn_start_persistent_effects:
+            row["turn_start_persistent_effects"] = [
+                {
+                    "sourceId": item.source_id,
+                    "sourceName": item.source_name,
+                    "effectId": item.effect_id,
+                    "maxCurrentHp": item.max_current_hp,
+                    "dieSize": item.die_size,
+                    "minimumRoll": item.minimum_roll,
+                    "endsOnFullHp": item.ends_on_full_hp,
+                }
+                for item in template.turn_start_persistent_effects
+            ]
         if template.legendary_actions:
             row["legendary_actions"] = [item.model_dump(mode="json") for item in template.legendary_actions]
         if template.save_success_overrides:
