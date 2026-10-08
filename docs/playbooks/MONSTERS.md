@@ -35,6 +35,10 @@ The monster supplies the numbers; the engine supplies the behavior.
 
 All fight-only mutation lives in temporary combat state and resets after the match.
 
+## Keep the ability pipeline moving
+
+Use [MONSTER_ABILITY_WORK_QUEUE.md](../MONSTER_ABILITY_WORK_QUEUE.md) for the one-ability implementation/CI queue. While one independent PR runs certification, prepare the next exact-source ability from the worksheet instead of repeating roster scans or waiting idle. A submitted PR is not a completed fix; check it off only after merge and regenerated source/browser verification. Keep generated blocker reports and mechanics inventory source-owned.
+
 ## Add or fix a monster
 
 1. Read the exact source text and edition.

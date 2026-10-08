@@ -118,6 +118,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `mechanic:recharge`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Bind printed recharge threshold and trigger to universal resource refill; do not create monster-specific recharge.
+- **Arena ruling queued:** Teleport (Recharge 4–6) remains on the source/card but is never executed in Iron Pit; only the normal Bite is available. Recharge attached solely to the excluded action must not block certification after shared classification, regeneration and gates. Not yet merged/certified.
 
 ### 013. Bulette
 
@@ -125,6 +126,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:extra-action`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Inspect the named extra action and represent its action cost, exact targeting/save/damage/condition via shared Action capabilities; mark as arena-unavailable only if an existing locked Pit rule actually covers it.
+- **Deadly Leap queued / approved arena semantics:** Landing occupies a 10×10-foot (2×2 square) AoE; every enemy overlapping a landing square resolves its own DC 16 Strength-or-Dexterity (better available) save. On failure, roll 3d6+4 bludgeoning plus 3d6+4 slashing, apply typed resistance/immunity/vulnerability independently, and inflict shared Prone. On success, half damage per component after the save, apply defenses, no Prone; 5-ft push deliberately omitted in Iron Pit. A legal 15-ft jump remains required. AI prioritizes leap on opening turn when eligible; ability remains available subsequently. **Queued, not implemented/certified.**
 
 ### 014. Dretch
 
@@ -132,6 +134,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:extra-action`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Inspect the named extra action and represent its action cost, exact targeting/save/damage/condition via shared Action capabilities; mark as arena-unavailable only if an existing locked Pit rule actually covers it.
+- **Fetid Cloud user-approved fix queued:** Treat as a source-owned 1/day area poison: shared Poisoned + separate action/bonus exclusivity and reaction suppression, delivered by existing saving throw and timed-effect primitives. Do not change the global Poisoned effect; retain exact printed DC/radius/duration/immunity terms for implementation. Source/card retains the printed name. **Not coded or certified.**
 
 ### 015. Frog
 
@@ -147,6 +150,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:trait`.
 - **Unbound printed traits:** Blind Senses
 - **Fix notes:** Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
+- **RAW range locked / queued:** Blindsight **30 feet**, not arena-wide (24×16 five-foot squares). Reuse shared Blindsight/sight and source Blinded immunity; no global Blinded disadvantage within perceivable range, no valid gaze eye contact with Basilisk/Medusa, normal limitations beyond 30 ft. Preserve printed Deafened/smell qualifier for future mechanics. **Specification only: not implemented or certified.**
 
 ### 017. Harpy
 
@@ -154,6 +158,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:extra-action`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Inspect the named extra action and represent its action cost, exact targeting/save/damage/condition via shared Action capabilities; mark as arena-unavailable only if an existing locked Pit rule actually covers it.
+- **Luring Song user decision / queued:** 300-ft range spans the entire current arena but retain hearing and creature-type eligibility. Failure of DC 11 Wisdom save composes existing Charmed and Incapacitated and moves the victim via existing pathfinding toward Harpy's 5-ft melee reach on its own turns, limited by normal movement (not teleport); retain printed follow-up saves, song continuation and 24-hour success immunity. **No implementation or certification yet.**
 
 ### 018. Invisible Stalker
 
@@ -161,6 +166,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:trait`.
 - **Unbound printed traits:** Invisibility; Faultless Tracker
 - **Fix notes:** Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
+- **User-approved arena policy (queued):** Faultless Tracker remains printed on source/card but has no effect in Iron Pit, no combat vision/targeting bonus. Invisibility uses existing universal system; Slam attacks are unaffected. Apply shared arena-inert trait classification and regenerate blockers; not yet implemented/certified.
 
 ### 019. Knight
 
@@ -168,6 +174,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:extra-action`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Inspect the named extra action and represent its action cost, exact targeting/save/damage/condition via shared Action capabilities; mark as arena-unavailable only if an existing locked Pit rule actually covers it.
+- **Leadership user decision / queued:** Activate via Action as a nonspell, short/long-rest recharge, 10-round Bless-style +1d4 to qualifying friendly attack rolls and saves within 30 ft and able to hear. No Concentration. **Iron Pit house simplification:** once activated, buff continues until duration expires or the Knight reaches 0 HP; printed Incapacitated-ending restriction is replaced by HP > 0. Reuse shared roll-bonus mechanics. **Not implemented/certified.**
 
 ### 020. Medusa
 
@@ -176,6 +183,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Unbound printed traits:** Petrifying Gaze
 - **Fix notes:** Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
 - **Known directed work:** Petrifying Gaze: reuse timed save escalation to Petrified, but verify sight/gaze avoidance and source timing.
+- **User decision, queued:** Same shared gaze mechanic and sight/avert policy as Basilisk. Medusa supplies **DC 14 Constitution, 30-ft range** and the special **fail by 5 or more => immediate Petrified** escalation (terminal Iron Pit outcome). Other failed saves follow existing Restrained → repeat-save → Petrified progression; source qualifiers preserved. Not implemented/certified.
 
 ### 021. Ochre Jelly
 
@@ -183,6 +191,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:reaction`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Map the exact trigger, eligibility, timing and effect to shared reaction grammar; preserve one-Reaction economy.
+- **User-approved arena exclusion / queued:** Split stays on source/card but never creates another combatant in Iron Pit, per no-extra-monsters rule. Preserve full lightning and slashing damage immunities via universal damage defenses (zero damage), regardless of Split exclusion. Classify reaction arena-unavailable using shared machinery, regenerate blockers, test, certify before clearing. **Not yet implemented.**
 
 ### 022. Sea Horse
 
@@ -190,6 +199,8 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `attack:none`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Check whether the creature has any legal combat attack; if no, preserve source and classify arena-neutral rather than fabricating one.
+- **USER DECISION / QUEUED:** Sea Horse may be selected and fielded in Iron Pit; it simply deals **0 attack damage**. Do not invent a damaging attack or alter the printed source. Change arena-neutral exclusion/certification behavior to allow a valid non-damaging participant; ensure combat can terminate without stalls. Not implemented/certified.
+- **Further user suggestion:** Rather than a fabricated 0-damage attack, Sea Horse may repeatedly take the **existing Dodge Action** on its turns, retaining exactly RAW Dodge conditions and no damage output; still arena-selectable. Avoid new machinery; guard against no-damage stalemates. Proposal queued, not implemented/certified.
 
 ### 023. Stirge
 
@@ -197,6 +208,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `arena:removed`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Check established Pit exclusion and retain explicit audit record; do not quietly count as certified.
+- **USER DECISION — REMOVED FOR NOW:** Retain source/stat block, but exclude Stirge from selectable arena roster. Do not build Blood Drain/attachment until revisited. This is an intentional exclusion, not combat certification.
 
 ### 024. Stone Giant
 
@@ -204,6 +216,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:reaction`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Map the exact trigger, eligibility, timing and effect to shared reaction grammar; preserve one-Reaction economy.
+- **User ruling / queued:** Reuse existing 1 Reaction per round for Rock Catching: when a qualifying ranged attack hits, make DC 10 Dexterity save; pass negates damage, fail resolves ordinary damage and defenses. User broadened rock/similar hurled objects to ranged attacks as Iron Pit simplification; implementation must distinguish ranged attack hits from spells/AoE before activating. Source text remains unchanged. **Not implemented/certified.**
 
 ### 025. Acolyte
 
@@ -211,6 +224,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `mechanic:spellcasting`, `source:trait`.
 - **Unbound printed traits:** Spellcasting
 - **Fix notes:** Map only arena-legal printed spells to the correct 2014 spell primitives and slot/at-will resource model; document each unsupported spell separately. Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
+- **User decision / queued:** **LOCKED: Light is combat-relevant and remains available**, to illuminate nonmagical darkness, reveal darkness-dependent stealth, or trigger bright-light sensitivity as appropriate. It cannot counter 2014 magical Darkness (overlapping Darkness dispels Light cantrip). Thaumaturgy stays on the original stat block, but AI never casts it because it has no relevant arena combat purpose. Preserve all remaining spells and use existing spell primitives. Not yet implemented/certified.
 
 ### 026. Archmage
 
@@ -218,6 +232,26 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `mechanic:spellcasting`, `source:trait`.
 - **Unbound printed traits:** Spellcasting
 - **Fix notes:** Map only arena-legal printed spells to the correct 2014 spell primitives and slot/at-will resource model; document each unsupported spell separately. Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
+- **Disguise Self — user decision / queued:** Retain printed spell on source/card; Archmage AI never casts it in Iron Pit (appearance-only, no combat impact). Route via shared arena-inert spell selection, not a bespoke Archmage resolver. Not implemented/certified.
+- **Detect Magic — user decision / queued:** Preserve printed spell but never select it as an Iron Pit combat action; source remains intact. Not implemented/certified.
+- **Identify — user decision / queued:** Keep the printed spell but never cast it in Iron Pit. Implement by shared noncombat-spell choice exclusion; not certified.
+- **Detect Thoughts — user decision / queued:** Printed spell retained; AI never casts it in arena. Shared noncombat-spell selection exclusion; not implemented/certified.
+- **Scrying — user decision / queued:** Useless in Iron Pit; retain source/card spell but never choose as a combat action. This is a universal spell-level ruling shared by every caster; see shared spell policy in MONSTER_ABILITY_WORK_QUEUE.md. Not implemented/certified.
+- **Mage Hand — user decision / queued, both editions:** Remains printed on source/card, but never used in arena combat. Universal spell-level policy shared by 2014 and 2024 casters. Not implemented/certified.
+- **Prestidigitation — user decision / queued, both editions:** Preserve original printed spell, but never cast in the Iron Pit arena. Applies as a shared spell-selection ruling across all monsters, pregens, and homebrew; not yet implemented/certified.
+- **Misty Step — user decision / queued:** Combat-relevant Bonus Action escape: counter Grappled and eligible Restrained debuffs using the shared teleport-cancelable (`ends_on_teleport`) effect handling, **without relocating the creature**. Preserve resource cost and source spell text; apply arena-use policy across 2014/2024 while checking each edition's RAW. Not implemented/certified.
+- **Mirror Image — user decision / universal queued:** All 2014/2024 casters reuse one 3-charge, 10-round, no-Concentration defensive interception buff. 2014 d20 redirection 6+/8+/11+ for 3/2/1 images, with redirected attack resolving against image AC 10+Dex; 2024 hit-first and d6 per surviving image, any 3+ intercepts and destroys an image. No combatant spawning. See shared spell policy. Not implemented or certified.
+- **Counterspell (2014 & 2024), user decision / QUEUED:** When an enemy begins casting an eligible spell, a caster with Counterspell automatically considers/uses its **Reaction** (if reaction available, target perceptible/visible within 60 ft, and legal spell slot available), interrupting **before the triggering spell resolves**. Apply the existing one-Reaction economy and shared spell-interrupt event, never a bespoke Archmage exception. Preserve edition-specific RAW resolution: **2014** automatic cancellation if the interrupted spell's level ≤ Counterspell slot level; otherwise spellcasting-ability check DC 10 + enemy spell level; a failed attempt lets the enemy spell resolve. **2024** target spellcaster makes a Constitution save vs Counterspell caster's spell DC; failure negates the spell and spends the casting action but does **not** expend target's spell slot. 2024 triggering cast must visibly have V/S/M components. Spend Counterspell caster's slot/reaction by applicable RAW. Keep visibility, timing, counter-counterspell and simultaneous interrupt handling in common resolver. Use this approved reaction trigger for all monsters/pregens/homebrew in both editions. **Decision approved, implementation/testing/certification pending.**
+- **Fly — user approval / queued:** Reuse existing horizontal-only Fly effect; no vertical altitude or avoidance of reach, eligible ground-contact snare immunity as per locked arena contract. Spell's 60-ft speed is movement per normal turn economy (12 squares), not battlefield-wide coverage (arena is 120×80 ft). Preserve duration/Concentration/slots and 2014 vs 2024 source parameters. Universal reuse, not separately certified here.
+- **Banishment — user decision / queued (both editions):** Failed Charisma saving throw applies existing timed `banished` removed-from-combat effect; successful save does nothing. Action, Concentration ≤10 rounds; 2014 range 60 ft / 2024 range 30 ft. Reuse existing Python/browser exile and condition lifecycle, ensure source-linked Concentration return, preserve printed special full-duration non-return rules per edition subject to locked no-plane-shift arena rule. Target is not dead merely because Banished. No new conditions/creatures/positions. **Not implemented or certified.**
+- **Fire Shield — user-approved, queued for all 2014/2024 casters:** Choose Chill Shield (Fire resistance; Cold retaliation) when the enemy deals Fire damage. Choose Warm Shield (Cold resistance; Fire retaliation) against Cold damage. When both are available, assess greatest incoming threat using the existing universal damage-type scoring. Retain 10-minute, non-Concentration buff, normal resources, and shared melee retaliation. Reuse spell variant selection globally; no automatic mid-buff switching. Not yet certified.
+- **Wall of Force — user directive / queued:** Keep Wall of Force on original printed Archmage source/card, but never cast it in Iron Pit. **2014 Archmage arena-only 5th-level spell substitution: Hold Monster** (legal Wizard spell), range 90 ft, DC 17 Wisdom, failure gives existing Paralyzed, repeat Wisdom save at each target turn end, Concentration up to 1 minute, 2014 immunity for Undead. Source spell list is not altered; arena loadout differs explicitly by user direction. Casting Hold Monster ends Stoneskin Concentration. Cross-caster Wall of Force no-cast policy applies to both editions, but only authorize replacements where the caster can legally have the alternate spell. No engine implementation/certification yet.
+- **Globe of Invulnerability / Stoneskin — USER-APPROVED match-up choice / queued:** Retain Globe (6th) as useful spell barrier against parties with meaningful spellcasting offense, and choose Stoneskin (4th) against mostly physical/melee attackers; compare magic vs physical threat for mixed parties. This **explicit declarative choice-group override** of the normal highest-level-opening-buff rule is recorded in `docs/IRON_PIT_RULES_CONTRACT.md` §7.1. Keep precisely one arena opening buff, one Concentration, normal slots, and preserve printed prebuff Stoneskin source text; Globe must not stack with Stoneskin. Existing concentration/zone geometry may be reused, but generic spell-origin/level interception is not yet certified; implement in both runtimes and test. Not yet implemented.
+- **Teleport — user decision / queued:** Spell remains on printed source/card but is never used for Iron Pit relocation (2014/2024 shared arena policy, distinct from the approved Misty Step in-place debuff escape). For **2014 Archmage's separate 7th-level arena loadout**, choose **Finger of Death** (legal Wizard 7th; 60-ft seen target; DC 17 Constitution; 7d8+30 Necrotic damage failed save, half on success) using existing universal save damage and slot 7. No zombie is spawned even if this kills a Humanoid, consistent with existing Iron Pit no-extra-combatants contract. The replacement is not present on the printed Archmage stat block; do not rewrite source. Not implemented/certified.
+- **Mind Blank — user approved / queued (both editions):** Keep this 8th-level, 24-hour, non-Concentration defensive buff. Shared **Psychic damage Immunity** and **Charmed condition Immunity**; preserve anti-scrying/thought-reading and mind-control text without building new irrelevant combat subsystems. Source 2014 Archmage pre-casts Mind Blank (starred spell). Before integration reconcile printed pre-cast state and standard single free opening buff with previously approved Globe-vs-Stoneskin selection—no silently stacked extra free buffs. Generic buff and Python/browser parity pending.
+- **Finger of Death — user reconfirmed / queued:** The 2014 Archmage's separate arena 7th-level legal replacement for Teleport deals 7d8+30 Necrotic (Constitution save for half). **Never create a Zombie on a Humanoid kill**, in either 2014 or 2024 or for any other caster. Preserve printed zombie rider on source/card. Existing universal save-damage engine, no new spawn code. Not newly certified.
+- **Time Stop -> Meteor Swarm — USER-APPROVED arena 9th-level spell substitution / queued:** Original Archmage printed Time Stop stays in canonical 2014 stat block/card, but Arena AI does not cast it. The 2014 Archmage legally substitutes Wizard 9th-level **Meteor Swarm** in its distinct arena loadout. Casting: Action, 9th-level spell slot, four 40-ft-radius impact areas at visible points within 1 mile. Resolve **one Dexterity save per creature in the union of impacted squares**, apply **20d6 Fire + 20d6 Bludgeoning**, half each on success and then normal typed defenses. **Overlapping meteors do not stack; targets are affected once.** **Friendly fire applies**; positioning AI should optimize legal placements without inventing immunity for friendly combatants. Reuse existing 5-ft grid geometry and multi-component save damage; missing shared multi-center AoE union/dedup requires Python/browser work and tests. Preserve original source spell, spell economy, and separate 2024 rules; no automatic other-caster Time Stop substitution. Not implemented or certified.
+- **Fire Shield implementation progress (PR #668):** Shared Fire Shield variant provider now exists for 2014/2024 callers, alongside reusable Fire-vs-Cold opponent-aware timed buff selection and scoring of off-type weapon damage riders. Python/browser regression tests are committed on feature branch. This does **not** yet bind the 2014 Archmage's monster Spellcasting actions, and exact-head CI/archmage certification remain pending. Track this as SUBMITTED, not MERGED/CERTIFIED.
 
 ### 027. Balor
 
