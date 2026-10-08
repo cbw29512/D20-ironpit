@@ -4,7 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available
 from app.combat.tactical_actions import choose_offensive_dash_grant, use_offensive_dash
-from app.combat.encounter_targeting import combatant_distance, living_opponents
+from app.combat.encounter_targeting import combatant_distance, living_targets
 from app.combat.formation_rows import member_is_backline
 from app.combat.grid_pathing import plan_movement_toward
 from app.combat.modifier_stack import effective_speed
@@ -34,7 +34,7 @@ def choose_offensive_movement_intent(
         ranged_progress: list[tuple[int, int, str, str, int]] = []
         melee_legal_now = False
         other_legal_now = False
-        for target in living_opponents(attacker, setup):
+        for target in living_targets(attacker, setup):
             if target.state.position is None:
                 raise ValueError("Grid offensive movement requires authoritative target positions.")
             distance = combatant_distance(attacker, target)
@@ -100,7 +100,7 @@ def melee_can_be_enabled_this_turn(
 ) -> bool:
     """True when a melee attack can land now or after this turn's legal approach."""
     try:
-        for target in living_opponents(attacker, setup):
+        for target in living_targets(attacker, setup):
             for family, desired_distance in offensive_ranges_for_target(attacker, target, turn_key):
                 if family == "melee" and combatant_distance(attacker, target) <= desired_distance:
                     return True
@@ -110,7 +110,7 @@ def melee_can_be_enabled_this_turn(
         if choose_offensive_dash_grant(attacker, setup, turn_key) is not None:
             budget += effective_speed(attacker.state)
         members = [*setup.heroes, *setup.monsters]
-        for target in living_opponents(attacker, setup):
+        for target in living_targets(attacker, setup):
             if target.state.position is None:
                 raise ValueError("Grid offensive movement requires authoritative target positions.")
             for family, desired_distance in offensive_ranges_for_target(attacker, target, turn_key):
