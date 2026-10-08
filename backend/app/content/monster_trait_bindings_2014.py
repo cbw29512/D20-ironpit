@@ -156,6 +156,10 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(martial_advantage.source_name)
         if sneak_attack_d6_2014(monster) > 0:
             bound.add(_SNEAK_ATTACK)
+        if "Assassinate" in monster.trait_names:
+            features = progression_features_2014(monster)
+            if features.advantage_against_unacted_targets and features.critical_hits_against_surprised_targets:
+                bound.add("Assassinate")
         bound.update(bound_passive_trait_names_2014(monster))
         bound.update(included_weapon_trait_names_2014(monster))
         bound.update(bound_zero_hp_trait_names_2014(monster))
