@@ -14,6 +14,7 @@
           condition_id: grant.condition_id || null,
           source_creature_types: [...(grant.source_creature_types || [])],
           required_active_effect_ids: [...(grant.required_active_effect_ids || [])],
+          requires_active_ally: grant.requires_active_ally === true,
           save_ability: grant.save_ability || null,
           save_dc: grant.save_dc ?? null,
           ends_on_owner_attack: Boolean(grant.ends_on_owner_attack),
