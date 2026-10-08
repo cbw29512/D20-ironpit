@@ -18,21 +18,22 @@
   }
 
   function positionLegal(setup, action, position) {
-    if (!setup.map_definition || !G().inBounds(setup.map_definition, position, action.footprintSize)) return false;
+    const side = G().effectSquareSide(action.footprintSize);
+    if (!setup.map_definition || !G().squareAreaInBounds(setup.map_definition, position, side)) return false;
+    const area = new Set(G().squareAreaCells(position, side).map(([x, y]) => `${x},${y}`));
+    const hits = (cells) => cells.some(([x, y]) => area.has(`${x},${y}`));
     const members = [...setup.heroes, ...setup.monsters];
-    if (members.some((member) => member.state.position && G().overlaps(
-      position, action.footprintSize, member.state.position, member.state.template.size,
-    ))) return false;
-    return !hazards(setup).some((item) => G().overlaps(
-      position, action.footprintSize, item.position, item.footprintSize,
-    ));
+    if (members.some((member) => member.state.position &&
+      hits(G().occupiedCells(member.state.position, member.state.template.size)))) return false;
+    return !hazards(setup).some((item) =>
+      hits(G().squareAreaCells(item.position, G().effectSquareSide(item.footprintSize))));
   }
 
   function cast(sequence, round, caster, setup, action, position, turnKey) {
     if (!setup.map_definition || !caster.state.position) throw new Error("Persistent hazards require the authoritative grid.");
     if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.actionCost} is unavailable for ${action.name}.`);
-    const distance = G().footprintDistanceFt(
-      caster.state.position, caster.state.template.size, position, action.footprintSize,
+    const distance = G().squareAreaDistanceFt(
+      caster.state.position, 1, position, G().effectSquareSide(action.footprintSize),
     );
     if (distance > action.castRangeFt) throw new Error(`${action.name} placement exceeds its cast range.`);
     if (!positionLegal(setup, action, position)) throw new Error(`${action.name} requires a legal unoccupied placement.`);
@@ -87,8 +88,8 @@
     for (const item of [...setup.persistent_hazards]) {
       if (item.sourceSide === mover.side) continue;
       if (item.triggeredTurnKeys[mover.combatant_id] === turnKey) continue;
-      const distance = G().footprintDistanceFt(
-        mover.state.position, mover.state.template.size, item.position, item.footprintSize,
+      const distance = G().squareAreaDistanceFt(
+        mover.state.position, 1, item.position, G().effectSquareSide(item.footprintSize),
       );
       if (distance > item.triggerRadiusFt) continue;
       item.triggeredTurnKeys[mover.combatant_id] = turnKey;
