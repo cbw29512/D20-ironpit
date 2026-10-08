@@ -166,6 +166,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:trait`.
 - **Unbound printed traits:** Invisibility; Faultless Tracker
 - **Fix notes:** Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
+- **User-approved arena policy (queued):** Faultless Tracker remains printed on source/card but has no effect in Iron Pit, no combat vision/targeting bonus. Invisibility uses existing universal system; Slam attacks are unaffected. Apply shared arena-inert trait classification and regenerate blockers; not yet implemented/certified.
 
 ### 019. Knight
 
