@@ -48,6 +48,8 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 - [ ] **Sea Horse (2014), attack:none — ALLOWED / USER-SUGGESTED DODGE POLICY QUEUED:** Keep Sea Horse selectable in Iron Pit, with no printed damaging attack. Prefer the existing RAW **Dodge Action every turn** rather than fabricating a zero-damage attack; zero offensive output remains correct. Dodge only gives its normal situational benefits (attack Disadvantage from visible attackers, Dexterity save Advantage, ends if Incapacitated or speed 0), not unconditional permanent benefits. Ensure stalemate/turn-limit handling when both sides cannot deal damage. This is a *behavior policy proposal* consistent with user's preference; not implemented/certified.
 
+- [ ] **Stirge (2014) — USER DECISION: REMOVED FOR NOW.** Keep original monster source and Blood Drain information intact, but Stirge is excluded from Iron Pit roster/combat. Do not implement attachment or ongoing Blood Drain mechanics at this stage. Track as explicitly excluded, **not** certified; revisit only on a later user decision.
+
 ## Status accounting
 
 - `QUEUED`: named blocker only; source/mechanic check not completed.
