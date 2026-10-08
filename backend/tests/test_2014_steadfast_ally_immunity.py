@@ -48,3 +48,23 @@ def test_condition_escalation_uses_same_live_ally_immunity_predicate():
     assert not condition_immunity_modifier_applies(
         modifier, state, "frightened", None, active_ally_present=False
     )
+
+
+def test_live_ally_predicate_changes_with_combatant_state():
+    from app.combat.ally_context import has_active_ally
+    from app.domain.encounters import EncounterCombatant, EncounterSetup
+    monsters = {monster.id: monster for monster in load_monster_source_2014()}
+    template = compile_combatant(adapt_basic_monster_2014(monsters["satyr"]))
+    owner = EncounterCombatant(combatant_id="owner", side="monsters",
+                               state=build_combatant_state(template))
+    ally = EncounterCombatant(combatant_id="ally", side="monsters",
+                              state=build_combatant_state(template))
+    foe = EncounterCombatant(combatant_id="foe", side="heroes",
+                             state=build_combatant_state(template))
+    setup = EncounterSetup(heroes=[foe], monsters=[owner, ally],
+                           hero_total_levels=1, monster_total_cr="1")
+    assert has_active_ally(owner, setup)
+    ally.state.current_hp = 0
+    assert not has_active_ally(owner, setup)
+    ally.state.current_hp = 1
+    assert has_active_ally(owner, setup)
