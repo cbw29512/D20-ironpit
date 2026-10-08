@@ -81,7 +81,8 @@
     const naturalOneEndsTurn = naturalOne && extra.offTurn !== true && !d20Override.featureId && !override.featureId;
     if (naturalOneEndsTurn) S().terminateTurn(attacker.state, "iron-pit-natural-1-attack");
     const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
-    const critical = Boolean(hit && !override.featureId && (expandedCritical || (Q().autoCritical(actualTarget.state) && distance <= 5)));
+    const critical = Boolean(hit && !override.featureId && (expandedCritical || (attacker.state.template.critical_hits_against_surprised_targets && actualTarget.state.is_surprised)
+      || (Q().autoCritical(actualTarget.state) && distance <= 5)));
     if (attacker.state.template.deferred_save_effect && !window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT) {
       throw new Error("Declared deferred-save effect requires browser-deferred-save-effect.js.");
     }
