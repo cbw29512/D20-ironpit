@@ -191,6 +191,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:reaction`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Map the exact trigger, eligibility, timing and effect to shared reaction grammar; preserve one-Reaction economy.
+- **User-approved arena exclusion / queued:** Split stays on source/card but never creates another combatant in Iron Pit, per no-extra-monsters rule. Preserve full lightning and slashing damage immunities via universal damage defenses (zero damage), regardless of Split exclusion. Classify reaction arena-unavailable using shared machinery, regenerate blockers, test, certify before clearing. **Not yet implemented.**
 
 ### 022. Sea Horse
 
