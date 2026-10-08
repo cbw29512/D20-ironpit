@@ -69,6 +69,8 @@ def _mechanics(template: Any) -> list[str]:
     features = template.progression_features
     if features.critical_hit_minimum < 20:
         mechanics.add("expanded-critical-range")
+    if features.advantage_against_unacted_targets:
+        mechanics.add("attack-advantage-before-target-first-turn")
     if features.initiative_advantage:
         mechanics.add("initiative-advantage")
     if features.first_round_extra_turn_initiative_offset is not None:
