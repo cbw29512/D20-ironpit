@@ -44,6 +44,8 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 - [ ] **Medusa — Petrifying Gaze (2014): USER-APPROVED / QUEUED.** Reuse Basilisk's universal gaze detection, eligible target, voluntary eye-aversion, timed Restrained-to-Petrified escalation, and Iron Pit terminal-on-Petrified handling. Source parameters: **30-ft range, DC 14 Constitution**; if initial save fails by **5 or more** (result ≤ 9), **immediately Petrified** (terminal in Iron Pit), instead of first becoming Restrained. Lesser failed save begins existing Restrained progression with the printed follow-up save; success ends it. Preserve exact source timing and immunity interactions; no Medusa-specific gaze resolver. Not yet implemented/certified.
 
+- [ ] **Ochre Jelly — Split (2014): USER-APPROVED ARENA EXCLUSION / QUEUED.** Printed Split Reaction remains on immutable monster source/card, but **never fires** in Iron Pit: the locked no-extra-combatants rule forbids creating additional jellies. **Preserve lightning and slashing damage IMMUNITIES** independently through generic typed-damage defenses; attacks of those types inflict zero damage. Do not spawn combatants, divide HP, or allocate initiative from Split. Use reusable arena-unavailable reaction classifier, regenerate blockers and certify before marking complete. **Not yet implemented/certified.**
+
 ## Status accounting
 
 - `QUEUED`: named blocker only; source/mechanic check not completed.
