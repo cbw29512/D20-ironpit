@@ -54,6 +54,8 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 - [ ] **Acolyte — Light / Thaumaturgy (2014), spellcasting: USER DECISION / QUEUED.** **LOCKED USER DECISION: Light has real combat impact and MUST remain available to AI when tactically relevant**, using shared light/visibility primitives: illuminate nonmagical darkness, expose darkness-dependent hiding, and trigger bright-light sensitivity where applicable. Avoid casting when it changes no combat outcome. Strict RAW distinction: the 2014 2nd-level **Darkness** spell dispels overlapping Light cantrip, so Light does NOT counter magical Darkness. Retain printed Thaumaturgy on source/card, but AI never casts it in Iron Pit because no combat value. Audit remaining Bless, Cure Wounds, Sanctuary and Sacred Flame against existing universal spell system rather than inventing mechanics. Not implemented/certified.
 
+- [ ] **Archmage — Disguise Self (2014), USER DECISION / QUEUED:** Preserve printed Disguise Self in immutable monster source/card. The Archmage AI **never casts Disguise Self in Iron Pit** because its cosmetic appearance change has no arena combat effect. Treat as arena-inert spell choice in the shared spell-action filter (not a new Archmage-specific resolver); no impact to other Archmage spells. **Not implemented/certified.**
+
 ## Status accounting
 
 - `QUEUED`: named blocker only; source/mechanic check not completed.
