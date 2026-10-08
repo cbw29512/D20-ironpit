@@ -459,7 +459,6 @@ Blocked monsters: **127**. These are grouped by printed ability name so the rost
 | False Appearance (Object Form Only) | Mimic | 1 |
 | Faultless Tracker | Invisible Stalker | 1 |
 | Fear Aura | Pit Fiend | 1 |
-| Fey Ancestry | Drider, Drow | 2 |
 | Fire Aura | Balor | 1 |
 | Fire Form | Fire Elemental | 1 |
 | Freedom of Movement | Kraken | 1 |
