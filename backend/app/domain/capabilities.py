@@ -7,6 +7,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import ConditionName, ConditionRemovalAction, HealingAction
+from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.area_weapon_attacks import AreaWeaponAttackAction
 from app.domain.bonus_attacks import BonusAttackGrant
 from app.domain.capability_attacks import (
@@ -31,7 +32,7 @@ from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.rulesets import RulesetId
 from app.domain.size import CreatureSize
 from app.domain.legendary_actions import LegendaryActionOption
-from app.domain.spells import DefensiveSpellAction, SpellSaveAction
+from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.triggered_extra_attacks import TriggeredExtraAttackStack
 from app.domain.traits import CombatTrait
@@ -70,6 +71,8 @@ class CombatantDefinition(BaseModel):
     area_weapon_attack_actions: list[AreaWeaponAttackAction] = Field(default_factory=list)
     save_actions: list[SaveCapabilityDefinition] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
+    spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list)
+    auto_hit_spell_actions: list[AutoHitSpellAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     timed_self_buff_actions: list[TimedSelfBuffAction] = Field(default_factory=list)
