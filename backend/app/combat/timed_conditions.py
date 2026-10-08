@@ -82,6 +82,7 @@ def apply_timed_condition(
     escape_check_ability: AbilityName | None = None,
     escape_check_dc: int | None = None,
     ground_contact: bool = False,
+    active_ally_present: bool = False,
     ends_on_teleport: bool = False,
     source_effect_immunity_on_end: bool = False,
     control_limits=None,
@@ -94,6 +95,7 @@ def apply_timed_condition(
             source_template,
             source_is_magical=source_is_magical,
             ground_contact=ground_contact,
+            active_ally_present=active_ally_present,
         ):
             return None
         if effect_id == POISONED_EFFECT_ID and use_default_poison_recovery:
