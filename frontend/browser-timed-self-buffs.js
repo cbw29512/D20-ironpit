@@ -4,12 +4,9 @@
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const P = () => window.IRON_PIT_BROWSER_TIMED_SELF_BUFF_POLICY;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
-  function active(member, action) {
-    return P().active(member, action);
-  }
-  function choose(member, setup = null, activationTiming = "action", turnKey = null) {
-    return P().choose(member, setup, activationTiming, turnKey);
-  }
+  const active = (member, action) => P().active(member, action);
+  const choose = (member, setup = null, activationTiming = "action", turnKey = null) =>
+    P().choose(member, setup, activationTiming, turnKey);
   function resolve(sequence, round, member, action, options = {}) {
     try {
       if (action.activationTiming === "passive") throw new Error("Passive auras cannot be activated.");
