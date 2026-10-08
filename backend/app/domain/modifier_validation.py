@@ -76,6 +76,8 @@ def validate_combat_modifier_payload(modifier) -> None:
         raise ValueError(f"{modifier.kind.value} does not accept attacker-sense bypass.")
     if len(set(modifier.bypass_attacker_senses)) != len(modifier.bypass_attacker_senses):
         raise ValueError("Attacker-sense bypass values must be unique.")
+    if modifier.requires_active_ally and modifier.kind is not ModifierKind.CONDITION_IMMUNITY:
+        raise ValueError("Only condition-immunity modifiers support active-ally requirements.")
     if modifier.required_active_effect_ids and modifier.kind is not ModifierKind.CONDITION_IMMUNITY:
         raise ValueError(f"{modifier.kind.value} does not accept active-effect requirements.")
     required_effects = [item.strip().casefold() for item in modifier.required_active_effect_ids]
