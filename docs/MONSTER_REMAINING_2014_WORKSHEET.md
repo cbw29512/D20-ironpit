@@ -232,6 +232,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `mechanic:spellcasting`, `source:trait`.
 - **Unbound printed traits:** Spellcasting
 - **Fix notes:** Map only arena-legal printed spells to the correct 2014 spell primitives and slot/at-will resource model; document each unsupported spell separately. Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
+- **Disguise Self — user decision / queued:** Retain printed spell on source/card; Archmage AI never casts it in Iron Pit (appearance-only, no combat impact). Route via shared arena-inert spell selection, not a bespoke Archmage resolver. Not implemented/certified.
 
 ### 027. Balor
 
