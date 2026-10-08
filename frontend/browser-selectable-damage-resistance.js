@@ -50,6 +50,32 @@
     return scoresFor(member, setup, rule.allowed_damage_types || [], rule.forbidden_source_qualifiers || []);
   }
 
+  function chooseTimed(member, setup, choices) {
+    try {
+      const sorted = [...choices].sort((a, b) => (b.priority || 0) - (a.priority || 0));
+      const preferred = sorted[0] || null;
+      if (!preferred || preferred.selectionStrategy !== "incoming-damage" || !setup) return preferred;
+      const variants = sorted.filter((action) =>
+        action.selectionGroup === preferred.selectionGroup
+        && action.selectionStrategy === preferred.selectionStrategy
+        && action.resourceId === preferred.resourceId);
+      const types = [...new Set(variants.map((action) => {
+        if ((action.damageResistances || []).length !== 1) {
+          throw new Error("Incoming-damage selection requires exactly one resistance type.");
+        }
+        return action.damageResistances[0];
+      }))];
+      const incoming = scoresFor(member, setup, types);
+      if (!Object.values(incoming).some((score) => score > 0)) return preferred;
+      return variants.sort((a, b) =>
+        (incoming[b.damageResistances[0]] || 0) - (incoming[a.damageResistances[0]] || 0)
+        || (b.priority || 0) - (a.priority || 0))[0];
+    } catch (error) {
+      console.error("Threat-aware buff selection failed.", { combatant: member?.combatant_id, error });
+      throw error;
+    }
+  }
+
   function choose(member, setup) {
     const rule = member.state.template.selectable_damage_resistance;
     if (!rule) return null;
@@ -90,5 +116,5 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_SELECTABLE_DAMAGE_RESISTANCE = { choose, resolve, scores, scoresFor };
+  window.IRON_PIT_BROWSER_SELECTABLE_DAMAGE_RESISTANCE = { choose, resolve, scores, scoresFor, chooseTimed };
 })();
