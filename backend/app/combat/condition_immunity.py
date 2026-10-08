@@ -13,6 +13,7 @@ def condition_is_immune(
     *,
     source_is_magical: bool = False,
     ground_contact: bool = False,
+    active_ally_present: bool = False,
 ) -> bool:
     """Return static and runtime condition immunities, including source-typed wards.
 
@@ -32,7 +33,9 @@ def condition_is_immune(
     ):
         return True
     if any(
-        condition_immunity_modifier_applies(item, state, condition_id, source)
+        condition_immunity_modifier_applies(
+            item, state, condition_id, source, active_ally_present=active_ally_present
+        )
         for item in state.active_modifiers
     ):
         return True
