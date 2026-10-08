@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.attack_legality import attack_allowed_against
-from app.combat.encounter_targeting import combatant_distance, living_opponents, select_nearest_target
+from app.combat.encounter_targeting import combatant_distance, living_targets, select_nearest_target
 from app.domain.actions import AttackActionSlot
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.size import size_at_most
@@ -40,7 +40,7 @@ def select_slot_target(
     """Choose the preferred target if this Multiattack slot can affect it, otherwise retarget legally."""
     try:
         preferred = select_nearest_target(attacker, setup)
-        opponents = sorted(living_opponents(attacker, setup), key=lambda target: combatant_distance(attacker, target))
+        opponents = sorted(living_targets(attacker, setup), key=lambda target: combatant_distance(attacker, target))
         candidates = ([preferred] if preferred is not None else []) + [target for target in opponents if target is not preferred]
         return next((target for target in candidates if _slot_statically_allows(attacker, target, slot, setup)), None)
     except Exception as exc:
