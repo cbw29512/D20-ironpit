@@ -46,6 +46,7 @@ from app.content.movement_modes import standard_arena_closing_speed_from_modes
 from app.content.monster_regeneration_2014 import regeneration_trait_2014
 from app.content.monster_save_capabilities_2014 import recharge_rules_2014, save_capabilities_2014, save_resources_2014
 from app.domain.combatants import ResourceDefinition, VisualLoadout
+from app.domain.passive_modifiers import PassiveModifierGrant
 from app.domain.capabilities import CombatantDefinition
 from app.domain.capability_attacks import AttackCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
@@ -154,7 +155,12 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         save_success_overrides=[legendary_override] if legendary_override else [],
         combat_traits=modeled_combat_traits_2014(monster),
         environment_context_reactions=environment_context_reactions_2014(monster),
-        progression_features=features, bonus_attack_grants=bonus_attack_grants_2014(monster),
+        progression_features=features,
+        passive_modifier_grants=([PassiveModifierGrant(
+            source_id="steadfast", source_name="Steadfast", kind="condition-immunity",
+            condition_id="frightened", requires_active_ally=True,
+        )] if "Steadfast" in monster.trait_names else []),
+        bonus_attack_grants=bonus_attack_grants_2014(monster),
         bonus_tactical_action_grants=aggressive_tactical_grants_2014(monster),
         saving_throw_bonuses=save_bonuses_2014(monster, scores),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
