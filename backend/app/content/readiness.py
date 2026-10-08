@@ -17,9 +17,10 @@ def assert_public_selection_runnable(selection: EncounterSelection) -> None:
         for card in catalog.monsters
         if card.runnable_template_id is not None
     }
-    blocked_heroes = [card_id for card_id in selection.hero_ids if card_id not in ready_heroes]
-    blocked_monsters = [card_id for card_id in selection.monster_ids if card_id not in ready_monsters]
+    ready_cards = ready_heroes | ready_monsters
+    blocked_heroes = [card_id for card_id in selection.hero_ids if card_id not in ready_cards]
+    blocked_monsters = [card_id for card_id in selection.monster_ids if card_id not in ready_cards]
     if blocked_heroes:
-        raise ValueError(f"Hero cards are not RAW-certified for public fights: {blocked_heroes}")
+        raise ValueError(f"Team A cards are not RAW-certified for public fights: {blocked_heroes}")
     if blocked_monsters:
-        raise ValueError(f"Monster cards are not RAW-certified for public fights: {blocked_monsters}")
+        raise ValueError(f"Team B cards are not RAW-certified for public fights: {blocked_monsters}")
