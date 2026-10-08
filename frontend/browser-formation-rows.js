@@ -52,7 +52,6 @@
         for (const member of side) {
           const state = member.state;
           if (!state.is_alive || state.is_dead || state.current_hp <= 0 || state.formation_row !== "back") continue;
-          if (hasRangedOrSpellOffense(state.template)) continue;
           const hasFront = side.some((ally) => ally.combatant_id !== member.combatant_id
             && ally.state.is_alive && !ally.state.is_dead && ally.state.current_hp > 0
             && ally.state.formation_row === "front");

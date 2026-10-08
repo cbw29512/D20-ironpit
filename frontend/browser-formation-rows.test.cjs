@@ -53,10 +53,12 @@ assert.equal(reserve.state.formation_row, "front");
 
 const stillBack = member("ranged-back", "monsters", mixed);
 stillBack.state.formation_row = "back";
+stillBack.state.initial_formation_row = "back";
 first.state.current_hp = 0;
 first.state.is_alive = false;
 first.state.is_dead = true;
-assert.deepEqual(R.syncFormationRows({ heroes: [], monsters: [first, stillBack] }), []);
-assert.equal(stillBack.state.formation_row, "back");
+assert.deepEqual(R.syncFormationRows({ heroes: [], monsters: [first, stillBack] }).map((m) => m.combatant_id), ["ranged-back"]);
+assert.equal(stillBack.state.formation_row, "front");
+assert.equal(stillBack.state.initial_formation_row, "back");
 
-console.log("Browser formation-row assignment and melee-only step-up passed.");
+console.log("Browser formation-row assignment and universal backline promotion passed.");
