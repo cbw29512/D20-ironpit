@@ -36,6 +36,8 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 - [ ] **Grimlock — Blind Senses (2014):** User-proposed semantics: source-native Blinded immunity plus **Blindsight 30 ft**, without attack penalties against perceivable targets inside that range. Grimlock cannot see gaze sources' eyes; Basilisk/Medusa gaze does not apply. Outside 30 ft it cannot perceive solely via Blindsight; **30 ft does not cover the current 120×80 ft arena**. Reuse the shared senses and sight rules, **not** a custom Blinded debuff override. Verify printed Deafened/smell qualifiers and any actual deafness effect before simplifying them. Bind/classify and certify before clearing. QUEUED.
 
+- [ ] **Harpy — Luring Song (2014), source:extra-action:** USER AGREED: 300-ft audible range covers full 120×80-ft arena; failed DC 11 Wisdom save uses shared Charmed + Incapacitated. While affected and more than 5 ft away, compelled movement on the creature's turn via existing pathfinding, toward Harpy until within 5-ft melee range or available movement exhausted; **not teleportation**. Preserve printed hearing/creature-type eligibility, end-of-turn and damage-triggered repeat saves, 24-hour immunity on a success, singing continuation/action costs, and duration. Movement is the outstanding composition; no bespoke condition. Decision/specification only, not implemented or certified.
+
 ## Status accounting
 
 - `QUEUED`: named blocker only; source/mechanic check not completed.
