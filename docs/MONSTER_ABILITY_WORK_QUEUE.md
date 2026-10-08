@@ -40,6 +40,8 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 - [ ] **Invisible Stalker — Faultless Tracker (2014): USER DECISION / SOURCE RETAINED, ARENA-INERT.** Preserve printed quarry/summoner tracking on monster source and card; never grant combat targeting, vision, hit bonuses, or actions from it in Iron Pit. Existing universal Invisibility remains fully functional; normal Slam attacks remain. Classify via reusable arena-inert trait handling; update generated blocker report and certify before completion. **Decision recorded, not implemented/certified.**
 
+- [ ] **Knight — Leadership (2014): USER-APPROVED / QUEUED.** Treat activation as the Knight applying shared Bless-style **+1d4 attack rolls and saving throws** to eligible friendly creatures within 30 ft that can hear it. This is a nonspell Action with short/long-rest recharge, duration 1 minute (10 rounds), and no Concentration. **Iron Pit ruling:** once activated, stays active while Knight HP > 0 and duration remains (instead of printed termination on any Incapacitated status). Ends if Knight reaches 0 HP or duration expires. Avoid duplicate instances of Leadership stacking with themselves; source ability remains named Leadership. Confirm radius, dynamic eligibility and stacking against actual source/engine contracts when implementing; no bespoke d4 effect. **Specification only; not implemented or certified.**
+
 ## Status accounting
 
 - `QUEUED`: named blocker only; source/mechanic check not completed.
