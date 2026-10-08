@@ -46,6 +46,8 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 - [ ] **Ochre Jelly — Split (2014): USER-APPROVED ARENA EXCLUSION / QUEUED.** Printed Split Reaction remains on immutable monster source/card, but **never fires** in Iron Pit: the locked no-extra-combatants rule forbids creating additional jellies. **Preserve lightning and slashing damage IMMUNITIES** independently through generic typed-damage defenses; attacks of those types inflict zero damage. Do not spawn combatants, divide HP, or allocate initiative from Split. Use reusable arena-unavailable reaction classifier, regenerate blockers and certify before marking complete. **Not yet implemented/certified.**
 
+- [ ] **Sea Horse (2014), attack:none — USER DECISION / QUEUED:** Sea Horse IS allowed to be placed in Iron Pit combat. Its effective attack damage is **0**; never invent damaging attacks or edit printed source. Treat zero offensive output as a valid arena participant rather than excluding it as arena-neutral. Ensure universal turn/targeting/termination behavior remains finite and the certification/classification gate supports non-damaging combatants. **Decision recorded, not implemented or certified.**
+
 ## Status accounting
 
 - `QUEUED`: named blocker only; source/mechanic check not completed.
