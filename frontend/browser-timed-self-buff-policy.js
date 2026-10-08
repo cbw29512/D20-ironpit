@@ -5,8 +5,9 @@
 
   function active(member, action) {
     try {
-      return (member.state.timed_effects || []).some((effect) =>
-        effect.source_id === member.combatant_id && effect.source_effect_id === action.id);
+      return (member.state.active_effect_ids || []).includes(action.id)
+        || (member.state.timed_effects || []).some((effect) =>
+          effect.source_id === member.combatant_id && effect.source_effect_id === action.id);
     } catch (error) {
       console.error("Timed self-buff activity lookup failed.", { combatant: member?.combatant_id, error });
       throw error;
@@ -77,6 +78,7 @@
       || action.meleeHitRetaliation
       || action.spellSaveDcBonus
       || action.spellAttackAdvantage
+      || (action.targetPolicy || "normal") !== "normal"
     );
   }
 
@@ -86,6 +88,7 @@
         (action.activationTiming || "action") === activationTiming
         && (activationTiming === "start_turn" || E().available(member.state, action.actionCost))
         && (action.resourceId == null || (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1))
+        && (action.startTurnMaxCurrentHp == null || member.state.current_hp <= action.startTurnMaxCurrentHp)
         && !active(member, action)
         && !concentrationGrantOnly(action)
         && (!action.concentration || !member.state.concentration)
@@ -104,5 +107,25 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_TIMED_SELF_BUFF_POLICY = { active, choose, concentrationGrantOnly };
+  function syncHpEnded(state) {
+    try {
+      const runtime = window.IRON_PIT_BROWSER_STATE;
+      if (!runtime?.effectiveMaxHp) throw new Error("Self-buff HP lifecycle requires state effectiveMaxHp.");
+      if (state.current_hp < runtime.effectiveMaxHp(state)) return [];
+      const ended = (state.template.timed_self_buff_actions || [])
+        .filter((action) => action.endsAtFullHp && (state.active_effect_ids || []).includes(action.id))
+        .map((action) => action.id);
+      if (ended.length) {
+        state.active_effect_ids = (state.active_effect_ids || []).filter((id) => !ended.includes(id));
+        state.timed_effects = (state.timed_effects || [])
+          .filter((effect) => !ended.includes(effect.effect_id) && !ended.includes(effect.source_effect_id));
+      }
+      return ended;
+    } catch (error) {
+      console.error("Failed full-HP self-buff cleanup.", { combatant: state?.template?.name, error });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_TIMED_SELF_BUFF_POLICY = { active, choose, concentrationGrantOnly, syncHpEnded };
 })();
