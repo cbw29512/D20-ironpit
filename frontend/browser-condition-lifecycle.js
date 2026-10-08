@@ -48,7 +48,7 @@
           if (effect.repeat_save_failure_condition_id) {
             removed = T().removeGroup(target.state, effect);
             const escalated = effect.repeat_save_failure_condition_id;
-            const immune = window.IRON_PIT_BROWSER_CONDITION_IMMUNITY?.immune(target.state, escalated, null) || false;
+            const immune = window.IRON_PIT_BROWSER_CONDITION_IMMUNITY?.immune(target.state, escalated, null, { member: target, setup }) || false;
             if (!immune) {
               if (!target.state.active_effect_ids.includes(escalated)) target.state.active_effect_ids.push(escalated);
               const affectedStates = setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
