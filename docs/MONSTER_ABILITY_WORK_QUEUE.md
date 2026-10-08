@@ -75,10 +75,13 @@ These are **spell-level decisions**, not Archmage-only exceptions. Preserve the 
 | Scrying | **User confirmed useless in Iron Pit**; never cast in arena | Source retained, exclude from AI combat actions |
 | Mage Hand | **User confirmed useless in Iron Pit**; never cast in arena in either edition | Source retained, exclude from AI combat actions |
 | Prestidigitation | **User confirmed useless in Iron Pit**; never cast in arena in either edition | Source retained, exclude from AI combat actions |
+| Misty Step | **USER CONFIRMED: combat-usable** Bonus Action escape from Grappled and teleport-eligible Restrained effects; **no x/y relocation** | Both editions: reuse universal `ends_on_teleport`/in-place escape removal and enforce spell slot/action cost, never teleport on grid; preserve distinct source edition rules |
 | Thaumaturgy | Never cast in arena; no relevant combat effect | Source retained, exclude from AI combat actions |
 | Light | **Combat-relevant; keep available when useful** for illumination of ordinary darkness, sight/hiding and bright-light sensitivity; not sunlight and cannot overcome 2014 magical Darkness | Shared light and vision mechanics; no unconditional AI casting |
 
 **Implementation rule:** maintain one universal spell-ID / ruleset-driven selection policy spanning 2014 and 2024; do not duplicate decisions for each caster, class or monster. Only mark implemented when engine AI, Python/browser parity, generated blocker/certification and exact-head CI pass. These entries record decisions only.
+
+- [ ] **Archmage — Misty Step (2014), USER DECISION / QUEUED:** A Bonus Action spell using the existing in-place teleport escape primitive: clears Grappled and qualifying Restrained/movement-snare debuffs as indicated by shared `ends_on_teleport` effects, without moving its grid position. Do not clear unrelated conditions or ignore spell-slot/resource limits; no new teleport relocation, no monster-specific engine branch. Same arena-use policy in 2024 with 2024 spell text preserved. Not implemented/certified.
 
 ## Status accounting
 
