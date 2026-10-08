@@ -1,36 +1,19 @@
 # Current operating status
 
-Updated 2026-10-07 after PR #637 merge.
-Merged source baseline audited: `403ec045b27391c50a4ca1cfb3cd2cac632e1291`. See the fix tracker for exact-head workflow evidence.
+Updated 2026-10-08 after arena PR #661 merge.
+Current arena merge: `638fbd27f4dee38a3d93aab3101fde20e9651b99`. Monster source-classifier figures below are from the generated blocker report on `main`, not a new full runtime certification. See the fix tracker for exact-head workflow evidence.
 Active fix queue: [Monster fix tracker](MONSTER_FIX_TRACKER.md).
 Per-monster source blockers: [Generated 2014 list](MONSTER_BLOCKERS_2014.md).
 
 This file is operating authority for **what to work on next**. Combat rules remain authoritative in `docs/IRON_PIT_RULES_CONTRACT.md`. Generated certification manifests and exact current source/tests determine counts and readiness. Repository truth overrides chat summaries and older milestone prose.
 
-## Clean baseline
+## Verified baseline and current queue
 
-PR #624 is the historical reset point. PR #637 is the latest accepted monster tranche. Brass Dragon Wyrmling, Young Brass Dragon, and Adult Brass Dragon now bind Sleep Breath through shared save-area, recharge, timed Unconscious, damage-expiry, and generic wake-sleeper mechanics. All four final-head gates passed; 2014 is 194/327. #635 cleared Violet Fungus; #633 cleared Grick; #632 cleared both Veterans; #631 cleared Bandit Captain, Gladiator and Lizardfolk.
-The required gates for every new mechanic tranche are:
+Arena PRs #658 (one-square footprints), #660 (3x2 deployment) and #661 (mixed combatant teams) are merged. Production Netlify remains locked. The last full monster certification baseline described here was PR #637; do not carry its counts forward as current runtime certification.
 
-- CI;
-- 2014 Basic Roster;
-- Paired Edition Monster Report;
-- 2014 Hero Certification.
+Current generated 2014 blocker source classification: **201/327 admitted, 126 blocked** (`docs/MONSTER_BLOCKERS_2014.md`). This is **not** a statement that all 201 have passed a new exact-head runtime certification. Previously verified canonical pregens: 240/240 each edition; earlier 2024 monster baseline: 141/330. Reverify those totals against current generated manifests before publishing a new certification claim.
 
-PR #625 is **closed unmerged**. It remains reference material only. It demonstrated useful mechanics, but it crossed too many semantic families to be a trustworthy merge unit.
-
-Do not revive or extend #625. Reimplement only still-correct pieces from current `main` in small semantic batches.
-
-## Verified current certification
-
-| Edition | Content | READY / target |
-|---|---|---:|
-| 2014 | Canonical pregens | **240 / 240** |
-| 2024 | Canonical pregens | **240 / 240** |
-| 2014 | Source monsters | **194 / 327** |
-| 2024 | SRD monsters | **141 / 330** |
-
-Counts above were verified on the #637 merged source baseline. The tracker records exact-head gates. Later documentation-only commits add no combat behavior and do not inherit exact-head CI.
+M-022 Berserk merged #651; M-023 Fey Ancestry merged #652; M-024 Gnome Cunning merged #653. Active work: M-025 Steadfast, draft #662 (clean generic active-ally predicate); #654 remains conflicted and should not be merged. M-026 Infernal Wound follows. Require exact-head Python/browser parity and certification for M-025 before calling it complete.
 
 ## Current completion order
 
@@ -75,13 +58,7 @@ Only `ENGINE_TRULY_MISSING` justifies a new universal engine primitive.
 
 ## Immediate next action
 
-Next: M-016 Bronze Dragon save-action family. Bronze Dragon Wyrmling and Young Bronze Dragon each retain only `mechanic:save-action`; Adult and Ancient Bronze Dragon retain `mechanic:save-action` plus an independent `source:extra-action` blocker. Read the exact 2014 source action first, decompose it into existing universal save/movement/timing pieces, and bind only if current primitives represent the behavior exactly. If any semantic is genuinely missing, park that piece and continue the family rather than inventing behavior.
-
-#637 is complete: Brass Dragon Wyrmling, Young Brass Dragon, and Adult Brass Dragon are admitted; Ancient Brass retains only its unrelated extra-action blocker. The generated blocker report now shows **194/327 admitted and 133 blocked**. Medusa still needs Petrifying Gaze.
-
-Verification follows the single-batch policy in AGENTS.md: one focused changed-family check and one required final-head CI pass. Do not duplicate full CI locally or restart clean validation while monsters await implementation.
-
-Historical work from #625 may be used as evidence, but every reused behavior must be revalidated against current main and implemented in a fresh branch.
+Complete M-025 as conditional Frightened immunity when an active ally exists. Reuse the universal active-ally predicate and condition-immunity modifier rather than creating a Steadfast-specific resolver. Implement and certify Python/browser live ally-context parity, refresh generated inventory/blockers, then merge the clean PR only if all required exact-head checks pass. Keep unrelated M-026 Infernal Wound separate.
 
 ## Publishing
 
