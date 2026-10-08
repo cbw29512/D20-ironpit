@@ -158,6 +158,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:extra-action`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Inspect the named extra action and represent its action cost, exact targeting/save/damage/condition via shared Action capabilities; mark as arena-unavailable only if an existing locked Pit rule actually covers it.
+- **Luring Song user decision / queued:** 300-ft range spans the entire current arena but retain hearing and creature-type eligibility. Failure of DC 11 Wisdom save composes existing Charmed and Incapacitated and moves the victim via existing pathfinding toward Harpy's 5-ft melee reach on its own turns, limited by normal movement (not teleport); retain printed follow-up saves, song continuation and 24-hour success immunity. **No implementation or certification yet.**
 
 ### 018. Invisible Stalker
 
