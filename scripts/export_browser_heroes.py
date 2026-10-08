@@ -412,17 +412,21 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost,
         "activationTiming": action.activation_timing,
-        "startTurnMaxCurrentHp": action.start_turn_max_current_hp,
-        "startTurnRollDieSize": action.start_turn_roll_die_size,
-        "startTurnRollMinimum": action.start_turn_roll_minimum,
-        "endsAtFullHp": action.ends_at_full_hp,
-        "targetPolicy": action.target_policy,
         "resourceId": action.resource_id, "resourceCost": action.resource_cost,
         "durationRounds": action.duration_rounds, "conditionIds": list(action.condition_ids),
         "damageResistances": [_value(item) for item in action.damage_resistances],
         "expiryTiming": action.expiry_timing, "priority": action.priority,
         "animation": action.animation,
     }
+    if action.start_turn_max_current_hp is not None:
+        row["startTurnMaxCurrentHp"] = action.start_turn_max_current_hp
+    if action.start_turn_roll_die_size is not None:
+        row["startTurnRollDieSize"] = action.start_turn_roll_die_size
+        row["startTurnRollMinimum"] = action.start_turn_roll_minimum
+    if action.ends_at_full_hp:
+        row["endsAtFullHp"] = True
+    if action.target_policy != "normal":
+        row["targetPolicy"] = action.target_policy
     if action.debuff_counters:
         row["debuffCounters"] = [item.model_dump(mode="json") for item in action.debuff_counters]
     if action.movement_mode_grants:
