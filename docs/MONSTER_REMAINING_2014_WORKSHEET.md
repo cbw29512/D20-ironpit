@@ -208,6 +208,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `arena:removed`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Check established Pit exclusion and retain explicit audit record; do not quietly count as certified.
+- **USER DECISION — REMOVED FOR NOW:** Retain source/stat block, but exclude Stirge from selectable arena roster. Do not build Blood Drain/attachment until revisited. This is an intentional exclusion, not combat certification.
 
 ### 024. Stone Giant
 
