@@ -15,6 +15,7 @@ _ALL_SAVE_ABILITIES = (
 _MAGIC_RESISTANCE = "Magic Resistance"
 _DARK_DEVOTION = "Dark Devotion"
 _BRAVE = "Brave"
+_GNOME_CUNNING = "Gnome Cunning"
 _FEY_ANCESTRY = "Fey Ancestry"
 _AGGRESSIVE = "Aggressive"
 _TWO_HEAD_TRAITS = frozenset({"Two-Headed", "Two Heads"})
@@ -55,6 +56,12 @@ def saving_throw_advantage_grants_2014(monster: SourceMonster2014) -> list[Savin
             grants.extend(_condition_save_advantage("dark-devotion", _DARK_DEVOTION, ("charm", "frightened")))
         if _BRAVE in monster.trait_names:
             grants.extend(_condition_save_advantage("brave", _BRAVE, ("frightened",)))
+        if _GNOME_CUNNING in monster.trait_names:
+            grants.append(SavingThrowAdvantageGrant(
+                source_id="gnome-cunning", source_name=_GNOME_CUNNING,
+                abilities=["intelligence", "wisdom", "charisma"],
+                requires_magical_effect=True,
+            ))
         if _FEY_ANCESTRY in monster.trait_names:
             grants.extend(_condition_save_advantage("fey-ancestry", _FEY_ANCESTRY, ("charm",)))
         for trait_name in monster.trait_names:
@@ -102,6 +109,8 @@ def bound_passive_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]
             bound.add(_DARK_DEVOTION)
         if _BRAVE in monster.trait_names:
             bound.add(_BRAVE)
+        if _GNOME_CUNNING in monster.trait_names:
+            bound.add(_GNOME_CUNNING)
         if _FEY_ANCESTRY in monster.trait_names:
             bound.add(_FEY_ANCESTRY)
         if _AGGRESSIVE in monster.trait_names:
