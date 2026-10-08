@@ -6,6 +6,9 @@ from app.combat.grid_geometry import (
     footprints_overlap,
     occupied_cells,
     position_in_bounds,
+    square_area_cells,
+    square_area_distance_ft,
+    effect_square_side_squares,
 )
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.size import CreatureSize
@@ -54,4 +57,16 @@ def test_grid_distance_uses_single_square_even_for_large_creatures() -> None:
     assert footprint_distance_ft(
         GridPosition(x=0, y=0), CreatureSize.LARGE,
         GridPosition(x=3, y=0), CreatureSize.LARGE,
+    ) == 15
+
+
+def test_spell_and_hazard_areas_remain_full_size_when_creatures_use_one_square() -> None:
+    origin = GridPosition(x=1, y=1)
+    assert occupied_cells(origin, CreatureSize.GARGANTUAN) == {(1, 1)}
+    assert effect_square_side_squares(CreatureSize.GARGANTUAN) == 4
+    assert len(square_area_cells(origin, 3)) == 9
+    assert (3, 3) in square_area_cells(origin, 3)
+    assert square_area_distance_ft(
+        GridPosition(x=0, y=0), 1,
+        GridPosition(x=3, y=0), 3,
     ) == 15
