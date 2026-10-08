@@ -416,6 +416,7 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         "durationRounds": action.duration_rounds, "conditionIds": list(action.condition_ids),
         "damageResistances": [_value(item) for item in action.damage_resistances],
         "expiryTiming": action.expiry_timing, "priority": action.priority,
+        "selectionGroup": action.selection_group, "selectionStrategy": action.selection_strategy,
         "animation": action.animation,
     }
     if action.start_turn_max_current_hp is not None:
