@@ -87,19 +87,25 @@ def test_open_melee_path_advances_then_dodges_when_attack_is_not_reachable_this_
         raise
 
 
-def test_blocked_melee_only_gargantuan_dodges_instead_of_breaking() -> None:
+def test_gargantuan_can_close_through_friendly_line_with_one_square_footprint() -> None:
     try:
-        # Pit magic makes even a Gargantuan mover occupy only (0, 0).
-        # These three allies block every legal adjacent cell at that corner.
+        # Allied occupied spaces may be traversed under normal 5e movement rules.
+        # A Gargantuan creature has a single-square Pit footprint and must not
+        # be incorrectly trapped by its printed size or adjacent allies.
         mover = _commoner("hero-mover", "heroes", 0, 0, size=CreatureSize.GARGANTUAN)
-        wall = [
+        allies = [
             _commoner("hero-wall-1", "heroes", 1, 0),
             _commoner("hero-wall-2", "heroes", 0, 1),
             _commoner("hero-wall-3", "heroes", 1, 1),
         ]
-        _assert_dodge_only(mover, _target(), wall)
+        setup = _setup(mover, _target(), allies)
+        before = mover.state.position.model_copy(deep=True)
+        events, _ = resolve_combat_turn(1, 1, mover, setup.monsters[0], setup, FixedDiceProvider([1]))
+        assert [event for event in events if event.event_type == "movement"]
+        assert mover.state.position != before
+        assert not [event for event in events if event.event_type == "attack"]
     except Exception:
-        logger.exception("Blocked Gargantuan Dodge fallback regression failed.")
+        logger.exception("Gargantuan single-square approach regression failed.")
         raise
 
 
