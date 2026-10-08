@@ -4,7 +4,7 @@ import logging
 
 from app.combat.barrier_line_of_effect import clear_line_between_members
 from app.combat.attack_legality import attack_allowed_against
-from app.combat.encounter_targeting import combatant_distance, living_opponents
+from app.combat.encounter_targeting import active_target_policy, combatant_distance, living_opponents, living_targets
 from app.combat.formation_rows import member_is_backline
 from app.combat.printed_damage import weapon_mean_damage
 from app.combat.range import resolve_attack_roll_mode
@@ -25,6 +25,8 @@ def target_order(
     prefer_backline: bool = False,
 ) -> list[EncounterCombatant]:
     """Return active Pit targets by formation role without using movement distance as priority."""
+    if active_target_policy(attacker) == "nearest_visible_creature":
+        return sorted(living_targets(attacker, setup), key=lambda target: combatant_distance(attacker, target))
     opponents = living_opponents(attacker, setup)
     front = [target for target in opponents if not is_backline(target)]
     back = [target for target in opponents if is_backline(target)]
