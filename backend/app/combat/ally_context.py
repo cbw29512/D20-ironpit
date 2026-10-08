@@ -27,6 +27,14 @@ def active_allies(attacker: EncounterCombatant, setup: EncounterSetup) -> list[E
         raise RuntimeError("Active allies could not be evaluated.") from exc
 
 
+def has_active_ally(
+    actor: EncounterCombatant,
+    setup: EncounterSetup,
+) -> bool:
+    """Generic fight-state ally-presence predicate; no range or source-name dispatch."""
+    return bool(active_allies(actor, setup))
+
+
 def has_adjacent_active_ally(
     attacker: EncounterCombatant,
     target: EncounterCombatant,
