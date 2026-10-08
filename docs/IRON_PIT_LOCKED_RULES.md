@@ -149,3 +149,14 @@ of grid separation. This is the explicit arena override in rules contract §9.
 Grick/Violet Fungus dynamic sequences remain parked for their own source/state audits. Conditional offhand source bindings are the active M-012 tranche; no conditional printed attack is stripped to make a card READY.
 
 - Conditional offhand Multiattack selects the highest-damage compatible fixed source loadout before combat; Veteran/Half-Red Dragon Veteran use one-handed Longsword plus drawn Shortsword. Authority: rules contract §10.
+
+
+## Locked arena formation and occupation — 2026-10-08
+
+- Iron Pit permits **up to six combatants per side**, in any mix of monsters and canonical pregens, including monster-versus-monster and pregen-versus-pregen. Each side has **three front (melee) slots and three back (ranged) slots**, arranged as a **3-column × 2-row formation**; front rows face the opposing team.
+- **Exactly one combatant occupies each 5-foot formation square**, regardless of creature size. A Huge or Gargantuan dragon uses one slot exactly as a Tiny creature does. This is explicit Pit magic, **not ordinary 5e physical-space RAW**. Actual creature size remains unchanged for size-sensitive combat mechanics.
+- Front slots are closest to the opposing side. Back slots are farther away but do not prohibit melee or ranged attacks where otherwise legal.
+- **Immediate automatic promotion:** When a side has **no remaining active front-row combatants**, its surviving back-row combatants become that side's effective front/melee line. This is simultaneous, costs no Action, Bonus Action, Reaction, or movement, and applies to either side and all source types. A front-row survivor prevents promotion until the last active front-row combatant is out of the fight.
+- **Do not teleport or reassign physical grid coordinates when promoting.** Effective melee/frontline eligibility changes; each unit retains its authoritative occupied square for grid geometry, distances, lines, cones, and other area effects. If the game stores formation role separately from position, compute effective role from live fight state; no persistent card/template mutations.
+- **All 12 possible occupied positions are considered for area effects.** Cones/lines use printed 2014 or 2024 size and orientation on the occupied-squares battlefield; affected squares, friendly fire, saves, and effects must be evaluated by the existing universal area machinery, not as automatic hits on everyone. Creature footprint for this calculation remains one 5-foot square despite actual size. Facing restrictions must not be invented where the source rules provide none.
+- These are **locked product rules and implementation requirements, not a claim that existing Python/browser grid, footprint, promotion, or area-targeting code already meets them**. Audit and certify both engines before reporting completion. Preserve rule-edition-specific source statistics and the locked no-summons policy.
