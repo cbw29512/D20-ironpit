@@ -99,6 +99,7 @@ def resolve_timed_self_buff(
             or action.spell_save_dc_bonus
             or action.spell_attack_advantage
             or action.modifier_effects
+            or action.target_policy != "normal"
         ):
             apply_timed_condition(
                 member.state,
@@ -117,6 +118,9 @@ def resolve_timed_self_buff(
                 ends_if_source_dead=action.ends_if_source_dead,
                 use_default_poison_recovery=False,
             )
+
+        if action.target_policy != "normal" and action.id not in member.state.active_effect_ids:
+            member.state.active_effect_ids.append(action.id)
 
         if action.friendly_recovery_aura is not None:
             from app.combat.friendly_recovery_auras import activate_source_recovery_aura
