@@ -129,3 +129,18 @@ def square_area_distance_ft(
         max(abs(ax - bx), abs(ay - by)) * 5
         for ax, ay in first for bx, by in second
     )
+
+
+_EFFECT_SIZE_SIDE = {
+    CreatureSize.TINY: 1,
+    CreatureSize.SMALL: 1,
+    CreatureSize.MEDIUM: 1,
+    CreatureSize.LARGE: 2,
+    CreatureSize.HUGE: 3,
+    CreatureSize.GARGANTUAN: 4,
+}
+
+
+def effect_square_side_squares(size: CreatureSize) -> int:
+    """Legacy area source metadata describes an effect's square, not a creature."""
+    return _EFFECT_SIZE_SIDE[size]
