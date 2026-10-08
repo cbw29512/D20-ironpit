@@ -24,6 +24,7 @@ from app.domain.effect_removal import EffectRemovalAction, EffectTagConditionGra
 from app.domain.environment_contexts import EnvironmentContextReaction
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
+from app.domain.passive_modifiers import PassiveModifierGrant
 from app.domain.recharge import RechargeRule
 from app.domain.regeneration import RegenerationTrait
 from app.domain.save_success_overrides import FailedSaveSuccessOverride
@@ -60,6 +61,7 @@ class CombatantDefinition(BaseModel):
     blindsight_ft: int = Field(default=0, ge=0)
     truesight_ft: int = Field(default=0, ge=0)
     progression_features: ProgressionCombatFeatures = Field(default_factory=ProgressionCombatFeatures)
+    passive_modifier_grants: list[PassiveModifierGrant] = Field(default_factory=list)
     environment_context_reactions: list[EnvironmentContextReaction] = Field(default_factory=list)
     bonus_attack_grants: list[BonusAttackGrant] = Field(default_factory=list)
     bonus_tactical_action_grants: list[BonusActionTacticalGrant] = Field(default_factory=list)
