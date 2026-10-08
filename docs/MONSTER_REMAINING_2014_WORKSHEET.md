@@ -224,6 +224,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `mechanic:spellcasting`, `source:trait`.
 - **Unbound printed traits:** Spellcasting
 - **Fix notes:** Map only arena-legal printed spells to the correct 2014 spell primitives and slot/at-will resource model; document each unsupported spell separately. Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
+- **User decision / queued:** Light is a selectable illumination utility to counter ordinary darkness, but cannot counter 2014 magical Darkness (overlapping Darkness dispels Light cantrip). Thaumaturgy stays on the original stat block, but AI never casts it because it has no relevant arena combat purpose. Preserve all remaining spells and use existing spell primitives. Not yet implemented/certified.
 
 ### 026. Archmage
 
