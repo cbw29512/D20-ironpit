@@ -42,6 +42,8 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 - [ ] **Knight — Leadership (2014): USER-APPROVED / QUEUED.** Treat activation as the Knight applying shared Bless-style **+1d4 attack rolls and saving throws** to eligible friendly creatures within 30 ft that can hear it. This is a nonspell Action with short/long-rest recharge, duration 1 minute (10 rounds), and no Concentration. **Iron Pit ruling:** once activated, stays active while Knight HP > 0 and duration remains (instead of printed termination on any Incapacitated status). Ends if Knight reaches 0 HP or duration expires. Avoid duplicate instances of Leadership stacking with themselves; source ability remains named Leadership. Confirm radius, dynamic eligibility and stacking against actual source/engine contracts when implementing; no bespoke d4 effect. **Specification only; not implemented or certified.**
 
+- [ ] **Medusa — Petrifying Gaze (2014): USER-APPROVED / QUEUED.** Reuse Basilisk's universal gaze detection, eligible target, voluntary eye-aversion, timed Restrained-to-Petrified escalation, and Iron Pit terminal-on-Petrified handling. Source parameters: **30-ft range, DC 14 Constitution**; if initial save fails by **5 or more** (result ≤ 9), **immediately Petrified** (terminal in Iron Pit), instead of first becoming Restrained. Lesser failed save begins existing Restrained progression with the printed follow-up save; success ends it. Preserve exact source timing and immunity interactions; no Medusa-specific gaze resolver. Not yet implemented/certified.
+
 ## Status accounting
 
 - `QUEUED`: named blocker only; source/mechanic check not completed.
