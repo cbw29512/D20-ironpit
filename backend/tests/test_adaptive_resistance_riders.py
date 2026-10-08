@@ -25,6 +25,7 @@ def test_off_type_weapon_fire_rider_is_counted_as_incoming_fire_threat() -> None
             reach_ft=5, animation="slash",
         ),
         attack_bonus=4,
+        damage_bonus=0,
         on_hit_damage=[OnHitDamage(
             source="Burning", dice_count=3, dice_size=6, damage_type=DamageType.FIRE,
         )],
