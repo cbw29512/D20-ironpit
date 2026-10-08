@@ -62,6 +62,16 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 - [ ] **Archmage — Detect Thoughts (2014), USER DECISION / QUEUED:** Retain the printed Detect Thoughts spell on source/card; the AI never casts it in Iron Pit because surface/deep thought reading has no mechanically relevant arena outcome. Apply shared noncombat spell selection, preserve source. Not implemented/certified.
 
+## Mandatory reuse checkpoint before each new monster, pregen, or homebrew ability
+
+**USER RECONFIRMED:** Decisions made during this review must be reused automatically when another caster/monster has the same spell or the same underlying effect. Do **not** re-ask a settled rule merely because a different source card or edition is encountered.
+
+1. First search this queue's **shared spell policy** for spell-ID rulings (cast vs. never cast, combat use, arena exceptions) and this queue's **approved ability specifications** for identical behavior.
+2. Check `docs/UNIVERSAL_MECHANIC_INVENTORY.md` and search **both** monster and pregen Python/browser implementations for a matching primitive **or existing composition**. Ability names are labels, not engine dispatch identities.
+3. Reuse the existing effect/condition, with the source supplying range, DC, dice, resource/action cost, timing, qualifiers, and edition-specific RAW. A shared mechanic may use distinct 2014/2024 rule parameters (e.g. Mirror Image).
+4. Keep an explicit distinction: **DECISION APPROVED / QUEUED** is **not** **IMPLEMENTED / CERTIFIED**. Before using a queued fix at runtime, build shared Python/browser parity, source binding, focused regressions, generated blocker/inventory truth, and exact-head CI.
+5. Whenever a generic primitive is implemented or extended, search the reverse consumer list (monsters, pregens, spells, future homebrew) and bind all other eligible consumers instead of coding a second resolver or reviewing the same decision again. Preserve printed names and immutable cards.
+
 ## Shared spell policy — both 2014 and 2024, all monsters, pregens, future homebrew
 
 These are **spell-level decisions**, not Archmage-only exceptions. Preserve the original spell on each character/monster source record and card. The arena AI and combat certification should apply the same **cast-or-never-cast policy to both 2014 and 2024** wherever that spell occurs, per user decision. Edition-specific spell text and effect parameters must still be checked against the matching edition's RAW; do not blindly reuse 2014 implementation rules in 2024.
