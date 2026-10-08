@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.condition_immunity import condition_is_immune
+from app.combat.ally_context import has_active_ally
 from app.combat.condition_removal import remove_condition
 from app.combat.modifier_stack import expire_target_turn_modifiers
 from app.combat.timed_condition_saves import resolve_repeat_save
@@ -53,7 +54,10 @@ def resolve_target_condition_timing(
                     if effect.repeat_save_failure_condition_id is not None:
                         removed = remove_effect_group(target.state, effect)
                         escalated = effect.repeat_save_failure_condition_id
-                        if not condition_is_immune(target.state, escalated):
+                        if not condition_is_immune(
+                            target.state, escalated,
+                            active_ally_present=bool(setup and has_active_ally(target, setup)),
+                        ):
                             if escalated not in target.state.active_effect_ids:
                                 target.state.active_effect_ids.append(escalated)
                             affected_states = (
