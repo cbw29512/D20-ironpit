@@ -96,6 +96,8 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Fix notes:** Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
 - **Known directed work:** Assassinate/Sneak Attack/Evasion: reuse rogue pregen combat primitives where semantics match.
 
+- **Assassinate in progress (PR #664):** Universal attack-roll Advantage against a target with zero turns started is bound in Python/browser via a source-owned feature flag, with focused parity checks. 2014 automatic critical on a Surprised target is not yet represented/certified. **Do not check off Assassinate or the Assassin monster yet.** Evasion and Sneak Attack remain separate source traits in this worksheet.
+
 ### 010. Azer
 
 - [ ] **SOURCE REVIEW / BIND / TEST / CERTIFY / MERGE** — not yet individually verified by this worksheet.
