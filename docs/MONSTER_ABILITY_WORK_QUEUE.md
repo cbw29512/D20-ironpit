@@ -62,6 +62,22 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 - [ ] **Archmage — Detect Thoughts (2014), USER DECISION / QUEUED:** Retain the printed Detect Thoughts spell on source/card; the AI never casts it in Iron Pit because surface/deep thought reading has no mechanically relevant arena outcome. Apply shared noncombat spell selection, preserve source. Not implemented/certified.
 
+## Shared 2014 spell policy — all monsters, pregens, future homebrew
+
+These are **spell-level decisions**, not Archmage-only exceptions. Preserve the original spell on each character/monster source record and card. The arena AI and combat certification should apply the same policy anywhere that spell occurs. 2024 same-name spells must be separately checked against 2024 rules before reuse.
+
+| Spell | Iron Pit decision | Reuse rule |
+| --- | --- | --- |
+| Disguise Self | Never cast in arena; cosmetic/noncombat | Source retained, exclude from AI combat actions |
+| Detect Magic | Never cast in arena; informational/noncombat | Source retained, exclude from AI combat actions |
+| Identify | Never cast in arena; informational/noncombat | Source retained, exclude from AI combat actions |
+| Detect Thoughts | Never cast in arena; informational/noncombat | Source retained, exclude from AI combat actions |
+| Scrying | **User confirmed useless in Iron Pit**; never cast in arena | Source retained, exclude from AI combat actions |
+| Thaumaturgy | Never cast in arena; no relevant combat effect | Source retained, exclude from AI combat actions |
+| Light | **Combat-relevant; keep available when useful** for illumination of ordinary darkness, sight/hiding and bright-light sensitivity; not sunlight and cannot overcome 2014 magical Darkness | Shared light and vision mechanics; no unconditional AI casting |
+
+**Implementation rule:** maintain one universal spell-ID / ruleset-driven selection policy; do not duplicate decisions for each caster, class or monster. Only mark implemented when engine AI, Python/browser parity, generated blocker/certification and exact-head CI pass. These entries record decisions only.
+
 ## Status accounting
 
 - `QUEUED`: named blocker only; source/mechanic check not completed.
