@@ -96,7 +96,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Fix notes:** Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
 - **Known directed work:** Assassinate/Sneak Attack/Evasion: reuse rogue pregen combat primitives where semantics match.
 
-- **Assassinate in progress (PR #664):** Universal attack-roll Advantage against a target with zero turns started is bound in Python/browser via a source-owned feature flag, with focused parity checks. 2014 automatic critical on a Surprised target is not yet represented/certified. **Do not check off Assassinate or the Assassin monster yet.** Evasion and Sneak Attack remain separate source traits in this worksheet.
+- **Assassinate implementation submitted (PR #664):** [x] First-turn attack Advantage; [x] automatic critical hit against an explicitly Surprised target, both via universal source-owned flags in Python and browser. Source trait binding/classification updated. Surprise is not automatically assigned in arena entry; the 2014 initiative/surprise lifecycle remains a separate engine capability to certify before claiming every Surprise scenario supported. Exact-head CI must pass before this ability is considered merged. **Assassin monster still blocked by Evasion.** Sneak Attack is already bound to the shared Rogue damage mechanic; verify separately before clearing its checkbox.
 
 ### 010. Azer
 
