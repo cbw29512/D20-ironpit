@@ -46,6 +46,7 @@ from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.triggered_extra_attacks import TriggeredExtraAttackStack
 from app.domain.post_hit_save_condition import PostHitSaveConditionSpell
 from app.domain.targeted_concentration_damage import TargetedConcentrationDamageAction
+from app.domain.turn_start_effects import TurnStartPersistentEffectRule
 from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.regeneration import RegenerationTrait
 from app.domain.save_success_overrides import FailedSaveSuccessOverride
@@ -169,6 +170,7 @@ class CombatantTemplate(BaseModel):
     damage_threshold_zero_hp_replacements: list[DamageThresholdZeroHpReplacement] = Field(default_factory=list)
     triggered_extra_attack_stacks: list[TriggeredExtraAttackStack] = Field(default_factory=list)
     damage_taken_timed_effects: list[DamageTakenTimedEffect] = Field(default_factory=list)
+    turn_start_persistent_effects: list[TurnStartPersistentEffectRule] = Field(default_factory=list)
     save_success_overrides: list[FailedSaveSuccessOverride] = Field(default_factory=list)
     legendary_actions: list[LegendaryActionOption] = Field(default_factory=list)
     source: str
