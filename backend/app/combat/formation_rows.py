@@ -24,21 +24,35 @@ def has_ranged_or_spell_offense(template: CombatantTemplate) -> bool:
 
 
 def assign_formation_rows(members: list[EncounterCombatant]) -> None:
-    """Assign Pit front/back rows from weapons and spells, never creature names."""
+    """Fill up to three front and three back starting slots, preferring melee offense."""
     try:
-        mixed: list[EncounterCombatant] = []
-        for member in members:
+        if len(members) > 6:
+            raise ValueError("Iron Pit supports at most six combatants per side.")
+
+        def front_priority(member: EncounterCombatant) -> int:
             template = member.state.template
             if uses_backline(template):
-                member.state.formation_row = "back"
-            elif has_ranged_weapon_offense(template) and has_melee_weapon(template):
-                mixed.append(member)
+                return 2
+            return 1 if has_ranged_weapon_offense(template) and has_melee_weapon(template) else 0
+
+        ranked = sorted(range(len(members)), key=lambda i: (front_priority(members[i]), i))
+        front_indices = {i for i in ranked if front_priority(members[i]) < 2}
+        front_indices = set(sorted(front_indices, key=lambda i: (front_priority(members[i]), i))[:3])
+        back_indices = {i for i in ranked if i not in front_indices and front_priority(members[i]) == 2}
+        back_indices = set(sorted(back_indices)[:3])
+        # Spill over only when one preferred row is full: six all-ranged or six
+        # all-melee must fit the same three-by-two deployment without exceptions.
+        for index in ranked:
+            if index in front_indices or index in back_indices:
+                continue
+            if len(front_indices) < 3:
+                front_indices.add(index)
             else:
-                member.state.formation_row = "front"
-        for index, member in enumerate(mixed):
-            member.state.formation_row = "front" if index == 0 else "back"
-        for member in members:
-            member.state.initial_formation_row = member.state.formation_row
+                back_indices.add(index)
+        for index, member in enumerate(members):
+            row = "front" if index in front_indices else "back"
+            member.state.formation_row = row
+            member.state.initial_formation_row = row
     except Exception:
         logger.exception("Failed to assign formation rows.")
         raise
