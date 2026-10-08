@@ -213,4 +213,34 @@ const otherSave = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(
 assert.equal(otherSave.roll.mode, "normal");
 assert.deepEqual(otherSave.roll.rolls, [11]);
 
+const gnomeTemplate = {
+  id: "deep-gnome", name: "Deep Gnome",
+  saving_throw_bonuses: { wisdom: 0, intelligence: 0, charisma: 0, strength: 0 },
+  saving_throw_advantage_grants: [{
+    source_id: "gnome-cunning", source_name: "Gnome Cunning",
+    abilities: ["intelligence", "wisdom", "charisma"],
+    requires_magical_effect: true,
+  }],
+};
+const gnomeState = {
+  template: gnomeTemplate, active_effect_ids: [],
+  active_modifiers: window.IRON_PIT_BROWSER_OPENING_MODIFIERS.build(gnomeTemplate),
+};
+for (const ability of ["intelligence", "wisdom", "charisma"]) {
+  window.IRON_PIT_DICE = queuedDice([3, 17]);
+  const result = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(
+    gnomeState, ability, 99, { magicalEffect: true },
+  );
+  assert.equal(result.roll.mode, "advantage");
+  assert.deepEqual(result.roll.rolls, [3, 17]);
+}
+for (const [ability, magicalEffect] of [["strength", true], ["wisdom", false]]) {
+  window.IRON_PIT_DICE = queuedDice([11]);
+  const result = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(
+    gnomeState, ability, 99, { magicalEffect },
+  );
+  assert.equal(result.roll.mode, "normal");
+  assert.deepEqual(result.roll.rolls, [11]);
+}
+
 console.log("Browser contextual saving-throw Advantage regressions passed.");
