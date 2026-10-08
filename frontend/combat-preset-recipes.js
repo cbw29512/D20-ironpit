@@ -28,7 +28,7 @@
     R("grapple", "2014", "2v2 · Escape the coils", 4, ["monk", "rogue"], ["giant-constrictor-snake", "giant-constrictor-snake"],
       "Grappled, Restrained, and a grapple escape.", 1701, [A("condition", "grappled"), A("condition", "restrained"), A("feature", "escape-grapple")]),
     R("poison", "2014", "3v3 · Poison and recovery", 6, ["paladin", "cleric", "ranger"], ["giant-scorpion", "giant-scorpion", "giant-scorpion"],
-      "Healing and a Giant Scorpion grapple.", 1, [A("event", "healing"), A("condition", "grappled")]),
+      "Healing and a Giant Scorpion grapple.", 4, [A("event", "healing"), A("condition", "grappled")]),
     R("undead", "2014", "2v2 · Undead endurance", 2, ["cleric", "fighter"], ["zombie", "skeleton"],
       "Healing and Undead Fortitude.", 8, [A("event", "healing"), A("text", "Undead Fortitude")]),
     R("capstones", "2014", "6v6 · Level 20 martial abilities", 20, ["barbarian", "fighter", "monk", "paladin", "rogue", "ranger"], ["roc", "roc", "roc", "roc", "roc", "roc"],
