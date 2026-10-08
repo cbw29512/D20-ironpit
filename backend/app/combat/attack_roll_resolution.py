@@ -100,7 +100,8 @@ def resolve_attack_roll(
             + reckless_advantage
             + conditional_attack_advantage_sources(attack, defender, attacker_event_id)
             + next_attack_against_advantage_sources(attacker, defender_event_id)
-            + marked_target_advantage_sources(attacker, defender_event_id),
+            + marked_target_advantage_sources(attacker, defender_event_id)
+            + int(attacker.template.progression_features.advantage_against_unacted_targets and defender.turns_started == 0),
         )
         mode = resolve_attack_roll_mode(
             attack.weapon,
