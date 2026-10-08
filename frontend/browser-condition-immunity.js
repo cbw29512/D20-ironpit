@@ -10,7 +10,10 @@
         return true;
       }
       if (C().prevented(state, conditionId, { sourceIsMagical: options.sourceIsMagical === true })) return true;
-      if (window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.conditionImmune(state, conditionId, sourceTemplate, options)) return true;
+      const hasAlly = options.activeAllyPresent === true || (options.member && options.setup
+        && window.IRON_PIT_BROWSER_STATE?.hasActiveAlly(options.member, options.setup) === true);
+      if (window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.conditionImmune(state, conditionId, sourceTemplate,
+        { ...options, activeAllyPresent: hasAlly })) return true;
       if (state.template.ruleset !== "2014" && state.template.mindless_rage
           && state.active_effect_ids.includes("rage")
           && ["charmed", "frightened"].includes(conditionId)) return true;
