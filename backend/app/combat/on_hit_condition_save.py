@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import logging
 
 from app.combat.condition_immunity import condition_is_immune
+from app.combat.ally_context import has_active_ally
 from app.combat.dice import DiceProvider
 from app.combat.forced_movement import push_straight_away
 from app.combat.saving_throw_rolls import resolve_saving_throw
@@ -55,7 +56,9 @@ def resolve_on_hit_condition_save(
             return OnHitConditionSaveResolution()
         if _excluded_target(defender, effect):
             return OnHitConditionSaveResolution()
-        if condition_is_immune(defender, effect.condition_id, source_template):
+        defender_member = next((item for item in [*setup.heroes, *setup.monsters] if item.state is defender), None) if setup is not None else None
+        ally_present = bool(defender_member is not None and has_active_ally(defender_member, setup))
+        if condition_is_immune(defender, effect.condition_id, source_template, active_ally_present=ally_present):
             return OnHitConditionSaveResolution()
         save_roll, succeeded = resolve_saving_throw(
             defender,
@@ -77,6 +80,7 @@ def resolve_on_hit_condition_save(
                     source_id or (source_template.id if source_template is not None else "on-hit-save"),
                     source_effect_id=attack.weapon.name,
                     source_template=source_template,
+                    active_ally_present=ally_present,
                     applied_round=round_number,
                     expires_round=(
                         None if round_number is None or effect.duration_rounds is None
