@@ -44,6 +44,4 @@ def test_capability_compiler_preserves_spell_attack_and_auto_hit_action_parity()
     assert browser["spell_attack_actions"][0]["attackBonus"] == 6
     assert browser["spell_attack_actions"][0]["damageDiceCount"] == 2
     assert browser["auto_hit_spell_actions"][0]["projectileCount"] == 3
-    assert browser["resources"] == {"spell-slot-1": 4} or any(
-        item.get("id") == "spell-slot-1" for item in browser["resources"]
-    )
+    assert browser["resources"] == {"spell-slot-1": 4}
