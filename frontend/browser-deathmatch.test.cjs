@@ -151,8 +151,12 @@ function scoutAtFive() {
   });
   const scoutAttacks = battle.events.filter((event) => event.event_type === "attack" && event.actor_id.startsWith("monster-1:"));
   const opening = scoutAttacks.slice(0, 2).map((event) => event.weapon_id);
-  assert.deepEqual(opening, ["scout-longbow", "scout-longbow"],
-    "a Scout at legal opening range uses its ranged Multiattack instead of teleporting into melee");
+  assert.deepEqual(opening, ["scout-shortsword", "scout-shortsword"],
+    "a Scout uses its printed melee Multiattack after legally closing from 25 feet");
+  assert.ok(battle.events.some((event) =>
+    event.event_type === "movement" && event.actor_id.startsWith("monster-1:")
+    && Array.isArray(event.grid_path) && event.grid_path.length > 0),
+    "a Scout must approach through measured grid movement, never teleport into melee");
 }
 
 console.log("Browser melee deathmatch and live-grid ranged regressions passed.");
