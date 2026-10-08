@@ -7,13 +7,14 @@ from app.domain.size import CreatureSize
 
 logger = logging.getLogger(__name__)
 
+# Pit magic: creature size does not expand physical square occupation.
 _FOOTPRINT_SIDE = {
     CreatureSize.TINY: 1,
     CreatureSize.SMALL: 1,
     CreatureSize.MEDIUM: 1,
-    CreatureSize.LARGE: 2,
-    CreatureSize.HUGE: 3,
-    CreatureSize.GARGANTUAN: 4,
+    CreatureSize.LARGE: 1,
+    CreatureSize.HUGE: 1,
+    CreatureSize.GARGANTUAN: 1,
 }
 
 
