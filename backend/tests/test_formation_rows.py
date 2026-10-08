@@ -38,7 +38,7 @@ def test_melee_only_back_row_steps_up_when_front_ally_dies() -> None:
     assert melee.state.formation_row == "front"
 
 
-def test_back_row_with_ranged_attack_does_not_step_up() -> None:
+def test_back_row_with_ranged_attack_steps_up_when_last_front_falls() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["rokhan-stonefury-2014-l3"],
         monster_ids=["2014-goblin", "2014-goblin"],
@@ -48,8 +48,9 @@ def test_back_row_with_ranged_attack_does_not_step_up() -> None:
     setup.monsters[0].state.is_alive = False
     setup.monsters[0].state.is_dead = True
 
-    assert sync_formation_rows(setup) == []
-    assert setup.monsters[1].state.formation_row == "back"
+    assert [member.combatant_id for member in sync_formation_rows(setup)] == [setup.monsters[1].combatant_id]
+    assert setup.monsters[1].state.formation_row == "front"
+    assert setup.monsters[1].state.initial_formation_row == "back"
 
 
 def test_front_row_melee_plans_closing_when_backup_range_already_lands() -> None:
