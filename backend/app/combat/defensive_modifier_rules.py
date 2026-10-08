@@ -151,6 +151,8 @@ def condition_immunity_modifier_applies(
     state: CombatantState,
     condition_id: str,
     source: CombatantTemplate | None,
+    *,
+    active_ally_present: bool = False,
 ) -> bool:
     try:
         return (
@@ -158,6 +160,7 @@ def condition_immunity_modifier_applies(
             and modifier.condition_id == condition_id
             and _source_type_matches(modifier, source)
             and set(modifier.required_active_effect_ids).issubset(state.active_effect_ids)
+            and (not modifier.requires_active_ally or active_ally_present)
         )
     except Exception:
         logger.exception(
