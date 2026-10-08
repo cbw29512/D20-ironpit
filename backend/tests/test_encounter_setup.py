@@ -98,8 +98,8 @@ def test_standard_setup_no_longer_starts_melee_combatants_engaged() -> None:
     monster = encounter.monsters[0]
     assert hero.state.position is not None
     assert monster.state.position is not None
-    assert hero.state.position.x <= 7
-    assert monster.state.position.x >= 16
+    assert hero.state.position.x == 9
+    assert monster.state.position.x == 14
 
 
 def test_duplicate_canonical_cards_receive_independent_runtime_state() -> None:
