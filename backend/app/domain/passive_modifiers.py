@@ -21,6 +21,7 @@ class PassiveModifierGrant(BaseModel):
     condition_id: str | None = Field(default=None, min_length=1)
     source_creature_types: list[str] = Field(default_factory=list)
     required_active_effect_ids: list[str] = Field(default_factory=list)
+    requires_active_ally: bool = False
     save_ability: AbilityName | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
     ends_on_owner_attack: bool = False
