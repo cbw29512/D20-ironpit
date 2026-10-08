@@ -112,3 +112,53 @@ def test_opening_buff_uses_highest_level_only_as_a_free_action() -> None:
     assert all(effect.source_effect_id != "countercharm" for effect in caster.state.timed_effects)
     assert next(item for item in caster.state.resources if item.id == "spell-slot-4").current_uses == 0
     assert next(item for item in caster.state.resources if item.id == "spell-slot-1").current_uses == 1
+
+
+def test_incoming_damage_choose_timed_defensive_variant() -> None:
+    """Choose the matching resistance, not a permanently favored named spell form."""
+    from unittest.mock import patch
+
+    from app.combat.precombat_buffs import choose_opening_buff
+    from app.content.warlock_2024_zone_spells import fire_shield_2024
+    from app.domain.weapons_base import DamageType
+
+    variants = fire_shield_2024(4)
+    assert {action.selection_group for action in variants} == {"fire-shield-variants"}
+    assert {action.selection_strategy for action in variants} == {"incoming-damage"}
+    caster_template = build_commoner().model_copy(update={
+        "ruleset": "2014",
+        "id": "caster-adaptive",
+        "name": "Adaptive Caster",
+        "timed_self_buff_actions": variants,
+        "resources": [ResourceDefinition(
+            id="spell-slot-4", name="Fourth-level slot", max_uses=1,
+        )],
+    })
+    caster = EncounterCombatant(
+        combatant_id="caster", side="heroes", position_ft=0,
+        state=build_combatant_state(caster_template),
+    )
+    enemy = _member("enemy", "monsters", 40)
+    setup = EncounterSetup(
+        heroes=[caster], monsters=[enemy], hero_total_levels=1,
+        monster_total_cr="0", ruleset="2014",
+    )
+
+    for fire, cold, expected in [
+        (24.0, 0.0, "fire-shield-chill"),
+        (0.0, 16.0, "fire-shield-warm"),
+        (8.0, 30.0, "fire-shield-warm"),
+        (35.0, 6.0, "fire-shield-chill"),
+        (0.0, 0.0, "fire-shield-warm"),
+    ]:
+        with patch(
+            "app.combat.precombat_buffs.score_enemy_damage_types",
+            return_value={DamageType.FIRE: fire, DamageType.COLD: cold},
+        ):
+            choice = choose_opening_buff(caster, setup)
+        assert choice is not None
+        assert choice.kind == "timed-self-buff"
+        assert choice.timed_action is not None
+        assert choice.timed_action.id == expected
+    assert caster.state.resources[0].current_uses == 1
+    assert caster.state.opening_buff_id is None
