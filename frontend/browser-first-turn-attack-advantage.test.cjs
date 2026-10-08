@@ -6,8 +6,8 @@ const path = require("node:path");
 const vm = require("node:vm");
 
 global.window = globalThis;
-vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-attack.js"), "utf8"), { filename: "browser-attack.js" });
-const source = window.IRON_PIT_BROWSER_ATTACK.firstTurnTargetAdvantageSources;
+vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-attack-advantage.js"), "utf8"), { filename: "browser-attack.js" });
+const source = window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE.firstTurnTargetAdvantageSources;
 const attacker = { template: { advantage_against_unacted_targets: true } };
 const target = { turns_started: 0 };
 assert.equal(source(attacker, target), 1, "before first turn");
