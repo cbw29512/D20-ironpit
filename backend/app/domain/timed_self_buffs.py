@@ -69,6 +69,8 @@ class TimedSelfBuffAction(BaseModel):
     ends_if_source_dead: bool = False
     expiry_timing: ConditionTiming | None = "source_turn_start"
     priority: int = 0
+    selection_group: str | None = None
+    selection_strategy: Literal["priority", "incoming-damage"] = "priority"
     animation: str = "buff"
 
     @model_validator(mode="after")
@@ -105,6 +107,10 @@ class TimedSelfBuffAction(BaseModel):
                 raise ValueError("Timed self-buff condition ids must be unique.")
             if len(set(self.damage_resistances)) != len(self.damage_resistances):
                 raise ValueError("Timed self-buff damage resistances must be unique.")
+            if self.selection_strategy == "incoming-damage" and (
+                not self.selection_group or len(self.damage_resistances) != 1
+            ):
+                raise ValueError("Incoming-damage selection requires a group and one resistance type.")
             counter_keys = {
                 (item.debuff_id, item.source_scope, item.mode, item.movement_cost_ft)
                 for item in self.debuff_counters
