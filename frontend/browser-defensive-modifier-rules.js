@@ -92,9 +92,10 @@
     .some((item) => item.kind === "death-save-advantage" || item.kind === "d20-test-advantage");
   const healingMaximized = (state) => (state.active_modifiers || [])
     .some((item) => item.kind === "healing-maximize");
-  const conditionImmune = (state, conditionId, sourceTemplate = null) => (state.active_modifiers || [])
+  const conditionImmune = (state, conditionId, sourceTemplate = null, options = {}) => (state.active_modifiers || [])
     .some((item) => item.kind === "condition-immunity" && item.condition_id === conditionId
       && sourceMatches(item, sourceTemplate)
+      && (!item.requires_active_ally || options.activeAllyPresent === true)
       && (item.required_active_effect_ids || []).every((effectId) =>
         (state.active_effect_ids || []).includes(effectId)));
   const targetingGate = (state, sourceTemplate = null) => (state.active_modifiers || [])
