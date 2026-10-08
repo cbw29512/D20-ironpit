@@ -67,7 +67,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Couatl | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting, Shielded Mind |
 | Cult Fanatic | mechanic:spellcasting, source:trait | Spellcasting |
 | Darkmantle | attack:incomplete, source:extra-action | — |
-| Deep Gnome (Svirfneblin) | mechanic:spellcasting, source:trait | Gnome Cunning, Innate Spellcasting |
+| Deep Gnome (Svirfneblin) | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Deva | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Djinni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Elemental Demise, Innate Spellcasting |
 | Doppelganger | attack:complex, source:extra-action, source:trait | Shapechanger, Ambusher, Surprise Attack |
