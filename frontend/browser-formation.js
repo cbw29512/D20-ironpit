@@ -32,7 +32,22 @@
     throw new Error(`Unknown encounter side: ${side}`);
   }
   function enemies(member, setup) { return member.side === "heroes" ? setup.monsters : setup.heroes; }
+  function activeTargetPolicy(member) {
+    const policies = new Set((member.state.template.timed_self_buff_actions || [])
+      .filter((action) => (action.targetPolicy || "normal") !== "normal"
+        && (member.state.active_effect_ids || []).includes(action.id))
+      .map((action) => action.targetPolicy));
+    if (policies.size > 1) throw new Error(`Conflicting active target policies for ${member.combatant_id}.`);
+    return policies.values().next().value || "normal";
+  }
   function livingTargets(member, setup) {
+    if (activeTargetPolicy(member) === "nearest_visible_creature") {
+      const conditions = window.IRON_PIT_BROWSER_CONDITION_RULES;
+      if (!conditions?.canSee) throw new Error("Nearest-visible target policy requires condition visibility rules.");
+      return [...setup.heroes, ...setup.monsters]
+        .filter((target) => target !== member && alive(target))
+        .filter((target) => conditions.canSee(member.state, target.state, S().distance(member, target)));
+    }
     const pool = enemies(member, setup), active = pool.filter(alive);
     if (active.length) return active;
     return pool.filter((target) => target.state.template.kind === "character"
@@ -40,6 +55,10 @@
   }
   function targetOrder(member, setup, preferBackline = false) {
     const targets = livingTargets(member, setup);
+    if (activeTargetPolicy(member) === "nearest_visible_creature") {
+      return [...targets].sort((a, b) => S().distance(member, a) - S().distance(member, b)
+        || a.combatant_id.localeCompare(b.combatant_id));
+    }
     const front = targets.filter((target) => !isBackline(target));
     const back = targets.filter(isBackline);
     return preferBackline ? [...back, ...front] : [...front, ...back];
@@ -143,7 +162,7 @@
   }
   window.IRON_PIT_BROWSER_FORMATION = {
     hasRangedWeaponOffense, hasTrueRangeOffense, usesBackline, isBackline, startingPosition,
-    targetOrder, alliedFrontlineActive, targetAllowed,
+    activeTargetPolicy, targetOrder, alliedFrontlineActive, targetAllowed,
     attackDistance, saveDistance, weaponMeanDamage, chooseAttack, chooseStandardAttack, meleeCanLandNow,
     flexibleSlotHasBoth, flexibleAttackMode, chooseSlotAttack, backlineHoldsPosition,
   };
