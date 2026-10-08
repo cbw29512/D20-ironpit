@@ -112,8 +112,8 @@ def test_poison_save_advantage_uses_shared_context_and_magical_defense_does_not(
     assert events[0].saving_throw_roll.rolls == [1] and not events[0].save_succeeded
 
 
-@pytest.mark.parametrize("target_x,expected_events", [(3, 1), (4, 0)])
-def test_passive_range_uses_live_large_footprint(target_x, expected_events):
+@pytest.mark.parametrize("target_x,expected_events", [(2, 1), (3, 0)])
+def test_passive_range_uses_pit_single_square_footprint(target_x, expected_events):
     setup, source, target = _setup()
     source.state.position = GridPosition(x=0, y=0)
     target.state.position = GridPosition(x=target_x, y=0)
