@@ -35,7 +35,8 @@ sets the work lane. Rules live in the rules contract, not this tracker.
 | P1 M-018 | Complete, merged #643 | Cyclops Poor Depth Perception is Disadvantage beyond 30 ft.; Rock is 30/120, so universal long-range Disadvantage already represents the complete combat effect. | Source threshold/ranges were proved; no duplicate modifier primitive. All four exact-head gates passed. 2014 source classifier moved to 198/327. |
 | P1 M-019 | Complete, merged #644 | Hobgoblin Martial Advantage reuses target-adjacent active-ally detection plus the generic once-per-turn +2d6 weapon-hit rider. | Shared adjacency and generic hit-rider mechanics; printed source name retained. |
 | P1 M-020 | Complete, merged #645 | Yeti Fear of Fire binds applied fire damage to timed Disadvantage on attack rolls and ability checks until the end of its next turn. | Reuses shared typed-damage trigger and timed roll-scope modifier; exact-head fix merged. |
-| P1 M-021 | Active, clean rebuild | Flesh Golem Aversion of Fire has the same printed combat semantics as Fear of Fire. | Bind the same universal fire-triggered timed Disadvantage rule under the printed name Aversion of Fire; Flesh Golem remains blocked only by Berserk. |
+| P1 M-021 | Complete, merged #649 | Flesh Golem Aversion of Fire reuses the same fire-triggered timed attack/check Disadvantage mechanic as Yeti Fear of Fire. | Clean rebuild from current main; all four exact-head workflows passed. Flesh Golem remains blocked only by Berserk. |
+| P1 M-022a | Active | Shared gap: turn start at/below a source HP threshold -> source die check -> persistent fight-only effect; regaining full HP can end it. | Implement activation/lifecycle only through existing active_effect_ids. Targeting behavior and golem source bindings are separate follow-up PRs. |
 
 ## Current evidence
 
