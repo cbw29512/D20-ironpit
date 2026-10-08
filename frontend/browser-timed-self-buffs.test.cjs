@@ -257,6 +257,7 @@ assert.equal(window.IRON_PIT_BROWSER_FORMATION.targetOrder(golem, golemSetup)[0]
     id: "fire-spell", damageType: "fire", damageDiceCount: 6, damageDiceSize: 6,
   }];
   assert.equal(preferred(caster, battle).id, "shield-chill", "fire incoming requires fire resistance");
+  assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(caster, battle).id, "shield-chill", "normal Action casting matches precombat");
 
   enemy.state.template.saving_throw_actions = [];
   enemy.state.template.attacks = [{
@@ -265,9 +266,9 @@ assert.equal(window.IRON_PIT_BROWSER_FORMATION.targetOrder(golem, golemSetup)[0]
     onHitDamage: [{ damageType: "fire", diceCount: 3, diceSize: 6 }],
   }];
   assert.equal(preferred(caster, battle).id, "shield-chill", "off-type fire rider must count");
+  assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(caster, battle).id, "shield-chill", "rider threat in combat");
   enemy.state.template.attacks = [];
 
-  assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(caster, battle).id, "shield-chill", "normal Action casting matches precombat");
 
   enemy.state.template.saving_throw_actions = [{
     id: "cold-spell", damageType: "cold", damageDiceCount: 6, damageDiceSize: 6,
