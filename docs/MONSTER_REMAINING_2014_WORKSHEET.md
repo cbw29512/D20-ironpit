@@ -174,6 +174,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:extra-action`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Inspect the named extra action and represent its action cost, exact targeting/save/damage/condition via shared Action capabilities; mark as arena-unavailable only if an existing locked Pit rule actually covers it.
+- **Leadership user decision / queued:** Activate via Action as a nonspell, short/long-rest recharge, 10-round Bless-style +1d4 to qualifying friendly attack rolls and saves within 30 ft and able to hear. No Concentration. **Iron Pit house simplification:** once activated, buff continues until duration expires or the Knight reaches 0 HP; printed Incapacitated-ending restriction is replaced by HP > 0. Reuse shared roll-bonus mechanics. **Not implemented/certified.**
 
 ### 020. Medusa
 
