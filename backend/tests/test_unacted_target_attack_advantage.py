@@ -25,5 +25,7 @@ def test_2014_assassin_binds_generic_unacted_target_flag():
     assassin = next(item for item in roster if item.id == "assassin")
     assert "Assassinate" in assassin.trait_names
     assert progression_features_2014(assassin).advantage_against_unacted_targets
+    assert progression_features_2014(assassin).critical_hits_against_surprised_targets
     other = next(item for item in roster if item.id == "goblin")
     assert not progression_features_2014(other).advantage_against_unacted_targets
+    assert not progression_features_2014(other).critical_hits_against_surprised_targets
