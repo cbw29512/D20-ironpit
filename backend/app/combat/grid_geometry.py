@@ -94,3 +94,38 @@ def footprint_distance_ft(
     except Exception:
         logger.exception("Failed to calculate footprint-aware grid distance.")
         raise
+
+
+def square_area_cells(position: GridPosition, side_squares: int) -> set[tuple[int, int]]:
+    """Occupied cells for an effect square; independent of creature-size Pit magic."""
+    if side_squares < 1:
+        raise ValueError("Area square side must be positive.")
+    return {
+        (position.x + dx, position.y + dy)
+        for dx in range(side_squares)
+        for dy in range(side_squares)
+    }
+
+
+def square_area_in_bounds(
+    map_definition: BattleMapDefinition, position: GridPosition, side_squares: int,
+) -> bool:
+    if side_squares < 1:
+        raise ValueError("Area square side must be positive.")
+    return (
+        0 <= position.x and 0 <= position.y
+        and position.x + side_squares <= map_definition.width_squares
+        and position.y + side_squares <= map_definition.height_squares
+    )
+
+
+def square_area_distance_ft(
+    first_position: GridPosition, first_side: int,
+    second_position: GridPosition, second_side: int,
+) -> int:
+    first = square_area_cells(first_position, first_side)
+    second = square_area_cells(second_position, second_side)
+    return min(
+        max(abs(ax - bx), abs(ay - by)) * 5
+        for ax, ay in first for bx, by in second
+    )
