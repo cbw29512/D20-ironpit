@@ -51,6 +51,17 @@ jobs:
           python scripts/export_browser_monsters_2014.py
       - name: Generate certification manifest candidates
         run: python scripts/verify_certification_manifests.py --write
+      - name: Refresh adaptive defense generated hero bundle
+        if: github.event.pull_request.head.ref == 'feat/adaptive-timed-buff-defense'
+        run: |
+          python scripts/prepare_static_site.py
+          git config user.name "iron-pit-certification"
+          git config user.email "actions@users.noreply.github.com"
+          git add -- frontend/browser-heroes.js
+          if ! git diff --cached --quiet; then
+            git commit -m "Regenerate adaptive defense hero bundle [skip refresh]"
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
       - name: Refresh generated hero progression artifacts
         if: startsWith(github.event.pull_request.head.ref, 'feat/2024-paladin-') || startsWith(github.event.pull_request.head.ref, 'feat/2024-ranger-')
         run: |
