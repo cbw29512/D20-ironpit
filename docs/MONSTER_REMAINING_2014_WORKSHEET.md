@@ -235,6 +235,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Disguise Self — user decision / queued:** Retain printed spell on source/card; Archmage AI never casts it in Iron Pit (appearance-only, no combat impact). Route via shared arena-inert spell selection, not a bespoke Archmage resolver. Not implemented/certified.
 - **Detect Magic — user decision / queued:** Preserve printed spell but never select it as an Iron Pit combat action; source remains intact. Not implemented/certified.
 - **Identify — user decision / queued:** Keep the printed spell but never cast it in Iron Pit. Implement by shared noncombat-spell choice exclusion; not certified.
+- **Detect Thoughts — user decision / queued:** Printed spell retained; AI never casts it in arena. Shared noncombat-spell selection exclusion; not implemented/certified.
 
 ### 027. Balor
 
