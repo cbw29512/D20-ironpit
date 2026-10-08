@@ -428,7 +428,7 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **127**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **126**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
@@ -438,7 +438,6 @@ Blocked monsters: **127**. These are grouped by printed ability name so the rost
 | Ambusher | Doppelganger | 1 |
 | Assassinate | Assassin | 1 |
 | Barbed Hide | Barbed Devil | 1 |
-| Berserk | Clay Golem, Flesh Golem | 2 |
 | Blind Senses | Grimlock | 1 |
 | Bound | Shield Guardian | 1 |
 | Confer Fire Resistance | Nightmare | 1 |
@@ -513,7 +512,7 @@ Blocked monsters: **127**. These are grouped by printed ability name so the rost
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 93 |
+| `source:trait` | 91 |
 | `source:extra-action` | 68 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 25 |
