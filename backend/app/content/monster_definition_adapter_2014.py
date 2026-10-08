@@ -29,6 +29,7 @@ from app.content.monster_innate_support_2014 import (
 )
 from app.content.monster_legendary_bindings_2014 import legendary_action_options_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
+from app.content.monster_spell_slot_resources_2014 import monster_spell_slot_resources_2014
 from app.content.monster_multiattack_2014 import multiattack_2014
 from app.content.monster_zero_hp_prevention_2014 import (
     damage_threshold_zero_hp_replacements_2014,
@@ -105,6 +106,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     resources = list(save_resources_2014(monster))
     resources.extend(healing_resources_2014(monster))
     resources.extend(innate_spell_resources_2014(monster))
+    resources.extend(monster_spell_slot_resources_2014(monster))
     resources.extend(zero_hp_prevention_resources_2014(monster))
     legendary_resource = legendary_resistance_resource_2014(monster)
     if legendary_resource is not None:
