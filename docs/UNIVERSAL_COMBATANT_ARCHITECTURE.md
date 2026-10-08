@@ -559,3 +559,8 @@ An immutable attack slot may carry `PreviousAttackRequirement` for a preceding-s
 ## Random sequence repetition
 
 An immutable complete variant may carry `AttackSequenceRepetition` dice. Validate strict positive dice and maximum eight expanded slots before mutation. Select the variant under normal legal reach/printed mean potential, spend its one Action, roll once through shared dice, emit an auditable feature-roll event, and freeze the expanded slot list for the ordinary resolver. The local repetition count is never stored on cards/fight state; every later Action/fight rolls afresh. Preview uses mean repetitions without rolling. Ordinary retargeting, previous-slot conditions, reactions, death/interruption and costs remain owned by existing engine functions. Source names/IDs are labels and immutable inputs only.
+
+
+## Turn-start persistent effect activation
+
+A `TurnStartPersistentEffectRule` is immutable source data for a persistent effect whose activation is checked at the acting creature's turn start. Source data supplies the printed source id/name, effect id, current-HP threshold, trigger die, minimum activating roll, and whether regaining effective full HP ends the effect. The resolver stores activation only in the existing fight-local `active_effect_ids`; fresh combat state therefore resets it automatically. Once active, the activation rule does not reroll. This primitive owns activation/lifecycle only: behavior caused by the active effect is composed separately through universal mechanics, never by source-name dispatch.
