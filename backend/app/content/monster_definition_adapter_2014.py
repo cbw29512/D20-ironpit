@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014, source_conditional_attack_advantage_2014
 from app.content.monster_attack_source_corrections_2014 import corrected_attack_range_2014
+from app.content.monster_berserk_2014 import berserk_self_buffs_2014
 from app.content.monster_basic_candidates_2014 import (
     basic_blockers_2014, modeled_combat_traits_2014, supports_parry_reaction_2014,
 )
@@ -140,6 +141,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         save_actions=save_capabilities_2014(monster),
         spell_save_actions=innate_spell_save_actions_2014(monster),
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
+            *berserk_self_buffs_2014(monster),
             *condition_auras_from_source(monster.source_traits, "2014"),
             *contextual_save_defenses_2014(monster)[0]],
         healing_actions=healing_actions_2014(monster),
