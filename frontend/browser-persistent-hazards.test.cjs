@@ -7,11 +7,10 @@ const vm = require("node:vm");
 global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(`frontend/${name}`, "utf8"), { filename: name });
 
-window.IRON_PIT_BROWSER_GRID_GEOMETRY = {
-  inBounds: () => true,
-  overlaps: (a, _as, b, _bs) => a.x === b.x && a.y === b.y,
-  footprintDistanceFt: (a, _as, b, _bs) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y)) * 5,
-};
+load("browser-grid-geometry.js");
+const geometry = window.IRON_PIT_BROWSER_GRID_GEOMETRY;
+assert.equal(geometry.footprintSide("large"), 1, "Large creatures must occupy only one Pit square");
+assert.equal(geometry.effectSquareSide("large"), 2, "Large-sized hazards must retain two-square side lengths");
 window.IRON_PIT_ACTION_ECONOMY = {
   available: (state) => state.action_available,
   spend: (state) => { state.action_available = false; },
@@ -62,6 +61,8 @@ const action = {
 
 const cast = H.cast(1, 1, caster, setup, action, { x: 6, y: 1 }, "1:caster");
 assert.equal(cast.sequence, 2);
+assert.equal(H.positionLegal(setup, action, { x: 7, y: 1 }), false,
+  "The two-square hazard must not overlap a living occupant");
 assert.equal(setup.persistent_hazards.length, 1);
 assert.equal(caster.state.resources["spell-slot-4"], 0);
 target.state.position = { x: 7, y: 1 };
