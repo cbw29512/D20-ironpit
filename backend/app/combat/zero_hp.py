@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Literal
 from app.combat.turn_damage import note_turn_damage_and_trigger
-from app.combat.timed_self_buff_policy import sync_hp_ended_self_buffs
+from app.combat.self_buff_lifecycle import sync_hp_ended_self_buffs
 from app.combat.concentration import resolve_concentration_damage
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
@@ -20,8 +20,7 @@ from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
 ZeroHpOutcome = Literal[
     "damaged", "unconscious", "dead", "unchanged", "relentless_endurance", "undead_fortitude",
-    "survival_save", "zero_hp_replacement", "damage_threshold_zero_hp_replacement",
-]
+    "survival_save", "zero_hp_replacement", "damage_threshold_zero_hp_replacement"]
 DODGE_EFFECT_ID = "dodge"
 PRONE_EFFECT_ID = "prone"
 
