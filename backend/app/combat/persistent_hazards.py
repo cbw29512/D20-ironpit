@@ -4,7 +4,7 @@ import logging
 
 from app.combat.damage import aggregate_damage_components, fixed_damage_component
 from app.combat.damage_defenses import apply_damage_defenses
-from app.combat.grid_geometry import footprint_distance_ft
+from app.combat.grid_geometry import square_area_distance_ft, effect_square_side_squares
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -37,9 +37,9 @@ def resolve_persistent_hazard_entries(
                 continue
             if hazard.triggered_turn_keys.get(mover.combatant_id) == turn_key:
                 continue
-            distance = footprint_distance_ft(
-                mover.state.position, mover.state.template.size,
-                hazard.position, hazard.footprint_size,
+            distance = square_area_distance_ft(
+                mover.state.position, 1,
+                hazard.position, effect_square_side_squares(hazard.footprint_size),
             )
             if distance > hazard.trigger_radius_ft:
                 continue

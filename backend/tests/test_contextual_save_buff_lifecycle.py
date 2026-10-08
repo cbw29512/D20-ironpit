@@ -110,8 +110,8 @@ def test_turn_repeat_save_retains_context_and_refreshes_live_aura(source_dead, r
     assert events[0].removed_condition_ids == ["trembling"]
 
 
-@pytest.mark.parametrize("x,mode", [(7, RollMode.ADVANTAGE), (8, RollMode.NORMAL)])
-def test_aura_distance_uses_live_large_footprints(x, mode):
+@pytest.mark.parametrize("x,mode", [(6, RollMode.ADVANTAGE), (7, RollMode.NORMAL)])
+def test_aura_distance_uses_pit_single_square_footprints(x, mode):
     setup, source, ghoul, _, _ = _setup()
     actions = [action.model_copy(update={"friendly_save_advantage_aura": action.friendly_save_advantage_aura.model_copy(update={"covers_arena": False})})
         if action.friendly_save_advantage_aura else action for action in source.state.template.timed_self_buff_actions]

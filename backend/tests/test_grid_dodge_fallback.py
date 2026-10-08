@@ -87,37 +87,44 @@ def test_open_melee_path_advances_then_dodges_when_attack_is_not_reachable_this_
         raise
 
 
-def test_blocked_melee_only_gargantuan_dodges_instead_of_breaking() -> None:
+def test_gargantuan_can_close_through_friendly_line_with_one_square_footprint() -> None:
     try:
-        mover = _commoner("hero-mover", "heroes", 0, 6, size=CreatureSize.GARGANTUAN)
-        wall = [
-            _commoner("hero-wall-1", "heroes", 4, 0, size=CreatureSize.GARGANTUAN),
-            _commoner("hero-wall-2", "heroes", 4, 4, size=CreatureSize.GARGANTUAN),
-            _commoner("hero-wall-3", "heroes", 4, 8, size=CreatureSize.GARGANTUAN),
-            _commoner("hero-wall-4", "heroes", 4, 12, size=CreatureSize.GARGANTUAN),
+        # Allied occupied spaces may be traversed under normal 5e movement rules.
+        # A Gargantuan creature has a single-square Pit footprint and must not
+        # be incorrectly trapped by its printed size or adjacent allies.
+        mover = _commoner("hero-mover", "heroes", 0, 0, size=CreatureSize.GARGANTUAN)
+        allies = [
+            _commoner("hero-wall-1", "heroes", 1, 0),
+            _commoner("hero-wall-2", "heroes", 0, 1),
+            _commoner("hero-wall-3", "heroes", 1, 1),
         ]
-        _assert_dodge_only(mover, _target(), wall)
+        setup = _setup(mover, _target(), allies)
+        before = mover.state.position.model_copy(deep=True)
+        events, _ = resolve_combat_turn(1, 1, mover, setup.monsters[0], setup, FixedDiceProvider([1]))
+        assert [event for event in events if event.event_type == "movement"]
+        assert mover.state.position != before
+        assert not [event for event in events if event.event_type == "attack"]
     except Exception:
-        logger.exception("Blocked Gargantuan Dodge fallback regression failed.")
+        logger.exception("Gargantuan single-square approach regression failed.")
         raise
 
 
 def test_medium_melee_creature_prefix_closes_toward_a_surrounded_target() -> None:
     try:
-        mover = _commoner("hero-medium-mover", "heroes", 0, 7)
-        target = _target(7, 7)
+        mover = _commoner("hero-medium-mover", "heroes", 0, 0)
+        # Edge-of-map target has exactly three adjacent 1-square cells.
+        target = _target(23, 0)
         summons = [
-            _commoner("summon-top", "heroes", 6, 4, size=CreatureSize.HUGE),
-            _commoner("summon-left", "heroes", 6, 7),
-            _commoner("summon-right", "heroes", 8, 7),
-            _commoner("summon-bottom", "heroes", 6, 8, size=CreatureSize.HUGE),
+            _commoner("blocker-left", "heroes", 22, 0),
+            _commoner("blocker-diagonal", "heroes", 22, 1),
+            _commoner("blocker-below", "heroes", 23, 1),
         ]
         setup = _setup(mover, target, summons)
         start = mover.state.position.model_copy(deep=True)
         events, _ = resolve_combat_turn(1, 1, mover, target, setup, FixedDiceProvider([1]))
         after = mover.state.position
-        start_distance = max(abs(start.x - 7), abs(start.y - 7))
-        after_distance = max(abs(after.x - 7), abs(after.y - 7))
+        start_distance = max(abs(start.x - 23), abs(start.y - 0))
+        after_distance = max(abs(after.x - 23), abs(after.y - 0))
         assert [event for event in events if event.event_type == "movement"]
         assert after_distance < start_distance
         assert not [event for event in events if event.event_type == "attack"]

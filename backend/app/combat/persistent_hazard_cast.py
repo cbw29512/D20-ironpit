@@ -3,7 +3,10 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
-from app.combat.grid_geometry import footprint_distance_ft, footprints_overlap, position_in_bounds
+from app.combat.grid_geometry import (
+    occupied_cells, square_area_cells, square_area_distance_ft,
+    square_area_in_bounds, effect_square_side_squares,
+)
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
@@ -25,21 +28,18 @@ def _position_legal(
 ) -> bool:
     if setup.map_definition is None:
         return False
-    if not position_in_bounds(setup.map_definition, position, action.footprint_size):
+    if not square_area_in_bounds(setup.map_definition, position, effect_square_side_squares(action.footprint_size)):
         return False
     for member in [*setup.heroes, *setup.monsters]:
         if member.state.position is None:
             continue
-        if footprints_overlap(
-            position, action.footprint_size,
+        if square_area_cells(position, effect_square_side_squares(action.footprint_size)) & occupied_cells(
             member.state.position, member.state.template.size,
         ):
             return False
     return not any(
-        footprints_overlap(
-            position, action.footprint_size,
-            hazard.position, hazard.footprint_size,
-        )
+        square_area_cells(position, effect_square_side_squares(action.footprint_size))
+        & square_area_cells(hazard.position, effect_square_side_squares(hazard.footprint_size))
         for hazard in setup.persistent_hazards
     )
 
@@ -59,9 +59,9 @@ def cast_persistent_hazard(
             raise ValueError("Persistent hazards require the authoritative grid.")
         if not is_available(caster.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")
-        distance = footprint_distance_ft(
-            caster.state.position, caster.state.template.size,
-            position, action.footprint_size,
+        distance = square_area_distance_ft(
+            caster.state.position, 1,
+            position, effect_square_side_squares(action.footprint_size),
         )
         if distance > action.cast_range_ft:
             raise ValueError(f"{action.name} placement exceeds its cast range.")

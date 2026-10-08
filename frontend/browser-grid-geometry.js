@@ -1,13 +1,14 @@
 (() => {
   "use strict";
 
+  // Pit magic: all creature sizes occupy exactly one 5-foot square.
   const FOOTPRINT_SIDE = {
     tiny: 1,
     small: 1,
     medium: 1,
-    large: 2,
-    huge: 3,
-    gargantuan: 4,
+    large: 1,
+    huge: 1,
+    gargantuan: 1,
   };
 
   function footprintSide(size) {
@@ -76,11 +77,44 @@
     }
   }
 
+  // Effect areas retain their printed dimensions. The one-square Pit override
+  // applies to creatures only, never to zones, hazards, or spell geometry.
+  const EFFECT_SIDE = { tiny: 1, small: 1, medium: 1, large: 2, huge: 3, gargantuan: 4 };
+  function effectSquareSide(size) {
+    const side = EFFECT_SIDE[size];
+    if (!side) throw new Error(`Unsupported effect footprint size: ${size}`);
+    return side;
+  }
+  function squareAreaCells(position, side) {
+    if (!Number.isInteger(side) || side < 1) throw new Error("Area side must be a positive square count.");
+    const cells = [];
+    for (let dx = 0; dx < side; dx += 1) {
+      for (let dy = 0; dy < side; dy += 1) cells.push([position.x + dx, position.y + dy]);
+    }
+    return cells;
+  }
+  function squareAreaInBounds(map, position, side) {
+    if (!Number.isInteger(side) || side < 1) throw new Error("Area side must be a positive square count.");
+    return position.x >= 0 && position.y >= 0
+      && position.x + side <= map.width_squares
+      && position.y + side <= map.height_squares;
+  }
+  function squareAreaDistanceFt(firstPosition, firstSide, secondPosition, secondSide) {
+    let minimum = Number.POSITIVE_INFINITY;
+    for (const [ax, ay] of squareAreaCells(firstPosition, firstSide)) {
+      for (const [bx, by] of squareAreaCells(secondPosition, secondSide)) {
+        minimum = Math.min(minimum, Math.max(Math.abs(ax - bx), Math.abs(ay - by)));
+      }
+    }
+    return minimum * 5;
+  }
+
   window.IRON_PIT_BROWSER_GRID_GEOMETRY = {
     footprintSide,
     occupiedCells,
     inBounds,
     overlaps,
     footprintDistanceFt,
+    effectSquareSide, squareAreaCells, squareAreaInBounds, squareAreaDistanceFt,
   };
 })();

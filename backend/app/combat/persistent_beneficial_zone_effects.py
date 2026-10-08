@@ -3,31 +3,22 @@ from __future__ import annotations
 import logging
 
 from app.combat.condition_rules import is_incapacitated
-from app.combat.grid_geometry import footprints_overlap
+from app.combat.grid_geometry import occupied_cells, square_area_cells
 from app.combat.modifier_stack import add_modifier
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import DamageType
 from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.runtime import TimedEffect
-from app.domain.size import CreatureSize
 
 logger = logging.getLogger(__name__)
 
-_ZONE_SIZE_BY_LENGTH = {
-    5: CreatureSize.MEDIUM,
-    10: CreatureSize.LARGE,
-    15: CreatureSize.HUGE,
-    20: CreatureSize.GARGANTUAN,
-}
-
-
-def zone_footprint_size(length_ft: int) -> CreatureSize:
-    try:
-        return _ZONE_SIZE_BY_LENGTH[length_ft]
-    except KeyError as exc:
+def zone_side_squares(length_ft: int) -> int:
+    """Effect dimensions are real squares, not simulated creature sizes."""
+    if length_ft not in (5, 10, 15, 20):
         raise ValueError(
             "Persistent beneficial zones currently require a 5/10/15/20-foot square footprint."
-        ) from exc
+        )
+    return length_ft // 5
 
 
 def _remove_zone_effects(setup: EncounterSetup, zone_id: str) -> None:
@@ -56,11 +47,9 @@ def _source_member(setup: EncounterSetup, source_id: str) -> EncounterCombatant 
 def _member_inside_zone(member: EncounterCombatant, zone) -> bool:
     if member.state.position is None:
         return False
-    return footprints_overlap(
-        member.state.position,
-        member.state.template.size,
-        zone.position,
-        zone_footprint_size(zone.length_ft),
+    return bool(
+        occupied_cells(member.state.position, member.state.template.size)
+        & square_area_cells(zone.position, zone_side_squares(zone.length_ft))
     )
 
 

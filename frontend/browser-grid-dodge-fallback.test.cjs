@@ -106,9 +106,12 @@ const melee = [{ id: "club", name: "Club", kind: "melee", reach: 5 }];
   const target = member("monster-gargantuan-target", "monsters", 20, 7);
   const fight = setup([mover, ...wall], [target]);
   const movement = window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT.move(1, 1, mover, fight, "1:hero-gargantuan");
-  assert.deepEqual(movement.events, []);
-  assert.deepEqual(mover.state.position, { x: 0, y: 6 });
-  const dodge = window.IRON_PIT_BROWSER_DODGE.take(1, 1, mover);
+  // Printed Gargantuan size cannot make distant one-cell allies into a wall.
+  assert.ok(movement.events.some((event) => event.event_type === "movement"));
+  assert.ok(mover.state.position.x > 0);
+  assert.equal(mover.state.template.size, "gargantuan");
+  // It cannot reach the target this turn, so Dodge remains a legal fallback.
+  const dodge = window.IRON_PIT_BROWSER_DODGE.take(movement.sequence, 1, mover);
   assert.equal(dodge.feature_id, "dodge");
 }
 
