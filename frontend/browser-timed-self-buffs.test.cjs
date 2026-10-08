@@ -188,6 +188,7 @@ assert.equal(slotCleric.state.resources["spell-slot-3"], 1);
 load("browser-ability-hooks.js");
 window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.installAbilityHooks();
 load("browser-formation.js");
+load("browser-healing-policy.js");
 load("browser-healing.js");
 
 const berserk = {
