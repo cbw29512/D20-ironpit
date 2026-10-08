@@ -6,8 +6,9 @@ from app.combat.dice import DiceProvider
 from app.combat.recharge import resolve_recharge_checks
 from app.combat.state import begin_turn
 from app.combat.turn_start_conditions import turn_start_condition_events
+from app.combat.turn_start_effects import resolve_turn_start_persistent_effects
 from app.domain.encounters import EncounterCombatant
-from app.domain.models import BattleEvent, CombatantState
+from app.domain.models import BattleEvent, CombatantState, DiceRoll
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +43,28 @@ def begin_turn_with_events(
                 description=(
                     f"{state.template.name} spends {movement_cost} feet of movement to clear {debuff_id} "
                     "using an active buff."
+                ),
+            ))
+            sequence += 1
+        for check in resolve_turn_start_persistent_effects(state, dice):
+            outcome = "activates" if check.activated else "does not activate"
+            events.append(BattleEvent(
+                sequence=sequence,
+                round_number=round_number,
+                event_type="feature",
+                actor_id=actor_id,
+                actor_name=state.template.name,
+                feature_id=check.source_id,
+                feature_roll=DiceRoll(
+                    notation=f"1d{check.die_size}",
+                    rolls=[check.roll],
+                    selected_roll=check.roll,
+                    total=check.roll,
+                ),
+                animation="feature",
+                description=(
+                    f"{state.template.name} rolls {check.roll} for {check.source_name}: "
+                    f"{check.source_name} {outcome}."
                 ),
             ))
             sequence += 1
