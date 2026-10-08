@@ -34,6 +34,8 @@ This is the **operational queue**, not a second monster source inventory. The au
 - [ ] **Frog — next worksheet entry:** Verify whether the Frog remains arena-neutral and blocked or was already classified. Skip if intentionally non-runnable/handled; do not invent combat offense.
 - [ ] **Grimlock — next actionable combat blocker:** Inspect pinned source and exact blocker, reuse existing senses, attacks and debuffs before proposing a fix.
 
+- [ ] **Grimlock — Blind Senses (2014):** User-proposed semantics: source-native Blinded immunity plus **Blindsight 30 ft**, without attack penalties against perceivable targets inside that range. Grimlock cannot see gaze sources' eyes; Basilisk/Medusa gaze does not apply. Outside 30 ft it cannot perceive solely via Blindsight; **30 ft does not cover the current 120×80 ft arena**. Reuse the shared senses and sight rules, **not** a custom Blinded debuff override. Verify printed Deafened/smell qualifiers and any actual deafness effect before simplifying them. Bind/classify and certify before clearing. QUEUED.
+
 ## Status accounting
 
 - `QUEUED`: named blocker only; source/mechanic check not completed.
