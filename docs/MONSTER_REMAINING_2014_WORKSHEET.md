@@ -33,17 +33,18 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 
 ### 001. Adult Bronze Dragon
 
-- [ ] **FIX NOTE RECORDED — NOT IMPLEMENTED/CERTIFIED.**
-- **Recorded blockers:** `source:extra-action` only. Bronze Repulsion Breath is already covered by the existing shared save + push implementation (see `docs/BRONZE_REPULSION_AUDIT.md`).
-- **Identified remaining action:** Change Shape; the Bronze Repulsion audit explicitly names this as the independent extra-action blocker.
-- **Fix plan:** Read the exact 2014 Change Shape source and compare against existing transformation/replacement-form and arena restrictions. If transformation is allowed and representable, bind it declaratively using the shared form/state primitive and preserve the original dragon's legal capabilities. If Pit policy excludes the action, document the existing rule and classifier consequence rather than invent a replacement. Verify attack choices, stats/HP/form return and browser/Python parity as applicable.
-- **Avoid rework:** Do not touch Repulsion Breath or add a dragon-specific transformation resolver. Next classification decision is the permitted scope of Change Shape under the locked Pit rules.
+- [x] **CHANGE SHAPE CLASSIFIED ARENA-UNAVAILABLE — PENDING GENERATED GATES.**
+- **Original blocker:** `source:extra-action` from Change Shape only.
+- **Pit decision, 2026-10-08:** Change Shape is a noncombat transformation and is not selected in Pit fights. Retain the printed action on the immutable source, but exclude it through the common arena-unavailable action classifier. No invented shape mechanics or name-specific combat resolver.
+- **Existing combat mechanics:** Lightning Breath and Repulsion Breath remain supported; do not reopen them.
+- **Check before READY:** Refresh generated source blockers and runtime artifacts and run required verification for the new head. If any other blocker appears, record it; do not silently certify.
 
 ### 002. Adult Gold Dragon
 
 - [ ] **SOURCE REVIEW / BIND / TEST / CERTIFY / MERGE** — not yet individually verified by this worksheet.
 - **Recorded blockers:** `source:extra-action`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
+- **Change Shape:** Retain source but classify as arena-unavailable under the global Pit rule; check for any other distinct printed actions before marking READY.
 - **Fix notes:** Inspect the named extra action and represent its action cost, exact targeting/save/damage/condition via shared Action capabilities; mark as arena-unavailable only if an existing locked Pit rule actually covers it.
 
 ### 003. Adult Silver Dragon
@@ -51,6 +52,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - [ ] **SOURCE REVIEW / BIND / TEST / CERTIFY / MERGE** — not yet individually verified by this worksheet.
 - **Recorded blockers:** `source:extra-action`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
+- **Change Shape:** Retain source but classify as arena-unavailable under the global Pit rule; check for any other distinct printed actions before marking READY.
 - **Fix notes:** Inspect the named extra action and represent its action cost, exact targeting/save/damage/condition via shared Action capabilities; mark as arena-unavailable only if an existing locked Pit rule actually covers it.
 
 ### 004. Ancient Brass Dragon
@@ -58,6 +60,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - [ ] **SOURCE REVIEW / BIND / TEST / CERTIFY / MERGE** — not yet individually verified by this worksheet.
 - **Recorded blockers:** `source:extra-action`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
+- **Change Shape:** Retain source but classify as arena-unavailable under the global Pit rule; check for any other distinct printed actions before marking READY.
 - **Fix notes:** Inspect the named extra action and represent its action cost, exact targeting/save/damage/condition via shared Action capabilities; mark as arena-unavailable only if an existing locked Pit rule actually covers it.
 
 ### 005. Ancient Bronze Dragon
@@ -65,6 +68,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - [ ] **SOURCE REVIEW / BIND / TEST / CERTIFY / MERGE** — not yet individually verified by this worksheet.
 - **Recorded blockers:** `source:extra-action`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
+- **Change Shape:** Retain source but classify as arena-unavailable under the global Pit rule; check for any other distinct printed actions before marking READY.
 - **Fix notes:** Inspect the named extra action and represent its action cost, exact targeting/save/damage/condition via shared Action capabilities; mark as arena-unavailable only if an existing locked Pit rule actually covers it.
 
 ### 006. Ancient Copper Dragon
@@ -72,6 +76,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - [ ] **SOURCE REVIEW / BIND / TEST / CERTIFY / MERGE** — not yet individually verified by this worksheet.
 - **Recorded blockers:** `source:extra-action`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
+- **Change Shape:** Retain source but classify as arena-unavailable under the global Pit rule; check for any other distinct printed actions before marking READY.
 - **Fix notes:** Inspect the named extra action and represent its action cost, exact targeting/save/damage/condition via shared Action capabilities; mark as arena-unavailable only if an existing locked Pit rule actually covers it.
 
 ### 007. Ancient Gold Dragon
@@ -79,6 +84,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - [ ] **SOURCE REVIEW / BIND / TEST / CERTIFY / MERGE** — not yet individually verified by this worksheet.
 - **Recorded blockers:** `source:extra-action`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
+- **Change Shape:** Retain source but classify as arena-unavailable under the global Pit rule; check for any other distinct printed actions before marking READY.
 - **Fix notes:** Inspect the named extra action and represent its action cost, exact targeting/save/damage/condition via shared Action capabilities; mark as arena-unavailable only if an existing locked Pit rule actually covers it.
 
 ### 008. Ancient Silver Dragon
@@ -86,6 +92,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - [ ] **SOURCE REVIEW / BIND / TEST / CERTIFY / MERGE** — not yet individually verified by this worksheet.
 - **Recorded blockers:** `source:extra-action`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
+- **Change Shape:** Retain source but classify as arena-unavailable under the global Pit rule; check for any other distinct printed actions before marking READY.
 - **Fix notes:** Inspect the named extra action and represent its action cost, exact targeting/save/damage/condition via shared Action capabilities; mark as arena-unavailable only if an existing locked Pit rule actually covers it.
 
 ### 009. Assassin

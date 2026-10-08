@@ -31,7 +31,7 @@ _MODELED_2014_TRAITS = {
 }
 _CHARGE_TRAIT_NAMES = frozenset({"Charge", "Pounce", "Trampling Charge"})
 _PIT_BANNED_ACTION_LABELS = frozenset({"teleport", "plane shift"})
-_ARENA_ABSENT_CONTEXT_ACTION_LABELS = frozenset({"ink cloud"})
+_ARENA_ABSENT_CONTEXT_ACTION_LABELS = frozenset({"ink cloud", "change shape"})
 _ARENA_UNAVAILABLE_SUMMON_ACTION_LABELS = frozenset({
     "animate trees", "children of the night", "create specter",
 })
