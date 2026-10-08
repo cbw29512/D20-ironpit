@@ -24,11 +24,9 @@ ZeroHpOutcome = Literal[
 ]
 DODGE_EFFECT_ID = "dodge"
 PRONE_EFFECT_ID = "prone"
-
 def reset_death_saves(state: CombatantState) -> None:
     state.death_save_successes = 0
     state.death_save_failures = 0
-
 
 def _mark_dead(state: CombatantState) -> ZeroHpOutcome:
     if delay_zero_hp_death(state):
