@@ -95,6 +95,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Unbound printed traits:** Assassinate; Evasion; Sneak Attack
 - **Fix notes:** Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
 - **Known directed work:** Assassinate/Sneak Attack/Evasion: reuse rogue pregen combat primitives where semantics match.
+- **Sneak Attack (PR #666):** [x] Reused existing universal Rogue once-per-turn hit-damage resolver; mapped the Assassin's printed `Sneak Attack` and Spy's `Sneak Attack (1/Turn)` to identical source-data dice and attack eligibility. No new runtime resolver. Focused source regression added; final-head CI/merge pending. Other Assassin traits remain independently blocked.
 
 ### 010. Azer
 
