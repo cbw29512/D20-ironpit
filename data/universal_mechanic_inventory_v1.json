@@ -6114,13 +6114,6 @@
       {
         "demand_count": 1,
         "monsters": [
-          "Deep Gnome (Svirfneblin)"
-        ],
-        "printed_name": "Gnome Cunning"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
           "Mimic"
         ],
         "printed_name": "Grappler"

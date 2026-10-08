@@ -463,7 +463,6 @@ Blocked monsters: **126**. These are grouped by printed ability name so the rost
 | Freedom of Movement | Kraken | 1 |
 | Freeze | Water Elemental | 1 |
 | Gibbering | Gibbering Mouther | 1 |
-| Gnome Cunning | Deep Gnome (Svirfneblin) | 1 |
 | Grappler | Mimic | 1 |
 | Grasping Tendrils | Roper | 1 |
 | Heated Body | Azer, Remorhaz, Salamander | 3 |
