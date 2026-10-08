@@ -16,6 +16,7 @@ def apply_failed_save_timed_effect(
     action: SavingThrowAction,
     round_number: int,
     affected_states: list[CombatantState] | None,
+    active_ally_present: bool = False,
 ) -> str | None:
     """Apply one failed-save timed rider, including ground-contact / teleport-cancel tags."""
     try:
@@ -54,6 +55,7 @@ def apply_failed_save_timed_effect(
             escape_check_ability=rider.escape_check_ability,
             escape_check_dc=rider.escape_check_dc,
             ground_contact=ground_contact,
+            active_ally_present=active_ally_present,
             ends_on_teleport=ends_on_teleport,
             source_effect_immunity_on_end=rider.source_effect_immunity_on_end,
         )
