@@ -28,7 +28,6 @@ def reset_death_saves(state: CombatantState) -> None:
     state.death_save_successes = 0
     state.death_save_failures = 0
 
-
 def _mark_dead(state: CombatantState) -> ZeroHpOutcome:
     if delay_zero_hp_death(state):
         return _mark_unconscious(state)
@@ -41,7 +40,6 @@ def _mark_dead(state: CombatantState) -> ZeroHpOutcome:
     revert_replacement_form_if_incapacitated(state)
     return "dead"
 
-
 def _mark_unconscious(state: CombatantState) -> ZeroHpOutcome:
     state.is_alive = True
     state.is_unconscious = True
@@ -52,12 +50,10 @@ def _mark_unconscious(state: CombatantState) -> ZeroHpOutcome:
     revert_replacement_form_if_incapacitated(state)
     return "unconscious"
 
-
 def _after_temporary_hp(state: CombatantState, amount: int) -> int:
     absorbed = min(state.temporary_hp, amount)
     state.temporary_hp -= absorbed
     return amount - absorbed
-
 
 def _finish_damage(
     state: CombatantState,
@@ -78,7 +74,6 @@ def _finish_damage(
     resolve_concentration_damage(state, damage_taken, dice, affected_states)
     return outcome
 
-
 def restore_hit_points(state: CombatantState, amount: int) -> int:
     """Restore true HP; ordinary healing cannot restore a dead creature or a Swarm."""
     if amount < 0:
@@ -96,7 +91,6 @@ def restore_hit_points(state: CombatantState, amount: int) -> int:
         sync_hp_ended_self_buffs(state)
     return healed
 
-
 def _damage_at_zero(state: CombatantState, incoming: int, *, critical: bool) -> ZeroHpOutcome:
     if state.template.kind == "monster" or incoming >= effective_max_hp(state):
         return _mark_dead(state)
@@ -105,7 +99,6 @@ def _damage_at_zero(state: CombatantState, incoming: int, *, critical: bool) -> 
     if state.death_save_failures >= 3:
         return _mark_dead(state)
     return _mark_unconscious(state)
-
 
 def reduce_to_zero_hit_points(
     state: CombatantState,
@@ -135,7 +128,6 @@ def reduce_to_zero_hit_points(
     except Exception as exc:
         logger.exception("Zero-HP reduction failed for %s.", state.template.name)
         raise RuntimeError("Zero-HP reduction could not be resolved.") from exc
-
 
 def apply_damage(
     state: CombatantState,
