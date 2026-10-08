@@ -39,8 +39,6 @@ def _mark_dead(state: CombatantState) -> ZeroHpOutcome:
     state.active_effect_ids = [effect for effect in state.active_effect_ids if effect != DODGE_EFFECT_ID]
     revert_replacement_form_if_incapacitated(state)
     return "dead"
-
-
 def _mark_unconscious(state: CombatantState) -> ZeroHpOutcome:
     state.is_alive = True
     state.is_unconscious = True
@@ -50,8 +48,6 @@ def _mark_unconscious(state: CombatantState) -> ZeroHpOutcome:
         state.active_effect_ids.append(PRONE_EFFECT_ID)
     revert_replacement_form_if_incapacitated(state)
     return "unconscious"
-
-
 def _after_temporary_hp(state: CombatantState, amount: int) -> int:
     absorbed = min(state.temporary_hp, amount)
     state.temporary_hp -= absorbed
