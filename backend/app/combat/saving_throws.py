@@ -10,6 +10,7 @@ from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
 from app.combat.forced_movement import push_straight_away
 from app.combat.failed_save_timed_apply import apply_failed_save_timed_effect
+from app.combat.ally_context import has_active_ally
 from app.combat.failed_d20_test_override import source_name_for_roll
 from app.combat.source_effect_immunity import (
     grant_source_effect_immunity,
@@ -139,6 +140,7 @@ def resolve_save_action(
     if not succeeded and target.state.is_alive and not target.state.is_dead:
         applied = apply_failed_save_timed_effect(
             target, actor, action, round_number, affected_states,
+            active_ally_present=bool(setup is not None and has_active_ally(target, setup)),
         )
         if applied is not None:
             applied_conditions.append(applied)
