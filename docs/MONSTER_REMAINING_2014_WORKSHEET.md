@@ -239,6 +239,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Scrying — user decision / queued:** Useless in Iron Pit; retain source/card spell but never choose as a combat action. This is a universal spell-level ruling shared by every caster; see shared spell policy in MONSTER_ABILITY_WORK_QUEUE.md. Not implemented/certified.
 - **Mage Hand — user decision / queued, both editions:** Remains printed on source/card, but never used in arena combat. Universal spell-level policy shared by 2014 and 2024 casters. Not implemented/certified.
 - **Prestidigitation — user decision / queued, both editions:** Preserve original printed spell, but never cast in the Iron Pit arena. Applies as a shared spell-selection ruling across all monsters, pregens, and homebrew; not yet implemented/certified.
+- **Misty Step — user decision / queued:** Combat-relevant Bonus Action escape: counter Grappled and eligible Restrained debuffs using the shared teleport-cancelable (`ends_on_teleport`) effect handling, **without relocating the creature**. Preserve resource cost and source spell text; apply arena-use policy across 2014/2024 while checking each edition's RAW. Not implemented/certified.
 
 ### 027. Balor
 
