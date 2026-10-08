@@ -150,6 +150,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:trait`.
 - **Unbound printed traits:** Blind Senses
 - **Fix notes:** Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
+- **RAW range locked / queued:** Blindsight **30 feet**, not arena-wide (24×16 five-foot squares). Reuse shared Blindsight/sight and source Blinded immunity; no global Blinded disadvantage within perceivable range, no valid gaze eye contact with Basilisk/Medusa, normal limitations beyond 30 ft. Preserve printed Deafened/smell qualifier for future mechanics. **Specification only: not implemented or certified.**
 
 ### 017. Harpy
 
