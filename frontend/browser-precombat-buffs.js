@@ -14,26 +14,12 @@
         if (action.resourceId == null) return true;
         return (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1);
       });
-      choices.sort((a, b) => (b.priority || 0) - (a.priority || 0));
-      const preferred = choices[0] || null;
-      if (!preferred || preferred.selectionStrategy !== "incoming-damage") return preferred;
-      const variants = choices.filter((action) =>
-        action.selectionGroup === preferred.selectionGroup
-        && action.selectionStrategy === preferred.selectionStrategy
-        && action.resourceId === preferred.resourceId);
-      const types = [...new Set(variants.map((action) => {
-        if ((action.damageResistances || []).length !== 1) {
-          throw new Error("Incoming-damage selection requires exactly one resistance type.");
-        }
-        return action.damageResistances[0];
-      }))];
-      if (!R()?.scoresFor) throw new Error("Opponent damage-type scoring is unavailable.");
-      const incoming = R().scoresFor(member, setup, types);
-      if (!Object.values(incoming).some((score) => score > 0)) return preferred;
-      variants.sort((a, b) =>
-        (incoming[b.damageResistances[0]] || 0) - (incoming[a.damageResistances[0]] || 0)
-        || (b.priority || 0) - (a.priority || 0));
-      return variants[0];
+      const preferred = [...choices].sort((a, b) => (b.priority || 0) - (a.priority || 0))[0] || null;
+      if (preferred?.selectionStrategy === "incoming-damage") {
+        if (!R()?.chooseTimed) throw new Error("Threat-aware defense selection is unavailable.");
+        return R().chooseTimed(member, setup, choices);
+      }
+      return preferred;
     } catch (error) {
       console.error("Opening timed-buff choice failed.", { combatant: member?.combatant_id, error });
       throw error;
