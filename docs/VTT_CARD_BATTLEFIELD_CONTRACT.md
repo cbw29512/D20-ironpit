@@ -1,6 +1,6 @@
 # Iron Pit VTT Card Battlefield Contract
 
-This document records the approved battlefield direction for D20 Iron Pit. It is a specific battlefield/UI architecture contract and supersedes older fixed-formation/deity-closing assumptions wherever they conflict.
+**Historical implementation reference, not current product authority.** Iron Pit is an automated D&D 5e matchup simulator, not an interactive virtual tabletop. For current combat rules, deployment, and creature footprints, `docs/IRON_PIT_RULES_CONTRACT.md` §10 and `docs/IRON_PIT_LOCKED_RULES.md` **supersede** every conflicting statement in this older UI architecture document. The visible battlefield is only a read-only view of engine-computed combat.
 
 ## Product decision
 
@@ -52,12 +52,7 @@ This is a locked Pit positioning rule for the universal engine. Creature names n
 
 ## Creature footprint
 
-Printed creature size determines occupied grid footprint; monster names never do.
-
-- Tiny, Small, Medium: 1 x 1 grid cell for the 5-foot VTT representation.
-- Large: 2 x 2 cells.
-- Huge: 3 x 3 cells.
-- Gargantuan: 4 x 4 cells unless a more specific source rule requires a larger space.
+Pit magic assigns **one 5-foot battlefield cell to every creature**, Tiny through Gargantuan. Printed size is preserved for other size-sensitive RAW mechanics, but never changes creature collision, distances, deployment, or occupied-cell targeting. **Area effects and hazards retain their independently printed dimensions.** Every team begins in three columns by two depth rows on the open 24 × 16 grid; normal measured movement then resolves automatically with no kiting.
 
 Footprint is derived from immutable size data. Runtime state stores position, not a duplicated monster-specific size override unless a supported transformation changes size.
 
@@ -68,7 +63,7 @@ For the canonical 2024 SRD roster, printed `size` comes from the vendored SRD 5.
 - Use the selected ruleset's Playing on a Grid rules.
 - A 5-foot adjacent orthogonal or diagonal square costs 5 feet of movement unless a specific rule changes the cost.
 - A combatant cannot end normal movement in an occupied illegal space.
-- Large footprints must fit completely inside legal map bounds and cannot overlap another occupying creature unless a specific rule permits it.
+- The single occupied cell must be in bounds and cannot overlap another creature's ending position unless a specific rule permits it.
 - Dash, Disengage, difficult terrain, Grappled, Prone, speed changes, teleports, forced movement, flight, swim, burrow, and other movement rules feed the same movement/position engine.
 - Iron Pit no longer grants free ordinary closing. Arena design and AI policy prevent degenerate fleeing/kiting rather than bypassing printed movement.
 

@@ -19,10 +19,10 @@
   function buildHeroDeploymentZone() {
     try {
       return {
-        x: 0,
-        y: 2,
-        width_squares: 8,
-        height_squares: 12,
+        x: 8,
+        y: 6,
+        width_squares: 2,
+        height_squares: 3,
         front_edge: "east",
       };
     } catch (error) {
@@ -34,10 +34,10 @@
   function buildMonsterDeploymentZone() {
     try {
       return {
-        x: 16,
-        y: 2,
-        width_squares: 8,
-        height_squares: 12,
+        x: 14,
+        y: 6,
+        width_squares: 2,
+        height_squares: 3,
         front_edge: "west",
       };
     } catch (error) {

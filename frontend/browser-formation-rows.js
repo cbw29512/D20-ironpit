@@ -28,17 +28,29 @@
 
   function assignFormationRows(members) {
     try {
-      const mixed = [];
-      for (const member of members) {
+      if (members.length > 6) throw new Error("Iron Pit supports at most six combatants per side.");
+      const priority = (member) => {
         const template = member.state.template;
-        if (F().usesBackline(template)) member.state.formation_row = "back";
-        else if (F().hasRangedWeaponOffense(template) && hasMeleeWeapon(template)) mixed.push(member);
-        else member.state.formation_row = "front";
+        if (F().usesBackline(template)) return 2;
+        return F().hasRangedWeaponOffense(template) && hasMeleeWeapon(template) ? 1 : 0;
+      };
+      const ranked = members.map((member, index) => ({ member, index }))
+        .sort((a, b) => priority(a.member) - priority(b.member) || a.index - b.index);
+      const frontIndices = new Set(ranked.filter((item) => priority(item.member) < 2)
+        .slice(0, 3).map((item) => item.index));
+      const backIndices = new Set(ranked.filter((item) =>
+        !frontIndices.has(item.index) && priority(item.member) === 2)
+        .slice(0, 3).map((item) => item.index));
+      for (const { index } of ranked) {
+        if (frontIndices.has(index) || backIndices.has(index)) continue;
+        if (frontIndices.size < 3) frontIndices.add(index);
+        else backIndices.add(index);
       }
-      mixed.forEach((member, index) => {
-        member.state.formation_row = index === 0 ? "front" : "back";
+      members.forEach((member, index) => {
+        const row = frontIndices.has(index) ? "front" : "back";
+        member.state.formation_row = row;
+        member.state.initial_formation_row = row;
       });
-      for (const member of members) member.state.initial_formation_row = member.state.formation_row;
     } catch (error) {
       console.error("Failed to assign browser formation rows", { error });
       throw error;

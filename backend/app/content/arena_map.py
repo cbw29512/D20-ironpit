@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 def build_standard_iron_pit_map() -> BattleMapDefinition:
-    """Return the approved single Iron Pit VTT battlefield: 24 x 16 five-foot squares."""
+    """Return the approved open Iron Pit combat battlefield: 24 x 16 five-foot squares."""
     try:
         return BattleMapDefinition(
             id="iron-pit-standard-vtt",
@@ -23,13 +23,13 @@ def build_standard_iron_pit_map() -> BattleMapDefinition:
 
 
 def build_hero_deployment_zone() -> DeploymentZone:
-    """Return the approved west-side 8 x 12 hero setup zone."""
+    """Return the west-side 2 x 3 starting formation."""
     try:
         return DeploymentZone(
-            x=0,
-            y=2,
-            width_squares=8,
-            height_squares=12,
+            x=8,
+            y=6,
+            width_squares=2,
+            height_squares=3,
             front_edge="east",
         )
     except Exception:
@@ -38,13 +38,13 @@ def build_hero_deployment_zone() -> DeploymentZone:
 
 
 def build_monster_deployment_zone() -> DeploymentZone:
-    """Return the approved east-side 8 x 12 monster setup zone."""
+    """Return the east-side 2 x 3 starting formation."""
     try:
         return DeploymentZone(
-            x=16,
-            y=2,
-            width_squares=8,
-            height_squares=12,
+            x=14,
+            y=6,
+            width_squares=2,
+            height_squares=3,
             front_edge="west",
         )
     except Exception:

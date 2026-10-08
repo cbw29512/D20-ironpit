@@ -33,11 +33,11 @@ const first = member("monster-1", "monsters", mixed);
 const second = member("monster-2", "monsters", mixed);
 R.assignFormationRows([first, second]);
 assert.equal(first.state.formation_row, "front");
-assert.equal(second.state.formation_row, "back");
+assert.equal(second.state.formation_row, "front");
 assert.equal(first.state.initial_formation_row, "front");
-assert.equal(second.state.initial_formation_row, "back");
+assert.equal(second.state.initial_formation_row, "front");
 assert.equal(R.isBackline(first), false);
-assert.equal(R.isBackline(second), true);
+assert.equal(R.isBackline(second), false);
 
 const front = member("hero-front", "heroes", melee);
 const reserve = member("hero-back", "heroes", melee);
@@ -61,4 +61,17 @@ assert.deepEqual(R.syncFormationRows({ heroes: [], monsters: [first, stillBack] 
 assert.equal(stillBack.state.formation_row, "front");
 assert.equal(stillBack.state.initial_formation_row, "back");
 
+const bowOnly = {
+  id: "bow-only", name: "Bow only", kind: "character", ruleset: "2014",
+  size: "medium", max_hp: 10, primary_attack_id: "shortbow",
+  attacks: [shortbow], traits: [], resources: {},
+};
+const loneRanger = member("ranged-only", "heroes", bowOnly);
+R.assignFormationRows([loneRanger]);
+assert.equal(loneRanger.state.initial_formation_row, "back",
+  "A lone ranged specialist starts in the back slot, not automatically in front");
+const rangedTeam = Array.from({ length: 6 }, (_, i) => member(`ranged-${i}`, "heroes", bowOnly));
+R.assignFormationRows(rangedTeam);
+assert.deepEqual(rangedTeam.map((item) => item.state.formation_row),
+  ["back", "back", "back", "front", "front", "front"]);
 console.log("Browser formation-row assignment and universal backline promotion passed.");
