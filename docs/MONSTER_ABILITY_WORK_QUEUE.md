@@ -56,6 +56,8 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 - [ ] **Archmage — Disguise Self (2014), USER DECISION / QUEUED:** Preserve printed Disguise Self in immutable monster source/card. The Archmage AI **never casts Disguise Self in Iron Pit** because its cosmetic appearance change has no arena combat effect. Treat as arena-inert spell choice in the shared spell-action filter (not a new Archmage-specific resolver); no impact to other Archmage spells. **Not implemented/certified.**
 
+- [ ] **Archmage — Detect Magic (2014), USER DECISION / QUEUED:** Retain printed spell on source/card; AI never casts it during Iron Pit combat because its magical detection does not provide a combat action or benefit in the arena. Reuse shared noncombat-spell selection exclusion, not an Archmage-specific branch. Not implemented/certified.
+
 ## Status accounting
 
 - `QUEUED`: named blocker only; source/mechanic check not completed.
