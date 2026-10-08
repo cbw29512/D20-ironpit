@@ -152,7 +152,7 @@ def test_incoming_damage_choose_timed_defensive_variant() -> None:
         (0.0, 0.0, "fire-shield-warm"),
     ]:
         with patch(
-            "app.combat.precombat_buffs.score_enemy_damage_types",
+            "app.combat.timed_defense_selection.score_enemy_damage_types",
             return_value={DamageType.FIRE: fire, DamageType.COLD: cold},
         ):
             choice = choose_opening_buff(caster, setup)
