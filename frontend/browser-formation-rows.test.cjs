@@ -53,6 +53,7 @@ assert.equal(reserve.state.formation_row, "front");
 
 const stillBack = member("ranged-back", "monsters", mixed);
 stillBack.state.formation_row = "back";
+stillBack.state.initial_formation_row = "back";
 first.state.current_hp = 0;
 first.state.is_alive = false;
 first.state.is_dead = true;
