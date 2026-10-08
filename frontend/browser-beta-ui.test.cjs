@@ -100,7 +100,7 @@ const click = async (id) => { await el(id).listeners.click(); };
   assert.equal(resolutions, 1);
   assert.ok(api.state.hasRun, JSON.stringify(errors));
   assert.equal(el("result-panel").hidden, false);
-  assert.match(el("status").textContent, /^(HEROES WIN|MONSTERS WIN|DRAW)$/);
+  assert.match(el("status").textContent, /^(TEAM A WINS|TEAM B WINS|DRAW)$/);
   const battle = api.state.session.battle;
   assert.equal(el("battle-log").children.length, battle.events.length);
   assert.ok(el("battle-log").children.every((row) => row.children[0].textContent));
