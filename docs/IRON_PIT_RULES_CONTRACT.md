@@ -326,21 +326,22 @@ A test harness may start a buff or debuff so a combination can be asserted. Purp
 
 ## 10. Arena and movement
 
-The standard Iron Pit is one persistent tactical battlefield. It is intentionally compact enough to prevent kiting/fleeing gameplay while preserving actual movement, creature size, reach, range, and area geometry.
+The standard Iron Pit is an **automated D&D 5e combat simulator**, not a manually played VTT. Combatants begin in compact six-slot formations, then move and fight on one persistent open grid. The Pit's aggressive AI prohibits voluntary retreat, kiting and circling to prolong combat. Movement, reach, range and AoE remain actual measured grid mechanics resolved behind the scenes.
 
-Standard battlefield:
+Standard battlefield and deterministic deployment:
 
-- 24 × 16 squares;
-- each square is 5 ft × 5 ft;
-- physical dimensions are 120 ft × 80 ft;
-- heroes deploy in `x = 0..7, y = 2..13`, facing the center from the east edge of that zone;
-- monsters deploy in `x = 16..23, y = 2..13`, facing the center from the west edge of that zone;
-- `x = 8..15` is the central open Pit lane.
+- **24 × 16 open battlefield**, each square 5 ft × 5 ft (120 ft × 80 ft); preserve ordinary movement/pathfinding after deployment.
+- Each team has **up to six initial slots** arranged in **three lanes × two depth rows**, where the nearer row is the front (nominal melee) and the farther row the back (nominal ranged). This formation is for **initial placement**, not a 3 × 2 enclosed combat map or an attack-type restriction.
+- West-side starting zone: `x = 8..9, y = 6..8`; `x = 9` is front. East-side starting zone: `x = 14..15, y = 6..8`; `x = 14` is front. The two front rows start **25 feet apart measured center-to-center** on the same lane. These zones are the default deployment anchors, not battle boundaries.
+- At most three living combatants start in each team's front slots and at most three in its back slots. Choose front candidates by legal melee capacity, while preserving source tactics; all-melee, all-ranged, or mixed six-combatant teams must still fit.
+- Each combatant occupies **one 5-ft square in the Pit regardless of printed size** (Tiny through Gargantuan), so six dragons can fight six dragons. This explicit Pit-magic exception affects *spatial footprint* only: printed size remains authoritative for size-dependent checks, grabs, and abilities.
+- Every team member uses the same universal engine. The game must eventually permit monsters or pregens on **either** side, including mixed teams; this selection/roster interface is a separate work item if not yet supported.
 
 Permanent arena rules:
 
 - Each combatant has one authoritative `x,y` grid position. Movement, reach, range, Opportunity Attacks, forced movement, and area geometry consume that same state.
-- Printed creature size determines occupied footprint: Tiny/Small/Medium = 1×1, Large = 2×2, Huge = 3×3, Gargantuan = 4×4.
+- If the final active front-row ally is defeated or removed, remaining back-row allies become the effective frontline automatically, with no action or movement cost. Their existing `x,y` positions **do not move**; it is a tactical-row state update, not teleportation. After deployment, row labels are not hard walls or movement constraints.
+- All combatants occupy exactly one 5-ft cell in the Iron Pit. Printed creature size is retained for non-footprint rules. Source size does not alter deployment, pathfinding collision, AoE membership, or grid distance.
 - The moving battlefield representation is the combatant's card/art presentation rendered inside that footprint; presentation never determines mechanics.
 - Voluntary movement uses actual effective Speed and legal movement cost. The Pit deity no longer grants free ordinary closing or hidden movement distance.
 - Default Arena AI does not voluntarily flee, kite, circle, run to map edges, seek cover, or reposition without an action-driven reason. If a supported offensive action is not yet reachable this turn but the pathfinder proves a legal eventual route to a usable position, the combatant advances as far as useful movement permits along that route. It does not stay still merely because it cannot attack this turn.
