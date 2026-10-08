@@ -5,7 +5,7 @@
   const T = () => window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS;
   const R = () => window.IRON_PIT_BROWSER_SELECTABLE_DAMAGE_RESISTANCE;
 
-  function timedChoice(member) {
+  function timedChoice(member, setup) {
     try {
       const choices = (member.state.template.timed_self_buff_actions || []).filter((action) => {
         if ((action.activationTiming || "action") !== "action") return false;
@@ -15,7 +15,25 @@
         return (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1);
       });
       choices.sort((a, b) => (b.priority || 0) - (a.priority || 0));
-      return choices[0] || null;
+      const preferred = choices[0] || null;
+      if (!preferred || preferred.selectionStrategy !== "incoming-damage") return preferred;
+      const variants = choices.filter((action) =>
+        action.selectionGroup === preferred.selectionGroup
+        && action.selectionStrategy === preferred.selectionStrategy
+        && action.resourceId === preferred.resourceId);
+      const types = [...new Set(variants.map((action) => {
+        if ((action.damageResistances || []).length !== 1) {
+          throw new Error("Incoming-damage selection requires exactly one resistance type.");
+        }
+        return action.damageResistances[0];
+      }))];
+      if (!R()?.scoresFor) throw new Error("Opponent damage-type scoring is unavailable.");
+      const incoming = R().scoresFor(member, setup, types);
+      if (!Object.values(incoming).some((score) => score > 0)) return preferred;
+      variants.sort((a, b) =>
+        (incoming[b.damageResistances[0]] || 0) - (incoming[a.damageResistances[0]] || 0)
+        || (b.priority || 0) - (a.priority || 0));
+      return variants[0];
     } catch (error) {
       console.error("Opening timed-buff choice failed.", { combatant: member?.combatant_id, error });
       throw error;
@@ -26,7 +44,7 @@
     try {
       if (member.state.opening_buff_id) return null;
       const spellChoice = P()?.choose(member, setup) || null;
-      const timed = T() ? timedChoice(member) : null;
+      const timed = T() ? timedChoice(member, setup) : null;
       const candidates = [];
       if (spellChoice) candidates.push({
         kind: "spell",
