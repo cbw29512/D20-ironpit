@@ -38,6 +38,8 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 - [ ] **Harpy — Luring Song (2014), source:extra-action:** USER AGREED: 300-ft audible range covers full 120×80-ft arena; failed DC 11 Wisdom save uses shared Charmed + Incapacitated. While affected and more than 5 ft away, compelled movement on the creature's turn via existing pathfinding, toward Harpy until within 5-ft melee range or available movement exhausted; **not teleportation**. Preserve printed hearing/creature-type eligibility, end-of-turn and damage-triggered repeat saves, 24-hour immunity on a success, singing continuation/action costs, and duration. Movement is the outstanding composition; no bespoke condition. Decision/specification only, not implemented or certified.
 
+- [ ] **Invisible Stalker — Faultless Tracker (2014): USER DECISION / SOURCE RETAINED, ARENA-INERT.** Preserve printed quarry/summoner tracking on monster source and card; never grant combat targeting, vision, hit bonuses, or actions from it in Iron Pit. Existing universal Invisibility remains fully functional; normal Slam attacks remain. Classify via reusable arena-inert trait handling; update generated blocker report and certify before completion. **Decision recorded, not implemented/certified.**
+
 ## Status accounting
 
 - `QUEUED`: named blocker only; source/mechanic check not completed.
