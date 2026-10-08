@@ -12,11 +12,12 @@
     for (const enemy of enemies || []) {
       const template = enemy.state.template;
       for (const attack of template.attacks || []) {
-        if (!(attack.damageType in result)) continue;
         const qualifiers = window.IRON_PIT_BROWSER_MODIFIERS?.damageSourceQualifiers(enemy.state, attack)
           || new Set(["attack", "weapon", attack.kind, ...(attack.damageSourceQualifiers || [])]);
         if ([...forbidden].some((item) => qualifiers.has(item))) continue;
-        result[attack.damageType] += average(attack.diceCount || 0, attack.diceSize || 6, attack.damageBonus || 0);
+        if (attack.damageType in result) {
+          result[attack.damageType] += average(attack.diceCount || 0, attack.diceSize || 6, attack.damageBonus || 0);
+        }
         for (const rider of attack.onHitDamage || []) {
           if (rider.damageType in result) result[rider.damageType] += average(rider.diceCount || 0, rider.diceSize || 6, rider.damageBonus || 0);
         }
