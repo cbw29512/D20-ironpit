@@ -19,14 +19,10 @@
 
   function runtimeTemplate(card, side) {
     if (!card?.runnable_template_id) return { id: card?.id, name: card?.name, kind: card?.kind, class_id: card?.class_id, ruleset: card?.ruleset };
-    if (card.ruleset === "2014") {
-      return side === "heroes"
-        ? window.IRON_PIT_BROWSER_HEROES?.[card.runnable_template_id] || card
-        : window.IRON_PIT_BROWSER_MONSTERS_2014?.[card.runnable_template_id] || card;
-    }
-    return side === "heroes"
-      ? window.IRON_PIT_BROWSER_HEROES?.[card.runnable_template_id] || card
-      : window.IRON_PIT_BROWSER_MONSTERS?.[card.runnable_template_id] || card;
+    if (card.kind === "character") return window.IRON_PIT_BROWSER_HEROES?.[card.runnable_template_id] || card;
+    return (card.ruleset === "2014"
+      ? window.IRON_PIT_BROWSER_MONSTERS_2014?.[card.runnable_template_id]
+      : window.IRON_PIT_BROWSER_MONSTERS?.[card.runnable_template_id]) || card;
   }
 
   function renderPreview(card, side) {
@@ -37,7 +33,7 @@
     const artwork = window.IRON_PIT_COMBATANT_ART?.markup(template) || "";
     const fallback = window.IRON_PIT_FIGURE_PORTRAITS?.markup(template) || "";
     frame.hidden = false;
-    const kind = side === "heroes" ? "hero-art" : "monster-art";
+    const kind = card.kind === "character" ? "hero-art" : "monster-art";
     const hasArt = artwork ? " has-art" : "";
     frame.className = `picker-portrait-frame fighter-portrait ${side} ${kind}${hasArt}`;
     frame.innerHTML = `${artwork}${fallback}`;
@@ -73,7 +69,7 @@
   }
 
   function populateMonster(state, existing, side = "monsters") {
-    const all = state.catalog[side], crSelect = el("picker-cr"), monsterSelect = el("picker-monster");
+    const all = state.catalog.monsters, crSelect = el("picker-cr"), monsterSelect = el("picker-monster");
     crSelect.replaceChildren(option("all", `All CRs · ${all.length} monsters`, true));
     P().challengeRatings(all).forEach((cr) => crSelect.append(option(cr, `CR ${cr}`)));
 
@@ -104,20 +100,26 @@
 
   function selectedCard(state) {
     if (!active) return null;
-    if (active.side === "heroes") return chosenHero(state);
+    if (el("picker-kind").value === "pregen") return chosenHero(state);
     return state.catalog.monsters.find((monster) => monster.id === el("picker-monster").value) || null;
   }
 
   function open(state, side, index, onConfirm, onRemove) {
     active = { side, index, onConfirm, onRemove };
     const existing = (side === "heroes" ? state.heroSlots : state.monsterSlots)[index];
-    const sideLabel = side === "heroes" ? "HERO" : "MONSTER";
+    const sideLabel = side === "heroes" ? "TEAM A" : "TEAM B";
     el("picker-kicker").textContent = `${sideLabel} SLOT ${index + 1}`;
-    el("picker-title").textContent = existing ? `Change ${existing.name}` : side === "monsters" ? "Choose a monster" : "Choose a hero";
-    const useMonsterPicker = side === "monsters";
-    el("hero-picker-fields").hidden = useMonsterPicker; el("monster-picker-fields").hidden = !useMonsterPicker;
+    el("picker-title").textContent = existing ? `Change ${existing.name}` : "Choose a combatant";
     el("remove-card").hidden = !existing; el("confirm-card").textContent = "Add to slot";
-    if (useMonsterPicker) populateMonster(state, existing, side); else populateHero(state, existing);
+    el("picker-kind").value = existing ? (existing.kind === "monster" ? "monster" : "pregen") : (side === "heroes" ? "pregen" : "monster");
+    const refreshKind = () => {
+      const monsterMode = el("picker-kind").value === "monster";
+      el("hero-picker-fields").hidden = monsterMode;
+      el("monster-picker-fields").hidden = !monsterMode;
+      if (monsterMode) populateMonster(state, existing?.kind === "monster" ? existing : null, side);
+      else populateHero(state, existing?.kind === "character" ? existing : null);
+    };
+    el("picker-kind").onchange = refreshKind; refreshKind();
     el("card-picker").showModal();
   }
 
