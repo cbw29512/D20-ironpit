@@ -37,9 +37,9 @@ sets the work lane. Rules live in the rules contract, not this tracker.
 | P1 M-020 | Complete, merged #645 | Yeti Fear of Fire binds applied fire damage to timed Disadvantage on attack rolls and ability checks until the end of its next turn. | Reuses shared typed-damage trigger and timed roll-scope modifier; exact-head fix merged. |
 | P1 M-021 | Active, clean rebuild | Flesh Golem Aversion of Fire has the same printed combat semantics as Fear of Fire. | Bind the same universal fire-triggered timed Disadvantage rule under the printed name Aversion of Fire; Flesh Golem remains blocked only by Berserk. |
 
-| P1 M-025 | Policy locked; binding pending | 2014 Bearded Devil Steadfast grants Frightened-save Advantage only when an active ally exists. In the Pit, any active ally qualifies for printed 30-foot range. | Reuse the universal Advantage modifier and an existing fight-state ally-presence predicate; grant schema currently has no ally-presence qualifier, so do not mark the trait bound unconditionally. Test ally present, last ally defeated, and unrelated saves. Separate Bearded Devil attack blockers remain. |
+| P1 M-025 | Policy locked; binding pending | 2014 Bearded Devil Steadfast grants immunity to Frightened while an active ally exists. In the Pit, any active ally qualifies for printed 30-foot range. | Reuse condition immunity plus existing ally-presence predicate. Test ally present and last ally defeated; do not model Steadfast as save Advantage. Separate Bearded Devil attack blockers remain. |
 
-## Current evidence
+| P1 M-026 | Scoped, pending implementation | 2014 Bearded Devil Glaive Infernal Wound accumulates ongoing damage; magical healing clears the effect. Medicine check deliberately excluded under Pit rule. | Reuse shared timed damage and healing-triggered effect removal, with tests for stacking, magical versus nonmagical healing, and reset. |\n\n## Current evidence
 
 Merged source baseline `403ec045b27391c50a4ca1cfb3cd2cac632e1291` from [PR #637](https://github.com/cbw29512/D20-ironpit/pull/637).
 Verified feature head `af78af31111fd2c1f99396fc2d4639c13dbdebf4`: all four required exact-head gates passed.
