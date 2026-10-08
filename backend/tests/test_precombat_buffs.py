@@ -119,6 +119,7 @@ def test_incoming_damage_choose_timed_defensive_variant() -> None:
     from unittest.mock import patch
 
     from app.combat.precombat_buffs import choose_opening_buff
+    from app.combat.timed_self_buff_policy import choose_timed_self_buff_action
     from app.content.warlock_2024_zone_spells import fire_shield_2024
     from app.domain.weapons_base import DamageType
 
@@ -156,6 +157,9 @@ def test_incoming_damage_choose_timed_defensive_variant() -> None:
             return_value={DamageType.FIRE: fire, DamageType.COLD: cold},
         ):
             choice = choose_opening_buff(caster, setup)
+            combat_choice = choose_timed_self_buff_action(caster, setup)
+        assert combat_choice is not None
+        assert combat_choice.id == expected
         assert choice is not None
         assert choice.kind == "timed-self-buff"
         assert choice.timed_action is not None
