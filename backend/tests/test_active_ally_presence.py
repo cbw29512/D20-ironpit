@@ -16,9 +16,9 @@ def test_active_ally_presence_tracks_live_fight_state():
     try:
         source = next(monster for monster in load_monster_source_2014() if monster.id == "satyr")
         template = compile_combatant(adapt_basic_monster_2014(source))
-        owner = EncounterCombatant(combatant_id="owner", side="monsters", state=build_combatant_state(template))
-        ally = EncounterCombatant(combatant_id="ally", side="monsters", state=build_combatant_state(template))
-        foe = EncounterCombatant(combatant_id="foe", side="heroes", state=build_combatant_state(template))
+        owner = EncounterCombatant(combatant_id="owner", side="monsters", position_ft=0, state=build_combatant_state(template))
+        ally = EncounterCombatant(combatant_id="ally", side="monsters", position_ft=5, state=build_combatant_state(template))
+        foe = EncounterCombatant(combatant_id="foe", side="heroes", position_ft=30, state=build_combatant_state(template))
         setup = EncounterSetup(heroes=[foe], monsters=[owner, ally], hero_total_levels=1, monster_total_cr="1")
         assert has_active_ally(owner, setup)
         assert not has_active_ally(foe, setup)
