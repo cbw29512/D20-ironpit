@@ -237,6 +237,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Identify — user decision / queued:** Keep the printed spell but never cast it in Iron Pit. Implement by shared noncombat-spell choice exclusion; not certified.
 - **Detect Thoughts — user decision / queued:** Printed spell retained; AI never casts it in arena. Shared noncombat-spell selection exclusion; not implemented/certified.
 - **Scrying — user decision / queued:** Useless in Iron Pit; retain source/card spell but never choose as a combat action. This is a universal spell-level ruling shared by every caster; see shared spell policy in MONSTER_ABILITY_WORK_QUEUE.md. Not implemented/certified.
+- **Mage Hand — user decision / queued, both editions:** Remains printed on source/card, but never used in arena combat. Universal spell-level policy shared by 2014 and 2024 casters. Not implemented/certified.
 
 ### 027. Balor
 
