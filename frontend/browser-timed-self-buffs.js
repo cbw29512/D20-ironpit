@@ -173,27 +173,18 @@
         resolve: ({ sequence, round, member, setup }) => {
           const action = choose(member, setup, "start_turn");
           if (!action) return null;
-          let featureRoll = null;
-          if (action.startTurnRollDieSize != null) {
-            if (!window.IRON_PIT_DICE?.roll) throw new Error(`${action.name} requires the canonical browser dice provider.`);
-            const roll = window.IRON_PIT_DICE.roll(action.startTurnRollDieSize);
-            featureRoll = {
-              notation: `1d${action.startTurnRollDieSize}`, rolls: [roll],
-              selected_roll: roll, modifier: 0, mode: "normal", total: roll,
-            };
-            if (roll < action.startTurnRollMinimum) {
-              return {
-                events: [{
-                  sequence, round_number: round, event_type: "feature",
-                  actor_id: member.combatant_id, actor_name: member.state.template.name,
-                  target_id: member.combatant_id, target_name: member.state.template.name,
-                  feature_id: action.id, feature_roll: featureRoll, animation: action.animation || "buff",
-                  description: `${member.state.template.name} rolls ${roll} for ${action.name}; the buff does not activate.`,
-                }],
-                sequence: sequence + 1, claimed: false,
-              };
-            }
-          }
+          const trigger = P().startTurnTrigger(action);
+          const featureRoll = trigger.featureRoll;
+          if (!trigger.passed) return {
+            events: [{
+              sequence, round_number: round, event_type: "feature",
+              actor_id: member.combatant_id, actor_name: member.state.template.name,
+              target_id: member.combatant_id, target_name: member.state.template.name,
+              feature_id: action.id, feature_roll: featureRoll, animation: action.animation || "buff",
+              description: `${member.state.template.name} rolls ${featureRoll.total} for ${action.name}; the buff does not activate.`,
+            }],
+            sequence: sequence + 1, claimed: false,
+          };
           const event = resolve(sequence, round, member, action, {
             spendActionCost: false,
             affectedStates: [...setup.heroes, ...setup.monsters].map((entry) => entry.state),
