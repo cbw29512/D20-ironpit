@@ -6,6 +6,7 @@ from typing import Literal
 from app.combat.action_economy import is_available
 from app.combat.condition_rules import has_condition
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.hit_points import effective_max_hp
 from app.combat.spellcasting import slot_spell_available
 from app.combat.suppression_zone_geometry import verbal_casting_blocked
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -63,10 +64,13 @@ def timed_self_buff_active(
     action: TimedSelfBuffAction,
 ) -> bool:
     try:
-        return any(
-            effect.source_id == member.combatant_id
-            and effect.source_effect_id == action.id
-            for effect in member.state.timed_effects
+        return (
+            action.id in member.state.active_effect_ids
+            or any(
+                effect.source_id == member.combatant_id
+                and effect.source_effect_id == action.id
+                for effect in member.state.timed_effects
+            )
         )
     except Exception as exc:
         logger.exception(
@@ -74,6 +78,29 @@ def timed_self_buff_active(
             member.combatant_id,
         )
         raise RuntimeError("Timed self-buff activity could not be evaluated.") from exc
+
+
+def sync_hp_ended_self_buffs(state) -> list[str]:
+    """End existing self-buff states whose source says full HP ends them."""
+    try:
+        if state.current_hp < effective_max_hp(state):
+            return []
+        ended = [
+            action.id for action in state.template.timed_self_buff_actions
+            if action.ends_at_full_hp and action.id in state.active_effect_ids
+        ]
+        if ended:
+            state.active_effect_ids = [
+                effect_id for effect_id in state.active_effect_ids if effect_id not in ended
+            ]
+            state.timed_effects = [
+                effect for effect in state.timed_effects
+                if effect.effect_id not in ended and effect.source_effect_id not in ended
+            ]
+        return ended
+    except Exception as exc:
+        logger.exception("Failed full-HP self-buff cleanup for %s.", state.template.name)
+        raise RuntimeError("Self-buff HP lifecycle could not be evaluated.") from exc
 
 
 def _friendly_aura_is_relevant(
@@ -165,6 +192,10 @@ def choose_timed_self_buff_action(
                         resource is not None
                         and resource.current_uses >= action.resource_cost
                     )
+                )
+                and (
+                    action.start_turn_max_current_hp is None
+                    or member.state.current_hp <= action.start_turn_max_current_hp
                 )
                 and not timed_self_buff_active(member, action)
                 and (not action.concentration or member.state.concentration is None)
