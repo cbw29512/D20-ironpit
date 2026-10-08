@@ -40,6 +40,11 @@ class TimedSelfBuffAction(BaseModel):
     name: str
     action_cost: ActionCost = "action"
     activation_timing: Literal["action", "start_turn", "passive"] = "action"
+    start_turn_max_current_hp: int | None = Field(default=None, ge=1)
+    start_turn_roll_die_size: int | None = Field(default=None, ge=2, le=100)
+    start_turn_roll_minimum: int | None = Field(default=None, ge=1)
+    ends_at_full_hp: bool = False
+    target_policy: Literal["normal", "nearest_visible_creature"] = "normal"
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=200)
     duration_rounds: int | None = Field(default=None, ge=1, le=600)
@@ -87,6 +92,13 @@ class TimedSelfBuffAction(BaseModel):
                 aura = self.hostile_start_turn_condition_aura
                 if aura is not None and aura.condition_expiry_timing is None:
                     raise ValueError("Passive condition auras require explicit target expiry.")
+            trigger_fields = (self.start_turn_max_current_hp, self.start_turn_roll_die_size, self.start_turn_roll_minimum)
+            if any(item is not None for item in trigger_fields) and self.activation_timing != "start_turn":
+                raise ValueError("Start-turn buff triggers require start_turn activation timing.")
+            if (self.start_turn_roll_die_size is None) != (self.start_turn_roll_minimum is None):
+                raise ValueError("Start-turn roll triggers require both die size and minimum roll.")
+            if self.start_turn_roll_die_size is not None and self.start_turn_roll_minimum > self.start_turn_roll_die_size:
+                raise ValueError("Start-turn roll minimum cannot exceed die size.")
             if self.action_cost == "reaction":
                 raise ValueError("Timed self-buff Actions currently require an on-turn Action or Bonus Action.")
             if len(set(self.condition_ids)) != len(self.condition_ids):
@@ -128,6 +140,7 @@ class TimedSelfBuffAction(BaseModel):
                 or self.spell_save_dc_bonus
                 or self.spell_attack_advantage
                 or self.modifier_effects
+                or self.target_policy != "normal"
                 or self.concentration
             ):
                 raise ValueError("Timed self-buff requires at least one combat effect.")
