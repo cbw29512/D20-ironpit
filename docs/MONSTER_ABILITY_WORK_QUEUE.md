@@ -50,6 +50,8 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 - [ ] **Stirge (2014) — USER DECISION: REMOVED FOR NOW.** Keep original monster source and Blood Drain information intact, but Stirge is excluded from Iron Pit roster/combat. Do not implement attachment or ongoing Blood Drain mechanics at this stage. Track as explicitly excluded, **not** certified; revisit only on a later user decision.
 
+- [ ] **Stone Giant — Rock Catching (2014): USER-APPROVED ARENA SIMPLIFICATION / QUEUED.** On being hit by an eligible ranged attack, the Stone Giant may spend its **one Reaction per round** to make a **DC 10 Dexterity saving throw**. Success: negate that attack's damage; failure: resolve normal damage through universal damage defenses. User proposes all ranged attacks as eligible, broader than printed RAW ('rock or similar object hurled at it'); explicitly mark this as an Iron Pit house simplification, and verify whether ranged spells should be excluded before binding so no unintended cancellation of spell AoE. Reuse Reaction economy, saves and post-hit damage cancellation, with attack log recording save result. **Not yet implemented/certified.**
+
 ## Status accounting
 
 - `QUEUED`: named blocker only; source/mechanic check not completed.
