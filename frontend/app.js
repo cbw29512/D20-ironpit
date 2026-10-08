@@ -56,7 +56,7 @@
     return { cards, indexes };
   }
   function validate(cards, side) {
-    const label = state.ruleset === "2014" ? (side === "heroes" ? "Team A" : "Team B") : side === "heroes" ? "Hero" : "Monster";
+    const label = side === "heroes" ? "Team A" : "Team B";
     if (!cards.length) return `${label} side needs at least one card.`;
     const blocked = cards.find((card) => card.coverage_status !== "raw_ready" || !card.runnable_template_id);
     return blocked ? `${blocked.name} is not ready for a fight yet.` : null;
@@ -73,7 +73,7 @@
       // Selections are immutable cards; rebuilding the view drops all live fight overlays.
       if (clearBoard) { state.heroSlots.fill(null); state.monsterSlots.fill(null); window.IRON_PIT_COMBAT_PRESETS?.clear?.(); }
       invalidateRun();
-      const message = clearBoard ? "Board cleared. Pick heroes and monsters, or choose a ready-made fight." : "Fight reset. Loaded cards restored; ready for a fresh fight.";
+      const message = clearBoard ? "Board cleared. Add pregens or monsters to either team, or choose a preset fight." : "Fight reset. Loaded cards restored; ready for a fresh fight.";
       clearResult(message); render(); el("status").textContent = message;
     } catch (error) { console.error("Battle reset failed", { clearBoard, error }); el("status").textContent = "Could not reset the battle."; }
   }
@@ -118,7 +118,7 @@
       state.ruleset = nextRuleset; state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog(nextRuleset);
       state.heroSlots.fill(null); state.monsterSlots.fill(null); window.IRON_PIT_COMBAT_PRESETS?.clear?.(); invalidateRun();
       clearResult(`${nextRuleset} loaded. Previous matchup cleared so editions stay separate.`); rulesetUi().update(state); render();
-      el("status").textContent = `${nextRuleset} ready. Pick heroes and monsters, or choose a ready-made fight.`;
+      el("status").textContent = `${nextRuleset} ready. Add pregens or monsters to either team, or choose a preset fight.`;
     } catch (error) {
       console.error("Ruleset switch failed", error); if (selector) selector.value = state.ruleset;
       el("status").textContent = `Could not load the ${nextRuleset} ruleset.`;

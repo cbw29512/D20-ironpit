@@ -52,16 +52,16 @@
   function buildSetup(selection) {
     try {
       const requestedRuleset = selectedRuleset(selection), registry = rosters(requestedRuleset);
-      const heroMembers = selection.hero_ids.map((id, index) => {
-        if (!registry.heroes[id]) throw new Error(`Unknown certified hero for ${requestedRuleset}: ${id}`);
-        const template = cloneTemplate(registry.heroes[id]);
-        return { combatant_id: `hero-${index + 1}:${id}`, side: "heroes", position_ft: F().startingPosition(template, "heroes"), state: S().buildState(template) };
-      });
-      const monsterMembers = selection.monster_ids.map((id, index) => {
-        if (!registry.monsters[id]) throw new Error(`Unknown certified monster for ${requestedRuleset}: ${id}`);
-        const template = cloneTemplate(registry.monsters[id]);
-        return { combatant_id: `monster-${index + 1}:${id}`, side: "monsters", position_ft: F().startingPosition(template, "monsters"), state: S().buildState(template) };
-      });
+      const collisions = Object.keys(registry.heroes).filter((id) => Object.hasOwn(registry.monsters, id)); if (collisions.length) throw new Error(`Ambiguous certified card IDs: ${collisions.join(", ")}`);
+      const card = (id, side) => {
+        const template = registry.heroes[id] || registry.monsters[id];
+        if (!template) throw new Error(`Unknown certified ${side === "heroes" ? "hero" : "monster"} for ${requestedRuleset}: ${id}`);
+        return cloneTemplate(template); };
+      const member = (id, index, side) => {
+        const template = card(id, side), label = side === "heroes" ? "hero" : "monster";
+        return { combatant_id: `${label}-${index + 1}:${id}`, side, position_ft: F().startingPosition(template, side), state: S().buildState(template) }; };
+      const heroMembers = selection.hero_ids.map((id, index) => member(id, index, "heroes"));
+      const monsterMembers = selection.monster_ids.map((id, index) => member(id, index, "monsters"));
       const ruleset = resolveRuleset([...heroMembers, ...monsterMembers]);
       if (ruleset !== requestedRuleset) throw new Error(`Selected ruleset ${requestedRuleset} does not match combatant ruleset ${ruleset}.`);
       const mapDefinition = placeStandardGrid(heroMembers, monsterMembers);

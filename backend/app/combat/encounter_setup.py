@@ -48,10 +48,9 @@ def _format_fraction(value: Fraction) -> str:
 
 def _hero_level_total(heroes: list[EncounterCombatant]) -> int:
     try:
-        levels = [hero.state.template.level for hero in heroes]
-        if any(level is None for level in levels):
-            raise ValueError("Every hero card must have a character level.")
-        return sum(int(level) for level in levels)
+        # This legacy total counts pregen levels on side A; monster cards
+        # legitimately lack a character level. Either side can hold any card kind.
+        return sum(int(member.state.template.level or 0) for member in heroes)
     except Exception:
         logger.exception("Failed to total hero levels.")
         raise
@@ -62,9 +61,8 @@ def _monster_cr_total(monsters: list[EncounterCombatant]) -> str:
         total = Fraction(0, 1)
         for monster in monsters:
             challenge_rating = monster.state.template.challenge_rating
-            if challenge_rating is None:
-                raise ValueError("Every monster card must have a challenge rating.")
-            total += Fraction(challenge_rating)
+            if challenge_rating is not None:
+                total += Fraction(challenge_rating)
         return _format_fraction(total)
     except Exception:
         logger.exception("Failed to total monster challenge ratings.")
@@ -111,12 +109,18 @@ def build_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
         roster = build_arena_roster(selection.ruleset)
         heroes = _index_templates(roster.characters)
         monsters = _index_templates(roster.monsters)
+        duplicate_ids = set(heroes) & set(monsters)
+        if duplicate_ids:
+            raise ValueError(f"Ambiguous card identifiers across rosters: {sorted(duplicate_ids)}")
+        # The historical hero_ids/monster_ids fields identify teams A/B, not
+        # restricted content classes. Both sides use the certified card union.
+        cards = {**heroes, **monsters}
         hero_states = [
-            _member(card_id, index, "heroes", heroes)
+            _member(card_id, index, "heroes", cards)
             for index, card_id in enumerate(selection.hero_ids, start=1)
         ]
         monster_states = [
-            _member(card_id, index, "monsters", monsters)
+            _member(card_id, index, "monsters", cards)
             for index, card_id in enumerate(selection.monster_ids, start=1)
         ]
         ruleset = resolve_encounter_ruleset([

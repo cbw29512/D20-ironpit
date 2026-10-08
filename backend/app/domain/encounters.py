@@ -35,6 +35,8 @@ class EncounterSelection(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     ruleset: RulesetId = DEFAULT_RULESET
+    # Legacy wire names: hero_ids is Team A; monster_ids is Team B.
+    # Either team may include monsters, pregens, or both.
     hero_ids: list[str] = Field(min_length=1, max_length=6)
     monster_ids: list[str] = Field(min_length=1, max_length=6)
     opening_conditions: list[OpeningConditionBinding] = Field(default_factory=list)
@@ -50,7 +52,7 @@ class EncounterCombatant(BaseModel):
 class EncounterSetup(BaseModel):
     heroes: list[EncounterCombatant] = Field(min_length=1, max_length=6)
     monsters: list[EncounterCombatant] = Field(min_length=1, max_length=6)
-    hero_total_levels: int = Field(ge=1, le=120)
+    hero_total_levels: int = Field(ge=0, le=120)
     monster_total_cr: str
     ruleset: RulesetId = DEFAULT_RULESET
     map_definition: BattleMapDefinition | None = None
