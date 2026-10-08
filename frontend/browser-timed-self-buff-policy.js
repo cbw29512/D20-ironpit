@@ -107,25 +107,20 @@
     }
   }
 
-  function syncHpEnded(state) {
-    try {
-      const runtime = window.IRON_PIT_BROWSER_STATE;
-      if (!runtime?.effectiveMaxHp) throw new Error("Self-buff HP lifecycle requires state effectiveMaxHp.");
-      if (state.current_hp < runtime.effectiveMaxHp(state)) return [];
-      const ended = (state.template.timed_self_buff_actions || [])
-        .filter((action) => action.endsAtFullHp && (state.active_effect_ids || []).includes(action.id))
-        .map((action) => action.id);
-      if (ended.length) {
-        state.active_effect_ids = (state.active_effect_ids || []).filter((id) => !ended.includes(id));
-        state.timed_effects = (state.timed_effects || [])
-          .filter((effect) => !ended.includes(effect.effect_id) && !ended.includes(effect.source_effect_id));
-      }
-      return ended;
-    } catch (error) {
-      console.error("Failed full-HP self-buff cleanup.", { combatant: state?.template?.name, error });
-      throw error;
-    }
+  function startTurnTrigger(action) {
+    if (action.startTurnRollDieSize == null) return { passed: true, featureRoll: null };
+    if (!window.IRON_PIT_DICE?.roll) throw new Error(`${action.name} requires the canonical browser dice provider.`);
+    const roll = window.IRON_PIT_DICE.roll(action.startTurnRollDieSize);
+    return {
+      passed: roll >= action.startTurnRollMinimum,
+      featureRoll: {
+        notation: `1d${action.startTurnRollDieSize}`, rolls: [roll],
+        selected_roll: roll, modifier: 0, mode: "normal", total: roll,
+      },
+    };
   }
 
-  window.IRON_PIT_BROWSER_TIMED_SELF_BUFF_POLICY = { active, choose, concentrationGrantOnly, syncHpEnded };
+  window.IRON_PIT_BROWSER_TIMED_SELF_BUFF_POLICY = {
+    active, choose, concentrationGrantOnly, startTurnTrigger,
+  };
 })();
