@@ -216,6 +216,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:reaction`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Map the exact trigger, eligibility, timing and effect to shared reaction grammar; preserve one-Reaction economy.
+- **User ruling / queued:** Reuse existing 1 Reaction per round for Rock Catching: when a qualifying ranged attack hits, make DC 10 Dexterity save; pass negates damage, fail resolves ordinary damage and defenses. User broadened rock/similar hurled objects to ranged attacks as Iron Pit simplification; implementation must distinguish ranged attack hits from spells/AoE before activating. Source text remains unchanged. **Not implemented/certified.**
 
 ### 025. Acolyte
 
