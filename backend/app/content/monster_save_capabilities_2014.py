@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.content.monster_arena_action_policy_2014 import action_label_2014, arena_unavailable_recharge_ids_2014
 from app.content.monster_save_control_2014 import (
     compile_failed_save_control_2014,
     supports_failed_save_control_2014,
@@ -52,17 +53,15 @@ def supports_recharge_rules_2014(monster: SourceMonster2014) -> bool:
         supported_resources = {
             str(action.get("resource_id")) for action in supported if action.get("resource_id")
         }
+        excluded_ids = arena_unavailable_recharge_ids_2014(monster)
         return all(
-            action_id in supported_ids or action_id in supported_resources
+            action_id in supported_ids or action_id in supported_resources or action_id in excluded_ids
             for action_id in monster.action_recharges
         )
     except Exception:
         logger.exception("Failed to classify 2014 Recharge rules for %s.", monster.name)
         raise
 
-
-def action_label_2014(name: str) -> str:
-    return name.split(" (Recharge", 1)[0].strip().casefold()
 
 
 
@@ -143,7 +142,11 @@ def save_resources_2014(monster: SourceMonster2014) -> list[ResourceDefinition]:
 
 
 def recharge_rules_2014(monster: SourceMonster2014) -> list[RechargeRule]:
+    if not supports_recharge_rules_2014(monster):
+        return []
+    excluded_ids = arena_unavailable_recharge_ids_2014(monster)
     return [
         RechargeRule(resource_id=action_id, minimum_roll=minimum)
         for action_id, minimum in sorted(monster.action_recharges.items())
-    ] if supports_recharge_rules_2014(monster) else []
+        if action_id not in excluded_ids
+    ]

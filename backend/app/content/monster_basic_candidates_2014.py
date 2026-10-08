@@ -4,6 +4,7 @@ from collections import Counter
 import logging
 
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
+from app.content.monster_arena_action_policy_2014 import PIT_BANNED_ACTION_LABELS_2014
 from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014
 from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
 from app.content.monster_attack_source_corrections_2014 import corrected_attack_range_2014
@@ -30,7 +31,7 @@ _MODELED_2014_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _CHARGE_TRAIT_NAMES = frozenset({"Charge", "Pounce", "Trampling Charge"})
-_PIT_BANNED_ACTION_LABELS = frozenset({"teleport", "plane shift"})
+_PIT_BANNED_ACTION_LABELS = PIT_BANNED_ACTION_LABELS_2014
 _ARENA_ABSENT_CONTEXT_ACTION_LABELS = frozenset({"ink cloud"})
 _ARENA_UNAVAILABLE_SUMMON_ACTION_LABELS = frozenset({
     "animate trees", "children of the night", "create specter",
