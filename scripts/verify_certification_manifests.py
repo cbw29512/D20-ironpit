@@ -71,6 +71,8 @@ def _mechanics(template: Any) -> list[str]:
         mechanics.add("expanded-critical-range")
     if features.advantage_against_unacted_targets:
         mechanics.add("attack-advantage-before-target-first-turn")
+    if features.critical_hits_against_surprised_targets:
+        mechanics.add("critical-hit-against-surprised-target")
     if features.initiative_advantage:
         mechanics.add("initiative-advantage")
     if features.first_round_extra_turn_initiative_offset is not None:
