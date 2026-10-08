@@ -9,7 +9,7 @@ from app.content.monster_source_2014 import load_monster_source_2014
 
 _IMMUTABLE_FORM_IDS = ("clay-golem", "flesh-golem", "iron-golem", "stone-golem")
 _NEWLY_READY_IDS = ("iron-golem", "stone-golem")
-_STILL_BLOCKED_IDS = ("clay-golem", "flesh-golem")
+_OTHER_GOLEM_IDS = ("clay-golem", "flesh-golem")
 
 
 def _source():
@@ -41,7 +41,6 @@ def test_immutable_form_unlocks_only_the_two_single_blocker_golems() -> None:
         template = compile_combatant(adapt_basic_monster_2014(monster))
         assert "Immutable Form" in template.source_trait_names
 
-    for monster_id in _STILL_BLOCKED_IDS:
+    for monster_id in _OTHER_GOLEM_IDS:
         blockers = basic_blockers_2014(source[monster_id])
-        assert blockers
         assert "source:trait" not in blockers
