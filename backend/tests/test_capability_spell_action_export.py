@@ -21,6 +21,8 @@ def test_capability_compiler_preserves_spell_attack_and_auto_hit_action_parity()
     # Do not admit the blocked Mage to the arena before its entire spell list is bound.
     base = load_2014_mvp_definitions()["2014-goblin"]
     original = base.model_dump(mode="json")
+    assert "spell_attack_actions" not in original
+    assert "auto_hit_spell_actions" not in original
     definition = CombatantDefinition.model_validate({
         **original,
         "spell_attack_actions": [
