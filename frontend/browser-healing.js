@@ -17,6 +17,7 @@
       state.is_stable = false;
       state.death_save_successes = 0;
       state.death_save_failures = 0;
+      window.IRON_PIT_BROWSER_TIMED_SELF_BUFF_POLICY?.syncHpEnded(state);
     }
     return healed;
   }
