@@ -96,6 +96,8 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Fix notes:** Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
 - **Known directed work:** Assassinate/Sneak Attack/Evasion: reuse rogue pregen combat primitives where semantics match.
 
+- **Evasion — submitted for certification:** [x] The monster source maps to the existing passive Rogue Evasion rule (`ProgressionCombatFeatures.evasion`, incapacitation qualifier). The shared save-damage path takes zero after a qualifying successful Dexterity save and half after failure; it costs no Action/Reaction. Focused Python regression added. **Do not mark the monster READY:** independent Assassinate on PR #664 remains unmerged; Sneak Attack is already bound by the preexisting universal rider. Source classification and generated roster must be refreshed after the corresponding PRs merge.
+
 ### 010. Azer
 
 - [ ] **SOURCE REVIEW / BIND / TEST / CERTIFY / MERGE** — not yet individually verified by this worksheet.
