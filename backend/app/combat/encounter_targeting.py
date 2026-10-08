@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.charmed_targeting import charmed_blocks_hostile_target
-from app.combat.condition_rules import is_incapacitated
+from app.combat.condition_rules import can_see, is_incapacitated
 from app.combat.grid_geometry import footprint_distance_ft
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
@@ -66,6 +66,24 @@ def _target_priority(member: EncounterCombatant) -> int | None:
     return None
 
 
+def active_target_policy(attacker: EncounterCombatant) -> str:
+    """Return the one live declarative targeting policy owned by an active self-buff."""
+    try:
+        policies = {
+            action.target_policy
+            for action in attacker.state.template.timed_self_buff_actions
+            if action.target_policy != "normal" and action.id in attacker.state.active_effect_ids
+        }
+        if len(policies) > 1:
+            raise ValueError(f"{attacker.combatant_id} has conflicting active target policies: {sorted(policies)}.")
+        return next(iter(policies), "normal")
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Failed active target-policy lookup for %s.", attacker.combatant_id)
+        raise RuntimeError("Active target policy could not be evaluated.") from exc
+
+
 def living_opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
     """Return only the highest-priority eligible target class under deterministic Pit policy."""
     candidates = [
@@ -79,10 +97,32 @@ def living_opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> lis
     return [member for member in candidates if _target_priority(member) == priority]
 
 
+def living_targets(attacker: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
+    """Return ordinary opponents unless an active buff explicitly broadens target policy."""
+    try:
+        if active_target_policy(attacker) != "nearest_visible_creature":
+            return living_opponents(attacker, setup)
+        candidates = [
+            member for member in [*setup.heroes, *setup.monsters]
+            if member.combatant_id != attacker.combatant_id
+            and member.state.is_alive and not member.state.is_dead
+            and member.state.current_hp > 0
+            and not _removed_from_battlefield(member.state)
+            and not charmed_blocks_hostile_target(attacker.state, member.combatant_id)
+        ]
+        return [
+            member for member in candidates
+            if can_see(attacker.state, member.state, combatant_distance(attacker, member))
+        ]
+    except Exception as exc:
+        logger.exception("Living target selection failed for %s.", attacker.combatant_id)
+        raise RuntimeError("Living targets could not be selected.") from exc
+
+
 def select_nearest_target(attacker: EncounterCombatant, setup: EncounterSetup) -> EncounterCombatant | None:
     """Within the current target class, finish a held target, fight a grappler, then engage nearest."""
     try:
-        opponents = living_opponents(attacker, setup)
+        opponents = living_targets(attacker, setup)
         if not opponents:
             return None
         held = [
