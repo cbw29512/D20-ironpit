@@ -9,6 +9,15 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { attackAdvantage: (state) => state.is_unconscious, autoCritical: (state) => state.is_unconscious, has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious, suppressAttackAdvantage: () => false, canSee: (observer, target) => !observer.active_effect_ids.includes("blinded") && !target.active_effect_ids.includes("invisible") };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
+  function firstTurnTargetAdvantageSources(attacker, defender) {
+    try {
+      return attacker.template.advantage_against_unacted_targets && defender.turns_started === 0 ? 1 : 0;
+    } catch (error) {
+      console.error("Failed browser first-turn attack Advantage", { error });
+      throw error;
+    }
+  }
+
   function conditionSources(attacker, defender, distance, targetId) {
     let advantage = M().attacksAgainstAdvantage(defender) + B2().attacksAgainstAdvantage(defender) + (M().d20TestAdvantage?.(attacker) || 0), disadvantage = X().attackDisadvantage(attacker) + (window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.attacksAgainstDisadvantage(defender, attacker, distance) || 0); const ignoresUnseen = Boolean(attacker.template.ignore_unseen_target_attack_disadvantage);
     if (Q().has(attacker, "blinded") && !ignoresUnseen) disadvantage += 1; if (Q().has(attacker, "invisible") && !Q().canSee(defender, attacker, distance)) advantage += 1;
@@ -53,7 +62,7 @@
     const unsuppressedAdvantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
       + Math.max(0, recklessAdvantage - brutalSuppression) + A().sources(attack, target.state, attacker.combatant_id)
       + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id)
-      + (attacker.state.template.advantage_against_unacted_targets && target.state.turns_started === 0 ? 1 : 0)
+      + firstTurnTargetAdvantageSources(attacker.state, target.state)
       + (attacker.state.template.advantage_against_marked_effect_id && attacker.state.active_modifiers?.some((item) => item.source_effect_id === attacker.state.template.advantage_against_marked_effect_id && item.target_id === target.combatant_id) ? 1 : 0);
     const advantage = Q().suppressAttackAdvantage?.(target.state) ? 0 : unsuppressedAdvantage;
     const mode = R().attackMode(attack, distance, advantage, disadvantage, closeThreat);
@@ -193,4 +202,4 @@
       animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description: description + survivalLog + (window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT?.consumeLog(actualTarget.state) || "") };
     if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, attacker.state.template.name);
     return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;
-  }  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, conditionSources, rangedCloseThreat, resolveAttack }; })();
+  }  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, conditionSources, firstTurnTargetAdvantageSources, rangedCloseThreat, resolveAttack }; })();
