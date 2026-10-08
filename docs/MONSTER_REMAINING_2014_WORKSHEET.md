@@ -183,6 +183,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Unbound printed traits:** Petrifying Gaze
 - **Fix notes:** Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
 - **Known directed work:** Petrifying Gaze: reuse timed save escalation to Petrified, but verify sight/gaze avoidance and source timing.
+- **User decision, queued:** Same shared gaze mechanic and sight/avert policy as Basilisk. Medusa supplies **DC 14 Constitution, 30-ft range** and the special **fail by 5 or more => immediate Petrified** escalation (terminal Iron Pit outcome). Other failed saves follow existing Restrained → repeat-save → Petrified progression; source qualifiers preserved. Not implemented/certified.
 
 ### 021. Ochre Jelly
 
