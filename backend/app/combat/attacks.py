@@ -103,7 +103,8 @@ def resolve_attack(
         if natural_1_ends_turn:
             terminate_turn(attacker, "iron-pit-natural-1-attack")
         critical = bool(hit and miss_override_feature_id is None and (
-            expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)
+            expanded_critical or (attacker.template.progression_features.critical_hits_against_surprised_targets and actual_defender.is_surprised)
+            or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)
         ))
         hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
         death_success_before = actual_defender.death_save_successes; death_failure_before = actual_defender.death_save_failures
