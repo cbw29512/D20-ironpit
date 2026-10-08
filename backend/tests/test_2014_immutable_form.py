@@ -44,4 +44,4 @@ def test_immutable_form_unlocks_only_the_two_single_blocker_golems() -> None:
     for monster_id in _STILL_BLOCKED_IDS:
         blockers = basic_blockers_2014(source[monster_id])
         assert blockers
-        assert "source:trait" in blockers
+        assert "source:trait" not in blockers
