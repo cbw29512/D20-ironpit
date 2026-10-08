@@ -3,10 +3,10 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
-from app.combat.grid_geometry import footprint_distance_ft
+from app.combat.grid_geometry import square_area_distance_ft
 from app.combat.persistent_beneficial_zone_effects import (
     sync_persistent_beneficial_zones,
-    zone_footprint_size,
+    zone_side_squares,
 )
 from app.combat.persistent_beneficial_zone_geometry import (
     beneficial_zone_position_legal,
@@ -46,11 +46,11 @@ def move_persistent_beneficial_zone(
         if beneficial_zone_source_distance(caster, destination, action) > action.move_range_ft:
             raise ValueError(f"{action.name} destination exceeds source range.")
 
-        move_distance = footprint_distance_ft(
+        move_distance = square_area_distance_ft(
             zone.position,
-            zone_footprint_size(zone.length_ft),
+            zone_side_squares(zone.length_ft),
             destination,
-            zone_footprint_size(action.length_ft),
+            zone_side_squares(action.length_ft),
         )
         if move_distance > action.move_distance_ft:
             raise ValueError(f"{action.name} cannot move that far.")
