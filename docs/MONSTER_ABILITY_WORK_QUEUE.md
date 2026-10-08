@@ -62,9 +62,9 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 - [ ] **Archmage — Detect Thoughts (2014), USER DECISION / QUEUED:** Retain the printed Detect Thoughts spell on source/card; the AI never casts it in Iron Pit because surface/deep thought reading has no mechanically relevant arena outcome. Apply shared noncombat spell selection, preserve source. Not implemented/certified.
 
-## Shared 2014 spell policy — all monsters, pregens, future homebrew
+## Shared spell policy — both 2014 and 2024, all monsters, pregens, future homebrew
 
-These are **spell-level decisions**, not Archmage-only exceptions. Preserve the original spell on each character/monster source record and card. The arena AI and combat certification should apply the same policy anywhere that spell occurs. 2024 same-name spells must be separately checked against 2024 rules before reuse.
+These are **spell-level decisions**, not Archmage-only exceptions. Preserve the original spell on each character/monster source record and card. The arena AI and combat certification should apply the same **cast-or-never-cast policy to both 2014 and 2024** wherever that spell occurs, per user decision. Edition-specific spell text and effect parameters must still be checked against the matching edition's RAW; do not blindly reuse 2014 implementation rules in 2024.
 
 | Spell | Iron Pit decision | Reuse rule |
 | --- | --- | --- |
@@ -77,7 +77,7 @@ These are **spell-level decisions**, not Archmage-only exceptions. Preserve the 
 | Thaumaturgy | Never cast in arena; no relevant combat effect | Source retained, exclude from AI combat actions |
 | Light | **Combat-relevant; keep available when useful** for illumination of ordinary darkness, sight/hiding and bright-light sensitivity; not sunlight and cannot overcome 2014 magical Darkness | Shared light and vision mechanics; no unconditional AI casting |
 
-**Implementation rule:** maintain one universal spell-ID / ruleset-driven selection policy; do not duplicate decisions for each caster, class or monster. Only mark implemented when engine AI, Python/browser parity, generated blocker/certification and exact-head CI pass. These entries record decisions only.
+**Implementation rule:** maintain one universal spell-ID / ruleset-driven selection policy spanning 2014 and 2024; do not duplicate decisions for each caster, class or monster. Only mark implemented when engine AI, Python/browser parity, generated blocker/certification and exact-head CI pass. These entries record decisions only.
 
 ## Status accounting
 
