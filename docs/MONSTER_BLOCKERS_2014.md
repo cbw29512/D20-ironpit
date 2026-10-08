@@ -72,8 +72,8 @@ Blocker categories overlap: a monster may require several fixes.
 | Djinni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Elemental Demise, Innate Spellcasting |
 | Doppelganger | attack:complex, source:extra-action, source:trait | Shapechanger, Ambusher, Surprise Attack |
 | Dretch | source:extra-action | — |
-| Drider | mechanic:spellcasting, source:trait | Fey Ancestry, Innate Spellcasting |
-| Drow | attack:complex, mechanic:spellcasting, source:trait | Fey Ancestry, Innate Spellcasting |
+| Drider | mechanic:spellcasting, source:trait | Innate Spellcasting |
+| Drow | attack:complex, mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Druid | mechanic:spellcasting, source:trait | Spellcasting |
 | Dryad | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting, Speak with Beasts and Plants, Tree Stride |
 | Duergar | attack:incomplete, source:extra-action, source:trait | Duergar Resilience |
