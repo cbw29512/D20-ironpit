@@ -15,6 +15,7 @@ _ALL_SAVE_ABILITIES = (
 _MAGIC_RESISTANCE = "Magic Resistance"
 _DARK_DEVOTION = "Dark Devotion"
 _BRAVE = "Brave"
+_FEY_ANCESTRY = "Fey Ancestry"
 _AGGRESSIVE = "Aggressive"
 _TWO_HEAD_TRAITS = frozenset({"Two-Headed", "Two Heads"})
 _TWO_HEAD_SAVE_TAGS = (
@@ -54,6 +55,8 @@ def saving_throw_advantage_grants_2014(monster: SourceMonster2014) -> list[Savin
             grants.extend(_condition_save_advantage("dark-devotion", _DARK_DEVOTION, ("charm", "frightened")))
         if _BRAVE in monster.trait_names:
             grants.extend(_condition_save_advantage("brave", _BRAVE, ("frightened",)))
+        if _FEY_ANCESTRY in monster.trait_names:
+            grants.extend(_condition_save_advantage("fey-ancestry", _FEY_ANCESTRY, ("charm",)))
         for trait_name in monster.trait_names:
             if trait_name not in _TWO_HEAD_TRAITS:
                 continue
@@ -99,6 +102,8 @@ def bound_passive_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]
             bound.add(_DARK_DEVOTION)
         if _BRAVE in monster.trait_names:
             bound.add(_BRAVE)
+        if _FEY_ANCESTRY in monster.trait_names:
+            bound.add(_FEY_ANCESTRY)
         if _AGGRESSIVE in monster.trait_names:
             bound.add(_AGGRESSIVE)
         bound.update(name for name in monster.trait_names if name in _TWO_HEAD_TRAITS)

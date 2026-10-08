@@ -6077,14 +6077,6 @@
         "printed_name": "Fear Aura"
       },
       {
-        "demand_count": 2,
-        "monsters": [
-          "Drider",
-          "Drow"
-        ],
-        "printed_name": "Fey Ancestry"
-      },
-      {
         "demand_count": 1,
         "monsters": [
           "Balor"

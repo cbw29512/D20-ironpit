@@ -185,4 +185,32 @@ const nonmagicalPlants = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(
 assert.equal(nonmagicalPlants.roll.mode, "normal");
 assert.deepEqual(nonmagicalPlants.roll.rolls, [9]);
 
+const feyTemplate = {
+  id: "drow-fey-ancestry", name: "Drow",
+  saving_throw_bonuses: { wisdom: 0 },
+  saving_throw_advantage_grants: [{
+    source_id: "fey-ancestry-charm", source_name: "Fey Ancestry",
+    abilities: ["wisdom"], required_effect_tags: ["charm"],
+  }],
+};
+const feyState = {
+  template: feyTemplate, active_effect_ids: [],
+  active_modifiers: window.IRON_PIT_BROWSER_OPENING_MODIFIERS.build(feyTemplate),
+};
+window.IRON_PIT_DICE = queuedDice([5, 16]);
+const charmSave = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(
+  feyState, "wisdom", 99, { effectTags: ["charm"] },
+);
+assert.equal(charmSave.roll.mode, "advantage");
+assert.deepEqual(charmSave.roll.rolls, [5, 16]);
+assert.deepEqual(window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS.saveAdvantageSourceNames(
+  feyState, "wisdom", { effectTags: ["charm"] },
+), ["Fey Ancestry"]);
+window.IRON_PIT_DICE = queuedDice([11]);
+const otherSave = window.IRON_PIT_BROWSER_SAVES.resolveSavingThrow(
+  feyState, "wisdom", 99, { effectTags: ["frightened"] },
+);
+assert.equal(otherSave.roll.mode, "normal");
+assert.deepEqual(otherSave.roll.rolls, [11]);
+
 console.log("Browser contextual saving-throw Advantage regressions passed.");
