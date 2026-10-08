@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Literal
 
+from app.combat.timed_defense_selection import choose_timed_defense_by_threat
 from app.combat.action_economy import is_available
 from app.combat.condition_rules import has_condition
 from app.combat.encounter_targeting import combatant_distance
@@ -192,7 +193,7 @@ def choose_timed_self_buff_action(
                 and _hostile_aura_is_relevant(member, action, setup)
             ):
                 choices.append(action)
-        return max(choices, key=lambda item: item.priority, default=None)
+        return choose_timed_defense_by_threat(member, setup, choices)
     except Exception as exc:
         logger.exception("Timed self-buff choice failed for %s.", member.combatant_id)
         raise RuntimeError("Timed self-buff policy could not be evaluated.") from exc
