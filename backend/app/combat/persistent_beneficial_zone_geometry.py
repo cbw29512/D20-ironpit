@@ -33,5 +33,5 @@ def beneficial_zone_source_distance(
         caster.state.position,
         1,
         position,
-        zone_footprint_size(action.length_ft),
+        zone_side_squares(action.length_ft),
     )
