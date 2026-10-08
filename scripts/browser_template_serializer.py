@@ -598,6 +598,8 @@ def _passive_modifier_grant(grant: Any) -> dict[str, Any]:
     }
     if grant.required_active_effect_ids:
         row["required_active_effect_ids"] = list(grant.required_active_effect_ids)
+    if grant.requires_active_ally:
+        row["requires_active_ally"] = True
     if grant.save_ability is not None:
         row["save_ability"] = grant.save_ability
     if grant.save_dc is not None:
