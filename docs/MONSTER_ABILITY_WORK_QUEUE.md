@@ -1,0 +1,38 @@
+# Iron Pit — monster ability work queue (2014 first)
+
+This is the **operational queue**, not a second monster source inventory. The authoritative per-monster checklist is [MONSTER_REMAINING_2014_WORKSHEET.md](MONSTER_REMAINING_2014_WORKSHEET.md); generated source blockers and [UNIVERSAL_MECHANIC_INVENTORY.md](UNIVERSAL_MECHANIC_INVENTORY.md) determine which monsters are actually clear. Never hand-edit generated inventories. Read [the monster playbook](playbooks/MONSTERS.md), source and locked rules before editing combat behavior.
+
+## Queue rules
+
+1. **One ability per implementation PR.** Decompose a source trait into actual mechanics and find matching universal engine/pregen/monster primitives first. Reuse existing capability IDs and runtime effects. Combat source provides qualifiers/dice/DC/name, never a unique resolver.
+2. **Do not idle while a PR is in CI.** Prepare the next *independent* ability: exact 2014 source, existing primitive, proposed binding, focused regression, then put it in **READY TO IMPLEMENT**. Independent PR branches start at current `main`, never at another pending PR. If a candidate depends on an unmerged change, mark **WAITING ON PR**, and choose an independent candidate.
+3. **Merge gate runs separately.** Check exact-head CI; correct actual failures; regenerate source-owned artifacts; merge only green. Rebase/reconcile dependent work after merges. No repeated whole-roster audits for a single feature.
+4. **Single completion authority.** Do not call a fix **DONE** from a pushed PR. Once merged and the focused check passes, mark the ability [x] in the worksheet and record its universal primitive; remove it from active queue. A monster is READY only when the generated blocker list and browser/Python certification both agree.
+5. **Queue next immediately.** When an ability is submitted, promote the prepared entry and prepare another. No duplicate work for an ability already implemented. A genuinely missing engine primitive can be parked with a precise reason and replaced by the next independent entry.
+6. **One writer per artifact.** Avoid concurrent edits of generated outputs or shared branches; consolidate generator refreshes on a final integration branch where multiple simultaneous source fixes change the same reports. No Netlify publish.
+
+## Active implementation / merge queue
+
+| Priority | Monster / ability | Universal effect reused | PR | State | Remaining gate |
+|---|---|---|---|---|---|
+| 1 | Assassin — Assassinate | First-turn target Advantage; critical vs explicitly Surprised | [#664](https://github.com/cbw29512/D20-ironpit/pull/664) | Code submitted, **not merged** | Exact-head CI; source blockers regeneration; Surprise assignment/lifecycle independently unresolved |
+| 2 | Assassin — Evasion | Passive Dexterity save damage: success 0, failure half; disabled if incapacitated | [#665](https://github.com/cbw29512/D20-ironpit/pull/665) | Code submitted, **not merged** | Exact-head CI; generated blockers refresh |
+| 3 | Assassin — Sneak Attack | Existing once-per-turn Rogue weapon-hit damage; printed source alias | [#666](https://github.com/cbw29512/D20-ironpit/pull/666) | Code submitted, **not merged** | Exact-head CI; generated blockers refresh |
+| 4 | Metallic dragons — Change Shape | Arena-unavailable noncombat action, retained in source | [#663](https://github.com/cbw29512/D20-ironpit/pull/663) | Code submitted, **not merged** | Generated browser roster count/artifacts and final-head CI |
+
+## READY TO IMPLEMENT — next independent ability
+
+- [ ] **Azer — Heated Body (2014):** Verify the printed trigger and damage, then search reusable *incoming melee-hit/contact damage retaliation* traits, the existing damage-triggered effect engine, and any hero equivalent. Proposed smallest change: bind a passive retaliation rider to the generic incoming-contact event, with original fire damage parameters on the source. Add Python/browser regressions for melee contact, non-contact, retaliation typing, and fight reset. **Do not infer its values or claim existing support without reading source.**
+- [ ] **Basilisk — Petrifying Gaze (2014):** After Azer, compare exact source start-of-turn eye-contact trigger, save, and escalation with already-shared Gorgon/Cockatrice Petrified handling. Respect Pit terminal Petrified override and verify the eye-contact/visibility qualifier before binding.
+- [ ] **Next subsequent item:** Take the earliest still-blocked ability from the generated list/worksheet, skipping already-complete source traits.
+
+## Status accounting
+
+- `QUEUED`: named blocker only; source/mechanic check not completed.
+- `READY TO IMPLEMENT`: exact printed source and universal reuse mapped.
+- `IN PR`: code pushed, may fail CI; continue independent preparation.
+- `WAITING ON PR`: cannot safely integrate without an earlier change.
+- `MERGED + CERTIFIED`: exact-head gate passed, merge confirmed, source blocker changed, worksheet checked.
+- `PARKED`: precisely stated semantic gap; move to next item.
+
+**Last edited 2026-10-08.** PR states above are snapshots; reconcile them from GitHub before each merge/queue promotion.
