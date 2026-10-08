@@ -33,12 +33,11 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 
 ### 001. Adult Bronze Dragon
 
-- [ ] **PARKED — EXACT SEMANTIC GAP VERIFIED; NOT IMPLEMENTED/CERTIFIED.**
-- **Recorded blockers:** `source:extra-action` only. Bronze Repulsion Breath is already covered by the existing shared save + push implementation (see `docs/BRONZE_REPULSION_AUDIT.md`).
-- **Identified remaining action:** Change Shape; the Bronze Repulsion audit explicitly names this as the independent extra-action blocker.
-- **Fix plan:** Read the exact 2014 Change Shape source and compare against existing transformation/replacement-form and arena restrictions. If transformation is allowed and representable, bind it declaratively using the shared form/state primitive and preserve the original dragon's legal capabilities. If Pit policy excludes the action, document the existing rule and classifier consequence rather than invent a replacement. Verify attack choices, stats/HP/form return and browser/Python parity as applicable.
-- **Avoid rework:** Do not touch Repulsion Breath or add a dragon-specific transformation resolver. Next classification decision is the permitted scope of Change Shape under the locked Pit rules.
-- **2026-10-08 source/engine disposition:** `ENGINE_TRULY_MISSING` for the complete 2014 Change Shape semantics, pending a generic hybrid replacement-form capability: choose eligible humanoid/beast CR <= original; use replacement statistics and abilities except retained mental scores, HP/Hit Dice, proficiencies, speech, Legendary Resistance, and Change Shape; exclude new-form class features/legendary actions; retain original identity and return to true form. Existing `replacement_forms.py` and `replacement_form_compiler.py` support some pregen replacement forms but do not establish this complete retained-field policy. This is not merely the existing Polymorph/Wild Shape binding. Keep its `source:extra-action` blocker and do not label the dragon READY. **Next:** move to worksheet entry 002 without rechecking Repulsion Breath. 2024 binding must be inspected separately.
+- [x] **CHANGE SHAPE CLASSIFIED ARENA-UNAVAILABLE — PENDING GENERATED GATES.**
+- **Original blocker:** `source:extra-action` from Change Shape only.
+- **Pit decision, 2026-10-08:** Change Shape is a noncombat transformation and is not selected in Pit fights. Retain the printed action on the immutable source, but exclude it through the common arena-unavailable action classifier. No invented shape mechanics or name-specific combat resolver.
+- **Existing combat mechanics:** Lightning Breath and Repulsion Breath remain supported; do not reopen them.
+- **Check before READY:** Refresh generated source blockers and runtime artifacts and run required verification for the new head. If any other blocker appears, record it; do not silently certify.
 
 ### 002. Adult Gold Dragon
 
