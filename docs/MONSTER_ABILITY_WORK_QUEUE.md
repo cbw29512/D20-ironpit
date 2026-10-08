@@ -60,6 +60,8 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 - [ ] **Archmage — Identify (2014), USER DECISION / QUEUED:** Keep Identify printed on source/card; AI never casts it in Iron Pit because informational identification has no combat benefit. Handle with shared arena-inert spell filter; do not remove source entry. Not implemented/certified.
 
+- [ ] **Archmage — Detect Thoughts (2014), USER DECISION / QUEUED:** Retain the printed Detect Thoughts spell on source/card; the AI never casts it in Iron Pit because surface/deep thought reading has no mechanically relevant arena outcome. Apply shared noncombat spell selection, preserve source. Not implemented/certified.
+
 ## Status accounting
 
 - `QUEUED`: named blocker only; source/mechanic check not completed.
