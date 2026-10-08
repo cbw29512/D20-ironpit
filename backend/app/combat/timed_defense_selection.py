@@ -11,13 +11,13 @@ logger = logging.getLogger(__name__)
 
 def choose_timed_defense_by_threat(
     member: EncounterCombatant,
-    setup: EncounterSetup,
+    setup: EncounterSetup | None,
     choices: list[TimedSelfBuffAction],
 ) -> TimedSelfBuffAction | None:
     """Keep declared priority unless matching defensive variants counter observed enemy offense."""
     try:
         preferred = max(choices, key=lambda item: item.priority, default=None)
-        if preferred is None or preferred.selection_strategy != "incoming-damage":
+        if preferred is None or preferred.selection_strategy != "incoming-damage" or setup is None:
             return preferred
         variants = [
             action for action in choices
