@@ -118,6 +118,7 @@ def fire_shield_2024(pact_slot_level: int) -> list[TimedSelfBuffAction]:
                 ends_if_source_dead=True,
                 expiry_timing="source_turn_end",
                 priority=88,
+                selection_group="fire-shield-variants", selection_strategy="incoming-damage",
                 animation="fire-shield",
             ),
             TimedSelfBuffAction(
@@ -134,6 +135,7 @@ def fire_shield_2024(pact_slot_level: int) -> list[TimedSelfBuffAction]:
                 ends_if_source_dead=True,
                 expiry_timing="source_turn_end",
                 priority=87,
+                selection_group="fire-shield-variants", selection_strategy="incoming-damage",
                 animation="fire-shield",
             ),
         ]
