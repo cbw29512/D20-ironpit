@@ -6,7 +6,7 @@ from typing import Literal
 
 from app.combat.defensive_spell_resolution import resolve_defensive_spell
 from app.combat.friendly_save_auras import sync_friendly_save_auras
-from app.combat.selectable_damage_resistance import resolve_selectable_damage_resistance
+from app.combat.selectable_damage_resistance import resolve_selectable_damage_resistance, score_enemy_damage_types
 from app.combat.precombat_spells import (
     choose_defensive_spell,
     select_defensive_targets,
@@ -35,7 +35,7 @@ class OpeningBuffChoice:
     timed_action: TimedSelfBuffAction | None = None
 
 
-def _timed_choice(member: EncounterCombatant) -> TimedSelfBuffAction | None:
+def _timed_choice(member: EncounterCombatant, setup: EncounterSetup) -> TimedSelfBuffAction | None:
     try:
         choices: list[TimedSelfBuffAction] = []
         for action in member.state.template.timed_self_buff_actions:
@@ -51,7 +51,23 @@ def _timed_choice(member: EncounterCombatant) -> TimedSelfBuffAction | None:
             ):
                 continue
             choices.append(action)
-        return max(choices, key=lambda item: item.priority, default=None)
+        preferred = max(choices, key=lambda item: item.priority, default=None)
+        if preferred is None or preferred.selection_strategy != "incoming-damage":
+            return preferred
+        variants = [
+            action for action in choices
+            if action.selection_group == preferred.selection_group
+            and action.selection_strategy == preferred.selection_strategy
+            and action.resource_id == preferred.resource_id
+        ]
+        types = list(dict.fromkeys(action.damage_resistances[0] for action in variants))
+        incoming = score_enemy_damage_types(member, setup, types)
+        if not any(incoming.values()):
+            return preferred
+        return max(
+            variants,
+            key=lambda action: (incoming[action.damage_resistances[0]], action.priority),
+        )
     except Exception as exc:
         logger.exception("Opening timed-buff choice failed for %s.", member.combatant_id)
         raise RuntimeError("Opening timed buff could not be selected.") from exc
@@ -84,7 +100,7 @@ def choose_opening_buff(
                 priority=resistance.priority,
             ))
 
-        timed = _timed_choice(member)
+        timed = _timed_choice(member, setup)
         if timed is not None:
             candidates.append(OpeningBuffChoice(
                 kind="timed-self-buff",
