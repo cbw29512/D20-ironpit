@@ -15,7 +15,6 @@ require("./combat-preset-recipes.js"); require("./combat-presets.js");
   const classes = { "2014": new Set(), "2024": new Set() };
   const sizes = new Set();
   const fired = [];
-  const missingSeeds = [];
   for (const recipe of IRON_PIT_COMBAT_PRESETS.recipes) {
     const catalog = catalogs[recipe.ruleset];
     const { heroes, monsters, difficulty, adjusted } = IRON_PIT_COMBAT_PRESETS.resolve(recipe, catalog);
@@ -48,21 +47,11 @@ require("./combat-preset-recipes.js"); require("./combat-presets.js");
         `${recipe.id} seed ${recipe.seed} used a pit-banned option: ${event.feature_id || event.description}`,
       );
     }
-    const missing = recipe.aspects.filter((spec) => !IRON_PIT_COMBAT_PRESETS.aspectFired(battle, spec));
-    if (missing.length) {
-      let replacement = null;
-      // Diagnostic only: a recorded seed remains mandatory for every purpose-built preset.
-      // A failed recipe is still a failed regression; do not silently substitute results.
-      for (let candidate = 1; candidate <= 48; candidate += 1) {
-        if (candidate === recipe.seed) continue;
-        const probe = IRON_PIT_BROWSER_TURBO.runSeeded(selection, candidate).battle;
-        if (recipe.aspects.every((spec) => IRON_PIT_COMBAT_PRESETS.aspectFired(probe, spec))) {
-          replacement = candidate;
-          break;
-        }
-      }
-      missingSeeds.push(`${recipe.id}@${recipe.seed} missed ${missing.map((spec) =>
-        `${spec.kind}:${Array.isArray(spec.value) ? spec.value.join("|") : spec.value}`).join(", ")}; suggested seed: ${replacement ?? "none in first 48"}`);
+    for (const spec of recipe.aspects) {
+      assert.ok(
+        IRON_PIT_COMBAT_PRESETS.aspectFired(battle, spec),
+        `${recipe.id} seed ${recipe.seed} missed ${spec.kind}:${Array.isArray(spec.value) ? spec.value.join("|") : spec.value}`,
+      );
     }
     fired.push(`${recipe.id}@${recipe.seed}:${recipe.aspects.map((spec) => spec.kind).join("+")}`);
     if (recipe.id === "goblins") { assert.equal(difficulty, "Medium"); assert.equal(adjusted, 200); }
@@ -75,7 +64,6 @@ require("./combat-preset-recipes.js"); require("./combat-presets.js");
       );
     }
   }
-  assert.deepEqual(missingSeeds, [], `Purpose-built seed regressions:\n${missingSeeds.join("\n")}`);
   assert.equal(classes["2014"].size, 12);
   assert.equal(classes["2024"].size, 12);
   for (const size of ["1v1", "1v2", "2v2", "3v3", "4v4", "5v5", "6v6"]) {
