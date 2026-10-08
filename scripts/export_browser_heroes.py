@@ -412,6 +412,11 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost,
         "activationTiming": action.activation_timing,
+        "startTurnMaxCurrentHp": action.start_turn_max_current_hp,
+        "startTurnRollDieSize": action.start_turn_roll_die_size,
+        "startTurnRollMinimum": action.start_turn_roll_minimum,
+        "endsAtFullHp": action.ends_at_full_hp,
+        "targetPolicy": action.target_policy,
         "resourceId": action.resource_id, "resourceCost": action.resource_cost,
         "durationRounds": action.duration_rounds, "conditionIds": list(action.condition_ids),
         "damageResistances": [_value(item) for item in action.damage_resistances],
