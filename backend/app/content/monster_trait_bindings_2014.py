@@ -41,7 +41,6 @@ _SNEAK_ATTACK_D6 = re.compile(
     re.IGNORECASE | re.DOTALL,
 )
 
-
 def supports_reckless_2014(monster: SourceMonster2014) -> bool:
     """Return whether printed Reckless can use the shared 2014 melee-Strength resolver."""
     try:
@@ -52,7 +51,6 @@ def supports_reckless_2014(monster: SourceMonster2014) -> bool:
     except Exception:
         logger.exception("Failed to classify 2014 Reckless support for %s.", monster.name)
         raise
-
 def supports_cunning_action_2014(monster: SourceMonster2014) -> bool:
     """Bind printed Cunning Action to the shared bonus-action Dash decision path."""
     return _CUNNING_ACTION in monster.trait_names
@@ -85,7 +83,6 @@ def sneak_attack_eligible_2014(monster: SourceMonster2014, attack: SourceAttack2
     """Mark only attacks that satisfy the shared ranged-or-Dexterity Sneak Attack profile."""
     return sneak_attack_d6_2014(monster) > 0 and _base_sneak_attack_eligible(attack)
 
-
 def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFeatures:
     """Translate printed 2014 traits into reusable progression feature fields."""
     try:
@@ -98,7 +95,6 @@ def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFe
     except Exception:
         logger.exception("Failed to compile 2014 progression features for %s.", monster.name)
         raise
-
 
 def bonus_attack_grants_2014(monster: SourceMonster2014) -> list[BonusAttackGrant]:
     """Bind printed kill-triggered Bonus Action attacks to the shared grant primitive."""
@@ -134,7 +130,6 @@ def environment_context_reactions_2014(
             monster.name,
         )
         raise
-
 
 def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
     """Return source traits that are fully bound to existing universal primitives."""
@@ -182,7 +177,6 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
     except Exception:
         logger.exception("Failed to classify bound 2014 traits for %s.", monster.name)
         raise
-
 
 def conditional_attack_advantage_2014(
     monster: SourceMonster2014,
