@@ -27,6 +27,15 @@ def active_allies(attacker: EncounterCombatant, setup: EncounterSetup) -> list[E
         raise RuntimeError("Active allies could not be evaluated.") from exc
 
 
+def has_active_ally(actor: EncounterCombatant, setup: EncounterSetup) -> bool:
+    """Reuse encounter-side active ally eligibility without distance or source-name dispatch."""
+    try:
+        return bool(active_allies(actor, setup))
+    except Exception as exc:
+        logger.exception("Active ally presence lookup failed for %s.", actor.combatant_id)
+        raise RuntimeError("Active ally presence could not be evaluated.") from exc
+
+
 def has_adjacent_active_ally(
     attacker: EncounterCombatant,
     target: EncounterCombatant,
