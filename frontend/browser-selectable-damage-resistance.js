@@ -3,12 +3,11 @@
 
   const average = (count, size, bonus = 0) => count > 0 ? count * (size + 1) / 2 + bonus : Math.max(0, bonus);
 
-  function scores(member, setup) {
-    const rule = member.state.template.selectable_damage_resistance;
-    if (!rule) return {};
-    const result = Object.fromEntries((rule.allowed_damage_types || []).map((type) => [type, 0]));
-    const enemies = member.side === "heroes" ? setup.monsters : setup.heroes;
-    const forbidden = new Set(rule.forbidden_source_qualifiers || []);
+  function scoresFor(member, setup, allowedTypes, forbiddenQualifiers = []) {
+    try {
+      const result = Object.fromEntries(allowedTypes.map((type) => [type, 0]));
+      const enemies = member.side === "heroes" ? setup.monsters : setup.heroes;
+      const forbidden = new Set(forbiddenQualifiers);
 
     for (const enemy of enemies || []) {
       const template = enemy.state.template;
@@ -38,7 +37,17 @@
           * average(action.damageDiceCount || 0, action.damageDiceSize || 6, action.damageBonus || 0);
       }
     }
-    return result;
+      return result;
+    } catch (error) {
+      console.error("Failed to score opponent damage types", { member: member?.combatant_id, error });
+      throw error;
+    }
+  }
+
+  function scores(member, setup) {
+    const rule = member.state.template.selectable_damage_resistance;
+    if (!rule) return {};
+    return scoresFor(member, setup, rule.allowed_damage_types || [], rule.forbidden_source_qualifiers || []);
   }
 
   function choose(member, setup) {
@@ -81,5 +90,5 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_SELECTABLE_DAMAGE_RESISTANCE = { choose, resolve, scores };
+  window.IRON_PIT_BROWSER_SELECTABLE_DAMAGE_RESISTANCE = { choose, resolve, scores, scoresFor };
 })();
