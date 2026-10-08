@@ -117,7 +117,7 @@ for (const magical of [false, true]) {
   assert.equal(result.claimed, false);
 }
 console.log("Shared passive condition aura source, immunity, expiry, reset and edition regressions passed.");
-for (const [x, expected] of [[3, 1], [4, 0]]) {
+for (const [x, expected] of [[2, 1], [3, 0]]) {
   const { target, source, setup } = fixture();
   source.state.position = { x: 0, y: 0 };
   target.state.position = { x, y: 0 };
