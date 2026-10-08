@@ -17,6 +17,11 @@
       state.is_stable = false;
       state.death_save_successes = 0;
       state.death_save_failures = 0;
+      if (state.template.turn_start_persistent_effects?.length) {
+        const runtime = window.IRON_PIT_BROWSER_TURN_START_EFFECTS;
+        if (!runtime) throw new Error("Healing requires turn-start persistent effect lifecycle runtime.");
+        runtime.syncAfterHpChange(state);
+      }
     }
     return healed;
   }
