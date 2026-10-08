@@ -64,6 +64,7 @@ class CombatModifier(BaseModel):
     source_creature_types: list[str] = Field(default_factory=list)
     bypass_attacker_senses: list[Literal["blindsight", "truesight"]] = Field(default_factory=list)
     required_active_effect_ids: list[str] = Field(default_factory=list)
+    requires_active_ally: bool = False
     save_ability: str | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
     success_immunity_hours: int | None = Field(default=None, ge=1)
