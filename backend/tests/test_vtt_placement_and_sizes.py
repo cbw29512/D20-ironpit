@@ -3,9 +3,12 @@ from __future__ import annotations
 import re
 
 from app.combat.grid_geometry import footprints_overlap, position_in_bounds
+from app.combat.formation_rows import assign_formation_rows
 from app.combat.grid_placement import apply_placement, pack_deployment_zone
 from app.combat.state import build_combatant_state
-from app.content.arena_map import build_standard_iron_pit_map
+from app.content.arena_map import (
+    build_standard_iron_pit_map, build_hero_deployment_zone, build_monster_deployment_zone,
+)
 from app.content.demo import build_goblin_warrior
 from app.content.monster_catalog import load_monster_rows
 from app.content.roster import build_arena_roster
@@ -77,3 +80,29 @@ def test_every_runtime_monster_size_matches_its_canonical_srd_row() -> None:
         source_size = source_by_name[monster.name]
         allowed = {size for size in supported if re.search(rf"\b{re.escape(size)}\b", source_size)}
         assert monster.size.value in allowed
+
+
+def test_hybrid_deployment_fits_six_gargantuan_creatures_on_each_side() -> None:
+    arena = build_standard_iron_pit_map()
+    west = build_hero_deployment_zone()
+    east = build_monster_deployment_zone()
+    assert (west.x, west.y, west.width_squares, west.height_squares) == (8, 6, 2, 3)
+    assert (east.x, east.y, east.width_squares, east.height_squares) == (14, 6, 2, 3)
+
+    for zone, side in [(west, "west"), (east, "east")]:
+        members = [_member(f"{side}-dragon-{i}", CreatureSize.GARGANTUAN) for i in range(6)]
+        assign_formation_rows(members)
+        assignments = pack_deployment_zone(arena, zone, members)
+        apply_placement(members, assignments)
+        cells = [(member.state.position.x, member.state.position.y) for member in members]
+        assert len(set(cells)) == 6
+        assert set(cells) == {
+            (zone.x + dx, zone.y + dy)
+            for dx in range(2) for dy in range(3)
+        }
+        assert sum(member.state.formation_row == "front" for member in members) == 3
+        assert sum(member.state.formation_row == "back" for member in members) == 3
+        front_x = zone.x + (1 if side == "west" else 0)
+        assert all(member.state.position.x == front_x for member in members if member.state.formation_row == "front")
+
+    assert (east.x - (west.x + 1)) * 5 == 25
