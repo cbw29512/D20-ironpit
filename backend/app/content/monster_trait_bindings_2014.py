@@ -30,6 +30,7 @@ _BLOOD_FRENZY = "Blood Frenzy"
 _RECKLESS = "Reckless"
 _CUNNING_ACTION = "Cunning Action"
 _SNEAK_ATTACK = "Sneak Attack (1/Turn)"
+_SNEAK_ATTACK_NAMES = frozenset({_SNEAK_ATTACK, "Sneak Attack"})
 _MAGIC_WEAPONS = "Magic Weapons"
 _INNATE_SPELLCASTING = "Innate Spellcasting"
 _SUNLIGHT_SENSITIVITY = "Sunlight Sensitivity"
@@ -37,7 +38,7 @@ _RAMPAGE = "Rampage"
 _POOR_DEPTH_PERCEPTION = "Poor Depth Perception"
 _FINESSE_WEAPON_NAMES_2014 = frozenset({"Dagger", "Rapier", "Scimitar", "Shortsword", "Whip"})
 _SNEAK_ATTACK_D6 = re.compile(
-    r"Sneak Attack \(1/Turn\).*?extra\s+\d+\s+\((\d+)d6\)",
+    r"Sneak Attack(?: \(1/Turn\))?.*?extra\s+\d+\s+\((\d+)d6\)",
     re.IGNORECASE | re.DOTALL,
 )
 
@@ -63,7 +64,7 @@ def _base_sneak_attack_eligible(attack: SourceAttack2014) -> bool:
 def sneak_attack_d6_2014(monster: SourceMonster2014) -> int:
     """Parse printed Sneak Attack dice from pinned SRD trait text."""
     try:
-        if _SNEAK_ATTACK not in monster.trait_names:
+        if not _SNEAK_ATTACK_NAMES.intersection(monster.trait_names):
             return 0
         if not any(_base_sneak_attack_eligible(attack) for attack in monster.attacks):
             return 0
@@ -153,7 +154,7 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         if martial_advantage:
             bound.add(martial_advantage.source_name)
         if sneak_attack_d6_2014(monster) > 0:
-            bound.add(_SNEAK_ATTACK)
+            bound.update(_SNEAK_ATTACK_NAMES.intersection(monster.trait_names))
         bound.update(bound_passive_trait_names_2014(monster))
         bound.update(included_weapon_trait_names_2014(monster))
         bound.update(bound_zero_hp_trait_names_2014(monster))
