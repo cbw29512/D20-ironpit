@@ -126,6 +126,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:extra-action`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
 - **Fix notes:** Inspect the named extra action and represent its action cost, exact targeting/save/damage/condition via shared Action capabilities; mark as arena-unavailable only if an existing locked Pit rule actually covers it.
+- **Deadly Leap queued / approved arena semantics:** Landing occupies a 10×10-foot (2×2 square) AoE; every enemy overlapping a landing square resolves its own DC 16 Strength-or-Dexterity (better available) save. On failure, roll 3d6+4 bludgeoning plus 3d6+4 slashing, apply typed resistance/immunity/vulnerability independently, and inflict shared Prone. On success, half damage per component after the save, apply defenses, no Prone; 5-ft push deliberately omitted in Iron Pit. A legal 15-ft jump remains required. AI prioritizes leap on opening turn when eligible; ability remains available subsequently. **Queued, not implemented/certified.**
 
 ### 014. Dretch
 
