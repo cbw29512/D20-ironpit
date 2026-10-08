@@ -33,10 +33,11 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 
 ### 001. Adult Bronze Dragon
 
-- [ ] **SOURCE REVIEW / BIND / TEST / CERTIFY / MERGE** — not yet individually verified by this worksheet.
-- **Recorded blockers:** `source:extra-action`.
-- **Unbound printed traits:** None listed; inspect actions/other blockers.
-- **Fix notes:** Inspect the named extra action and represent its action cost, exact targeting/save/damage/condition via shared Action capabilities; mark as arena-unavailable only if an existing locked Pit rule actually covers it.
+- [ ] **FIX NOTE RECORDED — NOT IMPLEMENTED/CERTIFIED.**
+- **Recorded blockers:** `source:extra-action` only. Bronze Repulsion Breath is already covered by the existing shared save + push implementation (see `docs/BRONZE_REPULSION_AUDIT.md`).
+- **Identified remaining action:** Change Shape; the Bronze Repulsion audit explicitly names this as the independent extra-action blocker.
+- **Fix plan:** Read the exact 2014 Change Shape source and compare against existing transformation/replacement-form and arena restrictions. If transformation is allowed and representable, bind it declaratively using the shared form/state primitive and preserve the original dragon's legal capabilities. If Pit policy excludes the action, document the existing rule and classifier consequence rather than invent a replacement. Verify attack choices, stats/HP/form return and browser/Python parity as applicable.
+- **Avoid rework:** Do not touch Repulsion Breath or add a dragon-specific transformation resolver. Next classification decision is the permitted scope of Change Shape under the locked Pit rules.
 
 ### 002. Adult Gold Dragon
 
