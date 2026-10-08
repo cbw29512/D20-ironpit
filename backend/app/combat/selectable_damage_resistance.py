@@ -31,14 +31,13 @@ def score_enemy_damage_types(
     for enemy in enemies:
         template = enemy.state.template
         for attack in [template.weapon_attack, *template.alternate_weapon_attacks]:
-            if attack.weapon.damage_type not in scores:
-                continue
             qualifiers = attack_damage_source_qualifiers(enemy.state, attack)
             if forbidden.intersection(qualifiers):
                 continue
-            scores[attack.weapon.damage_type] += _average_damage(
-                attack.weapon.dice_count, attack.weapon.dice_size, attack.damage_bonus,
-            )
+            if attack.weapon.damage_type in scores:
+                scores[attack.weapon.damage_type] += _average_damage(
+                    attack.weapon.dice_count, attack.weapon.dice_size, attack.damage_bonus,
+                )
             for rider in attack.on_hit_damage:
                 if rider.damage_type in scores:
                     scores[rider.damage_type] += _average_damage(
