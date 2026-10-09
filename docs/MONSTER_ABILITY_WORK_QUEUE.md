@@ -217,6 +217,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved composition/AI:** shared hearing/area target eligibility, DC18 Wisdom save, Deafened/Frightened/Paralyzed instances and dependency/expiry, timed repeat-save, sequenced-use resource tracking; use when enemy benefit justifies friendly-fire risks; cannot skip stages. No monster-specific resolver.
 - **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED. Continue third Roar next.
 
+### Androsphinx — Third Roar (2014), semantic composition confirmed 2026-10-09
+
+- **Printed third Roar:** third/final use of the sequenced 3/Day Action; each hearing creature within 500 ft, DC18 Constitution save. Failure 8d10 Thunder damage plus Prone; success half Thunder damage and no Prone. Apply shared typed defenses, own Action/resource, ordinary Prone lifecycle, and friendly-fire targeting.
+- **Architecture:** trigger -> action/resource -> save -> damage and condition effects -> expiration/reset. Source defines printed ability name, DC, dice, type and target scope. Reuse shared effects/conditions, not Androsphinx-specific logic; generic sequenced-action resource is the only separately proven capability gap if absent.
+- **Planning:** SOURCE REVIEWED; user restated universal effect architecture (not an explicit separate approval of any new exception). **Implementation:** NOT CERTIFIED. Continue through Androsphinx abilities one at a time.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
