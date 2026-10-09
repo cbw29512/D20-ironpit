@@ -369,6 +369,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 
 **Execution:** The complete printed spell list still needs source-exact per-spell binding/capability verification under issue #685; do not mark the whole spellcasting blocker certified based on planning reuse. Continue only with a genuinely **unresolved** Archmage source mechanic or decision after checking the existing worksheet and source catalog; never loop through these entries asking the same question again.
 
+### Balor — Fire Aura (2014), next source-reviewed approval item 2026-10-09
+
+- **Printed trait:** At start of each Balor turn, every creature within 5 ft takes 3d6 Fire (no save). A creature touching the Balor or hitting it with a melee attack from within 5 ft also takes 3d6 Fire; preserve independent event triggers, source type and damage defenses. The standard empty Pit has no flammable unattended object by default; do not fabricate one. Unlike 2024, this is 2014 start-turn plus retaliation timing.
+- **Universal plan:** shared source turn-start 5-ft area typed damage and contact/melee-hit retaliation; locate existing Heated Body/contact and timed-area primitives first, adding the smallest source-parameterized missing triggers, not a Balor-specific resolver. Affect allies too under printed 'each creature'. Avoid confusing adjacent aura damage with hit-trigger retaliatory damage or unintentionally applying it twice for one trigger.
+- **Planning:** SOURCE REVIEWED, awaiting user confirmation of AI/source mapping. **Implementation:** NOT CERTIFIED. Other Balor features remain next within same monster, including Death Throes, Magic Resistance/Weapons, Longsword/Whip and Multiattack.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
