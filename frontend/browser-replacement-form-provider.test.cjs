@@ -40,6 +40,12 @@ window.IRON_PIT_BROWSER_MONSTERS = { "srd-wolf": { id: "srd-wolf", name: "Wolf",
 load("browser-resource-conversion.js");
 load("browser-main-action-profiles.js");
 load("browser-main-action-selection.js");
+window.IRON_PIT_BROWSER_STATE = { distance: (a, b) => Math.abs(a.position_ft - b.position_ft) };
+window.IRON_PIT_BROWSER_FORMATION = {
+  weaponMeanDamage: (a) => (a.diceCount || 0) * ((a.diceSize || 6) + 1) / 2 + (a.damageBonus || 0),
+};
+window.IRON_PIT_BROWSER_CONDITION_RULES = { incapacitated: () => false };
+load("browser-replacement-form-threat.js");
 load("browser-replacement-form-provider.js");
 
 const S = window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION;
@@ -302,3 +308,44 @@ console.log("Emergency form-versus-healing value parity passed.");
   delete window.IRON_PIT_BROWSER_SPELL_OFFENSE;
 }
 console.log("Emergency form versus spell offense opportunity tests passed.");
+{
+  const caster = {
+    combatant_id: "threat-caster", side: "heroes", position_ft: 0,
+    state: {
+      action_available: true, bonus_action_available: true, current_hp: 8,
+      temporary_hp: 0, replacement_form: null, resources: { "wild-shape": 1 },
+      template: {
+        id: "threat-caster", ruleset: "2024", max_hp: 30,
+        replacement_form_actions: [{
+          id: "wild-shape", actionCost: "bonus_action", hpMode: "retain_owner",
+          aiUsePolicy: "emergency_only", aiEmergencyHpFraction: 1 / 3,
+          temporaryHpOnEnter: 8, formTemplateId: "srd-wolf",
+          resourceId: "wild-shape", resourceCost: 1,
+        }],
+      },
+    },
+  };
+  const attack = { id: "claw", kind: "melee", reach: 5,
+    diceCount: 4, diceSize: 6, damageBonus: 0 };
+  const attacker = {
+    combatant_id: "threat-enemy", side: "monsters", position_ft: 5,
+    state: {
+      is_alive: true, is_dead: false, current_hp: 20, resources: {},
+      template: { speed_ft: 0, attacks: [attack], saving_throw_actions: [] },
+    },
+  };
+  const setup = { heroes: [caster], monsters: [attacker] };
+  const form = caster.state.template.replacement_form_actions[0];
+  window.IRON_PIT_BROWSER_SPELL_OFFENSE = {
+    choose: () => ({ kind: "attack",
+      choice: { action: { id: "big-spell", actionCost: "action" }, expectedDamage: 40 } }),
+  };
+  const policy = window.IRON_PIT_BROWSER_REPLACEMENT_FORM_PROVIDER;
+  assert.equal(policy.deferEmergencyFormForSpell(caster, setup, form, "1:threat-caster"), false,
+    "A plausible lethal enemy Action overrides spell offense");
+  attacker.state.is_dead = true;
+  assert.equal(policy.deferEmergencyFormForSpell(caster, setup, form, "1:threat-caster"), true,
+    "Without immediate danger, stronger legal spell offense remains preferred");
+  delete window.IRON_PIT_BROWSER_SPELL_OFFENSE;
+}
+console.log("Lethal incoming pressure changes form choice consistently.");
