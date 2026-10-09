@@ -199,6 +199,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved AI:** prefer Whirlwind only when source-recharged, target shares Air Elemental's space and tactically advantageous; otherwise use two-Slam Multiattack. Reuse universal attack, typed damage, legal targeting, Multiattack and resource selection, not monster-name resolvers.
 - **Planning:** USER APPROVED. Air Elemental Air Form, Whirlwind and Slam/Multiattack planning pass complete; implementation NOT CERTIFIED until actual source/runtime bindings, Python/browser parity and exact-head gates. Advance review to Androsphinx.
 
+### Androsphinx — Inscrutable (2014), user approved 2026-10-09
+
+- **Printed trait:** immune to effects sensing emotions or reading thoughts; refused divination spells fail; Insight checks to discern intentions or sincerity have Disadvantage. Preserve source card wording and protections.
+- **Approved standard Pit classification:** currently arena-inactive only insofar as no supported combat context triggers those mental-reading, intention or divination clauses. If any relevant hostile combat divination capability is present or later supported, enforce the printed defense via generic source-qualified effect eligibility; do not suppress a genuine live defense.
+- **Reuse:** source-granted mental-information immunity / divination refusal / Insight Disadvantage where actual effects match; no Androsphinx-specific resolver. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED. Continue Androsphinx Roar stages one by one.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
