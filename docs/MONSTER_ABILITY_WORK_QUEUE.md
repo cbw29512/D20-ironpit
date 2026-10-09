@@ -444,7 +444,13 @@ Each linked issue contains the actual source rules, selected universal remediati
 
 - **Printed trait:** Can move through other creatures and objects as if they were difficult terrain. Takes **5 (1d10) Force damage** if ending its turn inside an object. Passive movement modifier, no action, spell slot, or save. Other creature overlap differs from ending inside an object. Honor normal arena 5-ft squares, action/movement budget and map occupancy rules; do not grant immunity to normal attacks or arbitrary phasing beyond the printed text.
 - **Universal composition:** Existing Air Elemental Air Form creature-space overlap, shared difficult-terrain movement cost, and source-specific end-of-own-turn object-occupancy hazard -> typed Force damage; check terrain/object representation and existing collision/hazard bindings before introducing any small reusable terrain-phase capability. Other incorporeal creatures can reuse the same parameterized movement and end-turn hazard. No Banshee-specific resolver.
-- **Planning:** SOURCE REVIEWED, recommended reuse/composition, NO NEW USER APPROVAL ASSUMED. **Implementation:** NOT CERTIFIED; Python/browser/5-ft occupancy/difficult terrain/force damage and generated parity remain to prove.
+- **Planning:** USER APPROVED 2026-10-09 for source-faithful reuse/composition. **Implementation:** NOT CERTIFIED; Python/browser/5-ft occupancy/difficult terrain/force damage and generated parity remain to prove.
+
+### Banshee — Resistances, immunities and condition defenses (2014), source review 2026-10-09
+
+- **Printed defensive profile:** Damage Resistances **Acid, Fire, Lightning, Thunder; Bludgeoning, Piercing and Slashing from Nonmagical Attacks**. Damage Immunities **Cold, Necrotic, Poison**. Condition Immunities **Charmed, Exhaustion, Frightened, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained**. These are independent exact source declarations, not extra actions or blanket immunity to weapon attacks.
+- **Universal composition:** Bind existing typed-damage resistance/immunity and damage-source qualifiers; normal attacks remain eligible and apply defenses to individual components. Bind existing condition-immunity filter before applying effects. Preserve source/card values. Cross-monster reuse all immunity/resistance passives; no new primitive or caster-specific logic.
+- **Planning:** SOURCE REVIEWED; no distinct user exception introduced. **Implementation:** NOT CERTIFIED pending Python/browser/source-generation matching and targeted attacks/effect tests. Need complete remaining Banshee action/passive reconciliation before moving on.
 
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
