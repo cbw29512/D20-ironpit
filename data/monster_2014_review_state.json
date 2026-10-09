@@ -1,0 +1,2424 @@
+{
+  "schema_version": 1,
+  "kind": "2014_monster_decision_gate",
+  "source_baseline_commit": "642a6154e99448b31e0427599889724000ad95ec",
+  "execution_policy": "This is planning only; no hourly implementation, no Netlify deployment.",
+  "review_cursor_number": 17,
+  "notes": "Only open_user_questions are user-facing questions. pending_source_review items are assistant research/planning work, not reasons to ask the user. Never infer a new question from a generated source blocker or an unchecked implementation PR. Respect recorded_decisions and carried_over_notes before advancing.",
+  "monsters": [
+    {
+      "number": 1,
+      "name": "Aboleth",
+      "planning_state": "partial",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "mechanic:legendary",
+        "source:extra-action",
+        "source:legendary",
+        "source:trait"
+      ],
+      "recorded_decisions": [
+        "Enslave: effective-allegiance control; printed escape triggers; no automatic win; Psychic Drain may hit controlled target; [#681](https://github.com/cbw29512/D20-ironpit/issues/681)."
+      ],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Tentacle**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**mechanic:legendary**: Use the existing legendary action economy but certify each source choice, turn restriction and exact combat resolution, not just the generic pool.",
+        "**source:extra-action** (review candidate actions: **Enslave (3/Day)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:legendary** (**Psychic Drain**): Implement each printed option and its point cost, target, turn-end timing, spend/refill lifecycle via existing legendary-action system.",
+        "**source:trait** (**Mucous Cloud; Probing Telepathy**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.",
+        "Remaining: Mucous Cloud context, Probing Telepathy, Tentacle disease, legendary Psychic Drain runtime integration."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 001. Aboleth"
+    },
+    {
+      "number": 2,
+      "name": "Acolyte",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [
+        "**User decision / queued:** **LOCKED: Light is combat-relevant and remains available**, to illuminate nonmagical darkness, reveal darkness-dependent stealth, or trigger bright-light sensitivity as appropriate. It cannot counter 2014 magical Darkness (overlapping Darkness dispels Light cantrip). Thaumaturgy stays on the original stat block, but AI never casts it because it has no relevant arena combat purpose. Preserve all remaining spells and use existing spell primitives. Not yet implemented/certified."
+      ],
+      "pending_source_review": [
+        "**mechanic:spellcasting** (**1-level wisdom caster; 6 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.",
+        "Bind six source-prepared spells to 2014 universal Actions; Light remains combat-relevant; Thaumaturgy remains source-only; [#682](https://github.com/cbw29512/D20-ironpit/issues/682)."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 002. Acolyte"
+    },
+    {
+      "number": 3,
+      "name": "Adult Bronze Dragon",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action"
+      ],
+      "recorded_decisions": [
+        "Change Shape — APPROVED FOR ALL MATCHING MONSTERS:** Retain the complete printed Change Shape on card/source; never select it in Iron Pit combat. Other breath, fear, weapon, legendary effects stay intact. This is an explicit arena-only RAW deviation. Scope: [#663](https://github.com/cbw29512/D20-ironpit/pull/663) (stale PR must be rebased/reverified)."
+      ],
+      "carried_over_notes": [],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 003. Adult Bronze Dragon"
+    },
+    {
+      "number": 4,
+      "name": "Adult Gold Dragon",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action"
+      ],
+      "recorded_decisions": [
+        "Change Shape — APPROVED FOR ALL MATCHING MONSTERS:** Retain the complete printed Change Shape on card/source; never select it in Iron Pit combat. Other breath, fear, weapon, legendary effects stay intact. This is an explicit arena-only RAW deviation. Scope: [#663](https://github.com/cbw29512/D20-ironpit/pull/663) (stale PR must be rebased/reverified)."
+      ],
+      "carried_over_notes": [],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 004. Adult Gold Dragon"
+    },
+    {
+      "number": 5,
+      "name": "Adult Silver Dragon",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action"
+      ],
+      "recorded_decisions": [
+        "Change Shape — APPROVED FOR ALL MATCHING MONSTERS:** Retain the complete printed Change Shape on card/source; never select it in Iron Pit combat. Other breath, fear, weapon, legendary effects stay intact. This is an explicit arena-only RAW deviation. Scope: [#663](https://github.com/cbw29512/D20-ironpit/pull/663) (stale PR must be rebased/reverified)."
+      ],
+      "carried_over_notes": [],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 005. Adult Silver Dragon"
+    },
+    {
+      "number": 6,
+      "name": "Air Elemental",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:recharge",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [
+        "**Known directed work:** Air Form: reuse movement, spaces and creature occupancy constraints; do not reduce to presentation."
+      ],
+      "pending_source_review": [
+        "**mechanic:recharge**: Bind Recharge threshold to the exact printed Action and source-owned resource/turn roll. Certification requires the recharged Action to be legal or formally excluded.",
+        "**source:extra-action** (review candidate actions: **Whirlwind (Recharge 4–6)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Air Form**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.",
+        "Air Form occupied-space exception, Whirlwind save/prone/fling/collision, Recharge 4–6; [#683](https://github.com/cbw29512/D20-ironpit/issues/683)."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 006. Air Elemental"
+    },
+    {
+      "number": 7,
+      "name": "Ancient Brass Dragon",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action"
+      ],
+      "recorded_decisions": [
+        "Change Shape — APPROVED FOR ALL MATCHING MONSTERS:** Retain the complete printed Change Shape on card/source; never select it in Iron Pit combat. Other breath, fear, weapon, legendary effects stay intact. This is an explicit arena-only RAW deviation. Scope: [#663](https://github.com/cbw29512/D20-ironpit/pull/663) (stale PR must be rebased/reverified)."
+      ],
+      "carried_over_notes": [],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 007. Ancient Brass Dragon"
+    },
+    {
+      "number": 8,
+      "name": "Ancient Bronze Dragon",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action"
+      ],
+      "recorded_decisions": [
+        "Change Shape — APPROVED FOR ALL MATCHING MONSTERS:** Retain the complete printed Change Shape on card/source; never select it in Iron Pit combat. Other breath, fear, weapon, legendary effects stay intact. This is an explicit arena-only RAW deviation. Scope: [#663](https://github.com/cbw29512/D20-ironpit/pull/663) (stale PR must be rebased/reverified)."
+      ],
+      "carried_over_notes": [],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 008. Ancient Bronze Dragon"
+    },
+    {
+      "number": 9,
+      "name": "Ancient Copper Dragon",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action"
+      ],
+      "recorded_decisions": [
+        "Change Shape — APPROVED FOR ALL MATCHING MONSTERS:** Retain the complete printed Change Shape on card/source; never select it in Iron Pit combat. Other breath, fear, weapon, legendary effects stay intact. This is an explicit arena-only RAW deviation. Scope: [#663](https://github.com/cbw29512/D20-ironpit/pull/663) (stale PR must be rebased/reverified)."
+      ],
+      "carried_over_notes": [],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 009. Ancient Copper Dragon"
+    },
+    {
+      "number": 10,
+      "name": "Ancient Gold Dragon",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action"
+      ],
+      "recorded_decisions": [
+        "Change Shape — APPROVED FOR ALL MATCHING MONSTERS:** Retain the complete printed Change Shape on card/source; never select it in Iron Pit combat. Other breath, fear, weapon, legendary effects stay intact. This is an explicit arena-only RAW deviation. Scope: [#663](https://github.com/cbw29512/D20-ironpit/pull/663) (stale PR must be rebased/reverified)."
+      ],
+      "carried_over_notes": [],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 010. Ancient Gold Dragon"
+    },
+    {
+      "number": 11,
+      "name": "Ancient Silver Dragon",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action"
+      ],
+      "recorded_decisions": [
+        "Change Shape — APPROVED FOR ALL MATCHING MONSTERS:** Retain the complete printed Change Shape on card/source; never select it in Iron Pit combat. Other breath, fear, weapon, legendary effects stay intact. This is an explicit arena-only RAW deviation. Scope: [#663](https://github.com/cbw29512/D20-ironpit/pull/663) (stale PR must be rebased/reverified)."
+      ],
+      "carried_over_notes": [],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 011. Ancient Silver Dragon"
+    },
+    {
+      "number": 12,
+      "name": "Androsphinx",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:legendary",
+        "mechanic:spellcasting",
+        "source:extra-action",
+        "source:legendary",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:legendary**: Use the existing legendary action economy but certify each source choice, turn restriction and exact combat resolution, not just the generic pool.",
+        "**mechanic:spellcasting** (**12-level wisdom caster; 15 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:extra-action** (review candidate actions: **Roar (3/Day); First Roar; Second Roar; Third Roar**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:legendary** (**Teleport; Cast a Spell**): Implement each printed option and its point cost, target, turn-end timing, spend/refill lifecycle via existing legendary-action system.",
+        "**source:trait** (**Inscrutable; Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.",
+        "Three sequenced Roars; 2014 prepared spells; source-legal legendary Claw and Cast a Spell (Teleport no-cast); [#684](https://github.com/cbw29512/D20-ironpit/issues/684)."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 012. Androsphinx"
+    },
+    {
+      "number": 13,
+      "name": "Archmage",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [
+        "mechanic:spellcasting** (**18-level intelligence caster; 25 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.",
+        "Prepared spell source→Action binding foundation **specified** (slots already exist; not implemented); [#685](https://github.com/cbw29512/D20-ironpit/issues/685).",
+        "USER-APPROVED 2026-10-08: all printed source pre-casts apply.** The 2014 Archmage begins with **Mind Blank (8th; 24h; no Concentration) + Stoneskin (4th; up to 1h; Concentration) + Mage Armor (1st; 8h; no Concentration)** as real buffs in the free opening phase before initiative. One printed Concentration, normal spell slot expenditures, no additional optional fourth opening buff, and do not double-count Mage Armor's AC. Later Globe may replace Stoneskin Concentration if legally cast. §7.1 rules contract updated; code/CI remains pending.",
+        "Rest of printed spell list classified for planning:** generic 2014 save-damage/spell-attack/invisibility/defensive/Concentration/counterspell mechanics apply; approved arena-neutral informational spells remain on source/card without casts; approved Wall of Force, Teleport and Time Stop replacements remain confined to the Archmage's arena loadout. The three source-printed pre-casts are mandatory. No more planning questions; **implementation and Python/browser source admission remain pending**."
+      ],
+      "carried_over_notes": [],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 013. Archmage"
+    },
+    {
+      "number": 14,
+      "name": "Assassin",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:trait"
+      ],
+      "recorded_decisions": [
+        "source:trait** (**Assassinate, Evasion, Sneak Attack planning approved**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.",
+        "ASSASSINATE USER-APPROVED (2026-10-08):** On round one, when Assassin beats the target's Initiative/acts before it, each qualifying attack against that target is an Assassinate attack: attack-roll Advantage and **automatic critical damage on a hit** (not automatic hit). No separate Surprise prerequisite in the Pit. Stops after Assassin's first turn; source 2014 distinction retained as a specifically approved arena override. PR #664 currently only addresses Advantage; crit-on-hit runtime still needed.",
+        "Evasion approved:** reuse existing Rogue Dexterity save damage modifier: success = zero, failure = half, with existing Incapacitated constraint. PR #665 pending implementation verification.",
+        "Sneak Attack agreed reuse:** same generic Rogue once-per-turn +4d6 on weapon hit with Advantage or an eligible nearby ally without Disadvantage; printed name is source/log metadata. PR #666 pending implementation verification."
+      ],
+      "carried_over_notes": [],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 014. Assassin"
+    },
+    {
+      "number": 15,
+      "name": "Azer",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:trait"
+      ],
+      "recorded_decisions": [
+        "source:trait** (**Heated Body — planning approved, implementation pending**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.",
+        "Source-authored passive **Heated Body** always active. When a creature touches the Azer or hits it with a melee attack while within 5 feet, that creature takes **1d10 fire** (no extra Attack, Reaction, or resource). A miss, ranged attack, noncontact approach or mere proximity does not trigger. Use universal typed damage, resistance/immunity, melee-hit retaliation; independent real physical contact event only. Preserve separate **Heated Weapons** +1d6 fire already included in its warhammer and **Illumination** (10-ft bright + 10-ft dim) source, not mistakenly folded into Heated Body. Reusable heated-body primitive also serves Salamander/Remorhaz with their own printed dice, but do not switch the active monster review. **Existing PR #673** already carries the proposed Python/browser generic implementation and tests; stale PR requires CI/merge before certification."
+      ],
+      "carried_over_notes": [
+        "**Known directed work:** Heated Body: use existing typed retaliatory fire damage and add/reuse generic contact trigger after checking hit-versus-touch distinction."
+      ],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 015. Azer"
+    },
+    {
+      "number": 16,
+      "name": "Balor",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "source:trait"
+      ],
+      "recorded_decisions": [
+        "attack:incomplete** (**Longsword; Whip**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "source:trait** (**Death Throes documented; Fire Aura remains**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.",
+        "Death Throes (2014 RAW, planning complete; implementation pending):** Trigger the shared death-event resolver **when the Balor actually dies**, even if slain outside its own turn. Before final victory evaluation, apply a **30-foot-radius burst to every creature in range (friend or foe)**. Each rolls its own **DC 20 Dexterity save**; failure **20d6 Fire**, success **half**; apply normal typed defenses. Destroy the Balor's own weapons. Ignite unattended flammable arena objects only when present; default arena has none, so do not invent scenery. Never trigger merely because an undying combatant reached 0 HP; resolve the printed death event once only. No extra action, initiative turn, monster-specific explosion resolver, or summoned creature.",
+        "Fire Aura:** source-bound passive 3d6 Fire to every creature within 5 ft at the start of each Balor turn; independently 3d6 Fire when a creature touches Balor or successfully hits it with a melee attack from within 5 ft. Ordinary typed defenses, no trigger for miss or mere proximity outside start-turn aura. Reuse shared AoE periodic damage and Heated Body/Fire Shield contact retaliation; no duplicate custom resolver.",
+        "Longsword:** +14 to hit at 10 ft, 3d8+8 Slashing and 3d8 Lightning. On critical hit, roll each damage dice pool *three* times rather than the usual two; flat modifiers once. Universal critical-multiplier/source parameter, no Balor-only engine path.",
+        "Whip:** +14 to hit at 30 ft, 2d6+8 Slashing and 3d6 Fire; DC 20 Strength save on hit, failure pulls the target up to 25 ft toward Balor using shared forced movement; success no pull. Apply damage regardless of pull-save success. Preserve actual grid bounds, collision and legal placement.",
+        "Teleport:** printed on original source and card, arena AI never chooses relocation per existing Pit no-teleport policy. No substitute Action. All decisions above are planning-only, not verified runtime implementations."
+      ],
+      "carried_over_notes": [],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 016. Balor"
+    },
+    {
+      "number": 17,
+      "name": "Banshee",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**source:extra-action** (review candidate actions: **Horrifying Visage; Wail (1/Day)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Detect Life**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 017. Banshee"
+    },
+    {
+      "number": 18,
+      "name": "Barbed Devil",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:range",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [
+        "**Known directed work:** Barbed Hide: reuse contact retaliation; verify printed trigger and damage."
+      ],
+      "pending_source_review": [
+        "**attack:range**: Restore exact reach and ranged normal/long bands from source and use shared range legality/disadvantage.",
+        "**source:trait** (**Barbed Hide**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 018. Barbed Devil"
+    },
+    {
+      "number": 19,
+      "name": "Basilisk",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:trait"
+      ],
+      "recorded_decisions": [
+        "source:trait** (**Petrifying Gaze**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.",
+        "Petrifying Gaze:** source start-of-target-turn mutual sight and 30-ft predicate, DC12 CON; fail Restrained, repeat at end of next turn, fail again Petrified until eligible cure; use prior generic 2014 gaze-avoidance decision, which makes source unseen to averter but doesn't confer globally Blinded. Printed self-reflection and incapacitated exceptions remain source binding. Shared with Medusa, no separate implementation branch; #676."
+      ],
+      "carried_over_notes": [
+        "**Known directed work:** Petrifying Gaze: source-triggered sight/save and staged Restrained/Petrified timing; check generic gaze predicate."
+      ],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 019. Basilisk"
+    },
+    {
+      "number": 20,
+      "name": "Bearded Devil",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:complex",
+        "attack:incomplete",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [
+        "**Known directed work:** M-025 Steadfast: conditional Frightened immunity requires live active ally; PR #654 partially implemented, not certified. Then Beard: save -> Poisoned plus healing restriction; Glaive: stacking 1d10 ongoing wound, cleared on magical healing (Pit globally disallows Medicine checks)."
+      ],
+      "pending_source_review": [
+        "**attack:complex** (**Beard**): Compose base weapon attack with all on-hit and target-specific riders; use shared damage/save/condition code and independent typed components.",
+        "**attack:incomplete** (**Beard**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**source:trait** (**Steadfast**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 020. Bearded Devil"
+    },
+    {
+      "number": 21,
+      "name": "Behir",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:recharge",
+        "source:extra-action"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:recharge**: Bind Recharge threshold to the exact printed Action and source-owned resource/turn roll. Certification requires the recharged Action to be legal or formally excluded.",
+        "**source:extra-action** (review candidate actions: **Lightning Breath (Recharge 5–6); Swallow**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 021. Behir"
+    },
+    {
+      "number": 22,
+      "name": "Black Pudding",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Pseudopod**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**source:trait** (**Corrosive Form**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 022. Black Pudding"
+    },
+    {
+      "number": 23,
+      "name": "Bugbear",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:complex",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:complex**: Compose base weapon attack with all on-hit and target-specific riders; use shared damage/save/condition code and independent typed components.",
+        "**source:trait** (**Surprise Attack**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 023. Bugbear"
+    },
+    {
+      "number": 24,
+      "name": "Bulette",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**source:extra-action** (review candidate actions: **Deadly Leap**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 024. Bulette"
+    },
+    {
+      "number": 25,
+      "name": "Chain Devil",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:complex",
+        "source:extra-action",
+        "source:reaction"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:complex**: Compose base weapon attack with all on-hit and target-specific riders; use shared damage/save/condition code and independent typed components.",
+        "**source:extra-action** (review candidate actions: **Animate Chains (Recharges after a Short or Long Rest)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:reaction** (**Unnerving Mask**): Model genuine triggering event, timing, eligibility, reaction cost, source effect and reset in shared reaction dispatch; prove production Python/browser calls, not helper-only tests."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 025. Chain Devil"
+    },
+    {
+      "number": 26,
+      "name": "Chuul",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "multiattack:complex",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Pincer**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**multiattack:complex**: Bind legal attack order, alternative forms, target limitations and conditional count to shared multiattack selector; no invented extra attacks.",
+        "**source:extra-action** (review candidate actions: **Tentacles**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Sense Magic**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 026. Chuul"
+    },
+    {
+      "number": 27,
+      "name": "Clay Golem",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:recharge",
+        "source:extra-action"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:recharge**: Bind Recharge threshold to the exact printed Action and source-owned resource/turn roll. Certification requires the recharged Action to be legal or formally excluded.",
+        "**source:extra-action** (review candidate actions: **Haste (Recharge 5–6)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 027. Clay Golem"
+    },
+    {
+      "number": 28,
+      "name": "Cloaker",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Bite**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**source:extra-action** (review candidate actions: **Moan; Phantasms (Recharges after a Short or Long Rest)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Damage Transfer; Light Sensitivity**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 028. Cloaker"
+    },
+    {
+      "number": 29,
+      "name": "Cloud Giant",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 029. Cloud Giant"
+    },
+    {
+      "number": 30,
+      "name": "Couatl",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "mechanic:spellcasting",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Bite**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:extra-action** (review candidate actions: **Change Shape**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Innate Spellcasting; Shielded Mind**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 030. Couatl"
+    },
+    {
+      "number": 31,
+      "name": "Cult Fanatic",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:spellcasting** (**4-level wisdom caster; 8 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 031. Cult Fanatic"
+    },
+    {
+      "number": 32,
+      "name": "Darkmantle",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "source:extra-action"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Crush**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**source:extra-action** (review candidate actions: **Darkness Aura (1/Day)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 032. Darkmantle"
+    },
+    {
+      "number": 33,
+      "name": "Deep Gnome (Svirfneblin)",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 033. Deep Gnome (Svirfneblin)"
+    },
+    {
+      "number": 34,
+      "name": "Deva",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:extra-action** (review candidate actions: **Healing Touch (3/Day); Change Shape**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 034. Deva"
+    },
+    {
+      "number": 35,
+      "name": "Djinni",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "mechanic:spellcasting",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Scimitar**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:extra-action** (review candidate actions: **Create Whirlwind**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Elemental Demise; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 035. Djinni"
+    },
+    {
+      "number": 36,
+      "name": "Doppelganger",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:complex",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:complex**: Compose base weapon attack with all on-hit and target-specific riders; use shared damage/save/condition code and independent typed components.",
+        "**source:extra-action** (review candidate actions: **Read Thoughts**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Shapechanger; Ambusher; Surprise Attack**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 036. Doppelganger"
+    },
+    {
+      "number": 37,
+      "name": "Dretch",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**source:extra-action** (review candidate actions: **Fetid Cloud (1/Day)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 037. Dretch"
+    },
+    {
+      "number": 38,
+      "name": "Drider",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 038. Drider"
+    },
+    {
+      "number": 39,
+      "name": "Drow",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:complex",
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:complex**: Compose base weapon attack with all on-hit and target-specific riders; use shared damage/save/condition code and independent typed components.",
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 039. Drow"
+    },
+    {
+      "number": 40,
+      "name": "Druid",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:spellcasting** (**4-level wisdom caster; 9 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 040. Druid"
+    },
+    {
+      "number": 41,
+      "name": "Dryad",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:extra-action** (review candidate actions: **Fey Charm**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Innate Spellcasting; Speak with Beasts and Plants; Tree Stride**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 041. Dryad"
+    },
+    {
+      "number": 42,
+      "name": "Duergar",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**War Pick; Javelin**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**source:extra-action** (review candidate actions: **Enlarge (Recharges after a Short or Long Rest); Invisibility (Recharges after a Short or Long Rest)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Duergar Resilience**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 042. Duergar"
+    },
+    {
+      "number": 43,
+      "name": "Dust Mephit",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:recharge",
+        "mechanic:spellcasting",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:recharge**: Bind Recharge threshold to the exact printed Action and source-owned resource/turn roll. Certification requires the recharged Action to be legal or formally excluded.",
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:extra-action** (review candidate actions: **Blinding Breath (Recharge 6)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Death Burst; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 043. Dust Mephit"
+    },
+    {
+      "number": 44,
+      "name": "Efreeti",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:range",
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:range**: Restore exact reach and ranged normal/long bands from source and use shared range legality/disadvantage.",
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Elemental Demise; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 044. Efreeti"
+    },
+    {
+      "number": 45,
+      "name": "Erinyes",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Longbow**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**source:trait** (**Hellish Weapons**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 045. Erinyes"
+    },
+    {
+      "number": 46,
+      "name": "Ettercap",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:complex",
+        "attack:damage-type",
+        "mechanic:recharge"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:complex**: Compose base weapon attack with all on-hit and target-specific riders; use shared damage/save/condition code and independent typed components.",
+        "**attack:damage-type**: Preserve each typed damage component and apply defenses separately and save-halving in both engines.",
+        "**mechanic:recharge**: Bind Recharge threshold to the exact printed Action and source-owned resource/turn roll. Certification requires the recharged Action to be legal or formally excluded."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 046. Ettercap"
+    },
+    {
+      "number": 47,
+      "name": "Fire Elemental",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:complex",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [
+        "**Known directed work:** Fire Form/Water Susceptibility: reuse contact/fire application and damage-from-environment primitives; retain Pit environment policy."
+      ],
+      "pending_source_review": [
+        "**attack:complex**: Compose base weapon attack with all on-hit and target-specific riders; use shared damage/save/condition code and independent typed components.",
+        "**source:trait** (**Fire Form; Water Susceptibility**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 047. Fire Elemental"
+    },
+    {
+      "number": 48,
+      "name": "Flameskull",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:range",
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:range**: Restore exact reach and ranged normal/long bands from source and use shared range legality/disadvantage.",
+        "**mechanic:spellcasting** (**5-level intelligence caster; 6 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 048. Flameskull"
+    },
+    {
+      "number": 49,
+      "name": "Frog",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "arena:neutral"
+      ],
+      "recorded_decisions": [
+        "arena:neutral**: Verify existing no-combat-action arena policy and source text; never certify invented offense.",
+        "Noncombat source admission:** retain the printed Frog and arena-neutral classification; no fake Bite, damage dice or combat AI. This is a source rule, not a new user decision. Runtime/source certification independent."
+      ],
+      "carried_over_notes": [
+        "**Known directed work:** No printed meaningful arena attack: preserve arena-neutral status."
+      ],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 049. Frog"
+    },
+    {
+      "number": 50,
+      "name": "Gelatinous Cube",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**source:extra-action** (review candidate actions: **Engulf**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Ooze Cube; Transparent**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 050. Gelatinous Cube"
+    },
+    {
+      "number": 51,
+      "name": "Ghost",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:recharge",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:recharge**: Bind Recharge threshold to the exact printed Action and source-owned resource/turn roll. Certification requires the recharged Action to be legal or formally excluded.",
+        "**source:extra-action** (review candidate actions: **Etherealness; Horrifying Visage; Possession (Recharge 6)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Ethereal Sight**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 051. Ghost"
+    },
+    {
+      "number": 52,
+      "name": "Giant Frog",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:swallow",
+        "source:extra-action"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:swallow**: Bind source bite/grapple/size prerequisites, swallowed state, confinement, ongoing typed damage, escape, end on death and reset with existing shared grapple/ongoing-damage mechanics.",
+        "**source:extra-action** (review candidate actions: **Swallow**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 052. Giant Frog"
+    },
+    {
+      "number": 53,
+      "name": "Giant Spider",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:complex",
+        "attack:damage-type",
+        "mechanic:recharge"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:complex**: Compose base weapon attack with all on-hit and target-specific riders; use shared damage/save/condition code and independent typed components.",
+        "**attack:damage-type**: Preserve each typed damage component and apply defenses separately and save-halving in both engines.",
+        "**mechanic:recharge**: Bind Recharge threshold to the exact printed Action and source-owned resource/turn roll. Certification requires the recharged Action to be legal or formally excluded."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 053. Giant Spider"
+    },
+    {
+      "number": 54,
+      "name": "Giant Toad",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:swallow",
+        "source:extra-action"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:swallow**: Bind source bite/grapple/size prerequisites, swallowed state, confinement, ongoing typed damage, escape, end on death and reset with existing shared grapple/ongoing-damage mechanics.",
+        "**source:extra-action** (review candidate actions: **Swallow**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 054. Giant Toad"
+    },
+    {
+      "number": 55,
+      "name": "Gibbering Mouther",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "multiattack:complex",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**multiattack:complex**: Bind legal attack order, alternative forms, target limitations and conditional count to shared multiattack selector; no invented extra attacks.",
+        "**source:extra-action** (review candidate actions: **Blinding Spittle (Recharge 5–6)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Aberrant Ground; Gibbering**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 055. Gibbering Mouther"
+    },
+    {
+      "number": 56,
+      "name": "Glabrezu",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 056. Glabrezu"
+    },
+    {
+      "number": 57,
+      "name": "Gray Ooze",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Pseudopod**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**source:trait** (**Corrode Metal**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 057. Gray Ooze"
+    },
+    {
+      "number": 58,
+      "name": "Green Hag",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:extra-action** (review candidate actions: **Illusory Appearance; Invisible Passage**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 058. Green Hag"
+    },
+    {
+      "number": 59,
+      "name": "Grimlock",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**source:trait** (**Blind Senses**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 059. Grimlock"
+    },
+    {
+      "number": 60,
+      "name": "Guardian Naga",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:spellcasting** (**11-level wisdom caster; 15 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:extra-action** (review candidate actions: **Spit Poison**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 060. Guardian Naga"
+    },
+    {
+      "number": 61,
+      "name": "Gynosphinx",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:legendary",
+        "mechanic:spellcasting",
+        "source:legendary",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:legendary**: Use the existing legendary action economy but certify each source choice, turn restriction and exact combat resolution, not just the generic pool.",
+        "**mechanic:spellcasting** (**9-level intelligence caster; 15 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:legendary** (**Teleport**): Implement each printed option and its point cost, target, turn-end timing, spend/refill lifecycle via existing legendary-action system.",
+        "**source:trait** (**Inscrutable; Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 061. Gynosphinx"
+    },
+    {
+      "number": 62,
+      "name": "Harpy",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**source:extra-action** (review candidate actions: **Luring Song**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 062. Harpy"
+    },
+    {
+      "number": 63,
+      "name": "Homunculus",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:complex",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:complex**: Compose base weapon attack with all on-hit and target-specific riders; use shared damage/save/condition code and independent typed components.",
+        "**source:trait** (**Telepathic Bond**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 063. Homunculus"
+    },
+    {
+      "number": 64,
+      "name": "Horned Devil",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:complex",
+        "attack:range"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:complex**: Compose base weapon attack with all on-hit and target-specific riders; use shared damage/save/condition code and independent typed components.",
+        "**attack:range**: Restore exact reach and ranged normal/long bands from source and use shared range legality/disadvantage."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 064. Horned Devil"
+    },
+    {
+      "number": 65,
+      "name": "Hydra",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "multiattack:complex",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [
+        "**Known directed work:** Multiple/Reactive Heads: shared head count, sever/regrow triggers, attack count and reactions driven by combat state."
+      ],
+      "pending_source_review": [
+        "**multiattack:complex**: Bind legal attack order, alternative forms, target limitations and conditional count to shared multiattack selector; no invented extra attacks.",
+        "**source:extra-action**: Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Multiple Heads; Reactive Heads**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 065. Hydra"
+    },
+    {
+      "number": 66,
+      "name": "Ice Devil",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:recharge",
+        "source:extra-action"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:recharge**: Bind Recharge threshold to the exact printed Action and source-owned resource/turn roll. Certification requires the recharged Action to be legal or formally excluded.",
+        "**source:extra-action** (review candidate actions: **Wall of Ice (Recharge 6)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 066. Ice Devil"
+    },
+    {
+      "number": 67,
+      "name": "Ice Mephit",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:death-trigger",
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:death-trigger**: Reuse the zero-HP/death event path with source exact damage, area, saves, exclusions, timing and exactly-once fire.",
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Death Burst; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 067. Ice Mephit"
+    },
+    {
+      "number": 68,
+      "name": "Imp",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**source:extra-action** (review candidate actions: **Invisibility**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Shapechanger**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 068. Imp"
+    },
+    {
+      "number": 69,
+      "name": "Invisible Stalker",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:trait"
+      ],
+      "recorded_decisions": [
+        "source:trait** (**Invisibility**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.",
+        "Invisibility / Faultless Tracker:** invisible trait keeps RAW unseen attacker/target eligibility semantics through shared invisibility. Printed quarry/summoner tracking cannot produce combat benefits in Pit; user-approved arena-inert policy. Preserve both source labels; coding/CI pending."
+      ],
+      "carried_over_notes": [
+        "**User-approved arena policy (queued):** Faultless Tracker remains printed on source/card but has no effect in Iron Pit, no combat vision/targeting bonus. Invisibility uses existing universal system; Slam attacks are unaffected. Apply shared arena-inert trait classification and regenerate blockers; not yet implemented/certified."
+      ],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 069. Invisible Stalker"
+    },
+    {
+      "number": 70,
+      "name": "Knight",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**source:extra-action** (review candidate actions: **Leadership (Recharges after a Short or Long Rest)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 070. Knight"
+    },
+    {
+      "number": 71,
+      "name": "Kraken",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "mechanic:legendary",
+        "mechanic:swallow",
+        "multiattack:complex",
+        "source:extra-action",
+        "source:legendary",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Tentacle**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**mechanic:legendary**: Use the existing legendary action economy but certify each source choice, turn restriction and exact combat resolution, not just the generic pool.",
+        "**mechanic:swallow**: Bind source bite/grapple/size prerequisites, swallowed state, confinement, ongoing typed damage, escape, end on death and reset with existing shared grapple/ongoing-damage mechanics.",
+        "**multiattack:complex**: Bind legal attack order, alternative forms, target limitations and conditional count to shared multiattack selector; no invented extra attacks.",
+        "**source:extra-action** (review candidate actions: **Fling**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:legendary** (**Tentacle Attack or Fling; Lightning Storm; Ink Cloud**): Implement each printed option and its point cost, target, turn-end timing, spend/refill lifecycle via existing legendary-action system.",
+        "**source:trait** (**Freedom of Movement**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 071. Kraken"
+    },
+    {
+      "number": 72,
+      "name": "Lamia",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "mechanic:spellcasting",
+        "multiattack:complex",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Claws**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**multiattack:complex**: Bind legal attack order, alternative forms, target limitations and conditional count to shared multiattack selector; no invented extra attacks.",
+        "**source:extra-action** (review candidate actions: **Intoxicating Touch**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 072. Lamia"
+    },
+    {
+      "number": 73,
+      "name": "Lich",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:legendary",
+        "mechanic:spellcasting",
+        "source:legendary",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:legendary**: Use the existing legendary action economy but certify each source choice, turn restriction and exact combat resolution, not just the generic pool.",
+        "**mechanic:spellcasting** (**18-level intelligence caster; 26 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:legendary** (**Cantrip; Frightening Gaze; Disrupt Life**): Implement each printed option and its point cost, target, turn-end timing, spend/refill lifecycle via existing legendary-action system.",
+        "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 073. Lich"
+    },
+    {
+      "number": 74,
+      "name": "Mage",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:spellcasting** (**9-level intelligence caster; 16 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 074. Mage"
+    },
+    {
+      "number": 75,
+      "name": "Magma Mephit",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:death-trigger",
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:death-trigger**: Reuse the zero-HP/death event path with source exact damage, area, saves, exclusions, timing and exactly-once fire.",
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Death Burst; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 075. Magma Mephit"
+    },
+    {
+      "number": 76,
+      "name": "Magmin",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "mechanic:death-trigger",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Touch**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**mechanic:death-trigger**: Reuse the zero-HP/death event path with source exact damage, area, saves, exclusions, timing and exactly-once fire.",
+        "**source:trait** (**Death Burst; Ignited Illumination**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 076. Magmin"
+    },
+    {
+      "number": 77,
+      "name": "Manticore",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:limited-use",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:limited-use**: Bind uses, expenditure, recovery/regrowth roll/interval and reset to generic encounter resources.",
+        "**source:trait** (**Tail Spike Regrowth**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 077. Manticore"
+    },
+    {
+      "number": 78,
+      "name": "Marilith",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:complex",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:complex**: Compose base weapon attack with all on-hit and target-specific riders; use shared damage/save/condition code and independent typed components.",
+        "**source:trait** (**Reactive**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 078. Marilith"
+    },
+    {
+      "number": 79,
+      "name": "Medusa",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:trait"
+      ],
+      "recorded_decisions": [
+        "source:trait** (**Petrifying Gaze**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.",
+        "User-approved Petrifying Gaze:** generic gaze/avert choice shared with Basilisk, but this 2014 source uses DC14 CON at 30 ft; fail by 5 or more triggers immediate Petrified; otherwise failed save Restrained followed by source next-turn repeat and Petrification on further failure. Preserve mutual sight and self-reflection qualifiers. Reuse shared stage/conditional gaze, #676; not certified."
+      ],
+      "carried_over_notes": [
+        "**Known directed work:** Petrifying Gaze: reuse timed save escalation to Petrified, but verify sight/gaze avoidance and source timing.",
+        "**User decision, queued:** Same shared gaze mechanic and sight/avert policy as Basilisk. Medusa supplies **DC 14 Constitution, 30-ft range** and the special **fail by 5 or more => immediate Petrified** escalation (terminal Iron Pit outcome). Other failed saves follow existing Restrained → repeat-save → Petrified progression; source qualifiers preserved. Not implemented/certified."
+      ],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 079. Medusa"
+    },
+    {
+      "number": 80,
+      "name": "Mimic",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Pseudopod**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**source:trait** (**Shapechanger; Adhesive (Object Form Only); False Appearance (Object Form Only); Grappler**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 080. Mimic"
+    },
+    {
+      "number": 81,
+      "name": "Mummy",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "source:extra-action"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Rotting Fist**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**source:extra-action** (review candidate actions: **Dreadful Glare**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 081. Mummy"
+    },
+    {
+      "number": 82,
+      "name": "Mummy Lord",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "mechanic:legendary",
+        "mechanic:spellcasting",
+        "source:extra-action",
+        "source:legendary",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Rotting Fist**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**mechanic:legendary**: Use the existing legendary action economy but certify each source choice, turn restriction and exact combat resolution, not just the generic pool.",
+        "**mechanic:spellcasting** (**10-level wisdom caster; 15 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:extra-action** (review candidate actions: **Dreadful Glare**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:legendary** (**Attack; Blinding Dust; Blasphemous Word; Channel Negative Energy; Whirlwind of Sand**): Implement each printed option and its point cost, target, turn-end timing, spend/refill lifecycle via existing legendary-action system.",
+        "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 082. Mummy Lord"
+    },
+    {
+      "number": 83,
+      "name": "Night Hag",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:extra-action** (review candidate actions: **Change Shape; Etherealness; Nightmare Haunting (1/Day)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 083. Night Hag"
+    },
+    {
+      "number": 84,
+      "name": "Nightmare",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**source:extra-action** (review candidate actions: **Ethereal Stride**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Confer Fire Resistance**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 084. Nightmare"
+    },
+    {
+      "number": 85,
+      "name": "Oni",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "mechanic:spellcasting",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Glaive**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:extra-action** (review candidate actions: **Change Shape**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 085. Oni"
+    },
+    {
+      "number": 86,
+      "name": "Otyugh",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Tentacle**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**source:extra-action** (review candidate actions: **Tentacle Slam**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Limited Telepathy**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 086. Otyugh"
+    },
+    {
+      "number": 87,
+      "name": "Pit Fiend",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Bite**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Fear Aura; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 087. Pit Fiend"
+    },
+    {
+      "number": 88,
+      "name": "Planetar",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:extra-action** (review candidate actions: **Healing Touch**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Divine Awareness; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 088. Planetar"
+    },
+    {
+      "number": 89,
+      "name": "Priest",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:spellcasting** (**5-level wisdom caster; 10 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Divine Eminence; Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 089. Priest"
+    },
+    {
+      "number": 90,
+      "name": "Pseudodragon",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:complex",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:complex**: Compose base weapon attack with all on-hit and target-specific riders; use shared damage/save/condition code and independent typed components.",
+        "**source:trait** (**Limited Telepathy**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 090. Pseudodragon"
+    },
+    {
+      "number": 91,
+      "name": "Purple Worm",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:complex",
+        "mechanic:swallow"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:complex**: Compose base weapon attack with all on-hit and target-specific riders; use shared damage/save/condition code and independent typed components.",
+        "**mechanic:swallow**: Bind source bite/grapple/size prerequisites, swallowed state, confinement, ongoing typed damage, escape, end on death and reset with existing shared grapple/ongoing-damage mechanics."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 091. Purple Worm"
+    },
+    {
+      "number": 92,
+      "name": "Quasit",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:complex",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:complex**: Compose base weapon attack with all on-hit and target-specific riders; use shared damage/save/condition code and independent typed components.",
+        "**source:extra-action** (review candidate actions: **Scare (1/Day); Invisibility**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Shapechanger**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 092. Quasit"
+    },
+    {
+      "number": 93,
+      "name": "Rakshasa",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:defense",
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:defense**: Bind printed conditional magic/condition damage defense to universal attack/save/spell predicates without monster-specific code.",
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Limited Magic Immunity; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 093. Rakshasa"
+    },
+    {
+      "number": 94,
+      "name": "Remorhaz",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:swallow",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [
+        "**Known directed work:** Heated Body: contact retaliation with source fire dice and temperature-independent Pit interpretation."
+      ],
+      "pending_source_review": [
+        "**mechanic:swallow**: Bind source bite/grapple/size prerequisites, swallowed state, confinement, ongoing typed damage, escape, end on death and reset with existing shared grapple/ongoing-damage mechanics.",
+        "**source:extra-action** (review candidate actions: **Swallow**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Heated Body**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 094. Remorhaz"
+    },
+    {
+      "number": 95,
+      "name": "Roper",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**source:extra-action** (review candidate actions: **Tendril; Reel**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Grasping Tendrils**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 095. Roper"
+    },
+    {
+      "number": 96,
+      "name": "Rug of Smothering",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:none",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [
+        "**Known directed work:** Damage Transfer: reuse distributed incoming damage primitive if exact; integrate grapple/restrain and existing susceptibility."
+      ],
+      "pending_source_review": [
+        "**attack:none**: Do not invent an attack for a non-offensive source creature. Confirm arena participation policy.",
+        "**source:extra-action** (review candidate actions: **Smother**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Damage Transfer**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 096. Rug of Smothering"
+    },
+    {
+      "number": 97,
+      "name": "Rust Monster",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**source:extra-action** (review candidate actions: **Antennae**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Iron Scent; Rust Metal**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 097. Rust Monster"
+    },
+    {
+      "number": 98,
+      "name": "Salamander",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:complex",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [
+        "**Known directed work:** Heated Body: generic touch retaliation; tail: exact own-grapple auto-hit constraint, not mere Advantage."
+      ],
+      "pending_source_review": [
+        "**attack:complex**: Compose base weapon attack with all on-hit and target-specific riders; use shared damage/save/condition code and independent typed components.",
+        "**source:trait** (**Heated Body**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 098. Salamander"
+    },
+    {
+      "number": 99,
+      "name": "Sea Hag",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**source:extra-action** (review candidate actions: **Death Glare; Illusory Appearance**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Horrific Appearance**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 099. Sea Hag"
+    },
+    {
+      "number": 100,
+      "name": "Sea Horse",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:none"
+      ],
+      "recorded_decisions": [
+        "attack:none**: Do not invent an attack for a non-offensive source creature. Confirm arena participation policy.",
+        "User approval carried forward:** Sea Horse is selectable in Pit despite having no damaging attack; exactly zero attack damage and no fabricated source Action. Permit normal no-damage fight termination/fallback. Runtime integration pending."
+      ],
+      "carried_over_notes": [
+        "**USER DECISION / QUEUED:** Sea Horse may be selected and fielded in Iron Pit; it simply deals **0 attack damage**. Do not invent a damaging attack or alter the printed source. Change arena-neutral exclusion/certification behavior to allow a valid non-damaging participant; ensure combat can terminate without stalls. Not implemented/certified."
+      ],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 100. Sea Horse"
+    },
+    {
+      "number": 101,
+      "name": "Shadow",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Strength Drain**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**source:trait** (**Sunlight Weakness**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 101. Shadow"
+    },
+    {
+      "number": 102,
+      "name": "Shambling Mound",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:swallow",
+        "multiattack:complex",
+        "source:extra-action"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:swallow**: Bind source bite/grapple/size prerequisites, swallowed state, confinement, ongoing typed damage, escape, end on death and reset with existing shared grapple/ongoing-damage mechanics.",
+        "**multiattack:complex**: Bind legal attack order, alternative forms, target limitations and conditional count to shared multiattack selector; no invented extra attacks.",
+        "**source:extra-action** (review candidate actions: **Engulf**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 102. Shambling Mound"
+    },
+    {
+      "number": 103,
+      "name": "Shield Guardian",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:reaction",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**source:reaction** (**Shield**): Model genuine triggering event, timing, eligibility, reaction cost, source effect and reset in shared reaction dispatch; prove production Python/browser calls, not helper-only tests.",
+        "**source:trait** (**Bound; Spell Storing**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 103. Shield Guardian"
+    },
+    {
+      "number": 104,
+      "name": "Shrieker",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:none",
+        "source:reaction"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:none**: Do not invent an attack for a non-offensive source creature. Confirm arena participation policy.",
+        "**source:reaction** (**Shriek**): Model genuine triggering event, timing, eligibility, reaction cost, source effect and reset in shared reaction dispatch; prove production Python/browser calls, not helper-only tests."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 104. Shrieker"
+    },
+    {
+      "number": 105,
+      "name": "Solar",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "mechanic:legendary",
+        "mechanic:spellcasting",
+        "source:extra-action",
+        "source:legendary",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:incomplete** (**Slaying Longbow**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**mechanic:legendary**: Use the existing legendary action economy but certify each source choice, turn restriction and exact combat resolution, not just the generic pool.",
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:extra-action** (review candidate actions: **Flying Sword; Healing Touch (4/Day)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:legendary** (**Teleport; Searing Burst; Blinding Gaze**): Implement each printed option and its point cost, target, turn-end timing, spend/refill lifecycle via existing legendary-action system.",
+        "**source:trait** (**Divine Awareness; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 105. Solar"
+    },
+    {
+      "number": 106,
+      "name": "Spectator",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action",
+        "source:reaction"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**source:extra-action** (review candidate actions: **Eye Rays; Create Food and Water**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:reaction** (**Spell Reflection**): Model genuine triggering event, timing, eligibility, reaction cost, source effect and reset in shared reaction dispatch; prove production Python/browser calls, not helper-only tests."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 106. Spectator"
+    },
+    {
+      "number": 107,
+      "name": "Spirit Naga",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:spellcasting** (**10-level intelligence caster; 13 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 107. Spirit Naga"
+    },
+    {
+      "number": 108,
+      "name": "Sprite",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:complex",
+        "source:extra-action"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**attack:complex**: Compose base weapon attack with all on-hit and target-specific riders; use shared damage/save/condition code and independent typed components.",
+        "**source:extra-action** (review candidate actions: **Heart Sight; Invisibility**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 108. Sprite"
+    },
+    {
+      "number": 109,
+      "name": "Steam Mephit",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:death-trigger",
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:death-trigger**: Reuse the zero-HP/death event path with source exact damage, area, saves, exclusions, timing and exactly-once fire.",
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Death Burst; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 109. Steam Mephit"
+    },
+    {
+      "number": 110,
+      "name": "Stirge",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "arena:removed"
+      ],
+      "recorded_decisions": [
+        "arena:removed**: Retain full source, record approved arena removal, no mechanical substitute.",
+        "User approved exclusion carried forward:** Stirge remains on immutable source/card but is intentionally not selectable in arena pending later product decision; do not implement attachment/Blood Drain solely for this excluded roster item."
+      ],
+      "carried_over_notes": [
+        "**USER DECISION — REMOVED FOR NOW:** Retain source/stat block, but exclude Stirge from selectable arena roster. Do not build Blood Drain/attachment until revisited. This is an intentional exclusion, not combat certification."
+      ],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 110. Stirge"
+    },
+    {
+      "number": 111,
+      "name": "Stone Giant",
+      "planning_state": "decision_complete",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:reaction"
+      ],
+      "recorded_decisions": [
+        "source:reaction** (**Rock Catching**): Model genuine triggering event, timing, eligibility, reaction cost, source effect and reset in shared reaction dispatch; prove production Python/browser calls, not helper-only tests.",
+        "User-approved Rock Catching:** when a qualifying ranged attack hits, spend available Reaction, roll DC10 Dexterity save; success negates the damage, failure resolves normal hit/damage. Broad Pit ranged-attack eligibility was already directed; use universal Reaction/save/damage cancellation, not a Stone Giant-only resolver."
+      ],
+      "carried_over_notes": [
+        "**User ruling / queued:** Reuse existing 1 Reaction per round for Rock Catching: when a qualifying ranged attack hits, make DC 10 Dexterity save; pass negates damage, fail resolves ordinary damage and defenses. User broadened rock/similar hurled objects to ranged attacks as Iron Pit simplification; implementation must distinguish ranged attack hits from spells/AoE before activating. Source text remains unchanged. **Not implemented/certified.**"
+      ],
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 111. Stone Giant"
+    },
+    {
+      "number": 112,
+      "name": "Storm Giant",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:spellcasting",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:spellcasting**: Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
+        "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 112. Storm Giant"
+    },
+    {
+      "number": 113,
+      "name": "Succubus/Incubus",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**source:extra-action** (review candidate actions: **Charm; Draining Kiss; Etherealness**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Telepathic Bond; Shapechanger**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 113. Succubus/Incubus"
+    },
+    {
+      "number": 114,
+      "name": "Tarrasque",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:legendary",
+        "mechanic:swallow",
+        "source:extra-action",
+        "source:legendary",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:legendary**: Use the existing legendary action economy but certify each source choice, turn restriction and exact combat resolution, not just the generic pool.",
+        "**mechanic:swallow**: Bind source bite/grapple/size prerequisites, swallowed state, confinement, ongoing typed damage, escape, end on death and reset with existing shared grapple/ongoing-damage mechanics.",
+        "**source:extra-action** (review candidate actions: **Swallow**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:legendary** (**Attack; Move; Chomp**): Implement each printed option and its point cost, target, turn-end timing, spend/refill lifecycle via existing legendary-action system.",
+        "**source:trait** (**Reflective Carapace**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 114. Tarrasque"
+    },
+    {
+      "number": 115,
+      "name": "Vampire",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "mechanic:legendary",
+        "multiattack:complex",
+        "source:extra-action",
+        "source:legendary",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [
+        "**Known directed work:** Shapechanger + Misty Escape + weaknesses: separate form state, zero-HP escape and environmental/debuff rules before legendary/actions."
+      ],
+      "pending_source_review": [
+        "**attack:incomplete** (**Unarmed Strike (Vampire Form Only); Bite. (Bat or Vampire Form Only)**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**mechanic:legendary**: Use the existing legendary action economy but certify each source choice, turn restriction and exact combat resolution, not just the generic pool.",
+        "**multiattack:complex**: Bind legal attack order, alternative forms, target limitations and conditional count to shared multiattack selector; no invented extra attacks.",
+        "**source:extra-action** (review candidate actions: **Multiattack. (Vampire Form Only); Charm; Children of the Night (1/Day)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:legendary** (**Move**): Implement each printed option and its point cost, target, turn-end timing, spend/refill lifecycle via existing legendary-action system.",
+        "**source:trait** (**Shapechanger; Misty Escape; Vampire Weaknesses**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 115. Vampire"
+    },
+    {
+      "number": 116,
+      "name": "Vampire Spawn",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "attack:incomplete",
+        "multiattack:complex",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [
+        "**Known directed work:** Vampire Weaknesses: evaluate environment-derived damage/restrictions plus existing attack riders."
+      ],
+      "pending_source_review": [
+        "**attack:incomplete** (**Claws; Bite**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.",
+        "**multiattack:complex**: Bind legal attack order, alternative forms, target limitations and conditional count to shared multiattack selector; no invented extra attacks.",
+        "**source:trait** (**Vampire Weaknesses**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 116. Vampire Spawn"
+    },
+    {
+      "number": 117,
+      "name": "Vrock",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:recharge",
+        "source:extra-action"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**mechanic:recharge**: Bind Recharge threshold to the exact printed Action and source-owned resource/turn roll. Certification requires the recharged Action to be legal or formally excluded.",
+        "**source:extra-action** (review candidate actions: **Spores (Recharge 6); Stunning Screech (1/Day)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 117. Vrock"
+    },
+    {
+      "number": 118,
+      "name": "Water Elemental",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "mechanic:recharge",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [
+        "**Known directed work:** Water Form/Freeze: reuse space/water traversal and susceptibility/condition with actual trigger."
+      ],
+      "pending_source_review": [
+        "**mechanic:recharge**: Bind Recharge threshold to the exact printed Action and source-owned resource/turn roll. Certification requires the recharged Action to be legal or formally excluded.",
+        "**source:extra-action** (review candidate actions: **Whelm (Recharge 4–6)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Water Form; Freeze**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 118. Water Elemental"
+    },
+    {
+      "number": 119,
+      "name": "Werebear",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "multiattack:complex",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**multiattack:complex**: Bind legal attack order, alternative forms, target limitations and conditional count to shared multiattack selector; no invented extra attacks.",
+        "**source:trait** (**Shapechanger**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 119. Werebear"
+    },
+    {
+      "number": 120,
+      "name": "Wereboar",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "multiattack:complex",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**multiattack:complex**: Bind legal attack order, alternative forms, target limitations and conditional count to shared multiattack selector; no invented extra attacks.",
+        "**source:extra-action** (review candidate actions: **Multiattack (Humanoid or Hybrid Form Only)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Shapechanger**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 120. Wereboar"
+    },
+    {
+      "number": 121,
+      "name": "Wererat",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "multiattack:complex",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**multiattack:complex**: Bind legal attack order, alternative forms, target limitations and conditional count to shared multiattack selector; no invented extra attacks.",
+        "**source:extra-action** (review candidate actions: **Multiattack (Humanoid or Hybrid Form Only)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Shapechanger**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 121. Wererat"
+    },
+    {
+      "number": 122,
+      "name": "Weretiger",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "multiattack:complex",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**multiattack:complex**: Bind legal attack order, alternative forms, target limitations and conditional count to shared multiattack selector; no invented extra attacks.",
+        "**source:extra-action** (review candidate actions: **Multiattack (Humanoid or Hybrid Form Only)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Shapechanger; Pounce (Tiger or Hybrid Form Only)**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 122. Weretiger"
+    },
+    {
+      "number": 123,
+      "name": "Werewolf",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [],
+      "pending_source_review": [
+        "**source:extra-action** (review candidate actions: **Multiattack. (Humanoid or Hybrid Form Only)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Shapechanger**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 123. Werewolf"
+    },
+    {
+      "number": 124,
+      "name": "Will-o'-Wisp",
+      "planning_state": "needs_source_review",
+      "implementation_state": "pending_verified_gate",
+      "blocker_categories": [
+        "source:extra-action",
+        "source:trait"
+      ],
+      "recorded_decisions": [],
+      "carried_over_notes": [
+        "**Known directed work:** Consume Life/Ephemeral/Variable Illumination: separate HP-threshold/terminal trigger, movement/material interactions and illumination."
+      ],
+      "pending_source_review": [
+        "**source:extra-action** (review candidate actions: **Invisibility**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
+        "**source:trait** (**Consume Life; Ephemeral; Variable Illumination**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+      ],
+      "open_user_questions": [],
+      "source_packet_heading": "### 124. Will-o'-Wisp"
+    }
+  ]
+}
