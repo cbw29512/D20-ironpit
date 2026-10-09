@@ -331,6 +331,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved Pit behavior:** Existing no-teleport-relocation arena policy excludes Legendary Teleport from combat AI; never select or expend legendary resources for it. No replacement effect is invented. Use generic arena-ineligible action policy for source-equivalent teleport actions.
 - **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED until source retention and no-selection parity validated. Next Androsphinx ability: Legendary Cast a Spell.
 
+### Androsphinx — Legendary Cast a Spell (2014), user approved 2026-10-09
+
+- **Printed legendary action:** At end of another creature's turn, spend 3 of 3 legendary action points to cast one prepared spell, expending normal spell slot if required (cantrips do not expend slots). Legendary points refresh at start of source's turn; ordinary spell slot ledger is shared with nonlegendary casting. Observe 2014 source casting limitations, target/range, concentration, and at most one legendary action per eligible turn-end window.
+- **Approved tactical AI:** choose a legal combat-useful prepared spell only when its expected advantage exceeds alternative Claw legendary attacks; never select card-only spells or invalid dispels/cures or create duplicate active effects. Reuse source-accurate generic spellcast action through existing universal legendary-point scheduler, not Androsphinx-specific spell code.
+- **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED pending Python/browser action and slot accounting, generated parity and exact-head gates. Androsphinx planning review of recorded traits, Roars, claws, spell package and legendary choices is complete; implementation remains queued. Advance to the next monster in the canonical work order, checking already resolved items before posing decisions.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
