@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "ruleset": "2014",
+  "description": "Source-owned, intentionally bounded candidate set for Change Shape tactics; not an activated action or a substitute for a full source-compatible form compiler.",
+  "policies": [
+    {
+      "source_monster": "Deva",
+      "source_cr": "10",
+      "keep_original_form_when_not_beneficial": true,
+      "max_selected_forms": 4,
+      "form_template_ids": [
+        "2014-giant-ape",
+        "2014-giant-scorpion",
+        "2014-tyrannosaurus-rex",
+        "2014-half-red-dragon-veteran"
+      ],
+      "candidate_profiles": [
+        {
+          "form_template_id": "2014-giant-ape",
+          "combat_role": "sustained_melee_or_ranged_pressure",
+          "distinct_value": [
+            "two_fist_attacks",
+            "ranged_rock_attack"
+          ],
+          "tradeoffs": [
+            "armor_class_12",
+            "flight_lost"
+          ]
+        },
+        {
+          "form_template_id": "2014-giant-scorpion",
+          "combat_role": "close_quarters_control",
+          "distinct_value": [
+            "two_claw_grapples",
+            "poison_sting",
+            "three_attacks"
+          ],
+          "tradeoffs": [
+            "attack_bonus_4",
+            "flight_lost",
+            "blindsight_binding_requires_source_audit"
+          ]
+        },
+        {
+          "form_template_id": "2014-tyrannosaurus-rex",
+          "combat_role": "single_target_lockdown",
+          "distinct_value": [
+            "restraining_bite",
+            "reach_10ft"
+          ],
+          "tradeoffs": [
+            "armor_class_13",
+            "flight_lost",
+            "tail_cannot_target_bitten_enemy"
+          ]
+        },
+        {
+          "form_template_id": "2014-half-red-dragon-veteran",
+          "combat_role": "fire_damage_counter",
+          "distinct_value": [
+            "source_fire_resistance",
+            "armor_class_18",
+            "fire_breath_cone"
+          ],
+          "tradeoffs": [
+            "normal_deva_magic_resistance_already_reduces_spell_saves",
+            "lower_strength_and_dexterity",
+            "flight_lost",
+            "nonform_blindsight_source_audit_required"
+          ]
+        }
+      ],
+      "requirements": [
+        "source_form_must_be_2014_certified",
+        "form_must_be_humanoid_or_beast",
+        "form_cr_at_most_source_cr",
+        "source_capability_merge_must_be_certified",
+        "source_size_policy_and_footprint_must_be_resolved",
+        "net_value_after_action_cost_must_exceed_normal_form",
+        "no_automatic_repeated_form_swapping",
+        "base_and_new_form_defenses_compose_with_source_qualifiers",
+        "opponent_threats_evaluated_by_printed_damage_and_condition_effects"
+      ],
+      "selection_note": "Use enemy source actions to estimate expected damage by TYPE and concentration/rider status conditions by source DC/immunity/available attacks, weighting actual frequency and severity. Compare the Deva's retained qualified defenses with additional form defenses and each form's AC, senses, outgoing options and Action cost. Most melee weapon hits are already resisted if nonmagical; magically enhanced or silvered damage must be evaluated using actual source qualifiers. Never invent poison/lightning immunity: no currently shortlisted certified 2014 form grants those. Half-Red Dragon Veteran adds Fire Resistance; blocked Werebear's qualified nonmagical immunity is a possible FUTURE candidate only after 2014 certification and exact source overlay support. The existing Deva form stays selected whenever no legal useful counter exists. The Deva retains Magic Resistance in every legal form. Giant Scorpion Blindsight and Half-Red Dragon Veteran special senses need source-export verification."
+    }
+  ]
+}
