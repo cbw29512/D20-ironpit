@@ -6,6 +6,7 @@ import logging
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.monster_arena_action_policy_2014 import PIT_BANNED_ACTION_LABELS_2014
 from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014
+from app.content.monster_arena_unavailable_reactions_2014 import arena_unavailable_reaction_names_2014
 from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
 from app.content.monster_attack_source_corrections_2014 import corrected_attack_range_2014
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
@@ -40,7 +41,6 @@ _ARENA_NEUTRAL_MIND_ACTION_LABELS = frozenset({"weird insight"})
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 _PIT_REMOVED_MONSTER_IDS_2014 = frozenset({"stirge"})
 _PIT_ARENA_NEUTRAL_MONSTER_IDS_2014 = frozenset({"frog"})
-
 
 def _supported_charge(monster: SourceMonster2014) -> bool:
     return any(
@@ -112,7 +112,7 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
         blockers.append("source:extra-action")
     if unsupported_traits_2014(monster):
         blockers.append("source:trait")
-    if (monster.reaction_names or monster.parry_ac_bonus is not None) and not supports_parry_reaction_2014(monster):
+    if (set(monster.reaction_names) - arena_unavailable_reaction_names_2014(monster) or monster.parry_ac_bonus is not None) and not supports_parry_reaction_2014(monster):
         blockers.append("source:reaction")
     if monster.legendary_action_names and not supports_legendary_actions_2014(monster):
         blockers.append("source:legendary")
