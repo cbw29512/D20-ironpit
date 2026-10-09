@@ -34,6 +34,7 @@ def enter_replacement_form(
     hp_mode: str = "form_pool",
     temporary_hp_on_enter: int = 0,
     ends_on_incapacitated: bool = False,
+    ends_on_death: bool = False,
     replace_existing_form: bool = False,
 ) -> ReplacementFormResult:
     try:
@@ -56,6 +57,7 @@ def enter_replacement_form(
             form_max_hp=form_template.max_hp,
             hp_mode=hp_mode,
             ends_on_incapacitated=ends_on_incapacitated,
+            ends_on_death=ends_on_death,
             resource_id=resource_id,
             resource_cost=resource_cost,
             voluntary_revert_action=voluntary_revert_action,
@@ -130,6 +132,7 @@ def resolve_replacement_form_action(
             hp_mode=action.hp_mode,
             temporary_hp_on_enter=action.temporary_hp_on_enter,
             ends_on_incapacitated=action.ends_on_incapacitated,
+            ends_on_death=action.ends_on_death,
             replace_existing_form=action.replace_existing_form,
         )
     except ValueError:

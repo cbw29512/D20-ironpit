@@ -23,6 +23,7 @@ class ReplacementFormState(BaseModel):
     form_max_hp: int = Field(ge=1)
     hp_mode: Literal["form_pool", "retain_owner"] = "form_pool"
     ends_on_incapacitated: bool = False
+    ends_on_death: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1)
     voluntary_revert_action: str = "bonus_action"
