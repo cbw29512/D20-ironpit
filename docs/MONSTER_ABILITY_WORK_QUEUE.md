@@ -1,5 +1,7 @@
 # Iron Pit — monster ability work queue (2014 first)
 
+- **One-monster-at-a-time decision tracker (124 records):** [2014 Monster Planning Checklist](MONSTER_2014_PLANNING_CHECKLIST.md). This is the master planning sequence; finish all unresolved monster/ability decisions BEFORE hourly coding. Separate planning approval from actual Python/browser certification. The full source-backed details remain in [2014 Monster Blocker Fix Blueprints](MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md).
+
 **Complete 124-monster blocker fix and reuse plan:** [2014 source-grounded fix blueprints](MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md). These are queued plans; current generator output still controls certification.
 
 This is the **operational queue**, not a second monster source inventory. The authoritative per-monster checklist is [MONSTER_REMAINING_2014_WORKSHEET.md](MONSTER_REMAINING_2014_WORKSHEET.md); generated source blockers and [UNIVERSAL_MECHANIC_INVENTORY.md](UNIVERSAL_MECHANIC_INVENTORY.md) determine which monsters are actually clear. Never hand-edit generated inventories. Read [the monster playbook](playbooks/MONSTERS.md), source and locked rules before editing combat behavior.
