@@ -197,6 +197,15 @@ console.log("Area disabling-save threat parity passed.");
     "Printed area without a severe rider must not gain condition threat value");
   action.failedSaveTimedEffect = { effectId: "stunned" };
   assert.equal(policy.formMitigates(defender, setup, form), true);
+  action.requiresTargetHearing = true;
+  defender.state.active_effect_ids = ["deafened"];
+  window.IRON_PIT_BROWSER_SAVES.legalAction = (source, target) =>
+    !source.requiresTargetHearing || !target.state.active_effect_ids?.includes("deafened");
+  assert.equal(policy.formMitigates(defender, setup, form), false,
+    "Printed area must respect target hearing legality");
+  defender.state.active_effect_ids = [];
+  delete action.requiresTargetHearing;
+  window.IRON_PIT_BROWSER_SAVES.legalAction = () => true;
   assert.equal(enemy.state.resources["spell-slot-3"], 1,
     "A lookahead may not consume the source's resource");
 }

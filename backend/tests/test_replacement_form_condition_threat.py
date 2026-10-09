@@ -211,6 +211,15 @@ def test_printed_area_save_uses_chosen_legal_targets_and_remaining_resource(buil
             if resource.id == "spell-slot-3":
                 resource.current_uses = 0
         assert not form_mitigates_disabling_save(defender, setup, form)
+        for resource in enemy.state.resources:
+            if resource.id == "spell-slot-3":
+                resource.current_uses = 1
+        # Hearing requirements are filtered by the existing target legality
+        # rule; a deafened defender must not be treated as affected.
+        enemy.state.template.saving_throw_actions[0].requires_target_hearing = True
+        defender.state.active_effect_ids.append("deafened")
+        assert not form_mitigates_disabling_save(defender, setup, form)
+        defender.state.active_effect_ids.remove("deafened")
     assert defender.state.current_hp == int(defender.state.template.max_hp * 0.25)
 
 
