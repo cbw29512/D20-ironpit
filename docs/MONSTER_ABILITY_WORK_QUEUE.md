@@ -560,6 +560,29 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Printed RAW:** Damage immunities **Acid, Cold, Lightning, Slashing**; condition immunities **Blinded, Charmed, Deafened, Exhaustion, Frightened, Prone**; **Blindsight 60 ft (blind beyond this radius)**, passive Perception 8; walking speed 20 ft, climb speed 20 ft. Use exact source-defined typed damage immunity, condition immunity and blindsight/range mechanics. Crucial: 2014 Slashing Immunity is **already printed**; user arena override changes **only Split triggering/spawn behavior**, retaining that printed immunity. Lightning immunity likewise remains despite disabled Split. No double application or alternate invented immunity.
 - **Planning:** SOURCE VERIFIED, inventory complete (Amorphous, Corrosive Form, Spider Climb, Pseudopod, Split, defensive profile and senses). User approved no-split policy remains locked. **Implementation:** NOT CERTIFIED; item corrosion/durability and source action serialization remain blockers and need parity testing. Next canonical monster must be checked before moving.
 
+### Bugbear — Surprise Attack (2014), existing user approval reconciled 2026-10-09
+
+- **Printed source:** If Bugbear surprises a creature and hits it in first round, extra 2d6 damage. **USER-APPROVED PIT OVERRIDE (issue #696, 2026-10-08):** If Bugbear wins initiative over its selected target and takes its **first attack attempt of combat before target starts its first turn**, eligible hit adds +2d6 of matching attack damage type. Miss consumes the one attempt; no later retry. Do not import Assassin Advantage/automatic critical or turn this into printed RAW Surprised behavior. Immutable card retains source wording. Generic first-attempt/target-not-acted predicate, existing on-hit extra dice; shared with Assassinate condition only, not its effects.
+- **Planning:** PRIOR USER APPROVAL CONFIRMED in issue #696, NOT a fresh approval. **Implementation:** NOT CERTIFIED; exact Python/browser, target-turn/attack-attempt state and generated parity required.
+
+### Bugbear — Brute (2014), existing source damage binding reconciled 2026-10-09
+
+- **Printed passive:** Melee weapon hits gain one additional weapon damage die; printed Morningstar and melee Javelin damage dice already include it. No extra on-hit die must be added in generated combat actions. Never apply Brute to thrown attacks. Reuse universal weapon-source included-dice provenance from docs/INCLUDED_WEAPON_DAMAGE_AUDIT.md (merged #630). **Planning:** SOURCE REVIEWED, linked to existing issue #697 and printed dice, no new decision. **Implementation:** NOT CERTIFIED for complete Bugbear.
+
+### Bugbear — Morningstar (2014), source-reviewed existing issue #697
+
+- **Printed Action:** +4 melee weapon attack, 5-ft reach, hit 2d8+2 Piercing, already Brute-included; no Multiattack. Reuse ordinary source melee hit/typed damage. Surprise Attack +2d6 conditional overlay under issue #696 on first eligible attempt only. **Planning:** SOURCE REVIEWED / PRIOR DECISION #697, NOT REOPENED. **Implementation:** NOT CERTIFIED.
+
+### Bugbear — Javelin (2014), source-reviewed existing issue #697
+
+- **Printed Action:** **One source weapon, two modes** +4 both; melee reach 5 ft, **2d6+2 Piercing** including Brute; thrown range **30/120 ft**, **1d6+2 Piercing** with ordinary long-range Disadvantage past 30 ft, no Brute. Reuse generic source weapon's paired melee/thrown mode adapter; preserve mode for logging, range and attack resolution; do not model two distinct owned javelins. First-hit Surprise overlay source conditional. **Planning:** PREVIOUS SOURCE PLAN #697 REUSED; **Implementation:** NOT CERTIFIED, dual-mode source serialization may be missing; Python/browser tests pending.
+
+### Bugbear — remaining printed passives and source inventory (2014), 2026-10-09
+
+- **Long-Limbed:** 2014 Bugbear printed melee reach +5 ft **on its turn** when it makes a melee attack, not permanent reach or ranged reach. Parameterized source conditional reach modifier on active turn; ordinary opportunity attacks use normal reach. **Cross-reuse:** source conditional reach overrides, other long-reach traits. **Planning:** SOURCE REVIEWED / generic reach modifier, no new policy decision. **Implementation:** NOT CERTIFIED.
+- **Senses and mobility:** Darkvision 60 ft, passive Perception 10, speed 30 ft; ordinary printed race/type and non-combat traits remain in immutable stat block. **Planning:** SOURCE REVIEWED / native movement/senses, no new policy. **Implementation:** NOT CERTIFIED.
+- **Source inventory:** Surprise Attack, Brute, Long-Limbed, Morningstar, Javelin and passive senses/movement; no printed Multiattack. Prior issues #696/#697 resolve the policy decisions but **not execution blockers**. Future 2024 bugbear must not inherit 2014 source modifiers unverified. **Next ordered monster:** Clay Golem.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
