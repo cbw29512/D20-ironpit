@@ -294,6 +294,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Printed spell:** 1 Action, 60-ft range, 4th-level slot, DC18 Charisma save, Concentration up to 1 minute. Failed save applies the source-dependent Banishment/exile state; successful save has no effect. Preserve distinct native-plane/other-plane duration and return semantics where applicable, without inventing an arena-specific permanent victory.
 - **Approved reuse:** universal battlefield exile/Banished state, concentration lifecycle, save, spell slot, target legality and source-correct return. Fight state only; no Androsphinx-name resolver. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED pending Python/browser and source report validation.
 
+### Androsphinx — Freedom of Movement (2014), user approved 2026-10-09
+
+- **Printed spell:** 1 Action, touch, duration 1 hour, non-Concentration, level-4 spell. Ignores difficult-terrain movement costs; magic cannot reduce target speed or cause Paralyzed/Restrained; spending 5-ft movement escapes nonmagical restraint/grapple; underwater movement clauses remain source-retained, inactive in dry Pit.
+- **Approved combat preparation:** prefer eligible self or ally threatened by Grappled/Restrained/Paralyzed effects as **free arena-entry buff** with declarative source opt-in, no slot spent for opening application, preserve legal access, one-hour duration, ordinary benefit and no stacking of identical buffs. In-combat casting still uses normal Action and slot if chosen.
+- **Reuse:** already established universal 2014 Freedom of Movement and generic arena-entry buff planner; source parameters only. **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED for this monster until source binding, Python/browser and generated gates pass.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
