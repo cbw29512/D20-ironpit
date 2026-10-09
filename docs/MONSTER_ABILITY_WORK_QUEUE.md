@@ -162,6 +162,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved tactical selection:** consider Cure Wounds when Acolyte or an eligible ally is Bloodied (current HP <= half maximum); prioritize healing when its survival value exceeds an attack, with normal movement/touch target legality, one slot and one Action. Do not guarantee the spell is chosen whenever bloodied if tactically worse or illegal.
 - **Reuse:** 2014 universal Cure Wounds/healing, existing HP-threshold AI, legal beneficial target selection and monster spell slot resources; no new resolver. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED, pending Python/browser and generated certification.
 
+### Acolyte — Sanctuary (2014), user approved 2026-10-09
+
+- **Printed spell:** 1 Bonus Action, 30-ft range, 1 minute, no Concentration, DC 12 Wisdom save for an enemy attempting to attack warded target; failed save redirects to another legal target or attack is lost; ends on warded target attacking or casting a spell affecting an enemy, as specified in the 2014 source. Spends one first-level spell slot in combat.
+- **Approved AI:** prefer Sanctuary as a tactical in-combat defensive option for a vulnerable Bloodied eligible ally when survival value warrants it. Avoid wards on allies about to make attacks or offensive spells. Do not make it a default opening preparation buff and do not stack duplicate Sanctuary effects.
+- **Universal reuse:** source-accurate 2014 Sanctuary, generic warded-target save gate, modifier/expiration, Bonus Action/resource, ally targeting. No Acolyte-specific resolver. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED until full generated/Python/browser production integration and source blocker checks.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
