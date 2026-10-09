@@ -132,9 +132,9 @@ def test_distinct_passive_and_active_retaliation_sources_both_trigger_once():
     })
     defender = _member(combined, "defender", "monsters", 0)
     # The timed Fire Shield effect is active in fight state, unlike a passive.
-    from app.domain.runtime import TimedEffect
+    from app.domain.timed_effects import TimedEffect
     defender.state.timed_effects.append(TimedEffect(
-        effect_id="shield-test", source_effect_id="shield-test", remaining_rounds=3,
+        effect_id="shield-test", source_id="defender", source_effect_id="shield-test", expires_round=10,
     ))
     opponent = _member(build_commoner().model_copy(update={"max_hp": 100}), "opponent", "heroes", 5)
     assert apply_melee_hit_retaliation(
