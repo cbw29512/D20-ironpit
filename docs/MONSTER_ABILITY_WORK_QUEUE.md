@@ -410,6 +410,16 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Shared composition:** one universal melee hit -> separately typed damage components -> on-hit Strength save -> source-distance forced pull, constrained by 5-ft arena squares/occupation. Reuse ordinary forced movement and critical-multiplier effect; no Balor/Whip-specific resolver. Cross-monster reuse for any save-gated pull on hit and mixed slashing/fire strikes.
 - **Planning status:** USER APPROVED; **implementation:** NOT CERTIFIED, Python/browser/per-source binding and parity still pending. Finish checking remaining Balor printed abilities before next monster.
 
+### Balor — Teleport (2014), existing user-approved arena policy reused 2026-10-09
+
+- **Printed action:** Teleport up to 120 feet to unoccupied space seen; preserve on immutable card. The already-approved no-teleport arena policy used by Androsphinx excludes normal positional teleport from AI; no action/resource spent. Reuse generic arena-ineligible selection constraint. **Planning:** EXISTING POLICY REUSED, no new decision. **Implementation:** NOT CERTIFIED. **Review caveat:** Balor Fire Aura still has explicit PENDING USER CONFIRMATION status; do not silently change it or certify Balor.
+
+### Banshee — Detect Life (2014), source review 2026-10-09
+
+- **Printed trait:** Banshee magically senses living creatures up to **5 miles away** unless they are Undead or Constructs. It knows their general direction but not exact location. Passive, no action, no save, no damage, no debuff or creature reveal precision beyond wording.
+- **Universal composition:** Source-driven passive creature-type eligibility and broad presence/direction sensing. This does **not** bypass target-visibility restrictions for attacks or target-specific spells; do not grant exact squares or line of sight. Under standard enclosed 120×80-ft arena with combatants already identified, has no additional actionable effect; retain printed trait and treat as **combat-AI neutral** without implementing a general five-mile search subsystem. Reuse generic passive sensory metadata/AI-neutral classification for other broad-radius presence sensors.
+- **Planning status:** SOURCE REVIEWED; no new decision proposed beyond existing source-faithful no-extra-effects policy. **Implementation:** NOT CERTIFIED; binding/serialization and source-card retention verification pending. Continue Banshee's next printed ability before moving to next monster.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
