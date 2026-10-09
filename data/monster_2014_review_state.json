@@ -331,17 +331,19 @@
     {
       "number": 17,
       "name": "Banshee",
-      "planning_state": "needs_source_review",
+      "planning_state": "partial",
       "implementation_state": "pending_verified_gate",
       "blocker_categories": [
         "source:extra-action",
         "source:trait"
       ],
-      "recorded_decisions": [],
+      "recorded_decisions": [
+        "Horrifying Visage 2014: Action; every non-Undead 60-ft creature that can see Banshee incl allies; DC13 Wisdom fail Frightened 1min, repeat turn-end Wis at Disadvantage when source visible; 24h source-specific immunity on initial success or effect end, match-scoped for standard Pit. Reuse source-gated generic fear/save/visibility/repeat-disadvantage and immunity, no new monster resolver. Planning complete; code pending."
+      ],
       "carried_over_notes": [],
       "pending_source_review": [
-        "**source:extra-action** (review candidate actions: **Horrifying Visage; Wail (1/Day)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
-        "**source:trait** (**Detect Life**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
+        "Wail (1/Day): printed 30-ft hearing, cannot use in sunlight, Construct/Undead immune; each eligible DC13 CON, fail set HP to 0 (not 3d6 damage), success 3d6 psychic, use 1/day. Review existing death and death-save response.",
+        "Detect Life: passive sensing presence+general direction of non-Undead/non-Construct within 5 miles, not exact location; audit invisibility and target selection without precise location or see-invisibility."
       ],
       "open_user_questions": [],
       "source_packet_heading": "### 017. Banshee",
