@@ -259,6 +259,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved Iron Pit AI:** remove from combat action selection in the standard arena where relevant enemies are already identified and the printed detection does not improve combat eligibility. Do not delete source or falsely treat a future meaningful detection requirement as already supported.
 - **Reuse:** generic source-aware combat-utility classification for equivalent detection-only spells; no Androsphinx-name handler. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED pending binding/source-card checks.
 
+### Androsphinx — Detect Magic (2014), accepted by continuation 2026-10-09
+
+- **Printed spell:** Preserve Detect Magic on the immutable card with its genuine detection/concentration semantics; 1 Action, self, senses magic within 30 feet, Concentration up to 10 minutes.
+- **Standard Iron Pit AI policy:** do not select Detect Magic in combat merely to identify already-tracked magical effects; no tactical benefit demonstrated, and it costs Action and Concentration. Preserve it for any future meaningful eligibility/unknown magic model rather than deleting source.
+- **Reuse:** generic context-aware noncombat-detection spell selection policy, never monster-name code. **Planning:** CONTINUATION ACCEPTED; **Implementation:** NOT CERTIFIED.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
