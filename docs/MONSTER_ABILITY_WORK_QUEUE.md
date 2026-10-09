@@ -480,6 +480,27 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Printed action:** Makes **three melee attacks: one with its tail and two with its claws**. Sequence is one Tail and two Claws in same Multiattack action; use same source attack profiles as normal eligible attack actions. This is not three arbitrary attacks, and Hurl Flame is a separate Action, not substituted for an attack without source authority.
 - **Universal reuse:** Existing multiattack attack-plan executor with named source profiles and counts, ordinary reach/targets/attack roll/damage and one Action budget; no custom devil logic. The two Claws may select legal targets as normal, preserving source attacks. Cross-monster reuse for any source-defined counted mixed-attack sequence. **Planning:** SOURCE REVIEWED / recommended existing multiattack reuse; no user policy exception assumed. **Implementation:** NOT CERTIFIED, action-binding and Python/browser/generated parity remain. Next separate source ability Claw.
 
+### Barbed Devil — Claw (2014), source reviewed 2026-10-09
+
+- **Printed attack:** +6 melee weapon attack, reach 5 ft, one target, hit **1d6+3 Piercing**. Universal melee AC attack, reach, source damage type, crit and typed-defense resolution. No bespoke code. Reused twice in printed Multiattack.
+- **Planning:** SOURCE REVIEWED / existing primitive reuse (routine mechanical mapping, no new user ruling). **Implementation:** NOT CERTIFIED; verify Python/browser/source binding and parity. Cross-monster reuse: ordinary source-defined claws.
+
+### Barbed Devil — Tail (2014), source reviewed 2026-10-09
+
+- **Printed attack:** +6 melee weapon attack, reach **10 ft**, one target, hit **1d10+3 Piercing**. Universal melee attack/damage with source-parameter reach. Referenced once in printed Multiattack; no new tail resolver.
+- **Planning:** SOURCE REVIEWED / existing primitive reuse, no new user ruling. **Implementation:** NOT CERTIFIED; verify action reach and Python/browser/source parity.
+
+### Barbed Devil — Hurl Flame (2014), source reviewed 2026-10-09
+
+- **Printed action:** +5 ranged spell attack, **range 150 ft**, one target, **3d6 Fire** damage on hit. If the target is a **flammable object not being worn or carried**, it also catches fire. Separate action, not an attack component of Multiattack.
+- **Universal composition:** existing ranged spell attack vs AC + typed Fire damage; apply existing eligible-object ignition where arena map represents unattended flammable objects, otherwise leave printed source rider on card without inventing target objects. No special monster spell slot or cantrip slot resource. Cross-monster reuse: spell-like ranged action + on-hit environmental object ignition.
+- **Planning:** SOURCE REVIEWED / reusable action composition; object-ignition binding may remain independently blocked where environmental object support is absent. **Implementation:** NOT CERTIFIED; Python/browser/source parity and ignition preconditions untested.
+
+### Barbed Devil — remaining passive/source defenses (2014), inventory reconciliation 2026-10-09
+
+- **Printed defenses:** Damage resistance **Cold**, and **Bludgeoning, Piercing, Slashing from nonmagical attacks that aren't silvered**; immunity **Fire and Poison**; condition immunity **Poisoned**. Preserve vulnerabilities to silvered nonmagical attacks and normal eligibility for magical attacks; use existing typed-damage and weapon-source qualifiers, not blanket physical immunity. Printed senses and ordinary speeds remain immutable source data. Magic Resistance and Devil's Sight already reviewed above; Barbed Hide source/turn-start grappler damage review remains separate.
+- **Planning:** SOURCE REVIEWED / source-defined defensive predicates. **Implementation:** NOT CERTIFIED. Barbed Devil action and trait *planning inventory* now complete (Barbed Hide, Devil's Sight, Magic Resistance, Multiattack, Claw, Tail, Hurl Flame, passive defenses). No user-approved status inferred for unapproved novel exception; preserve independent blockers. Next ordered monster: Behir.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
