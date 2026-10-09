@@ -205,6 +205,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved standard Pit classification:** currently arena-inactive only insofar as no supported combat context triggers those mental-reading, intention or divination clauses. If any relevant hostile combat divination capability is present or later supported, enforce the printed defense via generic source-qualified effect eligibility; do not suppress a genuine live defense.
 - **Reuse:** source-granted mental-information immunity / divination refusal / Insight Disadvantage where actual effects match; no Androsphinx-specific resolver. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED. Continue Androsphinx Roar stages one by one.
 
+### Androsphinx — First Roar (2014), user approved 2026-10-09
+
+- **Printed first use of Roar (3/Day sequenced):** one Action, each creature within 500 ft able to hear, DC18 Wisdom save, failed save Frightened for 1 minute; repeat Wisdom save at end of each affected creature's turn, ending Frightened on success. Hearing and allies are not waived; count this as use 1 of shared three Roar uses, proceeding to stage 2 on next use.
+- **Approved AI:** use first Roar when it can affect susceptible enemies, weighing risk to allies also in hearing range. Shared sequenced-use Action state, generic hearing eligibility, saving throws, timed Frightened, repeat saves, and ordinary Action/resource economy; no Androsphinx-name dispatch.
+- **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED. Review second Roar next before advancing.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
