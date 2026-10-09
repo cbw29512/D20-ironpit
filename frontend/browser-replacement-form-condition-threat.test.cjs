@@ -155,3 +155,49 @@ console.log("Universal protective-form disabling-save forecast passed.");
     "Unavailable spell slots still prohibit a disabling area threat");
 }
 console.log("Area disabling-save threat parity passed.");
+
+{
+  // An actual printed, non-spell area Action uses the shared selector,
+  // including its resource gate and filtered target list.
+  const group = setup.heroes;
+  enemy.state.resources["spell-slot-3"] = 1;
+  source.condition_immunities = ["stunned"];
+  enemy.position_ft = 10;
+  enemy.state.is_dead = false;
+  const action = {
+    id: "printed-area-stun", name: "Stun cloud", actionCost: "action",
+    saveAbility: "wisdom", dc: 30, range: 60,
+    resourceId: "spell-slot-3", resourceCost: 1,
+    area: { origin: "point", shape: "radius", radiusFt: 5 },
+    failedSaveTimedEffect: { effectId: "stunned" },
+  };
+  let chosen = [{ targetIds: [defender.combatant_id, group[1].combatant_id],
+    friendlyIds: [], enemyIds: [defender.combatant_id, group[1].combatant_id] }];
+  window.IRON_PIT_BROWSER_AREA_TARGETING = { legalPlacements: () => chosen };
+  load("browser-area-save-actions.js");
+  enemy.state.template.spell_save_actions = [];
+  enemy.state.template.saving_throw_actions = [action];
+  assert.equal(policy.formMitigates(defender, setup, form), true,
+    "The chosen printed Action area can stun this grouped defender");
+  chosen = [{ targetIds: [group[1].combatant_id],
+    friendlyIds: [], enemyIds: [group[1].combatant_id] }];
+  assert.equal(policy.formMitigates(defender, setup, form), false,
+    "A selected area that omits the defender is not a threat");
+  chosen = [];
+  assert.equal(policy.formMitigates(defender, setup, form), false,
+    "No legal placement cannot disable the defender");
+  chosen = [{ targetIds: [defender.combatant_id],
+    friendlyIds: [], enemyIds: [defender.combatant_id] }];
+  enemy.state.resources["spell-slot-3"] = 0;
+  assert.equal(policy.formMitigates(defender, setup, form), false,
+    "Spent source resources prohibit the printed area Action");
+  enemy.state.resources["spell-slot-3"] = 1;
+  action.failedSaveTimedEffect = null;
+  assert.equal(policy.formMitigates(defender, setup, form), false,
+    "Printed area without a severe rider must not gain condition threat value");
+  action.failedSaveTimedEffect = { effectId: "stunned" };
+  assert.equal(policy.formMitigates(defender, setup, form), true);
+  assert.equal(enemy.state.resources["spell-slot-3"], 1,
+    "A lookahead may not consume the source's resource");
+}
+console.log("Printed non-spell area disabling-save parity passed.");

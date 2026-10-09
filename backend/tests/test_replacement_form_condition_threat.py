@@ -172,3 +172,68 @@ def test_legacy_radius_aoe_disabling_save_uses_ally_safe_placement() -> None:
         assert form_mitigates_disabling_save(defender, setup, form)
         enemy.position_ft = 300
         assert not form_mitigates_disabling_save(defender, setup, form)
+
+
+@pytest.mark.parametrize("builder", [build_thalen_greenbough_2014, build_thalen_greenbough_level])
+def test_printed_area_save_uses_chosen_legal_targets_and_remaining_resource(builder) -> None:
+    defender, enemy, setup, form, source = _scenario(builder)
+    defender.state.position = GridPosition(x=6, y=4)
+    enemy.state.position = GridPosition(x=3, y=4)
+    ally = EncounterCombatant(
+        combatant_id="ally", side="heroes", position_ft=5,
+        state=build_combatant_state(builder(8)),
+    )
+    ally.state.position = GridPosition(x=7, y=4)
+    setup.heroes.append(ally)
+    setup.map_definition = BattleMapDefinition(id="printed-area", width_squares=20, height_squares=10)
+    action = SavingThrowAction(
+        id="area-stun", name="Stun cloud", action_cost="action",
+        save_ability="wisdom", dc=30, range_ft=60, resource_id="spell-slot-3",
+        area=AreaTargeting(shape="radius", origin="point", radius_ft=5),
+        failed_save_timed_effect=FailedSaveTimedEffect(effect_id="stunned", duration_rounds=2),
+    )
+    enemy.state.template = enemy.state.template.model_copy(update={
+        "saving_throw_actions": [action], "spell_save_actions": [],
+    })
+    guarded = source.model_copy(update={"condition_immunities": ["stunned"]})
+    from app.combat.area_save_actions import choose_area_save
+
+    with patch("app.combat.replacement_form_condition_threat.replacement_form_source_template", return_value=guarded):
+        selected = choose_area_save(enemy, setup, action_cost="action")
+        assert selected is not None and defender.combatant_id in selected[1].target_ids
+        assert form_mitigates_disabling_save(defender, setup, form)
+        # The Action chooser is still legal, but its selected area omits this
+        # distant combatant, so the form gets no condition-defense bonus.
+        defender.state.position = GridPosition(x=18, y=4)
+        assert not form_mitigates_disabling_save(defender, setup, form)
+        defender.state.position = GridPosition(x=6, y=4)
+        for resource in enemy.state.resources:
+            if resource.id == "spell-slot-3":
+                resource.current_uses = 0
+        assert not form_mitigates_disabling_save(defender, setup, form)
+    assert defender.state.current_hp == int(defender.state.template.max_hp * 0.25)
+
+
+def test_printed_area_save_selection_not_an_arbitrary_reachable_geometry() -> None:
+    defender, enemy, setup, form, source = _scenario(build_thalen_greenbough_level)
+    defender.state.position = GridPosition(x=6, y=4)
+    enemy.state.position = GridPosition(x=3, y=4)
+    setup.map_definition = BattleMapDefinition(id="area-choice", width_squares=20, height_squares=10)
+    action = SavingThrowAction(
+        id="area-paralysis", name="Paralysis cloud", action_cost="action",
+        save_ability="wisdom", dc=30, range_ft=60,
+        area=AreaTargeting(shape="radius", origin="point", radius_ft=5),
+        failed_save_timed_effect=FailedSaveTimedEffect(effect_id="paralyzed", duration_rounds=2),
+    )
+    # Another area Action wins the source selector based on target coverage;
+    # its rider is harmless, so the dangerous unchosen spell is not forecast.
+    other = action.model_copy(update={
+        "id": "area-harmless", "damage_dice_count": 10, "damage_type": "force",
+        "failed_save_timed_effect": None,
+    })
+    enemy.state.template = enemy.state.template.model_copy(update={
+        "saving_throw_actions": [action, other], "spell_save_actions": [],
+    })
+    guarded = source.model_copy(update={"condition_immunities": ["paralyzed"]})
+    with patch("app.combat.replacement_form_condition_threat.replacement_form_source_template", return_value=guarded):
+        assert not form_mitigates_disabling_save(defender, setup, form)

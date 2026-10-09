@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.area_save_actions import choose_area_save
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import can_see, is_incapacitated
 from app.combat.encounter_targeting import combatant_distance
@@ -78,6 +79,19 @@ def form_mitigates_disabling_save(member, setup, form) -> bool:
                     or (action.requires_target_sight and not can_see(enemy.state, member.state, distance))):
                     continue
                 actions.append((action, action.magical_effect))
+            # Reuse the actual non-spell area-save Action chooser and its
+            # source/size/resource-filtered target ids. Arbitrary geometry
+            # that the chooser would not pick is not an incoming threat.
+            if any(action.area is not None and action.action_cost == "action"
+                   for action in enemy.state.template.saving_throw_actions):
+                selected = choose_area_save(enemy, setup, action_cost="action")
+                if selected is not None:
+                    action, placement = selected
+                    if (member.combatant_id in placement.target_ids
+                        and (not action.requires_target_sight or can_see(
+                            enemy.state, member.state, distance,
+                        ))):
+                        actions.append((action, action.magical_effect))
             for action in enemy.state.template.spell_save_actions:
                 area = action.area is not None or action.area_radius_ft is not None
                 if (action.action_cost == "reaction" or action.cast_rounds != 1 or action.repeat_only
