@@ -381,6 +381,16 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Universal plan:** shared source turn-start 5-ft area typed damage and contact/melee-hit retaliation; locate existing Heated Body/contact and timed-area primitives first, adding the smallest source-parameterized missing triggers, not a Balor-specific resolver. Affect allies too under printed 'each creature'. Avoid confusing adjacent aura damage with hit-trigger retaliatory damage or unintentionally applying it twice for one trigger.
 - **Planning:** SOURCE REVIEWED, awaiting user confirmation of AI/source mapping. **Implementation:** NOT CERTIFIED. Other Balor features remain next within same monster, including Death Throes, Magic Resistance/Weapons, Longsword/Whip and Multiattack.
 
+### Balor — Magic Resistance (2014), source/engine review 2026-10-09
+
+- **RAW:** Advantage on all saving throws against spells and other magical effects; passive, no action/resource. Existing `monster_passive_grants_2014.py` supplies universal `SavingThrowAdvantageGrant(requires_magical_effect=True)`; `monster_trait_bindings_2014.py` recognizes the trait.
+- **Classification:** ENGINE_EXISTS_CERTIFICATION_MISSING for Balor; parameterized save modifier reused across every qualifying monster/pregen. **Planning:** SOURCE REVIEWED; **Implementation:** NOT CERTIFIED until Balor Python/browser/generated proof. No new user decision.
+
+### Balor — Magic Weapons (2014), source/engine review 2026-10-09
+
+- **RAW:** All Balor weapon attacks count as magical; no extra damage/action. Existing `monster_included_weapon_traits_2014.py` binds `DamageSourceQualifier.MAGICAL`; `monster_definition_adapter_2014.py` consumes this shared qualifier.
+- **Classification:** ENGINE_EXISTS_CERTIFICATION_MISSING for Balor; reusable by all Magic Weapons creatures and hero/item equivalent weapon qualifiers. **Planning:** SOURCE REVIEWED; **Implementation:** NOT CERTIFIED until source attacks, Python/browser defenses and generated parity pass. No new user decision.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
