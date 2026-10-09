@@ -12,7 +12,7 @@
 
 **Baseline markers:** `APPROVED` = user policy expressly approved; `PLAN DRAFTED` = concrete route written but coding pending; `PARTIAL` = some rulings fixed, some pending; `REVIEW NEXT` = source-backed packet requires *delta check*, not automatically a new question. **Skip gate:** `DECISION COMPLETE` (approved/reused/source-specified) -> record and advance, even when implementation pending; `IMPLEMENTATION PENDING` -> wait for hourly execution, **never ask as a planning question**; `DECISION NEEDED` -> the only reason to ask user. An unchecked item in an old worksheet does **not** itself mean user decision is needed. Generated report blockers are code readiness, not planning decisions.
 
-**Current review cursor:** #016 **Balor — Fire Aura**. Death Throes planning documented; Longsword/Whip next. Assassin and Azer planning complete; implementation remains pending.
+**Current source-review cursor:** #017 **Banshee**. This is an assistant-side source audit, **not an automatic question to the user**. Consult prior rulings/PRs; ask only when an actual unrecorded arena-policy choice exists. All documented decisions remain excluded from repeat questioning. See [Review State Index](../data/monster_2014_review_state.json) and the queue helper.
 
 ## Ordered review list
 
@@ -171,12 +171,16 @@
 
 ### 016. Balor
 
-**Planning:** PARTIAL — Death Throes planned source-exact; Fire Aura and Longsword/Whip to review next. **Implementation:** pending. **Current blockers:** `attack:incomplete`, `source:trait`. **Primary family:** PASSIVE RETALIATION / DAMAGE AURA.
-- [ ] **attack:incomplete** (**Longsword; Whip**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.
-- [ ] **source:trait** (**Death Throes documented; Fire Aura remains**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
+**Planning:** COMPLETE — Death Throes, Fire Aura, Longsword critical dice, Whip pull, and no-teleport arena policy all source-resolved. No user question. **Implementation:** pending. **Current blockers:** `attack:incomplete`, `source:trait`. **Primary family:** PASSIVE RETALIATION / DAMAGE AURA.
+- [x] **attack:incomplete** (**Longsword; Whip**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.
+- [x] **source:trait** (**Death Throes documented; Fire Aura remains**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
 
 - [x] **Death Throes (2014 RAW, planning complete; implementation pending):** Trigger the shared death-event resolver **when the Balor actually dies**, even if slain outside its own turn. Before final victory evaluation, apply a **30-foot-radius burst to every creature in range (friend or foe)**. Each rolls its own **DC 20 Dexterity save**; failure **20d6 Fire**, success **half**; apply normal typed defenses. Destroy the Balor's own weapons. Ignite unattended flammable arena objects only when present; default arena has none, so do not invent scenery. Never trigger merely because an undying combatant reached 0 HP; resolve the printed death event once only. No extra action, initiative turn, monster-specific explosion resolver, or summoned creature.
-- [ ] **NEXT — Fire Aura:** review source 3d6 Fire on each creature within 5 feet at Balor-turn start; also source contact and qualifying melee-hit 3d6 retaliation, using existing timed area and retaliation primitives. Separately review Longsword and Whip attack riders afterward.
+
+- [x] **Fire Aura:** source-bound passive 3d6 Fire to every creature within 5 ft at the start of each Balor turn; independently 3d6 Fire when a creature touches Balor or successfully hits it with a melee attack from within 5 ft. Ordinary typed defenses, no trigger for miss or mere proximity outside start-turn aura. Reuse shared AoE periodic damage and Heated Body/Fire Shield contact retaliation; no duplicate custom resolver.
+- [x] **Longsword:** +14 to hit at 10 ft, 3d8+8 Slashing and 3d8 Lightning. On critical hit, roll each damage dice pool *three* times rather than the usual two; flat modifiers once. Universal critical-multiplier/source parameter, no Balor-only engine path.
+- [x] **Whip:** +14 to hit at 30 ft, 2d6+8 Slashing and 3d6 Fire; DC 20 Strength save on hit, failure pulls the target up to 25 ft toward Balor using shared forced movement; success no pull. Apply damage regardless of pull-save success. Preserve actual grid bounds, collision and legal placement.
+- [x] **Teleport:** printed on original source and card, arena AI never chooses relocation per existing Pit no-teleport policy. No substitute Action. All decisions above are planning-only, not verified runtime implementations.
 
 **Source packet:** [#016 in full blueprint](MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md#16-balor-passive-retaliation-damage-aura). **Review completion:** fill all above decisions before implementing; existing code readiness is not evidence of planning closure.
 
@@ -201,11 +205,13 @@
 
 ### 019. Basilisk
 
-**Planning:** REVIEW NEXT — blueprint drafted. **Implementation:** pending. **Current blockers:** `source:trait`. **Primary family:** GAZE / SIGHT / INVISIBILITY.
-- [ ] **source:trait** (**Petrifying Gaze**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
+**Planning:** COMPLETE — 2014 Petrifying Gaze source sequence + previously agreed universal gaze/avert rule; no new policy question. **Implementation:** pending. **Current blockers:** `source:trait`. **Primary family:** GAZE / SIGHT / INVISIBILITY.
+- [x] **source:trait** (**Petrifying Gaze**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
 
 **Previously recorded source-specific decisions/dependencies** (preserved, not new approvals):
 - **Known directed work:** Petrifying Gaze: source-triggered sight/save and staged Restrained/Petrified timing; check generic gaze predicate.
+
+- [x] **Petrifying Gaze:** source start-of-target-turn mutual sight and 30-ft predicate, DC12 CON; fail Restrained, repeat at end of next turn, fail again Petrified until eligible cure; use prior generic 2014 gaze-avoidance decision, which makes source unseen to averter but doesn't confer globally Blinded. Printed self-reflection and incapacitated exceptions remain source binding. Shared with Medusa, no separate implementation branch; #676.
 
 **Source packet:** [#019 in full blueprint](MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md#19-basilisk-gaze-sight-invisibility). **Review completion:** fill all above decisions before implementing; existing code readiness is not evidence of planning closure.
 
@@ -472,11 +478,13 @@
 
 ### 049. Frog
 
-**Planning:** REVIEW NEXT — blueprint drafted. **Implementation:** pending. **Current blockers:** `arena:neutral`. **Primary family:** SOURCE-ONLY / ARENA POLICY.
-- [ ] **arena:neutral**: Verify existing no-combat-action arena policy and source text; never certify invented offense.
+**Planning:** COMPLETE — original source has no legal damage attack; established arena-neutral classification preserved, no invented attack or policy question. **Implementation:** pending. **Current blockers:** `arena:neutral`. **Primary family:** SOURCE-ONLY / ARENA POLICY.
+- [x] **arena:neutral**: Verify existing no-combat-action arena policy and source text; never certify invented offense.
 
 **Previously recorded source-specific decisions/dependencies** (preserved, not new approvals):
 - **Known directed work:** No printed meaningful arena attack: preserve arena-neutral status.
+
+- [x] **Noncombat source admission:** retain the printed Frog and arena-neutral classification; no fake Bite, damage dice or combat AI. This is a source rule, not a new user decision. Runtime/source certification independent.
 
 **Source packet:** [#049 in full blueprint](MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md#49-frog-source-only-arena-policy). **Review completion:** fill all above decisions before implementing; existing code readiness is not evidence of planning closure.
 
@@ -650,11 +658,13 @@
 
 ### 069. Invisible Stalker
 
-**Planning:** REVIEW NEXT — blueprint drafted. **Implementation:** pending. **Current blockers:** `source:trait`. **Primary family:** GAZE / SIGHT / INVISIBILITY.
-- [ ] **source:trait** (**Invisibility**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
+**Planning:** COMPLETE — printed Invisibility uses shared invisibility; user-approved Faultless Tracker arena-inert, no new question. **Implementation:** pending. **Current blockers:** `source:trait`. **Primary family:** GAZE / SIGHT / INVISIBILITY.
+- [x] **source:trait** (**Invisibility**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
 
 **Previously recorded source-specific decisions/dependencies** (preserved, not new approvals):
 - **User-approved arena policy (queued):** Faultless Tracker remains printed on source/card but has no effect in Iron Pit, no combat vision/targeting bonus. Invisibility uses existing universal system; Slam attacks are unaffected. Apply shared arena-inert trait classification and regenerate blockers; not yet implemented/certified.
+
+- [x] **Invisibility / Faultless Tracker:** invisible trait keeps RAW unseen attacker/target eligibility semantics through shared invisibility. Printed quarry/summoner tracking cannot produce combat benefits in Pit; user-approved arena-inert policy. Preserve both source labels; coding/CI pending.
 
 **Source packet:** [#069 in full blueprint](MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md#69-invisible-stalker-gaze-sight-invisibility). **Review completion:** fill all above decisions before implementing; existing code readiness is not evidence of planning closure.
 
@@ -746,12 +756,14 @@
 
 ### 079. Medusa
 
-**Planning:** REVIEW NEXT — blueprint drafted. **Implementation:** pending. **Current blockers:** `source:trait`. **Primary family:** GAZE / SIGHT / INVISIBILITY.
-- [ ] **source:trait** (**Petrifying Gaze**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
+**Planning:** COMPLETE — user-approved shared Petrifying Gaze and source-specific immediate-petrification margin; no further policy question. **Implementation:** pending. **Current blockers:** `source:trait`. **Primary family:** GAZE / SIGHT / INVISIBILITY.
+- [x] **source:trait** (**Petrifying Gaze**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
 
 **Previously recorded source-specific decisions/dependencies** (preserved, not new approvals):
 - **Known directed work:** Petrifying Gaze: reuse timed save escalation to Petrified, but verify sight/gaze avoidance and source timing.
 - **User decision, queued:** Same shared gaze mechanic and sight/avert policy as Basilisk. Medusa supplies **DC 14 Constitution, 30-ft range** and the special **fail by 5 or more => immediate Petrified** escalation (terminal Iron Pit outcome). Other failed saves follow existing Restrained → repeat-save → Petrified progression; source qualifiers preserved. Not implemented/certified.
+
+- [x] **User-approved Petrifying Gaze:** generic gaze/avert choice shared with Basilisk, but this 2014 source uses DC14 CON at 30 ft; fail by 5 or more triggers immediate Petrified; otherwise failed save Restrained followed by source next-turn repeat and Petrification on further failure. Preserve mutual sight and self-reflection qualifiers. Reuse shared stage/conditional gaze, #676; not certified.
 
 **Source packet:** [#079 in full blueprint](MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md#79-medusa-gaze-sight-invisibility). **Review completion:** fill all above decisions before implementing; existing code readiness is not evidence of planning closure.
 
@@ -940,12 +952,14 @@
 
 ### 100. Sea Horse
 
-**Planning:** REVIEW NEXT — blueprint drafted. **Implementation:** pending. **Current blockers:** `attack:none`. **Primary family:** SOURCE-ONLY / ARENA POLICY.
-- [ ] **attack:none**: Do not invent an attack for a non-offensive source creature. Confirm arena participation policy.
+**Planning:** COMPLETE — user already approved fielding zero-damage creature; no new question. **Implementation:** pending. **Current blockers:** `attack:none`. **Primary family:** SOURCE-ONLY / ARENA POLICY.
+- [x] **attack:none**: Do not invent an attack for a non-offensive source creature. Confirm arena participation policy.
 
 **Previously recorded source-specific decisions/dependencies** (preserved, not new approvals):
 - **USER DECISION / QUEUED:** Sea Horse may be selected and fielded in Iron Pit; it simply deals **0 attack damage**. Do not invent a damaging attack or alter the printed source. Change arena-neutral exclusion/certification behavior to allow a valid non-damaging participant; ensure combat can terminate without stalls. Not implemented/certified.
 - **Further user suggestion:** Rather than a fabricated 0-damage attack, Sea Horse may repeatedly take the **existing Dodge Action** on its turns, retaining exactly RAW Dodge conditions and no damage output; still arena-selectable. Avoid new machinery; guard against no-damage stalemates. Proposal queued, not implemented/certified.
+
+- [x] **User approval carried forward:** Sea Horse is selectable in Pit despite having no damaging attack; exactly zero attack damage and no fabricated source Action. Permit normal no-damage fight termination/fallback. Runtime integration pending.
 
 **Source packet:** [#100 in full blueprint](MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md#100-sea-horse-source-only-arena-policy). **Review completion:** fill all above decisions before implementing; existing code readiness is not evidence of planning closure.
 
@@ -1029,21 +1043,25 @@
 
 ### 110. Stirge
 
-**Planning:** REVIEW NEXT — blueprint drafted. **Implementation:** pending. **Current blockers:** `arena:removed`. **Primary family:** SOURCE-ONLY / ARENA POLICY.
-- [ ] **arena:removed**: Retain full source, record approved arena removal, no mechanical substitute.
+**Planning:** COMPLETE — previously approved arena roster exclusion, not a pending user decision. **Implementation:** pending. **Current blockers:** `arena:removed`. **Primary family:** SOURCE-ONLY / ARENA POLICY.
+- [x] **arena:removed**: Retain full source, record approved arena removal, no mechanical substitute.
 
 **Previously recorded source-specific decisions/dependencies** (preserved, not new approvals):
 - **USER DECISION — REMOVED FOR NOW:** Retain source/stat block, but exclude Stirge from selectable arena roster. Do not build Blood Drain/attachment until revisited. This is an intentional exclusion, not combat certification.
+
+- [x] **User approved exclusion carried forward:** Stirge remains on immutable source/card but is intentionally not selectable in arena pending later product decision; do not implement attachment/Blood Drain solely for this excluded roster item.
 
 **Source packet:** [#110 in full blueprint](MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md#110-stirge-source-only-arena-policy). **Review completion:** fill all above decisions before implementing; existing code readiness is not evidence of planning closure.
 
 ### 111. Stone Giant
 
-**Planning:** REVIEW NEXT — blueprint drafted. **Implementation:** pending. **Current blockers:** `source:reaction`. **Primary family:** REACTIONS / TRIGGERS.
-- [ ] **source:reaction** (**Rock Catching**): Model genuine triggering event, timing, eligibility, reaction cost, source effect and reset in shared reaction dispatch; prove production Python/browser calls, not helper-only tests.
+**Planning:** COMPLETE — Rock Catching already approved as generalized one-Reaction ranged-attack save, no policy question. **Implementation:** pending. **Current blockers:** `source:reaction`. **Primary family:** REACTIONS / TRIGGERS.
+- [x] **source:reaction** (**Rock Catching**): Model genuine triggering event, timing, eligibility, reaction cost, source effect and reset in shared reaction dispatch; prove production Python/browser calls, not helper-only tests.
 
 **Previously recorded source-specific decisions/dependencies** (preserved, not new approvals):
 - **User ruling / queued:** Reuse existing 1 Reaction per round for Rock Catching: when a qualifying ranged attack hits, make DC 10 Dexterity save; pass negates damage, fail resolves ordinary damage and defenses. User broadened rock/similar hurled objects to ranged attacks as Iron Pit simplification; implementation must distinguish ranged attack hits from spells/AoE before activating. Source text remains unchanged. **Not implemented/certified.**
+
+- [x] **User-approved Rock Catching:** when a qualifying ranged attack hits, spend available Reaction, roll DC10 Dexterity save; success negates the damage, failure resolves normal hit/damage. Broad Pit ranged-attack eligibility was already directed; use universal Reaction/save/damage cancellation, not a Stone Giant-only resolver.
 
 **Source packet:** [#111 in full blueprint](MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md#111-stone-giant-reactions-triggers). **Review completion:** fill all above decisions before implementing; existing code readiness is not evidence of planning closure.
 
