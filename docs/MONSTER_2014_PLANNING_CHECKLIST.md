@@ -12,7 +12,7 @@
 
 **Baseline markers:** `APPROVED` = user policy expressly approved; `PLAN DRAFTED` = concrete route written but coding pending; `PARTIAL` = some rulings fixed, some pending; `REVIEW NEXT` = full source-backed packet exists but has not been individually decision-closed. Unchecked categories refer to *planning review*, not code. Every item is **implementation pending** until verified elsewhere.
 
-**Current review cursor:** #016 **Balor — Death Throes** (review its first blocker only). Assassin and Azer have decision-complete plans; actual implementation remains in PRs #664/#665/#666/#673 pending certification.
+**Current review cursor:** #016 **Balor — Fire Aura**. Death Throes planning documented; Longsword/Whip next. Assassin and Azer planning complete; implementation remains pending.
 
 ## Ordered review list
 
@@ -171,9 +171,12 @@
 
 ### 016. Balor
 
-**Planning:** REVIEW NEXT — blueprint drafted. **Implementation:** pending. **Current blockers:** `attack:incomplete`, `source:trait`. **Primary family:** PASSIVE RETALIATION / DAMAGE AURA.
+**Planning:** PARTIAL — Death Throes planned source-exact; Fire Aura and Longsword/Whip to review next. **Implementation:** pending. **Current blockers:** `attack:incomplete`, `source:trait`. **Primary family:** PASSIVE RETALIATION / DAMAGE AURA.
 - [ ] **attack:incomplete** (**Longsword; Whip**): Recover full printed damage dice/type, saves/DC, conditions, persistent wounds, target restrictions and lifecycle in source attack schema; prove Python/browser hit resolution.
-- [ ] **source:trait** (**Death Throes; Fire Aura**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
+- [ ] **source:trait** (**Death Throes documented; Fire Aura remains**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
+
+- [x] **Death Throes (2014 RAW, planning complete; implementation pending):** Trigger the shared death-event resolver **when the Balor actually dies**, even if slain outside its own turn. Before final victory evaluation, apply a **30-foot-radius burst to every creature in range (friend or foe)**. Each rolls its own **DC 20 Dexterity save**; failure **20d6 Fire**, success **half**; apply normal typed defenses. Destroy the Balor's own weapons. Ignite unattended flammable arena objects only when present; default arena has none, so do not invent scenery. Never trigger merely because an undying combatant reached 0 HP; resolve the printed death event once only. No extra action, initiative turn, monster-specific explosion resolver, or summoned creature.
+- [ ] **NEXT — Fire Aura:** review source 3d6 Fire on each creature within 5 feet at Balor-turn start; also source contact and qualifying melee-hit 3d6 retaliation, using existing timed area and retaliation primitives. Separately review Longsword and Whip attack riders afterward.
 
 **Source packet:** [#016 in full blueprint](MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md#16-balor-passive-retaliation-damage-aura). **Review completion:** fill all above decisions before implementing; existing code readiness is not evidence of planning closure.
 
