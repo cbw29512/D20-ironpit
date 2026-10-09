@@ -12,7 +12,7 @@
 
 **Baseline markers:** `APPROVED` = user policy expressly approved; `PLAN DRAFTED` = concrete route written but coding pending; `PARTIAL` = some rulings fixed, some pending; `REVIEW NEXT` = full source-backed packet exists but has not been individually decision-closed. Unchecked categories refer to *planning review*, not code. Every item is **implementation pending** until verified elsewhere.
 
-**Current review cursor:** #013 **Archmage** — source spellcasting binding routed in [#685](https://github.com/cbw29512/D20-ironpit/issues/685). Continue remaining unreviewed Archmage choices/requirements, then #014. Mark decisions here; don't block on code.
+**Current review cursor:** #014 **Assassin — Assassinate and 2014 Surprise**. #013 Archmage **decision-complete / implementation pending**; its 2014 spell binder remains queued at [#685](https://github.com/cbw29512/D20-ironpit/issues/685). Check Assassin's automatic critical clause against standard Pit Surprise state before closing #014. Do not block review on code.
 
 ## Ordered review list
 
@@ -129,12 +129,12 @@
 
 ### 013. Archmage
 
-**Planning:** PARTIAL — many user spell decisions already approved; remaining source binding and policy review. **Implementation:** pending. **Current blockers:** `mechanic:spellcasting`, `source:trait`. **Primary family:** SPELLCASTING.
-- [ ] **mechanic:spellcasting** (**18-level intelligence caster; 25 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.
-- [ ] **source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
-- [ ] Prepared spell source→Action binding foundation (slots already exist); [#685](https://github.com/cbw29512/D20-ironpit/issues/685).
+**Planning:** DECISION-COMPLETE — all printed source spell IDs and previous user-directed arena substitutions/exclusions have a recorded binding/selection policy; 2014 RAW governs ordinary damage/healing/control spells. **No additional user policy question identified.** **Implementation:** pending. **Current blockers:** `mechanic:spellcasting`, `source:trait`. **Primary family:** SPELLCASTING.
+- [x] **mechanic:spellcasting** (**18-level intelligence caster; 25 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.
+- [x] **source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
+- [x] Prepared spell source→Action binding foundation **specified** (slots already exist; not implemented); [#685](https://github.com/cbw29512/D20-ironpit/issues/685).
 - [x] **USER-APPROVED 2026-10-08: all printed source pre-casts apply.** The 2014 Archmage begins with **Mind Blank (8th; 24h; no Concentration) + Stoneskin (4th; up to 1h; Concentration) + Mage Armor (1st; 8h; no Concentration)** as real buffs in the free opening phase before initiative. One printed Concentration, normal spell slot expenditures, no additional optional fourth opening buff, and do not double-count Mage Armor's AC. Later Globe may replace Stoneskin Concentration if legally cast. §7.1 rules contract updated; code/CI remains pending.
-- [ ] Continue auditing *other* unresolved Archmage spell semantics against the existing recorded rulings; do not reopen the now-resolved printed-precast question.
+- [x] **Rest of printed spell list classified for planning:** generic 2014 save-damage/spell-attack/invisibility/defensive/Concentration/counterspell mechanics apply; approved arena-neutral informational spells remain on source/card without casts; approved Wall of Force, Teleport and Time Stop replacements remain confined to the Archmage's arena loadout. The three source-printed pre-casts are mandatory. No more planning questions; **implementation and Python/browser source admission remain pending**.
 
 **Previously recorded source-specific decisions/dependencies** (preserved, not new approvals):
 - **Disguise Self — user decision / queued:** Retain printed spell on source/card; Archmage AI never casts it in Iron Pit (appearance-only, no combat impact). Route via shared arena-inert spell selection, not a bespoke Archmage resolver. Not implemented/certified.
