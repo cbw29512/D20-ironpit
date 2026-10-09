@@ -20,8 +20,8 @@ def test_2014_caster_druid_keeps_spellcasting_at_high_hp() -> None:
     assert action.action_cost == "action"
     assert action.hp_mode == "form_pool"
     assert action.ai_use_policy == "emergency_only"
-    # Emergency transformation cannot require a setup spell or spell slot.
-    assert action.setup_spell_id is None
+    # The optional setup remains source data, but emergency AI bypasses it.
+    assert action.setup_spell_id == "faerie-fire"
     assert not ai_may_start_replacement_form(_state(60), action, owner)
     assert not ai_may_start_replacement_form(_state(21), action, owner)
     assert ai_may_start_replacement_form(_state(20), action, owner)

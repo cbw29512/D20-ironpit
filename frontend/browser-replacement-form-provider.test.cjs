@@ -193,3 +193,32 @@ console.log("Browser replacement-form Main Action provider parity passed.");
   assert.equal(gate(st(60), { aiUsePolicy: "emergency_only" }, { max_hp: 0 }), false);
 }
 console.log("Browser Druid emergency source policy checks passed.");
+{
+  // Regression: a severely injured 2014 caster must transform immediately
+  // rather than requesting Faerie Fire first or needing a spell slot.
+  const emergency = {
+    combatant_id: "emergency-druid", side: "heroes",
+    state: {
+      action_available: true, current_hp: 6, replacement_form: null,
+      concentration: null, resources: { "wild-shape": 1 },
+      template: {
+        id: "emergency-2014-druid", name: "Emergency Druid",
+        kind: "character", ruleset: "2014", max_hp: 18,
+        replacement_form_actions: [{
+          id: "wild-shape", name: "Wild Shape", actionCost: "action",
+          formTemplateId: "2014-wolf", resourceId: "wild-shape",
+          resourceCost: 1, setupSpellId: "faerie-fire",
+          aiUsePolicy: "emergency_only", aiEmergencyHpFraction: 1 / 3,
+        }],
+      },
+    },
+  };
+  const emergencyCtx = {
+    sequence: 22, round: 2, turnKey: "2:emergency-druid",
+    member: emergency, setup: { heroes: [emergency], monsters: [target] },
+  };
+  const candidate = S.discoverCandidates("normalPreMove", emergencyCtx);
+  assert.equal(candidate.length, 1, "Low-HP caster may select a legal form");
+  assert.equal(candidate[0].payload.kind, "transform", "Skip optional Faerie Fire");
+}
+console.log("Emergency form setup bypass regression passed.");

@@ -72,7 +72,9 @@ def resolve_replacement_form_setup(
             ))
             sequence += 1
 
-        if action.setup_spell_id:
+        # Emergency forms bypass optional setup spells; they must work even
+        # when no slot remains or an immediate defensive Action is needed.
+        if action.setup_spell_id and action.ai_use_policy != "emergency_only":
             concentration = state.concentration
             setup_active = concentration is not None and concentration.effect_id == action.setup_spell_id
             if not setup_active:

@@ -38,7 +38,9 @@
         if (!action || !E().available(member.state, action.actionCost)) return null;
         const resourceReady = RES()?.available(member.state, action.resourceId, action.resourceCost || 1);
         if (!resourceReady && !RC()?.restorationAction(member.state, action.resourceId, turnKey)) return null;
-        if (action.setupSpellId && member.state.concentration?.effect_id !== action.setupSpellId) {
+        // An emergency form cannot be delayed or blocked by an optional setup spell.
+        if (action.setupSpellId && action.aiUsePolicy !== "emergency_only"
+            && member.state.concentration?.effect_id !== action.setupSpellId) {
           const choice = SP()?.chooseById(member, setup, turnKey, action.setupSpellId) || null;
           return choice ? { payload: { kind: "setup-spell", choice } } : null;
         }
