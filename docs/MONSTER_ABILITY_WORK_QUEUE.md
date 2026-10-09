@@ -271,6 +271,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved AI / non-waste gate:** Before selecting or spending a slot, inspect each target's *actual fight-state effect and cure metadata*. Only choose a condition/disease for which this exact spell satisfies required effect type, removal power/level, timing, restrictions and source ownership. Prioritize meaningful removal (especially Paralyzed) over lower-value cures. **Never attempt to remove an effect Lesser Restoration cannot cure** (e.g., activated 2014 Aboleth Tentacle disease requiring 6th-level-or-higher curing magic); do not spend an Action/slot on an ineffective cure. If no legal removable effect exists, remove this spell from current tactical choices, not from card.
 - **Universal reuse:** generic source-aware effect-removal eligibility and preview check for every spell/item/monster/hero cure action, common condition-removal pipeline and monster spellcasting; no Androsphinx-specific or ability-name resolver. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED; test eligible/ineligible choices and slot conservation in Python/browser.
 
+### Androsphinx — Zone of Truth (2014), user approved 2026-10-09
+
+- **Printed spell:** Action, 60-ft range, 15-ft-radius zone, 10-minute duration, Charisma save and source-defined restriction on deliberate lying; preserve full 2014 source wording on card.
+- **Approved arena behavior:** Do not select for combat AI in standard Iron Pit because its conversation/truthfulness restriction has no combat effect. No invented save/debuff, and no deletion from immutable source/card.
+- **Reuse:** context-aware arena-neutral classification for source-equivalent interrogation-only effects, without disabling genuinely tactical Charisma-save effects. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED pending card/AI parity check.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
