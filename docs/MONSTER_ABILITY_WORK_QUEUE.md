@@ -186,6 +186,13 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved arena implementation:** source-parameterized exception to standard 5-ft grid hostile occupancy; retain independent combatant identity and position, permit shared square only for eligible Air Form holder. Narrow passage component remains arena-neutral in an empty Pit, not erased.
 - **Reuse:** universal source-granted occupancy-permission predicate and authoritative movement/target geometry, reusable by other printed equivalent space-entry traits; do not name-dispatch. Required prerequisite for Whirlwind's every-creature-in-own-space target selection. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED.
 
+### Air Elemental — Whirlwind (2014), user approved 2026-10-09
+
+- **Printed action:** Recharge 4–6; one Action affects each creature occupying Air Elemental's own space, regardless of allegiance; DC13 Strength save. Failed: 3d8+2 Bludgeoning, random-direction fling up to 20 ft horizontally and Prone. Successful: half damage, no fling or Prone. Apply source-printed object/creature collision rules, including DC13 Dexterity save and collision Prone where applicable. Standard Pit does not fabricate obstacles or vertical movement.
+- **Approved AI:** use source-granted Air Form overlap and legal ordinary movement into a target's square before Whirlwind when recharged and tactically advantageous. Do not treat mere adjacency as eligibility, do not apply free displacement or special attacks, and do not create a monster-name resolver.
+- **Reusable mechanics:** generic own-space area target predicate, shared recharge, save, typed damage, Prone, random horizontal forced-movement direction, source-parameterized collision chain, movement-grid legality and end-turn effects. Inspect existing primitives first and add only truly missing generic remainder. Cross-monster reuse where actual printed mechanics match.
+- **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED pending source/action binding, deterministic Python/browser rolls and geometry, collisions, generated reports and exact-head gates.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
