@@ -41,6 +41,12 @@ The source supplies parameters such as ability name, source id, ruleset, AC, DC,
 
 Examples: the engine defines what Prone does, but the source decides whether an effect applies Prone and with what save/DC/duration. The engine defines attack-roll-versus-AC behavior, but the combatant source supplies AC and attack bonus. The engine defines typed damage resolution, but the source supplies the damage dice, bonus, type, and qualifiers.
 
+## Mandatory planning queue anti-repeat gate
+
+The generated blocker list is a **code-readiness inventory**, not a list of new user questions. The 2014 planning control file is `data/monster_2014_review_state.json`, and `scripts/monster_2014_review_queue.py` selects the next outstanding *source audit* separately from explicitly recorded open *user questions*. Before asking the user to decide a behavior, check previously confirmed source rulings, the worksheet, universal inventory and pending/merged PRs. **Never ask the user to approve a rule already settled**, even if a related PR has not merged, CI has failed, or the baseline blocker is still present. A printed source clause that already determines the effect should be documented as an implementation recipe and not escalated as a question.
+
+Progress must only increase: when a monster/ability is source-reviewed and the implementation route is known, mark planning decision complete, preserve that decision in the ledger, and advance. Maintain a separate implementation/certification status; **hourly implementation remains disabled until the entire planning pass is closed and the user authorizes it**. Do not reset the cursor from the 124-monster historical list. One monster ability at a time; no redundant image work or unrelated checks.
+
 ## Mandatory implementation sequence
 
 Before writing any combat mechanic:
