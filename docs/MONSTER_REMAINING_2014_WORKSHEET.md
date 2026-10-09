@@ -1,5 +1,7 @@
 # 2014 Iron Pit — one-by-one remaining monster fix worksheet
 
+**Complete 124-monster blocker fix and reuse plan:** [2014 source-grounded fix blueprints](MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md). These are queued plans; current generator output still controls certification.
+
 **Planning worksheet, not certification evidence.** Source snapshot: generated `docs/MONSTER_BLOCKERS_2014.md` on `main` at worksheet creation; 201 admitted / 327, **126 blocked**. This editable worksheet is separate from generated blockers and inventory. Reconcile it after each merge using the generators; never hand-edit generated outputs. Every line below is an **action hypothesis**, not a claim that exact RAW has been reviewed or that code exists. The current source, repository contracts, existing universal inventory, and focused Python/browser tests decide the actual implementation. Use 2014 source first; copy no printed stats from memory.
 
 ## Repeatable completion procedure
