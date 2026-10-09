@@ -306,6 +306,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved AI:** select legal area to maximize expected enemy damage while accounting for friendly fire and source-typed defenses. Resolve Fire and Radiant separately through generic multi-component area-save damage, no invented combined damage type; source 2014 Flame Strike shared with eligible pregens/monsters.
 - **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED pending generated monster binding, Python/browser parity and exact-head gates. Continue Greater Restoration.
 
+### Androsphinx — Greater Restoration (2014), user approved 2026-10-09
+
+- **Printed spell:** Action, touch, 5th-level slot; remove one eligible effect: exhaustion level, source effect causing Charmed/Petrified, curse, one ability-score reduction, or one maximum-HP reduction. Androsphinx has source permission to omit material components.
+- **Approved AI:** inspect actual fight-state effect and its provenance/removal restrictions before selecting; prioritize serious removable conditions, especially Petrified; do not waste Action/slot on an ineligible or unremovable effect. Preserve each distinct printed removal clause, do not imply arbitrary conditions are curable.
+- **Reuse:** universal source-aware cure eligibility, condition/effect removal and resource/action rules already requested for Lesser Restoration; same across pregens and monsters. **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED pending full source/engine parity and gate checks.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
