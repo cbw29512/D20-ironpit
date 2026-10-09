@@ -146,11 +146,13 @@
 
 ### 014. Assassin
 
-**Planning:** REVIEW NEXT — blueprint drafted. **Implementation:** pending. **Current blockers:** `source:trait`. **Primary family:** ATTACK RIDERS / MULTICOMPONENT DAMAGE.
-- [ ] **source:trait** (**Assassinate; Evasion; Sneak Attack**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
+**Planning:** PARTIAL — Assassinate initiative rule USER-APPROVED; Evasion and Sneak Attack still to be reviewed in order. **Implementation:** pending. **Current blockers:** `source:trait`. **Primary family:** ATTACK RIDERS / MULTICOMPONENT DAMAGE.
+- [ ] **source:trait** (**Assassinate approved; Evasion and Sneak Attack next**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
 
 **Previously recorded source-specific decisions/dependencies** (preserved, not new approvals):
-- **Known directed work:** Assassinate/Sneak Attack/Evasion: reuse rogue pregen combat primitives where semantics match.
+- [x] **ASSASSINATE USER-APPROVED (2026-10-08):** On round one, when Assassin beats the target's Initiative/acts before it, each qualifying attack against that target is an Assassinate attack: attack-roll Advantage and **automatic critical damage on a hit** (not automatic hit). No separate Surprise prerequisite in the Pit. Stops after Assassin's first turn; source 2014 distinction retained as a specifically approved arena override. PR #664 currently only addresses Advantage; crit-on-hit runtime still needed.
+- [ ] **Evasion** — reuse existing Rogue Dexterity half-damage save modifier without inventing a new mechanic.
+- [ ] **Sneak Attack** — reuse existing Rogue once-per-turn weapon-hit damage with source's 4d6, correct conditions.
 
 **Source packet:** [#014 in full blueprint](MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md#14-assassin-attack-riders-multicomponent-damage). **Review completion:** fill all above decisions before implementing; existing code readiness is not evidence of planning closure.
 
