@@ -102,7 +102,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Ice Devil | mechanic:recharge, source:extra-action | — |
 | Ice Mephit | mechanic:death-trigger, mechanic:spellcasting, source:trait | Death Burst, Innate Spellcasting |
 | Imp | source:extra-action, source:trait | Shapechanger |
-| Invisible Stalker | source:trait | Invisibility, Faultless Tracker |
+| Invisible Stalker | source:trait | Invisibility |
 | Knight | source:extra-action | — |
 | Kraken | attack:incomplete, mechanic:legendary, mechanic:swallow, multiattack:complex, source:extra-action, source:legendary, source:trait | Freedom of Movement |
 | Lamia | attack:incomplete, mechanic:spellcasting, multiattack:complex, source:extra-action, source:trait | Innate Spellcasting |

@@ -456,7 +456,6 @@ Blocked monsters: **124**. These are grouped by printed ability name so the rost
 | Ethereal Sight | Ghost | 1 |
 | Evasion | Assassin | 1 |
 | False Appearance (Object Form Only) | Mimic | 1 |
-| Faultless Tracker | Invisible Stalker | 1 |
 | Fear Aura | Pit Fiend | 1 |
 | Fire Aura | Balor | 1 |
 | Fire Form | Fire Elemental | 1 |
