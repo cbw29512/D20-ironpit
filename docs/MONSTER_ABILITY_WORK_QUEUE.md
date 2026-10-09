@@ -235,6 +235,11 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Shared binding:** source-owned Claw attack profile + ordinary attack/AC/typed damage resolver + universal fixed-count Multiattack. The 1-point legendary Claw Attack must call the same source Claw profile at a legal legendary action timing window, not duplicate it.
 - **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED pending source adapter, generated export, Python/browser and exact-head checks. Continue Androsphinx spellcasting one spell at a time.
 
+### Androsphinx — Sacred Flame (2014), user approved 2026-10-09
+
+- **Source parameters:** At-will cantrip, 1 Action, 60-ft range, DC18 Dexterity save, 3d8 Radiant on failure, zero on success, no spell slot; spellcaster level 12. Preserve 2014 Sacred Flame's printed cover rule.
+- **Universal reuse:** Exact 2014 Sacred Flame damage/save engine already reviewed for Acolyte; different save DC and scaled dice are source data, not separate mechanics. Shared monster prepared-spell action binding and normal Action/targeting. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED. Proceed to Spare the Dying.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
