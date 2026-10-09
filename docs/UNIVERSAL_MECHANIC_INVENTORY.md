@@ -428,7 +428,7 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **124**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **123**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
@@ -464,7 +464,6 @@ Blocked monsters: **124**. These are grouped by printed ability name so the rost
 | Gibbering | Gibbering Mouther | 1 |
 | Grappler | Mimic | 1 |
 | Grasping Tendrils | Roper | 1 |
-| Heated Body | Azer, Remorhaz, Salamander | 3 |
 | Hellish Weapons | Erinyes | 1 |
 | Horrific Appearance | Sea Hag | 1 |
 | Ignited Illumination | Magmin | 1 |
@@ -509,7 +508,7 @@ Blocked monsters: **124**. These are grouped by printed ability name so the rost
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 91 |
+| `source:trait` | 88 |
 | `source:extra-action` | 68 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 25 |
