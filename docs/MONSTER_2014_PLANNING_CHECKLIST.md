@@ -12,7 +12,7 @@
 
 **Baseline markers:** `APPROVED` = user policy expressly approved; `PLAN DRAFTED` = concrete route written but coding pending; `PARTIAL` = some rulings fixed, some pending; `REVIEW NEXT` = full source-backed packet exists but has not been individually decision-closed. Unchecked categories refer to *planning review*, not code. Every item is **implementation pending** until verified elsewhere.
 
-**Current review cursor:** #015 **Azer — Heated Body**. Assassin planning complete; code and tests remain pending on PRs #664, #665 and #666.
+**Current review cursor:** #016 **Balor — Death Throes** (review its first blocker only). Assassin and Azer have decision-complete plans; actual implementation remains in PRs #664/#665/#666/#673 pending certification.
 
 ## Ordered review list
 
@@ -158,8 +158,11 @@
 
 ### 015. Azer
 
-**Planning:** REVIEW NEXT — blueprint drafted. **Implementation:** pending. **Current blockers:** `source:trait`. **Primary family:** PASSIVE RETALIATION / DAMAGE AURA.
-- [ ] **source:trait** (**Heated Body**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
+**Planning:** COMPLETE — source-semantic fix already recorded in PR #673; no new rule choice needed. **Implementation:** pending. **Current blockers:** `source:trait`. **Primary family:** PASSIVE RETALIATION / DAMAGE AURA.
+- [x] **source:trait** (**Heated Body — planning approved, implementation pending**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
+
+**Implementation blueprint approved for planning:**
+- [x] Source-authored passive **Heated Body** always active. When a creature touches the Azer or hits it with a melee attack while within 5 feet, that creature takes **1d10 fire** (no extra Attack, Reaction, or resource). A miss, ranged attack, noncontact approach or mere proximity does not trigger. Use universal typed damage, resistance/immunity, melee-hit retaliation; independent real physical contact event only. Preserve separate **Heated Weapons** +1d6 fire already included in its warhammer and **Illumination** (10-ft bright + 10-ft dim) source, not mistakenly folded into Heated Body. Reusable heated-body primitive also serves Salamander/Remorhaz with their own printed dice, but do not switch the active monster review. **Existing PR #673** already carries the proposed Python/browser generic implementation and tests; stale PR requires CI/merge before certification.
 
 **Previously recorded source-specific decisions/dependencies** (preserved, not new approvals):
 - **Known directed work:** Heated Body: use existing typed retaliatory fire damage and add/reuse generic contact trigger after checking hit-versus-touch distinction.
