@@ -12,7 +12,7 @@
 
 **Baseline markers:** `APPROVED` = user policy expressly approved; `PLAN DRAFTED` = concrete route written but coding pending; `PARTIAL` = some rulings fixed, some pending; `REVIEW NEXT` = source-backed packet requires *delta check*, not automatically a new question. **Skip gate:** `DECISION COMPLETE` (approved/reused/source-specified) -> record and advance, even when implementation pending; `IMPLEMENTATION PENDING` -> wait for hourly execution, **never ask as a planning question**; `DECISION NEEDED` -> the only reason to ask user. An unchecked item in an old worksheet does **not** itself mean user decision is needed. Generated report blockers are code readiness, not planning decisions.
 
-**Current source-review cursor:** #017 **Banshee**. This is an assistant-side source audit, **not an automatic question to the user**. Consult prior rulings/PRs; ask only when an actual unrecorded arena-policy choice exists. All documented decisions remain excluded from repeat questioning. See [Review State Index](../data/monster_2014_review_state.json) and the queue helper.
+**Current source-review cursor:** #017 **Banshee — Wail (1/Day)**. Horrifying Visage is planning-closed; only Wail, then Detect Life remain. Ask the user only for a genuine undocumented policy choice. [Review State Index](../data/monster_2014_review_state.json) preserves completed decisions.
 
 ## Source-of-truth decision gate (read this instead of treating an old blocker as a new question)
 
@@ -193,9 +193,13 @@
 
 ### 017. Banshee
 
-**Planning:** REVIEW NEXT — blueprint drafted. **Implementation:** pending. **Current blockers:** `source:extra-action`, `source:trait`. **Primary family:** FEAR / CHARM / STATUS.
+**Planning:** PARTIAL — Horrifying Visage resolved from exact 2014 source; Wail and Detect Life still awaiting review. **Implementation:** pending. **Current blockers:** `source:extra-action`, `source:trait`. **Primary family:** FEAR / CHARM / STATUS.
 - [ ] **source:extra-action** (review candidate actions: **Horrifying Visage; Wail (1/Day)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.
 - [ ] **source:trait** (**Detect Life**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.
+
+- [x] **Horrifying Visage — 2014 source-complete planning; implementation pending:** One Action, every **non-Undead creature** within **60 ft that can see the Banshee**, ally or enemy; **DC 13 Wisdom** save. Fail applies universal **Frightened** for up to **1 minute**. Repeat WIS save at end of each affected creature's turn; repeat save at **Disadvantage while the Banshee is in that creature's line of sight**. A successful initial save or ending the effect grants **24-hour source-specific Horrifying Visage immunity**, equivalent to match-scoped immunity in the standard deathmatch. One reusable fear-save/visibility/contextual-repeat-save/immunity pipeline, no extra creature or custom Banshee combat resolver. AI avoids wasting this Action if no eligible nonimmune target exists. Preserve source/card and log exact ability name. Source-specific immunity must not make target immune to Frightened from unrelated effects.
+- [ ] **Next action in order: Wail (1/Day)** — review printed 30-ft hearing/sunlight gate, DC 13 CON: fail to 0 HP, success 3d6 Psychic. Distinguish set-HP-to-zero from damage and printed once/day resource. Decide no special house rule without need.
+- [ ] **Then trait: Detect Life** — 5-mile general-direction awareness of non-Undead, non-Construct creatures; never exact location; evaluate interaction with live vision/Invisible without granting illegal precise targeting.
 
 **Source packet:** [#017 in full blueprint](MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md#17-banshee-fear-charm-status). **Review completion:** fill all above decisions before implementing; existing code readiness is not evidence of planning closure.
 
