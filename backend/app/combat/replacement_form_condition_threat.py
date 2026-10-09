@@ -11,6 +11,8 @@ import logging
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import can_see, is_incapacitated
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.spell_policy import spell_at_slot, spell_has_higher_slot_scaling
+from app.combat.spell_policy_targeting import area_spell_choice, legacy_radius_spell_choice
 from app.combat.offense_value import _save_success_probability
 from app.combat.resources import resource_available
 from app.combat.saving_throws import legal_save_action
@@ -44,12 +46,15 @@ def form_mitigates_disabling_save(member, setup, form) -> bool:
             enemy.state.is_alive and not enemy.state.is_dead
             and enemy.state.current_hp > 0 and not is_incapacitated(enemy.state)
         )]
-        # Predict explicit targeting only when the endangered member is the
-        # lone living opponent; never assume enemy focus fire in group fights.
+        # Single-target focus is predictable only if this is the sole live
+        # opponent. AOE choices may target multiple opponents using *actual*
+        # area placement rules, not hypothetical focus fire.
         allies = setup.heroes if member.side == "heroes" else setup.monsters
-        if len([ally for ally in allies if ally.state.is_alive and not ally.state.is_dead
-                and ally.state.current_hp > 0]) != 1 or not sources:
+        solo = len([ally for ally in allies if ally.state.is_alive and not ally.state.is_dead
+                    and ally.state.current_hp > 0]) == 1
+        if not sources:
             return False
+        members = {row.combatant_id: row for row in [*setup.heroes, *setup.monsters]}
         owner = member.state.replacement_form.original_template if member.state.replacement_form else member.state.template
         source = replacement_form_source_template(owner.ruleset, form.form_template_id)
         compiled = compile_replacement_form_template(
@@ -66,7 +71,7 @@ def form_mitigates_disabling_save(member, setup, form) -> bool:
             distance = combatant_distance(enemy, member)
             actions = []
             for action in enemy.state.template.saving_throw_actions:
-                if (action.action_cost == "reaction" or action.max_targets != 1
+                if (not solo or action.action_cost == "reaction" or action.max_targets != 1
                     or action.area is not None or distance > action.range_ft
                     or not resource_available(enemy.state, action.resource_id, action.resource_cost)
                     or not legal_save_action(action, member, distance, source_id=enemy.combatant_id)
@@ -74,15 +79,38 @@ def form_mitigates_disabling_save(member, setup, form) -> bool:
                     continue
                 actions.append((action, action.magical_effect))
             for action in enemy.state.template.spell_save_actions:
+                area = action.area is not None or action.area_radius_ft is not None
                 if (action.action_cost == "reaction" or action.cast_rounds != 1 or action.repeat_only
-                    or action.area is not None or action.area_radius_ft is not None
-                    or action.target_count != 1 or action.target_count_per_slot_above != 0
                     or (action.concentration and enemy.state.concentration is not None)
                     or not spell_terrain_is_supported(action)
-                    or not legal_slot_levels(enemy.state, f"forecast:{enemy.combatant_id}", action.level)
-                    or member not in legal_single_spell_targets(enemy, setup, action)):
+                    or (not area and (
+                        not solo or action.target_count != 1 or action.target_count_per_slot_above != 0
+                    ))):
                     continue
-                actions.append((action, True))
+                slots = legal_slot_levels(
+                    enemy.state, f"forecast:{enemy.combatant_id}", action.level,
+                    higher_slot_scaling=spell_has_higher_slot_scaling(action),
+                )
+                if not slots:
+                    continue
+                if not area:
+                    if member in legal_single_spell_targets(enemy, setup, action):
+                        actions.append((action, True))
+                    continue
+                # The same ally-safe placement actually chosen by spell
+                # resolution. An arbitrary reachable blast is not a forecast.
+                for slot in slots:
+                    scaled = spell_at_slot(action, slot)
+                    if action.area is not None:
+                        choice = area_spell_choice(enemy, setup, action, slot, scaled, members)
+                    else:
+                        choice = legacy_radius_spell_choice(
+                            enemy, setup, action, slot, scaled, members, None,
+                        )
+                    if (choice is not None and choice.placement is not None
+                        and member.combatant_id in choice.placement.enemy_ids):
+                        actions.append((action, True))
+                        break
             for action, magical in actions:
                 rider = action.failed_save_timed_effect
                 condition = rider.effect_id if rider is not None else None

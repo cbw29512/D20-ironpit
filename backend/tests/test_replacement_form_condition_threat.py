@@ -17,6 +17,8 @@ from app.domain.actions import SavingThrowAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.spells import SpellSaveAction
+from app.domain.targeting import AreaTargeting
+from app.domain.grid import BattleMapDefinition, GridPosition
 
 
 def _scenario(builder):
@@ -111,4 +113,62 @@ def test_benefit_must_be_defensive_and_applies_before_spell_offense_ranking() ->
         })],
     })
     with patch("app.combat.replacement_form_condition_threat.replacement_form_source_template", return_value=guarded):
+        assert not form_mitigates_disabling_save(defender, setup, form)
+
+
+def test_universal_grid_aoe_disabling_save_can_threaten_a_group() -> None:
+    defender, enemy, setup, form, source = _scenario(build_thalen_greenbough_level)
+    defender.state.position = GridPosition(x=6, y=4)
+    enemy.state.position = GridPosition(x=3, y=4)
+    ally = EncounterCombatant(
+        combatant_id="ally", side="heroes", position_ft=5,
+        state=build_combatant_state(build_thalen_greenbough_level(8)),
+    )
+    ally.state.position = GridPosition(x=7, y=4)
+    setup.heroes.append(ally)
+    setup.map_definition = BattleMapDefinition(id="control-test", width_squares=20, height_squares=10)
+    spell = SpellSaveAction(
+        id="area-paralysis", name="Area paralysis", level=0,
+        save_ability="wisdom", dc=30, range_ft=60,
+        area=AreaTargeting(shape="radius", origin="point", radius_ft=5),
+        failed_save_timed_effect=FailedSaveTimedEffect(effect_id="paralyzed", duration_rounds=2),
+    )
+    enemy.state.template = enemy.state.template.model_copy(update={
+        "saving_throw_actions": [], "spell_save_actions": [spell],
+    })
+    protected = source.model_copy(update={"condition_immunities": ["paralyzed"]})
+    with patch("app.combat.replacement_form_condition_threat.replacement_form_source_template", return_value=protected):
+        assert form_mitigates_disabling_save(defender, setup, form), (
+            "A real legal area placement can affect the defender even in a group"
+        )
+        # The shared AoE selector cannot choose an out-of-range protected
+        # defender merely because the area could geometrically reach it.
+        defender.state.position = GridPosition(x=18, y=4)
+        assert not form_mitigates_disabling_save(defender, setup, form)
+        defender.state.position = GridPosition(x=6, y=4)
+        assert form_mitigates_disabling_save(defender, setup, form)
+        enemy.state.is_dead = True
+        assert not form_mitigates_disabling_save(defender, setup, form)
+
+
+def test_legacy_radius_aoe_disabling_save_uses_ally_safe_placement() -> None:
+    defender, enemy, setup, form, source = _scenario(build_thalen_greenbough_2014)
+    ally = EncounterCombatant(
+        combatant_id="ally", side="heroes", position_ft=5,
+        state=build_combatant_state(build_thalen_greenbough_2014(8)),
+    )
+    setup.heroes.append(ally)
+    enemy.position_ft = 30
+    spell = SpellSaveAction(
+        id="legacy-area-stun", name="Area stun", level=0,
+        save_ability="wisdom", dc=30, range_ft=60, area_radius_ft=10,
+        failed_save_timed_effect=FailedSaveTimedEffect(effect_id="stunned", duration_rounds=2),
+    )
+    enemy.state.template = enemy.state.template.model_copy(update={
+        "saving_throw_actions": [], "spell_save_actions": [spell],
+    })
+    guarded = source.model_copy(update={"condition_immunities": ["stunned"]})
+    with patch("app.combat.replacement_form_condition_threat.replacement_form_source_template", return_value=guarded):
+        assert form_mitigates_disabling_save(defender, setup, form)
+        enemy.position_ft = 300
         assert not form_mitigates_disabling_save(defender, setup, form)

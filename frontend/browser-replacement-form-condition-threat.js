@@ -13,6 +13,7 @@
   const E = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const R = () => window.IRON_PIT_BROWSER_RESOURCES;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const SA = () => window.IRON_PIT_BROWSER_SPELL_AREA;
 
   function formMitigates(member, setup, form) {
     try {
@@ -21,13 +22,13 @@
       const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
       const alive = (actor) => actor.state.is_alive !== false && !actor.state.is_dead
         && actor.state.current_hp > 0;
-      if (allies.filter(alive).length !== 1) return false;
+      const solo = allies.filter(alive).length === 1;
       const owner = member.state.replacement_form?.original_template || member.state.template;
       for (const enemy of enemies.filter((actor) => alive(actor) && !E().incapacitated(actor.state))) {
         const distance = S().distance(enemy, member);
         const actions = [];
         for (const action of enemy.state.template.saving_throw_actions || []) {
-          if (action.actionCost === "reaction" || (action.maxTargets || 1) !== 1
+          if (!solo || action.actionCost === "reaction" || (action.maxTargets || 1) !== 1
             || action.area || distance > (action.range || 0)
             || (action.resourceId && !R().available(enemy.state, action.resourceId, action.resourceCost || 1))
             || !V().legalAction(action, member, distance, enemy.combatant_id)
@@ -35,13 +36,45 @@
           actions.push([action, Boolean(action.magicalEffect)]);
         }
         for (const action of enemy.state.template.spell_save_actions || []) {
+          const hasArea = Boolean(action.area || action.areaRadius);
           if (action.actionCost === "reaction" || (action.castRounds || 1) !== 1
-            || action.repeatOnly || action.area || action.areaRadius
-            || (action.targetCount || 1) !== 1 || action.targetCountPerSlotAbove
-            || (action.concentration && enemy.state.concentration)
-            || !C().legalSlotLevels(enemy.state, "forecast:" + enemy.combatant_id, action.level).length
-            || !H().legalSingleTargets(enemy, setup, action).some((target) => target.combatant_id === member.combatant_id)) continue;
-          actions.push([action, true]);
+            || action.repeatOnly || (action.concentration && enemy.state.concentration)
+            || (!hasArea && (!solo || (action.targetCount || 1) !== 1
+              || action.targetCountPerSlotAbove))) continue;
+          const slots = C().legalSlotLevels(enemy.state, "forecast:" + enemy.combatant_id, action.level, {
+            higherSlotScaling: Boolean(action.allowsHigherSlots || action.upcastDicePerLevel
+              || (action.damageComponents || []).some((p) => p.upcastDicePerLevel)),
+          });
+          if (!slots.length) continue;
+          if (!hasArea) {
+            if (H().legalSingleTargets(enemy, setup, action)
+              .some((target) => target.combatant_id === member.combatant_id)) actions.push([action, true]);
+            continue;
+          }
+          // Match the current spell selector's legal, ally-safe placement;
+          // do not count hypothetical blast positions it would not choose.
+          for (const slot of slots) {
+            let placement;
+            if (action.area) {
+              const range = action.area.origin === "point"
+                ? H().effectiveRange(enemy.state, action.range) : action.range;
+              const placements = H().protectedUniversalPlacements(
+                enemy, setup, action, slot, range,
+              ).sort((a, b) => b.enemyIds.length - a.enemyIds.length
+                || a.friendlyIds.length - b.friendlyIds.length);
+              placement = placements[0] || null;
+            } else {
+              const protection = H().areaSpellProtection(enemy, setup, action, slot);
+              placement = SA().bestPlacement(
+                enemy, setup, action.areaRadius, action.range,
+                [...protection.ids], protection.limit,
+              );
+            }
+            if (placement?.enemyIds?.includes(member.combatant_id)) {
+              actions.push([action, true]);
+              break;
+            }
+          }
         }
         for (const [action, magical] of actions) {
           const condition = action.failedSaveTimedEffect?.effectId;
