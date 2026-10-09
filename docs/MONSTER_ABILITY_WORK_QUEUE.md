@@ -19,7 +19,7 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 | Priority | Monster / ability | Universal effect reused | PR | State | Remaining gate |
 |---|---|---|---|---|---|
-| 1 | Assassin — Assassinate | First-turn target Advantage; critical vs explicitly Surprised | [#664](https://github.com/cbw29512/D20-ironpit/pull/664) | Code submitted, **not merged** | Exact-head CI; source blockers regeneration; Surprise assignment/lifecycle independently unresolved |
+| 1 | Assassin — Assassinate | **User-approved Pit override:** first-turn Initiative lead vs target grants Advantage and critical-on-hit; no separate Surprise state | [#664](https://github.com/cbw29512/D20-ironpit/pull/664) | Code submitted, **not merged** | PR #664 Advantage only; extend with initiative-triggered crit-on-hit, then exact-head Python/browser CI and source refresh |
 | 2 | Assassin — Evasion | Passive Dexterity save damage: success 0, failure half; disabled if incapacitated | [#665](https://github.com/cbw29512/D20-ironpit/pull/665) | Code submitted, **not merged** | Exact-head CI; generated blockers refresh |
 | 3 | Assassin — Sneak Attack | Existing once-per-turn Rogue weapon-hit damage; printed source alias | [#666](https://github.com/cbw29512/D20-ironpit/pull/666) | Code submitted, **not merged** | Exact-head CI; generated blockers refresh |
 | 4 | Metallic dragons — Change Shape | Arena-unavailable noncombat action, retained in source | [#663](https://github.com/cbw29512/D20-ironpit/pull/663) | Code submitted, **not merged** | Generated browser roster count/artifacts and final-head CI |
