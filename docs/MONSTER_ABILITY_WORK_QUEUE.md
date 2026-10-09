@@ -211,6 +211,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved AI:** use first Roar when it can affect susceptible enemies, weighing risk to allies also in hearing range. Shared sequenced-use Action state, generic hearing eligibility, saving throws, timed Frightened, repeat saves, and ordinary Action/resource economy; no Androsphinx-name dispatch.
 - **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED. Review second Roar next before advancing.
 
+### Androsphinx — Second Roar (2014), user approved 2026-10-09
+
+- **Printed second Roar stage:** second use of source's 3/Day sequenced Roar, one Action, each hearing creature within 500 ft makes DC18 Wisdom save; failure applies Deafened and Frightened, and the frightened creature is Paralyzed while frightened by this Roar. Duration 1 minute, repeat save at end of affected creature's turns as printed, with dependent conditions ending at their source-correct times. Respect all affected allies and immunity.
+- **Approved composition/AI:** shared hearing/area target eligibility, DC18 Wisdom save, Deafened/Frightened/Paralyzed instances and dependency/expiry, timed repeat-save, sequenced-use resource tracking; use when enemy benefit justifies friendly-fire risks; cannot skip stages. No monster-specific resolver.
+- **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED. Continue third Roar next.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
