@@ -6065,13 +6065,6 @@
       {
         "demand_count": 1,
         "monsters": [
-          "Invisible Stalker"
-        ],
-        "printed_name": "Faultless Tracker"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
           "Pit Fiend"
         ],
         "printed_name": "Fear Aura"
