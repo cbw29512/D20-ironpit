@@ -193,6 +193,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Reusable mechanics:** generic own-space area target predicate, shared recharge, save, typed damage, Prone, random horizontal forced-movement direction, source-parameterized collision chain, movement-grid legality and end-turn effects. Inspect existing primitives first and add only truly missing generic remainder. Cross-monster reuse where actual printed mechanics match.
 - **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED pending source/action binding, deterministic Python/browser rolls and geometry, collisions, generated reports and exact-head gates.
 
+### Air Elemental — Slam/Multiattack (2014), user approved 2026-10-09
+
+- **Printed combat actions:** ordinary Slam melee weapon attack +8 to hit, 5-ft reach, 2d8+5 Bludgeoning, no extra condition; Multiattack spends one Action for two independent Slam attacks, with legal retargeting after first target dies.
+- **Approved AI:** prefer Whirlwind only when source-recharged, target shares Air Elemental's space and tactically advantageous; otherwise use two-Slam Multiattack. Reuse universal attack, typed damage, legal targeting, Multiattack and resource selection, not monster-name resolvers.
+- **Planning:** USER APPROVED. Air Elemental Air Form, Whirlwind and Slam/Multiattack planning pass complete; implementation NOT CERTIFIED until actual source/runtime bindings, Python/browser parity and exact-head gates. Advance review to Androsphinx.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
