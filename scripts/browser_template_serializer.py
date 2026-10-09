@@ -1170,6 +1170,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                     "voluntaryRevertAction": item.voluntary_revert_action,
                     "hpMode": item.hp_mode,
                     "temporaryHpOnEnter": item.temporary_hp_on_enter,
+                "aiUsePolicy": item.ai_use_policy,
+                "aiEmergencyHpFraction": item.ai_emergency_hp_fraction,
                     "retainCreatureType": item.retain_creature_type,
                     "endsOnIncapacitated": item.ends_on_incapacitated,
                     "replaceExistingForm": item.replace_existing_form,
