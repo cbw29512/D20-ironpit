@@ -583,6 +583,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Senses and mobility:** Darkvision 60 ft, passive Perception 10, speed 30 ft; ordinary printed race/type and non-combat traits remain in immutable stat block. **Planning:** SOURCE REVIEWED / native movement/senses, no new policy. **Implementation:** NOT CERTIFIED.
 - **Source inventory:** Surprise Attack, Brute, Long-Limbed, Morningstar, Javelin and passive senses/movement; no printed Multiattack. Prior issues #696/#697 resolve the policy decisions but **not execution blockers**. Future 2024 bugbear must not inherit 2014 source modifiers unverified. **Next ordered monster:** Clay Golem.
 
+### Clay Golem — Haste (Recharge 5–6), 2014 prior approved composite reconciled 2026-10-09
+
+- **Printed Action / source issue #704:** Action, Recharge 5–6, initially available. Until end of Clay Golem's next turn, grants +2 AC, Advantage on Dexterity saving throws, and one source Slam as a **Bonus Action**, with ordinary Bonus Action availability and Slam effect/riders. This is **not** the Haste spell: no speed doubling, extra full Action, post-expiry lethargy or Concentration.
+- **Universal composition:** shared Action + Recharge 5–6 turn-start resource (as Behir), timed self-buff, AC modifier, save advantage, bonus-action attack grant referencing existing Slam profile, expiry at source next-turn end, encounter reset. No unique golem buff resolver. Dependencies: generic recharge binding, bonus action executor, print-source source action adapter and Python/browser Hero/generated parity. Cross-monster reuse: source-defined temporary AC/save buffs with bonus attack and rechargeable Action.
+- **Planning status:** PREVIOUSLY APPROVED/RECORDED in issue #704; **NOT REOPENED**. **Implementation:** NOT CERTIFIED; blocker categories recharge and extra-action remain open. Next printed ability: Berserk; continue same Clay Golem until all printed traits and actions reviewed.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
