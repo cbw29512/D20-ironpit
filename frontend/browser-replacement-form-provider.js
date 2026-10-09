@@ -47,6 +47,8 @@
         buffer = Number(source.max_hp);
       }
       if (!(buffer > 0)) return false;
+      if (window.IRON_PIT_BROWSER_REPLACEMENT_FORM_CONDITION_THREAT
+          ?.formMitigates(member, setup, form)) return false;
       const threat = window.IRON_PIT_BROWSER_REPLACEMENT_FORM_THREAT;
       if (threat?.mayBeLethal(state.current_hp, state.temporary_hp, threat.estimate(member, setup))) return false;
       if (Number(state.current_hp) <= Number(owner.max_hp) * Number(form.aiEmergencyHpFraction ?? (1 / 3)) / 2) return false;

@@ -120,5 +120,5 @@
     return Math.max(0, (1 - success) * full + success * onSuccess);
   }
 
-  window.IRON_PIT_BROWSER_OFFENSE_VALUE = { attackProbabilities, autoHitSpell, saveSpell, spellAttack };
+  window.IRON_PIT_BROWSER_OFFENSE_VALUE = { attackProbabilities, autoHitSpell, saveSpell, saveSuccess, spellAttack };
 })();
