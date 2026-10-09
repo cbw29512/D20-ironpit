@@ -96,7 +96,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 - **Recorded blockers:** `source:trait`.
 - **Unbound printed traits:** Assassinate; Evasion; Sneak Attack
 - **Fix notes:** Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
-- **Known directed work:** Assassinate/Sneak Attack/Evasion: reuse rogue pregen combat primitives where semantics match.
+- **USER-RECONFIRMED ASSASSINATE (2026-10-08), planning decision complete:** If Assassin wins Initiative over a target in the first round and attacks **before that target has taken its turn**, **Assassinate** gives Advantage **and any hit is a critical hit**. It is not an automatic hit and does not require a separate Surprised flag in standard Pit matches. Applies per eligible first-turn target/attack, expires after Assassin's first turn. Explicit arena simplification of 2014's separate Surprised crit requirement. Universal turn-order + Advantage + critical-hit primitives, no custom monster resolver. PR #664 currently only covers Advantage; crit portion is unimplemented. Remaining planning blockers: Evasion, Sneak Attack (reuse Rogue pregen primitives where semantics match).
 
 ### 010. Azer
 
