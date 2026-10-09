@@ -16,6 +16,12 @@ effect. Existing replacement-form support changes only the acting combatant's ow
 """
 from __future__ import annotations
 
+import logging
+
+from app.content.monster_source_2014 import SourceMonster2014
+
+logger = logging.getLogger(__name__)
+
 ARENA_NEUTRAL_TRAITS_2014 = frozenset({
     "Siege Monster", "Amorphous", "Standing Leap", "Amphibious", "Beast of Burden", "Echolocation", "False Appearance", "Flyby", "Hold Breath",
     "Ice Walk", "Illumination", "Keen Hearing", "Keen Hearing and Smell", "Keen Hearing and Sight",
@@ -25,13 +31,6 @@ ARENA_NEUTRAL_TRAITS_2014 = frozenset({
     "Underwater Camouflage", "Web Sense", "Web Walker", "Rejuvenation", "Hellish Rejuvenation",
     "Wakeful", "Ethereal Jaunt", "Incorporeal Movement", "Immutable Form",
 })
-
-import logging
-
-from app.content.monster_source_2014 import SourceMonster2014
-
-logger = logging.getLogger(__name__)
-
 
 def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str) -> bool:
     """Accept only the pinned noncombat summoner/quarry tracking semantics."""
