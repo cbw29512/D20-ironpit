@@ -132,6 +132,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Cross-monster reuse:** Source-matched amphibious traits can use ordinary environment breathing eligibility without name-specific resolver. No broad immunity inferred.
 - **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED pending source retention and no spurious effect check.
 
+### Aboleth — Multiattack (2014), approved 2026-10-09
+
+- **Printed Action:** one Action makes three Tentacle attacks, each independently +9 hit, 10-ft reach, 2d6+5 Bludgeoning and on-hit DC14 Constitution save against Tentacle disease. Preserve separate attack, damage and save event per hit.
+- **Approved engine reuse:** shared source-defined fixed Multiattack sequence, one Action cost, independently legal targets, permitted retargeting after a target dies, per-hit disease effects; do not reuse the Aboleth's Tail attack as a fourth Multiattack slot.
+- **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED until exact Python/browser bindings and current blocker/report parity are checked.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
