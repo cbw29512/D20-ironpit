@@ -35,6 +35,11 @@ def resolve_replacement_form_setup(
         if not actions:
             return [], sequence
         action = actions[0]
+        if action.ai_use_policy == "emergency_only":
+            if state.replacement_form is not None:
+                return [], sequence
+            if not 0 < state.current_hp <= owner_template.max_hp * action.ai_emergency_hp_fraction:
+                return [], sequence
         if state.replacement_form is not None and not action.replace_existing_form:
             return [], sequence
         if not is_available(state, action.action_cost):
