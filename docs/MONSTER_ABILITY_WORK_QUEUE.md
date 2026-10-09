@@ -180,6 +180,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved AI:** card-retained and combat-inactive; do not consume Action/cast/slot for theatrics. Reuse source-aware arena-neutral utility spell classification where mechanically equivalent, not a spell-name runtime resolver.
 - **Acolyte six-spell planning review:** Sacred Flame, Bless, Cure Wounds, Sanctuary, Light and Thaumaturgy reviewed with distinct recorded remediations. Acolyte club remains standard +2 / 1d4 Bludgeoning, as source ticket #682 notes. **Planning complete for recorded spell package; implementation NOT CERTIFIED** until printed spell bindings and blocker generator/production Python/browser gates pass. Move planning cursor to **Air Elemental**, first ability Whirlwind.
 
+### Air Elemental — Air Form (2014), user approved 2026-10-09
+
+- **Printed trait:** Source owner can enter and stop in a hostile creature's space, and pass through spaces 1 inch wide without squeezing. Keep all source text on immutable card.
+- **Approved arena implementation:** source-parameterized exception to standard 5-ft grid hostile occupancy; retain independent combatant identity and position, permit shared square only for eligible Air Form holder. Narrow passage component remains arena-neutral in an empty Pit, not erased.
+- **Reuse:** universal source-granted occupancy-permission predicate and authoritative movement/target geometry, reusable by other printed equivalent space-entry traits; do not name-dispatch. Required prerequisite for Whirlwind's every-creature-in-own-space target selection. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
