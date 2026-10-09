@@ -27,6 +27,8 @@ def _actors():
     )
     enemy_template = enemy_template.model_copy(update={
         "attack_action": sequence, "saving_throw_actions": [], "speed_ft": 30,
+        "spell_save_actions": [], "spell_attack_actions": [],
+        "auto_hit_spell_actions": [], "concentration_repeat_save_actions": [],
     })
     defender = EncounterCombatant(
         combatant_id="caster", side="heroes", position_ft=0,

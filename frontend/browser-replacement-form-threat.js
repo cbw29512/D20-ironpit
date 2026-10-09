@@ -7,6 +7,7 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const R = () => window.IRON_PIT_BROWSER_RESOURCES;
   const conditions = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
+  const spellThreat = () => window.IRON_PIT_BROWSER_REPLACEMENT_FORM_SPELL_THREAT;
 
   const canReach = (attack, distance, speed) =>
     attack.unavailableReason == null
@@ -65,7 +66,10 @@
     try {
       if (!setup) return 0;
       const opponents = defender.side === "heroes" ? setup.monsters : setup.heroes;
-      return Math.max(0, ...opponents.map((enemy) => singleEnemy(enemy, defender)));
+      return Math.max(0, ...opponents.map((enemy) => Math.max(
+        singleEnemy(enemy, defender),
+        spellThreat()?.singleEnemy(enemy, defender, setup) || 0,
+      )));
     } catch (error) {
       console.error("Browser incoming printed threat prediction failed", { id: defender?.combatant_id, error });
       throw error;
