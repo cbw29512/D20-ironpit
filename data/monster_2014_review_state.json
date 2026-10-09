@@ -31,7 +31,8 @@
         "Remaining: Mucous Cloud context, Probing Telepathy, Tentacle disease, legendary Psychic Drain runtime integration."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 001. Aboleth"
+      "source_packet_heading": "### 001. Aboleth",
+      "implementation_notes": []
     },
     {
       "number": 2,
@@ -46,13 +47,14 @@
       "carried_over_notes": [
         "**User decision / queued:** **LOCKED: Light is combat-relevant and remains available**, to illuminate nonmagical darkness, reveal darkness-dependent stealth, or trigger bright-light sensitivity as appropriate. It cannot counter 2014 magical Darkness (overlapping Darkness dispels Light cantrip). Thaumaturgy stays on the original stat block, but AI never casts it because it has no relevant arena combat purpose. Preserve all remaining spells and use existing spell primitives. Not yet implemented/certified."
       ],
-      "pending_source_review": [
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 002. Acolyte",
+      "implementation_notes": [
         "**mechanic:spellcasting** (**1-level wisdom caster; 6 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
         "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.",
         "Bind six source-prepared spells to 2014 universal Actions; Light remains combat-relevant; Thaumaturgy remains source-only; [#682](https://github.com/cbw29512/D20-ironpit/issues/682)."
-      ],
-      "open_user_questions": [],
-      "source_packet_heading": "### 002. Acolyte"
+      ]
     },
     {
       "number": 3,
@@ -68,7 +70,8 @@
       "carried_over_notes": [],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 003. Adult Bronze Dragon"
+      "source_packet_heading": "### 003. Adult Bronze Dragon",
+      "implementation_notes": []
     },
     {
       "number": 4,
@@ -84,7 +87,8 @@
       "carried_over_notes": [],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 004. Adult Gold Dragon"
+      "source_packet_heading": "### 004. Adult Gold Dragon",
+      "implementation_notes": []
     },
     {
       "number": 5,
@@ -100,7 +104,8 @@
       "carried_over_notes": [],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 005. Adult Silver Dragon"
+      "source_packet_heading": "### 005. Adult Silver Dragon",
+      "implementation_notes": []
     },
     {
       "number": 6,
@@ -116,14 +121,15 @@
       "carried_over_notes": [
         "**Known directed work:** Air Form: reuse movement, spaces and creature occupancy constraints; do not reduce to presentation."
       ],
-      "pending_source_review": [
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 006. Air Elemental",
+      "implementation_notes": [
         "**mechanic:recharge**: Bind Recharge threshold to the exact printed Action and source-owned resource/turn roll. Certification requires the recharged Action to be legal or formally excluded.",
         "**source:extra-action** (review candidate actions: **Whirlwind (Recharge 4–6)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
         "**source:trait** (**Air Form**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.",
         "Air Form occupied-space exception, Whirlwind save/prone/fling/collision, Recharge 4–6; [#683](https://github.com/cbw29512/D20-ironpit/issues/683)."
-      ],
-      "open_user_questions": [],
-      "source_packet_heading": "### 006. Air Elemental"
+      ]
     },
     {
       "number": 7,
@@ -139,7 +145,8 @@
       "carried_over_notes": [],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 007. Ancient Brass Dragon"
+      "source_packet_heading": "### 007. Ancient Brass Dragon",
+      "implementation_notes": []
     },
     {
       "number": 8,
@@ -155,7 +162,8 @@
       "carried_over_notes": [],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 008. Ancient Bronze Dragon"
+      "source_packet_heading": "### 008. Ancient Bronze Dragon",
+      "implementation_notes": []
     },
     {
       "number": 9,
@@ -171,7 +179,8 @@
       "carried_over_notes": [],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 009. Ancient Copper Dragon"
+      "source_packet_heading": "### 009. Ancient Copper Dragon",
+      "implementation_notes": []
     },
     {
       "number": 10,
@@ -187,7 +196,8 @@
       "carried_over_notes": [],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 010. Ancient Gold Dragon"
+      "source_packet_heading": "### 010. Ancient Gold Dragon",
+      "implementation_notes": []
     },
     {
       "number": 11,
@@ -203,7 +213,8 @@
       "carried_over_notes": [],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 011. Ancient Silver Dragon"
+      "source_packet_heading": "### 011. Ancient Silver Dragon",
+      "implementation_notes": []
     },
     {
       "number": 12,
@@ -219,16 +230,17 @@
       ],
       "recorded_decisions": [],
       "carried_over_notes": [],
-      "pending_source_review": [
+      "pending_source_review": [],
+      "open_user_questions": [],
+      "source_packet_heading": "### 012. Androsphinx",
+      "implementation_notes": [
         "**mechanic:legendary**: Use the existing legendary action economy but certify each source choice, turn restriction and exact combat resolution, not just the generic pool.",
         "**mechanic:spellcasting** (**12-level wisdom caster; 15 printed prepared/at-will spells; printed spell list in full source packet**): Audit the full printed 2014 spells, slots/uses and AI choice. Map to shared edition-specific spell effects. Park every outcome-changing missing spell individually; keep source list and exclude only explicitly approved noncombat options.",
         "**source:extra-action** (review candidate actions: **Roar (3/Day); First Roar; Second Roar; Third Roar**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause.",
         "**source:legendary** (**Teleport; Cast a Spell**): Implement each printed option and its point cost, target, turn-end timing, spend/refill lifecycle via existing legendary-action system.",
         "**source:trait** (**Inscrutable; Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it.",
         "Three sequenced Roars; 2014 prepared spells; source-legal legendary Claw and Cast a Spell (Teleport no-cast); [#684](https://github.com/cbw29512/D20-ironpit/issues/684)."
-      ],
-      "open_user_questions": [],
-      "source_packet_heading": "### 012. Androsphinx"
+      ]
     },
     {
       "number": 13,
@@ -249,7 +261,8 @@
       "carried_over_notes": [],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 013. Archmage"
+      "source_packet_heading": "### 013. Archmage",
+      "implementation_notes": []
     },
     {
       "number": 14,
@@ -268,7 +281,8 @@
       "carried_over_notes": [],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 014. Assassin"
+      "source_packet_heading": "### 014. Assassin",
+      "implementation_notes": []
     },
     {
       "number": 15,
@@ -287,7 +301,8 @@
       ],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 015. Azer"
+      "source_packet_heading": "### 015. Azer",
+      "implementation_notes": []
     },
     {
       "number": 16,
@@ -310,7 +325,8 @@
       "carried_over_notes": [],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 016. Balor"
+      "source_packet_heading": "### 016. Balor",
+      "implementation_notes": []
     },
     {
       "number": 17,
@@ -328,7 +344,8 @@
         "**source:trait** (**Detect Life**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 017. Banshee"
+      "source_packet_heading": "### 017. Banshee",
+      "implementation_notes": []
     },
     {
       "number": 18,
@@ -348,7 +365,8 @@
         "**source:trait** (**Barbed Hide**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 018. Barbed Devil"
+      "source_packet_heading": "### 018. Barbed Devil",
+      "implementation_notes": []
     },
     {
       "number": 19,
@@ -367,7 +385,8 @@
       ],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 019. Basilisk"
+      "source_packet_heading": "### 019. Basilisk",
+      "implementation_notes": []
     },
     {
       "number": 20,
@@ -389,7 +408,8 @@
         "**source:trait** (**Steadfast**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 020. Bearded Devil"
+      "source_packet_heading": "### 020. Bearded Devil",
+      "implementation_notes": []
     },
     {
       "number": 21,
@@ -407,7 +427,8 @@
         "**source:extra-action** (review candidate actions: **Lightning Breath (Recharge 5–6); Swallow**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 021. Behir"
+      "source_packet_heading": "### 021. Behir",
+      "implementation_notes": []
     },
     {
       "number": 22,
@@ -425,7 +446,8 @@
         "**source:trait** (**Corrosive Form**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 022. Black Pudding"
+      "source_packet_heading": "### 022. Black Pudding",
+      "implementation_notes": []
     },
     {
       "number": 23,
@@ -443,7 +465,8 @@
         "**source:trait** (**Surprise Attack**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 023. Bugbear"
+      "source_packet_heading": "### 023. Bugbear",
+      "implementation_notes": []
     },
     {
       "number": 24,
@@ -459,7 +482,8 @@
         "**source:extra-action** (review candidate actions: **Deadly Leap**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 024. Bulette"
+      "source_packet_heading": "### 024. Bulette",
+      "implementation_notes": []
     },
     {
       "number": 25,
@@ -479,7 +503,8 @@
         "**source:reaction** (**Unnerving Mask**): Model genuine triggering event, timing, eligibility, reaction cost, source effect and reset in shared reaction dispatch; prove production Python/browser calls, not helper-only tests."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 025. Chain Devil"
+      "source_packet_heading": "### 025. Chain Devil",
+      "implementation_notes": []
     },
     {
       "number": 26,
@@ -501,7 +526,8 @@
         "**source:trait** (**Sense Magic**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 026. Chuul"
+      "source_packet_heading": "### 026. Chuul",
+      "implementation_notes": []
     },
     {
       "number": 27,
@@ -519,7 +545,8 @@
         "**source:extra-action** (review candidate actions: **Haste (Recharge 5–6)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 027. Clay Golem"
+      "source_packet_heading": "### 027. Clay Golem",
+      "implementation_notes": []
     },
     {
       "number": 28,
@@ -539,7 +566,8 @@
         "**source:trait** (**Damage Transfer; Light Sensitivity**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 028. Cloaker"
+      "source_packet_heading": "### 028. Cloaker",
+      "implementation_notes": []
     },
     {
       "number": 29,
@@ -557,7 +585,8 @@
         "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 029. Cloud Giant"
+      "source_packet_heading": "### 029. Cloud Giant",
+      "implementation_notes": []
     },
     {
       "number": 30,
@@ -579,7 +608,8 @@
         "**source:trait** (**Innate Spellcasting; Shielded Mind**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 030. Couatl"
+      "source_packet_heading": "### 030. Couatl",
+      "implementation_notes": []
     },
     {
       "number": 31,
@@ -597,7 +627,8 @@
         "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 031. Cult Fanatic"
+      "source_packet_heading": "### 031. Cult Fanatic",
+      "implementation_notes": []
     },
     {
       "number": 32,
@@ -615,7 +646,8 @@
         "**source:extra-action** (review candidate actions: **Darkness Aura (1/Day)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 032. Darkmantle"
+      "source_packet_heading": "### 032. Darkmantle",
+      "implementation_notes": []
     },
     {
       "number": 33,
@@ -633,7 +665,8 @@
         "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 033. Deep Gnome (Svirfneblin)"
+      "source_packet_heading": "### 033. Deep Gnome (Svirfneblin)",
+      "implementation_notes": []
     },
     {
       "number": 34,
@@ -653,7 +686,8 @@
         "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 034. Deva"
+      "source_packet_heading": "### 034. Deva",
+      "implementation_notes": []
     },
     {
       "number": 35,
@@ -675,7 +709,8 @@
         "**source:trait** (**Elemental Demise; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 035. Djinni"
+      "source_packet_heading": "### 035. Djinni",
+      "implementation_notes": []
     },
     {
       "number": 36,
@@ -695,7 +730,8 @@
         "**source:trait** (**Shapechanger; Ambusher; Surprise Attack**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 036. Doppelganger"
+      "source_packet_heading": "### 036. Doppelganger",
+      "implementation_notes": []
     },
     {
       "number": 37,
@@ -711,7 +747,8 @@
         "**source:extra-action** (review candidate actions: **Fetid Cloud (1/Day)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 037. Dretch"
+      "source_packet_heading": "### 037. Dretch",
+      "implementation_notes": []
     },
     {
       "number": 38,
@@ -729,7 +766,8 @@
         "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 038. Drider"
+      "source_packet_heading": "### 038. Drider",
+      "implementation_notes": []
     },
     {
       "number": 39,
@@ -749,7 +787,8 @@
         "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 039. Drow"
+      "source_packet_heading": "### 039. Drow",
+      "implementation_notes": []
     },
     {
       "number": 40,
@@ -767,7 +806,8 @@
         "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 040. Druid"
+      "source_packet_heading": "### 040. Druid",
+      "implementation_notes": []
     },
     {
       "number": 41,
@@ -787,7 +827,8 @@
         "**source:trait** (**Innate Spellcasting; Speak with Beasts and Plants; Tree Stride**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 041. Dryad"
+      "source_packet_heading": "### 041. Dryad",
+      "implementation_notes": []
     },
     {
       "number": 42,
@@ -807,7 +848,8 @@
         "**source:trait** (**Duergar Resilience**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 042. Duergar"
+      "source_packet_heading": "### 042. Duergar",
+      "implementation_notes": []
     },
     {
       "number": 43,
@@ -829,7 +871,8 @@
         "**source:trait** (**Death Burst; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 043. Dust Mephit"
+      "source_packet_heading": "### 043. Dust Mephit",
+      "implementation_notes": []
     },
     {
       "number": 44,
@@ -849,7 +892,8 @@
         "**source:trait** (**Elemental Demise; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 044. Efreeti"
+      "source_packet_heading": "### 044. Efreeti",
+      "implementation_notes": []
     },
     {
       "number": 45,
@@ -867,7 +911,8 @@
         "**source:trait** (**Hellish Weapons**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 045. Erinyes"
+      "source_packet_heading": "### 045. Erinyes",
+      "implementation_notes": []
     },
     {
       "number": 46,
@@ -887,7 +932,8 @@
         "**mechanic:recharge**: Bind Recharge threshold to the exact printed Action and source-owned resource/turn roll. Certification requires the recharged Action to be legal or formally excluded."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 046. Ettercap"
+      "source_packet_heading": "### 046. Ettercap",
+      "implementation_notes": []
     },
     {
       "number": 47,
@@ -907,7 +953,8 @@
         "**source:trait** (**Fire Form; Water Susceptibility**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 047. Fire Elemental"
+      "source_packet_heading": "### 047. Fire Elemental",
+      "implementation_notes": []
     },
     {
       "number": 48,
@@ -927,7 +974,8 @@
         "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 048. Flameskull"
+      "source_packet_heading": "### 048. Flameskull",
+      "implementation_notes": []
     },
     {
       "number": 49,
@@ -946,7 +994,8 @@
       ],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 049. Frog"
+      "source_packet_heading": "### 049. Frog",
+      "implementation_notes": []
     },
     {
       "number": 50,
@@ -964,7 +1013,8 @@
         "**source:trait** (**Ooze Cube; Transparent**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 050. Gelatinous Cube"
+      "source_packet_heading": "### 050. Gelatinous Cube",
+      "implementation_notes": []
     },
     {
       "number": 51,
@@ -984,7 +1034,8 @@
         "**source:trait** (**Ethereal Sight**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 051. Ghost"
+      "source_packet_heading": "### 051. Ghost",
+      "implementation_notes": []
     },
     {
       "number": 52,
@@ -1002,7 +1053,8 @@
         "**source:extra-action** (review candidate actions: **Swallow**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 052. Giant Frog"
+      "source_packet_heading": "### 052. Giant Frog",
+      "implementation_notes": []
     },
     {
       "number": 53,
@@ -1022,7 +1074,8 @@
         "**mechanic:recharge**: Bind Recharge threshold to the exact printed Action and source-owned resource/turn roll. Certification requires the recharged Action to be legal or formally excluded."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 053. Giant Spider"
+      "source_packet_heading": "### 053. Giant Spider",
+      "implementation_notes": []
     },
     {
       "number": 54,
@@ -1040,7 +1093,8 @@
         "**source:extra-action** (review candidate actions: **Swallow**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 054. Giant Toad"
+      "source_packet_heading": "### 054. Giant Toad",
+      "implementation_notes": []
     },
     {
       "number": 55,
@@ -1060,7 +1114,8 @@
         "**source:trait** (**Aberrant Ground; Gibbering**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 055. Gibbering Mouther"
+      "source_packet_heading": "### 055. Gibbering Mouther",
+      "implementation_notes": []
     },
     {
       "number": 56,
@@ -1078,7 +1133,8 @@
         "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 056. Glabrezu"
+      "source_packet_heading": "### 056. Glabrezu",
+      "implementation_notes": []
     },
     {
       "number": 57,
@@ -1096,7 +1152,8 @@
         "**source:trait** (**Corrode Metal**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 057. Gray Ooze"
+      "source_packet_heading": "### 057. Gray Ooze",
+      "implementation_notes": []
     },
     {
       "number": 58,
@@ -1116,7 +1173,8 @@
         "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 058. Green Hag"
+      "source_packet_heading": "### 058. Green Hag",
+      "implementation_notes": []
     },
     {
       "number": 59,
@@ -1132,7 +1190,8 @@
         "**source:trait** (**Blind Senses**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 059. Grimlock"
+      "source_packet_heading": "### 059. Grimlock",
+      "implementation_notes": []
     },
     {
       "number": 60,
@@ -1152,7 +1211,8 @@
         "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 060. Guardian Naga"
+      "source_packet_heading": "### 060. Guardian Naga",
+      "implementation_notes": []
     },
     {
       "number": 61,
@@ -1174,7 +1234,8 @@
         "**source:trait** (**Inscrutable; Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 061. Gynosphinx"
+      "source_packet_heading": "### 061. Gynosphinx",
+      "implementation_notes": []
     },
     {
       "number": 62,
@@ -1190,7 +1251,8 @@
         "**source:extra-action** (review candidate actions: **Luring Song**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 062. Harpy"
+      "source_packet_heading": "### 062. Harpy",
+      "implementation_notes": []
     },
     {
       "number": 63,
@@ -1208,7 +1270,8 @@
         "**source:trait** (**Telepathic Bond**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 063. Homunculus"
+      "source_packet_heading": "### 063. Homunculus",
+      "implementation_notes": []
     },
     {
       "number": 64,
@@ -1226,7 +1289,8 @@
         "**attack:range**: Restore exact reach and ranged normal/long bands from source and use shared range legality/disadvantage."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 064. Horned Devil"
+      "source_packet_heading": "### 064. Horned Devil",
+      "implementation_notes": []
     },
     {
       "number": 65,
@@ -1248,7 +1312,8 @@
         "**source:trait** (**Multiple Heads; Reactive Heads**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 065. Hydra"
+      "source_packet_heading": "### 065. Hydra",
+      "implementation_notes": []
     },
     {
       "number": 66,
@@ -1266,7 +1331,8 @@
         "**source:extra-action** (review candidate actions: **Wall of Ice (Recharge 6)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 066. Ice Devil"
+      "source_packet_heading": "### 066. Ice Devil",
+      "implementation_notes": []
     },
     {
       "number": 67,
@@ -1286,7 +1352,8 @@
         "**source:trait** (**Death Burst; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 067. Ice Mephit"
+      "source_packet_heading": "### 067. Ice Mephit",
+      "implementation_notes": []
     },
     {
       "number": 68,
@@ -1304,7 +1371,8 @@
         "**source:trait** (**Shapechanger**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 068. Imp"
+      "source_packet_heading": "### 068. Imp",
+      "implementation_notes": []
     },
     {
       "number": 69,
@@ -1323,7 +1391,8 @@
       ],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 069. Invisible Stalker"
+      "source_packet_heading": "### 069. Invisible Stalker",
+      "implementation_notes": []
     },
     {
       "number": 70,
@@ -1339,7 +1408,8 @@
         "**source:extra-action** (review candidate actions: **Leadership (Recharges after a Short or Long Rest)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 070. Knight"
+      "source_packet_heading": "### 070. Knight",
+      "implementation_notes": []
     },
     {
       "number": 71,
@@ -1367,7 +1437,8 @@
         "**source:trait** (**Freedom of Movement**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 071. Kraken"
+      "source_packet_heading": "### 071. Kraken",
+      "implementation_notes": []
     },
     {
       "number": 72,
@@ -1391,7 +1462,8 @@
         "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 072. Lamia"
+      "source_packet_heading": "### 072. Lamia",
+      "implementation_notes": []
     },
     {
       "number": 73,
@@ -1413,7 +1485,8 @@
         "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 073. Lich"
+      "source_packet_heading": "### 073. Lich",
+      "implementation_notes": []
     },
     {
       "number": 74,
@@ -1431,7 +1504,8 @@
         "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 074. Mage"
+      "source_packet_heading": "### 074. Mage",
+      "implementation_notes": []
     },
     {
       "number": 75,
@@ -1451,7 +1525,8 @@
         "**source:trait** (**Death Burst; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 075. Magma Mephit"
+      "source_packet_heading": "### 075. Magma Mephit",
+      "implementation_notes": []
     },
     {
       "number": 76,
@@ -1471,7 +1546,8 @@
         "**source:trait** (**Death Burst; Ignited Illumination**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 076. Magmin"
+      "source_packet_heading": "### 076. Magmin",
+      "implementation_notes": []
     },
     {
       "number": 77,
@@ -1489,7 +1565,8 @@
         "**source:trait** (**Tail Spike Regrowth**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 077. Manticore"
+      "source_packet_heading": "### 077. Manticore",
+      "implementation_notes": []
     },
     {
       "number": 78,
@@ -1507,7 +1584,8 @@
         "**source:trait** (**Reactive**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 078. Marilith"
+      "source_packet_heading": "### 078. Marilith",
+      "implementation_notes": []
     },
     {
       "number": 79,
@@ -1527,7 +1605,8 @@
       ],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 079. Medusa"
+      "source_packet_heading": "### 079. Medusa",
+      "implementation_notes": []
     },
     {
       "number": 80,
@@ -1545,7 +1624,8 @@
         "**source:trait** (**Shapechanger; Adhesive (Object Form Only); False Appearance (Object Form Only); Grappler**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 080. Mimic"
+      "source_packet_heading": "### 080. Mimic",
+      "implementation_notes": []
     },
     {
       "number": 81,
@@ -1563,7 +1643,8 @@
         "**source:extra-action** (review candidate actions: **Dreadful Glare**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 081. Mummy"
+      "source_packet_heading": "### 081. Mummy",
+      "implementation_notes": []
     },
     {
       "number": 82,
@@ -1589,7 +1670,8 @@
         "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 082. Mummy Lord"
+      "source_packet_heading": "### 082. Mummy Lord",
+      "implementation_notes": []
     },
     {
       "number": 83,
@@ -1609,7 +1691,8 @@
         "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 083. Night Hag"
+      "source_packet_heading": "### 083. Night Hag",
+      "implementation_notes": []
     },
     {
       "number": 84,
@@ -1627,7 +1710,8 @@
         "**source:trait** (**Confer Fire Resistance**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 084. Nightmare"
+      "source_packet_heading": "### 084. Nightmare",
+      "implementation_notes": []
     },
     {
       "number": 85,
@@ -1649,7 +1733,8 @@
         "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 085. Oni"
+      "source_packet_heading": "### 085. Oni",
+      "implementation_notes": []
     },
     {
       "number": 86,
@@ -1669,7 +1754,8 @@
         "**source:trait** (**Limited Telepathy**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 086. Otyugh"
+      "source_packet_heading": "### 086. Otyugh",
+      "implementation_notes": []
     },
     {
       "number": 87,
@@ -1689,7 +1775,8 @@
         "**source:trait** (**Fear Aura; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 087. Pit Fiend"
+      "source_packet_heading": "### 087. Pit Fiend",
+      "implementation_notes": []
     },
     {
       "number": 88,
@@ -1709,7 +1796,8 @@
         "**source:trait** (**Divine Awareness; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 088. Planetar"
+      "source_packet_heading": "### 088. Planetar",
+      "implementation_notes": []
     },
     {
       "number": 89,
@@ -1727,7 +1815,8 @@
         "**source:trait** (**Divine Eminence; Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 089. Priest"
+      "source_packet_heading": "### 089. Priest",
+      "implementation_notes": []
     },
     {
       "number": 90,
@@ -1745,7 +1834,8 @@
         "**source:trait** (**Limited Telepathy**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 090. Pseudodragon"
+      "source_packet_heading": "### 090. Pseudodragon",
+      "implementation_notes": []
     },
     {
       "number": 91,
@@ -1763,7 +1853,8 @@
         "**mechanic:swallow**: Bind source bite/grapple/size prerequisites, swallowed state, confinement, ongoing typed damage, escape, end on death and reset with existing shared grapple/ongoing-damage mechanics."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 091. Purple Worm"
+      "source_packet_heading": "### 091. Purple Worm",
+      "implementation_notes": []
     },
     {
       "number": 92,
@@ -1783,7 +1874,8 @@
         "**source:trait** (**Shapechanger**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 092. Quasit"
+      "source_packet_heading": "### 092. Quasit",
+      "implementation_notes": []
     },
     {
       "number": 93,
@@ -1803,7 +1895,8 @@
         "**source:trait** (**Limited Magic Immunity; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 093. Rakshasa"
+      "source_packet_heading": "### 093. Rakshasa",
+      "implementation_notes": []
     },
     {
       "number": 94,
@@ -1825,7 +1918,8 @@
         "**source:trait** (**Heated Body**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 094. Remorhaz"
+      "source_packet_heading": "### 094. Remorhaz",
+      "implementation_notes": []
     },
     {
       "number": 95,
@@ -1843,7 +1937,8 @@
         "**source:trait** (**Grasping Tendrils**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 095. Roper"
+      "source_packet_heading": "### 095. Roper",
+      "implementation_notes": []
     },
     {
       "number": 96,
@@ -1865,7 +1960,8 @@
         "**source:trait** (**Damage Transfer**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 096. Rug of Smothering"
+      "source_packet_heading": "### 096. Rug of Smothering",
+      "implementation_notes": []
     },
     {
       "number": 97,
@@ -1883,7 +1979,8 @@
         "**source:trait** (**Iron Scent; Rust Metal**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 097. Rust Monster"
+      "source_packet_heading": "### 097. Rust Monster",
+      "implementation_notes": []
     },
     {
       "number": 98,
@@ -1903,7 +2000,8 @@
         "**source:trait** (**Heated Body**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 098. Salamander"
+      "source_packet_heading": "### 098. Salamander",
+      "implementation_notes": []
     },
     {
       "number": 99,
@@ -1921,7 +2019,8 @@
         "**source:trait** (**Horrific Appearance**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 099. Sea Hag"
+      "source_packet_heading": "### 099. Sea Hag",
+      "implementation_notes": []
     },
     {
       "number": 100,
@@ -1940,7 +2039,8 @@
       ],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 100. Sea Horse"
+      "source_packet_heading": "### 100. Sea Horse",
+      "implementation_notes": []
     },
     {
       "number": 101,
@@ -1958,7 +2058,8 @@
         "**source:trait** (**Sunlight Weakness**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 101. Shadow"
+      "source_packet_heading": "### 101. Shadow",
+      "implementation_notes": []
     },
     {
       "number": 102,
@@ -1978,7 +2079,8 @@
         "**source:extra-action** (review candidate actions: **Engulf**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 102. Shambling Mound"
+      "source_packet_heading": "### 102. Shambling Mound",
+      "implementation_notes": []
     },
     {
       "number": 103,
@@ -1996,7 +2098,8 @@
         "**source:trait** (**Bound; Spell Storing**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 103. Shield Guardian"
+      "source_packet_heading": "### 103. Shield Guardian",
+      "implementation_notes": []
     },
     {
       "number": 104,
@@ -2014,7 +2117,8 @@
         "**source:reaction** (**Shriek**): Model genuine triggering event, timing, eligibility, reaction cost, source effect and reset in shared reaction dispatch; prove production Python/browser calls, not helper-only tests."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 104. Shrieker"
+      "source_packet_heading": "### 104. Shrieker",
+      "implementation_notes": []
     },
     {
       "number": 105,
@@ -2040,7 +2144,8 @@
         "**source:trait** (**Divine Awareness; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 105. Solar"
+      "source_packet_heading": "### 105. Solar",
+      "implementation_notes": []
     },
     {
       "number": 106,
@@ -2058,7 +2163,8 @@
         "**source:reaction** (**Spell Reflection**): Model genuine triggering event, timing, eligibility, reaction cost, source effect and reset in shared reaction dispatch; prove production Python/browser calls, not helper-only tests."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 106. Spectator"
+      "source_packet_heading": "### 106. Spectator",
+      "implementation_notes": []
     },
     {
       "number": 107,
@@ -2076,7 +2182,8 @@
         "**source:trait** (**Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 107. Spirit Naga"
+      "source_packet_heading": "### 107. Spirit Naga",
+      "implementation_notes": []
     },
     {
       "number": 108,
@@ -2094,7 +2201,8 @@
         "**source:extra-action** (review candidate actions: **Heart Sight; Invisibility**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 108. Sprite"
+      "source_packet_heading": "### 108. Sprite",
+      "implementation_notes": []
     },
     {
       "number": 109,
@@ -2114,7 +2222,8 @@
         "**source:trait** (**Death Burst; Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 109. Steam Mephit"
+      "source_packet_heading": "### 109. Steam Mephit",
+      "implementation_notes": []
     },
     {
       "number": 110,
@@ -2133,7 +2242,8 @@
       ],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 110. Stirge"
+      "source_packet_heading": "### 110. Stirge",
+      "implementation_notes": []
     },
     {
       "number": 111,
@@ -2152,7 +2262,8 @@
       ],
       "pending_source_review": [],
       "open_user_questions": [],
-      "source_packet_heading": "### 111. Stone Giant"
+      "source_packet_heading": "### 111. Stone Giant",
+      "implementation_notes": []
     },
     {
       "number": 112,
@@ -2170,7 +2281,8 @@
         "**source:trait** (**Innate Spellcasting**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 112. Storm Giant"
+      "source_packet_heading": "### 112. Storm Giant",
+      "implementation_notes": []
     },
     {
       "number": 113,
@@ -2188,7 +2300,8 @@
         "**source:trait** (**Telepathic Bond; Shapechanger**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 113. Succubus/Incubus"
+      "source_packet_heading": "### 113. Succubus/Incubus",
+      "implementation_notes": []
     },
     {
       "number": 114,
@@ -2212,7 +2325,8 @@
         "**source:trait** (**Reflective Carapace**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 114. Tarrasque"
+      "source_packet_heading": "### 114. Tarrasque",
+      "implementation_notes": []
     },
     {
       "number": 115,
@@ -2240,7 +2354,8 @@
         "**source:trait** (**Shapechanger; Misty Escape; Vampire Weaknesses**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 115. Vampire"
+      "source_packet_heading": "### 115. Vampire",
+      "implementation_notes": []
     },
     {
       "number": 116,
@@ -2262,7 +2377,8 @@
         "**source:trait** (**Vampire Weaknesses**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 116. Vampire Spawn"
+      "source_packet_heading": "### 116. Vampire Spawn",
+      "implementation_notes": []
     },
     {
       "number": 117,
@@ -2280,7 +2396,8 @@
         "**source:extra-action** (review candidate actions: **Spores (Recharge 6); Stunning Screech (1/Day)**): Identify each special printed Action, legality, targeting/area, source save, cost, duration, recharge and AI selection. Reuse shared area/save/action/movement/resource capabilities or park the specific missing semantic clause."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 117. Vrock"
+      "source_packet_heading": "### 117. Vrock",
+      "implementation_notes": []
     },
     {
       "number": 118,
@@ -2302,7 +2419,8 @@
         "**source:trait** (**Water Form; Freeze**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 118. Water Elemental"
+      "source_packet_heading": "### 118. Water Elemental",
+      "implementation_notes": []
     },
     {
       "number": 119,
@@ -2320,7 +2438,8 @@
         "**source:trait** (**Shapechanger**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 119. Werebear"
+      "source_packet_heading": "### 119. Werebear",
+      "implementation_notes": []
     },
     {
       "number": 120,
@@ -2340,7 +2459,8 @@
         "**source:trait** (**Shapechanger**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 120. Wereboar"
+      "source_packet_heading": "### 120. Wereboar",
+      "implementation_notes": []
     },
     {
       "number": 121,
@@ -2360,7 +2480,8 @@
         "**source:trait** (**Shapechanger**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 121. Wererat"
+      "source_packet_heading": "### 121. Wererat",
+      "implementation_notes": []
     },
     {
       "number": 122,
@@ -2380,7 +2501,8 @@
         "**source:trait** (**Shapechanger; Pounce (Tiger or Hybrid Form Only)**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 122. Weretiger"
+      "source_packet_heading": "### 122. Weretiger",
+      "implementation_notes": []
     },
     {
       "number": 123,
@@ -2398,7 +2520,8 @@
         "**source:trait** (**Shapechanger**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 123. Werewolf"
+      "source_packet_heading": "### 123. Werewolf",
+      "implementation_notes": []
     },
     {
       "number": 124,
@@ -2418,7 +2541,8 @@
         "**source:trait** (**Consume Life; Ephemeral; Variable Illumination**): Decompose every named trait into its genuine event trigger, target eligibility, source-defined values, action/save/damage/condition, duration and exit. Bind shared mechanics; only classify neutral when an existing explicit arena rule permits it."
       ],
       "open_user_questions": [],
-      "source_packet_heading": "### 124. Will-o'-Wisp"
+      "source_packet_heading": "### 124. Will-o'-Wisp",
+      "implementation_notes": []
     }
   ]
 }
