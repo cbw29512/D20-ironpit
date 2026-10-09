@@ -253,3 +253,52 @@ console.log("Emergency form setup bypass regression passed.");
   assert.equal(gate.preferFormOverSelfHealing(member, heal, "1:form-value"), false);
 }
 console.log("Emergency form-versus-healing value parity passed.");
+{
+  const member = {
+    combatant_id: "caster-opportunity", side: "heroes",
+    state: {
+      current_hp: 8, temporary_hp: 0, action_available: true,
+      bonus_action_available: true, replacement_form: null,
+      resources: { "wild-shape": 2 },
+      template: {
+        id: "caster-opportunity", name: "Caster", ruleset: "2024", max_hp: 30,
+        replacement_form_actions: [{
+          id: "wild-shape", name: "Wild Shape", aiUsePolicy: "emergency_only",
+          aiEmergencyHpFraction: 1 / 3, actionCost: "bonus_action",
+          formTemplateId: "srd-wolf", resourceId: "wild-shape",
+          hpMode: "retain_owner", temporaryHpOnEnter: 8,
+        }],
+      },
+    },
+  };
+  const setup = { heroes: [member], monsters: [target] };
+  const form = member.state.template.replacement_form_actions[0];
+  const chooser = window.IRON_PIT_BROWSER_REPLACEMENT_FORM_PROVIDER;
+  const spell = { action: { id: "offense", actionCost: "action" }, expectedDamage: 20 };
+  window.IRON_PIT_BROWSER_SPELL_OFFENSE = { choose: () => ({ kind: "save", choice: spell }) };
+  assert.equal(chooser.deferEmergencyFormForSpell(member, setup, form, "1:caster-opportunity"), true);
+  assert.equal(chooser.preferFormOverSelfHealing(member, {
+    id: "heal", actionCost: "bonus_action", diceCount: 1, diceSize: 4,
+  }, "1:caster-opportunity", setup), false, "No self-heal deferral when form loses to offense");
+  let picks = S.discoverCandidates("normalPreMove", {
+    sequence: 90, round: 1, member, setup, turnKey: "1:caster-opportunity",
+  });
+  assert.equal(picks.length, 0, "The emergency form must not starve better legal spell offense");
+
+  member.state.current_hp = 2;
+  assert.equal(chooser.deferEmergencyFormForSpell(member, setup, form, "1:caster-opportunity"), false);
+  picks = S.discoverCandidates("normalPreMove", {
+    sequence: 91, round: 1, member, setup, turnKey: "1:caster-opportunity",
+  });
+  assert.equal(picks.length, 1, "At critical HP the form gets the survival priority");
+  member.state.current_hp = 8;
+  form.retainedSpellActionIds = ["offense"];
+  assert.equal(chooser.deferEmergencyFormForSpell(member, setup, form, "1:caster-opportunity"), false,
+    "No opportunity loss when the spell survives transformation");
+  spell.action.actionCost = "bonus_action";
+  form.retainedSpellActionIds = [];
+  assert.equal(chooser.deferEmergencyFormForSpell(member, setup, form, "1:caster-opportunity"), true,
+    "Same bonus-action slot conflicts regardless of retained casting");
+  delete window.IRON_PIT_BROWSER_SPELL_OFFENSE;
+}
+console.log("Emergency form versus spell offense opportunity tests passed.");

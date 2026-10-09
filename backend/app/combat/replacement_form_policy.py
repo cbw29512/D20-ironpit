@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available
+from app.combat.replacement_form_offense import defer_emergency_form_for_spell
 from app.combat.replacement_forms import resolve_replacement_form_action
 from app.combat.resource_conversion import restoration_conversion, resolve_resource_conversion
 from app.combat.resources import resource_available
@@ -57,6 +58,8 @@ def resolve_replacement_form_setup(
         if not ai_may_start_replacement_form(state, action, owner_template):
             return [], sequence
         if state.replacement_form is not None and not action.replace_existing_form:
+            return [], sequence
+        if defer_emergency_form_for_spell(member, setup, action, turn_key):
             return [], sequence
         if not is_available(state, action.action_cost):
             return [], sequence
