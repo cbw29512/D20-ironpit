@@ -397,6 +397,13 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Classification:** ENGINE_EXISTS_BINDING_MISSING while the two printed attacks remain `attack:incomplete`. Dependencies: complete Longsword's typed damage/triple critical and Whip's typed damage/save/pull; then verify slot order, action spend, target legality, no extra attacks, Python/browser/generated parity.
 - **Reuse:** every fixed two-weapon Multiattack with source-defined slot order. **Planning:** SOURCE REVIEWED; **Implementation:** NOT CERTIFIED. No repeated approval needed.
 
+### Balor — Longsword (2014), source-verified planning entry 2026-10-09
+
+- **Exact printed Action:** Longsword is +14 melee weapon attack, 10-ft reach, one target; hit deals **3d8+8 Slashing and 3d8 Lightning** as distinct damage components. When this attack scores a critical hit, source says roll damage dice **three times rather than twice**. Preserve the Balor's printed magical weapon-attack qualifier. The normal Multiattack includes exactly one Longsword and one Whip; do not add a second attack via the critical rule.
+- **Universal mechanics:** shared melee attack/AC/range, multi-component on-hit typed damage and defenses, source-driven critical **dice repetition count=3** applied to eligible damage dice (not flat +8, not a triple total and not an extra attack), and magical damage-source metadata. Search existing monster/pregen critical-scaling and rider implementations before adding a smallest reusable critical-dice count parameter; no Balor- or Longsword-name resolver.
+- **Cross-monster reuse:** future creatures with source-printed alternate critical dice repetitions, and ordinary multi-component weapon attacks, can bind the same generic critical/damage primitives with their own printed source parameters; do not presume all critical hits triple dice.
+- **Planning status:** SOURCE VERIFIED / REMEDIATION PROPOSED, **AWAITING USER APPROVAL** for this ability. **Implementation status:** NOT CERTIFIED; require source adapter, Python/browser critical/normal hit/typed defense tests and regenerated blocker/parity/CI evidence. Next Balor ability Whip, only after this ability's decision.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
