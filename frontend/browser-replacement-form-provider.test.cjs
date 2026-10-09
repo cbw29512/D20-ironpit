@@ -178,3 +178,78 @@ console.log("Browser replacement-form Main Action provider parity passed.");
     ctx5.turnKey,
   );
 }
+
+{
+  const gate = window.IRON_PIT_BROWSER_REPLACEMENT_FORM_PROVIDER.aiMayStartReplacementForm;
+  const source = { aiUsePolicy: "emergency_only", aiEmergencyHpFraction: 1 / 3 };
+  const owner = { max_hp: 60 };
+  const st = (current_hp, replacement_form = null) => ({ current_hp, replacement_form });
+  assert.equal(gate(st(60), source, owner), false, "Caster at full HP keeps spells");
+  assert.equal(gate(st(21), source, owner), false);
+  assert.equal(gate(st(20), source, owner), true, "Emergency buffer unlocked at one-third");
+  assert.equal(gate(st(20, { source_id: "wild-shape" }), source, owner), false, "No repeated caster form cycling");
+  assert.equal(gate(st(0), source, owner), false, "No Wild Shape when dying");
+  assert.equal(gate(st(60), { aiUsePolicy: "tactical" }, owner), true, "Moon/frontline role may shift");
+  assert.equal(gate(st(60), { aiUsePolicy: "emergency_only" }, { max_hp: 0 }), false);
+}
+console.log("Browser Druid emergency source policy checks passed.");
+{
+  // Regression: a severely injured 2014 caster must transform immediately
+  // rather than requesting Faerie Fire first or needing a spell slot.
+  const emergency = {
+    combatant_id: "emergency-druid", side: "heroes",
+    state: {
+      action_available: true, current_hp: 6, replacement_form: null,
+      concentration: null, resources: { "wild-shape": 1 },
+      template: {
+        id: "emergency-2014-druid", name: "Emergency Druid",
+        kind: "character", ruleset: "2014", max_hp: 18,
+        replacement_form_actions: [{
+          id: "wild-shape", name: "Wild Shape", actionCost: "action",
+          formTemplateId: "2014-wolf", resourceId: "wild-shape",
+          resourceCost: 1, setupSpellId: "faerie-fire",
+          aiUsePolicy: "emergency_only", aiEmergencyHpFraction: 1 / 3,
+        }],
+      },
+    },
+  };
+  const emergencyCtx = {
+    sequence: 22, round: 2, turnKey: "2:emergency-druid",
+    member: emergency, setup: { heroes: [emergency], monsters: [target] },
+  };
+  const candidate = S.discoverCandidates("normalPreMove", emergencyCtx);
+  assert.equal(candidate.length, 1, "Low-HP caster may select a legal form");
+  assert.equal(candidate[0].payload.kind, "transform", "Skip optional Faerie Fire");
+}
+console.log("Emergency form setup bypass regression passed.");
+{
+  const member = {
+    combatant_id: "form-value", side: "heroes",
+    state: {
+      action_available: true, bonus_action_available: true, current_hp: 8,
+      temporary_hp: 0, replacement_form: null, resources: { "wild-shape": 1 },
+      template: {
+        id: "form-value", name: "Form Value", ruleset: "2024", max_hp: 30,
+        replacement_form_actions: [{
+          id: "wild-shape", aiUsePolicy: "emergency_only",
+          aiEmergencyHpFraction: 1 / 3, actionCost: "bonus_action",
+          resourceId: "wild-shape", resourceCost: 1, hpMode: "retain_owner",
+          temporaryHpOnEnter: 8,
+        }],
+      },
+    },
+  };
+  const gate = window.IRON_PIT_BROWSER_REPLACEMENT_FORM_PROVIDER;
+  const heal = { id: "healing", actionCost: "bonus_action", maxTargets: 1,
+    diceCount: 1, diceSize: 4, healingBonus: 0 };
+  assert.equal(gate.preferFormOverSelfHealing(member, heal, "1:form-value"), true);
+  assert.equal(gate.preferFormOverSelfHealing(member,
+    { ...heal, diceCount: 5, diceSize: 8 }, "1:form-value"), false);
+  assert.equal(gate.preferFormOverSelfHealing(member,
+    { ...heal, actionCost: "action" }, "1:form-value"), false);
+  member.state.temporary_hp = 8;
+  assert.equal(gate.aiMayStartReplacementForm(member.state,
+    member.state.template.replacement_form_actions[0], member.state.template), false);
+  assert.equal(gate.preferFormOverSelfHealing(member, heal, "1:form-value"), false);
+}
+console.log("Emergency form-versus-healing value parity passed.");

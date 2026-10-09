@@ -23,4 +23,8 @@ class ReplacementFormAction(BaseModel):
     retain_spellcasting: bool = False
     retained_spell_action_ids: list[str] = Field(default_factory=list)
     setup_spell_id: str | None = None
+    # Universal AI-only availability gate. RAW ability and player source
+    # permission remain intact even when a caster's AI defers using it.
+    ai_use_policy: Literal["tactical", "emergency_only"] = "tactical"
+    ai_emergency_hp_fraction: float = Field(default=1 / 3, gt=0, lt=1)
     source: str

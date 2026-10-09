@@ -13,6 +13,7 @@ def test_land_druid_combat_plan_preserves_opening_buff_then_concentration_then_f
     assert level_two.wild_shape_form_id == "2014-wolf"
     assert level_two.opening_buff_before_initiative is True
     assert level_two.concentration_before_wild_shape is True
+    assert level_two.wild_shape_ai_policy == "emergency_only"
 
     assert level_four.wild_shape_form_id == "2014-crocodile"
     assert level_eight.wild_shape_form_id == "2014-brown-bear"

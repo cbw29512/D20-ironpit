@@ -16,6 +16,25 @@ from app.domain.models import BattleEvent
 logger = logging.getLogger(__name__)
 
 
+def ai_may_start_replacement_form(state, action, owner_template) -> bool:
+    """AI selection gate, not a restriction on the printed source feature."""
+    try:
+        if action.ai_use_policy != "emergency_only":
+            return True
+        if state.replacement_form is not None:
+            return False
+        if (action.hp_mode == "retain_owner"
+            and action.temporary_hp_on_enter <= state.temporary_hp):
+            return False  # No gain: preserve limited form uses.
+        return 0 < state.current_hp <= owner_template.max_hp * action.ai_emergency_hp_fraction
+    except Exception as exc:
+        logger.exception(
+            "Cannot evaluate replacement-form AI eligibility for action %s.",
+            getattr(action, "id", "<unknown>"),
+        )
+        raise RuntimeError("Replacement-form AI eligibility could not be evaluated.") from exc
+
+
 def resolve_replacement_form_setup(
     sequence: int,
     round_number: int,
@@ -35,6 +54,8 @@ def resolve_replacement_form_setup(
         if not actions:
             return [], sequence
         action = actions[0]
+        if not ai_may_start_replacement_form(state, action, owner_template):
+            return [], sequence
         if state.replacement_form is not None and not action.replace_existing_form:
             return [], sequence
         if not is_available(state, action.action_cost):
@@ -54,7 +75,9 @@ def resolve_replacement_form_setup(
             ))
             sequence += 1
 
-        if action.setup_spell_id:
+        # Emergency forms bypass optional setup spells; they must work even
+        # when no slot remains or an immediate defensive Action is needed.
+        if action.setup_spell_id and action.ai_use_policy != "emergency_only":
             concentration = state.concentration
             setup_active = concentration is not None and concentration.effect_id == action.setup_spell_id
             if not setup_active:

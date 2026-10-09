@@ -15,6 +15,9 @@ class Druid2014CombatPlan:
     wild_shape_form_id: str
     opening_buff_before_initiative: bool = True
     concentration_before_wild_shape: bool = True
+    # Wild Shape is kept as an emergency buffer for this Land caster,
+    # not automatically selected after establishing Concentration.
+    wild_shape_ai_policy: str = "emergency_only"
 
 
 def druid_2014_combat_plan(level: int) -> Druid2014CombatPlan:
