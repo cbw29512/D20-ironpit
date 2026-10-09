@@ -319,6 +319,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Reusable mechanics:** poison/disease removal, condition immunities, Wisdom saving-throw Advantage, maximum-HP and HP adjustment, 24-hour duration, qualified pre-arena preparation. Same precise source effects are reusable by other legal Heroes' Feast casters after eligibility check.
 - **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED until exact pre-arena lifecycle, beneficiary selection, 2d10 roll, maximum HP and source-independent reset pass Python/browser and generated gates.
 
+### Androsphinx — Legendary Claw Attack (2014), user approved 2026-10-09
+
+- **Printed legendary action:** Costs 1 legendary action point, available at the end of another creature's turn, and makes one ordinary source Claw attack (+12 to hit, 5-ft reach, 2d10+6 Slashing, magical due to Magic Weapons).
+- **Approved implementation:** Reference the *same* immutable Claw attack profile used by ordinary Multiattack; spend exactly one of the source's three legendary action points, refill at start of Androsphinx's turn and permit at most one legendary action in each eligible end-of-other-creature turn window. Normal reach, target/visibility legality, attack-roll/AC/damage-defense rules; no duplicate Claw damage resolver.
+- **Reuse:** universal legendary-action resource/timing and source attack-profile reference for other qualified monsters. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED pending source/runtime binding and Python/browser parity.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
