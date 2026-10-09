@@ -31,11 +31,16 @@ def test_octopus_ink_cloud_is_absent_water_and_tentacles_grapple() -> None:
         assert template.recharge_rules == []
 
 
-def test_blink_dog_teleport_plus_bite_stays_parked() -> None:
+def test_blink_dog_teleport_is_arena_excluded_but_bite_is_retained() -> None:
     source = _source("blink-dog")
     assert source.action_recharges == {"teleport": 4}
-    assert "mechanic:recharge" in basic_blockers_2014(source)
-    assert "2014-blink-dog" not in {item.id for item in build_basic_2014_monsters()}
+    assert not basic_blockers_2014(source)
+    roster = {item.id: item for item in build_basic_2014_monsters()}
+    blink = roster["2014-blink-dog"]
+    assert blink.weapon_attack.weapon.name == "Bite"
+    assert blink.attack_action is None
+    assert blink.recharge_rules == []
+    assert not any(resource.id == "teleport" for resource in blink.resources)
 
 
 def test_swallow_attach_and_pull_or_removal_remain_explicit() -> None:
@@ -44,7 +49,6 @@ def test_swallow_attach_and_pull_or_removal_remain_explicit() -> None:
         "giant-toad": "mechanic:swallow",
         "stirge": "arena:removed",
         "roper": "source:extra-action",
-        "blink-dog": "mechanic:recharge",
     }
     for monster_id, blocker in parked.items():
         assert blocker in basic_blockers_2014(_source(monster_id))
