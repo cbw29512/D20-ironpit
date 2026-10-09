@@ -20,6 +20,8 @@ def test_2014_caster_druid_keeps_spellcasting_at_high_hp() -> None:
     assert action.action_cost == "action"
     assert action.hp_mode == "form_pool"
     assert action.ai_use_policy == "emergency_only"
+    # Emergency transformation cannot require a setup spell or spell slot.
+    assert action.setup_spell_id is None
     assert not ai_may_start_replacement_form(_state(60), action, owner)
     assert not ai_may_start_replacement_form(_state(21), action, owner)
     assert ai_may_start_replacement_form(_state(20), action, owner)
@@ -43,6 +45,7 @@ def test_moon_and_future_melee_form_role_reuses_same_gate_without_name_dispatch(
     moon2014_source = wild_shape_action_2014(8, ai_use_policy="tactical")
     moon2024_source = wild_shape_actions(8, ai_use_policy="tactical")[0]
     assert ai_may_start_replacement_form(_state(60), moon2014_source, owner)
+    assert moon2014_source.setup_spell_id == "faerie-fire"
     assert ai_may_start_replacement_form(_state(60), moon2024_source, owner)
     # Pure gate does not grant a bonus-action cost or healing feature on its own.
     assert moon2014_source.action_cost == "action"

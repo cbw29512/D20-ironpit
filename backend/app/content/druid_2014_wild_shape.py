@@ -47,7 +47,9 @@ def wild_shape_action_2014(
                 if level >= 20
                 else list(_BEAST_SPELL_ACTION_IDS) if level >= 18 else []
             ),
-            setup_spell_id="faerie-fire",
+            # Caster emergencies must not wait for Faerie Fire or a spell slot.
+            # Tactical frontliners retain the optional pre-form setup.
+            setup_spell_id=("faerie-fire" if ai_use_policy == "tactical" else None),
             ai_use_policy=ai_use_policy,
             source="D&D Basic Rules 2014: Druid — Wild Shape",
         )

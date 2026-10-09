@@ -12,13 +12,18 @@
   const RC = () => window.IRON_PIT_BROWSER_RESOURCE_CONVERSION;
 
   function aiMayStartReplacementForm(state, action, owner) {
-    if (action?.aiUsePolicy !== "emergency_only") return true;
-    if (state.replacement_form) return false;
-    const hp = Number(state.current_hp);
-    const maxHp = Number(owner.max_hp);
-    const fraction = Number(action.aiEmergencyHpFraction ?? (1 / 3));
-    return hp > 0 && maxHp > 0 && Number.isFinite(fraction)
-      && fraction > 0 && fraction < 1 && hp <= maxHp * fraction;
+    try {
+      if (action?.aiUsePolicy !== "emergency_only") return true;
+      if (state.replacement_form) return false;
+      const hp = Number(state.current_hp);
+      const maxHp = Number(owner.max_hp);
+      const fraction = Number(action.aiEmergencyHpFraction ?? (1 / 3));
+      return hp > 0 && maxHp > 0 && Number.isFinite(fraction)
+        && fraction > 0 && fraction < 1 && hp <= maxHp * fraction;
+    } catch (error) {
+      console.error("Replacement-form AI eligibility evaluation failed.", error);
+      throw error;
+    }
   }
 
   function register() {

@@ -18,11 +18,18 @@ logger = logging.getLogger(__name__)
 
 def ai_may_start_replacement_form(state, action, owner_template) -> bool:
     """AI selection gate, not a restriction on the printed source feature."""
-    if action.ai_use_policy != "emergency_only":
-        return True
-    if state.replacement_form is not None:
-        return False
-    return 0 < state.current_hp <= owner_template.max_hp * action.ai_emergency_hp_fraction
+    try:
+        if action.ai_use_policy != "emergency_only":
+            return True
+        if state.replacement_form is not None:
+            return False
+        return 0 < state.current_hp <= owner_template.max_hp * action.ai_emergency_hp_fraction
+    except Exception as exc:
+        logger.exception(
+            "Cannot evaluate replacement-form AI eligibility for action %s.",
+            getattr(action, "id", "<unknown>"),
+        )
+        raise RuntimeError("Replacement-form AI eligibility could not be evaluated.") from exc
 
 
 def resolve_replacement_form_setup(
