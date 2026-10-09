@@ -138,6 +138,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved engine reuse:** shared source-defined fixed Multiattack sequence, one Action cost, independently legal targets, permitted retargeting after a target dies, per-hit disease effects; do not reuse the Aboleth's Tail attack as a fourth Multiattack slot.
 - **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED until exact Python/browser bindings and current blocker/report parity are checked.
 
+### Aboleth — Tail (2014), approved 2026-10-09
+
+- **Printed attack:** Melee weapon +9 to hit, 10-ft reach, 3d6+5 Bludgeoning, no saving throw or secondary condition. Can take ordinary Attack Action using source profile. Its legendary Tail Swipe references the very same attack, spending one legendary action point at legal end-of-other-turn timing.
+- **Approved composition:** shared attack legality/AC/typed damage and source-owned profile; not included in the three-Tentacle Multiattack and not copied as a separate Tail Swipe damage profile. Reuse universal attack and legendary-action primitives.
+- **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED until source binding and engine parity checked. Aboleth's approved review decisions are recorded individually above; do not infer full monster certification or re-open resolved decisions.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
