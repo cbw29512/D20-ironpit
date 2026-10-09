@@ -43,6 +43,7 @@ def wild_shape_action_2014(level: int) -> ReplacementFormAction:
                 else list(_BEAST_SPELL_ACTION_IDS) if level >= 18 else []
             ),
             setup_spell_id="faerie-fire",
+            ai_use_policy="emergency_only",
             source="D&D Basic Rules 2014: Druid — Wild Shape",
         )
     except Exception:
