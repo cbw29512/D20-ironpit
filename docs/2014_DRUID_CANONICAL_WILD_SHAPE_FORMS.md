@@ -29,16 +29,63 @@ Circle of the Moon is not part of Thalen's current 2014 Land Druid progression. 
 These are future capability targets only and do not alter Land Druid certification.
 
 
-## Iron Pit Druid combat sequence
+## Iron Pit 2014 Land Druid combat plan — caster-first
 
-The deterministic Land Druid combat plan is:
+**October 9, 2026 user decision:** Land and other caster-oriented Druids
+primarily remain spellcasters. Do **not** automatically Wild Shape after
+casting a Concentration spell. Reserve Wild Shape as an emergency defensive
+buffer once the Druid is pressed hard on HP, evaluated against healing and
+other legal spell choices. The current conservative executable AI gate permits
+an emergency candidate at **one-third or less of its original HP**, while
+never changing printed source ability or preventing manual lawful use.
+This is an Iron Pit AI heuristic, **not a RAW threshold**.
 
-1. **Opening free buff before initiative** — use one legal available combat buff under the global Iron Pit opening-buff rule. Prefer a non-concentration buff when available so the concentration slot remains free.
-2. **Establish concentration** — on the first normal turn, cast the highest-priority legal concentration spell for the current build when that improves the fight.
-3. **Wild Shape** — on the next legal Action, enter the canonical form for the current level.
-4. **Maintain concentration while shaped** — replacement form does not end concentration by itself. Incoming damage in beast form still triggers normal concentration checks.
-5. **Fight in form** — use the canonical beast's shared attacks/control/movement until reversion or until a higher-priority legal action is required.
+1. Pre-combat legal buffs are handled by the existing generic source policy.
+2. Maintain the best legal Concentration spell, then prefer damage/control
+   spells, recovery or protection. **Do not immediately transform at high HP.**
+3. If original HP falls to one-third or less and an available Wild Shape form
+   offers useful extra survivability, spend the printed **Action** and one
+   Wild Shape use to enter the already-certified canonical level form.
+   Prefer a life-saving immediate spell when shape-changing would be inferior.
+   The current runtime implements the HP availability gate; the broader
+   spell-vs-form **opportunity-value comparison remains a separate task**.
+4. **2014 Wild Shape does not heal original HP.** It gives the fresh beast's
+   separate HP pool; on reversion the Druid returns to exactly the earlier
+   normal HP minus any overflow injury. At zero form HP, existing universal
+   reversion rules apply.
+5. Do not automatically cycle in and out in caster mode simply to replenish
+   form HP. A new printed Wild Shape use is not free; preserve the limits.
+   Normal form's Concentration may continue while transformed, including
+   canonical Concentration saves after damage.
 
-If the chosen concentration spell itself is used as the single free opening buff, the Druid may Wild Shape with the first normal-turn Action.
+## Moon Druid distinction — not part of this Land Druid pregen
 
-Circle of the Land uses the printed Action cost for Wild Shape. Future Circle of the Moon support may use its subclass-specific bonus-action transformation rule, but that must not leak into Land Druid behavior.
+2014 Circle of the Moon is intended to play as a Wild Shape frontline build.
+Starting at **Druid level 2** it uses **Bonus Action** to enter Wild Shape,
+instead of the normal Action; source-legal Beast CR starts at 1 and increases
+per Circle Forms, while movement gates remain source-correct. Unlike Land, its
+AI may transform tactically at healthy HP. A Moon Druid can spend a **Bonus
+Action and a spell slot while transformed** to recover **1d8 Beast-form HP per
+spell-slot level**. Reverting (Bonus Action on its turn) and later reentering
+with a new printed Wild Shape use gives a **fresh Beast-form HP pool**, not
+healing to the Druid's original HP. The printed Bonus Action/resource economy
+prevents instant free form cycling.
+
+For 2024, all Druids get **Bonus Action Wild Shape**, retain normal HP and
+gain level-based **Temporary HP**. The 2024 Circle of the Moon instead gains
+**three times Druid level** Temporary HP and source-defined form AC; it
+can cast its **Circle of the Moon Spells**, including Cure Wounds, in Beast
+form, but it does **not** inherit 2014 Combat Wild Shape's spell-slot-for-1d8
+form-HP healing. Temporary HP do not stack, and reversion does not heal
+normal HP. Honor source-known forms and legal CR/movement restrictions.
+
+This AI-role distinction is implemented as a declarative per-source
+`ai_use_policy` value: `emergency_only` for existing caster Druids;
+`tactical` for future fully certified Moon or other frontline transformations.
+This **does not** itself add a Moon Druid build. Existing one-form-per-level
+Land certification and the separate 2024 form roster remain unchanged.
+
+2014 source: https://www.dndbeyond.com/sources/dnd/basic-rules-2014/classes
+2014 Moon class feature: https://dnd5e.wikidot.com/druid:moon
+2024 source: https://www.dndbeyond.com/sources/dnd/br-2024/character-classes
+2024 Moon source: https://www.dndbeyond.com/posts/1755-the-2024-circle-of-the-moon-druid-and-changes-to
