@@ -156,6 +156,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved arena AI:** When there are eligible allies, prefer Bless as an arena-entry preparation buff, targeting the Acolyte and up to two eligible allies under normal legal-target selection. The existing explicitly opt-in Iron Pit free-opening-buff rule applies: do not spend a slot for the opening preparation; preserve Concentration and the normal duration/effect/expiry. No duplicate Bless stacking. If opening conditions do not qualify, normal in-combat casting still follows ordinary Action and slot cost.
 - **Reuse:** universal 2014 Cleric Bless, prepared monster spell adapter, generic free-entry buff opt-in, concentration and attack/save bonus primitives. No Acolyte-name resolver. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED until real Python/browser and generated source integration tested.
 
+### Acolyte — Cure Wounds (2014), user approved 2026-10-09
+
+- **Printed spell:** 1 Action, touch (arena adjacency 5 ft), heals 1d8 + Wisdom modifier (+2 for source Acolyte); uses one 1st-level spell slot; cannot heal undead or constructs, no Life Domain bonus.
+- **Approved tactical selection:** consider Cure Wounds when Acolyte or an eligible ally is Bloodied (current HP <= half maximum); prioritize healing when its survival value exceeds an attack, with normal movement/touch target legality, one slot and one Action. Do not guarantee the spell is chosen whenever bloodied if tactically worse or illegal.
+- **Reuse:** 2014 universal Cure Wounds/healing, existing HP-threshold AI, legal beneficial target selection and monster spell slot resources; no new resolver. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED, pending Python/browser and generated certification.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
