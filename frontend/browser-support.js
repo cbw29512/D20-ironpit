@@ -51,7 +51,7 @@
     // Protect ally rescue: only a competing self-heal yields to an emergency form.
     if (healing?.target.combatant_id === member.combatant_id
         && window.IRON_PIT_BROWSER_REPLACEMENT_FORM_PROVIDER
-          ?.preferFormOverSelfHealing(member, healing.action, turnKey)) healing = null;
+          ?.preferFormOverSelfHealing(member, healing.action, turnKey, setup)) healing = null;
     if (healing) {
       if ((healing.action.maxTargets || 1) > 1) {
         const targets = H().groupTargets(member, setup, healing.action, turnKey);

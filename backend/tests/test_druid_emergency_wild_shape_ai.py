@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
+from unittest.mock import patch
 
 from app.combat.replacement_form_policy import ai_may_start_replacement_form
 from app.content.druid_2014_wild_shape import wild_shape_action_2014
 from app.content.druid_2024_form_support import wild_shape_actions
 from app.combat.replacement_form_triage import defer_self_healing_for_form
+from app.combat.replacement_form_offense import favor_spell_over_emergency_form, defer_emergency_form_for_spell
 from app.combat.state import build_combatant_state
 from app.content.audited_druid import build_thalen_greenbough_level
 from app.content.druid_land_2014_runtime import build_thalen_greenbough_2014
@@ -85,3 +87,52 @@ def test_2014_emergency_form_competes_only_with_same_action_cost_healing() -> No
     assert not defer_self_healing_for_form(
         member, cure.model_copy(update={"action_cost": "bonus_action"}), "1:druid-2014",
     )
+
+
+def test_emergency_offense_score_preserves_critical_hp_override() -> None:
+    assert favor_spell_over_emergency_form(20, 60, 1 / 3, 8, 14)
+    assert not favor_spell_over_emergency_form(10, 60, 1 / 3, 8, 14)
+    assert not favor_spell_over_emergency_form(20, 60, 1 / 3, 8, 7)
+    assert not favor_spell_over_emergency_form(20, 60, 1 / 3, 0, 14)
+
+
+def test_2024_caster_chooses_available_offense_before_low_value_form() -> None:
+    template = build_thalen_greenbough_level(8)
+    state = build_combatant_state(template)
+    state.current_hp = int(template.max_hp * 0.25)
+    actor = EncounterCombatant(combatant_id="cast-2024", side="heroes", position_ft=0, state=state)
+    form = template.replacement_form_actions[0]
+    spell = SimpleNamespace(action=SimpleNamespace(id="offense", action_cost="action"),
+                            expected_damage=20)
+    with (
+        patch("app.combat.replacement_form_offense.choose_auto_hit_spell", return_value=None),
+        patch("app.combat.replacement_form_offense.choose_spell_attack", return_value=None),
+        patch("app.combat.replacement_form_offense.choose_spell", return_value=spell),
+        patch("app.combat.replacement_form_offense.choose_concentration_repeat_save", return_value=None),
+    ):
+        assert defer_emergency_form_for_spell(actor, SimpleNamespace(), form, "1:cast-2024")
+        assert not defer_emergency_form_for_spell(
+            actor, SimpleNamespace(),
+            form.model_copy(update={"retained_spell_action_ids": ["offense"]}), "1:cast-2024",
+        )
+        state.current_hp = 2
+        assert not defer_emergency_form_for_spell(actor, SimpleNamespace(), form, "1:cast-2024")
+
+
+def test_2014_form_competes_with_action_spell_but_not_bonus_spell() -> None:
+    template = build_thalen_greenbough_2014(8)
+    state = build_combatant_state(template)
+    state.current_hp = int(template.max_hp * 0.25)
+    actor = EncounterCombatant(combatant_id="cast-2014", side="heroes", position_ft=0, state=state)
+    form = template.replacement_form_actions[0]
+    spell = SimpleNamespace(action=SimpleNamespace(id="offense", action_cost="action"),
+                            expected_damage=50)
+    with (
+        patch("app.combat.replacement_form_offense.choose_auto_hit_spell", return_value=None),
+        patch("app.combat.replacement_form_offense.choose_spell_attack", return_value=None),
+        patch("app.combat.replacement_form_offense.choose_spell", return_value=spell),
+        patch("app.combat.replacement_form_offense.choose_concentration_repeat_save", return_value=None),
+    ):
+        assert defer_emergency_form_for_spell(actor, SimpleNamespace(), form, "1:cast-2014")
+        spell.action.action_cost = "bonus_action"
+        assert not defer_emergency_form_for_spell(actor, SimpleNamespace(), form, "1:cast-2014")
