@@ -404,6 +404,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Cross-monster reuse:** future creatures with source-printed alternate critical dice repetitions, and ordinary multi-component weapon attacks, can bind the same generic critical/damage primitives with their own printed source parameters; do not presume all critical hits triple dice.
 - **Planning status:** SOURCE VERIFIED / REMEDIATION PROPOSED, **USER APPROVED 2026-10-09** for this ability. **Implementation status:** NOT CERTIFIED; require source adapter, Python/browser critical/normal hit/typed defense tests and regenerated blocker/parity/CI evidence. Next Balor ability Whip, only after this ability's decision.
 
+### Balor — Whip (2014), user approved 2026-10-09
+
+- **Printed Action:** +14 melee weapon attack, 30-ft reach; 2d6+8 Slashing plus 3d6 Fire on hit, DC20 Strength save on hit with pull **up to 25 feet toward Balor** on failure (no pull on success). Use legal grid destination and source-defined 5-ft increments. Attack's magical qualifier derives from Magic Weapons. Balor printed critical rule rolls eligible weapon damage dice three times rather than twice for this attack too, without tripling static modifiers.
+- **Shared composition:** one universal melee hit -> separately typed damage components -> on-hit Strength save -> source-distance forced pull, constrained by 5-ft arena squares/occupation. Reuse ordinary forced movement and critical-multiplier effect; no Balor/Whip-specific resolver. Cross-monster reuse for any save-gated pull on hit and mixed slashing/fire strikes.
+- **Planning status:** USER APPROVED; **implementation:** NOT CERTIFIED, Python/browser/per-source binding and parity still pending. Finish checking remaining Balor printed abilities before next monster.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
