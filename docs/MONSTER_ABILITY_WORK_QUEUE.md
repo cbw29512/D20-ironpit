@@ -253,6 +253,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Universal decomposition:** ordinary spell Action/slot, target legality/language/undead prerequisite, single Wisdom save, source-parametric forced next-turn activity restriction with one-round expiry/reset. Reuse existing turn restriction primitives if equivalent; no Androsphinx-specific spell resolver. Other 2014 Command casters can bind the same Halt variant under this combat-AI selection, but preserve printed command options on source cards.
 - **Planning:** USER APPROVED for simple one-word next-turn loss of activity. **Implementation:** NOT CERTIFIED until target AI, round expiry, browser/Python and generated blockers verified.
 
+### Androsphinx — Detect Evil and Good (2014), approved 2026-10-09
+
+- **Printed spell:** Retain complete spell on immutable monster card. Its creature-type/area awareness is not treated as alignment detection and does not automatically provide new targeting powers.
+- **Approved Iron Pit AI:** remove from combat action selection in the standard arena where relevant enemies are already identified and the printed detection does not improve combat eligibility. Do not delete source or falsely treat a future meaningful detection requirement as already supported.
+- **Reuse:** generic source-aware combat-utility classification for equivalent detection-only spells; no Androsphinx-name handler. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED pending binding/source-card checks.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
