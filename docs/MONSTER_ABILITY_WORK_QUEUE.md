@@ -168,6 +168,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved AI:** prefer Sanctuary as a tactical in-combat defensive option for a vulnerable Bloodied eligible ally when survival value warrants it. Avoid wards on allies about to make attacks or offensive spells. Do not make it a default opening preparation buff and do not stack duplicate Sanctuary effects.
 - **Universal reuse:** source-accurate 2014 Sanctuary, generic warded-target save gate, modifier/expiration, Bonus Action/resource, ally targeting. No Acolyte-specific resolver. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED until full generated/Python/browser production integration and source blocker checks.
 
+### Acolyte — Light (2014), user approved 2026-10-09
+
+- **Printed cantrip:** 1 Action, touch an object, bright light 20-ft radius and dim light additional 20 ft, duration 1 hour, no Concentration or spell slot; normal 2014 targeting and object interaction apply.
+- **Approved AI:** conditional combat illumination utility only if ordinary darkness/visibility or bright-light sensitivity materially benefits. Does not dispel magical Darkness. No automatic arena-entry Light and no wasted combat Action if no tactical benefit.
+- **Universal reuse:** shared illumination/environment visibility state and source-specific 2014 Light across monsters and pregens; verify full light/visibility engine integration before certifying, rather than treating the spell as arena-neutral. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
