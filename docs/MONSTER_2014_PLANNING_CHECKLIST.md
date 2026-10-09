@@ -14,6 +14,13 @@
 
 **Current source-review cursor:** #017 **Banshee**. This is an assistant-side source audit, **not an automatic question to the user**. Consult prior rulings/PRs; ask only when an actual unrecorded arena-policy choice exists. All documented decisions remain excluded from repeat questioning. See [Review State Index](../data/monster_2014_review_state.json) and the queue helper.
 
+## Source-of-truth decision gate (read this instead of treating an old blocker as a new question)
+
+- **Machine-readable state**: [`data/monster_2014_review_state.json`](../data/monster_2014_review_state.json), with one stable entry per 124 historical blockers, carried-forward settled decisions and implementation notes.
+- **Read-only selector**: `python scripts/monster_2014_review_queue.py --verify` validates roster/305 historical blocker-category totals; `--next` chooses the next **assistant source audit** without replaying completed monsters; `--questions` shows **only explicitly identified unanswered user policy choices**.
+- If `--questions` is empty, **do not ask a question** just because `--next` selects a source record. Examine the source, apply RAW plus existing Pit constraints, document the reusable fix, close the planning item and advance. Add a question only where a genuine undocumented policy decision remains after this check.
+- **Current state at generation**: 22 decision-complete monsters, 1 partially source-reviewed, 101 source audits pending, **0 identified open user-policy questions**. This is not 124 approved implementations; it is explicit separation of review work from user decisions. PRs/CI remain independent.
+
 ## Ordered review list
 
 ### 001. Aboleth
