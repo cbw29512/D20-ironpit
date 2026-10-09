@@ -66,3 +66,22 @@ fireShield.state.timed_effects.push({ source_effect_id: "fire-shield" });
 assert.equal(P.apply(attacker, fireShield, { physicalContact: true }), 0);
 assert.equal(rolled, 2);
 console.log("Passive 2014 Heated Body and existing active Fire Shield remain isolated.");
+
+
+// A source-owned passive and an independently active Fire Shield both trigger on one hit.
+const combined = member("heated-shield", 0, [source, {
+  id: "fire-shield", name: "Fire Shield",
+  meleeHitRetaliation: { rangeFt: 5, diceCount: 2, diceSize: 8, damageType: "cold" },
+}]);
+combined.state.timed_effects.push({ source_effect_id: "fire-shield" });
+const unprotected = member("opponent", 5, []);
+window.IRON_PIT_DICE.rollMany = (count, size) => {
+  if (count === 1 && size === 10) return [6];
+  if (count === 2 && size === 8) return [3, 3];
+  throw new Error("Unexpected retaliation dice");
+};
+assert.deepEqual(P.activeAll(combined).map(({ action }) => action.id), ["heated-body", "fire-shield"]);
+assert.equal(P.apply(unprotected, combined, { melee: true }), 12);
+assert.equal(unprotected.state.current_hp, 88);
+assert.equal(P.apply(unprotected, combined, { physicalContact: true }), 6);
+assert.equal(unprotected.state.current_hp, 82);

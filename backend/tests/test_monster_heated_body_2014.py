@@ -12,6 +12,7 @@ from app.content.monster_heated_body_2014 import heated_body_retaliation_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monsters import build_commoner
 from app.domain.encounters import EncounterCombatant
+from app.domain.timed_self_buffs import MeleeHitRetaliation, TimedSelfBuffAction
 from app.domain.weapons_base import DamageType
 from scripts.browser_template_serializer import template_row
 
@@ -115,3 +116,34 @@ def test_heated_body_source_mutations_fail_closed():
         corrupted = m.model_copy(update={"source_traits": bad})
         assert not heated_body_retaliation_2014(corrupted)
         assert "source:trait" in basic_blockers_2014(corrupted)
+
+
+def test_distinct_passive_and_active_retaliation_sources_both_trigger_once():
+    """An existing timed source cannot shadow the monster's passive typed effect."""
+    azer_template = compile_combatant(adapt_basic_monster_2014(_source("azer")))
+    shield = TimedSelfBuffAction(
+        id="shield-test", name="Fire Shield", action_cost="action",
+        melee_hit_retaliation=MeleeHitRetaliation(
+            range_ft=5, dice_count=2, dice_size=8, damage_type=DamageType.COLD,
+        ),
+    )
+    combined = azer_template.model_copy(update={
+        "timed_self_buff_actions": [*azer_template.timed_self_buff_actions, shield],
+    })
+    defender = _member(combined, "defender", "monsters", 0)
+    # The timed Fire Shield effect is active in fight state, unlike a passive.
+    from app.domain.runtime import TimedEffect
+    defender.state.timed_effects.append(TimedEffect(
+        effect_id="shield-test", source_effect_id="shield-test", remaining_rounds=3,
+    ))
+    opponent = _member(build_commoner().model_copy(update={"max_hp": 100}), "opponent", "heroes", 5)
+    assert apply_melee_hit_retaliation(
+        opponent, defender, melee=True, dice=FixedDiceProvider([6, 3, 3]),
+        affected_states=[opponent.state, defender.state],
+    ) == 12
+    assert opponent.state.current_hp == 88
+    assert apply_melee_hit_retaliation(
+        opponent, defender, melee=False, physical_contact=True, dice=FixedDiceProvider([4]),
+        affected_states=[opponent.state, defender.state],
+    ) == 4
+    assert opponent.state.current_hp == 84
