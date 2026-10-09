@@ -174,6 +174,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved AI:** conditional combat illumination utility only if ordinary darkness/visibility or bright-light sensitivity materially benefits. Does not dispel magical Darkness. No automatic arena-entry Light and no wasted combat Action if no tactical benefit.
 - **Universal reuse:** shared illumination/environment visibility state and source-specific 2014 Light across monsters and pregens; verify full light/visibility engine integration before certifying, rather than treating the spell as arena-neutral. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED.
 
+### Acolyte — Thaumaturgy (2014), user approved 2026-10-09
+
+- **Printed cantrip:** Preserve exact noncombat sensory/minor environmental effects on Acolyte source card; no damage or combat-condition outcome in standard Pit.
+- **Approved AI:** card-retained and combat-inactive; do not consume Action/cast/slot for theatrics. Reuse source-aware arena-neutral utility spell classification where mechanically equivalent, not a spell-name runtime resolver.
+- **Acolyte six-spell planning review:** Sacred Flame, Bless, Cure Wounds, Sanctuary, Light and Thaumaturgy reviewed with distinct recorded remediations. Acolyte club remains standard +2 / 1d4 Bludgeoning, as source ticket #682 notes. **Planning complete for recorded spell package; implementation NOT CERTIFIED** until printed spell bindings and blocker generator/production Python/browser gates pass. Move planning cursor to **Air Elemental**, first ability Whirlwind.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
