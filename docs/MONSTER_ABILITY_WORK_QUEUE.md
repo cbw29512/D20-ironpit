@@ -507,6 +507,24 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Shared remediation:** inspect existing monster recharge primitives and attack/action serializers; attach source-defined `recharge_threshold=5`, `recharge_die=d6`, `on_turn_start` availability and once-used-until-recharged state to *universal* ability resources; reuse breath/line geometry and save-half effect. If an adapter/binder is missing, implement the smallest shared source-driven recharge/line-binding primitive, not a Behir switch; ensure recharge roll once per turn while spent, legal turn/action priority, reset of initial available state and browser/Python parity. Other recharge breaths, gaze and charged abilities consume same resource primitive with their own printed numbers.
 - **Dependencies:** `mechanic:recharge` historical blocker, source extra-action binding, timed turn scheduler, area targeting, save resolver, typed damage, generated data serializer. **Planning:** SOURCE VERIFIED / routine RAW and shared reuse recorded; no novel user decision or prior approval inferred. **Implementation:** NOT CERTIFIED, no tests run or engine changes in this planning commit. Next Behir printed Action: Multiattack, then Bite, Constrict, Swallow.
 
+### Behir — Multiattack (2014), reviewed 2026-10-09
+
+- **RAW:** One Action, exactly one Bite and one Constrict attack. Reuse existing ordered multiattack source-profile composition (Balor, Barbed Devil), action economy and legality; no Behir-specific resolver. **Planning:** SOURCE REVIEWED / routine reuse, no fresh user approval needed. **Implementation:** NOT CERTIFIED.
+
+### Behir — Bite (2014), reviewed 2026-10-09
+
+- **RAW:** +10 melee weapon attack, reach 10 ft, one target, 3d10+6 Piercing on hit. Same source attack profile used by ordinary Multiattack and conditional Swallow Bite; no extra rider. **Reuse:** shared melee attack, target AC/range, typed damage and critical handling. **Planning:** SOURCE REVIEWED, routine reuse; **Implementation:** NOT CERTIFIED.
+
+### Behir — Constrict (2014), reviewed 2026-10-09
+
+- **RAW:** +10 melee weapon attack, 5-ft reach, one Large or smaller creature; hit 2d10+6 Bludgeoning PLUS 2d10+6 Slashing, as distinct damage components. If Behir isn't already constricting one creature, also applies Grappled (escape DC16) and linked Restrained until grapple ends. Never create two simultaneous constriction holds, and do not suppress source damage if a second target cannot be newly grappled.
+- **Reuse:** ordinary source melee profile, multitype damage, hit-triggered Grapple/Restrained relationship, size eligibility and max-active-grapple capacity 1; shared with other constrict/grapple creatures, edition-specific binding. Inspect existing physical-control before adding new generic capacity field. **Planning:** SOURCE VERIFIED / shared remediation proposed, not newly user-approved. **Implementation:** NOT CERTIFIED.
+
+### Behir — Swallow (2014), reviewed 2026-10-09
+
+- **RAW:** One Action, one Bite attack against Medium or smaller creature **already grappled by Behir**. On hit it is swallowed; existing grapple ends. Only one swallowed creature. Swallowed target Blinded and Restrained, total cover against external attacks/effects, takes 6d6 Acid at start of each Behir turn. If target deals 30+ damage to Behir on a single turn, Behir rolls DC14 Con at end of that turn; failure regurgitates into available space within 10 ft, target Prone. If Behir dies, target is no longer restrained by Behir and can escape corpse with 15 feet movement, exiting Prone.
+- **Reuse:** existing Bite action from conditional source; linked grapple exit, conditions, total cover, turn-start damage, per-turn damage tracker, end-turn save, forced release/Prone, on-death release. Search existing swallow/engulf handling before adding smallest shared contained-occupant state with capacity 1; other swallowing monsters reuse. Never delete combatant/card from battle. **Planning:** SOURCE VERIFIED / shared composition proposed, swallow occupancy/targeting integration UNRESOLVED if not covered by existing contract (do not infer approval). **Implementation:** NOT CERTIFIED. Next review remaining Behir passive features before next monster.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
