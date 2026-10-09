@@ -222,3 +222,34 @@ console.log("Browser Druid emergency source policy checks passed.");
   assert.equal(candidate[0].payload.kind, "transform", "Skip optional Faerie Fire");
 }
 console.log("Emergency form setup bypass regression passed.");
+{
+  const member = {
+    combatant_id: "form-value", side: "heroes",
+    state: {
+      action_available: true, bonus_action_available: true, current_hp: 8,
+      temporary_hp: 0, replacement_form: null, resources: { "wild-shape": 1 },
+      template: {
+        id: "form-value", name: "Form Value", ruleset: "2024", max_hp: 30,
+        replacement_form_actions: [{
+          id: "wild-shape", aiUsePolicy: "emergency_only",
+          aiEmergencyHpFraction: 1 / 3, actionCost: "bonus_action",
+          resourceId: "wild-shape", resourceCost: 1, hpMode: "retain_owner",
+          temporaryHpOnEnter: 8,
+        }],
+      },
+    },
+  };
+  const gate = window.IRON_PIT_BROWSER_REPLACEMENT_FORM_PROVIDER;
+  const heal = { id: "healing", actionCost: "bonus_action", maxTargets: 1,
+    diceCount: 1, diceSize: 4, healingBonus: 0 };
+  assert.equal(gate.preferFormOverSelfHealing(member, heal, "1:form-value"), true);
+  assert.equal(gate.preferFormOverSelfHealing(member,
+    { ...heal, diceCount: 5, diceSize: 8 }, "1:form-value"), false);
+  assert.equal(gate.preferFormOverSelfHealing(member,
+    { ...heal, actionCost: "action" }, "1:form-value"), false);
+  member.state.temporary_hp = 8;
+  assert.equal(gate.aiMayStartReplacementForm(member.state,
+    member.state.template.replacement_form_actions[0], member.state.template), false);
+  assert.equal(gate.preferFormOverSelfHealing(member, heal, "1:form-value"), false);
+}
+console.log("Emergency form-versus-healing value parity passed.");

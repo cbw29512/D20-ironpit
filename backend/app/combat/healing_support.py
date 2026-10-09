@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.group_healing import choose_group_healing_targets, resolve_group_healing
 from app.combat.healing import choose_healing_action, resolve_healing
+from app.combat.replacement_form_triage import defer_self_healing_for_form
 from app.combat.healing_riders import apply_slot_healing_self_rider
 
 
@@ -19,6 +20,10 @@ def resolve_healing_support(
     if choice is None:
         return [], sequence
     action, target = choice
+    # Never suppress ally rescue; only a competing self-heal can yield to form.
+    if (not downed_only and target.combatant_id == healer.combatant_id
+        and defer_self_healing_for_form(healer, action, turn_key)):
+        return [], sequence
     if action.max_targets > 1:
         targets = choose_group_healing_targets(healer, setup, action, turn_key)
         if downed_only and not any(item.state.current_hp == 0 for item in targets):

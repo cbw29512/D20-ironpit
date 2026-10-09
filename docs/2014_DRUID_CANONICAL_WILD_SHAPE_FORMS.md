@@ -47,8 +47,11 @@ This is an Iron Pit AI heuristic, **not a RAW threshold**.
    offers useful extra survivability, spend the printed **Action** and one
    Wild Shape use to enter the already-certified canonical level form.
    Prefer a life-saving immediate spell when shape-changing would be inferior.
-   The current runtime implements the HP availability gate; the broader
-   spell-vs-form **opportunity-value comparison remains a separate task**.
+   The current runtime also compares the new form's absorbable HP with the
+   expected value of a legal competing **self-heal of the same action cost**.
+   Ties go to healing; downed allies, condition removal and group healing
+   retain their normal priority. The broader offensive/defensive spell
+   opportunity-value comparison is still a separate task.
 4. **2014 Wild Shape does not heal original HP.** It gives the fresh beast's
    separate HP pool; on reversion the Druid returns to exactly the earlier
    normal HP minus any overflow injury. At zero form HP, existing universal

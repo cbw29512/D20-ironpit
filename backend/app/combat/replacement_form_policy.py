@@ -23,6 +23,9 @@ def ai_may_start_replacement_form(state, action, owner_template) -> bool:
             return True
         if state.replacement_form is not None:
             return False
+        if (action.hp_mode == "retain_owner"
+            and action.temporary_hp_on_enter <= state.temporary_hp):
+            return False  # No gain: preserve limited form uses.
         return 0 < state.current_hp <= owner_template.max_hp * action.ai_emergency_hp_fraction
     except Exception as exc:
         logger.exception(
