@@ -1,5 +1,9 @@
 # D20 Iron Pit — SOUL
 
+## Mandatory monster-queue checkpoint
+
+Before answering "next monster", asking for another monster decision, coding a monster, or starting hourly monster work, **read the existing canonical [monster ability queue](docs/MONSTER_ABILITY_WORK_QUEUE.md)**. Locate the exact monster / issue / approved remediation and inspect the current PR/CI state. An approved plan is not implemented; an open issue is not a new question. Never revisit a user-answered ability just because its code still needs work. Advance in recorded order, one monster and one ability at a time; update the same queue after the result. Avoid unrelated Druid/UI/asset tasks in the monster workflow. The 2014 queue is primary, and new universal mechanics must be reused across editions, monsters and pregens.
+
 This file is the first-read architecture rule for every agent and contributor working on Iron Pit.
 
 ## Core principle
