@@ -37,6 +37,8 @@ The source supplies parameters such as ability name, source id, ruleset, AC, DC,
 
 **The engine supplies behavior. The source supplies the exact numbers and facts.**
 
+**Source-declared precombat buffs are authoritative.** If a printed combatant stat block explicitly says certain spells have been cast before combat, apply **all of those spells** as active pre-initiative buffs through the universal precombat state pipeline; do not erase source facts with the discretionary one-opening-buff selection. The 2014 Archmage specifically starts with Mind Blank, Stoneskin and Mage Armor. Respect the normal spells' Concentration, durations and resource costs; printed source pre-casts do not authorize an additional discretionary opening buff. This is an explicit user-approved product rule (2026-10-08); §7.1 of `docs/IRON_PIT_RULES_CONTRACT.md` owns the exact semantics. Implement by source-declared buff data, not by names in the engine.
+
 Examples: the engine defines what Prone does, but the source decides whether an effect applies Prone and with what save/DC/duration. The engine defines attack-roll-versus-AC behavior, but the combatant source supplies AC and attack bonus. The engine defines typed damage resolution, but the source supplies the damage dice, bonus, type, and qualifiers.
 
 ## Mandatory implementation sequence
