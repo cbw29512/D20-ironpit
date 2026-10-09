@@ -369,6 +369,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 
 **Execution:** The complete printed spell list still needs source-exact per-spell binding/capability verification under issue #685; do not mark the whole spellcasting blocker certified based on planning reuse. Continue only with a genuinely **unresolved** Archmage source mechanic or decision after checking the existing worksheet and source catalog; never loop through these entries asking the same question again.
 
+### Balor — Death Throes (2014), sequential source review 2026-10-09
+
+- **2014 printed effect:** On death, each creature within 30 ft (allies included) makes DC20 Dexterity save; 20d6 Fire damage, half on success. Ignites actual unattended flammables and destroys Balor weapons. No such objects are invented in the default arena.
+- **Engine audit:** Existing `backend/app/combat/zero_hp.py` owns terminal death, and shared AoE/saves/typed damage already exist. `monster_source_2014.py` carries `death_trigger_actions`, but no source-to-death-event area-damage execution was verified. Classify **ENGINE_TRULY_MISSING shared event bridge**, not a new damage primitive. Need once-only on-death trigger before match termination, legal position/radius, chain deaths, source log, reset and Python/browser parity.
+- **Cross-monster reuse:** Dust/Ice/Magma/Steam Mephit and Magmin Death Burst; source-specific dice, range and effects remain independent. **Planning:** SOURCE REVIEWED; no approval inferred. **Implementation:** NOT CERTIFIED. Park missing event dispatch.
+
 ### Balor — Fire Aura (2014), source/engine audited 2026-10-09
 
 - **Printed trait:** At start of each Balor turn, every creature within 5 ft takes 3d6 Fire (no save). A creature touching the Balor or hitting it with a melee attack from within 5 ft also takes 3d6 Fire; preserve independent event triggers, source type and damage defenses. The standard empty Pit has no flammable unattended object by default; do not fabricate one. Unlike 2024, this is 2014 start-turn plus retaliation timing.
