@@ -96,6 +96,13 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Universal remediation:** compose source attack + typed damage + source save + time-delayed disease effect + location-qualified healing suppression + phase-qualified disease-removal restriction + interval typed damage. Fight-owned state resets, source remains immutable; no monster-name resolver. Search shared disease/condition-removal and healing restrictions before adding minimal generic timed-effect metadata; reuse for other source-verified disease effects.
 - **Planning:** ENVIRONMENT DECISION RECORDED. **Implementation:** NOT CERTIFIED. Other Aboleth abilities remain separate queue entries. Do not conflate its Tentacle disease with Mucous Cloud.
 
+### Aboleth — Mucous Cloud (2014), arena ruling approved 2026-10-09
+
+- **Printed trait retained:** Mucous Cloud remains on immutable 2014 Aboleth card/source; its underwater touch/5-ft proximity DC 14 Constitution save and breathing-only-underwater disease are not deleted or rewritten.
+- **Approved standard Pit environment:** No water exists in Iron Pit. Because the trait's underwater prerequisite is false, **Mucous Cloud has no combat effect**: no activation, save, disease, or suffocation. This is source-conditional arena inactivity, not blanket disease immunity.
+- **Reusable policy:** Source-conditional environmental trait eligibility; no monster-specific resolver, new combat primitive, or fabricated water. The Aboleth's separate Tentacle disease still functions on land.
+- **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED; source retention and no-water inactivity must be checked against the generated card/browser/Python source semantics before clearing its blocker. Continue next Aboleth ability.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
