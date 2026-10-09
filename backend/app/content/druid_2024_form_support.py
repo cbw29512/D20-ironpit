@@ -28,6 +28,7 @@ def wild_shape_actions(level: int) -> list[ReplacementFormAction]:
             replace_existing_form=True,
             retain_spellcasting=level >= 18,
             retained_spell_action_ids=(list(BEAST_SPELL_ACTION_IDS) if level >= 18 else []),
+            ai_use_policy="emergency_only",
             source="D&D Beyond Basic Rules 2024: Druid — Wild Shape",
         )]
     except Exception:
