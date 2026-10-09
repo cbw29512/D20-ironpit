@@ -68,5 +68,61 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_REPLACEMENT_FORM_COMPILER = { compile };
+
+  // Source-retaining monster Change Shape: the physical-stat layer only.
+  // Additional form attacks/capabilities must be source-validated and bound
+  // before any arena action can select this output as a complete transformation.
+  function compileMonsterChangeShapePhysicalOverlay(original, form) {
+    if (original?.kind !== "monster" || form?.kind !== "monster") {
+      throw new Error("Monster Change Shape requires two monster templates.");
+    }
+    if (original.ruleset !== form.ruleset) {
+      throw new Error("A Change Shape form must use the owner's ruleset.");
+    }
+    if (!/^(beast|humanoid)(?:$|[ (])/i.test(String(form.creature_type || ""))) {
+      throw new Error("Change Shape form must be a humanoid or beast.");
+    }
+    const crValue = (cr) => {
+      if (cr == null || String(cr).trim() === "") throw new Error("Change Shape requires challenge ratings.");
+      const match = String(cr).trim().match(/^(\d+)(?:\/(\d+))?$/);
+      if (!match || (match[2] && Number(match[2]) === 0)) throw new Error("Invalid form challenge rating.");
+      return Number(match[1]) / Number(match[2] || 1);
+    };
+    if (crValue(form.challenge_rating) > crValue(original.challenge_rating)) {
+      throw new Error("Change Shape form exceeds its source's challenge rating.");
+    }
+    if (!original.ability_scores || !form.ability_scores) {
+      throw new Error("Change Shape requires source ability scores.");
+    }
+    const active = clone(original);
+    active.id = `${original.id}--form-${form.id}`;
+    active.armor_class = form.armor_class;
+    active.speed_ft = form.speed_ft;
+    active.movement_modes = clone(form.movement_modes);
+    active.blindsight_ft = Number(form.blindsight_ft || 0);
+    active.truesight_ft = Number(form.truesight_ft || 0);
+    active.ability_scores.strength = form.ability_scores.strength;
+    active.ability_scores.dexterity = form.ability_scores.dexterity;
+    const mergeUnique = (source = [], gained = []) => {
+      const result = clone(source || []);
+      const seen = new Set(result.map((item) => JSON.stringify(item)));
+      for (const item of gained || []) {
+        const key = JSON.stringify(item);
+        if (!seen.has(key)) { result.push(clone(item)); seen.add(key); }
+      }
+      return result;
+    };
+    // Add only the chosen legal form's *printed* defenses. The Deva retains
+    // its original defenses, including qualified nonmagical-weapon resistance.
+    active.damage_resistances = mergeUnique(original.damage_resistances, form.damage_resistances);
+    active.damage_immunities = mergeUnique(original.damage_immunities, form.damage_immunities);
+    active.condition_immunities = mergeUnique(original.condition_immunities, form.condition_immunities);
+    active.conditional_damage_defenses = mergeUnique(
+      original.conditional_damage_defenses, form.conditional_damage_defenses,
+    );
+    active.source = `${original.source}; physical Change Shape overlay: ${form.source}`;
+    return active;
+  }
+
+  window.IRON_PIT_BROWSER_REPLACEMENT_FORM_COMPILER = { compile, compileMonsterChangeShapePhysicalOverlay };
 })();
