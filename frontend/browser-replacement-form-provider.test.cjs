@@ -178,3 +178,18 @@ console.log("Browser replacement-form Main Action provider parity passed.");
     ctx5.turnKey,
   );
 }
+
+{
+  const gate = window.IRON_PIT_BROWSER_REPLACEMENT_FORM_PROVIDER.aiMayStartReplacementForm;
+  const source = { aiUsePolicy: "emergency_only", aiEmergencyHpFraction: 1 / 3 };
+  const owner = { max_hp: 60 };
+  const st = (current_hp, replacement_form = null) => ({ current_hp, replacement_form });
+  assert.equal(gate(st(60), source, owner), false, "Caster at full HP keeps spells");
+  assert.equal(gate(st(21), source, owner), false);
+  assert.equal(gate(st(20), source, owner), true, "Emergency buffer unlocked at one-third");
+  assert.equal(gate(st(20, { source_id: "wild-shape" }), source, owner), false, "No repeated caster form cycling");
+  assert.equal(gate(st(0), source, owner), false, "No Wild Shape when dying");
+  assert.equal(gate(st(60), { aiUsePolicy: "tactical" }, owner), true, "Moon/frontline role may shift");
+  assert.equal(gate(st(60), { aiUsePolicy: "emergency_only" }, { max_hp: 0 }), false);
+}
+console.log("Browser Druid emergency source policy checks passed.");
