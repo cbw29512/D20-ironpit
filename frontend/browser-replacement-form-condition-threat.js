@@ -14,6 +14,7 @@
   const R = () => window.IRON_PIT_BROWSER_RESOURCES;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const SA = () => window.IRON_PIT_BROWSER_SPELL_AREA;
+  const AS = () => window.IRON_PIT_BROWSER_AREA_SAVES;
 
   function formMitigates(member, setup, form) {
     try {
@@ -34,6 +35,19 @@
             || !V().legalAction(action, member, distance, enemy.combatant_id)
             || (action.requiresTargetSight && !E().canSee(enemy.state, member.state, distance))) continue;
           actions.push([action, Boolean(action.magicalEffect)]);
+        }
+        // The existing Action-family chooser decides the legal area and
+        // filters targets by actual printed save legality and resources.
+        // Only its selected targets count as threats to this defender.
+        if ((enemy.state.template.saving_throw_actions || [])
+          .some((action) => action.area && (action.actionCost || "action") === "action")) {
+          if (!AS()) throw new Error("Printed area save preview requires the area-save selector.");
+          const selected = AS().choose(enemy, setup, "action");
+          if (selected?.placement?.targetIds?.includes(member.combatant_id)
+              && (!selected.action.requiresTargetSight
+                || E().canSee(enemy.state, member.state, distance))) {
+            actions.push([selected.action, Boolean(selected.action.magicalEffect)]);
+          }
         }
         for (const action of enemy.state.template.spell_save_actions || []) {
           const hasArea = Boolean(action.area || action.areaRadius);
