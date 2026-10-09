@@ -289,6 +289,11 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved standard Pit AI:** no selection in combat because simulated opponents do not negotiate or require language translation; leave the card's spell list unchanged. Do not infer that understanding speech is irrelevant to *other* spells' source targeting requirements; preserve language gating where meaningful.
 - **Reuse:** generic arena-neutral communication-only spell classification across source-verified equivalent actors. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED.
 
+### Androsphinx — Banishment (2014), user approved 2026-10-09
+
+- **Printed spell:** 1 Action, 60-ft range, 4th-level slot, DC18 Charisma save, Concentration up to 1 minute. Failed save applies the source-dependent Banishment/exile state; successful save has no effect. Preserve distinct native-plane/other-plane duration and return semantics where applicable, without inventing an arena-specific permanent victory.
+- **Approved reuse:** universal battlefield exile/Banished state, concentration lifecycle, save, spell slot, target legality and source-correct return. Fight state only; no Androsphinx-name resolver. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED pending Python/browser and source report validation.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
