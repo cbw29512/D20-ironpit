@@ -37,7 +37,7 @@ All fight-only mutation lives in temporary combat state and resets after the mat
 
 ## Keep the ability pipeline moving
 
-Use [MONSTER_ABILITY_WORK_QUEUE.md](../MONSTER_ABILITY_WORK_QUEUE.md) for the one-ability implementation/CI queue. While one independent PR runs certification, prepare the next exact-source ability from the worksheet instead of repeating roster scans or waiting idle. A submitted PR is not a completed fix; check it off only after merge and regenerated source/browser verification. Keep generated blocker reports and mechanics inventory source-owned.
+Use [MONSTER_ABILITY_WORK_QUEUE.md](../MONSTER_ABILITY_WORK_QUEUE.md) as the **single current monster/ability/issues/remediation ledger**. Its reviewed-ability tickets and 124-monster/305-blocker table are mandatory first reads before asking for another monster decision or choosing the next implementation. Older planning worksheets, blueprint PRs, and fix trackers provide evidence, not a competing current cursor. Never re-ask an approved ability simply because implementation remains open. While one independent PR runs certification, prepare the next exact-source ability from the worksheet instead of repeating roster scans or waiting idle. A submitted PR is not a completed fix; check it off only after merge and regenerated source/browser verification. Keep generated blocker reports and mechanics inventory source-owned.
 
 ## Add or fix a monster
 

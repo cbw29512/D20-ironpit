@@ -2,7 +2,9 @@
 
 Updated 2026-10-07. Owner: ChatGPT for combat mechanics; Grok retains art/presentation ownership.
 
-This is the maintained work queue. [Every blocked 2014 monster](MONSTER_BLOCKERS_2014.md)
+**Historical merge/evidence tracker. The current, reconciled monster-name → issue → remediation → planning/code status queue is [MONSTER_ABILITY_WORK_QUEUE.md](MONSTER_ABILITY_WORK_QUEUE.md). Read it first; this older tracker must not override its current cursor or cause an already answered user decision to be reopened.**
+
+[Every blocked 2014 monster](MONSTER_BLOCKERS_2014.md)
 is generated from current source; [current operating status](CURRENT_OPERATING_STATUS.md)
 sets the work lane. Rules live in the rules contract, not this tracker.
 
