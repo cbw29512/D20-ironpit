@@ -91,7 +91,7 @@ Standing instruction: park, record, continue. Revisit this list after the rest o
 
 | Card / item | Family | Blocker | Why parked | Needed to unpark |
 |---|---|---|---|---|
-| Assassin | leftover trait | `source:trait` | Shortsword/crossbow poison save-damage already compiles. Assassinate / Evasion / Sneak Attack remain. | Leftover-trait lane for those three traits |
+| Assassin | leftover trait | `source:trait` | Shortsword/crossbow poison save-damage already compiles. **Assassinate PLANNING APPROVED:** first-turn Initiative lead over target gives Advantage and automatic critical **on a hit**; no separate Surprise required (Pit exception). Evasion/Sneak Attack remain to review. | Bind universal early-initiative Advantage + critical-on-hit; then Evasion and Sneak Attack reuse |
 | Basilisk | leftover trait | `source:trait` | Bite poison damage already compiles. Petrifying Gaze remains. | Gaze / petrify machine, shared with Cockatrice / Gorgon |
 | Phase Spider | leftover trait | `source:trait` | Bite poison save-damage already compiles. Ethereal Jaunt remains. | Ethereal / jaunt policy |
 | Ettercap; Giant Spider | web / recharge | `attack:complex`, `attack:damage-type`, `mechanic:recharge` | Bite poison already compiles. Web is a breakable restraint plus recharge. | Shared web / breakable-restraint primitive |
