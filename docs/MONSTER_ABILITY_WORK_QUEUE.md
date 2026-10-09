@@ -223,6 +223,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Architecture:** trigger -> action/resource -> save -> damage and condition effects -> expiration/reset. Source defines printed ability name, DC, dice, type and target scope. Reuse shared effects/conditions, not Androsphinx-specific logic; generic sequenced-action resource is the only separately proven capability gap if absent.
 - **Planning:** SOURCE REVIEWED; user restated universal effect architecture (not an explicit separate approval of any new exception). **Implementation:** NOT CERTIFIED. Continue through Androsphinx abilities one at a time.
 
+### Androsphinx — Magic Weapons (2014), user approved 2026-10-09
+
+- **Printed trait:** Androsphinx weapon attacks count as magical for overcoming damage resistance/immunity. Preserve printed name in source/card/log context.
+- **Reuse:** existing universal source-qualified magical weapon damage flag on original Claw profiles; damage-defense resolver receives the qualifier. No new monster- or trait-name combat branch, no extra damage dice. Other creatures with source-equivalent magical weapons reuse the same primitive.
+- **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED until adapter/generator/runtime and exact-head parity verified. Continue remaining Androsphinx spellcasting one source ability at a time.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
