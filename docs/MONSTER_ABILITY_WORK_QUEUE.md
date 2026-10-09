@@ -344,6 +344,31 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Archmage Fire Bolt:** at-will +9 ranged spell attack, 120-ft range, 4d10 Fire at caster level 18; normal ranged spell attack, typed defenses and visibility. A tactical fallback under shared cantrip policy, not automatic primary offense.
 - **Status:** USER-APPROVED SHARED AI POLICY; implementation NOT CERTIFIED for Archmage and any consumer not yet integrated. Apply the policy consistently to other monsters, pregens and future homebrew only where their printed casting rules allow it.
 
+### Archmage — reuse-first spell review, previously approved decisions (reconciled 2026-10-09)
+
+**User workflow:** When an equivalent 2014 spell or effect has already been discussed, immediately reuse the prior ruling and source-parametric primitive, record the cross-monster binding and move on; do not require a repeated yes/no per caster. Source 2014 Archmage 18th-level INT, DC17, spell attack +9, slots by level 4/3/3/3/3/1/1/1/1. Shared cantrip AI: fallback unless tactically better, never rigid waste of slots. All below are PLANNED or historically approved, **NOT Archmage runtime-certified**.
+
+| Existing approved ruling / related caster | Archmage spell | Queue remediation, source differences and state |
+|---|---|---|
+| Acolyte Light | Light | Shared ordinary illumination, not magical Darkness dispel; conditional combat use, no waste. REUSE APPROVED. |
+| Acolyte Thaumaturgy / Androsphinx utility exclusion | Mage Hand, Prestidigitation | Already approved card-only; exclude from combat choice, preserve printed source. REUSE APPROVED. |
+| Acolyte Sacred Flame and Androsphinx scaled cantrip | Fire Bolt | Same universal ranged attack + typed damage, +9 to hit and 4d10 Fire at source level 18; fallback cantrip. SOURCE REVIEWED. |
+| Androsphinx Detect Magic | Detect Magic | Preserve card, exclude from combat choice. REUSE APPROVED. |
+| Prior Archmage worksheet rulings | Disguise Self, Identify, Detect Thoughts, Scrying | Keep each printed spell on card and exclude only from standard arena AI; do not re-ask. PREVIOUS DECISIONS RECORDED. |
+| Prior Archmage worksheet ruling | Misty Step | Bonus Action teleport-cancelable debuff escape **without arena relocation**, edition-specific spell source; no generic teleport assumption. PREVIOUS DECISION RECORDED. |
+| Prior universal Mirror Image ruling | Mirror Image | Source-correct three images, timed interception buff with separate 2014 and 2024 hit-routing rules. PREVIOUS DECISION RECORDED. |
+| Prior universal Counterspell ruling | Counterspell | Reaction to eligible enemy spellcasting, interruption before spell resolution, 60-ft and visibility/legal source criteria; 2014 vs 2024 distinct checks. PREVIOUS DECISION RECORDED. |
+| Prior Fly ruling | Fly | Existing horizontal-only flight and speed/movement budget; no invented altitude. PREVIOUS DECISION RECORDED. |
+| Androsphinx Banishment | Banishment | Reuse Charisma save and source-timed battlefield exile, 2014 DC17 caster source. REUSE APPROVED. |
+| Prior Fire Shield ruling, PR #668 merged | Fire Shield | Existing Warm/Chill variant and damage-type threat preference; original monster spell action still unbound. PREVIOUS DECISION RECORDED. |
+| Prior Wall of Force ruling | Wall of Force | Original card preserved, excluded from AI; approved 2014 Archmage *arena loadout only* Hold Monster substitute, Wis DC17 and turn-end repeat save. PREVIOUS DECISION RECORDED. |
+| Prior Globe/Stoneskin ruling | Globe of Invulnerability / Stoneskin | Already approved matchup decision: Globe versus caster-heavy threats, Stoneskin against melee/physical threats; mutually exclusive concentration choices under existing contract. PREVIOUS DECISION RECORDED. |
+| Prior Teleport ruling | Teleport | Original card preserved, excluded from arena relocation; *Archmage arena only* 7th-level Finger of Death substitute (7d8+30 Necrotic, Con DC17, half on save), no summoned Zombie. PREVIOUS DECISION RECORDED. |
+| Prior Mind Blank ruling | Mind Blank | Prebuff provenance/one-opening-buff policy reconciliation, Psychic damage/Charmed immunity, source anti-divination text retained. PREVIOUS DECISION RECORDED. |
+| Prior Time Stop ruling | Time Stop | Preserve printed card, exclude arena AI; 2014 Archmage-only 9th-level Meteor Swarm loadout replacement, four impact circles with union/dedup and 20d6 Fire + 20d6 Bludgeoning, friendly fire. PREVIOUS DECISION RECORDED. |
+
+**Execution:** The complete printed spell list still needs source-exact per-spell binding/capability verification under issue #685; do not mark the whole spellcasting blocker certified based on planning reuse. Continue only with a genuinely **unresolved** Archmage source mechanic or decision after checking the existing worksheet and source catalog; never loop through these entries asking the same question again.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
