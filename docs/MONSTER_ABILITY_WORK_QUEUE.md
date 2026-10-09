@@ -468,7 +468,17 @@ Each linked issue contains the actual source rules, selected universal remediati
 
 - **Printed passive:** Magical darkness does **not impede the devil's darkvision**. Barbed Devil's printed darkvision range is **120 ft**. This is not truesight, automatic Invisible/Hidden detection, blindness immunity, or infinite range. Normal cover/line of sight remain applicable; this enables sight through ordinary magical darkness within the source's darkvision range. No action, resource, save or damage.
 - **Universal composition:** Existing visibility/light-level evaluation and darkvision range with source-configured flag `magical_darkness_does_not_impede_darkvision`; reuse same behavior for other 2014 devils and analogous source traits only if wording matches. Do not add individual devil resolver or treat 2024 darkness wording as automatically identical. Check existing monster passive/senses serializer and Python/browser visibility predicates before creating any new flag.
-- **Planning:** SOURCE REVIEWED, reusable existing visibility mechanic; no new user decision required for printed RAW. **Implementation:** NOT CERTIFIED; requires dark/magical darkness visibility tests and generated parity. Next source trait: Magic Resistance, then Multiattack, Claw, Tail, Hurl Flame, defenses; finish Barbed Devil before changing monster.
+- **Planning:** USER APPROVED 2026-10-09: simple passive darkvision buff that negates darkness-based visibility obstruction within printed 120-ft range, including magical darkness; does not cancel cover, Invisible/Hidden or other distinct debuffs. Existing visibility effect, not new separate mechanic. **Implementation:** NOT CERTIFIED; requires dark/magical darkness visibility tests and generated parity. Next source trait: Magic Resistance, then Multiattack, Claw, Tail, Hurl Flame, defenses; finish Barbed Devil before changing monster.
+
+### Barbed Devil — Magic Resistance (2014), reused 2026-10-09
+
+- **Printed passive:** Advantage on saving throws against spells and other magical effects. No action/slot/charge, no immunity to spells.
+- **Universal reuse:** Exact same already reviewed 2014 Balor Magic Resistance saving-throw Advantage conditional modifier. `monster_passive_grants_2014.py` shared grant and trait binding; no per-devil new code. **Planning:** PRIOR SHARED RULING REUSED; **Implementation:** NOT CERTIFIED for Barbed Devil until Python/browser/generated tests. Next ability: Multiattack.
+
+### Barbed Devil — Multiattack (2014), source-verified 2026-10-09
+
+- **Printed action:** Makes **three melee attacks: one with its tail and two with its claws**. Sequence is one Tail and two Claws in same Multiattack action; use same source attack profiles as normal eligible attack actions. This is not three arbitrary attacks, and Hurl Flame is a separate Action, not substituted for an attack without source authority.
+- **Universal reuse:** Existing multiattack attack-plan executor with named source profiles and counts, ordinary reach/targets/attack roll/damage and one Action budget; no custom devil logic. The two Claws may select legal targets as normal, preserving source attacks. Cross-monster reuse for any source-defined counted mixed-attack sequence. **Planning:** SOURCE REVIEWED / recommended existing multiattack reuse; no user policy exception assumed. **Implementation:** NOT CERTIFIED, action-binding and Python/browser/generated parity remain. Next separate source ability Claw.
 
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
