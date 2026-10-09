@@ -391,6 +391,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **RAW:** All Balor weapon attacks count as magical; no extra damage/action. Existing `monster_included_weapon_traits_2014.py` binds `DamageSourceQualifier.MAGICAL`; `monster_definition_adapter_2014.py` consumes this shared qualifier.
 - **Classification:** ENGINE_EXISTS_CERTIFICATION_MISSING for Balor; reusable by all Magic Weapons creatures and hero/item equivalent weapon qualifiers. **Planning:** SOURCE REVIEWED; **Implementation:** NOT CERTIFIED until source attacks, Python/browser defenses and generated parity pass. No new user decision.
 
+### Balor — Multiattack (2014), source/engine review 2026-10-09
+
+- **RAW:** One Action makes **exactly two attacks**: one Longsword and one Whip, each once. Neither attack is optional duplication; no legendary actions. Existing `monster_multiattack_2014.py` and universal ordered slots express the sequence without new engine behavior.
+- **Classification:** ENGINE_EXISTS_BINDING_MISSING while the two printed attacks remain `attack:incomplete`. Dependencies: complete Longsword's typed damage/triple critical and Whip's typed damage/save/pull; then verify slot order, action spend, target legality, no extra attacks, Python/browser/generated parity.
+- **Reuse:** every fixed two-weapon Multiattack with source-defined slot order. **Planning:** SOURCE REVIEWED; **Implementation:** NOT CERTIFIED. No repeated approval needed.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
