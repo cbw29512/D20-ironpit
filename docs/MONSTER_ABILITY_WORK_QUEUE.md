@@ -608,6 +608,21 @@ Each linked issue contains the actual source rules, selected universal remediati
 
 - **Printed traits:** Advantage on saving throws against spells and magical effects; golem weapon attacks count as magical. Existing universal save-advantage grant (`requires_magical_effect`) and magical damage-source qualifier, as established for Balor and Barbed Devil. **Planning:** SOURCE VERIFIED / prior mechanic reused, no repeat decision. **Implementation:** NOT CERTIFIED.
 
+### Clay Golem — Slam (2014), source verified 2026-10-09
+
+- **Printed Action:** Melee weapon attack +8, reach 5 ft, one target, 2d10+5 Bludgeoning (magical weapon attack by Magic Weapons). If target is creature, **DC15 Constitution** save; on failed save its **HP maximum is reduced by actual damage taken from this Slam**, and if maximum is reduced to **0** the target **dies**; this reduction persists until Greater Restoration or other qualifying magic removes it. Successful save does not reduce max HP. Do not confuse with current HP damage, ordinary poison, or temporary damage. A Haste-granted Bonus Action Slam uses this same exact profile and rider.
+- **Universal composition:** normal melee attack and typed damage after defenses -> qualified on-hit creature-only Con save -> generic max-HP adjustment with effect provenance and removal eligibility -> death if max HP zero. Track reduction in temporary fight state separate from HP; healing cannot exceed modified maximum; allow source-approved Greater Restoration clearing effect. Search existing Life Drain / max HP reduction primitives before adding anything. Reuse as ordinary two Slam attack slots in Multiattack and source-granted Bonus Slam, not copied effect logic. Cross-monster reuse with wraith/life drain HP-max reducers.
+- **Planning:** SOURCE VERIFIED / routine RAW mapping, no fresh user approval required. **Implementation:** NOT CERTIFIED; HP reduction/actual damage/save/heal reset and Python/browser/Hero/generated parity must pass.
+
+### Clay Golem — Multiattack (2014), source verified 2026-10-09
+
+- **Printed Action:** Exactly **two Slam attacks** within one Action, each separately resolved with printed damage and DC15 Con HP-max reduction rider; reused same attack profile as standalone and Haste Bonus Action Slam. Existing ordered attack sequence and one-Action budget; no new mechanic. **Planning:** SOURCE VERIFIED / reused primitive. **Implementation:** NOT CERTIFIED.
+
+### Clay Golem — defensive profile, senses, mobility (2014), source verified 2026-10-09
+
+- **Printed immunities:** Acid, Poison, Psychic damage, plus Bludgeoning/Piercing/Slashing from **nonmagical attacks that aren't adamantine**. Condition immunities Charmed, Exhaustion, Frightened, Paralyzed, Petrified, Poisoned. Source AC14, HP133, walking speed 20ft, Darkvision 60ft and passive Perception 9. Note Acid Absorption is already reviewed: incoming Acid produces healing under damage replacement despite immunity, not double processing.
+- **Reuse:** source-qualifier-aware typed defense filtering (adamantine and magical bypass), existing condition-immunity, native speed/senses, Acid replacement precedence. **Planning:** SOURCE VERIFIED / reused primitives; inventory covers all Clay Golem 2014 source actions and traits. **Implementation:** NOT CERTIFIED; no source/generated/runtime parity or gates performed. Next queued monster Cloud Giant, after review of Clay Golem dependencies.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
