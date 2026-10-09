@@ -118,6 +118,13 @@ Each linked issue contains the actual source rules, selected universal remediati
 
 - **Cross-source reuse:** existing legendary-action choices that call ordinary attacks and universal Perception checks may reuse equivalent mechanics only after exact printed source verification. No new resolver keyed to Aboleth or Tail Swipe.
 
+### Aboleth — Probing Telepathy (2014), approved 2026-10-09
+
+- **Source trait:** If a creature communicates telepathically with the Aboleth and it can see the creature, the Aboleth learns the creature's greatest desires. Keep the printed trait on the immutable card.
+- **Approved arena classification:** narrative-only/arena-neutral in standard Iron Pit; no modeled telepathic dialogue or creature desires, hence no automatic combat state, targeting, damage or condition. Do not turn telepathy into mind control.
+- **Shared reuse:** same arena-neutral classification only for independently source-verified narrative-only telepathic features; do not broadly disable mechanically significant telepathy.
+- **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED; verify source/card retention and no fabricated active effect during certification.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
