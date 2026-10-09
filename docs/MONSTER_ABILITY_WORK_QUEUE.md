@@ -325,6 +325,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved implementation:** Reference the *same* immutable Claw attack profile used by ordinary Multiattack; spend exactly one of the source's three legendary action points, refill at start of Androsphinx's turn and permit at most one legendary action in each eligible end-of-other-creature turn window. Normal reach, target/visibility legality, attack-roll/AC/damage-defense rules; no duplicate Claw damage resolver.
 - **Reuse:** universal legendary-action resource/timing and source attack-profile reference for other qualified monsters. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED pending source/runtime binding and Python/browser parity.
 
+### Androsphinx — Legendary Teleport (2014), user approved 2026-10-09
+
+- **Printed legendary action:** Teleport up to 120 feet to an unoccupied visible space, costs 2 legendary action points. Preserve on immutable source/card.
+- **Approved Pit behavior:** Existing no-teleport-relocation arena policy excludes Legendary Teleport from combat AI; never select or expend legendary resources for it. No replacement effect is invented. Use generic arena-ineligible action policy for source-equivalent teleport actions.
+- **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED until source retention and no-selection parity validated. Next Androsphinx ability: Legendary Cast a Spell.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
