@@ -6,6 +6,12 @@
 
 This is the **operational queue**, not a second monster source inventory. The authoritative per-monster checklist is [MONSTER_REMAINING_2014_WORKSHEET.md](MONSTER_REMAINING_2014_WORKSHEET.md); generated source blockers and [UNIVERSAL_MECHANIC_INVENTORY.md](UNIVERSAL_MECHANIC_INVENTORY.md) determine which monsters are actually clear. Never hand-edit generated inventories. Read [the monster playbook](playbooks/MONSTERS.md), source and locked rules before editing combat behavior.
 
+## Current decision workflow (planning first, no repeat questions)
+
+The master [decision state](../data/monster_2014_review_state.json) and [read-only selector](../scripts/monster_2014_review_queue.py) are authoritative for *which user questions are still unanswered*. The 124-record source blueprint is historical research, **not** a list of 124 new approval requests. Use `python scripts/monster_2014_review_queue.py --next` for the next assistant-side source review; only `--questions` may produce a user-facing decision prompt. Existing user rulings, source-derived mechanical behavior and pending/unmerged PRs must not turn into another user question.
+
+**The implementation queue below is parked during the planning pass.** Its PR/CI status does not invalidate a prior planning decision. Hourly implementation may begin only after all planning items are settled and the user explicitly authorizes it.
+
 ## Queue rules
 
 1. **One ability per implementation PR.** Decompose a source trait into actual mechanics and find matching universal engine/pregen/monster primitives first. Reuse existing capability IDs and runtime effects. Combat source provides qualifiers/dice/DC/name, never a unique resolver.
