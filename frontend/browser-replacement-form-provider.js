@@ -11,6 +11,16 @@
   const RES = () => window.IRON_PIT_BROWSER_RESOURCES;
   const RC = () => window.IRON_PIT_BROWSER_RESOURCE_CONVERSION;
 
+  function aiMayStartReplacementForm(state, action, owner) {
+    if (action?.aiUsePolicy !== "emergency_only") return true;
+    if (state.replacement_form) return false;
+    const hp = Number(state.current_hp);
+    const maxHp = Number(owner.max_hp);
+    const fraction = Number(action.aiEmergencyHpFraction ?? (1 / 3));
+    return hp > 0 && maxHp > 0 && Number.isFinite(fraction)
+      && fraction > 0 && fraction < 1 && hp <= maxHp * fraction;
+  }
+
   function register() {
     if (!S()) throw new Error("Replacement-form provider requires browser-main-action-selection.js.");
     S().registerProvider({
@@ -18,13 +28,7 @@
       discover: ({ member, setup, turnKey }) => {
         const owner = member.state.replacement_form?.original_template || member.state.template;
         const action = (owner.replacement_form_actions || [])[0];
-        if (action?.aiUsePolicy === "emergency_only") {
-          if (member.state.replacement_form) return null;
-          const hp = Number(member.state.current_hp);
-          const maxHp = Number(owner.max_hp);
-          const fraction = Number(action.aiEmergencyHpFraction ?? (1 / 3));
-          if (!(hp > 0 && maxHp > 0 && hp <= maxHp * fraction)) return null;
-        }
+        if (!aiMayStartReplacementForm(member.state, action, owner)) return null;
         if (member.state.replacement_form && !action?.replaceExistingForm) return null;
         if (!action || !E().available(member.state, action.actionCost)) return null;
         const resourceReady = RES()?.available(member.state, action.resourceId, action.resourceCost || 1);
@@ -85,5 +89,5 @@
   }
 
   register();
-  window.IRON_PIT_BROWSER_REPLACEMENT_FORM_PROVIDER = { register };
+  window.IRON_PIT_BROWSER_REPLACEMENT_FORM_PROVIDER = { register, aiMayStartReplacementForm };
 })();
