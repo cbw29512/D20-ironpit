@@ -125,6 +125,13 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Shared reuse:** same arena-neutral classification only for independently source-verified narrative-only telepathic features; do not broadly disable mechanically significant telepathy.
 - **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED; verify source/card retention and no fabricated active effect during certification.
 
+### Aboleth — Amphibious (2014), approved 2026-10-09
+
+- **Printed trait:** Can breathe air and water. Preserve source/card text.
+- **Approved Iron Pit outcome:** Standard arena has no water, but ambient air supports the Aboleth normally; no suffocation or active combat adjustment from Amphibious. No new engine mechanic.
+- **Cross-monster reuse:** Source-matched amphibious traits can use ordinary environment breathing eligibility without name-specific resolver. No broad immunity inferred.
+- **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED pending source retention and no spurious effect check.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
