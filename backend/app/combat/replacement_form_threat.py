@@ -1,7 +1,7 @@
-"""Conservative incoming weapon/printed-save pressure for form-selection AI.
+"""Conservative source-grounded single-enemy Action pressure for form AI.
 
 A lookahead heuristic, not combat resolution: one plausible enemy Action and
-no dice, movement, resource, or template mutation. Spell threat is a later pass.
+no dice, movement, resource, or template mutation.
 """
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ import logging
 from app.combat.condition_rules import is_incapacitated
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.printed_damage import save_mean_damage, weapon_mean_damage
+from app.combat.replacement_form_spell_threat import single_enemy_spell_pressure
 from app.combat.resources import resource_available
 from app.domain.models import WeaponAttackKind
 
@@ -83,10 +84,13 @@ def single_enemy_pressure(enemy, defender) -> float:
 
 
 def incoming_attack_pressure(defender, setup) -> float:
-    """Highest single-enemy printed exposure; no speculative focus fire."""
+    """Highest single-enemy weapon, save or spell exposure; no focus-fire sum."""
     try:
         opponents = setup.monsters if defender.side == "heroes" else setup.heroes
-        return max((single_enemy_pressure(enemy, defender) for enemy in opponents), default=0.0)
+        return max((max(
+            single_enemy_pressure(enemy, defender),
+            single_enemy_spell_pressure(enemy, defender, setup),
+        ) for enemy in opponents), default=0.0)
     except Exception:
         logger.exception("Incoming attack pressure failed for %s.", defender.combatant_id)
         raise
