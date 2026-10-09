@@ -103,6 +103,13 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Reusable policy:** Source-conditional environmental trait eligibility; no monster-specific resolver, new combat primitive, or fabricated water. The Aboleth's separate Tentacle disease still functions on land.
 - **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED; source retention and no-water inactivity must be checked against the generated card/browser/Python source semantics before clearing its blocker. Continue next Aboleth ability.
 
+### Aboleth — Psychic Drain (2014), source review 2026-10-09
+
+- **Printed legendary Action:** Psychic Drain costs **2 of 3 legendary action points**, used only at the end of another creature's turn; regain legendary action points at start of Aboleth's turn. One living creature **Charmed by this Aboleth** takes **3d6 Psychic** damage; Aboleth heals HP equal to the **actual damage the target takes**, capped at its missing HP by standard healing. No attack roll, saving throw, invented range requirement, or generic targeting of all Charmed creatures.
+- **Universal remediation:** shared source-owned condition provenance/eligibility + legendary cost/timing + typed damage/defenses + actual HP damage accounting + source-linked healing + zero-HP/damage-triggered Enslave repeat-save lifecycle. Evaluate damage-triggered repeat save after the damage event; if Enslave breaks, the damage and healing already occurred. No bespoke Psychic Drain resolver or automatic double spending.
+- **Cross-monster reuse:** generic drain-based healing and resource-timed damage where independently source-proven (e.g. vampire life-drain-like features require checking exact distinct maximum-HP effects), legendary-action timing and condition-source ownership for other legendary monsters. Do not assume equivalence from names.
+- **Planning status:** SOURCE REVIEWED, implementation NOT CERTIFIED; verify source identity, action eligibility, event sequencing, Python/browser parity and generated blocker results before marking ready. Do not conflate with the Aboleth's Mucous Cloud or Tentacle disease.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
