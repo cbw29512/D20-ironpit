@@ -40,6 +40,8 @@ Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §7, Attack natural 1, §10.1, §20
 - **Golem Berserk is a shared self-buff state, not a separate subsystem.** It grants no fake combat bonus. 2014 Flesh/Clay use their printed HP threshold + d6 gate, then target the nearest visible living creature regardless of side until full HP; object fallback and Flesh-Golem creator calming are inactive in the standard Pit. Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §20.2.
 - **2014 Rampage omits its movement rider in the Pit.** A qualifying own-turn melee reduction to 0 HP grants exactly one Bite through the creature's available Bonus Action when a legal target exists; no Rampage movement is granted or required. This is an explicit Iron Pit arena simplification, not tabletop RAW. Runtime uses the generic zero-HP trigger plus Bonus Action attack primitive; cards remain immutable.\n\nAuthority: `docs/IRON_PIT_RULES_CONTRACT.md` §25.2.\n\n## Buffs, debuffs, and match lifecycle
 
+- **Printed precombat spell lists win over the discretionary one-opening-buff rule.** If the source stat block says spells were cast before the fight, apply every printed pre-cast as real buffs in the opening free-action phase, retaining ordinary slots, duration, and a single Concentration. 2014 Archmage starts with **Mind Blank, Stoneskin and Mage Armor**. This does not confer an extra discretionary fourth opening buff; casting Globe later ends Stoneskin Concentration. Source-declared policy across both engines; reference `docs/IRON_PIT_RULES_CONTRACT.md` §7.1. **User-approved 2026-10-08; implementation and testing pending.**
+
 - **A buff cancels the matching debuff.** Pairing is by condition identity and modifier kind, never by spell/monster/class name. An already-active matching counter-buff suppresses the current condition and causes a new copy of that debuff to fail closed.
 - **Debuffs are checked at the start of the creature's turn** before it acts.
 - **Calm blocks new fear.** 2014 Calm Emotions uses the shared charm/frighten suppression / condition-immunity primitives. While that suppression is active, a new Frightened copy does not land.
@@ -91,7 +93,7 @@ Standing instruction: park, record, continue. Revisit this list after the rest o
 
 | Card / item | Family | Blocker | Why parked | Needed to unpark |
 |---|---|---|---|---|
-| Assassin | leftover trait | `source:trait` | Shortsword/crossbow poison save-damage already compiles. Assassinate / Evasion / Sneak Attack remain. | Leftover-trait lane for those three traits |
+| Assassin | leftover trait | `source:trait` | Shortsword/crossbow poison save-damage already compiles. **Assassinate PLANNING APPROVED:** first-turn Initiative lead over target gives Advantage and automatic critical **on a hit**; no separate Surprise required (Pit exception). Evasion/Sneak Attack remain to review. | Bind universal early-initiative Advantage + critical-on-hit; then Evasion and Sneak Attack reuse |
 | Basilisk | leftover trait | `source:trait` | Bite poison damage already compiles. Petrifying Gaze remains. | Gaze / petrify machine, shared with Cockatrice / Gorgon |
 | Phase Spider | leftover trait | `source:trait` | Bite poison save-damage already compiles. Ethereal Jaunt remains. | Ethereal / jaunt policy |
 | Ettercap; Giant Spider | web / recharge | `attack:complex`, `attack:damage-type`, `mechanic:recharge` | Bite poison already compiles. Web is a breakable restraint plus recharge. | Shared web / breakable-restraint primitive |

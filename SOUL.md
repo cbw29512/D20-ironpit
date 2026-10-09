@@ -37,7 +37,15 @@ The source supplies parameters such as ability name, source id, ruleset, AC, DC,
 
 **The engine supplies behavior. The source supplies the exact numbers and facts.**
 
+**Source-declared precombat buffs are authoritative.** If a printed combatant stat block explicitly says certain spells have been cast before combat, apply **all of those spells** as active pre-initiative buffs through the universal precombat state pipeline; do not erase source facts with the discretionary one-opening-buff selection. The 2014 Archmage specifically starts with Mind Blank, Stoneskin and Mage Armor. Respect the normal spells' Concentration, durations and resource costs; printed source pre-casts do not authorize an additional discretionary opening buff. This is an explicit user-approved product rule (2026-10-08); §7.1 of `docs/IRON_PIT_RULES_CONTRACT.md` owns the exact semantics. Implement by source-declared buff data, not by names in the engine.
+
 Examples: the engine defines what Prone does, but the source decides whether an effect applies Prone and with what save/DC/duration. The engine defines attack-roll-versus-AC behavior, but the combatant source supplies AC and attack bonus. The engine defines typed damage resolution, but the source supplies the damage dice, bonus, type, and qualifiers.
+
+## Mandatory planning queue anti-repeat gate
+
+The generated blocker list is a **code-readiness inventory**, not a list of new user questions. The 2014 planning control file is `data/monster_2014_review_state.json`, and `scripts/monster_2014_review_queue.py` selects the next outstanding *source audit* separately from explicitly recorded open *user questions*. Before asking the user to decide a behavior, check previously confirmed source rulings, the worksheet, universal inventory and pending/merged PRs. **Never ask the user to approve a rule already settled**, even if a related PR has not merged, CI has failed, or the baseline blocker is still present. A printed source clause that already determines the effect should be documented as an implementation recipe and not escalated as a question.
+
+Progress must only increase: when a monster/ability is source-reviewed and the implementation route is known, mark planning decision complete, preserve that decision in the ledger, and advance. Maintain a separate implementation/certification status; **hourly implementation remains disabled until the entire planning pass is closed and the user authorizes it**. Do not reset the cursor from the 124-monster historical list. One monster ability at a time; no redundant image work or unrelated checks.
 
 ## Mandatory implementation sequence
 
