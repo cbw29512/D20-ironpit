@@ -5,7 +5,10 @@ import logging
 
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.monster_arena_action_policy_2014 import PIT_BANNED_ACTION_LABELS_2014
-from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014
+from app.content.monster_arena_neutral_traits_2014 import (
+    ARENA_NEUTRAL_TRAITS_2014,
+    verified_arena_inert_trait_2014,
+)
 from app.content.monster_arena_unavailable_reactions_2014 import arena_unavailable_reaction_names_2014
 from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
 from app.content.monster_attack_source_corrections_2014 import corrected_attack_range_2014
@@ -79,6 +82,7 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
         return tuple(
             name for name in monster.trait_names
             if name not in certified and not is_arena_neutral_bonus_action(name)
+            and not verified_arena_inert_trait_2014(monster, name)
         )
     except Exception:
         logger.exception("Failed to identify unsupported 2014 traits for %s.", monster.name)

@@ -25,3 +25,28 @@ ARENA_NEUTRAL_TRAITS_2014 = frozenset({
     "Underwater Camouflage", "Web Sense", "Web Walker", "Rejuvenation", "Hellish Rejuvenation",
     "Wakeful", "Ethereal Jaunt", "Incorporeal Movement", "Immutable Form",
 })
+
+import logging
+
+from app.content.monster_source_2014 import SourceMonster2014
+
+logger = logging.getLogger(__name__)
+
+
+def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str) -> bool:
+    """Accept only the pinned noncombat summoner/quarry tracking semantics."""
+    try:
+        if trait_name != "Faultless Tracker" or trait_name not in monster.trait_names:
+            return False
+        source = monster.source_traits or ""
+        clauses = (
+            "<strong>Faultless Tracker.</strong>",
+            "given a quarry by its summoner",
+            "knows the direction and distance to its quarry",
+            "same plane of existence",
+            "knows the location of its summoner",
+        )
+        return all(clause in source for clause in clauses)
+    except Exception:
+        logger.exception("2014 noncombat tracking classification failed for %s.", monster.name)
+        raise
