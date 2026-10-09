@@ -116,7 +116,7 @@
     }
     const heroKeys = new Set(heroes.map((card) => `${card.class_id}:${card.level}`));
     if (heroKeys.size !== heroes.length) throw new Error("Certified 2014 hero registry contains duplicate class/level entries.");
-    if (monsters.length !== 201) throw new Error(`Expected 201 certified 2014 test monsters; found ${monsters.length}.`);
+    if (monsters.length !== 202) throw new Error(`Expected 202 certified 2024 test monsters; found ${monsters.length}.`);
     if (heroes.some((card) => card.ruleset !== "2014" || card.kind !== "character")) throw new Error("2014 hero catalog crossed the ruleset boundary.");
     if (monsters.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 monster catalog crossed the ruleset boundary.");
     return {
