@@ -238,6 +238,7 @@ Initiative is a Dexterity check. Normal initiative bonuses and ruleset-specific 
 - A natural 1 on Initiative remains in the bottom-priority bucket as an Iron Pit house rule. This is separate from the combat house rule that a natural 1 on an attack roll ends that attacker's current turn.
 - Natural 20/1 Initiative does not grant or remove actions, attacks, or rounds.
 - Surprise is resolved separately according to the selected ruleset; it does not automatically move a creature to the bottom of Initiative.
+- **Explicit Assassin Assassinate arena exception (2014, USER-APPROVED 2026-10-08):** During its **first turn only**, a source combatant with the printed 2014 Assassinate ability that acts before its target in Initiative attacks that still-unacted target with **Advantage**, and **any hit is a critical hit**, even when that target lacks a separate Surprised condition. Winning Initiative over the target is the Pit trigger for the complete Assassinate attack. This is a deliberate Iron Pit simplification of the 2014 RAW Surprised-target critical rider. Roll to hit normally; do not add extra attacks, do not extend to later turns, and do not affect unrelated general Surprise semantics. Source declaring Assassinate grants a generic opening-assassination effect composed from first-turn/unacted target check + Advantage + universal critical-hit damage; never hardcode the monster name in the resolver.
 
 Tie policy (deterministic simulator equivalent of RAW decision ownership):
 
