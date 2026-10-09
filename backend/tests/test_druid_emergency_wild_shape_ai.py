@@ -110,6 +110,7 @@ def test_2024_caster_chooses_available_offense_before_low_value_form() -> None:
         patch("app.combat.replacement_form_offense.choose_spell", return_value=spell),
         patch("app.combat.replacement_form_offense.choose_concentration_repeat_save", return_value=None),
         patch("app.combat.replacement_form_offense.incoming_attack_pressure", return_value=0),
+        patch("app.combat.replacement_form_offense.form_mitigates_disabling_save", return_value=False),
     ):
         assert defer_emergency_form_for_spell(actor, SimpleNamespace(), form, "1:cast-2024")
         assert not defer_emergency_form_for_spell(
@@ -134,6 +135,7 @@ def test_2014_form_competes_with_action_spell_but_not_bonus_spell() -> None:
         patch("app.combat.replacement_form_offense.choose_spell", return_value=spell),
         patch("app.combat.replacement_form_offense.choose_concentration_repeat_save", return_value=None),
         patch("app.combat.replacement_form_offense.incoming_attack_pressure", return_value=0),
+        patch("app.combat.replacement_form_offense.form_mitigates_disabling_save", return_value=False),
     ):
         assert defer_emergency_form_for_spell(actor, SimpleNamespace(), form, "1:cast-2014")
         spell.action.action_cost = "bonus_action"

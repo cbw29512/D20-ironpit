@@ -10,6 +10,7 @@ from app.combat.auto_hit_spell_policy import choose_auto_hit_spell
 from app.combat.concentration_repeat_saves import choose_concentration_repeat_save
 from app.combat.replacement_form_triage import emergency_form_buffer
 from app.combat.replacement_form_threat import incoming_attack_pressure, pressure_may_be_lethal
+from app.combat.replacement_form_condition_threat import form_mitigates_disabling_save
 from app.combat.spell_attack_policy import choose_spell_attack
 from app.combat.spell_policy import choose_spell
 
@@ -40,6 +41,8 @@ def defer_emergency_form_for_spell(member, setup, form, turn_key: str) -> bool:
         buffer = emergency_form_buffer(state, form, owner)
         if buffer <= 0:
             return False
+        if form_mitigates_disabling_save(member, setup, form):
+            return False  # Preserve a real reduction in severe failed-save danger.
         pressure = incoming_attack_pressure(member, setup)
         if pressure_may_be_lethal(state.current_hp, state.temporary_hp, pressure):
             return False  # A plausible lethal Action beats speculative damage.
