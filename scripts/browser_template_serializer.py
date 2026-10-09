@@ -753,6 +753,8 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
             "diceSize": action.melee_hit_retaliation.dice_size,
             "damageType": _value(action.melee_hit_retaliation.damage_type),
         }
+        if action.melee_hit_retaliation.on_contact:
+            row["meleeHitRetaliation"]["onContact"] = True
     return row
 
 

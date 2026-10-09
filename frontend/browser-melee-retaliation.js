@@ -11,7 +11,7 @@
     try {
       for (const action of defender.state.template.timed_self_buff_actions || []) {
         if (!action.meleeHitRetaliation) continue;
-        if ((defender.state.timed_effects || []).some((effect) => effect.source_effect_id === action.id)) {
+        if (action.activationTiming === "passive" || (defender.state.timed_effects || []).some((effect) => effect.source_effect_id === action.id)) {
           return { action, rule: action.meleeHitRetaliation };
         }
       }
@@ -24,9 +24,10 @@
 
   function apply(attacker, defender, options = {}) {
     try {
-      if (!options.melee || attacker.state.is_dead || !attacker.state.is_alive) return 0;
+      if ((!options.melee && !options.physicalContact) || attacker.state.is_dead || !attacker.state.is_alive) return 0;
       const bound = active(defender);
       if (!bound) return 0;
+      if (!options.melee && !bound.rule.onContact) return 0;
       const distance = window.IRON_PIT_BROWSER_STATE.distance(attacker, defender);
       if (distance > (bound.rule.rangeFt || 5)) return 0;
       const rolls = window.IRON_PIT_DICE.rollMany(bound.rule.diceCount, bound.rule.diceSize);

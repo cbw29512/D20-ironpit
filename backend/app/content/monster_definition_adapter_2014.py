@@ -10,6 +10,7 @@ from app.content.monster_charge_profile_2014 import charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_conditional_damage_defenses_2014 import template_defense_fields_2014
 from app.content.monster_healing_2014 import healing_actions_2014, healing_resources_2014
+from app.content.monster_heated_body_2014 import heated_body_retaliation_2014
 from app.content.monster_damage_taken_effects_2014 import damage_taken_timed_effects_2014
 from app.content.monster_included_weapon_traits_2014 import weapon_damage_source_qualifiers_2014
 from app.content.monster_condition_auras import condition_auras_from_source
@@ -144,6 +145,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         spell_save_actions=innate_spell_save_actions_2014(monster),
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
             *berserk_self_buffs_2014(monster),
+            *heated_body_retaliation_2014(monster),
             *condition_auras_from_source(monster.source_traits, "2014"),
             *contextual_save_defenses_2014(monster)[0]],
         healing_actions=healing_actions_2014(monster),

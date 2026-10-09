@@ -17,7 +17,9 @@ def active_melee_hit_retaliation(defender: CombatantState) -> tuple[TimedSelfBuf
         for action in defender.template.timed_self_buff_actions:
             if action.melee_hit_retaliation is None:
                 continue
-            if any(effect.source_effect_id == action.id for effect in defender.timed_effects):
+            if action.activation_timing == "passive" or any(
+                effect.source_effect_id == action.id for effect in defender.timed_effects
+            ):
                 return action, action.melee_hit_retaliation
         return None
     except Exception:
@@ -32,15 +34,18 @@ def apply_melee_hit_retaliation(
     melee: bool,
     dice,
     affected_states: list[CombatantState] | None = None,
+    physical_contact: bool = False,
 ) -> int:
     """Deal printed retaliation damage when a melee attack roll hits inside range."""
     try:
-        if not melee or attacker.state.is_dead or not attacker.state.is_alive:
+        if (not melee and not physical_contact) or attacker.state.is_dead or not attacker.state.is_alive:
             return 0
         bound = active_melee_hit_retaliation(defender.state)
         if bound is None:
             return 0
         action, rule = bound
+        if not melee and not rule.on_contact:
+            return 0
         if combatant_distance(attacker, defender) > rule.range_ft:
             return 0
         rolls = [dice.roll(rule.dice_size) for _ in range(rule.dice_count)]

@@ -31,6 +31,7 @@ class MeleeHitRetaliation(BaseModel):
     dice_count: int = Field(ge=1, le=40)
     dice_size: int = Field(default=8, ge=2, le=100)
     damage_type: DamageType
+    on_contact: bool = Field(default=False, exclude_if=lambda enabled: not enabled)
 
 
 class TimedSelfBuffAction(BaseModel):
@@ -80,17 +81,18 @@ class TimedSelfBuffAction(BaseModel):
                 # Passive source data is discovered directly, never cast/spent.
                 if sum(aura is not None for aura in (
                     self.hostile_start_turn_condition_aura, self.friendly_save_advantage_aura,
+                    self.melee_hit_retaliation,
                 )) != 1:
                     raise ValueError("Passive activation requires exactly one condition or friendly-save aura.")
                 if self.resource_id or self.concentration or self.duration_rounds is not None or self.ends_if_source_incapacitated:
                     raise ValueError("Passive condition auras cannot own activation resources or a source timer.")
-                if any((self.condition_ids, self.damage_resistances, self.melee_hit_retaliation,
+                if any((self.condition_ids, self.damage_resistances,
                     self.debuff_counters, self.saving_throw_advantage_grants, self.movement_mode_grants,
                     self.friendly_cover_aura,
                     self.friendly_weapon_damage_aura, self.friendly_recovery_aura,
                     self.start_turn_emanation_damage, self.emitted_environment_contexts,
                     self.spell_save_dc_bonus, self.spell_attack_advantage, self.modifier_effects)):
-                    raise ValueError("Passive condition aura cannot silently omit activation-owned effects.")
+                    raise ValueError("Passive effects cannot silently include activation-owned effects.")
                 aura = self.hostile_start_turn_condition_aura
                 if aura is not None and aura.condition_expiry_timing is None:
                     raise ValueError("Passive condition auras require explicit target expiry.")
