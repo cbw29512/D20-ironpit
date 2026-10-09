@@ -100,6 +100,7 @@
         form_hp: activeTemplate.max_hp, form_max_hp: activeTemplate.max_hp,
         hp_mode: action.hpMode || "form_pool",
         ends_on_incapacitated: Boolean(action.endsOnIncapacitated),
+        ends_on_death: Boolean(action.endsOnDeath),
         resource_id: action.resourceId || null, resource_cost: action.resourceCost || 1,
         voluntary_revert_action: action.voluntaryRevertAction || "bonus_action",
       };
@@ -130,8 +131,13 @@
 
   function revertIfIncapacitated(state) {
     const active = state.replacement_form;
-    if (!active || !active.ends_on_incapacitated) return false;
-    if (!state.is_dead && !state.is_unconscious && !Q()?.incapacitated(state)) return false;
+    if (!active) return false;
+    if (state.is_dead) {
+      if (!active.ends_on_death && !active.ends_on_incapacitated) return false;
+    } else if (!active.ends_on_incapacitated ||
+        (!state.is_unconscious && !Q()?.incapacitated(state))) {
+      return false;
+    }
     revert(state, false);
     return true;
   }

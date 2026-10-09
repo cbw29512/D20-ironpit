@@ -1174,6 +1174,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 "aiEmergencyHpFraction": item.ai_emergency_hp_fraction,
                     "retainCreatureType": item.retain_creature_type,
                     "endsOnIncapacitated": item.ends_on_incapacitated,
+                    **({"endsOnDeath": True} if item.ends_on_death else {}),
                     "replaceExistingForm": item.replace_existing_form,
                     "retainSpellcasting": item.retain_spellcasting,
                 **({"retainedSpellActionIds": list(item.retained_spell_action_ids)} if item.retained_spell_action_ids else {}),
