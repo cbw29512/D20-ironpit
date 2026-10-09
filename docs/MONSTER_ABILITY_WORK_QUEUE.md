@@ -144,6 +144,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved composition:** shared attack legality/AC/typed damage and source-owned profile; not included in the three-Tentacle Multiattack and not copied as a separate Tail Swipe damage profile. Reuse universal attack and legendary-action primitives.
 - **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED until source binding and engine parity checked. Aboleth's approved review decisions are recorded individually above; do not infer full monster certification or re-open resolved decisions.
 
+### Acolyte — Sacred Flame (2014), user approved 2026-10-09
+
+- **Printed spell:** At-will cantrip, one Action, 60-ft target, DC 12 Dexterity save, 1d8 Radiant damage on failure and zero on success, no slot spent; preserve 2014 spell-specific cover interaction.
+- **Reuse:** existing universal 2014 Cleric Sacred Flame saving-throw/damage ability and prepared-monster-spell action adapter; source/card names and slots remain independent from class names. No new resolver.
+- **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED; verify production monster action binding Python/browser before clearing Acolyte spellcasting blockers. Continue with Bless on same monster.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
