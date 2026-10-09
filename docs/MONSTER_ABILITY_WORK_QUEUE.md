@@ -110,6 +110,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Cross-monster reuse:** generic drain-based healing and resource-timed damage where independently source-proven (e.g. vampire life-drain-like features require checking exact distinct maximum-HP effects), legendary-action timing and condition-source ownership for other legendary monsters. Do not assume equivalence from names.
 - **Planning status:** SOURCE REVIEWED, implementation NOT CERTIFIED; verify source identity, action eligibility, event sequencing, Python/browser parity and generated blocker results before marking ready. Do not conflate with the Aboleth's Mucous Cloud or Tentacle disease.
 
+### Aboleth — Detect and Tail Swipe legendary actions (2014), reviewed 2026-10-09
+
+- **Detect:** 1 legendary action point at end of another creature's turn; make one Wisdom (Perception) check. Reuse legendary timing/resource and shared detection/perception. Proposed AI only chooses Detect if it could reveal a presently undetected opponent, not when all targets are known. Keep source card unchanged. **Planning: SOURCE REVIEWED, AI recommendation not independently approved; implementation NOT CERTIFIED.**
+- **Tail Swipe:** 1 legendary action point at end of another creature's turn; make **one ordinary Tail attack** (source +9 melee weapon attack, 10-ft reach, 3d6+5 Bludgeoning). Reuse exact source-owned Tail attack profile and universal attack/AC/typed-damage resolution; never create duplicate Tail Swipe damage semantics. Three available legendary action points per round, refresh at beginning of own turn, at most one legendary action at each eligible end-of-other-turn window; obey spent budget. **Planning: SOURCE REVIEWED, implementation NOT CERTIFIED.**
+- **Cross-source reuse:** existing legendary-action choices that call ordinary attacks and universal Perception checks may reuse equivalent mechanics only after exact printed source verification. No new resolver keyed to Aboleth or Tail Swipe.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
