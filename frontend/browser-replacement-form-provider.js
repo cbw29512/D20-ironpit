@@ -18,6 +18,13 @@
       discover: ({ member, setup, turnKey }) => {
         const owner = member.state.replacement_form?.original_template || member.state.template;
         const action = (owner.replacement_form_actions || [])[0];
+        if (action?.aiUsePolicy === "emergency_only") {
+          if (member.state.replacement_form) return null;
+          const hp = Number(member.state.current_hp);
+          const maxHp = Number(owner.max_hp);
+          const fraction = Number(action.aiEmergencyHpFraction ?? (1 / 3));
+          if (!(hp > 0 && maxHp > 0 && hp <= maxHp * fraction)) return null;
+        }
         if (member.state.replacement_form && !action?.replaceExistingForm) return null;
         if (!action || !E().available(member.state, action.actionCost)) return null;
         const resourceReady = RES()?.available(member.state, action.resourceId, action.resourceCost || 1);
