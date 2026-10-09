@@ -229,6 +229,12 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Reuse:** existing universal source-qualified magical weapon damage flag on original Claw profiles; damage-defense resolver receives the qualifier. No new monster- or trait-name combat branch, no extra damage dice. Other creatures with source-equivalent magical weapons reuse the same primitive.
 - **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED until adapter/generator/runtime and exact-head parity verified. Continue remaining Androsphinx spellcasting one source ability at a time.
 
+### Androsphinx — Claw / Multiattack (2014), user approved 2026-10-09
+
+- **Printed attacks:** source Claw melee +12 to hit, 5-ft reach, 2d10+6 Slashing. The printed Multiattack uses one Action for two independent Claws, permitting legal retargeting after the first target dies. The Magic Weapons trait qualifies their damage as magical.
+- **Shared binding:** source-owned Claw attack profile + ordinary attack/AC/typed damage resolver + universal fixed-count Multiattack. The 1-point legendary Claw Attack must call the same source Claw profile at a legal legendary action timing window, not duplicate it.
+- **Planning:** USER APPROVED. **Implementation:** NOT CERTIFIED pending source adapter, generated export, Python/browser and exact-head checks. Continue Androsphinx spellcasting one spell at a time.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
