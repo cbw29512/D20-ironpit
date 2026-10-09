@@ -75,6 +75,7 @@ window.IRON_PIT_BROWSER_SPELL_POLICY_SUPPORT = {
   legalSingleTargets: () => [defender],
 };
 load("browser-replacement-form-compiler.js");
+load("browser-spell-area.js");
 load("browser-replacement-form-condition-threat.js");
 const policy = window.IRON_PIT_BROWSER_REPLACEMENT_FORM_CONDITION_THREAT;
 assert.equal(policy.formMitigates(defender, setup, form), true);
@@ -106,3 +107,51 @@ setup.heroes.push({
 });
 assert.equal(policy.formMitigates(defender, setup, form), false, "Do not invent enemy focus fire");
 console.log("Universal protective-form disabling-save forecast passed.");
+
+{
+  // Area-control threat can be predicted in a group, but must use the
+  // resolver's legal/selected placement, not arbitrary possible coverage.
+  source.condition_immunities = ["paralyzed", "stunned"];
+  enemy.state.is_dead = false;
+  enemy.position_ft = 30;
+  enemy.state.resources["spell-slot-3"] = 1;
+  const group = setup.heroes;
+  assert.equal(group.length, 2);
+  const area = {
+    id: "area-paralysis", name: "Area paralysis", level: 3,
+    actionCost: "action", range: 60, targetCount: 1,
+    saveAbility: "wisdom", dc: 30,
+    area: { origin: "point", shape: "radius", radiusFt: 5 },
+    failedSaveTimedEffect: { effectId: "paralyzed" },
+  };
+  let selected = [{ enemyIds: [defender.combatant_id, group[1].combatant_id], friendlyIds: [] }];
+  window.IRON_PIT_BROWSER_SPELL_POLICY_SUPPORT = {
+    legalSingleTargets: () => [defender],
+    effectiveRange: (_state, distance) => distance,
+    protectedUniversalPlacements: () => selected,
+    areaSpellProtection: () => ({ ids: new Set(), limit: 0 }),
+  };
+  enemy.state.template.spell_save_actions = [area];
+  assert.equal(policy.formMitigates(defender, setup, form), true,
+    "Use the actually chosen area containing the defender");
+  selected = [{ enemyIds: [group[1].combatant_id], friendlyIds: [] }];
+  assert.equal(policy.formMitigates(defender, setup, form), false,
+    "No condition threat if the chosen area misses the defender");
+  selected = [];
+  assert.equal(policy.formMitigates(defender, setup, form), false,
+    "No legal area placement means no threat");
+  enemy.state.template.spell_save_actions = [{
+    ...area, area: undefined, areaRadius: 10,
+    failedSaveTimedEffect: { effectId: "stunned" },
+  }];
+  assert.equal(policy.formMitigates(defender, setup, form), true,
+    "Legacy radius uses the shared ally-safe area placement");
+  enemy.position_ft = 200;
+  assert.equal(policy.formMitigates(defender, setup, form), false,
+    "Legacy area must also be in casting range");
+  enemy.position_ft = 30;
+  enemy.state.resources["spell-slot-3"] = 0;
+  assert.equal(policy.formMitigates(defender, setup, form), false,
+    "Unavailable spell slots still prohibit a disabling area threat");
+}
+console.log("Area disabling-save threat parity passed.");
