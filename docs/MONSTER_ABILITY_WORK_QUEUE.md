@@ -277,6 +277,18 @@ Each linked issue contains the actual source rules, selected universal remediati
 - **Approved arena behavior:** Do not select for combat AI in standard Iron Pit because its conversation/truthfulness restriction has no combat effect. No invented save/debuff, and no deletion from immutable source/card.
 - **Reuse:** context-aware arena-neutral classification for source-equivalent interrogation-only effects, without disabling genuinely tactical Charisma-save effects. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED pending card/AI parity check.
 
+### Androsphinx — Dispel Magic (2014), user approved 2026-10-09
+
+- **Printed spell:** Action, 120-ft range, level-3 slot; each spell of level 3 or lower on selected target ends automatically, while each higher-level spell needs a spellcasting-ability check DC 10 + spell level (Androsphinx Wisdom +5). Preserve source targeting and all effect-level distinctions.
+- **Approved source-aware AI:** inspect actual active spell effects and their provenance before selection; prioritize tactically valuable enemy buffs, don't confuse innate traits/nonspell magical effects with removable spells, permit legitimate higher-level dispel attempts with the required check, and do not waste action/slot on effects that cannot be affected. Generic dispellability/benefit checks apply to any monster, pregen or homebrew source.
+- **Reuse:** universal spell provenance and duration state, legal target selection, spell-effect removal, ability check, spell slot/action economy and logging. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED.
+
+### Androsphinx — Tongues (2014), user approved 2026-10-09
+
+- **Printed spell retained:** Tongues remains on immutable source/card; it enables language comprehension and intelligible speech, not combat damage or condition resolution.
+- **Approved standard Pit AI:** no selection in combat because simulated opponents do not negotiate or require language translation; leave the card's spell list unchanged. Do not infer that understanding speech is irrelevant to *other* spells' source targeting requirements; preserve language gating where meaningful.
+- **Reuse:** generic arena-neutral communication-only spell classification across source-verified equivalent actors. **Planning:** USER APPROVED; **Implementation:** NOT CERTIFIED.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
