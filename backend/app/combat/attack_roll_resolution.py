@@ -53,6 +53,18 @@ class AttackRollResolution:
     d20_bonus_source_name: str | None = None
 
 
+def first_turn_target_advantage_sources(attacker: CombatantState, defender: CombatantState) -> int:
+    """Generic source-bound attack Advantage while a defender has taken no turn."""
+    try:
+        return int(
+            attacker.template.progression_features.advantage_against_unacted_targets
+            and defender.turns_started == 0
+        )
+    except Exception:
+        logger.exception("Failed to resolve first-turn attack Advantage")
+        raise
+
+
 def resolve_attack_roll(
     attacker: CombatantState,
     defender: CombatantState,
@@ -100,7 +112,8 @@ def resolve_attack_roll(
             + reckless_advantage
             + conditional_attack_advantage_sources(attack, defender, attacker_event_id)
             + next_attack_against_advantage_sources(attacker, defender_event_id)
-            + marked_target_advantage_sources(attacker, defender_event_id),
+            + marked_target_advantage_sources(attacker, defender_event_id)
+            + first_turn_target_advantage_sources(attacker, defender),
         )
         mode = resolve_attack_roll_mode(
             attack.weapon,
