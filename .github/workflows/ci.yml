@@ -13,28 +13,6 @@ concurrency:
 
 # Exact-head certification for RAW combat, source parity, figure identity, full SRD roster visibility, six-slot UI, Battle Lab, and Pages root entry.
 jobs:
-  repair-assassinate-artifacts:
-    if: github.event_name == 'pull_request' && github.head_ref == 'fix/assassinate-clean-main-20261010'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Install Python rules
-        working-directory: backend
-        run: pip install -e '.[dev]'
-      - name: Regenerate derived files from source
-        run: |
-          python scripts/export_runtime_monster_capabilities.py
-          python scripts/export_browser_monsters_2014.py
-          git add backend/app/content/data/combatant_capabilities_v1.json frontend/browser-monsters-2014.js
-          if ! git diff --cached --quiet; then
-            git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "chore: refresh Assassinate generated artifacts"
-            git push origin HEAD:fix/assassinate-clean-main-20261010
-          fi
   source-and-python:
     runs-on: ubuntu-latest
     steps:
