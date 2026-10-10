@@ -19,7 +19,7 @@
   function buildState(template) {
     return {
       template, current_hp: template.max_hp, max_hp_bonus: 0, temporary_hp: 0, position: null,
-      initiative_roll: null, initiative_total: null, is_alive: true,
+      initiative_roll: null, initiative_total: null, is_surprised: false, is_alive: true,
       is_unconscious: false, is_stable: false, is_dead: false, exhaustion_level: 0,
       death_save_successes: 0, death_save_failures: 0,
       action_available: true, bonus_action_available: true, reaction_available: true, disengaged_this_turn: false,

@@ -13,7 +13,7 @@ const deterministicDice = (seed = 2014) => {
 };
 
 assert.equal(window.IRON_PIT_2014_MVP_READY, true, "2014 browser test roster must be loaded");
-assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 204);
+assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 205);
 assert.deepEqual([...window.IRON_PIT_BROWSER_MONSTERS_2014["2014-ochre-jelly"].damage_immunities].sort(), ["lightning", "slashing"]);
 const scout2014 = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-scout"];
 assert.ok(scout2014, "2014 Scout must be in the certified browser roster");

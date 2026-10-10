@@ -39,6 +39,8 @@ def _strip_extension_defaults(value):
             continue
         if key == "prevents_instant_death" and item is False:
             continue
+        if key in {"advantage_against_unacted_targets", "critical_hits_against_surprised_targets"} and item is False:
+            continue
         if key == "free_opening_cast" and item is False:
             continue
         if key == "source_effect_immunity_on_success" and item is False:

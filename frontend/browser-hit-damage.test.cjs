@@ -260,7 +260,7 @@ assert.equal(result.damageComponents.some((item) => item.source === "Martial Adv
 
 load("browser-monsters-2014.js");
 const roster = window.IRON_PIT_BROWSER_MONSTERS_2014;
-assert.equal(Object.keys(roster).length, 204);
+assert.equal(Object.keys(roster).length, 205);
 for (const id of [
   "giant-centipede", "giant-poisonous-snake", "giant-scorpion", "giant-wasp", "poisonous-snake", "scorpion", "wyvern",
 ]) {

@@ -16,5 +16,8 @@
       return total;
     } catch (error) { console.error("Conditional attack Advantage resolution failed.", error); throw error; }
   }
-  window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE = { sources };
+  function firstTurnTargetAdvantageSources(attacker, defender) {
+    return attacker.template.advantage_against_unacted_targets && defender.turns_started === 0 ? 1 : 0;
+  }
+  window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE = { sources, firstTurnTargetAdvantageSources };
 })();
