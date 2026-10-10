@@ -886,6 +886,10 @@ def _progression_features(template: CombatantTemplate) -> dict[str, Any]:
         row["cunning_action"] = True
     if features.sneak_attack_d6:
         row["sneak_attack_d6"] = features.sneak_attack_d6
+    if features.advantage_against_unacted_targets:
+        row["advantage_against_unacted_targets"] = True
+    if features.critical_hits_against_surprised_targets:
+        row["critical_hits_against_surprised_targets"] = True
     if features.cunning_strike_obscure_die_cost:
         row["cunning_strike_obscure_die_cost"] = features.cunning_strike_obscure_die_cost
     return row
