@@ -28,6 +28,24 @@
     return { buffs: [...buffs].sort(), debuffs: [...debuffs].sort() };
   }
 
+  function permanentPassiveStates(member, setup) {
+    try {
+      const traits = member.state.template.source_trait_names || [];
+      const result = [];
+      // Names identify printed card text only; shared visibility computes activation.
+      if (member.state.template.ruleset === "2014" && traits.includes("Steadfast")) {
+        const predicate = window.IRON_PIT_BROWSER_STATE?.hasVisibleActiveAllyWithin;
+        if (!predicate) throw new Error("Steadfast visibility predicate unavailable.");
+        result.push({ id: "Steadfast", active: predicate(member, setup, 30),
+          explanation: "Immune to Frightened while a visible, active ally is within 30 feet." });
+      }
+      return result;
+    } catch (error) {
+      console.error("Failed to project permanent passive card states", { combatantId: member?.combatant_id, error });
+      throw error;
+    }
+  }
+
   function bindBattle(battle, slotMap) {
     nodes.clear();
     const bindSide = (members, indexes, side) => members.forEach((member, i) => {
@@ -56,7 +74,7 @@
     node.dataset.concentration = effectId || "";
   }
 
-  function renderLane(node, selector, ids, kind) {
+  function renderLane(node, selector, ids, kind, permanent = []) {
     try {
       const rack = node?.querySelector(selector); if (!rack) return;
       // Reuse the same DOM badge while its engine-owned effect remains active.
@@ -71,6 +89,15 @@
         badge.setAttribute("aria-label", `${kind === "buff" ? "Buff" : "Debuff"}: ${cleanLabel(id)}`);
         return badge;
       });
+      for (const passive of permanent) {
+        const badge = existing.get(passive.id) || document.createElement("span");
+        badge.className = `buff-badge passive-badge${passive.active ? "" : " is-inactive"}`;
+        badge.dataset.effect = passive.id;
+        badge.textContent = passive.id.toUpperCase();
+        badge.title = `${passive.explanation} Currently ${passive.active ? "active" : "inactive"}.`;
+        badge.setAttribute("aria-label", badge.title);
+        badges.push(badge);
+      }
       rack.replaceChildren(...badges);
     } catch (error) {
       console.error("Failed to render combat status lane", { selector, kind, error });
@@ -78,11 +105,11 @@
     }
   }
 
-  function renderStateLanes(node, state) {
+  function renderStateLanes(node, state, permanent = []) {
     if (!node) return;
-    const lanes = classifyStatusLanes(state); renderLane(node, ".card-buffs", lanes.buffs, "buff");
+    const lanes = classifyStatusLanes(state); renderLane(node, ".card-buffs", lanes.buffs, "buff", permanent);
     renderLane(node, ".card-debuffs", lanes.debuffs, "debuff");
-    node.classList.toggle("has-buff", lanes.buffs.length > 0 || Boolean(state.concentration));
+    node.classList.toggle("has-buff", lanes.buffs.length > 0 || permanent.some((item) => item.active) || Boolean(state.concentration));
     node.classList.toggle("has-debuff", lanes.debuffs.length > 0); node.classList.toggle("has-condition", lanes.debuffs.length > 0);
   }
 
@@ -132,7 +159,7 @@
       const node = nodes.get(member.combatant_id), state = member.state; if (!node) return;
       hp(node, state.current_hp); if (state.is_dead || !state.is_alive) dead(node);
       node.classList.toggle("battle-stable", Boolean(state.is_stable && state.current_hp === 0));
-      concentration(node, state.concentration?.effect_id || null); renderStateLanes(node, state);
+      concentration(node, state.concentration?.effect_id || null); renderStateLanes(node, state, permanentPassiveStates(member, battle.setup));
     });
   }
 
