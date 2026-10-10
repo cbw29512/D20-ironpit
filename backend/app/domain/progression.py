@@ -153,6 +153,8 @@ class ProgressionCombatFeatures(BaseModel):
     heroic_warrior: bool = False
     studied_attacks: bool = False
     sneak_attack_d6: int = Field(default=0, ge=0, le=10)
+    advantage_against_unacted_targets: bool = False
+    critical_hits_against_surprised_targets: bool = False
     cunning_action: bool = False
     stationary_bonus_action_next_attack_advantage: bool = False
     cunning_strike_trip_die_cost: int = Field(default=0, ge=0, le=6)
