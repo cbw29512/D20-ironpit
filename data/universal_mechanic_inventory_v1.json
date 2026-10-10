@@ -5864,7 +5864,7 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 123,
+    "blocked_monster_count": 122,
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
