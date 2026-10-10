@@ -12,7 +12,7 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 logger = logging.getLogger(__name__)
 
 
-def test_active_ally_presence_tracks_live_fight_state():
+def test_active_ally_presence_tracks_live_fight_state(monkeypatch):
     try:
         source = next(monster for monster in load_monster_source_2014() if monster.id == "satyr")
         template = compile_combatant(adapt_basic_monster_2014(source))
@@ -26,6 +26,12 @@ def test_active_ally_presence_tracks_live_fight_state():
         assert not has_active_ally(owner, setup)
         ally.state.current_hp = 1
         assert has_active_ally(owner, setup)
+        # A present but incapacitated ally cannot satisfy an active-ally trigger.
+        monkeypatch.setattr(
+            "app.combat.ally_context.is_incapacitated",
+            lambda state: state is ally.state,
+        )
+        assert not has_active_ally(owner, setup)
     except Exception:
         logger.exception("Live active-ally predicate regression failed")
         raise
