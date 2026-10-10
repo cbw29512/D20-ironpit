@@ -157,5 +157,5 @@ def test_no_retaliation_does_not_evaluate_unrelated_legacy_grid_geometry():
     defender.state.position = GridPosition(x=0, y=0)
     assert attacker.state.position is None
     assert apply_melee_hit_retaliation(
-        attacker, defender, melee=True, dice=FixedDiceProvider([]),
+        attacker, defender, melee=True, dice=FixedDiceProvider([1]),
     ) == 0
