@@ -50,9 +50,14 @@ def apply_melee_hit_retaliation(
     try:
         if (not melee and not physical_contact) or attacker.state.is_dead or not attacker.state.is_alive:
             return 0
+        # Geometry is only required when a defender actually has a retaliation.
+        # Legacy encounters may legitimately mix scalar and grid positions.
+        sources = active_melee_hit_retaliations(defender.state)
+        if not sources:
+            return 0
         distance = combatant_distance(attacker, defender)
         total = 0
-        for action, rule in active_melee_hit_retaliations(defender.state):
+        for action, rule in sources:
             if not melee and not rule.on_contact:
                 continue
             if distance > rule.range_ft:

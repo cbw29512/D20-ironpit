@@ -30,11 +30,12 @@ def test_included_damage_family_binds_without_certifying_other_mechanics(monster
     before = monster.model_dump_json()
     assert included_weapon_trait_names_2014(monster) == {trait}
     assert trait not in unsupported_traits_2014(monster)
-    if monster_id == 'gladiator':
-        # Its final independent blocker is now source-proven complete Multiattack.
+    if monster_id in {'gladiator', 'azer'}:
+        # Both creatures have all printed combat outcomes source-bound.
         assert basic_blockers_2014(monster) == ()
         action = adapt_basic_monster_2014(monster).attack_action
-        assert [(v.attack_kind.value, len(v.slots)) for v in action.variants] == [('melee', 3), ('ranged', 2)]
+        if monster_id == 'gladiator':
+            assert [(v.attack_kind.value, len(v.slots)) for v in action.variants] == [('melee', 3), ('ranged', 2)]
     else:
         assert basic_blockers_2014(monster)
         with pytest.raises(ValueError, match='not a basic 2014 candidate'):
