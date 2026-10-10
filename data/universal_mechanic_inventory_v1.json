@@ -6340,13 +6340,6 @@
       {
         "demand_count": 1,
         "monsters": [
-          "Assassin"
-        ],
-        "printed_name": "Sneak Attack"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
           "Dryad"
         ],
         "printed_name": "Speak with Beasts and Plants"
