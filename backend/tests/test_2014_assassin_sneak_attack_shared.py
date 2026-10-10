@@ -17,3 +17,13 @@ def test_spy_existing_sneak_attack_remains_bound():
     spy = next(m for m in load_monster_source_2014() if m.id == "spy")
     assert progression_features_2014(spy).sneak_attack_d6 == 2
     assert "Sneak Attack (1/Turn)" in bound_trait_names_2014(spy)
+
+
+def test_pit_sneak_attack_assumes_finesse_for_source_melee_attacks():
+    """The source weapon's printed name cannot disable Sneak Attack eligibility."""
+    from types import SimpleNamespace
+    from app.content.monster_trait_bindings_2014 import _base_sneak_attack_eligible
+
+    assert _base_sneak_attack_eligible(SimpleNamespace(kind="melee", name="Unlisted Melee Weapon"))
+    assert _base_sneak_attack_eligible(SimpleNamespace(kind="ranged", name="Unlisted Ranged Weapon"))
+    assert not _base_sneak_attack_eligible(SimpleNamespace(kind="spell", name="Spell Attack"))
