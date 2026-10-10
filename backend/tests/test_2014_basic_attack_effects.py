@@ -47,7 +47,7 @@ def _enum_value(value):
 def test_basic_attack_effect_tranche_tracks_certified_roster_and_ruleset_isolated():
     source = load_monster_source_2014()
     ready = [monster for monster in source if not basic_blockers_2014(monster)]
-    assert len(ready) == 204
+    assert len(ready) == 205
     assert any(monster.id == "ochre-jelly" for monster in ready)
     assert any(monster.id == 'blink-dog' for monster in ready)
     expected = (
