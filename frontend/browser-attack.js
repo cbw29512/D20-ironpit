@@ -52,7 +52,9 @@
     ) || 0;
     const unsuppressedAdvantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
       + Math.max(0, recklessAdvantage - brutalSuppression) + A().sources(attack, target.state, attacker.combatant_id)
-      + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id) + (attacker.state.template.advantage_against_marked_effect_id && attacker.state.active_modifiers?.some((item) => item.source_effect_id === attacker.state.template.advantage_against_marked_effect_id && item.target_id === target.combatant_id) ? 1 : 0);
+      + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id)
+      + (attacker.state.template.advantage_against_unacted_targets ? A().firstTurnTargetAdvantageSources(attacker.state, target.state) : 0)
+      + (attacker.state.template.advantage_against_marked_effect_id && attacker.state.active_modifiers?.some((item) => item.source_effect_id === attacker.state.template.advantage_against_marked_effect_id && item.target_id === target.combatant_id) ? 1 : 0);
     const advantage = Q().suppressAttackAdvantage?.(target.state) ? 0 : unsuppressedAdvantage;
     const mode = R().attackMode(attack, distance, advantage, disadvantage, closeThreat);
     const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + M().attackRollFlat(attacker.state, attack.weaponId || attack.id) + (M().nextIncomingAttackRollFlat?.(target.state, attacker.combatant_id) || 0), mode), M().effectiveArmorClass(target.state));
@@ -70,7 +72,8 @@
     const naturalOneEndsTurn = naturalOne && extra.offTurn !== true && !d20Override.featureId && !override.featureId;
     if (naturalOneEndsTurn) S().terminateTurn(attacker.state, "iron-pit-natural-1-attack");
     const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
-    const critical = Boolean(hit && !override.featureId && (expandedCritical || (Q().autoCritical(actualTarget.state) && distance <= 5)));
+    const critical = Boolean(hit && !override.featureId && (expandedCritical || (attacker.state.template.critical_hits_against_surprised_targets && actualTarget.state.is_surprised)
+      || (Q().autoCritical(actualTarget.state) && distance <= 5)));
     if (attacker.state.template.deferred_save_effect && !window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT) {
       throw new Error("Declared deferred-save effect requires browser-deferred-save-effect.js.");
     }
