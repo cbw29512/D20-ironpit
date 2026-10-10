@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available
+from app.combat.replacement_form_offense import defer_emergency_form_for_spell
 from app.combat.replacement_forms import resolve_replacement_form_action
 from app.combat.resource_conversion import restoration_conversion, resolve_resource_conversion
 from app.combat.resources import resource_available
@@ -14,6 +15,25 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
 logger = logging.getLogger(__name__)
+
+
+def ai_may_start_replacement_form(state, action, owner_template) -> bool:
+    """AI selection gate, not a restriction on the printed source feature."""
+    try:
+        if action.ai_use_policy != "emergency_only":
+            return True
+        if state.replacement_form is not None:
+            return False
+        if (action.hp_mode == "retain_owner"
+            and action.temporary_hp_on_enter <= state.temporary_hp):
+            return False  # No gain: preserve limited form uses.
+        return 0 < state.current_hp <= owner_template.max_hp * action.ai_emergency_hp_fraction
+    except Exception as exc:
+        logger.exception(
+            "Cannot evaluate replacement-form AI eligibility for action %s.",
+            getattr(action, "id", "<unknown>"),
+        )
+        raise RuntimeError("Replacement-form AI eligibility could not be evaluated.") from exc
 
 
 def resolve_replacement_form_setup(
@@ -35,7 +55,11 @@ def resolve_replacement_form_setup(
         if not actions:
             return [], sequence
         action = actions[0]
+        if not ai_may_start_replacement_form(state, action, owner_template):
+            return [], sequence
         if state.replacement_form is not None and not action.replace_existing_form:
+            return [], sequence
+        if defer_emergency_form_for_spell(member, setup, action, turn_key):
             return [], sequence
         if not is_available(state, action.action_cost):
             return [], sequence
@@ -54,7 +78,9 @@ def resolve_replacement_form_setup(
             ))
             sequence += 1
 
-        if action.setup_spell_id:
+        # Emergency forms bypass optional setup spells; they must work even
+        # when no slot remains or an immediate defensive Action is needed.
+        if action.setup_spell_id and action.ai_use_policy != "emergency_only":
             concentration = state.concentration
             setup_active = concentration is not None and concentration.effect_id == action.setup_spell_id
             if not setup_active:

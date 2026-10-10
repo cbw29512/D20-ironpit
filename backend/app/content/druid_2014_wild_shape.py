@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Literal
 
 from app.content.druid_2014_wild_shape_forms import canonical_wild_shape_form_2014
 from app.domain.replacement_form_actions import ReplacementFormAction
@@ -24,7 +25,11 @@ _ARCHDRUID_SPELL_ACTION_IDS = [
 ]
 
 
-def wild_shape_action_2014(level: int) -> ReplacementFormAction:
+def wild_shape_action_2014(
+    level: int,
+    *,
+    ai_use_policy: Literal["tactical", "emergency_only"] = "emergency_only",
+) -> ReplacementFormAction:
     try:
         form = canonical_wild_shape_form_2014(level)
         return ReplacementFormAction(
@@ -42,7 +47,10 @@ def wild_shape_action_2014(level: int) -> ReplacementFormAction:
                 if level >= 20
                 else list(_BEAST_SPELL_ACTION_IDS) if level >= 18 else []
             ),
+            # This is an optional tactical setup, not a prerequisite for
+            # emergency-only AI transformation.
             setup_spell_id="faerie-fire",
+            ai_use_policy=ai_use_policy,
             source="D&D Basic Rules 2014: Druid — Wild Shape",
         )
     except Exception:

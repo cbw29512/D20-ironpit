@@ -30,6 +30,7 @@ from app.content.monster_innate_support_2014 import (
 )
 from app.content.monster_legendary_bindings_2014 import legendary_action_options_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
+from app.content.monster_senses_2014 import special_senses_2014
 from app.content.monster_spell_slot_resources_2014 import monster_spell_slot_resources_2014
 from app.content.monster_multiattack_2014 import multiattack_2014
 from app.content.monster_zero_hp_prevention_2014 import (
@@ -104,6 +105,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     scores = AbilityScores(**ability_values_2014(monster))
     movement = movement_modes_2014(monster)
     attacks = [_attack(monster, attack) for attack in monster.attacks]
+    blindsight_ft, truesight_ft = special_senses_2014(monster)
     resources = list(save_resources_2014(monster))
     resources.extend(healing_resources_2014(monster))
     resources.extend(innate_spell_resources_2014(monster))
@@ -139,7 +141,8 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         creature_type=monster.creature_type,
         size=CreatureSize(monster.size.lower()), ability_scores=scores,
         armor_class=monster.armor_class, max_hp=monster.max_hp, speed_ft=standard_arena_closing_speed_from_modes(movement),
-        movement_modes=movement, initiative_bonus=scores.modifier("dexterity"), attacks=attacks,
+        movement_modes=movement, initiative_bonus=scores.modifier("dexterity"),
+        blindsight_ft=blindsight_ft, truesight_ft=truesight_ft, attacks=attacks,
         primary_attack_id=attacks[0].id, attack_action=multiattack_2014(monster),
         save_actions=save_capabilities_2014(monster),
         spell_save_actions=innate_spell_save_actions_2014(monster),

@@ -10,12 +10,19 @@ logger = logging.getLogger(__name__)
 
 
 def revert_replacement_form_if_incapacitated(state: CombatantState) -> bool:
-    """Revert an active form when its declared lifecycle ends on incapacitation."""
+    """Revert a source-declared form only on its printed end event.
+
+    Death-only transformations do not revert merely for being Stunned or
+    Unconscious. Existing Wild Shape forms still revert on incapacitation.
+    """
     try:
         active = state.replacement_form
-        if active is None or not active.ends_on_incapacitated:
+        if active is None:
             return False
-        if not (state.is_dead or is_incapacitated(state)):
+        if state.is_dead:
+            if not (active.ends_on_death or active.ends_on_incapacitated):
+                return False
+        elif not (active.ends_on_incapacitated and is_incapacitated(state)):
             return False
         revert_replacement_form(state, spend_voluntary_action=False)
         return True

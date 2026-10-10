@@ -11,6 +11,104 @@
   const RES = () => window.IRON_PIT_BROWSER_RESOURCES;
   const RC = () => window.IRON_PIT_BROWSER_RESOURCE_CONVERSION;
 
+  function aiMayStartReplacementForm(state, action, owner) {
+    try {
+      if (action?.aiUsePolicy !== "emergency_only") return true;
+      if (state.replacement_form) return false;
+      if ((action.hpMode || "form_pool") === "retain_owner"
+          && Number(action.temporaryHpOnEnter || 0) <= Number(state.temporary_hp || 0)) return false;
+      const hp = Number(state.current_hp);
+      const maxHp = Number(owner.max_hp);
+      const fraction = Number(action.aiEmergencyHpFraction ?? (1 / 3));
+      return hp > 0 && maxHp > 0 && Number.isFinite(fraction)
+        && fraction > 0 && fraction < 1 && hp <= maxHp * fraction;
+    } catch (error) {
+      console.error("Replacement-form AI eligibility evaluation failed.", error);
+      throw error;
+    }
+  }
+
+
+
+  function deferEmergencyFormForSpell(member, setup, form, turnKey) {
+    try {
+      if (!setup || form?.aiUsePolicy !== "emergency_only") return false;
+      const state = member.state;
+      const owner = state.replacement_form?.original_template || state.template;
+      if (!aiMayStartReplacementForm(state, form, owner)) return false;
+      const registry = owner.ruleset === "2014"
+        ? window.IRON_PIT_BROWSER_MONSTERS_2014 : window.IRON_PIT_BROWSER_MONSTERS;
+      let buffer;
+      if ((form.hpMode || "form_pool") === "retain_owner") {
+        buffer = Math.max(0, Number(form.temporaryHpOnEnter || 0) - Number(state.temporary_hp || 0));
+      } else {
+        const source = registry?.[form.formTemplateId];
+        if (!source) throw new Error("Emergency form source unavailable.");
+        buffer = Number(source.max_hp);
+      }
+      if (!(buffer > 0)) return false;
+      if (window.IRON_PIT_BROWSER_REPLACEMENT_FORM_CONDITION_THREAT
+          ?.formMitigates(member, setup, form)) return false;
+      const threat = window.IRON_PIT_BROWSER_REPLACEMENT_FORM_THREAT;
+      if (threat?.mayBeLethal(state.current_hp, state.temporary_hp, threat.estimate(member, setup))) return false;
+      if (Number(state.current_hp) <= Number(owner.max_hp) * Number(form.aiEmergencyHpFraction ?? (1 / 3)) / 2) return false;
+      const offense = window.IRON_PIT_BROWSER_SPELL_OFFENSE?.choose(member, setup, turnKey);
+      const spell = offense?.choice?.action;
+      if (!spell) return false;
+      const sameCost = spell.actionCost === form.actionCost;
+      const losesCasting = form.actionCost === "bonus_action" && spell.actionCost === "action"
+        && !(form.retainedSpellActionIds || []).includes(spell.id);
+      return (sameCost || losesCasting)
+        && Number(offense.choice.expectedDamage || 0) >= buffer;
+    } catch (error) {
+      console.error("Emergency form/spell opportunity evaluation failed", {
+        combatant: member?.combatant_id, error,
+      });
+      throw error;
+    }
+  }
+
+  function preferFormOverSelfHealing(member, healing, turnKey, setup = null) {
+    try {
+      const state = member.state;
+      const owner = state.replacement_form?.original_template || state.template;
+      const form = (owner.replacement_form_actions || []).find((a) => a.aiUsePolicy === "emergency_only");
+      if (!form || !aiMayStartReplacementForm(state, form, owner)
+          || deferEmergencyFormForSpell(member, setup, form, turnKey)) return false;
+      if (form.actionCost !== healing.actionCost || (healing.maxTargets || 1) !== 1
+          || healing.stabilizeAtZero || healing.healingFromResourcePool
+          || healing.sharedHealingPool != null || healing.percentileSuccessMax != null
+          || (healing.removableConditions || []).length || healing.proneReactionStand) return false;
+      if (!E().available(state, form.actionCost)) return false;
+      if (!RES()?.available(state, form.resourceId, form.resourceCost || 1)
+          && !RC()?.restorationAction(state, form.resourceId, turnKey)) return false;
+      let buffer;
+      if ((form.hpMode || "form_pool") === "retain_owner") {
+        buffer = Math.max(0, Number(form.temporaryHpOnEnter || 0) - Number(state.temporary_hp || 0));
+      } else if ((form.hpMode || "form_pool") === "form_pool") {
+        const registry = owner.ruleset === "2014"
+          ? window.IRON_PIT_BROWSER_MONSTERS_2014 : window.IRON_PIT_BROWSER_MONSTERS;
+        const source = registry?.[form.formTemplateId];
+        if (!source) throw new Error("Emergency replacement form source unavailable.");
+        buffer = Number(source.max_hp);
+      } else throw new Error("Unknown form HP mode.");
+      if (!(buffer > 0)) return false;
+      const maximized = window.IRON_PIT_BROWSER_HEALING_POLICY?.healingMaximized(member, member) || false;
+      let expected = Number(healing.healingBonus || 0)
+        + Number(healing.diceCount || 0) * (maximized
+          ? Number(healing.diceSize || 6) : (Number(healing.diceSize || 6) + 1) / 2);
+      if (healing.restoreToEffectiveMax) expected = Number(owner.max_hp) - Number(state.current_hp);
+      else if (healing.grantsTemporaryHp) expected = Math.max(0, expected - Number(state.temporary_hp || 0));
+      else expected = Math.min(Math.max(0, Number(owner.max_hp) - Number(state.current_hp)), expected);
+      return buffer > expected; // Tie stays with healing; AI preference, not RAW.
+    } catch (error) {
+      console.error("Emergency form/healing comparison failed", {
+        combatant: member?.combatant_id, healing: healing?.id, error,
+      });
+      throw error;
+    }
+  }
+
   function register() {
     if (!S()) throw new Error("Replacement-form provider requires browser-main-action-selection.js.");
     S().registerProvider({
@@ -18,11 +116,15 @@
       discover: ({ member, setup, turnKey }) => {
         const owner = member.state.replacement_form?.original_template || member.state.template;
         const action = (owner.replacement_form_actions || [])[0];
+        if (!aiMayStartReplacementForm(member.state, action, owner)
+            || deferEmergencyFormForSpell(member, setup, action, turnKey)) return null;
         if (member.state.replacement_form && !action?.replaceExistingForm) return null;
         if (!action || !E().available(member.state, action.actionCost)) return null;
         const resourceReady = RES()?.available(member.state, action.resourceId, action.resourceCost || 1);
         if (!resourceReady && !RC()?.restorationAction(member.state, action.resourceId, turnKey)) return null;
-        if (action.setupSpellId && member.state.concentration?.effect_id !== action.setupSpellId) {
+        // An emergency form cannot be delayed or blocked by an optional setup spell.
+        if (action.setupSpellId && action.aiUsePolicy !== "emergency_only"
+            && member.state.concentration?.effect_id !== action.setupSpellId) {
           const choice = SP()?.chooseById(member, setup, turnKey, action.setupSpellId) || null;
           return choice ? { payload: { kind: "setup-spell", choice } } : null;
         }
@@ -78,5 +180,5 @@
   }
 
   register();
-  window.IRON_PIT_BROWSER_REPLACEMENT_FORM_PROVIDER = { register };
+  window.IRON_PIT_BROWSER_REPLACEMENT_FORM_PROVIDER = { register, aiMayStartReplacementForm, deferEmergencyFormForSpell, preferFormOverSelfHealing };
 })();

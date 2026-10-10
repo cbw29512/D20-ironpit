@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Literal
 
 from app.content.druid_2024_endgame import BEAST_SPELL_ACTION_IDS
 from app.domain.replacement_form_actions import ReplacementFormAction
@@ -8,7 +9,11 @@ from app.domain.replacement_form_actions import ReplacementFormAction
 logger = logging.getLogger(__name__)
 
 
-def wild_shape_actions(level: int) -> list[ReplacementFormAction]:
+def wild_shape_actions(
+    level: int,
+    *,
+    ai_use_policy: Literal["tactical", "emergency_only"] = "emergency_only",
+) -> list[ReplacementFormAction]:
     try:
         if level < 2:
             return []
@@ -28,6 +33,7 @@ def wild_shape_actions(level: int) -> list[ReplacementFormAction]:
             replace_existing_form=True,
             retain_spellcasting=level >= 18,
             retained_spell_action_ids=(list(BEAST_SPELL_ACTION_IDS) if level >= 18 else []),
+            ai_use_policy=ai_use_policy,
             source="D&D Beyond Basic Rules 2024: Druid — Wild Shape",
         )]
     except Exception:

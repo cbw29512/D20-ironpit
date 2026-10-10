@@ -19,8 +19,13 @@ class ReplacementFormAction(BaseModel):
     temporary_hp_on_enter: int = Field(default=0, ge=0)
     retain_creature_type: bool = False
     ends_on_incapacitated: bool = False
+    ends_on_death: bool = False
     replace_existing_form: bool = False
     retain_spellcasting: bool = False
     retained_spell_action_ids: list[str] = Field(default_factory=list)
     setup_spell_id: str | None = None
+    # Universal AI-only availability gate. RAW ability and player source
+    # permission remain intact even when a caster's AI defers using it.
+    ai_use_policy: Literal["tactical", "emergency_only"] = "tactical"
+    ai_emergency_hp_fraction: float = Field(default=1 / 3, gt=0, lt=1)
     source: str

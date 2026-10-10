@@ -40,6 +40,12 @@ window.IRON_PIT_BROWSER_MONSTERS = { "srd-wolf": { id: "srd-wolf", name: "Wolf",
 load("browser-resource-conversion.js");
 load("browser-main-action-profiles.js");
 load("browser-main-action-selection.js");
+window.IRON_PIT_BROWSER_STATE = { distance: (a, b) => Math.abs(a.position_ft - b.position_ft) };
+window.IRON_PIT_BROWSER_FORMATION = {
+  weaponMeanDamage: (a) => (a.diceCount || 0) * ((a.diceSize || 6) + 1) / 2 + (a.damageBonus || 0),
+};
+window.IRON_PIT_BROWSER_CONDITION_RULES = { incapacitated: () => false };
+load("browser-replacement-form-threat.js");
 load("browser-replacement-form-provider.js");
 
 const S = window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION;
@@ -178,3 +184,168 @@ console.log("Browser replacement-form Main Action provider parity passed.");
     ctx5.turnKey,
   );
 }
+
+{
+  const gate = window.IRON_PIT_BROWSER_REPLACEMENT_FORM_PROVIDER.aiMayStartReplacementForm;
+  const source = { aiUsePolicy: "emergency_only", aiEmergencyHpFraction: 1 / 3 };
+  const owner = { max_hp: 60 };
+  const st = (current_hp, replacement_form = null) => ({ current_hp, replacement_form });
+  assert.equal(gate(st(60), source, owner), false, "Caster at full HP keeps spells");
+  assert.equal(gate(st(21), source, owner), false);
+  assert.equal(gate(st(20), source, owner), true, "Emergency buffer unlocked at one-third");
+  assert.equal(gate(st(20, { source_id: "wild-shape" }), source, owner), false, "No repeated caster form cycling");
+  assert.equal(gate(st(0), source, owner), false, "No Wild Shape when dying");
+  assert.equal(gate(st(60), { aiUsePolicy: "tactical" }, owner), true, "Moon/frontline role may shift");
+  assert.equal(gate(st(60), { aiUsePolicy: "emergency_only" }, { max_hp: 0 }), false);
+}
+console.log("Browser Druid emergency source policy checks passed.");
+{
+  // Regression: a severely injured 2014 caster must transform immediately
+  // rather than requesting Faerie Fire first or needing a spell slot.
+  const emergency = {
+    combatant_id: "emergency-druid", side: "heroes",
+    state: {
+      action_available: true, current_hp: 6, replacement_form: null,
+      concentration: null, resources: { "wild-shape": 1 },
+      template: {
+        id: "emergency-2014-druid", name: "Emergency Druid",
+        kind: "character", ruleset: "2014", max_hp: 18,
+        replacement_form_actions: [{
+          id: "wild-shape", name: "Wild Shape", actionCost: "action",
+          formTemplateId: "2014-wolf", resourceId: "wild-shape",
+          resourceCost: 1, setupSpellId: "faerie-fire",
+          aiUsePolicy: "emergency_only", aiEmergencyHpFraction: 1 / 3,
+        }],
+      },
+    },
+  };
+  const emergencyCtx = {
+    sequence: 22, round: 2, turnKey: "2:emergency-druid",
+    member: emergency, setup: { heroes: [emergency], monsters: [target] },
+  };
+  const candidate = S.discoverCandidates("normalPreMove", emergencyCtx);
+  assert.equal(candidate.length, 1, "Low-HP caster may select a legal form");
+  assert.equal(candidate[0].payload.kind, "transform", "Skip optional Faerie Fire");
+}
+console.log("Emergency form setup bypass regression passed.");
+{
+  const member = {
+    combatant_id: "form-value", side: "heroes",
+    state: {
+      action_available: true, bonus_action_available: true, current_hp: 8,
+      temporary_hp: 0, replacement_form: null, resources: { "wild-shape": 1 },
+      template: {
+        id: "form-value", name: "Form Value", ruleset: "2024", max_hp: 30,
+        replacement_form_actions: [{
+          id: "wild-shape", aiUsePolicy: "emergency_only",
+          aiEmergencyHpFraction: 1 / 3, actionCost: "bonus_action",
+          resourceId: "wild-shape", resourceCost: 1, hpMode: "retain_owner",
+          temporaryHpOnEnter: 8,
+        }],
+      },
+    },
+  };
+  const gate = window.IRON_PIT_BROWSER_REPLACEMENT_FORM_PROVIDER;
+  const heal = { id: "healing", actionCost: "bonus_action", maxTargets: 1,
+    diceCount: 1, diceSize: 4, healingBonus: 0 };
+  assert.equal(gate.preferFormOverSelfHealing(member, heal, "1:form-value"), true);
+  assert.equal(gate.preferFormOverSelfHealing(member,
+    { ...heal, diceCount: 5, diceSize: 8 }, "1:form-value"), false);
+  assert.equal(gate.preferFormOverSelfHealing(member,
+    { ...heal, actionCost: "action" }, "1:form-value"), false);
+  member.state.temporary_hp = 8;
+  assert.equal(gate.aiMayStartReplacementForm(member.state,
+    member.state.template.replacement_form_actions[0], member.state.template), false);
+  assert.equal(gate.preferFormOverSelfHealing(member, heal, "1:form-value"), false);
+}
+console.log("Emergency form-versus-healing value parity passed.");
+{
+  const member = {
+    combatant_id: "caster-opportunity", side: "heroes",
+    state: {
+      current_hp: 8, temporary_hp: 0, action_available: true,
+      bonus_action_available: true, replacement_form: null,
+      resources: { "wild-shape": 2 },
+      template: {
+        id: "caster-opportunity", name: "Caster", ruleset: "2024", max_hp: 30,
+        replacement_form_actions: [{
+          id: "wild-shape", name: "Wild Shape", aiUsePolicy: "emergency_only",
+          aiEmergencyHpFraction: 1 / 3, actionCost: "bonus_action",
+          formTemplateId: "srd-wolf", resourceId: "wild-shape",
+          hpMode: "retain_owner", temporaryHpOnEnter: 8,
+        }],
+      },
+    },
+  };
+  const setup = { heroes: [member], monsters: [target] };
+  const form = member.state.template.replacement_form_actions[0];
+  const chooser = window.IRON_PIT_BROWSER_REPLACEMENT_FORM_PROVIDER;
+  const spell = { action: { id: "offense", actionCost: "action" }, expectedDamage: 20 };
+  window.IRON_PIT_BROWSER_SPELL_OFFENSE = { choose: () => ({ kind: "save", choice: spell }) };
+  assert.equal(chooser.deferEmergencyFormForSpell(member, setup, form, "1:caster-opportunity"), true);
+  assert.equal(chooser.preferFormOverSelfHealing(member, {
+    id: "heal", actionCost: "bonus_action", diceCount: 1, diceSize: 4,
+  }, "1:caster-opportunity", setup), false, "No self-heal deferral when form loses to offense");
+  let picks = S.discoverCandidates("normalPreMove", {
+    sequence: 90, round: 1, member, setup, turnKey: "1:caster-opportunity",
+  });
+  assert.equal(picks.length, 0, "The emergency form must not starve better legal spell offense");
+
+  member.state.current_hp = 2;
+  assert.equal(chooser.deferEmergencyFormForSpell(member, setup, form, "1:caster-opportunity"), false);
+  picks = S.discoverCandidates("normalPreMove", {
+    sequence: 91, round: 1, member, setup, turnKey: "1:caster-opportunity",
+  });
+  assert.equal(picks.length, 1, "At critical HP the form gets the survival priority");
+  member.state.current_hp = 8;
+  form.retainedSpellActionIds = ["offense"];
+  assert.equal(chooser.deferEmergencyFormForSpell(member, setup, form, "1:caster-opportunity"), false,
+    "No opportunity loss when the spell survives transformation");
+  spell.action.actionCost = "bonus_action";
+  form.retainedSpellActionIds = [];
+  assert.equal(chooser.deferEmergencyFormForSpell(member, setup, form, "1:caster-opportunity"), true,
+    "Same bonus-action slot conflicts regardless of retained casting");
+  delete window.IRON_PIT_BROWSER_SPELL_OFFENSE;
+}
+console.log("Emergency form versus spell offense opportunity tests passed.");
+{
+  const caster = {
+    combatant_id: "threat-caster", side: "heroes", position_ft: 0,
+    state: {
+      action_available: true, bonus_action_available: true, current_hp: 8,
+      temporary_hp: 0, replacement_form: null, resources: { "wild-shape": 1 },
+      template: {
+        id: "threat-caster", ruleset: "2024", max_hp: 30,
+        replacement_form_actions: [{
+          id: "wild-shape", actionCost: "bonus_action", hpMode: "retain_owner",
+          aiUsePolicy: "emergency_only", aiEmergencyHpFraction: 1 / 3,
+          temporaryHpOnEnter: 8, formTemplateId: "srd-wolf",
+          resourceId: "wild-shape", resourceCost: 1,
+        }],
+      },
+    },
+  };
+  const attack = { id: "claw", kind: "melee", reach: 5,
+    diceCount: 4, diceSize: 6, damageBonus: 0 };
+  const attacker = {
+    combatant_id: "threat-enemy", side: "monsters", position_ft: 5,
+    state: {
+      is_alive: true, is_dead: false, current_hp: 20, resources: {},
+      template: { speed_ft: 0, attacks: [attack], saving_throw_actions: [] },
+    },
+  };
+  const setup = { heroes: [caster], monsters: [attacker] };
+  const form = caster.state.template.replacement_form_actions[0];
+  window.IRON_PIT_BROWSER_SPELL_OFFENSE = {
+    choose: () => ({ kind: "attack",
+      choice: { action: { id: "big-spell", actionCost: "action" }, expectedDamage: 40 } }),
+  };
+  const policy = window.IRON_PIT_BROWSER_REPLACEMENT_FORM_PROVIDER;
+  assert.equal(policy.deferEmergencyFormForSpell(caster, setup, form, "1:threat-caster"), false,
+    "A plausible lethal enemy Action overrides spell offense");
+  attacker.state.is_dead = true;
+  assert.equal(policy.deferEmergencyFormForSpell(caster, setup, form, "1:threat-caster"), true,
+    "Without immediate danger, stronger legal spell offense remains preferred");
+  delete window.IRON_PIT_BROWSER_SPELL_OFFENSE;
+}
+console.log("Lethal incoming pressure changes form choice consistently.");
