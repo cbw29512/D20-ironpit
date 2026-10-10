@@ -13,6 +13,8 @@ def condition_is_immune(
     *,
     source_is_magical: bool = False,
     ground_contact: bool = False,
+    actor=None,
+    setup=None,
 ) -> bool:
     """Return static and runtime condition immunities, including source-typed wards.
 
@@ -21,6 +23,10 @@ def condition_is_immune(
     that fact. This keeps magical-only prevention distinct from blanket
     condition immunity and lets nonmagical sources continue to function.
     """
+    if actor is not None and setup is not None and actor.state is state:
+        from app.combat.steadfast_condition_immunity import steadfast_frightened_immunity
+        if steadfast_frightened_immunity(actor, setup, condition_id):
+            return True
     if condition_id in state.template.condition_immunities:
         return True
     if flying_counters_ground_contact(state, ground_contact=ground_contact):

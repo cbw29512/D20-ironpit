@@ -162,6 +162,23 @@
     return choices.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best);
   }
 
+  function hasVisibleActiveAllyWithin(member, setup, rangeFt) {
+    try {
+      if (!Number.isFinite(rangeFt) || rangeFt < 0) throw new Error("Ally range must be nonnegative.");
+      const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
+      const sight = window.IRON_PIT_BROWSER_CONDITION_RULES;
+      if (!sight?.canSee) throw new Error("Shared visibility resolver unavailable.");
+      return allies.some((ally) => ally.combatant_id !== member.combatant_id
+        && ally.state.is_alive && !ally.state.is_dead && ally.state.current_hp > 0
+        && !sight.incapacitated(ally.state)
+        && distance(member, ally) <= rangeFt
+        && sight.canSee(member.state, ally.state, distance(member, ally)));
+    } catch (error) {
+      console.error("Failed browser visible ally range check", { combatantId: member?.combatant_id, rangeFt, error });
+      throw error;
+    }
+  }
+
   function hasActiveAlly(member, setup) {
     try {
       const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
@@ -192,7 +209,7 @@
   const sizeAtMost = (member, maxSize) => Boolean(maxSize) && SIZE_RANK[member.state.template.size] <= SIZE_RANK[maxSize];
   window.IRON_PIT_BROWSER_STATE = {
     active, beginTurn, buildState, canProne: (target, maxSize) => sizeAtMost(target, maxSize), distance, downedCharacter, effectiveMaxHp, effectiveMovementModes, grantTemporaryHp, hasActiveAlly,
-    hasAdjacentActiveAlly, moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost,
+    hasAdjacentActiveAlly, hasVisibleActiveAllyWithin, moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost,
     targetPriority, terminateTurn,
   };
 })();
