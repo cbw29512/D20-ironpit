@@ -6051,13 +6051,6 @@
       {
         "demand_count": 1,
         "monsters": [
-          "Assassin"
-        ],
-        "printed_name": "Evasion"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
           "Mimic"
         ],
         "printed_name": "False Appearance (Object Form Only)"
@@ -6320,13 +6313,6 @@
           "Couatl"
         ],
         "printed_name": "Shielded Mind"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Assassin"
-        ],
-        "printed_name": "Sneak Attack"
       },
       {
         "demand_count": 1,

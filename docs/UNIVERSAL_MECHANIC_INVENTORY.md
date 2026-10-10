@@ -454,7 +454,6 @@ Blocked monsters: **123**. These are grouped by printed ability name so the rost
 | Elemental Demise | Djinni, Efreeti | 2 |
 | Ephemeral | Will-o'-Wisp | 1 |
 | Ethereal Sight | Ghost | 1 |
-| Evasion | Assassin | 1 |
 | False Appearance (Object Form Only) | Mimic | 1 |
 | Fear Aura | Pit Fiend | 1 |
 | Fire Aura | Balor | 1 |
@@ -488,7 +487,6 @@ Blocked monsters: **123**. These are grouped by printed ability name so the rost
 | Sense Magic | Chuul | 1 |
 | Shapechanger | Doppelganger, Imp, Mimic, Quasit, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf | 11 |
 | Shielded Mind | Couatl | 1 |
-| Sneak Attack | Assassin | 1 |
 | Speak with Beasts and Plants | Dryad | 1 |
 | Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
