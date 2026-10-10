@@ -23,6 +23,12 @@ def test_shared_evasion_passive_damage_cases(monkeypatch):
     assert evasion_damage(state, "dexterity", False, "half", 30) == 15
     assert evasion_damage(state, "constitution", True, "half", 30) == 15
     assert evasion_damage(state, "dexterity", True, "none", 30) == 30
+    # A combatant without the passive buff uses the ordinary save/damage rule.
+    # This is the same save event, not a special alternate Evasion resolver.
+    features.evasion = False
+    assert evasion_damage(state, "dexterity", True, "half", 30) == 15
+    assert evasion_damage(state, "dexterity", False, "half", 30) == 30
+    features.evasion = True
     monkeypatch.setattr("app.combat.rogue_defenses.is_incapacitated", lambda _: True)
     assert evasion_damage(state, "dexterity", True, "half", 30) == 15
     assert evasion_damage(state, "dexterity", False, "half", 30) == 30
