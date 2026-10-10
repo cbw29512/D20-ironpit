@@ -41,7 +41,6 @@ _SNEAK_ATTACK_D6 = re.compile(
     r"Sneak Attack(?: \(1/Turn\))?.*?extra\s+\d+\s+\((\d+)d6\)",
     re.IGNORECASE | re.DOTALL,
 )
-
 def supports_reckless_2014(monster: SourceMonster2014) -> bool:
     """Return whether printed Reckless can use the shared 2014 melee-Strength resolver."""
     try:
@@ -55,10 +54,8 @@ def supports_reckless_2014(monster: SourceMonster2014) -> bool:
 def supports_cunning_action_2014(monster: SourceMonster2014) -> bool:
     """Bind printed Cunning Action to the shared bonus-action Dash decision path."""
     return _CUNNING_ACTION in monster.trait_names
-
 def _base_sneak_attack_eligible(attack: SourceAttack2014) -> bool:
     return attack.kind in {"melee", "ranged"}
-
 def sneak_attack_d6_2014(monster: SourceMonster2014) -> int:
     """Parse printed Sneak Attack dice from pinned SRD trait text."""
     try:
@@ -77,17 +74,17 @@ def sneak_attack_d6_2014(monster: SourceMonster2014) -> int:
     except Exception:
         logger.exception("Failed to parse 2014 Sneak Attack for %s.", monster.name)
         raise
-
 def sneak_attack_eligible_2014(monster: SourceMonster2014, attack: SourceAttack2014) -> bool:
     """Mark only attacks that satisfy the shared ranged-or-Dexterity Sneak Attack profile."""
     return sneak_attack_d6_2014(monster) > 0 and _base_sneak_attack_eligible(attack)
-
 def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFeatures:
     """Translate printed 2014 traits into reusable progression feature fields."""
     try:
         return ProgressionCombatFeatures(
             cunning_action=supports_cunning_action_2014(monster),
             sneak_attack_d6=sneak_attack_d6_2014(monster),
+            advantage_against_unacted_targets="Assassinate" in monster.trait_names,
+            critical_hits_against_surprised_targets="Assassinate" in monster.trait_names,
             evasion="Evasion" in monster.trait_names,
             evasion_disabled_while_incapacitated="Evasion" in monster.trait_names,
             saving_throw_advantage_grants=saving_throw_advantage_grants_2014(monster),
@@ -96,7 +93,6 @@ def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFe
     except Exception:
         logger.exception("Failed to compile 2014 progression features for %s.", monster.name)
         raise
-
 def bonus_attack_grants_2014(monster: SourceMonster2014) -> list[BonusAttackGrant]:
     """Bind printed kill-triggered Bonus Action attacks to the shared grant primitive."""
     try:
@@ -116,7 +112,6 @@ def bonus_attack_grants_2014(monster: SourceMonster2014) -> list[BonusAttackGran
     except Exception:
         logger.exception("Failed to bind 2014 Rampage for %s.", monster.name)
         raise
-
 def environment_context_reactions_2014(
     monster: SourceMonster2014,
 ) -> list[EnvironmentContextReaction]:
@@ -131,7 +126,6 @@ def environment_context_reactions_2014(
             monster.name,
         )
         raise
-
 def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
     """Return source traits that are fully bound to existing universal primitives."""
     try:
@@ -156,6 +150,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(martial_advantage.source_name)
         if sneak_attack_d6_2014(monster) > 0:
             bound.update(_SNEAK_ATTACK_NAMES.intersection(monster.trait_names))
+        if "Assassinate" in monster.trait_names:
+            bound.add("Assassinate")
         if "Evasion" in monster.trait_names and progression_features_2014(monster).evasion:
             bound.add("Evasion")
         bound.update(bound_passive_trait_names_2014(monster))
