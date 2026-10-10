@@ -92,7 +92,7 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 
 - [ ] **SOURCE REVIEW / BIND / TEST / CERTIFY / MERGE** — not yet individually verified by this worksheet.
 - **Recorded blockers:** `source:trait`.
-- **Unbound printed traits:** Assassinate; Evasion; Sneak Attack
+- **Unbound printed traits:** Assassinate
 - **Fix notes:** Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
 - **Known directed work:** Assassinate/Sneak Attack/Evasion: reuse rogue pregen combat primitives where semantics match.
 
