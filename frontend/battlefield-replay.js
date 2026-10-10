@@ -57,14 +57,25 @@
   }
 
   function renderLane(node, selector, ids, kind) {
-    const rack = node?.querySelector(selector); if (!rack) return;
-    const badges = ids.map((id) => {
-      const badge = document.createElement("span");
-      badge.className = kind === "buff" ? `buff-badge buff-${id}` : `debuff-badge condition-badge condition-${id}`;
-      badge.dataset.effect = id; badge.textContent = kind === "debuff" ? conditionLabel(id) : cleanLabel(id);
-      badge.setAttribute("aria-label", `${kind === "buff" ? "Buff" : "Debuff"}: ${cleanLabel(id)}`); return badge;
-    });
-    rack.replaceChildren(...badges);
+    try {
+      const rack = node?.querySelector(selector); if (!rack) return;
+      // Reuse the same DOM badge while its engine-owned effect remains active.
+      // Newly applied statuses animate once; expired statuses leave immediately.
+      const existing = new Map([...rack.children].map((badge) => [badge.dataset.effect, badge]));
+      const badges = ids.map((id) => {
+        const old = existing.get(id);
+        if (old) return old;
+        const badge = document.createElement("span");
+        badge.className = kind === "buff" ? `buff-badge buff-${id} status-enter` : `debuff-badge condition-badge condition-${id} status-enter`;
+        badge.dataset.effect = id; badge.textContent = kind === "debuff" ? conditionLabel(id) : cleanLabel(id);
+        badge.setAttribute("aria-label", `${kind === "buff" ? "Buff" : "Debuff"}: ${cleanLabel(id)}`);
+        return badge;
+      });
+      rack.replaceChildren(...badges);
+    } catch (error) {
+      console.error("Failed to render combat status lane", { selector, kind, error });
+      throw error;
+    }
   }
 
   function renderStateLanes(node, state) {
