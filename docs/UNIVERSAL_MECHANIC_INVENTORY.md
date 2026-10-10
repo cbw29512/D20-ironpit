@@ -454,7 +454,6 @@ Blocked monsters: **126**. These are grouped by printed ability name so the rost
 | Elemental Demise | Djinni, Efreeti | 2 |
 | Ephemeral | Will-o'-Wisp | 1 |
 | Ethereal Sight | Ghost | 1 |
-| Evasion | Assassin | 1 |
 | False Appearance (Object Form Only) | Mimic | 1 |
 | Faultless Tracker | Invisible Stalker | 1 |
 | Fear Aura | Pit Fiend | 1 |
