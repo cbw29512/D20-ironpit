@@ -36,6 +36,24 @@ def has_active_ally(actor: EncounterCombatant, setup: EncounterSetup) -> bool:
         raise RuntimeError("Active ally presence could not be evaluated.") from exc
 
 
+
+def has_visible_active_ally_within(
+    actor: EncounterCombatant,
+    setup: EncounterSetup,
+    range_ft: int,
+) -> bool:
+    """Check the generic visible/live ally condition for range-dependent buffs."""
+    from app.combat.condition_rules import can_see
+
+    if range_ft < 0:
+        raise ValueError("Ally visibility range cannot be negative.")
+    return any(
+        combatant_distance(actor, ally) <= range_ft
+        and can_see(actor.state, ally.state, combatant_distance(actor, ally))
+        for ally in active_allies(actor, setup)
+    )
+
+
 def has_adjacent_active_ally(
     attacker: EncounterCombatant,
     target: EncounterCombatant,
