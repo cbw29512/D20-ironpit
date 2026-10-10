@@ -147,3 +147,15 @@ def test_distinct_passive_and_active_retaliation_sources_both_trigger_once():
         affected_states=[opponent.state, defender.state],
     ) == 4
     assert opponent.state.current_hp == 84
+
+def test_no_retaliation_does_not_evaluate_unrelated_legacy_grid_geometry():
+    """Ordinary hits must not fail on geometry only required by retaliation."""
+    from app.domain.grid import GridPosition
+
+    attacker = _member(build_commoner(), "attacker", "heroes", 5)
+    defender = _member(build_commoner(), "defender", "monsters", 0)
+    defender.state.position = GridPosition(x=0, y=0)
+    assert attacker.state.position is None
+    assert apply_melee_hit_retaliation(
+        attacker, defender, melee=True, dice=FixedDiceProvider([]),
+    ) == 0
