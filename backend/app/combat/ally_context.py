@@ -27,6 +27,33 @@ def active_allies(attacker: EncounterCombatant, setup: EncounterSetup) -> list[E
         raise RuntimeError("Active allies could not be evaluated.") from exc
 
 
+def has_active_ally(actor: EncounterCombatant, setup: EncounterSetup) -> bool:
+    """Reuse encounter-side active ally eligibility without distance or source-name dispatch."""
+    try:
+        return bool(active_allies(actor, setup))
+    except Exception as exc:
+        logger.exception("Active ally presence lookup failed for %s.", actor.combatant_id)
+        raise RuntimeError("Active ally presence could not be evaluated.") from exc
+
+
+
+def has_visible_active_ally_within(
+    actor: EncounterCombatant,
+    setup: EncounterSetup,
+    range_ft: int,
+) -> bool:
+    """Check the generic visible/live ally condition for range-dependent buffs."""
+    from app.combat.condition_rules import can_see
+
+    if range_ft < 0:
+        raise ValueError("Ally visibility range cannot be negative.")
+    return any(
+        combatant_distance(actor, ally) <= range_ft
+        and can_see(actor.state, ally.state, combatant_distance(actor, ally))
+        for ally in active_allies(actor, setup)
+    )
+
+
 def has_adjacent_active_ally(
     attacker: EncounterCombatant,
     target: EncounterCombatant,
