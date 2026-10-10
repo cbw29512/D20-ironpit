@@ -1158,6 +1158,67 @@ Source: [2014 Basic Rules Werebear](https://www.dndbeyond.com/sources/dnd/basic-
 - **Damage defense and physical source:** Immune to Bludgeoning/Piercing/Slashing **from nonmagical attacks that are not silvered**; do not declare blanket immunity to magical or silvered weapons. Passive Perception17 and sense changes source-parameterized; does not acquire a new bear creature stat block. **Planning SOURCE VERIFIED / generic attack-source-qualified immunity; Implementation NOT CERTIFIED**.
 - **Shared architecture:** Deva/Mimic source-dependent form overlays, attack-action alternatives, source-owned persistent curse (other lycanthropes), qualified damage immunity, temporary state reverting on death/reset. Note source text says statistics except **size and AC** remain the same although speed line separately lists bear/hybrid speeds: preserve explicit listed form speeds, do not infer new stats. **Next historical roster: Wereboar (#120).** No runtime/certification claimed.
 
+
+### 2014 Wereboar — complete printed ability inventory, batch review 2026-10-10
+
+Source: [2014 Basic Rules W](https://www.dndbeyond.com/sources/dnd/basic-rules-2014/monster-stat-blocks-w). Historical roster #120. All abilities below are source planning, **not certified code**.
+
+- **Shapechanger:** Action between true humanoid, boar and hybrid; AC10 humanoid/11 boar-hybrid, printed boar form speed40 versus usual30. Preserve source immutable form overlay and death-revert; don't replace with generic boar stat block.
+- **Charge (boar/hybrid):** after moving **at least 15ft straight toward target** and hitting **Tusks** in same turn, deal extra **2d6 Slashing**, then if target a creature DC13 Strength save or **Prone**. Generic movement-history predicate -> on-hit extra typed damage -> save/condition; no automatic charge from proximity or other attacks.
+- **Relentless:** after short/long rest recovery; when **14 or fewer damage** would reduce HP to0, set HP1 instead. Universal thresholded lethal-damage interception, limited recovery state; no repeat every turn.
+- **Multiattack (humanoid/hybrid only):** two attacks, **no more than one Tusks**; Maul +5 **2d6+3 Bludgeoning** humanoid/hybrid, Tusks +5 **2d6+3 Slashing** boar/hybrid; Tusks humanoid hit -> **DC12 Constitution** save or wereboar lycanthropy curse. Boar has single Tusks Action, not two-attack Multiattack. Universal source-form action eligibility and curse-on-hit predicate.
+- **Defenses:** conditional immunity nonmagical nonsilvered B/P/S, shared qualification; no invented silver vulnerability. Planning SOURCE VERIFIED, runtime certification PENDING.
+
+**Reusable architecture:** immutable source + mutable per-match form/resources/effects; existing attack/save/condition/event semantics; Python/browser/Hero/generated parity and exact-head CI required before any code certification.
+
+### 2014 Wererat — complete printed ability inventory, batch review 2026-10-10
+
+Source: [2014 Basic Rules W](https://www.dndbeyond.com/sources/dnd/basic-rules-2014/monster-stat-blocks-w). Historical roster #121. All abilities below are source planning, **not certified code**.
+
+- **Shapechanger:** Action humanoid, giant-rat, hybrid; same printed stats except **size**, equipment untransformed, reverts on death. AC12, HP33; source giant-rat form size Small, and **darkvision60 only in rat form**. Do not apply 2024 species traits.
+- **Keen Smell:** source-qualified Perception Advantage only when smell relevant.
+- **Multiattack (humanoid/hybrid only):** two attacks, **at most one Bite**. Bite rat/hybrid +4 **1d4+2 Piercing**; humanoid target **DC11 Constitution** save or wererat lycanthropy curse. Shortsword humanoid/hybrid +4 **1d6+2 Piercing**. Hand crossbow humanoid/hybrid +4 range30/120 **1d6+2 Piercing**. Rat-only one Bite Action; source-form action legality and ranged legality reuse.
+- **Defenses:** nonmagical nonsilvered B/P/S Immunity, source qualified. Planning SOURCE VERIFIED; implementation/certification PENDING.
+
+**Reusable architecture:** immutable source + mutable per-match form/resources/effects; existing attack/save/condition/event semantics; Python/browser/Hero/generated parity and exact-head CI required before any code certification.
+
+### 2014 Weretiger — complete printed ability inventory, batch review 2026-10-10
+
+Source: [2014 Basic Rules W](https://www.dndbeyond.com/sources/dnd/basic-rules-2014/monster-stat-blocks-w). Historical roster #122. All abilities below are source planning, **not certified code**.
+
+- **Shapechanger:** Action between humanoid, tiger and hybrid with same printed stats except **size**; tiger form has speed40 instead of usual30, AC12/HP120 retained; source form overlay, death-revert.
+- **Keen Hearing and Smell:** Advantage only on relevant Wisdom Perception checks.
+- **Pounce (tiger/hybrid):** move **15ft straight toward a creature**, then **Claw hit same turn** -> target **DC14 Strength** save or **Prone**; **if target Prone**, may use **Bonus Action Bite**. Reuse movement-history -> on-hit save -> condition -> conditional bonus attack, never free Bite regardless of save, and respect bonus-action economy.
+- **Multiattack (humanoid/hybrid only):** humanoid two Scimitars or two Longbows; hybrid may use humanoid sequence **or two Claws**; tiger form does **not** gain printed Multiattack. Bite tiger/hybrid +5 **1d10+3 Piercing**, humanoid target DC13 Constitution or weretiger curse; Claw +5 **1d8+3 Slashing**; Scimitar +5 **1d6+3 Slashing**; Longbow +4 range150/600 **1d8+2 Piercing**.
+- **Defenses:** qualified nonmagical nonsilvered B/P/S Immunity. Planning SOURCE VERIFIED; implementation/certification PENDING.
+
+**Reusable architecture:** immutable source + mutable per-match form/resources/effects; existing attack/save/condition/event semantics; Python/browser/Hero/generated parity and exact-head CI required before any code certification.
+
+### 2014 Werewolf — complete printed ability inventory, batch review 2026-10-10
+
+Source: [2014 Basic Rules W](https://www.dndbeyond.com/sources/dnd/basic-rules-2014/monster-stat-blocks-w). Historical roster #123. All abilities below are source planning, **not certified code**.
+
+- **Shapechanger:** Action between humanoid, wolf and hybrid; source AC11 humanoid vs AC12 wolf/hybrid, wolf speed40 vs normal30, HP58 unchanged; form-eligible actions and death-revert.
+- **Keen Hearing and Smell:** Advantage on smell/hearing Perception only.
+- **Multiattack (humanoid/hybrid only):** humanoid **two Spear** attacks; hybrid **one Bite plus one Claws** (not alternatives or two Bites). Wolf has single Bite Action. Bite wolf/hybrid +4 **1d8+2 Piercing**, humanoid target **DC12 Constitution** or lycanthropy curse. Claws hybrid +4 **2d4+2 Slashing**; Spear humanoid +4 reach5 **1d6+2 Piercing**, 2-handed melee **1d8+2**, or thrown range20/60 **1d6+2**.
+- **Defenses:** immunity nonmagical nonsilvered B/P/S; no invented silver weakness. Planning SOURCE VERIFIED; runtime implementation/certification PENDING.
+
+**Reusable architecture:** immutable source + mutable per-match form/resources/effects; existing attack/save/condition/event semantics; Python/browser/Hero/generated parity and exact-head CI required before any code certification.
+
+### 2014 Will-o'-Wisp — complete printed ability inventory, batch review 2026-10-10
+
+Source: [2014 Basic Rules W](https://www.dndbeyond.com/sources/dnd/basic-rules-2014/monster-stat-blocks-w). Historical roster #124. All abilities below are source planning, **not certified code**.
+
+- **Consume Life:** **Bonus Action** target visible **living creature at exactly 0 HP** within5ft; **DC10 Constitution** save or dies; only **if that target dies** Wisp regains **3d6 HP** (printed average10), capped by max HP. Reuse 0HP state and living-target predicate, save, death event and conditional heal; no regular attack, no heal on successful save.
+- **Incorporeal Movement:** can traverse creatures/objects as difficult terrain, takes **1d10 Force** if it **ends its turn inside an object**. Source-owned geometry/occupied-object collision, not universal immunity to OA or environmental damage; follow locked Pit's existing incorporeal movement policy without inventing travel/escape shortcuts.
+- **Variable Illumination:** emits bright-light radius **5–20ft**, dim light same additional distance, Bonus Action adjusts light radius. Shared light/visibility emitter with configurable source radius.
+- **Shock:** Action melee **spell attack +4**, reach5, **2d8 Lightning**, no ability-specific damage resolver.
+- **Invisibility:** Action, Wisp and its light Invisible until an attack or **Consume Life**, or until Concentration ends (spell-like). Use source-bound invisibility effect, vision/OA checks, concentration and break-on-action. Invisibility is an **Action**, not free opening buff without authorized policy.
+- **Ephemeral:** cannot wear or carry anything, source/equipment eligibility; preserve no fake items.
+- **Defenses:** AC19/HP22; fly50 hover, speed0 (horizontal flight Pit), immunity Lightning/Poison; resist Acid/Cold/Fire/Necrotic/Thunder and nonmagical B/P/S, broad condition immunities per printed source. **2014-only**; do not import 2024 Shock 2d8+2. Planning SOURCE VERIFIED; implementation/certification PENDING.
+
+**Reusable architecture:** immutable source + mutable per-match form/resources/effects; existing attack/save/condition/event semantics; Python/browser/Hero/generated parity and exact-head CI required before any code certification.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
