@@ -38,10 +38,9 @@ def test_active_ally_presence_tracks_live_fight_state(monkeypatch):
 
 
 def test_visible_active_ally_has_range_and_sight_requirements(monkeypatch):
-    from types import SimpleNamespace
-    from app.combat.ally_context import has_visible_active_ally_within
-
-    state = lambda: SimpleNamespace(is_alive=True, is_dead=False, current_hp=10)
+    source = next(monster for monster in load_monster_source_2014() if monster.id == "satyr")
+    template = compile_combatant(adapt_basic_monster_2014(source))
+    state = lambda: build_combatant_state(template)
     owner = EncounterCombatant(combatant_id="owner", side="monsters", position_ft=0, state=state())
     ally = EncounterCombatant(combatant_id="ally", side="monsters", position_ft=25, state=state())
     foe = EncounterCombatant(combatant_id="foe", side="heroes", position_ft=10, state=state())
