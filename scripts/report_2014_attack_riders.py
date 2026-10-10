@@ -26,7 +26,9 @@ _FIELDS = (
     "forbid_target_grappled_by_self",
     "grapple_target_policy",
 )
-_EXPECTED_ATTACK_ONLY = 0
+# Heated Body is now bound; Salamander still has an independent Tail
+# auto-hit-own-grapple blocker. Do not silently certify that attack.
+_EXPECTED_ATTACK_ONLY = frozenset({"salamander"})
 
 
 def _active(value: object, field: str) -> bool:
@@ -74,9 +76,10 @@ def main() -> None:
                     "shape": shape,
                 }, sort_keys=True, default=str))
     _report_charge_profiles(monsters)
-    if len(candidates) != _EXPECTED_ATTACK_ONLY:
+    found = {monster.id for monster in candidates}
+    if found != _EXPECTED_ATTACK_ONLY:
         raise RuntimeError(
-            f"Expected {_EXPECTED_ATTACK_ONLY} attack-complex-only monsters, found {len(candidates)}"
+            f"Expected attack-complex-only IDs {sorted(_EXPECTED_ATTACK_ONLY)}, found {sorted(found)}"
         )
 
 

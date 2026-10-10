@@ -474,6 +474,8 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
             "diceSize": action.melee_hit_retaliation.dice_size,
             "damageType": _value(action.melee_hit_retaliation.damage_type),
         }
+        if action.melee_hit_retaliation.on_contact:
+            row["meleeHitRetaliation"]["onContact"] = True
     if action.spell_save_dc_bonus:
         row["spellSaveDcBonus"] = action.spell_save_dc_bonus
     if action.spell_attack_advantage:

@@ -15,6 +15,7 @@ from app.content.monster_passive_grants_2014 import (
     saving_throw_advantage_grants_2014,
 )
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
+from app.content.monster_heated_body_2014 import heated_body_retaliation_2014
 from app.content.monster_range_trait_bindings_2014 import supports_poor_depth_perception_2014
 from app.content.monster_once_per_turn_traits_2014 import martial_advantage_rider_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
@@ -137,6 +138,7 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         bound: set[str] = set()
         bound.update(action.name for action in condition_auras_from_source(monster.source_traits, "2014"))
         bound.update(action.name for action in berserk_self_buffs_2014(monster))
+        bound.update(action.name for action in heated_body_retaliation_2014(monster))
         bound.update(rule.source_name for rule in damage_absorptions_from_source(
             monster.source_traits, {item.lower() for item in monster.damage_immunities},
         ))
