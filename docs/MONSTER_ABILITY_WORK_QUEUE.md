@@ -1243,6 +1243,28 @@ Source: [Legacy Adult Bronze Dragon 2014](https://www.dndbeyond.com/monsters/167
 
 **Planning SOURCE REVIEWED (documented), engine binding and certification NOT CLAIMED.** Continue to Adult Gold Dragon #004.
 
+### 2014 Adult Gold Dragon — source-complete per-ability planning, 2026-10-10
+
+Source: [Legacy Adult Gold Dragon](https://www.dndbeyond.com/monsters/16769-adult-gold-dragon). Historical #004. AC19 HP256; walk40/fly80/swim40, Fire Immunity, Blindsight60/Darkvision120. 2014 traits **Amphibious** (Pit biological accommodation) and **Legendary Resistance 3/day** (shared failed-save override).
+
+- **Multiattack:** optional **Frightful Presence** followed by exactly **Bite** +14, reach10, 2d10+8 Piercing and **two Claws** +14, reach5, 2d6+8 Slashing. Separate **Tail** +14 reach15, 2d8+8 Bludgeoning. Reuse ordered mixed action plus attacks, source attack reach.
+- **Frightful Presence:** seen/aware chosen creatures within120ft, Wisdom **DC21**, Frightened 1min, end-turn repeat save and 24h dragon-source immunity after successful save/effect expiry. Source-specific parameters only.
+- **Breath Weapons (shared Recharge 5–6):** **Fire Breath 60ft cone DC21 Dexterity 12d10 Fire**, half on save; **Weakening Breath 60ft cone DC21 Strength**, failure imposes Disadvantage on **Strength-based attack rolls, Strength checks, Strength saving throws** for 1min with repeat end-turn Strength save. Do **not** substitute generic Frightened, Poisoned, or all attack disadvantage. Compose universal ability-scoped roll modifiers plus timed save-ending effect.
+- **Change Shape:** printed source transformation retained; comply with approved standard-Pit metallic-dragon AI exclusion, preserving printed data and generic forms if ever represented. No arbitrary alternate CR forms selected without the existing source/arena policy.
+- **Legendary actions:** shared 3-point budget refresh on start of own turn, **Detect** cost1, **Tail Attack** cost1, **Wing Attack** cost2. Wing Attack DC22 Dexterity against creatures within10ft; fail **2d6+8 Bludgeoning** and Prone; then may move up to half flying speed without provoking OA, subject to horizontal-only Pit movement. Verify exact source timing in engine.
+- **Dependencies:** ability-specific Disadvantage modifier scoped to Strength attack rolls, checks and saves, shared breath pool and area, source-owned fear immunity, source form legality, legendary actions/flight. **Planning SOURCE VERIFIED; Python/browser/Hero/generated certification NOT CLAIMED**.
+
+### 2014 Adult Silver Dragon — source-complete per-ability planning, 2026-10-10
+
+Source: [Legacy Adult Silver Dragon](https://www.dndbeyond.com/monsters/16772-adult-silver-dragon). Historical #005. AC19 HP243, walk40/fly80, Cold Immunity, Blindsight60/Darkvision120; source Legendary Resistance 3/day.
+
+- **Multiattack:** optional Frightful Presence then one **Bite** +13 reach10 **2d10+8 Piercing** and two **Claws** +13 reach5 **2d6+8 Slashing**. **Tail** +13 reach15 **2d8+8 Bludgeoning** standalone or legendary. Shared ordered action.
+- **Frightful Presence:** chosen aware targets within120ft, Wisdom **DC18** save, Frightened 1min, end-turn repeat save, 24h success/end immunity to this dragon. Shared fear and source-owned immunity.
+- **Breath Weapons (single shared Recharge 5–6):** **Cold Breath 60ft cone DC20 Constitution 13d8 Cold**, half on successful save; **Paralyzing Breath 60ft cone DC20 Constitution**, failure **Paralyzed 1min**, repeat save at end of each target turn. Preserve 2014 immediate paralysis; never import 2024's two-stage Incapacitated-to-Paralyzed rules.
+- **Change Shape:** preserve source form-change profile but comply with already approved metallic-dragon Arena AI nonselection. No alteration to immutable source card.
+- **Legendary actions:** shared 3-point pool: **Detect** cost1, **Tail Attack** cost1, **Wing Attack** cost2. Wing Attack DC21 Dexterity within10ft, failure **2d6+8 Bludgeoning and Prone**, then half fly speed avoiding OA with horizontal-only flight. Verify legal placement/geometry in shared movement engine.
+- **Dependencies:** ordinary timed Paralyzed with end-turn repeats, dual-mode Recharge choice, source-targeted Frightened immunity, legendary flight/Prone. **Planning SOURCE VERIFIED; implementation and exact-head certification NOT CLAIMED**.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
