@@ -1219,6 +1219,30 @@ Source: [2014 Basic Rules W](https://www.dndbeyond.com/sources/dnd/basic-rules-2
 
 **Reusable architecture:** immutable source + mutable per-match form/resources/effects; existing attack/save/condition/event semantics; Python/browser/Hero/generated parity and exact-head CI required before any code certification.
 
+## Reconciled source-review coverage checkpoint — 2026-10-10
+
+Method: exact roster IDs 001–124 from the original **historical** ledger, joined to named source-review headings **above** this section (not issue tickets or source-only contracts). This is a conservative documentation coverage metric, **not** a finding that other monster decisions are unapproved and **not** combat-engine certification. A heading alone doesn't certify exact source completeness: individual issue/contract review still takes precedence.
+
+- Baseline before new dragon review: **59 / 124** historical monster names represented by review headings; **65 / 124** missing an identifiable monster review heading. This replaces the unreliable sequential cursor as the measure of documented coverage.
+- Names without identifiable headings (in historical roster order): 003 Adult Bronze Dragon; 004 Adult Gold Dragon; 005 Adult Silver Dragon; 007 Ancient Brass Dragon; 008 Ancient Bronze Dragon; 009 Ancient Copper Dragon; 010 Ancient Gold Dragon; 011 Ancient Silver Dragon; 014 Assassin; 015 Azer; 019 Basilisk; 020 Bearded Devil; 024 Bulette; 025 Chain Devil; 026 Chuul; 028 Cloaker; 030 Couatl; 034 Deva; 035 Djinni; 036 Doppelganger; 037 Dretch; 039 Drow; 041 Dryad; 042 Duergar; 043 Dust Mephit; 044 Efreeti; 046 Ettercap; 048 Flameskull; 051 Ghost; 053 Giant Spider; 055 Gibbering Mouther; 058 Green Hag; 059 Grimlock; 060 Guardian Naga; 061 Gynosphinx; 062 Harpy; 065 Hydra; 067 Ice Mephit; 069 Invisible Stalker; 070 Knight; 071 Kraken; 072 Lamia; 073 Lich; 075 Magma Mephit; 076 Magmin; 079 Medusa; 082 Mummy Lord; 083 Night Hag; 085 Oni; 086 Otyugh; 087 Pit Fiend; 088 Planetar; 092 Quasit; 093 Rakshasa; 094 Remorhaz; 096 Rug of Smothering; 100 Sea Horse; 102 Shambling Mound; 105 Solar; 109 Steam Mephit; 110 Stirge; 111 Stone Giant; 114 Tarrasque; 115 Vampire; 116 Vampire Spawn.
+- Approved decisions and previously source-reviewed issues must be reused, not reopened. Completion requires verifying each missing monster against printed 2014 source and documenting exact universal reuse/dependency separately; merely attaching a heading is insufficient.
+- Implementation, regenerated blocker, Python/browser parity, Hero and exact-head CI remain separate checks. No Netlify unlock.
+
+### 2014 Adult Bronze Dragon — source-complete per-ability planning, 2026-10-10
+
+Source: [Legacy Adult Bronze Dragon 2014](https://www.dndbeyond.com/monsters/16767-adult-bronze-dragon). Historical #003. Source values must remain **2014**, never imported from the later 2024 Rend/GUIDING BOLT presentation.
+
+- **Amphibious:** may breathe air/water; Pit already accommodates biology without inventing underwater terrain. No new arena action.
+- **Legendary Resistance (3/Day):** when the dragon fails a saving throw, may choose to succeed instead, consuming one source-owned use. Shared limited-use save result replacement; preserve fight state and reset.
+- **Multiattack / physical:** Action **Frightful Presence** then three attacks, exactly one **Bite** (+12, reach10, **2d10+7 Piercing**) and two **Claws** (+12, reach5, **2d6+7 Slashing**); Tail attack (+12, reach15, **2d8+7 Bludgeoning**) is available as standard standalone attack/legendary action. Shared ordered mixed ability/attack sequence and source reach.
+- **Frightful Presence:** each creature dragon chooses within120ft and aware of it **DC17 Wisdom** save or Frightened up to1min, end-turn repeat saves, 24h individual immunity following successful save or effect ending. Source-owned immunity provenance; no monster-specific fear resolver.
+- **Breath Weapons (Recharge 5–6):** one Action selects Lightning Breath **90ft line, 5ft wide**, DC19 Dexterity save, **12d10 Lightning** failure/half on save; or Repulsion Breath **30ft cone**, DC19 Strength save, failure **push 60ft away**, success unaffected. Both share one source Recharge pool, not two independent breath cooldowns. Repulsion does **not** add 2024 Prone.
+- **Change Shape:** printed polymorph into a Humanoid/Beast CR no higher than dragon or back, preserve printed special exceptions; obey existing locked arena AI policy and previous metallic-dragon PR rather than improvising new transformation behavior.
+- **Legendary choices:** 3 points per round, refresh at start of own turn; **Detect** costs1 (Perception); **Tail Attack** costs1; **Wing Attack** costs2: creatures within10ft **DC20 Dexterity** save, failure **2d6+7 Bludgeoning and Prone**, then dragon may fly up to half flying speed without provoking Opportunity Attacks. Reuse legendary economy, area save, timed Prone, native horizontal movement, source-bound OA exemption; no extra ordinary Action.
+- **Defenses/mobility:** Lightning damage immunity, walk40/fly80/swim40, Blindsight60/Darkvision120; source-defined geometry/size, no underwater assumption. Exact source/certification still requires Python/browser/hero/generated gates.
+
+**Planning SOURCE REVIEWED (documented), engine binding and certification NOT CLAIMED.** Continue to Adult Gold Dragon #004.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
