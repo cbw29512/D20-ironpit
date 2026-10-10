@@ -436,7 +436,6 @@ Blocked monsters: **123**. These are grouped by printed ability name so the rost
 | Adhesive (Object Form Only) | Mimic | 1 |
 | Air Form | Air Elemental | 1 |
 | Ambusher | Doppelganger | 1 |
-| Assassinate | Assassin | 1 |
 | Barbed Hide | Barbed Devil | 1 |
 | Blind Senses | Grimlock | 1 |
 | Bound | Shield Guardian | 1 |
