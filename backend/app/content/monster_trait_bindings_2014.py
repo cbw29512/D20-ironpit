@@ -25,7 +25,6 @@ from app.domain.bonus_attacks import BonusAttackGrant
 from app.domain.environment_contexts import EnvironmentContextReaction
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.weapons import ConditionalAttackAdvantage
-
 logger = logging.getLogger(__name__)
 _BLOOD_FRENZY = "Blood Frenzy"
 _RECKLESS = "Reckless"
