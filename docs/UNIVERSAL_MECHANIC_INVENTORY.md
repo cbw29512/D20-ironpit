@@ -490,7 +490,6 @@ Blocked monsters: **126**. These are grouped by printed ability name so the rost
 | Sense Magic | Chuul | 1 |
 | Shapechanger | Doppelganger, Imp, Mimic, Quasit, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf | 11 |
 | Shielded Mind | Couatl | 1 |
-| Sneak Attack | Assassin | 1 |
 | Speak with Beasts and Plants | Dryad | 1 |
 | Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
