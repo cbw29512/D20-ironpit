@@ -36,6 +36,10 @@ def test_universal_condition_resolver_accepts_encounter_scoped_steadfast():
     actor.state.template.progression_features = SimpleNamespace(mindless_rage=False)
     actor.state.active_modifiers = []
     actor.state.active_effect_ids = []
+    # The universal debuff pipeline always reads timed effects and uses
+    # the immutable template identity for diagnostic logging.
+    actor.state.timed_effects = []
+    actor.state.template.name = "Steadfast test combatant"
     setup = object()
     with patch("app.combat.steadfast_condition_immunity.has_visible_active_ally_within", return_value=True):
         assert condition_is_immune(actor.state, "frightened", actor=actor, setup=setup)
