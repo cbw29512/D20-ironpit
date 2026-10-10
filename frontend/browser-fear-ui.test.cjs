@@ -44,4 +44,10 @@ assert.match(css, /\.card-status-debuffs\{text-align:right/);
 assert.match(css, /\.condition-frightened/);
 assert.match(css, /condition-pulse/);
 
+
+assert.match(css, /@keyframes status-enter/, "New statuses need a one-time appearance animation.");
+assert.match(css, /\\.passive-badge\\.is-inactive/, "Inactive permanent passive must remain visible and grey.");
+assert.match(css, /prefers-reduced-motion:reduce/, "Status animation must respect reduced motion.");
+assert.match(fs.readFileSync(path.join(__dirname, "battlefield-replay.js"), "utf8"), /existing = new Map/, "Retain badges while effects remain active.");
+
 console.log("Battle card buff-left/debuff-right and fear UI regressions passed.");
