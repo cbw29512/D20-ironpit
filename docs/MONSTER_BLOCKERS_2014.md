@@ -47,7 +47,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Ancient Silver Dragon | source:extra-action | — |
 | Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Inscrutable, Spellcasting |
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
-| Assassin | source:trait | Assassinate, Evasion, Sneak Attack |
+| Assassin | source:trait | Evasion, Sneak Attack |
 | Azer | source:trait | Heated Body |
 | Balor | attack:incomplete, source:trait | Death Throes, Fire Aura |
 | Banshee | source:extra-action, source:trait | Detect Life |
