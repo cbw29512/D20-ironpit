@@ -724,6 +724,17 @@ Source: [2014 Basic Rules Giant Frog](https://www.dndbeyond.com/monsters/16884-g
 - **Senses/speeds:** darkvision30ft, passive Perception12, walk/swim30ft; standard 2014 typed source bindings. **Planning: SOURCE VERIFIED/reuse; implementation NOT CERTIFIED**.
 - **Cross-monster mapping:** Behir/Toad/Purple Worm/Remorhaz source-configured containment, linked conditions and source death exit; ordinary Grapple and Action attack reuse; swim/jump other native beasts. **Source planning inventory complete, runtime blockers `mechanic:swallow`/`source:extra-action` not cleared.** Next Giant Toad.
 
+### 2014 Giant Toad — source-complete per-ability review, 2026-10-09
+
+Source: [2014 Basic Rules Giant Toad](https://www.dndbeyond.com/monsters/16896-giant-toad), AC11 HP39.
+
+- **Amphibious:** Breathe air and water. Reuse standard native trait with no invented water in Pit. **Planning SOURCE VERIFIED / ordinary reuse; Implementation NOT CERTIFIED**.
+- **Standing Leap:** Long jump up to **20ft** and high jump up to **10ft**, with/without running start; same shared source-native jump mechanism as Giant Frog; Pit horizontal-only/normal movement budget. **Planning SOURCE VERIFIED/reuse; Implementation NOT CERTIFIED**.
+- **Bite:** +4 melee weapon, reach5, one target, **1d10+2 Piercing PLUS 1d10 Poison**; hit applies **Grappled escape DC13** and linked **Restrained until grapple ends**, with **cannot bite another target** while grapple persists. Reuse two typed components and ordinary Grapple owner/target-lock, without assigning the Poisoned condition (source says Poison damage only). **Planning SOURCE VERIFIED/composition; Implementation NOT CERTIFIED**.
+- **Swallow:** One separate Action makes one Bite attack against **Medium or smaller target it is already grappling**; on hit transition from Grappled to approved generic containment #691. **Blinded, Restrained, Total Cover** against outside attacks/effects, **3d6 Acid at start of each Toad turn**; capacity 1. Toad death ends linked Restrained, victim escapes corpse by spending **5ft movement**, exits Prone. No standalone regurgitation save/damage threshold; do not import Behir or 2024 Toad timing. **Planning PREVIOUS USER-APPROVED composite reused, not new approval; Implementation NOT CERTIFIED**.
+- **Speed/senses:** walk20ft swim40ft, darkvision30ft, passive Perception10. Typed source attributes. **Planning SOURCE VERIFIED/reuse; Implementation NOT CERTIFIED**.
+- **Reuse/dependencies:** shared Frog/Behir containment owner link with type-specific size, Acid dice and corpse exit, attack profile with two damage components, Grapple+Restrained and target lock. Still blocked by source extra-action/swallow binding and Python/browser/hero/generated parity; **planning inventory complete, no code certification claimed.** Next Glabrezu.
+
 ## Complete historical 2014 blocker/remediation ledger — 124 monsters, 305 issue categories
 
 **Source:** [#680's source-pinned 124 packets](https://github.com/cbw29512/D20-ironpit/pull/680), verified against its machine-readable 124-entry/305-category roster. This baseline is *not* 305 unreviewed user questions. Where an issue above exists, it supersedes the baseline planning label; after implementation, regenerate [the current blocker report](MONSTER_BLOCKERS_2014.md) and mark only actually cleared categories. Preserve all previously recorded decisions.
