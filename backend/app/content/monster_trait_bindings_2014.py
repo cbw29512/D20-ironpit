@@ -57,9 +57,8 @@ def supports_cunning_action_2014(monster: SourceMonster2014) -> bool:
     return _CUNNING_ACTION in monster.trait_names
 
 def _base_sneak_attack_eligible(attack: SourceAttack2014) -> bool:
-    return attack.kind == "ranged" or (
-        attack.kind == "melee" and attack.name in _FINESSE_WEAPON_NAMES_2014
-    )
+    """Pit policy: printed Sneak Attack grants finesse eligibility to melee attacks."""
+    return attack.kind in {"melee", "ranged"}
 
 def sneak_attack_d6_2014(monster: SourceMonster2014) -> int:
     """Parse printed Sneak Attack dice from pinned SRD trait text."""
