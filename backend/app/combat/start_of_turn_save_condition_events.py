@@ -10,6 +10,7 @@ from app.combat.friendly_recovery_aura_windows import (
 from app.combat.regeneration import resolve_start_of_turn_regeneration
 from app.combat.post_hit_save_condition_lifecycle import start_of_turn_save_condition_damage
 from app.combat.start_of_turn_timed_burn import start_of_turn_timed_burns
+from app.combat.start_of_turn_hp_loss import resolve_start_of_turn_hp_loss_events
 from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent
@@ -72,6 +73,10 @@ def resolve_start_of_turn_save_condition_damage_events(
             ))
             sequence += 1
             _ = adjusted
+        hp_loss_events, sequence = resolve_start_of_turn_hp_loss_events(
+            sequence, round_number, member, setup, dice,
+        )
+        events.extend(hp_loss_events)
         return events, sequence
     except Exception:
         logger.exception("Start-of-turn save-condition damage events failed for %s.", member.combatant_id)
