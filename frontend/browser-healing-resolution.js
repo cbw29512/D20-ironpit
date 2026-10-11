@@ -113,7 +113,8 @@
 
       const removed = action.stabilizeAtZero ? [] : applyRiders(target, action);
       if (!action.stabilizeAtZero && !action.grantsTemporaryHp
-        && (P().slotHeal(action) || action.magicalHealing)) {
+        && (P().slotHeal(action) || action.magicalHealing)
+        && (target.state.timed_effects || []).some((effect) => effect.ends_on_magical_healing)) {
         if (!T()?.removeOnMagicalHealing) throw new Error("Magical healing requires timed-effect cleanup.");
         removed.push(...T().removeOnMagicalHealing(target.state));
       }

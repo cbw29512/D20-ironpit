@@ -64,7 +64,8 @@
       const runtime = R();
       if (hasRiders && !runtime) throw new Error("Healing riders require the browser healing-resolution runtime.");
       const removed = hasRiders ? runtime.applyRiders(target, action) : [];
-      if (!action.grantsTemporaryHp && (P().slotHeal(action) || action.magicalHealing)) {
+      if (!action.grantsTemporaryHp && (P().slotHeal(action) || action.magicalHealing)
+        && (target.state.timed_effects || []).some((effect) => effect.ends_on_magical_healing)) {
         if (!T()?.removeOnMagicalHealing) throw new Error("Group magical healing requires timed-effect cleanup.");
         removed.push(...T().removeOnMagicalHealing(target.state));
       }

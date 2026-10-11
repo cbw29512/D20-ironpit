@@ -46,8 +46,10 @@
       const before = target.state.current_hp;
       const healed = H().restore(target.state, total);
       const timed = window.IRON_PIT_BROWSER_TIMED;
-      if (action.magicalEffect && !timed?.removeOnMagicalHealing) throw new Error("Area magical healing requires timed-effect cleanup.");
-      const removed = action.magicalEffect ? timed.removeOnMagicalHealing(target.state) : [];
+      const needsCleanup = action.magicalEffect
+        && (target.state.timed_effects || []).some((effect) => effect.ends_on_magical_healing);
+      if (needsCleanup && !timed?.removeOnMagicalHealing) throw new Error("Area magical healing requires timed-effect cleanup.");
+      const removed = needsCleanup ? timed.removeOnMagicalHealing(target.state) : [];
       return {
         sequence, round_number: round, event_type: "healing",
         actor_id: member.combatant_id, actor_name: member.state.template.name,
