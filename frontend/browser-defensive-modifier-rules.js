@@ -92,11 +92,15 @@
     .some((item) => item.kind === "death-save-advantage" || item.kind === "d20-test-advantage");
   const healingMaximized = (state) => (state.active_modifiers || [])
     .some((item) => item.kind === "healing-maximize");
-  const conditionImmune = (state, conditionId, sourceTemplate = null) => (state.active_modifiers || [])
+  const conditionImmune = (state, conditionId, sourceTemplate = null, context = {}) => (state.active_modifiers || [])
     .some((item) => item.kind === "condition-immunity" && item.condition_id === conditionId
       && sourceMatches(item, sourceTemplate)
       && (item.required_active_effect_ids || []).every((effectId) =>
-        (state.active_effect_ids || []).includes(effectId)));
+        (state.active_effect_ids || []).includes(effectId))
+      && (item.required_visible_active_ally_within_ft == null
+        || (context.actor?.state === state && context.setup
+          && window.IRON_PIT_BROWSER_STATE?.hasVisibleActiveAllyWithin?.(
+            context.actor, context.setup, item.required_visible_active_ally_within_ft))));
   const targetingGate = (state, sourceTemplate = null) => (state.active_modifiers || [])
     .filter((item) => item.kind === "targeting-save-gate" && sourceMatches(item, sourceTemplate))
     .sort((a, b) => (b.save_dc || 0) - (a.save_dc || 0) || a.id.localeCompare(b.id))[0] || null;
