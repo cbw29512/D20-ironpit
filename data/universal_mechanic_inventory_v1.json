@@ -5884,7 +5884,7 @@
       "source:extra-action": 68,
       "source:legendary": 9,
       "source:reaction": 5,
-      "source:trait": 87
+      "source:trait": 86
     },
     "unresolved_printed_abilities": [
       {
@@ -5956,13 +5956,6 @@
           "Gray Ooze"
         ],
         "printed_name": "Corrode Metal"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Black Pudding"
-        ],
-        "printed_name": "Corrosive Form"
       },
       {
         "demand_count": 2,

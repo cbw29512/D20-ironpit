@@ -442,7 +442,6 @@ Blocked monsters: **122**. These are grouped by printed ability name so the rost
 | Confer Fire Resistance | Nightmare | 1 |
 | Consume Life | Will-o'-Wisp | 1 |
 | Corrode Metal | Gray Ooze | 1 |
-| Corrosive Form | Black Pudding | 1 |
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
 | Death Burst | Dust Mephit, Ice Mephit, Magma Mephit, Magmin, Steam Mephit | 5 |
 | Death Throes | Balor | 1 |
@@ -505,7 +504,7 @@ Blocked monsters: **122**. These are grouped by printed ability name so the rost
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 87 |
+| `source:trait` | 86 |
 | `source:extra-action` | 68 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 25 |
