@@ -20,7 +20,6 @@ from app.combat.timed_condition_lifecycle import (
 )
 
 logger = logging.getLogger(__name__)
-
 POISONED_EFFECT_ID = "poisoned"
 ARENA_POISON_RECOVERY_DC = 10
 TERMINAL_CONDITIONS = frozenset({"petrified"})
@@ -76,6 +75,7 @@ def apply_timed_condition(
     return_damage_bonus: int = 0,
     return_damage_type: DamageType | None = None,
     return_damage_excluded_creature_types: list[str] | None = None,
+    start_of_turn_hp_loss_dice_count: int = 0, start_of_turn_hp_loss_dice_size: int = 10,
     use_default_poison_recovery: bool = True,
     repeat_save_failures_to_lock: int | None = None,
     repeat_save_failure_condition_id: str | None = None,
@@ -147,6 +147,7 @@ def apply_timed_condition(
             return_damage_bonus=return_damage_bonus,
             return_damage_type=return_damage_type,
             return_damage_excluded_creature_types=return_damage_excluded_creature_types or [],
+            start_of_turn_hp_loss_dice_count=start_of_turn_hp_loss_dice_count, start_of_turn_hp_loss_dice_size=start_of_turn_hp_loss_dice_size,
             repeat_save_failures_to_lock=repeat_save_failures_to_lock,
             repeat_save_failure_condition_id=repeat_save_failure_condition_id,
             escape_check_ability=escape_check_ability,

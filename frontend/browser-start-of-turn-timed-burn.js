@@ -17,6 +17,31 @@
       const events = [];
       const states = members(setup).map((item) => item.state || item);
       for (const effect of [...(member.state.timed_effects || [])]) {
+        if ((effect.start_of_turn_hp_loss_dice_count || 0) > 0) {
+          let rolled = 0;
+          for (let index = 0; index < effect.start_of_turn_hp_loss_dice_count; index += 1) {
+            rolled += D().roll(effect.start_of_turn_hp_loss_dice_size || 10);
+          }
+          const hpBefore = member.state.current_hp;
+          if (rolled > 0 && hpBefore > 0 && !member.state.is_dead) {
+            if (rolled >= hpBefore) {
+              const zero = window.IRON_PIT_BROWSER_ZERO_HP;
+              if (!zero?.reduceToZero) throw new Error("Raw HP loss requires the shared zero-HP transition.");
+              zero.reduceToZero(member.state, states);
+            } else member.state.current_hp -= rolled;
+          }
+          const name = effect.source_effect_id || effect.effect_id;
+          const lost = Math.max(0, hpBefore - member.state.current_hp);
+          events.push({
+            sequence: sequence++, round_number: round, event_type: "feature",
+            actor_id: member.combatant_id, actor_name: member.state.template.name,
+            target_id: member.combatant_id, target_name: member.state.template.name,
+            feature_id: name, hp_before: hpBefore, hp_after: member.state.current_hp,
+            animation: "feature",
+            description: `${name} causes ${lost} hit points to be lost by ${member.state.template.name} at the start of the turn.`,
+          });
+          continue;
+        }
         if ((effect.start_of_turn_dice_count || 0) <= 0 || !effect.start_of_turn_damage_type) continue;
         let total = 0;
         for (let index = 0; index < effect.start_of_turn_dice_count; index += 1) {
