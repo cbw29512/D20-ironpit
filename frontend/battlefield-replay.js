@@ -19,13 +19,42 @@
     const buffs = new Set(state.active_buff_effect_ids || []), debuffs = new Set();
     for (const id of state.active_effect_ids || []) (SELF_BUFFS.has(id) ? buffs : debuffs).add(id);
     for (const effect of state.timed_effects || []) debuffs.add(effect.effect_id);
+    const permanentIds = new Set((state.template?.passive_modifier_grants || []).map((grant) => grant.source_id));
     for (const modifier of state.active_modifiers || []) {
-      const id = modifier.source_effect_id; if (!id) continue;
+      const id = modifier.source_effect_id; if (!id || permanentIds.has(id)) continue;
       (modifierIsDebuff(modifier) ? debuffs : buffs).add(id);
     }
     if (state.concentration?.effect_id) buffs.delete(state.concentration.effect_id);
     for (const id of debuffs) buffs.delete(id);
     return { buffs: [...buffs].sort(), debuffs: [...debuffs].sort() };
+  }
+
+  function permanentPassiveStates(member, setup) {
+    try {
+      const result = [];
+      // The source owns printed passive labels, while the combat modifier stack owns activation.
+      // Applies to both editions without dispatching by class or monster name.
+      const passives = new Map();
+      for (const grant of member.state.template.passive_modifier_grants || []) {
+        if (!grant.source_name) continue;
+        const available = grant.required_visible_active_ally_within_ft == null
+          || Boolean(window.IRON_PIT_BROWSER_STATE?.hasVisibleActiveAllyWithin?.(
+            member, setup, grant.required_visible_active_ally_within_ft));
+        const enabled = available && (member.state.active_modifiers || []).some((modifier) =>
+          modifier.source_effect_id === grant.source_id && modifier.kind === grant.kind
+          && (modifier.required_active_effect_ids || []).every((id) => (member.state.active_effect_ids || []).includes(id)));
+        passives.set(grant.source_name, enabled || Boolean(passives.get(grant.source_name)));
+      }
+      for (const [id, enabled] of passives) {
+        if (!result.some((item) => item.id === id)) {
+          result.push({ id, active: enabled, explanation: "Source-owned permanent combat modifier." });
+        }
+      }
+      return result;
+    } catch (error) {
+      console.error("Failed to project permanent passive card states", { combatantId: member?.combatant_id, error });
+      throw error;
+    }
   }
 
   function bindBattle(battle, slotMap) {
@@ -56,22 +85,42 @@
     node.dataset.concentration = effectId || "";
   }
 
-  function renderLane(node, selector, ids, kind) {
-    const rack = node?.querySelector(selector); if (!rack) return;
-    const badges = ids.map((id) => {
-      const badge = document.createElement("span");
-      badge.className = kind === "buff" ? `buff-badge buff-${id}` : `debuff-badge condition-badge condition-${id}`;
-      badge.dataset.effect = id; badge.textContent = kind === "debuff" ? conditionLabel(id) : cleanLabel(id);
-      badge.setAttribute("aria-label", `${kind === "buff" ? "Buff" : "Debuff"}: ${cleanLabel(id)}`); return badge;
-    });
-    rack.replaceChildren(...badges);
+  function renderLane(node, selector, ids, kind, permanent = []) {
+    try {
+      const rack = node?.querySelector(selector); if (!rack) return;
+      // Reuse the same DOM badge while its engine-owned effect remains active.
+      // Newly applied statuses animate once; expired statuses leave immediately.
+      const existing = new Map([...rack.children].map((badge) => [badge.dataset.effect, badge]));
+      const badges = ids.map((id) => {
+        const old = existing.get(id);
+        if (old) return old;
+        const badge = document.createElement("span");
+        badge.className = kind === "buff" ? `buff-badge buff-${id} status-enter` : `debuff-badge condition-badge condition-${id} status-enter`;
+        badge.dataset.effect = id; badge.textContent = kind === "debuff" ? conditionLabel(id) : cleanLabel(id);
+        badge.setAttribute("aria-label", `${kind === "buff" ? "Buff" : "Debuff"}: ${cleanLabel(id)}`);
+        return badge;
+      });
+      for (const passive of permanent) {
+        const badge = existing.get(passive.id) || document.createElement("span");
+        badge.className = `buff-badge passive-badge${passive.active ? "" : " is-inactive"}`;
+        badge.dataset.effect = passive.id;
+        badge.textContent = passive.id.toUpperCase();
+        badge.title = `${passive.explanation} Currently ${passive.active ? "active" : "inactive"}.`;
+        badge.setAttribute("aria-label", badge.title);
+        badges.push(badge);
+      }
+      rack.replaceChildren(...badges);
+    } catch (error) {
+      console.error("Failed to render combat status lane", { selector, kind, error });
+      throw error;
+    }
   }
 
-  function renderStateLanes(node, state) {
+  function renderStateLanes(node, state, permanent = []) {
     if (!node) return;
-    const lanes = classifyStatusLanes(state); renderLane(node, ".card-buffs", lanes.buffs, "buff");
+    const lanes = classifyStatusLanes(state); renderLane(node, ".card-buffs", lanes.buffs, "buff", permanent);
     renderLane(node, ".card-debuffs", lanes.debuffs, "debuff");
-    node.classList.toggle("has-buff", lanes.buffs.length > 0 || Boolean(state.concentration));
+    node.classList.toggle("has-buff", lanes.buffs.length > 0 || permanent.some((item) => item.active) || Boolean(state.concentration));
     node.classList.toggle("has-debuff", lanes.debuffs.length > 0); node.classList.toggle("has-condition", lanes.debuffs.length > 0);
   }
 
@@ -121,7 +170,7 @@
       const node = nodes.get(member.combatant_id), state = member.state; if (!node) return;
       hp(node, state.current_hp); if (state.is_dead || !state.is_alive) dead(node);
       node.classList.toggle("battle-stable", Boolean(state.is_stable && state.current_hp === 0));
-      concentration(node, state.concentration?.effect_id || null); renderStateLanes(node, state);
+      concentration(node, state.concentration?.effect_id || null); renderStateLanes(node, state, permanentPassiveStates(member, battle.setup));
     });
   }
 
@@ -135,6 +184,6 @@
     syncFinal(battle); return battle;
   }
 
-  window.IRON_PIT_BATTLEFIELD_REPLAY = { bindBattle, classifyStatusLanes, concentrationLabel, conditionLabel, eventStep, play, syncFinal };
+  window.IRON_PIT_BATTLEFIELD_REPLAY = { bindBattle, classifyStatusLanes, concentrationLabel, conditionLabel, eventStep, permanentPassiveStates, play, syncFinal };
   window.playIronPitBattle = play;
 })();

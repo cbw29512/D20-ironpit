@@ -19,6 +19,7 @@
     if (I().immune(state, effectId, options.sourceTemplate || null, {
       sourceIsMagical: options.sourceIsMagical === true,
       groundContact: options.groundContact === true,
+      actor: options.targetActor || null, setup: options.setup || null,
     })) return null;
     const defaultPoison = effectId === POISONED && options.useDefaultPoisonRecovery !== false;
     if (defaultPoison && state.timed_effects.some((effect) => effect.effect_id === POISONED)) return POISONED;

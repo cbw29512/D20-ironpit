@@ -57,13 +57,14 @@
     };
   }
 
-  function apply(actor, target, action, rider, round) {
+  function apply(actor, target, action, rider, round, setup = null) {
     try {
       const timed = window.IRON_PIT_BROWSER_TIMED;
       if (!timed) throw new Error("Failed-save timed effect requires browser-timed-conditions.js.");
       return timed.apply(target.state, rider.effectId, actor.combatant_id, {
         sourceEffectId: action.id,
         sourceTemplate: actor.state.template,
+        targetActor: target, setup,
         sourceIsMagical: Boolean(action.magicalEffect),
         appliedRound: round,
         expiresRound: rider.durationRounds != null ? round + rider.durationRounds : null,

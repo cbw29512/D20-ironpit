@@ -35,6 +35,7 @@ def apply_opening_conditions(setup: EncounterSetup, selection: EncounterSelectio
                 binding.condition_id,
                 source.combatant_id,
                 source_template=source.state.template,
+                target_actor=target, setup=setup,
                 source_is_magical=True,
                 applied_round=0,
             )

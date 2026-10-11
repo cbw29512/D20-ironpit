@@ -26,7 +26,7 @@
     const effect = attack.onHitConditionSave;
     if (!effect || target.state.is_dead || !target.state.is_alive) return null;
     if (effect.maxTargetSize && !S().sizeAtMost(target, effect.maxTargetSize)) return null;
-    if (I().immune(target.state, effect.conditionId, sourceTemplate)) return null;
+    if (I().immune(target.state, effect.conditionId, sourceTemplate, { actor: target, setup })) return null;
     if (effect.durationRounds || effect.repeatSaveTiming || (effect.excludedCreatureTypes || []).length || (effect.excludedCreatureSubtypes || []).length) {
       throw new Error("On-hit condition save lifecycle runtime is not loaded.");
     }
@@ -150,7 +150,7 @@
     if (save.succeeded && action.sourceEffectImmunityOnSuccess) riderRuntime.grantImmunity(target.state, action.id, actor.combatant_id, round, { sourceTemplate: actor.state.template, sourceIsMagical: Boolean(action.magicalEffect) });
     if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.failedSaveTimedEffect) {
       if (!riderRuntime) throw new Error("Failed-save timed-effect runtime is not loaded.");
-      const applied = riderRuntime.apply(actor, target, action, action.failedSaveTimedEffect, round);
+      const applied = riderRuntime.apply(actor, target, action, action.failedSaveTimedEffect, round, options.setup || null);
       if (applied) appliedConditions.push(applied);
     }
     if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.grappleEscapeDc) {

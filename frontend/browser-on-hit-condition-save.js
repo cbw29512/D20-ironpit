@@ -23,7 +23,7 @@
     if (effect.maxTargetSize && !S().sizeAtMost(target, effect.maxTargetSize)) return null;
     const kinds = [...(effect.excludedCreatureTypes || []), ...(effect.excludedCreatureSubtypes || [])];
     if (kinds.some((kind) => creatureMatchesKind(target.state.template, kind))) return null;
-    if (I().immune(target.state, effect.conditionId, sourceTemplate)) return null;
+    if (I().immune(target.state, effect.conditionId, sourceTemplate, { actor: target, setup })) return null;
     const save = window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow(target.state, effect.saveAbility, effect.dc, {
       conditionId: effect.conditionId,
       effectTags: effect.conditionId === "poisoned" ? ["poison"] : [],
@@ -39,6 +39,7 @@
         appliedCondition = T().apply(target.state, effect.conditionId, attacker?.combatant_id || sourceTemplate?.id || "on-hit-save", {
           sourceEffectId: attack.name || attack.id,
           sourceTemplate,
+          targetActor: target, setup,
           appliedRound: round,
           expiresRound: effect.durationRounds != null && round != null ? round + effect.durationRounds : null,
           expiryTiming: effect.durationRounds != null ? "target_turn_end" : null,

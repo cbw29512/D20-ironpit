@@ -138,7 +138,7 @@ def resolve_save_action(
         )
     if not succeeded and target.state.is_alive and not target.state.is_dead:
         applied = apply_failed_save_timed_effect(
-            target, actor, action, round_number, affected_states,
+            target, actor, action, round_number, affected_states, setup,
         )
         if applied is not None:
             applied_conditions.append(applied)

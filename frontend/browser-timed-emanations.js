@@ -37,7 +37,7 @@
             if (!conditionImmunity?.immune) throw new Error("Condition aura requires condition-immunity runtime.");
             if (!immune && !target.state.is_dead && !conditionImmunity.immune(
               target.state, aura.condition_id, source.state.template,
-              { sourceIsMagical: Boolean(aura.source_is_magical) },
+              { sourceIsMagical: Boolean(aura.source_is_magical), actor: target, setup },
             )) {
               const saveRuntime = window.IRON_PIT_BROWSER_SAVES;
               const timed = window.IRON_PIT_BROWSER_TIMED;
@@ -68,6 +68,7 @@
                 const condition = timed.apply(target.state, aura.condition_id, source.combatant_id, {
                   sourceEffectId: action.id,
                   sourceTemplate: source.state.template,
+                  targetActor: target, setup,
                   sourceIsMagical: Boolean(aura.source_is_magical),
                   appliedRound: round,
                   expiresRound: duration == null ? null : round + duration,

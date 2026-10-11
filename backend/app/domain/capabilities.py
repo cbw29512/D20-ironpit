@@ -23,6 +23,7 @@ from app.domain.damage_absorption import DamageAbsorptionRule
 from app.domain.tactical_actions import BonusActionTacticalGrant
 from app.domain.effect_removal import EffectRemovalAction, EffectTagConditionGrant
 from app.domain.environment_contexts import EnvironmentContextReaction
+from app.domain.passive_modifiers import PassiveModifierGrant
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.recharge import RechargeRule
@@ -62,6 +63,7 @@ class CombatantDefinition(BaseModel):
     truesight_ft: int = Field(default=0, ge=0)
     progression_features: ProgressionCombatFeatures = Field(default_factory=ProgressionCombatFeatures)
     environment_context_reactions: list[EnvironmentContextReaction] = Field(default_factory=list)
+    passive_modifier_grants: list[PassiveModifierGrant] = Field(default_factory=list, exclude_if=lambda items: not items)
     bonus_attack_grants: list[BonusAttackGrant] = Field(default_factory=list)
     bonus_tactical_action_grants: list[BonusActionTacticalGrant] = Field(default_factory=list)
     attacks: list[AttackCapabilityDefinition] = Field(min_length=1)
