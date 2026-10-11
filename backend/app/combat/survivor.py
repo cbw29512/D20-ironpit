@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.zero_hp import restore_hit_points
 from app.domain.models import CombatantState
 
 logger = logging.getLogger(__name__)
@@ -17,9 +18,7 @@ def apply_survivor_start_turn_heal(state: CombatantState) -> int:
         maximum = state.template.max_hp + state.max_hp_bonus
         if state.current_hp * 2 > maximum:
             return 0
-        before = state.current_hp
-        state.current_hp = min(maximum, state.current_hp + amount)
-        return state.current_hp - before
+        return restore_hit_points(state, amount)
     except Exception:
         logger.exception("Failed Survivor start-turn healing for %s", state.template.name)
         raise
