@@ -4,7 +4,7 @@ import logging
 
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.actions import SavingThrowAction
-from app.domain.encounters import EncounterCombatant
+from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.runtime import CombatantState
 
 logger = logging.getLogger(__name__)
@@ -16,6 +16,7 @@ def apply_failed_save_timed_effect(
     action: SavingThrowAction,
     round_number: int,
     affected_states: list[CombatantState] | None,
+    setup: EncounterSetup | None = None,
 ) -> str | None:
     """Apply one failed-save timed rider, including ground-contact / teleport-cancel tags."""
     try:
@@ -30,6 +31,7 @@ def apply_failed_save_timed_effect(
             actor.combatant_id,
             source_effect_id=action.id,
             source_template=actor.state.template,
+            target_actor=target, setup=setup,
             source_is_magical=action.magical_effect,
             applied_round=round_number,
             expires_round=(
