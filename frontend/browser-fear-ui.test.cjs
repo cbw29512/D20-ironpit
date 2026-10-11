@@ -29,6 +29,29 @@ const lanes = replay.classifyStatusLanes({
 assert.deepEqual(lanes.buffs, ["bless", "rage", "weapon-mastery-vex"]);
 assert.deepEqual(lanes.debuffs, ["guiding-bolt", "poisoned", "weapon-mastery-sap"]);
 
+// Both editions project source-owned permanent passives from current combat state.
+const passiveMember = {
+  combatant_id: "passive-test",
+  state: {
+    template: {
+      ruleset: "2024", source_trait_names: [],
+      passive_modifier_grants: [{ source_id: "ward", source_name: "Warding", kind: "condition-immunity" }],
+    },
+    active_effect_ids: ["rage"],
+    active_modifiers: [{
+      source_effect_id: "ward", kind: "condition-immunity", required_active_effect_ids: ["rage"],
+    }],
+  },
+};
+assert.deepEqual(replay.permanentPassiveStates(passiveMember, {}), [{
+  id: "Warding", active: true, explanation: "Source-owned permanent combat modifier.",
+}]);
+assert.deepEqual(replay.classifyStatusLanes(passiveMember.state).buffs, [], "Permanent passives must not duplicate transient badges.");
+passiveMember.state.active_effect_ids = [];
+assert.equal(replay.permanentPassiveStates(passiveMember, {})[0].active, false, "Unavailable passive remains visible but grey.");
+passiveMember.state.template.ruleset = "2014";
+assert.equal(replay.permanentPassiveStates(passiveMember, {})[0].active, false, "Edition does not change passive display semantics.");
+
 const view = fs.readFileSync(path.join(__dirname, "battlefield-view.js"), "utf8");
 const buffLane = view.indexOf("card-status-buffs");
 const debuffLane = view.indexOf("card-status-debuffs");
