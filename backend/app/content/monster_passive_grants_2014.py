@@ -6,6 +6,7 @@ import logging
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_contextual_save_defenses import contextual_save_defenses_2014
 from app.domain.progression import SavingThrowAdvantageGrant
+from app.domain.passive_modifiers import PassiveModifierGrant
 from app.domain.tactical_actions import BonusActionTacticalGrant
 
 logger = logging.getLogger(__name__)
@@ -13,6 +14,7 @@ _ALL_SAVE_ABILITIES = (
     "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",
 )
 _MAGIC_RESISTANCE = "Magic Resistance"
+_STEADFAST = "Steadfast"
 _DARK_DEVOTION = "Dark Devotion"
 _BRAVE = "Brave"
 _GNOME_CUNNING = "Gnome Cunning"
@@ -22,6 +24,20 @@ _TWO_HEAD_TRAITS = frozenset({"Two-Headed", "Two Heads"})
 _TWO_HEAD_SAVE_TAGS = (
     "blinded", "charm", "charmed", "deafened", "frightened", "stunned", "unconscious",
 )
+
+
+def conditional_immunity_grants_2014(monster: SourceMonster2014) -> list[PassiveModifierGrant]:
+    """Bind printed trait facts to the generic visible-active-ally immunity gate."""
+    try:
+        if _STEADFAST not in monster.trait_names:
+            return []
+        return [PassiveModifierGrant(
+            source_id="steadfast", source_name=_STEADFAST, kind="condition-immunity",
+            condition_id="frightened", required_visible_active_ally_within_ft=30,
+        )]
+    except Exception:
+        logger.exception("Failed to bind 2014 source-conditional immunity for %s.", monster.name)
+        raise
 
 
 def _condition_save_advantage(source_id: str, source_name: str, tags: tuple[str, ...]) -> list[SavingThrowAdvantageGrant]:
