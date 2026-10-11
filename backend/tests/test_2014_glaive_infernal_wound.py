@@ -7,6 +7,7 @@ from app.combat.hit_point_loss import lose_hit_points
 from app.combat.state import build_combatant_state
 from app.combat.timed_conditions import apply_timed_condition
 from app.content.audited_fighter import build_karnok_stoneward
+from app.content.demo import build_goblin_warrior
 from app.content.capability_attack_compiler import compile_attack
 from app.content.monster_definition_adapter_2014 import _attack
 from app.content.monster_source_2014 import load_monster_source_2014
@@ -38,7 +39,7 @@ def _target():
 
 
 def test_glaive_failed_save_adds_one_source_owned_wound_and_stacks_without_save():
-    attacker = build_combatant_state(build_karnok_stoneward())
+    attacker = build_combatant_state(build_goblin_warrior())
     target = _target()
     glaive = _source_glaive()
     first = resolve_attack(1, 1, attacker, target, glaive, 10,
@@ -64,7 +65,7 @@ def test_glaive_failed_save_adds_one_source_owned_wound_and_stacks_without_save(
 
 
 def test_glaive_immunity_by_creature_type_and_successful_save():
-    attacker = build_combatant_state(build_karnok_stoneward())
+    attacker = build_combatant_state(build_goblin_warrior())
     glaive = _source_glaive()
     for kind in ("undead", "construct"):
         target = _target()
@@ -80,7 +81,7 @@ def test_glaive_immunity_by_creature_type_and_successful_save():
 
 
 def test_wounds_from_different_devils_are_independent_and_magic_heal_closes_them():
-    attacker = build_combatant_state(build_karnok_stoneward())
+    attacker = build_combatant_state(build_goblin_warrior())
     target = _target()
     glaive = _source_glaive()
     for number in (1, 2):

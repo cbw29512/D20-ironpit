@@ -6,6 +6,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.combat.zero_hp import restore_hit_points
 from app.content.audited_fighter import build_karnok_stoneward
+from app.content.demo import build_goblin_warrior
 from app.content.capability_attack_compiler import compile_attack
 from app.content.monster_definition_adapter_2014 import _attack
 from app.content.monster_source_2014 import load_monster_source_2014
@@ -48,7 +49,7 @@ def test_beard_binds_source_attack_and_qualifier() -> None:
 
 def test_beard_failed_save_blocks_healing_until_repeat_save_succeeds() -> None:
     target = _target()
-    attacker = build_combatant_state(build_karnok_stoneward())
+    attacker = build_combatant_state(build_goblin_warrior())
     attack = _attack_from_pinned_source()
     before = target.current_hp
     hit = resolve_attack(1, 1, attacker, target, attack, 5,
@@ -76,7 +77,7 @@ def test_beard_failed_save_blocks_healing_until_repeat_save_succeeds() -> None:
 def test_beard_poison_immunity_prevents_associated_heal_block() -> None:
     target = _target()
     target.template.condition_immunities.append("poisoned")
-    attacker = build_combatant_state(build_karnok_stoneward())
+    attacker = build_combatant_state(build_goblin_warrior())
     hit = resolve_attack(1, 1, attacker, target, _attack_from_pinned_source(), 5,
                          FixedDiceProvider([18, 2]), spend_action=False)
     assert hit.hit and hit.save_dc is None
