@@ -45,9 +45,6 @@ def main():
     rendered = render()
     if args.check:
         if not OUTPUT.exists() or OUTPUT.read_text() != rendered:
-            print('BEGIN_EXACT_MONSTER_BLOCKERS_RENDER')
-            print(rendered, end='')
-            print('END_EXACT_MONSTER_BLOCKERS_RENDER')
             raise SystemExit('2014 monster fix list is stale; regenerate it.')
     else:
         OUTPUT.write_text(rendered)

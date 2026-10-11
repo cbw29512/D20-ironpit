@@ -14,7 +14,7 @@ Blocker categories overlap: a monster may require several fixes.
 | `source:extra-action` | 68 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 25 |
-| `attack:complex` | 16 |
+| `attack:complex` | 14 |
 | `multiattack:complex` | 12 |
 | `mechanic:recharge` | 10 |
 | `mechanic:legendary` | 9 |
@@ -51,7 +51,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Banshee | source:extra-action, source:trait | Detect Life |
 | Barbed Devil | attack:range, source:trait | Barbed Hide |
 | Basilisk | source:trait | Petrifying Gaze |
-| Bearded Devil | attack:complex, attack:incomplete, source:trait | Steadfast |
+| Bearded Devil | attack:incomplete, source:trait | Steadfast |
 | Behir | mechanic:recharge, source:extra-action | — |
 | Black Pudding | attack:incomplete, source:trait | Corrosive Form |
 | Bugbear | attack:complex, source:trait | Surprise Attack |
@@ -95,7 +95,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Gynosphinx | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Inscrutable, Spellcasting |
 | Harpy | source:extra-action | — |
 | Homunculus | attack:complex, source:trait | Telepathic Bond |
-| Horned Devil | attack:complex, attack:range | — |
+| Horned Devil | attack:range | — |
 | Hydra | multiattack:complex, source:extra-action, source:trait | Multiple Heads, Reactive Heads |
 | Ice Devil | mechanic:recharge, source:extra-action | — |
 | Ice Mephit | mechanic:death-trigger, mechanic:spellcasting, source:trait | Death Burst, Innate Spellcasting |
