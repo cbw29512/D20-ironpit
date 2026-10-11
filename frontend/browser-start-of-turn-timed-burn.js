@@ -29,6 +29,39 @@
     }
   }
 
+  function applyOrStackHpLoss(state, effectId, sourceId, sourceEffectId, diceCount, diceSize) {
+    try {
+      if (!effectId || !sourceId || !sourceEffectId || !Number.isInteger(diceCount)
+        || diceCount < 1 || !Number.isInteger(diceSize) || diceSize < 2) {
+        throw new Error("Source-owned ongoing HP loss requires valid identities and dice.");
+      }
+      if (state.is_dead || !state.is_alive) return 0;
+      const match = (state.timed_effects || []).find((effect) =>
+        effect.effect_id === effectId && effect.source_id === sourceId
+        && effect.source_effect_id === sourceEffectId);
+      if (match) {
+        if (!(match.start_of_turn_hp_loss_dice_count > 0)
+          || match.start_of_turn_hp_loss_dice_size !== diceSize) throw new Error("Incompatible wound stack.");
+        const count = match.start_of_turn_hp_loss_dice_count + diceCount;
+        if (count > 40) throw new Error("HP-loss stack exceeds supported dice limit.");
+        match.start_of_turn_hp_loss_dice_count = count;
+        return count;
+      }
+      (state.timed_effects ||= []).push({
+        effect_id: effectId, source_id: sourceId, source_effect_id: sourceEffectId,
+        expires_at_start_of_source_turn: false,
+        start_of_turn_hp_loss_dice_count: diceCount,
+        start_of_turn_hp_loss_dice_size: diceSize,
+      });
+      state.active_effect_ids ||= [];
+      if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
+      return diceCount;
+    } catch (error) {
+      console.error("Ongoing HP-loss stack failed", { combatant: state?.template?.name, error });
+      throw error;
+    }
+  }
+
   function resolve(sequence, round, member, setup) {
     try {
       const events = [];
@@ -106,5 +139,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN = { resolve, loseHitPoints };
+  window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN = { resolve, loseHitPoints, applyOrStackHpLoss };
 })();
