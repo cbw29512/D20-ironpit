@@ -31,23 +31,18 @@
 
   function permanentPassiveStates(member, setup) {
     try {
-      const traits = member.state.template.source_trait_names || [];
       const result = [];
-      // Names identify printed card text only; shared visibility computes activation.
-      if (member.state.template.ruleset === "2014" && traits.includes("Steadfast")) {
-        const predicate = window.IRON_PIT_BROWSER_STATE?.hasVisibleActiveAllyWithin;
-        if (!predicate) throw new Error("Steadfast visibility predicate unavailable.");
-        result.push({ id: "Steadfast", active: predicate(member, setup, 30),
-          explanation: "Immune to Frightened while a visible, active ally is within 30 feet." });
-      }
       // The source owns printed passive labels, while the combat modifier stack owns activation.
       // Applies to both editions without dispatching by class or monster name.
       const passives = new Map();
       for (const grant of member.state.template.passive_modifier_grants || []) {
         if (!grant.source_name) continue;
-        const enabled = (member.state.active_modifiers || []).some((modifier) =>
+        const available = grant.required_visible_active_ally_within_ft == null
+          || Boolean(window.IRON_PIT_BROWSER_STATE?.hasVisibleActiveAllyWithin?.(
+            member, setup, grant.required_visible_active_ally_within_ft));
+        const enabled = available && (member.state.active_modifiers || []).some((modifier) =>
           modifier.source_effect_id === grant.source_id && modifier.kind === grant.kind
-          && (modifier.required_active_effect_ids || []).every((id) => member.state.active_effect_ids.includes(id)));
+          && (modifier.required_active_effect_ids || []).every((id) => (member.state.active_effect_ids || []).includes(id)));
         passives.set(grant.source_name, enabled || Boolean(passives.get(grant.source_name)));
       }
       for (const [id, enabled] of passives) {
