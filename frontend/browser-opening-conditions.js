@@ -24,6 +24,7 @@
         const source = memberAt(setup, binding.source_side, binding.source_roster_index);
         T.apply(target.state, binding.condition_id, source.combatant_id, {
           sourceTemplate: source.state.template,
+          targetActor: target, setup,
           sourceIsMagical: true,
           appliedRound: 0,
         });
