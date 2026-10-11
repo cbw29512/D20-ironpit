@@ -37,7 +37,7 @@ from app.content.monster_zero_hp_prevention_2014 import (
     damage_threshold_zero_hp_replacements_2014,
     zero_hp_prevention_resources_2014,
 )
-from app.content.monster_passive_grants_2014 import aggressive_tactical_grants_2014
+from app.content.monster_passive_grants_2014 import aggressive_tactical_grants_2014, conditional_immunity_grants_2014
 from app.content.monster_trait_bindings_2014 import (
     bonus_attack_grants_2014, conditional_attack_advantage_2014,
     environment_context_reactions_2014, progression_features_2014, sneak_attack_eligible_2014,
@@ -163,7 +163,8 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         save_success_overrides=[legendary_override] if legendary_override else [],
         combat_traits=modeled_combat_traits_2014(monster),
         environment_context_reactions=environment_context_reactions_2014(monster),
-        progression_features=features, bonus_attack_grants=bonus_attack_grants_2014(monster),
+        progression_features=features, passive_modifier_grants=conditional_immunity_grants_2014(monster),
+        bonus_attack_grants=bonus_attack_grants_2014(monster),
         bonus_tactical_action_grants=aggressive_tactical_grants_2014(monster),
         saving_throw_bonuses=save_bonuses_2014(monster, scores),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
