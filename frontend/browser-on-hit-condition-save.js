@@ -79,7 +79,7 @@
       if (!sourceId) throw new Error("Source-owned persistent HP loss requires a combatant source id.");
       const H = window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN;
       if (!H?.applyOrStackHpLoss) throw new Error("Universal source-owned HP-loss runtime is required.");
-      const sourceEffectId = attack.name;
+      const sourceEffectId = rule.sourceName;
       const existing = (target.state.timed_effects || []).find((effect) =>
         effect.effect_id === rule.effectId && effect.source_id === sourceId
         && effect.source_effect_id === sourceEffectId);

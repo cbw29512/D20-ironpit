@@ -50,6 +50,7 @@ def test_infernal_wound_save_then_stacks_without_new_save():
     wound = next(effect for effect in target.timed_effects
                  if effect.effect_id == "infernal-wound")
     assert wound.source_id == "devil-one"
+    assert wound.source_effect_id == "Infernal Wound"
     assert wound.start_of_turn_hp_loss_dice_count == 1
     assert wound.ends_on_magical_healing and wound.expires_round is None
     second = resolve_attack(

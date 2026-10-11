@@ -66,6 +66,7 @@ try {
   assert.equal(wound(target, attack, null, 1, null, devil1).saveSucceeded, null);
   assert.equal(saveCount, 1, "A repeat hit from this devil does not force another save.");
   assert.equal(target.state.timed_effects[0].start_of_turn_hp_loss_dice_count, 2);
+  assert.equal(target.state.timed_effects[0].source_effect_id, "Infernal Wound");
   wound(target, attack, null, 1, null, devil2);
   assert.equal(saveCount, 2);
   assert.equal(target.state.timed_effects.length, 2);

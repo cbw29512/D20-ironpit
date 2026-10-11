@@ -32,7 +32,7 @@ def resolve_on_hit_ongoing_hp_loss(
             for kind in rule.excluded_creature_types
         ):
             return OnHitConditionSaveResolution()
-        source_effect_id = attack.weapon.name
+        source_effect_id = rule.source_name
         existing = next((
             effect for effect in defender.timed_effects
             if effect.effect_id == rule.effect_id
