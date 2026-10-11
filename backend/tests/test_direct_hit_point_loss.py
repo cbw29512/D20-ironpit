@@ -16,6 +16,9 @@ def _fighter():
     state = build_combatant_state(build_karnok_stoneward())
     state.current_hp = min(16, state.template.max_hp)
     state.temporary_hp = 12
+    for resource in state.resources:
+        if resource.id == "relentless-endurance":
+            resource.current_uses = 0
     return state
 
 
