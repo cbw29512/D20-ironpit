@@ -12,6 +12,60 @@
   const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
   const members = (setup) => [...(setup?.heroes || []), ...(setup?.monsters || [])];
 
+  function loseHitPoints(state, amount, affectedStates = []) {
+    try {
+      if (!Number.isInteger(amount) || amount < 0) throw new Error("HP loss must be a nonnegative integer.");
+      if (!amount || state.is_dead || !state.is_alive || state.current_hp <= 0) return 0;
+      const before = state.current_hp;
+      if (amount >= before) {
+        const zero = window.IRON_PIT_BROWSER_ZERO_HP;
+        if (!zero?.reduceToZero) throw new Error("Direct HP loss requires universal zero-HP lifecycle.");
+        zero.reduceToZero(state, affectedStates);
+      } else state.current_hp -= amount;
+      return before - state.current_hp;
+    } catch (error) {
+      console.error("Direct HP loss failed", { combatant: state?.template?.name, error });
+      throw error;
+    }
+  }
+
+  function applyOrStackHpLoss(state, effectId, sourceId, sourceEffectId, diceCount, diceSize, endsOnMagicalHealing = false) {
+    try {
+      if (!effectId || !sourceId || !sourceEffectId || !Number.isInteger(diceCount)
+        || diceCount < 1 || !Number.isInteger(diceSize) || diceSize < 2) {
+        throw new Error("Source-owned ongoing HP loss requires valid identities and dice.");
+      }
+      if (state.is_dead || !state.is_alive) return 0;
+      const match = (state.timed_effects || []).find((effect) =>
+        effect.effect_id === effectId && effect.source_id === sourceId
+        && effect.source_effect_id === sourceEffectId);
+      if (match) {
+        if (!(match.start_of_turn_hp_loss_dice_count > 0)
+          || match.start_of_turn_hp_loss_dice_size !== diceSize) throw new Error("Incompatible wound stack.");
+        if (Boolean(match.ends_on_magical_healing) !== Boolean(endsOnMagicalHealing)) {
+          throw new Error("Incompatible wound healing-removal semantics.");
+        }
+        const count = match.start_of_turn_hp_loss_dice_count + diceCount;
+        if (count > 40) throw new Error("HP-loss stack exceeds supported dice limit.");
+        match.start_of_turn_hp_loss_dice_count = count;
+        return count;
+      }
+      (state.timed_effects ||= []).push({
+        effect_id: effectId, source_id: sourceId, source_effect_id: sourceEffectId,
+        expires_at_start_of_source_turn: false,
+        start_of_turn_hp_loss_dice_count: diceCount,
+        start_of_turn_hp_loss_dice_size: diceSize,
+        ends_on_magical_healing: Boolean(endsOnMagicalHealing),
+      });
+      state.active_effect_ids ||= [];
+      if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
+      return diceCount;
+    } catch (error) {
+      console.error("Ongoing HP-loss stack failed", { combatant: state?.template?.name, error });
+      throw error;
+    }
+  }
+
   function resolve(sequence, round, member, setup) {
     try {
       const events = [];
@@ -62,6 +116,26 @@
           }
         }
       }
+      for (const effect of [...(member.state.timed_effects || [])]) {
+        const hpLossCount = effect.start_of_turn_hp_loss_dice_count || 0;
+        if (hpLossCount > 0 && member.state.current_hp > 0 && !member.state.is_dead) {
+          let totalLoss = 0;
+          for (let index = 0; index < hpLossCount; index += 1) {
+            totalLoss += D().roll(effect.start_of_turn_hp_loss_dice_size || 10);
+          }
+          const hpBefore = member.state.current_hp;
+          const lost = loseHitPoints(member.state, totalLoss, states);
+          const name = effect.source_effect_id || effect.effect_id;
+          events.push({
+            sequence: sequence++, round_number: round, event_type: "feature",
+            actor_id: member.combatant_id, actor_name: member.state.template.name,
+            target_id: member.combatant_id, target_name: member.state.template.name,
+            feature_id: name, hp_before: hpBefore, hp_after: member.state.current_hp,
+            is_dead: member.state.is_dead, animation: "feature",
+            description: `${member.state.template.name} loses ${lost} Hit Points from ${name} at the start of the turn (not damage).`,
+          });
+        }
+      }
       return { events, sequence };
     } catch (error) {
       console.error("Start-of-turn timed burn failed.", { combatant: member?.combatant_id, error });
@@ -69,5 +143,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN = { resolve };
+  window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN = { resolve, loseHitPoints, applyOrStackHpLoss };
 })();

@@ -45,6 +45,11 @@
       const total = rolls.reduce((sum, value) => sum + value, 0) + (rider.healingBonus || 0);
       const before = target.state.current_hp;
       const healed = H().restore(target.state, total);
+      const timed = window.IRON_PIT_BROWSER_TIMED;
+      const needsCleanup = action.magicalEffect
+        && (target.state.timed_effects || []).some((effect) => effect.ends_on_magical_healing);
+      if (needsCleanup && !timed?.removeOnMagicalHealing) throw new Error("Area magical healing requires timed-effect cleanup.");
+      const removed = needsCleanup ? timed.removeOnMagicalHealing(target.state) : [];
       return {
         sequence, round_number: round, event_type: "healing",
         actor_id: member.combatant_id, actor_name: member.state.template.name,
@@ -58,6 +63,7 @@
         death_save_failures: target.state.death_save_failures,
         is_stable: target.state.is_stable, is_dead: target.state.is_dead,
         feature_id: action.id, resource_remaining: remaining,
+        removed_condition_ids: removed,
         animation: action.animation,
         description: `${member.state.template.name}'s ${action.name} restores ${healed} HP to ${target.state.template.name}.`,
       };

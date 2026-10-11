@@ -5,6 +5,7 @@ import logging
 from app.combat.area_targeting import AreaPlacement, member_in_area_placement
 from app.combat.hit_points import effective_max_hp
 from app.combat.zero_hp import restore_hit_points
+from app.combat.timed_condition_lifecycle import remove_on_magical_healing
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DiceRoll, SavingThrowAction
 
@@ -61,6 +62,7 @@ def resolve_area_healing(
         total = sum(rolls) + rider.healing_bonus
         before = target.state.current_hp
         healed = restore_hit_points(target.state, total)
+        removed = remove_on_magical_healing(target.state) if action.magical_effect else []
         event = BattleEvent(
             sequence=sequence, round_number=round_number, event_type="healing",
             actor_id=actor.combatant_id, actor_name=actor.state.template.name,
@@ -74,6 +76,7 @@ def resolve_area_healing(
             death_save_failures=target.state.death_save_failures,
             is_stable=target.state.is_stable, is_dead=target.state.is_dead,
             feature_id=action.id, resource_remaining=resource_remaining,
+            removed_condition_ids=removed,
             animation=action.animation,
             description=(
                 f"{actor.state.template.name}'s {action.name} restores {healed} HP "

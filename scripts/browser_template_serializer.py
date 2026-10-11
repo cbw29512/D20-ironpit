@@ -155,6 +155,19 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             if effect.cannot_regain_hit_points:
                 save_row["cannotRegainHitPoints"] = True
             row["onHitConditionSave"] = save_row
+        if attack.on_hit_ongoing_hp_loss:
+            effect = attack.on_hit_ongoing_hp_loss
+            row["onHitOngoingHpLoss"] = {
+                "effectId": effect.effect_id,
+                "sourceName": effect.source_name,
+                "saveAbility": _value(effect.save_ability),
+                "dc": effect.dc,
+                "diceCount": effect.dice_count,
+                "diceSize": effect.dice_size,
+                "excludedCreatureTypes": list(effect.excluded_creature_types),
+                "stacksOnReapply": effect.stacks_on_reapply,
+                "endsOnMagicalHealing": effect.ends_on_magical_healing,
+            }
         if attack.on_hit_modifier_effects:
             row["onHitModifiers"] = [_hit_modifier(effect) for effect in attack.on_hit_modifier_effects]
         if attack.conditional_damage:
@@ -415,7 +428,7 @@ def _spell_attack(action: Any) -> dict[str, Any]:
 
 def _healing(action: Any) -> dict[str, Any]:
     try:
-        return {
+        row = {
             "id": action.id, "name": action.name, "actionCost": action.action_cost,
             "range": action.range_ft, "targetMode": action.target_mode, "maxTargets": action.max_targets,
             "areaRadiusFt": action.area_radius_ft, "diceCount": action.dice_count, "diceSize": action.dice_size,
@@ -431,6 +444,9 @@ def _healing(action: Any) -> dict[str, Any]:
             "stabilizeAtZero": action.stabilize_at_zero,
             "animation": action.animation,
         }
+        if action.magical_healing:
+            row["magicalHealing"] = True
+        return row
     except Exception:
         logger.exception("Failed to serialize healing action %s.", action.id)
         raise

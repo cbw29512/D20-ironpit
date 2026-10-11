@@ -20,6 +20,21 @@ def remove_effect_instance(state: CombatantState, effect: TimedEffect) -> bool:
         raise
 
 
+def remove_on_magical_healing(state: CombatantState) -> list[str]:
+    """Close only effects marked for magical-healing removal, regardless of actual HP restored."""
+    try:
+        removed: list[str] = []
+        for effect in list(state.timed_effects):
+            if not effect.ends_on_magical_healing:
+                continue
+            if remove_effect_instance(state, effect) and effect.effect_id not in removed:
+                removed.append(effect.effect_id)
+        return removed
+    except Exception:
+        logger.exception("Failed magical-healing effect cleanup for %s.", state.template.name)
+        raise
+
+
 def remove_effect_group(state: CombatantState, effect: TimedEffect) -> list[str]:
     try:
         grant_immunity = effect.source_effect_immunity_on_end

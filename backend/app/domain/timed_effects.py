@@ -41,6 +41,7 @@ class TimedEffect(BaseModel):
     suppress_reactions: bool = False
     suppress_movement: bool = False
     cannot_regain_hit_points: bool = False
+    ends_on_magical_healing: bool = False
     next_attack_disadvantage: bool = False
     zero_hp_replacement_hp: int = Field(default=0, ge=0)
     # Universal source ownership for temporary typed resistances. This lets a
@@ -60,6 +61,8 @@ class TimedEffect(BaseModel):
     start_of_turn_dice_count: int = Field(default=0, ge=0, le=40)
     start_of_turn_dice_size: int = Field(default=6, ge=2, le=100)
     start_of_turn_damage_type: DamageType | None = None
+    start_of_turn_hp_loss_dice_count: int = Field(default=0, ge=0, le=40)
+    start_of_turn_hp_loss_dice_size: int = Field(default=10, ge=2, le=100)
     start_of_turn_save_ability: AbilityName | None = None
     start_of_turn_save_dc: int | None = Field(default=None, ge=1, le=40)
     start_of_turn_save_ends: bool = False

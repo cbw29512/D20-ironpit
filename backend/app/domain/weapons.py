@@ -73,6 +73,20 @@ class OnHitMaximumHpSave(BaseModel):
     zero_max_hp_kills: bool = False
 
 
+class OnHitOngoingHpLoss(BaseModel):
+    """Universal on-hit save leading to source-owned, stacking direct HP loss."""
+
+    effect_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    save_ability: AbilityName
+    dc: int = Field(ge=1, le=40)
+    dice_count: int = Field(ge=1, le=40)
+    dice_size: int = Field(ge=2, le=100)
+    excluded_creature_types: list[str] = Field(default_factory=list)
+    stacks_on_reapply: bool = True
+    ends_on_magical_healing: bool = True
+
+
 class OnHitConditionSave(BaseModel):
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
@@ -145,6 +159,7 @@ class WeaponAttack(BaseModel):
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_save_damage: OnHitSaveDamage | None = None
     on_hit_condition_save: OnHitConditionSave | None = None
+    on_hit_ongoing_hp_loss: OnHitOngoingHpLoss | None = None
     on_hit_maximum_hp_save: OnHitMaximumHpSave | None = None
     on_hit_contested_movement: OnHitContestedMovement | None = None
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)

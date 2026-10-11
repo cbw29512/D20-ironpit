@@ -65,6 +65,21 @@ class ProneEffectDefinition(BaseModel):
     max_target_size: CreatureSize | None = None
 
 
+class OngoingHpLossEffectDefinition(BaseModel):
+    """Immutable attack-source data; the encounter owns the live wound state."""
+
+    kind: Literal["ongoing_hp_loss"] = "ongoing_hp_loss"
+    effect_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    save_ability: AbilityName
+    dc: int = Field(ge=1, le=40)
+    dice_count: int = Field(ge=1, le=40)
+    dice_size: int = Field(ge=2, le=100)
+    excluded_creature_types: list[str] = Field(default_factory=list)
+    stacks_on_reapply: bool = True
+    ends_on_magical_healing: bool = True
+
+
 class SaveConditionEffectDefinition(BaseModel):
     kind: Literal["save_condition"] = "save_condition"
     save_ability: AbilityName
@@ -115,6 +130,6 @@ class ConditionEffectDefinition(BaseModel):
 
 AttackEffectDefinition = Annotated[
     DamageEffectDefinition | SaveDamageEffectDefinition | SaveMaximumHpReductionEffectDefinition | ContestedMovementEffectDefinition | ProneEffectDefinition | SaveConditionEffectDefinition |
-    GrappleEffectDefinition | ConditionEffectDefinition | HitModifierEffect,
+    GrappleEffectDefinition | ConditionEffectDefinition | OngoingHpLossEffectDefinition | HitModifierEffect,
     Field(discriminator="kind"),
 ]
