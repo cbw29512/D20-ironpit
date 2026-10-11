@@ -30,8 +30,8 @@ def test_source_linked_no_healing_blocks_only_while_effect_is_present() -> None:
 
     effect = state.timed_effects[0]
     assert remove_effect_instance(state, effect)
-    assert restore_hit_points(state, 9) == 9
-    assert state.current_hp == 10
+    assert restore_hit_points(state, 9) == min(9, state.template.max_hp - 1)
+    assert state.current_hp == state.template.max_hp
 
 
 def test_independent_poisoned_instances_do_not_inherit_heal_block() -> None:
