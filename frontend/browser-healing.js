@@ -21,7 +21,8 @@
   }
 
   function restore(state, amount) {
-    if (state.is_dead || amount <= 0 || P().swarm(state)) return 0;
+    if (state.is_dead || amount <= 0 || P().swarm(state)
+      || (state.timed_effects || []).some((effect) => effect.cannot_regain_hit_points)) return 0;
     const before = state.current_hp;
     state.current_hp = Math.min(S().effectiveMaxHp(state), before + amount);
     const healed = state.current_hp - before;
