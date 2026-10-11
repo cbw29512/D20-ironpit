@@ -20,6 +20,20 @@ def remove_effect_instance(state: CombatantState, effect: TimedEffect) -> bool:
         raise
 
 
+def remove_on_magical_healing(state: CombatantState) -> list[str]:
+    """Close source-owned wounds on receipt of magical healing, even if HP gain is prevented."""
+    try:
+        removed: list[str] = []
+        for effect in list(state.timed_effects):
+            if effect.ends_on_magical_healing:
+                remove_effect_instance(state, effect)
+                removed.append(effect.effect_id)
+        return removed
+    except Exception:
+        logger.exception("Failed magical-healing effect cleanup for %s.", state.template.name)
+        raise
+
+
 def remove_effect_group(state: CombatantState, effect: TimedEffect) -> list[str]:
     try:
         grant_immunity = effect.source_effect_immunity_on_end

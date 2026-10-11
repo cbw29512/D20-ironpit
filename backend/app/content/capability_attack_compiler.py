@@ -10,12 +10,13 @@ from app.domain.capability_effects import (
     GrappleEffectDefinition,
     ProneEffectDefinition,
     SaveConditionEffectDefinition,
+    OngoingHpLossEffectDefinition,
     SaveDamageEffectDefinition,
     SaveMaximumHpReductionEffectDefinition,
 )
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
-from app.domain.weapons import OnHitConditionSave, OnHitContestedMovement, OnHitMaximumHpSave, OnHitSaveDamage
+from app.domain.weapons import OnHitConditionSave, OnHitContestedMovement, OnHitMaximumHpSave, OnHitSaveDamage, OnHitOngoingHpLoss
 
 
 class UnsupportedCapabilityError(ValueError):
@@ -68,6 +69,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
     prone_size = None
     control = None
     on_hit_save = None
+    on_hit_hp_loss = None
     on_hit_save_damage = None
     on_hit_maximum_hp_save = None
     on_hit_contested_movement = None
@@ -126,6 +128,15 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                 excluded_creature_types=list(effect.excluded_creature_types),
                 excluded_creature_subtypes=list(effect.excluded_creature_subtypes),
             )
+        elif isinstance(effect, OngoingHpLossEffectDefinition):
+            on_hit_hp_loss = OnHitOngoingHpLoss(
+                effect_id=effect.effect_id, source_name=effect.source_name,
+                save_ability=effect.save_ability, dc=effect.dc,
+                dice_count=effect.dice_count, dice_size=effect.dice_size,
+                excluded_creature_types=list(effect.excluded_creature_types),
+                stacks_on_reapply=effect.stacks_on_reapply,
+                ends_on_magical_healing=effect.ends_on_magical_healing,
+            )
         elif isinstance(effect, HitModifierEffect):
             on_hit_modifiers.append(effect)
         elif isinstance(effect, (GrappleEffectDefinition, ConditionEffectDefinition)):
@@ -147,6 +158,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         on_hit_damage=on_hit,
         on_hit_save_damage=on_hit_save_damage,
         on_hit_condition_save=on_hit_save,
+        on_hit_ongoing_hp_loss=on_hit_hp_loss,
         on_hit_maximum_hp_save=on_hit_maximum_hp_save,
         on_hit_contested_movement=on_hit_contested_movement,
         on_hit_modifier_effects=on_hit_modifiers,

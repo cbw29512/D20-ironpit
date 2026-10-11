@@ -4,6 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.pooled_healing import bind_pool_healing_action
+from app.combat.timed_condition_lifecycle import remove_on_magical_healing
 from app.combat.dice import DiceProvider
 from app.combat.healing_policy import (
     choose_healing_action,
@@ -72,6 +73,8 @@ def resolve_healing(
         else:
             rolls, roll_total, healed, notation, modifier = resolve_healing_amount(healer, target, action, dice)
             removed = apply_healing_riders(target, action)
+            if not action.grants_temporary_hp and (slot_heal(action) or action.magical_healing):
+                removed.extend(remove_on_magical_healing(target.state))
             rider_text = (
                 " Conditions ended: " + ", ".join(item.replace("_", " ").title() for item in removed) + "."
                 if removed else ""

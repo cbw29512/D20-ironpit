@@ -29,6 +29,7 @@ class HealingAction(BaseModel):
     prone_reaction_stand: bool = False
     secondary_target_within_ft: int | None = Field(default=None, ge=5)
     grants_temporary_hp: bool = False
+    magical_healing: bool = False
     shared_healing_pool: int | None = Field(default=None, ge=1)
     stabilize_at_zero: bool = False
     animation: str = "healing"

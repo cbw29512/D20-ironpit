@@ -6,6 +6,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const P = () => window.IRON_PIT_BROWSER_HEALING_POLICY;
   const R = () => window.IRON_PIT_BROWSER_CONDITION_REMOVAL;
+  const T = () => window.IRON_PIT_BROWSER_TIMED;
 
   function spendResource(healer, action) {
     if (!action.resourceId) return null;
@@ -111,6 +112,12 @@
       }
 
       const removed = action.stabilizeAtZero ? [] : applyRiders(target, action);
+      if (!action.stabilizeAtZero && !action.grantsTemporaryHp
+        && (P().slotHeal(action) || action.magicalHealing)) {
+        for (const effect of [...(target.state.timed_effects || [])]) {
+          if (effect.ends_on_magical_healing) removed.push(...T().removeGroup(target.state, effect));
+        }
+      }
       const riderText = removed.length
         ? " Conditions ended: " + removed.map((id) => id.replaceAll("_", " ")).join(", ") + "."
         : "";

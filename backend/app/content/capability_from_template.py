@@ -52,8 +52,18 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
     effects.extend(effect.model_dump(mode="json") for effect in attack.on_hit_modifier_effects)
     if attack.knocks_prone_max_size is not None:
         effects.append({"kind": "prone", "max_target_size": attack.knocks_prone_max_size})
-    if attack.on_hit_condition_save is not None:
-        save = attack.on_hit_condition_save
+    if attack.on_hit_ongoing_hp_loss is not None:
+        ongoing = attack.on_hit_ongoing_hp_loss
+        effects.append({
+            "kind": "ongoing_hp_loss",
+            "effect_id": ongoing.effect_id, "source_name": ongoing.source_name,
+            "save_ability": ongoing.save_ability, "dc": ongoing.dc,
+            "dice_count": ongoing.dice_count, "dice_size": ongoing.dice_size,
+            "excluded_creature_types": list(ongoing.excluded_creature_types),
+            "stacks_on_reapply": ongoing.stacks_on_reapply,
+            "ends_on_magical_healing": ongoing.ends_on_magical_healing,
+        })
+    if attack.on_hit_condition_save is not None:        save = attack.on_hit_condition_save
         row: dict[str, object] = {
             "kind": "save_condition", "save_ability": save.save_ability, "dc": save.dc,
             "condition": save.condition_id, "max_target_size": save.max_target_size,

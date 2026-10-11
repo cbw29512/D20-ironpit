@@ -64,6 +64,7 @@
       return_damage_excluded_creature_types: [...(options.returnDamageExcludedCreatureTypes || [])],
       start_of_turn_hp_loss_dice_count: options.startOfTurnHpLossDiceCount || 0,
       start_of_turn_hp_loss_dice_size: options.startOfTurnHpLossDiceSize || 10,
+      ends_on_magical_healing: Boolean(options.endsOnMagicalHealing),
       repeat_save_failure_count: 0,
       repeat_save_failures_to_lock: options.repeatSaveFailuresToLock || null,
       repeat_save_failure_condition_id: options.repeatSaveFailureConditionId || null,
