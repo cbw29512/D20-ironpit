@@ -19,8 +19,9 @@
     const buffs = new Set(state.active_buff_effect_ids || []), debuffs = new Set();
     for (const id of state.active_effect_ids || []) (SELF_BUFFS.has(id) ? buffs : debuffs).add(id);
     for (const effect of state.timed_effects || []) debuffs.add(effect.effect_id);
+    const permanentIds = new Set((state.template?.passive_modifier_grants || []).map((grant) => grant.source_id));
     for (const modifier of state.active_modifiers || []) {
-      const id = modifier.source_effect_id; if (!id) continue;
+      const id = modifier.source_effect_id; if (!id || permanentIds.has(id)) continue;
       (modifierIsDebuff(modifier) ? debuffs : buffs).add(id);
     }
     if (state.concentration?.effect_id) buffs.delete(state.concentration.effect_id);
@@ -38,6 +39,21 @@
         if (!predicate) throw new Error("Steadfast visibility predicate unavailable.");
         result.push({ id: "Steadfast", active: predicate(member, setup, 30),
           explanation: "Immune to Frightened while a visible, active ally is within 30 feet." });
+      }
+      // The source owns printed passive labels, while the combat modifier stack owns activation.
+      // Applies to both editions without dispatching by class or monster name.
+      const passives = new Map();
+      for (const grant of member.state.template.passive_modifier_grants || []) {
+        if (!grant.source_name) continue;
+        const enabled = (member.state.active_modifiers || []).some((modifier) =>
+          modifier.source_effect_id === grant.source_id && modifier.kind === grant.kind
+          && (modifier.required_active_effect_ids || []).every((id) => member.state.active_effect_ids.includes(id)));
+        passives.set(grant.source_name, enabled || Boolean(passives.get(grant.source_name)));
+      }
+      for (const [id, enabled] of passives) {
+        if (!result.some((item) => item.id === id)) {
+          result.push({ id, active: enabled, explanation: "Source-owned permanent combat modifier." });
+        }
       }
       return result;
     } catch (error) {
