@@ -21,6 +21,7 @@ class PassiveModifierGrant(BaseModel):
     condition_id: str | None = Field(default=None, min_length=1)
     source_creature_types: list[str] = Field(default_factory=list)
     required_active_effect_ids: list[str] = Field(default_factory=list)
+    required_visible_active_ally_within_ft: int | None = Field(default=None, ge=0)
     save_ability: AbilityName | None = None
     save_dc: int | None = Field(default=None, ge=1, le=40)
     ends_on_owner_attack: bool = False
@@ -31,12 +32,14 @@ class PassiveModifierGrant(BaseModel):
         try:
             if self.kind in {"attacks-against-disadvantage", "targeting-save-gate"} and not self.source_creature_types:
                 raise ValueError("Passive source-filtered modifiers require at least one source creature type.")
-            if self.kind == "condition-immunity" and not self.source_creature_types and not self.required_active_effect_ids:
+            if self.kind == "condition-immunity" and not (self.source_creature_types or self.required_active_effect_ids or self.required_visible_active_ally_within_ft is not None):
                 raise ValueError("Passive condition immunity requires a source filter or active-effect requirement.")
             if any(not item.strip() for item in self.source_creature_types):
                 raise ValueError("Passive modifier source creature types cannot be blank.")
             if any(not item.strip() for item in self.required_active_effect_ids):
                 raise ValueError("Passive modifier active-effect requirements cannot be blank.")
+            if self.required_visible_active_ally_within_ft is not None and self.kind != "condition-immunity":
+                raise ValueError(f"{self.kind} does not accept ally-conditioned immunity.")
             if self.required_active_effect_ids and self.kind != "condition-immunity":
                 raise ValueError(f"{self.kind} does not accept active-effect requirements.")
             if self.kind == "condition-immunity" and self.condition_id is None:
