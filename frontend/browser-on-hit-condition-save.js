@@ -69,5 +69,47 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE = { resolve, creatureMatchesKind };
+  function resolveOngoingHpLoss(target, attack, sourceTemplate = null, round = null, setup = null, attacker = null) {
+    try {
+      const rule = attack.onHitOngoingHpLoss;
+      if (!rule || target.state.is_dead || !target.state.is_alive) return null;
+      const exclusions = rule.excludedCreatureTypes || [];
+      if (exclusions.some((kind) => creatureMatchesKind(target.state.template, kind))) return null;
+      const sourceId = attacker?.combatant_id;
+      if (!sourceId) throw new Error("Source-owned persistent HP loss requires a combatant source id.");
+      const H = window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN;
+      if (!H?.applyOrStackHpLoss) throw new Error("Universal source-owned HP-loss runtime is required.");
+      const sourceEffectId = attack.name;
+      const existing = (target.state.timed_effects || []).find((effect) =>
+        effect.effect_id === rule.effectId && effect.source_id === sourceId
+        && effect.source_effect_id === sourceEffectId);
+      if (existing) {
+        if (!rule.stacksOnReapply) return null;
+        H.applyOrStackHpLoss(target.state, rule.effectId, sourceId, sourceEffectId,
+          rule.diceCount, rule.diceSize, Boolean(rule.endsOnMagicalHealing));
+        return { saveRoll: null, saveAbility: null, saveDc: null,
+          saveSucceeded: null, appliedCondition: rule.effectId };
+      }
+      const save = window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow(
+        target.state, rule.saveAbility, rule.dc, {
+          roundNumber: round, encounterRoller: target, setup,
+        },
+      );
+      let appliedCondition = null;
+      if (!save.succeeded) {
+        H.applyOrStackHpLoss(target.state, rule.effectId, sourceId, sourceEffectId,
+          rule.diceCount, rule.diceSize, Boolean(rule.endsOnMagicalHealing));
+        appliedCondition = rule.effectId;
+      }
+      return {
+        saveRoll: save.roll, saveAbility: rule.saveAbility, saveDc: rule.dc,
+        saveSucceeded: save.succeeded, appliedCondition,
+      };
+    } catch (error) {
+      console.error("On-hit persistent HP loss failed", { target: target?.combatant_id, error });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE = { resolve, resolveOngoingHpLoss, creatureMatchesKind };
 })();

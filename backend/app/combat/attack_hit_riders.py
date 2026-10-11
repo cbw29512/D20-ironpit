@@ -8,6 +8,7 @@ from app.combat.exile import apply_on_hit_exile
 from app.combat.melee_hit_retaliation import apply_melee_hit_retaliation
 from app.combat.melee_hit_save_retaliation import apply_melee_hit_save_retaliation
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
+from app.combat.on_hit_ongoing_hp_loss import resolve_on_hit_ongoing_hp_loss
 from app.combat.on_hit_contested_movement import resolve_on_hit_contested_movement
 from app.combat.on_hit_maximum_hp_save import resolve_on_hit_maximum_hp_save
 from app.combat.post_hit_spell_riders import resolve_paid_post_hit_spell_riders
@@ -58,6 +59,11 @@ def resolve_attack_hit_riders(
         setup=setup,
         target_id=actual_event_id,
     )
+    if attack.on_hit_ongoing_hp_loss is not None:
+        result.on_hit_save = resolve_on_hit_ongoing_hp_loss(
+            defender, attack, dice, source_id=attacker_event_id,
+            round_number=round_number,
+        )
     damage_taken = sum(
         component.applied_total or 0 for component in result.damage_components
     )

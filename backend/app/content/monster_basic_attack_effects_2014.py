@@ -15,6 +15,7 @@ from app.content.monster_conditional_damage_2014 import (
     supports_conditional_damage_2014,
 )
 from app.content.monster_source_2014 import SourceAttack2014
+from app.content.monster_hp_loss_effect_2014 import ongoing_hp_loss_effect_2014, supported_ongoing_hp_loss_2014
 from app.content.monster_zero_hp_save_rider_2014 import zero_hp_save_rider_2014
 from app.domain.capability_effects import (
     AttackEffectDefinition,
@@ -59,6 +60,7 @@ def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
         supported_save_condition_2014(attack.on_hit_save_effect)
         or supported_save_damage_2014(attack.on_hit_save_effect)
         or supported_save_max_hp_reduction_2014(attack.on_hit_save_effect)
+        or supported_ongoing_hp_loss_2014(attack)
     ):
         return False
     if (
@@ -66,7 +68,8 @@ def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
         and not supported_contested_movement_2014(attack.on_hit_contested_movement)
     ):
         return False
-    if attack.ongoing_damage_effect or attack.resource_id or attack.breakable_restraint:
+    if ((attack.ongoing_damage_effect and not supported_ongoing_hp_loss_2014(attack))
+        or attack.resource_id or attack.breakable_restraint):
         return False
     if (
         attack.charge_profile is not None
@@ -89,6 +92,8 @@ def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
 def _save_effect_2014(attack: SourceAttack2014) -> AttackEffectDefinition:
     row = attack.on_hit_save_effect
     assert isinstance(row, dict)
+    if supported_ongoing_hp_loss_2014(attack):
+        return ongoing_hp_loss_effect_2014(attack)
     if supported_save_max_hp_reduction_2014(row):
         return SaveMaximumHpReductionEffectDefinition(
             save_ability=str(row["save_ability"]).lower(),
