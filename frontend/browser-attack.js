@@ -108,16 +108,9 @@
       }
       if (living) M().applyHitEffects?.(actualTarget.state, attacker.combatant_id, attack);
       hitSave = living ? window.IRON_PIT_BROWSER_SAVES?.resolveOnHitConditionSave(actualTarget, attack, attacker.state.template, round, extra.setup, attacker) || null : null;
+      if (living && attack.onHitOngoingHpLoss)
+        hitSave = window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE.resolveOngoingHpLoss(actualTarget, attack, attacker.state.template, round, extra.setup, attacker) || hitSave;
       if (hitSave?.appliedCondition && !applied.includes(hitSave.appliedCondition)) applied.push(hitSave.appliedCondition);
-      if (living && attack.onHitOngoingHpLoss) {
-        const wound = window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE?.resolveOngoingHpLoss(
-          actualTarget, attack, attacker.state.template, round, extra.setup, attacker,
-        );
-        if (wound?.appliedCondition && !applied.includes(wound.appliedCondition)) {
-          applied.push(wound.appliedCondition);
-        }
-        if (wound) hitSave = wound;
-      }
       const appliedDamage = (damageComponents || []).reduce((total, component) => total + (component.appliedTotal || 0), 0);
       maximumHpSave = living ? window.IRON_PIT_BROWSER_MAXIMUM_HP?.resolve(actualTarget, attack, appliedDamage) || null : null;
       contestedMovement = living ? window.IRON_PIT_BROWSER_CONTESTED_MOVEMENT?.resolve(
