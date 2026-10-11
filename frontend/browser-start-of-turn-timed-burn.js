@@ -34,24 +34,6 @@
       const events = [];
       const states = members(setup).map((item) => item.state || item);
       for (const effect of [...(member.state.timed_effects || [])]) {
-        const hpLossCount = effect.start_of_turn_hp_loss_dice_count || 0;
-        if (hpLossCount > 0 && member.state.current_hp > 0 && !member.state.is_dead) {
-          let totalLoss = 0;
-          for (let index = 0; index < hpLossCount; index += 1) {
-            totalLoss += D().roll(effect.start_of_turn_hp_loss_dice_size || 10);
-          }
-          const hpBefore = member.state.current_hp;
-          const lost = loseHitPoints(member.state, totalLoss, states);
-          const name = effect.source_effect_id || effect.effect_id;
-          events.push({
-            sequence: sequence++, round_number: round, event_type: "feature",
-            actor_id: member.combatant_id, actor_name: member.state.template.name,
-            target_id: member.combatant_id, target_name: member.state.template.name,
-            feature_id: name, hp_before: hpBefore, hp_after: member.state.current_hp,
-            is_dead: member.state.is_dead, animation: "feature",
-            description: `${member.state.template.name} loses ${lost} Hit Points from ${name} at the start of the turn (not damage).`,
-          });
-        }
         if ((effect.start_of_turn_dice_count || 0) <= 0 || !effect.start_of_turn_damage_type) continue;
         let total = 0;
         for (let index = 0; index < effect.start_of_turn_dice_count; index += 1) {
@@ -95,6 +77,26 @@
           if (concentration.source_id === effect.source_id && concentration.effect_id === effect.source_effect_id) {
             C().end(source.state, states);
           }
+        }
+      }
+      for (const effect of [...(member.state.timed_effects || [])]) {
+        const hpLossCount = effect.start_of_turn_hp_loss_dice_count || 0;
+        if (hpLossCount > 0 && member.state.current_hp > 0 && !member.state.is_dead) {
+          let totalLoss = 0;
+          for (let index = 0; index < hpLossCount; index += 1) {
+            totalLoss += D().roll(effect.start_of_turn_hp_loss_dice_size || 10);
+          }
+          const hpBefore = member.state.current_hp;
+          const lost = loseHitPoints(member.state, totalLoss, states);
+          const name = effect.source_effect_id || effect.effect_id;
+          events.push({
+            sequence: sequence++, round_number: round, event_type: "feature",
+            actor_id: member.combatant_id, actor_name: member.state.template.name,
+            target_id: member.combatant_id, target_name: member.state.template.name,
+            feature_id: name, hp_before: hpBefore, hp_after: member.state.current_hp,
+            is_dead: member.state.is_dead, animation: "feature",
+            description: `${member.state.template.name} loses ${lost} Hit Points from ${name} at the start of the turn (not damage).`,
+          });
         }
       }
       return { events, sequence };
