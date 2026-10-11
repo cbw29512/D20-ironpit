@@ -43,6 +43,14 @@ const template = (amount = 9) => ({
   assert.equal(state.current_hp, 70, "Survivor uses effective maximum HP for its half-HP threshold");
 }
 
+{
+  const state = S.buildState(template());
+  state.current_hp = 50;
+  state.timed_effects.push({ effect_id: "poisoned", source_id: "devil", cannot_regain_hit_points: true });
+  S.beginTurn(state);
+  assert.equal(state.current_hp, 50, "timed healing prevention also blocks start-turn Survivor healing");
+}
+
 console.log("Browser Survivor start-turn healing matches compiled RAW thresholds.");
 
 
