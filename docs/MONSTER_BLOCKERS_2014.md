@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 87 |
+| `source:trait` | 86 |
 | `source:extra-action` | 68 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 25 |
@@ -53,7 +53,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Basilisk | source:trait | Petrifying Gaze |
 | Bearded Devil | attack:incomplete, source:trait | Steadfast |
 | Behir | mechanic:recharge, source:extra-action | — |
-| Black Pudding | attack:incomplete, source:trait | Corrosive Form |
+| Black Pudding | attack:incomplete | — |
 | Bugbear | attack:complex, source:trait | Surprise Attack |
 | Bulette | source:extra-action | — |
 | Chain Devil | attack:complex, source:extra-action, source:reaction | — |
