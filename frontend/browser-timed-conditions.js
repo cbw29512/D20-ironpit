@@ -126,6 +126,19 @@
     return removed;
   }
 
+  function removeOnMagicalHealing(state) {
+    try {
+      const removed = [];
+      for (const effect of [...(state.timed_effects || [])]) {
+        if (effect.ends_on_magical_healing) removed.push(...removeGroup(state, effect));
+      }
+      return removed;
+    } catch (error) {
+      console.error("Timed effect magical-healing cleanup failed.", error);
+      throw error;
+    }
+  }
+
   function resolveMovementCounters(state) {
     const resolved = [
       ...(window.IRON_PIT_BROWSER_FLIGHT_GROUND?.resolveGroundConditions(state) || []),
@@ -177,7 +190,7 @@
 
   window.IRON_PIT_BROWSER_TIMED = {
     apply, applyTerminalOutcome, consumeNextAttackDisadvantage, expireSourceStart, nextAttackDisadvantage, ownsDamageResistance,
-    removeEffect, removeGroup, resolveMovementCounters, suppressesAction, suppressesBonusAction,
+    removeEffect, removeGroup, removeOnMagicalHealing, resolveMovementCounters, suppressesAction, suppressesBonusAction,
     suppressesMovement, suppressesReactions, suppressesVoluntaryTurn,
   };
 })();

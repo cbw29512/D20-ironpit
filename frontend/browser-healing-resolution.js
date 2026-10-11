@@ -114,9 +114,7 @@
       const removed = action.stabilizeAtZero ? [] : applyRiders(target, action);
       if (!action.stabilizeAtZero && !action.grantsTemporaryHp
         && (P().slotHeal(action) || action.magicalHealing)) {
-        for (const effect of [...(target.state.timed_effects || [])]) {
-          if (effect.ends_on_magical_healing) removed.push(...T().removeGroup(target.state, effect));
-        }
+        removed.push(...T().removeOnMagicalHealing(target.state));
       }
       const riderText = removed.length
         ? " Conditions ended: " + removed.map((id) => id.replaceAll("_", " ")).join(", ") + "."
