@@ -35,7 +35,7 @@ def resolve_hostile_condition_aura(
 
         if target.state.is_dead or condition_is_immune(
             target.state, aura.condition_id, source.state.template,
-            source_is_magical=aura.source_is_magical,
+            source_is_magical=aura.source_is_magical, actor=target, setup=setup,
         ):
             return None, sequence
 
@@ -69,6 +69,7 @@ def resolve_hostile_condition_aura(
                 target.state, aura.condition_id, source.combatant_id,
                 source_effect_id=action.id,
                 source_template=source.state.template,
+                target_actor=target, setup=setup,
                 source_is_magical=aura.source_is_magical,
                 applied_round=round_number,
                 expires_round=round_number + duration if duration is not None else None,
