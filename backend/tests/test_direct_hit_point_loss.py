@@ -3,6 +3,7 @@
 from types import SimpleNamespace
 
 from app.combat.hit_point_loss import lose_hit_points
+from app.combat.ongoing_hp_loss import apply_or_stack_hp_loss
 from app.combat.start_of_turn_hp_loss import resolve_start_of_turn_hp_loss_events
 from app.combat.state import build_combatant_state
 from app.combat.dice import FixedDiceProvider
@@ -76,3 +77,23 @@ def test_recurring_hp_loss_emits_loss_not_damage() -> None:
     assert "not damage" in events[0].description
     assert state.temporary_hp == 12
     assert state.death_save_failures == 0
+
+
+def test_wound_stacks_are_scoped_to_source_and_remove_independently() -> None:
+    from app.combat.timed_condition_lifecycle import remove_effect_instance
+
+    target = _fighter()
+    assert apply_or_stack_hp_loss(target, "persistent-wound", "devil-one", "Glaive",
+                                  dice_count=1, dice_size=10) == 1
+    assert apply_or_stack_hp_loss(target, "persistent-wound", "devil-one", "Glaive",
+                                  dice_count=1, dice_size=10) == 2
+    assert apply_or_stack_hp_loss(target, "persistent-wound", "devil-two", "Glaive",
+                                  dice_count=1, dice_size=10) == 1
+    assert len(target.timed_effects) == 2
+    first = next(e for e in target.timed_effects if e.source_id == "devil-one")
+    assert first.start_of_turn_hp_loss_dice_count == 2
+    remove_effect_instance(target, first)
+    assert len(target.timed_effects) == 1
+    assert target.timed_effects[0].source_id == "devil-two"
+    assert "persistent-wound" in target.active_effect_ids
+    assert not build_combatant_state(build_karnok_stoneward()).timed_effects
