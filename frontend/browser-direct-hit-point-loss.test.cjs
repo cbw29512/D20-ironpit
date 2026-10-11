@@ -69,4 +69,14 @@ const state = (hp = 18, kind = "character") => ({
   assert.equal(target.temporary_hp, 12);
   assert.ok(target.concentration);
 }
+{
+  const target = state();
+  assert.equal(H.applyOrStackHpLoss(target, "persistent-wound", "devil-one", "Glaive", 1, 10), 1);
+  assert.equal(H.applyOrStackHpLoss(target, "persistent-wound", "devil-one", "Glaive", 1, 10), 2);
+  assert.equal(H.applyOrStackHpLoss(target, "persistent-wound", "devil-two", "Glaive", 1, 10), 1);
+  assert.equal(target.timed_effects.length, 2);
+  assert.equal(target.timed_effects[0].start_of_turn_hp_loss_dice_count, 2);
+  target.timed_effects.splice(0, 1);
+  assert.equal(target.timed_effects[0].source_id, "devil-two");
+}
 console.log("Direct HP loss and persistent source wound ticks passed.");
