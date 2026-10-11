@@ -85,8 +85,7 @@ def apply_timed_condition(
     ends_on_teleport: bool = False,
     source_effect_immunity_on_end: bool = False,
     control_limits=None,
-    target_actor=None,
-    setup=None,
+    target_actor=None, setup=None,
 ) -> str | None:
     """Apply defenses and repeat-save context through one source-owned lifecycle."""
     try:
@@ -171,10 +170,7 @@ def apply_timed_condition(
         return effect_id
     except Exception:
         logger.exception(
-            "Failed to apply timed condition %s from source %s (%s)",
-            effect_id,
-            source_id,
-            source_effect_id,
+            "Failed to apply timed condition %s from source %s (%s)", effect_id, source_id, source_effect_id,
         )
         raise
 
