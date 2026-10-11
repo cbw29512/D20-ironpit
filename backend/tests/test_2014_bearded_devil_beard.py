@@ -30,7 +30,7 @@ def _target():
     template = build_karnok_stoneward().model_copy(deep=True)
     template.saving_throw_bonuses["constitution"] = 0
     state = build_combatant_state(template)
-    state.current_hp = max(1, state.current_hp - 14)
+    state.current_hp = max(2, state.current_hp - 1)
     return state
 
 
