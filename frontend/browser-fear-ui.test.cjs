@@ -46,7 +46,7 @@ const passiveMember = {
 assert.deepEqual(replay.permanentPassiveStates(passiveMember, {}), [{
   id: "Warding", active: true, explanation: "Source-owned permanent combat modifier.",
 }]);
-assert.deepEqual(replay.classifyStatusLanes(passiveMember.state).buffs, [], "Permanent passives must not duplicate transient badges.");
+assert.deepEqual(replay.classifyStatusLanes(passiveMember.state).buffs, ["rage"], "Permanent ward must not duplicate in transient badges; Rage remains a separate active buff.");
 passiveMember.state.active_effect_ids = [];
 assert.equal(replay.permanentPassiveStates(passiveMember, {})[0].active, false, "Unavailable passive remains visible but grey.");
 passiveMember.state.template.ruleset = "2014";
