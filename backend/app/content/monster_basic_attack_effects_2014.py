@@ -114,6 +114,7 @@ def _save_effect_2014(attack: SourceAttack2014) -> AttackEffectDefinition:
                 if row.get("repeat_save_failure_condition_id") is not None else None
             ),
             failure_push_ft=int(row.get("failure_push_ft", 0)),
+            cannot_regain_hit_points=bool(row.get("cannot_regain_hit_points", False)),
             excluded_creature_types=[
                 str(item) for item in row.get("excluded_creature_types") or []
             ],

@@ -48,6 +48,7 @@
           repeatSaveTiming: effect.repeatSaveTiming || null,
           repeatSaveFailureConditionId: effect.repeatSaveFailureConditionId || null,
           useDefaultPoisonRecovery: false,
+          cannotRegainHitPoints: Boolean(effect.cannotRegainHitPoints),
         }) || null;
       } else if (!target.state.active_effect_ids.includes(effect.conditionId)) {
         target.state.active_effect_ids.push(effect.conditionId);

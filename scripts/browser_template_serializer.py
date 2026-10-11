@@ -152,6 +152,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                 save_row["excludedCreatureTypes"] = list(effect.excluded_creature_types)
             if effect.excluded_creature_subtypes:
                 save_row["excludedCreatureSubtypes"] = list(effect.excluded_creature_subtypes)
+            if effect.cannot_regain_hit_points:
+                save_row["cannotRegainHitPoints"] = True
             row["onHitConditionSave"] = save_row
         if attack.on_hit_modifier_effects:
             row["onHitModifiers"] = [_hit_modifier(effect) for effect in attack.on_hit_modifier_effects]

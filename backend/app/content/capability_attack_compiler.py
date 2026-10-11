@@ -122,6 +122,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                 repeat_save_timing=effect.repeat_save_timing,
                 repeat_save_failure_condition_id=effect.repeat_save_failure_condition,
                 failure_push_ft=effect.failure_push_ft,
+                cannot_regain_hit_points=effect.cannot_regain_hit_points,
                 excluded_creature_types=list(effect.excluded_creature_types),
                 excluded_creature_subtypes=list(effect.excluded_creature_subtypes),
             )

@@ -58,6 +58,8 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
             "kind": "save_condition", "save_ability": save.save_ability, "dc": save.dc,
             "condition": save.condition_id, "max_target_size": save.max_target_size,
         }
+        if save.cannot_regain_hit_points:
+            row["cannot_regain_hit_points"] = True
         if save.duration_rounds is not None:
             row["duration_rounds"] = save.duration_rounds
         if save.repeat_save_timing is not None:

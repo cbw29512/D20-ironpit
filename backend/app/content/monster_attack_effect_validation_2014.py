@@ -17,6 +17,7 @@ _SAVE_CONDITION_KEYS = frozenset({
     "condition_id", "dc", "max_target_size", "save_ability",
     "duration_rounds", "repeat_save_timing", "repeat_save_failure_condition_id",
     "failure_push_ft", "excluded_creature_types", "excluded_creature_subtypes",
+    "cannot_regain_hit_points",
 })
 _SAVE_DAMAGE_KEYS = frozenset({
     "damage_bonus", "damage_dice_count", "damage_dice_size", "damage_type",
@@ -84,6 +85,7 @@ def supported_save_condition_2014(value: object) -> bool:
         and isinstance(value.get("dc"), int) and 0 < int(value["dc"]) <= 40
         and str(value.get("save_ability", "")).lower() in _ABILITIES
         and optional_size_2014(value.get("max_target_size"))
+        and isinstance(value.get("cannot_regain_hit_points", False), bool)
         and (duration is None or isinstance(duration, int) and 0 < duration <= 100800)
         and (timing is None or str(timing).lower() in _TIMINGS)
         and optional_name_list_2014(value.get("excluded_creature_types"))

@@ -8865,7 +8865,14 @@
         },
         "conditional_damage": [],
         "on_hit_damage": [],
-        "on_hit_save_effect": null,
+        "on_hit_save_effect": {
+        "save_ability": "constitution",
+        "dc": 12,
+        "condition_id": "poisoned",
+        "duration_rounds": 10,
+        "repeat_save_timing": "target_turn_end",
+        "cannot_regain_hit_points": true
+      },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
         "source_complete": false,
