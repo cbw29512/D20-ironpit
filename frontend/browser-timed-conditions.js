@@ -46,6 +46,7 @@
       suppress_bonus_action: Boolean(options.suppressBonusAction),
       suppress_reactions: Boolean(options.suppressReactions),
       suppress_movement: Boolean(options.suppressMovement),
+      cannot_regain_hit_points: Boolean(options.cannotRegainHitPoints),
       next_attack_disadvantage: Boolean(options.nextAttackDisadvantage),
       ends_on_damage: Boolean(options.endsOnDamage),
       ends_if_source_incapacitated: Boolean(options.endsIfSourceIncapacitated),

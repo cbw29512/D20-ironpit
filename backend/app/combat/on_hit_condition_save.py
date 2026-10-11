@@ -92,6 +92,7 @@ def resolve_on_hit_condition_save(
                     expires_at_start_of_source_turn=False,
                     affected_states=affected_states,
                     use_default_poison_recovery=False,
+                    cannot_regain_hit_points=effect.cannot_regain_hit_points,
                 )
             elif effect.condition_id not in defender.active_effect_ids:
                 defender.active_effect_ids.append(effect.condition_id)

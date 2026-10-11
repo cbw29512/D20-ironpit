@@ -80,6 +80,8 @@ def restore_hit_points(state: CombatantState, amount: int) -> int:
         raise ValueError("Healing cannot be negative.")
     if state.is_dead or amount == 0 or CombatTrait.SWARM in state.template.combat_traits:
         return 0
+    if any(effect.cannot_regain_hit_points for effect in state.timed_effects):
+        return 0
     before = state.current_hp
     state.current_hp = min(effective_max_hp(state), before + amount)
     healed = state.current_hp - before

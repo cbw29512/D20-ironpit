@@ -24,7 +24,8 @@
     if (typeof Z().restoreHitPoints === "function") {
       Z().restoreHitPoints(state, trait.amount);
     } else {
-      if (state.is_dead || trait.amount <= 0) return { healed: 0, died: false, suppressed: false };
+      if (state.is_dead || trait.amount <= 0
+        || (state.timed_effects || []).some((effect) => effect.cannot_regain_hit_points)) return { healed: 0, died: false, suppressed: false };
       const maximum = window.IRON_PIT_BROWSER_STATE.effectiveMaxHp(state);
       state.current_hp = Math.min(maximum, state.current_hp + trait.amount);
       if (state.current_hp > before) {
