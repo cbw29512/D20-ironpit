@@ -23,10 +23,6 @@ def condition_is_immune(
     that fact. This keeps magical-only prevention distinct from blanket
     condition immunity and lets nonmagical sources continue to function.
     """
-    if actor is not None and setup is not None and actor.state is state:
-        from app.combat.steadfast_condition_immunity import steadfast_frightened_immunity
-        if steadfast_frightened_immunity(actor, setup, condition_id):
-            return True
     if condition_id in state.template.condition_immunities:
         return True
     if flying_counters_ground_contact(state, ground_contact=ground_contact):
@@ -38,7 +34,7 @@ def condition_is_immune(
     ):
         return True
     if any(
-        condition_immunity_modifier_applies(item, state, condition_id, source)
+        condition_immunity_modifier_applies(item, state, condition_id, source, actor=actor, setup=setup)
         for item in state.active_modifiers
     ):
         return True
