@@ -43,12 +43,10 @@
     state.temporary_hp = Math.max(state.temporary_hp, amount);
     return state.temporary_hp;
   }
-
   function terminateTurn(state, reason) {
     state.turn_terminated = true; state.turn_termination_reason = reason;
     state.action_available = false; state.bonus_action_available = false; state.movement_remaining_ft = 0;
   }
-
   function refreshReaction(state) { state.reaction_available = !T().suppressesReactions(state); }
   function refreshStartOfTurn(state) {
     refreshReaction(state);
@@ -63,7 +61,6 @@
     if (survivor > 0 && state.current_hp > 0 && state.current_hp * 2 <= maximum) state.current_hp = Math.min(maximum, state.current_hp + survivor);
     window.IRON_PIT_BROWSER_HEROIC_INSPIRATION?.grant(state);
   }
-
   function beginTurn(state) {
     state.turns_started = (state.turns_started || 0) + 1;
     state.turn_terminated = false; state.turn_termination_reason = null; state.disengaged_this_turn = false; state.voluntary_turn_activity = null; state.attacks_this_turn = 0;
@@ -74,10 +71,7 @@
     const speed = M().effectiveSpeed(state);
     state.dash_uses_this_turn = 0;
     state.movement_remaining_ft = speed;
-    const countered = [
-      ...T().resolveMovementCounters(state),
-      ...(G()?.resolveMovementCounters?.(state) || []),
-    ];
+    const countered = [...T().resolveMovementCounters(state), ...(G()?.resolveMovementCounters?.(state) || [])];
     const speedZero = G()?.speedIsZero(state) || false;
     if (speedZero || T().suppressesMovement(state)) state.movement_remaining_ft = 0;
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
@@ -87,12 +81,10 @@
     }
     return countered;
   }
-
   function effectiveMovementModes(state) {
     try {
       const base = state.template.movement_modes || {
-        walk_ft: state.template.speed_ft || 0,
-        fly_ft: 0, climb_ft: 0, swim_ft: 0, burrow_ft: 0, hover: false,
+        walk_ft: state.template.speed_ft || 0, fly_ft: 0, climb_ft: 0, swim_ft: 0, burrow_ft: 0, hover: false,
       };
       const result = { ...base };
       for (const effect of state.timed_effects || []) {
@@ -113,7 +105,6 @@
       throw error;
     }
   }
-
   function distance(a, b) {
     try {
       const aGrid = a.state.position, bGrid = b.state.position;
@@ -128,12 +119,9 @@
       throw error;
     }
   }
-
-  const active = (member) => member.state.is_alive && !member.state.is_dead
-    && member.state.current_hp > 0 && !Q().incapacitated(member.state);
+  const active = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0 && !Q().incapacitated(member.state);
   const downedCharacter = (member) => member.state.template.kind === "character" && member.state.is_alive && !member.state.is_dead && member.state.current_hp === 0;
   const opponents = (member, setup) => member.side === "heroes" ? setup.monsters : setup.heroes;
-
   function targetPriority(member) {
     const state = member.state;
     if (!state.is_alive || state.is_dead) return null;
@@ -141,7 +129,6 @@
     if (state.template.kind === "character" && state.current_hp === 0) return 2;
     return null;
   }
-
   function priorityTargets(member, setup) {
     const eligible = opponents(member, setup).filter((candidate) => targetPriority(candidate) !== null
       && !window.IRON_PIT_BROWSER_CHARMED_TARGETING?.blocks(member.state, candidate.combatant_id));
@@ -149,7 +136,6 @@
     const priority = Math.min(...eligible.map(targetPriority));
     return eligible.filter((candidate) => targetPriority(candidate) === priority);
   }
-
   function nearestTarget(member, setup) {
     const candidates = priorityTargets(member, setup);
     if (!candidates.length) return null;
@@ -161,7 +147,6 @@
     const choices = grapplers.length ? grapplers : candidates;
     return choices.reduce((best, item) => distance(member, item) < distance(member, best) ? item : best);
   }
-
   function hasVisibleActiveAllyWithin(member, setup, rangeFt) {
     try {
       if (!Number.isFinite(rangeFt) || rangeFt < 0) throw new Error("Ally range must be nonnegative.");
@@ -170,15 +155,13 @@
       if (!sight?.canSee) throw new Error("Shared visibility resolver unavailable.");
       return allies.some((ally) => ally.combatant_id !== member.combatant_id
         && ally.state.is_alive && !ally.state.is_dead && ally.state.current_hp > 0
-        && !sight.incapacitated(ally.state)
-        && distance(member, ally) <= rangeFt
+        && !sight.incapacitated(ally.state) && distance(member, ally) <= rangeFt
         && sight.canSee(member.state, ally.state, distance(member, ally)));
     } catch (error) {
       console.error("Failed browser visible ally range check", { combatantId: member?.combatant_id, rangeFt, error });
       throw error;
     }
   }
-
   function hasActiveAlly(member, setup) {
     try {
       const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
@@ -205,11 +188,9 @@
     member.state.movement_remaining_ft -= moved;
     return { before, after: distance(member, target), moved };
   }
-
   const sizeAtMost = (member, maxSize) => Boolean(maxSize) && SIZE_RANK[member.state.template.size] <= SIZE_RANK[maxSize];
   window.IRON_PIT_BROWSER_STATE = {
     active, beginTurn, buildState, canProne: (target, maxSize) => sizeAtMost(target, maxSize), distance, downedCharacter, effectiveMaxHp, effectiveMovementModes, grantTemporaryHp, hasActiveAlly,
-    hasAdjacentActiveAlly, hasVisibleActiveAllyWithin, moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost,
-    targetPriority, terminateTurn,
+    hasAdjacentActiveAlly, hasVisibleActiveAllyWithin, moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost, targetPriority, terminateTurn,
   };
 })();
