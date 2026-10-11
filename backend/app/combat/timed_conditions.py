@@ -85,6 +85,8 @@ def apply_timed_condition(
     ends_on_teleport: bool = False,
     source_effect_immunity_on_end: bool = False,
     control_limits=None,
+    target_actor=None,
+    setup=None,
 ) -> str | None:
     """Apply defenses and repeat-save context through one source-owned lifecycle."""
     try:
@@ -93,7 +95,7 @@ def apply_timed_condition(
             effect_id,
             source_template,
             source_is_magical=source_is_magical,
-            ground_contact=ground_contact,
+            ground_contact=ground_contact, actor=target_actor, setup=setup,
         ):
             return None
         if effect_id == POISONED_EFFECT_ID and use_default_poison_recovery:
