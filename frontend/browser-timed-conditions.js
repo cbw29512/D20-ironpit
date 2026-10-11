@@ -57,6 +57,8 @@
       owned_debuff_counters: [...(options.ownedDebuffCounters || [])],
       owned_movement_mode_grants: [...(options.ownedMovementModeGrants || [])],
       removed_from_battlefield: Boolean(options.removedFromBattlefield),
+      start_of_turn_hp_loss_dice_count: options.startOfTurnHpLossDiceCount || 0,
+      start_of_turn_hp_loss_dice_size: options.startOfTurnHpLossDiceSize || 10,
       return_damage_dice_count: options.returnDamageDiceCount || 0,
       return_damage_dice_size: options.returnDamageDiceSize || 0,
       return_damage_bonus: options.returnDamageBonus || 0,
