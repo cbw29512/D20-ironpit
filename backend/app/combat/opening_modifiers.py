@@ -23,6 +23,7 @@ def opening_modifiers(template: CombatantTemplate) -> list[CombatModifier]:
                 condition_id=grant.condition_id,
                 source_creature_types=list(grant.source_creature_types),
                 required_active_effect_ids=list(grant.required_active_effect_ids),
+                required_visible_active_ally_within_ft=grant.required_visible_active_ally_within_ft,
                 save_ability=grant.save_ability,
                 save_dc=grant.save_dc,
                 ends_on_owner_attack=grant.ends_on_owner_attack,
