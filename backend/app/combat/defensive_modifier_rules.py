@@ -151,8 +151,15 @@ def condition_immunity_modifier_applies(
     state: CombatantState,
     condition_id: str,
     source: CombatantTemplate | None,
+    *, actor=None, setup=None,
 ) -> bool:
     try:
+        if modifier.required_visible_active_ally_within_ft is not None:
+            if actor is None or setup is None or actor.state is not state:
+                return False
+            from app.combat.ally_context import has_visible_active_ally_within
+            if not has_visible_active_ally_within(actor, setup, modifier.required_visible_active_ally_within_ft):
+                return False
         return (
             modifier.kind is ModifierKind.CONDITION_IMMUNITY
             and modifier.condition_id == condition_id
