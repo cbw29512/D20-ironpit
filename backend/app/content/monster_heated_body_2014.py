@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 # certify a retaliation. Stop at the next printed trait boundary.
 _CONTACT = re.compile(
     r"A creature that touches the .+? or hits it with a melee attack "
-    r"while within (?P<reach>\\d+) feet of it takes "
-    r"\\d+ \\((?P<count>\\d+)d(?P<size>\\d+)\\) (?P<type>fire|acid) damage\\b",
+    r"while within (?P<reach>\d+) feet of it takes "
+    r"\d+ \((?P<count>\d+)d(?P<size>\d+)\) (?P<type>fire|acid) damage\b",
     re.IGNORECASE | re.DOTALL,
 )
 
@@ -26,7 +26,7 @@ def _source_retaliation_2014(
         return []
     source = monster.source_traits or ""
     heading = re.compile(
-        rf"<strong>{re.escape(label)}\\.</strong>(?P<body>.*?)(?=<strong>|\\Z)",
+        rf"<strong>{re.escape(label)}\.</strong>(?P<body>.*?)(?=<strong>|\Z)",
         re.IGNORECASE | re.DOTALL,
     )
     section = heading.search(source)
