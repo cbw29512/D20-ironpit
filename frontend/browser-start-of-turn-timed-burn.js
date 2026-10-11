@@ -29,7 +29,7 @@
     }
   }
 
-  function applyOrStackHpLoss(state, effectId, sourceId, sourceEffectId, diceCount, diceSize) {
+  function applyOrStackHpLoss(state, effectId, sourceId, sourceEffectId, diceCount, diceSize, endsOnMagicalHealing = false) {
     try {
       if (!effectId || !sourceId || !sourceEffectId || !Number.isInteger(diceCount)
         || diceCount < 1 || !Number.isInteger(diceSize) || diceSize < 2) {
@@ -42,6 +42,9 @@
       if (match) {
         if (!(match.start_of_turn_hp_loss_dice_count > 0)
           || match.start_of_turn_hp_loss_dice_size !== diceSize) throw new Error("Incompatible wound stack.");
+        if (Boolean(match.ends_on_magical_healing) !== Boolean(endsOnMagicalHealing)) {
+          throw new Error("Incompatible wound healing-removal semantics.");
+        }
         const count = match.start_of_turn_hp_loss_dice_count + diceCount;
         if (count > 40) throw new Error("HP-loss stack exceeds supported dice limit.");
         match.start_of_turn_hp_loss_dice_count = count;
@@ -52,6 +55,7 @@
         expires_at_start_of_source_turn: false,
         start_of_turn_hp_loss_dice_count: diceCount,
         start_of_turn_hp_loss_dice_size: diceSize,
+        ends_on_magical_healing: Boolean(endsOnMagicalHealing),
       });
       state.active_effect_ids ||= [];
       if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);

@@ -23,6 +23,8 @@
 
   function riderWorthwhile(target, action) {
     const active = new Set(target.state.active_effect_ids || []);
+    if (!action.grantsTemporaryHp && (slotHeal(action) || action.magicalHealing)
+      && (target.state.timed_effects || []).some((effect) => effect.ends_on_magical_healing)) return true;
     if ((action.removableConditions || []).some((id) => active.has(id))) return true;
     return Boolean(action.proneReactionStand && active.has("prone") && target.state.reaction_available);
   }

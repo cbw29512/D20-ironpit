@@ -79,4 +79,20 @@ const state = (hp = 18, kind = "character") => ({
   target.timed_effects.splice(0, 1);
   assert.equal(target.timed_effects[0].source_id, "devil-two");
 }
-console.log("Direct HP loss and persistent source wound ticks passed.");
+load("browser-timed-conditions.js");
+{
+  const target = state();
+  assert.equal(H.applyOrStackHpLoss(target, "persistent-wound", "devil-one", "Glaive", 1, 10, true), 1);
+  assert.equal(H.applyOrStackHpLoss(target, "persistent-wound", "devil-two", "Glaive", 1, 10, true), 1);
+  target.timed_effects.push({
+    effect_id: "poisoned", source_id: "devil-one", source_effect_id: "Beard",
+    cannot_regain_hit_points: true,
+  });
+  target.active_effect_ids.push("poisoned");
+  const removed = window.IRON_PIT_BROWSER_TIMED.removeOnMagicalHealing(target);
+  assert.deepEqual(removed, ["persistent-wound"]);
+  assert.equal(target.timed_effects.length, 1);
+  assert.equal(target.timed_effects[0].effect_id, "poisoned");
+  assert.ok(target.active_effect_ids.includes("poisoned"));
+}
+console.log("Direct HP loss, wound stacks, and magical-healing closure passed.");

@@ -415,7 +415,7 @@ def _spell_attack(action: Any) -> dict[str, Any]:
 
 def _healing(action: Any) -> dict[str, Any]:
     try:
-        return {
+        row = {
             "id": action.id, "name": action.name, "actionCost": action.action_cost,
             "range": action.range_ft, "targetMode": action.target_mode, "maxTargets": action.max_targets,
             "areaRadiusFt": action.area_radius_ft, "diceCount": action.dice_count, "diceSize": action.dice_size,
@@ -431,6 +431,9 @@ def _healing(action: Any) -> dict[str, Any]:
             "stabilizeAtZero": action.stabilize_at_zero,
             "animation": action.animation,
         }
+        if action.magical_healing:
+            row["magicalHealing"] = True
+        return row
     except Exception:
         logger.exception("Failed to serialize healing action %s.", action.id)
         raise

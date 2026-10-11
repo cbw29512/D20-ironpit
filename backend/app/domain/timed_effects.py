@@ -41,6 +41,7 @@ class TimedEffect(BaseModel):
     suppress_reactions: bool = False
     suppress_movement: bool = False
     cannot_regain_hit_points: bool = False
+    ends_on_magical_healing: bool = False
     next_attack_disadvantage: bool = False
     zero_hp_replacement_hp: int = Field(default=0, ge=0)
     # Universal source ownership for temporary typed resistances. This lets a

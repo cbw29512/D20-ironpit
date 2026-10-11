@@ -8,6 +8,7 @@ from app.combat.healing_resolution_support import apply_healing_riders, resolve_
 from app.combat.hit_points import effective_max_hp
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.combat.zero_hp import restore_hit_points
+from app.combat.timed_condition_lifecycle import remove_on_magical_healing
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DiceRoll, HealingAction
 
@@ -119,6 +120,8 @@ def resolve_group_healing(
                 healer, target, action, dice,
             )
         removed = apply_healing_riders(target, action)
+        if not action.grants_temporary_hp and (slot_heal(action) or action.magical_healing):
+            removed.extend(remove_on_magical_healing(target.state))
         events.append(BattleEvent(
             sequence=sequence, round_number=round_number, event_type="healing",
             actor_id=healer.combatant_id, actor_name=healer.state.template.name,

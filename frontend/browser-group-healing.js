@@ -7,6 +7,7 @@
   const H = () => window.IRON_PIT_BROWSER_HEALING;
   const R = () => window.IRON_PIT_BROWSER_HEALING_RESOLUTION;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const T = () => window.IRON_PIT_BROWSER_TIMED;
 
   function resolveGroup(
     sequence, round, healer, targets, action, turnKey = null, setup = null,
@@ -63,6 +64,10 @@
       const runtime = R();
       if (hasRiders && !runtime) throw new Error("Healing riders require the browser healing-resolution runtime.");
       const removed = hasRiders ? runtime.applyRiders(target, action) : [];
+      if (!action.grantsTemporaryHp && (P().slotHeal(action) || action.magicalHealing)) {
+        if (!T()?.removeOnMagicalHealing) throw new Error("Group magical healing requires timed-effect cleanup.");
+        removed.push(...T().removeOnMagicalHealing(target.state));
+      }
       events.push({
         sequence: sequence++,
         round_number: round,

@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 def apply_or_stack_hp_loss(
     state: CombatantState, effect_id: str, source_id: str,
     source_effect_id: str, *, dice_count: int, dice_size: int,
+    ends_on_magical_healing: bool = False,
 ) -> int:
     """Return current stack size; each attacker/source action owns its own stack."""
     try:
@@ -28,6 +29,8 @@ def apply_or_stack_hp_loss(
         if matched is not None:
             if matched.start_of_turn_hp_loss_dice_count <= 0 or matched.start_of_turn_hp_loss_dice_size != dice_size:
                 raise ValueError("An existing source wound has incompatible stack semantics.")
+            if matched.ends_on_magical_healing != ends_on_magical_healing:
+                raise ValueError("An existing source wound has incompatible healing-removal semantics.")
             new_count = matched.start_of_turn_hp_loss_dice_count + dice_count
             if new_count > 40:
                 raise ValueError("Ongoing HP-loss stacks exceed the supported dice limit.")
@@ -39,6 +42,7 @@ def apply_or_stack_hp_loss(
             expires_at_start_of_source_turn=False,
             start_of_turn_hp_loss_dice_count=dice_count,
             start_of_turn_hp_loss_dice_size=dice_size,
+            ends_on_magical_healing=ends_on_magical_healing,
         )
         state.timed_effects.append(effect)
         if effect_id not in state.active_effect_ids:

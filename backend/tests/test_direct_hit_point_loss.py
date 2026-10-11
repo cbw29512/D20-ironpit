@@ -97,3 +97,32 @@ def test_wound_stacks_are_scoped_to_source_and_remove_independently() -> None:
     assert target.timed_effects[0].source_id == "devil-two"
     assert "persistent-wound" in target.active_effect_ids
     assert not build_combatant_state(build_karnok_stoneward()).timed_effects
+
+
+def test_magic_healing_receipt_closes_source_wounds_without_hp_gain() -> None:
+    from app.combat.healing import resolve_healing
+    from app.domain.models import HealingAction
+
+    target = _fighter()
+    for source in ("devil-one", "devil-two"):
+        apply_or_stack_hp_loss(
+            target, "persistent-wound", source, "Glaive",
+            dice_count=1, dice_size=10, ends_on_magical_healing=True,
+        )
+    target.timed_effects.append(TimedEffect(
+        effect_id="poisoned", source_id="devil-one", source_effect_id="Beard",
+        cannot_regain_hit_points=True, expires_at_start_of_source_turn=False,
+    ))
+    target.active_effect_ids.append("poisoned")
+    member = EncounterCombatant(combatant_id="target", side="heroes", position_ft=0, state=target)
+    before = target.current_hp
+    action = HealingAction(
+        id="healing-wound-close", name="Magical Heal", action_cost="action",
+        target_mode="self", healing_bonus=9, magical_healing=True,
+    )
+    event = resolve_healing(1, 1, member, member, action, FixedDiceProvider([1]))
+    assert event.hp_after == before
+    assert "persistent-wound" in event.removed_condition_ids
+    assert all(effect.effect_id != "persistent-wound" for effect in target.timed_effects)
+    assert any(effect.effect_id == "poisoned" for effect in target.timed_effects)
+    assert "poisoned" in target.active_effect_ids

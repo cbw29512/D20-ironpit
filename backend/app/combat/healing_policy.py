@@ -41,6 +41,9 @@ def resource_available(
 
 def healing_rider_worthwhile(target: EncounterCombatant, action: HealingAction) -> bool:
     active = set(target.state.active_effect_ids)
+    if not action.grants_temporary_hp and (slot_heal(action) or action.magical_healing):
+        if any(effect.ends_on_magical_healing for effect in target.state.timed_effects):
+            return True
     if active.intersection(action.removable_conditions):
         return True
     return bool(
