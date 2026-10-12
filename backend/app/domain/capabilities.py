@@ -61,6 +61,9 @@ class CombatantDefinition(BaseModel):
     initiative_bonus: int
     blindsight_ft: int = Field(default=0, ge=0)
     truesight_ft: int = Field(default=0, ge=0)
+    blindsight_deafened_ft: int | None = Field(default=None, ge=1)
+    blind_beyond_blindsight: bool = False
+    blindsight_requires_smell_when_deafened: bool = False
     progression_features: ProgressionCombatFeatures = Field(default_factory=ProgressionCombatFeatures)
     environment_context_reactions: list[EnvironmentContextReaction] = Field(default_factory=list)
     passive_modifier_grants: list[PassiveModifierGrant] = Field(default_factory=list, exclude_if=lambda items: not items)

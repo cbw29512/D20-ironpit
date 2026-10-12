@@ -53,7 +53,7 @@ def attack_roll_condition_sources(
         disadvantage += 1
     if attacks_have_advantage_against(defender):
         advantage += 1
-    if has_condition(defender, INVISIBLE_EFFECT_ID) and not ignores_unseen and not can_see(attacker, defender, distance_ft):
+    if not ignores_unseen and (has_condition(defender, INVISIBLE_EFFECT_ID) or attacker.template.blind_beyond_blindsight) and not can_see(attacker, defender, distance_ft):
         disadvantage += 1
     if RESTRAINED_EFFECT_ID in defender.active_effect_ids:
         advantage += 1

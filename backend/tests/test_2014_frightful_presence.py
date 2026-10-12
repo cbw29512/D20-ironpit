@@ -63,7 +63,7 @@ def test_chromatic_adult_ancient_dragons_are_single_family_unlocked() -> None:
         assert basic_blockers_2014(source[monster_id]) == ()
     roster_ids = {item.id for item in build_basic_2014_monsters()}
     assert {f"2014-{item}" for item in _CHROMATIC_IDS} <= roster_ids
-    assert len(roster_ids) == 209  # Includes Black Pudding, Horned Devil, and innate Invisible Stalker.
+    assert len(roster_ids) == 210  # Includes Black Pudding, Horned Devil, and innate Invisible Stalker.
     assert '2014-blink-dog' in roster_ids
 
 

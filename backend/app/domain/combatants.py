@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import Literal
 from pydantic import BaseModel, Field, model_validator
-
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, HpThresholdConditionAction, HpThresholdInstantDeathAction, SavingThrowAction
 from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.bonus_attacks import BonusAttackGrant
@@ -70,7 +69,6 @@ class ResourceDefinition(BaseModel):
     id: str
     name: str
     max_uses: int = Field(ge=0)
-
 class CombatantTemplate(BaseModel):
     id: str
     name: str
@@ -90,6 +88,9 @@ class CombatantTemplate(BaseModel):
     starts_with_heroic_inspiration: bool = False
     blindsight_ft: int = Field(default=0, ge=0)
     truesight_ft: int = Field(default=0, ge=0)
+    blindsight_deafened_ft: int | None = Field(default=None, ge=1)
+    blind_beyond_blindsight: bool = False
+    blindsight_requires_smell_when_deafened: bool = False
     progression_features: ProgressionCombatFeatures = Field(default_factory=ProgressionCombatFeatures)
     environment_context_reactions: list[EnvironmentContextReaction] = Field(default_factory=list)
     passive_modifier_grants: list[PassiveModifierGrant] = Field(default_factory=list)
@@ -172,7 +173,6 @@ class CombatantTemplate(BaseModel):
     save_success_overrides: list[FailedSaveSuccessOverride] = Field(default_factory=list)
     legendary_actions: list[LegendaryActionOption] = Field(default_factory=list)
     source: str
-
     @model_validator(mode="before")
     @classmethod
     def _normalize_compatibility_fields(cls, values: object) -> object:

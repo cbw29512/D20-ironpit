@@ -79,6 +79,7 @@ class CombatantState(BaseModel):
     voluntary_turn_activity: Literal["movement", "action", "bonus_action"] | None = None
     resources: list[ResourceState] = Field(default_factory=list)
     active_effect_ids: list[str] = Field(default_factory=list)
+    suppressed_sense_ids: list[Literal["smell", "blindsight", "truesight"]] = Field(default_factory=list)
     active_buff_effect_ids: list[str] = Field(default_factory=list)
     opening_buff_id: str | None = None
     grapple_sources: list[GrappleSource] = Field(default_factory=list)

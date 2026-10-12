@@ -24032,7 +24032,7 @@
       "stealth": 3
     },
     "skills_text": "Athletics +5, Perception +3, Stealth +3",
-    "senses": "Blindsight 30 ft.,  Passive Perception 13",
+    "senses": "Blindsight 30 ft. or 10 ft. while Deafened (blind beyond this radius), Passive Perception 13",
     "languages": "Undercommon",
     "damage_resistances": [],
     "damage_resistances_text": null,

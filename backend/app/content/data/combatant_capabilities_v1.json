@@ -23,6 +23,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -233,6 +235,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -414,6 +418,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -610,6 +616,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -794,6 +802,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -1032,6 +1042,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -1212,6 +1224,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -1363,6 +1377,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -1542,6 +1558,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -1695,6 +1713,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -1844,6 +1864,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -2010,6 +2032,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -2159,6 +2183,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -2318,6 +2344,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -2476,6 +2504,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -2634,6 +2664,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -2811,6 +2843,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -3012,6 +3046,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -3165,6 +3201,8 @@
     "initiative_bonus": -1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -3314,6 +3352,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -3465,6 +3505,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -3614,6 +3656,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -3765,6 +3809,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -3914,6 +3960,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -4068,6 +4116,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -4219,6 +4269,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -4373,6 +4425,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -4558,6 +4612,8 @@
     "initiative_bonus": -1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -4729,6 +4785,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -4887,6 +4945,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -5067,6 +5127,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -5214,6 +5276,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -5435,6 +5499,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -5771,6 +5837,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -5942,6 +6010,8 @@
     "initiative_bonus": -1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -6091,6 +6161,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -6238,6 +6310,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 60,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -6383,6 +6457,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -6530,6 +6606,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 30,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -6677,6 +6755,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -6825,6 +6905,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -6970,6 +7052,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -7117,6 +7201,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -7264,6 +7350,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -7411,6 +7499,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -7558,6 +7648,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -7703,6 +7795,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -7852,6 +7946,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -8003,6 +8099,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -8154,6 +8252,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -8325,6 +8425,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -8474,6 +8576,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -8625,6 +8729,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -8774,6 +8880,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -8930,6 +9038,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -9083,6 +9193,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 30,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -9232,6 +9344,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -9383,6 +9497,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -9538,6 +9654,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -9691,6 +9809,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 120,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -9840,6 +9960,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -9994,6 +10116,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -10145,6 +10269,8 @@
     "initiative_bonus": -1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -10296,6 +10422,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -10447,6 +10575,8 @@
     "initiative_bonus": -1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -10652,6 +10782,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -10821,6 +10953,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -10994,6 +11128,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -11194,6 +11330,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -11376,6 +11514,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -11538,6 +11678,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 30,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -11700,6 +11842,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 10,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -11881,6 +12025,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 60,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -12107,6 +12253,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -12315,6 +12463,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -12496,6 +12646,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 30,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -12656,6 +12808,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -12821,6 +12975,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -13039,6 +13195,8 @@
     "initiative_bonus": 4,
     "blindsight_ft": 10,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -13205,6 +13363,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -13372,6 +13532,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 10,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -13541,6 +13703,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -13712,6 +13876,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -13886,6 +14052,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -14071,6 +14239,8 @@
     "initiative_bonus": 6,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -14238,6 +14408,8 @@
     "initiative_bonus": -1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -14451,6 +14623,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 10,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -14653,6 +14827,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -14864,6 +15040,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 60,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -15044,6 +15222,8 @@
     "initiative_bonus": 4,
     "blindsight_ft": 60,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -15204,6 +15384,8 @@
     "initiative_bonus": -1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -15422,6 +15604,8 @@
     "initiative_bonus": -2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -15576,6 +15760,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -15738,6 +15924,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 10,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -15898,6 +16086,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -16075,6 +16265,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 30,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -16237,6 +16429,8 @@
     "initiative_bonus": 4,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -16466,6 +16660,8 @@
     "initiative_bonus": -2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -16637,6 +16833,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -16850,6 +17048,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 120,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -17001,6 +17201,8 @@
     "initiative_bonus": -3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -17161,6 +17363,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -17368,6 +17572,8 @@
     "initiative_bonus": -2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -17526,6 +17732,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -17688,6 +17896,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 10,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -17846,6 +18056,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -18031,6 +18243,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -18192,6 +18406,8 @@
     "initiative_bonus": 4,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -18398,6 +18614,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -18632,6 +18850,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -18814,6 +19034,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 10,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -18976,6 +19198,8 @@
     "initiative_bonus": -5,
     "blindsight_ft": 30,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -19150,6 +19374,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -19369,6 +19595,8 @@
     "initiative_bonus": -2,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -19527,6 +19755,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 60,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -19702,6 +19932,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 60,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -19857,6 +20089,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -20008,6 +20242,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 30,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -20162,6 +20398,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -20344,6 +20582,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -20528,6 +20768,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -20757,6 +20999,8 @@
     "initiative_bonus": 4,
     "blindsight_ft": 10,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -20985,6 +21229,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 10,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -21211,6 +21457,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 10,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -21440,6 +21688,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 10,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -21665,6 +21915,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 10,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -21892,6 +22144,8 @@
     "initiative_bonus": 5,
     "blindsight_ft": 30,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -22126,6 +22380,8 @@
     "initiative_bonus": 4,
     "blindsight_ft": 30,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -22358,6 +22614,8 @@
     "initiative_bonus": 4,
     "blindsight_ft": 30,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -22593,6 +22851,8 @@
     "initiative_bonus": 4,
     "blindsight_ft": 30,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -22824,6 +23084,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 30,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -23057,6 +23319,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -23216,6 +23480,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 60,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -23395,6 +23661,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -23574,6 +23842,8 @@
     "initiative_bonus": 2,
     "blindsight_ft": 30,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -23763,6 +24033,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -23969,6 +24241,8 @@
     "initiative_bonus": 0,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -24203,6 +24477,8 @@
     "initiative_bonus": 1,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],
@@ -24357,6 +24633,8 @@
     "initiative_bonus": 3,
     "blindsight_ft": 0,
     "truesight_ft": 0,
+    "blind_beyond_blindsight": false,
+    "blindsight_requires_smell_when_deafened": false,
     "progression_features": {
       "once_per_turn_weapon_hit_damage_riders": [],
       "ability_check_minimums": [],

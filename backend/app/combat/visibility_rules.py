@@ -76,6 +76,8 @@ def can_see(
         # Truesight is visual: Blinded blocks it. Inside range it sees Invisible.
         if blinded:
             return False
+        if observer.template.blind_beyond_blindsight:
+            return False
         if target_hidden:
             return _sense_reaches(observer, SENSE_TRUESIGHT, resolved_distance)
         return True

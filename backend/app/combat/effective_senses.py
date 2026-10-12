@@ -80,6 +80,8 @@ def source_sense_range_ft(observer: Any, sense_id: str) -> int:
 def sense_is_suppressed(observer: Any, sense_id: str) -> bool:
     """Return whether a live declarative suppressor currently disables this sense."""
     try:
+        if sense_id in (getattr(observer, "suppressed_sense_ids", None) or ()):
+            return True
         for item in getattr(observer, "active_modifiers", None) or []:
             if getattr(item, "suppressed_sense_id", None) == sense_id:
                 return True
@@ -88,6 +90,10 @@ def sense_is_suppressed(observer: Any, sense_id: str) -> bool:
             and _flag_enabled(observer, BLINDSIGHT_REQUIRES_HEARING)
             and _has_condition(observer, DEAFENED)
         ):
+            return True
+        if (sense_id == SENSE_BLINDSIGHT and _has_condition(observer, DEAFENED)
+            and _flag_enabled(observer, "blindsight_requires_smell_when_deafened")
+            and "smell" in (getattr(observer, "suppressed_sense_ids", None) or ())):
             return True
         grants = getattr(_sense_source(observer), "sense_suppressors", None) or ()
         for grant in grants:
@@ -116,7 +122,12 @@ def effective_sense_range_ft(observer: Any, sense_id: str) -> int:
     try:
         if sense_is_suppressed(observer, sense_id):
             return 0
-        return source_sense_range_ft(observer, sense_id)
+        full = source_sense_range_ft(observer, sense_id)
+        if sense_id == SENSE_BLINDSIGHT and _has_condition(observer, DEAFENED):
+            limited = getattr(_sense_source(observer), "blindsight_deafened_ft", None)
+            if limited is not None:
+                return min(full, int(limited))
+        return full
     except Exception:
         logger.exception(
             "Failed to resolve effective sense %s for %s.",

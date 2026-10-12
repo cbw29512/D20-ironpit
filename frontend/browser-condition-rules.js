@@ -92,6 +92,7 @@
       const blinded = has(observer, "blinded");
       if (senseReaches(observer, "blindsight", resolved)) return true;
       if (blinded) return false;
+      if (observer?.template?.blind_beyond_blindsight) return false;
       if (hidden) return senseReaches(observer, "truesight", resolved);
       return true;
     } catch (error) {
