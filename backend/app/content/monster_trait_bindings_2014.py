@@ -17,7 +17,7 @@ from app.content.monster_passive_grants_2014 import (
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_heated_body_2014 import heated_body_retaliation_2014, corrosive_form_retaliation_2014
 from app.content.monster_range_trait_bindings_2014 import supports_poor_depth_perception_2014
-from app.content.monster_once_per_turn_traits_2014 import martial_advantage_rider_2014, surprise_attack_rider_2014
+from app.content.monster_once_per_turn_traits_2014 import martial_advantage_rider_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.content.monster_terminal_effects_2014 import bound_terminal_effect_trait_names_2014
 from app.content.monster_zero_hp_prevention_2014 import bound_zero_hp_trait_names_2014
@@ -89,7 +89,6 @@ def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFe
             evasion_disabled_while_incapacitated="Evasion" in monster.trait_names,
             saving_throw_advantage_grants=saving_throw_advantage_grants_2014(monster),
             once_per_turn_weapon_hit_damage_rider=martial_advantage_rider_2014(monster),
-            once_per_turn_weapon_hit_damage_riders=[rider] if (rider := surprise_attack_rider_2014(monster)) else [],
         )
     except Exception:
         logger.exception("Failed to compile 2014 progression features for %s.", monster.name)
@@ -150,9 +149,6 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         martial_advantage = martial_advantage_rider_2014(monster)
         if martial_advantage:
             bound.add(martial_advantage.source_name)
-        surprise_attack = surprise_attack_rider_2014(monster)
-        if surprise_attack:
-            bound.add(surprise_attack.source_name)
         if sneak_attack_d6_2014(monster) > 0:
             bound.update(_SNEAK_ATTACK_NAMES.intersection(monster.trait_names))
         if "Assassinate" in monster.trait_names:
