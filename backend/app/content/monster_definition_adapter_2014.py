@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014, source_conditional_attack_advantage_2014
 from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
+from app.content.monster_opening_initiative_2014 import opening_initiative_damage_source_2014
 from app.content.monster_attack_source_corrections_2014 import corrected_attack_range_2014
 from app.content.monster_berserk_2014 import berserk_self_buffs_2014
 from app.content.monster_basic_candidates_2014 import (
@@ -78,7 +79,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "damage_type": str(attack.damage.type).lower(),
         "animation": "projectile" if attack.kind == "ranged" else "slash",
         "reach_ft": attack.reach_ft,
-        "effects": basic_attack_effects_2014(attack),
+        "effects": basic_attack_effects_2014(attack, opening_initiative_damage_source_2014(monster)),
         "charge_profile": charge_profile_2014(charge_source, monster_id=monster.id),
         "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
         "grapple_target_policy": attack.grapple_target_policy,
