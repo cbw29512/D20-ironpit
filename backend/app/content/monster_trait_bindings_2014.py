@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 import logging, re
-
 from app.content.environment_context_reactions import sunlight_sensitivity_2014
 from app.content.monster_berserk_2014 import berserk_self_buffs_2014
 from app.content.monster_damage_absorption import damage_absorptions_from_source
