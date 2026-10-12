@@ -31,13 +31,14 @@
   const HD = () => window.IRON_PIT_BROWSER_HIT_DAMAGE || { resolve: legacyHitDamage };
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
     if (attack.unavailableReason != null) throw new Error(`${attack.id} unavailable: ${attack.unavailableReason}`);
-    if (extra.brutalStrikeEffectIds != null) BS()?.selectEffects?.(attacker.state, extra.brutalStrikeEffectIds); const spendAction = extra.spendAction !== false; window.IRON_PIT_BROWSER_TIMED_CONTROL?.registerTurnAttack(attacker.state, extra.offTurn === true);
+    if (extra.brutalStrikeEffectIds != null) BS()?.selectEffects?.(attacker.state, extra.brutalStrikeEffectIds); const spendAction = extra.spendAction !== false;
     if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
     const formation = window.IRON_PIT_BROWSER_FORMATION;
     if (formation?.targetAllowed && !formation.targetAllowed(attacker, target, attack, extra.setup || null)) throw new Error(`${attack.id} cannot target ${target.combatant_id} under its current target policy.`);
     if (!formation?.targetAllowed && (attack.grappleTargetPolicy || "normal") !== "normal") throw new Error("Nonstandard attack target policy requires browser-formation.js.");
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(attacker, target) || null;
     if (ward && !ward.succeeded) { if (spendAction) E().spend(attacker.state, "action"); return window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, attacker, target, attack.name, ward); }
+    window.IRON_PIT_BROWSER_TIMED_CONTROL?.registerTurnAttack(attacker.state, extra.offTurn === true);
     const recklessStarted = extra.allowReckless === true && B2().activate(attacker, attack, round);
     if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
