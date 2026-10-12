@@ -58,7 +58,7 @@ def test_distinct_damage_type_defenses_apply_independently():
     })
     victim = build_combatant_state(victim_template)
     hit = resolve_attack(
-        1, 1, attacker, victim, weapon, 10,
+        1, 1, attacker, victim, weapon, 5,
         FixedDiceProvider([18, 4, 8, 8, 8, 8]), spend_action=False,
     )
     assert hit.hit
