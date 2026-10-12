@@ -36,10 +36,7 @@ _SUNLIGHT_SENSITIVITY = "Sunlight Sensitivity"
 _RAMPAGE = "Rampage"
 _POOR_DEPTH_PERCEPTION = "Poor Depth Perception"
 _FINESSE_WEAPON_NAMES_2014 = frozenset({"Dagger", "Rapier", "Scimitar", "Shortsword", "Whip"})
-_SNEAK_ATTACK_D6 = re.compile(
-    r"Sneak Attack(?: \(1/Turn\))?.*?extra\s+\d+\s+\((\d+)d6\)",
-    re.IGNORECASE | re.DOTALL,
-)
+_SNEAK_ATTACK_D6 = re.compile(r"Sneak Attack(?: \(1/Turn\))?.*?extra\s+\d+\s+\((\d+)d6\)", re.IGNORECASE | re.DOTALL)
 def supports_reckless_2014(monster: SourceMonster2014) -> bool:
     """Return whether printed Reckless can use the shared 2014 melee-Strength resolver."""
     try:
