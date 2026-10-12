@@ -1,6 +1,6 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-**Authoritative working order for monster ability decisions and remediation. Updated 2026-10-11.** This is the same existing work-queue file, **not another competing tracker**. Read this table **before** responding to "next", initiating a monster edit, or asking a previously answered question.
+**Authoritative working order for monster ability decisions and remediation. Updated 2026-10-12.** This is the same existing work-queue file, **not another competing tracker**. Read this table **before** responding to "next", initiating a monster edit, or asking a previously answered question.
 
 **What happened:** the 124-monster / 305-blocker review was recorded in unmerged [PR #680](https://github.com/cbw29512/D20-ironpit/pull/680), while the old operating table was frozen on October 8. Use the reconciled records below, not a guessed next monster. Original source blueprint is available at [the pinned PR commit](https://github.com/cbw29512/D20-ironpit/blob/88881607f1f271a2fdb37ffcf95008d9d8d1a07c/docs/MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md); source cards and generated current-main blockers are decisive for certification. This ledger does not falsely upgrade a plan to shipped code.
 
@@ -11,6 +11,9 @@
 4. **CI is not a planning question:** while an implementation PR is in CI, advance an independent queued ability's source audit. Do not switch to Druid, UI, graphics or unrelated work when the instruction is "next monster".
 5. **If blocked:** record exact missing semantic, link issue/PR, mark `PARKED`, and advance to the next independent ability. Preserve unchanged RAW/card text. Never change a source ability's meaning to force certification.
 6. **After each completed ability:** update **this file** with issue/PR/SHA/test evidence, update the existing worksheet, and advance the cursor. The generated blocker reports and universal inventory remain generator-owned and must not be hand-edited.
+
+## Active whole-monster promotion (2026-10-12)
+**Horned Devil**: [PR #753](https://github.com/cbw29512/D20-ironpit/pull/753) resolves the **only** source classifier blocker, `attack:range`, from the printed +7 / 150-ft / 4d6 Fire Hurl Flame Ranged Spell Attack. Shared range mechanic, no named combat resolver or source mutation. Generated classifier reports **208/327 admitted, 119 blocked** (previously 207/327). **Candidate until exact-head Python/browser/2014 Hero/Basic Roster/Paired report pass; do not call it certified before then.** 2014 source count tests remain independent strict assertions. Next prioritize whole-monster promotions with the fewest confirmed blockers rather than additional partial trait PRs.
 
 ## Current certification/review priorities (GitHub state checked 2026-10-09)
 
