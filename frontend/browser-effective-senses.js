@@ -46,6 +46,7 @@
 
   function senseIsSuppressed(observer, senseId) {
     try {
+      if ((observer?.suppressed_sense_ids || []).includes(senseId)) return true;
       const modifiers = (observer && observer.active_modifiers) || [];
       if (modifiers.some((item) => item.suppressed_sense_id === senseId)) return true;
       if (
@@ -55,6 +56,9 @@
       ) {
         return true;
       }
+      if (senseId === SENSE_BLINDSIGHT && hasCondition(observer, DEAFENED)
+        && flagEnabled(observer, "blindsight_requires_smell_when_deafened")
+        && (observer?.suppressed_sense_ids || []).includes("smell")) return true;
       const grants = (senseSource(observer).sense_suppressors) || [];
       return grants.some((grant) => grant.sense_id === senseId
         && (grant.suppressed_while_conditions || []).some((conditionId) => hasCondition(observer, conditionId)));
@@ -66,7 +70,12 @@
 
   function effectiveSenseRangeFt(observer, senseId) {
     try {
-      return senseIsSuppressed(observer, senseId) ? 0 : sourceSenseRangeFt(observer, senseId);
+      if (senseIsSuppressed(observer, senseId)) return 0;
+      const full = sourceSenseRangeFt(observer, senseId);
+      const limited = senseSource(observer).blindsight_deafened_ft;
+      if (senseId === SENSE_BLINDSIGHT && hasCondition(observer, DEAFENED) && limited != null)
+        return Math.min(full, Number(limited));
+      return full;
     } catch (error) {
       console.error("Failed to resolve effective sense range.", { senseId, error });
       throw error;
