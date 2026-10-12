@@ -5864,7 +5864,7 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 117,
+    "blocked_monster_count": 116,
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
@@ -5883,7 +5883,7 @@
       "source:extra-action": 68,
       "source:legendary": 9,
       "source:reaction": 5,
-      "source:trait": 83
+      "source:trait": 82
     },
     "unresolved_printed_abilities": [
       {
@@ -5913,13 +5913,6 @@
           "Doppelganger"
         ],
         "printed_name": "Ambusher"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Barbed Devil"
-        ],
-        "printed_name": "Barbed Hide"
       },
       {
         "demand_count": 1,
