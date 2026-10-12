@@ -118,6 +118,8 @@
       }
       const burns = window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN?.resolve(sequence, round, member, setup);
       if (burns) { events.push(...burns.events); sequence = burns.sequence; }
+      const source = window.IRON_PIT_BROWSER_SOURCE_TURN_RELATION_DAMAGE?.resolve(sequence, round, member, setup);
+      if (source) { events.push(...source.events); sequence = source.sequence; }
       return { events, sequence };
     } catch (error) {
       console.error("Start-of-turn save-condition damage failed.", error);
