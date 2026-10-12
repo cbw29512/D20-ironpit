@@ -142,11 +142,11 @@ def _save_effect_2014(attack: SourceAttack2014) -> AttackEffectDefinition:
     )
 
 
-def basic_attack_effects_2014(attack: SourceAttack2014) -> list[AttackEffectDefinition]:
+def basic_attack_effects_2014(attack: SourceAttack2014, opening_source_name: str | None = None) -> list[AttackEffectDefinition]:
     if not supports_basic_attack_effects_2014(attack):
         raise ValueError(f"{attack.id} has unsupported 2014 attack effects")
     effects: list[AttackEffectDefinition] = [
-        conditional_damage_effect_2014(row, attack.name)
+        conditional_damage_effect_2014(row, opening_source_name if row.get("trigger") == "round1_initiative_lead" and opening_source_name else attack.name)
         for row in attack.conditional_damage
     ]
     for row in attack.on_hit_damage:
