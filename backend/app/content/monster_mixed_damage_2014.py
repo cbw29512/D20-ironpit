@@ -29,7 +29,7 @@ def source_completed_mixed_attack_2014(
     """Upgrade a parser-incomplete attack only when both source hit dice are proven."""
     if attack.source_complete or attack.kind != "melee":
         return attack
-    if attack.on_hit_save_effect or attack.on_hit_damage or attack.control_effect or attack.ongoing_damage_effect:
+    if attack.on_hit_save_effect or attack.control_effect or attack.ongoing_damage_effect:
         return attack
     source = " ".join(html.unescape(re.sub(r"<[^>]+>", " ", monster.source_actions or "")).split())
     for match in _PATTERN.finditer(source):
@@ -50,6 +50,9 @@ def source_completed_mixed_attack_2014(
             dice_size=int(m["extra_size"]), bonus=0, type=m["extra_type"].lower(),
         )
         if attack.damage != base and attack.damage.model_dump() != extra:
+            continue
+        # A well-parsed existing second component must be reused, never doubled.
+        if attack.on_hit_damage and attack.on_hit_damage != [extra]:
             continue
         # The full nonmagical-armor rider is explicitly neutral in the Pit.
         # Do not extend that exception to any unknown source riders.
