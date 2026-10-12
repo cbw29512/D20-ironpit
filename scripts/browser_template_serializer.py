@@ -1017,7 +1017,6 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 for item in template.conditional_damage_defenses
             ],
             "condition_immunities": list(template.condition_immunities),
-            "innate_condition_ids": list(template.innate_condition_ids),
             "terminal_effect_tags": list(template.terminal_effect_tags),
             "effect_tag_condition_grants": [grant.model_dump(mode="json") for grant in template.effect_tag_condition_grants],
             "wearing_metal_armor": template.wearing_metal_armor,
@@ -1026,6 +1025,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        if template.innate_condition_ids:
+            row["innate_condition_ids"] = list(template.innate_condition_ids)
         if template.damage_absorptions:
             row["damage_absorptions"] = [
                 {"sourceId": item.source_id, "sourceName": item.source_name, "damageType": _value(item.damage_type)}
