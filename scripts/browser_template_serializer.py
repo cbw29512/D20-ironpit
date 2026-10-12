@@ -1017,6 +1017,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 for item in template.conditional_damage_defenses
             ],
             "condition_immunities": list(template.condition_immunities),
+            "innate_condition_ids": list(template.innate_condition_ids),
             "terminal_effect_tags": list(template.terminal_effect_tags),
             "effect_tag_condition_grants": [grant.model_dump(mode="json") for grant in template.effect_tag_condition_grants],
             "wearing_metal_armor": template.wearing_metal_armor,
