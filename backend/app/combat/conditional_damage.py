@@ -14,6 +14,11 @@ def conditional_damage_active(
         return attack_mode is RollMode.ADVANTAGE
     if conditional.trigger == "attacker_bloodied":
         return is_bloodied(attacker)
+    if conditional.trigger == "round1_initiative_lead":
+        if target is None:
+            raise ValueError("Opening-initiative damage requires defender state.")
+        return (attacker.turns_started == 1 and target.turns_started == 0
+                and attacker.feature_use_counts.get("weapon_attack_attempts", 0) == 1)
     if target is None:
         raise ValueError("Target state is required for target-Bloodied conditional damage.")
     return is_bloodied(target)
