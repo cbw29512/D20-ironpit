@@ -25,13 +25,14 @@
     if (restrained) state.active_effect_ids.push("restrained");
   }
 
-  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, sourceIsMagical = false) {
+  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, sourceIsMagical = false, periodicDamage = null) {
     if (I().immune(state, "grappled", null, { sourceIsMagical })) return [];
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
     const effectiveRestrains = restrains && !I().immune(state, "restrained", null, { sourceIsMagical });
     state.grapple_sources.push({
       source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt,
       restrains: effectiveRestrains, source_is_magical: Boolean(sourceIsMagical),
+      periodic_damage: periodicDamage,
     });
     sync(state);
     return effectiveRestrains ? ["grappled", "restrained"] : ["grappled"];
@@ -64,6 +65,13 @@
   function attackDisadvantage(state, targetId) {
     if (!state.grapple_sources.length) return 0;
     return state.grapple_sources.some((source) => source.source_id === targetId) ? 0 : 1;
+  }
+
+  function sourceHasActiveGrapple(setup, sourceId) {
+    if (!setup) throw new Error("Source-gated grapple requires encounter setup.");
+    return [...setup.heroes, ...setup.monsters].some((member) =>
+      member.combatant_id !== sourceId && member.state.is_alive && !member.state.is_dead
+      && (member.state.grapple_sources || []).some((grapple) => grapple.source_id === sourceId));
   }
 
   function cleanup(setup) {
@@ -128,5 +136,5 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_GRAPPLE = { apply, attackDisadvantage, cleanup, escape, release, resolveMovementCounters, shouldEscape, speedIsZero };
+  window.IRON_PIT_BROWSER_GRAPPLE = { apply, attackDisadvantage, cleanup, escape, release, resolveMovementCounters, shouldEscape, sourceHasActiveGrapple, speedIsZero };
 })();

@@ -4,7 +4,7 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AbilityName, ConditionName, ConditionTiming
+from app.domain.actions import AbilityName, ConditionName, ConditionTiming, GrapplePeriodicDamage
 from app.domain.combatants import DamageType
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
@@ -114,6 +114,8 @@ class GrappleEffectDefinition(BaseModel):
     escape_dc: int = Field(ge=1, le=40)
     max_target_size: CreatureSize | None = None
     restrains: bool = False
+    requires_source_free: bool = False
+    periodic_damage: GrapplePeriodicDamage | None = None
 
 
 class ConditionEffectDefinition(BaseModel):

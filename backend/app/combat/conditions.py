@@ -72,6 +72,7 @@ def apply_hit_conditions(
     round_number: int | None = None,
     affected_states: list[CombatantState] | None = None,
     source_template: CombatantTemplate | None = None,
+    setup=None,
 ) -> list[str]:
     """Apply certified automatic conditions and modifiers from a successful weapon hit."""
     if defender.is_dead or not defender.is_alive:
@@ -89,13 +90,20 @@ def apply_hit_conditions(
         applied.append(PRONE_EFFECT_ID)
     control = attack.control_effect
     if control is not None and control.grapple_escape_dc is not None:
-        if control.max_target_size is None or size_at_most(defender.template.size, control.max_target_size):
+        free = True
+        if control.grapple_requires_source_free:
+            if setup is None:
+                raise ValueError("Source-gated on-hit grapples require encounter setup.")
+            from app.combat.grapple_queries import source_has_active_grapple
+            free = not source_has_active_grapple(setup, source_id)
+        if free and (control.max_target_size is None or size_at_most(defender.template.size, control.max_target_size)):
             applied.extend(apply_grapple(
                 defender,
                 source_id,
                 control.grapple_escape_dc,
                 attack.weapon.reach_ft,
                 restrains=control.restrains_while_grappled,
+                periodic_damage=control.grapple_periodic_damage,
             ))
     if control is not None and control.condition_id is not None:
         timed = apply_timed_condition(

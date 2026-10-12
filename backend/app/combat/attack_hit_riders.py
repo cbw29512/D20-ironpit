@@ -46,6 +46,7 @@ def resolve_attack_hit_riders(
             round_number,
             affected_states,
             attacker.template,
+            setup,
         )
     )
     result.on_hit_save = resolve_on_hit_condition_save(

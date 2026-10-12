@@ -13,6 +13,7 @@ from app.content.monster_charge_source_corrections_2014 import corrected_charge_
 from app.content.monster_conditional_damage_defenses_2014 import template_defense_fields_2014
 from app.content.monster_healing_2014 import healing_actions_2014, healing_resources_2014
 from app.content.monster_heated_body_2014 import heated_body_retaliation_2014, corrosive_form_retaliation_2014
+from app.content.monster_grapple_periodic_2014 import supports_grapple_periodic_2014, source_grapple_periodic_proof_2014
 from app.content.monster_damage_taken_effects_2014 import damage_taken_timed_effects_2014
 from app.content.monster_included_weapon_traits_2014 import weapon_damage_source_qualifiers_2014
 from app.content.monster_condition_auras import condition_auras_from_source
@@ -61,6 +62,7 @@ from app.domain.reactions import ParryReaction
 from app.domain.size import CreatureSize
 
 def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapabilityDefinition:
+    source_grapple_periodic_proof_2014(monster, attack)
     attack = source_completed_mixed_attack_2014(monster, attack)
     charge_source = corrected_charge_profile_2014(monster, attack)
     normal_range_ft, long_range_ft = corrected_attack_range_2014(monster, attack)
@@ -81,7 +83,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "reach_ft": attack.reach_ft,
         "effects": basic_attack_effects_2014(attack, opening_initiative_damage_source_2014(monster)),
         "charge_profile": charge_profile_2014(charge_source, monster_id=monster.id),
-        "forbid_target_grappled_by_self": attack.forbid_target_grappled_by_self,
+        "forbid_target_grappled_by_self": (attack.forbid_target_grappled_by_self and not supports_grapple_periodic_2014(attack)),
         "grapple_target_policy": attack.grapple_target_policy,
         "unavailable_reason": attack_unavailable_reason_2014(monster, attack),
         "damage_source_qualifiers": weapon_damage_source_qualifiers_2014(monster),
