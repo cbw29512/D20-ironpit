@@ -17,6 +17,7 @@ from app.content.monster_grapple_periodic_2014 import supports_grapple_periodic_
 from app.content.monster_damage_taken_effects_2014 import damage_taken_timed_effects_2014
 from app.content.monster_included_weapon_traits_2014 import weapon_damage_source_qualifiers_2014
 from app.content.monster_condition_auras import condition_auras_from_source
+from app.content.monster_innate_conditions_2014 import innate_condition_ids_2014
 from app.content.monster_contextual_save_defenses import contextual_save_defenses_2014
 from app.content.monster_definition_adapter_support_2014 import (
     ability_values_2014,
@@ -174,6 +175,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         bonus_tactical_action_grants=aggressive_tactical_grants_2014(monster),
         saving_throw_bonuses=save_bonuses_2014(monster, scores),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
+        innate_condition_ids=innate_condition_ids_2014(monster),
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
         source_legendary_action_names=list(monster.legendary_action_names),
         parry_reaction=ParryReaction(ac_bonus=monster.parry_ac_bonus)
