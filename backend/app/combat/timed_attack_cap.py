@@ -33,11 +33,14 @@ def turn_attack_allowed(state: CombatantState, *, off_turn: bool = False) -> boo
 def register_turn_attack(state: CombatantState, *, off_turn: bool = False) -> None:
     """Count one on-turn attack; fail closed if a timed cap is already spent."""
     try:
-        if off_turn:
-            return
-        if not turn_attack_allowed(state, off_turn=False):
-            raise ValueError(f"{state.template.name} cannot make another attack this turn.")
-        state.attacks_this_turn += 1
+        if not off_turn:
+            if not turn_attack_allowed(state, off_turn=False):
+                raise ValueError(f"{state.template.name} cannot make another attack this turn.")
+            state.attacks_this_turn += 1
+        # A fight-wide attack attempt counter includes reactions and misses.
+        # The per-turn attack cap above remains independent.
+        counts = state.feature_use_counts
+        counts["weapon_attack_attempts"] = counts.get("weapon_attack_attempts", 0) + 1
     except Exception:
         logger.exception("Failed to register a timed-capped attack for %s.", state.template.name)
         raise

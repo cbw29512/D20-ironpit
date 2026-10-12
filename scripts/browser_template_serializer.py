@@ -186,6 +186,7 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                     "diceCount": conditional.dice_count, "diceSize": conditional.dice_size,
                     "damageBonus": conditional.damage_bonus, "damageType": conditional.damage_type.value,
                 }
+                if conditional.source_name: row["conditionalDamage"]["sourceName"] = conditional.source_name
         control = _control(attack.control_effect)
         if control:
             row["controlEffect"] = control

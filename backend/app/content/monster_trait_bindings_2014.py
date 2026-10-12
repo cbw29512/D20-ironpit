@@ -18,6 +18,7 @@ from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_heated_body_2014 import heated_body_retaliation_2014, corrosive_form_retaliation_2014
 from app.content.monster_range_trait_bindings_2014 import supports_poor_depth_perception_2014
 from app.content.monster_once_per_turn_traits_2014 import martial_advantage_rider_2014
+from app.content.monster_opening_initiative_2014 import opening_initiative_damage_source_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.content.monster_terminal_effects_2014 import bound_terminal_effect_trait_names_2014
 from app.content.monster_zero_hp_prevention_2014 import bound_zero_hp_trait_names_2014
@@ -157,6 +158,7 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add("Evasion")
         bound.update(bound_passive_trait_names_2014(monster))
         bound.update(included_weapon_trait_names_2014(monster))
+        if opening_initiative_damage_source_2014(monster): bound.add("Surprise Attack")
         bound.update(bound_zero_hp_trait_names_2014(monster))
         if _MAGIC_WEAPONS in monster.trait_names:
             bound.add(_MAGIC_WEAPONS)

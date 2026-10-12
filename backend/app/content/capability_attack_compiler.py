@@ -86,6 +86,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             else:
                 conditional.append(ConditionalDamage(
                     trigger=effect.trigger,
+                    source_name=effect.source if effect.trigger == "round1_initiative_lead" else None,
                     mode=effect.mode,
                     dice_count=effect.dice.count,
                     dice_size=effect.dice.size,

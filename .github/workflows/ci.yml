@@ -566,6 +566,7 @@ jobs:
           node frontend/browser-pooled-healing.test.cjs
           node frontend/browser-outgoing-healing-maximize.test.cjs
           node frontend/browser-once-per-turn-hit-damage.test.cjs
+          node frontend/browser-opening-hit-damage.test.cjs
           node frontend/browser-post-hit-damage.test.cjs
           node frontend/browser-post-hit-spell-riders.test.cjs
           node frontend/browser-start-of-turn-timed-burn.test.cjs

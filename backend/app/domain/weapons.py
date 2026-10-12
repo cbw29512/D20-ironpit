@@ -14,7 +14,8 @@ from app.domain.zero_hp_effects import ZeroHpSaveDamageRider
 
 
 class ConditionalDamage(BaseModel):
-    trigger: Literal["attack_advantage", "attacker_bloodied", "target_bloodied"]
+    trigger: Literal["attack_advantage", "attacker_bloodied", "target_bloodied", "round1_initiative_lead"]
+    source_name: str | None = None
     mode: Literal["add", "replace_weapon"] = "add"
     dice_count: int = Field(ge=1, le=20)
     dice_size: int = Field(ge=2, le=100)
