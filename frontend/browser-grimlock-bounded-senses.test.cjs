@@ -51,4 +51,19 @@ assert.deepEqual(newFight.suppressed_sense_ids, []);
 assert.deepEqual(newFight.active_effect_ids, []);
 assert.equal(C.canSee(newFight, target, 30), true);
 assert.equal(C.canSee(S.buildState(normal), target, 35), true);
+// Shared attack-source resolution must apply unseen-target Disadvantage beyond
+// a source-bounded sense, even against an ordinary (non-Invisible) target.
+window.IRON_PIT_BROWSER_MODIFIERS = {
+  attacksAgainstAdvantage: () => 0, d20TestAdvantage: () => 0,
+  effectiveSpeed: () => 30,
+};
+window.IRON_PIT_BROWSER_EXHAUSTION = { attackDisadvantage: () => 0 };
+window.IRON_PIT_BROWSER_GRAPPLE = { attackDisadvantage: () => 0 };
+load("browser-attack.js");
+const attackSources = window.IRON_PIT_BROWSER_ATTACK.conditionSources;
+const near = attackSources(newFight, target, 30, "target");
+const far = attackSources(newFight, target, 35, "target");
+assert.equal(far.disadvantage, near.disadvantage + 1);
+assert.equal(attackSources(S.buildState(normal), target, 35, "target").disadvantage, near.disadvantage);
+
 console.log("2014 source-bound bounded Blindsight browser semantics passed.");
