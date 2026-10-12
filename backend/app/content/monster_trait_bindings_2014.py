@@ -7,6 +7,7 @@ from app.content.monster_damage_taken_effects_2014 import damage_taken_timed_eff
 from app.content.monster_included_weapon_traits_2014 import included_weapon_trait_names_2014
 from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_innate_conditions_2014 import innate_condition_ids_2014
+from app.content.monster_senses_2014 import bounded_blindsight_2014
 from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.content.monster_legendary_resistance_2014 import legendary_resistance_trait_name_2014
 from app.content.monster_passive_grants_2014 import (
@@ -156,6 +157,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         if "Evasion" in monster.trait_names and progression_features_2014(monster).evasion:
             bound.add("Evasion")
         bound.update(bound_passive_trait_names_2014(monster))
+        if bounded_blindsight_2014(monster) is not None:
+            bound.add("Blind Senses")
         if "invisible" in innate_condition_ids_2014(monster):
             bound.add("Invisibility")
         bound.update(included_weapon_trait_names_2014(monster))
