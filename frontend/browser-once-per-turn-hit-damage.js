@@ -1,13 +1,7 @@
 (() => {
   "use strict";
 
-  function qualified(rider, attacker, target, activeAllyAdjacentToTarget = false) {
-    if (rider.requires_first_attack_of_fight && attacker.feature_use_counts?.weapon_attack_attempts !== 1) return false;
-    if (rider.requires_attacker_first_turn && attacker.turns_started !== 1) return false;
-    if (rider.requires_target_unacted) {
-      if (!target) throw new Error(`${rider.source_name} requires target initiative state.`);
-      if (target.turns_started !== 0) return false;
-    }
+  function qualified(rider, target, activeAllyAdjacentToTarget = false) {
     if (rider.requires_active_ally_adjacent_to_target && !activeAllyAdjacentToTarget) return false;
     if (rider.requires_target_below_max_hp) {
       if (!target) throw new Error(`${rider.source_name} requires target state for its hit qualification.`);
@@ -43,7 +37,7 @@
       if (seen.has(rider.source_id)) throw new Error(`Duplicate once-per-turn hit rider source id: ${rider.source_id}.`);
       seen.add(rider.source_id);
       if (attacker.feature_last_turn_keys[rider.source_id] === turnKey) continue;
-      if (!qualified(rider, attacker, target, activeAllyAdjacentToTarget)) continue;
+      if (!qualified(rider, target, activeAllyAdjacentToTarget)) continue;
       attacker.feature_last_turn_keys[rider.source_id] = turnKey;
       result.push(spec(rider, attack));
     }
