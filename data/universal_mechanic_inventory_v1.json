@@ -5864,7 +5864,7 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 120,
+    "blocked_monster_count": 119,
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
@@ -5872,7 +5872,6 @@
       "attack:damage-type": 2,
       "attack:incomplete": 24,
       "attack:none": 3,
-      "attack:range": 4,
       "mechanic:death-trigger": 4,
       "mechanic:defense": 1,
       "mechanic:legendary": 9,
