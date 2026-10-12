@@ -1,8 +1,8 @@
 "use strict";
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
-const vm = require("node:vm");
 const path = require("node:path");
+const vm = require("node:vm");
 
 global.window = globalThis;
 const load = (file) => vm.runInThisContext(
@@ -12,86 +12,78 @@ window.IRON_PIT_DICE = {
   queue: [],
   roll(sides) {
     const value = this.queue.shift();
-    if (!Number.isInteger(value) || value < 1 || value > sides) throw new Error("Invalid deterministic die");
+    if (!Number.isInteger(value) || value < 1 || value > sides) throw new Error("Bad deterministic roll");
     return value;
   },
   rollMany(count, sides) { return Array.from({ length: count }, () => this.roll(sides)); },
 };
 load("browser-timed-control-limits.js");
-load("browser-once-per-turn-hit-damage.js");
 load("browser-rolls.js");
-const count = window.IRON_PIT_BROWSER_TIMED_CONTROL.registerTurnAttack;
+
+const register = window.IRON_PIT_BROWSER_TIMED_CONTROL.registerTurnAttack;
 const damage = window.IRON_PIT_BROWSER_ROLLS.weaponDamage;
 const weapon = {
-  name: "Club", kind: "melee", diceCount: 1, diceSize: 4,
-  damageBonus: 0, damageType: "bludgeoning", onHitDamage: [],
+  name: "Morningstar", kind: "melee", diceCount: 2, diceSize: 8,
+  damageBonus: 2, damageType: "piercing", onHitDamage: [],
+  conditionalDamage: {
+    trigger: "round1_initiative_lead", mode: "add", diceCount: 2, diceSize: 6,
+    damageBonus: 0, damageType: "piercing", sourceName: "Surprise Attack",
+  },
 };
 const attacker = () => ({
-  template: {
-    max_hp: 20, traits: [],
-    once_per_turn_weapon_hit_damage_rider: {
-      source_id: "surprise-attack", source_name: "Surprise Attack",
-      dice_count: 2, dice_size: 6, flat_bonus: 0, damage_type: null,
-      requires_first_attack_of_fight: true,
-      requires_attacker_first_turn: true,
-      requires_target_unacted: true,
-    },
-  },
+  template: { max_hp: 20, traits: [] },
   current_hp: 20, turns_started: 1, attacks_this_turn: 0,
   feature_last_turn_keys: {}, feature_use_counts: {},
 });
 const target = () => ({ current_hp: 20, turns_started: 0, template: { max_hp: 20 } });
-const swing = (a, t, rolls, critical = false) => {
+const hit = (a, t, rolls, critical = false) => {
   window.IRON_PIT_DICE.queue = [...rolls];
   const result = damage(a, weapon, critical, "normal", "1:bugbear", null, t);
-  assert.equal(window.IRON_PIT_DICE.queue.length, 0);
+  assert.deepEqual(window.IRON_PIT_DICE.queue, []);
   return result.components;
 };
 
-// Winning initiative qualifies only the first attack attempt.
+// Winning initiative, first attack and one conditional rider — never double it.
 {
   const a = attacker(), t = target();
-  count(a);
-  const result = swing(a, t, [2, 3, 4]);
-  assert.deepEqual(result.map((part) => part.source), ["Club", "Surprise Attack"]);
-  assert.deepEqual(result[1].rolls, [3, 4]);
-  assert.equal(result[1].damage_type, "bludgeoning");
-  assert.equal(a.feature_use_counts.weapon_attack_attempts, 1);
+  register(a);
+  const components = hit(a, t, [2, 3, 4, 5]);
+  assert.deepEqual(components.map((part) => part.source), ["Morningstar", "Surprise Attack"]);
+  assert.deepEqual(components[1].rolls, [4, 5]);
+  assert.equal(components[1].damage_type, "piercing");
 }
-// Missing the first attack still consumes the one opening opportunity.
+// Missed first attempt still consumed; second attack has no opening bonus.
 {
   const a = attacker(), t = target();
-  count(a); // The first attack roll missed: no weaponDamage call.
-  count(a);
-  assert.deepEqual(swing(a, t, [3]).map((p) => p.source), ["Club"]);
+  register(a); // First attack missed, so no damage roll.
+  register(a);
+  assert.deepEqual(hit(a, t, [2, 3]).map((part) => part.source), ["Morningstar"]);
 }
-// Initiative lost, or attacker already beyond its opening turn: no rider.
-for (const [own, opponent] of [[1, 1], [2, 0]]) {
+// Target already went first, or attacker did not attack on their first turn.
+for (const [own, theirs] of [[1, 1], [2, 0]]) {
   const a = attacker(), t = target();
-  a.turns_started = own; t.turns_started = opponent;
-  count(a);
-  assert.deepEqual(swing(a, t, [2]).map((p) => p.source), ["Club"]);
+  a.turns_started = own; t.turns_started = theirs;
+  register(a);
+  assert.deepEqual(hit(a, t, [2, 3]).map((part) => part.source), ["Morningstar"]);
 }
-// Critical hits double both the printed 2d6 rider and the weapon die.
+// A critical doubles the 2d8 weapon dice and 2d6 bonus dice exactly once.
 {
   const a = attacker(), t = target();
-  count(a);
-  const parts = swing(a, t, [2, 3, 4, 5, 6, 1], true);
-  assert.deepEqual(parts[1].rolls, [4, 5, 6, 1]);
+  register(a);
+  const components = hit(a, t, [2, 3, 4, 5, 1, 2, 3, 4], true);
+  assert.deepEqual(components[1].rolls, [1, 2, 3, 4]);
 }
-// Off-turn weapon attempts must count toward the same first-attack entitlement.
+// An off-turn attempt consumes first-attack entitlement, too.
 {
   const a = attacker(), t = target();
-  count(a, true);
-  assert.equal(a.feature_use_counts.weapon_attack_attempts, 1);
-  count(a);
-  assert.deepEqual(swing(a, t, [2]).map((p) => p.source), ["Club"]);
+  register(a, true);
+  register(a);
+  assert.deepEqual(hit(a, t, [2, 3]).map((part) => part.source), ["Morningstar"]);
 }
-// A fresh fight has fresh counters, independent of previous encounters.
 {
   const a = attacker(), t = target();
   assert.deepEqual(a.feature_use_counts, {});
-  count(a);
-  assert.equal(swing(a, t, [2, 3, 4]).length, 2);
+  register(a);
+  assert.equal(hit(a, t, [2, 3, 4, 5]).length, 2);
 }
-console.log("2014 first-initiative opening hit damage browser regressions passed.");
+console.log("2014 opening-initiative source conditional damage browser regressions passed.");
