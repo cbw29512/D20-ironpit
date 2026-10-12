@@ -6,7 +6,7 @@ from app.domain.weapons import DamageType
 _CONDITIONAL_DAMAGE_KEYS = frozenset({
     "trigger", "mode", "dice_count", "dice_size", "damage_bonus", "damage_type",
 })
-_CONDITIONAL_TRIGGERS = frozenset({"attack_advantage", "attacker_bloodied", "target_bloodied"})
+_CONDITIONAL_TRIGGERS = frozenset({"attack_advantage", "attacker_bloodied", "target_bloodied", "round1_initiative_lead"})
 _CONDITIONAL_MODES = frozenset({"add", "replace_weapon"})
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 
