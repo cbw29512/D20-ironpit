@@ -63,7 +63,7 @@ def test_source_and_modes_are_pinned_and_source_cards_immutable():
         assert row.conditional_damage[0].source_name == "Surprise Attack"
     assert attack_range_disadvantage_sources(ranged.weapon, 35) == 1
     assert attack_range_disadvantage_sources(ranged.weapon, 5, True) == 1
-    with pytest.raises(ValueError, match="out of range"):
+    with pytest.raises(ValueError, match="beyond long range"):
         attack_range_disadvantage_sources(ranged.weapon, 125)
     assert source.model_dump_json() == before
 
