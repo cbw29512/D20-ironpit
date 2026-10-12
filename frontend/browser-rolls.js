@@ -67,6 +67,11 @@
     if (!spec) return false;
     if (spec.trigger === "attack_advantage") return mode === "advantage";
     if (spec.trigger === "attacker_bloodied") return bloodied(attacker);
+    if (spec.trigger === "round1_initiative_lead") {
+      if (!target) throw new Error("Opening-initiative damage requires target state.");
+      return attacker.turns_started === 1 && target.turns_started === 0
+        && attacker.feature_use_counts?.weapon_attack_attempts === 1;
+    }
     if (spec.trigger === "target_bloodied") {
       if (!target) throw new Error("Target state is required for target-Bloodied conditional damage.");
       return bloodied(target);
@@ -150,7 +155,7 @@
       });
     }
     if (conditional?.mode === "add" && conditionalActive(conditional, attacker, target, mode)) {
-      components.push(damageComponent({ ...conditional, source: "Conditional bonus damage" }, critical));
+      components.push(damageComponent({ ...conditional, source: conditional.sourceName || "Conditional bonus damage" }, critical));
     }
     const sneak = window.IRON_PIT_BROWSER_SNEAK_ATTACK?.bonusDamage(
       attacker, attack, mode, turnKey, sneakAllyAvailable, target,
