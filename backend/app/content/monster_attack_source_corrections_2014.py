@@ -19,10 +19,10 @@ _SCOUT_LONGBOW_RANGE = (150, 600)
 # This exact-source matcher repairs missing parser bands without inventing
 # long-range disadvantage or hardcoding any monster/ability as engine behavior.
 _SINGLE_RANGE_SPELL_ATTACK = re.compile(
-    r"(?P<name>[A-Za-z][A-Za-z '\\-]+)\\.\\s*Ranged Spell Attack:\\s*"
-    r"\\+(?P<bonus>\\d+) to hit,\\s*range (?P<range>\\d+) ft\\.,\\s*"
-    r"one target\\.\\s*Hit:\\s*(?P<average>\\d+) "
-    r"\\((?P<count>\\d+)d(?P<size>\\d+)\\) "
+    r"(?P<name>[A-Za-z][A-Za-z '\-]+)\.\s*Ranged Spell Attack:\s*"
+    r"\+(?P<bonus>\d+) to hit,\s*range (?P<range>\d+) ft\.,\s*"
+    r"one target\.\s*Hit:\s*(?P<average>\d+) "
+    r"\((?P<count>\d+)d(?P<size>\d+)\) "
     r"(?P<damage_type>[a-z]+) damage",
     re.IGNORECASE,
 )
