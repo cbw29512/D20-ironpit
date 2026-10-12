@@ -1027,6 +1027,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         }
         if template.innate_condition_ids:
             row["innate_condition_ids"] = list(template.innate_condition_ids)
+        if template.source_turn_relation_damages:
+            row["source_turn_relation_damages"] = [rule.model_dump(mode="json") for rule in template.source_turn_relation_damages]
         if template.blindsight_deafened_ft is not None:
             row["blindsight_deafened_ft"] = template.blindsight_deafened_ft
         if template.blind_beyond_blindsight:

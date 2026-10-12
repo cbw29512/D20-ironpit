@@ -23,13 +23,7 @@ from app.domain.suppression_zones import PersistentSuppressionZoneAction
 from app.domain.teleport_actions import TeleportAction
 from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
 from app.domain.progression import ProgressionCombatFeatures
-from app.domain.reactions import (
-    AttackDamageReductionReaction,
-    DamageReactionAttack,
-    IncomingDamageTypeResistanceReaction,
-    ParryReaction,
-    RedirectAttackReaction,
-)
+from app.domain.reactions import (AttackDamageReductionReaction, DamageReactionAttack, IncomingDamageTypeResistanceReaction, ParryReaction, RedirectAttackReaction)
 from app.domain.reaction_roll_penalties import ReactionRollPenaltyAction
 from app.domain.concentration_repeat_saves import ConcentrationRepeatSaveAction
 from app.domain.recharge import RechargeRule
@@ -41,6 +35,7 @@ from app.domain.spell_cast_modifiers import ResourceBackedSpellDurationModifier,
 from app.domain.spell_cast_effects import SpellCastTimedResistance
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
+from app.domain.source_turn_relation_damage import SourceTurnRelationDamage
 from app.domain.triggered_extra_attacks import TriggeredExtraAttackStack
 from app.domain.post_hit_save_condition import PostHitSaveConditionSpell
 from app.domain.targeted_concentration_damage import TargetedConcentrationDamageAction
@@ -135,6 +130,7 @@ class CombatantTemplate(BaseModel):
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
     source_trait_names: list[str] = Field(default_factory=list)
+    source_turn_relation_damages: list[SourceTurnRelationDamage] = Field(default_factory=list)
     innate_condition_ids: list[ConditionName] = Field(default_factory=list)
     source_reaction_names: list[str] = Field(default_factory=list)
     source_bonus_action_names: list[str] = Field(default_factory=list)
