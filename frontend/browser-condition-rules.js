@@ -3,6 +3,7 @@
 
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   function has(state, id) {
+    if ((state.template.innate_condition_ids || []).includes(id)) return !I().immune(state, id);
     if (!state.active_effect_ids.includes(id)) return false;
     const timed = (state.timed_effects || []).filter((effect) => effect.effect_id === id);
     if (timed.length) {
