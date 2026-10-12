@@ -92,7 +92,8 @@ def removable(target: EncounterCombatant, action: ConditionRemovalAction) -> lis
         allowed = set(action.removable_conditions)
         effects = [
             effect for effect in set(target.state.active_effect_ids)
-            if effect in allowed and _effect_allows_removal(target, effect, action)
+            if effect in allowed and effect not in target.state.template.innate_condition_ids
+            and _effect_allows_removal(target, effect, action)
         ]
         if action.reduces_exhaustion_levels and target.state.exhaustion_level:
             effects.append("exhaustion")
