@@ -13,6 +13,7 @@ from app.combat.start_of_turn_timed_burn import start_of_turn_timed_burns
 from app.combat.grapple_periodic_damage import grapple_turn_start_damage
 from app.combat.start_of_turn_hp_loss import resolve_start_of_turn_hp_loss_events
 from app.combat.zero_hp import apply_damage
+from app.combat.source_turn_relation_damage import resolve_source_turn_relation_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent
 from app.domain.models import DamageRollComponent, DamageType
@@ -75,6 +76,8 @@ def resolve_start_of_turn_save_condition_damage_events(
             ))
             sequence += 1
             _ = adjusted
+        source_events, sequence = resolve_source_turn_relation_damage(sequence, round_number, member, setup, dice)
+        events.extend(source_events)
         hp_loss_events, sequence = resolve_start_of_turn_hp_loss_events(
             sequence, round_number, member, setup, dice,
         )
