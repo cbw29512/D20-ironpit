@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014, source_conditional_attack_advantage_2014
+from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
 from app.content.monster_attack_source_corrections_2014 import corrected_attack_range_2014
 from app.content.monster_berserk_2014 import berserk_self_buffs_2014
 from app.content.monster_basic_candidates_2014 import (
@@ -59,6 +60,7 @@ from app.domain.reactions import ParryReaction
 from app.domain.size import CreatureSize
 
 def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapabilityDefinition:
+    attack = source_completed_mixed_attack_2014(monster, attack)
     charge_source = corrected_charge_profile_2014(monster, attack)
     normal_range_ft, long_range_ft = corrected_attack_range_2014(monster, attack)
     kwargs = {
