@@ -5864,7 +5864,7 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 118,
+    "blocked_monster_count": 117,
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
@@ -5883,7 +5883,7 @@
       "source:extra-action": 68,
       "source:legendary": 9,
       "source:reaction": 5,
-      "source:trait": 84
+      "source:trait": 83
     },
     "unresolved_printed_abilities": [
       {
@@ -5920,13 +5920,6 @@
           "Barbed Devil"
         ],
         "printed_name": "Barbed Hide"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Grimlock"
-        ],
-        "printed_name": "Blind Senses"
       },
       {
         "demand_count": 1,
