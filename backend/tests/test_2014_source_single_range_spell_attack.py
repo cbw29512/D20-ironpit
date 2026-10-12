@@ -36,7 +36,7 @@ def test_horned_devil_source_spell_range_admits_complete_monster() -> None:
         runtime = compile_combatant(adapt_basic_monster_2014(source))
         attack = next(
             a for a in [runtime.weapon_attack, *runtime.alternate_weapon_attacks]
-            if a.name == "Hurl Flame"
+            if a.weapon.name == "Hurl Flame"
         )
         assert attack.weapon.normal_range_ft == 150
         assert attack.weapon.long_range_ft == 150
