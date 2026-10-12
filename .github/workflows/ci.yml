@@ -37,6 +37,7 @@ jobs:
           for a in m.attacks:
               print("PSEUDOPOD_RAW", a.model_dump(mode="json"))
               print("PSEUDOPOD_CORRECTED", source_completed_mixed_attack_2014(m,a).model_dump(mode="json"))
+          raise SystemExit("Source parser diagnostic collected; fail this temporary run before the full Python suite")
           PY
       - name: Reconcile canonical 2014 source-derived artifacts
         if: ${{ github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'feat/2014-') && github.event.pull_request.head.repo.full_name == github.repository }}
