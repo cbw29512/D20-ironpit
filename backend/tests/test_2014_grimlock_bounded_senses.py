@@ -82,7 +82,7 @@ def test_bounded_range_deafness_and_smell_are_shared_live_fight_state() -> None:
 def test_blind_senses_drift_fails_closed_without_adding_runnable_trait() -> None:
     source = _source()
     wrong_range = source.model_copy(update={
-        "senses": source.senses.replace("while deafened", "while frightened"),
+        "senses": source.senses.replace("while Deafened", "while Frightened"),
     })
     assert wrong_range.senses != source.senses
     assert bounded_blindsight_2014(wrong_range) is None
