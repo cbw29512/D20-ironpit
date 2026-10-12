@@ -18,10 +18,9 @@ def test_faultless_tracker_is_source_retained_but_arena_inert() -> None:
     assert monster.trait_names == ["Invisibility", "Faultless Tracker"]
     assert verified_arena_inert_trait_2014(monster, "Faultless Tracker")
     assert not verified_arena_inert_trait_2014(monster, "Invisibility")
-    assert unsupported_traits_2014(monster) == ("Invisibility",)
-    assert basic_blockers_2014(monster) == ("source:trait",)
-    with pytest.raises(ValueError, match="source:trait"):
-        adapt_basic_monster_2014(monster)
+    assert unsupported_traits_2014(monster) == ()
+    assert basic_blockers_2014(monster) == ()
+    assert adapt_basic_monster_2014(monster).innate_condition_ids == ["invisible"]
     assert monster.model_dump_json() == before
 
 

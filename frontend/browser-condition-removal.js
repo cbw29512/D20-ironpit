@@ -57,7 +57,8 @@
   function removable(target, action) {
     const allowed = new Set(action.removableConditions || []);
     const effects = [...new Set(target.state.active_effect_ids)]
-      .filter((id) => allowed.has(id) && effectAllows(target, id, action));
+      .filter((id) => allowed.has(id) && !(target.state.template.innate_condition_ids || []).includes(id)
+        && effectAllows(target, id, action));
     if (action.reducesExhaustionLevels && target.state.exhaustion_level) effects.push("exhaustion");
     if ((action.removesCurses || action.removesAllCurses) && target.state.active_curses?.length) effects.push("curse");
     if (action.removesAbilityScoreReductions && Object.keys(target.state.ability_score_reductions || {}).length) {
@@ -108,6 +109,7 @@
         else T.removeEffect(target.state, effect);
       }
       target.state.active_effect_ids = target.state.active_effect_ids.filter((item) => item !== id);
+      if ((target.state.template.innate_condition_ids || []).includes(id)) target.state.active_effect_ids.push(id);
       if (id === "grappled") target.state.grapple_sources = [];
     } catch (error) {
       console.error("Failed to end condition", { target: target.combatant_id, id, error });

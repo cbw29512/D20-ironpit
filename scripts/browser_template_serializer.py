@@ -1025,6 +1025,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        if template.innate_condition_ids:
+            row["innate_condition_ids"] = list(template.innate_condition_ids)
         if template.damage_absorptions:
             row["damage_absorptions"] = [
                 {"sourceId": item.source_id, "sourceName": item.source_name, "damageType": _value(item.damage_type)}

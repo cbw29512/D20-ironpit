@@ -11,10 +11,11 @@ def remove_effect_instance(state: CombatantState, effect: TimedEffect) -> bool:
     try:
         state.timed_effects = [item for item in state.timed_effects if item != effect]
         still_active = any(item.effect_id == effect.effect_id for item in state.timed_effects)
-        if not still_active and effect.effect_id in state.active_effect_ids:
+        innate = effect.effect_id in state.template.innate_condition_ids
+        if not still_active and not innate and effect.effect_id in state.active_effect_ids:
             state.active_effect_ids.remove(effect.effect_id)
             return True
-        return not still_active
+        return not still_active and not innate
     except Exception:
         logger.exception("Failed to remove timed effect instance %s.", effect.effect_id)
         raise

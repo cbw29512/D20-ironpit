@@ -177,6 +177,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
       "Nimble Escape"
@@ -358,6 +359,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
       "Nimble Escape"
@@ -555,6 +557,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -738,6 +741,7 @@
       "Pack Tactics",
       "Sunlight Sensitivity"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -966,6 +970,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [
       "Redirect Attack"
     ],
@@ -1154,6 +1159,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -1304,6 +1310,7 @@
     "source_trait_names": [
       "Training"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -1482,6 +1489,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -1634,6 +1642,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -1782,6 +1791,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -1947,6 +1957,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -2095,6 +2106,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -2245,6 +2257,7 @@
     "source_trait_names": [
       "Spider Climb"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -2410,6 +2423,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -2567,6 +2581,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -2735,6 +2750,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -2943,6 +2959,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -3095,6 +3112,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -3243,6 +3261,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -3393,6 +3412,7 @@
     "source_trait_names": [
       "Agile"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -3541,6 +3561,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -3689,6 +3710,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -3839,6 +3861,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -3992,6 +4015,7 @@
     "source_trait_names": [
       "Bloodied Fury"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -4142,6 +4166,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -4295,6 +4320,7 @@
     "source_trait_names": [
       "Bloodied Fury"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -4472,6 +4498,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -4649,6 +4676,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -4799,6 +4827,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -4985,6 +5014,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -5131,6 +5161,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -5351,6 +5382,7 @@
     "source_trait_names": [
       "Amphibious"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -5674,6 +5706,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -5856,6 +5889,7 @@
     "source_trait_names": [
       "Flyby"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -6000,6 +6034,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -6148,6 +6183,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -6294,6 +6330,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -6440,6 +6477,7 @@
     "source_trait_names": [
       "Jumper"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -6586,6 +6624,7 @@
     "source_trait_names": [
       "Amphibious"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -6733,6 +6772,7 @@
       "Amphibious",
       "Standing Leap"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -6877,6 +6917,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -7023,6 +7064,7 @@
     "source_trait_names": [
       "Spider Climb"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -7169,6 +7211,7 @@
     "source_trait_names": [
       "Flyby"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -7315,6 +7358,7 @@
     "source_trait_names": [
       "Agile"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -7461,6 +7505,7 @@
     "source_trait_names": [
       "Mimicry"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -7605,6 +7650,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -7753,6 +7799,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -7901,6 +7948,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
       "Nimble Escape"
@@ -8053,6 +8101,7 @@
     "source_trait_names": [
       "Hold Breath"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -8221,6 +8270,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -8371,6 +8421,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -8521,6 +8572,7 @@
     "source_trait_names": [
       "Flyby"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -8669,6 +8721,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -8822,6 +8875,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
       "Nimble Escape"
@@ -8976,6 +9030,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -9122,6 +9177,7 @@
     "source_trait_names": [
       "Illumination"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -9274,6 +9330,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -9424,6 +9481,7 @@
     "source_trait_names": [
       "Flyby"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -9580,6 +9638,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -9728,6 +9787,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -9881,6 +9941,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -10031,6 +10092,7 @@
     "source_trait_names": [
       "Beast of Burden"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -10181,6 +10243,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -10331,6 +10394,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -10535,6 +10599,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -10703,6 +10768,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -10873,6 +10939,7 @@
     "source_trait_names": [
       "Running Leap"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
       "Nimble Escape"
@@ -11074,6 +11141,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -11255,6 +11323,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -11416,6 +11485,7 @@
     "source_trait_names": [
       "Hold Breath"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -11577,6 +11647,7 @@
     "source_trait_names": [
       "Amphibious"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -11757,6 +11828,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -11982,6 +12054,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -12189,6 +12262,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -12369,6 +12443,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -12528,6 +12603,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -12690,6 +12766,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -12909,6 +12986,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -13074,6 +13152,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -13240,6 +13319,7 @@
     "source_trait_names": [
       "Flyby"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -13408,6 +13488,7 @@
     "source_trait_names": [
       "Spider Climb"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -13578,6 +13659,7 @@
     "source_trait_names": [
       "Amphibious"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -13751,6 +13833,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -13932,6 +14015,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -14098,6 +14182,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -14313,6 +14398,7 @@
     "source_trait_names": [
       "Hold Breath"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -14514,6 +14600,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -14724,6 +14811,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -14892,6 +14980,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -15051,6 +15140,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -15269,6 +15359,7 @@
       "Earth Glide",
       "Siege Monster"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -15427,6 +15518,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -15593,6 +15685,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -15752,6 +15845,7 @@
     "source_trait_names": [
       "Flyby"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -15922,6 +16016,7 @@
     "source_trait_names": [
       "Flyby"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -16089,6 +16184,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -16317,6 +16413,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -16487,6 +16584,7 @@
     "source_trait_names": [
       "Hold Breath"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -16699,6 +16797,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -16849,6 +16948,7 @@
     "source_trait_names": [
       "Hold Breath"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -16999,6 +17099,7 @@
     "source_trait_names": [
       "Hellish Restoration"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -17214,6 +17315,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -17366,6 +17468,7 @@
     "source_trait_names": [
       "Undead Fortitude"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -17532,6 +17635,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -17689,6 +17793,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -17866,6 +17971,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -18033,6 +18139,7 @@
       "Spider Climb",
       "Web Walker"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -18236,6 +18343,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
       "Cunning Action"
@@ -18415,6 +18523,7 @@
       "Loathsome Limbs (4/Day)",
       "Regeneration"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
       "Charge"
@@ -18652,6 +18761,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -18813,6 +18923,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -18981,6 +19092,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -19196,6 +19308,7 @@
       "Earth Glide",
       "Treasure Sense"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
       "Charge"
@@ -19356,6 +19469,7 @@
     "source_trait_names": [
       "Undead Fortitude"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -19535,6 +19649,7 @@
     "source_trait_names": [
       "Water Breathing"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -19689,6 +19804,7 @@
     "source_trait_names": [
       "Water Breathing"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -19839,6 +19955,7 @@
     "source_trait_names": [
       "Water Breathing"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -19992,6 +20109,7 @@
       "Pack Tactics",
       "Water Breathing"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -20168,6 +20286,7 @@
       "Limited Amphibiousness",
       "Shark Telepathy"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
       "Aquatic Charge"
@@ -20343,6 +20462,7 @@
       "Swarm",
       "Water Breathing"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -20568,6 +20688,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [
@@ -20795,6 +20916,7 @@
     "source_trait_names": [
       "Amphibious"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [
@@ -21020,6 +21142,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [
@@ -21246,6 +21369,7 @@
     "source_trait_names": [
       "Amphibious"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [
@@ -21472,6 +21596,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [
@@ -21698,6 +21823,7 @@
     "source_trait_names": [
       "Ice Walk"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [
@@ -21931,6 +22057,7 @@
     "source_trait_names": [
       "Amphibious"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [
@@ -22162,6 +22289,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [
@@ -22394,6 +22522,7 @@
     "source_trait_names": [
       "Amphibious"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [
@@ -22626,6 +22755,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [
@@ -22858,6 +22988,7 @@
     "source_trait_names": [
       "Ice Walk"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [
@@ -23032,6 +23163,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -23197,6 +23329,7 @@
     "source_trait_names": [
       "Swarm"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -23375,6 +23508,7 @@
     "source_trait_names": [
       "Swarm"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -23557,6 +23691,7 @@
     "source_trait_names": [
       "Swarm"
     ],
+    "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
     "source_limited_use_names": [],
@@ -23776,6 +23911,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [
       "Parry"
     ],
@@ -24007,6 +24143,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [
       "Parry"
     ],
@@ -24162,6 +24299,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [
       "Parry"
     ],
@@ -24367,6 +24505,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "innate_condition_ids": [],
     "source_reaction_names": [
       "Parry"
     ],
