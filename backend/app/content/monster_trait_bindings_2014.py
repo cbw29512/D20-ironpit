@@ -10,10 +10,7 @@ from app.content.monster_innate_conditions_2014 import innate_condition_ids_2014
 from app.content.monster_senses_2014 import bounded_blindsight_2014
 from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.content.monster_legendary_resistance_2014 import legendary_resistance_trait_name_2014
-from app.content.monster_passive_grants_2014 import (
-    bound_passive_trait_names_2014,
-    saving_throw_advantage_grants_2014,
-)
+from app.content.monster_passive_grants_2014 import bound_passive_trait_names_2014, saving_throw_advantage_grants_2014
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_heated_body_2014 import heated_body_retaliation_2014, corrosive_form_retaliation_2014
 from app.content.monster_range_trait_bindings_2014 import supports_poor_depth_perception_2014
