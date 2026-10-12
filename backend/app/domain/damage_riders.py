@@ -12,6 +12,9 @@ class OncePerTurnWeaponHitDamageRider(BaseModel):
     dice_size: int = Field(default=2, ge=2, le=100)
     flat_bonus: int = Field(default=0, ge=0, le=30)
     damage_type: str | None = Field(default=None, min_length=1)
+    requires_first_attack_of_fight: bool = False
+    requires_attacker_first_turn: bool = False
+    requires_target_unacted: bool = False
     requires_target_below_max_hp: bool = False
     requires_active_ally_adjacent_to_target: bool = False
     target_creature_types: list[str] = Field(default_factory=list)
