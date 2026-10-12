@@ -87,6 +87,7 @@
         const removed = [];
         for (const conditionId of grant.condition_ids || []) {
           if (!(target.state.active_effect_ids || []).includes(conditionId)) continue;
+          if ((target.state.template.innate_condition_ids || []).includes(conditionId)) continue;
           target.state.active_effect_ids = target.state.active_effect_ids.filter((item) => item !== conditionId);
           target.state.timed_effects = target.state.timed_effects.filter((item) => item.effect_id !== conditionId);
           removed.push(conditionId);
