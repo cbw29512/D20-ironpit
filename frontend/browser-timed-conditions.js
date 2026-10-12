@@ -101,8 +101,9 @@
   function removeEffect(state, effect) {
     state.timed_effects = state.timed_effects.filter((item) => item !== effect);
     const stillActive = state.timed_effects.some((item) => item.effect_id === effect.effect_id);
-    if (!stillActive) state.active_effect_ids = state.active_effect_ids.filter((id) => id !== effect.effect_id);
-    return !stillActive;
+    const innate = (state.template.innate_condition_ids || []).includes(effect.effect_id);
+    if (!stillActive && !innate) state.active_effect_ids = state.active_effect_ids.filter((id) => id !== effect.effect_id);
+    return !stillActive && !innate;
   }
 
   function removeGroup(state, effect) {
