@@ -5868,7 +5868,7 @@
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
-      "attack:complex": 13,
+      "attack:complex": 12,
       "attack:damage-type": 2,
       "attack:incomplete": 24,
       "attack:none": 3,

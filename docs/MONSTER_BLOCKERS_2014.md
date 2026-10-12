@@ -14,8 +14,8 @@ Blocker categories overlap: a monster may require several fixes.
 | `source:extra-action` | 68 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |
-| `attack:complex` | 13 |
 | `multiattack:complex` | 12 |
+| `attack:complex` | 12 |
 | `mechanic:recharge` | 10 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
@@ -54,7 +54,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Bearded Devil | attack:incomplete, source:trait | Steadfast |
 | Behir | mechanic:recharge, source:extra-action | — |
 | Bulette | source:extra-action | — |
-| Chain Devil | attack:complex, source:extra-action, source:reaction | — |
+| Chain Devil | source:extra-action, source:reaction | — |
 | Chuul | attack:incomplete, multiattack:complex, source:extra-action, source:trait | Sense Magic |
 | Clay Golem | mechanic:recharge, source:extra-action | — |
 | Cloaker | attack:incomplete, source:extra-action, source:trait | Damage Transfer, Light Sensitivity |
