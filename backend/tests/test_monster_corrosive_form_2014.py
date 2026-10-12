@@ -54,8 +54,8 @@ def test_printed_corrosive_form_is_passive_and_source_proven():
     assert (rule.range_ft, rule.dice_count, rule.dice_size,
             rule.damage_type, rule.on_contact) == (5, 1, 8, DamageType.ACID, True)
     assert "Corrosive Form" not in unsupported_traits_2014(source)
-    # Attack remains blocked independently until Pseudopod (#695) is implemented.
-    assert "attack:incomplete" in basic_blockers_2014(source)
+    # The independently source-proven Pseudopod is now admitted.
+    assert "attack:incomplete" not in basic_blockers_2014(source)
     assert source.model_dump_json() == original
 
 

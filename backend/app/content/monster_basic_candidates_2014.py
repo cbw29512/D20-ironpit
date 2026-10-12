@@ -8,6 +8,7 @@ from app.content.monster_arena_action_policy_2014 import PIT_BANNED_ACTION_LABEL
 from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014, verified_arena_inert_trait_2014
 from app.content.monster_arena_unavailable_reactions_2014 import arena_unavailable_reaction_names_2014
 from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
+from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
 from app.content.monster_attack_source_corrections_2014 import corrected_attack_range_2014
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
@@ -50,7 +51,8 @@ def _supported_charge(monster: SourceMonster2014) -> bool:
 
 def _attack_blockers(monster: SourceMonster2014) -> list[str]:
     blockers: list[str] = []
-    for attack in monster.attacks:
+    for source_attack in monster.attacks:
+        attack = source_completed_mixed_attack_2014(monster, source_attack)
         if not attack.source_complete:
             blockers.append("attack:incomplete")
         if attack.damage.type not in _DAMAGE_TYPES:

@@ -65,4 +65,5 @@ def test_split_applies_only_to_printed_creation_reactions() -> None:
 
 def test_ochre_jelly_does_not_unlock_unrelated_monsters() -> None:
     assert "source:reaction" not in basic_blockers_2014(source("ochre-jelly"))
-    assert basic_blockers_2014(source("black-pudding"))
+    assert basic_blockers_2014(source("black-pudding")) == ()
+    assert basic_blockers_2014(source("bugbear"))

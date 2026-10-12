@@ -13,7 +13,23 @@ const deterministicDice = (seed = 2014) => {
 };
 
 assert.equal(window.IRON_PIT_2014_MVP_READY, true, "2014 browser test roster must be loaded");
-assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 205);
+assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 206);
+const pudding2014 = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-black-pudding"];
+assert.ok(pudding2014, "Source-complete Pseudopod must make Black Pudding playable");
+const pseudopod2014 = pudding2014.attacks.find((attack) => attack.id === "2014-black-pudding-pseudopod");
+assert.ok(pseudopod2014, "Pseudopod must be exported as a normal melee attack");
+assert.deepEqual(
+  [pseudopod2014.kind, pseudopod2014.bonus, pseudopod2014.reach,
+   pseudopod2014.diceCount, pseudopod2014.diceSize, pseudopod2014.damageBonus, pseudopod2014.damageType],
+  ["melee", 5, 5, 1, 6, 3, "bludgeoning"],
+);
+assert.deepEqual(
+  (pseudopod2014.onHitDamage || []).map((effect) =>
+    [effect.diceCount, effect.diceSize, effect.damageBonus, effect.damageType]),
+  [[4, 8, 0, "acid"]],
+);
+assert.equal(pseudopod2014.onHitModifiers, undefined, "No unproven item corrosion debuff");
+
 assert.deepEqual([...window.IRON_PIT_BROWSER_MONSTERS_2014["2014-ochre-jelly"].damage_immunities].sort(), ["lightning", "slashing"]);
 const scout2014 = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-scout"];
 assert.ok(scout2014, "2014 Scout must be in the certified browser roster");
