@@ -22,7 +22,7 @@ class DamageEffectDefinition(BaseModel):
     source: str
     dice: DiceSpec
     damage_type: DamageType
-    trigger: Literal["on_hit", "attack_advantage", "attacker_bloodied", "target_bloodied"] = "on_hit"
+    trigger: Literal["on_hit", "attack_advantage", "attacker_bloodied", "target_bloodied", "round1_initiative_lead"] = "on_hit"
     mode: Literal["add", "replace_weapon"] = "add"
 
 
