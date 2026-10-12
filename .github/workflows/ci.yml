@@ -41,6 +41,23 @@ jobs:
           python scripts/export_browser_monsters_2014.py
           python scripts/verify_certification_manifests.py --write
           python scripts/prepare_static_site.py
+          # Temporary generated-artifact capture (read only; no CI commits).
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          files = (
+              "backend/app/content/data/combatant_capabilities_v1.json",
+              "data/universal_mechanic_inventory_v1.json",
+              "docs/MONSTER_BLOCKERS_2014.md",
+              "docs/UNIVERSAL_MECHANIC_INVENTORY.md",
+          )
+          for name in files:
+              value = Path(name).read_text(encoding="utf-8")
+              print("IRONPIT_CAPTURE_BEGIN|" + name, flush=True)
+              for i in range(0, len(value), 1500):
+                  print("IRONPIT_CAPTURE_CHUNK|" + name + "|" + str(i // 1500) + "|" + json.dumps(value[i:i + 1500]), flush=True)
+              print("IRONPIT_CAPTURE_END|" + name, flush=True)
+          PY
           # CI must never advance its own tested commit. Canonical artifacts
           # are committed before certification so the manifest verifier sees
           # exactly github.event.pull_request.head.sha.
