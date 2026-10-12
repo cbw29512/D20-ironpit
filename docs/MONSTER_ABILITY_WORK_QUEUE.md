@@ -12,10 +12,13 @@
 5. **If blocked:** record exact missing semantic, link issue/PR, mark `PARKED`, and advance to the next independent ability. Preserve unchanged RAW/card text. Never change a source ability's meaning to force certification.
 6. **After each completed ability:** update **this file** with issue/PR/SHA/test evidence, update the existing worksheet, and advance the cursor. The generated blocker reports and universal inventory remain generator-owned and must not be hand-edited.
 
-## Active whole-monster promotion (2026-10-12)
-**Horned Devil**: [PR #753](https://github.com/cbw29512/D20-ironpit/pull/753) resolves the **only** source classifier blocker, `attack:range`, from the printed +7 / 150-ft / 4d6 Fire Hurl Flame Ranged Spell Attack. Shared range mechanic, no named combat resolver or source mutation. Generated classifier reports **208/327 admitted, 119 blocked** (previously 207/327). **Candidate until exact-head Python/browser/2014 Hero/Basic Roster/Paired report pass; do not call it certified before then.** 2014 source count tests remain independent strict assertions. Next prioritize whole-monster promotions with the fewest confirmed blockers rather than additional partial trait PRs.
+## Whole-monster promotion — current exact-main cursor (2026-10-12)
+- **MERGED, complete:** 2014 Horned Devil Hurl Flame +7, 150-foot Ranged Spell Attack, 4d6 Fire bound to universal range. [PR #753](https://github.com/cbw29512/D20-ironpit/pull/753) squash `088fd5eb369260f4fb22d38fffffaa30dac838bd`; all five PR-head gates succeeded (`52459e98`). Current generated classifier: **208/327 admitted, 119 blocked**; this counts source admission, not independent 2024 runtime certification.
+- **Next cursor:** prioritize another **whole monster** with exactly one source blocker from [current generated blockers](MONSTER_BLOCKERS_2014.md), rather than opening another multi-ability monster. Check the exact source and existing generic capabilities; prefer ENGINE_EXISTS_BINDING_MISSING or arena-neutral source-verified cases. Never mark a card ready by discarding printed combat effects.
+- **Pending Chain Devil:** Chain grapple/piercing issue #698 certified in [PR #752](https://github.com/cbw29512/D20-ironpit/pull/752). Animate Chains #699 and Unnerving Mask #700 remain independent blocks; do not redo Chain. Use the existing approved issue bodies.
+- **Next source review candidate:** Invisible Stalker has `source:trait` Invisibility only, and existing universal Invisible is supported by spells/monks. Assess immutable innate/always-on condition lifecycle including suppression, reset and Python/browser parity before binding; park if baseline innate-state primitive is genuinely missing, and advance to next one-blocker monster instead of guessing.
 
-## Current certification/review priorities (GitHub state checked 2026-10-09)
+## Superseded historical certification/review snapshot (2026-10-09; do not use as execution cursor)
 
 | Priority | Monster / issue | Recorded remediation | Current state | Next action |
 |---|---|---|---|---|

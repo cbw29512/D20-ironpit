@@ -1,76 +1,32 @@
 # Current operating status
 
-Updated 2026-10-08 after arena PR #661 merge.
-Current arena merge: `638fbd27f4dee38a3d93aab3101fde20e9651b99`. Monster source-classifier figures below are from the generated blocker report on `main`, not a new full runtime certification. See the fix tracker for exact-head workflow evidence.
-Active fix queue: [Monster fix tracker](MONSTER_FIX_TRACKER.md).
-Per-monster source blockers: [Generated 2014 list](MONSTER_BLOCKERS_2014.md).
+Updated 2026-10-12. Most recent whole-monster merge: [PR #753](https://github.com/cbw29512/D20-ironpit/pull/753), `088fd5eb369260f4fb22d38fffffaa30dac838bd`. The five PR-head checks (full CI including Python/browser, 2014 Basic Roster, 2014 Hero, Paired Edition, and artifact sync) passed on `52459e98b8148663c63f16549abed7a88d58112a` before squash. Netlify publishing remains locked.
 
-This file is operating authority for **what to work on next**. Combat rules remain authoritative in `docs/IRON_PIT_RULES_CONTRACT.md`. Generated certification manifests and exact current source/tests determine counts and readiness. Repository truth overrides chat summaries and older milestone prose.
+**AUTHORITATIVE CURRENT CURSOR:** [2014 monster ability work queue](MONSTER_ABILITY_WORK_QUEUE.md). **GENERATOR-OWNED REMAINING BLOCKERS:** [2014 blocker list](MONSTER_BLOCKERS_2014.md). **MECHANIC LOOKUP:** [universal inventory](UNIVERSAL_MECHANIC_INVENTORY.md). Older PR titles, this file's dated snapshots, and chat memories are not certified evidence.
 
-## Verified baseline and current queue
+## Verified source classification
 
-Arena PRs #658 (one-square footprints), #660 (3x2 deployment) and #661 (mixed combatant teams) are merged. Production Netlify remains locked. The last full monster certification baseline described here was PR #637; do not carry its counts forward as current runtime certification.
+- **2014 source-admitted: 208/327; blocked: 119** on the current generated source report. The previous baseline was 207/327; Horned Devil is newly admitted after #753.
+- These figures are source-classifier admission, **not** a claim of full independent runtime certification for every monster. The exact-head PR #753 Python/browser/certification gates are green. Recompute counts if `main` changes.
+- Pregens remain outside the active 2014-monster lane. Prior baselines: 240/240 canonical heroes each edition and 141/330 native 2024 monster public-ready; these are not newly re-certified by this doc edit.
+- Earlier core 2014 fixes (Bugbear #751, Black Pudding #749/#750, Bearded Devil #746/#748, Chain grapple #752, Steadfast #745) are merged. Do **not** reimplement them from stale task notes.
 
-Current generated 2014 blocker source classification: **201/327 admitted, 126 blocked** (`docs/MONSTER_BLOCKERS_2014.md`). This is **not** a statement that all 201 have passed a new exact-head runtime certification. Previously verified canonical pregens: 240/240 each edition; earlier 2024 monster baseline: 141/330. Reverify those totals against current generated manifests before publishing a new certification claim.
+## Immediate execution order
 
-M-022 Berserk merged #651; M-023 Fey Ancestry merged #652; M-024 Gnome Cunning merged #653. Active work: M-025 Steadfast, draft #662 (clean generic active-ally predicate); #654 remains conflicted and should not be merged. M-026 Infernal Wound follows. Require exact-head Python/browser parity and certification for M-025 before calling it complete.
+1. **Move complete 2014 monsters into source admission.** Filter current generated blocker report for monsters with one remaining blocker; select the smallest reusable semantic family that can remove an entire monster's blocker set. A PR that merely checks off a trait with no roster movement must have cross-monster primitive reuse value.
+2. **First candidate:** Invisible Stalker, one `source:trait` Invisibility blocker. Inspect the source trait and existing universal Invisible condition, then confirm immutable source, always-on fight state, buff suppression/reactivation, reset, Python/browser serialization and permanent tests. Do not just add a trait to a name allowlist. If the universal innate-starting-condition state is missing, mark ENGINE_TRULY_MISSING and park pending deliberate universal engine work; continue to the next one-blocker card.
+3. Distinct parked Chain Devil blockers are Animate Chains #699 (absent unattended-chain objects in standard arena) and Unnerving Mask #700 (start-of-target-turn reaction). Chain #698 is **done**. The issue queue already contains decisions; do not re-ask.
+4. For each family: exact source -> semantic reuse from heroes and monsters -> define immutable schema/mutable fight state -> Python oracle -> browser parity -> focused tests -> regenerate source-owned artifacts -> full exact-head gates -> merge -> re-audit 2014 + 2024 reuse -> update **same** queue. Preserve printed source ability names in logs, not dispatch keys.
+5. Prefer a single final-head CI suite after targeted checks and generated artifacts. Existing roster count assertions remain strict and must match the new canonical source roster; do not weaken checks to increase totals.
 
-## Current completion order
+## Anti-drift / product rules
 
-1. Finish the 2014 source monster roster first.
-2. Classify blockers by semantic behavior, not printed trait name.
-3. Choose the largest coherent blocker family that maps to **one** universal primitive family.
-4. Reuse an existing primitive whenever semantics match.
-5. Keep one semantic mechanic family per PR.
-6. Regenerate all derived data from that exact branch head.
-7. Require Python/browser parity and all four exact-head gates before merge.
-8. After each merge, re-audit all 327 2014 monsters and update the blocker counts.
-9. Immediately audit 2024 for direct reuse of the completed primitive.
-10. Do not expand independent 2024 mechanics while 2014 remains incomplete.
-
-Pregens are complete and are not the active expansion lane.
-
-## Anti-drift rules
-
-- No monster-name or ability-name resolvers.
-- No second primitive for behavior already represented by the engine.
-- No hand-edited generated monster bundles.
-- No count-only fixes that hide a blocker.
-- No mixing unrelated mechanic families in one PR.
-- No carrying CI or certification claims across a changed head SHA.
-- No stale branch rebases merely to preserve work.
-- No lair actions; monsters are not in their lairs.
-- No ethereal/incorporeal arena escape behavior.
-- Source cards/templates remain immutable; fight-only buffs/debuffs live in combat state and reset with the fight.
-
-If a branch exposes an unrelated blocker, record it for the next tranche rather than absorbing it unless it is strictly required for the current family to become runnable.
-
-## Monster blocker classification
-
-Before implementation classify each unresolved behavior as exactly one of:
-
-- `ENGINE_EXISTS_BINDING_MISSING`
-- `ENGINE_EXISTS_CERTIFICATION_MISSING`
-- `ARENA_NEUTRAL`
-- `ENGINE_TRULY_MISSING`
-
-Only `ENGINE_TRULY_MISSING` justifies a new universal engine primitive.
-
-## Immediate next action
-
-Complete M-025 as conditional Frightened immunity when an active ally exists. Reuse the universal active-ally predicate and condition-immunity modifier rather than creating a Steadfast-specific resolver. Implement and certify Python/browser live ally-context parity, refresh generated inventory/blockers, then merge the clean PR only if all required exact-head checks pass. Keep unrelated M-026 Infernal Wound separate.
-
-## Publishing
-
-Netlify production publishing remains manual/locked. Do not spend Netlify credits for monster-development validation.
+- The browser is the live combat engine, Python its parity/certification reference. Cards are immutable. Effects mutate only live fight state and reset at match end.
+- Reuse universal Prone, Grappled, Invisible, Frightened, saving throws, damage, advantage/resistance and all other primitives. Source cards supply exact values and named log attribution. No monster/ability-name combat routing.
+- All source-affecting changes are 2014-first, then inspect equivalent 2024 source without copying source parameters.
+- No lair actions, separate summoned entities, ethereal/incorporeal escape, invented terrain, or Netlify publishing from development runs.
+- Do not promote a monster with an unsupported outcome-changing source action merely to increment counts. Resolve or explicitly park the named semantic blocker and move to another monster.
 
 ## Verification truth
 
-Only claim:
-
-- **implemented** when code exists on the stated SHA;
-- **tested** when relevant permanent tests ran on that exact code;
-- **CI green** when exact-head workflows completed successfully;
-- **certified** when current generated manifests, runtime data, and certification gates agree.
-
-Never carry counts or CI status across a commit change without re-verification.
+Use current exact-commit evidence: **implemented** means current code exists, **tested** means tests ran on that SHA, **CI green** means all exact-head jobs passed, **certified** requires independent generated source/manifest and Python/browser gates. This doc can become stale; regenerators/source reports outrank it.
