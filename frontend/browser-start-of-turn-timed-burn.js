@@ -116,6 +116,27 @@
           }
         }
       }
+      // Grapple-linked ticks exist only while the owner relationship exists.
+      for (const grapple of [...(member.state.grapple_sources || [])]) {
+        const spec = grapple.periodic_damage;
+        if (!spec || member.state.is_dead || !member.state.is_alive) continue;
+        const grappler = members(setup).find((item) => item.combatant_id === grapple.source_id);
+        if (!grappler || grappler.state.is_dead || grappler.state.is_unconscious
+          || !grappler.state.is_alive || grappler.state.current_hp <= 0) continue;
+        if (Math.abs(grappler.position_ft - member.position_ft) > grapple.range_ft) continue;
+        const total = D().rollMany(spec.dice_count, spec.dice_size).reduce((sum, roll) => sum + roll, 0);
+        const hpBefore = member.state.current_hp;
+        const resolved = DD().resolveDamage(member.state, total, spec.damage_type);
+        A().applyDamage(member.state, resolved.applied, false, [spec.damage_type], states, setup);
+        events.push({
+          sequence: sequence++, round_number: round, event_type: "feature",
+          actor_id: member.combatant_id, actor_name: member.state.template.name,
+          target_id: member.combatant_id, target_name: member.state.template.name,
+          feature_id: spec.source_name, hp_before: hpBefore, hp_after: member.state.current_hp,
+          animation: "feature",
+          description: `${spec.source_name} deals ${resolved.applied} ${spec.damage_type} damage to ${member.state.template.name} at the start of the turn.`,
+        });
+      }
       for (const effect of [...(member.state.timed_effects || [])]) {
         const hpLossCount = effect.start_of_turn_hp_loss_dice_count || 0;
         if (hpLossCount > 0 && member.state.current_hp > 0 && !member.state.is_dead) {

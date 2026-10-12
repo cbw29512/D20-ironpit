@@ -16,6 +16,7 @@ from app.content.monster_conditional_damage_2014 import (
 )
 from app.content.monster_source_2014 import SourceAttack2014
 from app.content.monster_hp_loss_effect_2014 import ongoing_hp_loss_effect_2014, supported_ongoing_hp_loss_2014
+from app.content.monster_grapple_periodic_2014 import grapple_periodic_damage_2014, supports_grapple_periodic_2014
 from app.content.monster_zero_hp_save_rider_2014 import zero_hp_save_rider_2014
 from app.domain.capability_effects import (
     AttackEffectDefinition,
@@ -68,7 +69,7 @@ def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
         and not supported_contested_movement_2014(attack.on_hit_contested_movement)
     ):
         return False
-    if ((attack.ongoing_damage_effect and not supported_ongoing_hp_loss_2014(attack))
+    if ((attack.ongoing_damage_effect and not (supported_ongoing_hp_loss_2014(attack) or supports_grapple_periodic_2014(attack)))
         or attack.resource_id or attack.breakable_restraint):
         return False
     if (
@@ -185,5 +186,7 @@ def basic_attack_effects_2014(attack: SourceAttack2014, opening_source_name: str
                 CreatureSize(str(max_size).lower()) if max_size is not None else None
             ),
             restrains=bool(row.get("restrains_while_grappled", False)),
+            requires_source_free=supports_grapple_periodic_2014(attack),
+            periodic_damage=(grapple_periodic_damage_2014(attack) if supports_grapple_periodic_2014(attack) else None),
         ))
     return effects

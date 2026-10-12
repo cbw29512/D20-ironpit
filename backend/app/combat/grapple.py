@@ -41,6 +41,7 @@ def apply_grapple(
     *,
     restrains: bool = False,
     source_is_magical: bool = False,
+    periodic_damage=None,
 ) -> list[str]:
     if condition_is_immune(state, GRAPPLED_EFFECT_ID, source_is_magical=source_is_magical):
         return []
@@ -56,6 +57,7 @@ def apply_grapple(
         range_ft=range_ft,
         restrains=restrains,
         source_is_magical=source_is_magical,
+        periodic_damage=periodic_damage,
     ))
     _sync_effect_ids(state)
     return [GRAPPLED_EFFECT_ID, RESTRAINED_EFFECT_ID] if restrains else [GRAPPLED_EFFECT_ID]

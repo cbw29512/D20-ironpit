@@ -10,6 +10,7 @@ from app.combat.friendly_recovery_aura_windows import (
 from app.combat.regeneration import resolve_start_of_turn_regeneration
 from app.combat.post_hit_save_condition_lifecycle import start_of_turn_save_condition_damage
 from app.combat.start_of_turn_timed_burn import start_of_turn_timed_burns
+from app.combat.grapple_periodic_damage import grapple_turn_start_damage
 from app.combat.start_of_turn_hp_loss import resolve_start_of_turn_hp_loss_events
 from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -37,6 +38,7 @@ def resolve_start_of_turn_save_condition_damage_events(
         packets = [
             *start_of_turn_save_condition_damage(member, setup, dice),
             *start_of_turn_timed_burns(member, setup, dice),
+            *grapple_turn_start_damage(member, setup, dice),
         ]
         for name, total, damage_type in packets:
             component = DamageRollComponent(

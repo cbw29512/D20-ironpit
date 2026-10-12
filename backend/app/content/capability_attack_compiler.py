@@ -29,6 +29,8 @@ def _compile_control(effect: GrappleEffectDefinition | ConditionEffectDefinition
             max_target_size=effect.max_target_size,
             grapple_escape_dc=effect.escape_dc,
             restrains_while_grappled=effect.restrains,
+            grapple_requires_source_free=effect.requires_source_free,
+            grapple_periodic_damage=effect.periodic_damage,
         )
     return HitControlEffect(
         max_target_size=effect.max_target_size,

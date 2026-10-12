@@ -18,18 +18,28 @@ from app.domain.action_types import (
 )
 from app.domain.healing_actions import HealingAction
 
+class GrapplePeriodicDamage(BaseModel):
+    source_name: str = Field(min_length=1)
+    dice_count: int = Field(ge=1, le=40)
+    dice_size: int = Field(ge=2, le=100)
+    damage_type: DamageTypeName
+
+
 class GrappleSource(BaseModel):
     source_id: str
     escape_dc: int = Field(ge=1, le=40)
     range_ft: int = Field(default=5, ge=0)
     restrains: bool = False
     source_is_magical: bool = False
+    periodic_damage: GrapplePeriodicDamage | None = None
 
 
 class HitControlEffect(BaseModel):
     max_target_size: CreatureSize | None = None
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
+    grapple_requires_source_free: bool = False
+    grapple_periodic_damage: GrapplePeriodicDamage | None = None
     condition_id: ConditionName | None = None
     expires_at_start_of_source_turn: bool = False
     expiry_timing: ConditionTiming | None = None
