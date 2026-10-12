@@ -12,19 +12,9 @@ BonusDamageSpec = tuple[str, int, int, int, DamageType]
 
 def _qualified(
     rider: OncePerTurnWeaponHitDamageRider,
-    attacker: CombatantState,
     target: CombatantState | None,
     active_ally_adjacent_to_target: bool = False,
 ) -> bool:
-    if rider.requires_first_attack_of_fight and attacker.feature_use_counts.get("weapon_attack_attempts", 0) != 1:
-        return False
-    if rider.requires_attacker_first_turn and attacker.turns_started != 1:
-        return False
-    if rider.requires_target_unacted:
-        if target is None:
-            raise ValueError(f"{rider.source_name} requires target initiative state.")
-        if target.turns_started != 0:
-            return False
     if rider.requires_active_ally_adjacent_to_target and not active_ally_adjacent_to_target:
         return False
     if rider.requires_target_below_max_hp:
@@ -81,7 +71,7 @@ def once_per_turn_weapon_hit_bonus_damages(
             seen_ids.add(rider.source_id)
             if attacker.feature_last_turn_keys.get(rider.source_id) == turn_key:
                 continue
-            if not _qualified(rider, attacker, target, active_ally_adjacent_to_target):
+            if not _qualified(rider, target, active_ally_adjacent_to_target):
                 continue
             attacker.feature_last_turn_keys[rider.source_id] = turn_key
             result.append(_spec(rider, attack))
