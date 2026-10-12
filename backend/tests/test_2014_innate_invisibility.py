@@ -78,3 +78,25 @@ def test_innate_condition_binding_fails_closed_without_unconditional_source() ->
     assert conditional.source_traits != source.source_traits
     assert innate_condition_ids_2014(conditional) == []
     assert "source:trait" in basic_blockers_2014(conditional)
+
+
+def test_innate_invisibility_suppressed_but_not_removed_by_reveal() -> None:
+    """Universal visibility suppression is temporary; source Invisibility stays owned."""
+    from app.combat.condition_rules import invisibility_benefits_suppressed
+    from app.domain.modifiers import CombatModifier, ModifierKind
+
+    template = compile_combatant(adapt_basic_monster_2014(stalker()))
+    state = build_combatant_state(template)
+    observer = build_combatant_state(build_demo_fighter())
+    assert has_condition(state, "invisible") and not can_see(observer, state, 5)
+    state.active_modifiers.append(CombatModifier(
+        id="reveal:test", source_id="caster", source_effect_id="reveal",
+        kind=ModifierKind.INVISIBILITY_BENEFITS_SUPPRESSED,
+    ))
+    assert invisibility_benefits_suppressed(state)
+    assert can_see(observer, state, 5)
+    assert state.active_effect_ids == ["invisible"]
+    state.active_modifiers.clear()
+    assert has_condition(state, "invisible")
+    assert not can_see(observer, state, 5)
+    assert build_combatant_state(template).active_effect_ids == ["invisible"]
