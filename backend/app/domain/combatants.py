@@ -23,13 +23,7 @@ from app.domain.suppression_zones import PersistentSuppressionZoneAction
 from app.domain.teleport_actions import TeleportAction
 from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
 from app.domain.progression import ProgressionCombatFeatures
-from app.domain.reactions import (
-    AttackDamageReductionReaction,
-    DamageReactionAttack,
-    IncomingDamageTypeResistanceReaction,
-    ParryReaction,
-    RedirectAttackReaction,
-)
+from app.domain.reactions import (AttackDamageReductionReaction, DamageReactionAttack, IncomingDamageTypeResistanceReaction, ParryReaction, RedirectAttackReaction)
 from app.domain.reaction_roll_penalties import ReactionRollPenaltyAction
 from app.domain.concentration_repeat_saves import ConcentrationRepeatSaveAction
 from app.domain.recharge import RechargeRule
