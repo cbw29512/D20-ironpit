@@ -269,11 +269,10 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 
 ### 029. Barbed Devil
 
-- [ ] **SOURCE REVIEW / BIND / TEST / CERTIFY / MERGE** — not yet individually verified by this worksheet.
-- **Recorded blockers:** `attack:range`, `source:trait`.
-- **Unbound printed traits:** Barbed Hide
-- **Fix notes:** Correct reach/range bands from printed source; verify legal attack selection and shared range penalties. Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
-- **Known directed work:** Barbed Hide: reuse contact retaliation; verify printed trigger and damage.
+- [x] **MERGED + EXACT-HEAD CERTIFIED:** Barbed Hide in [PR #756](https://github.com/cbw29512/D20-ironpit/pull/756), `c0171ded985f3c0053b7dfe121700ea3b445c195`; five exact-head gates green.
+- **Source admission:** 2014 Barbed Devil is source-ready in generated 211/327 roster, no remaining blocker.
+- **Printed 2014 Barbed Hide:** source-turn 1d10 Piercing against each creature grappling the devil; no action/reaction/save. Uses the universal Grappled relationship and typed-damage/HP chain. The reverse grapple does not trigger. Source card remains immutable; 2024 behavior stays edition-separated.
+- **Hurl Flame:** shared source-verified 150-foot single-range ranged-spell primitive from #753, active in certified Barbed Devil roster. Original [#689](https://github.com/cbw29512/D20-ironpit/issues/689) records additional focused profile acceptance evidence; do not recode existing range semantics.
 
 ### 030. Behir
 
