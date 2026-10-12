@@ -14,7 +14,7 @@ _BOUNDED = re.compile(
     re.IGNORECASE,
 )
 _BLIND_TRAIT = re.compile(
-    r"\bBlind Senses\.\s*The\s+[^.]+?\s+can['’]t\s+use\s+its\s+blindsight"
+    r"\bBlind Senses\s*\.\s*The\s+[^.]+?\s+can['’]t\s+use\s+its\s+blindsight"
     r"\s+while\s+deafened\s+and\s+unable\s+to\s+smell\.",
     re.IGNORECASE,
 )
