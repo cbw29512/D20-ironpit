@@ -15,6 +15,8 @@ UNCONSCIOUS = "unconscious"
 
 
 def has_condition(state: CombatantState, condition_id: str) -> bool:
+    if condition_id in state.template.innate_condition_ids:
+        return not condition_is_immune(state, condition_id)
     if condition_id not in state.active_effect_ids:
         return False
     timed = [effect for effect in state.timed_effects if effect.effect_id == condition_id]
