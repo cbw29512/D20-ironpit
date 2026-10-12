@@ -42,11 +42,15 @@
 
   function registerTurnAttack(state, offTurn = false) {
     try {
-      if (offTurn) return;
-      if (!turnAttackAllowed(state, false)) {
-        throw new Error(`${state.template?.name || "Combatant"} cannot make another attack this turn.`);
+      if (!offTurn) {
+        if (!turnAttackAllowed(state, false)) {
+          throw new Error(`${state.template?.name || "Combatant"} cannot make another attack this turn.`);
+        }
+        state.attacks_this_turn = (state.attacks_this_turn || 0) + 1;
       }
-      state.attacks_this_turn = (state.attacks_this_turn || 0) + 1;
+      if (!state.feature_use_counts) throw new Error("Combatant state lacks feature-use counters.");
+      state.feature_use_counts.weapon_attack_attempts =
+        (state.feature_use_counts.weapon_attack_attempts || 0) + 1;
     } catch (error) {
       console.error("Timed attack registration failed.", error);
       throw error;
