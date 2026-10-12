@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 # Only the exact unconditional declaration is a starting condition.
 # An action, saving throw, temporary spell or "can become invisible" does not match.
 _INVISIBLE_DECLARATION = re.compile(
-    r"<strong>Invisibility\.</strong>\s*[^<.]{1,100}?\bis invisible\.",
+    r"<strong>Invisibility\.</strong>\s*</em>\s*[^<.]{1,100}?\bis invisible\.",
     re.IGNORECASE,
 )
 
