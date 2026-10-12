@@ -70,6 +70,10 @@ def test_source_turn_only_current_grapplers_get_damage_and_released_one_does_not
     first, second = heroes
     start = first.state.current_hp
     assert resolve_source_turn_relation_damage(1, 1, monster, setup, FixedDice()) == ([], 1)
+    # Reversed relationship: the devil grapples a hero, not vice versa.
+    apply_grapple(first.state, monster.combatant_id, 12, 10)
+    assert resolve_source_turn_relation_damage(1, 1, monster, setup, FixedDice()) == ([], 1)
+    release_grapple(first.state, monster.combatant_id)
     apply_grapple(monster.state, first.combatant_id, 12, 10)
     apply_grapple(monster.state, second.combatant_id, 12, 10)
     events, sequence = resolve_source_turn_relation_damage(1, 1, monster, setup, FixedDice())
