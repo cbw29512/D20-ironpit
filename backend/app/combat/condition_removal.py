@@ -34,6 +34,8 @@ def remove_condition(target: EncounterCombatant, condition_id: str) -> None:
             else:
                 remove_effect_instance(target.state, effect)
         target.state.active_effect_ids = [item for item in target.state.active_effect_ids if item != condition_id]
+        if condition_id in target.state.template.innate_condition_ids:
+            target.state.active_effect_ids.append(condition_id)
         if condition_id == "grappled":
             target.state.grapple_sources = []
     except Exception:
