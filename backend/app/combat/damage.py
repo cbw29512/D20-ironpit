@@ -125,7 +125,7 @@ def resolve_weapon_damage(
         for conditional in attack.conditional_damage:
             if conditional.mode != "add" or not conditional_damage_active(conditional, attacker, target, attack_mode):
                 continue
-            source = "Advantage bonus damage" if conditional.trigger == "attack_advantage" else "Conditional bonus damage"
+            source = conditional.source_name or ("Advantage bonus damage" if conditional.trigger == "attack_advantage" else "Conditional bonus damage")
             components.append(roll_damage_component(
                 dice, source, conditional.dice_count, conditional.dice_size,
                 conditional.damage_bonus, conditional.damage_type, critical,
