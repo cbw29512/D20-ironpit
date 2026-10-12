@@ -1027,6 +1027,12 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         }
         if template.innate_condition_ids:
             row["innate_condition_ids"] = list(template.innate_condition_ids)
+        if template.blindsight_deafened_ft is not None:
+            row["blindsight_deafened_ft"] = template.blindsight_deafened_ft
+        if template.blind_beyond_blindsight:
+            row["blind_beyond_blindsight"] = True
+        if template.blindsight_requires_smell_when_deafened:
+            row["blindsight_requires_smell_when_deafened"] = True
         if template.damage_absorptions:
             row["damage_absorptions"] = [
                 {"sourceId": item.source_id, "sourceName": item.source_name, "damageType": _value(item.damage_type)}
