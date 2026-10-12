@@ -14,8 +14,7 @@
     if (Q().has(attacker, "blinded") && !ignoresUnseen) disadvantage += 1; if (Q().has(attacker, "invisible") && !Q().canSee(defender, attacker, distance)) advantage += 1;
     if (attacker.active_effect_ids.includes("prone")) disadvantage += 1; if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1; if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1; disadvantage += G()?.attackDisadvantage(attacker, targetId) || 0;
     if (defender.active_effect_ids.includes("dodge") && !Q().incapacitated(defender) && M().effectiveSpeed(defender) > 0 && !G()?.speedIsZero(defender)) disadvantage += 1; if (Q().attackAdvantage(defender)) advantage += 1;
-    if (!ignoresUnseen && (Q().has(defender, "invisible") || attacker.template.blind_beyond_blindsight)
-      && !Q().canSee(attacker, defender, distance)) disadvantage += 1; if (defender.active_effect_ids.includes("restrained")) advantage += 1; if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
+    if (!ignoresUnseen && (Q().has(defender, "invisible") || attacker.template.blind_beyond_blindsight) && !Q().canSee(attacker, defender, distance)) disadvantage += 1; if (defender.active_effect_ids.includes("restrained")) advantage += 1; if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
     return { advantage, disadvantage };
   }
   function rangedCloseThreat(attacker, target, distance, setup) {
