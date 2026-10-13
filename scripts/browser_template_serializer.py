@@ -1123,6 +1123,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 "reductionDiceSize": rule.reduction_dice_size,
                 "reductionAbility": rule.reduction_ability,
                 "addLevel": rule.add_level,
+                "negateOnSaveAbility": rule.negate_on_save_ability,
+                "negateOnSaveDc": rule.negate_on_save_dc,
                 **(
                     {"zeroDamageRedirect": {
                         "sourceId": rule.zero_damage_redirect.source_id,
