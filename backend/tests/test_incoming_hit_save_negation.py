@@ -54,3 +54,44 @@ def test_universal_save_negation_cannot_trigger_twice():
     result = apply_attack_damage_reduction(defender, hit, _damage(), FixedDiceProvider([20]))
     assert not result.used
     assert result.components[0].total == 20
+
+
+def test_universal_save_negation_success_zeroes_all_damage_components() -> None:
+    defender = _defender()
+    hit = defender.template.weapon_attack
+    damage = [
+        DamageRollComponent(
+            source="rock", notation="11", rolls=[], modifier=11,
+            damage_type=DamageType.BLUDGEONING, total=11,
+        ),
+        DamageRollComponent(
+            source="secondary", notation="7", rolls=[], modifier=7,
+            damage_type=DamageType.FIRE, total=7,
+        ),
+    ]
+    result = apply_attack_damage_reduction(defender, hit, damage, FixedDiceProvider([20]))
+    assert result.used and result.zeroed_attack
+    assert result.reduction == 18
+    assert [component.total for component in result.components] == [0, 0]
+    assert [component.total for component in damage] == [11, 7]
+    assert defender.reaction_available is False
+
+
+def test_universal_save_negation_failure_preserves_all_damage_components() -> None:
+    defender = _defender()
+    hit = defender.template.weapon_attack
+    damage = [
+        DamageRollComponent(
+            source="rock", notation="11", rolls=[], modifier=11,
+            damage_type=DamageType.BLUDGEONING, total=11,
+        ),
+        DamageRollComponent(
+            source="secondary", notation="7", rolls=[], modifier=7,
+            damage_type=DamageType.FIRE, total=7,
+        ),
+    ]
+    result = apply_attack_damage_reduction(defender, hit, damage, FixedDiceProvider([1]))
+    assert result.used and not result.zeroed_attack
+    assert result.reduction == 0
+    assert [component.total for component in result.components] == [11, 7]
+    assert defender.reaction_available is False
