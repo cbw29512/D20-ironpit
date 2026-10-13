@@ -33,6 +33,7 @@ from app.combat.persistent_save_zone_windows import resolve_save_zone_window
 from app.combat.suppression_zone_effects import expire_suppression_zones, sync_suppression_zone_effects
 from app.combat.legendary_actions import resolve_legendary_actions_after_turn
 from app.combat.triggered_extra_attacks import resolve_triggered_extra_attacks_after_turn
+from app.combat.turn_start_save_reactions import resolve_turn_start_save_reactions
 from app.combat.turn_damage import clear_turn_damage
 from app.combat.timed_emanations import resolve_target_turn_start_emanations
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
@@ -160,7 +161,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     f"{round_number}:{member.combatant_id}", "start_turn",
                 )
                 events.extend(zone_events)
-                start_buff = resolve_start_turn_timed_self_buff(
+                reaction_events, sequence = resolve_turn_start_save_reactions(\n                    sequence, round_number, member, setup, dice,\n                )\n                events.extend(reaction_events)\n                start_buff = resolve_start_turn_timed_self_buff(
                     sequence, round_number, member, setup, dice,
                 )
                 if start_buff is not None:
