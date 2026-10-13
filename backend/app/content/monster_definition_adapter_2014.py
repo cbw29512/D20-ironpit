@@ -62,6 +62,7 @@ from app.content.monster_multiattack_variants_2014 import attack_unavailable_rea
 from app.domain.character_builds import AbilityScores
 from app.domain.reactions import ParryReaction
 from app.domain.size import CreatureSize
+from app.content.monster_rock_catching_2014 import source_rock_catching_reaction_2014
 
 def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapabilityDefinition:
     source_grapple_periodic_proof_2014(monster, attack)
@@ -185,6 +186,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
         source_turn_relation_damages=source_turn_grappler_damage_2014(monster),
         source_legendary_action_names=list(monster.legendary_action_names),
+        attack_damage_reduction_reaction=source_rock_catching_reaction_2014(monster),
         parry_reaction=ParryReaction(ac_bonus=monster.parry_ac_bonus)
             if supports_parry_reaction_2014(monster) else None,
         **template_defense_fields_2014(monster),
