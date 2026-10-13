@@ -86,7 +86,6 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
         logger.exception("Failed to identify unsupported 2014 traits for %s.", monster.name)
         raise
 
-
 def supports_parry_reaction_2014(monster: SourceMonster2014) -> bool:
     try:
         return monster.reaction_names == ["Parry"] and monster.parry_ac_bonus is not None
