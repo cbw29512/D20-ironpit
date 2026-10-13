@@ -50,7 +50,6 @@ def _supported_charge(monster: SourceMonster2014) -> bool:
         for attack in monster.attacks
     )
 
-
 def _attack_blockers(monster: SourceMonster2014) -> list[str]:
     blockers: list[str] = []
     for source_attack in monster.attacks:
