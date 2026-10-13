@@ -18,6 +18,7 @@ from app.content.monster_innate_support_2014 import innate_spell_names_2014, sup
 from app.content.monster_legendary_bindings_2014 import supports_legendary_actions_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_rock_catching_2014 import supports_rock_catching_reaction_2014
+from app.content.monster_turn_start_reaction_2014 import supports_turn_start_reaction_2014
 from app.content.monster_multiattack_2014 import multiattack_blockers_2014
 from app.content.monster_save_capabilities_2014 import supports_recharge_rules_2014, unsupported_save_actions_2014, unsupported_source_actions_2014
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
@@ -113,7 +114,7 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
         blockers.append("source:extra-action")
     if unsupported_traits_2014(monster):
         blockers.append("source:trait")
-    if (set(monster.reaction_names) - arena_unavailable_reaction_names_2014(monster) or monster.parry_ac_bonus is not None) and not (supports_parry_reaction_2014(monster) or supports_rock_catching_reaction_2014(monster)):
+    if (set(monster.reaction_names) - arena_unavailable_reaction_names_2014(monster) or monster.parry_ac_bonus is not None) and not (supports_parry_reaction_2014(monster) or supports_rock_catching_reaction_2014(monster) or supports_turn_start_reaction_2014(monster)):
         blockers.append("source:reaction")
     if monster.legendary_action_names and not supports_legendary_actions_2014(monster):
         blockers.append("source:legendary")
