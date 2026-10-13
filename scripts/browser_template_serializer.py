@@ -1119,7 +1119,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 "sourceName": rule.source_name,
                 "attackKinds": list(rule.attack_kinds),
                 "requiredDamageTypes": [item.value for item in rule.required_damage_types],
-                "requiredAttackQualifiers": [tag.value for tag in rule.required_attack_qualifiers],
+                "requiredAttackQualifiers": [tag.value for tag in rule.required_attack_qualifiers], "negateOnSaveDamageTypes": [kind.value for kind in rule.negate_on_save_damage_types],
                 "reductionDiceCount": rule.reduction_dice_count,
                 "reductionDiceSize": rule.reduction_dice_size,
                 "reductionAbility": rule.reduction_ability,
