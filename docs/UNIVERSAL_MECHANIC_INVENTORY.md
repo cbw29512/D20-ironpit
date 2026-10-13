@@ -443,7 +443,6 @@ Blocked monsters: **116**. These are grouped by printed ability name so the rost
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
 | Death Burst | Dust Mephit, Ice Mephit, Magma Mephit, Magmin, Steam Mephit | 5 |
 | Death Throes | Balor | 1 |
-| Detect Life | Banshee | 1 |
 | Divine Awareness | Planetar, Solar | 2 |
 | Divine Eminence | Priest | 1 |
 | Duergar Resilience | Duergar | 1 |
@@ -478,9 +477,7 @@ Blocked monsters: **116**. These are grouped by printed ability name so the rost
 | Reactive Heads | Hydra | 1 |
 | Reflective Carapace | Tarrasque | 1 |
 | Rust Metal | Rust Monster | 1 |
-| Sense Magic | Chuul | 1 |
 | Shapechanger | Doppelganger, Imp, Mimic, Quasit, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf | 11 |
-| Shielded Mind | Couatl | 1 |
 | Speak with Beasts and Plants | Dryad | 1 |
 | Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
@@ -500,7 +497,7 @@ Blocked monsters: **116**. These are grouped by printed ability name so the rost
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 82 |
+| `source:trait` | 80 |
 | `source:extra-action` | 68 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |
