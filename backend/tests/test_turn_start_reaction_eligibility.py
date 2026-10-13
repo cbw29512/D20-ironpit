@@ -44,3 +44,29 @@ def test_missing_reaction_rule_is_ineligible() -> None:
     source = _combatant("source", "monsters", 0)
     foe = _combatant("foe", "heroes", 5)
     assert not eligible_turn_start_reaction(source, foe)
+
+
+def test_directional_visibility_and_measured_range(monkeypatch) -> None:
+    import app.combat.turn_start_reaction_eligibility as eligibility
+
+    source = _combatant("source", "monsters", 0, source=True)
+    foe = _combatant("foe", "heroes", 30)
+    seen = []
+
+    def visibility(observer, target, distance_ft):
+        seen.append((observer is source.state, distance_ft))
+        return observer is source.state
+
+    monkeypatch.setattr(eligibility, "can_see", visibility)
+    assert not eligible_turn_start_reaction(source, foe)
+    assert seen == [(True, 30), (False, 30)]
+
+
+def test_source_must_see_target_before_reaction(monkeypatch) -> None:
+    import app.combat.turn_start_reaction_eligibility as eligibility
+
+    source = _combatant("source", "monsters", 0, source=True)
+    foe = _combatant("foe", "heroes", 5)
+    monkeypatch.setattr(eligibility, "can_see", lambda *_args: False)
+    assert not eligible_turn_start_reaction(source, foe)
+    assert source.state.reaction_available is True
