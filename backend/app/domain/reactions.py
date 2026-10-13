@@ -61,6 +61,9 @@ class AttackDamageReductionReaction(BaseModel):
         "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"
     ] | None = None
     add_level: bool = False
+    # A successful source-configured save negates the incoming hit's damage.
+    negate_on_save_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"] | None = None
+    negate_on_save_dc: int | None = Field(default=None, ge=1, le=40)
     zero_damage_redirect: ZeroDamageSaveRedirect | None = None
 
 
