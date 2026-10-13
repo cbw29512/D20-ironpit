@@ -6,7 +6,7 @@ from app.content.monster_opening_initiative_2014 import opening_initiative_damag
 from app.content.monster_attack_source_corrections_2014 import corrected_attack_range_2014
 from app.content.monster_berserk_2014 import berserk_self_buffs_2014
 from app.content.monster_basic_candidates_2014 import (
-    basic_blockers_2014, modeled_combat_traits_2014, supports_parry_reaction_2014, supports_rock_catching_reaction_2014,
+    basic_blockers_2014, modeled_combat_traits_2014, supports_parry_reaction_2014,
 )
 from app.content.monster_charge_profile_2014 import charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
@@ -60,8 +60,9 @@ from app.domain.capability_attacks import AttackCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
 from app.content.monster_multiattack_variants_2014 import attack_unavailable_reason_2014
 from app.domain.character_builds import AbilityScores
-from app.domain.reactions import AttackDamageReductionReaction, ParryReaction
+from app.domain.reactions import ParryReaction
 from app.domain.size import CreatureSize
+from app.content.monster_rock_catching_2014 import source_rock_catching_reaction_2014
 
 def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapabilityDefinition:
     source_grapple_periodic_proof_2014(monster, attack)
