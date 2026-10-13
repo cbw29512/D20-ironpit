@@ -42,3 +42,22 @@ def source_hurled_object_qualifiers_2014(
     except Exception:
         logger.exception("Failed to verify hurled-object source for %s.", monster.id)
         raise
+
+
+def source_rock_catching_reaction_2014(
+    monster: SourceMonster2014,
+) -> AttackDamageReductionReaction | None:
+    try:
+        if not supports_rock_catching_reaction_2014(monster):
+            return None
+        return AttackDamageReductionReaction(
+            source_id="rock-catching", source_name="Rock Catching",
+            attack_kinds=["ranged"],
+            required_attack_qualifiers=[DamageSourceQualifier.HURLED_OBJECT],
+            required_damage_types=["bludgeoning"],
+            negate_on_save_damage_types=["bludgeoning"],
+            negate_on_save_ability="dexterity", negate_on_save_dc=10,
+        )
+    except Exception:
+        logger.exception("Failed to bind 2014 Reaction for %s.", monster.id)
+        raise
