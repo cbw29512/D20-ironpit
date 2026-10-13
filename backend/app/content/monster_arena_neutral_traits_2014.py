@@ -54,10 +54,6 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "<strong>Detect Life.</strong>",
                 "general direction", "exact locations",
             ),
-            "Sense Magic": (
-                "<strong>Sense Magic.</strong>",
-                "120 feet", "detect magic",
-            ),
             "Shielded Mind": (
                 "<strong>Shielded Mind.</strong>",
                 "immune to scrying", "sense its emotions",

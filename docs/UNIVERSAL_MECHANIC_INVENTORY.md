@@ -428,7 +428,7 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **116**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **115**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
@@ -443,6 +443,7 @@ Blocked monsters: **116**. These are grouped by printed ability name so the rost
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
 | Death Burst | Dust Mephit, Ice Mephit, Magma Mephit, Magmin, Steam Mephit | 5 |
 | Death Throes | Balor | 1 |
+| Detect Life | Banshee | 1 |
 | Divine Awareness | Planetar, Solar | 2 |
 | Divine Eminence | Priest | 1 |
 | Duergar Resilience | Duergar | 1 |
@@ -477,7 +478,9 @@ Blocked monsters: **116**. These are grouped by printed ability name so the rost
 | Reactive Heads | Hydra | 1 |
 | Reflective Carapace | Tarrasque | 1 |
 | Rust Metal | Rust Monster | 1 |
+| Sense Magic | Chuul | 1 |
 | Shapechanger | Doppelganger, Imp, Mimic, Quasit, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf | 11 |
+| Shielded Mind | Couatl | 1 |
 | Speak with Beasts and Plants | Dryad | 1 |
 | Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
@@ -497,7 +500,7 @@ Blocked monsters: **116**. These are grouped by printed ability name so the rost
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 80 |
+| `source:trait` | 82 |
 | `source:extra-action` | 68 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |
@@ -507,8 +510,8 @@ Blocked monsters: **116**. These are grouped by printed ability name so the rost
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
 | `mechanic:swallow` | 7 |
-| `source:reaction` | 5 |
 | `mechanic:death-trigger` | 4 |
+| `source:reaction` | 4 |
 | `attack:none` | 3 |
 | `attack:damage-type` | 2 |
 | `arena:neutral` | 1 |

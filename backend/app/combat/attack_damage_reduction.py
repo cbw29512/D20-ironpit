@@ -5,6 +5,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.dice import DiceProvider
+from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.domain.models import CombatantState, DamageRollComponent, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -42,6 +43,10 @@ def can_reduce_attack_damage(
             return False
         if _value(attack.weapon.attack_kind) not in set(rule.attack_kinds):
             return False
+        required = {_value(tag) for tag in rule.required_attack_qualifiers}
+        actual = {_value(tag) for tag in attack.damage_source_qualifiers}
+        if not required.issubset(actual):
+            return False
         required = {_value(item) for item in rule.required_damage_types}
         if required and not any(_value(part.damage_type) in required and part.total > 0 for part in components):
             return False
@@ -64,6 +69,31 @@ def apply_attack_damage_reduction(
             return AttackDamageReductionResolution(components=list(components))
 
         original_total = sum(max(0, component.total) for component in components)
+        if rule.negate_on_save_ability is not None:
+            if rule.negate_on_save_dc is None:
+                raise ValueError("Save-negation reaction requires DC.")
+            _, succeeded = resolve_saving_throw(
+                defender, rule.negate_on_save_ability, rule.negate_on_save_dc, dice,
+            )
+            spend(defender, "reaction")
+            if succeeded:
+                protected = {_value(item) for item in rule.negate_on_save_damage_types}
+                reduced = [
+                    part.model_copy(update={"total": 0})
+                    if not protected or _value(part.damage_type) in protected else part
+                    for part in components
+                ]
+                prevented = original_total - sum(max(0, part.total) for part in reduced)
+                return AttackDamageReductionResolution(
+                    components=reduced,
+                    used=True, reduction=prevented,
+                    source_id=rule.source_id, source_name=rule.source_name,
+                    zeroed_attack=original_total > 0 and prevented == original_total,
+                )
+            return AttackDamageReductionResolution(
+                components=list(components), used=True,
+                source_id=rule.source_id, source_name=rule.source_name,
+            )
         reduction = sum(dice.roll(rule.reduction_dice_size) for _ in range(rule.reduction_dice_count))
         if rule.reduction_ability is not None:
             scores = defender.template.ability_scores

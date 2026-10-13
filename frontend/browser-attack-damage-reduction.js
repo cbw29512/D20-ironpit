@@ -11,6 +11,8 @@
       if (!rule || !components?.length || defender.current_hp <= 0) return false;
       if (!E().available(defender, "reaction")) return false;
       if (!(rule.attackKinds || []).includes(attack.kind)) return false;
+      const tags = new Set(attack?.damageSourceQualifiers || []);
+      if ((rule.requiredAttackQualifiers || []).some((tag) => !tags.has(tag))) return false;
       const required = new Set(rule.requiredDamageTypes || []);
       if (required.size && !components.some((part) => required.has(part.damage_type) && part.total > 0)) {
         return false;
@@ -31,6 +33,24 @@
         return { components, used: false, reduction: 0, sourceId: null, sourceName: null, zeroedAttack: false };
       }
       const originalTotal = components.reduce((sum, part) => sum + Math.max(0, part.total || 0), 0);
+      if (rule.negateOnSaveAbility) {
+        if (!Number.isInteger(rule.negateOnSaveDc)) throw new Error("Save-negation reaction requires DC.");
+        const resolver = window.IRON_PIT_BROWSER_SAVING_THROWS?.resolveSavingThrow;
+        if (!resolver) throw new Error("Universal saving throws are required.");
+        const outcome = resolver(defender, rule.negateOnSaveAbility, rule.negateOnSaveDc);
+        E().spend(defender, "reaction");
+        if (outcome.succeeded) {
+          const types = new Set(rule.negateOnSaveDamageTypes || []);
+          const reduced = components.map((part) => (!types.size || types.has(part.damage_type))
+            ? { ...part, total: 0 } : part);
+          const prevented = originalTotal - reduced.reduce((sum, part) => sum + Math.max(0, part.total || 0), 0);
+          return { components: reduced, used: true, reduction: prevented,
+            sourceId: rule.sourceId, sourceName: rule.sourceName,
+            zeroedAttack: originalTotal > 0 && prevented === originalTotal };
+        }
+        return { components, used: true, reduction: 0,
+          sourceId: rule.sourceId, sourceName: rule.sourceName, zeroedAttack: false };
+      }
       let reduction = 0;
       const count = rule.reductionDiceCount || 0;
       for (let index = 0; index < count; index += 1) {

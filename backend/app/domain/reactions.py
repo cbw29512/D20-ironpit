@@ -4,6 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.domain.damage_sources import DamageSourceQualifier
 from app.domain.size import CreatureSize
 from app.domain.weapons_base import DamageType
 
@@ -55,12 +56,17 @@ class AttackDamageReductionReaction(BaseModel):
     source_name: str = Field(min_length=1)
     attack_kinds: list[Literal["melee", "ranged"]] = Field(min_length=1)
     required_damage_types: list[DamageType] = Field(default_factory=list)
+    required_attack_qualifiers: list[DamageSourceQualifier] = Field(default_factory=list)
+    negate_on_save_damage_types: list[DamageType] = Field(default_factory=list)
     reduction_dice_count: int = Field(default=1, ge=0, le=20)
     reduction_dice_size: int = Field(default=10, ge=2, le=100)
     reduction_ability: Literal[
         "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"
     ] | None = None
     add_level: bool = False
+    # A successful source-configured save negates the incoming hit's damage.
+    negate_on_save_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"] | None = None
+    negate_on_save_dc: int | None = Field(default=None, ge=1, le=40)
     zero_damage_redirect: ZeroDamageSaveRedirect | None = None
 
 
