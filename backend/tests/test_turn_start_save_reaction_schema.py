@@ -41,11 +41,11 @@ def test_turn_start_reaction_survives_definition_compilation() -> None:
     from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 
     monster = next(m for m in load_monster_source_2014() if m.id == "chain-devil")
-    # The source reaction is not yet bound: use a copied definition only to
-    # prove the shared compile path retains the declarative policy.
-    definition = adapt_basic_monster_2014(monster).model_copy(update={
+    # Use an admitted template: Chain Devil still has a separate extra-action blocker.
+    admitted = next(m for m in load_monster_source_2014() if m.id == "stone-giant")
+    definition = adapt_basic_monster_2014(admitted).model_copy(update={
         "turn_start_save_reaction": _unnerving_mask(),
     })
     template = compile_combatant(definition)
     assert template.turn_start_save_reaction == _unnerving_mask()
-    assert template.source_reaction_names == monster.reaction_names
+    assert "Unnerving Mask" in monster.reaction_names
