@@ -1,8 +1,6 @@
 from __future__ import annotations
-
 from collections import Counter
 import logging
-
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.monster_arena_action_policy_2014 import PIT_BANNED_ACTION_LABELS_2014
 from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014, verified_arena_inert_trait_2014
@@ -104,9 +102,8 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
         | _ARENA_ABSENT_CONTEXT_ACTION_LABELS
         | _ARENA_UNAVAILABLE_SUMMON_ACTION_LABELS
         | _ARENA_NEUTRAL_MIND_ACTION_LABELS
+        | ({"animate chains"} if supports_animate_chains_arena_unavailable_2014(monster) else set())
     )
-    if supports_animate_chains_arena_unavailable_2014(monster):
-        allowed_extras = allowed_extras | {"animate chains"}
     extras = [
         name for name in extras
         if action_label_from_name(name) not in allowed_extras
