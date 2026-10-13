@@ -21,3 +21,7 @@ Updated 2026-10-13. Docs-only. No runtime, rules, or certification changes.
 ## Out of scope for this note
 
 Gameplay changes, card edits, Netlify deploy, and any alteration of certified counts.
+
+## TODO
+
+- [ ] Before merging this docs PR, re-check whether it is still needed (confirm #762 status, whether the blueprint clarification is still accurate, and whether any newer queue update already covers this note).
