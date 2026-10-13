@@ -4,6 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.domain.damage_sources import DamageSourceQualifier
 from app.domain.size import CreatureSize
 from app.domain.weapons_base import DamageType
 
