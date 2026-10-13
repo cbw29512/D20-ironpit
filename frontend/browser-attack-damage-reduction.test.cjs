@@ -167,21 +167,21 @@ const rule2024 = {
 {
   const rule = { sourceId: "rock-catching", sourceName: "Rock Catching",
     attackKinds: ["ranged"], requiredDamageTypes: [],
-    requiredAttackNameTokens: ["rock", "stone", "boulder"],
+    requiredAttackQualifiers: ["hurled-object"], negateOnSaveDamageTypes: ["bludgeoning"],
     negateOnSaveAbility: "dexterity", negateOnSaveDc: 10 };
   window.IRON_PIT_BROWSER_SAVING_THROWS = {
     resolveSavingThrow: () => ({ succeeded: true }),
   };
   const arrowDefender = state(rule);
   const arrow = window.IRON_PIT_BROWSER_ATTACK_DAMAGE_REDUCTION.apply(
-    arrowDefender, { kind: "ranged", name: "Longbow" },
+    arrowDefender, { kind: "ranged", name: "Longbow", damageSourceQualifiers: [] },
     [{ source: "arrow", damage_type: "piercing", total: 12 }],
   );
   assert.equal(arrow.used, false);
   assert.equal(arrowDefender.reaction_available, true);
   const rockDefender = state(rule);
   const rock = window.IRON_PIT_BROWSER_ATTACK_DAMAGE_REDUCTION.apply(
-    rockDefender, { kind: "ranged", name: "Rock" },
+    rockDefender, { kind: "ranged", name: "Rock", damageSourceQualifiers: ["hurled-object"] },
     [{ source: "rock", damage_type: "bludgeoning", total: 22 }],
   );
   assert.equal(rock.used, true);
