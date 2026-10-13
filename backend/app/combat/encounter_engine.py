@@ -161,7 +161,11 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     f"{round_number}:{member.combatant_id}", "start_turn",
                 )
                 events.extend(zone_events)
-                reaction_events, sequence = resolve_turn_start_save_reactions(\n                    sequence, round_number, member, setup, dice,\n                )\n                events.extend(reaction_events)\n                start_buff = resolve_start_turn_timed_self_buff(
+                reaction_events, sequence = resolve_turn_start_save_reactions(
+                    sequence, round_number, member, setup, dice,
+                )
+                events.extend(reaction_events)
+                start_buff = resolve_start_turn_timed_self_buff(
                     sequence, round_number, member, setup, dice,
                 )
                 if start_buff is not None:
