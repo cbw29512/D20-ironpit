@@ -4,13 +4,28 @@
 
 **What happened:** the 124-monster / 305-blocker review was recorded in unmerged [PR #680](https://github.com/cbw29512/D20-ironpit/pull/680), while the old operating table was frozen on October 8. Use the reconciled records below, not a guessed next monster. Original source blueprint is available at [the pinned PR commit](https://github.com/cbw29512/D20-ironpit/blob/88881607f1f271a2fdb37ffcf95008d9d8d1a07c/docs/MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md); source cards and generated current-main blockers are decisive for certification. This ledger does not falsely upgrade a plan to shipped code.
 
-## Non-negotiable execution protocol
-1. **Planning lane:** scan the reviewed-issue table first; treat an existing approved/source-reviewed resolution as already discussed. Do not ask again. Continue to the first truly unreviewed source clause. At the user's direction, planning is completed across the 124-monster roster before commencing a scheduled hourly implementation loop.
-2. **Implementation lane:** process one monster and **one ability** at a time. Verify its issue, remediation and existing code/PR before coding. Reuse universal effects, source parameters and 2014 RAW/locked arena decisions. If an independent PR already exists, finish/reconcile its certification rather than opening a duplicate.
-3. **Status is two-dimensional:** `DECISION RECORDED` or `SOURCE REVIEWED` does **not** mean code is complete. `NOT CERTIFIED` means never check off implementation. Mark `MERGED + CERTIFIED` **only** after exact-head Python/browser/2014 hero/combat gates, regenerated blocker truth and confirmed merge.
-4. **CI is not a planning question:** while an implementation PR is in CI, advance an independent queued ability's source audit. Do not switch to Druid, UI, graphics or unrelated work when the instruction is "next monster".
-5. **If blocked:** record exact missing semantic, link issue/PR, mark `PARKED`, and advance to the next independent ability. Preserve unchanged RAW/card text. Never change a source ability's meaning to force certification.
-6. **After each completed ability:** update **this file** with issue/PR/SHA/test evidence, update the existing worksheet, and advance the cursor. The generated blocker reports and universal inventory remain generator-owned and must not be hand-edited.
+## Non-negotiable execution protocol — NEXT MEANS BUILD (user clarification 2026-10-12)
+
+**The user's "next", "keep going", or "go" means perform the next actionable implementation/certification task, NOT read out another monster's abilities or ask to reapprove completed decisions.** Previous behavior repeatedly traversed already-reviewed Chuul/Couatl and other source decisions; this is explicitly prohibited.
+
+1. **Start at execution cursor below, not at the top of the historical issue table.** Confirm on current `main` whether its implementation is merged/certified. If yes, advance to the next outstanding *implementation* dependency. A `DECISION RECORDED` row is an input to code, not a fresh user-review task.
+2. **Do actual work before replying:** inspect live source and tests, implement the smallest reusable Python/browser primitive or finish an existing PR, run/certify gates, update the existing queue. Never substitute an issue-body edit, technical audit, or another rules summary for a requested implementation. If tools cannot modify/run code, state that blocker plainly rather than call the issue implemented.
+3. **Eligibility:** choose unfinished `NOT CERTIFIED` tasks whose rule decisions are settled; prioritize one-blocker monsters and reusable primitives. Already merged/certified = skip. Open implementation PR = inspect/reconcile, no duplicate. Stale docs PR = administrative debt, not runtime progress.
+4. **No repeated rule discussions:** review source wording only privately to bind correct parameters. Ask the user ONLY if a genuinely new, outcome-changing ambiguity cannot be resolved from 2014 RAW plus approved arena rules. Do not re-present Pincer, Tentacles, Sense Magic, Couatl, etc. on "next".
+5. **Status is two-dimensional:** `DECISION RECORDED` does not imply implementation. `NOT CERTIFIED` remains until matching Python/browser combat behavior, source-owned artifact regeneration, exact-head gates, and merge. Never increment admitted count on docs work.
+6. **Blocked execution:** record the exact missing dependency concisely and attempt the next independent implementation task; do not fall back into looping through rule reviews. While CI runs, make independent useful code/test progress, not another source-audit recap.
+7. **After each implementation:** cite PR, merged SHA, exact-head test evidence and blocker delta in this file. Generator-owned reports and universal inventory are regenerated, not hand-edited. One subsystem code writer at a time; no monster-name runtime special cases.
+
+### Active implementation cursor (do not confuse with the 124-monster planning ledger)
+
+| Order | Implementation target | Known prerequisite | State / advance rule |
+|---|---|---|---|
+| 1 | Stone Giant — Rock Catching (#675) | Universal incoming-ranged-hit Reaction -> Dex DC10 success negates attack damage; Python/browser source binding, full tests | **CURRENT / NOT CERTIFIED**; do not mark done because issue design is documented |
+| 2 | Chain Devil — Unnerving Mask (#700) | Universal target-turn-start Reaction, two-way visibility/range, Frightened through target turn end | **READY FOR CODE / NOT CERTIFIED** |
+| 3 | Air Elemental — Air Form + Whirlwind (#683) | Generic legal hostile overlap + same-cell random fling/collision, recharge and saves, parity | **ENGINE GAP / NOT CERTIFIED** |
+| 4 | Continue other source-approved one-blocker monsters from fresh generated blocker report | Prefer smallest reusable change removing full monster blocker set | **DYNAMIC; check main and existing PRs first** |
+
+**Cursor advancement is evidence-based.** If a higher row is unfinished but cannot be coded in the current execution environment, explicitly report the limitation; do not pretend to advance by restating a lower row's rules. The historical ledger remains available for identifying *unimplemented* blockers only, never as a sequence of review prompts.
 
 ## Reconciled decision debt — 2026-10-12 (planning vs shipped)
 
