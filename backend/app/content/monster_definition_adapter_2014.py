@@ -34,6 +34,7 @@ from app.content.monster_innate_support_2014 import (
     innate_timed_self_buffs_2014,
 )
 from app.content.monster_legendary_bindings_2014 import legendary_action_options_2014
+from app.content.monster_turn_start_reaction_2014 import source_turn_start_reaction_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.content.monster_senses_2014 import special_senses_2014, bounded_blindsight_2014
 from app.content.monster_spell_slot_resources_2014 import monster_spell_slot_resources_2014
@@ -186,6 +187,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
         source_turn_relation_damages=source_turn_grappler_damage_2014(monster),
         source_legendary_action_names=list(monster.legendary_action_names),
+        turn_start_save_reaction=source_turn_start_reaction_2014(monster),
         attack_damage_reduction_reaction=source_rock_catching_reaction_2014(monster),
         parry_reaction=ParryReaction(ac_bonus=monster.parry_ac_bonus)
             if supports_parry_reaction_2014(monster) else None,
