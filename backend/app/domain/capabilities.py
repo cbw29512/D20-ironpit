@@ -29,6 +29,7 @@ from app.domain.progression import ProgressionCombatFeatures
 from app.domain.recharge import RechargeRule
 from app.domain.regeneration import RegenerationTrait
 from app.domain.save_success_overrides import FailedSaveSuccessOverride
+from app.domain.turn_start_save_reaction import TurnStartSaveReaction
 from app.domain.reactions import AttackDamageReductionReaction, ParryReaction, RedirectAttackReaction
 from app.domain.rulesets import RulesetId
 from app.domain.size import CreatureSize
@@ -97,6 +98,7 @@ class CombatantDefinition(BaseModel):
     source_legendary_action_names: list[str] = Field(default_factory=list)
     source_spellcasting_fingerprint: str | None = None
     attack_damage_reduction_reaction: AttackDamageReductionReaction | None = None
+    turn_start_save_reaction: TurnStartSaveReaction | None = None
     parry_reaction: ParryReaction | None = None
     redirect_attack_reaction: RedirectAttackReaction | None = None
     fighting_style: str | None = None
