@@ -501,7 +501,7 @@ Blocked monsters: **115**. These are grouped by printed ability name so the rost
 | Blocker | Monsters |
 |---|---:|
 | `source:trait` | 82 |
-| `source:extra-action` | 68 |
+| `source:extra-action` | 67 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |
 | `attack:complex` | 12 |
