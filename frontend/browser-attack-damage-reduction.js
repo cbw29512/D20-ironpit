@@ -40,9 +40,13 @@
         const outcome = resolver(defender, rule.negateOnSaveAbility, rule.negateOnSaveDc);
         E().spend(defender, "reaction");
         if (outcome.succeeded) {
-          return { components: components.map((part) => ({ ...part, total: 0 })),
-            used: true, reduction: originalTotal, sourceId: rule.sourceId,
-            sourceName: rule.sourceName, zeroedAttack: originalTotal > 0 };
+          const types = new Set(rule.negateOnSaveDamageTypes || []);
+          const reduced = components.map((part) => (!types.size || types.has(part.damage_type))
+            ? { ...part, total: 0 } : part);
+          const prevented = originalTotal - reduced.reduce((sum, part) => sum + Math.max(0, part.total || 0), 0);
+          return { components: reduced, used: true, reduction: prevented,
+            sourceId: rule.sourceId, sourceName: rule.sourceName,
+            zeroedAttack: originalTotal > 0 && prevented === originalTotal };
         }
         return { components, used: true, reduction: 0,
           sourceId: rule.sourceId, sourceName: rule.sourceName, zeroedAttack: false };
