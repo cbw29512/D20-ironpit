@@ -87,9 +87,10 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
 
 
 def supports_rock_catching_reaction_2014(monster: SourceMonster2014) -> bool:
-    """Source-owned 2014 projectile-catching rule; never use monster IDs."""
-    return monster.reaction_names == ["Rock Catching"] and bool(monster.source_reactions and "DC 10" in monster.source_reactions and "Dexterity" in monster.source_reactions)
-
+    return (monster.reaction_names == ["Rock Catching"]
+            and bool(monster.source_reactions)
+            and "DC 10" in monster.source_reactions
+            and "Dexterity" in monster.source_reactions)
 
 def supports_parry_reaction_2014(monster: SourceMonster2014) -> bool:
     try:
