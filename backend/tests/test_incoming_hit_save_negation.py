@@ -133,3 +133,37 @@ def test_rock_catching_rejects_unrelated_projectiles() -> None:
         }),
     })
     assert can_reduce_attack_damage(defender, attack, _damage()) is False
+
+
+def test_2014_source_rock_attack_has_hurled_object_qualifier() -> None:
+    from app.content.monster_source_2014 import load_monster_source_2014
+    from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+    from app.content.capability_compiler import compile_combatant
+    source = next(m for m in load_monster_source_2014() if m.id == "stone-giant")
+    template = compile_combatant(adapt_basic_monster_2014(source))
+    ranged = [a for a in [template.weapon_attack, *template.alternate_weapon_attacks]
+              if a.weapon.attack_kind.value == "ranged"]
+    assert len(ranged) == 1
+    assert "hurled-object" in [tag.value for tag in ranged[0].damage_source_qualifiers]
+
+
+def test_save_negation_preserves_other_damage_types() -> None:
+    defender = _defender()
+    rule = defender.template.attack_damage_reduction_reaction.model_copy(update={
+        "negate_on_save_damage_types": [DamageType.BLUDGEONING],
+    })
+    defender.template = defender.template.model_copy(update={
+        "attack_damage_reduction_reaction": rule,
+    })
+    parts = [
+        DamageRollComponent(source="rock", notation="10", rolls=[], modifier=10,
+                            damage_type=DamageType.BLUDGEONING, total=10),
+        DamageRollComponent(source="fire", notation="4", rolls=[], modifier=4,
+                            damage_type=DamageType.FIRE, total=4),
+    ]
+    result = apply_attack_damage_reduction(
+        defender, defender.template.weapon_attack, parts, FixedDiceProvider([20]),
+    )
+    assert result.used and not result.zeroed_attack
+    assert result.reduction == 10
+    assert [part.total for part in result.components] == [0, 4]
