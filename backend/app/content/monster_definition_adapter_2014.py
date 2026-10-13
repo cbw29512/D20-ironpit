@@ -62,7 +62,6 @@ from app.content.monster_multiattack_variants_2014 import attack_unavailable_rea
 from app.domain.character_builds import AbilityScores
 from app.domain.reactions import AttackDamageReductionReaction, ParryReaction
 from app.domain.size import CreatureSize
-from app.content.monster_rock_catching_2014 import source_hurled_object_qualifiers_2014
 
 def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapabilityDefinition:
     source_grapple_periodic_proof_2014(monster, attack)
