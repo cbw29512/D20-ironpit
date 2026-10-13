@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
 
 
 class TurnStartSaveReaction(BaseModel):
@@ -22,10 +22,3 @@ class TurnStartSaveReaction(BaseModel):
     failure_condition: Literal["frightened"] = "frightened"
     expires_at: Literal["target_turn_end"] = "target_turn_end"
 
-    @model_validator(mode="after")
-    def validate_turn_start_condition(self) -> "TurnStartSaveReaction":
-        if not self.source_must_see_target or not self.target_must_see_source:
-            # Future printed sources may have different vision requirements.
-            # This is valid policy data, not a hardcoded Chain Devil rule.
-            return self
-        return self
