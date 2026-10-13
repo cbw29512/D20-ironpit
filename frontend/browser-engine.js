@@ -165,8 +165,7 @@
         );
         if (startZones) { events.push(...startZones.events); sequence = startZones.sequence; }
         const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start"); events.push(...start.events); sequence = start.sequence;
-        const saveDot = window.IRON_PIT_BROWSER_POST_HIT_SAVE_CONDITION?.resolveStartOfTurn(sequence, round, member, setup);
-        if (saveDot) { events.push(...saveDot.events); sequence = saveDot.sequence; }
+        const saveDot = window.IRON_PIT_BROWSER_POST_HIT_SAVE_CONDITION?.resolveStartOfTurn(sequence, round, member, setup); if (saveDot) { events.push(...saveDot.events); sequence = saveDot.sequence; }
         if (!window.IRON_PIT_BROWSER_TURN_START_SAVE_REACTIONS && members.some((item) => item.state.template.turn_start_save_reaction)) throw new Error("Turn-start Reaction runtime is missing.");
         const reaction = window.IRON_PIT_BROWSER_TURN_START_SAVE_REACTIONS?.resolve(sequence, round, member, setup); if (reaction) { events.push(...reaction.events); sequence = reaction.sequence; }
         if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) events.push(T().deathSave(sequence++, round, member));
