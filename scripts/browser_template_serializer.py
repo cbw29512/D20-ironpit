@@ -1301,6 +1301,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 }
                 for item in template.damage_taken_timed_effects
             ]
+        if template.turn_start_save_reaction is not None:
+            row["turn_start_save_reaction"] = template.turn_start_save_reaction.model_dump(mode="json")
         if template.legendary_actions:
             row["legendary_actions"] = [item.model_dump(mode="json") for item in template.legendary_actions]
         if template.save_success_overrides:
