@@ -163,4 +163,31 @@ const rule2024 = {
   assert.equal(defender.reaction_available, false);
 }
 
+
+{
+  const rule = { sourceId: "rock-catching", sourceName: "Rock Catching",
+    attackKinds: ["ranged"], requiredDamageTypes: [],
+    requiredAttackNameTokens: ["rock", "stone", "boulder"],
+    negateOnSaveAbility: "dexterity", negateOnSaveDc: 10 };
+  window.IRON_PIT_BROWSER_SAVING_THROWS = {
+    resolveSavingThrow: () => ({ succeeded: true }),
+  };
+  const arrowDefender = state(rule);
+  const arrow = window.IRON_PIT_BROWSER_ATTACK_DAMAGE_REDUCTION.apply(
+    arrowDefender, { kind: "ranged", name: "Longbow" },
+    [{ source: "arrow", damage_type: "piercing", total: 12 }],
+  );
+  assert.equal(arrow.used, false);
+  assert.equal(arrowDefender.reaction_available, true);
+  const rockDefender = state(rule);
+  const rock = window.IRON_PIT_BROWSER_ATTACK_DAMAGE_REDUCTION.apply(
+    rockDefender, { kind: "ranged", name: "Rock" },
+    [{ source: "rock", damage_type: "bludgeoning", total: 22 }],
+  );
+  assert.equal(rock.used, true);
+  assert.equal(rock.zeroedAttack, true);
+  assert.equal(rock.components[0].total, 0);
+  assert.equal(rockDefender.reaction_available, false);
+}
+
 console.log("Universal browser attack damage reduction regressions passed.");
