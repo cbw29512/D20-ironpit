@@ -122,4 +122,45 @@ const rule2024 = {
   assert.equal(result.used, false);
 }
 
+
+// Source-parameterized saving-throw reaction: success zeroes hit,
+// failure spends Reaction but leaves the original components intact.
+{
+  const rule = { sourceId: "catch-projectile", sourceName: "Catch Projectile",
+    attackKinds: ["ranged"], requiredDamageTypes: [],
+    negateOnSaveAbility: "dexterity", negateOnSaveDc: 10 };
+  window.IRON_PIT_BROWSER_SAVING_THROWS = {
+    resolveSavingThrow: (_state, ability, dc) => {
+      assert.equal(ability, "dexterity");
+      assert.equal(dc, 10);
+      return { succeeded: true };
+    },
+  };
+  const defender = state(rule);
+  const result = window.IRON_PIT_BROWSER_ATTACK_DAMAGE_REDUCTION.apply(
+    defender, { kind: "ranged" }, [{ source: "rock", damage_type: "bludgeoning", total: 23 }],
+  );
+  assert.equal(result.used, true);
+  assert.equal(result.zeroedAttack, true);
+  assert.equal(result.components[0].total, 0);
+  assert.equal(defender.reaction_available, false);
+}
+{
+  const rule = { sourceId: "catch-projectile", sourceName: "Catch Projectile",
+    attackKinds: ["ranged"], requiredDamageTypes: [],
+    negateOnSaveAbility: "dexterity", negateOnSaveDc: 10 };
+  window.IRON_PIT_BROWSER_SAVING_THROWS = {
+    resolveSavingThrow: () => ({ succeeded: false }),
+  };
+  const defender = state(rule);
+  const parts = [{ source: "rock", damage_type: "bludgeoning", total: 23 }];
+  const result = window.IRON_PIT_BROWSER_ATTACK_DAMAGE_REDUCTION.apply(
+    defender, { kind: "ranged" }, parts,
+  );
+  assert.equal(result.used, true);
+  assert.equal(result.zeroedAttack, false);
+  assert.deepEqual(result.components, parts);
+  assert.equal(defender.reaction_available, false);
+}
+
 console.log("Universal browser attack damage reduction regressions passed.");
