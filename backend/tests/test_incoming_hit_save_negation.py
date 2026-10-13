@@ -95,3 +95,40 @@ def test_universal_save_negation_failure_preserves_all_damage_components() -> No
     assert result.reduction == 0
     assert [component.total for component in result.components] == [11, 7]
     assert defender.reaction_available is False
+
+
+def test_stone_giant_2014_binds_source_rock_catching() -> None:
+    from app.content.monster_source_2014 import load_monster_source_2014
+    from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+    from app.content.capability_compiler import compile_combatant
+    from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+
+    source = next(m for m in load_monster_source_2014() if m.id == "stone-giant")
+    assert "Rock Catching" in source.reaction_names
+    assert "source:reaction" not in basic_blockers_2014(source)
+    definition = adapt_basic_monster_2014(source)
+    rule = compile_combatant(definition).attack_damage_reduction_reaction
+    assert rule is not None
+    assert rule.source_name == "Rock Catching"
+    assert rule.attack_kinds == ["ranged"]
+    assert rule.negate_on_save_ability == "dexterity"
+    assert rule.negate_on_save_dc == 10
+    assert rule.required_attack_name_tokens
+
+
+def test_rock_catching_rejects_unrelated_projectiles() -> None:
+    from app.combat.attack_damage_reduction import can_reduce_attack_damage
+    defender = _defender()
+    rule = defender.template.attack_damage_reduction_reaction.model_copy(update={
+        "attack_kinds": ["ranged"],
+        "required_attack_name_tokens": ["rock", "stone", "boulder"],
+    })
+    defender.template = defender.template.model_copy(update={
+        "attack_damage_reduction_reaction": rule,
+    })
+    attack = defender.template.weapon_attack.model_copy(update={
+        "weapon": defender.template.weapon_attack.weapon.model_copy(update={
+            "name": "Longbow", "attack_kind": "ranged",
+        }),
+    })
+    assert can_reduce_attack_damage(defender, attack, _damage()) is False
