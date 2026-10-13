@@ -30,7 +30,6 @@ def test_source_parameters_capture_both_vision_gates_and_turn_expiry() -> None:
 
 def test_invalid_save_dc_and_range_fail_closed() -> None:
     with pytest.raises(ValidationError):
-        _unnerving_mask().model_copy(update={"save_dc": 0}).model_dump()
-    # Validate reconstructed serialized data because model_copy skips validation.
+        TurnStartSaveReaction.model_validate({**_unnerving_mask().model_dump(), "save_dc": 0})
     with pytest.raises(ValidationError):
         TurnStartSaveReaction.model_validate({**_unnerving_mask().model_dump(), "range_ft": 0})
