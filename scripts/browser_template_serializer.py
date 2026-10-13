@@ -1144,6 +1144,19 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                     }} if rule.zero_damage_redirect else {}
                 ),
             }
+        if template.turn_start_save_condition_reaction:
+            rule = template.turn_start_save_condition_reaction
+            row["turnStartSaveConditionReaction"] = {
+                "sourceId": rule.source_id,
+                "sourceName": rule.source_name,
+                "rangeFt": rule.range_ft,
+                "saveAbility": rule.save_ability,
+                "saveDc": rule.save_dc,
+                "conditionId": rule.condition_id,
+                "expiryTiming": rule.expiry_timing,
+                "requiresSourceCanSeeTarget": rule.requires_source_can_see_target,
+                "requiresTargetCanSeeSource": rule.requires_target_can_see_source,
+            }
         if template.parry_reaction:
             row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}
         if template.redirect_attack_reaction:
