@@ -46,6 +46,27 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 and "While underwater" in source
                 and "transformative mucus" in source
             )
+        # Pure information traits: never grant battlefield coordinates,
+        # sight, targeting, Advantage, or extra actions. Verify exact
+        # source clauses to avoid admitting unrelated combat riders.
+        checks = {
+            "Detect Life": (
+                "<strong>Detect Life.</strong>",
+                "general direction", "exact locations",
+            ),
+            "Sense Magic": (
+                "<strong>Sense Magic.</strong>",
+                "120 feet", "detect magic",
+            ),
+            "Shielded Mind": (
+                "<strong>Shielded Mind.</strong>",
+                "immune to scrying", "sense its emotions",
+                "read its thoughts", "detect its location",
+            ),
+        }
+        if trait_name in checks:
+            normalized = source.casefold()
+            return all(clause.casefold() in normalized for clause in checks[trait_name])
         if trait_name != "Faultless Tracker":
             return False
         clauses = (
