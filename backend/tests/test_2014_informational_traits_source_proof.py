@@ -35,3 +35,15 @@ def test_source_proof_is_required_and_other_blockers_survive(monster_id, trait, 
     assert not verified_arena_inert_trait_2014(altered, trait)
     assert trait in unsupported_traits_2014(altered)
     assert basic_blockers_2014(monster)  # Other source attacks/actions remain unresolved.
+
+@pytest.mark.parametrize("monster_id,trait", [
+    ("banshee", "Detect Life"),
+    ("chuul", "Sense Magic"),
+    ("couatl", "Shielded Mind"),
+])
+def test_missing_printed_trait_never_receives_neutral_exemption(monster_id, trait):
+    monster = next(m for m in load_monster_source_2014() if m.id == monster_id)
+    altered = monster.model_copy(update={
+        "trait_names": [item for item in monster.trait_names if item != trait],
+    })
+    assert not verified_arena_inert_trait_2014(altered, trait)
