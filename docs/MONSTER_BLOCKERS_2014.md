@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 82 |
+| `source:trait` | 81 |
 | `source:extra-action` | 68 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |
@@ -47,7 +47,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Inscrutable, Spellcasting |
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
 | Balor | attack:incomplete, source:trait | Death Throes, Fire Aura |
-| Banshee | source:extra-action, source:trait | Detect Life |
+| Banshee | source:extra-action | — |
 | Basilisk | source:trait | Petrifying Gaze |
 | Bearded Devil | attack:incomplete, source:trait | Steadfast |
 | Behir | mechanic:recharge, source:extra-action | — |
@@ -57,7 +57,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Clay Golem | mechanic:recharge, source:extra-action | — |
 | Cloaker | attack:incomplete, source:extra-action, source:trait | Damage Transfer, Light Sensitivity |
 | Cloud Giant | mechanic:spellcasting, source:trait | Innate Spellcasting |
-| Couatl | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting, Shielded Mind |
+| Couatl | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Cult Fanatic | mechanic:spellcasting, source:trait | Spellcasting |
 | Darkmantle | attack:incomplete, source:extra-action | — |
 | Deep Gnome (Svirfneblin) | mechanic:spellcasting, source:trait | Innate Spellcasting |
