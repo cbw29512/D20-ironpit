@@ -140,6 +140,7 @@ class CombatantTemplate(BaseModel):
     support_action_modes: list[str] = Field(default_factory=list)
     attack_damage_reduction_reaction: AttackDamageReductionReaction | None = None
     incoming_damage_type_resistance_reaction: IncomingDamageTypeResistanceReaction | None = None
+    turn_start_save_reaction: TurnStartSaveReaction | None = None
     parry_reaction: ParryReaction | None = None
     redirect_attack_reaction: RedirectAttackReaction | None = None
     damage_reaction_attack: DamageReactionAttack | None = None
