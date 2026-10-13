@@ -23,3 +23,16 @@ def test_modified_source_does_not_silently_certify() -> None:
     altered = source.model_copy(update={"source_reactions": ""})
     assert source_turn_start_reaction_2014(altered) is None
     assert "source:reaction" in basic_blockers_2014(altered)
+
+
+def test_browser_template_serializes_universal_turn_start_reaction() -> None:
+    from scripts.browser_template_serializer import template_row
+
+    source = next(m for m in load_monster_source_2014() if m.id == "chain-devil")
+    template = compile_combatant(adapt_basic_monster_2014(source))
+    serialized = template_row(template)
+    assert serialized["turn_start_save_reaction"] == (
+        template.turn_start_save_reaction.model_dump(mode="json")
+    )
+    without_reaction = template.model_copy(update={"turn_start_save_reaction": None})
+    assert "turn_start_save_reaction" not in template_row(without_reaction)
