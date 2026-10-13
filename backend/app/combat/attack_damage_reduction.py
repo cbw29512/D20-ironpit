@@ -5,6 +5,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.dice import DiceProvider
+from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.domain.models import CombatantState, DamageRollComponent, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -64,6 +65,24 @@ def apply_attack_damage_reduction(
             return AttackDamageReductionResolution(components=list(components))
 
         original_total = sum(max(0, component.total) for component in components)
+        if rule.negate_on_save_ability is not None:
+            if rule.negate_on_save_dc is None:
+                raise ValueError("Save-negation reaction requires DC.")
+            _, succeeded = resolve_saving_throw(
+                defender, rule.negate_on_save_ability, rule.negate_on_save_dc, dice,
+            )
+            spend(defender, "reaction")
+            if succeeded:
+                return AttackDamageReductionResolution(
+                    components=[part.model_copy(update={"total": 0}) for part in components],
+                    used=True, reduction=original_total,
+                    source_id=rule.source_id, source_name=rule.source_name,
+                    zeroed_attack=original_total > 0,
+                )
+            return AttackDamageReductionResolution(
+                components=list(components), used=True,
+                source_id=rule.source_id, source_name=rule.source_name,
+            )
         reduction = sum(dice.roll(rule.reduction_dice_size) for _ in range(rule.reduction_dice_count))
         if rule.reduction_ability is not None:
             scores = defender.template.ability_scores
