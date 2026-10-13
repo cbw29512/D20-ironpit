@@ -86,6 +86,11 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
         raise
 
 
+def supports_rock_catching_reaction_2014(monster: SourceMonster2014) -> bool:
+    """Source-owned 2014 projectile-catching rule; never use monster IDs."""
+    return monster.reaction_names == ["Rock Catching"] and bool(monster.source_reactions and "DC 10" in monster.source_reactions and "Dexterity" in monster.source_reactions)
+
+
 def supports_parry_reaction_2014(monster: SourceMonster2014) -> bool:
     try:
         return monster.reaction_names == ["Parry"] and monster.parry_ac_bonus is not None
@@ -113,7 +118,7 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
         blockers.append("source:extra-action")
     if unsupported_traits_2014(monster):
         blockers.append("source:trait")
-    if (set(monster.reaction_names) - arena_unavailable_reaction_names_2014(monster) or monster.parry_ac_bonus is not None) and not supports_parry_reaction_2014(monster):
+    if (set(monster.reaction_names) - arena_unavailable_reaction_names_2014(monster) or monster.parry_ac_bonus is not None) and not (supports_parry_reaction_2014(monster) or supports_rock_catching_reaction_2014(monster)):
         blockers.append("source:reaction")
     if monster.legendary_action_names and not supports_legendary_actions_2014(monster):
         blockers.append("source:legendary")
