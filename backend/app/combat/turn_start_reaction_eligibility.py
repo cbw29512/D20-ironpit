@@ -22,10 +22,11 @@ def eligible_turn_start_reaction(
         return False
     if not is_available(source.state, "reaction"):
         return False
-    if combatant_distance(source, target) > rule.range_ft:
+    distance_ft = combatant_distance(source, target)
+    if distance_ft > rule.range_ft:
         return False
-    if rule.source_must_see_target and not can_see(source.state, target.state):
+    if rule.source_must_see_target and not can_see(source.state, target.state, distance_ft):
         return False
-    if rule.target_must_see_source and not can_see(target.state, source.state):
+    if rule.target_must_see_source and not can_see(target.state, source.state, distance_ft):
         return False
     return True
