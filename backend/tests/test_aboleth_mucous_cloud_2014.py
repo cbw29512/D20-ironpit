@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.content.monster_arena_neutral_traits_2014 import verified_arena_inert_trait_2014
-from app.content.monster_basic_candidates_2014 import unsupported_traits_2014
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014, unsupported_traits_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 
 
@@ -36,3 +36,11 @@ def test_mucous_cloud_exclusion_is_scoped_to_its_printed_trait() -> None:
     monster = aboleth()
     assert not verified_arena_inert_trait_2014(monster, "Probing Telepathy")
     assert "Probing Telepathy" in unsupported_traits_2014(monster)
+
+
+def test_aboleth_remains_blocked_by_independent_combat_mechanics() -> None:
+    monster = aboleth()
+    blockers = basic_blockers_2014(monster)
+    assert "source:trait" in blockers  # Probing Telepathy remains unresolved.
+    assert "attack:incomplete" in blockers
+    assert "source:legendary" in blockers
