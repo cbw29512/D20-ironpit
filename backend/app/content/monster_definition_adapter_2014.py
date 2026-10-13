@@ -6,7 +6,7 @@ from app.content.monster_opening_initiative_2014 import opening_initiative_damag
 from app.content.monster_attack_source_corrections_2014 import corrected_attack_range_2014
 from app.content.monster_berserk_2014 import berserk_self_buffs_2014
 from app.content.monster_basic_candidates_2014 import (
-    basic_blockers_2014, modeled_combat_traits_2014, supports_parry_reaction_2014,
+    basic_blockers_2014, modeled_combat_traits_2014, supports_parry_reaction_2014, supports_rock_catching_reaction_2014,
 )
 from app.content.monster_charge_profile_2014 import charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
@@ -60,7 +60,7 @@ from app.domain.capability_attacks import AttackCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
 from app.content.monster_multiattack_variants_2014 import attack_unavailable_reason_2014
 from app.domain.character_builds import AbilityScores
-from app.domain.reactions import ParryReaction
+from app.domain.reactions import AttackDamageReductionReaction, ParryReaction
 from app.domain.size import CreatureSize
 
 def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapabilityDefinition:
@@ -185,6 +185,11 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
         source_turn_relation_damages=source_turn_grappler_damage_2014(monster),
         source_legendary_action_names=list(monster.legendary_action_names),
+        attack_damage_reduction_reaction=AttackDamageReductionReaction(
+            source_id="rock-catching", source_name="Rock Catching",
+            attack_kinds=["ranged"], negate_on_save_ability="dexterity",
+            negate_on_save_dc=10,
+        ) if supports_rock_catching_reaction_2014(monster) else None,
         parry_reaction=ParryReaction(ac_bonus=monster.parry_ac_bonus)
             if supports_parry_reaction_2014(monster) else None,
         **template_defense_fields_2014(monster),
