@@ -188,7 +188,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         source_legendary_action_names=list(monster.legendary_action_names),
         attack_damage_reduction_reaction=AttackDamageReductionReaction(
             source_id="rock-catching", source_name="Rock Catching",
-            attack_kinds=["ranged"], required_attack_qualifiers=["hurled-object"],
+            attack_kinds=["ranged"], required_attack_qualifiers=["hurled-object"], required_damage_types=["bludgeoning"], negate_on_save_damage_types=["bludgeoning"],
             negate_on_save_ability="dexterity",
             negate_on_save_dc=10,
         ) if supports_rock_catching_reaction_2014(monster) else None,
