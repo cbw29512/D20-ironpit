@@ -166,7 +166,7 @@ const rule2024 = {
 
 {
   const rule = { sourceId: "rock-catching", sourceName: "Rock Catching",
-    attackKinds: ["ranged"], requiredDamageTypes: [],
+    attackKinds: ["ranged"], requiredDamageTypes: ["bludgeoning"],
     requiredAttackQualifiers: ["hurled-object"], negateOnSaveDamageTypes: ["bludgeoning"],
     negateOnSaveAbility: "dexterity", negateOnSaveDc: 10 };
   window.IRON_PIT_BROWSER_SAVING_THROWS = {
@@ -182,11 +182,11 @@ const rule2024 = {
   const rockDefender = state(rule);
   const rock = window.IRON_PIT_BROWSER_ATTACK_DAMAGE_REDUCTION.apply(
     rockDefender, { kind: "ranged", name: "Rock", damageSourceQualifiers: ["hurled-object"] },
-    [{ source: "rock", damage_type: "bludgeoning", total: 22 }],
+    [{ source: "rock", damage_type: "bludgeoning", total: 22 }, { source: "fire", damage_type: "fire", total: 5 }],
   );
   assert.equal(rock.used, true);
-  assert.equal(rock.zeroedAttack, true);
-  assert.equal(rock.components[0].total, 0);
+  assert.equal(rock.zeroedAttack, false);
+  assert.deepEqual(rock.components.map((part) => part.total), [0, 5]);
   assert.equal(rockDefender.reaction_available, false);
 }
 
