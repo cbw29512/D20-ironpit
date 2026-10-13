@@ -31,6 +31,20 @@
         return { components, used: false, reduction: 0, sourceId: null, sourceName: null, zeroedAttack: false };
       }
       const originalTotal = components.reduce((sum, part) => sum + Math.max(0, part.total || 0), 0);
+      if (rule.negateOnSaveAbility) {
+        if (!Number.isInteger(rule.negateOnSaveDc)) throw new Error("Save-negation reaction requires DC.");
+        const resolver = window.IRON_PIT_BROWSER_SAVING_THROWS?.resolveSavingThrow;
+        if (!resolver) throw new Error("Universal saving throws are required.");
+        const outcome = resolver(defender, rule.negateOnSaveAbility, rule.negateOnSaveDc);
+        E().spend(defender, "reaction");
+        if (outcome.succeeded) {
+          return { components: components.map((part) => ({ ...part, total: 0 })),
+            used: true, reduction: originalTotal, sourceId: rule.sourceId,
+            sourceName: rule.sourceName, zeroedAttack: originalTotal > 0 };
+        }
+        return { components, used: true, reduction: 0,
+          sourceId: rule.sourceId, sourceName: rule.sourceName, zeroedAttack: false };
+      }
       let reduction = 0;
       const count = rule.reductionDiceCount || 0;
       for (let index = 0; index < count; index += 1) {
