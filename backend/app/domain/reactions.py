@@ -55,7 +55,8 @@ class AttackDamageReductionReaction(BaseModel):
     source_name: str = Field(min_length=1)
     attack_kinds: list[Literal["melee", "ranged"]] = Field(min_length=1)
     required_damage_types: list[DamageType] = Field(default_factory=list)
-    required_attack_name_tokens: list[str] = Field(default_factory=list)
+    required_attack_qualifiers: list[DamageSourceQualifier] = Field(default_factory=list)
+    negate_on_save_damage_types: list[DamageType] = Field(default_factory=list)
     reduction_dice_count: int = Field(default=1, ge=0, le=20)
     reduction_dice_size: int = Field(default=10, ge=2, le=100)
     reduction_ability: Literal[
