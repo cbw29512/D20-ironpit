@@ -43,8 +43,9 @@ def can_reduce_attack_damage(
             return False
         if _value(attack.weapon.attack_kind) not in set(rule.attack_kinds):
             return False
-        tokens = [token.casefold() for token in rule.required_attack_name_tokens]
-        if tokens and not any(token in attack.weapon.name.casefold() for token in tokens):
+        required = {_value(tag) for tag in rule.required_attack_qualifiers}
+        actual = {_value(tag) for tag in attack.damage_source_qualifiers}
+        if not required.issubset(actual):
             return False
         required = {_value(item) for item in rule.required_damage_types}
         if required and not any(_value(part.damage_type) in required and part.total > 0 for part in components):
