@@ -4,9 +4,9 @@ import logging
 
 from app.combat.concentration import end_concentration_if_expired
 from app.combat.condition_lifecycle import resolve_source_condition_timing, resolve_target_condition_timing
-from app.combat.death_saves import resolve_death_save
 from app.combat.delayed_resource_refill import resolve_delayed_resource_refill_end_turn
 from app.combat.dice import DiceProvider
+from app.combat.encounter_zero_hp_turn import _resolve_zero_hp_turn
 from app.combat.encounter_combat_turn import resolve_combat_turn
 from app.combat.encounter_events import build_encounter_result, build_finish_event, build_initiative_events
 from app.combat.exile import resolve_source_exile_returns
@@ -37,7 +37,6 @@ from app.combat.turn_start_save_reactions import resolve_turn_start_save_reactio
 from app.combat.turn_damage import clear_turn_damage
 from app.combat.timed_emanations import resolve_target_turn_start_emanations
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
-from app.domain.models import BattleEvent
 
 logger = logging.getLogger(__name__)
 MAX_ENCOUNTER_ROUNDS = 100
@@ -45,21 +44,6 @@ MAX_ENCOUNTER_ROUNDS = 100
 
 def _combatant_index(combatants: list[EncounterCombatant]) -> dict[str, EncounterCombatant]:
     return {member.combatant_id: member for member in combatants}
-
-
-def _resolve_zero_hp_turn(
-    sequence: int,
-    round_number: int,
-    combatant: EncounterCombatant,
-    dice: DiceProvider,
-) -> tuple[BattleEvent | None, int]:
-    state = combatant.state
-    if state.template.kind != "character" or state.current_hp != 0:
-        return None, sequence
-    if state.is_dead or state.is_stable:
-        return None, sequence
-    event = resolve_death_save(sequence, round_number, combatant.combatant_id, state, dice)
-    return event, sequence + 1
 
 
 def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
