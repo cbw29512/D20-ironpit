@@ -54,6 +54,7 @@ from app.content.monster_legendary_resistance_2014 import (
 from app.content.movement_modes import standard_arena_closing_speed_from_modes
 from app.content.monster_regeneration_2014 import regeneration_trait_2014
 from app.content.monster_save_capabilities_2014 import recharge_rules_2014, save_capabilities_2014, save_resources_2014
+from app.content.stone_giant_rock_catching_2014 import build_stone_giant_rock_catching
 from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.capabilities import CombatantDefinition
 from app.domain.capability_attacks import AttackCapabilityDefinition
@@ -187,6 +188,11 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         source_legendary_action_names=list(monster.legendary_action_names),
         parry_reaction=ParryReaction(ac_bonus=monster.parry_ac_bonus)
             if supports_parry_reaction_2014(monster) else None,
+        attack_damage_reduction_reaction=(
+            build_stone_giant_rock_catching()
+            if monster.name == "Stone Giant" and "Rock Catching" in monster.reaction_names
+            else None
+        ),
         **template_defense_fields_2014(monster),
         visual=VisualLoadout(armor=monster.creature_type, main_hand=monster.attacks[0].name, body_style=monster.creature_type),
         source=f"SRD 5.1 (2014) {monster.name}",
