@@ -113,7 +113,8 @@ def test_stone_giant_2014_binds_source_rock_catching() -> None:
     assert rule.attack_kinds == ["ranged"]
     assert rule.negate_on_save_ability == "dexterity"
     assert rule.negate_on_save_dc == 10
-    assert rule.required_attack_name_tokens
+    assert [tag.value for tag in rule.required_attack_qualifiers] == ["hurled-object"]
+    assert [kind.value for kind in rule.negate_on_save_damage_types] == ["bludgeoning"]
 
 
 def test_rock_catching_rejects_unrelated_projectiles() -> None:
@@ -121,7 +122,7 @@ def test_rock_catching_rejects_unrelated_projectiles() -> None:
     defender = _defender()
     rule = defender.template.attack_damage_reduction_reaction.model_copy(update={
         "attack_kinds": ["ranged"],
-        "required_attack_name_tokens": ["rock", "stone", "boulder"],
+        "required_attack_qualifiers": ["hurled-object"],
     })
     defender.template = defender.template.model_copy(update={
         "attack_damage_reduction_reaction": rule,
