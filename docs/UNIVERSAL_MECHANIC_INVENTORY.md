@@ -469,7 +469,6 @@ Blocked monsters: **116**. These are grouped by printed ability name so the rost
 | Limited Magic Immunity | Rakshasa | 1 |
 | Limited Telepathy | Otyugh, Pseudodragon | 2 |
 | Misty Escape | Vampire | 1 |
-| Mucous Cloud | Aboleth | 1 |
 | Multiple Heads | Hydra | 1 |
 | Ooze Cube | Gelatinous Cube | 1 |
 | Petrifying Gaze | Basilisk, Medusa | 2 |
