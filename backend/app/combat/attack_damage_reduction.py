@@ -77,11 +77,18 @@ def apply_attack_damage_reduction(
             )
             spend(defender, "reaction")
             if succeeded:
+                protected = {_value(item) for item in rule.negate_on_save_damage_types}
+                reduced = [
+                    part.model_copy(update={"total": 0})
+                    if not protected or _value(part.damage_type) in protected else part
+                    for part in components
+                ]
+                prevented = original_total - sum(max(0, part.total) for part in reduced)
                 return AttackDamageReductionResolution(
-                    components=[part.model_copy(update={"total": 0}) for part in components],
-                    used=True, reduction=original_total,
+                    components=reduced,
+                    used=True, reduction=prevented,
                     source_id=rule.source_id, source_name=rule.source_name,
-                    zeroed_attack=original_total > 0,
+                    zeroed_attack=original_total > 0 and prevented == original_total,
                 )
             return AttackDamageReductionResolution(
                 components=list(components), used=True,
