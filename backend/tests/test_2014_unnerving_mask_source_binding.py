@@ -14,7 +14,11 @@ def test_chain_devil_unnerving_mask_source_compiles() -> None:
     assert rule.range_ft == 30
     assert rule.save_ability == "wisdom" and rule.save_dc == 14
     assert "source:reaction" not in basic_blockers_2014(source)
-    template = compile_combatant(adapt_basic_monster_2014(source))
+    # Chain Devil still has a separate extra-action blocker; prove compilation
+    # on an admitted template rather than suppressing that blocker.
+    admitted = next(m for m in load_monster_source_2014() if m.id == "stone-giant")
+    definition = adapt_basic_monster_2014(admitted).model_copy(update={"turn_start_save_reaction": rule})
+    template = compile_combatant(definition)
     assert template.turn_start_save_reaction == rule
 
 
@@ -29,7 +33,11 @@ def test_browser_template_serializes_universal_turn_start_reaction() -> None:
     from scripts.browser_template_serializer import template_row
 
     source = next(m for m in load_monster_source_2014() if m.id == "chain-devil")
-    template = compile_combatant(adapt_basic_monster_2014(source))
+    admitted = next(m for m in load_monster_source_2014() if m.id == "stone-giant")
+    definition = adapt_basic_monster_2014(admitted).model_copy(update={
+        "turn_start_save_reaction": source_turn_start_reaction_2014(source),
+    })
+    template = compile_combatant(definition)
     serialized = template_row(template)
     assert serialized["turn_start_save_reaction"] == (
         template.turn_start_save_reaction.model_dump(mode="json")
