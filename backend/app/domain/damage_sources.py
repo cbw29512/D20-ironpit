@@ -37,6 +37,7 @@ class DamageSourceQualifier(StrEnum):
     WEAPON = "weapon"
     MELEE = "melee"
     RANGED = "ranged"
+    HURLED_OBJECT = "hurled-object"
     MAGICAL = "magical"
     SILVERED = "silvered"
     ADAMANTINE = "adamantine"
