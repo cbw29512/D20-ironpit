@@ -31,6 +31,39 @@
         return { components, used: false, reduction: 0, sourceId: null, sourceName: null, zeroedAttack: false };
       }
       const originalTotal = components.reduce((sum, part) => sum + Math.max(0, part.total || 0), 0);
+
+      // Save-based full negation (Rock Catching style).
+      if (rule.negateOnSuccess && rule.saveAbility && rule.saveDc) {
+        const score = defender.template.ability_scores?.[rule.saveAbility];
+        if (!Number.isInteger(score)) throw new Error(`${rule.sourceName} requires certified ability scores.`);
+        const modValue = mod(score);
+        const roll = D().roll(20);
+        const total = roll + modValue;
+        const success = total >= rule.saveDc;
+        E().spend(defender, "reaction");
+        if (success) {
+          const reduced = components.map((part) => ({ ...part, total: 0 }));
+          return {
+            components: reduced,
+            used: true,
+            reduction: originalTotal,
+            sourceId: rule.sourceId,
+            sourceName: rule.sourceName,
+            zeroedAttack: originalTotal > 0,
+          };
+        }
+        if (!rule.reductionDiceCount) {
+          return {
+            components,
+            used: true,
+            reduction: 0,
+            sourceId: rule.sourceId,
+            sourceName: rule.sourceName,
+            zeroedAttack: false,
+          };
+        }
+      }
+
       let reduction = 0;
       const count = rule.reductionDiceCount || 0;
       for (let index = 0; index < count; index += 1) {
