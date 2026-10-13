@@ -33,3 +33,19 @@ def test_invalid_save_dc_and_range_fail_closed() -> None:
         TurnStartSaveReaction.model_validate({**_unnerving_mask().model_dump(), "save_dc": 0})
     with pytest.raises(ValidationError):
         TurnStartSaveReaction.model_validate({**_unnerving_mask().model_dump(), "range_ft": 0})
+
+
+def test_turn_start_reaction_survives_definition_compilation() -> None:
+    from app.content.capability_compiler import compile_combatant
+    from app.content.monster_source_2014 import load_monster_source_2014
+    from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+
+    monster = next(m for m in load_monster_source_2014() if m.id == "chain-devil")
+    # The source reaction is not yet bound: use a copied definition only to
+    # prove the shared compile path retains the declarative policy.
+    definition = adapt_basic_monster_2014(monster).model_copy(update={
+        "turn_start_save_reaction": _unnerving_mask(),
+    })
+    template = compile_combatant(definition)
+    assert template.turn_start_save_reaction == _unnerving_mask()
+    assert template.source_reaction_names == monster.reaction_names
