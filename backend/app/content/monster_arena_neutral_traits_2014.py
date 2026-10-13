@@ -35,9 +35,19 @@ ARENA_NEUTRAL_TRAITS_2014 = frozenset({
 def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str) -> bool:
     """Accept only the pinned noncombat summoner/quarry tracking semantics."""
     try:
-        if trait_name != "Faultless Tracker" or trait_name not in monster.trait_names:
+        if trait_name not in monster.trait_names:
             return False
         source = monster.source_traits or ""
+        # Context-driven exclusion: this trait only operates underwater, a
+        # context absent from the standard Iron Pit. Keep the printed trait.
+        if trait_name == "Mucous Cloud":
+            return (
+                "<strong>Mucous Cloud.</strong>" in source
+                and "While underwater" in source
+                and "transformative mucus" in source
+            )
+        if trait_name != "Faultless Tracker":
+            return False
         clauses = (
             "<strong>Faultless Tracker.</strong>",
             "given a quarry by its summoner",

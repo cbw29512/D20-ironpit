@@ -33,7 +33,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Monster | Remaining blockers | Unbound traits |
 |---|---|---|
-| Aboleth | attack:incomplete, mechanic:legendary, source:extra-action, source:legendary, source:trait | Mucous Cloud, Probing Telepathy |
+| Aboleth | attack:incomplete, mechanic:legendary, source:extra-action, source:legendary, source:trait | Probing Telepathy |
 | Acolyte | mechanic:spellcasting, source:trait | Spellcasting |
 | Adult Bronze Dragon | source:extra-action | — |
 | Adult Gold Dragon | source:extra-action | — |
