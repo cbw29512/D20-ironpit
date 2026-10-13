@@ -6,6 +6,7 @@ import re
 
 from app.content.monster_source_sections_2014 import source_sections_2014 as _sections
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_rock_catching_2014 import source_hurled_object_qualifiers_2014
 from app.domain.weapons import DamageSourceQualifier
 
 logger = logging.getLogger(__name__)
