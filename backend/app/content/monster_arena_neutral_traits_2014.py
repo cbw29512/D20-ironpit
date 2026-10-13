@@ -46,6 +46,23 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 and "While underwater" in source
                 and "transformative mucus" in source
             )
+        # User-approved arena exclusions: sensing metal and permanent equipment
+        # corrosion have no legal combat-state consumers in the standard Pit.
+        # Require source clauses so unrelated traits cannot inherit the policy.
+        excluded = {
+            "Iron Scent": (
+                "<strong>Iron Scent.</strong>", "by scent",
+                "ferrous metal within 30 feet",
+            ),
+            "Rust Metal": (
+                "<strong>Rust Metal.</strong>",
+                "nonmagical weapon made of metal",
+                "permanent and cumulative",
+                "nonmagical ammunition made of metal",
+            ),
+        }
+        if trait_name in excluded:
+            return all(part.casefold() in source.casefold() for part in excluded[trait_name])
         if trait_name != "Faultless Tracker":
             return False
         clauses = (
