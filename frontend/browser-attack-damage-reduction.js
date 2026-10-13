@@ -11,9 +11,8 @@
       if (!rule || !components?.length || defender.current_hp <= 0) return false;
       if (!E().available(defender, "reaction")) return false;
       if (!(rule.attackKinds || []).includes(attack.kind)) return false;
-      const tokens = (rule.requiredAttackNameTokens || []).map((token) => token.toLowerCase());
-      const attackName = String(attack?.name || attack?.weapon?.name || "").toLowerCase();
-      if (tokens.length && !tokens.some((token) => attackName.includes(token))) return false;
+      const tags = new Set(attack?.damageSourceQualifiers || []);
+      if ((rule.requiredAttackQualifiers || []).some((tag) => !tags.has(tag))) return false;
       const required = new Set(rule.requiredDamageTypes || []);
       if (required.size && !components.some((part) => required.has(part.damage_type) && part.total > 0)) {
         return false;
