@@ -5,6 +5,7 @@ import logging
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.content.monster_source_sections_2014 import source_sections_2014
 from app.domain.damage_sources import DamageSourceQualifier
+from app.domain.reactions import AttackDamageReductionReaction
 
 logger = logging.getLogger(__name__)
 
