@@ -41,3 +41,17 @@ def test_other_informational_trait_requires_its_own_verified_source() -> None:
     card = next(m for m in load_monster_source_2014() if m.id == "chuul")
     assert not verified_arena_inert_trait_2014(card, "Sense Magic")
     assert "Sense Magic" in unsupported_traits_2014(card)
+
+
+@pytest.mark.parametrize("monster_id,trait", [
+    ("banshee", "Detect Life"),
+    ("couatl", "Shielded Mind"),
+])
+def test_informational_proof_cannot_apply_to_missing_printed_trait(
+    monster_id: str, trait: str,
+) -> None:
+    card = next(m for m in load_monster_source_2014() if m.id == monster_id)
+    altered = card.model_copy(update={
+        "trait_names": [name for name in card.trait_names if name != trait],
+    })
+    assert not verified_arena_inert_trait_2014(altered, trait)
