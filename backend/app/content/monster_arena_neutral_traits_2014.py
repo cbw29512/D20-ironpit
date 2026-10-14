@@ -65,6 +65,26 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
         if trait_name in informational_clauses:
             folded = source.casefold()
             return all(clause.casefold() in folded for clause in informational_clauses[trait_name])
+        # Pinned source must prove both the printed trait and its
+        # arena-inert semantics. Other effects remain blocked independently.
+        additional_inert_clauses = {
+            "Elemental Demise": ("dies", "disintegrates"),
+            "Divine Awareness": ("hears", "lie"),
+            "Speak with Beasts and Plants": ("communicate", "beasts", "plants"),
+            "Tree Stride": ("tree", "movement"),
+            "Ethereal Sight": ("ethereal plane",),
+            "Telepathic Bond": ("telepathically",),
+            "Limited Telepathy": ("telepathically",),
+        }
+        if trait_name in additional_inert_clauses:
+            heading = f"<strong>{trait_name}.</strong>"
+            match_start = source.casefold().find(heading.casefold())
+            if match_start < 0:
+                return False
+            remainder = source[match_start + len(heading):]
+            next_heading = remainder.find("<strong>")
+            clause = (remainder[:next_heading] if next_heading >= 0 else remainder).casefold()
+            return all(token in clause for token in additional_inert_clauses[trait_name])
         if trait_name != "Faultless Tracker":
             return False
         clauses = (
