@@ -54,6 +54,7 @@ def movement_step_cost_ft(
     origin: GridPosition | None = None,
     barriers: list[PersistentBarrierState] | None = None,
     terrain_zones=None,
+    source_allows_hostile_overlap: bool = False,
 ) -> int | None:
     """Return 5/10 feet for a legal adjacent destination, or None when passage is illegal."""
     try:
@@ -63,7 +64,7 @@ def movement_step_cost_ft(
             return None
         cost = map_definition.cell_size_ft
         for occupant in overlapping_occupants(mover, destination, members):
-            if not can_pass_through(mover, occupant):
+            if not can_pass_through(mover, occupant, source_allows_hostile_overlap=source_allows_hostile_overlap):
                 return None
             if creature_space_is_difficult(mover, occupant):
                 cost = map_definition.cell_size_ft * 2
