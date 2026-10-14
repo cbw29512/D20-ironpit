@@ -34,9 +34,9 @@ def resolve_save_zone_trigger(
     trigger: str,
 ) -> tuple[list[BattleEvent], int]:
     try:
-        if trigger not in zone.triggers or not member_in_save_zone(target, zone):
+        if trigger not in zone.triggers or not member_in_save_zone(target, zone, setup):
             return [], sequence
-        if target.combatant_id == zone.source_id or target.side == zone.source_side:
+        if zone.target_scope == "enemies" and (target.combatant_id == zone.source_id or target.side == zone.source_side):
             return [], sequence
         if not target.state.is_alive or target.state.is_dead or target.state.current_hp <= 0:
             return [], sequence
