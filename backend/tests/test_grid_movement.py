@@ -130,3 +130,25 @@ def test_source_granted_hostile_passage_is_opt_in_and_never_changes_default() ->
     # This does not grant harmless free movement or change the universal
     # creature-space difficult-terrain rule.
     assert creature_space_is_difficult(mover, hostile)
+
+
+def test_source_granted_hostile_passage_reaches_pathfinder_and_preserves_cost() -> None:
+    """A form's passage permission must affect actual path search, not only its predicate."""
+    mover = _member("air-form", "monsters", 0, 3)
+    target = _member("target", "heroes", 3, 3)
+    wall = [_member(f"hostile-{y}", "heroes", 1, y) for y in range(8)]
+    members = [mover, target, *wall]
+    blocked = plan_movement_toward(MAP, mover, target, members, 5, 30)
+    allowed = plan_movement_toward(
+        MAP, mover, target, members, 5, 30,
+        source_allows_hostile_overlap=True,
+    )
+    assert not blocked.goal_reachable
+    assert allowed.goal_reachable
+    assert (1, 3) in [(p.x, p.y) for p in allowed.path]
+    assert (allowed.path[-1].x, allowed.path[-1].y) == (2, 3)
+    assert allowed.movement_cost_ft == 15  # Occupied enemy square is difficult.
+    assert movement_step_cost_ft(
+        MAP, mover, GridPosition(x=1, y=3), members,
+        source_allows_hostile_overlap=True,
+    ) == 10
