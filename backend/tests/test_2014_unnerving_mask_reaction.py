@@ -113,3 +113,39 @@ def test_ally_turn_never_consumes_harmful_reaction():
     assert events == []
     assert not has_condition(ally.state, "frightened")
     assert is_available(devil.state, "reaction")
+
+
+def test_reaction_is_consumed_only_once_per_round():
+    """A monster cannot spend the same Reaction against repeated turn-start events."""
+    devil, hero, setup = _setup_pair(10)
+    first, sequence = resolve_turn_start_save_condition_reactions(
+        1, 1, hero, setup, FixedDiceProvider([20]),
+    )
+    second, _ = resolve_turn_start_save_condition_reactions(
+        sequence, 1, hero, setup, FixedDiceProvider([1]),
+    )
+    assert len(first) == 1
+    assert second == []
+    assert not has_condition(hero.state, "frightened")
+    assert not is_available(devil.state, "reaction")
+
+
+def test_existing_frightened_condition_does_not_waste_reaction():
+    """The universal status guard must reject redundant condition applications."""
+    from app.combat.timed_conditions import apply_timed_condition
+
+    devil, hero, setup = _setup_pair(10)
+    apply_timed_condition(
+        hero.state, "frightened", "other-source",
+        source_effect_id="earlier-fear",
+        source_template=devil.state.template,
+        expires_at_start_of_source_turn=False,
+        expiry_timing="target_turn_end",
+        applied_round=1,
+    )
+    events, _ = resolve_turn_start_save_condition_reactions(
+        1, 1, hero, setup, FixedDiceProvider([1]),
+    )
+    assert events == []
+    assert has_condition(hero.state, "frightened")
+    assert is_available(devil.state, "reaction")
