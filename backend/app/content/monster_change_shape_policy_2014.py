@@ -8,10 +8,11 @@ forms are independently certified. All printed card text remains unchanged.
 from __future__ import annotations
 
 import logging
+import re
+from html import unescape
 
 from app.content.monster_arena_action_policy_2014 import action_label_2014
 from app.content.monster_source_2014 import SourceMonster2014
-from app.content.monster_source_sections_2014 import source_sections_2014
 
 logger = logging.getLogger(__name__)
 
@@ -49,8 +50,19 @@ def approved_inert_change_shape_2014(monster: SourceMonster2014) -> bool:
             return False
         if not any(action_label_2014(name) == "change shape" for name in monster.action_names):
             return False
-        section = source_sections_2014(monster.source_actions).get("Change Shape", "").casefold()
-        return bool(section) and all(clause in section for clause in _REQUIRED_PRINTED_CLAUSES)
+        # The SRD prints Change Shape in TWO adjacent paragraphs: the
+        # heading/transformation in the first and retained/replaced statistics
+        # in an unheaded continuation. Parsing only the heading paragraph
+        # incorrectly rejects all eight source cards.
+        source = monster.source_actions or ""
+        heading = "<strong>Change Shape.</strong>"
+        if heading not in source:
+            return False
+        continuation = source.split(heading, 1)[1]
+        # A future extra named Action must not serve as our source proof.
+        continuation = continuation.split("<strong>", 1)[0]
+        section = " ".join(unescape(re.sub(r"<[^>]+>", " ", continuation)).split()).casefold()
+        return all(clause in section for clause in _REQUIRED_PRINTED_CLAUSES)
     except Exception:
         logger.exception("Could not validate printed 2014 Change Shape for %s", monster.id)
         raise
