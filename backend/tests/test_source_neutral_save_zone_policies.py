@@ -111,3 +111,4 @@ def test_failed_nonmagical_save_transfers_provenance_to_condition(monkeypatch):
     )
     assert events[0].applied_condition_ids == ["poisoned"]
     assert observed[0][2]["source_is_magical"] is False
+    assert observed[0][2]["expires_at_start_of_source_turn"] is False
