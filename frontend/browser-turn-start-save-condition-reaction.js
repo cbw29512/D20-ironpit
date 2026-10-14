@@ -10,7 +10,9 @@
 
   function eligible(reactor, target, reaction) {
     if (!E().available(reactor.state, "reaction")) return false;
-    if (!target.state.is_alive || target.state.is_dead || reactor.state.is_dead) return false;
+    if (reactor.side === target.side) return false;
+    if (!reactor.state.is_alive || reactor.state.is_dead) return false;
+    if (!target.state.is_alive || target.state.is_dead) return false;
     if (!IMMUNITY()?.immune) throw new Error("Universal condition immunity is required for turn-start reactions.");
     if (IMMUNITY().immune(target.state, reaction.conditionId)) return false;
     if (Q().has(target.state, reaction.conditionId)) return false;
