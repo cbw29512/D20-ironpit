@@ -29,6 +29,22 @@ Blocker categories overlap: a monster may require several fixes.
 | `mechanic:defense` | 1 |
 | `arena:removed` | 1 |
 
+## Single-blocker completion opportunities
+
+Generated from current source cards; one blocker category does not imply
+the underlying ability is already implemented or trivial.
+
+**21** monsters have exactly one remaining blocker category.
+
+| Remaining blocker | Monsters | Count |
+|---|---|---:|
+| `source:extra-action` | Adult Bronze Dragon, Adult Gold Dragon, Adult Silver Dragon, Ancient Brass Dragon, Ancient Bronze Dragon, Ancient Copper Dragon, Ancient Gold Dragon, Ancient Silver Dragon, Banshee, Bulette, Dretch, Harpy, Knight | 13 |
+| `attack:complex` | Homunculus, Pseudodragon, Salamander | 3 |
+| `source:trait` | Basilisk, Medusa | 2 |
+| `arena:neutral` | Frog | 1 |
+| `arena:removed` | Stirge | 1 |
+| `attack:none` | Sea Horse | 1 |
+
 ## Every blocked monster
 
 | Monster | Remaining blockers | Unbound traits |

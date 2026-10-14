@@ -27,6 +27,20 @@ def render():
                 'Blocker categories overlap: a monster may require several fixes.', '',
                 '| Blocker | Monsters |', '|---|---:|']
         rows += [f'| `{key}` | {count} |' for key, count in counts.most_common()]
+        # Actionable completion queue is generated from the same source
+        # classifier as the roster. No manually curated counts or stale cursor.
+        single = [(monster, blockers[0]) for monster, blockers in blocked if len(blockers) == 1]
+        grouped = {}
+        for monster, blocker in single:
+            grouped.setdefault(blocker, []).append(monster.name)
+        rows += ['', '## Single-blocker completion opportunities', '',
+                 'Generated from current source cards; one blocker category does not imply',
+                 'the underlying ability is already implemented or trivial.', '',
+                 f'**{len(single)}** monsters have exactly one remaining blocker category.', '',
+                 '| Remaining blocker | Monsters | Count |', '|---|---|---:|']
+        for blocker, names in sorted(grouped.items(), key=lambda item: (-len(item[1]), item[0])):
+            escaped_names = ', '.join(sorted(names)).replace('|', '\\|')
+            rows.append(f'| `{blocker}` | {escaped_names} | {len(names)} |')
         rows += ['', '## Every blocked monster', '',
                  '| Monster | Remaining blockers | Unbound traits |', '|---|---|---|']
         for monster, blockers in sorted(blocked, key=lambda row: row[0].name):

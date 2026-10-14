@@ -39,6 +39,19 @@ All fight-only mutation lives in temporary combat state and resets after the mat
 
 Use [MONSTER_ABILITY_WORK_QUEUE.md](../MONSTER_ABILITY_WORK_QUEUE.md) as the **single current monster/ability/issues/remediation ledger**. Its reviewed-ability tickets and 124-monster/305-blocker table are mandatory first reads before asking for another monster decision or choosing the next implementation. Older planning worksheets, blueprint PRs, and fix trackers provide evidence, not a competing current cursor. Never re-ask an approved ability simply because implementation remains open. While one independent PR runs certification, prepare the next exact-source ability from the worksheet instead of repeating roster scans or waiting idle. A submitted PR is not a completed fix; check it off only after merge and regenerated source/browser verification. Keep generated blocker reports and mechanics inventory source-owned.
 
+## High-throughput completion lane
+
+The generated [single-blocker completion opportunities](../MONSTER_BLOCKERS_2014.md#single-blocker-completion-opportunities) are the first selection surface, not a second decision ledger. Exclude `arena:removed` and `arena:neutral` from claims of a completed combat monster. For each selected semantic family:
+
+1. Read approved decisions in the canonical queue and the exact immutable source clauses.
+2. Use source-owned parameters to bind **every matching monster in the batch**, not one foundation-only placeholder.
+3. Run focused Python and browser tests during edits; do not relax the full certification gate.
+4. Regenerate the owned source classifier, universal inventory, browser artifacts and manifest once on the final branch head. Push generator changes, then require exact-head green CI.
+5. Compare `main` before/after source-admitted IDs **and** runtime certification; report both deltas separately.
+6. If a feature cannot certify a whole monster, identify the precise remaining dependency and select the next independent one-blocker family rather than creating another tracking issue.
+
+No CI gate may be skipped, and no monster may be counted simply because a trait was classified neutral.
+
 ## Add or fix a monster
 
 1. Read the exact source text and edition.
