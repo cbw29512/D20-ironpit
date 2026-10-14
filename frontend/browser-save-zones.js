@@ -23,6 +23,7 @@
 
   function chooseCenter(caster, setup, action) {
     if (!setup.map_definition || !caster.state.position) return null;
+    if (action.centerOnSource) return { ...caster.state.position };
     const enemies = caster.side === "heroes" ? setup.monsters : setup.heroes;
     const living = enemies.filter((enemy) => enemy.state.is_alive && !enemy.state.is_dead && enemy.state.position);
     if (!living.length) return null;
