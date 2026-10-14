@@ -16,12 +16,18 @@
 6. **Blocked execution:** record the exact missing dependency concisely and attempt the next independent implementation task; do not fall back into looping through rule reviews. While CI runs, make independent useful code/test progress, not another source-audit recap.
 7. **After each implementation:** cite PR, merged SHA, exact-head test evidence and blocker delta in this file. Generator-owned reports and universal inventory are regenerated, not hand-edited. One subsystem code writer at a time; no monster-name runtime special cases.
 
+### Live generated-report reconciliation — 2026-10-14
+
+- Current default-branch `docs/MONSTER_BLOCKERS_2014.md` reports **212/327 source-admitted, 115 blocked** (up from the older 211/327 snapshot). Stone Giant is no longer on the blocked list; Python/source proof (`backend/app/content/monster_rock_catching_2014.py`, `backend/tests/test_2014_rock_catching_source_proof.py`) and browser tests exist. This audit did **not** independently rerun CI and does not assert all exact-head jobs passed.
+- Chain Devil remains blocked by `source:reaction` in the generated file. Its Animate Chains arena-unavailable source proof and regression tests are on main; finish/reconcile **PR #851** for Unnerving Mask before claiming Chain Devil promotion. PR #850 is an older foundation; do not create a parallel resolver.
+- The older 211/327 entries further below are historical snapshots and must not be treated as the current execution cursor.
+
 ### Active implementation cursor (do not confuse with the 124-monster planning ledger)
 
 | Order | Implementation target | Known prerequisite | State / advance rule |
 |---|---|---|---|
-| 1 | Stone Giant — Rock Catching (#675) | Universal incoming-ranged-hit Reaction -> Dex DC10 success negates attack damage; Python/browser source binding, full tests | **CURRENT / NOT CERTIFIED**; do not mark done because issue design is documented |
-| 2 | Chain Devil — Unnerving Mask (#700) | Universal target-turn-start Reaction, two-way visibility/range, Frightened through target turn end | **READY FOR CODE / NOT CERTIFIED** |
+| 1 | Stone Giant — Rock Catching (#675) | Shared incoming-hit save-negation Reaction, source proof and Python/browser focused tests | **SOURCE-ADMITTED ON MAIN (2026-10-14 audit)**: Stone Giant absent from generator-owned blocked list; whole-monster admission reflected in 212/327. Exact-head CI certification not reverified in this audit; do not recode. |
+| 2 | Chain Devil — Unnerving Mask (#700) | Universal target-turn-start Reaction, two-way visibility/range, Frightened through target turn end | **ACTIVE IMPLEMENTATION PR #851 / NOT SOURCE-ADMITTED**; review existing Python/browser tests and exact-head CI rather than duplicate. Animate Chains source-proof arena-unavailable implementation already on main. |
 | 3 | Air Elemental — Air Form + Whirlwind (#683) | Generic legal hostile overlap + same-cell random fling/collision, recharge and saves, parity | **ENGINE GAP / NOT CERTIFIED** |
 | 4 | Continue other source-approved one-blocker monsters from fresh generated blocker report | Prefer smallest reusable change removing full monster blocker set | **DYNAMIC; check main and existing PRs first** |
 
