@@ -101,7 +101,7 @@ def resolve_turn_start_save_condition_reactions(
                     f"{reactor.state.template.name} uses {reaction.source_name}: "
                     f"{target.state.template.name} {'succeeds' if succeeded else 'fails'} "
                     f"the DC {reaction.save_dc} {reaction.save_ability.title()} save"
-                    f"{'' if succeeded else ' and is Frightened until the end of its turn'}."
+                    f"{'' if succeeded else ' and gains ' + reaction.condition_id.replace('_', ' ').title() + ' until the end of its turn'}."
                 ),
             ))
             sequence += 1
