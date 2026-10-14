@@ -21,9 +21,7 @@ from app.content.monster_source_2014 import load_monster_source_2014
 ])
 def test_source_proven_inert_trait_is_safe_without_changing_source(monster_id: str, trait: str) -> None:
     rows = load_monster_source_2014()
-    monster = next((m for m in rows if m.id == monster_id), None)
-    if monster is None:
-        pytest.skip(f"No canonical source id {monster_id}")
+    monster = next(m for m in rows if m.id == monster_id)
     before = monster.model_dump_json()
     assert trait in monster.trait_names
     assert verified_arena_inert_trait_2014(monster, trait)
