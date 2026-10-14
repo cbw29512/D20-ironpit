@@ -124,4 +124,26 @@ const friendlyResult = R.resolve(1, 1, friendly, { heroes: [], monsters: [devil5
 assert.equal(friendlyResult.events.length, 0);
 assert.equal(devil5.state.reaction_available, true);
 
+// Successful saves consume the Reaction but must not apply Frightened.
+const originalSave = window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow;
+window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow = () => ({ roll: 18, succeeded: true });
+const successHero = member("success", "Successful Hero", 10);
+const successDevil = member("success-devil", "Chain Devil", 0, reaction);
+const saveResult = R.resolve(1, 1, successHero, { heroes: [successHero], monsters: [successDevil] });
+assert.equal(saveResult.events.length, 1);
+assert.equal(saveResult.events[0].save_succeeded, true);
+assert.deepEqual(saveResult.events[0].applied_condition_ids, []);
+assert.equal(successDevil.state.reaction_available, false);
+assert.equal(successHero.state.active_effect_ids.length, 0);
+window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow = originalSave;
+
+// Both visibility checks must pass: neither side can act through unseen targets.
+const originalCanSee = window.IRON_PIT_BROWSER_CONDITION_RULES.canSee;
+window.IRON_PIT_BROWSER_CONDITION_RULES.canSee = () => false;
+const unseenHero = member("unseen", "Unseen Hero", 10);
+const unseenDevil = member("unseen-devil", "Chain Devil", 0, reaction);
+assert.equal(R.resolve(1, 1, unseenHero, { heroes: [unseenHero], monsters: [unseenDevil] }).events.length, 0);
+assert.equal(unseenDevil.state.reaction_available, true);
+window.IRON_PIT_BROWSER_CONDITION_RULES.canSee = originalCanSee;
+
 console.log("browser turn-start save-condition reaction tests passed");
