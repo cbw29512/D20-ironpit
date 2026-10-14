@@ -119,3 +119,14 @@ def test_diagonal_path_cannot_squeeze_between_two_blocked_orthogonal_spaces() ->
     assert plan.movement_cost_ft == 0
     assert plan.final_distance_ft == 10
     assert plan.goal_reachable is False
+
+
+def test_source_granted_hostile_passage_is_opt_in_and_never_changes_default() -> None:
+    """Air/Water Form source grants passage; ordinary enemies remain blocking."""
+    mover = _member("elemental", "monsters", 0, 0)
+    hostile = _member("hostile", "heroes", 1, 1)
+    assert not can_pass_through(mover, hostile)
+    assert can_pass_through(mover, hostile, source_allows_hostile_overlap=True)
+    # This does not grant harmless free movement or change the universal
+    # creature-space difficult-terrain rule.
+    assert creature_space_is_difficult(mover, hostile)
