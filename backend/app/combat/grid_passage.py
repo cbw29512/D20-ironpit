@@ -18,10 +18,17 @@ _SIZE_RANK = {
 }
 
 
-def can_pass_through(mover: EncounterCombatant, occupant: EncounterCombatant) -> bool:
+def can_pass_through(
+    mover: EncounterCombatant,
+    occupant: EncounterCombatant,
+    *,
+    source_allows_hostile_overlap: bool = False,
+) -> bool:
     """Return whether SRD 5.2.1 permits the mover to pass through this creature's space."""
     try:
         if mover.combatant_id == occupant.combatant_id:
+            return True
+        if source_allows_hostile_overlap:
             return True
         if mover.side == occupant.side:
             return True
