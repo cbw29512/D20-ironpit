@@ -682,6 +682,8 @@ def _save_zone(action: Any) -> dict[str, Any]:
             "dc": action.dc, "triggers": list(action.triggers),
             "saveTriggers": list(action.save_triggers),
             "oncePerTurn": action.once_per_turn,
+            "targetPolicy": action.target_policy,
+            "saveContext": action.save_context,
             "damageDiceCount": action.damage_dice_count,
             "damageDiceSize": action.damage_dice_size,
             "damageType": action.damage_type, "successDamage": action.success_damage,
