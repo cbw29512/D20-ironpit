@@ -23,6 +23,7 @@
 
   function chooseCenter(caster, setup, action) {
     if (!setup.map_definition || !caster.state.position) return null;
+    if (action.centerOnSource) return { ...caster.state.position };
     const enemies = caster.side === "heroes" ? setup.monsters : setup.heroes;
     const living = enemies.filter((enemy) => enemy.state.is_alive && !enemy.state.is_dead && enemy.state.position);
     if (!living.length) return null;
@@ -123,6 +124,9 @@
   function cast(sequence, round, caster, setup, action, position, turnKey) {
     if (Z()?.verbalBlocked(caster, setup)) throw new Error(`${action.name} cannot be cast inside a Silence effect.`);
     if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.actionCost} is unavailable for ${action.name}.`);
+    if (action.centerOnSource && (!caster.state.position || position.x !== caster.state.position.x || position.y !== caster.state.position.y)) {
+      throw new Error(`${action.name} must be centered on its source.`);
+    }
     let slotLevel = action.level;
     if (action.resourceId && String(action.resourceId).startsWith("spell-slot-")) {
       slotLevel = Number(String(action.resourceId).split("-").pop());

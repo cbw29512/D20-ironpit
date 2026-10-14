@@ -22,11 +22,12 @@
       if (action.concentration && caster.state.concentration) continue;
       if (action.expendsSpellSlot && !P?.slotSpellAvailable(caster.state, turnKey)) continue;
       if (action.resourceId && (caster.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) continue;
-      for (const enemy of enemies) {
-        const count = coverage(enemy.state.position, enemies, action.radiusFt || action.radius_ft || 0);
+      const centers = action.centerOnSource ? [caster.state.position] : enemies.map((enemy) => enemy.state.position);
+      for (const center of centers) {
+        const count = coverage(center, enemies, action.radiusFt || action.radius_ft || 0);
         if (!count) continue;
         const score = action.damageDiceCount * ((action.damageDiceSize || 6) + 1) / 2 * count;
-        if (!best || score > best.score) best = { action, center: { ...enemy.state.position }, score };
+        if (!best || score > best.score) best = { action, center: { ...center }, score };
       }
     }
     return best;
