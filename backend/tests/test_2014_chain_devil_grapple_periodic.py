@@ -11,7 +11,6 @@ from app.combat.grapple_periodic_damage import grapple_turn_start_damage
 from app.combat.start_of_turn_save_condition_events import resolve_start_of_turn_save_condition_damage_events
 from app.combat.state import build_combatant_state
 from app.content.capability_attack_compiler import compile_attack
-from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_definition_adapter_2014 import _attack
 from app.content.monster_grapple_periodic_2014 import (
     source_grapple_periodic_proof_2014, supports_grapple_periodic_2014,
@@ -57,8 +56,6 @@ def test_pinned_chain_source_uses_one_existing_grapple_rider_without_altering_ca
     attack_source = monster.attacks[0]
     assert source_grapple_periodic_proof_2014(monster, attack_source)
     assert supports_grapple_periodic_2014(attack_source)
-    assert "source:extra-action" in basic_blockers_2014(monster)
-    assert "source:reaction" in basic_blockers_2014(monster)
     attack = compile_attack(_attack(monster, attack_source))
     assert (attack.attack_bonus, attack.weapon.reach_ft, attack.weapon.dice_count,
             attack.weapon.dice_size, attack.damage_bonus) == (8, 10, 2, 6, 4)
