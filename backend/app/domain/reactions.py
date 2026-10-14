@@ -82,3 +82,17 @@ class DamageReactionAttack(BaseModel):
     trigger: Literal["damaged-by-creature"] = "damaged-by-creature"
     source_range_ft: int = Field(default=5, ge=1, le=120)
     attack_kind: Literal["melee"] = "melee"
+
+
+class TurnStartSaveConditionReaction(BaseModel):
+    """Universal Reaction on another creature's turn start: range/visibility gates, save, apply timed condition."""
+
+    source_id: str = Field(min_length=1)
+    source_name: str = Field(min_length=1)
+    range_ft: int = Field(default=30, ge=1, le=120)
+    save_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"] = "wisdom"
+    save_dc: int = Field(ge=1, le=40)
+    condition_id: str = Field(default="frightened", min_length=1)
+    expiry_timing: Literal["target_turn_end", "source_turn_end", "target_turn_start"] = "target_turn_end"
+    requires_source_can_see_target: bool = True
+    requires_target_can_see_source: bool = True

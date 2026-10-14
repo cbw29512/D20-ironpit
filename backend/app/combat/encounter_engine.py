@@ -35,12 +35,12 @@ from app.combat.legendary_actions import resolve_legendary_actions_after_turn
 from app.combat.triggered_extra_attacks import resolve_triggered_extra_attacks_after_turn
 from app.combat.turn_damage import clear_turn_damage
 from app.combat.timed_emanations import resolve_target_turn_start_emanations
+from app.combat.turn_start_save_condition_reaction import resolve_turn_start_save_condition_reactions
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
 from app.domain.models import BattleEvent
 
 logger = logging.getLogger(__name__)
 MAX_ENCOUNTER_ROUNDS = 100
-
 
 def _combatant_index(combatants: list[EncounterCombatant]) -> dict[str, EncounterCombatant]:
     return {member.combatant_id: member for member in combatants}
@@ -167,6 +167,8 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     events.append(start_buff)
                     sequence += 1
 
+                reaction_events, sequence = resolve_turn_start_save_condition_reactions(sequence, round_number, member, setup, dice)
+                events.extend(reaction_events)
                 death_event, sequence = _resolve_zero_hp_turn(sequence, round_number, member, dice)
                 if death_event is not None:
                     events.append(death_event)
