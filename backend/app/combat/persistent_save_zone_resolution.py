@@ -94,6 +94,7 @@ def resolve_save_zone_trigger(
                 applied_round=round_number,
                 expires_round=round_number + zone.failed_save_duration_rounds,
                 expiry_timing="target_turn_end",
+                expires_at_start_of_source_turn=False,
                 suppress_action=zone.failed_save_suppress_action,
                 suppress_bonus_action=zone.failed_save_suppress_bonus_action,
                 source_is_magical=zone.save_context != "nonmagical",
