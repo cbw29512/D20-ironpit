@@ -34,25 +34,17 @@ def test_binding_produces_reaction():
 
 
 def _minimal_state(name: str, reaction=None):
-    from app.domain.combatants import CombatantTemplate
-    from app.domain.runtime import CombatantState
-    from app.domain.character_builds import AbilityScores
-    from app.domain.movement import MovementModes
-    template = CombatantTemplate(
-        id=name.lower().replace(" ", "-"),
-        name=name,
-        archetype="test",
-        kind="monster",
-        size="medium",
-        max_hp=10,
-        armor_class=10,
-        speed_ft=30,
-        movement_modes=MovementModes(walk_ft=30),
-        initiative_bonus=0,
-        ability_scores=AbilityScores(strength=10, dexterity=10, constitution=10, intelligence=10, wisdom=10, charisma=10),
-        turn_start_save_condition_reaction=reaction,
-    )
-    return CombatantState(template=template, current_hp=10)
+    # Reuse a complete certified combatant template; hand-written partial
+    # templates omit required shared actions, visual and source fields.
+    from app.combat.state import build_combatant_state
+    from app.content.monsters import build_commoner
+
+    template = build_commoner().model_copy(update={
+        "id": name.lower().replace(" ", "-"),
+        "name": name,
+        "turn_start_save_condition_reaction": reaction,
+    })
+    return build_combatant_state(template)
 
 
 def _setup_pair(distance: int = 10):
@@ -95,4 +87,15 @@ def test_out_of_range_skips():
     dice = FixedDiceProvider([1])
     events, _ = resolve_turn_start_save_condition_reactions(1, 1, hero, setup, dice)
     assert events == []
+    assert is_available(devil.state, "reaction")
+
+
+def test_condition_immunity_skips_reaction_without_spending():
+    devil, hero, setup = _setup_pair(10)
+    hero.state.template.condition_immunities.append("frightened")
+    events, _ = resolve_turn_start_save_condition_reactions(
+        1, 1, hero, setup, FixedDiceProvider([1]),
+    )
+    assert events == []
+    assert not has_condition(hero.state, "frightened")
     assert is_available(devil.state, "reaction")
