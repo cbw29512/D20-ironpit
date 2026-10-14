@@ -99,3 +99,17 @@ def test_condition_immunity_skips_reaction_without_spending():
     assert events == []
     assert not has_condition(hero.state, "frightened")
     assert is_available(devil.state, "reaction")
+
+def test_ally_turn_never_consumes_harmful_reaction():
+    devil, hero, setup = _setup_pair(10)
+    ally = EncounterCombatant(
+        combatant_id="ally", side="monsters", position_ft=5,
+        state=_minimal_state("Ally"),
+    )
+    setup.monsters.append(ally)
+    events, _ = resolve_turn_start_save_condition_reactions(
+        1, 1, ally, setup, FixedDiceProvider([1]),
+    )
+    assert events == []
+    assert not has_condition(ally.state, "frightened")
+    assert is_available(devil.state, "reaction")
