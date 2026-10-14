@@ -112,6 +112,8 @@ assert.throws(
   () => R.resolve(1, 1, hero4, { heroes: [hero4], monsters: [devil4] }),
   /Universal timed conditions are required/,
 );
+assert.equal(devil4.state.reaction_available, true, "missing engine must not consume the Reaction");
+assert.equal(hero4.state.active_effect_ids.length, 0, "missing engine must not mutate target conditions");
 window.IRON_PIT_BROWSER_TIMED = savedTimed;
 
 // The AI must preserve its Reaction for enemies, never target same-side allies.
