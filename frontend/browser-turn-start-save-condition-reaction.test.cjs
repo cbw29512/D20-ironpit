@@ -48,6 +48,7 @@ function member(id, name, position, reaction = null) {
   return {
     combatant_id: id,
     position_ft: position,
+    side: reaction ? "monsters" : "heroes",
     state: {
       is_alive: true,
       is_dead: false,
@@ -112,5 +113,13 @@ assert.throws(
   /Universal timed conditions are required/,
 );
 window.IRON_PIT_BROWSER_TIMED = savedTimed;
+
+// The AI must preserve its Reaction for enemies, never target same-side allies.
+const friendly = member("friendly", "Friendly Devil", 5);
+friendly.side = "monsters";
+const devil5 = member("devil5", "Chain Devil", 0, reaction);
+const friendlyResult = R.resolve(1, 1, friendly, { heroes: [], monsters: [devil5, friendly] });
+assert.equal(friendlyResult.events.length, 0);
+assert.equal(devil5.state.reaction_available, true);
 
 console.log("browser turn-start save-condition reaction tests passed");
