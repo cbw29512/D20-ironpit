@@ -657,7 +657,6 @@ def _suppression_zone(action: Any) -> dict[str, Any]:
         row = {
             "id": action.id, "name": action.name, "level": action.level,
             "actionCost": action.action_cost, "castRangeFt": action.cast_range_ft,
-            "centerOnSource": action.center_on_source,
             "radiusFt": action.radius_ft, "durationRounds": action.duration_rounds,
             "concentration": action.concentration, "deafens": action.deafens,
             "blocksVerbalSpells": action.blocks_verbal_spells,
