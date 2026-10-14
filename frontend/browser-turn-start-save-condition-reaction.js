@@ -5,11 +5,14 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const SAVES = () => window.IRON_PIT_BROWSER_SAVING_THROWS;
-  const TIMED = () => window.IRON_PIT_BROWSER_TIMED_CONDITIONS;
+  const TIMED = () => window.IRON_PIT_BROWSER_TIMED;
+  const IMMUNITY = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
 
   function eligible(reactor, target, reaction) {
     if (!E().available(reactor.state, "reaction")) return false;
     if (!target.state.is_alive || target.state.is_dead || reactor.state.is_dead) return false;
+    if (!IMMUNITY()?.immune) throw new Error("Universal condition immunity is required for turn-start reactions.");
+    if (IMMUNITY().immune(target.state, reaction.conditionId)) return false;
     if (Q().has(target.state, reaction.conditionId)) return false;
     const distance = S().distance(reactor, target);
     if (distance > reaction.rangeFt) return false;
@@ -32,7 +35,8 @@
         const outcome = resolver(target.state, reaction.saveAbility, reaction.saveDc);
         const applied = [];
         if (!outcome.succeeded) {
-          TIMED()?.apply(
+          if (!TIMED()?.apply) throw new Error("Universal timed conditions are required for turn-start reactions.");
+          const conditionApplied = TIMED().apply(
             target.state,
             reaction.conditionId,
             reactor.combatant_id,
@@ -43,7 +47,7 @@
               appliedRound: round,
             },
           );
-          applied.push(reaction.conditionId);
+          if (conditionApplied) applied.push(reaction.conditionId);
         }
         events.push({
           sequence,
