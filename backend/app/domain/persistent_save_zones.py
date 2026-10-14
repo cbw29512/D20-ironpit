@@ -22,7 +22,7 @@ class PersistentSaveZoneAction(BaseModel):
     level: int = Field(ge=0, le=9)
     action_cost: ActionCost = "action"
     cast_range_ft: int = Field(ge=0)
-    center_on_source: bool = False
+    center_on_source: bool = Field(default=False, exclude_if=lambda value: not value)
     radius_ft: int = Field(ge=5)
     duration_rounds: int = Field(ge=1)
     concentration: bool = False
