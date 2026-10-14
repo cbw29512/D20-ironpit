@@ -58,7 +58,8 @@ def test_pinned_chain_source_uses_one_existing_grapple_rider_without_altering_ca
     assert source_grapple_periodic_proof_2014(monster, attack_source)
     assert supports_grapple_periodic_2014(attack_source)
     assert "source:extra-action" in basic_blockers_2014(monster)
-    assert "source:reaction" in basic_blockers_2014(monster)
+    # The shared turn-start Reaction now handles this source; Animate Chains is independent.
+    assert "source:reaction" not in basic_blockers_2014(monster)
     attack = compile_attack(_attack(monster, attack_source))
     assert (attack.attack_bonus, attack.weapon.reach_ft, attack.weapon.dice_count,
             attack.weapon.dice_size, attack.damage_bonus) == (8, 10, 2, 6, 4)
