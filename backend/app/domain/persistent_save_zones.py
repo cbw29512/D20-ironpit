@@ -23,6 +23,8 @@ class PersistentSaveZoneAction(BaseModel):
     action_cost: ActionCost = "action"
     cast_range_ft: int = Field(ge=0)
     center_on_source: bool = Field(default=False, exclude_if=lambda value: not value)
+    follows_source: bool = Field(default=False, exclude_if=lambda value: not value)
+    target_scope: Literal["enemies", "all"] = "enemies"
     radius_ft: int = Field(ge=5)
     duration_rounds: int = Field(ge=1)
     concentration: bool = False
@@ -49,6 +51,8 @@ class PersistentSaveZoneAction(BaseModel):
     @model_validator(mode="after")
     def validate_zone(self) -> "PersistentSaveZoneAction":
         try:
+            if self.follows_source and not self.center_on_source:
+                raise ValueError("Following zones must be centered on their source when created.")
             if self.radius_ft % 5:
                 raise ValueError("Save zones must use 5-foot increments.")
             if len(set(self.triggers)) != len(self.triggers):
@@ -77,6 +81,8 @@ class PersistentSaveZoneState(BaseModel):
     zone_id: str = Field(min_length=1)
     source_id: str = Field(min_length=1)
     source_side: str = Field(min_length=1)
+    follows_source: bool = False
+    target_scope: Literal["enemies", "all"] = "enemies"
     action_id: str = Field(min_length=1)
     action_name: str = Field(min_length=1)
     position: GridPosition
