@@ -40,7 +40,7 @@ def render():
                  '| Remaining blocker | Monsters | Count |', '|---|---|---:|']
         for blocker, names in sorted(grouped.items(), key=lambda item: (-len(item[1]), item[0])):
             escaped_names = ', '.join(sorted(names)).replace('|', '\\|')
-            rows.append(f'| \`{blocker}\` | {escaped_names} | {len(names)} |')
+            rows.append(f'| `{blocker}` | {escaped_names} | {len(names)} |')
         rows += ['', '## Every blocked monster', '',
                  '| Monster | Remaining blockers | Unbound traits |', '|---|---|---|']
         for monster, blockers in sorted(blocked, key=lambda row: row[0].name):
