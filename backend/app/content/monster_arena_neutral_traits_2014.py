@@ -46,6 +46,25 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 and "While underwater" in source
                 and "transformative mucus" in source
             )
+        # Source-verified informational traits never grant combat coordinates,
+        # actions, saves or targeting. Names validate provenance only.
+        informational_clauses = {
+            "Detect Life": (
+                "<strong>Detect Life.</strong>",
+                "general direction",
+                "exact locations",
+            ),
+            "Shielded Mind": (
+                "<strong>Shielded Mind.</strong>",
+                "immune to scrying",
+                "sense its emotions",
+                "read its thoughts",
+                "detect its location",
+            ),
+        }
+        if trait_name in informational_clauses:
+            folded = source.casefold()
+            return all(clause.casefold() in folded for clause in informational_clauses[trait_name])
         if trait_name != "Faultless Tracker":
             return False
         clauses = (

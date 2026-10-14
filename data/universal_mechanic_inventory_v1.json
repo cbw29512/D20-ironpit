@@ -5883,7 +5883,7 @@
       "source:extra-action": 67,
       "source:legendary": 9,
       "source:reaction": 3,
-      "source:trait": 82
+      "source:trait": 81
     },
     "unresolved_printed_abilities": [
       {
@@ -5967,13 +5967,6 @@
           "Balor"
         ],
         "printed_name": "Death Throes"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Banshee"
-        ],
-        "printed_name": "Detect Life"
       },
       {
         "demand_count": 2,
@@ -6263,13 +6256,6 @@
           "Werewolf"
         ],
         "printed_name": "Shapechanger"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Couatl"
-        ],
-        "printed_name": "Shielded Mind"
       },
       {
         "demand_count": 1,
