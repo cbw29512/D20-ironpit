@@ -52,6 +52,29 @@ The generated [single-blocker completion opportunities](../MONSTER_BLOCKERS_2014
 
 No CI gate may be skipped, and no monster may be counted simply because a trait was classified neutral.
 
+## Hourly output scorecard
+
+Measure **verified source ability obligations resolved per actual work hour**, not PRs,
+commits, tests, or capabilities created. One obligation is one exact
+`(monster, printed ability)` that disappears from the generated unresolved
+source inventory; resolving the same ability across six monsters counts six.
+Subtract newly unresolved obligations to avoid hiding regressions.
+
+After a batch merges with green exact-head certification, compare the generated
+`data/universal_mechanic_inventory_v1.json` from its before/after commits:
+
+```bash
+python scripts/measure_monster_throughput_2014.py --before /tmp/before-inventory.json --after data/universal_mechanic_inventory_v1.json --hours 2.5
+```
+
+Use actual elapsed working hours, recorded at start/end; never infer hours from
+GitHub timestamps alone. Report gross and net resolved obligations/hour,
+newly unresolved obligations, net newly source-admitted monsters/hour, and
+Python/browser certification separately. A classified arena-neutral ability
+counts as resolved source obligation but **not** proof of runtime behavior.
+Do not describe this classifier score as fully certified combat abilities.
+If no source or roster progress occurred, report zero.
+
 ## Add or fix a monster
 
 1. Read the exact source text and edition.
