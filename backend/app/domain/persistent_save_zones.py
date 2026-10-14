@@ -25,6 +25,8 @@ class PersistentSaveZoneAction(BaseModel):
     radius_ft: int = Field(ge=5)
     duration_rounds: int = Field(ge=1)
     concentration: bool = False
+    follows_source: bool = Field(default=False, exclude_if=lambda value: not value)
+    target_scope: Literal["enemies", "all"] = Field(default="enemies", exclude_if=lambda value: value == "enemies")
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     triggers: list[SaveZoneTrigger] = Field(min_length=1)
@@ -76,6 +78,8 @@ class PersistentSaveZoneState(BaseModel):
     zone_id: str = Field(min_length=1)
     source_id: str = Field(min_length=1)
     source_side: str = Field(min_length=1)
+    follows_source: bool = False
+    target_scope: Literal["enemies", "all"] = "enemies"
     action_id: str = Field(min_length=1)
     action_name: str = Field(min_length=1)
     position: GridPosition
