@@ -1,8 +1,6 @@
 from __future__ import annotations
-
 from collections import Counter
 import logging
-
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.monster_arena_action_policy_2014 import PIT_BANNED_ACTION_LABELS_2014
 from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014, verified_arena_inert_trait_2014
@@ -18,6 +16,7 @@ from app.content.monster_innate_support_2014 import innate_spell_names_2014, sup
 from app.content.monster_legendary_bindings_2014 import supports_legendary_actions_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_rock_catching_2014 import supports_rock_catching_reaction_2014
+from app.content.monster_animate_chains_2014 import supports_animate_chains_arena_unavailable_2014
 from app.content.monster_unnerving_mask_2014 import supports_unnerving_mask_reaction_2014
 from app.content.monster_multiattack_2014 import multiattack_blockers_2014
 from app.content.monster_save_capabilities_2014 import supports_recharge_rules_2014, unsupported_save_actions_2014, unsupported_source_actions_2014
@@ -49,6 +48,7 @@ def _supported_charge(monster: SourceMonster2014) -> bool:
         and supports_charge_profile_2014(corrected_charge_profile_2014(monster, attack))
         for attack in monster.attacks
     )
+
 
 def _attack_blockers(monster: SourceMonster2014) -> list[str]:
     blockers: list[str] = []
@@ -103,6 +103,7 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
         | _ARENA_ABSENT_CONTEXT_ACTION_LABELS
         | _ARENA_UNAVAILABLE_SUMMON_ACTION_LABELS
         | _ARENA_NEUTRAL_MIND_ACTION_LABELS
+        | ({"animate chains"} if supports_animate_chains_arena_unavailable_2014(monster) else set())
     )
     extras = [
         name for name in extras
