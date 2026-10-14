@@ -26,9 +26,9 @@ _FIELDS = (
     "forbid_target_grappled_by_self",
     "grapple_target_policy",
 )
-# Heated Body is now bound; Salamander still has an independent Tail
-# auto-hit-own-grapple blocker. Do not silently certify that attack.
-_EXPECTED_ATTACK_ONLY = frozenset({"salamander"})
+# Source-verified noncombat traits no longer mask independently unsupported
+# attack riders on Homunculus and Pseudodragon. Keep all three blocked.
+_EXPECTED_ATTACK_ONLY = frozenset({"homunculus", "pseudodragon", "salamander"})
 
 
 def _active(value: object, field: str) -> bool:

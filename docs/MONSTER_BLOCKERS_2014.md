@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 81 |
+| `source:trait` | 77 |
 | `source:extra-action` | 67 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |
@@ -61,23 +61,23 @@ Blocker categories overlap: a monster may require several fixes.
 | Darkmantle | attack:incomplete, source:extra-action | — |
 | Deep Gnome (Svirfneblin) | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Deva | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
-| Djinni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Elemental Demise, Innate Spellcasting |
+| Djinni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Doppelganger | attack:complex, source:extra-action, source:trait | Shapechanger, Ambusher, Surprise Attack |
 | Dretch | source:extra-action | — |
 | Drider | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Drow | attack:complex, mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Druid | mechanic:spellcasting, source:trait | Spellcasting |
-| Dryad | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting, Speak with Beasts and Plants, Tree Stride |
+| Dryad | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Duergar | attack:incomplete, source:extra-action, source:trait | Duergar Resilience |
 | Dust Mephit | mechanic:recharge, mechanic:spellcasting, source:extra-action, source:trait | Death Burst, Innate Spellcasting |
-| Efreeti | mechanic:spellcasting, source:trait | Elemental Demise, Innate Spellcasting |
+| Efreeti | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Erinyes | attack:incomplete, source:trait | Hellish Weapons |
 | Ettercap | attack:complex, attack:damage-type, mechanic:recharge | — |
 | Fire Elemental | attack:complex, source:trait | Fire Form, Water Susceptibility |
 | Flameskull | mechanic:spellcasting, source:trait | Spellcasting |
 | Frog | arena:neutral | — |
 | Gelatinous Cube | source:extra-action, source:trait | Ooze Cube, Transparent |
-| Ghost | mechanic:recharge, source:extra-action, source:trait | Ethereal Sight |
+| Ghost | mechanic:recharge, source:extra-action | — |
 | Giant Frog | mechanic:swallow, source:extra-action | — |
 | Giant Spider | attack:complex, attack:damage-type, mechanic:recharge | — |
 | Giant Toad | mechanic:swallow, source:extra-action | — |
@@ -88,7 +88,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Guardian Naga | mechanic:spellcasting, source:extra-action, source:trait | Spellcasting |
 | Gynosphinx | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Inscrutable, Spellcasting |
 | Harpy | source:extra-action | — |
-| Homunculus | attack:complex, source:trait | Telepathic Bond |
+| Homunculus | attack:complex | — |
 | Hydra | multiattack:complex, source:extra-action, source:trait | Multiple Heads, Reactive Heads |
 | Ice Devil | mechanic:recharge, source:extra-action | — |
 | Ice Mephit | mechanic:death-trigger, mechanic:spellcasting, source:trait | Death Burst, Innate Spellcasting |
@@ -109,11 +109,11 @@ Blocker categories overlap: a monster may require several fixes.
 | Night Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Nightmare | source:extra-action, source:trait | Confer Fire Resistance |
 | Oni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
-| Otyugh | attack:incomplete, source:extra-action, source:trait | Limited Telepathy |
+| Otyugh | attack:incomplete, source:extra-action | — |
 | Pit Fiend | attack:incomplete, mechanic:spellcasting, source:trait | Fear Aura, Innate Spellcasting |
-| Planetar | mechanic:spellcasting, source:extra-action, source:trait | Divine Awareness, Innate Spellcasting |
+| Planetar | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Priest | mechanic:spellcasting, source:trait | Divine Eminence, Spellcasting |
-| Pseudodragon | attack:complex, source:trait | Limited Telepathy |
+| Pseudodragon | attack:complex | — |
 | Purple Worm | attack:complex, mechanic:swallow | — |
 | Quasit | attack:complex, source:extra-action, source:trait | Shapechanger |
 | Rakshasa | mechanic:defense, mechanic:spellcasting, source:trait | Limited Magic Immunity, Innate Spellcasting |
@@ -128,7 +128,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Shambling Mound | mechanic:swallow, multiattack:complex, source:extra-action | — |
 | Shield Guardian | source:reaction, source:trait | Bound, Spell Storing |
 | Shrieker | attack:none, source:reaction | — |
-| Solar | attack:incomplete, mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Divine Awareness, Innate Spellcasting |
+| Solar | attack:incomplete, mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Innate Spellcasting |
 | Spectator | source:extra-action, source:reaction | — |
 | Spirit Naga | mechanic:spellcasting, source:trait | Spellcasting |
 | Sprite | attack:complex, source:extra-action | — |

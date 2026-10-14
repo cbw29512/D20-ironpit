@@ -5883,7 +5883,7 @@
       "source:extra-action": 67,
       "source:legendary": 9,
       "source:reaction": 3,
-      "source:trait": 81
+      "source:trait": 77
     },
     "unresolved_printed_abilities": [
       {
@@ -5969,14 +5969,6 @@
         "printed_name": "Death Throes"
       },
       {
-        "demand_count": 2,
-        "monsters": [
-          "Planetar",
-          "Solar"
-        ],
-        "printed_name": "Divine Awareness"
-      },
-      {
         "demand_count": 1,
         "monsters": [
           "Priest"
@@ -5991,26 +5983,11 @@
         "printed_name": "Duergar Resilience"
       },
       {
-        "demand_count": 2,
-        "monsters": [
-          "Djinni",
-          "Efreeti"
-        ],
-        "printed_name": "Elemental Demise"
-      },
-      {
         "demand_count": 1,
         "monsters": [
           "Will-o'-Wisp"
         ],
         "printed_name": "Ephemeral"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Ghost"
-        ],
-        "printed_name": "Ethereal Sight"
       },
       {
         "demand_count": 1,
@@ -6155,14 +6132,6 @@
         "printed_name": "Limited Magic Immunity"
       },
       {
-        "demand_count": 2,
-        "monsters": [
-          "Otyugh",
-          "Pseudodragon"
-        ],
-        "printed_name": "Limited Telepathy"
-      },
-      {
         "demand_count": 1,
         "monsters": [
           "Vampire"
@@ -6260,13 +6229,6 @@
       {
         "demand_count": 1,
         "monsters": [
-          "Dryad"
-        ],
-        "printed_name": "Speak with Beasts and Plants"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
           "Shield Guardian"
         ],
         "printed_name": "Spell Storing"
@@ -6319,9 +6281,8 @@
         "printed_name": "Tail Spike Regrowth"
       },
       {
-        "demand_count": 2,
+        "demand_count": 1,
         "monsters": [
-          "Homunculus",
           "Succubus/Incubus"
         ],
         "printed_name": "Telepathic Bond"
@@ -6332,13 +6293,6 @@
           "Gelatinous Cube"
         ],
         "printed_name": "Transparent"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Dryad"
-        ],
-        "printed_name": "Tree Stride"
       },
       {
         "demand_count": 2,
