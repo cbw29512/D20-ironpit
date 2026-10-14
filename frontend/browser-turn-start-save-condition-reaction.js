@@ -66,7 +66,7 @@
           save_succeeded: outcome.succeeded,
           applied_condition_ids: applied,
           animation: "fear",
-          description: `${reactor.state.template.name} uses ${reaction.sourceName}: ${target.state.template.name} ${outcome.succeeded ? "succeeds" : "fails"} the DC ${reaction.saveDc} ${reaction.saveAbility} save${outcome.succeeded ? "" : " and is Frightened until the end of its turn"}.`,
+          description: `${reactor.state.template.name} uses ${reaction.sourceName}: ${target.state.template.name} ${outcome.succeeded ? "succeeds" : "fails"} the DC ${reaction.saveDc} ${reaction.saveAbility} save${outcome.succeeded ? "" : " and gains ${reaction.conditionId.replaceAll("_", " ")} until the end of its turn"}.`,
         });
         sequence += 1;
       }
