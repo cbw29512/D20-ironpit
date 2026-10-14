@@ -159,15 +159,15 @@
         window.IRON_PIT_BROWSER_GRID_BARRIERS?.cleanup(setup, round);
         window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.expire(setup, round);
         window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.sync(setup, round);
+        const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start");
+        events.push(...start.events); sequence = start.sequence; const tsr = window.IRON_PIT_BROWSER_TURN_START_SAVE_CONDITION_REACTION?.resolve(sequence, round, member, setup); if (tsr) { events.push(...tsr.events); sequence = tsr.sequence; }
+        const saveDot = window.IRON_PIT_BROWSER_POST_HIT_SAVE_CONDITION?.resolveStartOfTurn(sequence, round, member, setup);
+        if (saveDot) { events.push(...saveDot.events); sequence = saveDot.sequence; }
         window.IRON_PIT_BROWSER_SAVE_ZONES?.expire(setup, round);
         const startZones = window.IRON_PIT_BROWSER_SAVE_ZONES?.resolveWindow(
           sequence, round, member, setup, `${round}:${member.combatant_id}`, "start_turn",
         );
         if (startZones) { events.push(...startZones.events); sequence = startZones.sequence; }
-        const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start");
-        events.push(...start.events); sequence = start.sequence; const tsr = window.IRON_PIT_BROWSER_TURN_START_SAVE_CONDITION_REACTION?.resolve(sequence, round, member, setup); if (tsr) { events.push(...tsr.events); sequence = tsr.sequence; }
-        const saveDot = window.IRON_PIT_BROWSER_POST_HIT_SAVE_CONDITION?.resolveStartOfTurn(sequence, round, member, setup);
-        if (saveDot) { events.push(...saveDot.events); sequence = saveDot.sequence; }
         if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) events.push(T().deathSave(sequence++, round, member));
         if (member.state.current_hp > 0 && !member.state.is_dead) {
           const turn = T().resolveTurn(sequence, round, member, setup);
