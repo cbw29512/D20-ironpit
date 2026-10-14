@@ -184,6 +184,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         saving_throw_bonuses=save_bonuses_2014(monster, scores),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
         innate_condition_ids=innate_condition_ids_2014(monster),
+        source_allows_hostile_overlap=bool({'Air Form', 'Water Form'} & set(monster.trait_names)),
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
         source_turn_relation_damages=source_turn_grappler_damage_2014(monster),
         source_legendary_action_names=list(monster.legendary_action_names),
