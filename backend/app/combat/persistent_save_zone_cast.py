@@ -125,6 +125,8 @@ def cast_save_zone(
             zone_id=f"{caster.combatant_id}:{action.id}:{round_number}:{len(setup.save_zones) + 1}",
             source_id=caster.combatant_id,
             source_side=caster.side,
+            follows_source=action.follows_source,
+            target_scope=action.target_scope,
             action_id=action.id,
             action_name=action.name,
             position=position.model_copy(deep=True),
