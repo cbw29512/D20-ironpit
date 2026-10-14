@@ -54,6 +54,7 @@
           );
           if (conditionApplied) applied.push(reaction.conditionId);
         }
+        const conditionText = outcome.succeeded ? "" : ` and gains ${reaction.conditionId.replaceAll("_", " ")} until the end of its turn`;
         events.push({
           sequence,
           round_number: round,
@@ -69,7 +70,7 @@
           save_succeeded: outcome.succeeded,
           applied_condition_ids: applied,
           animation: "fear",
-          description: `${reactor.state.template.name} uses ${reaction.sourceName}: ${target.state.template.name} ${outcome.succeeded ? "succeeds" : "fails"} the DC ${reaction.saveDc} ${reaction.saveAbility} save${outcome.succeeded ? "" : " and gains ${reaction.conditionId.replaceAll("_", " ")} until the end of its turn"}.`,
+          description: `${reactor.state.template.name} uses ${reaction.sourceName}: ${target.state.template.name} ${outcome.succeeded ? "succeeds" : "fails"} the DC ${reaction.saveDc} ${reaction.saveAbility} save${conditionText}.`,
         });
         sequence += 1;
       }
