@@ -35,9 +35,9 @@
     }
   }
 
-  function canPassThrough(mover, occupant) {
+  function canPassThrough(mover, occupant, sourceAllowsHostileOverlap = false) {
     try {
-      if (mover.combatant_id === occupant.combatant_id || mover.side === occupant.side) return true;
+      if (mover.combatant_id === occupant.combatant_id || sourceAllowsHostileOverlap || mover.side === occupant.side) return true;
       if (conditionRules().incapacitated(occupant.state) || occupant.state.template.size === "tiny") return true;
       return Math.abs(SIZE_RANK[mover.state.template.size] - SIZE_RANK[occupant.state.template.size]) >= 2;
     } catch (error) {
@@ -82,6 +82,7 @@
 
   function movementStepCostFt(
     map, mover, destination, members, origin = null, barriers = null, terrainZones = null,
+    sourceAllowsHostileOverlap = false,
   ) {
     try {
       if (!geometry().inBounds(map, destination, mover.state.template.size)) return null;
@@ -90,7 +91,7 @@
       }
       let cost = map.cell_size_ft || 5;
       for (const occupant of occupantsAt(mover, destination, members)) {
-        if (!canPassThrough(mover, occupant)) return null;
+        if (!canPassThrough(mover, occupant, sourceAllowsHostileOverlap)) return null;
         if (creatureSpaceIsDifficult(mover, occupant)) cost = (map.cell_size_ft || 5) * 2;
       }
       const zones = terrainZones || [];
