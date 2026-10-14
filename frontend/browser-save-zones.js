@@ -124,6 +124,9 @@
   function cast(sequence, round, caster, setup, action, position, turnKey) {
     if (Z()?.verbalBlocked(caster, setup)) throw new Error(`${action.name} cannot be cast inside a Silence effect.`);
     if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.actionCost} is unavailable for ${action.name}.`);
+    if (action.centerOnSource && (!caster.state.position || position.x !== caster.state.position.x || position.y !== caster.state.position.y)) {
+      throw new Error(`${action.name} must be centered on its source.`);
+    }
     let slotLevel = action.level;
     if (action.resourceId && String(action.resourceId).startsWith("spell-slot-")) {
       slotLevel = Number(String(action.resourceId).split("-").pop());
