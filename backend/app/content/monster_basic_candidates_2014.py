@@ -25,7 +25,6 @@ from app.content.monster_trait_bindings_2014 import bound_trait_names_2014, supp
 from app.content.monster_zero_hp_prevention_2014 import supports_zero_hp_prevention_2014
 from app.domain.traits import CombatTrait
 from app.domain.weapons import DamageType
-
 logger = logging.getLogger(__name__)
 _MODELED_2014_TRAITS = {
     "Pack Tactics": CombatTrait.PACK_TACTICS,
@@ -41,15 +40,12 @@ _ARENA_NEUTRAL_MIND_ACTION_LABELS = frozenset({"weird insight"})
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 _PIT_REMOVED_MONSTER_IDS_2014 = frozenset({"stirge"})
 _PIT_ARENA_NEUTRAL_MONSTER_IDS_2014 = frozenset({"frog"})
-
 def _supported_charge(monster: SourceMonster2014) -> bool:
     return any(
         attack.charge_profile is not None
         and supports_charge_profile_2014(corrected_charge_profile_2014(monster, attack))
         for attack in monster.attacks
     )
-
-
 def _attack_blockers(monster: SourceMonster2014) -> list[str]:
     blockers: list[str] = []
     for source_attack in monster.attacks:
@@ -69,8 +65,6 @@ def _attack_blockers(monster: SourceMonster2014) -> list[str]:
             if normal_range_ft is None or long_range_ft is None:
                 blockers.append("attack:range")
     return blockers
-
-
 def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     try:
         certified = set(ARENA_NEUTRAL_TRAITS_2014) | set(_MODELED_2014_TRAITS)
@@ -85,15 +79,12 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     except Exception:
         logger.exception("Failed to identify unsupported 2014 traits for %s.", monster.name)
         raise
-
 def supports_parry_reaction_2014(monster: SourceMonster2014) -> bool:
     try:
         return monster.reaction_names == ["Parry"] and monster.parry_ac_bonus is not None
     except Exception:
         logger.exception("Failed to classify 2014 Parry support for %s.", monster.name)
         raise
-
-
 def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
     extras = unsupported_source_actions_2014(monster)
     allowed_extras = (
@@ -119,13 +110,9 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
     if monster.legendary_action_names and not supports_legendary_actions_2014(monster):
         blockers.append("source:legendary")
     return blockers
-
-
 def action_label_from_name(name: str) -> str:
     from app.content.monster_save_capabilities_2014 import action_label_2014
     return action_label_2014(name).split(" (", 1)[0]
-
-
 def modeled_combat_traits_2014(monster: SourceMonster2014) -> list[CombatTrait]:
     traits = [
         runtime_trait for source_name, runtime_trait in _MODELED_2014_TRAITS.items()
@@ -136,12 +123,8 @@ def modeled_combat_traits_2014(monster: SourceMonster2014) -> list[CombatTrait]:
     if supports_reckless_2014(monster):
         traits.append(CombatTrait.RECKLESS)
     return traits
-
-
 def is_arena_neutral_monster_2014(monster: SourceMonster2014) -> bool:
     return monster.id in _PIT_ARENA_NEUTRAL_MONSTER_IDS_2014
-
-
 def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     if monster.id in _PIT_REMOVED_MONSTER_IDS_2014:
         return ("arena:removed",)
@@ -191,11 +174,7 @@ def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     }
     blockers.extend(f"mechanic:{name}" for name, value in families.items() if value)
     return tuple(sorted(set(blockers)))
-
-
 def is_basic_candidate_2014(monster: SourceMonster2014) -> bool:
     return not basic_blockers_2014(monster)
-
-
 def blocker_counts_2014(monsters: tuple[SourceMonster2014, ...]) -> Counter[str]:
     return Counter(blocker for monster in monsters for blocker in basic_blockers_2014(monster))
