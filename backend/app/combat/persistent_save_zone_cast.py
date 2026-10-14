@@ -35,6 +35,8 @@ def choose_save_zone_center(
     try:
         if setup.map_definition is None or caster.state.position is None:
             return None
+        if action.center_on_source:
+            return caster.state.position.model_copy(deep=True)
         enemies = setup.monsters if caster.side == "heroes" else setup.heroes
         living = [
             enemy for enemy in enemies
@@ -95,6 +97,8 @@ def cast_save_zone(
             raise ValueError(f"{action.name} cannot be cast inside a Silence effect.")
         if not is_available(caster.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")
+        if action.center_on_source and position != caster.state.position:
+            raise ValueError(f"{action.name} must be centered on its source.")
         if not zone_center_legal(setup, position, action.cast_range_ft, caster):
             raise ValueError(f"{action.name} placement exceeds its cast range.")
         resource = _resource(caster, action.resource_id)
