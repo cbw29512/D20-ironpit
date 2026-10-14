@@ -88,6 +88,7 @@ class CombatantDefinition(BaseModel):
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
+    source_allows_hostile_overlap: bool = Field(default=False, exclude_if=lambda value: not value)
     source_trait_names: list[str] = Field(default_factory=list)
     source_turn_relation_damages: list[SourceTurnRelationDamage] = Field(default_factory=list)
     innate_condition_ids: list[ConditionName] = Field(default_factory=list)

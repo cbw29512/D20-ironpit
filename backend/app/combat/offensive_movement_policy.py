@@ -56,6 +56,7 @@ def choose_offensive_movement_intent(
                     attacker.state.movement_remaining_ft,
                     setup.persistent_barriers,
                     setup.temporary_terrain_zones,
+                    source_allows_hostile_overlap=attacker.state.template.source_allows_hostile_overlap,
                 )
                 if not plan.path:
                     continue
@@ -125,6 +126,7 @@ def melee_can_be_enabled_this_turn(
                     budget,
                     setup.persistent_barriers,
                     setup.temporary_terrain_zones,
+                    source_allows_hostile_overlap=attacker.state.template.source_allows_hostile_overlap,
                 )
                 if plan.goal_reachable and plan.path and plan.final_distance_ft <= desired_distance:
                     return True

@@ -53,6 +53,7 @@ def move_toward_on_grid(
             setup.persistent_barriers,
             setup.temporary_terrain_zones,
             allow_leave_melee=allow_leave_melee,
+            source_allows_hostile_overlap=mover.state.template.source_allows_hostile_overlap,
         )
         if not plan.path:
             return [], sequence, None
@@ -73,6 +74,7 @@ def move_toward_on_grid(
                 origin=before_position,
                 barriers=setup.persistent_barriers,
                 terrain_zones=setup.temporary_terrain_zones,
+                source_allows_hostile_overlap=mover.state.template.source_allows_hostile_overlap,
             )
             if step_cost is None or step_cost > mover.state.movement_remaining_ft:
                 break

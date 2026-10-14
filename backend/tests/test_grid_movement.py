@@ -152,3 +152,21 @@ def test_source_granted_hostile_passage_reaches_pathfinder_and_preserves_cost() 
         MAP, mover, GridPosition(x=1, y=3), members,
         source_allows_hostile_overlap=True,
     ) == 10
+
+
+def test_source_owned_passage_template_can_drive_shared_pathfinder() -> None:
+    """Immutable card field, not the monster name, grants the route permission."""
+    mover = _member("unrelated-homebrew", "monsters", 0, 3)
+    mover.state.template = mover.state.template.model_copy(
+        update={"source_allows_hostile_overlap": True},
+    )
+    target = _member("target", "heroes", 3, 3)
+    wall = [_member(f"wall-{y}", "heroes", 1, y) for y in range(8)]
+    members = [mover, target, *wall]
+    result = plan_movement_toward(
+        MAP, mover, target, members, 5, 30,
+        source_allows_hostile_overlap=mover.state.template.source_allows_hostile_overlap,
+    )
+    assert result.goal_reachable
+    assert (result.path[-1].x, result.path[-1].y) == (2, 3)
+    assert result.movement_cost_ft == 15
