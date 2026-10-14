@@ -664,8 +664,6 @@ def _suppression_zone(action: Any) -> dict[str, Any]:
             "resourceId": action.resource_id, "resourceCost": action.resource_cost,
             "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
         }
-        if action.center_on_source:
-            row["centerOnSource"] = True
         if action.source:
             row["source"] = action.source
         return row
@@ -695,6 +693,8 @@ def _save_zone(action: Any) -> dict[str, Any]:
             "resourceId": action.resource_id, "resourceCost": action.resource_cost,
             "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
         }
+        if action.center_on_source:
+            row["centerOnSource"] = True
         if action.source:
             row["source"] = action.source
         return row
