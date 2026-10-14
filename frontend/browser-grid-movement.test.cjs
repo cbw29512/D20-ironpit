@@ -144,4 +144,22 @@ assert.equal(
   true,
 );
 
+
+const passageMover = member("passage-mover", "monsters", 0, 3);
+const passageTarget = member("passage-target", "heroes", 3, 3);
+const passageWall = Array.from({ length: 8 }, (_, y) => member(`wall-${y}`, "heroes", 1, y));
+const passageMembers = [passageMover, passageTarget, ...passageWall];
+assert.equal(M.canPassThrough(passageMover, passageWall[3]), false);
+assert.equal(M.canPassThrough(passageMover, passageWall[3], true), true);
+assert.equal(
+  M.movementStepCostFt(map, passageMover, { x: 1, y: 3 }, passageMembers, null, null, true),
+  10,
+);
+const inaccessible = M.planToward(map, passageMover, passageTarget, passageMembers, 5, 30);
+const passable = M.planToward(map, passageMover, passageTarget, passageMembers, 5, 30, null, false, true);
+assert.equal(inaccessible.goal_reachable, false);
+assert.equal(passable.goal_reachable, true);
+assert.ok(passable.path.some((square) => square.x === 1));
+assert.deepEqual(passable.path.at(-1), { x: 2, y: 3 });
+
 console.log("Grid movement browser parity regressions passed.");

@@ -23,7 +23,7 @@
     }
   }
 
-  function affordableLegalPrefix(map, mover, members, route, movementBudgetFt, barriers = null) {
+  function affordableLegalPrefix(map, mover, members, route, movementBudgetFt, barriers = null, sourceAllowsHostileOverlap = false) {
     try {
       const api = support();
       let spent = 0;
@@ -32,7 +32,7 @@
       let origin = api.position(mover);
       for (let index = 0; index < route.length; index += 1) {
         const destination = route[index];
-        const stepCost = api.movementStepCostFt(map, mover, destination, members, origin, barriers);
+        const stepCost = api.movementStepCostFt(map, mover, destination, members, origin, barriers, null, sourceAllowsHostileOverlap);
         if (stepCost == null) {
           throw new Error(`Path search returned an illegal step at ${destination.x},${destination.y}.`);
         }
@@ -54,6 +54,7 @@
 
   function planToward(
     map, mover, target, members, desiredDistanceFt, movementBudgetFt, barriers = null, allowLeaveMelee = false,
+    sourceAllowsHostileOverlap = false,
   ) {
     try {
       if (desiredDistanceFt < 0 || movementBudgetFt < 0) {
@@ -77,6 +78,7 @@
         plannedDistanceFt,
         helpers,
         barriers,
+        sourceAllowsHostileOverlap,
       );
       const targetPosition = api.position(target);
       const routeGoalPosition = route.length ? route[route.length - 1] : api.position(mover);
@@ -86,7 +88,7 @@
         targetPosition,
         target.state.template.size,
       );
-      const prefix = affordableLegalPrefix(map, mover, members, route, movementBudgetFt, barriers);
+      const prefix = affordableLegalPrefix(map, mover, members, route, movementBudgetFt, barriers, sourceAllowsHostileOverlap);
       const finalPosition = prefix.path.length ? prefix.path[prefix.path.length - 1] : api.position(mover);
       const finalDistance = api.geometry().footprintDistanceFt(
         finalPosition,
@@ -110,9 +112,9 @@
     }
   }
 
-  function canPassThrough(mover, occupant) {
+  function canPassThrough(mover, occupant, sourceAllowsHostileOverlap = false) {
     try {
-      return support().canPassThrough(mover, occupant);
+      return support().canPassThrough(mover, occupant, sourceAllowsHostileOverlap);
     } catch (error) {
       console.error("Failed browser passage proxy", { mover: mover.combatant_id, error });
       throw error;
@@ -128,9 +130,9 @@
     }
   }
 
-  function movementStepCostFt(map, mover, destination, members, origin = null, barriers = null) {
+  function movementStepCostFt(map, mover, destination, members, origin = null, barriers = null, sourceAllowsHostileOverlap = false) {
     try {
-      return support().movementStepCostFt(map, mover, destination, members, origin, barriers);
+      return support().movementStepCostFt(map, mover, destination, members, origin, barriers, null, sourceAllowsHostileOverlap);
     } catch (error) {
       console.error("Failed browser movement-cost proxy", { mover: mover.combatant_id, error });
       throw error;
