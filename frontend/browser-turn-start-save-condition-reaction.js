@@ -33,12 +33,15 @@
         if (!reaction || !eligible(reactor, target, reaction)) continue;
         const resolver = SAVES()?.resolveSavingThrow;
         if (!resolver) throw new Error("Universal saving throws are required for turn-start reactions.");
+        // Validate effect support before spending a limited combat resource.
+        // A failed save must never leave a spent Reaction without its effect.
+        const timedApply = TIMED()?.apply;
+        if (!timedApply) throw new Error("Universal timed conditions are required for turn-start reactions.");
         E().spend(reactor.state, "reaction");
         const outcome = resolver(target.state, reaction.saveAbility, reaction.saveDc);
         const applied = [];
         if (!outcome.succeeded) {
-          if (!TIMED()?.apply) throw new Error("Universal timed conditions are required for turn-start reactions.");
-          const conditionApplied = TIMED().apply(
+          const conditionApplied = timedApply(
             target.state,
             reaction.conditionId,
             reactor.combatant_id,
