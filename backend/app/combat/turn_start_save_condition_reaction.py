@@ -23,7 +23,12 @@ def _eligible(
     try:
         if not is_available(reactor.state, "reaction"):
             return False
-        if not target.state.is_alive or target.state.is_dead or reactor.state.is_dead:
+        # Harmful save-condition Reactions are never chosen against a live ally.
+        if reactor.side == target.side:
+            return False
+        if not reactor.state.is_alive or reactor.state.is_dead:
+            return False
+        if not target.state.is_alive or target.state.is_dead:
             return False
         if condition_is_immune(target.state, reaction.condition_id):
             return False
