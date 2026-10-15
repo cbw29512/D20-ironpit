@@ -57,6 +57,43 @@ assert.equal(replay.permanentPassiveStates(passiveMember, {})[0].active, false, 
 passiveMember.state.template.ruleset = "2014";
 assert.equal(replay.permanentPassiveStates(passiveMember, {})[0].active, false, "Edition does not change passive display semantics.");
 
+
+let sunlightPresent = false;
+window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS = {
+  inside: (member, setup, contextId) =>
+    Boolean(setup) && member.combatant_id === "environment-test"
+    && contextId === "sunlight" && sunlightPresent,
+};
+const environmentMember = {
+  combatant_id: "environment-test",
+  state: {
+    template: {
+      environment_context_reactions: [{
+        source_id: "synthetic-weakness", source_name: "Sunlight Weakness",
+        context_id: "sunlight",
+        disadvantage_on: ["attack_rolls", "ability_checks", "saving_throws"],
+      }],
+      passive_modifier_grants: [],
+    },
+    active_effect_ids: [],
+    active_modifiers: [],
+  },
+};
+const inactiveWeakness = replay.permanentPassiveStates(environmentMember, {});
+assert.deepEqual(inactiveWeakness, [{
+  id: "synthetic-weakness",
+  label: "Sunlight Weakness",
+  lane: "debuff",
+  active: false,
+  explanation: "Source-owned permanent environmental weakness.",
+}]);
+sunlightPresent = true;
+assert.equal(replay.permanentPassiveStates(environmentMember, {})[0].active, true);
+sunlightPresent = false;
+assert.deepEqual(replay.permanentPassiveStates(environmentMember, {}), inactiveWeakness);
+assert.deepEqual(environmentMember.state.active_effect_ids, [],
+  "Exposure transitions must not create or remove a timed debuff.");
+
 for (const name of ["browser-defensive-modifier-rules.js", "browser-condition-immunity.js", "browser-timed-conditions.js"]) {
   vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 }

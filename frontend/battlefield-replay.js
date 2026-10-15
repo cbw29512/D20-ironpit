@@ -50,6 +50,20 @@
           result.push({ id, active: enabled, explanation: "Source-owned permanent combat modifier." });
         }
       }
+      // Environmental weaknesses are permanent card traits, not transient
+      // timed conditions. Their activation is a live context predicate.
+      for (const reaction of member.state.template.environment_context_reactions || []) {
+        if (!(reaction.disadvantage_on || []).length) continue;
+        const runtime = window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS;
+        if (!runtime?.inside) throw new Error("Permanent environment debuff requires context runtime.");
+        result.push({
+          id: reaction.source_id,
+          label: reaction.source_name,
+          lane: "debuff",
+          active: runtime.inside(member, setup, reaction.context_id),
+          explanation: "Source-owned permanent environmental weakness.",
+        });
+      }
       return result;
     } catch (error) {
       console.error("Failed to project permanent passive card states", { combatantId: member?.combatant_id, error });
@@ -102,12 +116,18 @@
       });
       for (const passive of permanent) {
         const badge = existing.get(passive.id) || document.createElement("span");
-        badge.className = `buff-badge passive-badge${passive.active ? "" : " is-inactive"}`;
+        badge.className = `${kind === "debuff" ? "debuff-badge" : "buff-badge"} passive-badge${passive.active ? "" : " is-inactive"}`;
         badge.dataset.effect = passive.id;
-        badge.textContent = passive.id.toUpperCase();
+        badge.textContent = String(passive.label || passive.id).toUpperCase();
         badge.title = `${passive.explanation} Currently ${passive.active ? "active" : "inactive"}.`;
         badge.setAttribute("aria-label", badge.title);
         badges.push(badge);
+      }
+      // Transient condition updates must not remove permanent passives.
+      if (!permanent.length) {
+        for (const badge of existing.values()) {
+          if (badge.classList.contains("passive-badge")) badges.push(badge);
+        }
       }
       rack.replaceChildren(...badges);
     } catch (error) {
@@ -118,10 +138,14 @@
 
   function renderStateLanes(node, state, permanent = []) {
     if (!node) return;
-    const lanes = classifyStatusLanes(state); renderLane(node, ".card-buffs", lanes.buffs, "buff", permanent);
-    renderLane(node, ".card-debuffs", lanes.debuffs, "debuff");
-    node.classList.toggle("has-buff", lanes.buffs.length > 0 || permanent.some((item) => item.active) || Boolean(state.concentration));
-    node.classList.toggle("has-debuff", lanes.debuffs.length > 0); node.classList.toggle("has-condition", lanes.debuffs.length > 0);
+    const lanes = classifyStatusLanes(state);
+    const buffs = permanent.filter((item) => item.lane !== "debuff");
+    const debuffs = permanent.filter((item) => item.lane === "debuff");
+    renderLane(node, ".card-buffs", lanes.buffs, "buff", buffs);
+    renderLane(node, ".card-debuffs", lanes.debuffs, "debuff", debuffs);
+    node.classList.toggle("has-buff", lanes.buffs.length > 0 || buffs.some((item) => item.active) || Boolean(state.concentration));
+    node.classList.toggle("has-debuff", lanes.debuffs.length > 0 || debuffs.some((item) => item.active));
+    node.classList.toggle("has-condition", lanes.debuffs.length > 0);
   }
 
   function conditions(node, added = [], removed = []) {
