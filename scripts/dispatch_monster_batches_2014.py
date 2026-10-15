@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 from collections import defaultdict
+from itertools import combinations
 import json
 import logging
 from pathlib import Path
@@ -62,6 +63,45 @@ def rank_batches(state):
         raise
 
 
+
+def rank_composite_batches(state, max_families=3, top=8):
+    """Find the smallest reusable mechanic bundles with the greatest possible admission yield.
+
+    A projected admission is counted only when *all* remaining blockers for that
+    monster are covered. No policy-only blocker can be optimized away.
+    """
+    try:
+        if max_families < 1 or top < 1:
+            raise ValueError("Composite batch limits must be positive.")
+        blocked = state["blocked"]
+        families = sorted({
+            family for row in blocked.values() for family in row["blockers"]
+            if family not in POLICY_ONLY
+        })
+        plans = []
+        for size in range(1, min(max_families, len(families)) + 1):
+            for bundle in combinations(families, size):
+                kinds = set(bundle)
+                unlocked = sorted(mid for mid, row in blocked.items()
+                                  if row["blockers"] and set(row["blockers"]) <= kinds)
+                if not unlocked:
+                    continue
+                touched = sorted(mid for mid, row in blocked.items()
+                                 if set(row["blockers"]) & kinds)
+                plans.append({"families": list(bundle),
+                              "projected_admissions": len(unlocked),
+                              "potential_monster_ids": unlocked,
+                              "affected_monsters": len(touched)})
+        return sorted(plans, key=lambda row: (
+            -row["projected_admissions"] / len(row["families"]),
+            -row["projected_admissions"], len(row["families"]),
+            -row["affected_monsters"], row["families"],
+        ))[:top]
+    except Exception:
+        logger.exception("Failed to rank composite monster blocker bundles.")
+        raise
+
+
 def compare(before, after):
     """Never equate a hypothetical batch with resolved source obligations."""
     try:
@@ -88,13 +128,17 @@ def main():
     parser.add_argument("--snapshot", type=Path, help="Write current classification JSON for next merge comparison.")
     parser.add_argument("--compare", type=Path, help="Compare an earlier snapshot to current classification.")
     parser.add_argument("--top", type=int, default=8)
+    parser.add_argument("--max-families", type=int, default=3)
     parser.add_argument("--fail-on-regression", action="store_true")
     args = parser.parse_args()
     if args.top < 1:
         parser.error("--top must be positive")
+    if args.max_families < 1 or args.max_families > 3:
+        parser.error("--max-families must be between 1 and 3")
     state = current_state()
     report = {"total": state["total"], "admitted": state["admitted"],
               "blocked": len(state["blocked"]), "next_batches": rank_batches(state)[:args.top],
+              "composite_batches": rank_composite_batches(state, args.max_families, args.top),
               "notes": "Candidate counts are not certified completions; implement, test both runtimes, regenerate and merge."}
     if args.compare:
         before = json.loads(args.compare.read_text(encoding="utf-8"))
