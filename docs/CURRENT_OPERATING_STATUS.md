@@ -1,6 +1,6 @@
 # Current operating status
 
-Updated 2026-10-12. Latest merged whole-monster promotion: Invisible Stalker [PR #754](https://github.com/cbw29512/D20-ironpit/pull/754), squash `9909139c12b0bdf690a9c312c7b28933a90fa4e2`. All five checks succeeded on exact PR head `518449075869c77140cc7c965af145b9c5e23ab6`. Production Netlify remains locked.
+Updated 2026-10-15. **Knight Leadership** source-bound via universal `TimedFriendlyRollBonusAura` on [PR #875](https://github.com/cbw29512/D20-ironpit/pull/875): 2014 source admission **223/327; blocked 104** (from 222/105). Stone Giant done; Chain Devil Unnerving Mask on main. Earlier snapshot:  Latest merged whole-monster promotion: Invisible Stalker [PR #754](https://github.com/cbw29512/D20-ironpit/pull/754), squash `9909139c12b0bdf690a9c312c7b28933a90fa4e2`. All five checks succeeded on exact PR head `518449075869c77140cc7c965af145b9c5e23ab6`. Production Netlify remains locked.
 
 **AUTHORITATIVE CURRENT CURSOR:** [2014 monster ability work queue](MONSTER_ABILITY_WORK_QUEUE.md). **GENERATOR-OWNED REMAINING BLOCKERS:** [2014 blocker list](MONSTER_BLOCKERS_2014.md). **MECHANIC LOOKUP:** [universal inventory](UNIVERSAL_MECHANIC_INVENTORY.md). Older PR titles, this file's dated snapshots, and chat memories are not certified evidence.
 

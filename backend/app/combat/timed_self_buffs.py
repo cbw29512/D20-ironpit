@@ -89,6 +89,7 @@ def resolve_timed_self_buff(
             or action.saving_throw_advantage_grants
             or action.movement_mode_grants
             or action.friendly_save_advantage_aura is not None
+            or action.friendly_roll_bonus_aura is not None
             or action.friendly_cover_aura is not None
             or action.friendly_weapon_damage_aura is not None
             or action.friendly_recovery_aura is not None

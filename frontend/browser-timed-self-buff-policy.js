@@ -28,6 +28,19 @@
           && stateRuntime.distance(member, target) <= recovery.radius_ft
           && target.state.current_hp <= 0);
       }
+      const bonus = action.friendlyRollBonusAura;
+      if (bonus) {
+        if (!setup) return false;
+        const st = window.IRON_PIT_BROWSER_STATE, cr = window.IRON_PIT_BROWSER_CONDITION_RULES;
+        return ((member.side === "heroes" ? setup.heroes : setup.monsters) || []).some((target) => {
+          if (target.state.is_dead || !target.state.is_alive) return false;
+          if (target.combatant_id === member.combatant_id && !bonus.includes_source) return false;
+          const d = st.distance(member, target);
+          if (d > bonus.radius_ft) return false;
+          if (bonus.requires_hearing && cr.has(target.state, "deafened")) return false;
+          return !bonus.requires_source_sight || cr.canSee(member.state, target.state, d);
+        });
+      }
       const aura = action.friendlySaveAdvantageAura;
       if (!aura) return true;
       if (aura.all_saves || aura.attacks_against_disadvantage) return false;
@@ -71,6 +84,7 @@
       || (action.movementModeGrants || []).length
       || action.friendlySaveAdvantageAura
       || action.friendlyCoverAura
+      || action.friendlyRollBonusAura
       || action.friendlyWeaponDamageAura
       || action.friendlyRecoveryAura
       || action.hostileStartTurnConditionAura

@@ -14,7 +14,7 @@ from app.domain.friendly_combat_auras import (
 )
 from app.domain.timed_aura_components import (
     TimedEmanationDamage, TimedHostileConditionAura,
-    TimedFriendlyCoverAura, TimedFriendlySaveAura,
+    TimedFriendlyCoverAura, TimedFriendlySaveAura, TimedFriendlyRollBonusAura,
 )
 from app.domain.progression import SavingThrowAdvantageGrant
 from app.domain.movement import MovementModeGrant
@@ -57,6 +57,7 @@ class TimedSelfBuffAction(BaseModel):
     movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
     friendly_save_advantage_aura: TimedFriendlySaveAura | None = None
     friendly_cover_aura: TimedFriendlyCoverAura | None = None
+    friendly_roll_bonus_aura: TimedFriendlyRollBonusAura | None = None
     friendly_weapon_damage_aura: TimedFriendlyWeaponDamageAura | None = None
     friendly_recovery_aura: TimedFriendlyRecoveryAura | None = None
     hostile_start_turn_condition_aura: TimedHostileConditionAura | None = None
@@ -88,7 +89,7 @@ class TimedSelfBuffAction(BaseModel):
                     raise ValueError("Passive condition auras cannot own activation resources or a source timer.")
                 if any((self.condition_ids, self.damage_resistances,
                     self.debuff_counters, self.saving_throw_advantage_grants, self.movement_mode_grants,
-                    self.friendly_cover_aura,
+                    self.friendly_cover_aura, self.friendly_roll_bonus_aura,
                     self.friendly_weapon_damage_aura, self.friendly_recovery_aura,
                     self.start_turn_emanation_damage, self.emitted_environment_contexts,
                     self.spell_save_dc_bonus, self.spell_attack_advantage, self.modifier_effects)):
@@ -139,6 +140,7 @@ class TimedSelfBuffAction(BaseModel):
                 or self.movement_mode_grants
                 or self.friendly_save_advantage_aura is not None
                 or self.friendly_cover_aura is not None
+                or self.friendly_roll_bonus_aura is not None
                 or self.friendly_weapon_damage_aura is not None
                 or self.friendly_recovery_aura is not None
                 or self.hostile_start_turn_condition_aura is not None

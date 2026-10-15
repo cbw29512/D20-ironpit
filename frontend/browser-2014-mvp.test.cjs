@@ -13,7 +13,7 @@ const deterministicDice = (seed = 2014) => {
 };
 
 assert.equal(window.IRON_PIT_2014_MVP_READY, true, "2014 browser test roster must be loaded");
-assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 222);
+assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 223);
 const pudding2014 = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-black-pudding"];
 assert.ok(pudding2014, "Source-complete Pseudopod must make Black Pudding playable");
 const pseudopod2014 = pudding2014.attacks.find((attack) => attack.id === "2014-black-pudding-pseudopod");
@@ -121,3 +121,7 @@ assert.throws(
 );
 
 console.log("Certified 2014 Fighter, Berserker, Thief, Open Hand Monk, Devotion Paladin, and Life Cleric roster checks passed.");
+// Leadership / TimedFriendlyRollBonusAura parity runs in isolated processes (own window globals).
+for (const args of [["--test", "browser-friendly-roll-bonus-auras.test.cjs"], ["browser-knight-leadership-2014.test.cjs"]]) {
+  require("node:child_process").execFileSync(process.execPath, args, { cwd: __dirname, stdio: "inherit" });
+}

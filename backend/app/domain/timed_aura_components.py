@@ -108,3 +108,26 @@ class TimedFriendlySaveAura(BaseModel):
         except Exception:
             logger.exception("Failed friendly save-aura schema validation.")
             raise
+
+class TimedFriendlyRollBonusAura(BaseModel):
+    """Source-linked, nonspell ally bonus dice; recipients are evaluated dynamically."""
+
+    radius_ft: int = Field(ge=1, le=120)
+    requires_hearing: bool = False
+    requires_source_sight: bool = False
+    includes_source: bool = True
+    stack_group: str | None = Field(default=None, min_length=1, max_length=60)
+    attack_dice_count: int = Field(default=0, ge=0, le=10)
+    attack_dice_size: int = Field(default=4, ge=2, le=100)
+    save_dice_count: int = Field(default=0, ge=0, le=10)
+    save_dice_size: int = Field(default=4, ge=2, le=100)
+
+    @model_validator(mode="after")
+    def validate_roll_bonus(self) -> "TimedFriendlyRollBonusAura":
+        try:
+            if not (self.attack_dice_count or self.save_dice_count):
+                raise ValueError("Friendly roll-bonus aura requires attack or saving-throw bonus dice.")
+            return self
+        except Exception:
+            logger.exception("Friendly roll-bonus aura schema validation failed.")
+            raise

@@ -36,10 +36,8 @@ def test_parry_stays_bound_when_other_source_blockers_are_resolved() -> None:
         assert supports_parry_reaction_2014(monster) is True
         blockers = basic_blockers_2014(monster)
         assert "source:reaction" not in blockers
+        assert blockers == ()  # Knight Leadership is now source-bound (TimedFriendlyRollBonusAura).
         if monster_id == "bandit-captain":
-            assert blockers == ()
             template = compile_combatant(adapt_basic_monster_2014(monster))
             assert template.parry_reaction.ac_bonus == 2
             assert [len(v.slots) for v in template.attack_action.variants] == [3, 2]
-        else:
-            assert blockers  # Knight still needs Leadership; Parry does not hide it.
