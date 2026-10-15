@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 75 |
+| `source:trait` | 74 |
 | `source:extra-action` | 57 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |
@@ -34,7 +34,7 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**11** monsters have exactly one remaining blocker category.
+**12** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
@@ -43,6 +43,7 @@ the underlying ability is already implemented or trivial.
 | `source:trait` | Basilisk, Medusa | 2 |
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
+| `attack:incomplete` | Shadow | 1 |
 | `attack:none` | Sea Horse | 1 |
 
 ## Every blocked monster
@@ -130,7 +131,7 @@ the underlying ability is already implemented or trivial.
 | Salamander | attack:complex | — |
 | Sea Hag | source:extra-action, source:trait | Horrific Appearance |
 | Sea Horse | attack:none | — |
-| Shadow | attack:incomplete, source:trait | Sunlight Weakness |
+| Shadow | attack:incomplete | — |
 | Shambling Mound | mechanic:swallow, multiattack:complex, source:extra-action | — |
 | Shield Guardian | source:reaction, source:trait | Bound, Spell Storing |
 | Shrieker | attack:none, source:reaction | — |
