@@ -5883,7 +5883,7 @@
       "source:extra-action": 59,
       "source:legendary": 9,
       "source:reaction": 3,
-      "source:trait": 74
+      "source:trait": 75
     },
     "unresolved_printed_abilities": [
       {
@@ -6166,6 +6166,13 @@
           "Weretiger"
         ],
         "printed_name": "Pounce (Tiger or Hybrid Form Only)"
+      },
+      {
+        "demand_count": 1,
+        "monsters": [
+          "Aboleth"
+        ],
+        "printed_name": "Probing Telepathy"
       },
       {
         "demand_count": 1,

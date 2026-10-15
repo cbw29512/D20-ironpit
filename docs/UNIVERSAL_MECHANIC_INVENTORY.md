@@ -468,6 +468,7 @@ Blocked monsters: **106**. These are grouped by printed ability name so the rost
 | Ooze Cube | Gelatinous Cube | 1 |
 | Petrifying Gaze | Basilisk, Medusa | 2 |
 | Pounce (Tiger or Hybrid Form Only) | Weretiger | 1 |
+| Probing Telepathy | Aboleth | 1 |
 | Reactive | Marilith | 1 |
 | Reactive Heads | Hydra | 1 |
 | Reflective Carapace | Tarrasque | 1 |
@@ -488,7 +489,7 @@ Blocked monsters: **106**. These are grouped by printed ability name so the rost
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 74 |
+| `source:trait` | 75 |
 | `source:extra-action` | 59 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |

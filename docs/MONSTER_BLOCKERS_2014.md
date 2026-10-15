@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 74 |
+| `source:trait` | 75 |
 | `source:extra-action` | 59 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |
@@ -50,7 +50,7 @@ the underlying ability is already implemented or trivial.
 
 | Monster | Remaining blockers | Unbound traits |
 |---|---|---|
-| Aboleth | attack:incomplete, mechanic:legendary, source:extra-action, source:legendary | — |
+| Aboleth | attack:incomplete, mechanic:legendary, source:extra-action, source:legendary, source:trait | Probing Telepathy |
 | Acolyte | mechanic:spellcasting, source:trait | Spellcasting |
 | Air Elemental | mechanic:recharge, source:extra-action, source:trait | Air Form |
 | Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Inscrutable, Spellcasting |
