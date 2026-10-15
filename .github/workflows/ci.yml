@@ -107,7 +107,7 @@ jobs:
         run: python scripts/report_capability_yield.py
       - name: Verify and report recursive monster batches
         run: |
-          pytest -q scripts/test_dispatch_monster_batches_2014.py
+          PYTHONPATH=. pytest -q scripts/test_dispatch_monster_batches_2014.py
           python scripts/dispatch_monster_batches_2014.py --top 8 --max-families 3
       - name: Prepare static browser package
         run: |
