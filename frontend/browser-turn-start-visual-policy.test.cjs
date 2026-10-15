@@ -60,3 +60,18 @@ assert.equal(P.resolveStage(generic, 12, "slowed"), "clear");
 
 // No explicit choice flag is needed for the approved automatic tactical policy.
 assert.equal(P.decide(basilisk, { ...facts }), "averted");
+
+const invalidRuleValues = ["", " ", null, 42, true];
+const originalError = console.error;
+console.error = () => {};
+try {
+  for (const value of invalidRuleValues) {
+    assert.throws(() => P.validate({ ...basilisk, saveAbility: value }));
+    assert.throws(() => P.validate({ ...basilisk, initialDebuff: value }));
+    assert.throws(() => P.validate({ ...basilisk, terminalDebuff: value }));
+  }
+  assert.throws(() => P.validate({ ...basilisk, initialDebuff: "petrified" }));
+} finally {
+  console.error = originalError;
+}
+assert.equal(P.resolveStage({ ...basilisk, saveAbility: "constitution" }, 1), "restrained");

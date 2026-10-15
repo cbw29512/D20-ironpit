@@ -6,14 +6,18 @@
       if (!rule || typeof rule.sourceId !== 'string' || !rule.sourceId.trim() || typeof rule.sourceName !== 'string' || !rule.sourceName.trim()) throw new Error("Visual source identity required.");
       if (!Number.isInteger(rule.rangeFt) || rule.rangeFt <= 0) throw new Error("Invalid visual range.");
       if (!Number.isInteger(rule.saveDc) || rule.saveDc < 1 || rule.saveDc > 40) throw new Error("Invalid visual DC.");
-      if (!["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"].includes(rule.saveAbility || "constitution")) {
+      if (!["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"].includes(rule.saveAbility === undefined ? "constitution" : rule.saveAbility)) {
         throw new Error("Invalid visual save ability.");
       }
       if (rule.immediatePetrificationMargin != null &&
           (!Number.isInteger(rule.immediatePetrificationMargin) || rule.immediatePetrificationMargin <= 0)) {
         throw new Error("Invalid immediate failure margin.");
       }
-      if ((rule.initialDebuff || "restrained") === (rule.terminalDebuff || "petrified")) throw new Error("Distinct debuff stages required.");
+      for (const key of ["initialDebuff", "terminalDebuff"]) {
+        if (rule[key] !== undefined && (typeof rule[key] !== "string" || !rule[key].trim())) throw new Error("Invalid visual debuff stage.");
+      }
+      if ((rule.initialDebuff === undefined ? "restrained" : rule.initialDebuff) ===
+          (rule.terminalDebuff === undefined ? "petrified" : rule.terminalDebuff)) throw new Error("Distinct debuff stages required.");
       return rule;
     } catch (error) {
       console.error("Invalid visual rule.", error);
@@ -44,8 +48,8 @@
     try {
       validate(rule);
       if (!Number.isInteger(saveTotal)) throw new Error("Visual save total must be an integer.");
-      const initial = rule.initialDebuff || "restrained";
-      const terminal = rule.terminalDebuff || "petrified";
+      const initial = rule.initialDebuff === undefined ? "restrained" : rule.initialDebuff;
+      const terminal = rule.terminalDebuff === undefined ? "petrified" : rule.terminalDebuff;
       if (previousStage !== null && previousStage !== initial) throw new Error("Invalid visual stage.");
       const outcome = window.IRON_PIT_BROWSER_STAGED_SAVE_DEBUFF.resolve({
         saveTotal, dc: rule.saveDc, initialEffect: initial, terminalEffect: terminal,
