@@ -127,9 +127,9 @@ Use the shared [implementation manual](docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md)
 ## Paired-edition monster certification
 
 - Keep 2014 and 2024 source data, rule text, parameters, and certification independent. A shared universal primitive may serve both editions, but one edition's values or behavior must never be copied into the other without matching source evidence.
-- Current operating priority is to catch the 2014 certified roster up to the 2024 certified count before pushing the 2024 count materially farther ahead.
+- Current operating priority is to finish source-approved 2014 monster semantic families before independent 2024 backlog expansion. Never derive priority from a frozen count in this document.
 - During catch-up, prioritize monsters that exist in both editions where the 2024 version is already RAW READY and the 2014 version is blocked, starting with the fewest/highest-yield 2014 blocker families.
-- Once the 2014 certified count reaches the 2024 certified count, process same-named monsters as an edition pair whenever practical: inspect 2014 and 2024 source side by side, identify the common reusable mechanic, then bind each edition's own parameters and timing to that primitive.
+- Process same-named monsters as an edition pair whenever practical after a 2014 semantic family is supported: inspect 2014 and 2024 source side by side, identify the common reusable mechanic, then bind each edition's own parameters and timing to that primitive.
 - When a 2014 monster is certified, immediately inspect the same 2024 monster before moving to an unrelated monster. When a 2024 monster is certified first, immediately inspect the 2014 counterpart.
 - If the two editions differ materially, preserve the difference through ruleset-specific declarative data or explicitly ruleset-scoped behavior; do not force artificial parity merely because the monster name matches.
 - A paired tranche may certify both editions only when they truly share the same mechanic family and both have full Python/browser/source evidence. If one edition still has unrelated blockers, certify the completed edition and record the remaining counterpart blockers without stalling the queue.

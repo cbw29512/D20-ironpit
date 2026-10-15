@@ -2,7 +2,7 @@
 
 Use this guide when a monster/pregen exposes a shared combat-mechanic gap or an existing primitive must be corrected.
 
-Read first: `SOUL.md`, this file, the exact source behavior exposing the gap, and current code/tests for the nearest existing primitive.
+Read first: [SOUL](../../SOUL.md), the [execution manual](../IRON_PIT_IMPLEMENTATION_PLAYBOOK.md), the exact source behavior exposing the gap, and current Python/browser code/tests for the nearest existing primitive. This page is a **mechanic catalog and engine-specific acceptance guide**, not another implementation cursor.
 
 ## Engine ownership
 
