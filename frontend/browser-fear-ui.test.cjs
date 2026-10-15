@@ -8,7 +8,9 @@ const vm = require("node:vm");
 global.window = globalThis;
 global.document = { getElementById: () => null };
 global.matchMedia = () => ({ matches: true });
-vm.runInThisContext(fs.readFileSync(path.join(__dirname, "battlefield-replay.js"), "utf8"), { filename: "battlefield-replay.js" });
+for (const file of ["battlefield-passive-states.js", "battlefield-replay.js"]) {
+  vm.runInThisContext(fs.readFileSync(path.join(__dirname, file), "utf8"), { filename: file });
+}
 
 const replay = window.IRON_PIT_BATTLEFIELD_REPLAY;
 assert.equal(replay.conditionLabel("frightened"), "😱 FEAR");
