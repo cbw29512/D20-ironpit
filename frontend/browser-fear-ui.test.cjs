@@ -89,6 +89,23 @@ assert.deepEqual(inactiveWeakness, [{
   active: false,
   explanation: "Source-owned permanent environmental weakness.",
 }]);
+// Future environmental reactions can be active buffs or non-roll debuffs;
+// their card badges must remain even when no d20 modifier is declared.
+environmentMember.state.template.environment_context_reactions.push({
+  source_id: "future-environment-ward", source_name: "Future Environment Ward",
+  context_id: "sunlight", status_lane: "buff", disadvantage_on: [],
+});
+assert.deepEqual(
+  replay.permanentPassiveStates(environmentMember, {}).map((x) => [x.lane, x.active]),
+  [["debuff", false], ["buff", false]],
+);
+sunlightPresent = true;
+assert.deepEqual(
+  replay.permanentPassiveStates(environmentMember, {}).map((x) => [x.lane, x.active]),
+  [["debuff", true], ["buff", true]],
+);
+environmentMember.state.template.environment_context_reactions.pop();
+
 sunlightPresent = true;
 assert.equal(replay.permanentPassiveStates(environmentMember, {})[0].active, true);
 sunlightPresent = false;

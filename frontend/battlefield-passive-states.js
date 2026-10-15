@@ -25,14 +25,19 @@
       // Environmental weaknesses are permanent card traits, not transient
       // timed conditions. Their activation is a live context predicate.
       for (const reaction of member.state.template.environment_context_reactions || []) {
-        if (!(reaction.disadvantage_on || []).length) continue;
+        // Display every declared permanent context reaction, including future
+        // rules that apply damage or other effects without a d20 roll.
+        const lane = reaction.status_lane || reaction.statusLane || "debuff";
+        if (lane !== "buff" && lane !== "debuff") throw new Error("Unknown permanent passive status lane.");
+        const contextId = reaction.context_id || reaction.contextId;
+        if (!contextId) throw new Error("Permanent passive requires a typed environment context.");
         const runtime = window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS;
         if (!runtime?.inside) throw new Error("Permanent environment debuff requires context runtime.");
         result.push({
           id: reaction.source_id,
           label: reaction.source_name,
-          lane: "debuff",
-          active: runtime.inside(member, setup, reaction.context_id),
+          lane,
+          active: runtime.inside(member, setup, contextId),
           explanation: "Source-owned permanent environmental weakness.",
         });
       }
