@@ -211,3 +211,16 @@ def test_full_sunlight_weakness_affects_every_d20_roll_kind_and_clears_on_exit()
         target.state, "wisdom", member=target, setup=setup,
     ) is RollMode.NORMAL
     assert target.state.template.environment_context_reactions == [sunlight_weakness_2014()]
+
+
+def test_unrelated_source_paragraph_cannot_prove_sunlight_weakness() -> None:
+    from app.content.environment_context_reactions import verified_sunlight_weakness_2014
+    from app.content.monster_source_2014 import load_monster_source_2014
+
+    shadow = next(m for m in load_monster_source_2014() if m.id == "shadow")
+    assert verified_sunlight_weakness_2014(shadow)
+    source = (shadow.source_traits or "").replace(
+        "saving throws", "unrelated words", 1,
+    ) + "<p><strong>Unrelated.</strong> saving throws</p>"
+    tampered = shadow.model_copy(update={"source_traits": source})
+    assert not verified_sunlight_weakness_2014(tampered)
