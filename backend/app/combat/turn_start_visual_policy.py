@@ -1,6 +1,7 @@
 from __future__ import annotations
 import logging
 from dataclasses import dataclass
+from app.combat.staged_save_debuff import resolve_staged_save
 
 log = logging.getLogger(__name__)
 
@@ -57,12 +58,13 @@ def resolve_visual_save_stage(rule: VisualTurnStartRule, save_total: int, previo
     try:
         if type(save_total) is not int or previous_stage not in (None, rule.initial_debuff):
             raise ValueError("Invalid save progression")
-        if save_total >= rule.save_dc:
-            return "clear"
-        if previous_stage == rule.initial_debuff:
-            return rule.terminal_debuff
-        margin = rule.immediate_petrification_margin
-        return rule.terminal_debuff if margin is not None and rule.save_dc - save_total >= margin else rule.initial_debuff
+        outcome = resolve_staged_save(
+            save_total=save_total, dc=rule.save_dc,
+            initial_effect=rule.initial_debuff, terminal_effect=rule.terminal_debuff,
+            previous_effect=previous_stage,
+            immediate_failure_margin=rule.immediate_petrification_margin,
+        )
+        return outcome if outcome is not None else "clear"
     except Exception:
         log.exception("Visual progression failed")
         raise
