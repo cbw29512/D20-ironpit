@@ -1,8 +1,7 @@
 (() => {
   "use strict";
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
-  const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
-  const P = () => window.IRON_PIT_BROWSER_TIMED_SELF_BUFF_POLICY;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS; const P = () => window.IRON_PIT_BROWSER_TIMED_SELF_BUFF_POLICY;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const active = (member, action) => P().active(member, action);
   const choose = (member, setup = null, activationTiming = "action", turnKey = null) =>
