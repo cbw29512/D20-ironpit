@@ -47,10 +47,11 @@
       const initial = rule.initialDebuff || "restrained";
       const terminal = rule.terminalDebuff || "petrified";
       if (previousStage !== null && previousStage !== initial) throw new Error("Invalid visual stage.");
-      if (saveTotal >= rule.saveDc) return "clear";
-      if (previousStage === initial) return terminal;
-      const margin = rule.immediatePetrificationMargin;
-      return margin != null && rule.saveDc - saveTotal >= margin ? terminal : initial;
+      const outcome = window.IRON_PIT_BROWSER_STAGED_SAVE_DEBUFF.resolve({
+        saveTotal, dc: rule.saveDc, initialEffect: initial, terminalEffect: terminal,
+        previousEffect: previousStage, immediateFailureMargin: rule.immediatePetrificationMargin ?? null,
+      });
+      return outcome ?? "clear";
     } catch (error) {
       console.error("Visual save progression failed.", error);
       throw error;
