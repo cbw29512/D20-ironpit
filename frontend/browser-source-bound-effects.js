@@ -23,7 +23,7 @@
         const key = `${effect.source_id}|${effect.source_effect_id || ""}`;
         if (handled.has(key)) continue;
         const source = byId.get(effect.source_id); if (!source) continue;
-        const dead = source.state.is_dead || !source.state.is_alive;
+        const dead = source.state.is_dead || !source.state.is_alive || source.state.current_hp <= 0;
         const incapacitated = C().incapacitated(source.state);
         if ((effect.ends_if_source_dead && dead) || (effect.ends_if_source_incapacitated && incapacitated)) {
           handled.add(key); T().removeGroup(target.state, effect);
