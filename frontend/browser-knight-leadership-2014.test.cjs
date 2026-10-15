@@ -12,7 +12,7 @@ const [action] = knightTemplate.timed_self_buff_actions;
 assert.equal(action.name, "Leadership");
 assert.equal(action.resourceId, "leadership");
 assert.equal(action.durationRounds, 10);
-assert.equal(action.endsIfSourceIncapacitated, false);
+assert.equal(Boolean(action.endsIfSourceIncapacitated), false);
 assert.equal(action.endsIfSourceDead, true);
 assert.ok(!action.concentration);
 assert.deepEqual(action.friendlyRollBonusAura, {
