@@ -44,6 +44,7 @@ def concentration_grant_only(action: TimedSelfBuffAction) -> bool:
             or action.saving_throw_advantage_grants
             or action.movement_mode_grants
             or action.friendly_save_advantage_aura
+            or action.friendly_roll_bonus_aura is not None
             or action.friendly_cover_aura
             or action.friendly_weapon_damage_aura
             or action.friendly_recovery_aura
