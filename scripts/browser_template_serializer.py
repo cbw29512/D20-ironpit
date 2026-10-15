@@ -697,6 +697,8 @@ def _save_zone(action: Any) -> dict[str, Any]:
             row["targetPolicy"] = action.target_policy
         if action.save_context != "spell":
             row["saveContext"] = action.save_context
+        if action.failed_save_suppress_reactions:
+            row["failedSaveSuppressReactions"] = True
         if action.center_on_source:
             row["centerOnSource"] = True
         if action.source:
