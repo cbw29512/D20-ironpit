@@ -7,6 +7,13 @@ from __future__ import annotations
 
 import logging
 
+from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
+from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
+from app.content.monster_attack_source_corrections_2014 import corrected_attack_range_2014
+from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
+from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
+from app.domain.weapons import DamageType
+
 from app.content.monster_conditional_damage_defenses_2014 import remaining_unsupported_defense_text_2014
 from app.content.monster_healing_2014 import healing_actions_2014, supports_healing_2014
 from app.content.monster_innate_support_2014 import innate_spell_resources_2014, supports_innate_spellcasting_2014
@@ -17,6 +24,7 @@ from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_zero_hp_prevention_2014 import supports_zero_hp_prevention_2014
 
 logger = logging.getLogger(__name__)
+_DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 
 
 def mechanic_family_blockers_2014(
@@ -63,4 +71,30 @@ def mechanic_family_blockers_2014(
         return [f"mechanic:{name}" for name, value in families.items() if value]
     except Exception:
         logger.exception("Failed mechanic-family classification for %s.", monster.name)
+        raise
+
+
+def attack_blockers_2014(monster: SourceMonster2014) -> list[str]:
+    """Classify complete attack semantics using only card data."""
+    try:
+        blockers: list[str] = []
+        for source_attack in monster.attacks:
+            attack = source_completed_mixed_attack_2014(monster, source_attack)
+            if not attack.source_complete:
+                blockers.append("attack:incomplete")
+            if attack.damage.type not in _DAMAGE_TYPES:
+                blockers.append("attack:damage-type")
+            profile = corrected_charge_profile_2014(monster, attack)
+            if attack.charge_profile is not None and not supports_charge_profile_2014(profile):
+                blockers.append("attack:complex")
+                continue
+            if not supports_basic_attack_effects_2014(attack):
+                blockers.append("attack:complex")
+            if attack.kind == "ranged":
+                normal_range_ft, long_range_ft = corrected_attack_range_2014(monster, attack)
+                if normal_range_ft is None or long_range_ft is None:
+                    blockers.append("attack:range")
+        return blockers
+    except Exception:
+        logger.exception("Failed attack classification for %s.", monster.name)
         raise
