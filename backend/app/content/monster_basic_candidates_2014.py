@@ -87,8 +87,12 @@ def supports_parry_reaction_2014(monster: SourceMonster2014) -> bool:
     except Exception:
         logger.exception("Failed to classify 2014 Parry support for %s.", monster.name)
         raise
-def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
-    extras = unsupported_source_actions_2014(monster)
+def _source_name_blockers(
+    monster: SourceMonster2014, *, recharge_supported: bool,
+) -> list[str]:
+    extras = unsupported_source_actions_2014(
+        monster, recharge_supported=recharge_supported,
+    )
     allowed_extras = (
         healing_action_names_2014(monster)
         | innate_spell_names_2014(monster)
@@ -147,7 +151,9 @@ def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
         blockers.append("attack:none")
     blockers.extend(_attack_blockers(monster))
     blockers.extend(multiattack_blockers_2014(monster))
-    blockers.extend(_source_name_blockers(monster))
+    # One source-classification decision feeds both action and resource checks.
+    recharge_supported = supports_recharge_rules_2014(monster)
+    blockers.extend(_source_name_blockers(monster, recharge_supported=recharge_supported))
     bound_limited = set()
     if supports_healing_2014(monster):
         from app.content.monster_healing_2014 import healing_actions_2014
@@ -182,7 +188,7 @@ def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
         ),
         "recharge": (
             monster.action_recharges or monster.rest_recharge_action_ids
-        ) if not supports_recharge_rules_2014(monster) else {},
+        ) if not recharge_supported else {},
     }
     blockers.extend(f"mechanic:{name}" for name, value in families.items() if value)
     return tuple(sorted(set(blockers)))
