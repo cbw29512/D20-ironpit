@@ -19,6 +19,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_informational_trait_proofs_2014 import verified_nonactionable_information_2014
 
 logger = logging.getLogger(__name__)
 
@@ -85,6 +86,8 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             next_heading = remainder.find("<strong>")
             clause = (remainder[:next_heading] if next_heading >= 0 else remainder).casefold()
             return all(token in clause for token in additional_inert_clauses[trait_name])
+        if verified_nonactionable_information_2014(monster, trait_name):
+            return True
         if trait_name != "Faultless Tracker":
             return False
         clauses = (
