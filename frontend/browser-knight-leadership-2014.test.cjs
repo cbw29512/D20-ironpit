@@ -12,11 +12,11 @@ const [action] = knightTemplate.timed_self_buff_actions;
 assert.equal(action.name, "Leadership");
 assert.equal(action.resourceId, "leadership");
 assert.equal(action.durationRounds, 10);
-assert.equal(action.endsIfSourceIncapacitated, true);
+assert.equal(action.endsIfSourceIncapacitated, false);
 assert.equal(action.endsIfSourceDead, true);
 assert.ok(!action.concentration);
 assert.deepEqual(action.friendlyRollBonusAura, {
-  attack_dice_count: 1, attack_dice_size: 4, includes_source: false, radius_ft: 30,
+  attack_dice_count: 1, attack_dice_size: 4, includes_source: true, radius_ft: 30,
   requires_hearing: true, requires_source_sight: true, save_dice_count: 1, save_dice_size: 4,
   stack_group: "leadership",
 });
@@ -60,7 +60,7 @@ sync();
 assert.deepEqual(kinds(ally), [], "source must see the recipient");
 for (const k of [knight, knight2]) {
   k.state.active_effect_ids.splice(k.state.active_effect_ids.indexOf("blinded"), 1);
-  k.state.active_effect_ids.push("incapacitated");
+  k.state.current_hp = 0;
 }
 window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS.cleanupDisabledSources(setup);
 sync();
