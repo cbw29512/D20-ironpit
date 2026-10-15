@@ -98,6 +98,7 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
         | _ARENA_NEUTRAL_MIND_ACTION_LABELS
         | ({"animate chains"} if supports_animate_chains_arena_unavailable_2014(monster) else set())
         | ({"change shape"} if approved_inert_change_shape_2014(monster) else set())
+        | _leadership_labels(monster)
         | {
             action_label_from_name(zone.name)
             for zone in (fetid_cloud_zone_2014(monster),)
@@ -118,6 +119,9 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
     if monster.legendary_action_names and not supports_legendary_actions_2014(monster):
         blockers.append("source:legendary")
     return blockers
+def _leadership_labels(monster: SourceMonster2014) -> set[str]:
+    from app.content.monster_leadership_2014 import leadership_labels_2014
+    return leadership_labels_2014(monster)
 def action_label_from_name(name: str) -> str:
     from app.content.monster_save_capabilities_2014 import action_label_2014
     return action_label_2014(name).split(" (", 1)[0]

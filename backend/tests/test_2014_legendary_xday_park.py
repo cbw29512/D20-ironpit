@@ -46,7 +46,6 @@ def test_supported_xday_action_is_admitted_while_other_remainders_stay_parked() 
     assert any(zone.name == "Fetid Cloud (1/Day)" for zone in compiled.persistent_save_zone_actions)
     assert any(resource.id == "fetid-cloud" and resource.max_uses == 1 for resource in compiled.resources)
     parked = {
-        "knight": "source:extra-action",
         "aboleth": "source:legendary",
         "androsphinx": "mechanic:spellcasting",
         "gynosphinx": "mechanic:spellcasting",

@@ -101,6 +101,9 @@ def _friendly_aura_is_relevant(
                 and target.state.current_hp <= 0
                 for target in allies
             )
+        if action.friendly_roll_bonus_aura is not None:
+            from app.combat.friendly_roll_bonus_auras import roll_bonus_aura_relevant
+            return roll_bonus_aura_relevant(member, action.friendly_roll_bonus_aura, setup)
         aura = action.friendly_save_advantage_aura
         if aura is None:
             return True
@@ -120,10 +123,7 @@ def _friendly_aura_is_relevant(
                 return True
         return False
     except Exception as exc:
-        logger.exception(
-            "Timed friendly save-aura relevance check failed for %s.",
-            member.combatant_id,
-        )
+        logger.exception("Timed friendly save-aura relevance check failed for %s.", member.combatant_id)
         raise RuntimeError("Timed self-buff relevance could not be evaluated.") from exc
 
 

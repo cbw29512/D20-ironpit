@@ -22,7 +22,10 @@
             for (const target of side) {
               if (target.state.is_dead || !target.state.is_alive) continue;
               if (source.combatant_id === target.combatant_id && !aura.includes_source) continue;
-              if (state.distance(source, target) > aura.radius_ft) continue;
+              const distance = state.distance(source, target);
+              if (distance > aura.radius_ft) continue;
+              if (aura.requires_source_sight &&
+                  !window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(s, target.state, distance)) continue;
               if (aura.requires_hearing &&
                   (window.IRON_PIT_BROWSER_CONDITION_RULES?.has(target.state, "deafened")
                    || target.state.active_effect_ids?.includes("deafened"))) continue;
@@ -31,8 +34,11 @@
                 ["saving-throw-bonus-die", aura.save_dice_count, aura.save_dice_size],
               ]) {
                 if (!count) continue;
+                const owner = aura.stack_group ? `group:${aura.stack_group}` : `${source.combatant_id}:${action.id}`;
+                const id = `${PREFIX}${owner}:${target.combatant_id}:${kind}`;
+                if (target.state.active_modifiers.some((item) => item.id === id)) continue;
                 modifiers.add(target.state, {
-                  id: `${PREFIX}${source.combatant_id}:${action.id}:${target.combatant_id}:${kind}`,
+                  id,
                   source_id: source.combatant_id, source_effect_id: action.id,
                   source_name: action.name, kind, dice_count: count, dice_size: size,
                 });

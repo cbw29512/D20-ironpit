@@ -36,6 +36,7 @@ from app.content.monster_innate_support_2014 import (
 from app.content.monster_legendary_bindings_2014 import legendary_action_options_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014, fetid_cloud_resources_2014
+from app.content.monster_leadership_2014 import leadership_actions_2014, leadership_resources_2014
 from app.content.monster_senses_2014 import special_senses_2014, bounded_blindsight_2014
 from app.content.monster_spell_slot_resources_2014 import monster_spell_slot_resources_2014
 from app.content.monster_multiattack_2014 import multiattack_2014
@@ -107,7 +108,6 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         kwargs["projectile"] = "projectile"
     return AttackCapabilityDefinition(**kwargs)
 
-
 def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     blockers = basic_blockers_2014(monster)
     if blockers:
@@ -117,7 +117,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     attacks = [_attack(monster, attack) for attack in monster.attacks]
     blindsight_ft, truesight_ft = special_senses_2014(monster)
     bounded = bounded_blindsight_2014(monster)
-    resources = [*save_resources_2014(monster), *fetid_cloud_resources_2014(monster)]
+    resources = [*save_resources_2014(monster), *fetid_cloud_resources_2014(monster), *leadership_resources_2014(monster)]
     resources.extend(healing_resources_2014(monster))
     resources.extend(innate_spell_resources_2014(monster))
     resources.extend(monster_spell_slot_resources_2014(monster))
@@ -167,7 +167,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
             *heated_body_retaliation_2014(monster),
             *corrosive_form_retaliation_2014(monster),
             *condition_auras_from_source(monster.source_traits, "2014"),
-            *contextual_save_defenses_2014(monster)[0]],
+            *contextual_save_defenses_2014(monster)[0], *leadership_actions_2014(monster)],
         healing_actions=healing_actions_2014(monster),
         condition_removal_actions=innate_condition_removal_2014(monster),
         terminal_effect_tags=terminal_effect_tags_2014(monster),
