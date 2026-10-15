@@ -79,16 +79,13 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "detect magic",
                 "isn't itself magical",
             ))
-        # Source-verified noncombat information and absent-environment clauses.
+        # Source-verified absent-environment clauses.
         # Keep these separate from any attack or active combat-effect resolver.
-        if trait_name in {"Probing Telepathy", "Water Susceptibility", "Sunlight Weakness"}:
+        if trait_name in {"Water Susceptibility", "Sunlight Weakness"}:
             from app.content.monster_source_sections_2014 import source_sections_2014
 
             printed = source_sections_2014(source).get(trait_name, "").casefold()
             phrases = {
-                "Probing Telepathy": (
-                    "communicates telepathically", "greatest desires", "can see the creature",
-                ),
                 "Water Susceptibility": (
                     "moves in water", "gallon of water", "1 cold damage",
                 ),
