@@ -6,6 +6,7 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
+  const D = () => window.IRON_PIT_DICE;
 
   function choose(member, setup) {
     if (!E().available(member.state, "action")) return null;
@@ -46,12 +47,15 @@
       ? R().spend(member.state, action.resourceId, action.resourceCost || 1)
       : null;
     E().spend(member.state, action.actionCost || "action");
+    const shared = action.damageComponents?.length
+      ? action.damageComponents.map((spec) => D().rollMany(spec.diceCount, spec.diceSize))
+      : action.damageDiceCount ? D().rollMany(action.damageDiceCount, action.damageDiceSize) : null;
     const events = [];
     for (const target of targets) {
       const distance = F().saveDistance(member, target, action.range);
       const event = V().resolveAction(sequence, round, member, target, action, distance, {
         setup, spendAction: false, checkResource: false,
-        spendResource: false, resourceRemaining: remaining,
+        spendResource: false, resourceRemaining: remaining, sharedDamageRolls: shared,
       });
       if (DR()) {
         const chain = DR().chain(sequence + 1, round, member, event, setup);

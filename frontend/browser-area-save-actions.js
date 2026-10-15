@@ -137,7 +137,9 @@
         remaining = member.state.resources[action.resourceId];
       }
       E().spend(member.state, actionCost);
-      const shared = action.damageDiceCount ? D().rollMany(action.damageDiceCount, action.damageDiceSize) : null;
+      const shared = action.damageComponents?.length
+        ? action.damageComponents.map((spec) => D().rollMany(spec.diceCount, spec.diceSize))
+        : action.damageDiceCount ? D().rollMany(action.damageDiceCount, action.damageDiceSize) : null;
       const events = [];
       for (const id of placement.targetIds) {
         const target = memberById(setup, id);

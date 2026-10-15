@@ -55,7 +55,16 @@ def resolve_save_targets(
             raise ValueError(f"{action.name} resource is unavailable.")
         remaining = spend_action_resource(actor.state, action)
         states = [member.state for member in [*setup.heroes, *setup.monsters]]
-        shared = [dice.roll(action.damage_dice_size) for _ in range(action.damage_dice_count)] if action.damage_dice_count else None
+        # A single source Action rolls each typed component once; all
+        # targets independently save and apply their own damage defenses.
+        shared = (
+            [[dice.roll(spec.dice_size) for _ in range(spec.dice_count)]
+             for spec in action.damage_components]
+            if action.damage_components else (
+                [dice.roll(action.damage_dice_size) for _ in range(action.damage_dice_count)]
+                if action.damage_dice_count else None
+            )
+        )
         events: list[BattleEvent] = []
         for target in targets:
             chain, sequence = resolve_save_event_chain(
