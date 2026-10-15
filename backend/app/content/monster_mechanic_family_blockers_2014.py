@@ -32,11 +32,14 @@ def mechanic_family_blockers_2014(
 ) -> list[str]:
     """Compose the existing source blockers without adding engine behavior."""
     try:
+        # Classify immutable card capabilities only once per source monster.
+        healing_supported = supports_healing_2014(monster)
+        innate_supported = supports_innate_spellcasting_2014(monster)
         bound_limited = set()
-        if supports_healing_2014(monster):
+        if healing_supported:
             # Reuse the source's existing healing resource binding
             bound_limited.update(action.resource_id for action in healing_actions_2014(monster) if action.resource_id)
-        if supports_innate_spellcasting_2014(monster):
+        if innate_supported:
             # Reuse the source's existing innate resource binding
             bound_limited.update(item.id for item in innate_spell_resources_2014(monster))
         unbound_limited = {
@@ -48,11 +51,11 @@ def mechanic_family_blockers_2014(
             "save-action": unsupported_save_actions_2014(monster),
             "swallow": monster.swallow_actions,
             "death-trigger": monster.death_trigger_actions,
-            "healing": monster.healing_actions if not supports_healing_2014(monster) else None,
+            "healing": monster.healing_actions if not healing_supported else None,
             "limited-use": unbound_limited,
             "spellcasting": (
                 None if (
-                    supports_innate_spellcasting_2014(monster) and not monster.spellcasting
+                    innate_supported and not monster.spellcasting
                 ) else (monster.innate_spellcasting or monster.spellcasting)
             ),
             "zero-hp": monster.zero_hp_prevention if not supports_zero_hp_prevention_2014(monster) else None,
