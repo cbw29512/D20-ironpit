@@ -44,6 +44,7 @@ Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §7, Attack natural 1, §10.1, §20
 - **Debuffs are checked at the start of the creature's turn** before it acts.
 - **Calm blocks new fear.** 2014 Calm Emotions uses the shared charm/frighten suppression / condition-immunity primitives. While that suppression is active, a new Frightened copy does not land.
 - **Cards are immutable.** Fight mutation belongs only to temporary combat state.
+- **All printed monster limited-use resources are fight-scoped.** A printed `1/Day`, `3/Day`, or `recharges after a short/long rest` label sets its allowed uses **within one Iron Pit fight**; it never creates real-world day/rest tracking between battles. On each new fight, construct fresh combat state from the immutable monster template with its complete printed resource allowance. Do not replenish a spent limited-use resource during the same fight unless an independently supported combat recharge trigger explicitly does so. This applies to every monster, not just Dretch; keep original printed source/card wording unchanged.
 - **Match end resets all effects.**
 - **Printed 24-hour immunities are match-scoped.** They last for the rest of the current fight only. Do not simulate calendar 24 hours and do not persist immunity across fights.
 
