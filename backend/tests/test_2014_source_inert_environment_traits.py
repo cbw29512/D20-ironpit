@@ -25,3 +25,23 @@ def test_source_proven_arena_inert_trait(monster_id: str, trait: str) -> None:
     })
     assert not verified_arena_inert_trait_2014(tampered, trait)
 
+
+@pytest.mark.parametrize("monster_id,trait,clause", [
+    ("fire-elemental", "Water Susceptibility", "gallon of water"),
+    ("shadow", "Sunlight Weakness", "while in sunlight"),
+])
+def test_environment_exclusion_requires_actual_source_semantics(
+    monster_id: str, trait: str, clause: str,
+) -> None:
+    import re
+
+    monster = next(m for m in load_monster_source_2014() if m.id == monster_id)
+    source = monster.source_traits or ""
+    damaged, replacements = re.subn(
+        re.escape(clause), "missing environmental trigger", source,
+        count=1, flags=re.IGNORECASE,
+    )
+    assert replacements == 1
+    altered = monster.model_copy(update={"source_traits": damaged})
+    assert not verified_arena_inert_trait_2014(altered, trait)
+    assert trait in unsupported_traits_2014(altered)
