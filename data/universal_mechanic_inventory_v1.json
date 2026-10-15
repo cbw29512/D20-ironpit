@@ -5883,7 +5883,7 @@
       "source:extra-action": 59,
       "source:legendary": 9,
       "source:reaction": 3,
-      "source:trait": 76
+      "source:trait": 75
     },
     "unresolved_printed_abilities": [
       {
@@ -6186,13 +6186,6 @@
           "Rust Monster"
         ],
         "printed_name": "Rust Metal"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Chuul"
-        ],
-        "printed_name": "Sense Magic"
       },
       {
         "demand_count": 11,
