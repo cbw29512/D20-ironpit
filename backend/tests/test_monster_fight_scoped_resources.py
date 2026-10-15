@@ -32,3 +32,24 @@ def test_printed_one_day_monster_ability_refills_between_fights() -> None:
     assert next(r for r in fight_two.resources if r.id == resource.id).current_uses == 1
     assert fight_one.resources is not fight_two.resources
     assert fight_one.template is template and fight_two.template is template
+
+
+def test_every_certified_monster_resource_is_fight_scoped_in_both_editions() -> None:
+    from app.content.roster import build_arena_roster
+
+    for edition in ("2014", "2024"):
+        templates = build_arena_roster(edition).monsters
+        assert templates, f"No certified monsters in {edition}"
+        for template in templates:
+            # All resources are initialized from immutable definitions,
+            # including monster-specific printed daily/rest ability uses.
+            first = build_combatant_state(template)
+            for resource in first.resources:
+                assert resource.current_uses == resource.max_uses
+                if resource.max_uses:
+                    assert spend_resource(first, resource.id) == resource.max_uses - 1
+            second = build_combatant_state(template)
+            assert [(r.id, r.current_uses) for r in second.resources] == [
+                (definition.id, definition.max_uses) for definition in template.resources
+            ]
+            assert first.resources is not second.resources
