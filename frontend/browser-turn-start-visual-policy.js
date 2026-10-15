@@ -3,7 +3,7 @@
 
   function validate(rule) {
     try {
-      if (!rule || !rule.sourceId || !rule.sourceName) throw new Error("Visual source identity required.");
+      if (!rule || typeof rule.sourceId !== 'string' || !rule.sourceId.trim() || typeof rule.sourceName !== 'string' || !rule.sourceName.trim()) throw new Error("Visual source identity required.");
       if (!Number.isInteger(rule.rangeFt) || rule.rangeFt <= 0) throw new Error("Invalid visual range.");
       if (!Number.isInteger(rule.saveDc) || rule.saveDc < 1 || rule.saveDc > 40) throw new Error("Invalid visual DC.");
       if (!["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"].includes(rule.saveAbility || "constitution")) {
@@ -26,9 +26,9 @@
       if (!facts || !Number.isInteger(facts.distanceFt) || facts.distanceFt < 0) {
         throw new Error("Invalid visual distance.");
       }
-      if (facts.distanceFt > rule.rangeFt || !facts.sourceActive || !facts.targetActive ||
+      for (const key of ["sourceActive", "targetActive", "sourceSeesTarget", "targetSeesSource", "targetImmune", "targetSurprised", "avertsEyes"]) {\n        if (typeof facts[key] !== "boolean") throw new Error("Visual eligibility flags must be booleans.");\n      }\n      if (facts.distanceFt > rule.rangeFt || !facts.sourceActive || !facts.targetActive ||
           !facts.sourceSeesTarget || !facts.targetSeesSource || facts.targetImmune) return "ineligible";
-      if (facts.mayAvertEyes === true && !facts.targetSurprised) return "averted";
+      if (facts.avertsEyes === true && !facts.targetSurprised) return "averted";
       return "save_required";
     } catch (error) {
       console.error("Visual eligibility failed.", error);

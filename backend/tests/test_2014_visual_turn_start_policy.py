@@ -11,14 +11,14 @@ MEDUSA = VisualTurnStartRule("source-2", "Petrifying Gaze", 30, 14, immediate_pe
 def _facts(**overrides):
     defaults = dict(distance_ft=15, source_active=True, target_active=True,
                     source_sees_target=True, target_sees_source=True,
-                    target_immune=False, target_surprised=False, may_avert_eyes=True)
+                    target_immune=False, target_surprised=False, averts_eyes=True)
     defaults.update(overrides)
     return VisualTurnStartFacts(**defaults)
 
 @pytest.mark.parametrize("rule", [BASILISK, MEDUSA])
-def test_automatic_aversion_and_surprise(rule):
+def test_explicit_aversion_choice_and_surprise(rule):
     assert decide_visual_turn_start(rule, _facts()) == "averted"
-    assert decide_visual_turn_start(rule, _facts(may_avert_eyes=False)) == "save_required"
+    assert decide_visual_turn_start(rule, _facts(averts_eyes=False)) == "save_required"
     assert decide_visual_turn_start(rule, _facts(target_surprised=True)) == "save_required"
 
 @pytest.mark.parametrize("override", [

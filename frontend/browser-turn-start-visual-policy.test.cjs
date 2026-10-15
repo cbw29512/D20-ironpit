@@ -9,10 +9,10 @@ const P = window.IRON_PIT_BROWSER_TURN_START_VISUAL_POLICY;
 const basilisk = { sourceId: "source-1", sourceName: "Petrifying Gaze", rangeFt: 30, saveDc: 12 };
 const medusa = { sourceId: "source-2", sourceName: "Petrifying Gaze", rangeFt: 30, saveDc: 14, immediatePetrificationMargin: 5 };
 const facts = { distanceFt: 15, sourceActive: true, targetActive: true, sourceSeesTarget: true,
-  targetSeesSource: true, targetImmune: false, targetSurprised: false, mayAvertEyes: true };
+  targetSeesSource: true, targetImmune: false, targetSurprised: false, avertsEyes: true };
 for (const rule of [basilisk, medusa]) {
   assert.equal(P.decide(rule, facts), "averted");
-  assert.equal(P.decide(rule, { ...facts, mayAvertEyes: false }), "save_required");
+  assert.equal(P.decide(rule, { ...facts, avertsEyes: false }), "save_required");
   assert.equal(P.decide(rule, { ...facts, targetSurprised: true }), "save_required");
   for (const patch of [{ distanceFt: 31 }, { sourceActive: false }, { targetActive: false },
     { sourceSeesTarget: false }, { targetSeesSource: false }, { targetImmune: true }]) {
