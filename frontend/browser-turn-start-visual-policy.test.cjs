@@ -4,6 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
 global.window = globalThis;
+vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-staged-save-debuff.js"), "utf8"));
 vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-turn-start-visual-policy.js"), "utf8"));
 const P = window.IRON_PIT_BROWSER_TURN_START_VISUAL_POLICY;
 const basilisk = { sourceId: "source-1", sourceName: "Petrifying Gaze", rangeFt: 30, saveDc: 12 };
