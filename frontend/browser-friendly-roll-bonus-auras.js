@@ -21,14 +21,14 @@
               effect.source_id === source.combatant_id && effect.source_effect_id === action.id)) continue;
             for (const target of side) {
               if (target.state.is_dead || !target.state.is_alive) continue;
-              if (source.combatant_id === target.combatant_id && !aura.includesSource) continue;
-              if (state.distance(source, target) > aura.radiusFt) continue;
-              if (aura.requiresHearing &&
+              if (source.combatant_id === target.combatant_id && !aura.includes_source) continue;
+              if (state.distance(source, target) > aura.radius_ft) continue;
+              if (aura.requires_hearing &&
                   (window.IRON_PIT_BROWSER_CONDITION_RULES?.has(target.state, "deafened")
                    || target.state.active_effect_ids?.includes("deafened"))) continue;
               for (const [kind, count, size] of [
-                ["attack-roll-bonus-die", aura.attackDiceCount, aura.attackDiceSize],
-                ["saving-throw-bonus-die", aura.saveDiceCount, aura.saveDiceSize],
+                ["attack-roll-bonus-die", aura.attack_dice_count, aura.attack_dice_size],
+                ["saving-throw-bonus-die", aura.save_dice_count, aura.save_dice_size],
               ]) {
                 if (!count) continue;
                 modifiers.add(target.state, {
