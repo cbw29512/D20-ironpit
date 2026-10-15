@@ -19,7 +19,7 @@ def environment_context_reactions_2014(
     """Bind only source-proven permanent environmental passives."""
     try:
         reactions = []
-        if _SUNLIGHT_SENSITIVITY in monster.trait_names:
+        if "Sunlight Sensitivity" in monster.trait_names:
             reactions.append(sunlight_sensitivity_2014())
         if verified_sunlight_weakness_2014(monster):
             reactions.append(sunlight_weakness_2014())
