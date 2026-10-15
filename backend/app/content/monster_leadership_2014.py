@@ -46,10 +46,10 @@ def leadership_actions_2014(monster: SourceMonster2014) -> list[TimedSelfBuffAct
                 resource_id=slug, resource_cost=1, duration_rounds=10,
                 friendly_roll_bonus_aura=TimedFriendlyRollBonusAura(
                     radius_ft=30, requires_hearing=True, requires_source_sight=True,
-                    includes_source=False, stack_group=slug,
+                    includes_source=True, stack_group=slug,
                     attack_dice_count=1, attack_dice_size=4, save_dice_count=1, save_dice_size=4,
                 ),
-                concentration=False, ends_if_source_incapacitated=True, ends_if_source_dead=True,
+                concentration=False, ends_if_source_incapacitated=False, ends_if_source_dead=True,
                 animation="buff",
             ))
         return actions
