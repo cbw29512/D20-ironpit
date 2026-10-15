@@ -7,10 +7,10 @@ from __future__ import annotations
 
 import logging
 import re
+from html import unescape
 
 from app.combat.turn_start_visual_policy import VisualTurnStartRule
 from app.content.monster_source_2014 import SourceMonster2014
-from app.content.monster_source_sections_2014 import source_sections_2014
 
 logger = logging.getLogger(__name__)
 _GAZE = "Petrifying Gaze"
@@ -18,15 +18,37 @@ _DC = re.compile(r"\bdc\s+(\d+)\s+constitution\b", re.IGNORECASE)
 _RANGE = re.compile(r"\bwithin\s+(\d+)\s+feet\b", re.IGNORECASE)
 
 
+
+def _source_clause_with_continuations(source: str, heading: str) -> str:
+    """Read a printed section and adjacent unheaded paragraphs only.
+
+    Unrelated named traits cannot satisfy missing source-proof clauses.
+    This selects source content, never combat behavior.
+    """
+    try:
+        active = False
+        paragraphs: list[str] = []
+        for raw in re.findall(r"<p\\b[^>]*>(.*?)</p>", source, flags=re.I | re.S):
+            named = re.search(r"<strong\\b[^>]*>(.*?)</strong>", raw, flags=re.I | re.S)
+            if named:
+                label = unescape(re.sub(r"<[^>]+>", "", named.group(1))).strip().rstrip(".")
+                if active:
+                    break
+                active = label == heading
+            if active:
+                paragraphs.append(" ".join(unescape(re.sub(r"<[^>]+>", "", raw)).split()))
+        return " ".join(paragraphs).casefold()
+    except Exception:
+        logger.exception("Failed reading 2014 source clause %s", heading)
+        raise
+
 def visual_turn_start_rule_2014(monster: SourceMonster2014) -> VisualTurnStartRule | None:
     """Fail closed unless the actual source supports the whole visual-save policy."""
     try:
         if _GAZE not in monster.trait_names:
             return None
         source = monster.source_traits or ""
-        sections = source_sections_2014(source)
-        printed = sections.get(_GAZE, "").casefold()
-        full = source.casefold()
+        printed = _source_clause_with_continuations(source, _GAZE)
         dc = _DC.search(printed)
         distance = _RANGE.search(printed)
         required = (
@@ -34,10 +56,10 @@ def visual_turn_start_rule_2014(monster: SourceMonster2014) -> VisualTurnStartRu
             "isn't incapacitated", "saving throw",
         )
         aversion = (
-            ("avert its eyes" in full)
-            and ("can't see" in full)
-            and ("surprised" in full)
-            and ("immediately make the save" in full)
+            ("avert its eyes" in printed)
+            and ("can't see" in printed)
+            and ("surprised" in printed)
+            and ("immediately make the save" in printed)
         )
         if not (dc and distance and aversion and all(s in printed for s in required)):
             return None

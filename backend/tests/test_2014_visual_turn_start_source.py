@@ -32,3 +32,19 @@ def test_source_tampering_cannot_silently_enable_visual_rule(monster_id):
         ),
     })
     assert visual_turn_start_rule_2014(altered) is None
+
+
+@pytest.mark.parametrize("monster_id", ["basilisk", "medusa"])
+def test_unrelated_named_trait_cannot_satisfy_missing_gaze_aversion(monster_id):
+    monster = next(m for m in load_monster_source_2014() if m.id == monster_id)
+    original = monster.source_traits or ""
+    # Remove the actual aversion paragraph, then move the keywords to
+    # another named trait. A whole-source substring scan would accept it.
+    stripped = "".join("<p>" + paragraph for paragraph in original.split("<p>")[1:]
+                       if "avert its eyes" not in paragraph.casefold())
+    spoofed = stripped + (
+        "<p><strong>Unrelated Trait.</strong> A creature can avert its eyes "
+        "unless surprised, can't see the source, and must immediately make the save.</p>"
+    )
+    altered = monster.model_copy(update={"source_traits": spoofed})
+    assert visual_turn_start_rule_2014(altered) is None
