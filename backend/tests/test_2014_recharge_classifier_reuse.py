@@ -52,11 +52,12 @@ def test_direct_source_action_callers_retain_recharge_fallback():
 
 def test_explicit_false_recharge_proof_keeps_breath_weapon_blocked():
     monster = _recharging_monster()
+    expected = saves.unsupported_source_actions_2014(
+        monster, recharge_supported=False,
+    )
     with patch.object(saves, "supports_recharge_rules_2014",
                       side_effect=AssertionError("Unexpected recharge check")):
         unsupported = saves.unsupported_source_actions_2014(
             monster, recharge_supported=False,
         )
-    assert unsupported == saves.unsupported_source_actions_2014(
-        monster, recharge_supported=False,
-    )
+    assert unsupported == expected
