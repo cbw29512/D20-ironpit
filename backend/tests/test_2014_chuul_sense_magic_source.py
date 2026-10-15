@@ -72,3 +72,23 @@ def test_omitted_trait_cannot_be_auto_classified():
     except Exception:
         logger.exception("Chuul Sense Magic provenance check failed")
         raise
+
+def test_other_traits_cannot_prove_missing_sense_magic_paragraph():
+    try:
+        monster = _chuul()
+        source = monster.source_traits or ""
+        sections = source_sections_2014(source)
+        assert "Sense Magic" in sections
+        # Preserve the declared trait name, but remove the printed body.
+        # A neighboring trait must never authorize Sense Magic by accident.
+        altered = monster.model_copy(update={
+            "source_traits": source.replace(
+                "<strong>Sense Magic.</strong>",
+                "<strong>Missing Source.</strong>",
+            ),
+        })
+        assert not verified_arena_inert_trait_2014(altered, "Sense Magic")
+        assert "Sense Magic" in unsupported_traits_2014(altered)
+    except Exception:
+        logger.exception("Chuul Sense Magic source isolation failed")
+        raise
