@@ -53,6 +53,7 @@
         || (action.movementModeGrants || []).length
         || action.friendlySaveAdvantageAura
         || action.friendlyCoverAura
+        || action.friendlyRollBonusAura
         || action.friendlyWeaponDamageAura
         || action.friendlyRecoveryAura
         || action.hostileStartTurnConditionAura
