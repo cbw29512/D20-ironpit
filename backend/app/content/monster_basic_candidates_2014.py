@@ -10,6 +10,7 @@ from app.content.monster_charge_source_corrections_2014 import corrected_charge_
 from app.content.monster_healing_2014 import healing_action_names_2014
 from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014
 from app.content.monster_innate_support_2014 import innate_spell_names_2014
+from app.content.monster_legendary_bindings_2014 import supports_legendary_actions_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_mechanic_family_blockers_2014 import attack_blockers_2014, mechanic_family_blockers_2014
 from app.content.monster_rock_catching_2014 import supports_rock_catching_reaction_2014
