@@ -1,8 +1,6 @@
 """Real fight-state regression for a source-bound moving 2014 monster zone."""
 from __future__ import annotations
 
-from unittest.mock import patch
-
 import pytest
 
 from app.combat import persistent_save_zone_resolution as resolver
@@ -21,9 +19,7 @@ from app.domain.grid import GridPosition
 
 def test_dretch_cloud_cast_poison_expiry_and_resource_reset(monkeypatch) -> None:
     source = next(m for m in load_monster_source_2014() if m.id == "dretch")
-    # Compile source-bound behavior without falsely declaring whole-monster admission.
-    with patch("app.content.monster_definition_adapter_2014.basic_blockers_2014", return_value=()):
-        template = compile_combatant(adapt_basic_monster_2014(source))
+    template = compile_combatant(adapt_basic_monster_2014(source))
     assert len(template.persistent_save_zone_actions) == 1
     action = template.persistent_save_zone_actions[0]
 
