@@ -52,3 +52,8 @@ try {
 } finally {
   console.error = priorError;
 }
+
+const generic = { ...basilisk, sourceName: "Other Trigger", initialDebuff: "slowed", terminalDebuff: "stunned" };
+assert.equal(P.resolveStage(generic, 3), "slowed");
+assert.equal(P.resolveStage(generic, 3, "slowed"), "stunned");
+assert.equal(P.resolveStage(generic, 12, "slowed"), "clear");
