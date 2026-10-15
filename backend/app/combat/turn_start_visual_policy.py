@@ -40,7 +40,9 @@ def decide_visual_turn_start(rule: VisualTurnStartRule, facts: VisualTurnStartFa
     try:
         if type(facts.distance_ft) is not int or facts.distance_ft < 0:
             raise ValueError("Invalid visual distance")
-        if any(type(getattr(facts, key)) is not bool for key in ("source_active", "target_active", "source_sees_target", "target_sees_source", "target_immune", "target_surprised", "averts_eyes")):\n            raise ValueError("Visual eligibility flags must be booleans")\n        if facts.distance_ft > rule.range_ft or not all((facts.source_active, facts.target_active, facts.source_sees_target, facts.target_sees_source)) or facts.target_immune:
+        if any(type(getattr(facts, key)) is not bool for key in ("source_active", "target_active", "source_sees_target", "target_sees_source", "target_immune", "target_surprised", "averts_eyes")):
+            raise ValueError("Visual eligibility flags must be booleans")
+        if facts.distance_ft > rule.range_ft or not all((facts.source_active, facts.target_active, facts.source_sees_target, facts.target_sees_source)) or facts.target_immune:
             return "ineligible"
         return "averted" if facts.averts_eyes and not facts.target_surprised else "save_required"
     except Exception:
