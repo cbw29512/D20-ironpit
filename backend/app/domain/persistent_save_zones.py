@@ -43,6 +43,7 @@ class PersistentSaveZoneAction(BaseModel):
     failed_save_suppress_action: bool = False
     failed_save_suppress_bonus_action: bool = False
     failed_save_suppress_reactions: bool = False
+    failed_save_action_bonus_exclusive: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     expends_spell_slot: bool = False
@@ -101,6 +102,7 @@ class PersistentSaveZoneState(BaseModel):
     failed_save_suppress_action: bool = False
     failed_save_suppress_bonus_action: bool = False
     failed_save_suppress_reactions: bool = False
+    failed_save_action_bonus_exclusive: bool = False
     concentration: bool = False
     triggered_turn_keys: dict[str, str] = Field(default_factory=dict)
     animation: str = "save-zone"
