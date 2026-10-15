@@ -10,6 +10,7 @@ from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll
 from app.domain.persistent_save_zones import PersistentSaveZoneState
+from app.domain.timed_control_limits import compiled_control_limits
 from app.domain.saving_throw_context import SavingThrowContext
 
 logger = logging.getLogger(__name__)
@@ -97,6 +98,10 @@ def resolve_save_zone_trigger(
                 expires_at_start_of_source_turn=False,
                 suppress_action=zone.failed_save_suppress_action,
                 suppress_bonus_action=zone.failed_save_suppress_bonus_action,
+                suppress_reactions=zone.failed_save_suppress_reactions,
+                control_limits=compiled_control_limits(
+                    action_bonus_exclusive=zone.failed_save_action_bonus_exclusive,
+                ),
                 source_is_magical=zone.save_context != "nonmagical",
                 use_default_poison_recovery=False,
             )

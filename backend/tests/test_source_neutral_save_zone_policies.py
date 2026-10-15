@@ -46,6 +46,8 @@ def _member(identifier, side):
 def test_opt_in_policy_validation_and_browser_serialization():
     assert _action().target_policy == "enemies"
     assert _action().save_context == "spell"
+    assert not _action().failed_save_suppress_reactions
+    assert not _action().failed_save_action_bonus_exclusive
     with pytest.raises(ValidationError):
         _action(target_policy="unknown")
     with pytest.raises(ValidationError):
@@ -57,9 +59,13 @@ def test_opt_in_policy_validation_and_browser_serialization():
     from browser_template_serializer import _save_zone
     assert "targetPolicy" not in _save_zone(_action())
     assert "saveContext" not in _save_zone(_action())
+    assert "failedSaveSuppressReactions" not in _save_zone(_action())
+    assert "failedSaveActionBonusExclusive" not in _save_zone(_action())
     values = _save_zone(_action(target_policy="all", save_context="nonmagical"))
     assert values["targetPolicy"] == "all"
     assert values["saveContext"] == "nonmagical"
+    assert _save_zone(_action(failed_save_suppress_reactions=True))["failedSaveSuppressReactions"] is True
+    assert _save_zone(_action(failed_save_action_bonus_exclusive=True))["failedSaveActionBonusExclusive"] is True
 
 
 @pytest.mark.parametrize("policy,expected", [
@@ -105,10 +111,15 @@ def test_failed_nonmagical_save_transfers_provenance_to_condition(monkeypatch):
 
     monkeypatch.setattr(zone_runtime, "apply_timed_condition", apply)
     actor = _member("ally", "heroes")
-    zone = _zone(target_policy="all", save_context="nonmagical")
+    zone = _zone(
+        target_policy="all", save_context="nonmagical",
+        failed_save_suppress_reactions=True, failed_save_action_bonus_exclusive=True,
+    )
     events, _ = zone_runtime.resolve_save_zone_trigger(
         1, 1, actor, None, zone, None, "turn:ally", "start_turn",
     )
     assert events[0].applied_condition_ids == ["poisoned"]
     assert observed[0][2]["source_is_magical"] is False
     assert observed[0][2]["expires_at_start_of_source_turn"] is False
+    assert observed[0][2]["suppress_reactions"] is True
+    assert observed[0][2]["control_limits"].action_bonus_exclusive is True

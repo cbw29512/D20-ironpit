@@ -97,6 +97,8 @@
         expiryTiming: "target_turn_end",
         suppressAction: Boolean(zone.failedSaveSuppressAction),
         suppressBonusAction: Boolean(zone.failedSaveSuppressBonusAction),
+        suppressReactions: Boolean(zone.failedSaveSuppressReactions),
+        controlLimits: zone.failedSaveActionBonusExclusive ? { action_bonus_exclusive: true } : null,
         sourceIsMagical: (zone.saveContext || "spell") !== "nonmagical",
         useDefaultPoisonRecovery: false,
       });
@@ -162,6 +164,8 @@
       failedSaveDurationRounds: action.failedSaveDurationRounds || 1,
       failedSaveSuppressAction: Boolean(action.failedSaveSuppressAction),
       failedSaveSuppressBonusAction: Boolean(action.failedSaveSuppressBonusAction),
+      failedSaveSuppressReactions: Boolean(action.failedSaveSuppressReactions),
+      failedSaveActionBonusExclusive: Boolean(action.failedSaveActionBonusExclusive),
       concentration: Boolean(action.concentration), animation: action.animation || "save-zone",
       triggered_turn_keys: {},
     };

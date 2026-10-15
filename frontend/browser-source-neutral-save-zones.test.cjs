@@ -78,11 +78,15 @@ test("failed nonmagical saves retain source context when applying Poisoned", () 
   window.saveSuccess = false;
   try {
     const { fight, members } = scenario("all", "nonmagical");
+    fight.save_zones[0].failedSaveSuppressReactions = true;
+    fight.save_zones[0].failedSaveActionBonusExclusive = true;
     const result = window.IRON_PIT_BROWSER_SAVE_ZONES.resolveWindow(
       1, 1, members[1], fight, "1:ally", "start_turn",
     );
     assert.deepEqual(result.events[0].applied_condition_ids, ["poisoned"]);
     assert.equal(applied[0].options.sourceIsMagical, false);
+    assert.equal(applied[0].options.suppressReactions, true);
+    assert.equal(applied[0].options.controlLimits.action_bonus_exclusive, true);
   } finally {
     window.saveSuccess = true;
   }
@@ -96,12 +100,15 @@ test("casting preserves source policy on mutable fight zone", () => {
     actionCost: "action", castRangeFt: 0, durationRounds: 10,
     radiusFt: 10, saveAbility: "constitution", dc: 11,
     triggers: ["start_turn"], targetPolicy: "all",
-    saveContext: "nonmagical",
+    saveContext: "nonmagical", failedSaveSuppressReactions: true,
+    failedSaveActionBonusExclusive: true,
   };
   window.IRON_PIT_BROWSER_SAVE_ZONES.cast(
     1, 1, members[0], fight, action, members[0].state.position, "1:source",
   );
   assert.equal(fight.save_zones[0].targetPolicy, "all");
   assert.equal(fight.save_zones[0].saveContext, "nonmagical");
+  assert.equal(fight.save_zones[0].failedSaveSuppressReactions, true);
+  assert.equal(fight.save_zones[0].failedSaveActionBonusExclusive, true);
   assert.equal(action.targetPolicy, "all");
 });
