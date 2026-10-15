@@ -71,3 +71,10 @@ def test_missing_printed_heading_or_declared_trait_is_not_accepted(monster_id, t
     assert not verified_arena_inert_trait_2014(changed_heading, trait)
     changed_name = monster.model_copy(update={"trait_names": [name for name in monster.trait_names if name != trait]})
     assert not verified_arena_inert_trait_2014(changed_name, trait)
+
+@pytest.mark.parametrize("monster_id", ("androsphinx", "gynosphinx"))
+def test_informational_proof_never_hides_unbound_spellcasting(monster_id):
+    monster = _source(monster_id)
+    assert verified_arena_inert_trait_2014(monster, "Inscrutable")
+    assert "Spellcasting" in unsupported_traits_2014(monster)
+    assert "source:trait" in basic_blockers_2014(monster)
