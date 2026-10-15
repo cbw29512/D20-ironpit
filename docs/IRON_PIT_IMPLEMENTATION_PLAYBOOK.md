@@ -1,49 +1,36 @@
-# Iron Pit Implementation Manual
+# Iron Pit — execution manual
 
-Purpose: let a fresh AI begin productive Iron Pit work with minimal context and no guessing.
+**One process. One authority per concern. No stale progress claims.** Read [SOUL](../SOUL.md) for architecture, [document map](DOCUMENTATION_MAP.md) for document status, and the [locked rules index](IRON_PIT_LOCKED_RULES.md) only when the touched behavior needs a product decision. Exact source, current tests, generated reports and exact-head GitHub Actions determine implementation truth.
 
-## Start here
+## Start here — each session
 
-1. Read `SOUL.md`.
-2. Read `docs/CURRENT_OPERATING_STATUS.md`.
-3. Read exactly one task guide:
-   - Pregens: `docs/playbooks/PREGENS.md`
-   - Monsters: `docs/playbooks/MONSTERS.md`
-   - Universal engine: `docs/playbooks/UNIVERSAL_ENGINE.md`
-4. Read `docs/UNIVERSAL_MECHANIC_INVENTORY.md` to identify existing engine IDs and all current monster/pregen demand.
-5. Read the exact source/card and current code/tests for the mechanic being touched.
-6. Open the long contracts only when the selected guide points to them, the mechanic touches that subsystem, or something is uncertain.
+1. Fetch the exact `main` SHA, changed files and open PR heads. Inspect [subsystem ownership](TWO_AGENT_COORDINATION.md) before any edits. Don't duplicate a live PR.
+2. For monster work, start at the [canonical queue](MONSTER_ABILITY_WORK_QUEUE.md), reconcile with the [generated 2014 blockers](MONSTER_BLOCKERS_2014.md) and [mechanic inventory](UNIVERSAL_MECHANIC_INVENTORY.md). Do **not** treat dated historical tables as live counts.
+3. Select **one lane**: [Monsters](playbooks/MONSTERS.md), [Pregens](playbooks/PREGENS.md), or [Universal engine](playbooks/UNIVERSAL_ENGINE.md). Read only its precise source/card, nearest equivalent Python/browser resolver, serializer and permanent tests.
+4. Declare branch, subsystem, source baseline, expected files and one family deliverable. If another active PR owns it, reconcile that PR instead of opening a parallel implementation.
+5. Implement, verify and merge the family; measure the resulting change in exact source obligations and certified cards. Continue with the next **unblocked** family.
 
-## Core ownership rule
+## Card → universal engine contract
 
-**The universal engine owns behavior. Content owns exact source parameters.**
+An immutable card declares printed name, edition, AC/HP, DC, attack/damage dice, typed damage, target/range/area, trigger, action cost, resource, recharge, duration and exit/reset qualifiers. The engine owns attack/save rolls, conditions, typed damage defenses, healing, action economy, geometry, lifecycle and audit. **Printed names are source/log labels, never runtime behavior switches.**
 
-The engine defines what Blinded, Prone, an attack roll, a saving throw, damage, healing, resistance, recharge, movement, and similar mechanics do.
+Map the exact ability to `trigger → eligibility → action/resource → attack/check/save → ordered typed effects → fight state → expiration/reset → audit`. Search monsters **and** pregens before creating a primitive; compose existing capabilities first. Preserve 2014/2024 source separation. Unsupported outcome-changing effects fail closed; park the single blocker and keep moving. Detailed acceptance: [universal card contract](UNIVERSAL_CARD_COMBAT_CONTRACT.md).
 
-The monster/pregen/source defines the exact AC, DC, attack bonus, save ability, damage dice/type, range, duration, target count, recharge threshold, resource count, qualifiers, ruleset, and printed name.
+## One family / one certification loop
 
-Never hardcode source numbers or source identity into a universal resolver.
+1. Source-proof exact printed behavior; map immutable schema, temporary per-fight state, Python oracle, browser production resolver, serializer, logs and independent parity tests.
+2. Implement a reusable semantic family and bind every matching card. Include an unrelated synthetic-card/homebrew equivalence test for a new/widened primitive. No fake admissions or monster-specific dispatch.
+3. Run **focused** tests while editing. Remove stale helpers/imports and duplicate calculations in the touched subsystem. Re-generate the owning artifacts **once** on the intended final branch head.
+4. Require the repository's applicable 2014 Basic Roster, Hero, Paired Edition, source/generated parity, Python and browser CI gates green on the **exact same head SHA**. An intermediate-head green result is not certification.
+5. Merge, refresh actual generated blockers/inventory, and compare before/after `(monster, printed ability)` obligations and admitted monsters. Record any remaining gap in the existing queue, **not** another tracker. The production Netlify lock stays on.
 
-## Non-negotiable RAW rule
+## Verification vocabulary
 
-Iron Pit implements combat behavior exactly. The only deviations from ordinary tabletop assumptions are the explicit Iron Pit arena/environment policies already recorded in `docs/IRON_PIT_RULES_CONTRACT.md` and indexed in `docs/IRON_PIT_LOCKED_RULES.md`.
+- **Implemented:** code exists at a named commit.
+- **Tested:** the relevant checks ran on that commit.
+- **CI green:** every applicable required job completed successfully on the exact head.
+- **Source-admitted:** the generated classifier accepted the source card; not proof of every fight.
+- **Runtime certified:** independent manifests and Python/browser gates agree.
+- **Unverified:** say so explicitly; do not transfer stale PR-head evidence.
 
-Never invent, approximate, silently omit, or infer an unsupported combat mechanic.
-
-If exact behavior cannot be represented:
-
-- park the affected card/feature;
-- record the exact missing semantic or RAW question;
-- continue the rest of the current family/pass;
-- return to parked technical debt after the pass is exhausted;
-- ask Chris one precise question whenever interpretation or architecture is uncertain.
-
-Unsupported outcome-changing mechanics fail closed.
-
-## Standard implementation path
-
-`source -> decompose behavior -> inventory lookup -> search/reuse primitives -> bind source parameters -> fight state -> Python oracle -> browser parity -> regenerate inventory/artifacts -> certification`
-
-Printed names and complete source abilities belong on cards/source data and player logs. A unique monster or homebrew ability must still be created/bound correctly even when the engine has no same-named capability. Engine dispatch uses universal mechanics underneath it; only a genuinely new semantic remainder justifies adding a new reusable primitive.
-
-Repository source and permanent tests are the final implementation truth.
+Deep rules and product exceptions remain in [Iron Pit Rules Contract](IRON_PIT_RULES_CONTRACT.md), [universal combat architecture](UNIVERSAL_COMBATANT_ARCHITECTURE.md), [battlefield contract](VTT_CARD_BATTLEFIELD_CONTRACT.md), and [main action selection](MAIN_ACTION_SELECTION_CONTRACT.md). Never rewrite those decisions from a cleanup prompt.

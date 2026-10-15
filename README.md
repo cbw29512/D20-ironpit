@@ -4,6 +4,13 @@
 
 Iron Pit is a rules-first browser combat simulator. The current certified public ruleset is D&D 2024 / SRD 5.2.1. Production fights run entirely in the browser; Python remains the reference/certification oracle used by generators, audits, manifests, and CI.
 
+## Where to start
+
+- [Documentation map](docs/DOCUMENTATION_MAP.md) — what each Markdown file owns and whether it is active, generated or historical.
+- [Implementation manual](docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md) — short execution path; choose the matching lane playbook.
+- [2014 monster queue](docs/MONSTER_ABILITY_WORK_QUEUE.md) and [generated blockers](docs/MONSTER_BLOCKERS_2014.md) — actionable backlog versus current classifier truth.
+- [Universal card contract](docs/UNIVERSAL_CARD_COMBAT_CONTRACT.md) — reusable engine behavior, immutable card parameters and synthetic homebrew acceptance.
+
 ## Authoritative rules
 
 Chris-locked product rules are indexed in `docs/IRON_PIT_LOCKED_RULES.md`. Read `docs/IRON_PIT_RULES_CONTRACT.md` for the detailed product/combat contract those locks cite. Do not copy the index into a second spec.
@@ -131,4 +138,4 @@ A tranche is not complete because code exists. Exact-head CI must prove, as appl
 
 ## Current priority
 
-Finish the universal engine capabilities in `IRON_PIT_RULES_CONTRACT.md`, then use those capabilities to unlock the remaining monster catalog and canonical pregen levels in large source-audited batches. Do not increase card counts by weakening rules fidelity.
+Complete the remaining **2014 source monsters** in source-approved semantic families, improving shared engine primitives only when an exact printed behavior cannot be composed from what already exists. Bind 2024 source parameters wherever the same primitive applies. Track source admission separately from combat certification. Do not increase card counts by weakening rules fidelity.

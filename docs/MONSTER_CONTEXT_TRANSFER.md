@@ -1,3 +1,5 @@
+> **Historical handoff — NOT CURRENT STATUS (2026-10-07).** The old `191/327` and "next M-015" statements below are evidence of the past, not instructions. For live execution use [the canonical monster queue](MONSTER_ABILITY_WORK_QUEUE.md); for current admission use [generated blockers](MONSTER_BLOCKERS_2014.md); for fresh handoffs use the [context-transfer skill](../.agents/skills/iron-pit-context-transfer/SKILL.md). Do not update this file as an operating cursor.
+
 # Iron Pit context transfer
 
 generated_at: 2026-10-07, after PR #635 merge
