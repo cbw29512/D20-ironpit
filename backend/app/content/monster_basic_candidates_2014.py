@@ -17,6 +17,7 @@ from app.content.monster_legendary_bindings_2014 import supports_legendary_actio
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_rock_catching_2014 import supports_rock_catching_reaction_2014
 from app.content.monster_animate_chains_2014 import supports_animate_chains_arena_unavailable_2014
+from app.content.monster_change_shape_policy_2014 import approved_inert_change_shape_2014
 from app.content.monster_unnerving_mask_2014 import supports_unnerving_mask_reaction_2014
 from app.content.monster_multiattack_2014 import multiattack_blockers_2014
 from app.content.monster_save_capabilities_2014 import supports_recharge_rules_2014, unsupported_save_actions_2014, unsupported_source_actions_2014
@@ -95,6 +96,7 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
         | _ARENA_UNAVAILABLE_SUMMON_ACTION_LABELS
         | _ARENA_NEUTRAL_MIND_ACTION_LABELS
         | ({"animate chains"} if supports_animate_chains_arena_unavailable_2014(monster) else set())
+        | ({"change shape"} if approved_inert_change_shape_2014(monster) else set())
     )
     extras = [
         name for name in extras

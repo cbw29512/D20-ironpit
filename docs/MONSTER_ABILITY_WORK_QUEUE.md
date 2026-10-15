@@ -22,6 +22,10 @@
 - Chain Devil remains blocked by `source:reaction` in the generated file. Its Animate Chains arena-unavailable source proof and regression tests are on main; finish/reconcile **PR #851** for Unnerving Mask before claiming Chain Devil promotion. PR #850 is an older foundation; do not create a parallel resolver.
 - The older 211/327 entries further below are historical snapshots and must not be treated as the current execution cursor.
 
+### Pending eight-dragon completion batch — 2026-10-14
+
+- **PR [#863](https://github.com/cbw29512/D20-ironpit/pull/863) — 2014 metallic dragons Change Shape:** the eight adult/ancient Bronze, Gold, Silver, Brass and Copper source-approved cards are classified arena-inert **only when their complete pinned Change Shape clauses match**. The original action text stays immutable. Generated PR-branch source admission **221/327, 106 blocked**, compared with main baseline **213/327, 114 blocked**; this is not a declaration that main has shipped or the creatures' battle engine has been independently certified. New source mutation, exclusion, and roster checks plus 221-count browser/Python assertions must pass at the final PR head before merge. The obsolete conflicting PR #663 was closed rather than merged. **STATUS: CODE + GENERATED ARTIFACTS IN PR, EXACT-HEAD CERTIFICATION PENDING.**
+
 ### Active implementation cursor (do not confuse with the 124-monster planning ledger)
 
 | Order | Implementation target | Known prerequisite | State / advance rule |
