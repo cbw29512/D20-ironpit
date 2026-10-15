@@ -45,3 +45,28 @@ def test_environment_exclusion_requires_actual_source_semantics(
     altered = monster.model_copy(update={"source_traits": damaged})
     assert not verified_arena_inert_trait_2014(altered, trait)
     assert trait in unsupported_traits_2014(altered)
+
+
+@pytest.mark.parametrize("monster_id,trait,clause", [
+    ("fire-elemental", "Water Susceptibility", "gallon of water"),
+    ("shadow", "Sunlight Weakness", "while in sunlight"),
+])
+def test_environment_clause_in_another_trait_cannot_prove_this_trait(
+    monster_id: str, trait: str, clause: str,
+) -> None:
+    """Source proof must be local to the named printed section."""
+    import re
+
+    monster = next(m for m in load_monster_source_2014() if m.id == monster_id)
+    original = monster.source_traits or ""
+    removed, count = re.subn(
+        re.escape(clause), "absent environment", original,
+        count=1, flags=re.IGNORECASE,
+    )
+    assert count == 1
+    unrelated_section = f"<p><strong>Unrelated Trait.</strong> {clause}</p>"
+    altered = monster.model_copy(update={
+        "source_traits": removed + unrelated_section,
+    })
+    assert not verified_arena_inert_trait_2014(altered, trait)
+    assert trait in unsupported_traits_2014(altered)
