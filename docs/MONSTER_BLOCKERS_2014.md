@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 77 |
+| `source:trait` | 76 |
 | `source:extra-action` | 59 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |
@@ -60,7 +60,7 @@ the underlying ability is already implemented or trivial.
 | Bearded Devil | attack:incomplete, source:trait | Steadfast |
 | Behir | mechanic:recharge, source:extra-action | — |
 | Bulette | source:extra-action | — |
-| Chuul | attack:incomplete, multiattack:complex, source:extra-action, source:trait | Sense Magic |
+| Chuul | attack:incomplete, multiattack:complex, source:extra-action | — |
 | Clay Golem | mechanic:recharge, source:extra-action | — |
 | Cloaker | attack:incomplete, source:extra-action, source:trait | Damage Transfer, Light Sensitivity |
 | Cloud Giant | mechanic:spellcasting, source:trait | Innate Spellcasting |
