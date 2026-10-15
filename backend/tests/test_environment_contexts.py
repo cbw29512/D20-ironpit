@@ -156,3 +156,56 @@ def test_context_only_emission_applies_without_emanation_damage() -> None:
     begin_turn(paladin.state)
     resolve_timed_self_buff(1, 1, paladin, context_only)
     assert environment_context_disadvantage_sources(target, setup, "attack_rolls") == 1
+
+
+def test_shadow_sunlight_weakness_is_permanent_source_binding_not_neutral() -> None:
+    from app.content.environment_context_reactions import (
+        sunlight_weakness_2014, verified_sunlight_weakness_2014,
+    )
+    from app.content.monster_basic_candidates_2014 import unsupported_traits_2014
+    from app.content.monster_source_2014 import load_monster_source_2014
+    from app.content.monster_trait_bindings_2014 import (
+        bound_trait_names_2014, environment_context_reactions_2014,
+    )
+
+    source = next(m for m in load_monster_source_2014() if m.id == "shadow")
+    assert verified_sunlight_weakness_2014(source)
+    assert "Sunlight Weakness" in bound_trait_names_2014(source)
+    assert "Sunlight Weakness" not in unsupported_traits_2014(source)
+    assert environment_context_reactions_2014(source) == [sunlight_weakness_2014()]
+    altered = source.model_copy(update={
+        "source_traits": (source.source_traits or "").replace(
+            "saving throws", "unrelated words",
+        ),
+    })
+    assert not verified_sunlight_weakness_2014(altered)
+    assert "Sunlight Weakness" in unsupported_traits_2014(altered)
+
+
+def test_full_sunlight_weakness_affects_every_d20_roll_kind_and_clears_on_exit() -> None:
+    from app.content.environment_context_reactions import sunlight_weakness_2014
+    from app.combat.saving_throw_rolls import saving_throw_mode
+
+    setup, paladin, target = _setup()
+    original_template = target.state.template
+    target.state.template = original_template.model_copy(update={
+        "environment_context_reactions": [sunlight_weakness_2014()],
+    })
+    # The weakness belongs to the template permanently even with no exposure.
+    assert environment_context_disadvantage_sources(target, setup, "saving_throws") == 0
+    _activate(paladin)
+    for kind in ("attack_rolls", "ability_checks", "saving_throws"):
+        assert environment_context_disadvantage_sources(target, setup, kind) == 1
+    assert ability_check_roll_mode(target.state, member=target, setup=setup) is RollMode.DISADVANTAGE
+    assert ability_check_roll_mode(
+        target.state, member=target, setup=setup, skill="perception", relies_on_sight=False,
+    ) is RollMode.DISADVANTAGE
+    assert saving_throw_mode(
+        target.state, "wisdom", member=target, setup=setup,
+    ) is RollMode.DISADVANTAGE
+    target.position_ft = 35
+    assert environment_context_disadvantage_sources(target, setup, "saving_throws") == 0
+    assert saving_throw_mode(
+        target.state, "wisdom", member=target, setup=setup,
+    ) is RollMode.NORMAL
+    assert target.state.template.environment_context_reactions == [sunlight_weakness_2014()]

@@ -33,10 +33,14 @@ def ability_check_roll_mode(
     """Resolve ability-check roll mode including universal D20-test modifiers."""
     try:
         context_disadvantage = 0
-        if member is not None and skill == "perception" and relies_on_sight:
-            context_disadvantage = environment_context_disadvantage_sources(
-                member, setup, "sight_based_perception_checks",
+        if member is not None:
+            context_disadvantage += environment_context_disadvantage_sources(
+                member, setup, "ability_checks",
             )
+            if skill == "perception" and relies_on_sight:
+                context_disadvantage += environment_context_disadvantage_sources(
+                    member, setup, "sight_based_perception_checks",
+                )
         return resolve_roll_mode(
             advantage_sources + d20_test_advantage_sources(state),
             disadvantage_sources + context_disadvantage + timed_ability_check_disadvantage_sources(state),

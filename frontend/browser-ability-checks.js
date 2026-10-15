@@ -4,13 +4,14 @@
   function mode(state, advantageSources = 0, disadvantageSources = 0, options = {}) {
     try {
       const generic = window.IRON_PIT_BROWSER_MODIFIERS?.d20TestAdvantage(state) || 0;
-      const context = (
-        options.member && options.skill === "perception" && options.reliesOnSight
-          ? (window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS?.disadvantageSources(
-            options.member, options.setup, "sight_based_perception_checks",
-          ) || 0)
-          : 0
-      );
+      const contexts = window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS;
+      const context = options.member
+        ? (contexts?.disadvantageSources(options.member, options.setup, "ability_checks") || 0)
+          + (options.skill === "perception" && options.reliesOnSight
+            ? (contexts?.disadvantageSources(
+              options.member, options.setup, "sight_based_perception_checks",
+            ) || 0) : 0)
+        : 0;
       const timed = (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(state, options.ability) || 0)
         + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityCheckDisadvantage(state) || 0);
       return window.IRON_PIT_BROWSER_ROLLS.modeFromSources(
