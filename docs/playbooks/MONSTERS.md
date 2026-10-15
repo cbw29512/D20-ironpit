@@ -1,154 +1,38 @@
-# Monster Implementation Guide
+# Monster implementation — 2014 first
 
-Use this guide for monster traits, actions, reactions, legendary actions, defenses, recharge, conditions, and certification.
+**Operational lane only.** The [execution manual](../IRON_PIT_IMPLEMENTATION_PLAYBOOK.md) owns the universal process, [SOUL](../../SOUL.md) owns architecture, [locked rules](../IRON_PIT_LOCKED_RULES.md) own explicit Pit exceptions, and [this queue](../MONSTER_ABILITY_WORK_QUEUE.md) is the **single** source of previously approved monster decisions. This guide owns **monster-specific implementation order and throughput**.
 
-Read first: `SOUL.md`, this file, `docs/CURRENT_OPERATING_STATUS.md`, and the exact monster source for the correct edition.
+## Pick the next actionable family
 
-## What a monster is
+1. Recheck current `main`, open PR file overlap, and the [generated 2014 blocker list](../MONSTER_BLOCKERS_2014.md), not a dated queue milestone, chat recollection, or the historical 124-monster worksheet.
+2. Advance the queue's implementation cursor past decisions already coded/merged and avoid duplicating open PRs. Start with source-approved one-blocker combat monsters and equivalent abilities on multiple cards; exclude `arena:neutral` and `arena:removed` from playable admission.
+3. Read the exact 2014 source clauses, source cards, existing monster **and pregen** adapters, [universal inventory](../UNIVERSAL_MECHANIC_INVENTORY.md), Python rules reference, browser runtime and associated tests.
+4. Decompose each printed ability: `trigger/timing → eligibility/geometry → Action/Bonus Action/Reaction/resource → roll/save/automatic outcome → ordered typed damage + conditions/buffs/debuffs/movement → expiry/fight reset`.
+5. Bind exact numbers and printed names **only on immutable cards**. Reuse the common engine; combine existing primitives before expanding a primitive. Do not add monster-name/ability-name resolvers. Missing outcome-changing semantics stay blocked; park one card and proceed to another independent task.
+6. Prove one representative source, then **batch-bind every mechanically equivalent card**. For widened engine behavior, prove an unrelated synthetic/homebrew card can use the same primitive without source-name dispatch.
+7. Check focused Python/browser behavior and lifecycle. Remove duplicate logic and imports in touched files; regenerate the relevant source-owned assets and manifests once. All applicable exact-final-head CI checks must pass before merge.
+8. Recompute admitted monster IDs **and** unresolved `(monster, printed ability)` obligations from generator outputs. Update only the **existing** queue with verified implementation/PR/merge evidence and pick the next unblocked family.
 
-A monster is immutable source data plus declarative bindings to the universal engine.
+## What is not completion
 
-### Monster/source owns
+- A written RAW decision, issue, PR, foundation helper, a passing source classifier, or a self-described READY card is **not** complete combat certification.
+- An unsupported source Action or trait cannot be dropped, guessed, treated as no-op, or name-special-cased merely to grow the roster.
+- A fail-closed arena-neutral classification is not a runnable monster.
+- A green result on an older head does not certify a newer commit.
+- Source numbers/data for 2014 and 2024 must remain isolated; after 2014 binding, inspect 2024 for **semantic** reuse without copying statistics.
 
-- name, source identity and ruleset;
-- AC, HP, ability scores, size, creature type and speeds;
-- attack bonus and exact attack profile;
-- save DC and save ability;
-- damage dice, bonus and damage type;
-- range, reach, area, target count and geometry;
-- duration, recharge threshold and limited uses;
-- condition/effect parameters and qualifiers;
-- exact printed ability name for cards/logs.
+## Measure output, not motion
 
-### Universal engine owns
-
-- how attack rolls work;
-- how AC is checked;
-- how saving throws/checks work;
-- how damage/healing resolve;
-- what conditions do;
-- how resistance/immunity/vulnerability work;
-- action economy, timing, movement, recharge and other shared mechanics.
-
-**Blinded is Blinded. Prone is Prone. A saving throw is a saving throw.**  
-The monster supplies the numbers; the engine supplies the behavior.
-
-All fight-only mutation lives in temporary combat state and resets after the match.
-
-## Keep the ability pipeline moving
-
-Use [MONSTER_ABILITY_WORK_QUEUE.md](../MONSTER_ABILITY_WORK_QUEUE.md) as the **single current monster/ability/issues/remediation ledger**. Its reviewed-ability tickets and 124-monster/305-blocker table are mandatory first reads before asking for another monster decision or choosing the next implementation. Older planning worksheets, blueprint PRs, and fix trackers provide evidence, not a competing current cursor. Never re-ask an approved ability simply because implementation remains open. While one independent PR runs certification, prepare the next exact-source ability from the worksheet instead of repeating roster scans or waiting idle. A submitted PR is not a completed fix; check it off only after merge and regenerated source/browser verification. Keep generated blocker reports and mechanics inventory source-owned.
-
-## High-throughput completion lane
-
-The generated [single-blocker completion opportunities](../MONSTER_BLOCKERS_2014.md#single-blocker-completion-opportunities) are the first selection surface, not a second decision ledger. Exclude `arena:removed` and `arena:neutral` from claims of a completed combat monster. For each selected semantic family:
-
-1. Read approved decisions in the canonical queue and the exact immutable source clauses.
-2. Use source-owned parameters to bind **every matching monster in the batch**, not one foundation-only placeholder.
-3. Run focused Python and browser tests during edits; do not relax the full certification gate.
-4. Regenerate the owned source classifier, universal inventory, browser artifacts and manifest once on the final branch head. Push generator changes, then require exact-head green CI.
-5. Compare `main` before/after source-admitted IDs **and** runtime certification; report both deltas separately.
-6. If a feature cannot certify a whole monster, identify the precise remaining dependency and select the next independent one-blocker family rather than creating another tracking issue.
-
-No CI gate may be skipped, and no monster may be counted simply because a trait was classified neutral.
-
-## Hourly output scorecard
-
-Measure **verified source ability obligations resolved per actual work hour**, not PRs,
-commits, tests, or capabilities created. One obligation is one exact
-`(monster, printed ability)` that disappears from the generated unresolved
-source inventory; resolving the same ability across six monsters counts six.
-Subtract newly unresolved obligations to avoid hiding regressions.
-
-After a batch merges with green exact-head certification, compare the generated
-`data/universal_mechanic_inventory_v1.json` from its before/after commits:
+After a **merged and exact-head certified** batch, compare before/after generated universal-inventory data. One resolved obligation is one source-verified `(monster, printed ability)` no longer unresolved. Report gross/newly introduced/net resolved obligations, net new admitted monsters, separately verified runtime certification and actual elapsed hours.
 
 ```bash
 python scripts/measure_monster_throughput_2014.py --before /tmp/before-inventory.json --after data/universal_mechanic_inventory_v1.json --hours 2.5
 ```
 
-Use actual elapsed working hours, recorded at start/end; never infer hours from
-GitHub timestamps alone. Report gross and net resolved obligations/hour,
-newly unresolved obligations, net newly source-admitted monsters/hour, and
-Python/browser certification separately. A classified arena-neutral ability
-counts as resolved source obligation but **not** proof of runtime behavior.
-Do not describe this classifier score as fully certified combat abilities.
-If no source or roster progress occurred, report zero.
+The `--hours` argument is an example; use measured actual hours, never PR timestamps as a substitute. If admissions and obligations do not change, record **zero**. One clean final-head suite is preferable to repeated full CI runs on unchanged work.
 
-## Add or fix a monster
+## Examples and authority
 
-1. Read the exact source text and edition.
-2. Rewrite each combat ability without its printed name:
-   `trigger/timing -> action/resource -> attack/check/save -> damage/healing -> condition/state -> range/area/movement -> duration -> exits/reset`.
-3. Read `docs/UNIVERSAL_MECHANIC_INVENTORY.md`, then search existing **monster and pregen** implementations for every semantic piece. Use its reverse monster ability index to find every current consumer before scanning source files manually.
-4. Classify the gap:
-   - `ENGINE_EXISTS_BINDING_MISSING`
-   - `ENGINE_EXISTS_CERTIFICATION_MISSING`
-   - `ARENA_NEUTRAL`
-   - `ENGINE_TRULY_MISSING`
-5. Reuse or compose existing universal primitives.
-6. Bind only the monster's source parameters.
-   If a printed trait is already fully implied by stricter/equivalent universal rules for every legal source action, prove that equivalence from source parameters and certify the trait instead of adding duplicate runtime behavior.
-7. Prove one representative monster.
-8. Expand the same binding to the mechanically identical family.
-9. Run one focused family verification, regenerate owned outputs, then use one final-head CI pass.
-10. Regenerate the universal mechanic inventory plus blocker/tracker truth; resolved ability rows must disappear or shrink before continuing.
+A breath Action is a composition of generic recharge, area targeting, saving throws, typed effects, conditions and expiry—not a dragon-specific resolver. A petrification gaze is a source-declared passive trigger, visibility/range/aversion check, saving throw, staged condition and universal terminal Petrified rule—not a monster-name branch.
 
-## Hard blocker rule
-
-Monster work never invents engine behavior.
-
-If a printed outcome-changing mechanic is not exactly supported, **park that monster/ability and keep moving**. Record the printed name, exact missing semantic, and why it cannot certify.
-
-Never:
-
-- approximate it;
-- silently ignore it;
-- create a monster-name or ability-name resolver;
-- weaken certification;
-- strip the printed mechanic;
-- guess RAW or Chris's intent.
-
-Return to parked technical debt only after the current pass is exhausted. If RAW meaning, architecture, or equivalence is uncertain, ask Chris one precise question before implementation.
-
-## Arena/environment exceptions
-
-Use only established Iron Pit rules. Do not invent new environmental exceptions.
-
-High-level examples already established:
-
-- the Pit is hospitable to printed creature biology/movement modes;
-- hospitality does not create water, rocky terrain, or another missing environment;
-- environment-only traits stay inactive when their required context is absent;
-- standard-Pit flight is horizontal-only;
-- separate summoned/conjured combat entities are currently arena-unavailable.
-
-For any environmental edge case, read `docs/IRON_PIT_RULES_CONTRACT.md` and `docs/IRON_PIT_LOCKED_RULES.md`. Never extrapolate from this summary.
-
-## Edition rule
-
-Finish/bind 2014 first, then inspect 2024 for reuse.
-
-Different AC, DC, dice, range, duration, recharge threshold, damage amount/type, target count, or uses are **source data**, not new mechanics. Keep 2014 and 2024 source data independent even when they bind to the same engine primitive.
-
-## Example: 2014 Brass Dragon Sleep Breath
-
-Behavior:
-
-`Action -> breath Recharge 5-6 -> cone -> CON save -> failed save Unconscious -> ends on damage OR ally Action to wake -> otherwise duration expires`
-
-Reuse:
-
-- save action;
-- area targeting;
-- recharge;
-- timed condition;
-- universal `unconscious`;
-- damage-triggered expiry;
-- generic condition-removal action.
-
-Do not create a Brass Dragon or Sleep Breath resolver. Each dragon card supplies its own DC, cone, duration, recharge and printed name.
-
-## Done means
-
-Exact source behavior; no unsupported outcome-changing mechanic; immutable source; temporary/resetting fight state; universal reuse; Python/browser parity; generated outputs refreshed; blocker/tracker truth current; focused checks and exact-head CI green.
+For actual RAW interpretation use [the detailed rules contract](../IRON_PIT_RULES_CONTRACT.md); for schema/parity extension use the [engine lane](UNIVERSAL_ENGINE.md); for agent collisions use [coordination](../TWO_AGENT_COORDINATION.md). The Pit is hospitable to aquatic biology but creates neither water nor rocky terrain; no invented terrain exceptions or automatic Netlify publish.

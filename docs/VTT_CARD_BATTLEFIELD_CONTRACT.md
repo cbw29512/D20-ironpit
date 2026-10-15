@@ -100,7 +100,7 @@ A dragon's Lightning Breath is not coded as "hit two targets." It is a line with
 
 The moving battlefield representation uses the user's card art and identity.
 
-- Card/token dimensions visually scale to the creature footprint while preserving readable artwork.
+- Battlefield card/tokens fit each combatant's **single 5-foot occupied square** regardless of printed creature size; decorative artwork may be scaled visually, but never changes collision, area targeting or occupancy.
 - The token displays compact live combat data such as current HP and Temporary HP.
 - Buff/debuff/condition/resource symbols render as overlays around/on the card.
 - Overlay state is read-only presentation derived from engine state; icons never create, remove, or alter a rule effect.

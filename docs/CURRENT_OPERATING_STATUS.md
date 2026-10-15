@@ -1,6 +1,6 @@
 # Current operating status
 
-Updated 2026-10-15. This is a short navigation/status page, **not** a second monster queue or a certification manifest.
+Updated 2026-10-15. This is a short navigation/status page, **not** a second monster queue or a certification manifest. Use the [documentation map](DOCUMENTATION_MAP.md) and [execution manual](IRON_PIT_IMPLEMENTATION_PLAYBOOK.md) for the operating path.
 
 ## Authoritative sources
 
