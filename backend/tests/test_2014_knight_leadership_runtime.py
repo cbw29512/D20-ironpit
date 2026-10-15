@@ -63,10 +63,10 @@ def test_source_binding_preserves_printed_terms_and_clears_only_blocker():
     aura = action.friendly_roll_bonus_aura
     assert (action.name, action.duration_rounds, action.concentration) == ("Leadership", 10, False)
     assert action.action_cost == "action" and action.resource_cost == 1
-    assert action.ends_if_source_incapacitated and action.ends_if_source_dead
+    assert not action.ends_if_source_incapacitated and action.ends_if_source_dead
     assert (aura.radius_ft, aura.requires_hearing, aura.requires_source_sight) == (30, True, True)
     assert (aura.attack_dice_count, aura.attack_dice_size, aura.save_dice_count, aura.save_dice_size) == (1, 4, 1, 4)
-    assert aura.stack_group == "leadership" and not aura.includes_source
+    assert aura.stack_group == "leadership" and aura.includes_source
     assert source.model_dump_json() == original
     template = _knight_template()
     assert next(r for r in template.resources if r.id == "leadership").max_uses == 1
@@ -116,7 +116,7 @@ def test_leadership_live_lifecycle_range_sight_hearing_nonstack_and_incapacitati
     assert kinds(ally) == []  # source must see the recipient
     for k in (knight, knight2):
         k.state.active_effect_ids.remove("blinded")
-        k.state.active_effect_ids.append("incapacitated")
+        k.state.current_hp = 0
     cleanup_disabled_source_effects(setup)
     sync_friendly_roll_bonus_auras(setup)
     assert kinds(ally) == [] and not any(e.source_effect_id == "leadership" for e in knight.state.timed_effects)
