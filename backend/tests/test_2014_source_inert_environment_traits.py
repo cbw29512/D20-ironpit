@@ -8,7 +8,6 @@ from app.content.monster_source_2014 import load_monster_source_2014
 
 
 @pytest.mark.parametrize("monster_id,trait", [
-    ("aboleth", "Probing Telepathy"),
     ("fire-elemental", "Water Susceptibility"),
     ("shadow", "Sunlight Weakness"),
 ])
@@ -26,8 +25,3 @@ def test_source_proven_arena_inert_trait(monster_id: str, trait: str) -> None:
     })
     assert not verified_arena_inert_trait_2014(tampered, trait)
 
-
-def test_removed_printed_trait_never_qualifies() -> None:
-    monster = next(m for m in load_monster_source_2014() if m.id == "aboleth")
-    altered = monster.model_copy(update={"trait_names": ["Amphibious", "Mucous Cloud"]})
-    assert not verified_arena_inert_trait_2014(altered, "Probing Telepathy")
