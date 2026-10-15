@@ -2,33 +2,9 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 from app.combat.staged_save_debuff import resolve_staged_save
+from app.domain.visual_turn_start import VisualTurnStartRule
 
 log = logging.getLogger(__name__)
-
-@dataclass(frozen=True)
-class VisualTurnStartRule:
-    source_id: str
-    source_name: str
-    range_ft: int
-    save_dc: int
-    save_ability: str = "constitution"
-    immediate_petrification_margin: int | None = None
-    initial_debuff: str = "restrained"
-    terminal_debuff: str = "petrified"
-
-    def __post_init__(self):
-        try:
-            if (type(self.source_id) is not str or not self.source_id.strip() or type(self.source_name) is not str or not self.source_name.strip() or type(self.range_ft) is not int or self.range_ft <= 0 or type(self.save_dc) is not int or not 1 <= self.save_dc <= 40):
-                raise ValueError("Invalid visual source parameters")
-            if not self.initial_debuff or not self.terminal_debuff or self.initial_debuff == self.terminal_debuff:
-                raise ValueError("Distinct debuff stages required")
-            if self.save_ability not in ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"):
-                raise ValueError("Invalid visual saving throw")
-            if self.immediate_petrification_margin is not None and (type(self.immediate_petrification_margin) is not int or self.immediate_petrification_margin <= 0):
-                raise ValueError("Invalid immediate failure margin")
-        except ValueError:
-            log.exception("Invalid visual source configuration")
-            raise
 
 @dataclass(frozen=True)
 class VisualTurnStartFacts:

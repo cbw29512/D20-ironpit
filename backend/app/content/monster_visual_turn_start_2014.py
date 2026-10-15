@@ -9,7 +9,7 @@ import logging
 import re
 from html import unescape
 
-from app.combat.turn_start_visual_policy import VisualTurnStartRule
+from app.domain.visual_turn_start import VisualTurnStartRule
 from app.content.monster_source_2014 import SourceMonster2014
 
 logger = logging.getLogger(__name__)
