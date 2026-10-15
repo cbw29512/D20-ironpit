@@ -73,3 +73,11 @@ def test_strict_eligibility_flags(flag):
 def test_strict_save_totals(bad):
     with pytest.raises(ValueError):
         resolve_visual_save_stage(MEDUSA, bad)
+
+
+def test_visual_save_stages_are_generic_debuffs():
+    rule = VisualTurnStartRule("source", "Other Trigger", 30, 12,
+                               initial_debuff="slowed", terminal_debuff="stunned")
+    assert resolve_visual_save_stage(rule, 3) == "slowed"
+    assert resolve_visual_save_stage(rule, 3, previous_stage="slowed") == "stunned"
+    assert resolve_visual_save_stage(rule, 12, previous_stage="slowed") == "clear"
