@@ -11,14 +11,13 @@ MEDUSA = VisualTurnStartRule("source-2", "Petrifying Gaze", 30, 14, immediate_pe
 def _facts(**overrides):
     defaults = dict(distance_ft=15, source_active=True, target_active=True,
                     source_sees_target=True, target_sees_source=True,
-                    target_immune=False, target_surprised=False, averts_eyes=True)
+                    target_immune=False, target_surprised=False)
     defaults.update(overrides)
     return VisualTurnStartFacts(**defaults)
 
 @pytest.mark.parametrize("rule", [BASILISK, MEDUSA])
-def test_explicit_aversion_choice_and_surprise(rule):
+def test_automatic_aversion_and_surprise(rule):
     assert decide_visual_turn_start(rule, _facts()) == "averted"
-    assert decide_visual_turn_start(rule, _facts(averts_eyes=False)) == "save_required"
     assert decide_visual_turn_start(rule, _facts(target_surprised=True)) == "save_required"
 
 @pytest.mark.parametrize("override", [
@@ -64,7 +63,7 @@ def test_strict_distance(bad):
         decide_visual_turn_start(BASILISK, _facts(distance_ft=bad))
 
 @pytest.mark.parametrize("flag", ["source_active", "target_active", "source_sees_target",
-                                  "target_sees_source", "target_immune", "target_surprised", "averts_eyes"])
+                                  "target_sees_source", "target_immune", "target_surprised"])
 def test_strict_eligibility_flags(flag):
     with pytest.raises(ValueError):
         decide_visual_turn_start(BASILISK, _facts(**{flag: 1}))
@@ -81,3 +80,9 @@ def test_visual_save_stages_are_generic_debuffs():
     assert resolve_visual_save_stage(rule, 3) == "slowed"
     assert resolve_visual_save_stage(rule, 3, previous_stage="slowed") == "stunned"
     assert resolve_visual_save_stage(rule, 12, previous_stage="slowed") == "clear"
+
+
+def test_visual_eligibility_has_no_manual_aversion_toggle():
+    # Arena AI always averts automatically unless the observer is Surprised.
+    with pytest.raises(TypeError):
+        VisualTurnStartFacts(**{**_facts().__dict__, "averts_eyes": False})

@@ -27,12 +27,12 @@
       if (!facts || !Number.isInteger(facts.distanceFt) || facts.distanceFt < 0) {
         throw new Error("Invalid visual distance.");
       }
-      for (const key of ["sourceActive", "targetActive", "sourceSeesTarget", "targetSeesSource", "targetImmune", "targetSurprised", "avertsEyes"]) {
+      for (const key of ["sourceActive", "targetActive", "sourceSeesTarget", "targetSeesSource", "targetImmune", "targetSurprised"]) {
         if (typeof facts[key] !== "boolean") throw new Error("Visual eligibility flags must be booleans.");
       }
       if (facts.distanceFt > rule.rangeFt || !facts.sourceActive || !facts.targetActive ||
           !facts.sourceSeesTarget || !facts.targetSeesSource || facts.targetImmune) return "ineligible";
-      if (facts.avertsEyes === true && !facts.targetSurprised) return "averted";
+      if (!facts.targetSurprised) return "averted";
       return "save_required";
     } catch (error) {
       console.error("Visual eligibility failed.", error);

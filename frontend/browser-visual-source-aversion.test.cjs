@@ -24,9 +24,9 @@ assert.equal(first.length, 1);
 assert.equal(A.record(second, "observer", "source-a", 2).length, 1);
 const rule = { sourceId: "source-trait", sourceName: "Printed Name", rangeFt: 30, saveDc: 12 };
 const facts = { distanceFt: 15, sourceActive: true, targetActive: true,
-  sourceSeesTarget: true, targetImmune: false, targetSurprised: false, avertsEyes: false };
+  sourceSeesTarget: true, targetImmune: false, targetSurprised: false };
 assert.equal(P.decide(rule, { ...facts, targetSeesSource: false }), "ineligible");
-assert.equal(P.decide(rule, { ...facts, targetSeesSource: true }), "save_required");
+assert.equal(P.decide(rule, { ...facts, targetSeesSource: true }), "averted");
 const oldError = console.error;
 console.error = () => {};
 try {

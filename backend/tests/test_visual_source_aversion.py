@@ -29,11 +29,11 @@ def test_nonvisual_sense_does_not_trigger_gaze():
     rule = VisualTurnStartRule("source-trait", "Printed Name", 30, 12)
     facts = dict(distance_ft=15, source_active=True, target_active=True,
                  source_sees_target=True, target_immune=False,
-                 target_surprised=False, averts_eyes=False)
+                 target_surprised=False)
     assert decide_visual_turn_start(rule, VisualTurnStartFacts(
         **facts, target_sees_source=visual)) == "ineligible"
     assert decide_visual_turn_start(rule, VisualTurnStartFacts(
-        **facts, target_sees_source=True)) == "save_required"
+        **facts, target_sees_source=True)) == "averted"
 
 @pytest.mark.parametrize("observer,source,turn", [
     ("", "source", 1), ("observer", "", 1), (5, "source", 1),

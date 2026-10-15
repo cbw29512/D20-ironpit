@@ -10,10 +10,9 @@ const P = window.IRON_PIT_BROWSER_TURN_START_VISUAL_POLICY;
 const basilisk = { sourceId: "source-1", sourceName: "Petrifying Gaze", rangeFt: 30, saveDc: 12 };
 const medusa = { sourceId: "source-2", sourceName: "Petrifying Gaze", rangeFt: 30, saveDc: 14, immediatePetrificationMargin: 5 };
 const facts = { distanceFt: 15, sourceActive: true, targetActive: true, sourceSeesTarget: true,
-  targetSeesSource: true, targetImmune: false, targetSurprised: false, avertsEyes: true };
+  targetSeesSource: true, targetImmune: false, targetSurprised: false };
 for (const rule of [basilisk, medusa]) {
   assert.equal(P.decide(rule, facts), "averted");
-  assert.equal(P.decide(rule, { ...facts, avertsEyes: false }), "save_required");
   assert.equal(P.decide(rule, { ...facts, targetSurprised: true }), "save_required");
   for (const patch of [{ distanceFt: 31 }, { sourceActive: false }, { targetActive: false },
     { sourceSeesTarget: false }, { targetSeesSource: false }, { targetImmune: true }]) {
@@ -44,7 +43,7 @@ try {
     assert.throws(() => P.decide(basilisk, { ...facts, distanceFt: value }));
   }
   for (const flag of ["sourceActive", "targetActive", "sourceSeesTarget",
-    "targetSeesSource", "targetImmune", "targetSurprised", "avertsEyes"]) {
+    "targetSeesSource", "targetImmune", "targetSurprised"]) {
     assert.throws(() => P.decide(basilisk, { ...facts, [flag]: 1 }));
   }
   for (const value of [true, false, 9.5, "9"]) {
@@ -58,3 +57,6 @@ const generic = { ...basilisk, sourceName: "Other Trigger", initialDebuff: "slow
 assert.equal(P.resolveStage(generic, 3), "slowed");
 assert.equal(P.resolveStage(generic, 3, "slowed"), "stunned");
 assert.equal(P.resolveStage(generic, 12, "slowed"), "clear");
+
+// No explicit choice flag is needed for the approved automatic tactical policy.
+assert.equal(P.decide(basilisk, { ...facts }), "averted");
