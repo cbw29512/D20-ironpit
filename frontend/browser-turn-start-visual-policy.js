@@ -13,6 +13,7 @@
           (!Number.isInteger(rule.immediatePetrificationMargin) || rule.immediatePetrificationMargin <= 0)) {
         throw new Error("Invalid immediate failure margin.");
       }
+      if ((rule.initialDebuff || "restrained") === (rule.terminalDebuff || "petrified")) throw new Error("Distinct debuff stages required.");
       return rule;
     } catch (error) {
       console.error("Invalid visual rule.", error);
@@ -43,11 +44,13 @@
     try {
       validate(rule);
       if (!Number.isInteger(saveTotal)) throw new Error("Visual save total must be an integer.");
-      if (previousStage !== null && previousStage !== "restrained") throw new Error("Invalid visual stage.");
+      const initial = rule.initialDebuff || "restrained";
+      const terminal = rule.terminalDebuff || "petrified";
+      if (previousStage !== null && previousStage !== initial) throw new Error("Invalid visual stage.");
       if (saveTotal >= rule.saveDc) return "clear";
-      if (previousStage === "restrained") return "petrified";
+      if (previousStage === initial) return terminal;
       const margin = rule.immediatePetrificationMargin;
-      return margin != null && rule.saveDc - saveTotal >= margin ? "petrified" : "restrained";
+      return margin != null && rule.saveDc - saveTotal >= margin ? terminal : initial;
     } catch (error) {
       console.error("Visual save progression failed.", error);
       throw error;
