@@ -29,3 +29,26 @@ assert.equal(P.resolveStage({ ...medusa, sourceName: "Unrelated Label" }, 9), "p
 assert.throws(() => P.resolveStage(medusa, 4, "unknown"), /Invalid visual stage/);
 assert.throws(() => P.decide(medusa, { ...facts, distanceFt: -1 }), /Invalid visual distance/);
 console.log("Visual policy browser regressions passed.");
+
+const priorError = console.error;
+console.error = () => {};
+try {
+  for (const value of [true, 30.5, "30"]) {
+    assert.throws(() => P.validate({ ...basilisk, rangeFt: value }));
+  }
+  for (const value of [true, 12.5, "12"]) {
+    assert.throws(() => P.validate({ ...basilisk, saveDc: value }));
+  }
+  for (const value of [true, 15.5, "15"]) {
+    assert.throws(() => P.decide(basilisk, { ...facts, distanceFt: value }));
+  }
+  for (const flag of ["sourceActive", "targetActive", "sourceSeesTarget",
+    "targetSeesSource", "targetImmune", "targetSurprised", "avertsEyes"]) {
+    assert.throws(() => P.decide(basilisk, { ...facts, [flag]: 1 }));
+  }
+  for (const value of [true, false, 9.5, "9"]) {
+    assert.throws(() => P.resolveStage(medusa, value));
+  }
+} finally {
+  console.error = priorError;
+}

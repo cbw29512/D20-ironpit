@@ -47,3 +47,29 @@ def test_invalid_inputs_fail_closed():
         decide_visual_turn_start(BASILISK, _facts(distance_ft=-1))
     with pytest.raises(ValueError):
         resolve_visual_save_stage(MEDUSA, 4, previous_stage="unknown")
+
+@pytest.mark.parametrize("bad", [True, 30.5, "30"])
+def test_strict_numeric_visual_source_range(bad):
+    with pytest.raises(ValueError):
+        VisualTurnStartRule("source", "Label", bad, 12)
+
+@pytest.mark.parametrize("bad", [True, 12.5, "12"])
+def test_strict_visual_save_dc(bad):
+    with pytest.raises(ValueError):
+        VisualTurnStartRule("source", "Label", 30, bad)
+
+@pytest.mark.parametrize("bad", [True, 15.5, "15"])
+def test_strict_distance(bad):
+    with pytest.raises(ValueError):
+        decide_visual_turn_start(BASILISK, _facts(distance_ft=bad))
+
+@pytest.mark.parametrize("flag", ["source_active", "target_active", "source_sees_target",
+                                  "target_sees_source", "target_immune", "target_surprised", "averts_eyes"])
+def test_strict_eligibility_flags(flag):
+    with pytest.raises(ValueError):
+        decide_visual_turn_start(BASILISK, _facts(**{flag: 1}))
+
+@pytest.mark.parametrize("bad", [True, False, 9.5, "9"])
+def test_strict_save_totals(bad):
+    with pytest.raises(ValueError):
+        resolve_visual_save_stage(MEDUSA, bad)
