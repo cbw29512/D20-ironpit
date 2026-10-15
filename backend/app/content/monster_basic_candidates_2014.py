@@ -12,6 +12,7 @@ from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_conditional_damage_defenses_2014 import remaining_unsupported_defense_text_2014
 from app.content.monster_healing_2014 import healing_action_names_2014, supports_healing_2014
+from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014
 from app.content.monster_innate_support_2014 import innate_spell_names_2014, supports_innate_spellcasting_2014
 from app.content.monster_legendary_bindings_2014 import supports_legendary_actions_2014
 from app.content.monster_source_2014 import SourceMonster2014
@@ -97,6 +98,11 @@ def _source_name_blockers(monster: SourceMonster2014) -> list[str]:
         | _ARENA_NEUTRAL_MIND_ACTION_LABELS
         | ({"animate chains"} if supports_animate_chains_arena_unavailable_2014(monster) else set())
         | ({"change shape"} if approved_inert_change_shape_2014(monster) else set())
+        | {
+            action_label_from_name(zone.name)
+            for zone in (fetid_cloud_zone_2014(monster),)
+            if zone is not None
+        }
     )
     extras = [
         name for name in extras

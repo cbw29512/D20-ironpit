@@ -24,11 +24,11 @@ def fetid_cloud_zone_2014(monster: SourceMonster2014) -> PersistentSaveZoneActio
         return None
     return PersistentSaveZoneAction(
         id="fetid-cloud", name="Fetid Cloud (1/Day)", level=0,
-        action_cost="action", cast_range_ft=0, center_on_source=True,
+        action_cost="action", cast_range_ft=0, center_on_source=True, follows_source=True,
         radius_ft=10, duration_rounds=10, save_ability="constitution",
         dc=11, triggers=["start_turn"], target_policy="all",
         save_context="nonmagical", failed_save_condition_id="poisoned",
-        failed_save_duration_rounds=1,
+        failed_save_duration_rounds=1, failed_save_expiry_timing="target_turn_start",
         failed_save_action_bonus_exclusive=True,
         failed_save_suppress_reactions=True,
         resource_id="fetid-cloud", resource_cost=1,

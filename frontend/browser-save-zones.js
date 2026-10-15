@@ -10,10 +10,14 @@
     ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES
     : (() => { throw new Error("Save-zone damage requires the shared damage resolver."); })();
 
-  function memberInZone(member, zone) {
+  function memberInZone(member, zone, setup = null) {
     if (!member.state.position || !zone.position) return false;
+    const source = zone.followsSource ? [...(setup?.heroes || []), ...(setup?.monsters || [])]
+      .find((actor) => actor.combatant_id === zone.source_id) : null;
+    const center = zone.followsSource ? source?.state.position : zone.position;
+    if (!center) return false;
     return G().footprintDistanceFt(
-      member.state.position, member.state.template.size, zone.position, "medium",
+      member.state.position, member.state.template.size, center, "medium",
     ) <= zone.radius_ft;
   }
 
@@ -52,7 +56,7 @@
   }
 
   function resolveTrigger(sequence, round, target, setup, zone, turnKey, trigger) {
-    if (!(zone.triggers || []).includes(trigger) || !memberInZone(target, zone)) return null;
+    if (!(zone.triggers || []).includes(trigger) || !memberInZone(target, zone, setup)) return null;
     if ((zone.targetPolicy || "enemies") === "enemies"
       && (target.combatant_id === zone.source_id || target.side === zone.source_side)) return null;
     if (!target.state.is_alive || target.state.is_dead || target.state.current_hp <= 0) return null;
@@ -94,7 +98,7 @@
       const applied = window.IRON_PIT_BROWSER_TIMED.apply(target.state, zone.failedSaveConditionId, zone.source_id, {
         sourceEffectId: zone.action_id, appliedRound: round,
         expiresRound: round + (zone.failedSaveDurationRounds || 1),
-        expiryTiming: "target_turn_end",
+        expiryTiming: zone.failedSaveExpiryTiming || "target_turn_end",
         suppressAction: Boolean(zone.failedSaveSuppressAction),
         suppressBonusAction: Boolean(zone.failedSaveSuppressBonusAction),
         suppressReactions: Boolean(zone.failedSaveSuppressReactions),
@@ -131,9 +135,8 @@
   function cast(sequence, round, caster, setup, action, position, turnKey) {
     if (action.saveContext !== "nonmagical" && Z()?.verbalBlocked(caster, setup)) throw new Error(`${action.name} cannot be cast inside a Silence effect.`);
     if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.actionCost} is unavailable for ${action.name}.`);
-    if (action.resourceId && (caster.state.resources?.[action.resourceId] ?? 0) < (action.resourceCost || 1)) {
+    if (action.resourceId && (caster.state.resources?.[action.resourceId] ?? 0) < (action.resourceCost || 1))
       throw new Error(`Resource ${action.resourceId} is unavailable for ${action.name}.`);
-    }
     if (action.centerOnSource && (!caster.state.position || position.x !== caster.state.position.x || position.y !== caster.state.position.y)) {
       throw new Error(`${action.name} must be centered on its source.`);
     }
@@ -154,7 +157,7 @@
     setup.save_zones = setup.save_zones || [];
     const zone = {
       zone_id: `${caster.combatant_id}:${action.id}:${round}:${setup.save_zones.length + 1}`,
-      source_id: caster.combatant_id, source_side: caster.side,
+      source_id: caster.combatant_id, source_side: caster.side, followsSource: Boolean(action.followsSource),
       action_id: action.id, action_name: action.name, position: { ...position },
       radius_ft: action.radiusFt, expires_round: round + action.durationRounds,
       saveAbility: action.saveAbility, dc: action.dc,       triggers: [...(action.triggers || [])],
@@ -169,6 +172,7 @@
       failedSaveSuppressBonusAction: Boolean(action.failedSaveSuppressBonusAction),
       failedSaveSuppressReactions: Boolean(action.failedSaveSuppressReactions),
       failedSaveActionBonusExclusive: Boolean(action.failedSaveActionBonusExclusive),
+      failedSaveExpiryTiming: action.failedSaveExpiryTiming || "target_turn_end",
       concentration: Boolean(action.concentration), animation: action.animation || "save-zone",
       triggered_turn_keys: {},
     };

@@ -23,6 +23,7 @@ class PersistentSaveZoneAction(BaseModel):
     action_cost: ActionCost = "action"
     cast_range_ft: int = Field(ge=0)
     center_on_source: bool = Field(default=False, exclude_if=lambda value: not value)
+    follows_source: bool = False
     radius_ft: int = Field(ge=5)
     duration_rounds: int = Field(ge=1)
     concentration: bool = False
@@ -44,6 +45,7 @@ class PersistentSaveZoneAction(BaseModel):
     failed_save_suppress_bonus_action: bool = False
     failed_save_suppress_reactions: bool = False
     failed_save_action_bonus_exclusive: bool = False
+    failed_save_expiry_timing: Literal["target_turn_start", "target_turn_end"] = "target_turn_end"
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     expends_spell_slot: bool = False
@@ -53,6 +55,8 @@ class PersistentSaveZoneAction(BaseModel):
     @model_validator(mode="after")
     def validate_zone(self) -> "PersistentSaveZoneAction":
         try:
+            if self.follows_source and not self.center_on_source:
+                raise ValueError("Source-following zones must start at their source.")
             if self.radius_ft % 5:
                 raise ValueError("Save zones must use 5-foot increments.")
             if len(set(self.triggers)) != len(self.triggers):
@@ -81,6 +85,7 @@ class PersistentSaveZoneState(BaseModel):
     zone_id: str = Field(min_length=1)
     source_id: str = Field(min_length=1)
     source_side: str = Field(min_length=1)
+    follows_source: bool = False
     action_id: str = Field(min_length=1)
     action_name: str = Field(min_length=1)
     position: GridPosition
@@ -103,6 +108,7 @@ class PersistentSaveZoneState(BaseModel):
     failed_save_suppress_bonus_action: bool = False
     failed_save_suppress_reactions: bool = False
     failed_save_action_bonus_exclusive: bool = False
+    failed_save_expiry_timing: Literal["target_turn_start", "target_turn_end"] = "target_turn_end"
     concentration: bool = False
     triggered_turn_keys: dict[str, str] = Field(default_factory=dict)
     animation: str = "save-zone"

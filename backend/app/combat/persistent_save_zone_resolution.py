@@ -35,7 +35,7 @@ def resolve_save_zone_trigger(
     trigger: str,
 ) -> tuple[list[BattleEvent], int]:
     try:
-        if trigger not in zone.triggers or not member_in_save_zone(target, zone):
+        if trigger not in zone.triggers or not member_in_save_zone(target, zone, setup):
             return [], sequence
         if zone.target_policy == "enemies" and (
             target.combatant_id == zone.source_id or target.side == zone.source_side
@@ -94,7 +94,7 @@ def resolve_save_zone_trigger(
                 source_effect_id=zone.action_id,
                 applied_round=round_number,
                 expires_round=round_number + zone.failed_save_duration_rounds,
-                expiry_timing="target_turn_end",
+                expiry_timing=zone.failed_save_expiry_timing,
                 expires_at_start_of_source_turn=False,
                 suppress_action=zone.failed_save_suppress_action,
                 suppress_bonus_action=zone.failed_save_suppress_bonus_action,

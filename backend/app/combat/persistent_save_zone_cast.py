@@ -125,6 +125,7 @@ def cast_save_zone(
             zone_id=f"{caster.combatant_id}:{action.id}:{round_number}:{len(setup.save_zones) + 1}",
             source_id=caster.combatant_id,
             source_side=caster.side,
+            follows_source=action.follows_source,
             action_id=action.id,
             action_name=action.name,
             position=position.model_copy(deep=True),
@@ -147,6 +148,7 @@ def cast_save_zone(
             failed_save_suppress_bonus_action=action.failed_save_suppress_bonus_action,
             failed_save_suppress_reactions=action.failed_save_suppress_reactions,
             failed_save_action_bonus_exclusive=action.failed_save_action_bonus_exclusive,
+            failed_save_expiry_timing=action.failed_save_expiry_timing,
             concentration=action.concentration,
             animation=action.animation,
         )
