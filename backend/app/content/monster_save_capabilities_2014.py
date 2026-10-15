@@ -72,17 +72,29 @@ def unsupported_save_actions_2014(monster: SourceMonster2014) -> list[object]:
     ]
 
 
-def unsupported_source_actions_2014(monster: SourceMonster2014) -> list[str]:
-    allowed = {attack.name.casefold() for attack in monster.attacks}
-    allowed.update(
-        str(action.get("name", "")).casefold()
-        for action in monster.saving_throw_actions if isinstance(action, dict)
-    )
-    if monster.multiattack_slots:
-        allowed.add("multiattack")
-    if supports_recharge_rules_2014(monster):
-        allowed.add("breath weapons")
-    return [name for name in monster.action_names if action_label_2014(name) not in allowed]
+def unsupported_source_actions_2014(
+    monster: SourceMonster2014, *, recharge_supported: bool | None = None,
+) -> list[str]:
+    """Reuse an already-checked recharge decision without changing source rules.
+
+    Direct callers can omit it; the helper then checks recharge itself.
+    """
+    try:
+        allowed = {attack.name.casefold() for attack in monster.attacks}
+        allowed.update(
+            str(action.get("name", "")).casefold()
+            for action in monster.saving_throw_actions if isinstance(action, dict)
+        )
+        if monster.multiattack_slots:
+            allowed.add("multiattack")
+        if recharge_supported is None:
+            recharge_supported = supports_recharge_rules_2014(monster)
+        if recharge_supported:
+            allowed.add("breath weapons")
+        return [name for name in monster.action_names if action_label_2014(name) not in allowed]
+    except Exception:
+        logger.exception("Failed to classify source actions for %s.", monster.name)
+        raise
 
 def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDefinition]:
     try:
