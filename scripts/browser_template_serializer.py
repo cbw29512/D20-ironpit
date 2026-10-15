@@ -773,6 +773,8 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["endsIfSourceIncapacitated"] = True
     if action.ends_if_source_dead:
         row["endsIfSourceDead"] = True
+    if action.friendly_roll_bonus_aura is not None:
+        row["friendlyRollBonusAura"] = action.friendly_roll_bonus_aura.model_dump(mode="json")
     if action.friendly_save_advantage_aura is not None:
         row["friendlySaveAdvantageAura"] = action.friendly_save_advantage_aura.model_dump(mode="json")
     if action.friendly_cover_aura is not None:
