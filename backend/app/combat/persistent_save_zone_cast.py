@@ -145,6 +145,7 @@ def cast_save_zone(
             failed_save_duration_rounds=action.failed_save_duration_rounds,
             failed_save_suppress_action=action.failed_save_suppress_action,
             failed_save_suppress_bonus_action=action.failed_save_suppress_bonus_action,
+            failed_save_suppress_reactions=action.failed_save_suppress_reactions,
             concentration=action.concentration,
             animation=action.animation,
         )
