@@ -1,9 +1,8 @@
 from __future__ import annotations
 import logging, re
-from app.content.environment_context_reactions import (
-    sunlight_sensitivity_2014, sunlight_weakness_2014,
-    verified_sunlight_weakness_2014,
-)
+
+from app.content.environment_context_reactions import verified_sunlight_weakness_2014
+from app.content.monster_environment_context_bindings_2014 import environment_context_reactions_2014
 from app.content.monster_berserk_2014 import berserk_self_buffs_2014
 from app.content.monster_damage_absorption import damage_absorptions_from_source
 from app.content.monster_damage_taken_effects_2014 import damage_taken_timed_effects_2014
@@ -24,7 +23,7 @@ from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.content.monster_terminal_effects_2014 import bound_terminal_effect_trait_names_2014
 from app.content.monster_zero_hp_prevention_2014 import bound_zero_hp_trait_names_2014
 from app.domain.bonus_attacks import BonusAttackGrant
-from app.domain.environment_contexts import EnvironmentContextReaction
+
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.weapons import ConditionalAttackAdvantage
 logger = logging.getLogger(__name__)
@@ -110,23 +109,6 @@ def bonus_attack_grants_2014(monster: SourceMonster2014) -> list[BonusAttackGran
         )]
     except Exception:
         logger.exception("Failed to bind 2014 Rampage for %s.", monster.name)
-        raise
-def environment_context_reactions_2014(
-    monster: SourceMonster2014,
-) -> list[EnvironmentContextReaction]:
-    """Bind only source-proven permanent environmental passives."""
-    try:
-        reactions = []
-        if _SUNLIGHT_SENSITIVITY in monster.trait_names:
-            reactions.append(sunlight_sensitivity_2014())
-        if verified_sunlight_weakness_2014(monster):
-            reactions.append(sunlight_weakness_2014())
-        return reactions
-    except Exception:
-        logger.exception(
-            "Failed to bind 2014 environment-context reactions for %s.",
-            monster.name,
-        )
         raise
 def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
     """Return source traits that are fully bound to existing universal primitives."""

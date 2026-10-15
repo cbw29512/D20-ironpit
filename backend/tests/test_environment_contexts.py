@@ -187,10 +187,12 @@ def test_full_sunlight_weakness_affects_every_d20_roll_kind_and_clears_on_exit()
     from app.combat.saving_throw_rolls import saving_throw_mode
 
     setup, paladin, target = _setup()
+    from app.combat.state import build_combatant_state
+
     original_template = target.state.template
-    target.state.template = original_template.model_copy(update={
+    target.state = build_combatant_state(original_template.model_copy(update={
         "environment_context_reactions": [sunlight_weakness_2014()],
-    })
+    }))
     # The weakness belongs to the template permanently even with no exposure.
     assert environment_context_disadvantage_sources(target, setup, "saving_throws") == 0
     _activate(paladin)
