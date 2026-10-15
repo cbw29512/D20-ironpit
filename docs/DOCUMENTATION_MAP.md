@@ -22,7 +22,7 @@ This is a **directory and ownership map**, not a new task queue, certification s
 - **Asset evidence:** card-art inventories and fixtures, not combat source truth.
 - **Legal:** retain notices verbatim.
 
-This map covers **63** Markdown files at its creation (3 asset evidence, 2 generated, 32 historical evidence, 1 legal, 1 live queue, 13 operating, 11 rules/technical contract). New documents should have a clear unique owner, not duplicate a current cursor.
+This map covers **63** Markdown files at its creation (3 asset evidence, 2 generated, 31 historical evidence, 1 legal, 1 live queue, 13 operating, 12 rules/technical contract). New documents should have a clear unique owner, not duplicate a current cursor.
 
 | File | Role |
 |---|---|
@@ -43,7 +43,7 @@ This map covers **63** Markdown files at its creation (3 asset evidence, 2 gener
 | `docs/2014_RECONCILIATION_PLAN.md` | historical evidence |
 | `docs/2014_ROGUE_11_20_ENGINE_AUDIT.md` | historical evidence |
 | `docs/2024_BARBARIAN_NEXT_AUDIT.md` | historical evidence |
-| `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md` | historical evidence |
+| `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md` | rules/technical contract |
 | `docs/ANTIMAGIC_SUSCEPTIBILITY_AUDIT.md` | historical evidence |
 | `docs/BATTLECAST_MOVEMENT_PROVENANCE.md` | historical evidence |
 | `docs/BRONZE_REPULSION_AUDIT.md` | historical evidence |
