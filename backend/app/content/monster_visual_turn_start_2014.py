@@ -28,8 +28,8 @@ def _source_clause_with_continuations(source: str, heading: str) -> str:
     try:
         active = False
         paragraphs: list[str] = []
-        for raw in re.findall(r"<p\\b[^>]*>(.*?)</p>", source, flags=re.I | re.S):
-            named = re.search(r"<strong\\b[^>]*>(.*?)</strong>", raw, flags=re.I | re.S)
+        for raw in re.findall(r"<p\b[^>]*>(.*?)</p>", source, flags=re.I | re.S):
+            named = re.search(r"<strong\b[^>]*>(.*?)</strong>", raw, flags=re.I | re.S)
             if named:
                 label = unescape(re.sub(r"<[^>]+>", "", named.group(1))).strip().rstrip(".")
                 if active:
