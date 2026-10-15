@@ -703,6 +703,10 @@ def _save_zone(action: Any) -> dict[str, Any]:
             row["failedSaveActionBonusExclusive"] = True
         if action.center_on_source:
             row["centerOnSource"] = True
+        if action.follows_source:
+            row["followsSource"] = True
+        if action.failed_save_expiry_timing != "target_turn_end":
+            row["failedSaveExpiryTiming"] = action.failed_save_expiry_timing
         if action.source:
             row["source"] = action.source
         return row
