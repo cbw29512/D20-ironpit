@@ -1,7 +1,7 @@
 """Regression coverage for the iterative monster batch dispatcher."""
 from __future__ import annotations
 
-from scripts.dispatch_monster_batches_2014 import rank_batches, rank_composite_batches, compare
+from scripts.dispatch_monster_batches_2014 import rank_batches, rank_composite_batches, compare, current_state
 
 
 def test_prioritizes_direct_admissions_without_treating_policy_exclusions_as_fixes():
@@ -49,3 +49,19 @@ def test_composite_batch_accounts_for_all_blockers_before_projecting_admission()
     assert "policy" not in matched["potential_monster_ids"]
     assert "deep" not in matched["potential_monster_ids"]
     assert all("arena:removed" not in p["families"] for p in plans)
+
+
+def test_classifier_runs_once_per_monster(monkeypatch):
+    from scripts import dispatch_monster_batches_2014 as dispatcher
+    class Monster:
+        def __init__(self, mid):
+            self.id = mid
+            self.name = mid
+    calls = []
+    def classify(monster):
+        calls.append(monster.id)
+        return ("attack:complex",) if monster.id == "one" else ()
+    monkeypatch.setattr(dispatcher, "basic_blockers_2014", classify)
+    state = current_state([Monster("one"), Monster("two")])
+    assert calls == ["one", "two"]
+    assert (state["admitted"], len(state["blocked"])) == (1, 1)

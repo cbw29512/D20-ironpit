@@ -26,9 +26,10 @@ def current_state(monsters=None):
     """Recompute from immutable source, not a stale manually edited tracker."""
     try:
         source = load_monster_source_2014() if monsters is None else monsters
-        blocked = {m.id: {"name": m.name, "blockers": sorted(set(basic_blockers_2014(m)))}
-                   for m in source if basic_blockers_2014(m)}
-        return {"total": len(source), "admitted": len(source) - len(blocked),
+        classified = [(monster, basic_blockers_2014(monster)) for monster in source]
+        blocked = {monster.id: {"name": monster.name, "blockers": sorted(set(blockers))}
+                   for monster, blockers in classified if blockers}
+        return {"total": len(classified), "admitted": len(classified) - len(blocked),
                 "blocked": blocked}
     except Exception:
         logger.exception("2014 monster classification failed; refusing stale batch selection.")

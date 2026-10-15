@@ -105,6 +105,10 @@ jobs:
         run: python scripts/report_zero_engine_monsters.py
       - name: Report capability blocker yields
         run: python scripts/report_capability_yield.py
+      - name: Verify and report recursive monster batches
+        run: |
+          PYTHONPATH=. pytest -q scripts/test_dispatch_monster_batches_2014.py
+          python scripts/dispatch_monster_batches_2014.py --top 8 --max-families 3
       - name: Prepare static browser package
         run: |
           python scripts/prepare_static_site.py
