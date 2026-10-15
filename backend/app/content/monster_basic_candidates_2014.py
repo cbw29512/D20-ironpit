@@ -5,17 +5,13 @@ from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_actio
 from app.content.monster_arena_action_policy_2014 import PIT_BANNED_ACTION_LABELS_2014
 from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014, verified_arena_inert_trait_2014
 from app.content.monster_arena_unavailable_reactions_2014 import arena_unavailable_reaction_names_2014
-from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
-from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
-from app.content.monster_attack_source_corrections_2014 import corrected_attack_range_2014
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
 from app.content.monster_healing_2014 import healing_action_names_2014
 from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014
 from app.content.monster_innate_support_2014 import innate_spell_names_2014
-from app.content.monster_legendary_bindings_2014 import supports_legendary_actions_2014
 from app.content.monster_source_2014 import SourceMonster2014
-from app.content.monster_mechanic_family_blockers_2014 import mechanic_family_blockers_2014
+from app.content.monster_mechanic_family_blockers_2014 import attack_blockers_2014, mechanic_family_blockers_2014
 from app.content.monster_rock_catching_2014 import supports_rock_catching_reaction_2014
 from app.content.monster_animate_chains_2014 import supports_animate_chains_arena_unavailable_2014
 from app.content.monster_change_shape_policy_2014 import approved_inert_change_shape_2014
@@ -24,7 +20,6 @@ from app.content.monster_multiattack_2014 import multiattack_blockers_2014
 from app.content.monster_save_capabilities_2014 import supports_recharge_rules_2014, unsupported_source_actions_2014
 from app.content.monster_trait_bindings_2014 import bound_trait_names_2014, supports_reckless_2014
 from app.domain.traits import CombatTrait
-from app.domain.weapons import DamageType
 logger = logging.getLogger(__name__)
 _MODELED_2014_TRAITS = {
     "Pack Tactics": CombatTrait.PACK_TACTICS,
@@ -37,7 +32,6 @@ _PIT_BANNED_ACTION_LABELS = PIT_BANNED_ACTION_LABELS_2014
 _ARENA_ABSENT_CONTEXT_ACTION_LABELS = frozenset({"ink cloud"})
 _ARENA_UNAVAILABLE_SUMMON_ACTION_LABELS = frozenset({"animate trees", "children of the night", "create specter"})
 _ARENA_NEUTRAL_MIND_ACTION_LABELS = frozenset({"weird insight"})
-_DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 _PIT_REMOVED_MONSTER_IDS_2014 = frozenset({"stirge"})
 _PIT_ARENA_NEUTRAL_MONSTER_IDS_2014 = frozenset({"frog"})
 def _supported_charge(monster: SourceMonster2014) -> bool:
@@ -46,25 +40,6 @@ def _supported_charge(monster: SourceMonster2014) -> bool:
         and supports_charge_profile_2014(corrected_charge_profile_2014(monster, attack))
         for attack in monster.attacks
     )
-def _attack_blockers(monster: SourceMonster2014) -> list[str]:
-    blockers: list[str] = []
-    for source_attack in monster.attacks:
-        attack = source_completed_mixed_attack_2014(monster, source_attack)
-        if not attack.source_complete:
-            blockers.append("attack:incomplete")
-        if attack.damage.type not in _DAMAGE_TYPES:
-            blockers.append("attack:damage-type")
-        profile = corrected_charge_profile_2014(monster, attack)
-        if attack.charge_profile is not None and not supports_charge_profile_2014(profile):
-            blockers.append("attack:complex")
-            continue
-        if not supports_basic_attack_effects_2014(attack):
-            blockers.append("attack:complex")
-        if attack.kind == "ranged":
-            normal_range_ft, long_range_ft = corrected_attack_range_2014(monster, attack)
-            if normal_range_ft is None or long_range_ft is None:
-                blockers.append("attack:range")
-    return blockers
 def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     try:
         certified = set(ARENA_NEUTRAL_TRAITS_2014) | set(_MODELED_2014_TRAITS)
@@ -147,7 +122,7 @@ def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     blockers: list[str] = []
     if not monster.attacks:
         blockers.append("attack:none")
-    blockers.extend(_attack_blockers(monster))
+    blockers.extend(attack_blockers_2014(monster))
     blockers.extend(multiattack_blockers_2014(monster))
     # One source-classification decision feeds both action and resource checks.
     recharge_supported = supports_recharge_rules_2014(monster)
