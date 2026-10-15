@@ -693,6 +693,10 @@ def _save_zone(action: Any) -> dict[str, Any]:
             "resourceId": action.resource_id, "resourceCost": action.resource_cost,
             "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
         }
+        if action.target_policy != "enemies":
+            row["targetPolicy"] = action.target_policy
+        if action.save_context != "spell":
+            row["saveContext"] = action.save_context
         if action.center_on_source:
             row["centerOnSource"] = True
         if action.source:

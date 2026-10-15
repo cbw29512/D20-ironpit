@@ -31,6 +31,8 @@ class PersistentSaveZoneAction(BaseModel):
     triggers: list[SaveZoneTrigger] = Field(min_length=1)
     save_triggers: list[SaveZoneTrigger] = Field(default_factory=list)
     once_per_turn: bool = True
+    target_policy: Literal["enemies", "all"] = "enemies"
+    save_context: Literal["spell", "magical", "nonmagical"] = "spell"
     damage_dice_count: int = Field(default=0, ge=0, le=40)
     damage_dice_size: int = Field(default=8, ge=2, le=100)
     damage_type: DamageTypeName | None = None
@@ -87,6 +89,8 @@ class PersistentSaveZoneState(BaseModel):
     triggers: list[SaveZoneTrigger] = Field(min_length=1)
     save_triggers: list[SaveZoneTrigger] = Field(default_factory=list)
     once_per_turn: bool = True
+    target_policy: Literal["enemies", "all"] = "enemies"
+    save_context: Literal["spell", "magical", "nonmagical"] = "spell"
     damage_dice_count: int = Field(default=0, ge=0)
     damage_dice_size: int = Field(default=8, ge=2)
     damage_type: DamageTypeName | None = None

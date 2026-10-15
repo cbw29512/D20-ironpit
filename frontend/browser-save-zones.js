@@ -53,7 +53,8 @@
 
   function resolveTrigger(sequence, round, target, setup, zone, turnKey, trigger) {
     if (!(zone.triggers || []).includes(trigger) || !memberInZone(target, zone)) return null;
-    if (target.combatant_id === zone.source_id || target.side === zone.source_side) return null;
+    if ((zone.targetPolicy || "enemies") === "enemies"
+      && (target.combatant_id === zone.source_id || target.side === zone.source_side)) return null;
     if (!target.state.is_alive || target.state.is_dead || target.state.current_hp <= 0) return null;
     if (zone.oncePerTurn !== false && (zone.triggered_turn_keys || {})[target.combatant_id] === turnKey) return null;
     zone.triggered_turn_keys = zone.triggered_turn_keys || {};
@@ -62,7 +63,10 @@
     const requiresSave = !saveTriggers.length || saveTriggers.includes(trigger);
     const save = requiresSave
       ? window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow(
-        target.state, zone.saveAbility, zone.dc, { magicalEffect: true, spellEffect: true, roundNumber: round },
+        target.state, zone.saveAbility, zone.dc, {
+          magicalEffect: (zone.saveContext || "spell") !== "nonmagical",
+          spellEffect: (zone.saveContext || "spell") === "spell", roundNumber: round,
+        },
       )
       : { roll: null, succeeded: false };
     const hpBefore = target.state.current_hp;
@@ -93,6 +97,7 @@
         expiryTiming: "target_turn_end",
         suppressAction: Boolean(zone.failedSaveSuppressAction),
         suppressBonusAction: Boolean(zone.failedSaveSuppressBonusAction),
+        sourceIsMagical: (zone.saveContext || "spell") !== "nonmagical",
         useDefaultPoisonRecovery: false,
       });
       if (applied) appliedConditions.push(applied);
@@ -150,6 +155,7 @@
       saveAbility: action.saveAbility, dc: action.dc,       triggers: [...(action.triggers || [])],
       saveTriggers: [...(action.saveTriggers || [])],
       oncePerTurn: action.oncePerTurn !== false,
+      targetPolicy: action.targetPolicy || "enemies", saveContext: action.saveContext || "spell",
       damageDiceCount: scaledDice(action, slotLevel), damageDiceSize: action.damageDiceSize,
       damageType: action.damageType, successDamage: action.successDamage || "none",
       failedSaveConditionId: action.failedSaveConditionId,

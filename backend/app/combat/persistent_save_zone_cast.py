@@ -135,6 +135,8 @@ def cast_save_zone(
             triggers=list(action.triggers),
             save_triggers=list(action.save_triggers),
             once_per_turn=action.once_per_turn,
+            target_policy=action.target_policy,
+            save_context=action.save_context,
             damage_dice_count=_scaled_dice(action, slot_level),
             damage_dice_size=action.damage_dice_size,
             damage_type=action.damage_type,
