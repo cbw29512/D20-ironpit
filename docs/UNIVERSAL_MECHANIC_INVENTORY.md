@@ -473,7 +473,6 @@ Blocked monsters: **106**. These are grouped by printed ability name so the rost
 | Reactive Heads | Hydra | 1 |
 | Reflective Carapace | Tarrasque | 1 |
 | Rust Metal | Rust Monster | 1 |
-| Sense Magic | Chuul | 1 |
 | Shapechanger | Doppelganger, Imp, Mimic, Quasit, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf | 11 |
 | Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
@@ -492,7 +491,7 @@ Blocked monsters: **106**. These are grouped by printed ability name so the rost
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 77 |
+| `source:trait` | 76 |
 | `source:extra-action` | 59 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |
