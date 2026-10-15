@@ -5883,7 +5883,7 @@
       "source:extra-action": 59,
       "source:legendary": 9,
       "source:reaction": 3,
-      "source:trait": 77
+      "source:trait": 76
     },
     "unresolved_printed_abilities": [
       {
@@ -6103,14 +6103,6 @@
         "printed_name": "Innate Spellcasting"
       },
       {
-        "demand_count": 2,
-        "monsters": [
-          "Androsphinx",
-          "Gynosphinx"
-        ],
-        "printed_name": "Inscrutable"
-      },
-      {
         "demand_count": 1,
         "monsters": [
           "Rust Monster"
@@ -6166,13 +6158,6 @@
           "Weretiger"
         ],
         "printed_name": "Pounce (Tiger or Hybrid Form Only)"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Aboleth"
-        ],
-        "printed_name": "Probing Telepathy"
       },
       {
         "demand_count": 1,
