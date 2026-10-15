@@ -5883,7 +5883,7 @@
       "source:extra-action": 59,
       "source:legendary": 9,
       "source:reaction": 3,
-      "source:trait": 76
+      "source:trait": 74
     },
     "unresolved_printed_abilities": [
       {
@@ -6170,13 +6170,6 @@
       {
         "demand_count": 1,
         "monsters": [
-          "Aboleth"
-        ],
-        "printed_name": "Probing Telepathy"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
           "Marilith"
         ],
         "printed_name": "Reactive"
@@ -6255,13 +6248,6 @@
       {
         "demand_count": 1,
         "monsters": [
-          "Shadow"
-        ],
-        "printed_name": "Sunlight Weakness"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
           "Doppelganger"
         ],
         "printed_name": "Surprise Attack"
@@ -6308,13 +6294,6 @@
           "Water Elemental"
         ],
         "printed_name": "Water Form"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Fire Elemental"
-        ],
-        "printed_name": "Water Susceptibility"
       }
     ]
   },

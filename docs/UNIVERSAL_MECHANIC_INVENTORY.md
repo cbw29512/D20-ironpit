@@ -468,7 +468,6 @@ Blocked monsters: **106**. These are grouped by printed ability name so the rost
 | Ooze Cube | Gelatinous Cube | 1 |
 | Petrifying Gaze | Basilisk, Medusa | 2 |
 | Pounce (Tiger or Hybrid Form Only) | Weretiger | 1 |
-| Probing Telepathy | Aboleth | 1 |
 | Reactive | Marilith | 1 |
 | Reactive Heads | Hydra | 1 |
 | Reflective Carapace | Tarrasque | 1 |
@@ -477,7 +476,6 @@ Blocked monsters: **106**. These are grouped by printed ability name so the rost
 | Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
 | Steadfast | Bearded Devil | 1 |
-| Sunlight Weakness | Shadow | 1 |
 | Surprise Attack | Doppelganger | 1 |
 | Tail Spike Regrowth | Manticore | 1 |
 | Telepathic Bond | Succubus/Incubus | 1 |
@@ -485,13 +483,12 @@ Blocked monsters: **106**. These are grouped by printed ability name so the rost
 | Vampire Weaknesses | Vampire, Vampire Spawn | 2 |
 | Variable Illumination | Will-o'-Wisp | 1 |
 | Water Form | Water Elemental | 1 |
-| Water Susceptibility | Fire Elemental | 1 |
 
 ## Monster blocker categories
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 76 |
+| `source:trait` | 74 |
 | `source:extra-action` | 59 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |
