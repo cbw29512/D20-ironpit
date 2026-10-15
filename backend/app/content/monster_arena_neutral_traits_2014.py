@@ -66,6 +66,20 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
         if trait_name in informational_clauses:
             folded = source.casefold()
             return all(clause.casefold() in folded for clause in informational_clauses[trait_name])
+        if trait_name == "Sense Magic":
+            # This only reports magic's presence. It never grants visibility,
+            # target location, Advantage, a save, or a combat action.
+            # Isolate the printed paragraph: no other trait may prove it.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+
+            printed = source_sections_2014(source).get("Sense Magic", "")
+            normalized = printed.casefold().replace("’", "'")
+            return all(clause in normalized for clause in (
+                "senses magic within 120 feet",
+                "at will",
+                "detect magic",
+                "isn't itself magical",
+            ))
         # Pinned source must prove both the printed trait and its
         # arena-inert semantics. Other effects remain blocked independently.
         additional_inert_clauses = {
