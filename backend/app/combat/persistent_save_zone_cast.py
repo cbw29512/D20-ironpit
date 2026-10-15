@@ -59,10 +59,10 @@ def choose_save_zone_action(
     turn_key: str,
 ) -> tuple[PersistentSaveZoneAction, GridPosition] | None:
     try:
-        if verbal_casting_blocked(caster, setup):
-            return None
         for action in caster.state.template.persistent_save_zone_actions:
             if action.damage_dice_count:
+                continue
+            if action.save_context != "nonmagical" and verbal_casting_blocked(caster, setup):
                 continue
             if not is_available(caster.state, action.action_cost):
                 continue
@@ -93,7 +93,7 @@ def cast_save_zone(
     dice,
 ) -> tuple[list[BattleEvent], int]:
     try:
-        if verbal_casting_blocked(caster, setup):
+        if action.save_context != "nonmagical" and verbal_casting_blocked(caster, setup):
             raise ValueError(f"{action.name} cannot be cast inside a Silence effect.")
         if not is_available(caster.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")

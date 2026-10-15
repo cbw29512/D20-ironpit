@@ -34,9 +34,9 @@
   }
 
   function choose(caster, setup, turnKey) {
-    if (Z()?.verbalBlocked(caster, setup)) return null;
     for (const action of caster.state.template.persistent_save_zone_actions || []) {
       if (action.damageDiceCount) continue;
+      if (action.saveContext !== "nonmagical" && Z()?.verbalBlocked(caster, setup)) continue;
       if (!E().available(caster.state, action.actionCost)) continue;
       if (action.concentration && caster.state.concentration) continue;
       if (action.expendsSpellSlot && !P()?.slotSpellAvailable(caster.state, turnKey)) continue;
@@ -129,7 +129,7 @@
   }
 
   function cast(sequence, round, caster, setup, action, position, turnKey) {
-    if (Z()?.verbalBlocked(caster, setup)) throw new Error(`${action.name} cannot be cast inside a Silence effect.`);
+    if (action.saveContext !== "nonmagical" && Z()?.verbalBlocked(caster, setup)) throw new Error(`${action.name} cannot be cast inside a Silence effect.`);
     if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.actionCost} is unavailable for ${action.name}.`);
     if (action.centerOnSource && (!caster.state.position || position.x !== caster.state.position.x || position.y !== caster.state.position.y)) {
       throw new Error(`${action.name} must be centered on its source.`);
