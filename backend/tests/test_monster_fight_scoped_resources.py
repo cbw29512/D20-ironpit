@@ -16,14 +16,11 @@ def test_printed_one_day_monster_ability_refills_between_fights() -> None:
     resource = fetid_cloud_resources_2014(monster)[0]
     assert zone.resource_id == resource.id and resource.max_uses == 1
 
-    # Use a minimal existing production combat template, replacing only
-    # its resource definitions; the state constructor is the subject here.
-    from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
-    from unittest.mock import patch
-    with patch("app.content.monster_definition_adapter_2014.basic_blockers_2014", return_value=()):
-        definition = adapt_basic_monster_2014(monster)
-    from app.content.capability_compiler import compile_combatant
-    template: CombatantTemplate = compile_combatant(definition)
+    # A certified combat template supplies all mandatory combat fields;
+    # replace its resource definitions only, without mutating the template.
+    from app.content.roster import build_arena_roster
+    existing = build_arena_roster("2014").monsters[0]
+    template: CombatantTemplate = existing.model_copy(update={"resources": [resource]})
 
     fight_one = build_combatant_state(template)
     assert next(r for r in fight_one.resources if r.id == resource.id).current_uses == 1
