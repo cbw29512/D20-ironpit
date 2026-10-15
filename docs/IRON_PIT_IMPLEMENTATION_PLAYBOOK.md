@@ -33,4 +33,4 @@ Map the exact ability to `trigger → eligibility → action/resource → attack
 - **Runtime certified:** independent manifests and Python/browser gates agree.
 - **Unverified:** say so explicitly; do not transfer stale PR-head evidence.
 
-Deep rules and product exceptions remain in [Iron Pit Rules Contract](IRON_PIT_RULES_CONTRACT.md), [universal combat architecture](UNIVERSAL_COMBATANT_ARCHITECTURE.md), [battlefield contract](VTT_CARD_BATTLEFIELD_CONTRACT.md), and [main action selection](MAIN_ACTION_SELECTION_CONTRACT.md). Never rewrite those decisions from a cleanup prompt.
+Deep rules and product exceptions remain in [Iron Pit Rules Contract](IRON_PIT_RULES_CONTRACT.md), [universal combat architecture](UNIVERSAL_COMBATANT_ARCHITECTURE.md), [historical battlefield design reference](VTT_CARD_BATTLEFIELD_CONTRACT.md) (current Pit rules supersede it), and [main action selection](MAIN_ACTION_SELECTION_CONTRACT.md). Never rewrite those decisions from a cleanup prompt.

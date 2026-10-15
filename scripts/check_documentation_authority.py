@@ -31,6 +31,7 @@ OLD_CURSOR = (
     "## Current lane (2026-10-07)",
     "124-monster/305-blocker table",
     "M-015 Brass Dragon Sleep Breath is next",
+    "Large 2x2, Huge 3x3, Gargantuan 4x4",
 )
 ROW = re.compile(r"^\| `([^\x60]+\.md)` \| ([^|]+) \|$", re.MULTILINE)
 LINK = re.compile(r"\]\(([^\s)]+)(?:\s+[^)]*)?\)")
@@ -90,6 +91,11 @@ def audit(root: Path, tracked: set[str] | None = None) -> list[str]:
         if new_docs:
             logger.warning("New Markdown files need map classification: %s",
                            ", ".join(new_docs))
+        # The source-neutral size override is shared by Python and browser.
+        # Prevent historical tabletop footprints from re-entering agent guidance.
+        ag = (root / "AGENTS.md").read_text(encoding="utf-8")
+        if "every creature size occupies one 5-foot square" not in ag:
+            errors.append("Missing one-square Pit footprint invariant in AGENTS.md")
         for path in OPERATING:
             if path not in tracked:
                 errors.append(f"Missing operating document: {path}")

@@ -22,7 +22,7 @@ This is a **directory and ownership map**, not a new task queue, certification s
 - **Asset evidence:** card-art inventories and fixtures, not combat source truth.
 - **Legal:** retain notices verbatim.
 
-This map covers **63** Markdown files at its creation (3 asset evidence, 2 generated, 31 historical evidence, 1 legal, 1 live queue, 13 operating, 12 rules/technical contract). New documents should have a clear unique owner, not duplicate a current cursor.
+This map covers **63** Markdown files at its creation (3 asset evidence, 2 generated, 32 historical evidence, 1 legal, 1 live queue, 13 operating, 11 rules/technical contract). New documents should have a clear unique owner, not duplicate a current cursor.
 
 | File | Role |
 |---|---|
@@ -77,7 +77,7 @@ This map covers **63** Markdown files at its creation (3 asset evidence, 2 gener
 | `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md` | rules/technical contract |
 | `docs/UNIVERSAL_MECHANIC_INVENTORY.md` | generated |
 | `docs/UNIVERSAL_TACTICAL_FORM_SELECTION.md` | rules/technical contract |
-| `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md` | rules/technical contract |
+| `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md` | historical evidence |
 | `docs/artifacts/card-art/ART_SHOPPING_LIST.md` | asset evidence |
 | `docs/artifacts/card-art/REAL_ART_INVENTORY.md` | asset evidence |
 | `docs/artifacts/card-art/fixtures/README.md` | asset evidence |

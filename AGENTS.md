@@ -16,7 +16,9 @@ Before changing combat code, read:
 6. Current source/runtime code and permanent tests.
 7. Generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
 
-Detailed authorities remain available in `docs/IRON_PIT_RULES_CONTRACT.md`, `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md`, `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`, `docs/COMBAT_RESOLUTION_PIPELINE.md`, `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md`, `docs/MAIN_ACTION_SELECTION_CONTRACT.md`, `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md`, `docs/PREGEN_AND_CONTENT_RULES_CONTRACT.md`, and `docs/CANONICAL_COMBAT_BUILD_POLICY.md`.
+Detailed authorities remain available in `docs/IRON_PIT_RULES_CONTRACT.md`, `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`, `docs/COMBAT_RESOLUTION_PIPELINE.md`, `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md`, `docs/MAIN_ACTION_SELECTION_CONTRACT.md`, `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md`, `docs/PREGEN_AND_CONTENT_RULES_CONTRACT.md`, and `docs/CANONICAL_COMBAT_BUILD_POLICY.md`.
+
+The older `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md` is a **historical battlefield design reference**, not current product authority. Its incompatible proposals are superseded by `docs/IRON_PIT_RULES_CONTRACT.md` and the locked rules index.
 
 Repository truth beats chat summaries, historical counts, old milestone prose, uploaded registry dumps, and stale file-library references. External/user-provided files are evidence only until reconciled against the exact current commit.
 
@@ -92,7 +94,7 @@ Before changing a monster, pregen, spell, feature or item: read the exact source
 - Preserve printed movement modes and printed base speeds exactly as source data; never convert Swim/Fly/Climb/Burrow speed into a generic land/base speed just to make a creature runnable.
 - The battlefield is one authoritative 5-foot square grid with real combatant x/y positions.
 - Voluntary movement consumes actual effective movement speed. The old free-closing/fixed-formation path is migration scaffolding only and must not remain the final combat authority.
-- Creature footprint derives from immutable printed size data: Tiny/Small/Medium 1x1, Large 2x2, Huge 3x3, Gargantuan 4x4 unless a more specific supported rule changes occupied space.
+- **Pit magic: every creature size occupies one 5-foot square**, Tiny through Gargantuan. Printed size remains immutable source data for size-sensitive rules. Area effects, hazards, cones, lines and other source-defined geometry retain their independent printed dimensions; never expand creature occupancy by size.
 - Movement, reach, range, collision, Opportunity Attacks, forced movement, auras, line of sight, and area geometry consume the same authoritative grid state.
 - Arena design and AI policy prevent degenerate fleeing/kiting; do not bypass printed movement to force engagement.
 - The card artwork is the moving battlefield token. Current HP, Temporary HP, conditions, buffs/debuffs, concentration, recharge/resource state, and similar live symbols are presentation overlays derived from runtime state and never rule inputs.
