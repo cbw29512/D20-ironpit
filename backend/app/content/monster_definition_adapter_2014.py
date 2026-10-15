@@ -117,8 +117,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     attacks = [_attack(monster, attack) for attack in monster.attacks]
     blindsight_ft, truesight_ft = special_senses_2014(monster)
     bounded = bounded_blindsight_2014(monster)
-    resources = list(save_resources_2014(monster))
-    resources.extend(fetid_cloud_resources_2014(monster))
+    resources = [*save_resources_2014(monster), *fetid_cloud_resources_2014(monster)]
     resources.extend(healing_resources_2014(monster))
     resources.extend(innate_spell_resources_2014(monster))
     resources.extend(monster_spell_slot_resources_2014(monster))
