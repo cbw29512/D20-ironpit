@@ -20,3 +20,16 @@ def test_source_proven_dretch_zone_survives_capability_compilation() -> None:
     assert zone.failed_save_action_bonus_exclusive
     assert zone.failed_save_suppress_reactions
     assert any(resource.id == "fetid-cloud" and resource.max_uses == 1 for resource in template.resources)
+
+def test_source_mutation_reblocks_dretch_instead_of_silently_admitting() -> None:
+    from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+    from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014
+
+    source = next(m for m in load_monster_source_2014() if m.id == "dretch")
+    tampered = source.model_copy(update={
+        "source_actions": (source.source_actions or "").replace(
+            "can't take reactions", "can take reactions",
+        ),
+    })
+    assert fetid_cloud_zone_2014(tampered) is None
+    assert "source:extra-action" in basic_blockers_2014(tampered)
