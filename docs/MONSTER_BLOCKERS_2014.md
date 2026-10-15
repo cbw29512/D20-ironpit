@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 76 |
+| `source:trait` | 75 |
 | `source:extra-action` | 59 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |
@@ -49,10 +49,10 @@ the underlying ability is already implemented or trivial.
 
 | Monster | Remaining blockers | Unbound traits |
 |---|---|---|
-| Aboleth | attack:incomplete, mechanic:legendary, source:extra-action, source:legendary, source:trait | Probing Telepathy |
+| Aboleth | attack:incomplete, mechanic:legendary, source:extra-action, source:legendary | — |
 | Acolyte | mechanic:spellcasting, source:trait | Spellcasting |
 | Air Elemental | mechanic:recharge, source:extra-action, source:trait | Air Form |
-| Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Inscrutable, Spellcasting |
+| Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Spellcasting |
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
 | Balor | attack:incomplete, source:trait | Death Throes, Fire Aura |
 | Banshee | source:extra-action | — |
@@ -94,7 +94,7 @@ the underlying ability is already implemented or trivial.
 | Gray Ooze | attack:incomplete, source:trait | Corrode Metal |
 | Green Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Guardian Naga | mechanic:spellcasting, source:extra-action, source:trait | Spellcasting |
-| Gynosphinx | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Inscrutable, Spellcasting |
+| Gynosphinx | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Harpy | source:extra-action | — |
 | Homunculus | attack:complex | — |
 | Hydra | multiattack:complex, source:extra-action, source:trait | Multiple Heads, Reactive Heads |

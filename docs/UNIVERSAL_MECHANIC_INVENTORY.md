@@ -459,7 +459,6 @@ Blocked monsters: **106**. These are grouped by printed ability name so the rost
 | Horrific Appearance | Sea Hag | 1 |
 | Ignited Illumination | Magmin | 1 |
 | Innate Spellcasting | Cloud Giant, Couatl, Deep Gnome (Svirfneblin), Deva, Djinni, Drider, Drow, Dryad, Dust Mephit, Efreeti, Glabrezu, Green Hag, Ice Mephit, Lamia, Magma Mephit, Night Hag, Oni, Pit Fiend, Planetar, Rakshasa, Solar, Steam Mephit, Storm Giant | 23 |
-| Inscrutable | Androsphinx, Gynosphinx | 2 |
 | Iron Scent | Rust Monster | 1 |
 | Light Sensitivity | Cloaker | 1 |
 | Limited Magic Immunity | Rakshasa | 1 |
@@ -468,7 +467,6 @@ Blocked monsters: **106**. These are grouped by printed ability name so the rost
 | Ooze Cube | Gelatinous Cube | 1 |
 | Petrifying Gaze | Basilisk, Medusa | 2 |
 | Pounce (Tiger or Hybrid Form Only) | Weretiger | 1 |
-| Probing Telepathy | Aboleth | 1 |
 | Reactive | Marilith | 1 |
 | Reactive Heads | Hydra | 1 |
 | Reflective Carapace | Tarrasque | 1 |
@@ -491,7 +489,7 @@ Blocked monsters: **106**. These are grouped by printed ability name so the rost
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 76 |
+| `source:trait` | 75 |
 | `source:extra-action` | 59 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |
