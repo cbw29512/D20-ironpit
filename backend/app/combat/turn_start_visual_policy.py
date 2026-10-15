@@ -12,11 +12,15 @@ class VisualTurnStartRule:
     save_dc: int
     save_ability: str = "constitution"
     immediate_petrification_margin: int | None = None
+    initial_debuff: str = "restrained"
+    terminal_debuff: str = "petrified"
 
     def __post_init__(self):
         try:
             if (type(self.source_id) is not str or not self.source_id.strip() or type(self.source_name) is not str or not self.source_name.strip() or type(self.range_ft) is not int or self.range_ft <= 0 or type(self.save_dc) is not int or not 1 <= self.save_dc <= 40):
                 raise ValueError("Invalid visual source parameters")
+            if not self.initial_debuff or not self.terminal_debuff or self.initial_debuff == self.terminal_debuff:
+                raise ValueError("Distinct debuff stages required")
             if self.save_ability not in ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"):
                 raise ValueError("Invalid visual saving throw")
             if self.immediate_petrification_margin is not None and (type(self.immediate_petrification_margin) is not int or self.immediate_petrification_margin <= 0):
@@ -51,14 +55,14 @@ def decide_visual_turn_start(rule: VisualTurnStartRule, facts: VisualTurnStartFa
 
 def resolve_visual_save_stage(rule: VisualTurnStartRule, save_total: int, previous_stage: str | None = None) -> str:
     try:
-        if type(save_total) is not int or previous_stage not in (None, "restrained"):
+        if type(save_total) is not int or previous_stage not in (None, rule.initial_debuff):
             raise ValueError("Invalid save progression")
         if save_total >= rule.save_dc:
             return "clear"
-        if previous_stage == "restrained":
-            return "petrified"
+        if previous_stage == rule.initial_debuff:
+            return rule.terminal_debuff
         margin = rule.immediate_petrification_margin
-        return "petrified" if margin is not None and rule.save_dc - save_total >= margin else "restrained"
+        return rule.terminal_debuff if margin is not None and rule.save_dc - save_total >= margin else rule.initial_debuff
     except Exception:
         log.exception("Visual progression failed")
         raise
