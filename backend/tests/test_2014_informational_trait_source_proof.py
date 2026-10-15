@@ -39,8 +39,14 @@ def test_informational_exemption_fails_closed_on_source_mutation(
 
 def test_other_informational_trait_requires_its_own_verified_source() -> None:
     card = next(m for m in load_monster_source_2014() if m.id == "chuul")
-    assert not verified_arena_inert_trait_2014(card, "Sense Magic")
-    assert "Sense Magic" in unsupported_traits_2014(card)
+    assert verified_arena_inert_trait_2014(card, "Sense Magic")
+    mutated = card.model_copy(update={
+        "source_traits": (card.source_traits or "").replace(
+            "senses magic within 120 feet", "senses magic within 30 feet",
+        ),
+    })
+    assert not verified_arena_inert_trait_2014(mutated, "Sense Magic")
+    assert "Sense Magic" in unsupported_traits_2014(mutated)
 
 
 @pytest.mark.parametrize("monster_id,trait", [
