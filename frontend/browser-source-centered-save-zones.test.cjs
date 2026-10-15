@@ -82,3 +82,21 @@ test("illegal off-source placement fails before spending action or limited resou
   assert.equal(caster.state.resources.cloud, 1);
   assert.deepEqual(setup.save_zones, []);
 });
+
+test("exhausted per-fight cloud cannot spend an action or create a zone", () => {
+  const action = { id: "cloud", name: "Fetid Cloud", actionCost: "action",
+    castRangeFt: 0, radiusFt: 10, durationRounds: 10, level: 0,
+    resourceId: "cloud", resourceCost: 1, centerOnSource: true,
+    saveContext: "nonmagical" };
+  const { caster, setup } = scenario(action);
+  caster.state.resources.cloud = 0;
+  assert.equal(window.IRON_PIT_BROWSER_SAVE_ZONES.choose(caster, setup, "1:caster"), null);
+  const before = actionsSpent;
+  assert.throws(
+    () => window.IRON_PIT_BROWSER_SAVE_ZONES.cast(1, 1, caster, setup, action, caster.state.position, "1:caster"),
+    /Resource cloud is unavailable/,
+  );
+  assert.equal(actionsSpent, before);
+  assert.equal(caster.state.resources.cloud, 0);
+  assert.equal(setup.save_zones.length, 0);
+});
