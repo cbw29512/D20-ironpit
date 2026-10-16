@@ -15,4 +15,5 @@ assert.ok(js.includes("IRON_PIT_BROWSER_ENGINE.runEncounter") || js.includes("IR
 assert.ok(js.includes("applied_condition_ids") && js.includes("damage_components"), "Report must include observed conditions and typed damage components.");
 assert.ok(js.includes("observed events only; not RAW correctness"), "Observed mechanics must not be mislabeled as certified correctness.");
 assert.ok(!js.includes("resolveAttack("), "Test Lab must not implement a new combat resolver.");
+assert.ok(js.includes("cards_unchanged") && js.includes("cardSnapshot"), "Every fight must check for certified card mutation.");
 console.log("Engine Test Lab static integration checks passed.");
