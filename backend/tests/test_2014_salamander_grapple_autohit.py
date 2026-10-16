@@ -89,7 +89,7 @@ def test_auto_hit_stops_after_release_and_other_targets_remain_illegal() -> None
     # Without owner-linked grapple, natural 1 still misses normally.
     event = resolve_attack(
         1, 1, build_combatant_state(source), other, tail, 5,
-        FixedDiceProvider([1]), actor_event_id="attacker-1",
+        FixedDiceProvider([1, 1]), actor_event_id="attacker-1",
         target_event_id="other", spend_action=False,
         affected_states=[other, held],
     )
