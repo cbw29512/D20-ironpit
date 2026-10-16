@@ -119,4 +119,30 @@ assert.ok(!held.state.active_effect_ids.includes("restrained"));
   assert.ok(d20Count > 0);
   assert.equal(boss.state.reaction_available, false);
 }
+// Synthetic source identity: target-specific AC and the d20 must survive a rename.
+{
+  const syntheticTemplate = structuredClone(template);
+  syntheticTemplate.id = "custom-grappler";
+  syntheticTemplate.name = "Synthetic Grasping Creature";
+  const syntheticAttack = { ...tail, id: "custom-grasp", name: "Custom Grasp" };
+  const source = member("custom-owner", "monsters", syntheticTemplate, 10);
+  const boss = member("custom-boss", "heroes", heroTemplate, 5);
+  const ally = member("custom-ally", "heroes", heroTemplate, 5);
+  boss.state.template.armor_class = 10;
+  ally.state.template.armor_class = 30;
+  boss.state.template.redirect_attack_reaction = { ally_range_ft: 5, ally_max_size: "medium" };
+  const encounter = { heroes: [boss, ally], monsters: [source], ruleset: "2014" };
+  G.apply(boss.state, source.combatant_id, 14, 10, true);
+  window.IRON_PIT_DICE = {
+    roll: () => 12,
+    rollMany: (count) => Array.from({ length: count }, () => 12),
+  };
+  S.beginTurn(source.state);
+  const result = A.resolveAttack(4, 4, source, boss, syntheticAttack, 5, { setup: encounter });
+  assert.equal(result.target_id, ally.combatant_id);
+  assert.equal(result.target_ac, 30, "Replacement AC must be used, not the original defender AC");
+  assert.equal(result.attack_roll?.selected_roll, 12, "Unheld replacement must require a d20");
+  assert.equal(result.hit, false);
+  assert.equal(boss.state.reaction_available, false);
+}
 console.log("Salamander shared grapple-owner auto-hit / source dice browser parity passed.");
