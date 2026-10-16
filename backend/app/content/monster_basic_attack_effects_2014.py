@@ -122,6 +122,7 @@ def _save_effect_2014(attack: SourceAttack2014) -> AttackEffectDefinition:
             failure_push_ft=int(row.get("failure_push_ft", 0)),
             cannot_regain_hit_points=bool(row.get("cannot_regain_hit_points", False)),
             failure_margin_escalation=row.get("failure_margin_escalation"),
+            failure_margin_escalation=row.get("failure_margin_escalation"),
             excluded_creature_types=[
                 str(item) for item in row.get("excluded_creature_types") or []
             ],

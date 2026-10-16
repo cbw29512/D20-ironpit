@@ -97,6 +97,10 @@ def resolve_attack_hit_riders(
     ):
         result.applied_conditions.append(result.on_hit_save.applied_condition)
 
+    for condition_id in result.on_hit_save.additional_conditions:
+        if condition_id not in result.applied_conditions:
+            result.applied_conditions.append(condition_id)
+
     result.topple = resolve_topple_hit(attacker, defender, attack, dice)
     if result.topple.applied and "prone" not in result.applied_conditions:
         result.applied_conditions.append("prone")
