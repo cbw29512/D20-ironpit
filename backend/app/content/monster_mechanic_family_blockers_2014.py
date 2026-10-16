@@ -21,6 +21,7 @@ from app.content.monster_legendary_bindings_2014 import supports_legendary_actio
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_save_capabilities_2014 import unsupported_save_actions_2014
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_grapple_auto_hit_source_2014 import source_proves_grapple_auto_hit_2014
 from app.content.monster_zero_hp_prevention_2014 import supports_zero_hp_prevention_2014
 
 logger = logging.getLogger(__name__)
@@ -91,7 +92,10 @@ def attack_blockers_2014(monster: SourceMonster2014) -> list[str]:
             if attack.charge_profile is not None and not supports_charge_profile_2014(profile):
                 blockers.append("attack:complex")
                 continue
-            if not supports_basic_attack_effects_2014(attack):
+            if not supports_basic_attack_effects_2014(attack) or (
+                attack.grapple_target_policy == "auto_hit_own_grapple"
+                and not source_proves_grapple_auto_hit_2014(monster, attack)
+            ):
                 blockers.append("attack:complex")
             if attack.kind == "ranged":
                 normal_range_ft, long_range_ft = corrected_attack_range_2014(monster, attack)

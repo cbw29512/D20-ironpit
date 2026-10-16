@@ -23,7 +23,7 @@ def attack_allowed_against(
             return False
         if attack.grapple_target_policy == "normal":
             return True
-        if attack.grapple_target_policy != "own_grapple_only":
+        if attack.grapple_target_policy not in {"own_grapple_only", "auto_hit_own_grapple"}:
             raise ValueError(f"Unsupported grapple target policy: {attack.grapple_target_policy}")
         if defender_owned:
             return True
