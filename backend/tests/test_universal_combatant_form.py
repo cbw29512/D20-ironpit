@@ -42,11 +42,15 @@ def test_homebrew_form_compiles_through_same_template_as_official_definition() -
 
 
 def test_ability_names_are_labels_not_resolution_switches() -> None:
-    original = compile_combatant_form(form())
-    renamed = compile_combatant_form(form("Homebrew Serpent"))
+    original_payload = form()
+    renamed_payload = copy.deepcopy(original_payload)
+    renamed_payload["attacks"][0]["name"] = "Completely Different Label"
+    original = compile_combatant_form(original_payload)
+    renamed = compile_combatant_form(renamed_payload)
     assert original.weapon_attack.attack_bonus == renamed.weapon_attack.attack_bonus
     assert original.weapon_attack.on_hit_damage == renamed.weapon_attack.on_hit_damage
-    assert renamed.weapon_attack.weapon.name == "Burning Coil"
+    assert renamed.weapon_attack.weapon.name == "Completely Different Label"
+    assert original.weapon_attack.weapon.name == "Tail"
 
 
 def test_form_rejects_silent_unknown_effect_fields() -> None:
