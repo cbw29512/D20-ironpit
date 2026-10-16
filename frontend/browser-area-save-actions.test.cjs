@@ -174,3 +174,96 @@ window.IRON_PIT_BROWSER_HEALING = {
   assert.equal(resolvedHeal.events[0].target_id, "hero:ally-only");
   assert.equal(healer.state.resources["wild-shape"], 1);
 }
+
+
+{
+  // Multi-typed AOE damage is rolled once per component, then reused for
+  // each affected target; defenses and saves still resolve separately.
+  const jumper = member("monster:jumper", "monsters", 1, 1);
+  const targets = [member("hero:one", "heroes", 2, 1), member("hero:two", "heroes", 3, 1)];
+  const action = {
+    id: "two-types", name: "Two Types", range: 15,
+    saveAbility: "dexterity", dc: 16,
+    area: { shape: "cone", origin: "self", length_ft: 15 },
+    damageComponents: [
+      { diceCount: 1, diceSize: 6, damageType: "bludgeoning" },
+      { diceCount: 1, diceSize: 8, damageType: "slashing" },
+    ],
+  };
+  jumper.state.template.saving_throw_actions = [action];
+  const field = { heroes: targets, monsters: [jumper],
+    map_definition: { width_squares: 10, height_squares: 10 } };
+  const rolled = [];
+  window.IRON_PIT_DICE = {
+    rollMany: (count, size) => {
+      rolled.push([count, size]);
+      return [size];
+    },
+  };
+  calls.length = 0;
+  const selected = A.choose(jumper, field);
+  assert.ok(selected);
+  const resolved = A.resolve(40, 1, jumper, field, selected);
+  assert.equal(resolved.events.length, 2);
+  assert.deepEqual(rolled, [[1, 6], [1, 8]]);
+  assert.deepEqual(calls.map((item) => item.rolls), [
+    [[6], [8]], [[6], [8]],
+  ]);
+
+  // Multiple individually chosen targets follow the same universal rule.
+  window.IRON_PIT_BROWSER_RESOURCES = {
+    available: () => true, spend: () => null,
+  };
+  window.IRON_PIT_BROWSER_FORMATION = { saveDistance: () => 5 };
+  load("browser-multi-save-provider.js");
+  const M = window.IRON_PIT_BROWSER_MULTI_SAVE_PROVIDER;
+  jumper.state.action_available = true;
+  const multi = { ...action, area: null, maxTargets: 2 };
+  rolled.length = 0;
+  calls.length = 0;
+  const multiResult = M.resolve(50, 1, jumper, field, multi, targets);
+  assert.equal(multiResult.events.length, 2);
+  assert.deepEqual(rolled, [[1, 6], [1, 8]]);
+  assert.deepEqual(calls.map((item) => item.rolls), [
+    [[6], [8]], [[6], [8]],
+  ]);
+}
+
+console.log("Multi-target shared typed-save damage parity passed.");
+
+// Run source-neutral multi-target validation parity with the existing browser CI gate.
+require("./browser-save-target-cap-parity.test.cjs");
+
+// Source-neutral area placement must not treat immune creatures as legal targets.
+{
+  const caster = member("monster:renamed-source", "monsters", 1, 1);
+  const legal = member("hero:eligible", "heroes", 2, 1);
+  const immune = member("hero:immune", "heroes", 3, 1);
+  const areaAction = {
+    ...action, id: "renamed-source", name: "Arbitrary Homebrew Effect",
+    resourceId: "renamed-source", resourceCost: 1,
+  };
+  caster.state.template.saving_throw_actions = [areaAction];
+  caster.state.resources["renamed-source"] = 1;
+  const mixed = { heroes: [legal, immune], monsters: [caster],
+    map_definition: { width_squares: 10, height_squares: 10 } };
+  const originalLegal = window.IRON_PIT_BROWSER_SAVES.legalAction;
+  window.IRON_PIT_BROWSER_SAVES.legalAction = (_effect, target) => target.combatant_id !== "hero:immune";
+  try {
+    const selected = A.choose(caster, mixed);
+    assert.ok(selected);
+    assert.deepEqual(selected.placement.targetIds, ["hero:eligible"]);
+    const forged = { ...selected, placement: { ...selected.placement, targetIds: ["hero:immune"] } };
+    assert.throws(() => A.resolve(60, 1, caster, mixed, forged), /stale or illegal area placement/);
+    const empty = { ...selected, placement: { ...selected.placement, targetIds: [] } };
+    assert.throws(() => A.resolve(60, 1, caster, mixed, empty), /stale or illegal area placement/);
+    assert.equal(caster.state.action_available, true);
+    assert.equal(caster.state.resources["renamed-source"], 1);
+    const outcome = A.resolve(60, 1, caster, mixed, selected);
+    assert.deepEqual(outcome.events.map((event) => event.target_id), ["hero:eligible"]);
+    assert.equal(caster.state.resources["renamed-source"], 0);
+    assert.equal(caster.state.action_available, false);
+  } finally {
+    window.IRON_PIT_BROWSER_SAVES.legalAction = originalLegal;
+  }
+}

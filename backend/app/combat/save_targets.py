@@ -12,6 +12,22 @@ from app.domain.models import BattleEvent, SavingThrowAction
 logger = logging.getLogger(__name__)
 
 
+def roll_shared_save_damage(action: SavingThrowAction, dice) -> list[int] | list[list[int]] | None:
+    """Roll one set of source-defined damage dice for all targets of one Action."""
+    try:
+        if action.damage_components:
+            return [
+                [dice.roll(spec.dice_size) for _ in range(spec.dice_count)]
+                for spec in action.damage_components
+            ]
+        if action.damage_dice_count:
+            return [dice.roll(action.damage_dice_size) for _ in range(action.damage_dice_count)]
+        return None
+    except Exception:
+        logger.exception("Failed to roll shared saving-throw damage for %s.", action.id)
+        raise
+
+
 def validate_save_targets(
     actor: EncounterCombatant,
     setup: EncounterSetup,
@@ -22,6 +38,11 @@ def validate_save_targets(
 ) -> list[EncounterCombatant]:
     if not target_ids or len(set(target_ids)) != len(target_ids):
         raise ValueError("Multi-target save actions require unique target IDs.")
+    # The immutable card controls how many creatures one Action can affect.
+    # Area effects already enforce their geometry through legal placements;
+    # max_targets limits direct multi-target Actions only.
+    if action.area is None and len(target_ids) > action.max_targets:
+        raise ValueError("Multi-target save selection exceeds its declared target cap.")
     by_id = {member.combatant_id: member for member in [*setup.heroes, *setup.monsters]}
     expected_side = "monsters" if actor.side == "heroes" else "heroes"
     result: list[EncounterCombatant] = []
@@ -55,7 +76,9 @@ def resolve_save_targets(
             raise ValueError(f"{action.name} resource is unavailable.")
         remaining = spend_action_resource(actor.state, action)
         states = [member.state for member in [*setup.heroes, *setup.monsters]]
-        shared = [dice.roll(action.damage_dice_size) for _ in range(action.damage_dice_count)] if action.damage_dice_count else None
+        # A single source Action rolls each typed component once; all
+        # targets independently save and apply their own damage defenses.
+        shared = roll_shared_save_damage(action, dice)
         events: list[BattleEvent] = []
         for target in targets:
             chain, sequence = resolve_save_event_chain(
