@@ -7,7 +7,7 @@ require("./browser-test-runtime.cjs").loadWebsite();
 function execute(kind, label) {
   const source = kind === "monster"
     ? window.IRON_PIT_BROWSER_MONSTERS["srd-goblin-warrior"]
-    : window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
+    : Object.values(window.IRON_PIT_BROWSER_HEROES).find(item => item.ruleset === "2014");
   const template = structuredClone(source);
   template.id = "synthetic-attacker";
   template.kind = kind;
