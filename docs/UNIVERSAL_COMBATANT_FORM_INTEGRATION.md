@@ -39,3 +39,18 @@ with declarative movement grants; validate nested effect schemas strictly;
 wire a guided homebrew editor to this same compiler; test Python/browser
 combat parity on a synthetic renamed form. Keep each slice separate and
 reuse existing primitives. Do not merge a universal rewrite in one change.
+
+## Homebrew saving throw default — confirmed 2026-10-16
+
+For a user-defined harmful condition effect, the default save outcome is:
+**failed save applies the declared negative condition; successful save negates
+that condition**. This is an editor default, not a universal RAW override.
+The effect schema must retain explicit success and failure outcomes, because
+some printed effects deal half damage or have other effects on success.
+
+Example: **Howling Anguish**, character level 1, area targets make a Wisdom
+save against the character's configured ability DC. Failure applies the
+universal Frightened condition for the source-defined duration; success does
+not apply Frightened. The card supplies the name, area, save ability, DC source,
+duration, action cost and uses; the engine uses its existing save/condition
+mechanics. Never dispatch combat behavior on the name Howling Anguish.
