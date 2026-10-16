@@ -99,6 +99,16 @@ def compile_combatant_form(values: Mapping[str, Any]) -> CombatantTemplate:
         for i, recharge in enumerate(values.get("recharge_rules", [])):
             _check_keys(recharge, RechargeRule, f"recharge_rules[{i}]")
         definition = CombatantDefinition.model_validate(dict(values))
+        resource_ids = [resource.id for resource in definition.resources]
+        if len(resource_ids) != len(set(resource_ids)):
+            raise ValueError("Duplicate combatant resource ids are not allowed.")
+        available = set(resource_ids)
+        for recharge in definition.recharge_rules:
+            if recharge.resource_id not in available:
+                raise ValueError(f"Recharge references undeclared resource: {recharge.resource_id}")
+        for action in definition.save_actions:
+            if action.resource_id is not None and action.resource_id not in available:
+                raise ValueError(f"Save action references undeclared resource: {action.resource_id}")
         # Unsupported capabilities are still rejected by the same compiler.
         return compile_combatant(definition)
     except (ValueError, ValidationError):
