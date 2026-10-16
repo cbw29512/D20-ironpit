@@ -42,3 +42,32 @@ function execute(kind, label) {
 test("renamed monster and character attacks use identical browser combat rules", () => {
   assert.deepEqual(execute("monster", "Tail"), execute("character", "Imaginary Coil"));
 });
+
+const fs = require("node:fs");
+const path = require("node:path");
+
+test("actual compiled form browser rows match Python combat outcomes", () => {
+  const fixture = JSON.parse(fs.readFileSync(path.join(__dirname, "browser-form-runtime-parity-fixture.json"), "utf8"));
+  for (const item of fixture.cases) {
+    const actor = {
+      combatant_id: "attacker", side: item.kind === "monster" ? "monsters" : "heroes",
+      position_ft: 0, state: window.IRON_PIT_BROWSER_STATE.buildState(item.attacker),
+    };
+    const target = {
+      combatant_id: "target", side: item.kind === "monster" ? "heroes" : "monsters",
+      position_ft: 5, state: window.IRON_PIT_BROWSER_STATE.buildState(item.defender),
+    };
+    const rolls = [15, 4, 5];
+    window.IRON_PIT_DICE = {
+      roll(sides) { const v = rolls.shift(); assert.ok(v >= 1 && v <= sides); return v; },
+      rollMany(count, sides) { return Array.from({length: count}, () => this.roll(sides)); },
+    };
+    const event = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(
+      1, 1, actor, target, actor.state.template.attacks[0], 5, {spendAction: false},
+    );
+    assert.deepEqual(
+      {hit: event.hit, damage: event.damage_roll.total, hp: target.state.current_hp},
+      item.expected, `Python/browser divergence for ${item.kind}`,
+    );
+  }
+});
