@@ -62,4 +62,24 @@ const releasedAttack = A.resolveAttack(2, 2, salamander, another, tail, 5, { set
 assert.equal(releasedAttack.hit, false);
 assert.ok(releasedAttack.attack_roll);
 assert.ok(resumedD20 > 0);
+assert.equal(another.state.grapple_sources.length, 0, "A missed first Tail attack never Grapples");
+// Universal cleanup: truly Incapacitated grapplers release their hold.
+// Mere Poisoned, Frightened, Charmed, Restrained or Grappled does not.
+for (const condition of ["incapacitated", "unconscious", "stunned", "paralyzed", "petrified"]) {
+  G.apply(held.state, salamander.combatant_id, 14, 10, true);
+  salamander.state.active_effect_ids.push(condition);
+  G.cleanup(setup);
+  assert.deepEqual(held.state.grapple_sources, [], condition);
+  assert.ok(!held.state.active_effect_ids.includes("grappled"), condition);
+  assert.ok(!held.state.active_effect_ids.includes("restrained"), condition);
+  salamander.state.active_effect_ids.pop();
+}
+for (const condition of ["poisoned", "frightened", "charmed", "restrained", "grappled"]) {
+  G.apply(held.state, salamander.combatant_id, 14, 10, true);
+  salamander.state.active_effect_ids.push(condition);
+  G.cleanup(setup);
+  assert.equal(held.state.grapple_sources.length, 1, condition);
+  salamander.state.active_effect_ids.pop();
+  G.release(held.state, salamander.combatant_id);
+}
 console.log("Salamander shared grapple-owner auto-hit / source dice browser parity passed.");

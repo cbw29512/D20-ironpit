@@ -94,3 +94,4 @@ def test_auto_hit_stops_after_release_and_other_targets_remain_illegal() -> None
         affected_states=[other, held],
     )
     assert not event.hit and event.attack_roll is not None
+    assert not other.grapple_sources
