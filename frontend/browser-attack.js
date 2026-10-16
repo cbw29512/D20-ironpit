@@ -33,7 +33,7 @@
     if (attack.unavailableReason != null) throw new Error(`${attack.id} unavailable: ${attack.unavailableReason}`);
     if (extra.brutalStrikeEffectIds != null) BS()?.selectEffects?.(attacker.state, extra.brutalStrikeEffectIds); const spendAction = extra.spendAction !== false;
     if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
-    const formation = window.IRON_PIT_BROWSER_FORMATION;
+    const formation = window.IRON_PIT_BROWSER_FORMATION; const autoHit = formation?.automaticHit?.(attacker, target, attack) || false;
     if (formation?.targetAllowed && !formation.targetAllowed(attacker, target, attack, extra.setup || null)) throw new Error(`${attack.id} cannot target ${target.combatant_id} under its current target policy.`);
     if (!formation?.targetAllowed && (attack.grappleTargetPolicy || "normal") !== "normal") throw new Error("Nonstandard attack target policy requires browser-formation.js.");
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(attacker, target) || null;
@@ -58,15 +58,15 @@
       + (attacker.state.template.advantage_against_marked_effect_id && attacker.state.active_modifiers?.some((item) => item.source_effect_id === attacker.state.template.advantage_against_marked_effect_id && item.target_id === target.combatant_id) ? 1 : 0);
     const advantage = Q().suppressAttackAdvantage?.(target.state) ? 0 : unsuppressedAdvantage;
     const mode = R().attackMode(attack, distance, advantage, disadvantage, closeThreat);
-    const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + M().attackRollFlat(attacker.state, attack.weaponId || attack.id) + (M().nextIncomingAttackRollFlat?.(target.state, attacker.combatant_id) || 0), mode), M().effectiveArmorClass(target.state));
-    let attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll); const d20Bonus = [1, 20].includes(heroic.roll.selected_roll) ? null : DB()?.applyIfUseful(attacker.state, "attack", attackRoll, M().effectiveArmorClass(target.state), round); if (d20Bonus) attackRoll = d20Bonus.roll; const rollPenalty = window.IRON_PIT_BROWSER_REACTION_ROLL_PENALTIES?.applyIfUseful(attacker, extra.setup, "attack", attackRoll, M().effectiveArmorClass(target.state)); if (rollPenalty) attackRoll = rollPenalty.roll;
-    M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); M().consumeNextIncomingAttackRollFlat?.(target.state, attacker.combatant_id);
-    T()?.consumeNextAttackDisadvantage(attacker.state); SAP().consume(attacker.state);
-    M().consumeAttacksAgainstAdvantage(target.state); window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
+    const heroic = autoHit ? { roll: null, used: false } : HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + M().attackRollFlat(attacker.state, attack.weaponId || attack.id) + (M().nextIncomingAttackRollFlat?.(target.state, attacker.combatant_id) || 0), mode), M().effectiveArmorClass(target.state));
+    let attackRoll = autoHit ? null : M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll); const d20Bonus = autoHit || [1, 20].includes(heroic.roll.selected_roll) ? null : DB()?.applyIfUseful(attacker.state, "attack", attackRoll, M().effectiveArmorClass(target.state), round); if (d20Bonus) attackRoll = d20Bonus.roll; const rollPenalty = autoHit ? null : window.IRON_PIT_BROWSER_REACTION_ROLL_PENALTIES?.applyIfUseful(attacker, extra.setup, "attack", attackRoll, M().effectiveArmorClass(target.state)); if (rollPenalty) attackRoll = rollPenalty.roll;
+    if (!autoHit) { M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); M().consumeNextIncomingAttackRollFlat?.(target.state, attacker.combatant_id);
+      T()?.consumeNextAttackDisadvantage(attacker.state); SAP().consume(attacker.state); M().consumeAttacksAgainstAdvantage(target.state); }
+    window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null, actualTarget = redirected || target;
-    const resolved = O().resolveD20(attacker.state, actualTarget.state, attack, attackRoll,
-      M().effectiveArmorClass(actualTarget.state), attacker, extra.setup);
+    const resolved = autoHit ? O().automaticHit(M().effectiveArmorClass(actualTarget.state))
+      : O().resolveD20(attacker.state, actualTarget.state, attack, attackRoll, M().effectiveArmorClass(actualTarget.state), attacker, extra.setup);
     const resolvedAttackRoll = resolved.roll, natural = resolved.natural, targetAc = resolved.targetAc;
     const parry = resolved.parry, outcomeAdjustment = resolved.adjustment, d20Override = resolved.d20, override = resolved.miss, hit = resolved.hit; if (!hit) BS()?.clearPending?.(attacker.state, extra.turnKey);
     const naturalOne = natural === 1;

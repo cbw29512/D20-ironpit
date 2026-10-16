@@ -7,6 +7,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.timed_attack_cap import register_turn_attack
 from app.combat.attack_roll_resolution import resolve_attack_roll
 from app.combat.attack_legality import attack_allowed_against
+from app.combat.attack_grapple_auto_hit import owned_grapple_auto_hit, automatic_hit_roll, automatic_hit_outcome
 from app.combat.attack_d20_outcome import resolve_attack_d20_outcome
 from app.combat.attack_effect_resolution import resolve_attack_effects
 from app.combat.attack_event_support import attack_damage_reduction_description, build_attack_description, primary_attack_save_fields
@@ -41,16 +42,11 @@ def resolve_attack(
         if not attack_allowed_against(attack, attacker_event_id, defender, affected_states):
             raise ValueError(f"{attack.id} cannot target {defender_event_id} under its current target policy.")
         register_turn_attack(attacker, off_turn=off_turn)
-        roll_resolution = resolve_attack_roll(
-            attacker,
-            defender,
-            attack,
-            distance_ft,
-            dice,
-            defender_event_id=defender_event_id,
-            attacker_event_id=attacker_event_id,
-            round_number=round_number,
-            turn_key=turn_key,
+        auto_hit = owned_grapple_auto_hit(attack, attacker_event_id, defender)
+        roll_resolution = automatic_hit_roll() if auto_hit else resolve_attack_roll(
+            attacker, defender, attack, distance_ft, dice,
+            defender_event_id=defender_event_id, attacker_event_id=attacker_event_id,
+            round_number=round_number, turn_key=turn_key,
             advantage_sources=advantage_sources,
             other_disadvantage_sources=other_disadvantage_sources,
             close_enemy_active=close_enemy_active,
@@ -61,7 +57,7 @@ def resolve_attack(
         brutal_strike_disadvantage = roll_resolution.brutal_strike_disadvantage
         d20_bonus_source_name = roll_resolution.d20_bonus_source_name
         reaction_penalty = None
-        if reaction_setup is not None and reaction_roller is not None:
+        if not auto_hit and reaction_setup is not None and reaction_roller is not None:
             reaction_penalty = apply_reaction_roll_penalty_if_useful(
                 reaction_roller,
                 reaction_setup,
@@ -77,15 +73,12 @@ def resolve_attack(
         if redirect_target is not None and redirect_target is not defender and defender.template.redirect_attack_reaction is not None and is_available(defender, "reaction"):
             spend(defender, "reaction"); actual_defender = redirect_target
             actual_event_id = redirect_target_event_id or redirect_target.template.id; redirect_used = True
-        d20_outcome = resolve_attack_d20_outcome(
-            attacker,
-            actual_defender,
-            attack,
-            attack_roll,
+        d20_outcome = automatic_hit_outcome(
             effective_armor_class(actual_defender),
-            encounter_roller=reaction_roller,
-            setup=reaction_setup,
-            dice=dice,
+        ) if auto_hit else resolve_attack_d20_outcome(
+            attacker, actual_defender, attack, attack_roll,
+            effective_armor_class(actual_defender),
+            encounter_roller=reaction_roller, setup=reaction_setup, dice=dice,
         )
         attack_roll, target_ac, hit = d20_outcome.roll, d20_outcome.target_ac, d20_outcome.hit
         if not hit:

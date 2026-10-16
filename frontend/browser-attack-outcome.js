@@ -42,6 +42,11 @@
     return { events: [], sequence, claimed: false };
   }
 
+  function automaticHit(targetAc) {
+    const unused = { featureId: null, sourceName: null };
+    return { roll: null, natural: 0, targetAc, hit: true,
+      parry: { used: false }, adjustment: unused, d20: unused, miss: unused };
+  }
   function resolveD20(
     attackerState, defenderState, attack, attackRoll, baseTargetAc,
     attackerMember = null, setup = null,
@@ -94,6 +99,6 @@
   }
 
   window.IRON_PIT_BROWSER_ATTACK_OUTCOME = {
-    create, emptyTopple, noEventResult, requireOutcome, resolveD20,
+    create, emptyTopple, noEventResult, requireOutcome, resolveD20, automaticHit,
   };
 })();

@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass(frozen=True)
 class AttackD20Outcome:
-    roll: DiceRoll
+    roll: DiceRoll | None
     target_ac: int
     hit: bool
     natural: int
