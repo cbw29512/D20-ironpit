@@ -57,3 +57,23 @@ def test_legacy_save_damage_still_compiles() -> None:
     assert action.damage_dice_count == 2
     assert action.damage_type == "fire"
     assert action.damage_components == []
+
+
+def test_browser_card_serialization_preserves_multi_target_typed_components() -> None:
+    """The production browser card must retain source target count and types."""
+    import sys
+    from pathlib import Path
+
+    scripts = Path(__file__).resolve().parents[2] / "scripts"
+    if str(scripts) not in sys.path:
+        sys.path.insert(0, str(scripts))
+    from browser_template_serializer import _save
+
+    row = _save(_compile_save(_synthetic_card("Renamed Source")))
+    assert row["name"] == "Renamed Source"
+    assert row["maxTargets"] == 4
+    assert row["successDamage"] == "half"
+    assert row["damageComponents"] == [
+        {"diceCount": 3, "diceSize": 6, "damageBonus": 4, "damageType": "bludgeoning"},
+        {"diceCount": 3, "diceSize": 6, "damageBonus": 4, "damageType": "slashing"},
+    ]
