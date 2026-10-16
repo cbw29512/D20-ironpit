@@ -49,3 +49,19 @@ def test_exact_source_cap_allows_legal_targets_without_name_dispatch() -> None:
             actor, setup, _action(2), ("hero:1", "hero:2"), skip_range_check=True,
         )
     assert selected == targets
+
+def test_area_saves_use_geometry_not_single_target_default() -> None:
+    """Area geometry may legitimately select several targets with default max_targets=1."""
+    actor = SimpleNamespace(combatant_id="monster:source", side="monsters")
+    state = SimpleNamespace(is_alive=True, is_dead=False, current_hp=12)
+    targets = [
+        SimpleNamespace(combatant_id=f"hero:{number}", side="heroes", state=state)
+        for number in (1, 2)
+    ]
+    setup = SimpleNamespace(heroes=targets, monsters=[])
+    action = _action(1).model_copy(update={"area": {"shape": "cone", "origin": "self", "length_ft": 15}})
+    with patch("app.combat.save_targets.legal_save_action", return_value=True):
+        selected = validate_save_targets(
+            actor, setup, action, ("hero:1", "hero:2"), skip_range_check=True,
+        )
+    assert selected == targets
