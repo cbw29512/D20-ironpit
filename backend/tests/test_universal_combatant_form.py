@@ -11,6 +11,7 @@ from app.content.combatant_form import compile_combatant_form
 from app.content.capability_compiler import compile_combatant
 from app.combat.state import build_combatant_state
 from app.domain.capabilities import CombatantDefinition
+from scripts.browser_template_serializer import template_row
 
 
 def form(name: str = "Original") -> dict:
@@ -217,3 +218,23 @@ def test_cross_kind_attack_execution_uses_identical_roll_and_damage() -> None:
         outcomes.append((event.hit, event.damage_roll.total, defender.current_hp))
     assert outcomes[0] == outcomes[1]
     assert outcomes[0][0] is True
+
+
+def test_cross_kind_forms_serialize_identical_browser_attack_mechanics() -> None:
+    monster = form()
+    character = copy.deepcopy(monster)
+    character["id"] = "form-character"
+    character["kind"] = "character"
+    character["level"] = 1
+    character["ability_scores"] = {
+        "strength": 16, "dexterity": 14, "constitution": 16,
+        "intelligence": 10, "wisdom": 12, "charisma": 10,
+    }
+    monster_row = template_row(compile_combatant_form(monster))
+    character_row = template_row(compile_combatant_form(character))
+    assert monster_row["kind"] == "monster"
+    assert character_row["kind"] == "character"
+    assert monster_row["attacks"] == character_row["attacks"]
+    assert monster_row["armor_class"] == character_row["armor_class"]
+    assert monster_row["max_hp"] == character_row["max_hp"]
+    assert monster_row["ruleset"] == character_row["ruleset"]
