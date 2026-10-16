@@ -8,6 +8,35 @@ Read alongside [SOUL.md](../SOUL.md). This applies to 2014 and 2024 monsters, pr
 
 A card declares: (1) triggers and action economy; (2) target, range, senses, visibility, area, and immunity eligibility; (3) attack/check/save/automatic resolution and exact DC, dice, modifiers; (4) damage, healing, buffs, debuffs, conditions, movement, transformations, and defeat; (5) stacking, duration, concentration, source dependency, exit rules, recharge, and fight reset. Printed ability names are retained for cards and logs only, never runtime dispatch.
 
+## Shared form contract and editor modes
+
+The canonical runtime is `CombatantDefinition → CombatantTemplate →
+CombatantState`. Source cards and user forms bind values to that pipeline;
+they do not introduce an alternative combatant engine.
+
+- **Monster editor:** empty fields accept source-level AC, HP, movement,
+  attacks, multiattack composition, saves, passive traits, recharge and
+  conditions. Attack damage and bonuses are declared, not guessed from a name.
+- **Character editor:** empty fields accept edition, scores, level, gear,
+  trained proficiencies and selected abilities. The character-building
+  rules compute AC, hit/damage bonuses and save DCs before emitting the *same*
+  completed combatant schema. No duplicated combat formulas in the editor.
+- **Ability editor:** exact display name plus typed trigger, action/resource
+  cost, area/target rule, DC source or explicit DC, ordered effects,
+  success/failure outcomes, duration and reset. A monster ability can belong
+  to a character when its declared mechanics are valid. User text alone
+  cannot authorize executable mechanics.
+
+A default harmful condition save means failed save applies the negative
+condition and successful save does not; source-defined partial effects or
+half damage on success override the default. Name substitutions only change
+presentation and audit labels.
+
+**Fail closed:** unknown/unsupported nested values, broken references,
+invalid resources and unimplemented outcome-changing behavior must reject
+compilation. Run parity and fight-reset tests for synthetic renamed
+monster/character forms before making homebrew available in the browser.
+
 ## Composable examples
 
 - **Petrifying Gaze:** active source passive → visibility/range/aversion predicate → Constitution saving throw → staged target debuff → Petrified terminal defeat (locked Iron Pit override).

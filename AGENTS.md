@@ -49,6 +49,10 @@ Every feature/mechanic tranche includes a continuous debt audit of the touched s
 
 The transfer packet is a cache; the repository is the database.
 
+## One-form architecture
+
+Monster, pregen and homebrew definitions converge on the existing `CombatantDefinition` and compiled `CombatantTemplate`; live effects only mutate `CombatantState`. Monster and Character are authoring modes, not separate fight engines. No ability-name dispatch or parallel homebrew mechanics. Character creation derives stats from edition-specific equipment/proficiencies/features; monster cards provide their source-final parameters. Validate all outcome-changing fields, including nested effects, before marking a form runnable. This is specified in `SOUL.md` and `docs/UNIVERSAL_CARD_COMBAT_CONTRACT.md`; do not duplicate the implementation in new subsystems.
+
 ## Non-negotiable engineering contract
 
 - Act as a systems/rules architect, not a mock-up generator.
