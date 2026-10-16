@@ -233,3 +233,37 @@ console.log("Multi-target shared typed-save damage parity passed.");
 
 // Run source-neutral multi-target validation parity with the existing browser CI gate.
 require("./browser-save-target-cap-parity.test.cjs");
+
+// Source-neutral area placement must not treat immune creatures as legal targets.
+{
+  const caster = member("monster:renamed-source", "monsters", 1, 1);
+  const legal = member("hero:eligible", "heroes", 2, 1);
+  const immune = member("hero:immune", "heroes", 3, 1);
+  const areaAction = {
+    ...action, id: "renamed-source", name: "Arbitrary Homebrew Effect",
+    resourceId: "renamed-source", resourceCost: 1,
+  };
+  caster.state.template.saving_throw_actions = [areaAction];
+  caster.state.resources["renamed-source"] = 1;
+  const mixed = { heroes: [legal, immune], monsters: [caster],
+    map_definition: { width_squares: 10, height_squares: 10 } };
+  const originalLegal = window.IRON_PIT_BROWSER_SAVES.legalAction;
+  window.IRON_PIT_BROWSER_SAVES.legalAction = (_effect, target) => target.combatant_id !== "hero:immune";
+  try {
+    const selected = A.choose(caster, mixed);
+    assert.ok(selected);
+    assert.deepEqual(selected.placement.targetIds, ["hero:eligible"]);
+    const forged = { ...selected, placement: { ...selected.placement, targetIds: ["hero:immune"] } };
+    assert.throws(() => A.resolve(60, 1, caster, mixed, forged), /stale or illegal area placement/);
+    const empty = { ...selected, placement: { ...selected.placement, targetIds: [] } };
+    assert.throws(() => A.resolve(60, 1, caster, mixed, empty), /stale or illegal area placement/);
+    assert.equal(caster.state.action_available, true);
+    assert.equal(caster.state.resources["renamed-source"], 1);
+    const outcome = A.resolve(60, 1, caster, mixed, selected);
+    assert.deepEqual(outcome.events.map((event) => event.target_id), ["hero:eligible"]);
+    assert.equal(caster.state.resources["renamed-source"], 0);
+    assert.equal(caster.state.action_available, false);
+  } finally {
+    window.IRON_PIT_BROWSER_SAVES.legalAction = originalLegal;
+  }
+}

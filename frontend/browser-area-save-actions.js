@@ -73,6 +73,20 @@
     }
   }
 
+  // Recompute eligibility from the geometric placement before execution.
+  function eligiblePlacement(member, setup, action, placement) {
+    try {
+      const targetIds = placement.targetIds.filter((id) => {
+        const target = memberById(setup, id);
+        return target && V().legalAction(action, target, 0, member.combatant_id);
+      });
+      return { ...placement, targetIds, target_ids: targetIds };
+    } catch (error) {
+      console.error("Failed browser area-save eligibility", { member: member.combatant_id, action: action.id, error });
+      throw error;
+    }
+  }
+
   function choose(member, setup, actionCost = null) {
     try {
       const candidates = [];
@@ -89,12 +103,8 @@
           member, setup, action.area, action.range, Boolean(action.areaHealingRider),
         );
         for (const placement of placements) {
-          const targetIds = placement.targetIds.filter((id) => {
-            const target = memberById(setup, id);
-            return target && V().legalAction(action, target, 0, member.combatant_id);
-          });
-          if (!targetIds.length && !action.areaHealingRider) continue;
-          const legal = { ...placement, targetIds, target_ids: targetIds };
+          const legal = eligiblePlacement(member, setup, action, placement);
+          if (!legal.targetIds.length && !action.areaHealingRider) continue;
           const healTarget = healingTarget(member, setup, action, legal, !legal.targetIds.length);
           if (action.areaHealingRider && !healTarget) continue;
           candidates.push({ action, placement: legal, healTarget });
@@ -121,7 +131,8 @@
       if (!resourceAvailable(member.state, action)) throw new Error(`${action.name} resource is unavailable.`);
       const legalPlacements = T().legalPlacements(
         member, setup, action.area, action.range, Boolean(action.areaHealingRider),
-      );
+      ).map((row) => eligiblePlacement(member, setup, action, row))
+        .filter((row) => row.targetIds.length || action.areaHealingRider);
       if (!legalPlacements.some((row) =>
         JSON.stringify(row.origin) === JSON.stringify(placement.origin)
         && JSON.stringify(row.direction) === JSON.stringify(placement.direction)
