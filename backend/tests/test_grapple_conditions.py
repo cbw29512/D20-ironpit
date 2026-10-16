@@ -90,6 +90,44 @@ def test_grapple_ends_when_grappler_is_dead_or_out_of_range() -> None:
     cleanup_grapples(setup)
     assert hero.state.grapple_sources == []
 
+def test_grappler_incapacitation_releases_all_owned_grapples() -> None:
+    # Grappled, Restrained, Poisoned and Frightened alone do NOT break a hold.
+    # Any condition that actually Incapacitates the grappler DOES.
+    for disabled in ("incapacitated", "unconscious", "stunned", "paralyzed", "petrified"):
+        setup = _setup()
+        hero, crocodile = setup.heroes[0], setup.monsters[0]
+        apply_grapple(hero.state, crocodile.combatant_id, 12, 5, restrains=True)
+        crocodile.state.active_effect_ids.append(disabled)
+        cleanup_grapples(setup)
+        assert not hero.state.grapple_sources, disabled
+        assert "restrained" not in hero.state.active_effect_ids
+        assert "grappled" not in hero.state.active_effect_ids
+    for partial in ("grappled", "restrained", "poisoned", "frightened", "charmed"):
+        setup = _setup()
+        hero, crocodile = setup.heroes[0], setup.monsters[0]
+        apply_grapple(hero.state, crocodile.combatant_id, 12, 5, restrains=True)
+        crocodile.state.active_effect_ids.append(partial)
+        cleanup_grapples(setup)
+        assert hero.state.grapple_sources, partial
+
+
+
+def test_dead_target_releases_hold_but_unconscious_living_target_does_not() -> None:
+    setup = _setup()
+    hero, crocodile = setup.heroes[0], setup.monsters[0]
+    apply_grapple(hero.state, crocodile.combatant_id, 12, 5, restrains=True)
+    hero.state.current_hp = 0
+    hero.state.is_unconscious = True
+    cleanup_grapples(setup)
+    assert hero.state.grapple_sources, "Living unconscious target remains held by RAW"
+    hero.state.is_alive = False
+    hero.state.is_dead = True
+    hero.state.is_unconscious = False
+    cleanup_grapples(setup)
+    assert not hero.state.grapple_sources
+    assert "grappled" not in hero.state.active_effect_ids
+    assert "restrained" not in hero.state.active_effect_ids
+
 
 def test_restrained_grapple_escape_spends_action_and_rage_helps_strength_check() -> None:
     setup = build_encounter_setup(EncounterSelection(

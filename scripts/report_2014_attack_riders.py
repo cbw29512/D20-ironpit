@@ -26,9 +26,9 @@ _FIELDS = (
     "forbid_target_grappled_by_self",
     "grapple_target_policy",
 )
-# Source-verified noncombat traits no longer mask independently unsupported
-# attack riders on Homunculus and Pseudodragon. Keep all three blocked.
-_EXPECTED_ATTACK_ONLY = frozenset({"homunculus", "pseudodragon", "salamander"})
+# Homunculus and Pseudodragon retain their unimplemented failure-margin poison
+# escalation; Salamander's owner-grapple Tail policy is now source-proven.
+_EXPECTED_ATTACK_ONLY = frozenset({"homunculus", "pseudodragon"})
 
 
 def _active(value: object, field: str) -> bool:

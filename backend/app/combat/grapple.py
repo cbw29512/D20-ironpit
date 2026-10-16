@@ -4,7 +4,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.ability_checks import ability_check_roll_mode, resolve_ability_check_outcome
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
-from app.combat.condition_rules import condition_speed_is_zero, has_condition
+from app.combat.condition_rules import condition_speed_is_zero, has_condition, is_incapacitated
 from app.combat.debuff_counters import debuff_is_countered, movement_counter_cost
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifier
@@ -112,10 +112,16 @@ def grapple_attack_disadvantage(state: CombatantState, target_id: str) -> int:
 def cleanup_grapples(setup: EncounterSetup) -> None:
     members = {member.combatant_id: member for member in [*setup.heroes, *setup.monsters]}
     for target in members.values():
+        # A dead target no longer occupies a held-grapple slot; unconscious
+        # living targets remain held until the owner is Incapacitated or released.
+        if target.state.is_dead or not target.state.is_alive:
+            target.state.grapple_sources = []
+            _sync_effect_ids(target.state)
+            continue
         retained: list[GrappleSource] = []
         for source in target.state.grapple_sources:
             grappler = members.get(source.source_id)
-            if grappler is None or grappler.state.is_dead or grappler.state.is_unconscious:
+            if grappler is None or grappler.state.is_dead or not grappler.state.is_alive or is_incapacitated(grappler.state):
                 continue
             if abs(grappler.position_ft - target.position_ft) > source.range_ft:
                 continue

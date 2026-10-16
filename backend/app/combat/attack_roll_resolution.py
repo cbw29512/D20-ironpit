@@ -46,7 +46,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass(frozen=True)
 class AttackRollResolution:
-    roll: DiceRoll
+    roll: DiceRoll | None
     mode: RollMode
     heroic_reroll: bool
     brutal_strike_disadvantage: int
