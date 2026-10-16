@@ -19,10 +19,13 @@ A new fight builds a fresh state. No mutable homebrew state is saved in a card.
 validation and references → unsupported-capability gate → existing compiler
 → existing Python reference / browser serialized combatant runtime.
 
-**Scope limitation:** nested payload objects currently retain their own
-existing Pydantic validation policies. A future user-facing editor must add
-strict nested-field validation and present human-readable capability choices;
-do not imply an unknown nested mechanic is safely supported. This slice adds
+**Scope limitation:** top-level, attack, supported typed attack-effect,
+attack damage dice and save-action keys now reject unknown submitted fields.
+Further nested payloads (recharge, complex multiattack, resources, advanced
+effects and other composite fields) still use their existing Pydantic
+validation policy. Before opening the public homebrew editor, audit and
+strictly validate all remaining recursive fields and expose supported
+capabilities as choices; never claim unknown nested mechanics are supported. This slice adds
 no new UI, browser engine, source admission, or monster certification.
 
 **Parity contract:** the output template is the same shape already consumed
