@@ -126,3 +126,37 @@ def test_linked_sleep_has_same_source_group_when_no_independent_wake():
     sleeping = next(x for x in target.timed_effects if x.effect_id == "unconscious")
     assert poison.source_effect_id == sleeping.source_effect_id
     assert set(remove_effect_group(target, poison)) == {"poisoned", "unconscious"}
+
+
+def test_source_approved_2014_poison_cards_bind_without_name_dispatch():
+    from app.content.capability_compiler import compile_combatant
+    from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+    from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+    from app.content.monster_source_2014 import load_monster_source_2014
+
+    rows = {monster.id: monster for monster in load_monster_source_2014()}
+    expected = {
+        "homunculus": ("bite", 10, 10),
+        "pseudodragon": ("sting", 11, 600),
+        "sprite": ("shortbow", 10, 10),
+        "drow": ("hand-crossbow", 13, 600),
+    }
+    for monster_id, (attack_id, dc, duration) in expected.items():
+        monster = rows[monster_id]
+        source_attack = next(attack for attack in monster.attacks if attack.id == attack_id)
+        from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014
+        from app.domain.capability_effects import SaveConditionEffectDefinition
+        effects = basic_attack_effects_2014(source_attack)
+        condition = next(effect for effect in effects if isinstance(effect, SaveConditionEffectDefinition))
+        assert condition.dc == dc
+        assert condition.duration_rounds == duration
+        assert condition.failure_margin_escalation is not None
+        assert condition.failure_margin_escalation.margin == 5
+        if monster_id in ("homunculus", "pseudodragon"):
+            template = compile_combatant(adapt_basic_monster_2014(monster))
+            attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+            attack = next(attack for attack in attacks if attack.id.endswith("-" + attack_id))
+            assert attack.weapon.name == source_attack.name
+            assert attack.on_hit_condition_save is not None
+    for monster_id in ("homunculus", "pseudodragon"):
+        assert basic_blockers_2014(rows[monster_id]) == ()
