@@ -1,0 +1,16 @@
+"use strict";
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const root = __dirname;
+const page = fs.readFileSync(path.join(root, "engine-test-lab.html"), "utf8");
+const js = fs.readFileSync(path.join(root, "engine-test-lab.js"), "utf8");
+const scripts = [...page.matchAll(/<script defer src="([^"]+)"/g)].map(row => row[1]);
+assert.ok(page.includes('id="fight"') && page.includes('id="results"'));
+assert.ok(page.includes("engine-test-lab.js"));
+assert.ok(scripts.indexOf("browser-engine.js") >= 0);
+assert.ok(scripts.indexOf("browser-engine.js") < scripts.indexOf("engine-test-lab.js"));
+for (const script of scripts) assert.ok(fs.existsSync(path.join(root, script)), "Missing runtime file: " + script);
+assert.ok(js.includes("IRON_PIT_BROWSER_ENGINE.runEncounter"));
+assert.ok(!js.includes("resolveAttack("), "Test Lab must not implement a new combat resolver.");
+console.log("Engine Test Lab static integration checks passed.");
