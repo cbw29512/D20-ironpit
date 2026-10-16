@@ -4,6 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
+from app.domain.failure_margin import FailureMarginEscalation
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming, HitControlEffect
 from app.domain.charge import AttackChargeProfile, ChargeDamage
 from app.domain.damage_sources import DamageSourceQualifier
@@ -98,6 +99,7 @@ class OnHitConditionSave(BaseModel):
     repeat_save_failure_condition_id: ConditionName | None = None
     failure_push_ft: int = Field(default=0, ge=0)
     cannot_regain_hit_points: bool = False
+    failure_margin_escalation: FailureMarginEscalation | None = None
     excluded_creature_types: list[str] = Field(default_factory=list)
     excluded_creature_subtypes: list[str] = Field(default_factory=list)
 

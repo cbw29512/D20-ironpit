@@ -154,6 +154,17 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                 save_row["repeatSaveTiming"] = _value(effect.repeat_save_timing)
             if effect.repeat_save_failure_condition_id:
                 save_row["repeatSaveFailureConditionId"] = effect.repeat_save_failure_condition_id
+            if effect.failure_margin_escalation:
+                escalation = effect.failure_margin_escalation
+                save_row["failureMarginEscalation"] = {
+                    "margin": escalation.margin,
+                    "additionalConditionIds": list(escalation.additional_condition_ids),
+                    "replacementDurationDiceCount": escalation.replacement_duration_dice_count,
+                    "replacementDurationDiceSize": escalation.replacement_duration_dice_size,
+                    "replacementDurationRoundMultiplier": escalation.replacement_duration_round_multiplier,
+                    "endsOnDamage": escalation.ends_on_damage,
+                    "allowedRemovalActionIds": list(escalation.allowed_removal_action_ids),
+                }
             if effect.failure_push_ft:
                 save_row["failurePushFt"] = effect.failure_push_ft
             if effect.excluded_creature_types:
