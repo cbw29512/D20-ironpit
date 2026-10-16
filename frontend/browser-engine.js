@@ -52,9 +52,7 @@
   function buildSetup(selection) {
     try {
       const requestedRuleset = selectedRuleset(selection), registry = rosters(requestedRuleset);
-      const custom = selection.compiled_monsters || {};
-      if (Array.isArray(custom) || typeof custom !== "object") throw new Error("Compiled monster registry must be an object.");
-      for (const [id, item] of Object.entries(custom)) if (!item || item.id !== id || item.kind !== "monster" || item.ruleset !== requestedRuleset || !Array.isArray(item.attacks) || !item.attacks.length || !item.primary_attack_id || !Number.isInteger(item.armor_class) || item.armor_class < 1 || !Number.isInteger(item.max_hp) || item.max_hp < 1 || Object.hasOwn(registry.heroes, id) || Object.hasOwn(registry.monsters, id)) throw new Error(`Invalid or colliding compiled monster: ${id}`);
+      const custom = selection.compiled_monsters || {}; if (Array.isArray(custom) || typeof custom !== "object") throw new Error("Compiled monster registry must be an object."); for (const [id, item] of Object.entries(custom)) if (!item || item.id !== id || item.kind !== "monster" || item.ruleset !== requestedRuleset || !Array.isArray(item.attacks) || !item.attacks.length || !item.primary_attack_id || !Number.isInteger(item.armor_class) || item.armor_class < 1 || !Number.isInteger(item.max_hp) || item.max_hp < 1 || Object.hasOwn(registry.heroes, id) || Object.hasOwn(registry.monsters, id)) throw new Error(`Invalid or colliding compiled monster: ${id}`);
       const collisions = Object.keys(registry.heroes).filter((id) => Object.hasOwn(registry.monsters, id)); if (collisions.length) throw new Error(`Ambiguous certified card IDs: ${collisions.join(", ")}`);
       const card = (id, side) => {
         const template = side === "heroes" ? registry.heroes[id] : (custom[id] || registry.monsters[id]);
