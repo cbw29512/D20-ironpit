@@ -68,3 +68,21 @@ def test_form_fails_closed_for_unsupported_mechanics() -> None:
     payload["unsupported_capabilities"] = ["unimplemented:custom-effect"]
     with pytest.raises(ValueError, match="unsupported capabilities"):
         compile_combatant_form(payload)
+
+
+@pytest.mark.parametrize("location", ["attack", "effect", "dice", "save"])
+def test_nested_unknown_mechanic_fails_closed(location: str) -> None:
+    payload = form()
+    if location == "attack":
+        payload["attacks"][0]["secret_trigger"] = "on_hit"
+    elif location == "effect":
+        payload["attacks"][0]["effects"][0]["secret_condition"] = "paralyzed"
+    elif location == "dice":
+        payload["attacks"][0]["damage"]["bonus_damage_type"] = "fire"
+    else:
+        payload["save_actions"] = [{
+            "id": "shriek", "name": "Arbitrary Label", "save_ability": "wisdom",
+            "dc": 15, "range_ft": 15, "hidden_success_effect": "frightened",
+        }]
+    with pytest.raises(ValueError, match="unknown fields"):
+        compile_combatant_form(payload)
