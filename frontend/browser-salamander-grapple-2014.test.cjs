@@ -49,4 +49,17 @@ assert.equal(held.state.grapple_sources.length, 1);
 G.release(held.state, salamander.combatant_id);
 assert.equal(F.automaticHit(salamander, held, tail), false);
 assert.equal(F.targetAllowed(salamander, another, tail, setup), true);
+// Once the owner's grapple ends, ordinary attacks again require a d20 test.
+let resumedD20 = 0;
+window.IRON_PIT_DICE = {
+  roll: (sides) => { if (sides === 20) resumedD20++; return 1; },
+  rollMany: (count, sides) => Array.from({ length: count }, () => {
+    if (sides === 20) resumedD20++; return 1;
+  }),
+};
+S.beginTurn(salamander.state);
+const releasedAttack = A.resolveAttack(2, 2, salamander, another, tail, 5, { setup });
+assert.equal(releasedAttack.hit, false);
+assert.ok(releasedAttack.attack_roll);
+assert.ok(resumedD20 > 0);
 console.log("Salamander shared grapple-owner auto-hit / source dice browser parity passed.");
