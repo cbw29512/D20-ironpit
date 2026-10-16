@@ -182,3 +182,13 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
 
 console.log("Browser combat regressions passed.");
 require("./browser-initiative-natural-one.test.cjs");
+
+{
+  const custom = structuredClone(window.IRON_PIT_BROWSER_MONSTERS_2014["srd-goblin-warrior"]);
+  custom.id = "synthetic-unlisted-monster";
+  const hero = Object.values(window.IRON_PIT_BROWSER_HEROES).find(row => row.ruleset === "2014");
+  const selection = {ruleset:"2014",hero_ids:[hero.id],monster_ids:[custom.id],compiled_monsters:{[custom.id]:custom}};
+  const result = window.IRON_PIT_BROWSER_ENGINE.runEncounter(selection);
+  assert.ok(result.events.length);
+  assert.equal(Object.hasOwn(window.IRON_PIT_BROWSER_MONSTERS_2014,custom.id),false);
+}
