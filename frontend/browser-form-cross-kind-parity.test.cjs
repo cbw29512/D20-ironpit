@@ -75,7 +75,7 @@ test("actual compiled form browser rows match Python combat outcomes", () => {
 test("compiled custom monster completes a full browser encounter", () => {
   const fixture = JSON.parse(fs.readFileSync(path.join(__dirname, "browser-form-runtime-parity-fixture.json"), "utf8"));
   const monster = fixture.cases.find(item => item.kind === "monster").attacker;
-  const hero = structuredClone(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
+  const hero = structuredClone(Object.values(window.IRON_PIT_BROWSER_HEROES).find(item => item.ruleset === "2014"));
   const monsterId = "form-custom-monster-full-fight";
   const heroId = "form-custom-hero-full-fight";
   const roster = window.IRON_PIT_BROWSER_MONSTERS_2014;
