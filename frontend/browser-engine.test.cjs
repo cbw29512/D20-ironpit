@@ -182,3 +182,28 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
 
 console.log("Browser combat regressions passed.");
 require("./browser-initiative-natural-one.test.cjs");
+
+{
+  // Certified cards must be reusable across battles without fight-state leakage.
+  const encounters = [
+    { heroes: ["karnok-stoneward-l1"], monsters: ["srd-bandit"] },
+    { heroes: ["rokhan-stonefury-l1"], monsters: ["srd-commoner"] },
+    { heroes: ["karnok-stoneward-l1", "rokhan-stonefury-l1"], monsters: ["srd-wolf", "srd-wolf"] },
+  ];
+  for (const [index, encounter] of encounters.entries()) {
+    const run = () => fight(encounter.heroes, encounter.monsters, deterministicDice(800 + index));
+    const beforeHeroes = encounter.heroes.map(id => JSON.stringify(window.IRON_PIT_BROWSER_HEROES[id]));
+    const beforeMonsters = encounter.monsters.map(id => JSON.stringify(window.IRON_PIT_BROWSER_MONSTERS[id]));
+    const first = run(), second = run();
+    assert.notEqual(first.outcome, "active", "certified pregen/monster encounter must resolve");
+    assert.equal(first.outcome, second.outcome, "same seed and immutable cards must resolve identically");
+    assert.equal(first.rounds, second.rounds, "repeated fight rounds must match");
+    assert.deepEqual(first.events.map(event => [event.event_type, event.actor_id, event.target_id, event.damage_roll?.total]),
+      second.events.map(event => [event.event_type, event.actor_id, event.target_id, event.damage_roll?.total]),
+      "repeated fights must have identical observable combat events");
+    assert.deepEqual(encounter.heroes.map(id => JSON.stringify(window.IRON_PIT_BROWSER_HEROES[id])), beforeHeroes,
+      "a fight must not mutate certified pregen definitions");
+    assert.deepEqual(encounter.monsters.map(id => JSON.stringify(window.IRON_PIT_BROWSER_MONSTERS[id])), beforeMonsters,
+      "a fight must not mutate certified monster definitions");
+  }
+}
