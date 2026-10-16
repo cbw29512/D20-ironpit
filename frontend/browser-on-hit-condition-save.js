@@ -18,6 +18,7 @@
   }
 
   function resolve(target, attack, sourceTemplate = null, round = null, setup = null, attacker = null) {
+    try {
     const effect = attack.onHitConditionSave;
     if (!effect || target.state.is_dead || !target.state.is_alive) return null;
     if (effect.maxTargetSize && !S().sizeAtMost(target, effect.maxTargetSize)) return null;
@@ -97,6 +98,9 @@
       saveRoll: save.roll, saveAbility: effect.saveAbility, saveDc: effect.dc,
       saveSucceeded: save.succeeded, appliedCondition, additionalConditions, forcedMovementFt,
     };
+    } catch (error) {
+      console.error("On-hit condition save resolution failed", { target: target?.combatant_id, error }); throw error;
+    }
   }
 
   function resolveOngoingHpLoss(target, attack, sourceTemplate = null, round = null, setup = null, attacker = null) {
