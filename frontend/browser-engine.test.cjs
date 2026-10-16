@@ -217,3 +217,29 @@ require("./browser-initiative-natural-one.test.cjs");
       "a fight must not mutate certified monster definitions");
   }
 }
+
+{
+  // Beta gate: completed encounters preserve fundamental combat-state bounds.
+  // Exercise the existing engine; do not calculate combat outcomes here.
+  const scenarios = [
+    [["karnok-stoneward-l1"], ["srd-bandit"]],
+    [["rokhan-stonefury-l1"], ["srd-commoner"]],
+    [["karnok-stoneward-l1", "rokhan-stonefury-l1"], ["srd-wolf", "srd-wolf"]],
+  ];
+  for (const [index, [heroes, monsters]] of scenarios.entries()) {
+    const battle = fight(heroes, monsters, deterministicDice(19400 + index));
+    assert.notEqual(battle.outcome, "active");
+    for (const member of [...battle.setup.heroes, ...battle.setup.monsters]) {
+      const state = member.state;
+      assert.ok(Number.isFinite(state.current_hp), "HP must remain finite");
+      assert.ok(Number.isFinite(state.temporary_hp) && state.temporary_hp >= 0, "temporary HP must be nonnegative");
+      assert.ok(state.current_hp >= 0, "HP cannot be negative");
+      assert.ok(state.current_hp <= window.IRON_PIT_BROWSER_STATE.effectiveMaxHp(state), "HP cannot exceed effective maximum");
+      assert.equal(Boolean(state.is_alive && state.is_dead), false, "alive and dead states cannot coexist");
+      assert.ok(Number.isInteger(state.death_save_successes) && state.death_save_successes >= 0 && state.death_save_successes <= 3);
+      assert.ok(Number.isInteger(state.death_save_failures) && state.death_save_failures >= 0 && state.death_save_failures <= 3);
+      assert.ok(Object.values(state.resources || {}).every(value => Number.isInteger(value) && value >= 0),
+        "resource counters must be nonnegative integers");
+    }
+  }
+}
