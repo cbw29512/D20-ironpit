@@ -229,4 +229,26 @@ const ctx = (actor) => ({
   assert.equal(fallback.some((item) => item.providerId === "deferred-effect"), true);
 }
 
+{
+  // Source-owned typed components must be counted for tactical Action ranking.
+  // Renaming the printed ability must not change the generic combat score.
+  const actor = member("2014");
+  actor.state.template.spellEnabled = false;
+  actor.state.template.attackActionEnabled = false;
+  actor.state.template.areaEnabled = false;
+  actor.state.template.standardEnabled = false;
+  const damageComponents = [
+    { diceCount: 3, diceSize: 6, damageBonus: 4, damageType: "bludgeoning" },
+    { diceCount: 3, diceSize: 6, damageBonus: 4, damageType: "slashing" },
+  ];
+  for (const name of ["Synthetic Leap", "Renamed Homebrew"]) {
+    actor.state.template.saving_throw_actions = [
+      { id: "typed-save", name, range: 30, damageComponents },
+    ];
+    const candidates = S.discoverCandidates("normalPostMove", ctx(actor));
+    const save = candidates.find((candidate) => candidate.providerId === "save-action");
+    assert.equal(save.payload.expectedDamage, 29);
+  }
+}
+
 console.log("Browser Main Action provider registration/discovery parity passed.");
