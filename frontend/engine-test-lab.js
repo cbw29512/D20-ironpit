@@ -38,6 +38,17 @@
   function signature(battle) {
     return window.IRON_PIT_BATTLE_LAB.fingerprint(battle);
   }
+  function observed(events) {
+    const groups = {event_types: {}, feature_ids: {}, applied_conditions: {}, damage_types: {}};
+    const increment = (group, value) => { if (typeof value === "string" && value) group[value] = (group[value] || 0) + 1; };
+    for (const event of events) {
+      increment(groups.event_types, event.event_type);
+      increment(groups.feature_ids, event.feature_id);
+      for (const condition of event.applied_condition_ids || []) increment(groups.applied_conditions, condition);
+      for (const component of event.damage_components || []) increment(groups.damage_types, component.damage_type);
+    }
+    return groups;
+  }
   function execute(entries, repeat) {
     const results = [];
     for (const entry of entries) {
@@ -46,10 +57,10 @@
         const battle = fight(entry.selection, entry.seed);
         const stable = repeat ? signature(battle) === signature(fight(entry.selection, entry.seed)) : null;
         results.push({selection:entry.selection,seed:entry.seed,outcome:battle.outcome,rounds:battle.rounds,
-          events:battle.events.length,stable,ms:Math.round(performance.now()-start),log:battle.events});
+          events:battle.events.length,observed:observed(battle.events),stable,ms:Math.round(performance.now()-start),log:battle.events});
       } catch (error) { results.push({selection:entry.selection,seed:entry.seed,error:String(error.message || error)}); }
     }
-    report = {generated_at:new Date().toISOString(),engine:"IRON_PIT_BROWSER_ENGINE.runEncounter",results};
+    report = {generated_at:new Date().toISOString(),engine:"IRON_PIT_BROWSER_ENGINE.runEncounter",coverage_kind:"observed events only; not RAW correctness",results};
     const failed = results.filter(row => row.error || row.stable === false).length;
     $("status").textContent = `${results.length} runs; ${failed} errors/replay mismatches.`;
     $("summary").textContent = `${results.filter(row => row.outcome === "heroes_win").length} hero wins, ${results.filter(row => row.outcome === "monsters_win").length} monster wins, ${results.filter(row => row.outcome === "draw").length} draws.`;
@@ -68,6 +79,12 @@
       table.append(tr);
     });
     $("results").replaceChildren(table);
+    const coverage = document.createElement("pre");
+    coverage.textContent = JSON.stringify(results.reduce((totals,row) => {
+      for (const [group,counts] of Object.entries(row.observed || {})) for (const [key,count] of Object.entries(counts)) totals[group][key]=(totals[group][key] || 0)+count;
+      return totals;
+    },{event_types:{},feature_ids:{},applied_conditions:{},damage_types:{}}),null,2);
+    $("results").append(coverage);
     $("events").textContent = JSON.stringify(results[0]?.log || results[0]?.error || [], null, 2);
     $("download").disabled=false;
   }
