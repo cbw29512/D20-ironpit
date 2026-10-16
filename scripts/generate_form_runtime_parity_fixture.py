@@ -27,6 +27,7 @@ def form(kind: str) -> dict:
         }],
         "primary_attack_id": "fixture-attack",
         "source": "synthetic cross-runtime parity fixture",
+        "visual": {"armor": "natural", "main_hand": "claw", "body_style": "beast"},
     }
     if kind == "character":
         payload.update(level=1, ability_scores={
