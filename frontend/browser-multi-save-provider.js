@@ -29,6 +29,10 @@
     if (!targets.length || targets.length > (action.maxTargets || 1)) {
       throw new Error("Multi-target save selection violates its declared target cap.");
     }
+    // One declared Action cannot resolve the same creature twice.
+    if (new Set(targets.map((target) => target.combatant_id)).size !== targets.length) {
+      throw new Error("Multi-target save selection requires unique target IDs.");
+    }
     if (!E().available(member.state, action.actionCost || "action")) {
       throw new Error(`${action.name} Action is unavailable.`);
     }

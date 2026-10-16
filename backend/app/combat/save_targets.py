@@ -22,6 +22,9 @@ def validate_save_targets(
 ) -> list[EncounterCombatant]:
     if not target_ids or len(set(target_ids)) != len(target_ids):
         raise ValueError("Multi-target save actions require unique target IDs.")
+    # The immutable card controls how many creatures one Action can affect.
+    if len(target_ids) > action.max_targets:
+        raise ValueError("Multi-target save selection exceeds its declared target cap.")
     by_id = {member.combatant_id: member for member in [*setup.heroes, *setup.monsters]}
     expected_side = "monsters" if actor.side == "heroes" else "heroes"
     result: list[EncounterCombatant] = []

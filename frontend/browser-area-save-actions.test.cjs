@@ -230,3 +230,6 @@ window.IRON_PIT_BROWSER_HEALING = {
 }
 
 console.log("Multi-target shared typed-save damage parity passed.");
+
+// Run source-neutral multi-target validation parity with the existing browser CI gate.
+require("./browser-save-target-cap-parity.test.cjs");
