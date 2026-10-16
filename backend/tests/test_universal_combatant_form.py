@@ -137,3 +137,28 @@ def test_resource_form_rejects_unknown_parameters(field: str) -> None:
         payload[field] = [{"resource_id": "howl", "minimum_roll": 5, "invented_trigger": "hit"}]
     with pytest.raises(ValueError, match="unknown fields"):
         compile_combatant_form(payload)
+
+
+@pytest.mark.parametrize("failure", ["duplicate", "recharge", "save"])
+def test_form_resource_references_fail_closed(failure: str) -> None:
+    payload = form()
+    payload["resources"] = [{"id": "charge", "name": "Charge", "max_uses": 1}]
+    if failure == "duplicate":
+        payload["resources"].append({"id": "charge", "name": "Other", "max_uses": 2})
+    elif failure == "recharge":
+        payload["recharge_rules"] = [{"resource_id": "missing", "minimum_roll": 5}]
+    else:
+        payload["save_actions"] = [{
+            "id": "save", "name": "Custom Blast", "save_ability": "wisdom",
+            "dc": 14, "range_ft": 20, "resource_id": "missing",
+        }]
+    with pytest.raises(ValueError, match="Duplicate combatant resource|undeclared resource"):
+        compile_combatant_form(payload)
+
+
+def test_form_accepts_declared_recharge_resource() -> None:
+    payload = form()
+    payload["resources"] = [{"id": "charge", "name": "Charge", "max_uses": 1}]
+    payload["recharge_rules"] = [{"resource_id": "charge", "minimum_roll": 5}]
+    template = compile_combatant_form(payload)
+    assert template.recharge_rules[0].resource_id == "charge"
