@@ -4,7 +4,8 @@ from dataclasses import dataclass
 import logging
 
 from app.combat.condition_immunity import condition_is_immune
-from app.combat.dice import DiceProvider, roll_dice
+from app.combat.dice import DiceProvider
+from app.combat.failure_margin_runtime import escalation_duration
 from app.combat.forced_movement import push_straight_away
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import apply_terminal_condition_outcome, apply_timed_condition
@@ -72,18 +73,7 @@ def resolve_on_hit_condition_save(
         applied = None
         additional: list[str] = []
         escalation = effect.failure_margin_escalation
-        escalated = (
-            not succeeded and save_roll is not None and escalation is not None
-            and save_roll.total <= effect.dc - escalation.margin
-        )
-        duration = effect.duration_rounds
-        if escalated and escalation.replacement_duration_dice_count is not None:
-            duration = roll_dice(
-                dice, escalation.replacement_duration_dice_count,
-                escalation.replacement_duration_dice_size,
-            ) * escalation.replacement_duration_round_multiplier
-        if escalated and duration is None:
-            raise ValueError("Escalated timed conditions require a source-declared duration.")
+        escalated, duration = escalation_duration(effect, save_roll, succeeded, dice)
         if not succeeded:
             timed = duration is not None or effect.repeat_save_timing is not None
             if timed:
