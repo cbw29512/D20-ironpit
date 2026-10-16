@@ -84,4 +84,15 @@ for (const condition of ["poisoned", "frightened", "charmed", "restrained", "gra
   salamander.state.active_effect_ids.pop();
   G.release(held.state, salamander.combatant_id);
 }
+G.apply(held.state, salamander.combatant_id, 14, 10, true);
+held.state.is_unconscious = true;
+held.state.current_hp = 0;
+G.cleanup(setup);
+assert.equal(held.state.grapple_sources.length, 1, "A living Unconscious target remains held");
+held.state.is_alive = false;
+held.state.is_dead = true;
+held.state.is_unconscious = false;
+G.cleanup(setup);
+assert.equal(held.state.grapple_sources.length, 0, "Dead target releases owner hold");
+assert.ok(!held.state.active_effect_ids.includes("restrained"));
 console.log("Salamander shared grapple-owner auto-hit / source dice browser parity passed.");

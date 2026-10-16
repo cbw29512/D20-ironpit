@@ -112,6 +112,12 @@ def grapple_attack_disadvantage(state: CombatantState, target_id: str) -> int:
 def cleanup_grapples(setup: EncounterSetup) -> None:
     members = {member.combatant_id: member for member in [*setup.heroes, *setup.monsters]}
     for target in members.values():
+        # A dead target no longer occupies a held-grapple slot; unconscious
+        # living targets remain held until the owner is Incapacitated or released.
+        if target.state.is_dead or not target.state.is_alive:
+            target.state.grapple_sources = []
+            _sync_effect_ids(target.state)
+            continue
         retained: list[GrappleSource] = []
         for source in target.state.grapple_sources:
             grappler = members.get(source.source_id)

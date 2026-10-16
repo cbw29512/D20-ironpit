@@ -77,6 +77,11 @@
   function cleanup(setup) {
     const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
     for (const target of members.values()) {
+      if (target.state.is_dead || !target.state.is_alive) {
+        target.state.grapple_sources = [];
+        sync(target.state);
+        continue;
+      }
       target.state.grapple_sources = target.state.grapple_sources.filter((source) => {
         const grappler = members.get(source.source_id);
         if (!grappler || grappler.state.is_dead || !grappler.state.is_alive || Q().incapacitated(grappler.state)) return false;

@@ -112,6 +112,23 @@ def test_grappler_incapacitation_releases_all_owned_grapples() -> None:
 
 
 
+def test_dead_target_releases_hold_but_unconscious_living_target_does_not() -> None:
+    setup = _setup()
+    hero, crocodile = setup.heroes[0], setup.monsters[0]
+    apply_grapple(hero.state, crocodile.combatant_id, 12, 5, restrains=True)
+    hero.state.current_hp = 0
+    hero.state.is_unconscious = True
+    cleanup_grapples(setup)
+    assert hero.state.grapple_sources, "Living unconscious target remains held by RAW"
+    hero.state.is_alive = False
+    hero.state.is_dead = True
+    hero.state.is_unconscious = False
+    cleanup_grapples(setup)
+    assert not hero.state.grapple_sources
+    assert "grappled" not in hero.state.active_effect_ids
+    assert "restrained" not in hero.state.active_effect_ids
+
+
 def test_restrained_grapple_escape_spends_action_and_rage_helps_strength_check() -> None:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["rokhan-stonefury-l1"], monster_ids=["srd-crocodile"],
