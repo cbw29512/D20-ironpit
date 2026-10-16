@@ -90,9 +90,16 @@
   }));
   $("matrix").addEventListener("click",()=>guarded(()=>{
     const edition=$("edition").value, seed=integer("seed",1,4294967295);
-    const heroes=unique(heroRoster().filter(row=>row.ruleset===edition)).slice(0,6);
-    const monsters=unique(monsterRoster(edition).filter(row=>row.ruleset===edition)).slice(0,12);
-    execute(heroes.flatMap(h=>monsters.map(m=>({selection:{ruleset:edition,hero_ids:[h.id],monster_ids:[m.id]},seed}))),true);
+    const heroes=unique(heroRoster().filter(row=>row.ruleset===edition));
+    const monsters=unique(monsterRoster(edition).filter(row=>row.ruleset===edition));
+    const offset=integer("matrix-offset",0,Math.max(0,heroes.length*monsters.length-1));
+    const size=integer("matrix-size",1,100);
+    const entries=Array.from({length:Math.min(size,heroes.length*monsters.length-offset)},(_,i)=>{
+      const n=offset+i,h=heroes[Math.floor(n/monsters.length)],m=monsters[n%monsters.length];
+      return {selection:{ruleset:edition,hero_ids:[h.id],monster_ids:[m.id]},seed};
+    });
+    execute(entries,true);
+    $("status").textContent += ` Matrix matchups ${offset+1}–${offset+entries.length} of ${heroes.length*monsters.length}.`;
   }));
   $("download").addEventListener("click",()=>{
     if (!report) return;
