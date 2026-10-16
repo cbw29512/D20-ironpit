@@ -1,3 +1,5 @@
+> **Superseded historical evidence.** Not the live execution cursor. See [MONSTER_ABILITY_WORK_QUEUE.md](MONSTER_ABILITY_WORK_QUEUE.md). Old Actions URLs in this file will age out.
+
 # Violet Fungus random sequence audit
 
 Owner ChatGPT; `feat/2014-violet-fungus-repeat`. Exact starting main `8a5d37360aaf49f65198f4b145fe32a5af42e251`. Printed source: Multiattack makes 1d4 Rotting Touch attacks; each is +2, reach 10 feet, 1d8 Necrotic damage. Existing dice pool service and ordinary attack loop are reused. Only immutable random whole-sequence repetition/expansion was missing (`ENGINE_TRULY_MISSING` for that small parameter). No new attack resolver or source-name dispatch.
