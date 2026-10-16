@@ -48,9 +48,12 @@ that condition**. This is an editor default, not a universal RAW override.
 The effect schema must retain explicit success and failure outcomes, because
 some printed effects deal half damage or have other effects on success.
 
-Example: **Howling Anguish**, character level 1, area targets make a Wisdom
-save against the character's configured ability DC. Failure applies the
+**Illustrative only (not an ability to implement):** an arbitrarily named
+homebrew effect can target an area and call for a Wisdom save against its
+creator-defined character DC. Failure applies the
 universal Frightened condition for the source-defined duration; success does
 not apply Frightened. The card supplies the name, area, save ability, DC source,
 duration, action cost and uses; the engine uses its existing save/condition
-mechanics. Never dispatch combat behavior on the name Howling Anguish.
+mechanics. An ability name exists only for display, source provenance and logs; it is
+never a runtime dispatch key. Renaming an ability without changing its mechanics
+must not alter its combat outcome.
