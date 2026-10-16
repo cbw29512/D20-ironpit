@@ -95,4 +95,28 @@ held.state.is_unconscious = false;
 G.cleanup(setup);
 assert.equal(held.state.grapple_sources.length, 0, "Dead target releases owner hold");
 assert.ok(!held.state.active_effect_ids.includes("restrained"));
+// Redirect Attack must not transfer an automatic hit to an unheld target.
+{
+  const source = member("salamander-redirect", "monsters", template, 10);
+  const boss = member("redirect-boss", "heroes", heroTemplate, 5);
+  const ally = member("redirect-ally", "heroes", heroTemplate, 5);
+  boss.state.template.redirect_attack_reaction = { ally_range_ft: 5, ally_max_size: "medium" };
+  const encounter = { heroes: [boss, ally], monsters: [source], ruleset: "2014" };
+  G.apply(boss.state, source.combatant_id, 14, 10, true);
+  let d20Count = 0;
+  window.IRON_PIT_DICE = {
+    roll: (sides) => { if (sides === 20) d20Count++; return 1; },
+    rollMany: (count, sides) => Array.from({ length: count }, () => {
+      if (sides === 20) d20Count++;
+      return 1;
+    }),
+  };
+  S.beginTurn(source.state);
+  const redirected = A.resolveAttack(3, 3, source, boss, tail, 5, { setup: encounter });
+  assert.equal(redirected.target_id, ally.combatant_id);
+  assert.equal(redirected.hit, false);
+  assert.ok(redirected.attack_roll, "Unheld replacement requires a d20");
+  assert.ok(d20Count > 0);
+  assert.equal(boss.state.reaction_available, false);
+}
 console.log("Salamander shared grapple-owner auto-hit / source dice browser parity passed.");
