@@ -511,6 +511,8 @@ jobs:
           node frontend/browser-roll-revisions.test.cjs
           node frontend/browser-dice-recording.test.cjs
           node frontend/browser-engine.test.cjs
+          node frontend/engine-test-lab.test.cjs
+          node --check frontend/engine-test-lab.js
           node frontend/browser-ruleset-isolation.test.cjs
           node frontend/browser-release-lanes.test.cjs
           node frontend/browser-formation.test.cjs
