@@ -100,3 +100,28 @@ def test_hit_modifier_unknown_payload_is_rejected() -> None:
     })
     with pytest.raises(ValueError, match="unknown fields"):
         compile_combatant_form(payload)
+
+
+@pytest.mark.parametrize("nested", ["charge", "charge_damage", "save_damage", "save_grapple"])
+def test_additional_nested_form_values_fail_closed(nested: str) -> None:
+    payload = form()
+    if nested in {"charge", "charge_damage"}:
+        charge = {"minimum_move_ft": 10, "bonus_damage": {
+            "dice_count": 2, "dice_size": 6, "damage_type": "bludgeoning",
+        }}
+        if nested == "charge":
+            charge["invented_trigger"] = True
+        else:
+            charge["bonus_damage"]["invented_multiplier"] = 3
+        payload["attacks"][0]["charge_profile"] = charge
+    else:
+        action = {"id": "blast", "name": "Arbitrary Label",
+                  "save_ability": "wisdom", "dc": 15, "range_ft": 15}
+        if nested == "save_damage":
+            action.update(damage={"count": 2, "size": 6, "invented_rider": 9},
+                          damage_type="fire")
+        else:
+            action["grapple"] = {"escape_dc": 15, "invented_grapple_rule": True}
+        payload["save_actions"] = [action]
+    with pytest.raises(ValueError, match="unknown fields"):
+        compile_combatant_form(payload)
