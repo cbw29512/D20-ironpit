@@ -52,7 +52,7 @@ def test_ability_names_are_labels_not_resolution_switches() -> None:
 def test_form_rejects_silent_unknown_effect_fields() -> None:
     payload = form()
     payload["my_secret_mechanic"] = {"kind": "paralyze"}
-    with pytest.raises(ValueError, match="Unrecognized combatant form fields"):
+    with pytest.raises(ValueError, match="combatant has unknown fields"):
         compile_combatant_form(payload)
 
 
@@ -84,5 +84,15 @@ def test_nested_unknown_mechanic_fails_closed(location: str) -> None:
             "id": "shriek", "name": "Arbitrary Label", "save_ability": "wisdom",
             "dc": 15, "range_ft": 15, "hidden_success_effect": "frightened",
         }]
+    with pytest.raises(ValueError, match="unknown fields"):
+        compile_combatant_form(payload)
+
+
+def test_hit_modifier_unknown_payload_is_rejected() -> None:
+    payload = form()
+    payload["attacks"][0]["effects"].append({
+        "kind": "speed", "flat_bonus": -10,
+        "unexpected_duration": 3,
+    })
     with pytest.raises(ValueError, match="unknown fields"):
         compile_combatant_form(payload)
