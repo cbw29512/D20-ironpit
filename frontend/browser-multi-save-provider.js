@@ -12,7 +12,7 @@
     if (!E().available(member.state, "action")) return null;
     const orderedTargets = F().targetOrder(member, setup);
     for (const action of member.state.template.saving_throw_actions || []) {
-      if ((action.actionCost || "action") !== "action" || (action.maxTargets || 1) <= 1) continue;
+      if ((action.actionCost || "action") !== "action" || action.area || (action.maxTargets || 1) <= 1) continue;
       if (action.resourceId && !R().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
       const targets = orderedTargets.filter((target) => {
         const distance = F().saveDistance(member, target, action.range);
@@ -26,6 +26,7 @@
   }
 
   function resolve(sequence, round, member, setup, action, targets) {
+    if (action.area) throw new Error("Area saves require a geometry-validated placement.");
     if (!targets.length || targets.length > (action.maxTargets || 1)) {
       throw new Error("Multi-target save selection violates its declared target cap.");
     }

@@ -24,7 +24,7 @@ def choose_multi_target_save_action(
         if not is_available(actor.state, "action"):
             return None
         for action in actor.state.template.saving_throw_actions:
-            if action.action_cost != "action" or action.max_targets <= 1:
+            if action.action_cost != "action" or action.area is not None or action.max_targets <= 1:
                 continue
             if not action_resource_available(actor.state, action):
                 continue
@@ -57,6 +57,10 @@ def resolve_multi_target_save_action(
     """Spend one Action/resource, then resolve one independent save per selected target."""
     try:
         action, targets = selection
+        if action.area is not None:
+            raise ValueError("Area saves require a geometry-validated placement.")
+        if len({target.combatant_id for target in targets}) != len(targets):
+            raise ValueError("Multi-target save selection requires unique target IDs.")
         if not targets or len(targets) > action.max_targets:
             raise ValueError("Multi-target save selection violates the declared target cap.")
         if not is_available(actor.state, action.action_cost):
