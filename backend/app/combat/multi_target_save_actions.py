@@ -9,6 +9,7 @@ from app.combat.encounter_targeting import combatant_distance
 from app.combat.pit_policy import target_order
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throws import legal_save_action
+from app.combat.save_targets import roll_shared_save_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, SavingThrowAction
 
@@ -79,6 +80,7 @@ def resolve_multi_target_save_action(
         remaining = spend_action_resource(actor.state, action)
         spend(actor.state, action.action_cost)
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
+        shared = roll_shared_save_damage(action, dice)
         events: list[BattleEvent] = []
         for target in targets:
             resolved, sequence = resolve_save_event_chain(
@@ -94,6 +96,7 @@ def resolve_multi_target_save_action(
                 check_resource=False,
                 spend_resource=False,
                 resource_remaining_override=remaining,
+                shared_damage_rolls=shared,
                 affected_states=affected_states,
             )
             events.extend(resolved)

@@ -68,3 +68,50 @@ def test_duplicate_target_ids_cannot_spend_or_resolve() -> None:
         spend.assert_not_called()
         resource.assert_not_called()
         resolve.assert_not_called()
+
+
+def test_typed_damage_is_rolled_once_and_reused_for_direct_targets() -> None:
+    """Both targets save separately against identical component dice."""
+    actor = SimpleNamespace(combatant_id="source", state=SimpleNamespace())
+    targets = (
+        SimpleNamespace(combatant_id="one", state=SimpleNamespace()),
+        SimpleNamespace(combatant_id="two", state=SimpleNamespace()),
+    )
+    setup = SimpleNamespace(heroes=list(targets), monsters=[actor])
+    action = SavingThrowAction(
+        id="synthetic-components", name="Renamed Two-Type Effect",
+        save_ability="dexterity", dc=15, range_ft=30, max_targets=2,
+        damage_components=[
+            {"dice_count": 1, "dice_size": 6, "damage_type": "bludgeoning"},
+            {"dice_count": 1, "dice_size": 8, "damage_type": "slashing"},
+        ],
+    )
+    rolled: list[int] = []
+    seen: list[list[list[int]]] = []
+
+    def roll(sides: int) -> int:
+        rolled.append(sides)
+        return sides
+
+    def resolve(sequence, _round, _actor, _target, _action, _distance, _dice, _setup, **kwargs):
+        seen.append(kwargs["shared_damage_rolls"])
+        return [SimpleNamespace(sequence=sequence)], sequence + 1
+
+    with (
+        patch("app.combat.multi_target_save_actions.is_available", return_value=True),
+        patch("app.combat.multi_target_save_actions.action_resource_available", return_value=True),
+        patch("app.combat.multi_target_save_actions.legal_save_action", return_value=True),
+        patch("app.combat.multi_target_save_actions.combatant_distance", return_value=5),
+        patch("app.combat.multi_target_save_actions.spend_action_resource", return_value=None),
+        patch("app.combat.multi_target_save_actions.spend") as spend,
+        patch("app.combat.multi_target_save_actions.resolve_save_event_chain", side_effect=resolve),
+    ):
+        events, next_sequence = resolve_multi_target_save_action(
+            1, 1, actor, setup, SimpleNamespace(roll=roll), (action, targets),
+        )
+    assert len(events) == 2
+    assert next_sequence == 3
+    assert rolled == [6, 8]
+    assert seen == [[[6], [8]], [[6], [8]]]
+    assert seen[0] is seen[1]
+    spend.assert_called_once()

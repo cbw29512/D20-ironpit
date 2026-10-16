@@ -12,6 +12,22 @@ from app.domain.models import BattleEvent, SavingThrowAction
 logger = logging.getLogger(__name__)
 
 
+def roll_shared_save_damage(action: SavingThrowAction, dice) -> list[int] | list[list[int]] | None:
+    """Roll one set of source-defined damage dice for all targets of one Action."""
+    try:
+        if action.damage_components:
+            return [
+                [dice.roll(spec.dice_size) for _ in range(spec.dice_count)]
+                for spec in action.damage_components
+            ]
+        if action.damage_dice_count:
+            return [dice.roll(action.damage_dice_size) for _ in range(action.damage_dice_count)]
+        return None
+    except Exception:
+        logger.exception("Failed to roll shared saving-throw damage for %s.", action.id)
+        raise
+
+
 def validate_save_targets(
     actor: EncounterCombatant,
     setup: EncounterSetup,
@@ -62,14 +78,7 @@ def resolve_save_targets(
         states = [member.state for member in [*setup.heroes, *setup.monsters]]
         # A single source Action rolls each typed component once; all
         # targets independently save and apply their own damage defenses.
-        shared = (
-            [[dice.roll(spec.dice_size) for _ in range(spec.dice_count)]
-             for spec in action.damage_components]
-            if action.damage_components else (
-                [dice.roll(action.damage_dice_size) for _ in range(action.damage_dice_count)]
-                if action.damage_dice_count else None
-            )
-        )
+        shared = roll_shared_save_damage(action, dice)
         events: list[BattleEvent] = []
         for target in targets:
             chain, sequence = resolve_save_event_chain(
