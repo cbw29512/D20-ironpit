@@ -7,7 +7,7 @@ require("./browser-test-runtime.cjs").loadWebsite();
 function execute(kind, label) {
   const source = kind === "monster"
     ? window.IRON_PIT_BROWSER_MONSTERS["srd-goblin-warrior"]
-    : window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
+    : Object.values(window.IRON_PIT_BROWSER_HEROES).find(item => item.ruleset === "2014");
   const template = structuredClone(source);
   template.id = "synthetic-attacker";
   template.kind = kind;
@@ -69,5 +69,33 @@ test("actual compiled form browser rows match Python combat outcomes", () => {
       {hit: event.hit, damage: event.damage_roll.total, hp: target.state.current_hp},
       item.expected, `Python/browser divergence for ${item.kind}`,
     );
+  }
+});
+
+test("compiled custom monster completes a full browser encounter", () => {
+  const fixture = JSON.parse(fs.readFileSync(path.join(__dirname, "browser-form-runtime-parity-fixture.json"), "utf8"));
+  const monster = fixture.cases.find(item => item.kind === "monster").attacker;
+  const hero = structuredClone(Object.values(window.IRON_PIT_BROWSER_HEROES).find(item => item.ruleset === "2014"));
+  const monsterId = "form-custom-monster-full-fight";
+  const heroId = "form-custom-hero-full-fight";
+  const roster = window.IRON_PIT_BROWSER_MONSTERS_2014;
+  assert.equal(monster.ruleset, "2014");
+  assert.equal(hero.ruleset, "2014");
+  try {
+    roster[monsterId] = {...structuredClone(monster), id: monsterId};
+    window.IRON_PIT_BROWSER_HEROES[heroId] = {...hero, id: heroId};
+    window.IRON_PIT_DICE = {
+      roll: sides => sides === 20 ? 15 : 3,
+      rollMany: (count, sides) => Array.from({length: count}, () => sides === 20 ? 15 : 3),
+    };
+    const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
+      ruleset: "2014", hero_ids: [heroId], monster_ids: [monsterId],
+    });
+    assert.notEqual(battle.outcome, "active");
+    assert.ok(battle.events.some(item => item.event_type === "attack"));
+    assert.equal(battle.setup.monsters[0].state.template.id, monsterId);
+  } finally {
+    delete roster[monsterId];
+    delete window.IRON_PIT_BROWSER_HEROES[heroId];
   }
 });
