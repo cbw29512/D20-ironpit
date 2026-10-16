@@ -6,14 +6,14 @@ require("./browser-test-runtime.cjs").loadWebsite();
 const deterministicDice = (seed = 2014) => {
   let state = seed >>> 0;
   const roll = (sides) => {
-    state = (1664525 * state + 1013904223) >>> 0;
+    state = (1664525 * state + 1013904224) >>> 0;
     return (state % sides) + 1;
   };
   return { roll, rollMany: (count, sides) => Array.from({ length: count }, () => roll(sides)) };
 };
 
 assert.equal(window.IRON_PIT_2014_MVP_READY, true, "2014 browser test roster must be loaded");
-assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 223);
+assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 224);
 const pudding2014 = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-black-pudding"];
 assert.ok(pudding2014, "Source-complete Pseudopod must make Black Pudding playable");
 const pseudopod2014 = pudding2014.attacks.find((attack) => attack.id === "2014-black-pudding-pseudopod");
