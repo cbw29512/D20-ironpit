@@ -13,7 +13,11 @@ from pydantic import ValidationError
 
 from app.content.capability_compiler import compile_combatant
 from app.domain.capabilities import CombatantDefinition
-from app.domain.capability_attacks import AttackCapabilityDefinition, SaveCapabilityDefinition
+from app.domain.capability_attacks import (
+    AttackCapabilityDefinition, SaveCapabilityDefinition, ChargeProfileDefinition,
+    ChargeDamageDefinition,
+)
+from app.domain.targeting import AreaTargeting
 from app.domain.capability_effects import (
     ConditionEffectDefinition, ContestedMovementEffectDefinition, DamageEffectDefinition,
     GrappleEffectDefinition, OngoingHpLossEffectDefinition, ProneEffectDefinition,
@@ -63,6 +67,13 @@ def compile_combatant_form(values: Mapping[str, Any]) -> CombatantTemplate:
             _check_keys(attack, AttackCapabilityDefinition, f"attacks[{i}]")
             if "damage" in attack and attack["damage"] is not None:
                 _check_keys(attack["damage"], DiceSpec, f"attacks[{i}].damage")
+            if attack.get("charge_profile") is not None:
+                charge = attack["charge_profile"]
+                label = f"attacks[{i}].charge_profile"
+                _check_keys(charge, ChargeProfileDefinition, label)
+                for component in ("bonus_damage", "replacement_damage"):
+                    if charge.get(component) is not None:
+                        _check_keys(charge[component], ChargeDamageDefinition, f"{label}.{component}")
             for j, effect in enumerate(attack.get("effects", [])):
                 label = f"attacks[{i}].effects[{j}]"
                 if not isinstance(effect, Mapping):
@@ -73,7 +84,14 @@ def compile_combatant_form(values: Mapping[str, Any]) -> CombatantTemplate:
                 if kind in {"damage", "save_damage"} and "dice" in effect:
                     _check_keys(effect["dice"], DiceSpec, f"{label}.dice")
         for i, action in enumerate(values.get("save_actions", [])):
-            _check_keys(action, SaveCapabilityDefinition, f"save_actions[{i}]")
+            label = f"save_actions[{i}]"
+            _check_keys(action, SaveCapabilityDefinition, label)
+            if action.get("damage") is not None:
+                _check_keys(action["damage"], DiceSpec, f"{label}.damage")
+            if action.get("grapple") is not None:
+                _check_keys(action["grapple"], GrappleEffectDefinition, f"{label}.grapple")
+            if action.get("area") is not None:
+                _check_keys(action["area"], AreaTargeting, f"{label}.area")
         definition = CombatantDefinition.model_validate(dict(values))
         # Unsupported capabilities are still rejected by the same compiler.
         return compile_combatant(definition)
