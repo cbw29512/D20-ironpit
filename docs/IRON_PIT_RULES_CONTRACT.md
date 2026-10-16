@@ -6,6 +6,36 @@ This is the authoritative product/rules contract for Iron Pit. It describes the 
 
 If implementation and this contract disagree, either fix the implementation or make an explicit product decision to revise this file. Historical milestone documents and conversational progress claims are not authority.
 
+## Universal combatant form and ability resolution
+
+**Locked architecture:** monsters, canonical pregens and homebrew use the
+same finished-combatant contract and the same combat engine. The Monster and
+Character creation paths are editors, not separate runtime kinds of logic.
+A monster author may declare final attack bonus, damage dice, AC and HP.
+A character author enters scores, gear, proficiencies, level and features;
+edition-specific character creation resolves the derived values before fight
+entry. Neither path authorizes combat dispatch on identity or ability names.
+
+The submitted ability name is retained exactly on the card and in player
+logs; only declared universal effect IDs and typed parameters drive combat.
+An attack may compose damage with multiple on-hit conditions and independent
+saves. Multiattack is a list of declared action slots. Passive regeneration
+uses source-defined amount, timing, suppression conditions and HP eligibility.
+Resources, concentration, conditions, position and damage are fight-local.
+Permanent declared source buffs stay on immutable source data and derive
+their activation from semantic triggers.
+
+For harmful conditions, form-editor save defaults are failure = apply,
+success = negate; any explicit printed success effect wins. No hardcoded
+example ability is a new mechanic. Unsupported or malformed semantic effects,
+including nested effects, must fail closed. 2014/2024 derivation and source
+parameters remain independent; equivalent mechanics share primitives.
+
+This section governs **architecture only**. All existing locked damage,
+timing, terrain, visibility, Petrified, action-economy and arena overrides
+elsewhere in this contract continue unchanged. Implementation and parity
+gates are in [the universal card contract](UNIVERSAL_CARD_COMBAT_CONTRACT.md).
+
 ## Arena-entry buff casting
 
 When a canonical combatant can legally cast a non-Concentration buff before combat and that buff is selected as its deterministic opening preparation, Iron Pit may mark that specific opening cast as **free at arena entry**. A free opening cast still requires the spell to be legally prepared or known and the combatant to have access to a slot of the printed spell level, but it does not consume that spell slot. This is an explicit arena setup rule, not a change to the spell's RAW casting rules. Runtime data must opt into the rule declaratively; existing opening spells continue to consume slots unless so marked.
