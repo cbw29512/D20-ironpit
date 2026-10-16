@@ -90,3 +90,39 @@ def test_incomplete_replacement_duration_is_rejected_by_card_schema():
             margin=5, additional_condition_ids=["unconscious"],
             replacement_duration_dice_count=1,
         )
+
+
+def test_linked_sleep_has_same_source_group_when_no_independent_wake():
+    """A source saying unconscious *while poisoned* ends both conditions together."""
+    from app.combat.timed_condition_lifecycle import remove_effect_group
+
+    attacker = build_combatant_state(
+        build_karnok_stoneward().model_copy(update={"combat_traits": []}, deep=True)
+    )
+    source = build_goblin_warrior()
+    saves = dict(source.saving_throw_bonuses)
+    saves["constitution"] = 0
+    target = build_combatant_state(source.model_copy(update={
+        "armor_class": 10, "max_hp": 40, "saving_throw_bonuses": saves,
+    }, deep=True))
+    effect = OnHitConditionSave(
+        save_ability="constitution", dc=10, condition_id="poisoned",
+        duration_rounds=10,
+        failure_margin_escalation=FailureMarginEscalation(
+            margin=5, additional_condition_ids=["unconscious"],
+            replacement_duration_dice_count=1, replacement_duration_dice_size=10,
+            replacement_duration_round_multiplier=10,
+        ),
+    )
+    attack = attacker.template.weapon_attack.model_copy(
+        update={"on_hit_condition_save": effect}, deep=True,
+    )
+    event = resolve_attack(
+        1, 1, attacker, target, attack, 5,
+        FixedDiceProvider([15, 4, 4, 3, 2]), spend_action=False,
+    )
+    assert {"poisoned", "unconscious"} <= set(event.applied_condition_ids)
+    poison = next(x for x in target.timed_effects if x.effect_id == "poisoned")
+    sleeping = next(x for x in target.timed_effects if x.effect_id == "unconscious")
+    assert poison.source_effect_id == sleeping.source_effect_id
+    assert set(remove_effect_group(target, poison)) == {"poisoned", "unconscious"}

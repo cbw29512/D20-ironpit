@@ -72,7 +72,8 @@
         for (const conditionId of escalation.additionalConditionIds) {
           const added = T().apply(target.state, conditionId,
             attacker?.combatant_id || sourceTemplate?.id || "on-hit-save", {
-              sourceEffectId: `${attack.name || attack.id}:escalated`,
+              sourceEffectId: (escalation.endsOnDamage || escalation.allowedRemovalActionIds?.length)
+                ? `${attack.name || attack.id}:escalated` : (attack.name || attack.id),
               sourceTemplate, targetActor: target, setup,
               appliedRound: round,
               expiresRound: round == null ? null : round + duration,

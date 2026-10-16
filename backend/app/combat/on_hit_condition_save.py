@@ -120,7 +120,11 @@ def resolve_on_hit_condition_save(
                     added = apply_timed_condition(
                         defender, condition_id,
                         source_id or (source_template.id if source_template is not None else "on-hit-save"),
-                        source_effect_id=f"{attack.weapon.name}:escalated",
+                        source_effect_id=(
+                            f"{attack.weapon.name}:escalated"
+                            if escalation.ends_on_damage or escalation.allowed_removal_action_ids
+                            else attack.weapon.name
+                        ),
                         source_template=source_template,
                         target_actor=target_actor, setup=setup,
                         applied_round=round_number,

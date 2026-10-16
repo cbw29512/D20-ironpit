@@ -208,3 +208,26 @@ console.log("Browser universal on-hit condition-save riders beyond Prone passed.
   }
 }
 console.log("Browser 2014 failed-save escalation and wake-on-damage parity passed.");
+
+
+{
+  const fighter = member("linked-poison-source", "heroes", {
+    onHitConditionSave: {
+      saveAbility: "constitution", dc: 10, conditionId: "poisoned", durationRounds: 10,
+      failureMarginEscalation: {
+        margin: 5, additionalConditionIds: ["unconscious"],
+        replacementDurationDiceCount: 1, replacementDurationDiceSize: 10,
+        replacementDurationRoundMultiplier: 10, endsOnDamage: false,
+        allowedRemovalActionIds: [],
+      },
+    },
+  });
+  const target = member("linked-sleeper", "monsters", { position: 5 });
+  const event = attack(fighter, target, [15, 4, 4, 3, 2]);
+  assert.ok(event.applied_condition_ids.includes("unconscious"));
+  const poison = target.state.timed_effects.find(item => item.effect_id === "poisoned");
+  const sleep = target.state.timed_effects.find(item => item.effect_id === "unconscious");
+  assert.equal(poison.source_effect_id, sleep.source_effect_id);
+  const removed = window.IRON_PIT_BROWSER_TIMED.removeGroup(target.state, poison);
+  assert.deepEqual(new Set(removed), new Set(["poisoned", "unconscious"]));
+}
