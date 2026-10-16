@@ -125,3 +125,15 @@ def test_additional_nested_form_values_fail_closed(nested: str) -> None:
         payload["save_actions"] = [action]
     with pytest.raises(ValueError, match="unknown fields"):
         compile_combatant_form(payload)
+
+
+@pytest.mark.parametrize("field", ["resources", "recharge_rules"])
+def test_resource_form_rejects_unknown_parameters(field: str) -> None:
+    payload = form()
+    if field == "resources":
+        payload[field] = [{"id": "howl", "name": "Howl", "max_uses": 1, "invented_cost": 2}]
+    else:
+        payload["resources"] = [{"id": "howl", "name": "Howl", "max_uses": 1}]
+        payload[field] = [{"resource_id": "howl", "minimum_roll": 5, "invented_trigger": "hit"}]
+    with pytest.raises(ValueError, match="unknown fields"):
+        compile_combatant_form(payload)
