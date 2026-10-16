@@ -4,11 +4,6 @@
   const heroRoster = () => Object.values(window.IRON_PIT_BROWSER_HEROES || {});
   const monsterRoster = edition => Object.values(edition === "2014" ? window.IRON_PIT_BROWSER_MONSTERS_2014 || {} : window.IRON_PIT_BROWSER_MONSTERS || {});
   let report = null;
-  const dice = seed => {
-    let state = seed >>> 0;
-    const roll = sides => { state = (1664525 * state + 1013904223) >>> 0; return state % sides + 1; };
-    return {roll, rollMany: (count, sides) => Array.from({length: count}, () => roll(sides))};
-  };
   const integer = (id, low, high) => {
     const raw = Number($(id).value);
     if (!Number.isInteger(raw) || raw < low || raw > high) throw new Error(`${id} must be ${low}–${high}`);
@@ -32,8 +27,7 @@
     $("status").textContent = `Loaded ${$("hero").options.length} pregens and ${$("monster").options.length} monsters for ${edition}.`;
   }
   function fight(selection, seed) {
-    window.IRON_PIT_DICE = dice(seed);
-    return window.IRON_PIT_BROWSER_ENGINE.runEncounter(selection);
+    return window.IRON_PIT_BROWSER_TURBO.runSeeded(selection,seed).battle;
   }
   function selection() {
     const edition = $("edition").value;
@@ -42,7 +36,7 @@
       monster_ids: Array(integer("monster-count", 1, 6)).fill($("monster").value)};
   }
   function signature(battle) {
-    return JSON.stringify({outcome:battle.outcome,rounds:battle.rounds,events:battle.events});
+    return window.IRON_PIT_BATTLE_LAB.fingerprint(battle);
   }
   function execute(entries, repeat) {
     const results = [];
