@@ -233,3 +233,6 @@ console.log("Multi-target shared typed-save damage parity passed.");
 
 // Run source-neutral multi-target validation parity with the existing browser CI gate.
 require("./browser-save-target-cap-parity.test.cjs");
+
+// Source-neutral geometry/duplicate/shared-roll coverage in the standard browser CI lane.
+require("./browser-multi-save-geometry.test.cjs");
