@@ -77,3 +77,19 @@ def test_browser_card_serialization_preserves_multi_target_typed_components() ->
         {"diceCount": 3, "diceSize": 6, "damageBonus": 4, "damageType": "bludgeoning"},
         {"diceCount": 3, "diceSize": 6, "damageBonus": 4, "damageType": "slashing"},
     ]
+
+
+def test_default_target_count_keeps_existing_browser_card_shape() -> None:
+    import sys
+    from pathlib import Path
+
+    scripts = Path(__file__).resolve().parents[2] / "scripts"
+    if str(scripts) not in sys.path:
+        sys.path.insert(0, str(scripts))
+    from browser_template_serializer import _save
+
+    legacy = SaveCapabilityDefinition(
+        id="default-target", name="Default Target", save_ability="wisdom",
+        dc=11, range_ft=30,
+    )
+    assert "maxTargets" not in _save(_compile_save(legacy))
