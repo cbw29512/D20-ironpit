@@ -36,6 +36,8 @@ _EFFECT_TYPES = {
     "save_condition": SaveConditionEffectDefinition,
     "grapple": GrappleEffectDefinition,
     "condition": ConditionEffectDefinition,
+    "attacks-against-advantage": HitModifierEffect,
+    "speed": HitModifierEffect,
 }
 # Other existing discriminator kinds are intentionally validated by Pydantic;
 # they must not be guessed from user-visible names.
