@@ -4,6 +4,10 @@ This is the single index of **Chris-locked** Iron Pit rules. It exists so those 
 
 It does **not** replace `docs/IRON_PIT_RULES_CONTRACT.md`. That file remains the detailed product/combat contract. Architecture, battlefield UI, and pregen construction stay in their existing docs. If this index and a cited file disagree, stop and reconcile in the cited file. Do not write a third copy of the same rule.
 
+## Canonical combatant form
+
+- **One completed combatant, one engine:** Monster and Character are blank-form authoring modes; both compile into `CombatantDefinition → CombatantTemplate` and fresh fight state. Monster authors enter source-final values; character builders derive values from edition-specific scores, proficiency, weapons, armor and features. Named abilities never select runtime logic. Homebrew uses the same typed primitives as official cards; rejected unsupported mechanics remain blocked. The authoritative details are in [the Rules Contract](IRON_PIT_RULES_CONTRACT.md) under *Universal combatant form and ability resolution*, and the [universal card contract](UNIVERSAL_CARD_COMBAT_CONTRACT.md).
+
 ## Engineering
 
 - **Audit and reuse first.** Before any new mechanic, decompose the printed behavior and search the existing hero and monster primitive inventory. Reuse or parameterize a match. Compose from existing primitives when one named ability is several mechanics. Unique code is allowed only for a genuinely unique remainder.
