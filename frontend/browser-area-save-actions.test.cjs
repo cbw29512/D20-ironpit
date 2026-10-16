@@ -174,3 +174,59 @@ window.IRON_PIT_BROWSER_HEALING = {
   assert.equal(resolvedHeal.events[0].target_id, "hero:ally-only");
   assert.equal(healer.state.resources["wild-shape"], 1);
 }
+
+
+{
+  // Multi-typed AOE damage is rolled once per component, then reused for
+  // each affected target; defenses and saves still resolve separately.
+  const jumper = member("monster:jumper", "monsters", 1, 1);
+  const targets = [member("hero:one", "heroes", 2, 1), member("hero:two", "heroes", 3, 1)];
+  const action = {
+    id: "two-types", name: "Two Types", range: 15,
+    saveAbility: "dexterity", dc: 16,
+    area: { shape: "cone", origin: "self", length_ft: 15 },
+    damageComponents: [
+      { diceCount: 1, diceSize: 6, damageType: "bludgeoning" },
+      { diceCount: 1, diceSize: 8, damageType: "slashing" },
+    ],
+  };
+  jumper.state.template.saving_throw_actions = [action];
+  const field = { heroes: targets, monsters: [jumper],
+    map_definition: { width_squares: 10, height_squares: 10 } };
+  const rolled = [];
+  window.IRON_PIT_DICE = {
+    rollMany: (count, size) => {
+      rolled.push([count, size]);
+      return [size];
+    },
+  };
+  calls.length = 0;
+  const selected = A.choose(jumper, field);
+  assert.ok(selected);
+  const resolved = A.resolve(40, 1, jumper, field, selected);
+  assert.equal(resolved.events.length, 2);
+  assert.deepEqual(rolled, [[1, 6], [1, 8]]);
+  assert.deepEqual(calls.map((item) => item.rolls), [
+    [[6], [8]], [[6], [8]],
+  ]);
+
+  // Multiple individually chosen targets follow the same universal rule.
+  window.IRON_PIT_BROWSER_RESOURCES = {
+    available: () => true, spend: () => null,
+  };
+  window.IRON_PIT_BROWSER_FORMATION = { saveDistance: () => 5 };
+  load("browser-multi-save-provider.js");
+  const M = window.IRON_PIT_BROWSER_MULTI_SAVE_PROVIDER;
+  jumper.state.action_available = true;
+  const multi = { ...action, area: null, maxTargets: 2 };
+  rolled.length = 0;
+  calls.length = 0;
+  const multiResult = M.resolve(50, 1, jumper, field, multi, targets);
+  assert.equal(multiResult.events.length, 2);
+  assert.deepEqual(rolled, [[1, 6], [1, 8]]);
+  assert.deepEqual(calls.map((item) => item.rolls), [
+    [[6], [8]], [[6], [8]],
+  ]);
+}
+
+console.log("Multi-target shared typed-save damage parity passed.");
