@@ -49,30 +49,36 @@
     }
     return groups;
   }
+  function cardSnapshot(selection) {
+    const heroes = window.IRON_PIT_BROWSER_HEROES || {};
+    const monsters = selection.ruleset === "2014" ? window.IRON_PIT_BROWSER_MONSTERS_2014 || {} : window.IRON_PIT_BROWSER_MONSTERS || {};
+    return JSON.stringify({heroes:selection.hero_ids.map(id => heroes[id]),monsters:selection.monster_ids.map(id => monsters[id])});
+  }
   function execute(entries, repeat) {
     const results = [];
     for (const entry of entries) {
       try {
-        const start = performance.now();
+        const start = performance.now(), before = cardSnapshot(entry.selection);
         const battle = fight(entry.selection, entry.seed);
         const stable = repeat ? signature(battle) === signature(fight(entry.selection, entry.seed)) : null;
-        results.push({selection:entry.selection,seed:entry.seed,outcome:battle.outcome,rounds:battle.rounds,
+        const cards_unchanged = before === cardSnapshot(entry.selection);
+        results.push({selection:entry.selection,seed:entry.seed,cards_unchanged,outcome:battle.outcome,rounds:battle.rounds,
           events:battle.events.length,observed:observed(battle.events),stable,ms:Math.round(performance.now()-start),log:battle.events});
       } catch (error) { results.push({selection:entry.selection,seed:entry.seed,error:String(error.message || error)}); }
     }
     report = {generated_at:new Date().toISOString(),engine:"IRON_PIT_BROWSER_ENGINE.runEncounter",coverage_kind:"observed events only; not RAW correctness",results};
-    const failed = results.filter(row => row.error || row.stable === false).length;
+    const failed = results.filter(row => row.error || row.stable === false || row.cards_unchanged === false).length;
     $("status").textContent = `${results.length} runs; ${failed} errors/replay mismatches.`;
     $("summary").textContent = `${results.filter(row => row.outcome === "heroes_win").length} hero wins, ${results.filter(row => row.outcome === "monsters_win").length} monster wins, ${results.filter(row => row.outcome === "draw").length} draws.`;
     const table = document.createElement("table");
     const head = document.createElement("tr");
-    for (const key of ["Seed","Heroes","Monsters","Outcome / Error","Rounds","Events","Replay"]) {
+    for (const key of ["Seed","Heroes","Monsters","Outcome / Error","Rounds","Events","Replay","Cards unchanged"]) {
       const th = document.createElement("th"); th.textContent=key; head.append(th);
     }
     table.append(head);
     results.forEach(row => {
       const tr=document.createElement("tr");
-      for (const value of [row.seed,row.selection.hero_ids.length,row.selection.monster_ids.length,row.error || row.outcome,row.rounds ?? "—",row.events ?? "—",row.stable === null || row.stable === undefined ? "Not checked" : row.stable ? "PASS" : "FAIL"]) {
+      for (const value of [row.seed,row.selection.hero_ids.length,row.selection.monster_ids.length,row.error || row.outcome,row.rounds ?? "—",row.events ?? "—",row.stable === null || row.stable === undefined ? "Not checked" : row.stable ? "PASS" : "FAIL",row.cards_unchanged === undefined ? "—" : row.cards_unchanged ? "PASS" : "FAIL"]) {
         const td=document.createElement("td"); td.textContent=String(value); tr.append(td);
       }
       tr.addEventListener("click",()=>{$("events").textContent=JSON.stringify(row.log || row.error,null,2);});
