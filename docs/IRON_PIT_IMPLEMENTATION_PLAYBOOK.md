@@ -10,6 +10,23 @@
 4. Declare branch, subsystem, source baseline, expected files and one family deliverable. If another active PR owns it, reconcile that PR instead of opening a parallel implementation.
 5. Implement, verify and merge the family; measure the resulting change in exact source obligations and certified cards. Continue with the next **unblocked** family.
 
+## Form-driven refactor sequence
+
+Use one canonical `CombatantDefinition` and one compiled template for all
+combatants. Treat Monster and Character as two *form entry modes*: the former
+enters final combat stats, while the latter derives them with the existing
+edition-aware builder. Before writing any feature, list its universal
+triggers, costs, rolls, effects, duration and cleanup and search both
+monster and pregen code. Bind identical semantics once. Prefer shrinking
+duplicate source-name checks to schema fields over adding resolvers.
+
+Refactor in independently certifiable slices: (1) strict nested form
+validation; (2) declarative movement/passive grants instead of trait-name
+tests; (3) editor and compiler parity; (4) Python/browser synthetic form
+execution. Keep creature data immutable and fight state temporary.
+No broad rewrite or simultaneous unrelated PRs. Actual admissions change
+only when a whole card passes source and exact-head certification.
+
 ## Card → universal engine contract
 
 An immutable card declares printed name, edition, AC/HP, DC, attack/damage dice, typed damage, target/range/area, trigger, action cost, resource, recharge, duration and exit/reset qualifiers. The engine owns attack/save rolls, conditions, typed damage defenses, healing, action economy, geometry, lifecycle and audit. **Printed names are source/log labels, never runtime behavior switches.**
