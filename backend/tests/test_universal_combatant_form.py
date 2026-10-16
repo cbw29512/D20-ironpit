@@ -5,6 +5,8 @@ import copy
 
 import pytest
 
+from app.combat.attacks import resolve_attack
+from app.combat.dice import FixedDiceProvider
 from app.content.combatant_form import compile_combatant_form
 from app.content.capability_compiler import compile_combatant
 from app.combat.state import build_combatant_state
@@ -190,3 +192,28 @@ def test_character_form_requires_ability_scores() -> None:
     payload["level"] = 1
     with pytest.raises(ValueError, match="require ability scores"):
         compile_combatant_form(payload)
+
+
+def test_cross_kind_attack_execution_uses_identical_roll_and_damage() -> None:
+    base = form()
+    character = copy.deepcopy(base)
+    character["kind"] = "character"
+    character["level"] = 1
+    character["ability_scores"] = {
+        "strength": 16, "dexterity": 14, "constitution": 16,
+        "intelligence": 10, "wisdom": 12, "charisma": 10,
+    }
+    outcomes = []
+    for payload in (base, character):
+        attacker = build_combatant_state(compile_combatant_form(payload))
+        defender = build_combatant_state(compile_combatant_form({
+            **form(), "id": "defender", "armor_class": 10, "max_hp": 80,
+        }))
+        event = resolve_attack(
+            1, 1, attacker, defender, attacker.template.weapon_attack, 5,
+            FixedDiceProvider([15, 4, 5, 3]), spend_action=False,
+            actor_event_id="attacker", target_event_id="defender",
+        )
+        outcomes.append((event.hit, event.damage_roll.total, defender.current_hp))
+    assert outcomes[0] == outcomes[1]
+    assert outcomes[0][0] is True
