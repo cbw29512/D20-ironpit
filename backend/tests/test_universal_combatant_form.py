@@ -162,3 +162,31 @@ def test_form_accepts_declared_recharge_resource() -> None:
     payload["recharge_rules"] = [{"resource_id": "charge", "minimum_roll": 5}]
     template = compile_combatant_form(payload)
     assert template.recharge_rules[0].resource_id == "charge"
+
+
+def test_monster_and_character_forms_share_ability_mechanics() -> None:
+    monster = form()
+    character = copy.deepcopy(monster)
+    character["id"] = "homebrew-character"
+    character["kind"] = "character"
+    character["level"] = 1
+    character["ability_scores"] = {
+        "strength": 16, "dexterity": 14, "constitution": 16,
+        "intelligence": 10, "wisdom": 12, "charisma": 10,
+    }
+    # A character builder supplies resolved numbers before this shared gate.
+    m_template = compile_combatant_form(monster)
+    c_template = compile_combatant_form(character)
+    assert m_template.kind == "monster"
+    assert c_template.kind == "character"
+    assert m_template.weapon_attack.model_dump() == c_template.weapon_attack.model_dump()
+    assert m_template.recharge_rules == c_template.recharge_rules
+    assert build_combatant_state(m_template).current_hp == build_combatant_state(c_template).current_hp
+
+
+def test_character_form_requires_ability_scores() -> None:
+    payload = form()
+    payload["kind"] = "character"
+    payload["level"] = 1
+    with pytest.raises(ValueError, match="require ability scores"):
+        compile_combatant_form(payload)
