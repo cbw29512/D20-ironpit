@@ -5883,7 +5883,7 @@
       "source:extra-action": 57,
       "source:legendary": 9,
       "source:reaction": 3,
-      "source:trait": 75
+      "source:trait": 74
     },
     "unresolved_printed_abilities": [
       {
@@ -6236,13 +6236,6 @@
           "Bearded Devil"
         ],
         "printed_name": "Steadfast"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Shadow"
-        ],
-        "printed_name": "Sunlight Weakness"
       },
       {
         "demand_count": 1,

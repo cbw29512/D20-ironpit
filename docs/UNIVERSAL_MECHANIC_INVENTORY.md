@@ -475,7 +475,6 @@ Blocked monsters: **104**. These are grouped by printed ability name so the rost
 | Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
 | Steadfast | Bearded Devil | 1 |
-| Sunlight Weakness | Shadow | 1 |
 | Surprise Attack | Doppelganger | 1 |
 | Tail Spike Regrowth | Manticore | 1 |
 | Telepathic Bond | Succubus/Incubus | 1 |
@@ -489,7 +488,7 @@ Blocked monsters: **104**. These are grouped by printed ability name so the rost
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 75 |
+| `source:trait` | 74 |
 | `source:extra-action` | 57 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |

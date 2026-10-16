@@ -29,33 +29,11 @@
     return { buffs: [...buffs].sort(), debuffs: [...debuffs].sort() };
   }
 
-  function permanentPassiveStates(member, setup) {
-    try {
-      const result = [];
-      // The source owns printed passive labels, while the combat modifier stack owns activation.
-      // Applies to both editions without dispatching by class or monster name.
-      const passives = new Map();
-      for (const grant of member.state.template.passive_modifier_grants || []) {
-        if (!grant.source_name) continue;
-        const available = grant.required_visible_active_ally_within_ft == null
-          || Boolean(window.IRON_PIT_BROWSER_STATE?.hasVisibleActiveAllyWithin?.(
-            member, setup, grant.required_visible_active_ally_within_ft));
-        const enabled = available && (member.state.active_modifiers || []).some((modifier) =>
-          modifier.source_effect_id === grant.source_id && modifier.kind === grant.kind
-          && (modifier.required_active_effect_ids || []).every((id) => (member.state.active_effect_ids || []).includes(id)));
-        passives.set(grant.source_name, enabled || Boolean(passives.get(grant.source_name)));
-      }
-      for (const [id, enabled] of passives) {
-        if (!result.some((item) => item.id === id)) {
-          result.push({ id, active: enabled, explanation: "Source-owned permanent combat modifier." });
-        }
-      }
-      return result;
-    } catch (error) {
-      console.error("Failed to project permanent passive card states", { combatantId: member?.combatant_id, error });
-      throw error;
-    }
-  }
+  const permanentPassiveStates = (...args) => {
+    const project = window.IRON_PIT_BATTLEFIELD_PASSIVE_STATES?.permanentPassiveStates;
+    if (!project) throw new Error("Permanent passive projection runtime is not loaded.");
+    return project(...args);
+  };
 
   function bindBattle(battle, slotMap) {
     nodes.clear();
@@ -102,12 +80,18 @@
       });
       for (const passive of permanent) {
         const badge = existing.get(passive.id) || document.createElement("span");
-        badge.className = `buff-badge passive-badge${passive.active ? "" : " is-inactive"}`;
+        badge.className = `${kind === "debuff" ? "debuff-badge" : "buff-badge"} passive-badge${passive.active ? "" : " is-inactive"}`;
         badge.dataset.effect = passive.id;
-        badge.textContent = passive.id.toUpperCase();
+        badge.textContent = String(passive.label || passive.id).toUpperCase();
         badge.title = `${passive.explanation} Currently ${passive.active ? "active" : "inactive"}.`;
         badge.setAttribute("aria-label", badge.title);
         badges.push(badge);
+      }
+      // Transient condition updates must not remove permanent passives.
+      if (!permanent.length) {
+        for (const badge of existing.values()) {
+          if (badge.classList.contains("passive-badge")) badges.push(badge);
+        }
       }
       rack.replaceChildren(...badges);
     } catch (error) {
@@ -118,10 +102,14 @@
 
   function renderStateLanes(node, state, permanent = []) {
     if (!node) return;
-    const lanes = classifyStatusLanes(state); renderLane(node, ".card-buffs", lanes.buffs, "buff", permanent);
-    renderLane(node, ".card-debuffs", lanes.debuffs, "debuff");
-    node.classList.toggle("has-buff", lanes.buffs.length > 0 || permanent.some((item) => item.active) || Boolean(state.concentration));
-    node.classList.toggle("has-debuff", lanes.debuffs.length > 0); node.classList.toggle("has-condition", lanes.debuffs.length > 0);
+    const lanes = classifyStatusLanes(state);
+    const buffs = permanent.filter((item) => item.lane !== "debuff");
+    const debuffs = permanent.filter((item) => item.lane === "debuff");
+    renderLane(node, ".card-buffs", lanes.buffs, "buff", buffs);
+    renderLane(node, ".card-debuffs", lanes.debuffs, "debuff", debuffs);
+    node.classList.toggle("has-buff", lanes.buffs.length > 0 || buffs.some((item) => item.active) || Boolean(state.concentration));
+    node.classList.toggle("has-debuff", lanes.debuffs.length > 0 || debuffs.some((item) => item.active));
+    node.classList.toggle("has-condition", lanes.debuffs.length > 0);
   }
 
   function conditions(node, added = [], removed = []) {

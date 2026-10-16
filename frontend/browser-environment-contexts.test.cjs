@@ -183,3 +183,37 @@ assert.equal(koboldAttack.attack_roll.mode, "disadvantage");
 assert.equal(koboldAttack.attack_roll.selected_roll, 3);
 
 console.log("environment context sunlight reaction parity passed.");
+
+
+// Source-neutral synthetic card: permanent sunlight weakness, conditional
+// on live sunlight and including ALL ability checks and saving throws.
+load("browser-saving-throws.js");
+const shadowTemplate = targetTemplate();
+shadowTemplate.name = "Synthetic Weakness Card";
+shadowTemplate.environment_context_reactions = [{
+  source_id: "sunlight-weakness",
+  source_name: "Sunlight Weakness",
+  context_id: "sunlight",
+  disadvantage_on: ["attack_rolls", "ability_checks", "saving_throws"],
+}];
+shadowTemplate.saving_throw_bonuses = { wisdom: 2 };
+const shadow = member("shadow-synthetic", "monsters", shadowTemplate, 25);
+const lightSource = member("light-source", "heroes", hero, 0);
+const weaknessSetup = { heroes: [lightSource], monsters: [shadow], ruleset: "2014" };
+assert.equal(E.disadvantageSources(shadow, weaknessSetup, "saving_throws"), 0);
+S.beginTurn(lightSource.state);
+B.resolve(1, 1, lightSource, nimbus);
+for (const kind of ["attack_rolls", "ability_checks", "saving_throws"]) {
+  assert.equal(E.disadvantageSources(shadow, weaknessSetup, kind), 1);
+}
+assert.equal(C.mode(shadow.state, 0, 0, { member: shadow, setup: weaknessSetup }), "disadvantage");
+assert.equal(window.IRON_PIT_BROWSER_SAVING_THROWS.saveMode(
+  shadow.state, "wisdom", { encounterRoller: shadow, setup: weaknessSetup },
+), "disadvantage");
+shadow.position_ft = 35;
+assert.equal(E.disadvantageSources(shadow, weaknessSetup, "saving_throws"), 0);
+assert.equal(window.IRON_PIT_BROWSER_SAVING_THROWS.saveMode(
+  shadow.state, "wisdom", { encounterRoller: shadow, setup: weaknessSetup },
+), "normal");
+assert.equal(shadow.state.template.environment_context_reactions[0].source_name, "Sunlight Weakness");
+console.log("Permanent source-neutral sunlight weakness parity passed.");

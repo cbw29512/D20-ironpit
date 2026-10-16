@@ -57,6 +57,10 @@
       const disadvantage = X().saveDisadvantage(state) + (DF().saveDisadvantage?.(state, ability) || 0)
         + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(state, ability) || 0)
         + (context.disadvantageSources || []).length
+        + (context.encounterRoller
+          ? (window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS?.disadvantageSources(
+            context.encounterRoller, context.setup, "saving_throws",
+          ) || 0) : 0)
         + (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0);
       return R().modeFromSources(advantage, disadvantage);
     } catch (error) {

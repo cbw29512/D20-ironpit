@@ -8,7 +8,10 @@ from pydantic import BaseModel, Field, model_validator
 logger = logging.getLogger(__name__)
 
 EnvironmentContextId = Literal["sunlight"]
-EnvironmentContextRollKind = Literal["attack_rolls", "sight_based_perception_checks"]
+EnvironmentContextRollKind = Literal[
+    "attack_rolls", "ability_checks", "saving_throws",
+    "sight_based_perception_checks",
+]
 
 
 class EmittedEnvironmentContext(BaseModel):
