@@ -1,6 +1,8 @@
 """Declarative on-hit save escalation; never keyed to a printed ability name."""
 from __future__ import annotations
 
+import logging
+
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from app.domain.action_types import ConditionName
@@ -29,3 +31,27 @@ class FailureMarginEscalation(BaseModel):
         if len(set(self.additional_condition_ids)) != len(self.additional_condition_ids):
             raise ValueError("Escalated condition IDs must be unique.")
         return self
+
+logger = logging.getLogger(__name__)
+
+
+def require_escalation_duration(
+    rule: FailureMarginEscalation | None,
+    duration_rounds: int | None,
+) -> None:
+    """Reject a source card whose escalated conditions cannot expire."""
+    try:
+        if (
+            rule is not None
+            and duration_rounds is None
+            and rule.replacement_duration_dice_count is None
+        ):
+            raise ValueError(
+                "Failed-save escalation requires duration_rounds or replacement duration dice."
+            )
+    except ValueError:
+        logger.warning("Rejected failed-save escalation without an expiry duration.")
+        raise
+    except Exception:
+        logger.exception("Failed to validate failed-save escalation duration.")
+        raise

@@ -7,7 +7,7 @@ from app.content.monster_zero_hp_save_rider_2014 import (
     supports_zero_hp_save_rider_2014,
 )
 from app.domain.action_types import ConditionName, ConditionTiming
-from app.domain.failure_margin import FailureMarginEscalation
+from app.domain.failure_margin import FailureMarginEscalation, require_escalation_duration
 from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType
 
@@ -81,7 +81,8 @@ def supported_save_condition_2014(value: object) -> bool:
     escalation = value.get("failure_margin_escalation")
     if escalation is not None:
         try:
-            FailureMarginEscalation.model_validate(escalation)
+            rule = FailureMarginEscalation.model_validate(escalation)
+            require_escalation_duration(rule, duration)
         except (ValueError, TypeError):
             return False
     push = value.get("failure_push_ft", 0)

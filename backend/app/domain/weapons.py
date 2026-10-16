@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.failure_margin import FailureMarginEscalation
+from app.domain.failure_margin import FailureMarginEscalation, require_escalation_duration
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming, HitControlEffect
 from app.domain.charge import AttackChargeProfile, ChargeDamage
 from app.domain.damage_sources import DamageSourceQualifier
@@ -115,6 +115,7 @@ class OnHitConditionSave(BaseModel):
             )
         if self.repeat_save_failure_condition_id is not None and self.repeat_save_timing is None:
             raise ValueError("Failure escalation requires a repeat-save timing.")
+        require_escalation_duration(self.failure_margin_escalation, self.duration_rounds)
         return self
 
 
