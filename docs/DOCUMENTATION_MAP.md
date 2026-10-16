@@ -2,6 +2,10 @@
 
 This is a **directory and ownership map**, not a new task queue, certification source or rules spec. Every tracked Markdown document at the initial 2026-10-15 audit is assigned one role below. Generated files, legal notices, historical audit evidence and locked rule contracts are intentionally not bulk-rewritten: doing so would erase evidence, conflict with generator output, or change approved combat policy without a new decision.
 
+## Canonical form refactor status
+
+The foundation now specifies **one combatant definition and one runtime** for monsters, pregens and homebrew. [Form integration](UNIVERSAL_COMBATANT_FORM_INTEGRATION.md) records actual implemented form-boundary behavior and remaining validation/browser/editor work, not a second rules authority. [Universal Combatant Architecture](UNIVERSAL_COMBATANT_ARCHITECTURE.md) and [Pregen and Content Rules](PREGEN_AND_CONTENT_RULES_CONTRACT.md) cross-reference the core card contract. Historic inventory counts below are **2026-10-15 audit snapshots**, not an assertion of current repository totals. Keep generated reports untouched; never delete a historical record solely because it predates this architecture.
+
 ## Fast path
 
 1. [SOUL](../SOUL.md) and the [universal card contract](UNIVERSAL_CARD_COMBAT_CONTRACT.md) — engine owns mechanics; immutable source cards own parameters.
