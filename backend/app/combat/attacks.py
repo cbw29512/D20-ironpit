@@ -12,7 +12,7 @@ from app.combat.attack_d20_outcome import resolve_attack_d20_outcome
 from app.combat.attack_effect_resolution import resolve_attack_effects
 from app.combat.attack_event_support import attack_damage_reduction_description, build_attack_description, primary_attack_save_fields
 from app.combat.brutal_strike import clear_brutal_strike_pending
-from app.combat.condition_rules import close_hit_is_automatic_critical
+from app.combat.condition_rules import close_hit_is_automatic_critical, is_incapacitated
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.modifier_stack import effective_armor_class
@@ -35,6 +35,10 @@ def resolve_attack(
     reaction_roller: EncounterCombatant | None = None,
 ) -> BattleEvent:
     try:
+        # Spend-action=False means a free/off-turn attack, not permission for an
+        # Incapacitated creature to attack. Both paths share the same gate.
+        if attacker.is_dead or is_incapacitated(attacker):
+            raise ValueError("An incapacitated or dead creature cannot attack.")
         if spend_action and not is_available(attacker, "action"):
             raise ValueError("Action is not available for an attack.")
         weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id

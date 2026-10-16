@@ -31,6 +31,7 @@
   const HD = () => window.IRON_PIT_BROWSER_HIT_DAMAGE || { resolve: legacyHitDamage };
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
     if (attack.unavailableReason != null) throw new Error(`${attack.id} unavailable: ${attack.unavailableReason}`);
+    if (attacker.state.is_dead || Q().incapacitated(attacker.state)) throw new Error("An incapacitated or dead creature cannot attack.");
     if (extra.brutalStrikeEffectIds != null) BS()?.selectEffects?.(attacker.state, extra.brutalStrikeEffectIds); const spendAction = extra.spendAction !== false;
     if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
     const formation = window.IRON_PIT_BROWSER_FORMATION; const autoHit = formation?.automaticHit?.(attacker, target, attack) || false;

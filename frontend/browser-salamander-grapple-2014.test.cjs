@@ -68,6 +68,8 @@ assert.equal(another.state.grapple_sources.length, 0, "A missed first Tail attac
 for (const condition of ["incapacitated", "unconscious", "stunned", "paralyzed", "petrified"]) {
   G.apply(held.state, salamander.combatant_id, 14, 10, true);
   salamander.state.active_effect_ids.push(condition);
+  assert.throws(() => A.resolveAttack(10, 1, salamander, held, tail, 5,
+    { setup, spendAction: false }), /incapacitated or dead/);
   G.cleanup(setup);
   assert.deepEqual(held.state.grapple_sources, [], condition);
   assert.ok(!held.state.active_effect_ids.includes("grappled"), condition);

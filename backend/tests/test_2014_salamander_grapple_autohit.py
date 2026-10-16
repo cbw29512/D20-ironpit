@@ -95,3 +95,19 @@ def test_auto_hit_stops_after_release_and_other_targets_remain_illegal() -> None
     )
     assert not event.hit and event.attack_roll is not None
     assert not other.grapple_sources
+
+
+@pytest.mark.parametrize("condition", ["incapacitated", "unconscious", "stunned", "paralyzed", "petrified"])
+def test_incapacitated_grappler_cannot_attack_even_when_attack_is_free(condition: str) -> None:
+    actor_template, tail = template_and_tail()
+    actor = build_combatant_state(actor_template)
+    defender = build_combatant_state(build_aurelia_brightshield_2014(20))
+    apply_grapple(defender, "attacker-1", 14, 10, restrains=True)
+    actor.active_effect_ids.append(condition)
+    with pytest.raises(RuntimeError, match="Attack resolution failed"):
+        resolve_attack(
+            1, 1, actor, defender, tail, 5, FixedDiceProvider([1, 1, 1]),
+            actor_event_id="attacker-1", spend_action=False,
+        )
+    assert defender.current_hp == defender.template.max_hp
+
