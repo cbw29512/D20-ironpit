@@ -26,6 +26,8 @@ from app.domain.capability_effects import (
 )
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import CombatantTemplate
+from app.domain.combatants import ResourceDefinition
+from app.domain.recharge import RechargeRule
 
 logger = logging.getLogger(__name__)
 
@@ -92,6 +94,10 @@ def compile_combatant_form(values: Mapping[str, Any]) -> CombatantTemplate:
                 _check_keys(action["grapple"], GrappleEffectDefinition, f"{label}.grapple")
             if action.get("area") is not None:
                 _check_keys(action["area"], AreaTargeting, f"{label}.area")
+        for i, resource in enumerate(values.get("resources", [])):
+            _check_keys(resource, ResourceDefinition, f"resources[{i}]")
+        for i, recharge in enumerate(values.get("recharge_rules", [])):
+            _check_keys(recharge, RechargeRule, f"recharge_rules[{i}]")
         definition = CombatantDefinition.model_validate(dict(values))
         # Unsupported capabilities are still rejected by the same compiler.
         return compile_combatant(definition)
