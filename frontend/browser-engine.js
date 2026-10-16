@@ -52,9 +52,22 @@
   function buildSetup(selection) {
     try {
       const requestedRuleset = selectedRuleset(selection), registry = rosters(requestedRuleset);
+      // Only compiled browser templates enter this opt-in lane; raw form fields
+      // must be validated and compiled by the canonical Python form compiler.
+      const custom = selection.compiled_monsters || {};
+      if (custom === null || Array.isArray(custom) || typeof custom !== "object") throw new Error("Compiled monster registry must be an object.");
+      for (const [id, template] of Object.entries(custom)) {
+        if (!template || template.id !== id || template.kind !== "monster" ||
+            template.ruleset !== requestedRuleset || !Array.isArray(template.attacks) ||
+            !template.attacks.length || !template.primary_attack_id ||
+            !Number.isInteger(template.armor_class) || template.armor_class < 1 ||
+            !Number.isInteger(template.max_hp) || template.max_hp < 1 ||
+            Object.hasOwn(registry.heroes, id) || Object.hasOwn(registry.monsters, id))
+          throw new Error(`Invalid or colliding compiled monster: ${id}`);
+      }
       const collisions = Object.keys(registry.heroes).filter((id) => Object.hasOwn(registry.monsters, id)); if (collisions.length) throw new Error(`Ambiguous certified card IDs: ${collisions.join(", ")}`);
       const card = (id, side) => {
-        const template = registry.heroes[id] || registry.monsters[id];
+        const template = side === "heroes" ? registry.heroes[id] : (custom[id] || registry.monsters[id]);
         if (!template) throw new Error(`Unknown certified ${side === "heroes" ? "hero" : "monster"} for ${requestedRuleset}: ${id}`);
         return cloneTemplate(template); };
       const member = (id, index, side) => {
