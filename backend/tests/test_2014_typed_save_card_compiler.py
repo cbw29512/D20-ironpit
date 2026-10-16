@@ -38,7 +38,6 @@ def test_typed_components_compile_without_name_dispatch(printed_name: str) -> No
 
 def test_mixed_legacy_and_typed_damage_fails_closed() -> None:
     with pytest.raises(ValidationError, match="either legacy dice or typed components"):
-        _synthetic_card("Mixed Invalid").model_copy().model_dump()
         SaveCapabilityDefinition(
             id="invalid", name="Invalid", save_ability="dexterity", dc=16,
             range_ft=15, damage=DiceSpec(count=1, size=6),
