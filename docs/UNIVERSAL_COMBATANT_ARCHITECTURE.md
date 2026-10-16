@@ -1,5 +1,8 @@
 # Universal Combatant Architecture
 
+**Canonical form boundary (2026-10-16):** Monster and Character are *creation modes*, not separate combat engines. A source-final monster, edition-validated pregen, or homebrew editor submission must produce the same `CombatantDefinition → CombatantTemplate` contract. Only fight-local `CombatantState` is mutable. Names are for display/logging, never combat dispatch. The detailed validation and acceptance requirements live in [Universal Card-to-Combat Contract](UNIVERSAL_CARD_COMBAT_CONTRACT.md); the [form integration guide](UNIVERSAL_COMBATANT_FORM_INTEGRATION.md) tracks the implemented boundary and its gaps. Preserve existing RAW and edition restrictions below.
+
+
 This is the durable implementation contract for D20 Iron Pit.
 
 ## KISS principle

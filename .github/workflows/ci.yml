@@ -444,6 +444,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install form fixture compiler
+        run: pip install -e ./backend
       - name: Validate browser JavaScript syntax
         run: |
           for file in frontend/*.js; do node --check "$file"; done
@@ -672,6 +677,8 @@ jobs:
           node frontend/browser-2014-druid-level10.test.cjs
           node frontend/browser-2014-mvp.test.cjs
           node frontend/browser-salamander-grapple-2014.test.cjs
+          PYTHONPATH=backend:. python scripts/generate_form_runtime_parity_fixture.py
+          node frontend/browser-form-cross-kind-parity.test.cjs
           node frontend/browser-cleric5-6.test.cjs
           node frontend/browser-fighter6.test.cjs
           node frontend/browser-fighter7.test.cjs

@@ -8,6 +8,40 @@ Before answering "next monster", asking for another monster decision, coding a m
 
 This file is the first-read architecture rule for every agent and contributor working on Iron Pit. [Documentation map](docs/DOCUMENTATION_MAP.md) and [implementation manual](docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md) provide the single navigation/operating path; this document is not an execution-status ledger.
 
+## One form, one combat engine
+
+A monster card, a completed pregen, and a user-created homebrew are the same
+**finished combatant contract**. Monster and Character are **editor modes**,
+not combat engines. An editor starts blank and produces declarative values;
+a monster typically supplies final AC, HP, attack bonuses and damage, while a
+character builder derives legal values from ability scores, proficiency,
+equipment, level and selected features under its ruleset. Both compile into
+the existing `CombatantDefinition → CombatantTemplate` pipeline and build fresh
+`CombatantState` each fight. Source data is immutable.
+
+**Ability names are display/log labels only.** A declared effect is an ordered
+composition of universal primitives: trigger → eligibility → action/resource
+→ roll/save → typed damage/healing/conditions/movement → timing/expiry/reset.
+No name, monster ID, class, source text or editor mode may switch resolution
+behavior. The same capability library must work for monsters, pregens and
+homebrew—including assigning a monster-sourced effect to a character—without
+creating a new resolver for the renamed ability.
+
+Form validation must fail closed on unknown or unsupported *outcome-changing*
+parameters, including nested effects; never silently discard them. The normal
+default for a harmful save effect is failure applies the declared condition,
+success negates it, but explicit printed success effects (including half damage)
+take precedence. Character-specific calculations belong in a shared
+character-building compiler, not in the fight resolver; manually entered
+monster attack values must not be recalculated as character weapon attacks.
+
+**Acceptance test:** rename a synthetic ability, or apply the same supported
+effect to a different form type, and demonstrate identical Python/browser
+resolution and reset with only the source label changed. See
+[universal card contract](docs/UNIVERSAL_CARD_COMBAT_CONTRACT.md) for the
+implementation gate and [form integration](docs/UNIVERSAL_COMBATANT_FORM_INTEGRATION.md)
+for the incremental migration.
+
 ## Core principle
 
 **The engine models what an effect does, not what the source calls it.**
