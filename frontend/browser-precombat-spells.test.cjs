@@ -193,3 +193,25 @@ console.log("Browser precombat defensive spell regressions passed.");
   assert.deepEqual(new Set(targets.map((target) => target.combatant_id)),
     new Set(["caster", ...allies.map((ally) => ally.combatant_id)]));
 }
+
+{
+  const invis = (id) => ({
+    ...defense(id, 4, 95), temporaryHp: 0, range: 5, durationMinutes: 1,
+    targetPolicy: "friendly", concentration: true, conditionIds: ["invisible"],
+  });
+  const first = caster([invis("wizard-invisibility")], { 4: 1 });
+  first.combatant_id = "wizard";
+  const second = caster([invis("sorcerer-invisibility")], { 4: 1 });
+  second.combatant_id = "sorcerer";
+  const ally = { combatant_id: "fighter", side: "heroes", position_ft: 0,
+    state: S.buildState(structuredClone(base)) };
+  const fight = { heroes: [first, second, ally], monsters: [enemy()] };
+  const originalPriority = P.selectTargets(first, fight, invis("wizard-invisibility"), 4);
+  assert.equal(originalPriority[0].combatant_id, "fighter");
+  const prepared = P.prepare(fight);
+  assert.equal(prepared.events.length, 2);
+  assert.equal(prepared.events[0].target_id, "fighter");
+  assert.notEqual(prepared.events[1].target_id, "fighter",
+    "Second caster must not waste a slot applying the same condition to an already protected target.");
+  assert.ok(ally.state.active_effect_ids.includes("invisible"));
+}
