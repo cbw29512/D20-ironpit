@@ -156,6 +156,7 @@
               const slotMap = { heroes: match.heroes.indexes, monsters: match.monsters.indexes };
               await window.IRON_PIT_BATTLEFIELD_REPLAY.play(battle, slotMap);
               view().writeLog(battle); view().showResult(battle);
+              window.IRON_PIT_BETA_LOG?.record?.(battle, selection, seed);
               el("status").textContent = "Beta fight complete · seed " + seed;
             } finally { state.fighting = false; updateControls(); }
           },
