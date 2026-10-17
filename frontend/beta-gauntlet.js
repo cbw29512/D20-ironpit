@@ -140,14 +140,17 @@
             row.observed = window.IRON_PIT_BETA_GAUNTLET_ASSERTIONS.inspect(replay.battle);
             row.result = "PASS";
             row.diagnostic_id = replay.diagnostic_id;
-            row.outcome = replay.battle.outcome; row.rounds = replay.battle.rounds; passes++;
+            row.outcome = replay.battle.outcome; row.rounds = replay.battle.rounds;
+            row.events = replay.battle.events; passes++;
             if ($("watch").checked) {
               $("status").textContent = "Watching " + recipe.id + " (" + (index + 1) + "/" + count + ")";
               await w.IRON_PIT_BETA_BRIDGE.showFight(setup, replay.battle, testSeed);
             }
           } catch (error) {
             row.result = "FAIL"; row.details = error?.message || String(error);
-            row.stack = error?.stack || null; failures++;
+            row.stack = error?.stack || null;
+            if (typeof replay !== "undefined" && replay?.battle?.events) row.events = replay.battle.events;
+            failures++;
           }
           report.tests.push(row); finished++; $("progress").value = finished;
           issue(row, row.result, row.details);
