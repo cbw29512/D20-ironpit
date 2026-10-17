@@ -27,11 +27,13 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:17rem;overflow:auto}
 <p id="status" role="status" aria-live="polite">Loading production browser runtime…</p>
 <progress id="progress" value="0" max="1" style="width:100%"></progress>
 </section>
+<section><h2>Engine capability coverage</h2><p class="muted">Evidence here means a preset explicitly asserted and observed an event. It does not prove all rules or edge cases of a capability.</p><p id="coverage-summary">Coverage not measured yet.</p><details><summary>View every capability and missing tests</summary><table><thead><tr><th>Capability</th><th>Implementation</th><th>Preset evidence</th></tr></thead><tbody id="coverage-rows"></tbody></table></details></section>
 <section>
 <h2>Results</h2>
 <p id="totals">No tests run.</p>
 <table><thead><tr><th>Fight</th><th>Edition</th><th>Seed</th><th>Result</th><th>Details</th></tr></thead><tbody id="rows"></tbody></table>
 </section>
 <iframe id="runtime" title="Isolated Iron Pit runtime" src="./index.html" aria-hidden="true" tabindex="-1"></iframe>
+<script src="beta-gauntlet-coverage.js"></script>
 <script src="beta-gauntlet.js"></script>
 </body></html>
