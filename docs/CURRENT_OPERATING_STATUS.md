@@ -13,16 +13,9 @@ Updated 2026-10-15. This is a short navigation/status page, **not** a second mon
 
 If this page conflicts with the generated reports or current source/CI, **the reports and current source/CI win**.
 
-## Last observed main snapshot
+## Current monster admission and blockers
 
-At main commit `4ab13b9c254663b221a5a874122b112645f970ea` (2026-10-15):
-- 2014 source-admitted monsters: **223 / 327**; source-blocked: **104**.
-- Stone Giant Rock Catching and Chain Devil Unnerving Mask are merged; do not reimplement them.
-- Source admission is **not** independent full-match runtime certification.
-- Python is the reference oracle, the browser is the production combat engine.
-- Production Netlify publication remains locked.
-
-These numbers are deliberately a **dated snapshot**, not live counters. Refresh them from the generated report before describing current progress.
+The admission count is generated and changes after merges; do not use this document as a live count. Read [MONSTER_BLOCKERS_2014.md](MONSTER_BLOCKERS_2014.md) and [UNIVERSAL_MECHANIC_INVENTORY.md](UNIVERSAL_MECHANIC_INVENTORY.md) at the exact `main` commit being audited. Source admission is **not** whole-match certification. Python is the reference oracle; the browser is the production combat engine. Netlify publication remains locked.
 
 ## Implementation order
 
