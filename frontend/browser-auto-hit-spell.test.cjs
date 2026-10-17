@@ -115,3 +115,19 @@ const magicMissile = {
 }
 
 console.log("Browser universal auto-hit spell regression passed.");
+
+{
+  const caster = member("lethal-caster", "heroes", 0, {
+    resources: { "spell-slot-1": 1 }, actions: [magicMissile],
+  });
+  const target = member("lethal-monster", "monsters", 30, { hp: 5, kind: "monster" });
+  const setup = { heroes: [caster], monsters: [target] };
+  const choice = P.choose(caster, setup, "1:lethal-caster");
+  const queue = [4, 4, 4];
+  window.IRON_PIT_DICE = { roll: () => queue.shift(), rollMany: (count) =>
+    Array.from({ length: count }, () => queue.shift()) };
+  const event = R.resolve(1, 1, caster, target, setup, choice, "1:lethal-caster");
+  assert.equal(event.hp_after, 0);
+  assert.equal(event.is_dead, true, "Lethal auto-hit log must reflect monster death.");
+  assert.equal(event.is_stable, false);
+}
