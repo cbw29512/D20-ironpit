@@ -68,7 +68,7 @@
     }
     report = {generated_at:new Date().toISOString(),engine:"IRON_PIT_BROWSER_ENGINE.runEncounter",coverage_kind:"observed events only; not RAW correctness",results};
     const failed = results.filter(row => row.error || row.stable === false || row.cards_unchanged === false).length;
-    $("status").textContent = `${results.length} runs; ${failed} errors/replay mismatches.`;
+    $("status").textContent = `${results.length} runs; ${failed} engine errors, replay mismatches or card mutations.`;
     $("summary").textContent = `${results.filter(row => row.outcome === "heroes_win").length} hero wins, ${results.filter(row => row.outcome === "monsters_win").length} monster wins, ${results.filter(row => row.outcome === "draw").length} draws.`;
     const table = document.createElement("table");
     const head = document.createElement("tr");
@@ -100,6 +100,7 @@
   $("edition").addEventListener("change",populate);
   $("fight").addEventListener("click",()=>guarded(()=>{
     const base=selection(), count=integer("runs",1,100), seed=integer("seed",1,4294967295);
+    if (seed + count - 1 > 0xffffffff) throw new RangeError("Seed range exceeds 32-bit dice limit; choose a lower starting seed.");
     execute(Array.from({length:count},(_,i)=>({selection:base,seed:seed+i})),false);
   }));
   $("repeat").addEventListener("click",()=>guarded(()=>{
