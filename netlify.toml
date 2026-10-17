@@ -5,4 +5,5 @@
   # 2026-10-05 roster production is live and locked:
   #   deploy 6ac3e995b21bb000098a0bdd (main 2292ba324, unlock merge #592)
   # Relock merge is 0963fff45 (#594). ironpit.app remains unpurchased.
-  ignore = "exit 0"
+  # Beta-only branch: build this separate project when beta is explicitly updated.
+  ignore = "exit 1"
