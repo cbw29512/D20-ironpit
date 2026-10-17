@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  function permanentPassiveStates(member, setup) {
+  function permanent passiveStates(member, setup) {
     try {
       const result = [];
       // The source owns printed passive labels, while the combat modifier stack owns activation.
@@ -41,6 +41,20 @@
           explanation: "Source-owned permanent environmental weakness.",
         });
       }
+      // Every printed source trait appears as a permanent buff for completeness,
+      // even when arena-neutral. Active only if already projected above.
+      const seen = new Set(result.map((item) => item.label || item.id));
+      for (const name of member.state.template.source_trait_names || []) {
+        if (!name || seen.has(name)) continue;
+        result.push({
+          id: name,
+          label: name,
+          lane: "buff",
+          active: false,
+          explanation: "Source-owned permanent trait (arena-neutral or inactive).",
+        });
+        seen.add(name);
+      }
       return result;
     } catch (error) {
       console.error("Failed to project permanent passive card states", { combatantId: member?.combatant_id, error });
@@ -49,5 +63,5 @@
   }
 
 
-  window.IRON_PIT_BATTLEFIELD_PASSIVE_STATES = { permanentPassiveStates };
+  window.IRON_PIT_BATTLEFIELD_PASSIVE_STATES = { permanent passiveStates };
 })();
