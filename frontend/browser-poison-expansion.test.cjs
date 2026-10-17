@@ -53,11 +53,10 @@ const assertArenaPoison = (target) => {
   const event = A.resolveAttack(1, 1, source, target, gouge, 5, { spendAction: false, setup: { heroes: [target], monsters: [source] } });
   assert.equal(event.hit, true);
   assert.ok(event.applied_condition_ids.includes("poisoned"));
-  assertArenaPoison(target);
-  setD20(20);
-  const sameRound = L.resolveTargetTiming(2, 1, target, "target_turn_start");
-  assert.equal(sameRound.events.length, 0, "arena Poisoned must last through the round in which it was applied");
-  const ended = L.resolveTargetTiming(sameRound.sequence, 2, target, "target_turn_start");
+  const poison = target.state.timed_effects.find((effect) => effect.effect_id === "poisoned");
+  assert.equal(poison.expiry_timing, "target_turn_end");
+  assert.equal(poison.repeat_save_timing, null);
+  const ended = L.resolveTargetTiming(2, 1, target, "target_turn_end");
   assert.equal(ended.events.length, 1);
   assert.deepEqual(ended.events[0].removed_condition_ids, ["poisoned"]);
 }
@@ -82,9 +81,12 @@ const assertArenaPoison = (target) => {
   const event = A.resolveAttack(1, 1, source, target, sting, 10, { spendAction: false, setup });
   assert.equal(event.hit, true);
   assert.ok(event.applied_condition_ids.includes("poisoned"));
-  assertArenaPoison(target);
-  setD20(20);
-  const ended = L.resolveTargetTiming(2, 2, target, "target_turn_start");
+  const poison = target.state.timed_effects.find((effect) => effect.effect_id === "poisoned");
+  assert.equal(poison.expiry_timing, "source_turn_start");
+  assert.equal(poison.repeat_save_timing, null);
+  const beforeSource = L.resolveTargetTiming(2, 2, target, "target_turn_start");
+  assert.equal(beforeSource.events.length, 0);
+  const ended = L.resolveSourceTiming(2, 2, source, setup, "source_turn_start");
   assert.equal(ended.events.length, 1);
   assert.deepEqual(ended.events[0].removed_condition_ids, ["poisoned"]);
 }
