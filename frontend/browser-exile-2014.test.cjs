@@ -73,6 +73,8 @@ assert.equal(window.IRON_PIT_BROWSER_EXILE.removed(target.state), true);
 assert.ok(target.state.active_effect_ids.includes("banished"));
 assert.equal(outcome.exileApplied.resourceRemaining, 0);
 
+target.state.template.kind = "monster";
+target.state.template.max_hp = 200;
 target.state.current_hp = 40;
 const result = H.runPhase(H.PHASES.TURN_END_LIFECYCLE, {
   sequence: 2, round: 2, member: source, setup, events: [],
