@@ -1,8 +1,10 @@
+import pytest
 from app.combat.dice import FixedDiceProvider
 from app.combat.healing import choose_healing_action, resolve_healing
 from app.combat.healing_policy import resource_available
 from app.combat.spell_attack_policy import choose_spell_attack
 from app.combat.spell_policy import choose_spell
+from app.combat.spellcasting import legal_slot_levels
 from app.combat.state import build_combatant_state
 from app.content.audited_cleric import build_seraphine_dawnshield
 from app.content.audited_fighter import build_karnok_stoneward
@@ -86,3 +88,14 @@ def test_2014_bonus_action_spell_filters_attack_and_save_spell_candidates() -> N
 def test_healing_word_fails_closed_without_active_turn_key() -> None:
     setup, caster, _ = _setup()
     assert choose_healing_action(caster, setup) is None
+
+
+def test_cantrip_slot_selection_validates_turn_and_ruleset() -> None:
+    _, caster, _ = _setup()
+    assert legal_slot_levels(caster.state, "1:cleric", 0) == (0,)
+    with pytest.raises(ValueError, match="active turn key"):
+        legal_slot_levels(caster.state, "", 0)
+    invalid_state = caster.state.model_copy(deep=True)
+    invalid_state.template = invalid_state.template.model_copy(update={"ruleset": "2099"})
+    with pytest.raises(ValueError, match="Unsupported spellcasting ruleset"):
+        legal_slot_levels(invalid_state, "1:cleric", 0)
