@@ -234,3 +234,14 @@ console.log("Audit-grade battle log regressions passed.");
   assert.match(failed, /FAILURE/);
   assert.match(failed, /STUNNED/);
 }
+
+{
+  const event = { event_type: "feature", actor_name: "Kael",
+    description: "Kael escapes the grapple.", check_ability: "dexterity (acrobatics)",
+    ability_check_roll: { rolls: [15], selected_roll: 15, modifier: 3, total: 18, mode: "normal" },
+    check_dc: 16, check_succeeded: true };
+  const rendered = L.format(event);
+  assert.match(rendered, /DC 16/);
+  assert.match(rendered, /SUCCESS/);
+  assert.match(rendered, /15/);
+}
