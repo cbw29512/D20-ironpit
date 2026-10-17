@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  function passiveStates(member, setup) {
+  function permanentPassiveStates(member, setup) {
     try {
       const result = [];
       // The source owns printed passive labels, while the combat modifier stack owns activation.
@@ -63,5 +63,5 @@
   }
 
 
-  window.IRON_PIT_BATTLEFIELD_PASSIVE_STATES = { passiveStates };
+  window.IRON_PIT_BATTLEFIELD_PASSIVE_STATES = { permanentPassiveStates };
 })();
