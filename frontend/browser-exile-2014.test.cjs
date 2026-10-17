@@ -73,13 +73,16 @@ assert.equal(window.IRON_PIT_BROWSER_EXILE.removed(target.state), true);
 assert.ok(target.state.active_effect_ids.includes("banished"));
 assert.equal(outcome.exileApplied.resourceRemaining, 0);
 
+target.state.current_hp = 40;
 const result = H.runPhase(H.PHASES.TURN_END_LIFECYCLE, {
   sequence: 2, round: 2, member: source, setup, events: [],
 });
 assert.equal(result.events.length, 1);
 assert.equal(window.IRON_PIT_BROWSER_EXILE.removed(target.state), false);
 assert.equal(result.events[0].damage_roll.total, 50);
-assert.equal(target.state.current_hp, 150);
+assert.equal(target.state.current_hp, 0);
+assert.equal(result.events[0].is_dead, true, "Lethal exile-return event must report death.");
+assert.equal(result.events[0].is_stable, false);
 
 const fiend = { combatant_id: "fiend", side: "monsters", state: state("Fiend", "fiend") };
 source.state.resources["hurl-through-hell"] = 1;
