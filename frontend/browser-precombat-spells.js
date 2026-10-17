@@ -92,9 +92,7 @@
   function modifierDetail(effect) {
     if (effect.kind === "debuff-counter") {
       const counter = effect.debuffCounter || effect.debuff_counter;
-      if (!counter) return "debuff-counter";
-      const id = counter.debuffId || counter.debuff_id || "effect", scope = counter.sourceScope || counter.source_scope || "any";
-      const cost = counter.movementCostFt ?? counter.movement_cost_ft;
+      const id = counter?.debuffId || counter?.debuff_id || "effect", scope = counter?.sourceScope || counter?.source_scope || "any", cost = counter?.movementCostFt ?? counter?.movement_cost_ft;
       return (counter.mode || "prevent") === "remove-with-movement"
         ? `${id} (spend ${cost} ft movement to escape; ${scope})` : `${id} prevented (${scope})`;
     }
