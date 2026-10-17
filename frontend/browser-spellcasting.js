@@ -3,7 +3,11 @@
 
   function slotSpellAvailable(state, turnKey) {
     if (!turnKey) throw new Error("Spell-slot legality requires an active turn key.");
-    return state.spell_slot_expended_turn_key !== turnKey;
+    const ruleset = state.template?.ruleset;
+    if (ruleset !== "2014" && ruleset !== "2024") {
+      throw new Error(`Unsupported spellcasting ruleset: ${ruleset}.`);
+    }
+    return ruleset === "2014" || state.spell_slot_expended_turn_key !== turnKey;
   }
 
   function legalSlotLevels(state, turnKey, printedLevel, options = {}) {
