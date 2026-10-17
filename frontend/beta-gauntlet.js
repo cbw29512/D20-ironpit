@@ -40,6 +40,25 @@
     return battle.rounds + " rounds, " + battle.events.length + " events, " + battle.outcome;
   }
 
+  function showFamilies(tests) {
+    const summary = window.IRON_PIT_BETA_GAUNTLET_ASSERTIONS.aggregate(tests);
+    const observed = Object.values(summary).filter((entry) => entry.fights > 0).length;
+    $("family-summary").textContent = observed + " / " + Object.keys(summary).length +
+      " combat behavior categories observed in successful fights.";
+    $("family-rows").replaceChildren();
+    for (const [name, entry] of Object.entries(summary)) {
+      const tr = document.createElement("tr");
+      const values = [name, entry.fights, entry.sample
+        ? entry.sample.preset + " / " + entry.sample.edition + " / seed " + entry.sample.seed
+        : "Not observed"];
+      for (const value of values) {
+        const td = document.createElement("td"); td.textContent = String(value); tr.append(td);
+      }
+      $("family-rows").append(tr);
+    }
+    return summary;
+  }
+
   function showCoverage(recipes, tests) {
     const matrix = window.IRON_PIT_BETA_GAUNTLET_COVERAGE.coverage(recipes, tests);
     const evidenced = matrix.filter((entry) => entry.coverage === "asserted in passing preset").length;
@@ -91,7 +110,9 @@
           try {
             if (setupError) throw setupError;
             const replay = turbo.runSeeded(setup, testSeed);
-            row.result = "PASS"; row.details = validate(replay, recipe, presets, index === 0);
+            row.details = validate(replay, recipe, presets, index === 0);
+            row.observed = window.IRON_PIT_BETA_GAUNTLET_ASSERTIONS.inspect(replay.battle);
+            row.result = "PASS";
             row.diagnostic_id = replay.diagnostic_id;
             row.outcome = replay.battle.outcome; row.rounds = replay.battle.rounds; passes++;
           } catch (error) {
@@ -111,6 +132,7 @@
       console.error("Fight gauntlet failed", error);
     } finally {
       report.capability_coverage = showCoverage(recipes, report.tests);
+      report.observed_behaviors = showFamilies(report.tests);
       report.completed = !stop && finished === recipes.length * count;
       report.passed = passes; report.failed = failures;
       running = false; $("start").disabled = false; $("stop").disabled = true;
