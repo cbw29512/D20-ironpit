@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  function permanent passiveStates(member, setup) {
+  function passiveStates(member, setup) {
     try {
       const result = [];
       // The source owns printed passive labels, while the combat modifier stack owns activation.
