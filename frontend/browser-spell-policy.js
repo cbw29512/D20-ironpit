@@ -145,7 +145,7 @@
   function chooseById(caster, setup, turnKey, spellId, protectedAllyIds = []) {
     try {
       const action = (caster.state.template.spell_save_actions || []).find((item) => item.id === spellId);
-      if (!action) return null;
+      if (!action || !C().spellTurnLegal(caster.state, turnKey, action.actionCost, action.level)) return null;
       const options = H().castOptions(caster, action, turnKey);
       if (!options.length) return null;
       const selected = options.sort((a, b) =>

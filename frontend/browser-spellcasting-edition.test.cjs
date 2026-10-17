@@ -94,6 +94,33 @@ test("2014 healing candidate selection honors bonus-action spell timing", () => 
   }
 });
 
+test("explicit save-spell choice rejects a 2014 cast after bonus-action spell", () => {
+  try {
+    const context = { window: {}, console };
+    vm.runInNewContext(source, context);
+    context.window.IRON_PIT_ACTION_ECONOMY = { available: () => true };
+    context.window.IRON_PIT_BROWSER_SPELL_POLICY_SUPPORT = {
+      scaledSpell: (action) => action, slotLevel: () => 1, slotLevels: () => [1],
+      alternateCasts: () => [], castOptions: () => [{ castLevel: 1, alternateCast: null }],
+      protectedUniversalPlacements: () => [{ enemyIds: [], friendlyIds: [], protectedFriendlyIds: [] }],
+      placementKey: () => "one", effectiveRange: () => 30,
+      availableRangeModifier: () => null,
+    };
+    vm.runInNewContext(fs.readFileSync(path.join(__dirname, "browser-spell-policy.js"), "utf8"), context);
+    const caster = { combatant_id: "caster", side: "heroes", state: {
+      template: { ruleset: "2014", spell_save_actions: [{
+        id: "synthetic-save", level: 1, actionCost: "action", range: 30, area: { origin: "point" },
+      }] }, feature_last_turn_keys: { "spell:bonus-action": "1:caster" },
+    } };
+    const setup = { heroes: [caster], monsters: [] };
+    assert.equal(context.window.IRON_PIT_BROWSER_SPELL_POLICY.chooseById(
+      caster, setup, "1:caster", "synthetic-save"), null);
+  } catch (error) {
+    console.error("Explicit 2014 spell selection regression failed", error);
+    throw error;
+  }
+});
+
 for (const [firstCost, firstLevel, secondCost, secondLevel, allowed] of [
   ["bonus_action", 1, "action", 0, true],
   ["bonus_action", 1, "action", 1, false],
