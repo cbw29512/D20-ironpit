@@ -102,7 +102,7 @@
             row.events = replay.battle.events; passes++;
             if ($("watch").checked) {
               $("status").textContent = "Watching " + recipe.id + " (" + (index + 1) + "/" + count + ")";
-              await w.IRON_PIT_BETA_BRIDGE.showFight(setup, replay.battle, testSeed);
+              await window.IRON_PIT_BETA_SPECTATOR.play(replay.battle, recipe, testSeed);
             }
           } catch (error) {
             row.result = "FAIL"; row.details = error?.message || String(error);
@@ -132,12 +132,12 @@
   }
 
   $("runtime").addEventListener("load", async () => {
-    for (let i = 0; i < 100 && !$("runtime").contentWindow?.IRON_PIT_BETA_BRIDGE?.ready(); i++) {
+    for (let i = 0; i < 100 && !$("runtime").contentWindow?.IRON_PIT_BROWSER_TURBO; i++) {
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
     try {
       const w = $("runtime").contentWindow;
-      if (!w.IRON_PIT_BROWSER_TURBO || !w.IRON_PIT_BETA_BRIDGE || !w.IRON_PIT_COMBAT_PRESETS ||
+      if (!w.IRON_PIT_BROWSER_TURBO || !window.IRON_PIT_BETA_SPECTATOR || !w.IRON_PIT_COMBAT_PRESETS ||
         !w.IRON_PIT_COMBAT_PRESET_RECIPES || !w.IRON_PIT_BROWSER_CATALOG) {
         throw Error("Site runtime or test presets did not initialize.");
       }
