@@ -6,7 +6,7 @@
 
   function setup(battle, recipe, seed) {
     nodes = new Map();
-    $("arena-title").textContent = recipe.title + " · " + recipe.ruleset + " · seed " + seed;
+    $("arena-title").textContent = (recipe.title || recipe.id || "Roster fight") + " · " + recipe.ruleset + " · seed " + seed;
     $("arena-teams").replaceChildren(); $("arena-log").replaceChildren();
     $("arena-event").textContent = "Preparing fight…";
     for (const [side, members] of [["Heroes", battle.setup.heroes], ["Monsters", battle.setup.monsters]]) {
@@ -29,8 +29,11 @@
 
   function apply(event) {
     const line = document.createElement("li");
-    line.textContent = "Round " + event.round_number + ": " +
-      (event.description || event.event_type);
+    const title = document.createElement("strong");
+    title.textContent = "Round " + event.round_number + ": " + (event.event_type || "event");
+    const detail = document.createElement("p");
+    detail.textContent = event.description || event.event_type || "Combat event";
+    line.append(title, detail);
     $("arena-log").append(line);
     $("arena-event").textContent = line.textContent;
     $("arena-log").scrollTop = $("arena-log").scrollHeight;
