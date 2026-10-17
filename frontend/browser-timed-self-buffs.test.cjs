@@ -189,10 +189,10 @@ slotCleric2024.state.resources["spell-slot-3"] = 1;
 slotCleric2024.state.spell_slot_expended_turn_key = "1:slot-cleric-2024";
 const slotSetup2024 = { heroes: [slotCleric2024], monsters: [slotEnemy] };
 assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(slotCleric2024, slotSetup2024, "action", "1:slot-cleric-2024"), null);
-const skipped = window.IRON_PIT_BROWSER_SUPPORT.resolve(1, 1, slotCleric, slotSetup, "1:slot-cleric");
+const skipped = window.IRON_PIT_BROWSER_SUPPORT.resolve(1, 1, slotCleric2024, slotSetup2024, "1:slot-cleric-2024");
 assert.deepEqual(skipped.events, []);
-assert.equal(slotCleric.state.action_available, true);
-assert.equal(slotCleric.state.resources["spell-slot-3"], 1);
+assert.equal(slotCleric2024.state.action_available, true);
+assert.equal(slotCleric2024.state.resources["spell-slot-3"], 1);
 
 
 load("browser-ability-hooks.js");
