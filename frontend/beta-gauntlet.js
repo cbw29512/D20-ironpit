@@ -115,6 +115,10 @@
             row.result = "PASS";
             row.diagnostic_id = replay.diagnostic_id;
             row.outcome = replay.battle.outcome; row.rounds = replay.battle.rounds; passes++;
+            if ($("watch").checked) {
+              $("status").textContent = "Watching " + recipe.id + " (" + (index + 1) + "/" + count + ")";
+              await window.IRON_PIT_BETA_SPECTATOR.play(replay.battle, recipe, testSeed);
+            }
           } catch (error) {
             row.result = "FAIL"; row.details = error?.message || String(error);
             row.stack = error?.stack || null; failures++;
