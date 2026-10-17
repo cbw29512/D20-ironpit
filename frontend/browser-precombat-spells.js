@@ -88,7 +88,6 @@
       .sort((a, b) => comparePriority(friendlyBuffPriority(member, a, setup), friendlyBuffPriority(member, b, setup)));
     return spell.targetAllLegal === true ? legal : legal.slice(0, spell.targetCount || 1);
   }
-
   function modifierDetail(effect) {
     if (effect.kind === "debuff-counter") {
       const counter = effect.debuffCounter || effect.debuff_counter;
