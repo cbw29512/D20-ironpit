@@ -6,20 +6,21 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Iron Pit — Beta Fight Gauntlet</title>
 <style>
-body{font:16px system-ui,sans-serif;margin:2rem auto;padding:0 1rem;max-width:950px;background:#161817;color:#f3f4ed}
+body{font:16px system-ui,sans-serif;margin:2rem auto;padding:0 1rem;max-width:1500px;background:#161817;color:#f3f4ed}
 a{color:#b4dcff}button,input,select{font:inherit;padding:.6rem;margin:.3rem}button{cursor:pointer}
 button:disabled{cursor:wait;opacity:.5}section{border:1px solid #606965;border-radius:9px;padding:1rem;margin:1rem 0}
 table{width:100%;border-collapse:collapse}td,th{padding:.6rem;border-bottom:1px solid #505651;text-align:left}
 .pass{color:#a7efa2}.fail{color:#ffadad}.muted{color:#b8c0b7}
-#runtime{position:absolute;left:-9999px;width:1px;height:1px;border:0}
+#runtime{display:block;width:100%;height:780px;border:1px solid #606965;background:#111;border-radius:8px}
  .teams{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.team{padding:1rem;border:1px solid #606965;border-radius:8px}.fighter{padding:.5rem;border-bottom:1px solid #555}.fighter progress{display:block;width:100%}.combat-feed{height:220px;overflow:auto}.combat-feed li{padding:.25rem}.fallen{opacity:.45}pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:17rem;overflow:auto}
 </style>
 </head>
 <body>
 <a href="./">← Iron Pit</a>
 <h1>Beta Fight Gauntlet</h1>
-<p>Runs the actual browser combat engine through every certified preset, one fight after another. This page does not publish or modify game data.</p>
+<p>Runs the real Iron Pit arena and replays fights through the same battlefield UI. Presets verify specific abilities; the roster sweep tests every runnable pregen and monster in order. This does not publish game data.</p>
 <section>
+<label>Test suite <select id="suite"><option value="roster">Full roster sweep</option><option value="presets">Mechanic presets</option><option value="both" selected>Both</option></select></label>
 <label>Edition <select id="edition"><option value="2014">2014</option><option value="2024">2024</option><option value="both">Both</option></select></label>
 <label>Fights per preset <input id="count" type="number" min="1" max="100" value="5"></label>
 <label>Base seed <input id="seed" type="number" min="0" max="4294967295" value="1701"></label>
@@ -27,7 +28,8 @@ table{width:100%;border-collapse:collapse}td,th{padding:.6rem;border-bottom:1px 
 <p id="status" role="status" aria-live="polite">Loading production browser runtime…</p>
 <progress id="progress" value="0" max="1" style="width:100%"></progress>
 </section>
-<section id="spectator"><h2>Live arena spectator</h2><p>Watch the current fight event by event. The roster and HP update as the combat log plays.</p><label><input type="checkbox" id="watch" checked> Watch every fight</label><label>Playback <select id="speed"><option value="120">Fast</option><option value="400" selected>Normal</option><option value="950">Slow</option></select></label><p id="arena-title">Waiting for a fight.</p><div id="arena-teams" class="teams"></div><p id="arena-event" role="status" aria-live="off">—</p><ol id="arena-log" class="combat-feed"></ol></section>
+<section id="spectator"><h2>Production battlefield — live automated playback</h2><p>Watch the current fight event by event. The roster and HP update as the combat log plays.</p><label><input type="checkbox" id="watch" checked> Watch fights in arena</label><label>Playback <select id="speed"><option value="120">Fast</option><option value="400" selected>Normal</option><option value="950">Slow</option></select></label><p id="arena-title">Waiting for a fight.</p><p>Below is the full Iron Pit interface, including character portraits, conditions, buffs, debuffs and combat playback.</p>
+<iframe id="runtime" title="Iron Pit live fight arena" src="./index.html?betaGauntlet=1"></iframe></section>
 <section><h2>Observed engine behaviors</h2><p class="muted">Observed means a combat event matched this category, not that every mechanic in it is correct.</p><p id="family-summary">No fights analyzed yet.</p><details><summary>Show combat categories</summary><table><thead><tr><th>Behavior</th><th>Fights observed</th><th>Reproduce</th></tr></thead><tbody id="family-rows"></tbody></table></details></section>
 <section><h2>Engine capability coverage</h2><p class="muted">Evidence here means a preset explicitly asserted and observed an event. It does not prove all rules or edge cases of a capability.</p><p id="coverage-summary">Coverage not measured yet.</p><details><summary>View every capability and missing tests</summary><table><thead><tr><th>Capability</th><th>Implementation</th><th>Preset evidence</th></tr></thead><tbody id="coverage-rows"></tbody></table></details></section>
 <section>
@@ -35,9 +37,8 @@ table{width:100%;border-collapse:collapse}td,th{padding:.6rem;border-bottom:1px 
 <p id="totals">No tests run.</p>
 <table><thead><tr><th>Fight</th><th>Edition</th><th>Seed</th><th>Result</th><th>Details</th></tr></thead><tbody id="rows"></tbody></table>
 </section>
-<iframe id="runtime" title="Isolated Iron Pit runtime" src="./index.html" aria-hidden="true" tabindex="-1"></iframe>
+
 <script src="beta-gauntlet-coverage.js"></script>
 <script src="beta-gauntlet-assertions.js"></script>
-<script src="beta-gauntlet-spectator.js"></script>
 <script src="beta-gauntlet.js"></script>
 </body></html>
