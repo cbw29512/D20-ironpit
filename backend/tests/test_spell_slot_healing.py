@@ -73,6 +73,16 @@ def test_2014_healing_slot_selection_obeys_bonus_action_spell_timing() -> None:
     assert not resource_available(caster, bonus_heal, turn_key)
 
 
+def test_2014_bonus_action_spell_filters_attack_and_save_spell_candidates() -> None:
+    setup, caster, _ = _setup()
+    caster.state = build_combatant_state(caster.state.template.model_copy(update={"ruleset": "2014"}))
+    caster.state.feature_last_turn_keys["spell:bonus-action"] = "1:cleric"
+    assert choose_spell_attack(caster, setup, "1:cleric") is None
+    choice = choose_spell(caster, setup, "1:cleric")
+    assert choice is not None and choice.action.level == 0
+    assert choose_spell(caster, setup, "2:cleric") is not None
+
+
 def test_healing_word_fails_closed_without_active_turn_key() -> None:
     setup, caster, _ = _setup()
     assert choose_healing_action(caster, setup) is None
