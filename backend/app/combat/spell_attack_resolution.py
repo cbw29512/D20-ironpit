@@ -116,6 +116,7 @@ def resolve_spell_attack(
         if resource is not None:
             mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
         if spend_cast_costs:
+            record_spell_turn(caster.state, turn_key, spell.action_cost, spell.level)
             spend(caster.state, spell.action_cost)
         range_remaining = (
             spend_spell_range_modifier(caster.state, range_modifier)
