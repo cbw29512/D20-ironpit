@@ -5,8 +5,8 @@ from app.combat.turn_start_visual_policy import (
     decide_visual_turn_start, resolve_visual_save_stage,
 )
 
-BASILISK = VisualTurnStartRule("source-1", "Petrifying Gaze", 30, 12)
-MEDUSA = VisualTurnStartRule("source-2", "Petrifying Gaze", 30, 14, immediate_petrification_margin=5)
+BASILISK = VisualTurnStartRule(source_id="source-1", source_name="Petrifying Gaze", range_ft=30, save_dc=12)
+MEDUSA = VisualTurnStartRule(source_id="source-2", source_name="Petrifying Gaze", range_ft=30, save_dc=14, immediate_petrification_margin=5)
 
 def _facts(**overrides):
     defaults = dict(distance_ft=15, source_active=True, target_active=True,
@@ -34,14 +34,14 @@ def test_staged_save_transitions_and_source_parameters():
     assert resolve_visual_save_stage(BASILISK, 12, previous_stage="restrained") == "clear"
     assert resolve_visual_save_stage(MEDUSA, 10) == "restrained"
     assert resolve_visual_save_stage(MEDUSA, 9) == "petrified"
-    renamed = VisualTurnStartRule("other", "Unrelated Label", 30, 14, immediate_petrification_margin=5)
+    renamed = VisualTurnStartRule(source_id="other", source_name="Unrelated Label", range_ft=30, save_dc=14, immediate_petrification_margin=5)
     assert resolve_visual_save_stage(renamed, 9) == "petrified"
 
 def test_invalid_inputs_fail_closed():
     with pytest.raises(ValueError):
         VisualTurnStartRule("", "label", 30, 12)
     with pytest.raises(ValueError):
-        VisualTurnStartRule("id", "label", 0, 12)
+        VisualTurnStartRule(source_id="id", source_name="label", range_ft=0, save_dc=12)
     with pytest.raises(ValueError):
         decide_visual_turn_start(BASILISK, _facts(distance_ft=-1))
     with pytest.raises(ValueError):
@@ -50,12 +50,12 @@ def test_invalid_inputs_fail_closed():
 @pytest.mark.parametrize("bad", [True, 30.5, "30"])
 def test_strict_numeric_visual_source_range(bad):
     with pytest.raises(ValueError):
-        VisualTurnStartRule("source", "Label", bad, 12)
+        VisualTurnStartRule(source_id="source", source_name="Label", range_ft=bad, save_dc=12)
 
 @pytest.mark.parametrize("bad", [True, 12.5, "12"])
 def test_strict_visual_save_dc(bad):
     with pytest.raises(ValueError):
-        VisualTurnStartRule("source", "Label", 30, bad)
+        VisualTurnStartRule(source_id="source", source_name="Label", range_ft=30, save_dc=bad)
 
 @pytest.mark.parametrize("bad", [True, 15.5, "15"])
 def test_strict_distance(bad):
@@ -75,7 +75,7 @@ def test_strict_save_totals(bad):
 
 
 def test_visual_save_stages_are_generic_debuffs():
-    rule = VisualTurnStartRule("source", "Other Trigger", 30, 12,
+    rule = VisualTurnStartRule(source_id="source", source_name="Other Trigger", range_ft=30, save_dc=12,
                                initial_debuff="slowed", terminal_debuff="stunned")
     assert resolve_visual_save_stage(rule, 3) == "slowed"
     assert resolve_visual_save_stage(rule, 3, previous_stage="slowed") == "stunned"
