@@ -138,6 +138,39 @@
       window.IRON_PIT_COMBAT_REVIEW.install({ state, matchup, render, updateControls, clearResult, load: loadCards, ensureRuleset: changeRuleset });
       window.IRON_PIT_BATTLE_LOG_EXPORT?.install?.();
       rulesetUi().update(state); render();
+      {
+        window.IRON_PIT_BETA_BRIDGE = {
+          ready: () => Boolean(state.catalog && !state.fighting),
+          async showFight(selection, battle, seed) {
+            if (state.fighting) throw new Error("A fight is already playing.");
+            if (state.ruleset !== selection.ruleset) await changeRuleset(selection.ruleset);
+            if (state.ruleset !== selection.ruleset) throw new Error("Edition switch failed.");
+            const heroes = selection.hero_ids.map((id) => cardByTemplate("heroes", id));
+            const monsters = selection.monster_ids.map((id) => cardByTemplate("monsters", id));
+            if ([...heroes, ...monsters].some((card) => !card)) throw new Error("Unrunnable beta combatant.");
+            loadCards(heroes, monsters, "Beta test replay · seed " + seed);
+            const match = matchup();
+            if (match.error) throw new Error(match.error);
+            state.fighting = true; updateControls();
+            try {
+              const slotMap = { heroes: match.heroes.indexes, monsters: match.monsters.indexes };
+              const replay = window.IRON_PIT_BATTLEFIELD_REPLAY;
+              const log = window.IRON_PIT_BETA_LOG;
+              log?.begin?.(selection, seed);
+              replay.bindBattle(battle, slotMap);
+              for (const event of battle.events || []) {
+                await replay.eventStep(event);
+                log?.step?.(event);
+              }
+              replay.syncFinal(battle);
+              view().writeLog(battle); view().showResult(battle);
+              log?.finish?.(battle);
+              el("status").textContent = "Beta fight complete · seed " + seed;
+            } finally { state.fighting = false; updateControls(); }
+          },
+        };
+      }
+
       el("status").textContent = "Iron Pit ready. Pick heroes and monsters, then press Fight.";
     } catch (error) { console.error("Iron Pit initialization failed", error); el("status").textContent = "The Iron Pit failed to initialize."; }
   }
