@@ -92,10 +92,11 @@
       const components = action.damageComponents?.length
         ? action.damageComponents
         : (action.damageDiceCount ? [action] : []);
-      return components.reduce((sum, part) =>
-        sum + (part.diceCount ?? part.damageDiceCount ?? 0)
-          * ((part.diceSize ?? part.damageDiceSize ?? 0) + 1) / 2
-          + (part.damageBonus ?? 0), 0);
+      return components.reduce((sum, part) => {
+        const count = part.diceCount ?? part.damageDiceCount ?? 0;
+        const size = part.diceSize ?? part.damageDiceSize ?? 0;
+        return sum + (count > 0 ? count * (size + 1) / 2 + (part.damageBonus ?? 0) : 0);
+      }, 0);
     } catch (error) {
       console.error("Failed area-save expected damage calculation", { action: action.id, error });
       throw error;
@@ -190,5 +191,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_AREA_SAVES = { choose, resolve };
+  window.IRON_PIT_BROWSER_AREA_SAVES = { choose, resolve, expectedSaveDamage };
 })();
