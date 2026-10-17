@@ -107,6 +107,7 @@
       const outcome = event.save_succeeded === true ? "SUCCESS" : event.save_succeeded === false ? "FAILURE" : "RESULT UNKNOWN";
       pieces.push(`${target} ${String(event.save_ability || "save").toUpperCase()} save: ${rollLabel(event.saving_throw_roll)} vs DC ${event.save_dc} — ${outcome}`);
     }
+    if (event.ability_check_roll) pieces.push(`${event.check_ability || "Ability check"}: ${rollLabel(event.ability_check_roll)} vs DC ${event.check_dc} — ${event.check_succeeded ? "SUCCESS" : "FAILURE"}`);
     if (event.attack_roll) pieces.push(`Attack: ${rollLabel(event.attack_roll)}`);
     const damage = damageLabel(event); if (damage) pieces.push(damage);
     appendState(pieces, event, Boolean(event.damage_roll));
