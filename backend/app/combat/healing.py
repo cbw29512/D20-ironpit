@@ -19,7 +19,7 @@ from app.combat.healing_resolution_support import (
     resolve_percentile_healing_gate,
     spend_healing_resource,
 )
-from app.combat.spellcasting import mark_slot_spell_cast
+from app.combat.spellcasting import mark_slot_spell_cast, record_spell_turn, spell_turn_legal
 from app.combat.zero_hp_stabilization import stabilize_at_zero
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent, DiceRoll, HealingAction
@@ -41,12 +41,16 @@ def resolve_healing(
         if (not is_available(healer.state, action.action_cost)
             or not target_allowed(healer, target, action) or not resource_available(healer, action, turn_key)):
             raise ValueError("Healing action is not legal for this target or turn.")
+        if slot_heal(action) and not spell_turn_legal(healer.state, turn_key, action.action_cost, int(action.resource_id.removeprefix("spell-slot-"))):
+            raise ValueError("Healing spell conflicts with another cast on this turn.")
         action = bind_pool_healing_action(healer, target, action)
         if slot_heal(action):
             if turn_key is None:
                 raise ValueError("Spell-slot healing requires an active turn key.")
             mark_slot_spell_cast(healer.state, turn_key)
 
+        if slot_heal(action):
+            record_spell_turn(healer.state, turn_key, action.action_cost, int(action.resource_id.removeprefix("spell-slot-")))
         spend(healer.state, action.action_cost)
         remaining = spend_healing_resource(healer, action)
         feature_roll, failure = resolve_percentile_healing_gate(
