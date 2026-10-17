@@ -199,3 +199,20 @@ function member(id, side, x, extras = {}) {
 }
 
 console.log("Legendary Action after-turn attack, save, shield, and heal paths passed.");
+
+{
+  // When the final enemy dies, a non-targeted Legendary Action must not occur after combat ends.
+  const legend = member("unicorn", "monsters", 0, {
+    hp: 35, uses: 3, legendary_actions: [{
+      id: "shimmering-shield", name: "Shimmering Shield", cost: 2, kind: "ac_buff",
+      ac_buff: { ac_bonus: 2, range_ft: 60 },
+    }],
+  });
+  const hero = member("fallen-hero", "heroes", 1, { hp: 0 });
+  hero.state.is_alive = false;
+  hero.state.is_dead = true;
+  const setup = { heroes: [hero], monsters: [legend] };
+  assert.equal(window.IRON_PIT_BROWSER_LEGENDARY_ACTIONS.choose(legend, setup), null);
+  assert.deepEqual(window.IRON_PIT_BROWSER_LEGENDARY_ACTIONS.resolveAfterTurn(1, 3, hero, setup).events, []);
+  assert.equal(legend.state.resources["legendary-actions"], 3);
+}
