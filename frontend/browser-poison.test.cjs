@@ -41,11 +41,11 @@ assert.equal(Object.keys(monsters).length, 59, "poison batch must preserve the l
   assert.equal(event.hit, true);
   assert.deepEqual(event.applied_condition_ids, ["poisoned"]);
   const poison = hero.state.timed_effects[0];
-  assert.equal(poison.expiry_timing, null);
-  assert.equal(poison.expires_at_start_of_source_turn, false);
-  assert.equal(poison.repeat_save_ability, "constitution");
-  assert.equal(poison.repeat_save_dc, 10);
-  assert.equal(poison.repeat_save_timing, "target_turn_start");
+  assert.equal(poison.expiry_timing, "source_turn_start");
+  assert.equal(poison.expires_at_start_of_source_turn, true);
+  assert.equal(poison.repeat_save_ability, null);
+  assert.equal(poison.repeat_save_dc, null);
+  assert.equal(poison.repeat_save_timing, null);
 
   window.IRON_PIT_DICE = queuedDice([18, 2, 3, 3, 3, 3]);
   const counter = A.resolveAttack(2, 1, hero, centipede, hero.state.template.attacks[0], 5);
