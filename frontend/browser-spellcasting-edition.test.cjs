@@ -69,6 +69,31 @@ for (const ruleset of ["2014", "2024"]) {
   });
 }
 
+test("2014 healing candidate selection honors bonus-action spell timing", () => {
+  try {
+    const context = { window: {}, console };
+    vm.runInNewContext(source, context);
+    vm.runInNewContext(fs.readFileSync(path.join(__dirname, "browser-healing-policy.js"), "utf8"), context);
+    const policy = context.window.IRON_PIT_BROWSER_HEALING_POLICY;
+    const member = { state: {
+      template: { ruleset: "2014" },
+      feature_last_turn_keys: {}, resources: { "spell-slot-1": 2 },
+      spell_slot_expended_turn_key: null,
+    } };
+    const bonus = { resourceId: "spell-slot-1", resourceCost: 1, actionCost: "bonus_action" };
+    const action = { ...bonus, actionCost: "action" };
+    assert.equal(policy.resourceAvailable(member, action, "1:caster"), true);
+    member.state.feature_last_turn_keys["spell:bonus-action"] = "1:caster";
+    assert.equal(policy.resourceAvailable(member, action, "1:caster"), false);
+    assert.equal(policy.resourceAvailable(member, action, "2:caster"), true);
+    member.state.feature_last_turn_keys = { "spell:action-noncantrip": "1:caster" };
+    assert.equal(policy.resourceAvailable(member, bonus, "1:caster"), false);
+  } catch (error) {
+    console.error("2014 healing spell selection regression failed", error);
+    throw error;
+  }
+});
+
 for (const [firstCost, firstLevel, secondCost, secondLevel, allowed] of [
   ["bonus_action", 1, "action", 0, true],
   ["bonus_action", 1, "action", 1, false],

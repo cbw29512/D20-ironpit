@@ -1,5 +1,6 @@
 from app.combat.dice import FixedDiceProvider
 from app.combat.healing import choose_healing_action, resolve_healing
+from app.combat.healing_policy import resource_available
 from app.combat.spell_attack_policy import choose_spell_attack
 from app.combat.spell_policy import choose_spell
 from app.combat.state import build_combatant_state
@@ -54,6 +55,22 @@ def test_prior_leveled_spell_blocks_healing_word_same_turn() -> None:
     turn_key = "1:cleric"
     caster.state.spell_slot_expended_turn_key = turn_key
     assert choose_healing_action(caster, setup, turn_key) is None
+
+
+def test_2014_healing_slot_selection_obeys_bonus_action_spell_timing() -> None:
+    setup, caster, _ = _setup()
+    caster.state = build_combatant_state(caster.state.template.model_copy(update={"ruleset": "2014"}))
+    turn_key = "1:cleric"
+    bonus_heal = build_healing_word(3)
+    action_heal = bonus_heal.model_copy(update={"action_cost": "action"})
+    assert resource_available(caster, bonus_heal, turn_key)
+    assert resource_available(caster, action_heal, turn_key)
+    caster.state.feature_last_turn_keys["spell:bonus-action"] = turn_key
+    assert not resource_available(caster, action_heal, turn_key)
+    assert resource_available(caster, action_heal, "2:cleric")
+    caster.state.feature_last_turn_keys.clear()
+    caster.state.feature_last_turn_keys["spell:action-noncantrip"] = turn_key
+    assert not resource_available(caster, bonus_heal, turn_key)
 
 
 def test_healing_word_fails_closed_without_active_turn_key() -> None:
