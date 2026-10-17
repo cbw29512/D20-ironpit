@@ -18,7 +18,24 @@
   const CH = () => window.IRON_PIT_BROWSER_CHARGE;
   const MS = () => window.IRON_PIT_BROWSER_MULTI_SAVE_PROVIDER;
   const BOTH = Object.freeze(["2014", "2024"]);
-  const printedSave = (action) => (action.damageDiceCount || 0) * ((action.damageDiceSize || 6) + 1) / 2 + (action.damageBonus || 0);
+  const printedSave = (action) => {
+    try {
+      if (action.damageComponents?.length) {
+        return action.damageComponents.reduce((sum, part) => {
+          if (!Number.isInteger(part.diceCount) || part.diceCount < 0
+              || !Number.isInteger(part.diceSize) || part.diceSize < 2
+              || !Number.isFinite(part.damageBonus ?? 0)) {
+            throw new Error("Invalid typed save damage component.");
+          }
+          return sum + part.diceCount * (part.diceSize + 1) / 2 + (part.damageBonus || 0);
+        }, 0);
+      }
+      return (action.damageDiceCount || 0) * ((action.damageDiceSize || 6) + 1) / 2 + (action.damageBonus || 0);
+    } catch (error) {
+      console.error("Failed browser printed save-action scoring", { id: action?.id, error });
+      throw error;
+    }
+  };
   const memberById = (setup, id) => [...setup.heroes, ...setup.monsters].find((member) => member.combatant_id === id) || null;
   const actionById = (member, id) => (member.state.template.saving_throw_actions || []).find((action) => action.id === id) || null;
   const register = (descriptor) => S().registerProvider(descriptor);
