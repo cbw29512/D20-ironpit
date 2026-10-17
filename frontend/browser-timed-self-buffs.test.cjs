@@ -179,6 +179,10 @@ slotEnemy.state.template.timed_self_buff_actions = [];
 const slotSetup = { heroes: [slotCleric], monsters: [slotEnemy] };
 assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(slotCleric, slotSetup, "action", "1:slot-cleric").id, "spirit-guardians");
 slotCleric.state.spell_slot_expended_turn_key = "1:slot-cleric";
+// 2014 has no blanket one-slot-per-turn prohibition. This is a standalone Action spell.
+assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(slotCleric, slotSetup, "action", "1:slot-cleric").id, "spirit-guardians");
+// The 2024 slot restriction remains enforced against the equivalent immutable source data.
+slotCleric.state.template.ruleset = "2024";
 assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(slotCleric, slotSetup, "action", "1:slot-cleric"), null);
 const skipped = window.IRON_PIT_BROWSER_SUPPORT.resolve(1, 1, slotCleric, slotSetup, "1:slot-cleric");
 assert.deepEqual(skipped.events, []);
