@@ -8,11 +8,14 @@ logger = logging.getLogger(__name__)
 
 
 def slot_spell_available(state: CombatantState, turn_key: str) -> bool:
-    """2024: a creature can expend only one spell slot to cast a spell on a turn."""
+    """Apply the one-slot-per-turn gate only to 2024 combatants."""
     try:
         if not turn_key:
             raise ValueError("Spell-slot legality requires an active turn key.")
-        return state.spell_slot_expended_turn_key != turn_key
+        ruleset = state.template.ruleset
+        if ruleset not in {"2014", "2024"}:
+            raise ValueError(f"Unsupported spellcasting ruleset: {ruleset!r}.")
+        return ruleset == "2014" or state.spell_slot_expended_turn_key != turn_key
     except ValueError:
         raise
     except Exception as exc:
