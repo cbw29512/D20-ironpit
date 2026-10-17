@@ -49,3 +49,25 @@ test("unsupported ruleset and missing turn key fail closed", () => {
     throw error;
   }
 });
+
+for (const [firstCost, firstLevel, secondCost, secondLevel, allowed] of [
+  ["bonus_action", 1, "action", 0, true],
+  ["bonus_action", 1, "action", 1, false],
+  ["bonus_action", 1, "reaction", 0, false],
+  ["action", 1, "bonus_action", 1, false],
+  ["action", 0, "bonus_action", 1, true],
+  ["action", 1, "action", 1, true],
+]) {
+  test(`2014 cast order ${firstCost}/${firstLevel} -> ${secondCost}/${secondLevel}`, () => {
+    try {
+      const api = spellcastingApi();
+      const state = { template: { ruleset: "2014" }, feature_last_turn_keys: {} };
+      api.recordSpellTurn(state, "1:caster", firstCost, firstLevel);
+      assert.equal(api.spellTurnLegal(state, "1:caster", secondCost, secondLevel), allowed);
+      assert.equal(api.spellTurnLegal(state, "2:caster", secondCost, secondLevel), true);
+    } catch (error) {
+      console.error("Browser 2014 spell ordering regression failed", error);
+      throw error;
+    }
+  });
+}
