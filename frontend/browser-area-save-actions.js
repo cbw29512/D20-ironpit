@@ -87,6 +87,22 @@
     }
   }
 
+  function expectedSaveDamage(action) {
+    try {
+      const components = action.damageComponents?.length
+        ? action.damageComponents
+        : (action.damageDiceCount ? [action] : []);
+      return components.reduce((sum, part) => {
+        const count = part.diceCount ?? part.damageDiceCount ?? 0;
+        const size = part.diceSize ?? part.damageDiceSize ?? 0;
+        return sum + (count > 0 ? count * (size + 1) / 2 + (part.damageBonus ?? 0) : 0);
+      }, 0);
+    } catch (error) {
+      console.error("Failed area-save expected damage calculation", { action: action.id, error });
+      throw error;
+    }
+  }
+
   function choose(member, setup, actionCost = null) {
     try {
       const candidates = [];
@@ -112,7 +128,7 @@
       }
       candidates.sort((a, b) =>
         b.placement.targetIds.length - a.placement.targetIds.length
-        || (b.action.damageDiceCount || 0) - (a.action.damageDiceCount || 0)
+        || expectedSaveDamage(b.action) - expectedSaveDamage(a.action)
         || Number(Boolean(b.healTarget)) - Number(Boolean(a.healTarget))
         || a.action.id.localeCompare(b.action.id));
       return candidates[0] || null;
@@ -175,5 +191,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_AREA_SAVES = { choose, resolve };
+  window.IRON_PIT_BROWSER_AREA_SAVES = { choose, resolve, expectedSaveDamage };
 })();
