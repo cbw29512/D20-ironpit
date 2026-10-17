@@ -144,7 +144,7 @@
   }
 
   function choose(actor, setup) {
-    if (Q().incapacitated(actor.state) || actor.state.is_dead || actor.state.current_hp <= 0) return null;
+    if (Q().incapacitated(actor.state) || actor.state.is_dead || actor.state.current_hp <= 0 || !opponents(actor, setup).length) return null;
     const attack = chooseAttack(actor, setup);
     const save = chooseSave(actor, setup);
     if (save.damage > attack.damage) return save.choice;
