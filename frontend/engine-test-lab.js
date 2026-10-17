@@ -20,11 +20,41 @@
     }
     if ([...$(id).options].some(option => option.value === old)) $(id).value = old;
   }
+  function paintCards(side) {
+    const selected = $(side).value;
+    const source = side === "hero" ? heroRoster() : monsterRoster($("edition").value);
+    const query = $(side + "-search").value.trim().toLowerCase();
+    const entries = unique(source.filter(row => row.ruleset === $("edition").value))
+      .filter(row => [row.name, row.id, row.class_id, row.level, row.challenge_rating, row.cr]
+        .some(value => String(value ?? "").toLowerCase().includes(query)));
+    const target = $(side + "-cards");
+    target.replaceChildren();
+    for (const item of entries) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "pick-card";
+      button.setAttribute("aria-pressed", String(item.id === selected));
+      const name = document.createElement("strong");
+      name.textContent = item.name || item.id;
+      const info = document.createElement("small");
+      info.textContent = side === "hero"
+        ? [item.class_id, item.level != null ? "Level " + item.level : ""].filter(Boolean).join(" · ")
+        : [item.challenge_rating != null ? "CR " + item.challenge_rating : item.cr != null ? "CR " + item.cr : "", item.armor_class != null ? "AC " + item.armor_class : ""].filter(Boolean).join(" · ");
+      button.append(name, info);
+      button.addEventListener("click", () => {
+        $(side).value = item.id;
+        paintCards(side);
+      });
+      target.append(button);
+    }
+    if (!entries.length) target.textContent = "No matching certified cards.";
+  }
   function populate() {
     const edition = $("edition").value;
     fill("hero", heroRoster().filter(row => row.ruleset === edition));
     fill("monster", monsterRoster(edition).filter(row => row.ruleset === edition));
     $("status").textContent = `Loaded ${$("hero").options.length} pregens and ${$("monster").options.length} monsters for ${edition}.`;
+    paintCards("hero"); paintCards("monster");
   }
   function fight(selection, seed) {
     return window.IRON_PIT_BROWSER_TURBO.runSeeded(selection,seed).battle;
@@ -98,6 +128,15 @@
     try {run();} catch (error) {$("status").textContent="Test configuration error: "+String(error.message || error);}
   }
   $("edition").addEventListener("change",populate);
+  for (const side of ["hero","monster"]) {
+    $(side).addEventListener("change", () => paintCards(side));
+    $(side + "-search").addEventListener("input", () => paintCards(side));
+  }
+  $("quick-fight").addEventListener("click", () => guarded(() => {
+    execute([{selection:selection(),seed:integer("seed",1,4294967295)}], true);
+    $("events").scrollIntoView({behavior:"smooth",block:"start"});
+  }));
+
   $("fight").addEventListener("click",()=>guarded(()=>{
     const base=selection(), count=integer("runs",1,100), seed=integer("seed",1,4294967295);
     if (seed + count - 1 > 0xffffffff) throw new RangeError("Seed range exceeds 32-bit dice limit; choose a lower starting seed.");
