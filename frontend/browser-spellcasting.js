@@ -51,11 +51,13 @@
   }
 
   function legalSlotLevels(state, turnKey, printedLevel, options = {}) {
-    if (printedLevel === 0) return [0];
-    if (!Number.isInteger(printedLevel) || printedLevel < 1 || printedLevel > 9) {
-      throw new Error("Printed spell level must be between 0 and 9.");
+    if (!Number.isInteger(printedLevel) || printedLevel < 0 || printedLevel > 9) {
+      throw new Error("Printed spell level must be an integer between 0 and 9.");
     }
-    if (!slotSpellAvailable(state, turnKey)) return [];
+    // Even slot-free cantrips require a valid ruleset and active turn.
+    const slotAllowed = slotSpellAvailable(state, turnKey);
+    if (printedLevel === 0) return [0];
+    if (!slotAllowed) return [];
     const maximum = options.higherSlotScaling ? 9 : printedLevel;
     const levels = [];
     for (let level = printedLevel; level <= maximum; level += 1) {
