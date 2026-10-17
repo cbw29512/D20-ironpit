@@ -243,3 +243,28 @@ require("./browser-initiative-natural-one.test.cjs");
     }
   }
 }
+
+{
+  // Beta gate: full 6-vs-6 must resolve deterministically with isolated state.
+  // Use actual certified cards, repeating IDs only as distinct combatant instances.
+  const heroes = Array(6).fill("karnok-stoneward-l1");
+  const monsters = Array(6).fill("srd-commoner");
+  const run = () => fight(heroes, monsters, deterministicDice(62026));
+  const beforeHero = JSON.stringify(window.IRON_PIT_BROWSER_HEROES[heroes[0]]);
+  const beforeMonster = JSON.stringify(window.IRON_PIT_BROWSER_MONSTERS[monsters[0]]);
+  const first = run(), second = run();
+  assert.notEqual(first.outcome, "active", "6v6 must reach a terminal outcome");
+  assert.equal(first.setup.heroes.length, 6, "all six heroes must be instantiated");
+  assert.equal(first.setup.monsters.length, 6, "all six monsters must be instantiated");
+  assert.equal(window.IRON_PIT_BATTLE_LAB?.fingerprint?.(first) || JSON.stringify(first.events),
+    window.IRON_PIT_BATTLE_LAB?.fingerprint?.(second) || JSON.stringify(second.events),
+    "six-versus-six seeded replay must match");
+  assert.equal(JSON.stringify(window.IRON_PIT_BROWSER_HEROES[heroes[0]]), beforeHero);
+  assert.equal(JSON.stringify(window.IRON_PIT_BROWSER_MONSTERS[monsters[0]]), beforeMonster);
+  for (const member of [...first.setup.heroes, ...first.setup.monsters]) {
+    const state = member.state;
+    assert.ok(Number.isFinite(state.current_hp) && state.current_hp >= 0);
+    assert.ok(state.current_hp <= window.IRON_PIT_BROWSER_STATE.effectiveMaxHp(state));
+    assert.ok(!(state.is_alive && state.is_dead));
+  }
+}
