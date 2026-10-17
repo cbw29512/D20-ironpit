@@ -86,11 +86,11 @@ def legal_slot_levels(
 ) -> tuple[int, ...]:
     """Return spell-slot levels Iron Pit may legally choose for one declared spell."""
     try:
+        if not isinstance(printed_level, int) or isinstance(printed_level, bool) or not 0 <= printed_level <= 9:
+            raise ValueError("Printed spell level must be an integer between 0 and 9.")
         slot_available = slot_spell_available(state, turn_key)
         if printed_level == 0:
             return (0,)
-        if not 1 <= printed_level <= 9:
-            raise ValueError("Printed spell level must be between 0 and 9.")
         if not slot_available:
             return ()
         maximum = 9 if higher_slot_scaling else printed_level
