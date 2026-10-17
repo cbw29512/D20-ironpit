@@ -133,9 +133,10 @@
         for (let index = 0; index < count && !stop; index += 1) {
           const testSeed = index === 0 ? recipe.seed : turbo.deriveSeed(seed ^ recipe.seed, index);
           const row = { name: recipe.id, edition: recipe.ruleset, seed: testSeed, index };
+          let replay = null;
           try {
             if (setupError) throw setupError;
-            const replay = turbo.runSeeded(setup, testSeed);
+            replay = turbo.runSeeded(setup, testSeed);
             row.details = validate(replay, recipe, presets, index === 0 && !recipe.selection);
             row.observed = window.IRON_PIT_BETA_GAUNTLET_ASSERTIONS.inspect(replay.battle);
             row.result = "PASS";
@@ -149,7 +150,7 @@
           } catch (error) {
             row.result = "FAIL"; row.details = error?.message || String(error);
             row.stack = error?.stack || null;
-            if (typeof replay !== "undefined" && replay?.battle?.events) row.events = replay.battle.events;
+            if (replay?.battle?.events) row.events = replay.battle.events;
             failures++;
           }
           report.tests.push(row); finished++; $("progress").value = finished;
