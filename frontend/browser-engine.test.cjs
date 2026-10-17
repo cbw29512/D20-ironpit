@@ -283,6 +283,11 @@ require("./browser-initiative-natural-one.test.cjs");
   assert.notEqual(first.outcome, "active", "mixed 6v6 must terminate");
   assert.equal(first.setup.heroes.length, 6);
   assert.equal(first.setup.monsters.length, 6);
+  const instances = [...first.setup.heroes, ...first.setup.monsters];
+  assert.equal(new Set(instances.map(member => member.combatant_id)).size, 12,
+    "repeated source cards must create twelve separate combatants");
+  assert.equal(new Set(instances.map(member => member.state)).size, 12,
+    "each participant must own isolated fight state");
   assert.equal(first.outcome, second.outcome);
   assert.equal(first.rounds, second.rounds);
   assert.deepEqual(first.events, second.events, "mixed 6v6 must replay the same events");
