@@ -88,8 +88,13 @@
       .sort((a, b) => comparePriority(friendlyBuffPriority(member, a, setup), friendlyBuffPriority(member, b, setup)));
     return spell.targetAllLegal === true ? legal : legal.slice(0, spell.targetCount || 1);
   }
-
   function modifierDetail(effect) {
+    if (effect.kind === "debuff-counter") {
+      const counter = effect.debuffCounter || effect.debuff_counter;
+      const id = counter?.debuffId || counter?.debuff_id || "effect", scope = counter?.sourceScope || counter?.source_scope || "any", cost = counter?.movementCostFt ?? counter?.movement_cost_ft;
+      return (counter.mode || "prevent") === "remove-with-movement"
+        ? `${id} (spend ${cost} ft movement to escape; ${scope})` : `${id} prevented (${scope})`;
+    }
     if (effect.kind === "armor-class") return `${effect.flatBonus >= 0 ? "+" : ""}${effect.flatBonus || 0} AC`;
     if (effect.kind === "armor-class-minimum") return `minimum AC ${effect.minimumValue || 0}`;
     if (effect.kind === "speed") return `${effect.flatBonus >= 0 ? "+" : ""}${effect.flatBonus || 0} Speed`;
