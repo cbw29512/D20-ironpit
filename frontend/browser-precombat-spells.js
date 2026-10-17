@@ -16,7 +16,6 @@
       || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id)
       || target.state.timed_effects?.some((effect) => effect.source_effect_id === spell.id));
   }
-
   function typedRelevant(member, setup, spell) {
     const typed = (spell.modifierEffects || []).filter((effect) => effect.sourceCreatureTypes?.length);
     if (!typed.length || (spell.modifierEffects || []).some((effect) => !effect.sourceCreatureTypes?.length)) return true;

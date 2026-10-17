@@ -121,5 +121,26 @@ window.IRON_PIT_BROWSER_ATTACK.resolveAttack = (sequence, round, actor, defender
 window.IRON_PIT_BROWSER_CHARGE.resolveClosing(1, 1, pair.actor, pair.defender, pair.setup);
 assert.deepEqual(calls, ["2014-allosaurus-claw"], "Pounce follow-up must require an available Bonus Action");
 
+{
+  const elephant = roster["2014-elephant"];
+  const actor = { combatant_id: "elephant", side: "monsters", state: {
+    template: elephant, current_hp: 76, is_alive: true, is_dead: false, active_effect_ids: [],
+    position_ft: 10, formation_row: "front",
+  }};
+  const hero = { combatant_id: "hero", side: "heroes", state: {
+    template: { id: "hero", kind: "character", size: "medium", speed_ft: 30 },
+    current_hp: 40, is_alive: true, is_dead: false, active_effect_ids: [], position_ft: 5,
+    formation_row: "front",
+  }};
+  const setup = { heroes: [hero], monsters: [actor] };
+  const formation = window.IRON_PIT_BROWSER_FORMATION;
+  const stomp = elephant.attacks.find((attack) => attack.id === "2014-elephant-stomp");
+  assert.equal(formation.targetAllowed(actor, hero, stomp, setup), false,
+    "Elephant Stomp cannot target a standing creature.");
+  hero.state.active_effect_ids.push("prone");
+  assert.equal(formation.targetAllowed(actor, hero, stomp, setup), true,
+    "Elephant Stomp can target a prone creature.");
+}
+
 window.IRON_PIT_BROWSER_ATTACK.resolveAttack = originalResolve;
 console.log("2014 declarative Charge and Pounce browser parity passed.");

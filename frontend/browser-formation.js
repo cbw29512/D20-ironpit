@@ -70,6 +70,10 @@
   function targetAllowed(member, target, attack, setup = null) {
     try {
       if (attack.unavailableReason != null) return false;
+      const restrictedFollowUps = attacks(member.state.template).map((item) => item.charge)
+        .filter((charge) => charge?.followUpAttackId === attack.id && charge.followUpRequiredTargetCondition);
+      if (restrictedFollowUps.length && !restrictedFollowUps.some((charge) =>
+        target.state.active_effect_ids?.includes(charge.followUpRequiredTargetCondition))) return false;
       const ownsTarget = (target.state.grapple_sources || []).some(
         (source) => source.source_id === member.combatant_id,
       );
