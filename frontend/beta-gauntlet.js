@@ -24,6 +24,27 @@
     };
   }
 
+  async function rosterSweep(w, editions) {
+    const cases = [];
+    for (const ruleset of editions) {
+      const catalog = await w.IRON_PIT_BROWSER_CATALOG.buildCatalog(ruleset);
+      const heroes = catalog.heroes.filter((card) =>
+        card.coverage_status === "raw_ready" && card.runnable_template_id);
+      const monsters = catalog.monsters.filter((card) =>
+        card.coverage_status === "raw_ready" && card.runnable_template_id);
+      if (!heroes.length || !monsters.length) throw Error("No runnable " + ruleset + " roster.");
+      const total = Math.max(heroes.length, monsters.length);
+      for (let i = 0; i < total; i++) {
+        const hero = heroes[i % heroes.length], monster = monsters[i % monsters.length];
+        cases.push({ id: "roster-" + ruleset + "-" + (i + 1), ruleset,
+          title: hero.name + " vs " + monster.name, seed: (1701 + i) >>> 0,
+          aspects: [], selection: { ruleset, hero_ids: [hero.runnable_template_id],
+            monster_ids: [monster.runnable_template_id] } });
+      }
+    }
+    return cases;
+  }
+
   function validate(replay, recipe, presets, expectedAspects) {
     const battle = replay.battle;
     if (!battle || !Array.isArray(battle.events) || battle.events.length < 1) throw Error("No battle events");
@@ -89,8 +110,17 @@
     }
     const w = runtime, turbo = w.IRON_PIT_BROWSER_TURBO, presets = w.IRON_PIT_COMBAT_PRESETS;
     const edition = $("edition").value;
-    const recipes = w.IRON_PIT_COMBAT_PRESET_RECIPES.recipes.filter((item) =>
-      edition === "both" || item.ruleset === edition);
+    const editions = edition === "both" ? ["2014", "2024"] : [edition];
+    const suite = $("suite").value;
+    let recipes;
+    try {
+      recipes = suite === "roster" ? [] : w.IRON_PIT_COMBAT_PRESET_RECIPES.recipes.filter((item) =>
+        editions.includes(item.ruleset));
+      if (suite !== "presets") recipes.push(...await rosterSweep(w, editions));
+    } catch (error) {
+      $("status").textContent = "Test roster unavailable: " + error.message;
+      running = false; $("start").disabled = false; $("stop").disabled = true; return;
+    }
     report = { timestamp: new Date().toISOString(), base_seed: seed, edition, fights_per_preset: count,
       tests: [], environment: location.href };
     const catalogs = {};
@@ -102,7 +132,7 @@
         let setup, setupError;
         try {
           catalogs[recipe.ruleset] ||= await w.IRON_PIT_BROWSER_CATALOG.buildCatalog(recipe.ruleset);
-          setup = selection(recipe, catalogs[recipe.ruleset], presets);
+          setup = recipe.selection || selection(recipe, catalogs[recipe.ruleset], presets);
         } catch (error) { setupError = error; }
         for (let index = 0; index < count && !stop; index += 1) {
           const testSeed = index === 0 ? recipe.seed : turbo.deriveSeed(seed ^ recipe.seed, index);
@@ -110,14 +140,14 @@
           try {
             if (setupError) throw setupError;
             const replay = turbo.runSeeded(setup, testSeed);
-            row.details = validate(replay, recipe, presets, index === 0);
+            row.details = validate(replay, recipe, presets, index === 0 && !recipe.selection);
             row.observed = window.IRON_PIT_BETA_GAUNTLET_ASSERTIONS.inspect(replay.battle);
             row.result = "PASS";
             row.diagnostic_id = replay.diagnostic_id;
             row.outcome = replay.battle.outcome; row.rounds = replay.battle.rounds; passes++;
             if ($("watch").checked) {
               $("status").textContent = "Watching " + recipe.id + " (" + (index + 1) + "/" + count + ")";
-              await window.IRON_PIT_BETA_SPECTATOR.play(replay.battle, recipe, testSeed);
+              await w.IRON_PIT_BETA_BRIDGE.showFight(setup, replay.battle, testSeed);
             }
           } catch (error) {
             row.result = "FAIL"; row.details = error?.message || String(error);
@@ -144,10 +174,13 @@
     }
   }
 
-  $("runtime").addEventListener("load", () => {
+  $("runtime").addEventListener("load", async () => {
+    for (let i = 0; i < 100 && !$("runtime").contentWindow?.IRON_PIT_BETA_BRIDGE?.ready(); i++) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
     try {
       const w = $("runtime").contentWindow;
-      if (!w.IRON_PIT_BROWSER_TURBO || !w.IRON_PIT_COMBAT_PRESETS ||
+      if (!w.IRON_PIT_BROWSER_TURBO || !w.IRON_PIT_BETA_BRIDGE || !w.IRON_PIT_COMBAT_PRESETS ||
         !w.IRON_PIT_COMBAT_PRESET_RECIPES || !w.IRON_PIT_BROWSER_CATALOG) {
         throw Error("Site runtime or test presets did not initialize.");
       }
