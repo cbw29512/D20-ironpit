@@ -12,7 +12,7 @@ button:disabled{cursor:wait;opacity:.5}section{border:1px solid #606965;border-r
 table{width:100%;border-collapse:collapse}td,th{padding:.6rem;border-bottom:1px solid #505651;text-align:left}
 .pass{color:#a7efa2}.fail{color:#ffadad}.muted{color:#b8c0b7}
 #runtime{position:absolute;left:-9999px;width:1px;height:1px;border:0}
-pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:17rem;overflow:auto}
+ .teams{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.team{padding:1rem;border:1px solid #606965;border-radius:8px}.fighter{padding:.5rem;border-bottom:1px solid #555}.fighter progress{display:block;width:100%}.combat-feed{height:220px;overflow:auto}.combat-feed li{padding:.25rem}.fallen{opacity:.45}pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:17rem;overflow:auto}
 </style>
 </head>
 <body>
@@ -27,6 +27,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:17rem;overflow:auto}
 <p id="status" role="status" aria-live="polite">Loading production browser runtime…</p>
 <progress id="progress" value="0" max="1" style="width:100%"></progress>
 </section>
+<section id="spectator"><h2>Live arena spectator</h2><p>Watch the current fight event by event. The roster and HP update as the combat log plays.</p><label><input type="checkbox" id="watch" checked> Watch every fight</label><label>Playback <select id="speed"><option value="120">Fast</option><option value="400" selected>Normal</option><option value="950">Slow</option></select></label><p id="arena-title">Waiting for a fight.</p><div id="arena-teams" class="teams"></div><p id="arena-event" role="status" aria-live="off">—</p><ol id="arena-log" class="combat-feed"></ol></section>
 <section><h2>Observed engine behaviors</h2><p class="muted">Observed means a combat event matched this category, not that every mechanic in it is correct.</p><p id="family-summary">No fights analyzed yet.</p><details><summary>Show combat categories</summary><table><thead><tr><th>Behavior</th><th>Fights observed</th><th>Reproduce</th></tr></thead><tbody id="family-rows"></tbody></table></details></section>
 <section><h2>Engine capability coverage</h2><p class="muted">Evidence here means a preset explicitly asserted and observed an event. It does not prove all rules or edge cases of a capability.</p><p id="coverage-summary">Coverage not measured yet.</p><details><summary>View every capability and missing tests</summary><table><thead><tr><th>Capability</th><th>Implementation</th><th>Preset evidence</th></tr></thead><tbody id="coverage-rows"></tbody></table></details></section>
 <section>
@@ -37,5 +38,6 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:17rem;overflow:auto}
 <iframe id="runtime" title="Isolated Iron Pit runtime" src="./index.html" aria-hidden="true" tabindex="-1"></iframe>
 <script src="beta-gauntlet-coverage.js"></script>
 <script src="beta-gauntlet-assertions.js"></script>
+<script src="beta-gauntlet-spectator.js"></script>
 <script src="beta-gauntlet.js"></script>
 </body></html>
