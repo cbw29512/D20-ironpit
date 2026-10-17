@@ -17,4 +17,7 @@ assert.ok(js.includes("observed events only; not RAW correctness"), "Observed me
 assert.ok(!js.includes("resolveAttack("), "Test Lab must not implement a new combat resolver.");
 assert.ok(js.includes("cards_unchanged") && js.includes("cardSnapshot"), "Every fight must check for certified card mutation.");
 assert.ok(js.includes("seed + count - 1 > 0xffffffff"), "Batch seed must fit the existing Turbo 32-bit seed contract.");
+assert.ok(page.includes('id="hero-cards"') && page.includes('id="monster-cards"'), "Both clickable galleries are required.");
+assert.ok(page.includes('id="quick-fight"'), "One-click fight action must be present.");
+assert.ok(js.includes('execute([{selection:selection(),seed:') && js.includes("paintCards"), "Card selection must use the existing engine lab runner.");
 console.log("Engine Test Lab static integration checks passed.");
