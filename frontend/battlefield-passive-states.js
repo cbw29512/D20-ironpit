@@ -63,5 +63,5 @@
   }
 
 
-  window.IRON_PIT_BATTLEFIELD_PASSIVE_STATES = { permanent passiveStates };
+  window.IRON_PIT_BATTLEFIELD_PASSIVE_STATES = { passiveStates };
 })();
