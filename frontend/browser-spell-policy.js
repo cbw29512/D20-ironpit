@@ -74,6 +74,7 @@
           || action.repeatOnly
           || (action.concentration && caster.state.concentration)
           || !E().available(caster.state, action.actionCost)
+          || !C().spellTurnLegal(caster.state, turnKey, action.actionCost, action.level)
           || window.IRON_PIT_BROWSER_TEMPORARY_TERRAIN?.spellTerrainSupported?.(action) === false
           || window.IRON_PIT_BROWSER_DEBUFF_ANSWERS?.failedSaveIsBeneficial?.(action)) continue;
         for (const { castLevel, alternateCast } of H().castOptions(caster, action, turnKey)) {
