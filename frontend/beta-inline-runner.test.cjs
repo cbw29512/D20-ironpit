@@ -26,7 +26,7 @@ window.IRON_PIT_COMBAT_PRESET_RECIPES = { recipes: [] };
 const battle = { events: [{ event_type: "damage", round_number: 1, description: "test event" }],
   outcome: "heroes_win", rounds: 1 };
 window.IRON_PIT_BROWSER_TURBO = { runSeeded: () => ({ battle }) };
-window.IRON_PIT_BETA_BRIDGE = { showFight: async () => { throw Error("spectator render failed"); } };
+window.IRON_PIT_BETA_BRIDGE = { ready: () => true, showFight: async () => { throw Error("spectator render failed"); } };
 const recorded = [];
 window.IRON_PIT_BETA_LOG = { record: (...args) => recorded.push(args) };
 vm.runInThisContext(fs.readFileSync(path.join(__dirname, "beta-inline-runner.js"), "utf8"),
