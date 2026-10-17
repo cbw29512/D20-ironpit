@@ -93,6 +93,10 @@ def test_healing_word_fails_closed_without_active_turn_key() -> None:
 def test_cantrip_slot_selection_validates_turn_and_ruleset() -> None:
     _, caster, _ = _setup()
     assert legal_slot_levels(caster.state, "1:cleric", 0) == (0,)
+    with pytest.raises(ValueError, match="integer between 0 and 9"):
+        legal_slot_levels(caster.state, "1:cleric", False)
+    with pytest.raises(ValueError, match="integer between 0 and 9"):
+        legal_slot_levels(caster.state, "1:cleric", 0.0)
     with pytest.raises(ValueError, match="active turn key"):
         legal_slot_levels(caster.state, "", 0)
     invalid_state = caster.state.model_copy(deep=True)
