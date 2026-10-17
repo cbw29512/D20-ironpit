@@ -5,6 +5,7 @@ import logging
 
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
+from app.combat.failure_margin_runtime import escalation_duration
 from app.combat.forced_movement import push_straight_away
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import apply_terminal_condition_outcome, apply_timed_condition
@@ -24,6 +25,7 @@ class OnHitConditionSaveResolution:
     save_succeeded: bool | None = None
     applied_condition: str | None = None
     forced_movement_ft: int = 0
+    additional_conditions: tuple[str, ...] = ()
 
 
 def _excluded_target(defender: CombatantState, effect) -> bool:
@@ -69,8 +71,11 @@ def resolve_on_hit_condition_save(
             ),
         )
         applied = None
+        additional: list[str] = []
+        escalation = effect.failure_margin_escalation
+        escalated, duration = escalation_duration(effect, save_roll, succeeded, dice)
         if not succeeded:
-            timed = effect.duration_rounds is not None or effect.repeat_save_timing is not None
+            timed = duration is not None or effect.repeat_save_timing is not None
             if timed:
                 applied = apply_timed_condition(
                     defender,
@@ -81,10 +86,10 @@ def resolve_on_hit_condition_save(
                     target_actor=target_actor, setup=setup,
                     applied_round=round_number,
                     expires_round=(
-                        None if round_number is None or effect.duration_rounds is None
-                        else round_number + effect.duration_rounds
+                        None if round_number is None or duration is None
+                        else round_number + duration
                     ),
-                    expiry_timing="target_turn_end" if effect.duration_rounds is not None else None,
+                    expiry_timing="target_turn_end" if duration is not None else None,
                     repeat_save_ability=effect.save_ability if effect.repeat_save_timing else None,
                     repeat_save_dc=effect.dc if effect.repeat_save_timing else None,
                     repeat_save_timing=effect.repeat_save_timing,
@@ -100,6 +105,28 @@ def resolve_on_hit_condition_save(
                     defender, effect.condition_id, affected_states=affected_states
                 )
                 applied = effect.condition_id
+            if escalated:
+                for condition_id in escalation.additional_condition_ids:
+                    added = apply_timed_condition(
+                        defender, condition_id,
+                        source_id or (source_template.id if source_template is not None else "on-hit-save"),
+                        source_effect_id=(
+                            f"{attack.weapon.name}:escalated"
+                            if escalation.ends_on_damage or escalation.allowed_removal_action_ids
+                            else attack.weapon.name
+                        ),
+                        source_template=source_template,
+                        target_actor=target_actor, setup=setup,
+                        applied_round=round_number,
+                        expires_round=None if round_number is None else round_number + duration,
+                        expiry_timing="target_turn_end",
+                        ends_on_damage=escalation.ends_on_damage,
+                        allowed_removal_action_ids=escalation.allowed_removal_action_ids,
+                        use_default_poison_recovery=False,
+                        affected_states=affected_states,
+                    )
+                    if added is not None:
+                        additional.append(added)
         moved = 0
         if not succeeded and effect.failure_push_ft:
             if setup is None or target_id is None or source_id is None:
@@ -114,7 +141,8 @@ def resolve_on_hit_condition_save(
                 round_number=round_number or 1,
             )
         return OnHitConditionSaveResolution(
-            save_roll, effect.save_ability, effect.dc, succeeded, applied, moved
+            save_roll, effect.save_ability, effect.dc, succeeded, applied, moved,
+            tuple(additional),
         )
     except Exception:
         logger.exception("Failed to resolve on-hit condition save for %s.", defender.template.name)

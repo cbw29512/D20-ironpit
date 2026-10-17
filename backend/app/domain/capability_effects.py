@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming, GrapplePeriodicDamage
 from app.domain.combatants import DamageType
 from app.domain.hit_modifiers import HitModifierEffect
+from app.domain.failure_margin import FailureMarginEscalation, require_escalation_duration
 from app.domain.size import CreatureSize
 from app.domain.zero_hp_effects import ZeroHpSaveDamageRider
 
@@ -91,6 +92,7 @@ class SaveConditionEffectDefinition(BaseModel):
     repeat_save_failure_condition: ConditionName | None = None
     failure_push_ft: int = Field(default=0, ge=0)
     cannot_regain_hit_points: bool = False
+    failure_margin_escalation: FailureMarginEscalation | None = None
     excluded_creature_types: list[str] = Field(default_factory=list)
     excluded_creature_subtypes: list[str] = Field(default_factory=list)
 
@@ -106,6 +108,7 @@ class SaveConditionEffectDefinition(BaseModel):
             )
         if self.repeat_save_failure_condition is not None and self.repeat_save_timing is None:
             raise ValueError("Failure escalation requires a repeat-save timing.")
+        require_escalation_duration(self.failure_margin_escalation, self.duration_rounds)
         return self
 
 
