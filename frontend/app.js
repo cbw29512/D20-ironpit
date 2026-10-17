@@ -154,9 +154,17 @@
             state.fighting = true; updateControls();
             try {
               const slotMap = { heroes: match.heroes.indexes, monsters: match.monsters.indexes };
-              await window.IRON_PIT_BATTLEFIELD_REPLAY.play(battle, slotMap);
+              const replay = window.IRON_PIT_BATTLEFIELD_REPLAY;
+              const log = window.IRON_PIT_BETA_LOG;
+              log?.begin?.(selection, seed);
+              replay.bindBattle(battle, slotMap);
+              for (const event of battle.events || []) {
+                await replay.eventStep(event);
+                log?.step?.(event);
+              }
+              replay.syncFinal(battle);
               view().writeLog(battle); view().showResult(battle);
-              window.IRON_PIT_BETA_LOG?.record?.(battle, selection, seed);
+              log?.finish?.(battle);
               el("status").textContent = "Beta fight complete · seed " + seed;
             } finally { state.fighting = false; updateControls(); }
           },
