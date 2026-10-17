@@ -3,7 +3,6 @@
   const $ = (id) => document.getElementById(id);
   let runtime = null, stop = false, running = false, report = null;
   const pause = () => new Promise((resolve) => setTimeout(resolve, 0));
-
   function issue(row, status, details) {
     const tr = document.createElement("tr");
     for (const value of [row.name, row.edition, row.seed, status, details]) {
@@ -14,7 +13,6 @@
     }
     $("rows").append(tr);
   }
-
   function selection(recipe, catalog, presets) {
     const cards = presets.resolve(recipe, catalog);
     return {
@@ -23,7 +21,6 @@
       monster_ids: cards.monsters.map((card) => card.runnable_template_id),
     };
   }
-
   async function rosterSweep(w, editions) {
     const cases = [];
     for (const ruleset of editions) {
@@ -44,7 +41,6 @@
     }
     return cases;
   }
-
   function validate(replay, recipe, presets, expectedAspects) {
     const battle = replay.battle;
     if (!battle || !Array.isArray(battle.events) || battle.events.length < 1) throw Error("No battle events");
