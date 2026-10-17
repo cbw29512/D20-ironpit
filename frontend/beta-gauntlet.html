@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Iron Pit — Beta Fight Gauntlet</title>
+<style>
+body{font:16px system-ui,sans-serif;margin:2rem auto;padding:0 1rem;max-width:950px;background:#161817;color:#f3f4ed}
+a{color:#b4dcff}button,input,select{font:inherit;padding:.6rem;margin:.3rem}button{cursor:pointer}
+button:disabled{cursor:wait;opacity:.5}section{border:1px solid #606965;border-radius:9px;padding:1rem;margin:1rem 0}
+table{width:100%;border-collapse:collapse}td,th{padding:.6rem;border-bottom:1px solid #505651;text-align:left}
+.pass{color:#a7efa2}.fail{color:#ffadad}.muted{color:#b8c0b7}
+#runtime{position:absolute;left:-9999px;width:1px;height:1px;border:0}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:17rem;overflow:auto}
+</style>
+</head>
+<body>
+<a href="./">← Iron Pit</a>
+<h1>Beta Fight Gauntlet</h1>
+<p>Runs the actual browser combat engine through every certified preset, one fight after another. This page does not publish or modify game data.</p>
+<section>
+<label>Edition <select id="edition"><option value="2014">2014</option><option value="2024">2024</option><option value="both">Both</option></select></label>
+<label>Fights per preset <input id="count" type="number" min="1" max="100" value="5"></label>
+<label>Base seed <input id="seed" type="number" min="0" max="4294967295" value="1701"></label>
+<p><button id="start" disabled>Loading engine…</button><button id="stop" disabled>Stop after current fight</button><button id="export" disabled>Download JSON report</button></p>
+<p id="status" role="status" aria-live="polite">Loading production browser runtime…</p>
+<progress id="progress" value="0" max="1" style="width:100%"></progress>
+</section>
+<section>
+<h2>Results</h2>
+<p id="totals">No tests run.</p>
+<table><thead><tr><th>Fight</th><th>Edition</th><th>Seed</th><th>Result</th><th>Details</th></tr></thead><tbody id="rows"></tbody></table>
+</section>
+<iframe id="runtime" title="Isolated Iron Pit runtime" src="./index.html" aria-hidden="true" tabindex="-1"></iframe>
+<script src="beta-gauntlet.js"></script>
+</body></html>
