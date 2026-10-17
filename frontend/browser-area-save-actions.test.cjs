@@ -64,6 +64,17 @@ const setup = {
 };
 
 const A = window.IRON_PIT_BROWSER_AREA_SAVES;
+{
+  const typed = { id: "typed", name: "Renamable", damageComponents: [
+    { diceCount: 2, diceSize: 10, damageType: "fire" },
+    { diceCount: 1, diceSize: 4, damageType: "cold" },
+  ] };
+  assert.equal(A.expectedSaveDamage(typed), 13.5);
+  typed.name = "Different Printed Name";
+  assert.equal(A.expectedSaveDamage(typed), 13.5);
+  assert.equal(A.expectedSaveDamage({ damageDiceCount: 3, damageDiceSize: 6 }), 10.5);
+  assert.equal(A.expectedSaveDamage({ damageDiceCount: 0, damageBonus: 5 }), 0);
+}
 const selected = A.choose(actor, setup);
 assert.ok(selected);
 assert.equal(selected.action.id, "fire-breath");
