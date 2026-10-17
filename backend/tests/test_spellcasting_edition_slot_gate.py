@@ -3,7 +3,7 @@ import logging
 
 import pytest
 
-from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
+from app.combat.spellcasting import legal_slot_levels, mark_slot_spell_cast, slot_spell_available
 from app.combat.state import build_combatant_state
 from app.content.audited_cleric import build_seraphine_dawnshield
 
@@ -38,4 +38,20 @@ def test_missing_turn_key_fails_closed() -> None:
             slot_spell_available(state, "")
     except Exception:
         logger.exception("Missing-turn-key spellcasting regression failed")
+        raise
+
+@pytest.mark.parametrize("edition,expected", [("2014", (1,)), ("2024", ())])
+def test_slot_level_selection_respects_edition_after_expenditure(edition: str, expected: tuple[int, ...]) -> None:
+    try:
+        template = build_seraphine_dawnshield().model_copy(update={"ruleset": edition})
+        state = build_combatant_state(template)
+        key = "1:caster"
+        # Explicit fixture resource: the test isolates turn legality from spell preparation.
+        from app.domain.runtime import ResourceState
+        state.resources = [ResourceState(id="spell-slot-1", name="Level 1 Slot", current_uses=2, max_uses=2)]
+        mark_slot_spell_cast(state, key)
+        assert legal_slot_levels(state, key, 1) == expected
+        assert legal_slot_levels(state, "2:caster", 1) == (1,)
+    except Exception:
+        logger.exception("Edition-specific slot-level selection failed for %s", edition)
         raise
