@@ -53,8 +53,8 @@
     }
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null;
     if (ward && !ward.succeeded) {
-      if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
       if (spendCastCosts) { C().recordSpellTurn(caster.state, turnKey, spell.actionCost, spell.level); E().spend(caster.state, spell.actionCost); }
+      if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
       const rangeRemaining = spendCastCosts ? spendRangeModifier(caster.state, rangeModifier) : null;
       if (spendCastCosts) CE()?.applyTimedResistance(caster, spell, round);
       const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward);
@@ -78,8 +78,8 @@
     M().consumeNextAttackAgainstAdvantage(caster.state, target.combatant_id);
     T()?.consumeNextAttackDisadvantage(caster.state);
     SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
-    if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
     if (spendCastCosts) { C().recordSpellTurn(caster.state, turnKey, spell.actionCost, spell.level); E().spend(caster.state, spell.actionCost); }
+    if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
     const rangeRemaining = spendCastCosts ? spendRangeModifier(caster.state, rangeModifier) : null;
     if (spendCastCosts) CE()?.applyTimedResistance(caster, spell, round);
     const natural = attackRoll.selected_roll;

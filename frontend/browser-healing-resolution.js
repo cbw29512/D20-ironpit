@@ -78,11 +78,9 @@
       if (action.healingFromResourcePool) action = window.IRON_PIT_BROWSER_POOLED_HEALING.bindAction(healer, target, action);
       if (P().slotHeal(action)) {
         if (!turnKey) throw new Error("Spell-slot healing requires an active turn key.");
-        C().markSlotSpellCast(healer.state, turnKey);
-      }
-      if (P().slotHeal(action)) {
         C().recordSpellTurn(healer.state, turnKey, action.actionCost,
           Number.parseInt(action.resourceId.slice("spell-slot-".length), 10));
+        C().markSlotSpellCast(healer.state, turnKey);
       }
       E().spend(healer.state, action.actionCost);
       const remaining = spendResource(healer, action);

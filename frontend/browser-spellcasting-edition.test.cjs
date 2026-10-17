@@ -50,6 +50,25 @@ test("unsupported ruleset and missing turn key fail closed", () => {
   }
 });
 
+for (const ruleset of ["2014", "2024"]) {
+  test(`${ruleset} first spell records before its own slot expenditure`, () => {
+    try {
+      const api = spellcastingApi();
+      const template = { ruleset };
+      const state = { template, feature_last_turn_keys: {}, spell_slot_expended_turn_key: null };
+      assert.equal(api.spellTurnLegal(state, "1:caster", "action", 1), true);
+      api.recordSpellTurn(state, "1:caster", "action", 1);
+      api.markSlotSpellCast(state, "1:caster");
+      assert.equal(api.slotSpellAvailable(state, "1:caster"), ruleset === "2014");
+      if (ruleset === "2024") assert.equal(api.spellTurnLegal(state, "1:caster", "action", 1), false);
+      assert.equal(api.slotSpellAvailable({ template, spell_slot_expended_turn_key: null }, "1:caster"), true);
+    } catch (error) {
+      console.error("First-spell ordering regression failed", { ruleset, error });
+      throw error;
+    }
+  });
+}
+
 for (const [firstCost, firstLevel, secondCost, secondLevel, allowed] of [
   ["bonus_action", 1, "action", 0, true],
   ["bonus_action", 1, "action", 1, false],

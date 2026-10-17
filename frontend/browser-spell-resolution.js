@@ -44,11 +44,14 @@
       } else if (choice.slotLevel > 0) {
         const resourceId = `spell-slot-${choice.slotLevel}`;
         if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains.`);
+        SC().recordSpellTurn(caster.state, turnKey, spell.actionCost, spell.level);
         SC().markSlotSpellCast(caster.state, turnKey);
         caster.state.resources[resourceId] -= 1;
         remaining = caster.state.resources[resourceId];
       }
-      SC().recordSpellTurn(caster.state, turnKey, spell.actionCost, spell.level);
+      if (choice.alternateCast || choice.slotLevel === 0) {
+        SC().recordSpellTurn(caster.state, turnKey, spell.actionCost, spell.level);
+      }
       E().spend(caster.state, spell.actionCost);
       const rangeRemaining = choice.rangeModifier
         ? (P()?.spendRangeModifier

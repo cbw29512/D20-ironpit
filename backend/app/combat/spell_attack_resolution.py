@@ -65,10 +65,11 @@ def resolve_spell_attack(
             raise ValueError(f"No level {requested} spell slot remains for {spell.name}.")
         ward = check_targeting_ward(caster, target, dice)
         if ward is not None and not ward.succeeded:
+            if spend_cast_costs:
+                record_spell_turn(caster.state, turn_key, spell.action_cost, spell.level)
             if resource is not None:
                 mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
             if spend_cast_costs:
-                record_spell_turn(caster.state, turn_key, spell.action_cost, spell.level)
                 spend(caster.state, spell.action_cost)
             range_remaining = (
                 spend_spell_range_modifier(caster.state, range_modifier)
@@ -113,10 +114,11 @@ def resolve_spell_attack(
         consume_next_attack_against_advantage(caster.state, target.combatant_id)
         consume_next_attack_disadvantage(caster.state)
         consume_sap(caster.state); consume_attacks_against_advantage(target.state)
+        if spend_cast_costs:
+            record_spell_turn(caster.state, turn_key, spell.action_cost, spell.level)
         if resource is not None:
             mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
         if spend_cast_costs:
-            record_spell_turn(caster.state, turn_key, spell.action_cost, spell.level)
             spend(caster.state, spell.action_cost)
         range_remaining = (
             spend_spell_range_modifier(caster.state, range_modifier)

@@ -59,11 +59,14 @@ def resolve_spell(
             resource = _resource(caster.state, choice.slot_level)
             if resource is None or resource.current_uses < 1:
                 raise ValueError(f"No level {choice.slot_level} spell slot remains.")
+            # Check and record legality before this cast's own slot marker.
+            record_spell_turn(caster.state, turn_key, spell.action_cost, spell.level)
             mark_slot_spell_cast(caster.state, turn_key)
             resource.current_uses -= 1
             remaining = resource.current_uses
 
-        record_spell_turn(caster.state, turn_key, spell.action_cost, spell.level)
+        if choice.alternate_cast is not None or choice.slot_level == 0:
+            record_spell_turn(caster.state, turn_key, spell.action_cost, spell.level)
         spend(caster.state, spell.action_cost)
         range_remaining = spend_spell_range_modifier(caster.state, choice.range_modifier)
         remove_owner_attack_ending_modifiers(caster.state)

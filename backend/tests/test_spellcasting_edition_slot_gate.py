@@ -56,6 +56,24 @@ def test_slot_level_selection_respects_edition_after_expenditure(edition: str, e
         logger.exception("Edition-specific slot-level selection failed for %s", edition)
         raise
 
+@pytest.mark.parametrize("ruleset", ["2014", "2024"])
+def test_first_spell_records_before_its_own_slot_expenditure(ruleset: str) -> None:
+    try:
+        template = build_seraphine_dawnshield().model_copy(update={"ruleset": ruleset})
+        state = build_combatant_state(template)
+        turn_key = "1:caster"
+        assert spell_turn_legal(state, turn_key, "action", 1)
+        record_spell_turn(state, turn_key, "action", 1)
+        mark_slot_spell_cast(state, turn_key)
+        assert slot_spell_available(state, turn_key) is (ruleset == "2014")
+        assert slot_spell_available(build_combatant_state(template), turn_key)
+        if ruleset == "2024":
+            assert not spell_turn_legal(state, turn_key, "action", 1)
+    except Exception:
+        logger.exception("First spell cast ordering regression failed for %s", ruleset)
+        raise
+
+
 @pytest.mark.parametrize("first_cost,first_level,second_cost,second_level,allowed", [
     ("bonus_action", 1, "action", 0, True),
     ("bonus_action", 1, "action", 1, False),

@@ -47,10 +47,9 @@ def resolve_healing(
         if slot_heal(action):
             if turn_key is None:
                 raise ValueError("Spell-slot healing requires an active turn key.")
-            mark_slot_spell_cast(healer.state, turn_key)
-
-        if slot_heal(action):
+            # Record the cast before its own slot is marked expended.
             record_spell_turn(healer.state, turn_key, action.action_cost, int(action.resource_id.removeprefix("spell-slot-")))
+            mark_slot_spell_cast(healer.state, turn_key)
         spend(healer.state, action.action_cost)
         remaining = spend_healing_resource(healer, action)
         feature_roll, failure = resolve_percentile_healing_gate(
