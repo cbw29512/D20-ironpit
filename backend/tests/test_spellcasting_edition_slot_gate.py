@@ -3,7 +3,7 @@ import logging
 
 import pytest
 
-from app.combat.spellcasting import legal_slot_levels, mark_slot_spell_cast, slot_spell_available
+from app.combat.spellcasting import legal_slot_levels, mark_slot_spell_cast, slot_spell_available, spell_turn_legal, record_spell_turn
 from app.combat.state import build_combatant_state
 from app.content.audited_cleric import build_seraphine_dawnshield
 
@@ -54,4 +54,23 @@ def test_slot_level_selection_respects_edition_after_expenditure(edition: str, e
         assert legal_slot_levels(state, "2:caster", 1) == (1,)
     except Exception:
         logger.exception("Edition-specific slot-level selection failed for %s", edition)
+        raise
+
+@pytest.mark.parametrize("first_cost,first_level,second_cost,second_level,allowed", [
+    ("bonus_action", 1, "action", 0, True),
+    ("bonus_action", 1, "action", 1, False),
+    ("bonus_action", 1, "reaction", 0, False),
+    ("action", 1, "bonus_action", 1, False),
+    ("action", 0, "bonus_action", 1, True),
+    ("action", 1, "action", 1, True),
+])
+def test_2014_bonus_action_spell_turn_order(first_cost, first_level, second_cost, second_level, allowed) -> None:
+    try:
+        template = build_seraphine_dawnshield().model_copy(update={"ruleset": "2014"})
+        state = build_combatant_state(template)
+        record_spell_turn(state, "1:caster", first_cost, first_level)
+        assert spell_turn_legal(state, "1:caster", second_cost, second_level) is allowed
+        assert spell_turn_legal(state, "2:caster", second_cost, second_level)
+    except Exception:
+        logger.exception("2014 bonus-action spell order regression failed")
         raise
