@@ -65,6 +65,7 @@ from app.domain.reactions import ParryReaction
 from app.domain.size import CreatureSize
 from app.content.monster_rock_catching_2014 import source_rock_catching_reaction_2014
 from app.content.monster_unnerving_mask_2014 import source_unnerving_mask_reaction_2014
+from app.content.monster_visual_turn_start_2014 import visual_turn_start_rule_2014
 
 def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapabilityDefinition:
     source_grapple_periodic_proof_2014(monster, attack)
@@ -192,6 +193,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         source_legendary_action_names=list(monster.legendary_action_names),
         attack_damage_reduction_reaction=source_rock_catching_reaction_2014(monster),
         turn_start_save_condition_reaction=source_unnerving_mask_reaction_2014(monster),
+        visual_turn_start_rule=visual_turn_start_rule_2014(monster),
         parry_reaction=ParryReaction(ac_bonus=monster.parry_ac_bonus)
             if supports_parry_reaction_2014(monster) else None,
         **template_defense_fields_2014(monster),
