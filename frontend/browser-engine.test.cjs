@@ -268,3 +268,35 @@ require("./browser-initiative-natural-one.test.cjs");
     assert.ok(!(state.is_alive && state.is_dead));
   }
 }
+
+{
+  // Beta gate: mixed card definitions must coexist in a full party battle.
+  // Avoid treating six copies of one card as sufficient mixed-party coverage.
+  const heroes = ["karnok-stoneward-l1", "rokhan-stonefury-l1", "karnok-stoneward-l1",
+    "rokhan-stonefury-l1", "karnok-stoneward-l1", "rokhan-stonefury-l1"];
+  const monsters = ["srd-commoner", "srd-bandit", "srd-wolf",
+    "srd-commoner", "srd-bandit", "srd-wolf"];
+  const run = () => fight(heroes, monsters, deterministicDice(622026));
+  const snapshots = [...new Set(heroes)].map(id => JSON.stringify(window.IRON_PIT_BROWSER_HEROES[id]))
+    .concat([...new Set(monsters)].map(id => JSON.stringify(window.IRON_PIT_BROWSER_MONSTERS[id])));
+  const first = run(), second = run();
+  assert.notEqual(first.outcome, "active", "mixed 6v6 must terminate");
+  assert.equal(first.setup.heroes.length, 6);
+  assert.equal(first.setup.monsters.length, 6);
+  const instances = [...first.setup.heroes, ...first.setup.monsters];
+  assert.equal(new Set(instances.map(member => member.combatant_id)).size, 12,
+    "repeated source cards must create twelve separate combatants");
+  assert.equal(new Set(instances.map(member => member.state)).size, 12,
+    "each participant must own isolated fight state");
+  assert.equal(first.outcome, second.outcome);
+  assert.equal(first.rounds, second.rounds);
+  assert.deepEqual(first.events, second.events, "mixed 6v6 must replay the same events");
+  assert.deepEqual([...new Set(heroes)].map(id => JSON.stringify(window.IRON_PIT_BROWSER_HEROES[id]))
+    .concat([...new Set(monsters)].map(id => JSON.stringify(window.IRON_PIT_BROWSER_MONSTERS[id]))), snapshots,
+    "mixed 6v6 must leave all distinct card definitions unchanged");
+  for (const member of [...first.setup.heroes, ...first.setup.monsters]) {
+    assert.ok(Number.isFinite(member.state.current_hp) && member.state.current_hp >= 0);
+    assert.ok(member.state.current_hp <= window.IRON_PIT_BROWSER_STATE.effectiveMaxHp(member.state));
+    assert.ok(!(member.state.is_alive && member.state.is_dead));
+  }
+}
