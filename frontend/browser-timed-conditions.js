@@ -21,7 +21,8 @@
       groundContact: options.groundContact === true,
       actor: options.targetActor || null, setup: options.setup || null,
     })) return null;
-    const defaultPoison = effectId === POISONED && options.useDefaultPoisonRecovery !== false;
+    const defaultPoison = effectId === POISONED && options.useDefaultPoisonRecovery !== false
+      && !options.expiryTiming && !options.expiresAtStartOfSourceTurn;
     if (defaultPoison && state.timed_effects.some((effect) => effect.effect_id === POISONED)) return POISONED;
     const sourceEffectId = options.sourceEffectId || null;
     state.timed_effects = state.timed_effects.filter((effect) => !(
