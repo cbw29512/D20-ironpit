@@ -97,6 +97,30 @@ def test_auto_hit_stops_after_release_and_other_targets_remain_illegal() -> None
     assert not other.grapple_sources
 
 
+def test_redirected_owner_grapple_auto_hit_rolls_against_replacement() -> None:
+    """Owner-linked automatic hits cannot transfer to unheld defenders."""
+    from app.content.demo import build_goblin_warrior
+    from app.content.monster_goblin_boss import build_goblin_boss
+
+    template, tail = template_and_tail()
+    attacker = build_combatant_state(template)
+    boss = build_combatant_state(build_goblin_boss())
+    replacement = build_combatant_state(build_goblin_warrior())
+    apply_grapple(boss, "attacker-1", 14, 10, restrains=True)
+    assert attack_allowed_against(tail, "attacker-1", boss, [boss, replacement])
+    hp_before = replacement.current_hp
+    event = resolve_attack(
+        1, 1, attacker, boss, tail, 5, FixedDiceProvider([1]),
+        actor_event_id="attacker-1", target_event_id="boss",
+        redirect_target=replacement, redirect_target_event_id="replacement",
+        spend_action=False, affected_states=[boss, replacement],
+    )
+    assert event.target_id == "replacement"
+    assert event.attack_roll is not None and event.attack_roll.selected_roll == 1
+    assert not event.hit and replacement.current_hp == hp_before
+    assert not boss.reaction_available
+
+
 @pytest.mark.parametrize("condition", ["incapacitated", "unconscious", "stunned", "paralyzed", "petrified"])
 def test_incapacitated_grappler_cannot_attack_even_when_attack_is_free(condition: str) -> None:
     actor_template, tail = template_and_tail()

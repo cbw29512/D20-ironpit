@@ -46,10 +46,19 @@ def resolve_attack(
         if not attack_allowed_against(attack, attacker_event_id, defender, affected_states):
             raise ValueError(f"{attack.id} cannot target {defender_event_id} under its current target policy.")
         register_turn_attack(attacker, off_turn=off_turn)
-        auto_hit = owned_grapple_auto_hit(attack, attacker_event_id, defender)
+        # Resolve redirection before target-specific auto-hit and roll modifiers.
+        actual_defender, actual_event_id, redirect_used = defender, defender_event_id, False
+        if (redirect_target is not None and redirect_target is not defender
+                and defender.template.redirect_attack_reaction is not None
+                and is_available(defender, "reaction")):
+            spend(defender, "reaction")
+            actual_defender = redirect_target
+            actual_event_id = redirect_target_event_id or redirect_target.template.id
+            redirect_used = True
+        auto_hit = owned_grapple_auto_hit(attack, attacker_event_id, actual_defender)
         roll_resolution = automatic_hit_roll() if auto_hit else resolve_attack_roll(
-            attacker, defender, attack, distance_ft, dice,
-            defender_event_id=defender_event_id, attacker_event_id=attacker_event_id,
+            attacker, actual_defender, attack, distance_ft, dice,
+            defender_event_id=actual_event_id, attacker_event_id=attacker_event_id,
             round_number=round_number, turn_key=turn_key,
             advantage_sources=advantage_sources,
             other_disadvantage_sources=other_disadvantage_sources,
@@ -68,15 +77,11 @@ def resolve_attack(
                 "attack",
                 attack_roll,
                 dice,
-                threshold=effective_armor_class(defender),
+                threshold=effective_armor_class(actual_defender),
             )
             if reaction_penalty is not None:
                 attack_roll = reaction_penalty.roll
         if spend_action: spend(attacker, "action")
-        actual_defender, actual_event_id, redirect_used = defender, defender_event_id, False
-        if redirect_target is not None and redirect_target is not defender and defender.template.redirect_attack_reaction is not None and is_available(defender, "reaction"):
-            spend(defender, "reaction"); actual_defender = redirect_target
-            actual_event_id = redirect_target_event_id or redirect_target.template.id; redirect_used = True
         d20_outcome = automatic_hit_outcome(
             effective_armor_class(actual_defender),
         ) if auto_hit else resolve_attack_d20_outcome(
