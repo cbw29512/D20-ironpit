@@ -56,7 +56,6 @@
     active.rounds = Math.max(active.rounds, Number(event.round_number) || 0);
     active.body.append(window.IRON_PIT_BATTLEFIELD_VIEW.eventRow(event));
     active.body.scrollTop = active.body.scrollHeight;
-    if (active.body.childElementCount > 60) active.body.firstElementChild.remove();
     active.summary.textContent = "Fight #" + active.number + " · " + active.ruleset +
       " · seed " + active.seed + " · round " + active.rounds +
       " · " + active.events.length + " events · IN PROGRESS";
