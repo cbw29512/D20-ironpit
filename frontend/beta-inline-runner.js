@@ -46,8 +46,9 @@
             window.IRON_PIT_BROWSER_TURBO.deriveSeed(test.seed ^ 1701, i);
           status.textContent = "Fight " + (completed + 1) + "/" +
             (selected.length * repeats) + " · " + test.label;
+          let battle = null;
           try {
-            const battle = window.IRON_PIT_BROWSER_TURBO.runSeeded(test.selection, seed).battle;
+            battle = window.IRON_PIT_BROWSER_TURBO.runSeeded(test.selection, seed).battle;
             if (!battle?.events?.length) throw Error("No battle events.");
             if (!["heroes_win", "monsters_win", "draw"].includes(battle.outcome)) throw Error("Invalid outcome.");
             if (test.recipe && i === 0) {
@@ -61,7 +62,7 @@
             pass++;
           } catch (error) {
             fail++;
-            window.IRON_PIT_BETA_LOG.record(null, test.selection, seed, error.message);
+            window.IRON_PIT_BETA_LOG.record(battle, test.selection, seed, error.message);
           }
           completed++;
           $("beta-run-progress").value = completed;
