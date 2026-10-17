@@ -16,4 +16,5 @@ assert.ok(js.includes("applied_condition_ids") && js.includes("damage_components
 assert.ok(js.includes("observed events only; not RAW correctness"), "Observed mechanics must not be mislabeled as certified correctness.");
 assert.ok(!js.includes("resolveAttack("), "Test Lab must not implement a new combat resolver.");
 assert.ok(js.includes("cards_unchanged") && js.includes("cardSnapshot"), "Every fight must check for certified card mutation.");
+assert.ok(js.includes("seed + count - 1 > 0xffffffff"), "Batch seed must fit the existing Turbo 32-bit seed contract.");
 console.log("Engine Test Lab static integration checks passed.");
