@@ -141,6 +141,7 @@
           animation: "condition-ended",
           damage_roll: damageRoll, damage_components: damageComponents,
           hp_before: hpBefore, hp_after: target.state.current_hp,
+          is_dead: target.state.is_dead, is_stable: target.state.is_stable,
           temporary_hp_before: tempBefore, temporary_hp_after: target.state.temporary_hp || 0,
           description: `${target.state.template.name} returns from ${effect.source_effect_id || effect.effect_id}.`
             + (excluded ? " The return damage is suppressed by creature type." : ""),
