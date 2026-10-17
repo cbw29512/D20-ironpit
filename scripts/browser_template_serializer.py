@@ -1171,6 +1171,18 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 "requiresSourceCanSeeTarget": rule.requires_source_can_see_target,
                 "requiresTargetCanSeeSource": rule.requires_target_can_see_source,
             }
+        if template.visual_turn_start_rule is not None:
+            rule = template.visual_turn_start_rule
+            row["visualTurnStartRule"] = {
+                "sourceId": rule.source_id,
+                "sourceName": rule.source_name,
+                "rangeFt": rule.range_ft,
+                "saveDc": rule.save_dc,
+                "saveAbility": rule.save_ability,
+                "immediatePetrificationMargin": rule.immediate_petrification_margin,
+                "initialDebuff": rule.initial_debuff,
+                "terminalDebuff": rule.terminal_debuff,
+            }
         if template.parry_reaction:
             row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}
         if template.redirect_attack_reaction:
