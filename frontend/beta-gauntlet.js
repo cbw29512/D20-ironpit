@@ -40,6 +40,24 @@
     return battle.rounds + " rounds, " + battle.events.length + " events, " + battle.outcome;
   }
 
+  function showCoverage(recipes, tests) {
+    const matrix = window.IRON_PIT_BETA_GAUNTLET_COVERAGE.coverage(recipes, tests);
+    const evidenced = matrix.filter((entry) => entry.coverage === "asserted in passing preset").length;
+    $("coverage-summary").textContent = evidenced + " / " + matrix.length +
+      " capabilities have explicit passing preset evidence. Remaining capabilities require targeted tests.";
+    $("coverage-rows").replaceChildren();
+    for (const entry of matrix) {
+      const tr = document.createElement("tr");
+      for (const value of [entry.id, entry.status, entry.coverage]) {
+        const td = document.createElement("td");
+        td.textContent = value;
+        tr.append(td);
+      }
+      $("coverage-rows").append(tr);
+    }
+    return matrix;
+  }
+
   async function execute() {
     if (!runtime || running) return;
     running = true; stop = false; $("start").disabled = true; $("stop").disabled = false;
@@ -92,6 +110,7 @@
       $("status").textContent = "Runner failure: " + (error?.message || String(error));
       console.error("Fight gauntlet failed", error);
     } finally {
+      report.capability_coverage = showCoverage(recipes, report.tests);
       report.completed = !stop && finished === recipes.length * count;
       report.passed = passes; report.failed = failures;
       running = false; $("start").disabled = false; $("stop").disabled = true;
