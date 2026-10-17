@@ -138,7 +138,7 @@
       window.IRON_PIT_COMBAT_REVIEW.install({ state, matchup, render, updateControls, clearResult, load: loadCards, ensureRuleset: changeRuleset });
       window.IRON_PIT_BATTLE_LOG_EXPORT?.install?.();
       rulesetUi().update(state); render();
-      if (new URLSearchParams(window.location?.search || "").get("betaGauntlet") === "1") {
+      {
         window.IRON_PIT_BETA_BRIDGE = {
           ready: () => Boolean(state.catalog && !state.fighting),
           async showFight(selection, battle, seed) {
