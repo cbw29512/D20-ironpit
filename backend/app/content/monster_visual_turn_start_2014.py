@@ -64,6 +64,10 @@ def visual_turn_start_rule_2014(monster: SourceMonster2014) -> VisualTurnStartRu
         if not (dc and distance and aversion and all(s in printed for s in required)):
             return None
         margin = 5 if "fails by 5 or more" in printed else None
+        # A five-point failure margin must be source-proven to cause immediate
+        # petrification, not inferred from the numeric phrase alone.
+        if margin is not None and "instantly petrified" not in printed:
+            return None
         return VisualTurnStartRule(
             source_id="petrifying-gaze",
             source_name=_GAZE,
