@@ -48,7 +48,12 @@
         e => e.source_id === source.combatant_id && e.source_effect_id === rule.sourceId &&
           e.effect_id === (rule.initialDebuff || "restrained")
       );
-      const next = policy().resolveStage(rule, save.roll?.total ?? (save.succeeded ? rule.saveDc : -1),
+      // The universal save resolver may turn a failed die total into success
+      // via a feature. Honor that adjudicated outcome, not only the raw die.
+      if (!save.succeeded && !Number.isInteger(save.roll?.total)) {
+        throw new Error("A failed visual save requires its resolved roll total.");
+      }
+      const next = policy().resolveStage(rule, save.succeeded ? rule.saveDc : save.roll.total,
         current ? current.effect_id : null);
       if (current) timed().removeEffect(target.state, current);
       if (next !== "clear") {
