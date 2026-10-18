@@ -4,6 +4,149 @@
 
 **What happened:** the 124-monster / 305-blocker review was recorded in unmerged [PR #680](https://github.com/cbw29512/D20-ironpit/pull/680), while the old operating table was frozen on October 8. Use the reconciled records below, not a guessed next monster. Original source blueprint is available at [the pinned PR commit](https://github.com/cbw29512/D20-ironpit/blob/88881607f1f271a2fdb37ffcf95008d9d8d1a07c/docs/MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md); source cards and generated current-main blockers are decisive for certification. This ledger does not falsely upgrade a plan to shipped code.
 
+<!-- BEGIN CURRENT 2014 MONSTER ISSUE MATRIX -->
+## Current 2014 monster issue-to-fix matrix — 2026-10-18
+
+**Operational snapshot, not a second tracker.** Derived from the generated `docs/MONSTER_BLOCKERS_2014.md` on main: **227/327 source-admitted, 100 blocked**. This matrix is an execution aid inside the canonical queue. All 100 rows below come from that report, but **fixes are implementation hypotheses**, not evidence that code exists, that an unresolved rule was approved, or that a monster is certified. Recompute from the generated report after merges; do not hand-edit generator output.
+
+**Execution contract:** Pick a monster or shared family; inspect the immutable source, prior approved decision and existing code; implement the *smallest generic* binding/fix; run focused source/Python/browser checks; submit one isolated PR; after required exact-head gates pass, merge while production publishing stays locked; move immediately to next blocked monster. Webpage fights and batch debugging follow, and only those with positive evidence are called fully finished. If missing shared mechanics are too large, record blocker and skip to an independent candidate. **“Keep going” means continuing toward zero blockers, not stopping after one PR.**
+
+**Rules for reading proposed fixes:** The “targeted fix” cell lists the likely smallest first move. Additional blockers in the next cell remain mandatory for full admission. A source-only correction or automatic classifier admission is not proof of fight readiness.
+
+| Monster | Current blockers | Unbound printed traits | Targeted proposed fix (first step; then repeat for each blocker) |
+|---|---|---|---|
+| Aboleth | `attack:incomplete`, `mechanic:legendary`, `source:extra-action`, `source:legendary` | — | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Acolyte | `mechanic:spellcasting`, `source:trait` | Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Air Elemental | `mechanic:recharge`, `source:extra-action`, `source:trait` | Air Form | Bind the card's recharge trigger/dice and resource to a universal Action or save effect. |
+| Androsphinx | `mechanic:legendary`, `mechanic:spellcasting`, `source:extra-action`, `source:legendary`, `source:trait` | Spellcasting | Map legendary resource and out-of-turn actions to shared turn/reaction scheduler. |
+| Archmage | `mechanic:spellcasting`, `source:trait` | Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Balor | `attack:incomplete`, `source:trait` | Death Throes, Fire Aura | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Banshee | `source:extra-action` | — | Horrifying Visage and Wail: universal visual Frightened with end-turn saves, audible Con save and HP-to-zero or damage; approved ranges and creature exclusions. |
+| Basilisk | `source:trait` | Petrifying Gaze | Petrifying Gaze: shared start-turn sight, avert-eyes and save grammar; first failure Restrained, subsequent failure Petrified (terminal in Pit). |
+| Bearded Devil | `attack:incomplete`, `source:trait` | Steadfast | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Behir | `mechanic:recharge`, `source:extra-action` | — | Bind the card's recharge trigger/dice and resource to a universal Action or save effect. |
+| Bulette | `source:extra-action` | — | Deadly Leap: source Action; legal 15-ft jump; 2×2 landing AoE; best Str/Dex DC 16; 3d6+4 bludgeoning + 3d6+4 slashing; half on success; Prone on failure; no push (approved Pit rule). |
+| Chuul | `attack:incomplete`, `multiattack:complex`, `source:extra-action` | — | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Clay Golem | `mechanic:recharge`, `source:extra-action` | — | Bind the card's recharge trigger/dice and resource to a universal Action or save effect. |
+| Cloaker | `attack:incomplete`, `source:extra-action`, `source:trait` | Damage Transfer, Light Sensitivity | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Cloud Giant | `mechanic:spellcasting`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Couatl | `attack:incomplete`, `mechanic:spellcasting`, `source:extra-action`, `source:trait` | Innate Spellcasting | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Cult Fanatic | `mechanic:spellcasting`, `source:trait` | Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Darkmantle | `attack:incomplete`, `source:extra-action` | — | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Deep Gnome (Svirfneblin) | `mechanic:spellcasting`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Deva | `mechanic:spellcasting`, `source:extra-action`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Djinni | `attack:incomplete`, `mechanic:spellcasting`, `source:extra-action`, `source:trait` | Innate Spellcasting | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Doppelganger | `attack:complex`, `source:extra-action`, `source:trait` | Shapechanger, Ambusher, Surprise Attack | Compose complete source on-hit riders/conditional attacks with reusable attack effect grammar. |
+| Drider | `mechanic:spellcasting`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Drow | `mechanic:spellcasting`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Druid | `mechanic:spellcasting`, `source:trait` | Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Dryad | `mechanic:spellcasting`, `source:extra-action`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Duergar | `attack:incomplete`, `source:extra-action`, `source:trait` | Duergar Resilience | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Dust Mephit | `mechanic:recharge`, `mechanic:spellcasting`, `source:extra-action`, `source:trait` | Death Burst, Innate Spellcasting | Bind the card's recharge trigger/dice and resource to a universal Action or save effect. |
+| Efreeti | `mechanic:spellcasting`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Erinyes | `attack:incomplete`, `source:trait` | Hellish Weapons | Hellish Weapons trait binding is on PR #941; separately finish attack:incomplete source rider before complete-monster admission. |
+| Ettercap | `attack:complex`, `attack:damage-type`, `mechanic:recharge` | — | Compose complete source on-hit riders/conditional attacks with reusable attack effect grammar. |
+| Fire Elemental | `attack:complex`, `source:trait` | Fire Form, Water Susceptibility | Compose complete source on-hit riders/conditional attacks with reusable attack effect grammar. |
+| Flameskull | `mechanic:spellcasting`, `source:trait` | Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Frog | `arena:neutral` | — | Explicit arena-neutral exclusion; do not count as fighting monster without authorized rule change. |
+| Gelatinous Cube | `source:extra-action`, `source:trait` | Ooze Cube, Transparent | Compile printed Action into universal attack/save/AoE/control/resource action; verify AI selection and turn timing. |
+| Ghost | `mechanic:recharge`, `source:extra-action` | — | Bind the card's recharge trigger/dice and resource to a universal Action or save effect. |
+| Giant Frog | `mechanic:swallow`, `source:extra-action` | — | Compose grapple/restrain/blind/cover/periodic damage and escape as generic linked state. |
+| Giant Spider | `attack:complex`, `attack:damage-type`, `mechanic:recharge` | — | Compose complete source on-hit riders/conditional attacks with reusable attack effect grammar. |
+| Giant Toad | `mechanic:swallow`, `source:extra-action` | — | Compose grapple/restrain/blind/cover/periodic damage and escape as generic linked state. |
+| Gibbering Mouther | `multiattack:complex`, `source:extra-action`, `source:trait` | Aberrant Ground, Gibbering | Compile printed conditional Multiattack selection/slots into existing action sequence grammar. |
+| Glabrezu | `mechanic:spellcasting`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Gray Ooze | `attack:incomplete`, `source:trait` | Corrode Metal | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Green Hag | `mechanic:spellcasting`, `source:extra-action`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Guardian Naga | `mechanic:spellcasting`, `source:extra-action`, `source:trait` | Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Gynosphinx | `mechanic:legendary`, `mechanic:spellcasting`, `source:legendary`, `source:trait` | Spellcasting | Map legendary resource and out-of-turn actions to shared turn/reaction scheduler. |
+| Harpy | `source:extra-action` | — | Luring Song: universal area/hearing, Wis save, Charm and forced target movement; source timing and save-repeat. |
+| Hydra | `multiattack:complex`, `source:extra-action`, `source:trait` | Multiple Heads, Reactive Heads | Compile printed conditional Multiattack selection/slots into existing action sequence grammar. |
+| Ice Devil | `mechanic:recharge`, `source:extra-action` | — | Bind the card's recharge trigger/dice and resource to a universal Action or save effect. |
+| Ice Mephit | `mechanic:death-trigger`, `mechanic:spellcasting`, `source:trait` | Death Burst, Innate Spellcasting | Bind source death trigger to universal on-death event, save, area and typed damage. |
+| Imp | `source:extra-action`, `source:trait` | Shapechanger | Compile printed Action into universal attack/save/AoE/control/resource action; verify AI selection and turn timing. |
+| Kraken | `attack:incomplete`, `mechanic:legendary`, `mechanic:swallow`, `multiattack:complex`, `source:extra-action`, `source:legendary`, `source:trait` | Freedom of Movement | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Lamia | `attack:incomplete`, `mechanic:spellcasting`, `multiattack:complex`, `source:extra-action`, `source:trait` | Innate Spellcasting | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Lich | `mechanic:legendary`, `mechanic:spellcasting`, `source:legendary`, `source:trait` | Spellcasting | Map legendary resource and out-of-turn actions to shared turn/reaction scheduler. |
+| Mage | `mechanic:spellcasting`, `source:trait` | Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Magma Mephit | `mechanic:death-trigger`, `mechanic:spellcasting`, `source:trait` | Death Burst, Innate Spellcasting | Bind source death trigger to universal on-death event, save, area and typed damage. |
+| Magmin | `attack:incomplete`, `mechanic:death-trigger`, `source:trait` | Death Burst, Ignited Illumination | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Manticore | `mechanic:limited-use`, `source:trait` | Tail Spike Regrowth | Bind source per-fight resource and refill/use rule to generic resources. |
+| Medusa | `source:trait` | Petrifying Gaze | Same gaze grammar as Basilisk; DC 14 Con, 30-ft; initial failure by 5+ immediately Petrified; otherwise staged saves (settled). |
+| Mimic | `attack:incomplete`, `source:trait` | Shapechanger, Adhesive (Object Form Only), False Appearance (Object Form Only), Grappler | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Mummy | `attack:incomplete`, `source:extra-action` | — | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Mummy Lord | `attack:incomplete`, `mechanic:legendary`, `mechanic:spellcasting`, `source:extra-action`, `source:legendary`, `source:trait` | Spellcasting | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Night Hag | `mechanic:spellcasting`, `source:extra-action`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Nightmare | `source:extra-action`, `source:trait` | Confer Fire Resistance | Compile printed Action into universal attack/save/AoE/control/resource action; verify AI selection and turn timing. |
+| Oni | `attack:incomplete`, `mechanic:spellcasting`, `source:extra-action`, `source:trait` | Innate Spellcasting | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Otyugh | `attack:incomplete`, `source:extra-action` | — | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Pit Fiend | `attack:incomplete`, `mechanic:spellcasting`, `source:trait` | Fear Aura, Innate Spellcasting | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Planetar | `mechanic:spellcasting`, `source:extra-action`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Priest | `mechanic:spellcasting`, `source:trait` | Divine Eminence, Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Purple Worm | `attack:complex`, `mechanic:swallow` | — | Compose complete source on-hit riders/conditional attacks with reusable attack effect grammar. |
+| Quasit | `attack:complex`, `source:extra-action`, `source:trait` | Shapechanger | Compose complete source on-hit riders/conditional attacks with reusable attack effect grammar. |
+| Rakshasa | `mechanic:defense`, `mechanic:spellcasting`, `source:trait` | Limited Magic Immunity, Innate Spellcasting | Compile printed damage/condition/spell defenses to universal defense and targeting gates. |
+| Remorhaz | `mechanic:swallow`, `source:extra-action` | — | Compose grapple/restrain/blind/cover/periodic damage and escape as generic linked state. |
+| Roper | `source:extra-action`, `source:trait` | Grasping Tendrils | Compile printed Action into universal attack/save/AoE/control/resource action; verify AI selection and turn timing. |
+| Rug of Smothering | `attack:none`, `source:extra-action`, `source:trait` | Damage Transfer | Source-proof the monster's intended no-attack or special-action behavior; admit only if runnable under arena policy. |
+| Rust Monster | `source:extra-action`, `source:trait` | Iron Scent, Rust Metal | Compile printed Action into universal attack/save/AoE/control/resource action; verify AI selection and turn timing. |
+| Sea Hag | `source:extra-action`, `source:trait` | Horrific Appearance | Compile printed Action into universal attack/save/AoE/control/resource action; verify AI selection and turn timing. |
+| Sea Horse | `attack:none` | — | Resolve nonattacking creature via established arena-neutral/no-combat policy; avoid fabricated attack. |
+| Shadow | `attack:incomplete` | — | Complete Strength Drain attack source/rider via existing ability-reduction and hit effect system; ensure state/serialization parity. |
+| Shambling Mound | `mechanic:swallow`, `multiattack:complex`, `source:extra-action` | — | Compose grapple/restrain/blind/cover/periodic damage and escape as generic linked state. |
+| Shield Guardian | `source:reaction`, `source:trait` | Bound, Spell Storing | Bind source reaction trigger/cost/target/condition to universal reaction dispatcher. |
+| Shrieker | `attack:none`, `source:reaction` | — | Source-proof the monster's intended no-attack or special-action behavior; admit only if runnable under arena policy. |
+| Solar | `attack:incomplete`, `mechanic:legendary`, `mechanic:spellcasting`, `source:extra-action`, `source:legendary`, `source:trait` | Innate Spellcasting | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Spectator | `source:extra-action`, `source:reaction` | — | Compile printed Action into universal attack/save/AoE/control/resource action; verify AI selection and turn timing. |
+| Spirit Naga | `mechanic:spellcasting`, `source:trait` | Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Sprite | `source:extra-action` | — | Bind printed invisibility/heart-sight Action to common condition/sense/save primitives or source-proven arena-neutral policy. |
+| Steam Mephit | `mechanic:death-trigger`, `mechanic:spellcasting`, `source:trait` | Death Burst, Innate Spellcasting | Bind source death trigger to universal on-death event, save, area and typed damage. |
+| Stirge | `arena:removed` | — | Explicit arena removed per locked rules; do not count as fighting monster. |
+| Storm Giant | `mechanic:spellcasting`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| Succubus/Incubus | `source:extra-action`, `source:trait` | Telepathic Bond, Shapechanger | Compile printed Action into universal attack/save/AoE/control/resource action; verify AI selection and turn timing. |
+| Tarrasque | `mechanic:legendary`, `mechanic:swallow`, `source:extra-action`, `source:legendary`, `source:trait` | Reflective Carapace | Map legendary resource and out-of-turn actions to shared turn/reaction scheduler. |
+| Vampire | `attack:incomplete`, `mechanic:legendary`, `multiattack:complex`, `source:extra-action`, `source:legendary`, `source:trait` | Shapechanger, Misty Escape, Vampire Weaknesses | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Vampire Spawn | `attack:incomplete`, `multiattack:complex`, `source:trait` | Vampire Weaknesses | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Vrock | `mechanic:recharge`, `source:extra-action` | — | Bind the card's recharge trigger/dice and resource to a universal Action or save effect. |
+| Water Elemental | `mechanic:recharge`, `source:extra-action`, `source:trait` | Water Form, Freeze | Bind the card's recharge trigger/dice and resource to a universal Action or save effect. |
+| Werebear | `multiattack:complex`, `source:trait` | Shapechanger | Compile printed conditional Multiattack selection/slots into existing action sequence grammar. |
+| Wereboar | `multiattack:complex`, `source:extra-action`, `source:trait` | Shapechanger | Compile printed conditional Multiattack selection/slots into existing action sequence grammar. |
+| Wererat | `multiattack:complex`, `source:extra-action`, `source:trait` | Shapechanger | Compile printed conditional Multiattack selection/slots into existing action sequence grammar. |
+| Weretiger | `multiattack:complex`, `source:extra-action`, `source:trait` | Shapechanger, Pounce (Tiger or Hybrid Form Only) | Compile printed conditional Multiattack selection/slots into existing action sequence grammar. |
+| Werewolf | `source:extra-action`, `source:trait` | Shapechanger | Compile printed Action into universal attack/save/AoE/control/resource action; verify AI selection and turn timing. |
+| Will-o'-Wisp | `source:extra-action`, `source:trait` | Consume Life, Ephemeral, Variable Illumination | Compile printed Action into universal attack/save/AoE/control/resource action; verify AI selection and turn timing. |
+
+### Shared blocker-family fix reference (applies across rows)
+
+| Blocker code | Proposed universal repair / validation |
+|---|---|
+| `source:trait` | Bind printed trait to existing generic trigger/effect/condition grants; source-proof wording and payload. Do not accept mere name match. |
+| `source:extra-action` | Compile printed Action into universal attack/save/AoE/control/resource action; verify AI selection and turn timing. |
+| `mechanic:spellcasting` | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
+| `attack:incomplete` | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| `attack:complex` | Compose complete source on-hit riders/conditional attacks with reusable attack effect grammar. |
+| `attack:damage-type` | Normalize source damage type into supported typed damage without losing damage components. |
+| `multiattack:complex` | Compile printed conditional Multiattack selection/slots into existing action sequence grammar. |
+| `mechanic:recharge` | Bind the card's recharge trigger/dice and resource to a universal Action or save effect. |
+| `mechanic:legendary` | Map legendary resource and out-of-turn actions to shared turn/reaction scheduler. |
+| `source:legendary` | Verify all printed legendary action names and costs are bound to universal implementations. |
+| `mechanic:swallow` | Compose grapple/restrain/blind/cover/periodic damage and escape as generic linked state. |
+| `mechanic:death-trigger` | Bind source death trigger to universal on-death event, save, area and typed damage. |
+| `source:reaction` | Bind source reaction trigger/cost/target/condition to universal reaction dispatcher. |
+| `attack:none` | Source-proof the monster's intended no-attack or special-action behavior; admit only if runnable under arena policy. |
+| `arena:neutral` | Record explicit existing arena no-combat policy; not a monster fight admission. |
+| `arena:removed` | Keep excluded under existing arena rule; not an active monster fight admission. |
+| `mechanic:limited-use` | Bind source per-fight resource and refill/use rule to generic resources. |
+| `mechanic:defense` | Compile printed damage/condition/spell defenses to universal defense and targeting gates. |
+
+### Prioritization and evidence
+
+- Start from the **10 one-category blockers** (four extra-action, two trait, Shadow, Sea Horse, Frog and Stirge) where existing universal semantics suffice; do not call Frog/Stirge fighting-monster completions merely by policy. Batch equivalent source traits (Basilisk + Medusa). Then rank multi-blocker monsters by shared family and number unlocked.
+- Before implementing, find settled source decisions in this queue; entries with no settled policy require source analysis, and only genuinely novel outcome-changing ambiguity goes to the user.
+- **Status: PLANNED (not implemented by this matrix).** A source-admission delta requires generator output on the implementation branch. A merged delta requires successful exact-head CI. Full monster completion additionally requires successful fights through the webpage.
+
+<!-- END CURRENT 2014 MONSTER ISSUE MATRIX -->
+
 ## Non-negotiable execution protocol — NEXT MEANS BUILD (user clarification 2026-10-12)
 
 **The user's "next", "keep going", or "go" means perform the next actionable implementation/certification task, NOT read out another monster's abilities or ask to reapprove completed decisions.** Previous behavior repeatedly traversed already-reviewed Chuul/Couatl and other source decisions; this is explicitly prohibited.
