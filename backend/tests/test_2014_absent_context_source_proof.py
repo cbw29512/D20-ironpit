@@ -40,7 +40,10 @@ def test_2014_source_mutation_fails_closed():
         sources = {item.id: item for item in load_monster_source_2014()}
         rust = sources["rust-monster"]
         altered = rust.model_copy(update={
-            "source_actions": (rust.source_actions or "") + "<p>Antennae also deal 2d8 fire damage.</p>"
+            "source_actions": (rust.source_actions or "").replace(
+                "<strong>Antennae.</strong>",
+                "<strong>Antennae.</strong> Also deals 2d8 fire damage.",
+            )
         })
         assert not verified_absent_context_action_2014(altered, "Antennae")
         assert "source:extra-action" in basic_blockers_2014(altered)
