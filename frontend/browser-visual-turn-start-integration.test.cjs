@@ -50,4 +50,11 @@ assert.deepEqual(operations, [["apply", "restrained"], ["remove", "restrained"],
 window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow = () => ({ roll: { total: 12 }, succeeded: true });
 result = bridge.resolve(context);
 assert.equal(result.events[0].save_succeeded, true);
+// A granted save-success override must prevail over the raw failed total.
+operations.length = 0;
+victim.state.timed_effects = [];
+window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow = () => ({ roll: { total: 2 }, succeeded: true });
+result = bridge.resolve(context);
+assert.equal(result.events[0].save_succeeded, true);
+assert.deepEqual(operations, []);
 console.log("Visual turn-start combat bridge checks passed.");
