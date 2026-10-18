@@ -15,7 +15,7 @@
     const sources = [...setup.heroes, ...setup.monsters].filter(
       actor => actor.combatant_id !== target.combatant_id &&
         actor.state.template.visualTurnStartRule
-    );
+    ).sort((a, b) => (b.state.initiative_total ?? -Infinity) - (a.state.initiative_total ?? -Infinity));
     for (const source of sources) {
       const rule = source.state.template.visualTurnStartRule;
       const distance = state().distance(source, target);
