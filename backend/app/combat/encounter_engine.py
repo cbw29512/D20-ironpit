@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-
 from app.combat.concentration import end_concentration_if_expired
 from app.combat.condition_lifecycle import resolve_source_condition_timing, resolve_target_condition_timing
 from app.combat.death_saves import resolve_death_save
