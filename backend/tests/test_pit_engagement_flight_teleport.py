@@ -259,6 +259,9 @@ def test_creature_cannot_kite_out_of_melee_by_flying_or_running() -> None:
 def _restrained_teleport_fight():
     """A source-neutral spell teleport that has a meaningful debuff to clear."""
     caster = _member("caster", "heroes", 6, 6, teleport=True)
+    # The demo goblin defaults to 2024; a 2014 encounter does not change
+    # the combatant template edition used by the universal spell-turn gate.
+    caster.state.template = caster.state.template.model_copy(update={"ruleset": "2014"})
     enemy = _member("enemy", "monsters", 7, 6)
     setup = _setup(caster, enemy)
     apply_timed_condition(
