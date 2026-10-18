@@ -9,6 +9,9 @@ for (const file of ["browser-action-economy.js", "browser-state.js"]) {
 }
 const S = window.IRON_PIT_BROWSER_STATE;
 const E = window.IRON_PIT_ACTION_ECONOMY;
+vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-monsters-2014.js"), "utf8"), { filename: "browser-monsters-2014.js" });
+assert.ok(window.IRON_PIT_BROWSER_MONSTERS_2014["2014-marilith"]?.traits.includes("reaction-each-turn"),
+  "the source-bound card must serialize the universal reaction budget");
 const template = (name, traits = []) => ({ name, max_hp: 20, speed_ft: 30, traits, resources: {} });
 const reactive = S.buildState(template("Synthetic non-Marilith creature", ["reaction-each-turn"]));
 const ordinary = S.buildState(template("Ordinary creature"));
