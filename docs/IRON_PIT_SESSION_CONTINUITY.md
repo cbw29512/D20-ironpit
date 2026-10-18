@@ -19,6 +19,8 @@ This is a **handoff entry point**, not a competing rules ledger. Read this befor
 
 These choices supersede any older process suggestion that says a missing mechanic must always be built immediately, or that automated CI alone makes a monster finished.
 
+**Standing continuation directive:** When the user says **“keep going”**, continue doing concrete monster implementation, testing, certification, and merging across successive approved work items **until the 2014 blocked monster count reaches zero**. Finishing one monster, one mechanic, or one PR is not the stopping condition. If a family is blocked, record its precise dependency and immediately advance to the next actionable family. Do not replace implementation with plans or repeated status discussions. The zero-blocker target is not a claim that unattended work can continue outside an active session or scheduled automation; every run must make verifiable progress where tools permit.
+
 ## Required execution order, every session
 1. Read [SOUL](../SOUL.md), [implementation playbook](IRON_PIT_IMPLEMENTATION_PLAYBOOK.md), [monster playbook](playbooks/MONSTERS.md), [locked rules](IRON_PIT_LOCKED_RULES.md), [canonical monster queue](MONSTER_ABILITY_WORK_QUEUE.md), [generated blockers](MONSTER_BLOCKERS_2014.md), and [mechanic inventory](UNIVERSAL_MECHANIC_INVENTORY.md).
 2. Inspect **live main**, relevant existing PR branches/heads, and exact-head CI. Generated data and current repo state override old chat summaries and historical numbers.
