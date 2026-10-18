@@ -16,6 +16,10 @@
 6. **Blocked execution:** record the exact missing dependency concisely and attempt the next independent implementation task; do not fall back into looping through rule reviews. While CI runs, make independent useful code/test progress, not another source-audit recap.
 7. **After each implementation:** cite PR, merged SHA, exact-head test evidence and blocker delta in this file. Generator-owned reports and universal inventory are regenerated, not hand-edited. One subsystem code writer at a time; no monster-name runtime special cases.
 
+### Active reaction-budget implementation — 2026-10-18
+
+- **Draft [PR #940](https://github.com/cbw29512/D20-ironpit/pull/940), `feat/2014-reaction-each-turn`**: source-verified 2014 Marilith Reactive trait now binds the universal `reaction-each-turn` combat trait; Python turn-boundary state and browser refresh plus focused source/synthetic tests are committed. **NOT CERTIFIED:** exact-head Python and Node tests, Python/browser combat parity, generator-owned report regeneration and PR review are still required. No blocker-count or monster-admission promotion is claimed. The browser test source is present but could not be executed in this environment because GitHub cannot be reached by local shell and no remote test runner was available.
+
 ### Live generated-report reconciliation — 2026-10-14
 
 - Current default-branch `docs/MONSTER_BLOCKERS_2014.md` reports **212/327 source-admitted, 115 blocked** (up from the older 211/327 snapshot). Stone Giant is no longer on the blocked list; Python/source proof (`backend/app/content/monster_rock_catching_2014.py`, `backend/tests/test_2014_rock_catching_source_proof.py`) and browser tests exist. This audit did **not** independently rerun CI and does not assert all exact-head jobs passed.

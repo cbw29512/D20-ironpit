@@ -14,6 +14,7 @@ from app.content.monster_legendary_bindings_2014 import supports_legendary_actio
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_mechanic_family_blockers_2014 import attack_blockers_2014, mechanic_family_blockers_2014
 from app.content.monster_rock_catching_2014 import supports_rock_catching_reaction_2014
+from app.content.monster_reactive_2014 import supports_reaction_each_turn_2014
 from app.content.monster_animate_chains_2014 import supports_animate_chains_arena_unavailable_2014
 from app.content.monster_change_shape_policy_2014 import approved_inert_change_shape_2014
 from app.content.monster_unnerving_mask_2014 import supports_unnerving_mask_reaction_2014
@@ -112,6 +113,8 @@ def modeled_combat_traits_2014(monster: SourceMonster2014) -> list[CombatTrait]:
         traits.append(CombatTrait.CHARGE)
     if supports_reckless_2014(monster):
         traits.append(CombatTrait.RECKLESS)
+    if supports_reaction_each_turn_2014(monster):
+        traits.append(CombatTrait.REACTION_EACH_TURN)
     return traits
 def is_arena_neutral_monster_2014(monster: SourceMonster2014) -> bool:
     return monster.id in _PIT_ARENA_NEUTRAL_MONSTER_IDS_2014
