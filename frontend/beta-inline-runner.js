@@ -29,16 +29,18 @@
     }
     return out;
   }
-  async function run() {
+  async function run(presetOnly = false) {
     if (running) return;
     running = true; stopping = false;
     const start = $("beta-run-all"), stop = $("beta-stop-all"), status = $("beta-run-status");
-    start.disabled = true; stop.disabled = false;
+    start.disabled = true; $("beta-run-presets").disabled = true; stop.disabled = false;
     let pass = 0, fail = 0, completed = 0;
     try {
-      const edition = $("beta-run-edition").value;
+      const edition = presetOnly ? "both" : $("beta-run-edition").value;
       const repeats = Math.min(100, Math.max(1, Number($("beta-repeats").value) || 1));
-      const selected = await cases(edition, $("beta-suite").value);
+      const selected = edition === "both"
+        ? [...await cases("2014", "presets"), ...await cases("2024", "presets")]
+        : await cases(edition, presetOnly ? "presets" : $("beta-suite").value);
       $("beta-run-progress").max = selected.length * repeats;
       for (const test of selected) {
         for (let i = 0; i < repeats && !stopping; i++) {
@@ -76,15 +78,17 @@
     } catch (error) {
       status.textContent = "Runner error: " + error.message;
     } finally {
-      running = false; start.disabled = false; stop.disabled = true;
+      running = false; start.disabled = false; $("beta-run-presets").disabled = false; stop.disabled = true;
     }
   }
-  $("beta-run-all")?.addEventListener("click", run);
+  $("beta-run-all")?.addEventListener("click", () => run(false));
+  $("beta-run-presets")?.addEventListener("click", () => run(true));
   $("beta-stop-all")?.addEventListener("click", () => { stopping = true; });
   async function ready() {
     for (let i = 0; i < 200; i++) {
       if (window.IRON_PIT_BETA_BRIDGE?.ready() && window.IRON_PIT_BETA_LOG) {
         $("beta-run-all").disabled = false;
+        $("beta-run-presets").disabled = false;
         $("beta-run-status").textContent = "2014 beta runner ready.";
         return;
       }
