@@ -51,8 +51,13 @@ vm.runInThisContext(fs.readFileSync(path.join(root, "beta-gauntlet-spectator.js"
   ] };
   await window.IRON_PIT_BETA_SPECTATOR.play(battle, { id: "test", ruleset: "2014" }, 17);
   assert.match(document.getElementById("arena-title").textContent, /2014.*17/);
-  assert.equal(document.getElementById("arena-log").children.length, 1);
-  assert.match(document.getElementById("arena-log").children[0].children[1].textContent, /Hero hits Monster/);
+  assert.equal(document.getElementById("arena-log").children.length, 2);
+  assert.match(document.getElementById("arena-log").children[1].children[1].textContent, /Hero hits Monster/);
+  await window.IRON_PIT_BETA_SPECTATOR.play(battle, { id: "second", ruleset: "2014" }, 18);
+  assert.equal(document.getElementById("arena-log").children.length, 4,
+    "a second fight must not erase the previous fight's complete event history");
+  assert.match(document.getElementById("arena-log").children[0].textContent, /seed 17/);
+  assert.match(document.getElementById("arena-log").children[2].textContent, /seed 18/);
   assert.equal(document.getElementById("arena-teams").children.length, 2);
   assert.equal(document.getElementById("arena-teams").children[1].children[1].children[1].value, 5);
   console.log("Beta gauntlet spectator wiring and event playback passed.");
