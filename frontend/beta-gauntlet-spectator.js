@@ -50,11 +50,12 @@
 
   async function play(battle, recipe, seed) {
     setup(battle, recipe, seed);
-    for (const event of battle.events) {
-      apply(event);
-      const ms = Number($("speed").value);
-      if (!Number.isFinite(ms) || ms < 0) throw Error("Invalid spectator playback delay.");
-      await sleep(ms);
+    const ms = Number($("speed").value);
+    if (!Number.isFinite(ms) || ms < 0 || ms > 2000) throw Error("Invalid spectator playback delay.");
+    for (let i = 0; i < battle.events.length; i++) {
+      apply(battle.events[i]);
+      if (ms > 0) await sleep(ms);
+      else if (i % 100 === 99) await sleep(0);
     }
   }
   window.IRON_PIT_BETA_SPECTATOR = { play, setup, apply };
