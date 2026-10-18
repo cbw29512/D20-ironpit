@@ -39,6 +39,7 @@ from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014, fetid_cl
 from app.content.monster_leadership_2014 import leadership_actions_2014, leadership_resources_2014
 from app.content.monster_senses_2014 import special_senses_2014, bounded_blindsight_2014
 from app.content.monster_spell_slot_resources_2014 import monster_spell_slot_resources_2014
+from app.content.monster_prepared_spell_bindings_2014 import bind_prepared_spells_2014
 from app.content.monster_multiattack_2014 import multiattack_2014
 from app.content.monster_zero_hp_prevention_2014 import (
     damage_threshold_zero_hp_replacements_2014,
@@ -121,6 +122,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     resources.extend(healing_resources_2014(monster))
     resources.extend(innate_spell_resources_2014(monster))
     resources.extend(monster_spell_slot_resources_2014(monster))
+    prepared = bind_prepared_spells_2014(monster)
     resources.extend(zero_hp_prevention_resources_2014(monster))
     legendary_resource = legendary_resistance_resource_2014(monster)
     if legendary_resource is not None:
@@ -160,7 +162,9 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         attacks=attacks,
         primary_attack_id=attacks[0].id, attack_action=multiattack_2014(monster),
         save_actions=save_capabilities_2014(monster),
-        spell_save_actions=innate_spell_save_actions_2014(monster),
+        spell_save_actions=[*innate_spell_save_actions_2014(monster), *prepared.saves],
+        spell_attack_actions=list(prepared.attacks),
+        auto_hit_spell_actions=list(prepared.auto_hits),
         persistent_save_zone_actions=[zone for zone in [fetid_cloud_zone_2014(monster)] if zone is not None],
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
             *berserk_self_buffs_2014(monster),

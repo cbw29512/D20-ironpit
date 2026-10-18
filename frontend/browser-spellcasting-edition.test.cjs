@@ -177,3 +177,30 @@ for (const invalidLevel of [true, false, 1.5, -1, 10]) {
     }
   });
 }
+
+test("2014 source-parameterized monster spells use the shared browser casting gate", () => {
+  try {
+    const api = spellcastingApi();
+    const state = {
+      template: {
+        ruleset: "2014",
+        spell_attack_actions: [{ id: "fire-bolt", level: 0, attackBonus: 6 }],
+        auto_hit_spell_actions: [{ id: "magic-missile", level: 1, projectileCount: 3 }],
+      },
+      resources: { "spell-slot-1": 4 },
+      feature_last_turn_keys: {},
+      spell_slot_expended_turn_key: null,
+    };
+    assert.deepEqual(Array.from(api.legalSlotLevels(state, "1:caster", 1)), [1]);
+    api.recordSpellTurn(state, "1:caster", "action", 1);
+    api.markSlotSpellCast(state, "1:caster");
+    assert.equal(api.spellTurnLegal(state, "1:caster", "action", 0), true);
+    assert.equal(api.spellTurnLegal(state, "1:caster", "bonus_action", 1), false);
+    assert.equal(api.spellTurnLegal(state, "2:caster", "bonus_action", 1), true);
+    assert.equal(state.template.spell_attack_actions[0].attackBonus, 6);
+    assert.equal(state.template.auto_hit_spell_actions[0].projectileCount, 3);
+  } catch (error) {
+    console.error("2014 prepared monster spell browser parity failed", error);
+    throw error;
+  }
+});
