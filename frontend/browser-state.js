@@ -48,6 +48,12 @@
     state.action_available = false; state.bonus_action_available = false; state.movement_remaining_ft = 0;
   }
   function refreshReaction(state) { state.reaction_available = !T().suppressesReactions(state); }
+  function refreshReactionsForNewTurn(states, actingState) {
+    for (const state of states) {
+      if (state === actingState || state.is_dead) continue;
+      if (state.template.traits?.includes("reaction-each-turn")) refreshReaction(state);
+    }
+  }
   function refreshStartOfTurn(state) {
     refreshReaction(state);
     for (const resourceId of state.template.start_turn_resource_refill_ids || []) {
@@ -192,6 +198,6 @@
   const sizeAtMost = (member, maxSize) => Boolean(maxSize) && SIZE_RANK[member.state.template.size] <= SIZE_RANK[maxSize];
   window.IRON_PIT_BROWSER_STATE = {
     active, beginTurn, buildState, canProne: (target, maxSize) => sizeAtMost(target, maxSize), distance, downedCharacter, effectiveMaxHp, effectiveMovementModes, grantTemporaryHp, hasActiveAlly,
-    hasAdjacentActiveAlly, hasVisibleActiveAllyWithin, moveToward, nearestTarget, packTactics, refreshReaction, refreshStartOfTurn, sizeAtMost, targetPriority, terminateTurn,
+    hasAdjacentActiveAlly, hasVisibleActiveAllyWithin, moveToward, nearestTarget, packTactics, refreshReaction, refreshReactionsForNewTurn, refreshStartOfTurn, sizeAtMost, targetPriority, terminateTurn,
   };
 })();
