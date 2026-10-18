@@ -59,12 +59,12 @@
       }
       if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.actionCost} is unavailable for ${action.name}.`);
       if (!destination) throw new Error(`${action.name} requires a destination argument.`);
+      if (action.expendsSpellSlot && !P().slotSpellAvailable(caster.state, turnKey)) {
+        throw new Error("A spell slot has already been expended on this turn.");
+      }
       if ((action.level > 0 || action.expendsSpellSlot)
         && !P().spellTurnLegal(caster.state, turnKey, action.actionCost, action.level)) {
         throw new Error("Teleport spell conflicts with another cast on this turn.");
-      }
-      if (action.expendsSpellSlot && !P().slotSpellAvailable(caster.state, turnKey)) {
-        throw new Error("A spell slot has already been expended on this turn.");
       }
       if (action.resourceId
         && (caster.state.resources?.[action.resourceId] || 0) < (action.resourceCost || 1)) {

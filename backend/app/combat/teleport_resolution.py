@@ -63,12 +63,12 @@ def resolve_teleport(
             raise ValueError(f"{action.name} requires a destination argument.")
         if not is_available(caster.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")
+        if action.expends_spell_slot and not slot_spell_available(caster.state, turn_key):
+            raise ValueError("A spell slot has already been expended on this turn.")
         if (action.level > 0 or action.expends_spell_slot) and not spell_turn_legal(
             caster.state, turn_key, action.action_cost, action.level,
         ):
             raise ValueError("Teleport spell conflicts with another cast on this turn.")
-        if action.expends_spell_slot and not slot_spell_available(caster.state, turn_key):
-            raise ValueError("A spell slot has already been expended on this turn.")
         origin = caster.state.position.model_copy(deep=True)
         # Iron Pit: supplied destinations are ignored; teleport never changes x/y.
         _ = (destination, dice)
