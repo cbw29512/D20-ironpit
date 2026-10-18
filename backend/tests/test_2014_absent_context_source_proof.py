@@ -13,11 +13,10 @@ from app.content.monster_source_2014 import load_monster_source_2014
 logger = logging.getLogger(__name__)
 
 
-def test_2014_source_exact_absent_context_promotes_two_without_erasing_attacks():
+def test_2014_source_exact_absent_context_promotes_nightmare_without_erasing_attacks():
     try:
         sources = {item.id: item for item in load_monster_source_2014()}
         for monster_id, trait_names, action_name in (
-            ("rust-monster", ("Iron Scent", "Rust Metal"), "Antennae"),
             ("nightmare", ("Confer Fire Resistance",), "Ethereal Stride"),
         ):
             source = sources[monster_id]
@@ -47,6 +46,7 @@ def test_2014_source_mutation_fails_closed():
         })
         assert not verified_absent_context_action_2014(altered, "Antennae")
         assert "source:extra-action" in basic_blockers_2014(altered)
+        assert "source:trait" in basic_blockers_2014(rust)
         nightmare = sources["nightmare"]
         altered = nightmare.model_copy(update={
             "source_traits": (nightmare.source_traits or "").replace(
