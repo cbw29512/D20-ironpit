@@ -124,6 +124,8 @@ test("explicit save-spell choice rejects a 2014 cast after bonus-action spell", 
 for (const [firstCost, firstLevel, secondCost, secondLevel, allowed] of [
   ["bonus_action", 1, "action", 0, true],
   ["bonus_action", 1, "action", 1, false],
+  ["bonus_action", 1, "bonus_action", 1, false],
+  ["bonus_action", 0, "bonus_action", 0, false],
   ["bonus_action", 1, "reaction", 0, false],
   ["action", 1, "bonus_action", 1, false],
   ["action", 0, "bonus_action", 1, true],
@@ -138,6 +140,39 @@ for (const [firstCost, firstLevel, secondCost, secondLevel, allowed] of [
       assert.equal(api.spellTurnLegal(state, "2:caster", secondCost, secondLevel), true);
     } catch (error) {
       console.error("Browser 2014 spell ordering regression failed", error);
+      throw error;
+    }
+  });
+}
+
+test("2014 duplicate bonus-action spell rejects without mutation and resets", () => {
+  try {
+    const api = spellcastingApi();
+    const template = { ruleset: "2014" };
+    const state = { template, feature_last_turn_keys: {} };
+    api.recordSpellTurn(state, "1:caster", "bonus_action", 0);
+    const before = { ...state.feature_last_turn_keys };
+    assert.throws(() => api.recordSpellTurn(state, "1:caster", "bonus_action", 1), /conflicts/);
+    assert.deepEqual(state.feature_last_turn_keys, before);
+    assert.equal(api.spellTurnLegal(state, "1:caster", "action", 0), true);
+    assert.equal(api.spellTurnLegal(state, "1:caster", "action", 1), false);
+    assert.equal(api.spellTurnLegal(state, "2:caster", "bonus_action", 1), true);
+    assert.equal(api.spellTurnLegal({ template, feature_last_turn_keys: {} }, "1:caster", "bonus_action", 1), true);
+  } catch (error) {
+    console.error("Browser duplicate bonus-action spell regression failed", error);
+    throw error;
+  }
+});
+
+for (const invalidLevel of [true, false, 1.5, -1, 10]) {
+  test(`spell turn gate rejects invalid level ${invalidLevel}`, () => {
+    try {
+      const api = spellcastingApi();
+      assert.throws(() => api.spellTurnLegal(
+        { template: { ruleset: "2014" }, feature_last_turn_keys: {} },
+        "1:caster", "action", invalidLevel), /Spell level/);
+    } catch (error) {
+      console.error("Browser spell-level schema parity regression failed", error);
       throw error;
     }
   });

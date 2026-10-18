@@ -42,7 +42,7 @@ def spell_turn_legal(state: CombatantState, turn_key: str, action_cost: str, spe
     try:
         if not turn_key or action_cost not in {"action", "bonus_action", "reaction"}:
             raise ValueError("A spell requires a turn key and supported casting action.")
-        if not 0 <= spell_level <= 9:
+        if type(spell_level) is not int or not 0 <= spell_level <= 9:
             raise ValueError("Spell level must be between 0 and 9.")
         if state.template.ruleset == "2024":
             return spell_level == 0 or slot_spell_available(state, turn_key)
@@ -50,7 +50,8 @@ def spell_turn_legal(state: CombatantState, turn_key: str, action_cost: str, spe
             raise ValueError("Unsupported spellcasting ruleset.")
         history = state.feature_last_turn_keys
         if action_cost == "bonus_action":
-            return history.get("spell:action-noncantrip") != turn_key
+            return (history.get("spell:action-noncantrip") != turn_key
+                    and history.get("spell:bonus-action") != turn_key)
         if history.get("spell:bonus-action") == turn_key:
             return action_cost == "action" and spell_level == 0
         return True

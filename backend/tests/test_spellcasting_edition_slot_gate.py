@@ -77,6 +77,8 @@ def test_first_spell_records_before_its_own_slot_expenditure(ruleset: str) -> No
 @pytest.mark.parametrize("first_cost,first_level,second_cost,second_level,allowed", [
     ("bonus_action", 1, "action", 0, True),
     ("bonus_action", 1, "action", 1, False),
+    ("bonus_action", 1, "bonus_action", 1, False),
+    ("bonus_action", 0, "bonus_action", 0, False),
     ("bonus_action", 1, "reaction", 0, False),
     ("action", 1, "bonus_action", 1, False),
     ("action", 0, "bonus_action", 1, True),
@@ -91,4 +93,32 @@ def test_2014_bonus_action_spell_turn_order(first_cost, first_level, second_cost
         assert spell_turn_legal(state, "2:caster", second_cost, second_level)
     except Exception:
         logger.exception("2014 bonus-action spell order regression failed")
+        raise
+
+def test_2014_duplicate_bonus_spell_rejected_without_mutation() -> None:
+    try:
+        template = build_seraphine_dawnshield().model_copy(update={"ruleset": "2014"})
+        state = build_combatant_state(template)
+        record_spell_turn(state, "1:caster", "bonus_action", 0)
+        before = dict(state.feature_last_turn_keys)
+        with pytest.raises(ValueError, match="conflicts"):
+            record_spell_turn(state, "1:caster", "bonus_action", 1)
+        assert state.feature_last_turn_keys == before
+        assert spell_turn_legal(state, "1:caster", "action", 0)
+        assert not spell_turn_legal(state, "1:caster", "action", 1)
+        assert spell_turn_legal(state, "2:caster", "bonus_action", 1)
+        assert spell_turn_legal(build_combatant_state(template), "1:caster", "bonus_action", 1)
+    except Exception:
+        logger.exception("Duplicate bonus-action spell regression failed")
+        raise
+
+
+@pytest.mark.parametrize("invalid_level", [True, False, 1.0, -1, 10])
+def test_spell_turn_gate_rejects_invalid_spell_levels(invalid_level) -> None:
+    try:
+        state = build_combatant_state(build_seraphine_dawnshield().model_copy(update={"ruleset": "2014"}))
+        with pytest.raises(ValueError, match="Spell level"):
+            spell_turn_legal(state, "1:caster", "action", invalid_level)
+    except Exception:
+        logger.exception("Spell level schema parity regression failed")
         raise

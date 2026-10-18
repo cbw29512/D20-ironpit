@@ -23,7 +23,10 @@
       if (ruleset === "2024") return spellLevel === 0 || slotSpellAvailable(state, turnKey);
       if (ruleset !== "2014") throw new Error("Unsupported spellcasting ruleset.");
       const history = state.feature_last_turn_keys || {};
-      if (actionCost === "bonus_action") return history["spell:action-noncantrip"] !== turnKey;
+      if (actionCost === "bonus_action") {
+        return history["spell:action-noncantrip"] !== turnKey
+          && history["spell:bonus-action"] !== turnKey;
+      }
       if (history["spell:bonus-action"] === turnKey) return actionCost === "action" && spellLevel === 0;
       return true;
     } catch (error) {
