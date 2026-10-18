@@ -57,4 +57,16 @@ window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow = () => ({ roll: { tota
 result = bridge.resolve(context);
 assert.equal(result.events[0].save_succeeded, true);
 assert.deepEqual(operations, []);
+// Competing gaze sources resolve highest initiative first, independent of array order.
+const second = member("second", rule);
+source.state.initiative_total = 8;
+second.state.initiative_total = 19;
+second.state.is_surprised = false;
+victim.state.timed_effects = [];
+window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow = () => ({ roll: { total: 12 }, succeeded: true });
+const ordered = bridge.resolve({
+  ...context, setup: { heroes: [victim], monsters: [source, second] },
+});
+assert.equal(ordered.events[0].actor_id, "second");
+assert.equal(ordered.events[1].actor_id, "source");
 console.log("Visual turn-start combat bridge checks passed.");
