@@ -38,14 +38,8 @@ def test_visual_failure_margin_requires_printed_instant_petrification() -> None:
     assert visual_turn_start_rule_2014(medusa) is not None
     altered = medusa.model_copy(update={
         "source_traits": medusa.source_traits.replace(
-            "instantly petrified", "not instantly petrified"
+            "instantly petrified", "instead remains restrained"
         )
     })
-    # This still says "instantly petrified" and therefore is not a valid
-    # negative control; remove the phrase completely.
-    altered = altered.model_copy(update={
-        "source_traits": altered.source_traits.replace(
-            "not instantly petrified", "instead remains restrained"
-        )
-    })
+    assert altered.source_traits != medusa.source_traits
     assert visual_turn_start_rule_2014(altered) is None
