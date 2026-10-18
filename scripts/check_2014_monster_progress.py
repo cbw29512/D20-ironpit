@@ -65,8 +65,25 @@ def compare(before: dict, after: dict, required: list[str], forbid_regressions: 
     }
 
 
+
+def next_work(state: dict, limit: int = 5) -> list[dict]:
+    """Rank actionable single-blocker families without pretending they are implemented."""
+    excluded = {"arena:neutral", "arena:removed"}
+    singles: dict[str, list[str]] = {}
+    for monster_id, blockers in state["monsters"].items():
+        if len(blockers) == 1 and blockers[0] not in excluded:
+            singles.setdefault(blockers[0], []).append(monster_id)
+    return [
+        {"family": family, "monsters": sorted(ids), "potential_admissions": len(ids)}
+        for family, ids in sorted(
+            singles.items(), key=lambda pair: (-len(pair[1]), pair[0])
+        )[:limit]
+    ]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--next", action="store_true", help="Show ranked single-blocker work families")
     parser.add_argument("--output", type=Path, help="Write machine-readable baseline/current snapshot")
     parser.add_argument("--baseline", type=Path, help="Compare with previously saved snapshot")
     parser.add_argument("--require-unblocked", action="append", default=[], metavar="MONSTER_ID")
@@ -75,6 +92,8 @@ def main() -> None:
     if args.require_unblocked and not args.baseline:
         parser.error("--require-unblocked requires --baseline")
     result = {"snapshot": state}
+    if args.next:
+        result["next_work"] = next_work(state)
     if args.baseline:
         result["progress"] = compare(
             json.loads(args.baseline.read_text(encoding="utf-8")),
