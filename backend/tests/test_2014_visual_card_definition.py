@@ -30,3 +30,22 @@ def test_visual_rule_round_trips_through_immutable_card_definition(
     assert restored.visual_turn_start_rule == rule
     assert restored.visual_turn_start_rule is not rule
     assert definition.visual_turn_start_rule is None
+
+
+def test_visual_failure_margin_requires_printed_instant_petrification() -> None:
+    source = {m.id: m for m in load_monster_source_2014()}
+    medusa = source["medusa"]
+    assert visual_turn_start_rule_2014(medusa) is not None
+    altered = medusa.model_copy(update={
+        "source_traits": medusa.source_traits.replace(
+            "instantly petrified", "not instantly petrified"
+        )
+    })
+    # This still says "instantly petrified" and therefore is not a valid
+    # negative control; remove the phrase completely.
+    altered = altered.model_copy(update={
+        "source_traits": altered.source_traits.replace(
+            "not instantly petrified", "instead remains restrained"
+        )
+    })
+    assert visual_turn_start_rule_2014(altered) is None
