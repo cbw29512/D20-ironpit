@@ -1,5 +1,7 @@
 # D20 Iron Pit — SOUL
 
+**MANDATORY SESSION HANDOFF:** Read [Iron Pit Session Continuity](docs/IRON_PIT_SESSION_CONTINUITY.md) at the start of every development session and scheduled run. It is an entry point to these existing authorities, not a replacement. Never ask the user to repeat the established universal-engine/immutable-card architecture.
+
 **Card-to-combat acceptance gate:** [Universal Card-to-Combat Contract](docs/UNIVERSAL_CARD_COMBAT_CONTRACT.md). Every monster and pregen implementation must preserve this source-data versus universal-behavior separation, including future homebrew.
 
 ## Mandatory monster-queue checkpoint
