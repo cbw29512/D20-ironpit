@@ -38,3 +38,38 @@ try {
   console.error("Unable to register spellcasting edition parity regressions", error);
   throw error;
 }
+
+test("healing resource IDs reject malformed slot levels before casting", () => {
+  try {
+    const context = { window: {}, console };
+    vm.runInNewContext(source, context, { filename: "browser-spellcasting.js" });
+    vm.runInNewContext(fs.readFileSync(path.join(__dirname, "browser-healing-policy.js"), "utf8"),
+      context, { filename: "browser-healing-policy.js" });
+    const policy = context.window.IRON_PIT_BROWSER_HEALING_POLICY;
+    for (const ruleset of ["2014", "2024"]) {
+      const member = { state: {
+        template: { ruleset }, feature_last_turn_keys: {},
+        resources: { "spell-slot-1": 2, "spell-slot-1junk": 2 },
+        spell_slot_expended_turn_key: null,
+      } };
+      assert.equal(policy.resourceAvailable(member, {
+        resourceId: "spell-slot-1", actionCost: "bonus_action", resourceCost: 1,
+      }, "1:caster"), true);
+      for (const invalid of ["spell-slot-1junk", "spell-slot-01", "spell-slot-0", "spell-slot-10", "spell-slot-1e0"]) {
+        assert.throws(() => policy.resourceAvailable(member, {
+          resourceId: invalid, actionCost: "bonus_action", resourceCost: 1,
+        }, "1:caster"), /Malformed spell-slot/);
+        assert.throws(() => policy.resourceAvailable(member, {
+          resourceId: invalid, actionCost: "bonus_action", resourceCost: 1,
+        }, null), /Malformed spell-slot/);
+      }
+    }
+    for (const invalid of [0, false, "", 1.5, []]) {
+      assert.throws(() => policy.resourceAvailable({ state: { resources: {} } },
+        { resourceId: invalid }, "1:caster"), /Healing resource ID/);
+    }
+  } catch (error) {
+    console.error("Browser malformed healing spell-slot resource regression failed", error);
+    throw error;
+  }
+});

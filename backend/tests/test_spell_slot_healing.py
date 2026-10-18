@@ -86,3 +86,27 @@ def test_2014_bonus_action_spell_filters_attack_and_save_spell_candidates() -> N
 def test_healing_word_fails_closed_without_active_turn_key() -> None:
     setup, caster, _ = _setup()
     assert choose_healing_action(caster, setup) is None
+
+def test_healing_slot_resource_id_rejects_malformed_values() -> None:
+    import logging
+    import pytest
+
+    logger = logging.getLogger(__name__)
+    try:
+        _, caster, _ = _setup()
+        for ruleset in ("2014", "2024"):
+            caster.state = build_combatant_state(caster.state.template.model_copy(update={"ruleset": ruleset}))
+            assert resource_available(caster, build_healing_word(3), "1:cleric")
+            for invalid in ("spell-slot-1junk", "spell-slot-01", "spell-slot-0", "spell-slot-10", "spell-slot-1e0"):
+                action = build_healing_word(3).model_copy(update={"resource_id": invalid})
+                with pytest.raises(ValueError, match="Malformed spell-slot"):
+                    resource_available(caster, action, "1:cleric")
+                with pytest.raises(ValueError, match="Malformed spell-slot"):
+                    resource_available(caster, action, None)
+            for invalid in (0, False, "", 1.5, []):
+                action = build_healing_word(3).model_copy(update={"resource_id": invalid})
+                with pytest.raises(ValueError, match="Healing resource ID"):
+                    resource_available(caster, action, "1:cleric")
+    except Exception:
+        logger.exception("Malformed healing spell-slot resource regression failed")
+        raise
