@@ -53,6 +53,11 @@ jobs:
             echo "Canonical source-derived artifacts are stale; regenerate and commit them before certification."
             exit 1
           fi
+      - name: Verify source-admission progress reporter
+        run: |
+          PYTHONPATH=scripts pytest -q scripts/test_check_2014_monster_progress.py
+          python scripts/check_2014_monster_progress.py --output /tmp/iron-pit-2014-monster-baseline.json
+          python scripts/check_2014_monster_progress.py --baseline /tmp/iron-pit-2014-monster-baseline.json
       - name: Enforce combat capability coverage
         run: |
           python scripts/check_combat_engine_coverage.py
