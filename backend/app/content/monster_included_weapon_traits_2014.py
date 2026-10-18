@@ -21,8 +21,8 @@ _TRAITS = {
         r"\d+ \((\d+)d(\d+)\) fire damage(?: on a hit)? \(included in the attack\)\.", re.I,
     ),
     "Hellish Weapons": re.compile(
-        r".+? weapon attacks are magical and deal an extra \\d+ \\(?(\\d+)d(\\d+)\\)? "
-        r"poison damage on a hit \\(included in the attacks\\)\\.", re.I,
+        r".+? weapon attacks are magical and deal an extra \d+ \((\d+)d(\d+)\) "
+        r"poison damage on a hit \(included in the attacks\)\.", re.I,
     ),
     "Angelic Weapons": re.compile(
         r".+? weapon attacks are magical\. When .+? hits with any weapon, "
