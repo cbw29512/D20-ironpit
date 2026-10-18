@@ -1,0 +1,78 @@
+(() => {
+  "use strict";
+  const hooks = () => window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+  const policy = () => window.IRON_PIT_BROWSER_TURN_START_VISUAL_POLICY;
+  const conditions = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
+  const timed = () => window.IRON_PIT_BROWSER_TIMED;
+  const saves = () => window.IRON_PIT_BROWSER_SAVING_THROWS;
+  const state = () => window.IRON_PIT_BROWSER_STATE;
+  const immune = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
+
+  function resolve(ctx) {
+    const { member: target, setup, round } = ctx;
+    const events = [];
+    let sequence = ctx.sequence;
+    const sources = [...setup.heroes, ...setup.monsters].filter(
+      actor => actor.combatant_id !== target.combatant_id &&
+        actor.state.template.visualTurnStartRule
+    );
+    for (const source of sources) {
+      const rule = source.state.template.visualTurnStartRule;
+      const distance = state().distance(source, target);
+      const facts = {
+        distanceFt: distance,
+        sourceActive: source.state.current_hp > 0 && !conditions().incapacitated(source.state),
+        targetActive: target.state.current_hp > 0 && !target.state.is_dead,
+        sourceSeesTarget: conditions().canSee(source.state, target.state, distance),
+        targetSeesSource: conditions().canSee(target.state, source.state, distance),
+        targetImmune: immune().immune(target.state, rule.terminalDebuff || "petrified"),
+        targetSurprised: Boolean(target.state.is_surprised),
+      };
+      const decision = policy().decide(rule, facts);
+      if (decision === "ineligible") continue;
+      if (decision === "averted") {
+        events.push({
+          sequence: sequence++, round_number: round, event_type: "feature",
+          actor_id: target.combatant_id, target_id: source.combatant_id,
+          feature_id: rule.sourceId, animation: "condition",
+          description: `${target.state.template.name} averts its eyes from ${source.state.template.name}.`,
+        });
+        continue;
+      }
+      const save = saves().resolveSavingThrow(target.state, rule.saveAbility || "constitution", rule.saveDc);
+      const current = (target.state.timed_effects || []).find(
+        e => e.source_id === source.combatant_id && e.source_effect_id === rule.sourceId &&
+          e.effect_id === (rule.initialDebuff || "restrained")
+      );
+      const next = policy().resolveStage(rule, save.roll?.total ?? (save.succeeded ? rule.saveDc : -1),
+        current ? current.effect_id : null);
+      if (next !== "clear") {
+        if (current) timed().remove?.(target.state, current.effect_id, source.combatant_id);
+        timed().apply(target.state, next, source.combatant_id, {
+          sourceEffectId: rule.sourceId, sourceTemplate: source.state.template,
+          appliedRound: round, setup,
+        });
+      }
+      events.push({
+        sequence: sequence++, round_number: round, event_type: "saving_throw",
+        actor_id: source.combatant_id, target_id: target.combatant_id,
+        feature_id: rule.sourceId, save_ability: rule.saveAbility || "constitution",
+        save_dc: rule.saveDc, saving_throw_roll: save.roll, save_succeeded: save.succeeded,
+        applied_condition_ids: next === "clear" ? [] : [next], animation: "condition",
+        description: `${target.state.template.name} ${save.succeeded ? "resists" : "fails"} ${rule.sourceName} (${next}).`,
+      });
+      if (target.state.is_dead) break;
+    }
+    return { events, sequence, claimed: false };
+  }
+
+  function installAbilityHooks() {
+    hooks().registerAbility(hooks().PHASES.TURN_START, {
+      id: "universal-visual-turn-start", rulesets: ["2014", "2024"],
+      priority: 20, appliesTo: (_, ctx) => [...ctx.setup.heroes, ...ctx.setup.monsters]
+        .some(actor => actor.state.template.visualTurnStartRule),
+      resolve,
+    });
+  }
+  window.IRON_PIT_BROWSER_VISUAL_TURN_START_INTEGRATION = { resolve, installAbilityHooks };
+})();
