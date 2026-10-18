@@ -5864,7 +5864,7 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 101,
+    "blocked_monster_count": 100,
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
@@ -5883,7 +5883,7 @@
       "source:extra-action": 57,
       "source:legendary": 9,
       "source:reaction": 3,
-      "source:trait": 74
+      "source:trait": 73
     },
     "unresolved_printed_abilities": [
       {
@@ -6158,13 +6158,6 @@
           "Weretiger"
         ],
         "printed_name": "Pounce (Tiger or Hybrid Form Only)"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Marilith"
-        ],
-        "printed_name": "Reactive"
       },
       {
         "demand_count": 1,
