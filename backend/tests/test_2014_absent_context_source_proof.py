@@ -47,6 +47,7 @@ def test_2014_source_mutation_fails_closed():
         assert not verified_absent_context_action_2014(altered, "Antennae")
         assert "source:extra-action" in basic_blockers_2014(altered)
         assert "source:trait" in basic_blockers_2014(rust)
+        assert not verified_absent_context_trait_2014(rust, "Rust Metal")
         nightmare = sources["nightmare"]
         altered = nightmare.model_copy(update={
             "source_traits": (nightmare.source_traits or "").replace(
