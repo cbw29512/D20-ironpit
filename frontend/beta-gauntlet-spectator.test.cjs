@@ -30,6 +30,14 @@ for (const id of ["arena-title", "arena-event", "arena-teams", "arena-log", "spe
 }
 assert.match(runner, /IRON_PIT_BETA_SPECTATOR\.play/);
 assert.doesNotMatch(runner, /IRON_PIT_BETA_BRIDGE/);
+assert.doesNotMatch(runner, /row\.events = replay\.battle\.events; passes\+\+;/,
+  "do not count passes before optional spectator playback");
+assert.match(runner, /if \(row\.result === "PASS"\) passes\+\+; else failures\+\+;/,
+  "each fight must increment exactly one outcome counter");
+assert.match(runner, /row\.playback_error =/,
+  "spectator errors must not masquerade as combat failures");
+assert.match(html, /id="watch">/, "bulk test should not replay every event by default");
+assert.match(html, /id="speed"[^>]*value="0"/, "optional replay should default to no delay");
 
 vm.runInThisContext(fs.readFileSync(path.join(root, "beta-gauntlet-spectator.js"), "utf8"),
   { filename: "beta-gauntlet-spectator.js" });
