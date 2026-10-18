@@ -1,5 +1,7 @@
 # Iron Pit — execution manual
 
+**FIRST:** Read [mandatory session continuity](IRON_PIT_SESSION_CONTINUITY.md). This restores agreed architecture and execution standards across conversations and scheduled runs; it does not replace this manual.
+
 **One process. One authority per concern. No stale progress claims.** Read [SOUL](../SOUL.md) for architecture, [document map](DOCUMENTATION_MAP.md) for document status, and the [locked rules index](IRON_PIT_LOCKED_RULES.md) only when the touched behavior needs a product decision. Exact source, current tests, generated reports and exact-head GitHub Actions determine implementation truth.
 
 ## Start here — each session
