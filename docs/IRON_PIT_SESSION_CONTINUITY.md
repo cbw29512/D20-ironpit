@@ -9,6 +9,16 @@ This is a **handoff entry point**, not a competing rules ledger. Read this befor
 - Preserve the established Iron Pit exceptions in the locked rules; 2014 first, then 2024. Petrified is immediate defeat in the Pit. Do not ask to reconsider settled design unless incompatible source facts require a genuinely new ruling.
 - New monsters and homebrew should compose the existing mechanics without engine changes when their effects already exist.
 
+## User-approved execution decisions — 2026-10-18 (do not reopen)
+
+1. **Finished monster = verified source-card behavior, passing automated Python and browser combat tests, merged implementation, AND successful real fights through the Iron Pit webpage.** Source admission alone is not finished. A simulated or exported test with no webpage fight evidence cannot be reported as finished.
+2. **Prioritize universal mechanics unlocking the largest groups of monsters.** No monster-name-based combat dispatch; card data owns DC, attacks, damage, timings, and effects.
+3. **If a needed universal mechanic is missing, document the exact blocker and move to monsters that the existing mechanics can already handle.** Do not spend an indefinite cycle inventing the absent mechanic. Return to its shared family according to throughput priority.
+4. **When all required tests pass, automatically merge approved work to main.** Keep production publishing locked, with beta preview separate. Do not merge unverified code; record merge SHA and test evidence.
+5. **Report progress on distinct axes:** source-admitted, automated certified, merged, and successfully webpage battle-tested. Use only evidence, not approximations or discussion counts.
+
+These choices supersede any older process suggestion that says a missing mechanic must always be built immediately, or that automated CI alone makes a monster finished.
+
 ## Required execution order, every session
 1. Read [SOUL](../SOUL.md), [implementation playbook](IRON_PIT_IMPLEMENTATION_PLAYBOOK.md), [monster playbook](playbooks/MONSTERS.md), [locked rules](IRON_PIT_LOCKED_RULES.md), [canonical monster queue](MONSTER_ABILITY_WORK_QUEUE.md), [generated blockers](MONSTER_BLOCKERS_2014.md), and [mechanic inventory](UNIVERSAL_MECHANIC_INVENTORY.md).
 2. Inspect **live main**, relevant existing PR branches/heads, and exact-head CI. Generated data and current repo state override old chat summaries and historical numbers.
