@@ -31,6 +31,10 @@
       const decision = policy().decide(rule, facts);
       if (decision === "ineligible") continue;
       if (decision === "averted") {
+        const windows = target.state.visual_aversion_windows || [];
+        target.state.visual_aversion_windows = window.IRON_PIT_BROWSER_VISUAL_SOURCE_AVERSION.record(
+          windows, target.combatant_id, source.combatant_id, target.state.turns_started,
+        );
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
           actor_id: target.combatant_id, target_id: source.combatant_id,
@@ -46,8 +50,8 @@
       );
       const next = policy().resolveStage(rule, save.roll?.total ?? (save.succeeded ? rule.saveDc : -1),
         current ? current.effect_id : null);
+      if (current) timed().removeEffect(target.state, current);
       if (next !== "clear") {
-        if (current) timed().remove?.(target.state, current.effect_id, source.combatant_id);
         timed().apply(target.state, next, source.combatant_id, {
           sourceEffectId: rule.sourceId, sourceTemplate: source.state.template,
           appliedRound: round, setup,
