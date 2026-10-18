@@ -4,6 +4,7 @@ from __future__ import annotations
 import pytest
 
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_visual_turn_start_2014 import visual_turn_start_rule_2014
 from app.domain.capabilities import CombatantDefinition
@@ -43,3 +44,12 @@ def test_visual_failure_margin_requires_printed_instant_petrification() -> None:
     })
     assert altered.source_traits != medusa.source_traits
     assert visual_turn_start_rule_2014(altered) is None
+
+
+@pytest.mark.parametrize("monster_id", ["basilisk", "medusa"])
+def test_source_proven_gaze_monster_is_admitted_and_compiles(monster_id: str) -> None:
+    monster = next(row for row in load_monster_source_2014() if row.id == monster_id)
+    assert basic_blockers_2014(monster) == ()
+    definition = adapt_basic_monster_2014(monster)
+    assert definition.visual_turn_start_rule is not None
+    assert definition.visual_turn_start_rule.source_name == "Petrifying Gaze"
