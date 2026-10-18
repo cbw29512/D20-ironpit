@@ -18,6 +18,7 @@ from app.content.monster_range_trait_bindings_2014 import supports_poor_depth_pe
 from app.content.monster_once_per_turn_traits_2014 import martial_advantage_rider_2014
 from app.content.monster_opening_initiative_2014 import opening_initiative_damage_source_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
+from app.content.monster_visual_turn_start_2014 import visual_turn_start_rule_2014
 from app.content.monster_terminal_effects_2014 import bound_terminal_effect_trait_names_2014
 from app.content.monster_zero_hp_prevention_2014 import bound_zero_hp_trait_names_2014
 from app.domain.bonus_attacks import BonusAttackGrant
@@ -171,6 +172,9 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         if bonus_attack_grants_2014(monster):
             bound.add(_RAMPAGE)
         bound.update(bound_terminal_effect_trait_names_2014(monster))
+        gaze = visual_turn_start_rule_2014(monster)
+        if gaze is not None:
+            bound.add(gaze.source_name)
         if supports_regeneration_2014(monster):
             bound.add("Regeneration")
         resistance = legendary_resistance_trait_name_2014(monster)
