@@ -30,3 +30,11 @@ for (const ruleset of ["2014", "2024"]) {
     }
   });
 }
+
+// CI invokes this entry point; include the shared edition-timing parity regressions.
+try {
+  require("./browser-spellcasting-edition.test.cjs");
+} catch (error) {
+  console.error("Unable to register spellcasting edition parity regressions", error);
+  throw error;
+}
