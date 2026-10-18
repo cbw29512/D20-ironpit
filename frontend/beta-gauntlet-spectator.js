@@ -7,7 +7,10 @@
   function setup(battle, recipe, seed) {
     nodes = new Map();
     $("arena-title").textContent = (recipe.title || recipe.id || "Roster fight") + " · " + recipe.ruleset + " · seed " + seed;
-    $("arena-teams").replaceChildren(); $("arena-log").replaceChildren();
+    $("arena-teams").replaceChildren();
+    const heading = document.createElement("li");
+    heading.textContent = "Fight: " + (recipe.title || recipe.id || "Roster fight") + " · seed " + seed;
+    $("arena-log").append(heading);
     $("arena-event").textContent = "Preparing fight…";
     for (const [side, members] of [["Heroes", battle.setup.heroes], ["Monsters", battle.setup.monsters]]) {
       const section = document.createElement("div");
@@ -43,7 +46,6 @@
       target.hp.value = hp; target.label.textContent = hp + " / " + target.maximum + " HP";
       target.node.classList.toggle("fallen", hp === 0);
     }
-    while ($("arena-log").children.length > 300) $("arena-log").firstElementChild.remove();
   }
 
   async function play(battle, recipe, seed) {
