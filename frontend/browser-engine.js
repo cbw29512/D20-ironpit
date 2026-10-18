@@ -154,6 +154,7 @@
         const member = byId.get(id);
         B()?.cleanupDisabledSources(setup);
         window.IRON_PIT_BROWSER_MODIFIERS?.expireSourceTurnStart(states, member.combatant_id);
+        S().refreshReactionsForNewTurn(states, member.state);
         S().refreshStartOfTurn(member.state);
         C()?.endIfExpired(member.state, round, states);
         window.IRON_PIT_BROWSER_GRID_BARRIERS?.cleanup(setup, round);
