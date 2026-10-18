@@ -506,6 +506,8 @@ jobs:
           node frontend/battle-lab.test.cjs
           node frontend/browser-execution.test.cjs
           node frontend/browser-beta-ui.test.cjs
+          node frontend/beta-inline-runner.test.cjs
+          node frontend/beta-gauntlet-spectator.test.cjs
           node frontend/combat-presets.test.cjs
           node frontend/combat-review.test.cjs
           node frontend/browser-audit.test.cjs

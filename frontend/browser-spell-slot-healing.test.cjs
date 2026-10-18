@@ -64,3 +64,15 @@ function setup() {
 }
 
 console.log("Browser spell-slot healing turn gate regression passed.");
+
+{
+  const { caster } = setup();
+  const C = window.IRON_PIT_BROWSER_SPELLCASTING;
+  assert.deepEqual(C.legalSlotLevels(caster.state, "1:cleric", 0), [0]);
+  assert.throws(() => C.legalSlotLevels(caster.state, "1:cleric", 0.5), /integer between 0 and 9/);
+  assert.throws(() => C.legalSlotLevels(caster.state, "1:cleric", NaN), /integer between 0 and 9/);
+  assert.throws(() => C.legalSlotLevels(caster.state, "", 0), /active turn key/);
+  const invalidState = structuredClone(caster.state);
+  invalidState.template.ruleset = "2099";
+  assert.throws(() => C.legalSlotLevels(invalidState, "1:cleric", 0), /Unsupported spellcasting ruleset/);
+}
