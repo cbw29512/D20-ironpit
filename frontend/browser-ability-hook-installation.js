@@ -6,6 +6,7 @@
     if (!hooks) throw new Error("Ability hook installation requires browser-ability-hooks.js.");
 
     const installers = [
+      ["Visual Turn Start", window.IRON_PIT_BROWSER_VISUAL_TURN_START_INTEGRATION?.installAbilityHooks],
       ["Rage", window.IRON_PIT_BROWSER_RAGE?.installAbilityHooks],
       ["Support", window.IRON_PIT_BROWSER_SUPPORT?.installAbilityHooks],
       ["Start-turn Timed Self Buffs", window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS?.installAbilityHooks],
