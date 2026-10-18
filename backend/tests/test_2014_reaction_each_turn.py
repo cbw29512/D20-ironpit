@@ -33,5 +33,18 @@ def test_reaction_budget_refreshes_only_for_declared_generic_trait():
     assert not is_available(ordinary, "reaction")
     spend(reactive, "reaction")
     assert not is_available(reactive, "reaction")
+    # A second creature turn restores only the source-declared budget.
+    refresh_reactions_for_new_turn([reactive, ordinary, actor], ordinary)
+    assert is_available(reactive, "reaction")
+    assert not is_available(ordinary, "reaction")
+    spend(reactive, "reaction")
+    # The creature whose own turn is starting uses the normal refresh path.
+    refresh_reactions_for_new_turn([reactive, ordinary, actor], reactive)
+    assert not is_available(reactive, "reaction")
     refresh_start_of_turn(reactive)
     assert is_available(reactive, "reaction")
+    # A fresh fight creates a separate reaction pool, not shared state.
+    fresh = build_combatant_state(reactive.template)
+    assert is_available(fresh, "reaction")
+    spend(reactive, "reaction")
+    assert is_available(fresh, "reaction")
