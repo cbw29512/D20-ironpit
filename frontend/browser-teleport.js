@@ -34,8 +34,15 @@
       if (!caster.state.position) return null;
       const cancel = window.IRON_PIT_BROWSER_TELEPORT_CANCEL;
       if (!cancel?.cancelableIds(caster.state).length) return null;
-      const actions = (caster.state.template.teleport_actions || []).filter((action) =>
-        E().available(caster.state, action.actionCost || action.action_cost));
+      const actions = (caster.state.template.teleport_actions || []).filter((action) => {
+        const cost = action.actionCost || action.action_cost;
+        if (!E().available(caster.state, cost)) return false;
+        if ((action.level > 0 || action.expendsSpellSlot)
+          && !P().spellTurnLegal(caster.state, turnKey, cost, action.level)) return false;
+        if (action.expendsSpellSlot && !P().slotSpellAvailable(caster.state, turnKey)) return false;
+        return !action.resourceId
+          || (caster.state.resources?.[action.resourceId] || 0) >= (action.resourceCost || 1);
+      });
       if (!actions.length) return null;
       const action = actions.slice().sort((a, b) => (a.level - b.level) || String(a.id).localeCompare(b.id))[0];
       return { action, destination: { ...caster.state.position } };
@@ -52,7 +59,21 @@
       }
       if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.actionCost} is unavailable for ${action.name}.`);
       if (!destination) throw new Error(`${action.name} requires a destination argument.`);
-      if (action.expendsSpellSlot) P()?.markSlotSpellCast?.(caster.state, turnKey);
+      if ((action.level > 0 || action.expendsSpellSlot)
+        && !P().spellTurnLegal(caster.state, turnKey, action.actionCost, action.level)) {
+        throw new Error("Teleport spell conflicts with another cast on this turn.");
+      }
+      if (action.expendsSpellSlot && !P().slotSpellAvailable(caster.state, turnKey)) {
+        throw new Error("A spell slot has already been expended on this turn.");
+      }
+      if (action.resourceId
+        && (caster.state.resources?.[action.resourceId] || 0) < (action.resourceCost || 1)) {
+        throw new Error(`Resource ${action.resourceId} is unavailable for ${action.name}.`);
+      }
+      if (action.level > 0 || action.expendsSpellSlot) {
+        P().recordSpellTurn(caster.state, turnKey, action.actionCost, action.level);
+      }
+      if (action.expendsSpellSlot) P().markSlotSpellCast(caster.state, turnKey);
       E().spend(caster.state, action.actionCost);
       if (action.resourceId) caster.state.resources[action.resourceId] -= action.resourceCost || 1;
       const travelers = [caster, ...passengers(caster, setup, action)];

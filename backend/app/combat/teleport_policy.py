@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.spellcasting import slot_spell_available, spell_turn_legal
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
 from app.domain.teleport_actions import TeleportAction
@@ -42,11 +43,25 @@ def choose_teleport_action(
             return None
         if not teleport_cancelable_effect_ids(caster.state):
             return None
-        actions = [
-            action
-            for action in caster.state.template.teleport_actions
-            if is_available(caster.state, action.action_cost)
-        ]
+        actions = []
+        for action in caster.state.template.teleport_actions:
+            if not is_available(caster.state, action.action_cost):
+                continue
+            # Only spell teleports participate in the spell-turn restriction.
+            if (action.level > 0 or action.expends_spell_slot) and not spell_turn_legal(
+                caster.state, turn_key, action.action_cost, action.level,
+            ):
+                continue
+            if action.expends_spell_slot and not slot_spell_available(caster.state, turn_key):
+                continue
+            if action.resource_id:
+                resource = next(
+                    (item for item in caster.state.resources if item.id == action.resource_id),
+                    None,
+                )
+                if resource is None or resource.current_uses < action.resource_cost:
+                    continue
+            actions.append(action)
         if not actions:
             return None
         action = min(actions, key=lambda item: (item.level, item.id))

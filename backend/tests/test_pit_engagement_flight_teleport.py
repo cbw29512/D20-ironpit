@@ -4,6 +4,7 @@ from app.combat.flight_ground_immunity import combatant_is_flying
 from app.combat.grapple import apply_grapple
 from app.combat.grid_pathing import movement_step_cost_ft, plan_movement_toward
 from app.combat.pit_engagement import voluntary_destination_leaves_melee
+from app.combat.spellcasting import mark_slot_spell_cast, record_spell_turn, spell_turn_legal
 from app.combat.state import begin_turn, build_combatant_state
 from app.combat.teleport_policy import choose_teleport_action, choose_teleport_destination
 from app.combat.teleport_resolution import resolve_teleport
@@ -253,3 +254,63 @@ def test_creature_cannot_kite_out_of_melee_by_flying_or_running() -> None:
     assert close_plan.path
     assert close_plan.final_distance_ft <= 5
     assert voluntary_destination_leaves_melee(runner, [runner, enemy, closer], close_plan.path[0]) is True
+
+
+def _restrained_teleport_fight():
+    """A source-neutral spell teleport that has a meaningful debuff to clear."""
+    caster = _member("caster", "heroes", 6, 6, teleport=True)
+    enemy = _member("enemy", "monsters", 7, 6)
+    setup = _setup(caster, enemy)
+    apply_timed_condition(
+        caster.state, "restrained", "enemy",
+        source_effect_id="binding", ends_on_teleport=True,
+        use_default_poison_recovery=False,
+    )
+    begin_turn(caster.state)
+    return caster, setup, caster.state.template.teleport_actions[0]
+
+
+def test_teleport_spell_fails_closed_after_action_spell_without_mutating_state() -> None:
+    caster, setup, action = _restrained_teleport_fight()
+    record_spell_turn(caster.state, "1:caster", "action", 1)
+    assert choose_teleport_action(caster, setup, "1:caster") is None
+    before = caster.state.model_copy(deep=True)
+    import pytest
+    with pytest.raises(ValueError, match="conflicts"):
+        resolve_teleport(1, 1, caster, setup, action, caster.state.position, None, "1:caster")
+    assert caster.state == before
+
+
+def test_teleport_spell_after_action_cantrip_records_history_and_spends_slot() -> None:
+    caster, setup, action = _restrained_teleport_fight()
+    record_spell_turn(caster.state, "1:caster", "action", 0)
+    assert choose_teleport_action(caster, setup, "1:caster") is not None
+    resolve_teleport(1, 1, caster, setup, action, caster.state.position, None, "1:caster")
+    assert caster.state.feature_last_turn_keys["spell:bonus-action"] == "1:caster"
+    assert caster.state.spell_slot_expended_turn_key == "1:caster"
+    assert caster.state.resources[0].current_uses == 0
+    assert not spell_turn_legal(caster.state, "1:caster", "action", 1)
+    assert spell_turn_legal(caster.state, "2:caster", "action", 1)
+
+
+def test_2024_teleport_slot_gate_rejects_second_slot_cast() -> None:
+    caster, setup, action = _restrained_teleport_fight()
+    caster.state.template = caster.state.template.model_copy(update={"ruleset": "2024"})
+    mark_slot_spell_cast(caster.state, "1:caster")
+    assert choose_teleport_action(caster, setup, "1:caster") is None
+    before = caster.state.model_copy(deep=True)
+    import pytest
+    with pytest.raises(ValueError, match="already been expended"):
+        resolve_teleport(1, 1, caster, setup, action, caster.state.position, None, "1:caster")
+    assert caster.state == before
+
+
+def test_teleport_chooser_rejects_missing_resource_before_resolving() -> None:
+    caster, setup, action = _restrained_teleport_fight()
+    caster.state.resources[0].current_uses = 0
+    assert choose_teleport_action(caster, setup, "1:caster") is None
+    before = caster.state.model_copy(deep=True)
+    import pytest
+    with pytest.raises(ValueError, match="unavailable"):
+        resolve_teleport(1, 1, caster, setup, action, caster.state.position, None, "1:caster")
+    assert caster.state == before
