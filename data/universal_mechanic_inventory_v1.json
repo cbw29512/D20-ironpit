@@ -5883,7 +5883,7 @@
       "source:extra-action": 57,
       "source:legendary": 9,
       "source:reaction": 3,
-      "source:trait": 74
+      "source:trait": 73
     },
     "unresolved_printed_abilities": [
       {
@@ -6051,13 +6051,6 @@
           "Roper"
         ],
         "printed_name": "Grasping Tendrils"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Erinyes"
-        ],
-        "printed_name": "Hellish Weapons"
       },
       {
         "demand_count": 1,

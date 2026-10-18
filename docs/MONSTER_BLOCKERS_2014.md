@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 74 |
+| `source:trait` | 73 |
 | `source:extra-action` | 57 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |
@@ -34,15 +34,15 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**11** monsters have exactly one remaining blocker category.
+**12** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
 | `source:extra-action` | Banshee, Bulette, Harpy, Sprite | 4 |
 | `source:trait` | Basilisk, Marilith, Medusa | 3 |
+| `attack:incomplete` | Erinyes, Shadow | 2 |
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
-| `attack:incomplete` | Shadow | 1 |
 | `attack:none` | Sea Horse | 1 |
 
 ## Every blocked monster
@@ -78,7 +78,7 @@ the underlying ability is already implemented or trivial.
 | Duergar | attack:incomplete, source:extra-action, source:trait | Duergar Resilience |
 | Dust Mephit | mechanic:recharge, mechanic:spellcasting, source:extra-action, source:trait | Death Burst, Innate Spellcasting |
 | Efreeti | mechanic:spellcasting, source:trait | Innate Spellcasting |
-| Erinyes | attack:incomplete, source:trait | Hellish Weapons |
+| Erinyes | attack:incomplete | — |
 | Ettercap | attack:complex, attack:damage-type, mechanic:recharge | — |
 | Fire Elemental | attack:complex, source:trait | Fire Form, Water Susceptibility |
 | Flameskull | mechanic:spellcasting, source:trait | Spellcasting |
