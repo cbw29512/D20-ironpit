@@ -1,7 +1,7 @@
 """Regression checks for evidence-based monster admission reporting."""
 import pytest
 
-from check_2014_monster_progress import compare
+from check_2014_monster_progress import compare, next_work
 
 
 def state(monsters):
@@ -38,3 +38,16 @@ def test_changed_blocker_is_not_false_completion():
 def test_invalid_snapshot_rejected():
     with pytest.raises(ValueError, match="incompatible"):
         compare({"schema": 0, "total": 327, "monsters": {}}, state({}), [])
+
+
+def test_next_work_ranks_shared_single_blocker_families():
+    current = state({
+        "a": ["source:trait"], "b": ["source:trait"],
+        "c": ["source:extra-action"], "d": ["attack:incomplete", "source:trait"],
+        "frog": ["arena:neutral"], "stirge": ["arena:removed"],
+    })
+    chosen = next_work(current)
+    assert chosen[0] == {
+        "family": "source:trait", "monsters": ["a", "b"], "potential_admissions": 2,
+    }
+    assert all(row["family"] not in {"arena:neutral", "arena:removed"} for row in chosen)
