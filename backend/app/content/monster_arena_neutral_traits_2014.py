@@ -19,6 +19,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_absent_context_source_2014 import verified_absent_context_trait_2014
 from app.content.monster_informational_trait_proofs_2014 import verified_nonactionable_information_2014
 
 logger = logging.getLogger(__name__)
@@ -38,6 +39,8 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
     try:
         if trait_name not in monster.trait_names:
             return False
+        if verified_absent_context_trait_2014(monster, trait_name):
+            return True
         source = monster.source_traits or ""
         # Context-driven exclusion: this trait only operates underwater, a
         # context absent from the standard Iron Pit. Keep the printed trait.
