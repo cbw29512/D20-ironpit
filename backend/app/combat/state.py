@@ -12,6 +12,7 @@ from app.combat.timed_effect_control import suppresses_action, suppresses_bonus_
 from app.combat.opening_modifiers import opening_modifiers
 from app.combat.survivor import apply_survivor_start_turn_heal
 from app.domain.models import CombatantState, CombatantTemplate, ResourceState
+from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +39,21 @@ def build_combatant_state(template: CombatantTemplate) -> CombatantState:
 def refresh_reaction(state: CombatantState) -> None:
     """Refresh the Reaction opportunity, subject to active timed suppression."""
     state.reaction_available = not suppresses_reactions(state)
+
+
+def refresh_reactions_for_new_turn(
+    states: list[CombatantState], acting_state: CombatantState,
+) -> None:
+    """Refresh a declared per-creature-turn Reaction budget before the actor starts."""
+    try:
+        for state in states:
+            if state is acting_state or state.is_dead:
+                continue
+            if CombatTrait.REACTION_EACH_TURN in state.template.combat_traits:
+                refresh_reaction(state)
+    except Exception:
+        logger.exception("Failed to refresh per-turn Reaction budgets.")
+        raise
 
 
 def refresh_start_of_turn(state: CombatantState) -> None:
