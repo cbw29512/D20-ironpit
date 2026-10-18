@@ -9,6 +9,29 @@
       heroes: [...selection.hero_ids], monsters: [...selection.monster_ids],
       seed, outcome: battle?.outcome || "ERROR", rounds: battle?.rounds || 0,
       events: battle?.events || [], failure };
+    // Playback can fail after begin() has already created this attempt.
+    // Finalize that same entry, preserving the full computed fight evidence.
+    if (active && active.seed === seed && active.ruleset === selection.ruleset
+        && JSON.stringify(active.heroes) === JSON.stringify(selection.hero_ids)
+        && JSON.stringify(active.monsters) === JSON.stringify(selection.monster_ids)) {
+      active.outcome = "ERROR";
+      active.rounds = battle?.rounds || active.rounds;
+      active.events = battle?.events || active.events;
+      active.failure = failure || "Playback failed.";
+      active.summary.textContent = "Fight #" + active.number + " · " + active.ruleset +
+        " · seed " + seed + " · ERROR · " + active.failure +
+        " · " + active.events.length + " events";
+      active.item.open = false;
+      active.body.replaceChildren();
+      // Keep the complete stream in data, lazily rendering when reviewed.
+      const failed = active;
+      failed.item.addEventListener("toggle", () => {
+        if (!failed.item.open || failed.body.childElementCount) return;
+        for (const event of failed.events) failed.body.append(window.IRON_PIT_BATTLEFIELD_VIEW.eventRow(event));
+      });
+      active = null;
+      return;
+    }
     records.push(entry);
     const holder = $("beta-history"); if (!holder) return;
     const item = document.createElement("details");
@@ -34,6 +57,7 @@
   }
   let active = null;
   function begin(selection, seed) {
+    if (active) throw new Error("Previous beta fight log was not finalized.");
     active = { number: records.length + 1, ruleset: selection.ruleset,
       heroes: [...selection.hero_ids], monsters: [...selection.monster_ids],
       seed, outcome: "IN PROGRESS", rounds: 0, events: [], failure: null };
