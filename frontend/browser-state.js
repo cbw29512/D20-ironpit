@@ -49,9 +49,7 @@
   }
   function refreshReaction(state) { state.reaction_available = !T().suppressesReactions(state); }
   function refreshReactionsForNewTurn(states, actingState) {
-    for (const state of states) {
-      if (state !== actingState && !state.is_dead && state.template.traits?.includes("reaction-each-turn")) refreshReaction(state);
-    }
+    for (const state of states) if (state !== actingState && !state.is_dead && state.template.traits?.includes("reaction-each-turn")) refreshReaction(state);
   }
   function refreshStartOfTurn(state) {
     refreshReaction(state);
