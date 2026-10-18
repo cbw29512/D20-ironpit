@@ -12,7 +12,7 @@ const operations = [];
 const member = (id, rule = null) => ({
   combatant_id: id, side: id === "victim" ? "heroes" : "monsters",
   state: { template: { name: id, visualTurnStartRule: rule }, current_hp: 10,
-    is_dead: false, is_surprised: false, turns_started: 1, timed_effects: [] },
+    is_dead: false, is_surprised: false, turns_started: 1, timed_effects: [], active_effect_ids: [] },
 });
 const rule = { sourceId: "visual", sourceName: "Gaze", rangeFt: 30, saveDc: 12 };
 const source = member("source", rule), victim = member("victim");
@@ -25,11 +25,13 @@ window.IRON_PIT_BROWSER_TIMED = {
   apply: (state, id, sourceId, opts) => {
     operations.push(["apply", id]);
     state.timed_effects.push({ effect_id: id, source_id: sourceId, source_effect_id: opts.sourceEffectId });
+    if (!state.active_effect_ids.includes(id)) state.active_effect_ids.push(id);
     return id;
   },
   removeEffect: (state, effect) => {
     operations.push(["remove", effect.effect_id]);
     state.timed_effects = state.timed_effects.filter(x => x !== effect);
+    state.active_effect_ids = state.active_effect_ids.filter(id => id !== effect.effect_id);
   },
 };
 load("browser-visual-turn-start-integration.js");
