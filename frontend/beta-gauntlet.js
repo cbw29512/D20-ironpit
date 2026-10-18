@@ -99,17 +99,21 @@
             row.result = "PASS";
             row.diagnostic_id = replay.diagnostic_id;
             row.outcome = replay.battle.outcome; row.rounds = replay.battle.rounds;
-            row.events = replay.battle.events; passes++;
+            row.events = replay.battle.events;
             if ($("watch").checked) {
               $("status").textContent = "Watching " + recipe.id + " (" + (index + 1) + "/" + count + ")";
-              await window.IRON_PIT_BETA_SPECTATOR.play(replay.battle, recipe, testSeed);
+              try {
+                await window.IRON_PIT_BETA_SPECTATOR.play(replay.battle, recipe, testSeed);
+              } catch (playbackError) {
+                row.playback_error = playbackError?.message || String(playbackError);
+              }
             }
           } catch (error) {
             row.result = "FAIL"; row.details = error?.message || String(error);
             row.stack = error?.stack || null;
             if (replay?.battle?.events) row.events = replay.battle.events;
-            failures++;
           }
+          if (row.result === "PASS") passes++; else failures++;
           report.tests.push(row); finished++; $("progress").value = finished;
           issue(row, row.result, row.details);
           $("totals").textContent = passes + " passed / " + failures + " failed / " + finished + " run";
