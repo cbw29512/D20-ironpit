@@ -561,6 +561,7 @@ jobs:
           node frontend/browser-control.test.cjs
           node frontend/browser-poison.test.cjs
           node frontend/browser-mixed-damage.test.cjs
+          node frontend/browser-ability-score-reduction.test.cjs
           node frontend/browser-included-weapon-damage.test.cjs
           node frontend/browser-multiattack-sequences.test.cjs
           node frontend/browser-attack-ammunition.test.cjs
