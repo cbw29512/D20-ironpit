@@ -150,6 +150,8 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
     return WeaponAttack(
         id=definition.id,
         weapon=weapon,
+        resource_id=definition.resource_id,
+        resource_cost=definition.resource_cost,
         attack_bonus=definition.attack_bonus,
         damage_bonus=damage.bonus if damage else 0,
         attack_ability=definition.attack_ability,
