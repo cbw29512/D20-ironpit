@@ -1,4 +1,5 @@
 from __future__ import annotations
+from app.domain.visual_turn_start import VisualTurnStartRule
 
 from app.domain.attack_action_definitions import all_action_slots
 
@@ -71,6 +72,7 @@ class CombatantDefinition(BaseModel):
     passive_modifier_grants: list[PassiveModifierGrant] = Field(default_factory=list, exclude_if=lambda items: not items)
     bonus_attack_grants: list[BonusAttackGrant] = Field(default_factory=list)
     bonus_tactical_action_grants: list[BonusActionTacticalGrant] = Field(default_factory=list)
+    visual_turn_start_rule: VisualTurnStartRule | None = None
     attacks: list[AttackCapabilityDefinition] = Field(min_length=1)
     primary_attack_id: str
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
