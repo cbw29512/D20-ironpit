@@ -100,6 +100,8 @@ Authority: `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md`; `docs/IRON_PIT_RULES_CONTRAC
 
 ## Parked blockers
 
+- **2014 Erinyes — Longbow/Hellish Weapons save provenance:** source-only prototype on `feat/2014-included-poison-weapons-current` proves damage and persistent Poisoned behavior, but its interaction with Magic Resistance is not yet source-bound/tested. The current on-hit condition-save schema lacks explicit magical-effect provenance. Verify the printed qualifier and reuse generic save context; do not infer that all riders of every magical weapon share one qualifier. Keep the monster unpromoted on main until resolved. This records an uncertainty, not a new Pit ruling.
+
 Standing instruction: park, record, continue. Revisit this list after the rest of the current family is finished. Folded from the short-lived `docs/PARKED_BLOCKERS.md` working list after #602/#603/#604.
 
 **2014 poison family (this lane).** Extra poison damage, Poisoned on a failed Con save, repeat-save timing, and half-on-success save-damage already compile through the shared on-hit save / `FailedSaveTimedEffect` / typed-damage primitives. Breath weapons stay out of this family. Remaining poison-named cards are parked because a different family still blocks READY:
