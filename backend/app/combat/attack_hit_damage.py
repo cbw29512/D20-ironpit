@@ -5,8 +5,7 @@ import logging
 
 from app.combat.damage import BonusDamageSpec, aggregate_damage_components, resolve_weapon_damage
 from app.combat.hunters_mark_splash import resolve_hunters_mark_splash
-from app.combat.damage_defenses import apply_damage_defenses
-from app.combat.attack_ordered_damage import resolve_ordered_monster_hit_damage
+from app.combat.attack_ordered_damage import resolve_ordered_hit_damage
 from app.combat.cunning_strike import (
     CunningStrikeObscureResolution, CunningStrikeTripResolution,
     resolve_obscure, resolve_trip,
@@ -16,7 +15,6 @@ from app.combat.ally_context import has_adjacent_active_ally_for_states
 from app.combat.dice import DiceProvider
 from app.combat.on_hit_save_damage import OnHitSaveDamageResolution, resolve_on_hit_save_damage
 from app.combat.rogue_defenses import apply_uncanny_dodge
-from app.combat.zero_hp import apply_damage
 from app.combat.zero_hp_save_damage_rider import apply_zero_hp_save_damage_rider, save_damage_caused_zero
 from app.domain.models import CombatantState, DamageRollComponent, DiceRoll, RollMode, WeaponAttack
 
@@ -123,25 +121,14 @@ def resolve_attack_hit_damage(
     reduction = apply_attack_damage_reduction(defender, attack, rolled_components, dice)
     rolled_components = reduction.components
     rolled_components, uncanny_used = apply_uncanny_dodge(attacker, defender, rolled_components)
-    if defender.template.kind == "monster":
-        applied_total, components, outcome = resolve_ordered_monster_hit_damage(
-            defender, rolled_components, critical=critical, dice=dice,
-            affected_states=affected_states, setup=setup,
-            ignored_resistance_types=_ignored_resistance_types(attacker),
-        )
-        # The saving-throw damage rider is ordered last; do not invoke its
-        # zero-HP rider if the target died before that component.
-        save_component_present = save_component_present and len(components) == len(rolled_components)
-    else:
-        applied_total, components = apply_damage_defenses(
-            defender, rolled_components,
-            ignored_resistance_types=_ignored_resistance_types(attacker),
-        )
-        applied_types = {part.damage_type for part in components if part.applied_total > 0}
-        outcome = apply_damage(
-            defender, applied_total, critical=critical, damage_types=applied_types,
-            dice=dice, affected_states=affected_states, setup=setup, damage_components=components,
-        )
+    applied_total, components, outcome = resolve_ordered_hit_damage(
+        defender, rolled_components, critical=critical, dice=dice,
+        affected_states=affected_states, setup=setup,
+        ignored_resistance_types=_ignored_resistance_types(attacker),
+    )
+    # The saving-throw damage rider is ordered last; do not invoke its
+    # zero-HP rider if the target died before that component.
+    save_component_present = save_component_present and len(components) == len(rolled_components)
     damage_roll = aggregate_damage_components(components)
     damage_roll.total = applied_total
     if setup is not None and target_event_id:
