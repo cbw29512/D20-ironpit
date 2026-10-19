@@ -11,6 +11,7 @@ from app.domain.save_damage import DamageTypeName, SaveDamageComponent
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
+from app.domain.environment_contexts import EnvironmentContextId
 
 from app.domain.action_types import (
     AbilityName, ActionCost, HealingTargetMode, ConditionRemovalTargetMode,
@@ -149,6 +150,9 @@ class SavingThrowAction(BaseModel):
     effect_tags: list[str] = Field(default_factory=list)
     automatic_failure_creature_types: list[str] = Field(default_factory=list)
     requires_target_hearing: bool = False
+    prohibited_environment_context_id: EnvironmentContextId | None = Field(
+        default=None, exclude_if=lambda value: value is None,
+    )
     requires_target_sight: bool = False
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
     source_effect_immunity_on_success: bool = False
