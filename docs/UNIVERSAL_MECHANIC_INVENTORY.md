@@ -428,7 +428,7 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **100**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **99**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
@@ -475,7 +475,6 @@ Blocked monsters: **100**. These are grouped by printed ability name so the rost
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
 | Steadfast | Bearded Devil | 1 |
 | Surprise Attack | Doppelganger | 1 |
-| Tail Spike Regrowth | Manticore | 1 |
 | Telepathic Bond | Succubus/Incubus | 1 |
 | Transparent | Gelatinous Cube | 1 |
 | Vampire Weaknesses | Vampire, Vampire Spawn | 2 |
@@ -487,7 +486,7 @@ Blocked monsters: **100**. These are grouped by printed ability name so the rost
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 73 |
+| `source:trait` | 72 |
 | `source:extra-action` | 57 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 24 |
@@ -504,4 +503,3 @@ Blocked monsters: **100**. These are grouped by printed ability name so the rost
 | `arena:neutral` | 1 |
 | `arena:removed` | 1 |
 | `mechanic:defense` | 1 |
-| `mechanic:limited-use` | 1 |
