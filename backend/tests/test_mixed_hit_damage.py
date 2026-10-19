@@ -168,3 +168,68 @@ def test_missed_mixed_type_attack_rolls_no_damage_and_spends_its_action() -> Non
     assert event.turn_terminated is True  # Locked Pit natural-1 rule.
     assert event.damage_components == []
     assert hero.state.current_hp == starting_hp
+
+def test_monster_defeat_breaks_remaining_typed_hit_damage() -> None:
+    from app.combat.attack_legality import attack_allowed_against
+
+    setup = _setup()
+    hero, monster = setup.heroes[0], setup.monsters[0]
+    monster.state.current_hp = 5
+    event = resolve_attack(
+        1, 1, hero.state, monster.state, _venom_bite(), 5,
+        FixedDiceProvider([15, 4, 2]),
+        actor_event_id=hero.combatant_id, target_event_id=monster.combatant_id,
+    )
+
+    assert event.hit is True
+    assert [part.damage_type for part in event.damage_components] == [DamageType.PIERCING]
+    assert [part.applied_total for part in event.damage_components] == [8]
+    assert event.damage_roll is not None and event.damage_roll.total == 8
+    assert monster.state.current_hp == 0 and monster.state.is_dead
+    assert not attack_allowed_against(
+        _venom_bite(), hero.combatant_id, monster.state,
+    )
+
+
+def test_resisted_piercing_can_leave_monster_alive_for_poison_component() -> None:
+    setup = _setup()
+    hero, monster = setup.heroes[0], setup.monsters[0]
+    monster.state.current_hp = 5
+    monster.state.template.damage_resistances = [DamageType.PIERCING]
+    event = resolve_attack(
+        1, 1, hero.state, monster.state, _venom_bite(), 5,
+        FixedDiceProvider([15, 4, 2]),
+        actor_event_id=hero.combatant_id, target_event_id=monster.combatant_id,
+    )
+    assert [part.applied_total for part in event.damage_components] == [4, 2]
+    assert monster.state.current_hp == 0 and monster.state.is_dead
+
+
+def test_immune_piercing_component_does_not_end_remaining_poison_damage() -> None:
+    setup = _setup()
+    hero, monster = setup.heroes[0], setup.monsters[0]
+    monster.state.current_hp = 5
+    monster.state.template.damage_immunities = [DamageType.PIERCING]
+    event = resolve_attack(
+        1, 1, hero.state, monster.state, _venom_bite(), 5,
+        FixedDiceProvider([15, 4, 2]),
+        actor_event_id=hero.combatant_id, target_event_id=monster.combatant_id,
+    )
+    assert [part.applied_total for part in event.damage_components] == [0, 2]
+    assert monster.state.current_hp == 3 and not monster.state.is_dead
+
+
+def test_pregen_dying_lifecycle_is_not_monster_instant_death() -> None:
+    setup = _setup()
+    hero, monster = setup.heroes[0], setup.monsters[0]
+    hero.state.current_hp = 5
+    event = resolve_attack(
+        1, 1, monster.state, hero.state, _venom_bite(), 5,
+        FixedDiceProvider([15, 4, 2]),
+        actor_event_id=monster.combatant_id, target_event_id=hero.combatant_id,
+    )
+    assert len(event.damage_components) == 2
+    assert hero.state.current_hp == 0
+    assert hero.state.is_unconscious and not hero.state.is_dead
+    assert hero.state.death_save_failures == 0
+
