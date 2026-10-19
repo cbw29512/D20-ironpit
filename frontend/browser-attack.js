@@ -66,7 +66,7 @@
       + (attacker.state.template.advantage_against_marked_effect_id && attacker.state.active_modifiers?.some((item) => item.source_effect_id === attacker.state.template.advantage_against_marked_effect_id && item.target_id === target.combatant_id) ? 1 : 0);
     const advantage = Q().suppressAttackAdvantage?.(target.state) ? 0 : unsuppressedAdvantage;
     const mode = R().attackMode(attack, distance, advantage, disadvantage, closeThreat);
-    const heroic = autoHit ? { roll: null, used: false } : HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + M().attackRollFlat(attacker.state, attack.weaponId || attack.id) + (M().nextIncomingAttackRollFlat?.(target.state, attacker.combatant_id) || 0), mode), M().effectiveArmorClass(target.state));
+    const heroic = autoHit ? { roll: null, used: false } : HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + (window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION?.abilityModifierDelta(attacker.state, attack.attackAbility) || 0) + M().attackRollFlat(attacker.state, attack.weaponId || attack.id) + (M().nextIncomingAttackRollFlat?.(target.state, attacker.combatant_id) || 0), mode), M().effectiveArmorClass(target.state));
     let attackRoll = autoHit ? null : M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll); const d20Bonus = autoHit || [1, 20].includes(heroic.roll.selected_roll) ? null : DB()?.applyIfUseful(attacker.state, "attack", attackRoll, M().effectiveArmorClass(target.state), round); if (d20Bonus) attackRoll = d20Bonus.roll; const rollPenalty = autoHit ? null : window.IRON_PIT_BROWSER_REACTION_ROLL_PENALTIES?.applyIfUseful(attacker, extra.setup, "attack", attackRoll, M().effectiveArmorClass(target.state)); if (rollPenalty) attackRoll = rollPenalty.roll;
     if (!autoHit) { M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); M().consumeNextIncomingAttackRollFlat?.(target.state, attacker.combatant_id);
       T()?.consumeNextAttackDisadvantage(attacker.state); SAP().consume(attacker.state); M().consumeAttacksAgainstAdvantage(target.state); }
@@ -92,6 +92,7 @@
     const outcome = O().create();
     let { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, topple, sapApplied, vexApplied, studiedApplied, deferredEffectArmed, exileApplied } = outcome;
     let maximumHpSave = null;
+    let abilityReduction = null;
     let contestedMovement = null;
     let cunningStrikeTrip = null, cunningStrikeObscure = null;
     const applied = outcome.appliedConditions;
@@ -100,6 +101,11 @@
         extra.turnKey || `${round}:${attacker.combatant_id}`, { bonusDamage: extra.bonusDamage || null,
           targetId: actualTarget.combatant_id, sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false, affectedStates, setup: extra.setup || null, naturalRoll: natural });
       damageComponents = damage.damageComponents; damageRoll = damage.damageRoll; damageOutcome = damage.damageOutcome; saveDamage = damage.saveDamage; outcome.damageReductionReaction = damage.damageReductionReactionUsed ? damage : null;
+      if (attack.onHitAbilityScoreReduction && !actualTarget.state.is_dead) {
+        const score = window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION;
+        if (!score?.applyOnHit) throw new Error("On-hit ability reduction requires its shared browser runtime.");
+        abilityReduction = score.applyOnHit(actualTarget.state, attack.onHitAbilityScoreReduction, affectedStates);
+      }
       cunningStrikeTrip = damage.cunningStrikeTrip || null;
       cunningStrikeObscure = damage.cunningStrikeObscure || null;
       if (cunningStrikeTrip?.applied && !applied.includes("prone")) applied.push("prone");
@@ -178,6 +184,10 @@
     if (outcome.postHitSelfBuffApplied) description += ` ${outcome.postHitSelfBuffApplied.sourceName} activates.`;
     if (attackSave) description += ` ${attackSave.saveAbility} save DC ${attackSave.saveDc}: ${actualTarget.state.template.name} ${attackSave.saveSucceeded ? "succeeds" : "fails"}.`;
     if (hitSave?.forcedMovementFt) description += ` ${actualTarget.state.template.name} is pushed ${hitSave.forcedMovementFt} feet away.`;
+    if (abilityReduction) {
+      description += ` ${abilityReduction.source || attack.name} reduces ${actualTarget.state.template.name}'s ${abilityReduction.ability} by ${abilityReduction.applied} (${abilityReduction.scoreBefore} to ${abilityReduction.scoreAfter}).`;
+      if (abilityReduction.deathOutcome === "dead") description += ` ${actualTarget.state.template.name} dies at ${abilityReduction.ability} 0.`;
+    }
     if (maximumHpSave?.reductionApplied) description += ` ${actualTarget.state.template.name}'s hit point maximum is reduced by ${maximumHpSave.reductionApplied}.`;
     if (maximumHpSave?.killedByZeroMaximum) description += ` ${actualTarget.state.template.name} dies as its hit point maximum reaches 0.`;
     if (contestedMovement?.targetRoll) {

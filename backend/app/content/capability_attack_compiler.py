@@ -4,6 +4,7 @@ from app.content.capability_charge_compiler import compile_charge
 from app.domain.actions import HitControlEffect
 from app.domain.capabilities import AttackCapabilityDefinition
 from app.domain.capability_effects import (
+    AbilityScoreReductionEffectDefinition,
     ConditionEffectDefinition,
     ContestedMovementEffectDefinition,
     DamageEffectDefinition,
@@ -16,7 +17,7 @@ from app.domain.capability_effects import (
 )
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
-from app.domain.weapons import OnHitConditionSave, OnHitContestedMovement, OnHitMaximumHpSave, OnHitSaveDamage, OnHitOngoingHpLoss
+from app.domain.weapons import OnHitAbilityScoreReduction, OnHitConditionSave, OnHitContestedMovement, OnHitMaximumHpSave, OnHitSaveDamage, OnHitOngoingHpLoss
 
 
 class UnsupportedCapabilityError(ValueError):
@@ -74,6 +75,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
     on_hit_hp_loss = None
     on_hit_save_damage = None
     on_hit_maximum_hp_save = None
+    on_hit_ability_score_reduction = None
     on_hit_contested_movement = None
     for effect in definition.effects:
         if isinstance(effect, DamageEffectDefinition):
@@ -101,6 +103,11 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
                 dice_count=effect.dice.count, dice_size=effect.dice.size, damage_bonus=effect.dice.bonus,
                 damage_type=effect.damage_type, success_damage=effect.success_damage,
                 zero_hp_rider=effect.zero_hp_rider,
+            )
+        elif isinstance(effect, AbilityScoreReductionEffectDefinition):
+            on_hit_ability_score_reduction = OnHitAbilityScoreReduction(
+                source=effect.source, ability=effect.ability,
+                dice_count=effect.dice.count, dice_size=effect.dice.size,
             )
         elif isinstance(effect, ContestedMovementEffectDefinition):
             on_hit_contested_movement = OnHitContestedMovement(
@@ -166,6 +173,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         on_hit_condition_save=on_hit_save,
         on_hit_ongoing_hp_loss=on_hit_hp_loss,
         on_hit_maximum_hp_save=on_hit_maximum_hp_save,
+        on_hit_ability_score_reduction=on_hit_ability_score_reduction,
         on_hit_contested_movement=on_hit_contested_movement,
         on_hit_modifier_effects=on_hit_modifiers,
         charge_profile=compile_charge(definition.charge_profile),

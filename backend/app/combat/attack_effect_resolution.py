@@ -25,6 +25,7 @@ class AttackEffectResolution:
     save_damage: Any = None
     on_hit_save: Any = None
     on_hit_maximum_hp_save: Any = None
+    ability_reduction: Any = None
     contested_movement: Any = None
     cunning_strike: Any = None
     cunning_strike_obscure: Any = None

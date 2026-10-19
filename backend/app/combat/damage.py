@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.attack_damage_type_choice import choose_attack_damage_type
+from app.combat.ability_score_reduction import ability_modifier_delta
 from app.combat.barbarian import rage_damage_bonus
 from app.combat.brutal_critical import brutal_critical_bonus_damage
 from app.combat.brutal_strike import brutal_strike_bonus_damage
@@ -101,6 +102,7 @@ def resolve_weapon_damage(
         else:
             weapon_modifier = (
                 attack.damage_bonus
+                + ability_modifier_delta(attacker, attack.attack_ability)
                 + rage_damage_bonus(attacker, attack)
                 + weapon_damage_flat_bonus(attacker, attack.weapon.id)
             )

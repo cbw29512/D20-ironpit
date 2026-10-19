@@ -37697,9 +37697,14 @@
         "conditional_damage": [],
         "on_hit_damage": [],
         "on_hit_save_effect": null,
+      "on_hit_ability_score_reduction": {
+        "ability": "strength",
+        "dice_count": 1,
+        "dice_size": 4
+      },
         "control_effect": null,
         "forbid_target_grappled_by_self": false,
-        "source_complete": false,
+        "source_complete": true,
         "unsupported_text": "the target's Strength score is reduced by 1d4. The target dies if this reduces its Strength to 0. Otherwise, the reduction lasts until the target finishes a short or long rest",
         "reach_ft": 5,
         "attack_ability": "dexterity"

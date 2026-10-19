@@ -39,6 +39,7 @@ class SourceAttack2014(BaseModel):
     conditional_attack_advantage: list[object] = Field(default_factory=list)
     on_hit_damage: list[object] = Field(default_factory=list)
     on_hit_save_effect: object | None = None
+    on_hit_ability_score_reduction: object | None = None
     on_hit_contested_movement: object | None = None
     ongoing_damage_effect: object | None = None
     control_effect: object | None = None

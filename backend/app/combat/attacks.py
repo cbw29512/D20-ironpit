@@ -156,6 +156,15 @@ def resolve_attack(
             deferred_effect_armed=deferred_effect_armed,
         )
         description += attack_damage_reduction_description(effects, actual_defender.template.name)
+        if effects.ability_reduction is not None:
+            reduction = effects.ability_reduction
+            description += (
+                f" {weapon.name} reduces {actual_defender.template.name}'s "
+                f"{reduction.ability.title()} by {reduction.applied} "
+                f"({reduction.score_before} to {reduction.score_after})."
+            )
+            if reduction.death_outcome == "dead":
+                description += f" {actual_defender.template.name} dies at {reduction.ability.title()} 0."
         if d20_bonus_source_name:
             description += f" {d20_bonus_source_name} adds its bonus die to the attack roll."
         if outcome_adjustment_name:
