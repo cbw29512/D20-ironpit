@@ -118,7 +118,9 @@
       }
     }
     const count = action.damageDiceCount || 0;
-    if (!action.damageComponents?.length && count && !(save.succeeded && action.successDamage === "none")) {
+    if (!action.damageComponents?.length && count && (
+      action.damageOnlyOnSuccess ? save.succeeded : !(save.succeeded && action.successDamage === "none")
+    )) {
       if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
       const rolls = damageRolls(action, count, options.sharedDamageRolls);
       const rawTotal = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
@@ -144,6 +146,11 @@
         }
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
       }
+    }
+    if (!save.succeeded && action.failureSetsZeroHp) {
+      const zeroHp = window.IRON_PIT_BROWSER_ZERO_HP;
+      if (!zeroHp?.reduceToZero) throw new Error("Direct zero-HP save outcome requires universal zero-HP runtime.");
+      zeroHp.reduceToZero(target.state, states(options.setup));
     }
     const riderRuntime = window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS;
     let appliedConditions = [];
@@ -182,6 +189,7 @@
     if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
     if (appliedConditions.includes("restrained")) description += ` ${target.state.template.name} is Restrained while Grappled.`;
     if (pushedFt) description += ` ${target.state.template.name} is pushed ${pushedFt} feet away.`;
+    if (!save.succeeded && action.failureSetsZeroHp) description += ` ${target.state.template.name} drops directly to 0 HP (not damage).`;
     return { sequence, round_number: round, event_type: "saving_throw", actor_id: actor.combatant_id, actor_name: actor.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll,
       save_ability: action.saveAbility, save_dc: action.dc, save_succeeded: save.succeeded, damage_roll: damageRoll,
