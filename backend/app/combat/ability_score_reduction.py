@@ -1,16 +1,19 @@
 """Source-neutral fight-state ability-score reductions.
 
 An immutable combatant card holds the base score. The existing fight-state
-ability_score_reductions mapping holds cumulative, rest-removable reductions.
+ability_score_reductions mapping holds cumulative reductions only for the current fight.
 This is an effect primitive, not a monster-specific attack resolver.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
+import logging
 
 from app.combat.instant_death import apply_terminal_death
 from app.domain.character_builds import AbilityName
 from app.domain.runtime import CombatantState
+
+logger = logging.getLogger(__name__)
 
 ABILITIES = frozenset((
     "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",
@@ -60,26 +63,31 @@ def apply_ability_score_reduction(
     zero_kills: bool = False,
     affected_states: list[CombatantState] | None = None,
 ) -> AbilityScoreReductionResult:
-    """Apply source-declared score drain, optionally killing at zero.
+    """Apply a cumulative fight-only score reduction and kill at zero.
 
-    An effect that cannot kill must leave the target at least one point;
-    explicit zero_kills uses terminal death for both monsters and pregens.
-    Repeated hits stack in fight state. Greater Restoration already removes
-    one named ability's reduction via the shared restoration resolver.
+    All six ability scores share the same 0-score terminal death rule in Iron
+    Pit. The legacy zero_kills argument is accepted only for old call sites;
+    it can never make a score-0 result nonlethal. Source templates are not
+    mutated and new combat state starts with the original scores.
     """
-    if type(amount) is not int or amount < 0:
-        raise ValueError("Ability score reduction amount must be a nonnegative integer.")
-    before = effective_ability_score(state, ability)
-    if state.is_dead or amount == 0 or before == 0:
-        return AbilityScoreReductionResult(ability, before, before, 0)
-    minimum = 0 if zero_kills else 1
-    after = max(minimum, before - amount)
-    applied = before - after
-    if applied:
-        state.ability_score_reductions[ability] = (
-            state.ability_score_reductions.get(ability, 0) + applied
-        )
-    outcome = apply_terminal_death(state, affected_states=affected_states) if (
-        zero_kills and after == 0 and applied
-    ) else None
-    return AbilityScoreReductionResult(ability, before, after, applied, outcome)
+    try:
+        if type(amount) is not int or amount < 0:
+            raise ValueError("Ability score reduction amount must be a nonnegative integer.")
+        before = effective_ability_score(state, ability)
+        if state.is_dead or amount == 0 or before == 0:
+            return AbilityScoreReductionResult(ability, before, before, 0)
+        after = max(0, before - amount)
+        applied = before - after
+        if applied:
+            state.ability_score_reductions[ability] = (
+                state.ability_score_reductions.get(ability, 0) + applied
+            )
+        outcome = apply_terminal_death(state, affected_states=affected_states) if (
+            after == 0 and applied
+        ) else None
+        return AbilityScoreReductionResult(ability, before, after, applied, outcome)
+    except ValueError:
+        raise
+    except Exception as exc:
+        logger.exception("Ability-score reduction failed for %s (%s).", state.template.name, ability)
+        raise RuntimeError("Ability-score reduction could not be resolved.") from exc
