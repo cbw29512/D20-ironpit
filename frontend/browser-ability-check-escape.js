@@ -33,7 +33,8 @@
     if (!scores || !Number.isInteger(scores[ability])) {
       throw new Error(`${state.template.name} lacks ability scores for a ${ability} check.`);
     }
-    return Math.floor((scores[ability] - 10) / 2);
+    return Math.floor((scores[ability] - 10) / 2)
+      + (window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION?.abilityModifierDelta(state, ability) || 0);
   }
 
   function resolve(sequence, round, actor, setup = null) {
