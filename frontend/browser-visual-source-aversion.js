@@ -39,6 +39,7 @@
       if (typeof visualSight !== "boolean" || typeof nonvisualPerception !== "boolean") {
         throw Error("Perception facts must be booleans");
       }
+      checked(windows); // Invalid sourced aversion state must fail closed even without visual sight.
       const visual = visualSight && !active(windows, observerId, sourceId, turn);
       return { visualSight: visual, canPerceive: visual || nonvisualPerception };
     } catch (error) { console.error("Failed source-scoped visual perception", error); throw error; }
