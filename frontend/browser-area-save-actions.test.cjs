@@ -267,3 +267,52 @@ require("./browser-save-target-cap-parity.test.cjs");
     window.IRON_PIT_BROWSER_SAVES.legalAction = originalLegal;
   }
 }
+
+
+// Source-neutral multi-target RAW: a printed 'all other creatures' Action affects
+// eligible allies as well as foes, without including its source.
+{
+  const source = member("mob:source", "monsters", 1, 1);
+  const ally = member("mob:living-ally", "monsters", 2, 1);
+  const foe = member("hero:foe", "heroes", 3, 1);
+  const effect = {
+    id: "arbitrary-wave", name: "Renamed Homebrew Wave",
+    actionCost: "action", targetScope: "all-other-creatures",
+    saveAbility: "constitution", dc: 13, range: 0,
+    area: { shape: "emanation", origin: "self", radius_ft: 30 },
+  };
+  source.state.template.saving_throw_actions = [effect];
+  const arena = { heroes: [foe], monsters: [source, ally],
+    map_definition: { width_squares: 10, height_squares: 10 } };
+  calls.length = 0;
+  const selection = A.choose(source, arena);
+  assert.ok(selection, "Generic all-creatures save should be selectable");
+  assert.deepEqual(new Set(selection.placement.targetIds), new Set(["hero:foe", "mob:living-ally"]));
+  const result = A.resolve(200, 1, source, arena, selection);
+  assert.deepEqual(new Set(result.events.map(row => row.target_id)),
+    new Set(["hero:foe", "mob:living-ally"]));
+  assert.ok(!calls.some(item => item.target === source.combatant_id));
+  assert.equal(source.state.action_available, false);
+
+  // No hostile creatures need be in range when the source affects its friends.
+  source.state.action_available = true;
+  calls.length = 0;
+  const alliesOnly = { ...arena, heroes: [] };
+  const onlyFriends = A.choose(source, alliesOnly);
+  assert.ok(onlyFriends);
+  assert.deepEqual(onlyFriends.placement.targetIds, ["mob:living-ally"]);
+  A.resolve(220, 1, source, alliesOnly, onlyFriends);
+  assert.deepEqual(calls.map(row => row.target), ["mob:living-ally"]);
+
+  // Existing source cards still target enemies unless they opt in explicitly.
+  source.state.action_available = true;
+  source.state.template.saving_throw_actions = [{ ...effect, targetScope: "enemies" }];
+  const oldRules = A.choose(source, arena);
+  assert.ok(oldRules);
+  assert.deepEqual(oldRules.placement.targetIds, ["hero:foe"]);
+  const forged = { ...oldRules,
+    placement: { ...oldRules.placement, targetIds: ["mob:living-ally"] } };
+  assert.throws(() => A.resolve(240, 1, source, arena, forged), /stale or illegal/);
+  assert.equal(source.state.action_available, true);
+}
+console.log("All-other-creatures area-save friendly-fire parity passed.");
