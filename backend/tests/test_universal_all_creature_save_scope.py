@@ -59,7 +59,9 @@ def test_an_all_other_creatures_action_can_hit_an_ally_without_enemy_exposure() 
     actor = _member("actor", "heroes", 1)
     friend = _member("friend", "heroes", 2)
     actor.state.template.saving_throw_actions = [_action()]
-    setup = _setup(actor, [friend], [])
+    # Iron Pit requires an opposing roster member, even when none is in range.
+    far_enemy = _member("far-enemy", "monsters", 11)
+    setup = _setup(actor, [friend], [far_enemy])
     choice = choose_area_save(actor, setup)
     assert choice is not None
     assert choice[1].target_ids == ("friend",)
