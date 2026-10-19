@@ -1,4 +1,5 @@
 from __future__ import annotations
+from app.content.monster_visual_turn_start_2014 import visual_turn_start_rule_2014
 import logging, re
 
 from app.content.environment_context_reactions import verified_sunlight_weakness_2014
@@ -162,6 +163,9 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         if bonus_attack_grants_2014(monster):
             bound.add(_RAMPAGE)
         bound.update(bound_terminal_effect_trait_names_2014(monster))
+        gaze = visual_turn_start_rule_2014(monster)
+        if gaze is not None:
+            bound.add(gaze.source_name)
         if supports_regeneration_2014(monster):
             bound.add("Regeneration")
         if supports_reaction_each_turn_2014(monster):

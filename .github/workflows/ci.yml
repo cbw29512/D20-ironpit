@@ -517,6 +517,9 @@ jobs:
           node frontend/browser-audit.test.cjs
           node frontend/browser-roll-revisions.test.cjs
           node frontend/browser-dice-recording.test.cjs
+          node frontend/browser-turn-start-visual-policy.test.cjs
+          node frontend/browser-visual-source-aversion.test.cjs
+          node frontend/browser-visual-turn-start-integration.test.cjs
           IRON_PIT_RECORD_GOLDENS=1 node frontend/browser-engine.test.cjs
           node frontend/engine-test-lab.test.cjs
           node --check frontend/engine-test-lab.js

@@ -13,7 +13,7 @@ const deterministicDice = (seed = 2014) => {
 };
 
 assert.equal(window.IRON_PIT_2014_MVP_READY, true, "2014 browser test roster must be loaded");
-assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 229);
+assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 231);
 const pudding2014 = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-black-pudding"];
 assert.ok(pudding2014, "Source-complete Pseudopod must make Black Pudding playable");
 const pseudopod2014 = pudding2014.attacks.find((attack) => attack.id === "2014-black-pudding-pseudopod");
@@ -109,6 +109,20 @@ function runCertifiedFight(heroId, expectedLevel) {
   }
 }
 
+// Source-proven gaze monsters must actually enter full browser combat.
+for (const [monsterId, dc] of [["2014-basilisk", 12], ["2014-medusa", 14]]) {
+  const template = window.IRON_PIT_BROWSER_MONSTERS_2014[monsterId];
+  assert.ok(template?.visualTurnStartRule, monsterId + " must serialize its gaze.");
+  assert.equal(template.visualTurnStartRule.saveDc, dc);
+  window.IRON_PIT_DICE = deterministicDice(dc * 2014);
+  const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
+    ruleset: "2014", hero_ids: ["karnok-stoneward-2014-l5"],
+    monster_ids: [monsterId],
+  });
+  assert.notEqual(battle.outcome, "active", monsterId + " must complete the fight");
+  assert.ok(battle.events.some(e => e.feature_id === "petrifying-gaze"),
+    monsterId + " must execute turn-start gaze behavior in a real battle");
+}
 runCertifiedFight("karnok-stoneward-2014-l5", 5);
 runCertifiedFight("rokhan-stonefury-2014-l5", 5);
 runCertifiedFight("mara-quickstep-2014-l7", 7);
