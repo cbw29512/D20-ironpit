@@ -18,7 +18,7 @@ from app.combat.source_effect_immunity import (
 from app.combat.defensive_modifier_rules import saving_throw_advantage_source_names
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throw_rolls import resolve_saving_throw
-from app.combat.zero_hp import apply_damage
+from app.combat.zero_hp import apply_damage, reduce_to_zero_hit_points
 from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, SavingThrowAction
@@ -130,6 +130,8 @@ def resolve_save_action(
         ):
             from app.combat.restoration_riders import apply_hit_point_maximum_reduction
             apply_hit_point_maximum_reduction(target, incoming)
+    if not succeeded and action.failure_sets_zero_hp:
+        reduce_to_zero_hit_points(target.state, dice=dice, affected_states=affected_states)
     applied_conditions: list[str] = []
     if succeeded and action.source_effect_immunity_on_success:
         grant_source_effect_immunity(
@@ -183,6 +185,8 @@ def resolve_save_action(
     if "grappled" in applied_conditions: description += f" {target.state.template.name} is Grappled."
     if "restrained" in applied_conditions: description += f" {target.state.template.name} is Restrained while Grappled."
     if pushed_ft: description += f" {target.state.template.name} is pushed {pushed_ft} feet away."
+    if not succeeded and action.failure_sets_zero_hp:
+        description += f" {target.state.template.name} drops directly to 0 HP (not damage)."
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="saving_throw", actor_id=actor.combatant_id, actor_name=actor.state.template.name,
         target_id=target.combatant_id, target_name=target.state.template.name, saving_throw_roll=save_roll,
