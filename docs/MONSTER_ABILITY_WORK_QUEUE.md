@@ -4,6 +4,17 @@
 
 **What happened:** the 124-monster / 305-blocker review was recorded in unmerged [PR #680](https://github.com/cbw29512/D20-ironpit/pull/680), while the old operating table was frozen on October 8. Use the reconciled records below, not a guessed next monster. Original source blueprint is available at [the pinned PR commit](https://github.com/cbw29512/D20-ironpit/blob/88881607f1f271a2fdb37ffcf95008d9d8d1a07c/docs/MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md); source cards and generated current-main blockers are decisive for certification. This ledger does not falsely upgrade a plan to shipped code.
 
+## Active finite attack resources — PR #952
+
+- Owner: ChatGPT, ACTIVE; resumed `feat/2014-shared-attack-ammunition` at `93e358bf2355fec62da2df395d38b99595bb9cb5`; starting main `634b654391aa9f2bad689c4b285e5c3a40f1bedc`. This resumes the interrupted writer, with no parallel ammunition implementation.
+- Family/source: 2014 Manticore Tail Spike / Tail Spike Regrowth; user-approved allowance is 24 per fight, one spent per attempted attack, including misses. Three attempted shots spend three; unused spikes do not regenerate during the fight.
+- Immutable schema: `AttackCapabilityDefinition.resource_id/resource_cost`, compiled `WeaponAttack`, `ResourceDefinition.max_uses`, and complete melee/ranged `AttackActionVariant` alternatives. Mutable state: existing `CombatantState.resources`; fresh state rebuild restores the template allowance.
+- Python: `attacks.resolve_attack`, `attack_action_sequences.sequence_resource_fundable`, and shared resource checks in `pit_policy`. Browser: `browser-attack.js`, `browser-formation.js`, `browser-multiattack-choices.js`, `browser-resources.js`; serializer: `scripts/browser_template_serializer.py`.
+- Resume findings: prior CI used a stale browser roster; generated head corrected the bundle but retained an obsolete 227-monster live catalog guard and omitted the ammunition browser regression from CI. Those defects and three further stale roster-count assertions are repaired on the resumed branch; previous-head results are not certification.
+- Expected edits: live catalog guard, ammunition/source-equivalence tests, CI registration, generator-owned outputs if required, and this queue. Gaze #949 owns a separate mechanic; its eventual admission totals must be reconciled after merge rather than copied into this branch.
+- Focused evidence: 11 Python cases; browser tests for canonical 24-shot depletion, melee fallback, natural-1 interruption, fresh-fight reset, renamed two-unit-cost character attacks, catalog loading, and edition isolation. Canonical 1v1/6v6 production-engine encounters replay deterministically. All owning generators ran without artifact drift. The 2024 Manticore prints no finite Tail Spike resource and remains unchanged.
+- Next action: require exact-final-head CI before merge. Source admission on this branch is 228/327 versus main's 227/327; this is not a completed-monster claim. Real webpage fights remain unverified: the cloud browser cannot reach the container HTTP server and its security policy rejects local-file URLs. No deployment or production unlock is authorized.
+
 <!-- BEGIN CURRENT 2014 MONSTER ISSUE MATRIX -->
 ## Current 2014 monster issue-to-fix matrix — 2026-10-18
 

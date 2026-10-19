@@ -52,6 +52,8 @@ class AttackCapabilityDefinition(BaseModel):
     id: str
     name: str
     weapon_id: str | None = None
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=1000)
     unavailable_reason: str | None = None
     attack_kind: WeaponAttackKind
     attack_bonus: int

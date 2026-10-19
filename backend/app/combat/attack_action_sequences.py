@@ -5,6 +5,7 @@ from app.combat.dice import roll_dice
 from app.combat.attack_action_choices import attack_choice, save_choice, followup_target
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.printed_damage import weapon_mean_damage, save_mean_damage
+from app.combat.resources import resource_available
 from app.domain.attack_action_definitions import AttackActionVariant
 from app.domain.models import WeaponAttackKind, DiceRoll
 logger = logging.getLogger(__name__)
@@ -37,6 +38,27 @@ def sequence_damage(attacker, setup, variant, mode) -> float:
         raise
 
 
+def sequence_resource_fundable(attacker, setup, variant, mode) -> bool:
+    """A full printed sequence may not promise more shots than remain."""
+    try:
+        reservations = {}
+        multiplier = (variant.repetitions.dice_count * variant.repetitions.dice_size
+                      if variant.repetitions else 1)
+        for chosen, _ in sequence_choices(attacker, setup, variant, mode):
+            if chosen is None:
+                continue
+            attack = chosen[1]
+            if attack.resource_id is not None:
+                reservations[attack.resource_id] = (
+                    reservations.get(attack.resource_id, 0) + attack.resource_cost * multiplier
+                )
+        return all(resource_available(attacker.state, key, cost)
+                   for key, cost in reservations.items())
+    except Exception:
+        logger.exception("Failed attack sequence resource check for %s.", attacker.combatant_id)
+        raise
+
+
 def select_sequence(attacker, setup):
     try:
         definition = attacker.state.template.attack_action
@@ -49,7 +71,8 @@ def select_sequence(attacker, setup):
                     for v in variants if v.attack_kind in {None, WeaponAttackKind.MELEE}
                     for choice, _ in sequence_choices(attacker, setup, v, WeaponAttackKind.MELEE))
         mode = WeaponAttackKind.MELEE if melee else WeaponAttackKind.RANGED
-        permitted = [v for v in variants if v.attack_kind in {None, mode}]
+        permitted = [v for v in variants if v.attack_kind in {None, mode}
+                     and sequence_resource_fundable(attacker, setup, v, mode)]
         if not permitted:
             return None
         chosen = max(permitted, key=lambda v: sequence_damage(attacker, setup, v, mode))

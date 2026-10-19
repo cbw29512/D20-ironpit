@@ -128,7 +128,13 @@
   }
   function chooseAttack(member, setup, ids, kind = null, preferBackline = false, targetId = null) {
     const allowed = new Set(ids);
-    const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id) && (!kind || attack.kind === kind));
+    const profiles = attacks(member.state.template).filter((attack) => {
+      if (!allowed.has(attack.id) || (kind && attack.kind !== kind)) return false;
+      if (!attack.resourceId) return true;
+      const resource = window.IRON_PIT_BROWSER_RESOURCES;
+      if (!resource) throw new Error("Finite attack resources require browser-resources.js.");
+      return resource.available(member.state, attack.resourceId, attack.resourceCost || 1);
+    });
     for (const target of targetOrder(member, setup, preferBackline)) {
       if (targetId !== null && target.combatant_id !== targetId) continue;
       const distance = attackDistance(member, target);
