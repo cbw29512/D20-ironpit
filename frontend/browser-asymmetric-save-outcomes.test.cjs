@@ -40,7 +40,7 @@ window.IRON_PIT_BROWSER_ZERO_HP = {
     return state.is_dead ? "dead" : "unconscious";
   },
 };
-window.IRON_PIT_BROWSER_DICE = { rollMany: () => [1, 2, 3] };
+window.IRON_PIT_DICE = { rollMany: () => [1, 2, 3] };
 window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS = { saveAdvantageSourceNames: () => [] };
 window.IRON_PIT_BROWSER_CONCENTRATION = { endIfIncapacitated: () => {} };
 load("browser-saves.js");
