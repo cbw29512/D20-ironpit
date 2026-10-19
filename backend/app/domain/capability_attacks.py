@@ -10,6 +10,7 @@ from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, Grap
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
+from app.domain.environment_contexts import EnvironmentContextId
 from app.domain.weapons import (
     ConditionalAttackAdvantage,
     DamageSourceQualifier,
@@ -120,6 +121,11 @@ class SaveCapabilityDefinition(BaseModel):
     success_damage: Literal["none", "half"] = "none"
     failure_sets_zero_hp: bool = Field(default=False, exclude_if=lambda value: not value)
     damage_only_on_success: bool = Field(default=False, exclude_if=lambda value: not value)
+    requires_target_hearing: bool = Field(default=False, exclude_if=lambda value: not value)
+    excluded_target_creature_types: list[str] = Field(default_factory=list, exclude_if=lambda value: not value)
+    prohibited_environment_context_id: EnvironmentContextId | None = Field(
+        default=None, exclude_if=lambda value: value is None,
+    )
     grapple: GrappleEffectDefinition | None = None
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
