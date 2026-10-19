@@ -38,8 +38,8 @@ const state = () => ({
 }
 {
   const target = state();
-  assert.equal(R.apply(target, "strength", 100).scoreAfter, 1);
-  assert.equal(target.is_dead, false);
+  assert.equal(R.apply(target, "strength", 100).scoreAfter, 0);
+  assert.equal(target.is_dead, true);
   assert.throws(() => R.apply(target, "strength", -1), /Invalid ability reduction amount/);
   assert.throws(() => R.apply(target, "strength", 1.5), /Invalid ability reduction amount/);
   assert.throws(() => R.effectiveScore(target, "unknown"), /Unknown ability/);
@@ -61,5 +61,23 @@ const state = () => ({
   assert.equal(R.abilityModifierDelta(target, "strength"), -1);
   assert.equal(R.abilityModifierDelta(target, "dexterity"), 0);
   assert.equal(R.abilityModifierDelta(target, null), 0);
+}
+for (const ability of ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]) {
+  for (const kind of ["hero", "monster"]) {
+    const target = state();
+    target.template.kind = kind;
+    const original = target.template.ability_scores[ability];
+    const result = R.apply(target, ability, original, { zeroKills: false });
+    assert.equal(result.scoreAfter, 0, ability);
+    assert.equal(result.deathOutcome, "dead", ability);
+    assert.equal(target.is_dead, true);
+    assert.equal(target.current_hp, 0);
+    assert.equal(target.is_unconscious, false);
+    assert.equal(target.death_save_failures || 0, 0);
+    assert.equal(target.template.ability_scores[ability], original);
+    const newFight = { ...target, template: target.template, is_dead: false, is_alive: true,
+      current_hp: 25, ability_score_reductions: {} };
+    assert.equal(R.effectiveScore(newFight, ability), original, "fresh battle starts from original card");
+  }
 }
 console.log("Universal browser ability-score reduction parity passed.");
