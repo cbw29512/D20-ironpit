@@ -593,6 +593,7 @@ jobs:
           node frontend/browser-ability-check-escape.test.cjs
           node frontend/browser-unicorn-2014.test.cjs
           node frontend/browser-frightful-presence.test.cjs
+          node frontend/browser-source-visible-repeat-save.test.cjs
           node frontend/browser-holy-aura-blind.test.cjs
           node frontend/browser-matching-dice-leap.test.cjs
           node frontend/browser-pooled-healing.test.cjs
