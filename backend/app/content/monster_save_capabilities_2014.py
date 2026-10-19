@@ -125,6 +125,8 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                 target_scope=str(action.get("target_scope", "enemies")),
                 damage=damage, damage_type=action.get("damage_type"),
                 success_damage=str(action.get("success_damage", "none")),
+                failure_sets_zero_hp=bool(action.get("failure_sets_zero_hp", False)),
+                damage_only_on_success=bool(action.get("damage_only_on_success", False)),
                 resource_id=action.get("resource_id"),
                 resource_cost=int(action.get("resource_cost", 1) or 1),
                 requires_no_active_grapple=bool(action.get("requires_no_active_grapple", False)),
