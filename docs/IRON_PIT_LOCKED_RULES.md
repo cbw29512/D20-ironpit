@@ -30,6 +30,9 @@ Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §1.1, §2, §25; `SOUL.md`; `AGENT
 
 ## Death and dying
 
+- **Ordered attack damage stops when a monster reaches terminal 0 HP — user-approved 2026-10-19.** One attack roll may yield several separately typed damage components (for example, piercing followed by poison). Check the applicable defenses, apply each component and update the monster's HP in source order. Once a monster reaches 0 HP and no already-declared zero-HP survival/replacement has kept it active, terminate all remaining damage/effects directed at that monster; it is no longer a legal attack target, including later Multiattack slots. A special survival that keeps the monster at positive HP remains source-driven, not ignored.
+- **Pregen characters use their distinct dying lifecycle.** At 0 HP they are Unconscious/dying and make Death Saving Throws under the existing rules, rather than being immediately removed as dead monsters. Damage to dying pregens follows the death-save damage rules (including special cases), not the blanket monster skip. No new universal instant-death shortcut for pregens.
+
 - **Antimagic Susceptibility is terminal in the Iron Pit.** An applied semantic `antimagic` effect kills a susceptible combatant. Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §13, Antimagic susceptibility.
 - **Dispel Magic uses Stunned for susceptible creatures.** Reuse the shared 10-round debuff; this supersedes the earlier Dispel-also-kills choice. Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §13, Antimagic susceptibility.
 - **Petrified is terminal in the Iron Pit.** When the Petrified debuff is successfully applied, that combatant is immediately Dead for the rest of the match. This is an explicit Iron Pit arena rule, not a statement of tabletop RAW. The universal condition engine owns this consequence; monster/ability names must not dispatch it.
