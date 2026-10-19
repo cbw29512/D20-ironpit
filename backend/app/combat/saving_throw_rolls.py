@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.ability_score_reduction import ability_modifier_delta
 from app.combat.barbarian import rage_active
 from app.combat.condition_rules import automatically_fails_strength_dexterity_save
 from app.combat.danger_sense import danger_sense_advantage
@@ -107,7 +108,9 @@ def resolve_saving_throw(
             return None, False
         if ability not in state.template.saving_throw_bonuses:
             raise ValueError(f"{state.template.name} lacks a certified {ability.title()} saving throw bonus.")
-        modifier = state.template.saving_throw_bonuses[ability] + saving_throw_flat_bonus(state, ability)
+        modifier = (state.template.saving_throw_bonuses[ability]
+                    + ability_modifier_delta(state, ability)
+                    + saving_throw_flat_bonus(state, ability))
         roll = apply_d20_bonus_dice(
             state,
             ModifierKind.SAVING_THROW_BONUS_DIE,
