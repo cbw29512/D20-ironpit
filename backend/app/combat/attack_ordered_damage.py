@@ -1,7 +1,7 @@
 """Apply ordered hit components through the existing typed-defense/HP primitives.
 
-A terminal monster stops taking components immediately at 0 HP. A character
-uses the existing whole-hit/death-save lifecycle instead (see attack_hit_damage).
+A terminal monster stops at 0 HP; a dying character continues through later
+damage components, which use the existing damage-at-zero/death-save rules.
 """
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from app.domain.models import CombatantState, DamageRollComponent, DamageType
 logger = logging.getLogger(__name__)
 
 
-def resolve_ordered_monster_hit_damage(
+def resolve_ordered_hit_damage(
     target: CombatantState,
     components: list[DamageRollComponent],
     *,
@@ -24,19 +24,17 @@ def resolve_ordered_monster_hit_damage(
     setup,
     ignored_resistance_types: set[DamageType] | None,
 ) -> tuple[int, list[DamageRollComponent], str | None]:
-    """Stop later typed components once an ordinary monster actually reaches 0 HP.
+    """Stop when a monster reaches terminal 0 HP or any combatant is dead.
 
-    Never bypass source-defined replacements: if a zero-HP effect preserves
-    positive HP, subsequent components are still eligible to resolve.
+    The shared zero-HP resolver handles a character's subsequent damage-at-zero
+    failures, and honors source-defined survival/replacement effects.
     """
     try:
-        if target.template.kind != "monster":
-            raise ValueError("Ordered monster hit damage requires a monster target.")
         processed: list[DamageRollComponent] = []
         applied_total = 0
         outcome: str | None = None
         for component in components:
-            if target.is_dead or target.current_hp <= 0:
+            if target.is_dead or (target.template.kind == "monster" and target.current_hp <= 0):
                 break
             applied, healed, absorption_source = resolve_damage_amount(
                 component.total,
@@ -64,4 +62,4 @@ def resolve_ordered_monster_hit_damage(
         raise
     except Exception as exc:
         logger.exception("Ordered attack damage failed for %s.", target.template.name)
-        raise RuntimeError("Ordered monster hit damage could not be resolved.") from exc
+        raise RuntimeError("Ordered hit damage could not be resolved.") from exc
