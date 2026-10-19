@@ -22,10 +22,10 @@ def resolve_death_trigger_save(
     dice: DiceProvider,
     setup: EncounterSetup,
 ) -> BattleEvent | None:
-    """Use ordinary saves/damage without spending a dead creature's Action."""
+    """Use ordinary saves/damage for death at any HP, without spending an Action."""
     try:
-        if not source.state.is_dead or source.state.current_hp != 0:
-            raise ValueError("A source-death trigger requires a dead source at zero HP.")
+        if not source.state.is_dead:
+            raise ValueError("A source-death trigger requires a dead source.")
         if target.state.is_dead:
             return None
         return resolve_save_action(
