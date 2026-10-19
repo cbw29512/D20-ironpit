@@ -80,4 +80,26 @@ for (const ability of ["strength", "dexterity", "constitution", "intelligence", 
     assert.equal(R.effectiveScore(newFight, ability), original, "fresh battle starts from original card");
   }
 }
+{
+  // This generic attack rider is attached to source cards by the serializer.
+  // Rename its displayed ability without changing the underlying resolution.
+  const target = state();
+  const original = structuredClone(target.template.ability_scores);
+  window.IRON_PIT_DICE = { rollMany: (count, sides) => {
+    assert.equal(count, 1);
+    assert.equal(sides, 4);
+    return [2];
+  } };
+  const effect = { source: "Unrelated Homebrew", ability: "strength", diceCount: 1, diceSize: 4 };
+  const first = R.applyOnHit(target, effect);
+  const second = R.applyOnHit(target, { ...effect, source: "Strength Drain" });
+  assert.deepEqual(first.rolls, [2]);
+  assert.equal(second.scoreAfter, 2);
+  assert.equal(target.ability_score_reductions.strength, 4);
+  assert.deepEqual(target.template.ability_scores, original);
+  assert.equal(R.applyOnHit(target, effect).deathOutcome, "dead");
+  assert.equal(target.death_save_failures || 0, 0);
+  assert.deepEqual(state().template.ability_scores, original, "future fight uses original card");
+  assert.throws(() => R.applyOnHit(state(), { ...effect, diceSize: 0 }), /Invalid/);
+}
 console.log("Universal browser ability-score reduction parity passed.");
