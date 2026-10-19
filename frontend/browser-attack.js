@@ -9,9 +9,10 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { attackAdvantage: (state) => state.is_unconscious, autoCritical: (state) => state.is_unconscious, has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious, suppressAttackAdvantage: () => false, canSee: (observer, target) => !observer.active_effect_ids.includes("blinded") && !target.active_effect_ids.includes("invisible") };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
-  function conditionSources(attacker, defender, distance, targetId) {
+  function conditionSources(attacker, defender, distance, targetId, setup = null) {
     let advantage = M().attacksAgainstAdvantage(defender) + B2().attacksAgainstAdvantage(defender) + (M().d20TestAdvantage?.(attacker) || 0), disadvantage = X().attackDisadvantage(attacker) + (window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.attacksAgainstDisadvantage(defender, attacker, distance) || 0); const ignoresUnseen = Boolean(attacker.template.ignore_unseen_target_attack_disadvantage);
     if (Q().has(attacker, "blinded") && !ignoresUnseen) disadvantage += 1; if (Q().has(attacker, "invisible") && !Q().canSee(defender, attacker, distance)) advantage += 1;
+    if (Q().has(attacker, "frightened", setup)) disadvantage += 1;
     if (attacker.active_effect_ids.includes("prone")) disadvantage += 1; if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1; if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1; disadvantage += G()?.attackDisadvantage(attacker, targetId) || 0;
     if (defender.active_effect_ids.includes("dodge") && !Q().incapacitated(defender) && M().effectiveSpeed(defender) > 0 && !G()?.speedIsZero(defender)) disadvantage += 1; if (Q().attackAdvantage(defender)) advantage += 1;
     if (!ignoresUnseen && (Q().has(defender, "invisible") || attacker.template.blind_beyond_blindsight) && !Q().canSee(attacker, defender, distance)) disadvantage += 1; if (defender.active_effect_ids.includes("restrained")) advantage += 1; if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
@@ -47,7 +48,7 @@
     window.IRON_PIT_BROWSER_TIMED_CONTROL?.registerTurnAttack(attacker.state, extra.offTurn === true);
     const recklessStarted = extra.allowReckless === true && B2().activate(attacker, attack, round);
     if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
-    const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
+    const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id, extra.setup);
     const disadvantage = conditions.disadvantage + SAP().disadvantage(attacker.state)
       + (T()?.nextAttackDisadvantage(attacker.state) || 0) + (extra.otherDisadvantageSources || 0) + (window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS?.disadvantageSources(attacker, extra.setup, "attack_rolls") || 0) + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(attacker.state, attack.attackAbility || attack.attack_ability) || 0)
       + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.attackRollDisadvantage(attacker.state) || 0);

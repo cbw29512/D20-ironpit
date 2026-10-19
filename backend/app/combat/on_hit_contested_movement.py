@@ -27,17 +27,17 @@ class OnHitContestedMovementResolution:
     direction: str | None = None
 
 
-def _contest_disadvantage(member: EncounterCombatant, ability: str) -> int:
+def _contest_disadvantage(member: EncounterCombatant, ability: str, setup=None) -> int:
     return (
         ability_check_disadvantage_sources(member.state, ability)
-        + int(has_condition(member.state, "poisoned") or has_condition(member.state, "frightened"))
+        + int(has_condition(member.state, "poisoned") or has_condition(member.state, "frightened", setup=setup))
     )
 
 
-def _roll_check(member: EncounterCombatant, ability: str, dice) -> DiceRoll:
+def _roll_check(member: EncounterCombatant, ability: str, dice, setup=None) -> DiceRoll:
     mode = ability_check_roll_mode(
         member.state,
-        disadvantage_sources=_contest_disadvantage(member, ability),
+        disadvantage_sources=_contest_disadvantage(member, ability, setup),
     )
     return roll_d20(
         dice,
@@ -65,8 +65,8 @@ def resolve_on_hit_contested_movement(
         ):
             return OnHitContestedMovementResolution()
 
-        source_roll = _roll_check(source, effect.source_ability, dice)
-        target_roll = _roll_check(target, effect.target_ability, dice)
+        source_roll = _roll_check(source, effect.source_ability, dice, setup)
+        target_roll = _roll_check(target, effect.target_ability, dice, setup)
 
         source_roll, _ = resolve_ability_check_outcome(
             source.state,

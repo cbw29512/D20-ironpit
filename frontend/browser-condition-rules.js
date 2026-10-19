@@ -2,14 +2,14 @@
   "use strict";
 
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
-  function has(state, id) {
-    if ((state.template?.innate_condition_ids || []).includes(id)) return !I().immune(state, id);
+  function has(state, id, setup = null) {
+    if ((state.template?.innate_condition_ids || []).includes(id)) return !I().immune(state, id, null, { setup });
     if (!state.active_effect_ids.includes(id)) return false;
     const timed = (state.timed_effects || []).filter((effect) => effect.effect_id === id);
     if (timed.length) {
-      return timed.some((effect) => !I().immune(state, id, null, { sourceIsMagical: Boolean(effect.source_is_magical) }));
+      return timed.some((effect) => !I().immune(state, id, null, { sourceIsMagical: Boolean(effect.source_is_magical), setup }));
     }
-    return !I().immune(state, id);
+    return !I().immune(state, id, null, { setup });
   }
 
   const invisibilitySuppressed = (state) => Boolean(

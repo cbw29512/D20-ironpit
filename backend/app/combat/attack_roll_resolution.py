@@ -79,11 +79,12 @@ def resolve_attack_roll(
     advantage_sources: int,
     other_disadvantage_sources: int,
     close_enemy_active: bool,
+    setup=None,
 ) -> AttackRollResolution:
     """Resolve the shared attack-roll source stack and consume roll-scoped modifiers."""
     try:
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(
-            attacker, defender, distance_ft, defender_event_id,
+            attacker, defender, distance_ft, defender_event_id, setup=setup,
         )
         disadvantage_total = (
             other_disadvantage_sources

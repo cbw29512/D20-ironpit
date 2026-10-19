@@ -57,7 +57,7 @@ def resolve_attack(
             round_number=round_number, turn_key=turn_key,
             advantage_sources=advantage_sources,
             other_disadvantage_sources=other_disadvantage_sources,
-            close_enemy_active=close_enemy_active,
+            close_enemy_active=close_enemy_active, setup=reaction_setup,
         )
         attack_roll = roll_resolution.roll
         mode = roll_resolution.mode

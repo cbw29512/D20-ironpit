@@ -40,6 +40,7 @@ def apply_turned_creature_effects(
             source_effect_id=source_effect_id,
             source_template=source.state.template,
             source_is_magical=True,
+            target_actor=target, setup=setup,
             applied_round=round_number,
             expires_round=(round_number + expires_rounds) if expires_rounds is not None else None,
             expiry_timing=expiry_timing,
@@ -75,7 +76,7 @@ def apply_turned_creature_effects(
         if include_incapacitated:
             conditions.append("incapacitated")
         for condition in conditions:
-            if not condition_is_immune(target.state, condition):
+            if not condition_is_immune(target.state, condition, actor=target, setup=setup):
                 applied.append(apply_timed_condition(
                     target.state,
                     condition,

@@ -62,7 +62,7 @@ def resolve_escape_check(
         disadvantage = ability_check_disadvantage_sources(actor.state, ability)
         disadvantage += int(
             has_condition(actor.state, POISONED_EFFECT_ID)
-            or has_condition(actor.state, FRIGHTENED_EFFECT_ID)
+            or has_condition(actor.state, FRIGHTENED_EFFECT_ID, setup=setup)
         )
         mode = ability_check_roll_mode(
             actor.state,

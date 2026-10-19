@@ -64,11 +64,11 @@
         const runtime = IP();
         if (!runtime) throw new Error("Intimidating Presence runtime is not loaded.");
         const target = F().targetOrder(member, setup)[0] || null;
-        return target && runtime.canUse(member, target)
+        return target && runtime.canUse(member, target, setup)
           ? { payload: { targetId: target.combatant_id, delivery: "control", expectedDamage: 0 } } : null;
       },
       resolve: ({ sequence, round, member, setup }, candidate) => {
-        const event = IP().resolve(sequence, round, member, memberById(setup, candidate.payload.targetId));
+        const event = IP().resolve(sequence, round, member, memberById(setup, candidate.payload.targetId), setup);
         if (!event) throw new Error("Intimidating Presence candidate became illegal before resolution.");
         return { events: [event], sequence: sequence + 1 };
       },
