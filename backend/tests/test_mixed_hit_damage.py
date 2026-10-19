@@ -114,3 +114,57 @@ def test_type_specific_defenses_apply_after_components_are_rolled() -> None:
     assert [component.total for component in event.damage_components] == [8, 8]
     assert [component.applied_total for component in event.damage_components] == [4, 0]
     assert event.damage_roll is not None and event.damage_roll.total == 4
+
+
+def test_renamed_card_attack_uses_same_typed_damage_and_defense_primitives() -> None:
+    """Source labels may change; AC, rolls and typed defenses alone decide combat."""
+    original = _venom_bite()
+    renamed = original.model_copy(deep=True)
+    renamed.id = "synthetic-anonymous-attack"
+    renamed.weapon.id = "synthetic-anonymous-weapon"
+    renamed.weapon.name = "Completely Different Label"
+    renamed.on_hit_damage[0].source = "An Unrelated Effect Label"
+
+    def resolve(attack: WeaponAttack):
+        setup = _setup()
+        hero, attacker = setup.heroes[0], setup.monsters[0]
+        hero.state.template.damage_resistances = [DamageType.PIERCING]
+        hero.state.template.damage_vulnerabilities = [DamageType.POISON]
+        starting_hp = hero.state.current_hp
+        event = resolve_attack(
+            1, 1, attacker.state, hero.state, attack, 5,
+            FixedDiceProvider([15, 4, 2]),
+            actor_event_id=attacker.combatant_id,
+            target_event_id=hero.combatant_id,
+        )
+        return event, starting_hp
+
+    original_event, original_hp = resolve(original)
+    renamed_event, renamed_hp = resolve(renamed)
+    for event, before in ((original_event, original_hp), (renamed_event, renamed_hp)):
+        assert event.hit is True
+        assert [part.damage_type for part in event.damage_components] == [
+            DamageType.PIERCING, DamageType.POISON,
+        ]
+        assert [part.total for part in event.damage_components] == [8, 2]
+        # Piercing resistance halves 8 to 4; poison vulnerability doubles 2 to 4.
+        assert [part.applied_total for part in event.damage_components] == [4, 4]
+        assert event.damage_roll is not None and event.damage_roll.total == 8
+        assert event.hp_after == before - 8
+    assert renamed_event.attack_id != original_event.attack_id
+
+
+def test_missed_mixed_type_attack_rolls_no_damage_and_spends_its_action() -> None:
+    setup = _setup()
+    hero, attacker = setup.heroes[0], setup.monsters[0]
+    starting_hp = hero.state.current_hp
+    event = resolve_attack(
+        1, 1, attacker.state, hero.state, _venom_bite(), 5,
+        FixedDiceProvider([1]),
+        actor_event_id=attacker.combatant_id,
+        target_event_id=hero.combatant_id,
+    )
+    assert event.hit is False
+    assert event.turn_terminated is True  # Locked Pit natural-1 rule.
+    assert event.damage_components == []
+    assert hero.state.current_hp == starting_hp
