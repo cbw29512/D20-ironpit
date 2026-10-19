@@ -51,5 +51,25 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION = { effectiveScore, effectiveModifier, abilityModifierDelta, apply };
+  function applyOnHit(state, effect, affectedStates = []) {
+    try {
+      if (!effect || !ABILITIES.has(effect.ability)
+        || !Number.isInteger(effect.diceCount) || effect.diceCount < 1 || effect.diceCount > 40
+        || !Number.isInteger(effect.diceSize) || effect.diceSize < 2 || effect.diceSize > 100) {
+        throw new Error("Invalid on-hit ability-score reduction declaration.");
+      }
+      if (typeof window.IRON_PIT_DICE?.rollMany !== "function") {
+        throw new Error("Browser dice runtime is required for ability reduction.");
+      }
+      if (state.is_dead) return null;
+      const rolls = window.IRON_PIT_DICE.rollMany(effect.diceCount, effect.diceSize);
+      const result = apply(state, effect.ability, rolls.reduce((sum, roll) => sum + roll, 0), { affectedStates });
+      return { ...result, source: effect.source, rolls };
+    } catch (error) {
+      console.error("On-hit ability-score drain failed", { combatant: state?.template?.name, error });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION = { effectiveScore, effectiveModifier, abilityModifierDelta, apply, applyOnHit };
 })();
