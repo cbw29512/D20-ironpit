@@ -37,11 +37,11 @@ def test_zero_score_is_lethal_through_existing_instant_death_lifecycle() -> None
     assert apply_ability_score_reduction(state, "strength", 2, zero_kills=True).applied == 0
 
 
-def test_nonlethal_source_caps_reduction_and_invalid_inputs_fail_closed() -> None:
+def test_any_source_reaching_zero_kills_and_invalid_inputs_fail_closed() -> None:
     state = _state()
-    score = effective_ability_score(state, "strength")
-    assert apply_ability_score_reduction(state, "strength", 999).score_after == 1
-    assert not state.is_dead
+    assert apply_ability_score_reduction(state, "strength", 999).score_after == 0
+    assert state.is_dead
+    state = _state()
     with pytest.raises(ValueError):
         apply_ability_score_reduction(state, "strength", -1)
     with pytest.raises(ValueError):
@@ -70,3 +70,28 @@ def test_strength_loss_changes_strength_based_modifiers_not_dexterity() -> None:
     assert ability_modifier_delta(state, "dexterity") == 0
     assert ability_modifier_delta(state, None) == 0
     assert state.template.ability_scores.strength == 14
+
+
+@pytest.mark.parametrize("ability", [
+    "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",
+])
+@pytest.mark.parametrize("is_hero", [False, True])
+def test_every_ability_zero_is_terminal_for_both_sides_and_resets(ability: str, is_hero: bool) -> None:
+    template = _state().template
+    if is_hero:
+        template = template.model_copy(update={"kind": "hero"})
+    state = build_combatant_state(template)
+    original = effective_ability_score(state, ability)
+    assert original > 0
+    # No source-specific lethal flag: this is universal for ANY ability reduction.
+    result = apply_ability_score_reduction(state, ability, original, zero_kills=False)
+    assert result.score_after == 0
+    assert result.death_outcome == "dead"
+    assert state.is_dead and state.current_hp == 0 and not state.is_alive
+    assert not state.is_unconscious
+    assert state.death_save_failures == 0 and state.death_save_successes == 0
+    assert template.ability_scores.score(ability) == original
+    next_fight = build_combatant_state(template)
+    assert effective_ability_score(next_fight, ability) == original
+    assert next_fight.ability_score_reductions == {}
+    assert next_fight.is_alive and not next_fight.is_dead
