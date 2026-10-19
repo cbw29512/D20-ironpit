@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 
 from app.combat.ability_score_reduction import (
-    apply_ability_score_reduction, effective_ability_score, effective_ability_modifier,
+    apply_ability_score_reduction, effective_ability_score, effective_ability_modifier, ability_modifier_delta,
 )
 from app.combat.state import build_combatant_state
 from app.content.monster_roster_2014 import build_basic_2014_monsters
@@ -48,3 +48,25 @@ def test_nonlethal_source_caps_reduction_and_invalid_inputs_fail_closed() -> Non
         apply_ability_score_reduction(state, "strength", True)
     with pytest.raises(ValueError):
         effective_ability_score(state, "bogus")
+
+
+def test_a_pregen_at_zero_strength_is_dead_without_death_saves() -> None:
+    base = _state().template
+    hero = build_combatant_state(base.model_copy(update={"kind": "hero"}))
+    amount = effective_ability_score(hero, "strength")
+    outcome = apply_ability_score_reduction(hero, "strength", amount, zero_kills=True)
+    assert outcome.score_after == 0
+    assert outcome.death_outcome == "dead"
+    assert hero.is_dead and not hero.is_unconscious and hero.current_hp == 0
+    assert hero.death_save_failures == 0 and hero.death_save_successes == 0
+
+
+def test_strength_loss_changes_strength_based_modifiers_not_dexterity() -> None:
+    state = _state()
+    assert ability_modifier_delta(state, "strength") == 0
+    assert ability_modifier_delta(state, "dexterity") == 0
+    apply_ability_score_reduction(state, "strength", 2)
+    assert ability_modifier_delta(state, "strength") == -1
+    assert ability_modifier_delta(state, "dexterity") == 0
+    assert ability_modifier_delta(state, None) == 0
+    assert state.template.ability_scores.strength == 14
