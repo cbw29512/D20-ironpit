@@ -80,4 +80,45 @@ const ritualSickle = {
   assert.equal(event.damage_roll.total, 4);
 }
 
+
+{
+  // Names and IDs are card metadata, not branches in the damage resolver.
+  const renamedSourceAttack = structuredClone(venomBite);
+  renamedSourceAttack.id = "synthetic-anonymous-attack";
+  renamedSourceAttack.name = "Completely Different Label";
+  renamedSourceAttack.onHitDamage[0].source = "An Unrelated Effect Label";
+
+  const check = (attack) => {
+    const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+    const attacker = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+    hero.state.template.damage_resistances = ["piercing"];
+    hero.state.template.damage_vulnerabilities = ["poison"];
+    const startingHp = hero.state.current_hp;
+    window.IRON_PIT_DICE = queuedDice([15, 4, 2]);
+    const event = A.resolveAttack(1, 1, attacker, hero, attack, 5);
+    assert.equal(event.hit, true);
+    assert.deepEqual(event.damage_components.map((part) => part.damage_type), ["piercing", "poison"]);
+    assert.deepEqual(event.damage_components.map((part) => part.total), [8, 2]);
+    assert.deepEqual(event.damage_components.map((part) => part.applied_total), [4, 4]);
+    assert.equal(event.damage_roll.total, 8);
+    assert.equal(hero.state.current_hp, startingHp - 8);
+    return event;
+  };
+  const original = check(venomBite);
+  const renamed = check(renamedSourceAttack);
+  assert.notEqual(original.attack_id, renamed.attack_id);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const attacker = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  const startingHp = hero.state.current_hp;
+  window.IRON_PIT_DICE = queuedDice([1]);
+  const event = A.resolveAttack(1, 1, attacker, hero, venomBite, 5);
+  assert.equal(event.hit, false);
+  assert.equal(event.turn_terminated, true); // Pit natural-1 policy.
+  assert.deepEqual(event.damage_components, []);
+  assert.equal(hero.state.current_hp, startingHp);
+}
+
 console.log("Browser mixed typed hit-damage regressions passed, including fixed typed riders.");
