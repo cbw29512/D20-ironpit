@@ -136,6 +136,17 @@ def supported_save_max_hp_reduction_2014(value: object) -> bool:
     )
 
 
+def supported_ability_score_reduction_2014(value: object) -> bool:
+    """Reject unsupported or incomplete nested source effects."""
+    if not isinstance(value, dict) or set(value) != {"ability", "dice_count", "dice_size"}:
+        return False
+    return (
+        str(value["ability"]).lower() in _ABILITIES
+        and type(value["dice_count"]) is int and 1 <= value["dice_count"] <= 40
+        and type(value["dice_size"]) is int and 2 <= value["dice_size"] <= 100
+    )
+
+
 def supported_contested_movement_2014(value: object) -> bool:
     if not isinstance(value, dict):
         return False
