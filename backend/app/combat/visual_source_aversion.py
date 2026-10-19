@@ -65,8 +65,10 @@ def visual_source_perception(windows: Iterable[VisualAversionWindow], observer_i
     try:
         if type(visual_sight) is not bool or type(nonvisual_perception) is not bool:
             raise ValueError("Perception facts must be booleans")
-        visual = visual_sight and not visual_aversion_active(
+        # Validate the aversion state even if sight is absent.
+        aversion_active = visual_aversion_active(
             windows, observer_id, source_combatant_id, observer_turns_started)
+        visual = visual_sight and not aversion_active
         return visual, visual or nonvisual_perception
     except Exception:
         log.exception("Failed source-scoped visual perception")
