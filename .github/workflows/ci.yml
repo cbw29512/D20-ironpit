@@ -560,6 +560,8 @@ jobs:
           node frontend/browser-mixed-damage.test.cjs
           node frontend/browser-included-weapon-damage.test.cjs
           node frontend/browser-multiattack-sequences.test.cjs
+          node frontend/browser-attack-ammunition.test.cjs
+          node frontend/browser-manticore-ammunition-2014.test.cjs
           node frontend/browser-veteran-multiattack.test.cjs
           node frontend/browser-grick-sequence.test.cjs
           node frontend/browser-fungus-sequence.test.cjs

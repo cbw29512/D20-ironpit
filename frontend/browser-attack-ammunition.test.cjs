@@ -10,23 +10,25 @@ assert.ok(fixture, "Source Multiattack fixture is required.");
 const S = window.IRON_PIT_BROWSER_STATE;
 const MC = window.IRON_PIT_BROWSER_MULTIATTACK_CHOICES;
 const F = window.IRON_PIT_BROWSER_FORMATION;
-function setupFor(ammo) {
+function setupFor(ammo, cost = 1) {
   const card = structuredClone(fixture.actor);
+  card.name = "Crystal Warden";
+  card.kind = "character";
   const melee = card.attacks.find(attack => attack.kind === "melee");
   const ranged = card.attacks.find(attack => attack.kind === "ranged");
   assert.ok(melee && ranged);
   card.attacks = [
     { ...melee, id: "bite", name: "Bite" },
     { ...melee, id: "claw", name: "Claw" },
-    { ...ranged, id: "spike", name: "Tail Spike", resourceId: "spikes", resourceCost: 1 },
+    { ...ranged, id: "crystal-bolt", name: "Crystal Bolt", resourceId: "crystals", resourceCost: cost },
   ];
-  card.resources = { spikes: ammo };
+  card.resources = { crystals: ammo };
   card.attack_action = { id: "grouped", name: "Multiattack", isAttackAction: false, variants: [
     { id: "melee", attackKind: "melee", slots: [
       { attackIds: ["bite"] }, { attackIds: ["claw"] }, { attackIds: ["claw"] },
     ] },
     { id: "ranged", attackKind: "ranged", slots: [
-      { attackIds: ["spike"] }, { attackIds: ["spike"] }, { attackIds: ["spike"] },
+      { attackIds: ["crystal-bolt"] }, { attackIds: ["crystal-bolt"] }, { attackIds: ["crystal-bolt"] },
     ] },
   ] };
   const actor = { combatant_id: "actor", side: "monsters", state: S.buildState(card) };
@@ -47,15 +49,25 @@ function setupFor(ammo) {
   assert.equal(events.length, 3);
   assert.deepEqual(events.map(event => event.resource_remaining), [23, 22, 21]);
   assert.ok(events.every(event => !event.hit && event.description.includes("ammunition remaining")));
-  assert.equal(actor.state.resources.spikes, 21);
+  assert.equal(actor.state.resources.crystals, 21);
 }
 {
   const { actor, setup } = setupFor(2);
   assert.equal(MC.selectSequence(actor, setup), null, "Three-shot option needs three ammunition");
-  assert.equal(F.chooseStandardAttack(actor, setup).attack.id, "spike");
-  actor.state.resources.spikes = 0;
+  assert.equal(F.chooseStandardAttack(actor, setup).attack.id, "crystal-bolt");
+  actor.state.resources.crystals = 0;
   assert.equal(F.chooseStandardAttack(actor, setup), null);
   assert.equal(MC.selectSequence(actor, setup), null);
-  assert.equal(setupFor(24).actor.state.resources.spikes, 24, "New fight restores source ammunition");
+  assert.equal(setupFor(24).actor.state.resources.crystals, 24, "New fight restores source ammunition");
+}
+{
+  const { actor, setup } = setupFor(6, 2);
+  const originalCard = structuredClone(actor.state.template);
+  const events = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, actor, setup)
+    .events.filter(event => event.event_type === "attack");
+  assert.deepEqual(events.map(event => event.resource_remaining), [4, 2, 0]);
+  assert.ok(events.every(event => event.attack_name === "Crystal Bolt"));
+  assert.deepEqual(actor.state.template, originalCard);
+  assert.equal(S.buildState(actor.state.template).resources.crystals, 6);
 }
 console.log("Universal browser ammunition: preview, three misses, depletion, fallback and reset passed.");
