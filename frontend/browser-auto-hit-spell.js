@@ -12,8 +12,12 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
 
   function resolve(sequence, round, caster, target, setup, choice, turnKey) {
+    try {
     const action = choice.action;
     if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.name} cannot be cast in this action window.`);
+    if (!C().spellTurnLegal(caster.state, turnKey, action.actionCost, action.level)) {
+      throw new Error("Spell conflicts with another cast on this turn.");
+    }
     if (target.side === caster.side || target.state.is_dead || !target.state.is_alive) throw new Error(`${action.name} requires a living enemy target.`);
     if (S().distance(caster, target) > action.range) throw new Error(`${action.name} target is out of range.`);
     if (!C().slotSpellAvailable(caster.state, turnKey)) throw new Error("A spell slot was already expended this turn.");
@@ -43,6 +47,7 @@
 
     const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
     A().applyDamage(target.state, total, false, total > 0 ? [action.damageType] : [], states, setup, components);
+    C().recordSpellTurn(caster.state, turnKey, action.actionCost, action.level);
     C().markSlotSpellCast(caster.state, turnKey);
     caster.state.resources[resourceId] -= 1;
     E().spend(caster.state, action.actionCost);
@@ -64,6 +69,10 @@
       animation: action.animation || "spell-projectile",
       description: `${caster.state.template.name} casts ${action.name}: ${choice.projectileCount} projectiles automatically strike ${target.state.template.name}.`,
     };
+    } catch (error) {
+      console.error("Auto-hit spell resolution failed.", { actor: caster?.combatant_id, ability: choice?.action?.name, error });
+      throw error;
+    }
   }
 
   window.IRON_PIT_BROWSER_AUTO_HIT_SPELL = { resolve };
