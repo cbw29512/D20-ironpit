@@ -20,6 +20,7 @@
       ["Persistent Spell Attacks", window.IRON_PIT_BROWSER_PERSISTENT_SPELL_ATTACKS?.installAbilityHooks],
     ];
     for (const [name, installer] of installers) {
+      if (name === "Visual Turn Start" && typeof installer !== "function") continue;
       if (typeof installer !== "function") throw new Error(`${name} ability hook installer is not loaded.`);
       installer();
     }
