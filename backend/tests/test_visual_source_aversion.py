@@ -26,7 +26,7 @@ def test_nonvisual_sense_does_not_trigger_gaze():
     assert not visual and perceived
     assert visual_source_perception(windows, "observer", "source-b", 1,
                                     visual_sight=True, nonvisual_perception=False) == (True, True)
-    rule = VisualTurnStartRule("source-trait", "Printed Name", 30, 12)
+    rule = VisualTurnStartRule(source_id="source-trait", source_name="Printed Name", range_ft=30, save_dc=12)
     facts = dict(distance_ft=15, source_active=True, target_active=True,
                  source_sees_target=True, target_immune=False,
                  target_surprised=False)
