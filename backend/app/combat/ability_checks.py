@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.ability_score_reduction import effective_ability_score
 from app.combat.d20_bonus_dice import (
     apply_d20_bonus_die_if_useful,
     apply_resource_backed_d20_bonus_if_useful,
