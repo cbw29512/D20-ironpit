@@ -292,6 +292,8 @@ def _save(action: Any) -> dict[str, Any]:
         row["requiresTargetHearing"] = True
     if action.requires_target_sight:
         row["requiresTargetSight"] = True
+    if getattr(action, "requires_target_to_see_source", False):
+        row["requiresTargetToSeeSource"] = True
     if action.area_healing_rider is not None:
         row["areaHealingRider"] = {
             "diceCount": action.area_healing_rider.dice_count,
@@ -393,6 +395,8 @@ def _failed_save_timed_effect(rider: Any) -> dict[str, Any]:
         row["escapeCheckDc"] = rider.escape_check_dc
     if rider.source_effect_immunity_on_end:
         row["sourceEffectImmunityOnEnd"] = True
+    if rider.repeat_save_disadvantage_while_source_visible:
+        row["repeatSaveDisadvantageWhileSourceVisible"] = True
     return row
 
 
