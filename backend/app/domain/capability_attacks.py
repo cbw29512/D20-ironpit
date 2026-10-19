@@ -118,6 +118,8 @@ class SaveCapabilityDefinition(BaseModel):
     damage: DiceSpec | None = None
     damage_type: DamageType | None = None
     success_damage: Literal["none", "half"] = "none"
+    failure_sets_zero_hp: bool = Field(default=False, exclude_if=lambda value: not value)
+    damage_only_on_success: bool = Field(default=False, exclude_if=lambda value: not value)
     grapple: GrappleEffectDefinition | None = None
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
@@ -133,6 +135,12 @@ class SaveCapabilityDefinition(BaseModel):
     def validate_damage(self) -> "SaveCapabilityDefinition":
         if (self.damage is None) != (self.damage_type is None):
             raise ValueError("Save damage dice and damage type must be declared together.")
+        if self.damage_only_on_success and self.success_damage != "none":
+            raise ValueError("Success-only save damage must not declare legacy success scaling.")
+        if self.damage_only_on_success and self.damage is None:
+            raise ValueError("Success-only save damage requires typed damage dice.")
+        if self.failure_sets_zero_hp and self.damage is not None and not self.damage_only_on_success:
+            raise ValueError("Zero-HP failure cannot coexist with ordinary failed-save damage.")
         if self.grapple and self.grapple.max_target_size and self.target_max_size:
             if self.grapple.max_target_size != self.target_max_size:
                 raise ValueError("Save target size and grapple target size cannot disagree.")
