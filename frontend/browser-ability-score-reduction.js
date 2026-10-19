@@ -25,24 +25,30 @@
   }
 
   function apply(state, ability, amount, { zeroKills = false, affectedStates = [] } = {}) {
-    if (!Number.isInteger(amount) || amount < 0) throw new Error("Invalid ability reduction amount.");
-    const before = effectiveScore(state, ability);
-    if (state.is_dead || amount === 0 || before === 0) {
-      return { ability, scoreBefore: before, scoreAfter: before, applied: 0, deathOutcome: null };
+    try {
+      // zeroKills is a deprecated call-site option: zero in ANY ability always kills.
+      if (!Number.isInteger(amount) || amount < 0) throw new Error("Invalid ability reduction amount.");
+      const before = effectiveScore(state, ability);
+      if (state.is_dead || amount === 0 || before === 0) {
+        return { ability, scoreBefore: before, scoreAfter: before, applied: 0, deathOutcome: null };
+      }
+      const after = Math.max(0, before - amount);
+      const applied = before - after;
+      const zero = after === 0 && applied ? window.IRON_PIT_BROWSER_TERMINAL_EFFECTS : null;
+      // Fail closed before changing state if the terminal-death handler is absent.
+      if (after === 0 && applied && !zero?.applyTerminalDeath) {
+        throw new Error("Terminal effect runtime is required.");
+      }
+      if (applied > 0) {
+        state.ability_score_reductions ||= {};
+        state.ability_score_reductions[ability] = (state.ability_score_reductions[ability] || 0) + applied;
+      }
+      const deathOutcome = after === 0 && applied ? zero.applyTerminalDeath(state, affectedStates) : null;
+      return { ability, scoreBefore: before, scoreAfter: after, applied, deathOutcome };
+    } catch (error) {
+      console.error("Browser ability-score reduction failed", { combatant: state?.template?.name, ability, error });
+      throw error;
     }
-    const after = Math.max(zeroKills ? 0 : 1, before - amount);
-    const applied = before - after;
-    if (applied > 0) {
-      state.ability_score_reductions ||= {};
-      state.ability_score_reductions[ability] = (state.ability_score_reductions[ability] || 0) + applied;
-    }
-    let deathOutcome = null;
-    if (zeroKills && after === 0 && applied) {
-      const zero = window.IRON_PIT_BROWSER_TERMINAL_EFFECTS;
-      if (!zero?.applyTerminalDeath) throw new Error("Terminal effect runtime is required.");
-      deathOutcome = zero.applyTerminalDeath(state, affectedStates);
-    }
-    return { ability, scoreBefore: before, scoreAfter: after, applied, deathOutcome };
   }
 
   window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION = { effectiveScore, effectiveModifier, abilityModifierDelta, apply };
