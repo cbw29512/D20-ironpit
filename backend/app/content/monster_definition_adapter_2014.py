@@ -161,7 +161,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         primary_attack_id=attacks[0].id, attack_action=multiattack_2014(monster),
         save_actions=save_capabilities_2014(monster),
         spell_save_actions=[*innate_spell_save_actions_2014(monster), *prepared.saves],
-        spell_attack_actions=list(prepared.attacks), auto_hit_spell_actions=list(prepared.auto_hits),
+        spell_attack_actions=list(prepared.attacks), auto_hit_spell_actions=list(prepared.auto_hits), defensive_spell_actions=list(prepared.defenses),
         persistent_save_zone_actions=[zone for zone in [fetid_cloud_zone_2014(monster)] if zone is not None],
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
             *berserk_self_buffs_2014(monster),
