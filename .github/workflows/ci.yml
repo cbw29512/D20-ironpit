@@ -696,6 +696,15 @@ jobs:
           node frontend/browser-save-action-cost.test.cjs
           node frontend/browser-2014-audit-fixes.test.cjs
 
+      - name: Upload deterministic monster fight transcripts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-fight-transcripts-${{ github.sha }}
+          path: frontend/monster-golden-transcripts.json
+          if-no-files-found: ignore
+          retention-days: 30
+
   combat-certification:
     if: ${{ always() }}
     needs: [source-and-python, browser-regressions]
