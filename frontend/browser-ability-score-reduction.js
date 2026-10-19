@@ -40,7 +40,7 @@
     if (zeroKills && after === 0 && applied) {
       const zero = window.IRON_PIT_BROWSER_ZERO_HP;
       if (!zero?.applyInstantDeath) throw new Error("Instant-death runtime is required for lethal ability reduction.");
-      deathOutcome = zero.applyInstantDeath(state, affectedStates);
+      deathOutcome = window.IRON_PIT_BROWSER_TERMINAL_EFFECTS.applyTerminalDeath(state, affectedStates);
     }
     return { ability, scoreBefore: before, scoreAfter: after, applied, deathOutcome };
   }
