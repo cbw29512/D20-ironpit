@@ -4,6 +4,7 @@ import logging
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.monster_arena_action_policy_2014 import PIT_BANNED_ACTION_LABELS_2014
 from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014, verified_arena_inert_trait_2014
+from app.content.monster_informational_action_proofs_2014 import verified_nonactionable_action_2014
 from app.content.monster_arena_unavailable_reactions_2014 import arena_unavailable_reaction_names_2014
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
@@ -90,6 +91,7 @@ def _source_name_blockers(
     extras = [
         name for name in extras
         if action_label_from_name(name) not in allowed_extras
+        and not verified_nonactionable_action_2014(monster, name)
     ]
     blockers = []
     if extras:
