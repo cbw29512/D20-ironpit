@@ -294,6 +294,10 @@ def _save(action: Any) -> dict[str, Any]:
         row["requiresTargetSight"] = True
     if getattr(action, "requires_target_to_see_source", False):
         row["requiresTargetToSeeSource"] = True
+    if action.required_target_creature_types:
+        row["requiredTargetCreatureTypes"] = list(action.required_target_creature_types)
+    if action.excluded_target_creature_types:
+        row["excludedTargetCreatureTypes"] = list(action.excluded_target_creature_types)
     if action.area_healing_rider is not None:
         row["areaHealingRider"] = {
             "diceCount": action.area_healing_rider.dice_count,
