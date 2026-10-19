@@ -39,7 +39,7 @@ def test_staged_save_transitions_and_source_parameters():
 
 def test_invalid_inputs_fail_closed():
     with pytest.raises(ValueError):
-        VisualTurnStartRule("", "label", 30, 12)
+        VisualTurnStartRule(source_id="", source_name="label", range_ft=30, save_dc=12)
     with pytest.raises(ValueError):
         VisualTurnStartRule(source_id="id", source_name="label", range_ft=0, save_dc=12)
     with pytest.raises(ValueError):
