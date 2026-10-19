@@ -8,6 +8,7 @@ from app.content.monster_save_control_2014 import (
     supports_failed_save_control_2014,
 )
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_source_save_outcome_bindings_2014 import source_proven_asymmetric_saves_2014
 from app.domain.capability_attacks import SaveCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
 from app.domain.combatants import ResourceDefinition
@@ -85,6 +86,7 @@ def unsupported_source_actions_2014(
             str(action.get("name", "")).casefold()
             for action in monster.saving_throw_actions if isinstance(action, dict)
         )
+        allowed.update(item.name.casefold() for item in source_proven_asymmetric_saves_2014(monster))
         if monster.multiattack_slots:
             allowed.add("multiattack")
         if recharge_supported is None:
@@ -127,6 +129,9 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                 success_damage=str(action.get("success_damage", "none")),
                 failure_sets_zero_hp=bool(action.get("failure_sets_zero_hp", False)),
                 damage_only_on_success=bool(action.get("damage_only_on_success", False)),
+                requires_target_hearing=bool(action.get("requires_target_hearing", False)),
+                excluded_target_creature_types=list(action.get("excluded_target_creature_types", [])),
+                prohibited_environment_context_id=action.get("prohibited_environment_context_id"),
                 resource_id=action.get("resource_id"),
                 resource_cost=int(action.get("resource_cost", 1) or 1),
                 requires_no_active_grapple=bool(action.get("requires_no_active_grapple", False)),
@@ -139,6 +144,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                 failed_save_push_ft=int(action.get("failure_push_ft", 0) or 0),
                 animation=str(action.get("animation", "save-effect")),
             ))
+        result.extend(source_proven_asymmetric_saves_2014(monster))
         return result
     except Exception:
         logger.exception("Failed to adapt 2014 save actions for %s.", monster.name)
@@ -150,10 +156,16 @@ def save_resources_2014(monster: SourceMonster2014) -> list[ResourceDefinition]:
         action.resource_id for action in save_capabilities_2014(monster)
         if action.resource_id is not None and action.resource_id in monster.action_recharges
     }
-    return [
+    resources = [
         ResourceDefinition(id=resource_id, name=resource_id.replace("-", " ").title(), max_uses=1)
         for resource_id in sorted(ids)
     ]
+    for action in source_proven_asymmetric_saves_2014(monster):
+        if action.resource_id and action.resource_id not in ids:
+            resources.append(ResourceDefinition(
+                id=action.resource_id, name=action.name, max_uses=1,
+            ))
+    return resources
 
 
 def recharge_rules_2014(monster: SourceMonster2014) -> list[RechargeRule]:
