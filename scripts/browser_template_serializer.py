@@ -265,6 +265,8 @@ def _save(action: Any) -> dict[str, Any]:
              "damageBonus": item.damage_bonus, "damageType": item.damage_type}
             for item in action.damage_components
         ]
+    if action.target_scope != "enemies":
+        row["targetScope"] = action.target_scope
     if action.target_max_size:
         row["targetMaxSize"] = _value(action.target_max_size)
     if action.area:

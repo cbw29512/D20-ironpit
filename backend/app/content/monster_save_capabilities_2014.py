@@ -122,6 +122,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                 id=str(action["id"]), name=str(action["name"]),
                 save_ability=str(action["save_ability"]), dc=int(action["dc"]),
                 range_ft=int(action["range_ft"]), area=action.get("area"),
+                target_scope=str(action.get("target_scope", "enemies")),
                 damage=damage, damage_type=action.get("damage_type"),
                 success_damage=str(action.get("success_damage", "none")),
                 resource_id=action.get("resource_id"),

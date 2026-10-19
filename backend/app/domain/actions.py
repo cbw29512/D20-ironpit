@@ -127,6 +127,9 @@ class SavingThrowAction(BaseModel):
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
     max_targets: int = Field(default=1, ge=1, le=20)
+    target_scope: Literal["enemies", "all-other-creatures"] = Field(
+        default="enemies", exclude_if=lambda value: value == "enemies",
+    )
     target_max_size: CreatureSize | None = None
     area: AreaTargeting | None = None
     damage_dice_count: int = Field(default=0, ge=0, le=40)
