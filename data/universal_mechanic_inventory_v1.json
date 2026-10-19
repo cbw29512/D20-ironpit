@@ -5864,7 +5864,7 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 100,
+    "blocked_monster_count": 98,
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
@@ -5883,7 +5883,7 @@
       "source:extra-action": 57,
       "source:legendary": 9,
       "source:reaction": 3,
-      "source:trait": 73
+      "source:trait": 71
     },
     "unresolved_printed_abilities": [
       {
@@ -6143,14 +6143,6 @@
           "Gelatinous Cube"
         ],
         "printed_name": "Ooze Cube"
-      },
-      {
-        "demand_count": 2,
-        "monsters": [
-          "Basilisk",
-          "Medusa"
-        ],
-        "printed_name": "Petrifying Gaze"
       },
       {
         "demand_count": 1,
