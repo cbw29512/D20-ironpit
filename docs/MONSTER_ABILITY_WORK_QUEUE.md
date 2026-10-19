@@ -4,6 +4,13 @@
 
 **What happened:** the 124-monster / 305-blocker review was recorded in unmerged [PR #680](https://github.com/cbw29512/D20-ironpit/pull/680), while the old operating table was frozen on October 8. Use the reconciled records below, not a guessed next monster. Original source blueprint is available at [the pinned PR commit](https://github.com/cbw29512/D20-ironpit/blob/88881607f1f271a2fdb37ffcf95008d9d8d1a07c/docs/MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md); source cards and generated current-main blockers are decisive for certification. This ledger does not falsely upgrade a plan to shipped code.
 
+## Current gaze admission reconciliation — 2026-10-19 (PR #949)
+
+- Ownership remains on the **existing** [PR #949](https://github.com/cbw29512/D20-ironpit/pull/949), not a duplicate gaze branch. Merge commit `6725cbfdd337e4f69f2dddf5abae50b5a073dd3f` joins the former gaze implementation to current main `d0851df14fba32d6bac8ff08e4ef20573f130e88`, preserving newer source fixes, current 229-monster roster proofs, and Python/browser shared visual start-turn rules. Generated owner artifacts were refreshed by the repository's sync workflow on `d6338d275156c608074906c60f35dd53ebe33c67`.
+- **Branch-only source admission is 231/327; 96 blocked**, versus **229/327; 98 blocked on main** at this checkpoint. These are source-classifier counts, not proof of a completed fight. Basilisk and Medusa are not marked merged, certified or webpage-battle-tested until the corresponding gates actually pass on the final head. Preserve source-specific DC 12 / 14, the Medusa's failure-by-5 escalation, aversion and sight requirements, and the universal Petrified Pit defeat rule.
+- Exact-head checks must run after a human-authored branch commit because automatic generator commits from `github-actions[bot]` do not launch certifying GitHub Actions. Never bypass the required CI, copy generated files by hand, or mark bot-triggered `action_required` runs as passing.
+- Separate PR #955 owns the corrected **2014 RAW one-hit typed damage** and dead-target legality regression. It does not add two separate death-save hits from one Bite. Reconcile its tested merge independently before publishing or counting 2014 completion.
+
 ## Verified existing-work check — 2026-10-19
 
 Checked against main `72fe95258db3793c5aba4d86ba5487217c03da51`, including closed/merged PRs and their actual source/test files. A generated blocker is not evidence that its mechanic needs rebuilding.
