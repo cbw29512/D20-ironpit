@@ -303,7 +303,7 @@ require("./browser-initiative-natural-one.test.cjs");
 
 {
   // Actual browser fights, not a mocked combat resolver. Preserve every event
-  // and compare seeded replays for multiple source monsters and a mixed 6v6.
+  // and compare seeded replays for multiple source monsters and a mixed 3v3.
   const { transcript, assertReplay } = require("./golden-monster-transcripts.cjs");
   const encounters = [
     { hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-commoner"], seed: 1801 },
