@@ -7,7 +7,7 @@ from app.combat.barrier_line_of_effect import clear_line_between_members
 from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import auto_hit_spell_expected_damage
-from app.combat.spellcasting import legal_slot_levels
+from app.combat.spellcasting import legal_slot_levels, spell_turn_legal
 from app.combat.spell_damage_maximizers import safe_maximizer_for_spell
 from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -35,7 +35,8 @@ def choose_auto_hit_spell(
         enemies = setup.monsters if caster.side == "heroes" else setup.heroes
         candidates: list[tuple[float, int, int, str, AutoHitSpellChoice]] = []
         for index, action in enumerate(caster.state.template.auto_hit_spell_actions):
-            if action.action_cost == "reaction" or not is_available(caster.state, action.action_cost):
+            if (action.action_cost == "reaction" or not is_available(caster.state, action.action_cost)
+                    or not spell_turn_legal(caster.state, turn_key, action.action_cost, action.level)):
                 continue
             for slot_level in legal_slot_levels(
                 caster.state,

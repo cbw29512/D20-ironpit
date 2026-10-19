@@ -4,7 +4,9 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.encounter_targeting import combatant_distance
-from app.combat.spellcasting import mark_slot_spell_cast
+from app.combat.spellcasting import (
+    mark_slot_spell_cast, record_spell_turn, slot_spell_available, spell_turn_legal,
+)
 from app.combat.suppression_zone_geometry import verbal_casting_blocked
 from app.combat.teleport_cancel import clear_teleport_cancelable_effects
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -61,12 +63,21 @@ def resolve_teleport(
             raise ValueError(f"{action.name} requires a destination argument.")
         if not is_available(caster.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")
+        if action.expends_spell_slot and not slot_spell_available(caster.state, turn_key):
+            raise ValueError("A spell slot has already been expended on this turn.")
+        if (action.level > 0 or action.expends_spell_slot) and not spell_turn_legal(
+            caster.state, turn_key, action.action_cost, action.level,
+        ):
+            raise ValueError("Teleport spell conflicts with another cast on this turn.")
         origin = caster.state.position.model_copy(deep=True)
         # Iron Pit: supplied destinations are ignored; teleport never changes x/y.
         _ = (destination, dice)
         resource = _resource(caster, action.resource_id)
         if action.resource_id and (resource is None or resource.current_uses < action.resource_cost):
             raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
+        # Check every prerequisite before mutating the fight's spell history.
+        if action.level > 0 or action.expends_spell_slot:
+            record_spell_turn(caster.state, turn_key, action.action_cost, action.level)
         if action.expends_spell_slot:
             mark_slot_spell_cast(caster.state, turn_key)
         spend(caster.state, action.action_cost)

@@ -5,7 +5,9 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.encounter_targeting import combatant_distance
-from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
+from app.combat.spellcasting import (
+    mark_slot_spell_cast, record_spell_turn, slot_spell_available, spell_turn_legal,
+)
 from app.combat.zero_hp import apply_damage
 from app.combat.spell_damage_maximizers import maximized_auto_hit_rolls
 from app.domain.auto_hit_spells import AutoHitSpellAction
@@ -33,6 +35,8 @@ def resolve_auto_hit_spell(
     try:
         if not is_available(caster.state, action.action_cost):
             raise ValueError(f"{action.name} cannot be cast in this action window.")
+        if not spell_turn_legal(caster.state, turn_key, action.action_cost, action.level):
+            raise ValueError("Spell conflicts with another cast on this turn.")
         if target.side == caster.side or target.state.is_dead or not target.state.is_alive:
             raise ValueError(f"{action.name} requires a living enemy target.")
         if combatant_distance(caster, target) > action.range_ft:
@@ -86,6 +90,8 @@ def resolve_auto_hit_spell(
             affected_states=affected_states,
             damage_components=applied_components,
         )
+        # Record the declared source-neutral spell before marking its own slot spent.
+        record_spell_turn(caster.state, turn_key, action.action_cost, action.level)
         mark_slot_spell_cast(caster.state, turn_key)
         resource.current_uses -= 1
         spend(caster.state, action.action_cost)

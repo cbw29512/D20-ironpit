@@ -44,6 +44,7 @@ function member(id, side, position, kind = "melee", options = {}) {
   template.defensive_spell_actions = options.blessCaster ? [bless] : [];
   template.resources = options.blessCaster ? { "spell-slot-1": 1 } : {};
   if (options.armorClass != null) template.armor_class = options.armorClass;
+  if (options.monster) template.kind = "monster";
   return { combatant_id: id, side, position_ft: position, state: S.buildState(template) };
 }
 
@@ -125,3 +126,20 @@ assert.deepEqual(bless.modifierEffects.map((effect) => effect.kind), ["attack-ro
 }
 
 console.log("Generated Bless targeting, independent-roll, and Concentration regressions passed.");
+
+// The same immutable defensive spell row must work on a monster card.
+try {
+  const caster = member("prepared-monster", "monsters", 0, "ranged", { blessCaster: true, monster: true });
+  const opponent = member("opponent", "heroes", 15);
+  const setup = { heroes: [opponent], monsters: [caster] };
+  const result = P.prepare(setup);
+  assert.equal(result.events.length, 1);
+  assert.equal(result.events[0].feature_id, "bless");
+  assert.equal(caster.state.resources["spell-slot-1"], 0);
+  assert.equal(caster.state.concentration.effect_id, "bless");
+  assert.deepEqual(new Set(caster.state.active_modifiers.map((row) => row.kind)),
+    new Set(["attack-roll-bonus-die", "saving-throw-bonus-die"]));
+} catch (error) {
+  console.error("Monster prepared defense browser parity failed", error);
+  throw error;
+}

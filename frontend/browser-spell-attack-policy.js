@@ -22,7 +22,8 @@
     const enemies = member.side === "heroes" ? setup.monsters : setup.heroes;
     const candidates = [];
     for (const [index, spell] of (member.state.template.spell_attack_actions || []).entries()) {
-      if (spell.actionCost === "reaction" || !E().available(member.state, spell.actionCost)) continue;
+      if (spell.actionCost === "reaction" || !E().available(member.state, spell.actionCost)
+        || !C().spellTurnLegal(member.state, turnKey, spell.actionCost, spell.level)) continue;
       const levels = slotLevels(member, spell, turnKey);
       if (!levels.length) continue;
       const policy = P();

@@ -504,6 +504,7 @@ jobs:
           node frontend/browser-initiative-resource-refill.test.cjs
           node frontend/browser-resource-conversion.test.cjs
           node frontend/browser-spell-save-disadvantage.test.cjs
+          node frontend/browser-spellcasting-slot-validation.test.cjs
           node frontend/browser-d20-bonus-dice.test.cjs
           node frontend/browser-d20-test-advantage.test.cjs
           node frontend/browser-failed-save-reroll.test.cjs

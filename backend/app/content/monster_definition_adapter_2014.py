@@ -40,6 +40,7 @@ from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014, fetid_cl
 from app.content.monster_leadership_2014 import leadership_actions_2014, leadership_resources_2014
 from app.content.monster_senses_2014 import special_senses_2014, bounded_blindsight_2014
 from app.content.monster_spell_slot_resources_2014 import monster_spell_slot_resources_2014
+from app.content.monster_prepared_spell_bindings_2014 import bind_prepared_spells_2014
 from app.content.monster_multiattack_2014 import multiattack_2014
 from app.content.monster_attack_ammunition_2014 import attack_ammunition_2014
 from app.content.monster_zero_hp_prevention_2014 import (
@@ -126,6 +127,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     resources.extend(healing_resources_2014(monster))
     resources.extend(innate_spell_resources_2014(monster))
     resources.extend(monster_spell_slot_resources_2014(monster))
+    prepared = bind_prepared_spells_2014(monster)
     resources.extend(zero_hp_prevention_resources_2014(monster))
     legendary_resource = legendary_resistance_resource_2014(monster)
     if legendary_resource is not None:
@@ -154,19 +156,18 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     return CombatantDefinition(
         id=f"2014-{monster.id}", name=monster.name, archetype=f"2014 {monster.creature_type}",
         challenge_rating=monster.challenge_rating, kind="monster", ruleset="2014",
-        creature_type=monster.creature_type,
-        size=CreatureSize(monster.size.lower()), ability_scores=scores,
+        creature_type=monster.creature_type, size=CreatureSize(monster.size.lower()), ability_scores=scores,
         armor_class=monster.armor_class, max_hp=monster.max_hp, speed_ft=standard_arena_closing_speed_from_modes(movement),
         movement_modes=movement, initiative_bonus=scores.modifier("dexterity"),
         blindsight_ft=blindsight_ft, truesight_ft=truesight_ft,
-        blindsight_deafened_ft=bounded[1] if bounded else None,
-        blind_beyond_blindsight=bounded is not None,
+        blindsight_deafened_ft=bounded[1] if bounded else None, blind_beyond_blindsight=bounded is not None,
         blindsight_requires_smell_when_deafened=bounded is not None,
         visual_turn_start_rule=visual_turn_start_rule_2014(monster),
         attacks=attacks,
         primary_attack_id=attacks[0].id, attack_action=multiattack_2014(monster),
         save_actions=save_capabilities_2014(monster),
-        spell_save_actions=innate_spell_save_actions_2014(monster),
+        spell_save_actions=[*innate_spell_save_actions_2014(monster), *prepared.saves],
+        spell_attack_actions=list(prepared.attacks), auto_hit_spell_actions=list(prepared.auto_hits), defensive_spell_actions=list(prepared.defenses),
         persistent_save_zone_actions=[zone for zone in [fetid_cloud_zone_2014(monster)] if zone is not None],
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
             *berserk_self_buffs_2014(monster),
@@ -174,10 +175,8 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
             *corrosive_form_retaliation_2014(monster),
             *condition_auras_from_source(monster.source_traits, "2014"),
             *contextual_save_defenses_2014(monster)[0], *leadership_actions_2014(monster)],
-        healing_actions=healing_actions_2014(monster),
-        condition_removal_actions=innate_condition_removal_2014(monster),
-        terminal_effect_tags=terminal_effect_tags_2014(monster),
-        effect_tag_condition_grants=effect_tag_condition_grants_2014(monster),
+        healing_actions=healing_actions_2014(monster), condition_removal_actions=innate_condition_removal_2014(monster),
+        terminal_effect_tags=terminal_effect_tags_2014(monster), effect_tag_condition_grants=effect_tag_condition_grants_2014(monster),
         legendary_actions=legendary_options,
         resources=resources, recharge_rules=recharge_rules_2014(monster),
         regeneration=regeneration_trait_2014(monster),

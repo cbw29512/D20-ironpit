@@ -67,7 +67,6 @@ const magicMissile = {
   projectileCount: 3, projectilesPerSlotAbove: 1,
   damageDiceCount: 1, damageDiceSize: 4, damageBonus: 1, damageType: "force",
 };
-
 {
   const caster = member("caster", "heroes", 0, {
     resources: { "spell-slot-1": 1, "spell-slot-2": 1 },
@@ -93,7 +92,6 @@ const magicMissile = {
   assert.equal(caster.state.resources["spell-slot-2"], 0);
   assert.equal(caster.state.action_available, false);
 }
-
 {
   const caster = member("caster-resistant", "heroes", 0, {
     resources: { "spell-slot-1": 1 },
@@ -113,9 +111,7 @@ const magicMissile = {
   assert.deepEqual(event.damage_components.map((part) => part.applied_total), [2, 2, 2]);
   assert.equal(event.damage_roll.total, 6);
 }
-
 console.log("Browser universal auto-hit spell regression passed.");
-
 {
   const caster = member("lethal-caster", "heroes", 0, {
     resources: { "spell-slot-1": 1 }, actions: [magicMissile],
@@ -130,4 +126,23 @@ console.log("Browser universal auto-hit spell regression passed.");
   assert.equal(event.hp_after, 0);
   assert.equal(event.is_dead, true, "Lethal auto-hit log must reflect monster death.");
   assert.equal(event.is_stable, false);
+}
+{
+  // Monster and character source labels must use the same 2014 cast-turn gate.
+  const caster = member("renamed-monster-caster", "monsters", 30, {
+    kind: "monster", resources: { "spell-slot-1": 1 },
+    actions: [{ ...magicMissile, id: "other-id", name: "Renamed Force Projectiles" }],
+  });
+  const target = member("hero-target", "heroes", 0);
+  const setup = { heroes: [target], monsters: [caster] };
+  const key = "1:renamed-monster-caster";
+  window.IRON_PIT_BROWSER_SPELLCASTING.recordSpellTurn(caster.state, key, "bonus_action", 1);
+  assert.equal(P.choose(caster, setup, key), null);
+  const beforeHp = target.state.current_hp;
+  assert.throws(() => R.resolve(1, 1, caster, target, setup, {
+    action: caster.state.template.auto_hit_spell_actions[0], slotLevel: 1, projectileCount: 3,
+  }, key), /conflicts with another cast/);
+  assert.equal(caster.state.resources["spell-slot-1"], 1);
+  assert.equal(target.state.current_hp, beforeHp);
+  assert.equal(caster.state.action_available, true);
 }

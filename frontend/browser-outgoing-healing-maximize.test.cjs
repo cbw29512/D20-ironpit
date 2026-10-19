@@ -7,7 +7,7 @@ const vm = require("node:vm");
 global.window = globalThis;
 
 window.IRON_PIT_ACTION_ECONOMY = { available: () => true };
-window.IRON_PIT_BROWSER_SPELLCASTING = { slotSpellAvailable: () => true };
+window.IRON_PIT_BROWSER_SPELLCASTING = { slotSpellAvailable: () => true, spellTurnLegal: () => true };
 window.IRON_PIT_BROWSER_STATE = { effectiveMaxHp: (state) => state.template.max_hp };
 window.IRON_PIT_BROWSER_SPELL_AREA = {};
 window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS = { healingMaximized: () => false };

@@ -99,3 +99,49 @@ def test_auto_hit_projectiles_apply_typed_damage_defenses_per_projectile() -> No
     assert [part.applied_total for part in event.damage_components] == [2, 2, 2]
     assert event.damage_roll is not None
     assert event.damage_roll.total == 6
+
+
+
+def test_renamed_auto_hit_spell_respects_2014_bonus_action_cast_history() -> None:
+    """The previous bonus-action spell, not the printed name, blocks the cast."""
+    import pytest
+
+    from app.combat.spellcasting import record_spell_turn
+
+    setup, caster, target = _setup()
+    action = caster.state.template.auto_hit_spell_actions[0].model_copy(
+        update={"id": "synthetic-auto-hit", "name": "Renamed Force Projectiles"},
+    )
+    key = "1:nyra"
+    record_spell_turn(caster.state, key, "bonus_action", 1)
+    assert choose_auto_hit_spell(caster, setup, key) is None
+
+    slot = next(item for item in caster.state.resources if item.id == "spell-slot-1")
+    remaining, hp_before = slot.current_uses, target.state.current_hp
+    with pytest.raises(ValueError, match="conflicts with another cast"):
+        resolve_auto_hit_spell(
+            1, 1, caster, target, setup, action, 1, 3, key, FixedDiceProvider([]),
+        )
+    assert slot.current_uses == remaining
+    assert target.state.current_hp == hp_before
+    assert caster.state.action_available is True
+
+
+def test_2024_auto_hit_spells_share_one_slot_gate() -> None:
+    import pytest
+
+    from app.combat.spellcasting import mark_slot_spell_cast
+
+    setup, caster, target = _setup()
+    caster.state.template.ruleset = "2024"
+    key = "1:nyra"
+    mark_slot_spell_cast(caster.state, key)
+    assert choose_auto_hit_spell(caster, setup, key) is None
+    slot = next(item for item in caster.state.resources if item.id == "spell-slot-1")
+    remaining = slot.current_uses
+    action = caster.state.template.auto_hit_spell_actions[0]
+    with pytest.raises(ValueError, match="conflicts with another cast"):
+        resolve_auto_hit_spell(
+            1, 1, caster, target, setup, action, 1, 3, key, FixedDiceProvider([]),
+        )
+    assert slot.current_uses == remaining

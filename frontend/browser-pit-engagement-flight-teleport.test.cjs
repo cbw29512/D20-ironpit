@@ -31,6 +31,7 @@ for (const file of [
   "browser-grid-path-search.js",
   "browser-grid-movement.js",
   "browser-teleport-cancel.js",
+  "browser-spellcasting.js",
   "browser-teleport.js",
   "browser-monsters-2014.js",
 ]) load(file);
@@ -47,7 +48,7 @@ const map = { id: "pit-lock", width_squares: 16, height_squares: 16, cell_size_f
 
 function member(id, side, x, y, extras = {}) {
   const state = S.buildState({
-    id, name: id, max_hp: 20, speed_ft: 30, size: "medium",
+    id, name: id, ruleset: "2014", max_hp: 20, speed_ft: 30, size: "medium",
     movement_modes: { walk_ft: 30, fly_ft: extras.flyFt || 0, climb_ft: 0, swim_ft: 0, burrow_ft: 0, hover: false },
     condition_immunities: [], resources: extras.resources || {}, traits: [],
     teleport_actions: extras.teleportActions || [],
@@ -222,5 +223,65 @@ function member(id, side, x, y, extras = {}) {
   assert.equal(roc.movement_modes.walk_ft, 20);
   assert.equal(roc.movement_modes.fly_ft, 120);
   assert.deepEqual(roc.attack_action.slots.map((slot) => slot.attackIds), [["2014-roc-beak"], ["2014-roc-talons"]]);
+}
+{
+  const spells = window.IRON_PIT_BROWSER_SPELLCASTING;
+  const makeCaster = () => member("source-neutral-caster", "heroes", 6, 6, {
+    resources: { "spell-slot-2": 1 },
+    teleportActions: [{
+      id: "renamed-teleport", name: "Renamed Teleport", level: 2,
+      actionCost: "bonus_action", resourceId: "spell-slot-2",
+      resourceCost: 1, expendsSpellSlot: true,
+    }],
+  });
+  const setupFor = (caster) => ({ heroes: [caster], monsters: [member("target", "monsters", 7, 6)] });
+  const bind = (caster) => {
+    caster.state.active_effect_ids.push("restrained");
+    caster.state.timed_effects.push({
+      effect_id: "restrained", source_id: "target",
+      source_effect_id: "binding", ends_on_teleport: true,
+    });
+  };
+
+  const blocked = makeCaster();
+  bind(blocked);
+  const blockedSetup = setupFor(blocked);
+  spells.recordSpellTurn(blocked.state, "1:caster", "action", 1);
+  assert.equal(TP.choose(blocked, blockedSetup, "1:caster"), null);
+  assert.throws(() => TP.resolve(
+    1, 1, blocked, blockedSetup, blocked.state.template.teleport_actions[0],
+    blocked.state.position, "1:caster"), /conflicts/);
+  assert.equal(blocked.state.resources["spell-slot-2"], 1);
+  assert.equal(blocked.state.bonus_action_available, true);
+  assert.ok(blocked.state.active_effect_ids.includes("restrained"));
+
+  const allowed = makeCaster();
+  bind(allowed);
+  const allowedSetup = setupFor(allowed);
+  spells.recordSpellTurn(allowed.state, "1:caster", "action", 0);
+  const choice = TP.choose(allowed, allowedSetup, "1:caster");
+  assert.ok(choice);
+  TP.resolve(1, 1, allowed, allowedSetup, choice.action, choice.destination, "1:caster");
+  assert.equal(allowed.state.resources["spell-slot-2"], 0);
+  assert.equal(allowed.state.feature_last_turn_keys["spell:bonus-action"], "1:caster");
+  assert.equal(spells.spellTurnLegal(allowed.state, "1:caster", "action", 1), false);
+  assert.equal(spells.spellTurnLegal(allowed.state, "2:caster", "action", 1), true);
+
+  const empty = makeCaster();
+  bind(empty);
+  empty.state.resources["spell-slot-2"] = 0;
+  assert.equal(TP.choose(empty, setupFor(empty), "1:caster"), null);
+  assert.throws(() => TP.resolve(
+    1, 1, empty, setupFor(empty), empty.state.template.teleport_actions[0],
+    empty.state.position, "1:caster"), /unavailable/);
+
+  const newer = makeCaster();
+  bind(newer);
+  newer.state.template.ruleset = "2024";
+  spells.markSlotSpellCast(newer.state, "1:caster");
+  assert.equal(TP.choose(newer, setupFor(newer), "1:caster"), null);
+  assert.throws(() => TP.resolve(
+    1, 1, newer, setupFor(newer), newer.state.template.teleport_actions[0],
+    newer.state.position, "1:caster"), /already been expended/);
 }
 console.log("Browser pit engagement, flight, and in-place teleport regressions passed.");
