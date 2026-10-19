@@ -76,9 +76,13 @@
   // Recompute eligibility from the geometric placement before execution.
   function eligiblePlacement(member, setup, action, placement) {
     try {
-      const targetIds = placement.targetIds.filter((id) => {
+      const candidates = action.targetScope === "all-other-creatures"
+        ? [...placement.targetIds, ...placement.friendlyIds] : placement.targetIds;
+      const targetIds = candidates.filter((id) => {
         const target = memberById(setup, id);
-        return target && V().legalAction(action, target, 0, member.combatant_id);
+        return target && target.combatant_id !== member.combatant_id
+          && (action.targetScope === "all-other-creatures" || target.side !== member.side)
+          && V().legalAction(action, target, 0, member.combatant_id);
       });
       return { ...placement, targetIds, target_ids: targetIds };
     } catch (error) {
@@ -100,7 +104,8 @@
           if (holding) continue;
         }
         const placements = T().legalPlacements(
-          member, setup, action.area, action.range, Boolean(action.areaHealingRider),
+          member, setup, action.area, action.range,
+          Boolean(action.areaHealingRider) || action.targetScope === "all-other-creatures",
         );
         for (const placement of placements) {
           const legal = eligiblePlacement(member, setup, action, placement);
@@ -130,7 +135,8 @@
       if (!E().available(member.state, actionCost)) return null;
       if (!resourceAvailable(member.state, action)) throw new Error(`${action.name} resource is unavailable.`);
       const legalPlacements = T().legalPlacements(
-        member, setup, action.area, action.range, Boolean(action.areaHealingRider),
+        member, setup, action.area, action.range,
+        Boolean(action.areaHealingRider) || action.targetScope === "all-other-creatures",
       ).map((row) => eligiblePlacement(member, setup, action, row))
         .filter((row) => row.targetIds.length || action.areaHealingRider);
       if (!legalPlacements.some((row) =>
