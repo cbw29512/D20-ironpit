@@ -27,7 +27,13 @@
     try {
       const rules = (state.template.ability_check_minimums || []).filter((rule) => rule.ability === ability);
       if (!rules.length) return roll;
-      const score = state.template.ability_scores?.[ability];
+      const reducer = window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION;
+      if ((state.ability_score_reductions?.[ability] || 0) > 0 && !reducer?.effectiveScore) {
+        throw new Error("Ability-score reduction runtime required for a drained check minimum.");
+      }
+      // The source card is immutable; minimums follow the live combat score.
+      const score = reducer?.effectiveScore
+        ? reducer.effectiveScore(state, ability) : state.template.ability_scores?.[ability];
       if (!Number.isInteger(score)) {
         throw new Error(`${state.template.name} has an ability-check minimum without a certified ${ability} score.`);
       }
