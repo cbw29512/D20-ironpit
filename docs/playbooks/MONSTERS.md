@@ -4,6 +4,8 @@
 
 ## Pick the next actionable family
 
+**Default is a card-only integration.** Work the [executable card-field → shared-resolver contract](../UNIVERSAL_CARD_COMBAT_CONTRACT.md#executable-card-field--shared-resolver-contract-chris-2026-10-19) in order: card field → compiled capability → Python primitive → browser primitive → regression. Printed attacks with multiple damage types call one to-hit roll and the same typed-damage resolver once per component; Multiattack and Bonus Actions are action scheduling, not new attack algorithms. Do not write a new monster resolver when this path is already implemented.
+
 1. Recheck current `main`, open PR file overlap, and the [generated 2014 blocker list](../MONSTER_BLOCKERS_2014.md), not a dated queue milestone, chat recollection, or the historical 124-monster worksheet.
 2. Advance the queue's implementation cursor past decisions already coded/merged and avoid duplicating open PRs. Start with source-approved one-blocker combat monsters and equivalent abilities on multiple cards; exclude `arena:neutral` and `arena:removed` from playable admission.
 3. Read the exact 2014 source clauses, source cards, existing monster **and pregen** adapters, [universal inventory](../UNIVERSAL_MECHANIC_INVENTORY.md), Python rules reference, browser runtime and associated tests.
