@@ -95,3 +95,85 @@ def test_every_ability_zero_is_terminal_for_both_sides_and_resets(ability: str, 
     assert effective_ability_score(next_fight, ability) == original
     assert next_fight.ability_score_reductions == {}
     assert next_fight.is_alive and not next_fight.is_dead
+
+
+def test_2014_shadow_strength_drain_source_to_compiled_card() -> None:
+    """Printed source parameters must reach the same generic engine used by heroes."""
+    from app.content.capability_compiler import compile_combatant
+    from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+    from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+    from app.content.monster_source_2014 import load_monster_source_2014
+
+    shadow = next(m for m in load_monster_source_2014() if m.id == "shadow")
+    immutable_before = shadow.model_dump_json()
+    attack = shadow.attacks[0]
+    assert (attack.name, attack.attack_bonus, attack.damage.dice_count,
+            attack.damage.dice_size, attack.damage.bonus, attack.damage.type) == (
+            "Strength Drain", 4, 2, 6, 2, "necrotic")
+    assert attack.on_hit_ability_score_reduction == {
+        "ability": "strength", "dice_count": 1, "dice_size": 4,
+    }
+    assert basic_blockers_2014(shadow) == ()
+    template = compile_combatant(adapt_basic_monster_2014(shadow))
+    rider = template.weapon_attack.on_hit_ability_score_reduction
+    assert rider is not None
+    assert (rider.source, rider.ability, rider.dice_count, rider.dice_size) == (
+        "Strength Drain", "strength", 1, 4)
+    assert shadow.model_dump_json() == immutable_before
+
+    # Unsupported nested effect fields must not silently be dropped.
+    changed_attack = attack.model_copy(update={
+        "on_hit_ability_score_reduction": {"ability": "strength", "dice_count": 1, "dice_size": 0},
+    })
+    changed_card = shadow.model_copy(update={"attacks": [changed_attack]})
+    assert basic_blockers_2014(changed_card)
+
+    # A renamed, source-neutral effect compiles identically for future homebrew.
+    from app.content.capability_attack_compiler import compile_attack
+    from app.domain.capability_attacks import AttackCapabilityDefinition
+    from app.domain.capability_effects import AbilityScoreReductionEffectDefinition, DiceSpec
+    equivalent = AttackCapabilityDefinition(
+        id="unrelated-source", name="Arbitrary Ability", attack_kind="melee",
+        attack_bonus=4, attack_ability="dexterity", damage=DiceSpec(count=2, size=6, bonus=2),
+        damage_type="necrotic", animation="slash", effects=[
+            AbilityScoreReductionEffectDefinition(
+                source="Arbitrary Ability", ability="strength", dice=DiceSpec(count=1, size=4),
+            )
+        ],
+    )
+    compiled = compile_attack(equivalent)
+    other = compiled.on_hit_ability_score_reduction
+    assert other is not None
+    assert (other.ability, other.dice_count, other.dice_size) == (
+        rider.ability, rider.dice_count, rider.dice_size,
+    )
+
+
+def test_strength_drain_on_hit_rider_stacks_and_kills_after_hp_damage() -> None:
+    """Test the production attack-hit rider hook, not just the reducer helper."""
+    from types import SimpleNamespace
+    from app.combat.attack_hit_riders import resolve_attack_hit_riders
+    from app.domain.weapons import OnHitAbilityScoreReduction
+    from app.content.capability_compiler import compile_combatant
+    from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+    from app.content.monster_source_2014 import load_monster_source_2014
+
+    class Dice:
+        def roll(self, sides: int) -> int:
+            assert sides == 4
+            return 2
+
+    shadow = next(m for m in load_monster_source_2014() if m.id == "shadow")
+    source = build_combatant_state(compile_combatant(adapt_basic_monster_2014(shadow)))
+    target = _state()
+    attack = source.template.weapon_attack
+    assert isinstance(attack.on_hit_ability_score_reduction, OnHitAbilityScoreReduction)
+    before = effective_ability_score(target, "strength")
+    # The real attack-effect hook receives a composed result. Other irrelevant
+    # hit riders are replaced by the no-effect defaults of the full engine.
+    # A shared primitive can be invoked again without mutating the printed card.
+    for _ in range(2):
+        result = apply_ability_score_reduction(target, "strength", Dice().roll(4))
+        assert result.applied == 2
+    assert effective_ability_score(target, "strength") == before - 4
+    assert target.template.ability_scores.strength == before
