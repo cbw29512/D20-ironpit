@@ -48,7 +48,9 @@ def validate_save_targets(
     result: list[EncounterCombatant] = []
     for target_id in target_ids:
         target = by_id.get(target_id)
-        if target is None or target.side != expected_side:
+        if target is None or target.combatant_id == actor.combatant_id or (
+            action.target_scope == "enemies" and target.side != expected_side
+        ):
             raise ValueError(f"Illegal save-action target {target_id!r}.")
         if not target.state.is_alive or target.state.is_dead or target.state.current_hp <= 0:
             raise ValueError(f"Save-action target {target_id!r} is not active.")
