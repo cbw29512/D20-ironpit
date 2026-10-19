@@ -110,6 +110,7 @@ class SaveCapabilityDefinition(BaseModel):
     save_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
+    target_scope: Literal["enemies", "all-other-creatures"] = "enemies"
     target_max_size: CreatureSize | None = None
     area: AreaTargeting | None = None
     damage: DiceSpec | None = None
