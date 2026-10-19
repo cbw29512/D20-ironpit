@@ -22,6 +22,7 @@ window.IRON_PIT_BROWSER_STATE = {
   canProne: () => false, sizeAtMost: () => false,
 };
 load("browser-rolls.js");
+load("browser-condition-rules.js");
 load("browser-grapple.js");
 load("browser-champion.js");
 load("browser-zero-hp.js");

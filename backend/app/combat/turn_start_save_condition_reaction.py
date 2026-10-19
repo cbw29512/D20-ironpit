@@ -19,6 +19,7 @@ def _eligible(
     reactor: EncounterCombatant,
     target: EncounterCombatant,
     reaction: TurnStartSaveConditionReaction,
+    setup=None,
 ) -> bool:
     try:
         if not is_available(reactor.state, "reaction"):
@@ -30,9 +31,9 @@ def _eligible(
             return False
         if not target.state.is_alive or target.state.is_dead:
             return False
-        if condition_is_immune(target.state, reaction.condition_id):
+        if condition_is_immune(target.state, reaction.condition_id, actor=target, setup=setup):
             return False
-        if has_condition(target.state, reaction.condition_id):
+        if has_condition(target.state, reaction.condition_id, setup=setup):
             return False
         distance = combatant_distance(reactor, target)
         if distance > reaction.range_ft:
@@ -63,7 +64,7 @@ def resolve_turn_start_save_condition_reactions(
         ]
         for reactor in reactors:
             reaction = reactor.state.template.turn_start_save_condition_reaction
-            if reaction is None or not _eligible(reactor, target, reaction):
+            if reaction is None or not _eligible(reactor, target, reaction, setup):
                 continue
             spend(reactor.state, "reaction")
             roll, succeeded = resolve_saving_throw(
@@ -77,6 +78,7 @@ def resolve_turn_start_save_condition_reactions(
                     reactor.combatant_id,
                     source_effect_id=reaction.source_id,
                     source_template=reactor.state.template,
+                    target_actor=target, setup=setup,
                     expires_at_start_of_source_turn=False,
                     expiry_timing=reaction.expiry_timing,
                     applied_round=round_number,

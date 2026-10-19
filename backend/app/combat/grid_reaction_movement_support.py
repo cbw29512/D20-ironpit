@@ -36,7 +36,7 @@ def approaches_fear_source(
     setup: EncounterSetup,
 ) -> bool:
     try:
-        if not has_condition(mover.state, FRIGHTENED_EFFECT_ID):
+        if not has_condition(mover.state, FRIGHTENED_EFFECT_ID, setup=setup):
             return False
         source_ids = {
             effect.source_id for effect in mover.state.timed_effects

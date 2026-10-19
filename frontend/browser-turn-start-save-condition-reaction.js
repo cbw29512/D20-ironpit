@@ -8,14 +8,14 @@
   const TIMED = () => window.IRON_PIT_BROWSER_TIMED;
   const IMMUNITY = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
 
-  function eligible(reactor, target, reaction) {
+  function eligible(reactor, target, reaction, setup = null) {
     if (!E().available(reactor.state, "reaction")) return false;
     if (reactor.side === target.side) return false;
     if (!reactor.state.is_alive || reactor.state.is_dead) return false;
     if (!target.state.is_alive || target.state.is_dead) return false;
     if (!IMMUNITY()?.immune) throw new Error("Universal condition immunity is required for turn-start reactions.");
-    if (IMMUNITY().immune(target.state, reaction.conditionId)) return false;
-    if (Q().has(target.state, reaction.conditionId)) return false;
+    if (IMMUNITY().immune(target.state, reaction.conditionId, null, { actor: target, setup })) return false;
+    if (Q().has(target.state, reaction.conditionId, setup)) return false;
     const distance = S().distance(reactor, target);
     if (distance > reaction.rangeFt) return false;
     if (reaction.requiresSourceCanSeeTarget && !Q().canSee(reactor.state, target.state, distance)) return false;
@@ -30,7 +30,7 @@
         .filter((member) => member.combatant_id !== target.combatant_id);
       for (const reactor of reactors) {
         const reaction = reactor.state.template.turnStartSaveConditionReaction;
-        if (!reaction || !eligible(reactor, target, reaction)) continue;
+        if (!reaction || !eligible(reactor, target, reaction, setup)) continue;
         const resolver = SAVES()?.resolveSavingThrow;
         if (!resolver) throw new Error("Universal saving throws are required for turn-start reactions.");
         // Validate effect support before spending a limited combat resource.
@@ -48,6 +48,7 @@
             {
               sourceEffectId: reaction.sourceId,
               sourceTemplate: reactor.state.template,
+              targetActor: target, setup,
               expiryTiming: reaction.expiryTiming,
               appliedRound: round,
             },

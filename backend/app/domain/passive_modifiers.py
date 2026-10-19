@@ -5,7 +5,7 @@ from typing import Literal
 
 from app.domain.character_builds import AbilityName
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +14,8 @@ PassiveModifierKind = Literal["attacks-against-disadvantage", "condition-immunit
 
 class PassiveModifierGrant(BaseModel):
     """Declarative always-on modifier compiled into fresh combat state."""
+
+    model_config = ConfigDict(extra="forbid")
 
     source_id: str = Field(min_length=1)
     source_name: str = Field(min_length=1)

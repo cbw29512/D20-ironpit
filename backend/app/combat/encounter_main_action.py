@@ -44,7 +44,7 @@ def resolve_post_move_action(events, sequence, round_number, attacker, target, s
             events.extend(spell_events)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         if pick.family == "presence":
-            presence = resolve_intimidating_presence(sequence, round_number, attacker, pick.payload or target, dice)
+            presence = resolve_intimidating_presence(sequence, round_number, attacker, pick.payload or target, dice, setup)
             if presence is not None:
                 events.append(presence)
                 sequence += 1

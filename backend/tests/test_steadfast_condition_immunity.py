@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from app.combat.condition_immunity import condition_is_immune
 from app.content.monster_passive_grants_2014 import conditional_immunity_grants_2014
+from app.content.monster_source_2014 import load_monster_source_2014
 from app.domain.modifiers import CombatModifier, ModifierKind
 
 
@@ -27,14 +28,14 @@ def _actor(*, bound=True):
 
 
 def test_source_binding_uses_data_not_name_dispatch():
-    monster = SimpleNamespace(name="Bearded Devil", trait_names={"Steadfast"})
+    monster = next(item for item in load_monster_source_2014() if item.id == "bearded-devil")
     grants = conditional_immunity_grants_2014(monster)
     assert len(grants) == 1
     assert grants[0].source_name == "Steadfast"
     assert grants[0].condition_id == "frightened"
     assert grants[0].required_visible_active_ally_within_ft == 30
     assert conditional_immunity_grants_2014(
-        SimpleNamespace(name="Other", trait_names=set()),
+        monster.model_copy(update={"trait_names": []}),
     ) == []
 
 

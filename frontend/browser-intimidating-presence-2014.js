@@ -20,17 +20,17 @@
     return !(effects.includes("blinded") && effects.includes("deafened"));
   }
 
-  function canUse(actor, target) {
+  function canUse(actor, target, setup = null) {
     const dc = actor.state.template.intimidating_presence_2014_dc || 0;
     return actor.state.template.ruleset === "2014" && dc > 0 && E().available(actor.state, "action")
       && target.state.is_alive && !target.state.is_dead && S().distance(actor, target) <= 30
-      && canPerceive(target) && !I().immune(target.state, FRIGHTENED)
+      && canPerceive(target) && !I().immune(target.state, FRIGHTENED, null, { actor: target, setup })
       && !(immunityKey(actor.combatant_id) in target.state.feature_last_turn_keys)
       && !activeEffect(target, actor.combatant_id);
   }
 
-  function resolve(sequence, round, actor, target) {
-    if (!canUse(actor, target)) return null;
+  function resolve(sequence, round, actor, target, setup = null) {
+    if (!canUse(actor, target, setup)) return null;
     const dc = actor.state.template.intimidating_presence_2014_dc;
     const save = V().resolveSavingThrow(target.state, "wisdom", dc);
     E().spend(actor.state, "action");
@@ -40,6 +40,7 @@
       const effect = T().apply(target.state, FRIGHTENED, actor.combatant_id, {
         sourceEffectId: FEATURE, appliedRound: round, expiresRound: round + 1,
         expiryTiming: "source_turn_end", useDefaultPoisonRecovery: false,
+        targetActor: target, setup,
       });
       if (effect) applied.push(effect);
     }

@@ -5864,13 +5864,13 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 99,
+    "blocked_monster_count": 98,
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
       "attack:complex": 6,
       "attack:damage-type": 2,
-      "attack:incomplete": 24,
+      "attack:incomplete": 23,
       "attack:none": 3,
       "mechanic:death-trigger": 4,
       "mechanic:defense": 1,
@@ -5882,7 +5882,7 @@
       "source:extra-action": 57,
       "source:legendary": 9,
       "source:reaction": 3,
-      "source:trait": 72
+      "source:trait": 71
     },
     "unresolved_printed_abilities": [
       {
@@ -6221,13 +6221,6 @@
           "Spirit Naga"
         ],
         "printed_name": "Spellcasting"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Bearded Devil"
-        ],
-        "printed_name": "Steadfast"
       },
       {
         "demand_count": 1,

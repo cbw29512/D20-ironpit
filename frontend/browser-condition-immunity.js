@@ -5,6 +5,10 @@
 
   function immune(state, conditionId, sourceTemplate = null, options = {}) {
     try {
+      if (!options.actor && options.setup) {
+        const actor = [...options.setup.heroes, ...options.setup.monsters].find(member => member.state === state);
+        options = { ...options, actor };
+      }
       if (state.template.condition_immunities?.includes(conditionId) === true) return true;
       if (window.IRON_PIT_BROWSER_FLIGHT_GROUND?.countersGroundContact(state, options.groundContact === true)) {
         return true;
