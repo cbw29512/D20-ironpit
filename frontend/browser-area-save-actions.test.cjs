@@ -316,3 +316,65 @@ require("./browser-save-target-cap-parity.test.cjs");
   assert.equal(source.state.action_available, true);
 }
 console.log("All-other-creatures area-save friendly-fire parity passed.");
+
+
+{
+// Source-declared Wail eligibility: allies die to a failed save elsewhere in the
+// shared zero-HP primitive, but are never exempted by allegiance here.
+  const source = member("banshee", "monsters", 1, 1);
+  const friend = member("living-friend", "monsters", 2, 1);
+  const construct = member("construct-friend", "monsters", 3, 1);
+  const undead = member("undead-friend", "monsters", 4, 1);
+  const hero = member("hero", "heroes", 5, 1);
+  const deaf = member("deaf", "heroes", 6, 1);
+  source.state.template.creature_type = "undead";
+  friend.state.template.creature_type = "humanoid";
+  construct.state.template.creature_type = "construct";
+  undead.state.template.creature_type = "undead";
+  hero.state.template.creature_type = "humanoid";
+  deaf.state.template.creature_type = "humanoid";
+  deaf.state.active_effect_ids = ["deafened"];
+  const wail = {
+    id: "source-wail", name: "Wail (1/Day)", targetScope: "all-other-creatures",
+    actionCost: "action", saveAbility: "constitution", dc: 13, range: 30,
+    area: { shape: "emanation", origin: "self", radius_ft: 30 },
+    damageDiceCount: 3, damageDiceSize: 6, damageType: "psychic",
+    failureSetsZeroHp: true, damageOnlyOnSuccess: true,
+    excludedTargetCreatureTypes: ["construct", "undead"],
+    requiresTargetHearing: true, prohibitedEnvironmentContextId: "sunlight",
+    resourceId: "source-wail", resourceCost: 1,
+  };
+  source.state.template.saving_throw_actions = [wail];
+  source.state.resources["source-wail"] = 1;
+  const scene = {
+    heroes: [hero, deaf], monsters: [source, friend, construct, undead],
+    map_definition: { width_squares: 10, height_squares: 10 },
+  };
+  let sunlight = false;
+  window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS = {
+    inside: (_actor, _setup, contextId) => contextId === "sunlight" && sunlight,
+  };
+  const original = window.IRON_PIT_BROWSER_SAVES.legalAction;
+  window.IRON_PIT_BROWSER_SAVES.legalAction = (action, target) =>
+    !(action.excludedTargetCreatureTypes || []).includes(target.state.template.creature_type)
+    && !(action.requiresTargetHearing && (target.state.active_effect_ids || []).includes("deafened"));
+  try {
+    const legal = A.choose(source, scene);
+    assert.ok(legal);
+    assert.deepEqual(new Set(legal.placement.targetIds), new Set(["hero", "living-friend"]));
+    sunlight = true;
+    assert.equal(A.choose(source, scene), null, "Sunlight prohibits Wail before spending resources");
+    assert.throws(() => A.resolve(300, 1, source, scene, legal), /prohibited/);
+    assert.equal(source.state.resources["source-wail"], 1);
+    sunlight = false;
+    const outcome = A.resolve(300, 1, source, scene, legal);
+    assert.equal(outcome.events.length, 2);
+    assert.deepEqual(new Set(outcome.events.map(e => e.target_id)), new Set(["hero", "living-friend"]));
+    assert.equal(source.state.resources["source-wail"], 0);
+    assert.equal(A.choose(source, scene), null, "Spent Wail cannot recur in same fight");
+  } finally {
+    window.IRON_PIT_BROWSER_SAVES.legalAction = original;
+    delete window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS;
+  }
+}
+console.log("2014 source Wail eligibility, sunlight and friendly-fire parity passed.");
