@@ -137,6 +137,8 @@ class SavingThrowAction(BaseModel):
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
     success_damage: Literal["none", "half"] = "none"
+    failure_sets_zero_hp: bool = Field(default=False, exclude_if=lambda value: not value)
+    damage_only_on_success: bool = Field(default=False, exclude_if=lambda value: not value)
     damage_components: list[SaveDamageComponent] = Field(default_factory=list)
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
@@ -158,6 +160,16 @@ class SavingThrowAction(BaseModel):
     reduce_hit_point_maximum_on_failed_save: bool = False
     animation: str = "save-effect"
 
+    @model_validator(mode="after")
+    def validate_asymmetric_save_outcomes(self) -> "SavingThrowAction":
+        if self.damage_only_on_success and self.success_damage != "none":
+            raise ValueError("Success-only damage cannot also be halved or suppressed on success.")
+        has_damage = bool(self.damage_dice_count or self.damage_components)
+        if self.damage_only_on_success and not has_damage:
+            raise ValueError("Success-only damage requires printed typed damage.")
+        if self.failure_sets_zero_hp and has_damage and not self.damage_only_on_success:
+            raise ValueError("Direct zero-HP failure cannot also apply normal failure damage.")
+        return self
 
 
 class HpThresholdConditionAction(BaseModel):
