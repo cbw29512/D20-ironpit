@@ -4,6 +4,15 @@
 
 **What happened:** the 124-monster / 305-blocker review was recorded in unmerged [PR #680](https://github.com/cbw29512/D20-ironpit/pull/680), while the old operating table was frozen on October 8. Use the reconciled records below, not a guessed next monster. Original source blueprint is available at [the pinned PR commit](https://github.com/cbw29512/D20-ironpit/blob/88881607f1f271a2fdb37ffcf95008d9d8d1a07c/docs/MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md); source cards and generated current-main blockers are decisive for certification. This ledger does not falsely upgrade a plan to shipped code.
 
+## Active included poison weapon binding
+
+- Owner: ChatGPT, ACTIVE on `feat/2014-included-poison-weapons-current`, isolated from main `634b654391aa9f2bad689c4b285e5c3a40f1bedc`. Existing incomplete PR #941 is the reviewed source-binding reference; this branch transplants its still-correct binding onto current main, not its stale generated files. Ammunition PR #952 is awaiting independent CI.
+- Source/parameters: 2014 Erinyes Hellish Weapons contributes magical weapon qualifiers and the already-included 3d8 Poison rider. Longbow separately supplies +7, 150/600 ft, 1d8+3 Piercing, and DC 14 Constitution or Poisoned until removed by Lesser Restoration or similar magic. No repeat save or invented expiry.
+- Reuse/parity: existing `SaveConditionEffectDefinition` / `OnHitConditionSave`, `on_hit_condition_save.resolve_on_hit_condition_save`, `browser-on-hit-condition-save.js`, typed damage defenses, and condition removal. Immutable source/card data remains unchanged; only fight-local condition state mutates and fresh fights clear it.
+- Scope: source-only included-weapon trait proof and ranged hit/condition proof; reuse the existing source completion entry point and compiler/serializer. No new combat resolver. Prove exact source, mutation rejection, immunity/resistance, removal, reset, and source-name-independent Python/browser behavior before admission.
+- Counterpart audit: 2024 Erinyes instead prints Withering Sword, Entangling Rope, Magic Rope and Parry. It does not print this 2014 Longbow/Hellish Weapons package; no 2014 poison parameters are copied into 2024.
+- Checkpoint: focused source/runtime and existing-family regressions pass (82 Python cases); five browser cases match independently generated Python outcomes, including renamed character/attack IDs, source DC changes, immunity, resistance, actual 2014 Lesser Restoration and reset. Source classifier admits Erinyes on this isolated branch. Generated roster/count updates and full final-head CI are deliberately pending reconciliation after #952; no runtime/webpage certification or merge is claimed.
+
 <!-- BEGIN CURRENT 2014 MONSTER ISSUE MATRIX -->
 ## Current 2014 monster issue-to-fix matrix — 2026-10-18
 
