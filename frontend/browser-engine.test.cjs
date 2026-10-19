@@ -300,3 +300,30 @@ require("./browser-initiative-natural-one.test.cjs");
     assert.ok(!(member.state.is_alive && member.state.is_dead));
   }
 }
+
+{
+  // Actual browser fights, not a mocked combat resolver. Preserve every event
+  // and compare seeded replays for multiple source monsters and a mixed 6v6.
+  const { transcript, assertReplay } = require("./golden-monster-transcripts.cjs");
+  const encounters = [
+    { hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-commoner"], seed: 1801 },
+    { hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-wolf"], seed: 1802 },
+    { hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-bandit"], seed: 1803 },
+    { hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-black-bear"], seed: 1804 },
+    { hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-brown-bear"], seed: 1805 },
+    { hero_ids: ["karnok-stoneward-l1", "rokhan-stonefury-l1", "karnok-stoneward-l1"],
+      monster_ids: ["srd-commoner", "srd-wolf", "srd-bandit"], seed: 1806 },
+  ];
+  const recordings = encounters.map(({ seed, ...selection }) => {
+    const first = transcript(fight(selection.hero_ids, selection.monster_ids, deterministicDice(seed)), selection, seed);
+    const replay = transcript(fight(selection.hero_ids, selection.monster_ids, deterministicDice(seed)), selection, seed);
+    assertReplay(first, replay);
+    assert.ok(first.events.length > 1, "Every golden encounter must execute combat");
+    return first;
+  });
+  if (process.env.IRON_PIT_RECORD_GOLDENS === "1") {
+    const output = path.join(__dirname, "monster-golden-transcripts.json");
+    fs.writeFileSync(output, JSON.stringify(recordings, null, 2) + "\\n");
+    console.log(`Recorded ${recordings.length} seeded real-fight transcripts at ${output}`);
+  }
+}
