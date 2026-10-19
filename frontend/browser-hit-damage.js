@@ -155,7 +155,7 @@
     let appliedTotal = 0, damageOutcome = null;
     const monsterTarget = defender.template.kind === "monster";
     for (const part of uncanny.components) {
-      if (monsterTarget && (defender.is_dead || defender.current_hp <= 0)) break;
+      if (defender.is_dead || (monsterTarget && defender.current_hp <= 0)) break;
       const resolved = DD().resolveDamage(
         defender, part.total, part.damage_type, true, part.source_qualifiers || [], bypassTypes.has(part.damage_type),
       );
@@ -163,9 +163,9 @@
         absorption_source_name: resolved.sourceName || null };
       damageComponents.push(component);
       appliedTotal += resolved.applied;
-      if (monsterTarget && resolved.applied > 0) {
-        // One existing zero-HP/defeat resolver per applied component. A dead
-        // monster cannot receive the remaining types of the same attack.
+      if (resolved.applied > 0) {
+        // Every applied component calls the same zero-HP resolver. A dead
+        // monster stops; a dying character takes the later death-save failures.
         damageOutcome = A().applyDamage(
           defender, resolved.applied, critical, [part.damage_type],
           options.affectedStates || [], options.setup || null, [component],
@@ -173,15 +173,6 @@
       }
     }
     const damageRoll = { ...aggregate(damageComponents), total: appliedTotal };
-    if (!monsterTarget) {
-      const appliedTypes = [...new Set(
-        damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type),
-      )];
-      damageOutcome = A().applyDamage(
-        defender, appliedTotal, critical, appliedTypes,
-        options.affectedStates || [], options.setup || null, damageComponents,
-      );
-    }
     window.IRON_PIT_BROWSER_HUNTERS_MARK_SPLASH?.resolve(
       attacker, null, options.targetId, damageComponents, turnKey, options.setup,
     );
