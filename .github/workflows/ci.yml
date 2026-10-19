@@ -502,6 +502,7 @@ jobs:
           node frontend/browser-initiative-resource-refill.test.cjs
           node frontend/browser-resource-conversion.test.cjs
           node frontend/browser-spell-save-disadvantage.test.cjs
+          node frontend/browser-spellcasting-slot-validation.test.cjs
           node frontend/browser-d20-bonus-dice.test.cjs
           node frontend/browser-d20-test-advantage.test.cjs
           node frontend/browser-failed-save-reroll.test.cjs
@@ -510,6 +511,8 @@ jobs:
           node frontend/battle-lab.test.cjs
           node frontend/browser-execution.test.cjs
           node frontend/browser-beta-ui.test.cjs
+          node frontend/beta-inline-runner.test.cjs
+          node frontend/beta-gauntlet-spectator.test.cjs
           node frontend/combat-presets.test.cjs
           node frontend/combat-review.test.cjs
           node frontend/browser-audit.test.cjs

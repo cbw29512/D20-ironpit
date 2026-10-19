@@ -179,11 +179,20 @@ slotEnemy.state.template.timed_self_buff_actions = [];
 const slotSetup = { heroes: [slotCleric], monsters: [slotEnemy] };
 assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(slotCleric, slotSetup, "action", "1:slot-cleric").id, "spirit-guardians");
 slotCleric.state.spell_slot_expended_turn_key = "1:slot-cleric";
-assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(slotCleric, slotSetup, "action", "1:slot-cleric"), null);
-const skipped = window.IRON_PIT_BROWSER_SUPPORT.resolve(1, 1, slotCleric, slotSetup, "1:slot-cleric");
+// 2014 has no blanket one-slot-per-turn prohibition. This is a standalone Action spell.
+assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(slotCleric, slotSetup, "action", "1:slot-cleric").id, "spirit-guardians");
+// Construct a separate 2024 actor; never mutate an existing source template.
+const slotCleric2024 = { combatant_id: "slot-cleric-2024", side: "heroes", state: state("Slot Cleric 2024") };
+slotCleric2024.state.template.ruleset = "2024";
+slotCleric2024.state.template.timed_self_buff_actions = [guardians];
+slotCleric2024.state.resources["spell-slot-3"] = 1;
+slotCleric2024.state.spell_slot_expended_turn_key = "1:slot-cleric-2024";
+const slotSetup2024 = { heroes: [slotCleric2024], monsters: [slotEnemy] };
+assert.equal(window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.choose(slotCleric2024, slotSetup2024, "action", "1:slot-cleric-2024"), null);
+const skipped = window.IRON_PIT_BROWSER_SUPPORT.resolve(1, 1, slotCleric2024, slotSetup2024, "1:slot-cleric-2024");
 assert.deepEqual(skipped.events, []);
-assert.equal(slotCleric.state.action_available, true);
-assert.equal(slotCleric.state.resources["spell-slot-3"], 1);
+assert.equal(slotCleric2024.state.action_available, true);
+assert.equal(slotCleric2024.state.resources["spell-slot-3"], 1);
 
 
 load("browser-ability-hooks.js");

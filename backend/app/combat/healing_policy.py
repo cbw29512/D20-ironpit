@@ -5,7 +5,7 @@ from app.combat.bloodied import is_bloodied
 from app.combat.defensive_modifier_rules import healing_is_maximized
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.hit_points import effective_max_hp
-from app.combat.spellcasting import slot_spell_available
+from app.combat.spellcasting import slot_spell_available, spell_turn_legal
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import HealingAction
 from app.domain.traits import CombatTrait
@@ -33,8 +33,14 @@ def resource_available(
 ) -> bool:
     if action.resource_id is None:
         return True
-    if slot_heal(action) and (turn_key is None or not slot_spell_available(member.state, turn_key)):
-        return False
+    if slot_heal(action):
+        if turn_key is None or not slot_spell_available(member.state, turn_key):
+            return False
+        # Candidate selection must enforce the same 2014 bonus-action spell
+        # timing as resolution; a legal slot alone is insufficient.
+        spell_level = int(action.resource_id.removeprefix("spell-slot-"))
+        if not spell_turn_legal(member.state, turn_key, action.action_cost, spell_level):
+            return False
     resource = next((item for item in member.state.resources if item.id == action.resource_id), None)
     return resource is not None and resource.current_uses >= (1 if action.healing_from_resource_pool else action.resource_cost)
 

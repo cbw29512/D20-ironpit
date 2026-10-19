@@ -24,6 +24,7 @@ for (const file of [
 
 window.IRON_PIT_BROWSER_SPELLCASTING = {
   slotSpellAvailable: () => true,
+  spellTurnLegal: () => true,
   markSlotSpellCast: () => {},
 };
 window.IRON_PIT_BROWSER_SPELL_AREA = {

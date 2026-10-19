@@ -12,7 +12,7 @@ from app.combat.spell_policy import spell_at_slot
 from app.combat.spell_range_modifiers import spend_spell_range_modifier
 from app.combat.spell_save_effect_resolution import resolve_spell_save_effect
 from app.combat.spell_damage_maximizers import resolve_maximizer_after_cast
-from app.combat.spellcasting import mark_slot_spell_cast
+from app.combat.spellcasting import mark_slot_spell_cast, record_spell_turn, spell_turn_legal
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -44,6 +44,8 @@ def resolve_spell(
             raise ValueError("Reaction spells require their own trigger window.")
         if not is_available(caster.state, spell.action_cost):
             raise ValueError(f"{spell.action_cost} is unavailable for {spell.name}.")
+        if not spell_turn_legal(caster.state, turn_key, spell.action_cost, spell.level):
+            raise ValueError("Spell conflicts with another cast on this turn.")
         from app.combat.suppression_zone_geometry import verbal_casting_blocked
         if getattr(spell, "verbal_component", True) and verbal_casting_blocked(caster, setup):
             raise ValueError(f"{spell.name} cannot be cast inside a Silence effect.")
@@ -57,10 +59,14 @@ def resolve_spell(
             resource = _resource(caster.state, choice.slot_level)
             if resource is None or resource.current_uses < 1:
                 raise ValueError(f"No level {choice.slot_level} spell slot remains.")
+            # Check and record legality before this cast's own slot marker.
+            record_spell_turn(caster.state, turn_key, spell.action_cost, spell.level)
             mark_slot_spell_cast(caster.state, turn_key)
             resource.current_uses -= 1
             remaining = resource.current_uses
 
+        if choice.alternate_cast is not None or choice.slot_level == 0:
+            record_spell_turn(caster.state, turn_key, spell.action_cost, spell.level)
         spend(caster.state, spell.action_cost)
         range_remaining = spend_spell_range_modifier(caster.state, choice.range_modifier)
         remove_owner_attack_ending_modifiers(caster.state)

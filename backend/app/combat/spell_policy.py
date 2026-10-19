@@ -14,7 +14,7 @@ from app.combat.spell_policy_targeting import (
     legal_single_spell_targets,
     single_target_spell_choice,
 )
-from app.combat.spellcasting import legal_slot_levels
+from app.combat.spellcasting import legal_slot_levels, spell_turn_legal
 from app.combat.temporary_terrain import spell_terrain_is_supported
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
@@ -106,6 +106,7 @@ def choose_spell(
                 or action.repeat_only
                 or (action.concentration and caster.state.concentration is not None)
                 or not is_available(caster.state, action.action_cost)
+                or not spell_turn_legal(caster.state, turn_key, action.action_cost, action.level)
                 or not spell_terrain_is_supported(action)
                 or failed_save_is_beneficial(action)
             ):
