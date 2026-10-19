@@ -236,5 +236,60 @@ def test_pregen_dying_lifecycle_is_not_monster_instant_death() -> None:
     assert len(event.damage_components) == 2
     assert hero.state.current_hp == 0
     assert hero.state.is_unconscious and not hero.state.is_dead
+    # Piercing dropped the hero to 0; subsequent poison from this same hit
+    # counts as an additional damaging component under the locked Pit rule.
+    assert hero.state.death_save_failures == 1
+
+
+def test_pregen_poison_immunity_prevents_followup_death_save_failure() -> None:
+    setup = _setup()
+    hero, attacker = setup.heroes[0], setup.monsters[0]
+    hero.state.current_hp = 5
+    hero.state.template.damage_immunities = [DamageType.POISON]
+    for resource in hero.state.resources:
+        if resource.id == "relentless-endurance":
+            resource.current_uses = 0
+    event = resolve_attack(
+        1, 1, attacker.state, hero.state, _venom_bite(), 5,
+        FixedDiceProvider([15, 4, 2]),
+        actor_event_id=attacker.combatant_id, target_event_id=hero.combatant_id,
+    )
+    assert [part.applied_total for part in event.damage_components] == [8, 0]
+    assert hero.state.current_hp == 0 and hero.state.is_unconscious
+    assert hero.state.death_save_failures == 0
+
+
+def test_pregen_critical_followup_component_causes_two_failed_saves() -> None:
+    setup = _setup()
+    hero, attacker = setup.heroes[0], setup.monsters[0]
+    hero.state.current_hp = 5
+    for resource in hero.state.resources:
+        if resource.id == "relentless-endurance":
+            resource.current_uses = 0
+    event = resolve_attack(
+        1, 1, attacker.state, hero.state, _venom_bite(), 5,
+        FixedDiceProvider([20, 2, 3, 4, 5]),
+        actor_event_id=attacker.combatant_id, target_event_id=hero.combatant_id,
+    )
+    assert event.critical is True
+    assert len(event.damage_components) == 2
+    assert hero.state.current_hp == 0 and not hero.state.is_dead
+    assert hero.state.death_save_failures == 2
+
+
+def test_pregen_relentless_endurance_intercepts_first_zero_hp_before_poison() -> None:
+    setup = _setup()
+    hero, attacker = setup.heroes[0], setup.monsters[0]
+    hero.state.current_hp = 5
+    # Keep the character's printed once-per-rest survival ability available.
+    event = resolve_attack(
+        1, 1, attacker.state, hero.state, _venom_bite(), 5,
+        FixedDiceProvider([15, 4, 2]),
+        actor_event_id=attacker.combatant_id, target_event_id=hero.combatant_id,
+    )
+    assert len(event.damage_components) == 2
+    # Piercing invokes Relentless Endurance (1 HP); later poison drops that
+    # 1 HP to zero for the first time, so no extra death-save failure yet.
+    assert hero.state.current_hp == 0 and hero.state.is_unconscious
     assert hero.state.death_save_failures == 0
 
