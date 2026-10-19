@@ -6,6 +6,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.automatic_save_failures import automatically_fails_save
 from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.condition_rules import can_see
+from app.combat.encounter_targeting import combatant_distance
 from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
 from app.combat.forced_movement import push_straight_away
@@ -33,10 +34,14 @@ def legal_save_action(
     target: EncounterCombatant,
     distance_ft: int,
     source_id: str | None = None,
+    actor: EncounterCombatant | None = None,
 ) -> bool:
     template = target.state.template
     if source_id and has_source_effect_immunity(target.state, action.id, source_id):
         return False
+    if action.requires_target_to_see_source:
+        if actor is None or not can_see(target.state, actor.state, combatant_distance(actor, target)):
+            return False
     if distance_ft > action.range_ft or (
         action.requires_target_hearing and "deafened" in target.state.active_effect_ids
     ):
@@ -62,7 +67,7 @@ def resolve_save_action(
 ) -> BattleEvent:
     if spend_action and not is_available(actor.state, action.action_cost):
         raise ValueError(f"{action.action_cost} is not available for {action.name}.")
-    if not legal_save_action(action, target, distance_ft, source_id=actor.combatant_id):
+    if not legal_save_action(action, target, distance_ft, source_id=actor.combatant_id, actor=actor):
         raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
     if action.requires_target_sight and not can_see(actor.state, target.state):
         raise ValueError(f"{action.name} requires the actor to see the target.")
