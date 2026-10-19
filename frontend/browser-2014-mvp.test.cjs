@@ -109,6 +109,20 @@ function runCertifiedFight(heroId, expectedLevel) {
   }
 }
 
+// Source-proven gaze monsters must actually enter full browser combat.
+for (const [monsterId, dc] of [["2014-basilisk", 12], ["2014-medusa", 14]]) {
+  const template = window.IRON_PIT_BROWSER_MONSTERS_2014[monsterId];
+  assert.ok(template?.visualTurnStartRule, monsterId + " must serialize its gaze.");
+  assert.equal(template.visualTurnStartRule.saveDc, dc);
+  window.IRON_PIT_DICE = deterministicDice(dc * 2014);
+  const battle = window.IRON_PIT_BROWSER_ENGINE.runEncounter({
+    ruleset: "2014", hero_ids: ["karnok-stoneward-2014-l5"],
+    monster_ids: [monsterId],
+  });
+  assert.notEqual(battle.outcome, "active", monsterId + " must complete the fight");
+  assert.ok(battle.events.some(e => e.feature_id === "petrifying-gaze"),
+    monsterId + " must execute turn-start gaze behavior in a real battle");
+}
 runCertifiedFight("karnok-stoneward-2014-l5", 5);
 runCertifiedFight("rokhan-stonefury-2014-l5", 5);
 runCertifiedFight("mara-quickstep-2014-l7", 7);
