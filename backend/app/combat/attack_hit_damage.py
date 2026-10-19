@@ -6,6 +6,7 @@ import logging
 from app.combat.damage import BonusDamageSpec, aggregate_damage_components, resolve_weapon_damage
 from app.combat.hunters_mark_splash import resolve_hunters_mark_splash
 from app.combat.damage_defenses import apply_damage_defenses
+from app.combat.attack_ordered_damage import resolve_ordered_monster_hit_damage
 from app.combat.cunning_strike import (
     CunningStrikeObscureResolution, CunningStrikeTripResolution,
     resolve_obscure, resolve_trip,
@@ -122,18 +123,27 @@ def resolve_attack_hit_damage(
     reduction = apply_attack_damage_reduction(defender, attack, rolled_components, dice)
     rolled_components = reduction.components
     rolled_components, uncanny_used = apply_uncanny_dodge(attacker, defender, rolled_components)
-    damage_roll = aggregate_damage_components(rolled_components)
-    applied_total, components = apply_damage_defenses(
-        defender,
-        rolled_components,
-        ignored_resistance_types=_ignored_resistance_types(attacker),
-    )
+    if defender.template.kind == "monster":
+        applied_total, components, outcome = resolve_ordered_monster_hit_damage(
+            defender, rolled_components, critical=critical, dice=dice,
+            affected_states=affected_states, setup=setup,
+            ignored_resistance_types=_ignored_resistance_types(attacker),
+        )
+        # The saving-throw damage rider is ordered last; do not invoke its
+        # zero-HP rider if the target died before that component.
+        save_component_present = save_component_present and len(components) == len(rolled_components)
+    else:
+        applied_total, components = apply_damage_defenses(
+            defender, rolled_components,
+            ignored_resistance_types=_ignored_resistance_types(attacker),
+        )
+        applied_types = {part.damage_type for part in components if part.applied_total > 0}
+        outcome = apply_damage(
+            defender, applied_total, critical=critical, damage_types=applied_types,
+            dice=dice, affected_states=affected_states, setup=setup, damage_components=components,
+        )
+    damage_roll = aggregate_damage_components(components)
     damage_roll.total = applied_total
-    applied_types = {part.damage_type for part in components if part.applied_total > 0}
-    outcome = apply_damage(
-        defender, applied_total, critical=critical, damage_types=applied_types,
-        dice=dice, affected_states=affected_states, setup=setup, damage_components=components,
-    )
     if setup is not None and target_event_id:
         source = next(
             (item for item in [*setup.heroes, *setup.monsters] if item.state is attacker),
