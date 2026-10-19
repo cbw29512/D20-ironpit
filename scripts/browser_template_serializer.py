@@ -111,6 +111,12 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                  "damageBonus": part.damage_bonus, "damageType": part.damage_type.value}
                 for part in attack.on_hit_damage
             ]
+        if attack.on_hit_ability_score_reduction:
+            effect = attack.on_hit_ability_score_reduction
+            row["onHitAbilityScoreReduction"] = {
+                "source": effect.source, "ability": _value(effect.ability),
+                "diceCount": effect.dice_count, "diceSize": effect.dice_size,
+            }
         if attack.on_hit_save_damage:
             effect = attack.on_hit_save_damage
             save_damage = {
