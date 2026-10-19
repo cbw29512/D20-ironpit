@@ -174,13 +174,18 @@ def test_one_bite_typed_components_are_one_damage_event_for_a_monster() -> None:
     """Do not skip poison merely because piercing would individually reach 0 HP."""
     from app.combat.attack_legality import attack_allowed_against
 
-    setup = _setup()
-    hero, monster = setup.heroes[0], setup.monsters[0]
+    # Use a source-neutral Commoner attacker so hero-only extra hit dice
+    # do not alter the exact three-roll synthetic attack fixture.
+    setup = build_encounter_setup(EncounterSelection(
+        hero_ids=["karnok-stoneward-l1"],
+        monster_ids=["srd-commoner", "srd-commoner"],
+    ))
+    attacker, monster = setup.monsters
     monster.state.current_hp = 5
     event = resolve_attack(
-        1, 1, hero.state, monster.state, _venom_bite(), 5,
+        1, 1, attacker.state, monster.state, _venom_bite(), 5,
         FixedDiceProvider([15, 4, 2]),
-        actor_event_id=hero.combatant_id,
+        actor_event_id=attacker.combatant_id,
         target_event_id=monster.combatant_id,
     )
     assert event.hit is True
@@ -190,7 +195,7 @@ def test_one_bite_typed_components_are_one_damage_event_for_a_monster() -> None:
     assert [part.applied_total for part in event.damage_components] == [8, 2]
     assert event.damage_roll is not None and event.damage_roll.total == 10
     assert monster.state.current_hp == 0 and monster.state.is_dead
-    assert not attack_allowed_against(_venom_bite(), hero.combatant_id, monster.state)
+    assert not attack_allowed_against(_venom_bite(), attacker.combatant_id, monster.state)
 
 
 def test_one_bite_zeroes_pregen_without_extra_failed_save_from_poison() -> None:
