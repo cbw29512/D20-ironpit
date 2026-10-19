@@ -121,4 +121,38 @@ const ritualSickle = {
   assert.equal(hero.state.current_hp, startingHp);
 }
 
+
+{
+  // The mixed-type damage from one Bite shares a single hit/zero-HP event.
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const monster = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  monster.state.current_hp = 5;
+  window.IRON_PIT_DICE = queuedDice([15, 4, 2]);
+  const event = A.resolveAttack(1, 1, hero, monster, venomBite, 5);
+  assert.equal(event.hit, true);
+  assert.deepEqual(event.damage_components.map((part) => part.damage_type), ["piercing", "poison"]);
+  assert.deepEqual(event.damage_components.map((part) => part.applied_total), [8, 2]);
+  assert.equal(event.damage_roll.total, 10);
+  assert.equal(monster.state.current_hp, 0);
+  assert.equal(monster.state.is_dead, true);
+  assert.throws(() => A.resolveAttack(2, 1, hero, monster, venomBite, 5), /cannot be targeted/);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const attacker = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  hero.state.current_hp = 5;
+  hero.state.resources["relentless-endurance"] = 0;
+  window.IRON_PIT_DICE = queuedDice([15, 4, 2]);
+  const event = A.resolveAttack(1, 1, attacker, hero, venomBite, 5);
+  assert.deepEqual(event.damage_components.map((part) => part.applied_total), [8, 2]);
+  assert.equal(hero.state.current_hp, 0);
+  assert.equal(hero.state.is_unconscious, true);
+  assert.equal(hero.state.is_dead, false);
+  assert.equal(hero.state.death_save_failures, 0);
+  // A *separate* later damaging event at 0 HP incurs a failed save.
+  window.IRON_PIT_BROWSER_ZERO_HP.applyDamage(hero.state, 2, false, ["poison"]);
+  assert.equal(hero.state.death_save_failures, 1);
+}
+
 console.log("Browser mixed typed hit-damage regressions passed, including fixed typed riders.");

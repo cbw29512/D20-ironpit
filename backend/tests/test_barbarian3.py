@@ -90,8 +90,15 @@ def test_frenzy_is_first_hit_only_per_turn() -> None:
         FixedDiceProvider([15, 4, 8, 2, 6, 5]), setup,
         spend_action=False, allow_reckless=True, turn_key=turn_key,
     )
+    # Resolve the next attack against a *living second creature* rather
+    # than repeat an attack against the first target if it was defeated.
+    second_enemy = EncounterCombatant(
+        combatant_id="monster-2:test-fighter", side="monsters", position_ft=10,
+        state=build_combatant_state(build_karnok_stoneward()),
+    )
+    setup.monsters.append(second_enemy)
     second = resolve_encounter_attack(
-        3, 1, hero, enemy, hero.state.template.weapon_attack, 5,
+        3, 1, hero, second_enemy, hero.state.template.weapon_attack, 5,
         FixedDiceProvider([15, 7, 5]), setup,
         spend_action=False, allow_reckless=True, turn_key=turn_key,
     )

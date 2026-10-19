@@ -18,6 +18,8 @@ def attack_allowed_against(
     try:
         if attack.unavailable_reason is not None:
             return False
+        if defender.is_dead or (defender.template.kind == "monster" and defender.current_hp <= 0):
+            return False
         defender_owned = any(source.source_id == attacker_event_id for source in defender.grapple_sources)
         if attack.forbid_target_grappled_by_self and defender_owned:
             return False
