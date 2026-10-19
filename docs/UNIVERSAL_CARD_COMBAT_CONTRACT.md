@@ -67,9 +67,16 @@ subsequent damage components and hostile hit effects aimed at that monster,
 reject future attacks against it, and allow a Multiattack sequence to select
 another legal living target. Retain any printed source-defined zero-HP
 replacement/survival check before declaring the monster defeated. Do not
-apply this monster shortcut to a pregen: it must retain the normal
-Unconscious/dying, Death Saving Throw, damage-at-zero and instant-death
-mechanics. Python and browser must agree; cover kill on the first component,
+apply this monster shortcut to a pregen: per Chris's approved Iron Pit
+house rule, each ordered damaging component updates a pregen's HP as it
+arrives. If an earlier component reduces HP to 0, any later positive-damage
+component from the same attack counts as damage while dying, causing the
+existing damage-at-zero failure count (one ordinary hit, two critical; instant
+death where the standard max-HP damage threshold applies). The component that
+first drops HP to 0 does not itself add a failed save. Skip later components
+only once the pregen is Dead. Respect condition and zero-HP survival replacements;
+this *per-component* death-save rule intentionally differs from usual 2014
+single-hit RAW, while continuing to use the shared Death Saving Throw engine. Python and browser must agree; cover kill on the first component,
 survival through a resisted first component, an immune component, protected
 zero-HP replacement, dead-target legality and character-at-zero regression.
 A discarded component cannot generate a later effect on that dead target.
