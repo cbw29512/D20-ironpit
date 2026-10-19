@@ -265,6 +265,8 @@ def _save(action: Any) -> dict[str, Any]:
              "damageBonus": item.damage_bonus, "damageType": item.damage_type}
             for item in action.damage_components
         ]
+    if action.prohibited_environment_context_id:
+        row["prohibitedEnvironmentContextId"] = action.prohibited_environment_context_id
     if action.failure_sets_zero_hp:
         row["failureSetsZeroHp"] = True
     if action.damage_only_on_success:
