@@ -60,26 +60,23 @@ For **each attempted attack**, use this decision table in order:
 | new HP/temporary HP and terminal state | shared HP, zero-HP and condition lifecycle | At 0 HP an ordinary monster is removed as an active enemy; a dying hero follows death-save rules; source-defined zero-HP overrides and terminal Dead/Petrified Pit rules take precedence |
 | action sequence and unspent Bonus Action | shared Multiattack/action-economy scheduler | Execute only printed/legal remaining attacks; never invent extra attacks, double-spend an Action, or give a Bonus Action merely because an attack missed |
 
-**Locked early termination at monster zero HP (Chris, 2026-10-19):**
-After each adjusted typed damage component, apply the HP/zero-HP lifecycle
-**immediately for monster targets**. If the result is terminal 0 HP, discard
-subsequent damage components and hostile hit effects aimed at that monster,
-reject future attacks against it, and allow a Multiattack sequence to select
-another legal living target. Retain any printed source-defined zero-HP
-replacement/survival check before declaring the monster defeated. Do not
-apply this monster shortcut to a pregen: per Chris's approved Iron Pit
-house rule, each ordered damaging component updates a pregen's HP as it
-arrives. If an earlier component reduces HP to 0, any later positive-damage
-component from the same attack counts as damage while dying, causing the
-existing damage-at-zero failure count (one ordinary hit, two critical; instant
-death where the standard max-HP damage threshold applies). The component that
-first drops HP to 0 does not itself add a failed save. Skip later components
-only once the pregen is Dead. Respect condition and zero-HP survival replacements;
-this *per-component* death-save rule intentionally differs from usual 2014
-single-hit RAW, while continuing to use the shared Death Saving Throw engine. Python and browser must agree; cover kill on the first component,
-survival through a resisted first component, an immune component, protected
-zero-HP replacement, dead-target legality and character-at-zero regression.
-A discarded component cannot generate a later effect on that dead target.
+**Locked single-hit damage timing (Chris, corrected 2026-10-19):**
+Treat every printed weapon hit, including a Bite that deals piercing plus
+poison, as **one attack roll, one hit, and one damage/zero-HP event** under
+2014 RAW. Calculate each typed component with its own defenses, then apply
+the combined adjusted damage once through the existing HP, special survival,
+and dying/death-save resolver. The target does not enter a separate dying
+lifecycle between the piercing and poison portions of the *same* hit. If
+that hit drops a pregen from positive HP to zero, there is no extra failed
+death save merely because its second damage type existed. A subsequent
+independent damaging hit against an already-dying pregen follows the
+ordinary damage-at-zero failure and instant-death rules. A monster defeated
+at the end of that hit becomes an invalid target for the **next attack**;
+Multiattack must reselect another legal active target or stop. Keep printed
+zero-HP replacement/survival exceptions. The earlier per-component
+damage-at-zero house rule is **withdrawn**; do not reintroduce it.
+Preserve one-hit/dual-type, resistance, immunity, zero-HP, dead-target and
+subsequent-hit tests in both Python and browser.
 
 **An attack is one hit determination, not a separate attack for each damage
 type.** Example: a source Bite with +5 to hit, 2d6+3 piercing and 2d6
