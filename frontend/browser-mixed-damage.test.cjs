@@ -174,7 +174,49 @@ const ritualSickle = {
   assert.equal(hero.state.current_hp, 0);
   assert.equal(hero.state.is_unconscious, true);
   assert.equal(hero.state.is_dead, false);
+  assert.equal(hero.state.death_save_failures, 1);
+}
+
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const attacker = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  hero.state.current_hp = 5;
+  hero.state.resources["relentless-endurance"] = 0;
+  hero.state.template.damage_immunities = ["poison"];
+  window.IRON_PIT_DICE = queuedDice([15, 4, 2]);
+  const event = A.resolveAttack(1, 1, attacker, hero, venomBite, 5);
+  assert.deepEqual(event.damage_components.map((part) => part.applied_total), [8, 0]);
+  assert.equal(hero.state.current_hp, 0);
+  assert.equal(hero.state.is_unconscious, true);
   assert.equal(hero.state.death_save_failures, 0);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const attacker = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  hero.state.current_hp = 5;
+  hero.state.resources["relentless-endurance"] = 0;
+  window.IRON_PIT_DICE = queuedDice([20, 2, 3, 4, 5]);
+  const event = A.resolveAttack(1, 1, attacker, hero, venomBite, 5);
+  assert.equal(event.critical, true);
+  assert.equal(event.damage_components.length, 2);
+  assert.equal(hero.state.current_hp, 0);
+  assert.equal(hero.state.is_dead, false);
+  assert.equal(hero.state.death_save_failures, 2);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const attacker = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  hero.state.current_hp = 5; // Relentless Endurance is still available.
+  window.IRON_PIT_DICE = queuedDice([15, 4, 2]);
+  const event = A.resolveAttack(1, 1, attacker, hero, venomBite, 5);
+  assert.equal(event.damage_components.length, 2);
+  assert.equal(hero.state.current_hp, 0);
+  assert.equal(hero.state.is_unconscious, true);
+  assert.equal(hero.state.death_save_failures, 0);
+  assert.equal(hero.state.resources["relentless-endurance"], 0);
 }
 
 console.log("Browser mixed typed hit-damage regressions passed, including fixed typed riders.");
