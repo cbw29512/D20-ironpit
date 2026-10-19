@@ -38,6 +38,21 @@ class SaveDamageEffectDefinition(BaseModel):
     zero_hp_rider: ZeroHpSaveDamageRider | None = None
 
 
+class AbilityScoreReductionEffectDefinition(BaseModel):
+    """Source-declared, unsaved on-hit ability loss; templates remain immutable."""
+
+    kind: Literal["ability_score_reduction"] = "ability_score_reduction"
+    source: str = Field(min_length=1)
+    ability: AbilityName
+    dice: DiceSpec
+
+    @model_validator(mode="after")
+    def validate_roll(self) -> "AbilityScoreReductionEffectDefinition":
+        if self.dice.count < 1 or self.dice.bonus:
+            raise ValueError("Ability-score reduction needs dice without a flat bonus.")
+        return self
+
+
 class SaveMaximumHpReductionEffectDefinition(BaseModel):
     kind: Literal["save_max_hp_reduction"] = "save_max_hp_reduction"
     save_ability: AbilityName
@@ -134,7 +149,7 @@ class ConditionEffectDefinition(BaseModel):
 
 
 AttackEffectDefinition = Annotated[
-    DamageEffectDefinition | SaveDamageEffectDefinition | SaveMaximumHpReductionEffectDefinition | ContestedMovementEffectDefinition | ProneEffectDefinition | SaveConditionEffectDefinition |
+    DamageEffectDefinition | SaveDamageEffectDefinition | AbilityScoreReductionEffectDefinition | SaveMaximumHpReductionEffectDefinition | ContestedMovementEffectDefinition | ProneEffectDefinition | SaveConditionEffectDefinition |
     GrappleEffectDefinition | ConditionEffectDefinition | OngoingHpLossEffectDefinition | HitModifierEffect,
     Field(discriminator="kind"),
 ]
