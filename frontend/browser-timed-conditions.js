@@ -41,6 +41,7 @@
       repeat_save_ability: defaultPoison ? (options.repeatSaveAbility || "constitution") : (options.repeatSaveAbility || null),
       repeat_save_dc: defaultPoison ? (options.repeatSaveDc || POISON_RECOVERY_DC) : (options.repeatSaveDc || null),
       repeat_save_timing: defaultPoison ? "target_turn_start" : (options.repeatSaveTiming || null),
+      repeat_save_disadvantage_while_source_visible: Boolean(options.repeatSaveDisadvantageWhileSourceVisible),
       allowed_removal_action_ids: [...(options.allowedRemovalActionIds || [])],
       turn_behavior: options.turnBehavior || "normal",
       suppress_action: Boolean(options.suppressAction),

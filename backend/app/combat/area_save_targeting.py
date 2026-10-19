@@ -27,7 +27,7 @@ def legal_area_save_placements(
                 if action.target_scope == "all-other-creatures" else placement.target_ids
             )
             if (target := by_id.get(target_id)) is not None and legal_save_action(
-                action, target, 0, source_id=actor.combatant_id,
+                action, target, 0, source_id=actor.combatant_id, actor=actor,
             )
         )
         placement_key = (

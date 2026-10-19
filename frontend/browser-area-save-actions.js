@@ -94,7 +94,7 @@
         const target = memberById(setup, id);
         return target && target.combatant_id !== member.combatant_id
           && (action.targetScope === "all-other-creatures" || target.side !== member.side)
-          && V().legalAction(action, target, 0, member.combatant_id);
+          && V().legalAction(action, target, 0, member.combatant_id, member);
       });
       return { ...placement, targetIds, target_ids: targetIds };
     } catch (error) {

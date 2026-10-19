@@ -27,6 +27,15 @@
         magicalEffect: stored.magical_effect ?? Boolean(effect.source_is_magical),
         sourceCreatureType: stored.source_creature_type || null, spellEffect: Boolean(stored.spell_effect),
         effectTags: stored.effect_tags || [], roundNumber: round, encounterRoller: target, setup };
+      if (effect.repeat_save_disadvantage_while_source_visible) {
+        if (!setup) throw new Error("Source-visible repeat save requires encounter setup.");
+        const source = [...setup.heroes, ...setup.monsters].find((member) => member.combatant_id === effect.source_id);
+        if (!source) throw new Error("Source-visible repeat save cannot find its original source.");
+        const distance = window.IRON_PIT_BROWSER_STATE.distance(target, source);
+        if (window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(target.state, source.state, distance)) {
+          context.disadvantageSources = [...(context.disadvantageSources || []), "visible-source"];
+        }
+      }
       const buffs = window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.saveAdvantageSourceNames?.(target.state, effect.repeat_save_ability, context) || [];
       return { ...V().resolveSavingThrow(target.state, effect.repeat_save_ability, effect.repeat_save_dc, context), buffs };
     } catch (error) {

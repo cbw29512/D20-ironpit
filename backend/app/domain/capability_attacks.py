@@ -122,6 +122,7 @@ class SaveCapabilityDefinition(BaseModel):
     failure_sets_zero_hp: bool = Field(default=False, exclude_if=lambda value: not value)
     damage_only_on_success: bool = Field(default=False, exclude_if=lambda value: not value)
     requires_target_hearing: bool = Field(default=False, exclude_if=lambda value: not value)
+    requires_target_to_see_source: bool = Field(default=False, exclude_if=lambda value: not value)
     excluded_target_creature_types: list[str] = Field(default_factory=list, exclude_if=lambda value: not value)
     prohibited_environment_context_id: EnvironmentContextId | None = Field(
         default=None, exclude_if=lambda value: value is None,
