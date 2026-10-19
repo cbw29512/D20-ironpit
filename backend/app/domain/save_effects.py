@@ -67,6 +67,7 @@ class FailedSaveTimedEffect(BaseModel):
                 "saving_throw_flat_bonuses": [],
                 "allowed_removal_action_ids": [],
                 "repeat_save_failure_condition_id": None,
+                "repeat_save_disadvantage_while_source_visible": False,
             }
             for key, default in defaults.items():
                 if data.get(key) == default:
