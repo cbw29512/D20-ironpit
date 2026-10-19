@@ -31,6 +31,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         failure_sets_zero_hp=definition.failure_sets_zero_hp,
         damage_only_on_success=definition.damage_only_on_success,
         requires_target_hearing=definition.requires_target_hearing,
+        requires_target_to_see_source=definition.requires_target_to_see_source,
         excluded_target_creature_types=list(definition.excluded_target_creature_types),
         prohibited_environment_context_id=definition.prohibited_environment_context_id,
         grapple_escape_dc=grapple.escape_dc if grapple else None,
