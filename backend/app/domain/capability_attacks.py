@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, ConditionName
 from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, GrappleEffectDefinition
 from app.domain.save_effects import FailedSaveTimedEffect
+from app.domain.save_damage import SaveDamageComponent
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
 from app.domain.weapons import (
@@ -110,10 +111,12 @@ class SaveCapabilityDefinition(BaseModel):
     save_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
+    max_targets: int = Field(default=1, ge=1, le=20)
     target_max_size: CreatureSize | None = None
     area: AreaTargeting | None = None
     damage: DiceSpec | None = None
     damage_type: DamageType | None = None
+    damage_components: list[SaveDamageComponent] = Field(default_factory=list)
     success_damage: Literal["none", "half"] = "none"
     grapple: GrappleEffectDefinition | None = None
     resource_id: str | None = None
@@ -130,6 +133,8 @@ class SaveCapabilityDefinition(BaseModel):
     def validate_damage(self) -> "SaveCapabilityDefinition":
         if (self.damage is None) != (self.damage_type is None):
             raise ValueError("Save damage dice and damage type must be declared together.")
+        if self.damage_components and self.damage is not None:
+            raise ValueError("Save damage must use either legacy dice or typed components, not both.")
         if self.grapple and self.grapple.max_target_size and self.target_max_size:
             if self.grapple.max_target_size != self.target_max_size:
                 raise ValueError("Save target size and grapple target size cannot disagree.")
