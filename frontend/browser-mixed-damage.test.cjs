@@ -165,6 +165,9 @@ const ritualSickle = {
   const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
   const monster = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
   hero.state.current_hp = 5;
+  // The source hero has Relentless Endurance; exhaust that resource to
+  // exercise ordinary dying/death saves rather than its legal 1-HP rescue.
+  hero.state.resources["relentless-endurance"] = 0;
   window.IRON_PIT_DICE = queuedDice([15, 4, 2]);
   const event = A.resolveAttack(1, 1, monster, hero, venomBite, 5);
   assert.equal(event.damage_components.length, 2);
