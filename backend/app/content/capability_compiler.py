@@ -28,6 +28,8 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         damage_bonus=damage.bonus if damage else 0,
         damage_type=definition.damage_type.value if definition.damage_type else None,
         success_damage=definition.success_damage,
+        failure_sets_zero_hp=definition.failure_sets_zero_hp,
+        damage_only_on_success=definition.damage_only_on_success,
         grapple_escape_dc=grapple.escape_dc if grapple else None,
         restrains_while_grappled=grapple.restrains if grapple else False,
         resource_id=definition.resource_id, resource_cost=definition.resource_cost,
