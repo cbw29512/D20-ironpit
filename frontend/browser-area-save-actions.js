@@ -73,6 +73,18 @@
     }
   }
 
+  function prohibitedContext(member, setup, action) {
+    try {
+      if (!action.prohibitedEnvironmentContextId) return false;
+      const runtime = window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS;
+      if (!runtime?.inside) throw new Error("Context-gated Action requires shared environment context resolver.");
+      return runtime.inside(member, setup, action.prohibitedEnvironmentContextId);
+    } catch (error) {
+      console.error("Failed Action environment eligibility.", { source: member?.combatant_id, effect: action?.id, error });
+      throw error;
+    }
+  }
+
   // Recompute eligibility from the geometric placement before execution.
   function eligiblePlacement(member, setup, action, placement) {
     try {
@@ -96,7 +108,8 @@
       const candidates = [];
       for (const action of member.state.template.saving_throw_actions || []) {
         if (actionCost && (action.actionCost || "action") !== actionCost) continue;
-        if (!action.area || !resourceAvailable(member.state, action)) continue;
+        if (!action.area || !resourceAvailable(member.state, action)
+          || prohibitedContext(member, setup, action)) continue;
         if (action.requiresNoActiveGrapple) {
           const holding = [...setup.heroes, ...setup.monsters].some((target) =>
             target.combatant_id !== member.combatant_id && !target.state.is_dead
@@ -131,6 +144,7 @@
     try {
       if (!selected) return null;
       const { action, placement } = selected;
+      if (prohibitedContext(member, setup, action)) throw new Error(`${action.name} is prohibited by the live environment context.`);
       const actionCost = action.actionCost || "action";
       if (!E().available(member.state, actionCost)) return null;
       if (!resourceAvailable(member.state, action)) throw new Error(`${action.name} resource is unavailable.`);
