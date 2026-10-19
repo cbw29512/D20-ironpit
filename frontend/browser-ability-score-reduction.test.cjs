@@ -102,4 +102,23 @@ for (const ability of ["strength", "dexterity", "constitution", "intelligence", 
   assert.deepEqual(state().template.ability_scores, original, "future fight uses original card");
   assert.throws(() => R.applyOnHit(state(), { ...effect, diceSize: 0 }), /Invalid/);
 }
+load("browser-ability-checks.js");
+{
+  const checks = window.IRON_PIT_BROWSER_ABILITY_CHECKS;
+  const roll = { total: 1, notation: "1d20", rolls: [1], modifier: 0, selected_roll: 1, revisions: [] };
+  const target = state();
+  target.template.ability_check_minimums = [{ source_id: "synthetic-floor", ability: "strength" }];
+  assert.equal(checks.applyMinimum(target, "strength", roll).total, 6);
+  R.apply(target, "strength", 2);
+  const drained = checks.applyMinimum(target, "strength", roll);
+  assert.equal(drained.total, 4);
+  assert.equal(drained.revisions[0].replacement_total, 4);
+  assert.equal(target.template.ability_scores.strength, 6);
+  assert.equal(checks.applyMinimum(state(), "strength", roll).total, 1);
+  const dex = state();
+  dex.template.ability_check_minimums = [{ source_id: "renamed-floor", ability: "dexterity" }];
+  R.apply(dex, "dexterity", 2);
+  assert.equal(checks.applyMinimum(dex, "dexterity", roll).total, 12);
+  assert.equal(dex.template.ability_scores.dexterity, 14);
+}
 console.log("Universal browser ability-score reduction parity passed.");
