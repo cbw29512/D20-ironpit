@@ -14,18 +14,18 @@ from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 
 logger = logging.getLogger(__name__)
 _SCORE_CLAUSE = re.compile(
-    r"the target['’]s\\s+(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)"
-    r"\\s+score is reduced by\\s+(\\d+)d(\\d+)",
+    r"the target['’]s\s+(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)"
+    r"\s+score is reduced by\s+(\d+)d(\d+)",
     re.IGNORECASE,
 )
 
 
 def _printed_reduction(monster: SourceMonster2014, attack: SourceAttack2014) -> dict | None:
     # A source action is an HTML paragraph. Keep only the named attack paragraph.
-    for paragraph in re.findall(r"<p\\b[^>]*>(.*?)</p>", monster.source_actions or "", re.I | re.S):
+    for paragraph in re.findall(r"<p\b[^>]*>(.*?)</p>", monster.source_actions or "", re.I | re.S):
         text = re.sub(r"<[^>]+>", "", unescape(paragraph))
-        text = re.sub(r"\\s+", " ", text).strip()
-        if not re.match(rf"^{re.escape(attack.name)}\\.", text, re.IGNORECASE):
+        text = re.sub(r"\s+", " ", text).strip()
+        if not re.match(rf"^{re.escape(attack.name)}\.", text, re.IGNORECASE):
             continue
         match = _SCORE_CLAUSE.search(text)
         if match is None:
