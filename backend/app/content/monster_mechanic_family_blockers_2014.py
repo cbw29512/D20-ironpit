@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import logging
 
+from app.content.monster_ability_score_reduction_source_2014 import source_proves_ability_score_reduction_2014
 from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
 from app.content.monster_attack_ammunition_2014 import attack_ammunition_2014
 from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
@@ -85,7 +86,7 @@ def attack_blockers_2014(monster: SourceMonster2014) -> list[str]:
         blockers: list[str] = []
         for source_attack in monster.attacks:
             attack = source_completed_mixed_attack_2014(monster, source_attack)
-            if not attack.source_complete:
+            if not attack.source_complete or not source_proves_ability_score_reduction_2014(monster, attack):
                 blockers.append("attack:incomplete")
             if attack.damage.type not in _DAMAGE_TYPES:
                 blockers.append("attack:damage-type")
