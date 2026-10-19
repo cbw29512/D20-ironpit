@@ -4,6 +4,7 @@ from app.combat.undead_fortitude import consume_survival_save_log
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 import logging
 from app.combat.action_economy import is_available, spend
+from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.timed_attack_cap import register_turn_attack
 from app.combat.attack_roll_resolution import resolve_attack_roll
 from app.combat.attack_legality import attack_allowed_against
@@ -45,6 +46,9 @@ def resolve_attack(
         attacker_event_id = actor_event_id or attacker.template.id
         if not attack_allowed_against(attack, attacker_event_id, defender, affected_states):
             raise ValueError(f"{attack.id} cannot target {defender_event_id} under its current target policy.")
+        if not action_resource_available(attacker, attack):
+            raise ValueError(f"{attack.id} has insufficient ammunition or other attack resources.")
+        ammunition_remaining = spend_action_resource(attacker, attack)
         register_turn_attack(attacker, off_turn=off_turn)
         auto_hit = owned_grapple_auto_hit(attack, attacker_event_id, defender)
         roll_resolution = automatic_hit_roll() if auto_hit else resolve_attack_roll(
@@ -164,6 +168,8 @@ def resolve_attack(
             save_damage, on_hit_save, on_hit_maximum_hp_save, contested_movement,
             cunning_strike_obscure, cunning_strike, topple,
         )
+        if ammunition_remaining is not None:
+            description += f" {weapon.name}: {ammunition_remaining} ammunition remaining."
         return BattleEvent(
             sequence=sequence, round_number=round_number, event_type="attack", actor_id=attacker_event_id, actor_name=attacker.template.name,
             target_id=actual_event_id, target_name=actual_defender.template.name, attack_name=weapon.name, target_ac=target_ac,
@@ -184,7 +190,7 @@ def resolve_attack(
             feature_id=d20_override_feature_id or miss_override_feature_id or outcome_adjustment_feature_id or feature_id, concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
             resource_remaining=(
                 exile_applied[1] if exile_applied is not None
-                else deferred_effect_armed.resource_remaining if deferred_effect_armed is not None else None
+                else deferred_effect_armed.resource_remaining if deferred_effect_armed is not None else ammunition_remaining
             ),
             animation=weapon.animation, description=description + consume_survival_save_log(actual_defender) + consume_zero_hp_replacement_log(actual_defender),
         )
