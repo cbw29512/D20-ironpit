@@ -148,8 +148,13 @@ function rage(hero) {
   });
   assert.ok(hit.damage_components.some((part) => part.source === "Frenzy"), "a miss must not consume Frenzy");
 
+  // The first hit can defeat the Bandit. Continue on a second living
+  // combatant: the Pit never permits subsequent attacks on a dead monster.
+  const secondTarget = setup().monster;
+  secondTarget.combatant_id = "monster-2:bandit";
+  arena.monsters.push(secondTarget);
   window.IRON_PIT_DICE = queuedDice([15, 7, 5]);
-  const second = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(4, 1, hero, monster, template.attacks[0], 5, {
+  const second = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(4, 1, hero, secondTarget, template.attacks[0], 5, {
     setup: arena, spendAction: false, allowReckless: true, turnKey,
   });
   assert.ok(second.damage_components.every((part) => part.source !== "Frenzy"), "Frenzy is first-hit-only per turn");

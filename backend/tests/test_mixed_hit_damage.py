@@ -168,3 +168,65 @@ def test_missed_mixed_type_attack_rolls_no_damage_and_spends_its_action() -> Non
     assert event.turn_terminated is True  # Locked Pit natural-1 rule.
     assert event.damage_components == []
     assert hero.state.current_hp == starting_hp
+
+
+def test_one_bite_typed_components_are_one_damage_event_for_a_monster() -> None:
+    """Do not skip poison merely because piercing would individually reach 0 HP."""
+    from app.combat.attack_legality import attack_allowed_against
+
+    # Use a source-neutral Commoner attacker so hero-only extra hit dice
+    # do not alter the exact three-roll synthetic attack fixture.
+    setup = build_encounter_setup(EncounterSelection(
+        hero_ids=["karnok-stoneward-l1"],
+        monster_ids=["srd-commoner", "srd-commoner"],
+    ))
+    attacker, monster = setup.monsters
+    monster.state.current_hp = 5
+    event = resolve_attack(
+        1, 1, attacker.state, monster.state, _venom_bite(), 5,
+        FixedDiceProvider([15, 4, 2]),
+        actor_event_id=attacker.combatant_id,
+        target_event_id=monster.combatant_id,
+    )
+    assert event.hit is True
+    assert [part.damage_type for part in event.damage_components] == [
+        DamageType.PIERCING, DamageType.POISON,
+    ]
+    assert [part.applied_total for part in event.damage_components] == [8, 2]
+    assert event.damage_roll is not None and event.damage_roll.total == 10
+    assert monster.state.current_hp == 0 and monster.state.is_dead
+    assert not attack_allowed_against(_venom_bite(), attacker.combatant_id, monster.state)
+
+
+def test_one_bite_zeroes_pregen_without_extra_failed_save_from_poison() -> None:
+    setup = _setup()
+    hero, monster = setup.heroes[0], setup.monsters[0]
+    hero.state.current_hp = 5
+    # Test ordinary dying, rather than this hero's Relentless Endurance.
+    for resource in hero.state.resources:
+        if resource.id == "relentless-endurance":
+            resource.current_uses = 0
+    event = resolve_attack(
+        1, 1, monster.state, hero.state, _venom_bite(), 5,
+        FixedDiceProvider([15, 4, 2]),
+        actor_event_id=monster.combatant_id,
+        target_event_id=hero.combatant_id,
+    )
+    assert [part.applied_total for part in event.damage_components] == [8, 2]
+    assert hero.state.current_hp == 0 and hero.state.is_unconscious
+    assert not hero.state.is_dead
+    assert hero.state.death_save_failures == 0
+
+
+def test_separate_later_damage_at_zero_causes_a_failed_save() -> None:
+    from app.combat.zero_hp import apply_damage
+
+    setup = _setup()
+    hero = setup.heroes[0]
+    hero.state.current_hp = 0
+    hero.state.is_unconscious = True
+    outcome = apply_damage(hero.state, 2, damage_types={DamageType.POISON})
+    assert outcome == "unconscious"
+    assert hero.state.death_save_failures == 1
+    assert not hero.state.is_dead
+

@@ -60,6 +60,24 @@ For **each attempted attack**, use this decision table in order:
 | new HP/temporary HP and terminal state | shared HP, zero-HP and condition lifecycle | At 0 HP an ordinary monster is removed as an active enemy; a dying hero follows death-save rules; source-defined zero-HP overrides and terminal Dead/Petrified Pit rules take precedence |
 | action sequence and unspent Bonus Action | shared Multiattack/action-economy scheduler | Execute only printed/legal remaining attacks; never invent extra attacks, double-spend an Action, or give a Bonus Action merely because an attack missed |
 
+**Locked single-hit damage timing (Chris, corrected 2026-10-19):**
+Treat every printed weapon hit, including a Bite that deals piercing plus
+poison, as **one attack roll, one hit, and one damage/zero-HP event** under
+2014 RAW. Calculate each typed component with its own defenses, then apply
+the combined adjusted damage once through the existing HP, special survival,
+and dying/death-save resolver. The target does not enter a separate dying
+lifecycle between the piercing and poison portions of the *same* hit. If
+that hit drops a pregen from positive HP to zero, there is no extra failed
+death save merely because its second damage type existed. A subsequent
+independent damaging hit against an already-dying pregen follows the
+ordinary damage-at-zero failure and instant-death rules. A monster defeated
+at the end of that hit becomes an invalid target for the **next attack**;
+Multiattack must reselect another legal active target or stop. Keep printed
+zero-HP replacement/survival exceptions. The earlier per-component
+damage-at-zero house rule is **withdrawn**; do not reintroduce it.
+Preserve one-hit/dual-type, resistance, immunity, zero-HP, dead-target and
+subsequent-hit tests in both Python and browser.
+
 **An attack is one hit determination, not a separate attack for each damage
 type.** Example: a source Bite with +5 to hit, 2d6+3 piercing and 2d6
 poison rolls to hit once. On a hit, those are two damage components resolved
