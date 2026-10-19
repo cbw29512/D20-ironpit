@@ -140,7 +140,7 @@ def test_2024_auto_hit_spells_share_one_slot_gate() -> None:
     slot = next(item for item in caster.state.resources if item.id == "spell-slot-1")
     remaining = slot.current_uses
     action = caster.state.template.auto_hit_spell_actions[0]
-    with pytest.raises(ValueError, match="already expended"):
+    with pytest.raises(ValueError, match="conflicts with another cast"):
         resolve_auto_hit_spell(
             1, 1, caster, target, setup, action, 1, 3, key, FixedDiceProvider([]),
         )
