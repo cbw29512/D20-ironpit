@@ -17,6 +17,13 @@
     return Math.floor((effectiveScore(state, ability) - 10) / 2);
   }
 
+  function abilityModifierDelta(state, ability) {
+    if (ability == null || !(state.ability_score_reductions?.[ability] > 0)) return 0;
+    const base = state.template.ability_scores?.[ability];
+    if (!Number.isInteger(base)) throw new Error("Missing source ability score.");
+    return effectiveModifier(state, ability) - Math.floor((base - 10) / 2);
+  }
+
   function apply(state, ability, amount, { zeroKills = false, affectedStates = [] } = {}) {
     if (!Number.isInteger(amount) || amount < 0) throw new Error("Invalid ability reduction amount.");
     const before = effectiveScore(state, ability);
@@ -38,5 +45,5 @@
     return { ability, scoreBefore: before, scoreAfter: after, applied, deathOutcome };
   }
 
-  window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION = { effectiveScore, effectiveModifier, apply };
+  window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION = { effectiveScore, effectiveModifier, abilityModifierDelta, apply };
 })();
