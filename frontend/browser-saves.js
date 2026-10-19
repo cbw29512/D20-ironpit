@@ -41,7 +41,8 @@
     return { saveRoll: save.roll, saveAbility: effect.saveAbility, saveDc: effect.dc,
       saveSucceeded: save.succeeded, appliedCondition };
   }
-  function legalAction(action, target, distance, sourceId) {
+  function legalAction(action, target, distance, sourceId, actor = null) {
+    if (action.requiresTargetToSeeSource && (!actor || !Q().canSee(target.state, actor.state, S().distance(actor, target)))) return false;
     if (distance > action.range) return false;
     if (sourceId && window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS?.isImmune(target, action, sourceId)) return false;
     if (action.requiresTargetHearing && target.state.active_effect_ids.includes("deafened")) return false;
@@ -65,7 +66,7 @@
     const actionCost = action.actionCost || "action";
     if (spendAction && !E().available(actor.state, actionCost)) throw new Error(`${actionCost} is unavailable for ${action.name}.`);
     if (checkResource && action.resourceId && (actor.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);
-    if (!legalAction(action, target, distance, actor.combatant_id)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
+    if (!legalAction(action, target, distance, actor.combatant_id, actor)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     if (action.requiresTargetSight && !Q().canSee(actor.state, target.state, distance)) throw new Error(`${action.name} requires the actor to see the target.`);
     const effectTags = [...new Set([...(action.effectTags || []).map((tag) => String(tag).trim().toLowerCase()).filter(Boolean), ...(String(action.damageType || "").trim().toLowerCase() === "poison" ? ["poison"] : [])])];
     const saveContext = {
