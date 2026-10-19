@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from app.combat.instant_death import apply_instant_death
+from app.combat.instant_death import apply_terminal_death
 from app.domain.character_builds import AbilityName
 from app.domain.runtime import CombatantState
 
@@ -43,6 +43,15 @@ def effective_ability_modifier(state: CombatantState, ability: AbilityName) -> i
     return (effective_ability_score(state, ability) - 10) // 2
 
 
+def ability_modifier_delta(state: CombatantState, ability: AbilityName | None) -> int:
+    """Apply live score loss to source-final bonuses without rebuilding the card."""
+    if ability is None or not state.ability_score_reductions.get(ability, 0):
+        return 0
+    if state.template.ability_scores is None:
+        raise ValueError("Drained attack/check requires a certified source ability score.")
+    return effective_ability_modifier(state, ability) - state.template.ability_scores.modifier(ability)
+
+
 def apply_ability_score_reduction(
     state: CombatantState,
     ability: AbilityName,
@@ -54,7 +63,7 @@ def apply_ability_score_reduction(
     """Apply source-declared score drain, optionally killing at zero.
 
     An effect that cannot kill must leave the target at least one point;
-    explicit zero_kills uses existing instant-death prevention/lifecycle.
+    explicit zero_kills uses terminal death for both monsters and pregens.
     Repeated hits stack in fight state. Greater Restoration already removes
     one named ability's reduction via the shared restoration resolver.
     """
@@ -70,7 +79,7 @@ def apply_ability_score_reduction(
         state.ability_score_reductions[ability] = (
             state.ability_score_reductions.get(ability, 0) + applied
         )
-    outcome = apply_instant_death(state, affected_states=affected_states) if (
+    outcome = apply_terminal_death(state, affected_states=affected_states) if (
         zero_kills and after == 0 and applied
     ) else None
     return AbilityScoreReductionResult(ability, before, after, applied, outcome)
