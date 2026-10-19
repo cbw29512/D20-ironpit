@@ -150,6 +150,7 @@ class SavingThrowAction(BaseModel):
     effect_tags: list[str] = Field(default_factory=list)
     automatic_failure_creature_types: list[str] = Field(default_factory=list)
     requires_target_hearing: bool = False
+    requires_target_to_see_source: bool = False
     prohibited_environment_context_id: EnvironmentContextId | None = Field(
         default=None, exclude_if=lambda value: value is None,
     )
