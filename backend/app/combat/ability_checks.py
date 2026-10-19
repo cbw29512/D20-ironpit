@@ -69,7 +69,7 @@ def apply_ability_check_minimum(
             raise ValueError(
                 f"{state.template.name} has an ability-check minimum without certified ability scores."
             )
-        floor = scores.score(ability)
+        floor = effective_ability_score(state, ability)
         if roll.total >= floor:
             return roll
         rule = sorted(rules, key=lambda item: item.source_id)[0]
