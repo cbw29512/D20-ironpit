@@ -60,6 +60,20 @@ For **each attempted attack**, use this decision table in order:
 | new HP/temporary HP and terminal state | shared HP, zero-HP and condition lifecycle | At 0 HP an ordinary monster is removed as an active enemy; a dying hero follows death-save rules; source-defined zero-HP overrides and terminal Dead/Petrified Pit rules take precedence |
 | action sequence and unspent Bonus Action | shared Multiattack/action-economy scheduler | Execute only printed/legal remaining attacks; never invent extra attacks, double-spend an Action, or give a Bonus Action merely because an attack missed |
 
+**Locked early termination at monster zero HP (Chris, 2026-10-19):**
+After each adjusted typed damage component, apply the HP/zero-HP lifecycle
+**immediately for monster targets**. If the result is terminal 0 HP, discard
+subsequent damage components and hostile hit effects aimed at that monster,
+reject future attacks against it, and allow a Multiattack sequence to select
+another legal living target. Retain any printed source-defined zero-HP
+replacement/survival check before declaring the monster defeated. Do not
+apply this monster shortcut to a pregen: it must retain the normal
+Unconscious/dying, Death Saving Throw, damage-at-zero and instant-death
+mechanics. Python and browser must agree; cover kill on the first component,
+survival through a resisted first component, an immune component, protected
+zero-HP replacement, dead-target legality and character-at-zero regression.
+A discarded component cannot generate a later effect on that dead target.
+
 **An attack is one hit determination, not a separate attack for each damage
 type.** Example: a source Bite with +5 to hit, 2d6+3 piercing and 2d6
 poison rolls to hit once. On a hit, those are two damage components resolved
