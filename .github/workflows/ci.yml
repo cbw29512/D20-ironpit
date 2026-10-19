@@ -47,7 +47,6 @@ jobs:
           python scripts/export_browser_monsters_2014.py
           python scripts/verify_certification_manifests.py --write
           python scripts/prepare_static_site.py
-          python -c 'import base64,pathlib; [print("GENCHUNK::"+p+"::"+b[i:i+6000]) for p in ("data/universal_mechanic_inventory_v1.json","docs/MONSTER_BLOCKERS_2014.md","docs/UNIVERSAL_MECHANIC_INVENTORY.md","frontend/browser-monsters-2014.js") for b in (base64.b64encode(pathlib.Path(p).read_bytes()).decode("ascii"),) for i in range(0,len(b),6000)]'
           # CI must never advance its own tested commit. Canonical artifacts
           # are committed before certification so the manifest verifier sees
           # exactly github.event.pull_request.head.sha.
