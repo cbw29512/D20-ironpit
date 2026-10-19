@@ -67,7 +67,6 @@ const magicMissile = {
   projectileCount: 3, projectilesPerSlotAbove: 1,
   damageDiceCount: 1, damageDiceSize: 4, damageBonus: 1, damageType: "force",
 };
-
 {
   const caster = member("caster", "heroes", 0, {
     resources: { "spell-slot-1": 1, "spell-slot-2": 1 },
@@ -93,7 +92,6 @@ const magicMissile = {
   assert.equal(caster.state.resources["spell-slot-2"], 0);
   assert.equal(caster.state.action_available, false);
 }
-
 {
   const caster = member("caster-resistant", "heroes", 0, {
     resources: { "spell-slot-1": 1 },
@@ -113,9 +111,7 @@ const magicMissile = {
   assert.deepEqual(event.damage_components.map((part) => part.applied_total), [2, 2, 2]);
   assert.equal(event.damage_roll.total, 6);
 }
-
 console.log("Browser universal auto-hit spell regression passed.");
-
 {
   const caster = member("lethal-caster", "heroes", 0, {
     resources: { "spell-slot-1": 1 }, actions: [magicMissile],
@@ -131,8 +127,6 @@ console.log("Browser universal auto-hit spell regression passed.");
   assert.equal(event.is_dead, true, "Lethal auto-hit log must reflect monster death.");
   assert.equal(event.is_stable, false);
 }
-
-
 {
   // Monster and character source labels must use the same 2014 cast-turn gate.
   const caster = member("renamed-monster-caster", "monsters", 30, {
