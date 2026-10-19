@@ -223,6 +223,11 @@ def test_pregen_dying_lifecycle_is_not_monster_instant_death() -> None:
     setup = _setup()
     hero, monster = setup.heroes[0], setup.monsters[0]
     hero.state.current_hp = 5
+    # Exhaust Relentless Endurance, which would otherwise correctly save
+    # this source character at 1 HP instead of entering dying state.
+    for resource in hero.state.resources:
+        if resource.id == "relentless-endurance":
+            resource.current_uses = 0
     event = resolve_attack(
         1, 1, monster.state, hero.state, _venom_bite(), 5,
         FixedDiceProvider([15, 4, 2]),
