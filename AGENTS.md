@@ -28,6 +28,18 @@ The only live monster decision/implementation queue is [docs/MONSTER_ABILITY_WOR
 
 Select a source-approved, unimplemented **semantic family** that resolves the most remaining exact obligations and preferably completes entire monsters; 2014 first, then inspect 2024 reuse. One subsystem owner, one focused family per PR, one final-head full CI pass. No automatic production deployment. See [operating manual](docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md) and [documentation map](docs/DOCUMENTATION_MAP.md).
 
+### Check existing fixes before coding (Chris, 2026-10-19)
+
+Before changing a selected monster or ability, search **open and closed/merged**
+PRs and issues by monster name, printed ability and linked ticket. Inspect the
+relevant branch, merge SHA, current implementation and tests. An open-PR list
+alone is insufficient. Reconcile stale queue rows first. Reuse merged work or
+resume its existing branch; do not recreate a completed mechanic, reopen an
+answered rules question or change its approved policy because a classifier still
+reports a blocker. Identify and record the exact remaining integration gap
+before writing code. If a genuine regression is found, prove it against current
+main and fix that gap without rebuilding the already-completed ability.
+
 ## Mandatory context-transfer / anti-rot gate
 
 Before substantial Iron Pit work begins, after a material merge, when switching agents/sessions, before resuming an older branch, and before handing off unfinished work, run the repository context-transfer procedure in:

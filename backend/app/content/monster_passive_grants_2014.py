@@ -4,6 +4,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_ally_immunity_2014 import visible_ally_immunity_grants_2014
 from app.content.monster_contextual_save_defenses import contextual_save_defenses_2014
 from app.domain.progression import SavingThrowAdvantageGrant
 from app.domain.passive_modifiers import PassiveModifierGrant
@@ -14,7 +15,6 @@ _ALL_SAVE_ABILITIES = (
     "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",
 )
 _MAGIC_RESISTANCE = "Magic Resistance"
-_STEADFAST = "Steadfast"
 _DARK_DEVOTION = "Dark Devotion"
 _BRAVE = "Brave"
 _GNOME_CUNNING = "Gnome Cunning"
@@ -27,14 +27,9 @@ _TWO_HEAD_SAVE_TAGS = (
 
 
 def conditional_immunity_grants_2014(monster: SourceMonster2014) -> list[PassiveModifierGrant]:
-    """Bind printed trait facts to the generic visible-active-ally immunity gate."""
+    """Bind source-verified facts to the generic visible-ally immunity gate."""
     try:
-        if _STEADFAST not in monster.trait_names:
-            return []
-        return [PassiveModifierGrant(
-            source_id="steadfast", source_name=_STEADFAST, kind="condition-immunity",
-            condition_id="frightened", required_visible_active_ally_within_ft=30,
-        )]
+        return visible_ally_immunity_grants_2014(monster)
     except Exception:
         logger.exception("Failed to bind 2014 source-conditional immunity for %s.", monster.name)
         raise
@@ -116,6 +111,7 @@ def bound_passive_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]
     """Return printed traits fully represented by the shared grant primitives above."""
     try:
         bound: set[str] = set()
+        bound.update(grant.source_name for grant in conditional_immunity_grants_2014(monster))
         actions, grants = contextual_save_defenses_2014(monster)
         bound.update(item.name for item in actions)
         bound.update(item.source_name for item in grants)

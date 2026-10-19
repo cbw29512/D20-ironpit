@@ -46,6 +46,9 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     try:
         certified = set(ARENA_NEUTRAL_TRAITS_2014) | set(_MODELED_2014_TRAITS)
         certified.update(bound_trait_names_2014(monster))
+        from app.content.monster_attack_ammunition_2014 import attack_ammunition_2014
+        bound_ammo = attack_ammunition_2014(monster)
+        certified.update(f"{attack.name} Regrowth" for attack in monster.attacks if attack.id in bound_ammo)
         if _supported_charge(monster):
             certified.update(_CHARGE_TRAIT_NAMES)
         return tuple(

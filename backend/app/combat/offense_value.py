@@ -72,7 +72,7 @@ def spell_attack_expected_damage(
     caster: EncounterCombatant, target: EncounterCombatant, spell: SpellAttackAction, setup: EncounterSetup,
 ) -> float:
     distance = combatant_distance(caster, target)
-    advantage, disadvantage = attack_roll_condition_sources(caster.state, target.state, distance, target.combatant_id)
+    advantage, disadvantage = attack_roll_condition_sources(caster.state, target.state, distance, target.combatant_id, setup=setup)
     advantage += attacks_against_advantage_sources(target.state)
     advantage += int(
         spell.advantage_if_target_wearing_metal_armor

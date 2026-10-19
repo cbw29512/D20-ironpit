@@ -465,6 +465,7 @@ Blocked monsters: **98**. These are grouped by printed ability name so the roste
 | Misty Escape | Vampire | 1 |
 | Multiple Heads | Hydra | 1 |
 | Ooze Cube | Gelatinous Cube | 1 |
+| Petrifying Gaze | Basilisk, Medusa | 2 |
 | Pounce (Tiger or Hybrid Form Only) | Weretiger | 1 |
 | Reactive Heads | Hydra | 1 |
 | Reflective Carapace | Tarrasque | 1 |
@@ -472,9 +473,7 @@ Blocked monsters: **98**. These are grouped by printed ability name so the roste
 | Shapechanger | Doppelganger, Imp, Mimic, Quasit, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf | 11 |
 | Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
-| Steadfast | Bearded Devil | 1 |
 | Surprise Attack | Doppelganger | 1 |
-| Tail Spike Regrowth | Manticore | 1 |
 | Telepathic Bond | Succubus/Incubus | 1 |
 | Transparent | Gelatinous Cube | 1 |
 | Vampire Weaknesses | Vampire, Vampire Spawn | 2 |
@@ -489,7 +488,7 @@ Blocked monsters: **98**. These are grouped by printed ability name so the roste
 | `source:trait` | 71 |
 | `source:extra-action` | 57 |
 | `mechanic:spellcasting` | 36 |
-| `attack:incomplete` | 24 |
+| `attack:incomplete` | 23 |
 | `multiattack:complex` | 12 |
 | `mechanic:recharge` | 10 |
 | `mechanic:legendary` | 9 |
@@ -503,4 +502,3 @@ Blocked monsters: **98**. These are grouped by printed ability name so the roste
 | `arena:neutral` | 1 |
 | `arena:removed` | 1 |
 | `mechanic:defense` | 1 |
-| `mechanic:limited-use` | 1 |

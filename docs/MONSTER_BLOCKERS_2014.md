@@ -13,7 +13,7 @@ Blocker categories overlap: a monster may require several fixes.
 | `source:trait` | 71 |
 | `source:extra-action` | 57 |
 | `mechanic:spellcasting` | 36 |
-| `attack:incomplete` | 24 |
+| `attack:incomplete` | 23 |
 | `multiattack:complex` | 12 |
 | `mechanic:recharge` | 10 |
 | `mechanic:legendary` | 9 |
@@ -25,7 +25,6 @@ Blocker categories overlap: a monster may require several fixes.
 | `source:reaction` | 3 |
 | `attack:damage-type` | 2 |
 | `arena:neutral` | 1 |
-| `mechanic:limited-use` | 1 |
 | `mechanic:defense` | 1 |
 | `arena:removed` | 1 |
 
@@ -34,11 +33,12 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**8** monsters have exactly one remaining blocker category.
+**10** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
 | `source:extra-action` | Banshee, Bulette, Harpy, Sprite | 4 |
+| `source:trait` | Basilisk, Medusa | 2 |
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
 | `attack:incomplete` | Shadow | 1 |
@@ -55,7 +55,7 @@ the underlying ability is already implemented or trivial.
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
 | Balor | attack:incomplete, source:trait | Death Throes, Fire Aura |
 | Banshee | source:extra-action | — |
-| Bearded Devil | attack:incomplete, source:trait | Steadfast |
+| Basilisk | source:trait | Petrifying Gaze |
 | Behir | mechanic:recharge, source:extra-action | — |
 | Bulette | source:extra-action | — |
 | Chuul | attack:incomplete, multiattack:complex, source:extra-action | — |
@@ -103,7 +103,7 @@ the underlying ability is already implemented or trivial.
 | Mage | mechanic:spellcasting, source:trait | Spellcasting |
 | Magma Mephit | mechanic:death-trigger, mechanic:spellcasting, source:trait | Death Burst, Innate Spellcasting |
 | Magmin | attack:incomplete, mechanic:death-trigger, source:trait | Death Burst, Ignited Illumination |
-| Manticore | mechanic:limited-use, source:trait | Tail Spike Regrowth |
+| Medusa | source:trait | Petrifying Gaze |
 | Mimic | attack:incomplete, source:trait | Shapechanger, Adhesive (Object Form Only), False Appearance (Object Form Only), Grappler |
 | Mummy | attack:incomplete, source:extra-action | — |
 | Mummy Lord | attack:incomplete, mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Spellcasting |

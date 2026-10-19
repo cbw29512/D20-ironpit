@@ -7,11 +7,11 @@
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
   const F = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
 
-  function disadvantage(state, ability) {
+  function disadvantage(state, ability, setup = null) {
     try {
       let count = 0;
       if ((state.active_effect_ids || []).includes("poisoned")) count += 1;
-      if ((state.active_effect_ids || []).includes("frightened")) count += 1;
+      if (window.IRON_PIT_BROWSER_CONDITION_RULES.has(state, "frightened", setup)) count += 1;
       count += X()?.abilityCheckDisadvantageSources?.(state, ability) || 0;
       return count;
     } catch (error) {
@@ -20,8 +20,8 @@
     }
   }
 
-  function check(member, ability) {
-    const mode = A().mode(member.state, 0, disadvantage(member.state, ability), { ability });
+  function check(member, ability, setup = null) {
+    const mode = A().mode(member.state, 0, disadvantage(member.state, ability, setup), { ability });
     return R().d20(
       E().abilityCheckBonus(member.state, ability) + (X()?.d20Modifier(member.state) || 0),
       mode,
@@ -33,8 +33,8 @@
       const effect = attack.onHitContestedMovement;
       if (!effect || target.state.is_dead || !target.state.is_alive) return null;
       if (effect.maxTargetSize && !window.IRON_PIT_BROWSER_STATE.sizeAtMost(target, effect.maxTargetSize)) return null;
-      let sourceRoll = check(source, effect.sourceAbility);
-      let targetRoll = check(target, effect.targetAbility);
+      let sourceRoll = check(source, effect.sourceAbility, setup);
+      let targetRoll = check(target, effect.targetAbility, setup);
       sourceRoll = A().resolve(source.state, effect.sourceAbility, sourceRoll, targetRoll.total, {
         roller: source, setup, round,
       }).roll;

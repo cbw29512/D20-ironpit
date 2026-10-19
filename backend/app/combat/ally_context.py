@@ -42,16 +42,20 @@ def has_visible_active_ally_within(
     setup: EncounterSetup,
     range_ft: int,
 ) -> bool:
-    """Check the generic visible/live ally condition for range-dependent buffs."""
-    from app.combat.condition_rules import can_see
+    """Check the existing visible/active ally condition for range-dependent buffs."""
+    try:
+        from app.combat.condition_rules import can_see
 
-    if range_ft < 0:
-        raise ValueError("Ally visibility range cannot be negative.")
-    return any(
-        combatant_distance(actor, ally) <= range_ft
-        and can_see(actor.state, ally.state, combatant_distance(actor, ally))
-        for ally in active_allies(actor, setup)
-    )
+        if range_ft < 0:
+            raise ValueError("Ally visibility range cannot be negative.")
+        return any(
+            combatant_distance(actor, ally) <= range_ft
+            and can_see(actor.state, ally.state, combatant_distance(actor, ally))
+            for ally in active_allies(actor, setup)
+        )
+    except Exception:
+        logger.exception("Visible ally range evaluation failed for %s.", actor.combatant_id)
+        raise
 
 
 def has_adjacent_active_ally(

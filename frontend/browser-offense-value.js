@@ -66,7 +66,7 @@
 
   function spellAttack(caster, target, spell, setup) {
     const distance = S().distance(caster, target);
-    const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
+    const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id, setup);
     const closeThreat = A().rangedCloseThreat(caster, target, distance, setup);
     const metalAdvantage = Boolean(
       spell.advantageIfTargetWearingMetalArmor && target.state.template.wearing_metal_armor

@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import logging
+
 from app.combat.debuff_counters import debuff_is_countered
 from app.combat.defensive_modifier_rules import condition_immunity_modifier_applies
 from app.combat.flight_ground_immunity import flying_counters_ground_contact
 from app.domain.models import CombatantState, CombatantTemplate
+
+logger = logging.getLogger(__name__)
 
 
 def condition_is_immune(
@@ -23,6 +27,13 @@ def condition_is_immune(
     that fact. This keeps magical-only prevention distinct from blanket
     condition immunity and lets nonmagical sources continue to function.
     """
+    if actor is None and setup is not None:
+        try:
+            actor = next((member for member in [*setup.heroes, *setup.monsters]
+                          if member.state is state), None)
+        except Exception:
+            logger.exception("Failed condition-immunity encounter lookup for %s.", state.template.id)
+            raise
     if condition_id in state.template.condition_immunities:
         return True
     if flying_counters_ground_contact(state, ground_contact=ground_contact):

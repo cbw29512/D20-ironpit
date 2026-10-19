@@ -74,6 +74,7 @@
         "id": "goblin-scimitar",
         "name": "Scimitar",
         "weapon_id": "scimitar",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -115,6 +116,7 @@
         "id": "goblin-shortbow",
         "name": "Shortbow",
         "weapon_id": "shortbow",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 4,
         "damage": {
@@ -288,6 +290,7 @@
         "id": "goblin-minion-dagger-melee",
         "name": "Dagger",
         "weapon_id": "goblin-minion-dagger-melee",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -315,6 +318,7 @@
         "id": "goblin-minion-dagger-ranged",
         "name": "Dagger",
         "weapon_id": "goblin-minion-dagger-ranged",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 4,
         "damage": {
@@ -473,6 +477,7 @@
         "id": "hobgoblin-longsword",
         "name": "Longsword",
         "weapon_id": "hobgoblin-longsword",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
         "damage": {
@@ -500,6 +505,7 @@
         "id": "hobgoblin-longbow",
         "name": "Longbow",
         "weapon_id": "hobgoblin-longbow",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 3,
         "damage": {
@@ -673,6 +679,7 @@
         "id": "kobold-warrior-dagger-melee",
         "name": "Dagger",
         "weapon_id": "kobold-warrior-dagger-melee",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -700,6 +707,7 @@
         "id": "kobold-warrior-dagger-ranged",
         "name": "Dagger",
         "weapon_id": "kobold-warrior-dagger-ranged",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 4,
         "damage": {
@@ -861,6 +869,7 @@
         "id": "goblin-boss-scimitar",
         "name": "Scimitar",
         "weapon_id": "scimitar",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -902,6 +911,7 @@
         "id": "goblin-boss-shortbow",
         "name": "Shortbow",
         "weapon_id": "shortbow",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 4,
         "damage": {
@@ -1103,6 +1113,7 @@
         "id": "bandit-scimitar",
         "name": "Scimitar",
         "weapon_id": "scimitar",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
         "damage": {
@@ -1131,6 +1142,7 @@
         "id": "bandit-light-crossbow",
         "name": "Light Crossbow",
         "weapon_id": "light-crossbow",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 3,
         "damage": {
@@ -1287,6 +1299,7 @@
         "id": "commoner-club",
         "name": "Club",
         "weapon_id": "club",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
         "damage": {
@@ -1442,6 +1455,7 @@
         "id": "guard-spear-melee",
         "name": "Spear",
         "weapon_id": "guard-spear-melee",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
         "damage": {
@@ -1469,6 +1483,7 @@
         "id": "guard-spear-thrown",
         "name": "Spear",
         "weapon_id": "guard-spear-thrown",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 3,
         "damage": {
@@ -1625,6 +1640,7 @@
         "id": "giant-rat-bite",
         "name": "Bite",
         "weapon_id": "giant-rat-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -1782,6 +1798,7 @@
         "id": "giant-weasel-bite",
         "name": "Bite",
         "weapon_id": "giant-weasel-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -1935,6 +1952,7 @@
         "id": "srd-blood-hawk-beak",
         "name": "Beak",
         "weapon_id": "srd-blood-hawk-beak-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -2105,6 +2123,7 @@
         "id": "axe-beak-beak",
         "name": "Beak",
         "weapon_id": "axe-beak-beak",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -2258,6 +2277,7 @@
         "id": "giant-lizard-bite",
         "name": "Bite",
         "weapon_id": "giant-lizard-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -2421,6 +2441,7 @@
         "id": "wolf-bite",
         "name": "Bite",
         "weapon_id": "wolf-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -2583,6 +2604,7 @@
         "id": "dire-wolf-bite",
         "name": "Bite",
         "weapon_id": "dire-wolf-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -2745,6 +2767,7 @@
         "id": "black-bear-rend",
         "name": "Rend",
         "weapon_id": "black-bear-rend-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -2926,6 +2949,7 @@
         "id": "brown-bear-bite",
         "name": "Bite",
         "weapon_id": "brown-bear-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -2953,6 +2977,7 @@
         "id": "brown-bear-claw",
         "name": "Claw",
         "weapon_id": "brown-bear-claw-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -3131,6 +3156,7 @@
         "id": "baboon-bite",
         "name": "Bite",
         "weapon_id": "baboon-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 1,
         "damage": {
@@ -3288,6 +3314,7 @@
         "id": "camel-bite",
         "name": "Bite",
         "weapon_id": "camel-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -3441,6 +3468,7 @@
         "id": "deer-ram",
         "name": "Ram",
         "weapon_id": "deer-ram-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
         "damage": {
@@ -3596,6 +3624,7 @@
         "id": "draft-horse-hooves",
         "name": "Hooves",
         "weapon_id": "draft-horse-hooves-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -3749,6 +3778,7 @@
         "id": "giant-badger-bite",
         "name": "Bite",
         "weapon_id": "giant-badger-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
         "damage": {
@@ -3904,6 +3934,7 @@
         "id": "jackal-bite",
         "name": "Bite",
         "weapon_id": "jackal-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 1,
         "damage": {
@@ -4057,6 +4088,7 @@
         "id": "boar-gore",
         "name": "Gore",
         "weapon_id": "boar-gore-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
         "damage": {
@@ -4215,6 +4247,7 @@
         "id": "elk-ram",
         "name": "Ram",
         "weapon_id": "elk-ram-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -4370,6 +4403,7 @@
         "id": "giant-boar-gore",
         "name": "Gore",
         "weapon_id": "giant-boar-gore-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -4528,6 +4562,7 @@
         "id": "minotaur-skeleton-gore",
         "name": "Gore",
         "weapon_id": "minotaur-skeleton-gore",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -4555,6 +4590,7 @@
         "id": "minotaur-skeleton-slam",
         "name": "Slam",
         "weapon_id": "minotaur-skeleton-slam",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -4717,6 +4753,7 @@
         "id": "triceratops-gore",
         "name": "Gore",
         "weapon_id": "triceratops-gore",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 9,
         "damage": {
@@ -4892,6 +4929,7 @@
         "id": "warhorse-skeleton-hooves",
         "name": "Hooves",
         "weapon_id": "warhorse-skeleton-hooves",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -5054,6 +5092,7 @@
         "id": "allosaurus-bite",
         "name": "Bite",
         "weapon_id": "allosaurus-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -5081,6 +5120,7 @@
         "id": "allosaurus-claws",
         "name": "Claws",
         "weapon_id": "allosaurus-claws",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -5238,6 +5278,7 @@
         "id": "goat-ram",
         "name": "Ram",
         "weapon_id": "goat-ram-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
         "fixed_damage": 1,
@@ -5389,6 +5430,7 @@
         "id": "merfolk-skirmisher-ocean-spear-ranged",
         "name": "Ocean Spear",
         "weapon_id": "merfolk-skirmisher-ocean-spear-ranged-weapon",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 2,
         "damage": {
@@ -5439,6 +5481,7 @@
         "id": "merfolk-skirmisher-ocean-spear-melee",
         "name": "Ocean Spear",
         "weapon_id": "merfolk-skirmisher-ocean-spear-melee-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
         "damage": {
@@ -5614,6 +5657,7 @@
         "id": "srd-druid-vine-staff",
         "name": "Vine Staff",
         "weapon_id": "srd-druid-vine-staff-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -5654,6 +5698,7 @@
         "id": "srd-druid-verdant-wisp",
         "name": "Verdant Wisp",
         "weapon_id": "srd-druid-verdant-wisp-weapon",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 5,
         "damage": {
@@ -5954,6 +5999,7 @@
         "id": "hippogriff-rend",
         "name": "Rend",
         "weapon_id": "hippogriff-rend",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -6129,6 +6175,7 @@
         "id": "awakened-shrub-rake",
         "name": "Rake",
         "weapon_id": "awakened-shrub-rake",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 1,
         "fixed_damage": 1,
@@ -6282,6 +6329,7 @@
         "id": "badger-bite",
         "name": "Bite",
         "weapon_id": "badger-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
         "fixed_damage": 1,
@@ -6433,6 +6481,7 @@
         "id": "bat-bite",
         "name": "Bite",
         "weapon_id": "bat-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "fixed_damage": 1,
@@ -6582,6 +6631,7 @@
         "id": "cat-scratch",
         "name": "Scratch",
         "weapon_id": "cat-scratch",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "fixed_damage": 1,
@@ -6733,6 +6783,7 @@
         "id": "crab-claw",
         "name": "Claw",
         "weapon_id": "crab-claw",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
         "fixed_damage": 1,
@@ -6884,6 +6935,7 @@
         "id": "frog-bite",
         "name": "Bite",
         "weapon_id": "frog-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
         "fixed_damage": 1,
@@ -7036,6 +7088,7 @@
         "id": "hawk-talons",
         "name": "Talons",
         "weapon_id": "hawk-talons",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "fixed_damage": 1,
@@ -7185,6 +7238,7 @@
         "id": "lizard-bite",
         "name": "Bite",
         "weapon_id": "lizard-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
         "fixed_damage": 1,
@@ -7336,6 +7390,7 @@
         "id": "owl-talons",
         "name": "Talons",
         "weapon_id": "owl-talons",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
         "fixed_damage": 1,
@@ -7487,6 +7542,7 @@
         "id": "rat-bite",
         "name": "Bite",
         "weapon_id": "rat-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
         "fixed_damage": 1,
@@ -7638,6 +7694,7 @@
         "id": "raven-beak",
         "name": "Beak",
         "weapon_id": "raven-beak",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "fixed_damage": 1,
@@ -7789,6 +7846,7 @@
         "id": "weasel-bite",
         "name": "Bite",
         "weapon_id": "weasel-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "fixed_damage": 1,
@@ -7938,6 +7996,7 @@
         "id": "eagle-talons",
         "name": "Talons",
         "weapon_id": "eagle-talons",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -8091,6 +8150,7 @@
         "id": "panther-rend",
         "name": "Rend",
         "weapon_id": "panther-rend",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -8246,6 +8306,7 @@
         "id": "plesiosaurus-bite",
         "name": "Bite",
         "weapon_id": "plesiosaurus-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -8401,6 +8462,7 @@
         "id": "polar-bear-rend",
         "name": "Rend",
         "weapon_id": "polar-bear-rend",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
         "damage": {
@@ -8576,6 +8638,7 @@
         "id": "pony-hooves",
         "name": "Hooves",
         "weapon_id": "pony-hooves",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -8729,6 +8792,7 @@
         "id": "pteranodon-bite",
         "name": "Bite",
         "weapon_id": "pteranodon-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -8884,6 +8948,7 @@
         "id": "riding-horse-hooves",
         "name": "Hooves",
         "weapon_id": "riding-horse-hooves",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -9037,6 +9102,7 @@
         "id": "tiger-rend",
         "name": "Rend",
         "weapon_id": "tiger-rend",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -9197,6 +9263,7 @@
         "id": "vulture-beak",
         "name": "Beak",
         "weapon_id": "vulture-beak",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
         "damage": {
@@ -9354,6 +9421,7 @@
         "id": "giant-fire-beetle-bite",
         "name": "Bite",
         "weapon_id": "giant-fire-beetle-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 1,
         "fixed_damage": 1,
@@ -9507,6 +9575,7 @@
         "id": "giant-goat-ram",
         "name": "Ram",
         "weapon_id": "giant-goat-ram",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -9662,6 +9731,7 @@
         "id": "giant-owl-talons",
         "name": "Talons",
         "weapon_id": "giant-owl-talons",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -9821,6 +9891,7 @@
         "id": "hyena-bite",
         "name": "Bite",
         "weapon_id": "hyena-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
         "damage": {
@@ -9978,6 +10049,7 @@
         "id": "giant-bat-bite",
         "name": "Bite",
         "weapon_id": "giant-bat-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -10131,6 +10203,7 @@
         "id": "mastiff-bite",
         "name": "Bite",
         "weapon_id": "mastiff-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
         "damage": {
@@ -10289,6 +10362,7 @@
         "id": "mule-hooves",
         "name": "Hooves",
         "weapon_id": "mule-hooves",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -10444,6 +10518,7 @@
         "id": "rhinoceros-gore",
         "name": "Gore",
         "weapon_id": "rhinoceros-gore",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
         "damage": {
@@ -10599,6 +10674,7 @@
         "id": "warhorse-hooves",
         "name": "Hooves",
         "weapon_id": "warhorse-hooves",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -10754,6 +10830,7 @@
         "id": "ogre-greatclub",
         "name": "Greatclub",
         "weapon_id": "ogre-greatclub",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -10781,6 +10858,7 @@
         "id": "ogre-javelin-melee",
         "name": "Javelin",
         "weapon_id": "ogre-javelin-melee",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -10808,6 +10886,7 @@
         "id": "ogre-javelin",
         "name": "Javelin",
         "weapon_id": "ogre-javelin",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 6,
         "damage": {
@@ -10963,6 +11042,7 @@
         "id": "owlbear-rend",
         "name": "Rend",
         "weapon_id": "owlbear-rend",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
         "damage": {
@@ -11136,6 +11216,7 @@
         "id": "saber-toothed-tiger-rend",
         "name": "Rend",
         "weapon_id": "saber-toothed-tiger-rend",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -11313,6 +11394,7 @@
         "id": "scout-longbow",
         "name": "Longbow",
         "weapon_id": "scout-longbow",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 4,
         "damage": {
@@ -11342,6 +11424,7 @@
         "id": "scout-shortsword",
         "name": "Shortsword",
         "weapon_id": "scout-shortsword",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -11517,6 +11600,7 @@
         "id": "warrior-infantry-spear-melee",
         "name": "Spear",
         "weapon_id": "warrior-infantry-spear-melee",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
         "damage": {
@@ -11544,6 +11628,7 @@
         "id": "warrior-infantry-spear-ranged",
         "name": "Spear",
         "weapon_id": "warrior-infantry-spear-ranged",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 3,
         "damage": {
@@ -11703,6 +11788,7 @@
         "id": "crocodile-bite",
         "name": "Bite",
         "weapon_id": "crocodile-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -11869,6 +11955,7 @@
         "id": "giant-crab-claw",
         "name": "Claw",
         "weapon_id": "giant-crab-claw",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
         "damage": {
@@ -12035,6 +12122,7 @@
         "id": "constrictor-snake-bite",
         "name": "Bite",
         "weapon_id": "constrictor-snake-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -12220,6 +12308,7 @@
         "id": "srd-giant-scorpion-claw",
         "name": "Claw",
         "weapon_id": "srd-giant-scorpion-claw-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -12255,6 +12344,7 @@
         "id": "srd-giant-scorpion-sting",
         "name": "Sting",
         "weapon_id": "srd-giant-scorpion-sting-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -12450,6 +12540,7 @@
         "id": "srd-grick-beak",
         "name": "Beak",
         "weapon_id": "srd-grick-beak-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -12477,6 +12568,7 @@
         "id": "srd-grick-tentacles",
         "name": "Tentacles",
         "weapon_id": "srd-grick-tentacles-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -12662,6 +12754,7 @@
         "id": "srd-griffon-rend",
         "name": "Rend",
         "weapon_id": "srd-griffon-rend-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -12847,6 +12940,7 @@
         "id": "giant-centipede-bite",
         "name": "Bite",
         "weapon_id": "giant-centipede-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -13011,6 +13105,7 @@
         "id": "giant-vulture-gouge",
         "name": "Gouge",
         "weapon_id": "giant-vulture-gouge",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -13180,6 +13275,7 @@
         "id": "wyvern-bite",
         "name": "Bite",
         "weapon_id": "wyvern-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
         "damage": {
@@ -13207,6 +13303,7 @@
         "id": "wyvern-sting",
         "name": "Sting",
         "weapon_id": "wyvern-sting",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
         "damage": {
@@ -13402,6 +13499,7 @@
         "id": "giant-venomous-snake-bite",
         "name": "Bite",
         "weapon_id": "giant-venomous-snake-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -13572,6 +13670,7 @@
         "id": "giant-wasp-sting",
         "name": "Sting",
         "weapon_id": "giant-wasp-sting",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -13743,6 +13842,7 @@
         "id": "giant-wolf-spider-bite",
         "name": "Bite",
         "weapon_id": "giant-wolf-spider-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -13916,6 +14016,7 @@
         "id": "archelon-bite",
         "name": "Bite",
         "weapon_id": "archelon-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -14091,6 +14192,7 @@
         "id": "ankylosaurus-tail",
         "name": "Tail",
         "weapon_id": "ankylosaurus-tail",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -14269,6 +14371,7 @@
         "id": "giant-eagle-rend",
         "name": "Rend",
         "weapon_id": "giant-eagle-rend",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -14458,6 +14561,7 @@
         "id": "giant-elk-ram",
         "name": "Ram",
         "weapon_id": "giant-elk-ram",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -14629,6 +14733,7 @@
         "id": "giant-crocodile-bite",
         "name": "Bite",
         "weapon_id": "giant-crocodile-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 8,
         "damage": {
@@ -14664,6 +14769,7 @@
         "id": "giant-crocodile-tail",
         "name": "Tail",
         "weapon_id": "giant-crocodile-tail",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 8,
         "damage": {
@@ -14846,6 +14952,7 @@
         "id": "giant-constrictor-snake-bite",
         "name": "Bite",
         "weapon_id": "giant-constrictor-snake-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -15052,6 +15159,7 @@
         "id": "tyrannosaurus-rex-bite",
         "name": "Bite",
         "weapon_id": "tyrannosaurus-rex-bite",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 10,
         "damage": {
@@ -15087,6 +15195,7 @@
         "id": "tyrannosaurus-rex-tail",
         "name": "Tail",
         "weapon_id": "tyrannosaurus-rex-tail",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 10,
         "damage": {
@@ -15267,6 +15376,7 @@
         "id": "srd-animated-armor-slam",
         "name": "Slam",
         "weapon_id": "srd-animated-armor-slam-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -15451,6 +15561,7 @@
         "id": "srd-animated-flying-sword-slash",
         "name": "Slash",
         "weapon_id": "srd-animated-flying-sword-slash-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -15615,6 +15726,7 @@
         "id": "srd-earth-elemental-slam",
         "name": "Slam",
         "weapon_id": "srd-earth-elemental-slam-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 8,
         "damage": {
@@ -15642,6 +15754,7 @@
         "id": "srd-earth-elemental-rock-launch",
         "name": "Rock Launch",
         "weapon_id": "srd-earth-elemental-rock-launch-weapon",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 8,
         "damage": {
@@ -15837,6 +15950,7 @@
         "id": "srd-awakened-tree-slam",
         "name": "Slam",
         "weapon_id": "srd-awakened-tree-slam-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -15995,6 +16109,7 @@
         "id": "srd-cultist-ritual-sickle",
         "name": "Ritual Sickle",
         "weapon_id": "srd-cultist-ritual-sickle-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
         "damage": {
@@ -16161,6 +16276,7 @@
         "id": "srd-flying-snake-bite",
         "name": "Bite",
         "weapon_id": "srd-flying-snake-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "fixed_damage": 1,
@@ -16325,6 +16441,7 @@
         "id": "srd-gargoyle-claw",
         "name": "Claw",
         "weapon_id": "srd-gargoyle-claw-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -16506,6 +16623,7 @@
         "id": "srd-grimlock-bone-cudgel",
         "name": "Bone Cudgel",
         "weapon_id": "srd-grimlock-bone-cudgel-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -16672,6 +16790,7 @@
         "id": "srd-guard-captain-javelin-melee",
         "name": "Javelin",
         "weapon_id": "srd-guard-captain-javelin-melee-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -16699,6 +16818,7 @@
         "id": "srd-guard-captain-javelin-ranged",
         "name": "Javelin",
         "weapon_id": "srd-guard-captain-javelin-ranged-weapon",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 6,
         "damage": {
@@ -16728,6 +16848,7 @@
         "id": "srd-guard-captain-longsword",
         "name": "Longsword",
         "weapon_id": "srd-guard-captain-longsword-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -16905,6 +17026,7 @@
         "id": "srd-hippopotamus-bite",
         "name": "Bite",
         "weapon_id": "srd-hippopotamus-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
         "damage": {
@@ -17080,6 +17202,7 @@
         "id": "srd-hill-giant-tree-club",
         "name": "Tree Club",
         "weapon_id": "srd-hill-giant-tree-club-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 8,
         "damage": {
@@ -17112,6 +17235,7 @@
         "id": "srd-hill-giant-trash-lob",
         "name": "Trash Lob",
         "weapon_id": "srd-hill-giant-trash-lob-weapon",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 8,
         "damage": {
@@ -17297,6 +17421,7 @@
         "id": "srd-killer-whale-bite",
         "name": "Bite",
         "weapon_id": "srd-killer-whale-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -17452,6 +17577,7 @@
         "id": "srd-lemure-vile-slime",
         "name": "Vile Slime",
         "weapon_id": "srd-lemure-vile-slime-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
         "damage": {
@@ -17616,6 +17742,7 @@
         "id": "srd-manticore-rend",
         "name": "Rend",
         "weapon_id": "srd-manticore-rend-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -17643,6 +17770,7 @@
         "id": "srd-manticore-tail-spike",
         "name": "Tail Spike",
         "weapon_id": "srd-manticore-tail-spike-weapon",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 5,
         "damage": {
@@ -17827,6 +17955,7 @@
         "id": "srd-ogre-zombie-slam",
         "name": "Slam",
         "weapon_id": "srd-ogre-zombie-slam-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -17989,6 +18118,7 @@
         "id": "srd-pegasus-hooves",
         "name": "Hooves",
         "weapon_id": "srd-pegasus-hooves-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -18155,6 +18285,7 @@
         "id": "srd-scorpion-sting",
         "name": "Sting",
         "weapon_id": "srd-scorpion-sting-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
         "fixed_damage": 1,
@@ -18317,6 +18448,7 @@
         "id": "srd-skeleton-shortsword",
         "name": "Shortsword",
         "weapon_id": "srd-skeleton-shortsword-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -18344,6 +18476,7 @@
         "id": "srd-skeleton-shortbow",
         "name": "Shortbow",
         "weapon_id": "srd-skeleton-shortbow-weapon",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 5,
         "damage": {
@@ -18506,6 +18639,7 @@
         "id": "srd-spider-bite",
         "name": "Bite",
         "weapon_id": "srd-spider-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "fixed_damage": 1,
@@ -18671,6 +18805,7 @@
         "id": "srd-spy-shortsword",
         "name": "Shortsword",
         "weapon_id": "srd-spy-shortsword-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -18711,6 +18846,7 @@
         "id": "srd-spy-hand-crossbow",
         "name": "Hand Crossbow",
         "weapon_id": "srd-spy-hand-crossbow-weapon",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 4,
         "damage": {
@@ -18881,6 +19017,7 @@
         "id": "srd-troll-rend",
         "name": "Rend",
         "weapon_id": "srd-troll-rend-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
         "damage": {
@@ -19021,6 +19158,7 @@
           },
           "attack_bonus": 6,
           "damage_bonus": 4,
+          "resource_cost": 1,
           "conditional_damage": [],
           "conditional_attack_advantage": [],
           "on_hit_damage": [],
@@ -19119,6 +19257,7 @@
         "id": "srd-tough-mace",
         "name": "Mace",
         "weapon_id": "srd-tough-mace-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -19146,6 +19285,7 @@
         "id": "srd-tough-heavy-crossbow",
         "name": "Heavy Crossbow",
         "weapon_id": "srd-tough-heavy-crossbow-weapon",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 3,
         "damage": {
@@ -19305,6 +19445,7 @@
         "id": "srd-venomous-snake-bite",
         "name": "Bite",
         "weapon_id": "srd-venomous-snake-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -19471,6 +19612,7 @@
         "id": "srd-violet-fungus-rotting-touch",
         "name": "Rotting Touch",
         "weapon_id": "srd-violet-fungus-rotting-touch-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
         "damage": {
@@ -19649,6 +19791,7 @@
         "id": "srd-xorn-bite",
         "name": "Bite",
         "weapon_id": "srd-xorn-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -19676,6 +19819,7 @@
         "id": "srd-xorn-claw",
         "name": "Claw",
         "weapon_id": "srd-xorn-claw-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -19872,6 +20016,7 @@
         "id": "srd-zombie-slam",
         "name": "Slam",
         "weapon_id": "srd-zombie-slam-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
         "damage": {
@@ -20034,6 +20179,7 @@
         "id": "srd-giant-shark-bite",
         "name": "Bite",
         "weapon_id": "srd-giant-shark-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 9,
         "damage": {
@@ -20213,6 +20359,7 @@
         "id": "srd-hunter-shark-bite",
         "name": "Bite",
         "weapon_id": "srd-hunter-shark-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -20372,6 +20519,7 @@
         "id": "srd-piranha-bite",
         "name": "Bite",
         "weapon_id": "srd-piranha-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "fixed_damage": 1,
@@ -20527,6 +20675,7 @@
         "id": "srd-reef-shark-bite",
         "name": "Bite",
         "weapon_id": "srd-reef-shark-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -20685,6 +20834,7 @@
         "id": "srd-sahuagin-warrior-claw",
         "name": "Claw",
         "weapon_id": "srd-sahuagin-warrior-claw-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
         "damage": {
@@ -20871,6 +21021,7 @@
         "id": "srd-swarm-of-piranhas-bites",
         "name": "Bites",
         "weapon_id": "srd-swarm-of-piranhas-bites-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -21059,6 +21210,7 @@
         "id": "srd-hell-hound-bite",
         "name": "Bite",
         "weapon_id": "srd-hell-hound-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -21292,6 +21444,7 @@
         "id": "srd-black-dragon-wyrmling-rend",
         "name": "Rend",
         "weapon_id": "srd-black-dragon-wyrmling-rend-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -21524,6 +21677,7 @@
         "id": "srd-blue-dragon-wyrmling-rend",
         "name": "Rend",
         "weapon_id": "srd-blue-dragon-wyrmling-rend-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -21754,6 +21908,7 @@
         "id": "srd-green-dragon-wyrmling-rend",
         "name": "Rend",
         "weapon_id": "srd-green-dragon-wyrmling-rend-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -21987,6 +22142,7 @@
         "id": "srd-red-dragon-wyrmling-rend",
         "name": "Rend",
         "weapon_id": "srd-red-dragon-wyrmling-rend-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
         "damage": {
@@ -22216,6 +22372,7 @@
         "id": "srd-white-dragon-wyrmling-rend",
         "name": "Rend",
         "weapon_id": "srd-white-dragon-wyrmling-rend-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -22447,6 +22604,7 @@
         "id": "srd-young-black-dragon-rend",
         "name": "Rend",
         "weapon_id": "srd-young-black-dragon-rend-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
         "damage": {
@@ -22685,6 +22843,7 @@
         "id": "srd-young-blue-dragon-rend",
         "name": "Rend",
         "weapon_id": "srd-young-blue-dragon-rend-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 9,
         "damage": {
@@ -22921,6 +23080,7 @@
         "id": "srd-young-green-dragon-rend",
         "name": "Rend",
         "weapon_id": "srd-young-green-dragon-rend-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
         "damage": {
@@ -23160,6 +23320,7 @@
         "id": "srd-young-red-dragon-rend",
         "name": "Rend",
         "weapon_id": "srd-young-red-dragon-rend-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 10,
         "damage": {
@@ -23395,6 +23556,7 @@
         "id": "srd-young-white-dragon-rend",
         "name": "Rend",
         "weapon_id": "srd-young-white-dragon-rend-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
         "damage": {
@@ -23632,6 +23794,7 @@
         "id": "srd-worg-bite",
         "name": "Bite",
         "weapon_id": "srd-worg-bite-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -23795,6 +23958,7 @@
         "id": "srd-swarm-of-bats-bites",
         "name": "Bites",
         "weapon_id": "srd-swarm-of-bats-bites-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -23978,6 +24142,7 @@
         "id": "srd-swarm-of-rats-bites",
         "name": "Bites",
         "weapon_id": "srd-swarm-of-rats-bites-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
         "damage": {
@@ -24161,6 +24326,7 @@
         "id": "srd-swarm-of-crawling-claws-swarm-of-grasping-hands",
         "name": "Swarm of Grasping Hands",
         "weapon_id": "srd-swarm-of-crawling-claws-swarm-of-grasping-hands-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
         "damage": {
@@ -24354,6 +24520,7 @@
         "id": "srd-bandit-captain-scimitar",
         "name": "Scimitar",
         "weapon_id": "srd-bandit-captain-scimitar-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -24381,6 +24548,7 @@
         "id": "srd-bandit-captain-pistol",
         "name": "Pistol",
         "weapon_id": "srd-bandit-captain-pistol-weapon",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 5,
         "damage": {
@@ -24564,6 +24732,7 @@
         "id": "srd-knight-greatsword",
         "name": "Greatsword",
         "weapon_id": "srd-knight-greatsword-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -24604,6 +24773,7 @@
         "id": "srd-knight-heavy-crossbow",
         "name": "Heavy Crossbow",
         "weapon_id": "srd-knight-heavy-crossbow-weapon",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 2,
         "damage": {
@@ -24802,6 +24972,7 @@
         "id": "srd-noble-rapier",
         "name": "Rapier",
         "weapon_id": "srd-noble-rapier-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
         "damage": {
@@ -24960,6 +25131,7 @@
         "id": "srd-warrior-veteran-greatsword",
         "name": "Greatsword",
         "weapon_id": "srd-warrior-veteran-greatsword-weapon",
+        "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
         "damage": {
@@ -24987,6 +25159,7 @@
         "id": "srd-warrior-veteran-heavy-crossbow",
         "name": "Heavy Crossbow",
         "weapon_id": "srd-warrior-veteran-heavy-crossbow-weapon",
+        "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 3,
         "damage": {

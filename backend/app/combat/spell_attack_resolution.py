@@ -79,7 +79,7 @@ def resolve_spell_attack(
                 event.description += f" {caster.state.template.name} uses {range_modifier.name}."
             return event
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(
-            caster.state, target.state, distance, target.combatant_id,
+            caster.state, target.state, distance, target.combatant_id, setup=setup,
         )
         advantage = condition_advantage + attacks_against_advantage_sources(target.state)
         advantage += attacks_against_reckless_advantage(target.state)

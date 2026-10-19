@@ -127,7 +127,7 @@ def decide_post_move_offense(
                 item.family == "attack-action", item.family,
             ))
         target = living_opponents(attacker, setup)[0] if living_opponents(attacker, setup) else None
-        if target is not None and can_use_presence(attacker, target):
+        if target is not None and can_use_presence(attacker, target, setup):
             return OffensePick("presence", 0.0, target)
         if picks:
             return max(picks, key=lambda item: (item.expected_damage, item.family))

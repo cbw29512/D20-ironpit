@@ -41,6 +41,7 @@ from app.content.monster_leadership_2014 import leadership_actions_2014, leaders
 from app.content.monster_senses_2014 import special_senses_2014, bounded_blindsight_2014
 from app.content.monster_spell_slot_resources_2014 import monster_spell_slot_resources_2014
 from app.content.monster_multiattack_2014 import multiattack_2014
+from app.content.monster_attack_ammunition_2014 import attack_ammunition_2014
 from app.content.monster_zero_hp_prevention_2014 import (
     damage_threshold_zero_hp_replacements_2014,
     zero_hp_prevention_resources_2014,
@@ -79,6 +80,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "name": attack.name,
         "attack_kind": attack.kind,
         "attack_bonus": attack.attack_bonus,
+        "resource_id": attack.id if attack.id in attack_ammunition_2014(monster) else None,
         "attack_ability": attack.attack_ability,
         "sneak_attack_eligible": sneak_attack_eligible_2014(monster, attack),
         "conditional_attack_advantage": [
@@ -119,6 +121,8 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     blindsight_ft, truesight_ft = special_senses_2014(monster)
     bounded = bounded_blindsight_2014(monster)
     resources = [*save_resources_2014(monster), *fetid_cloud_resources_2014(monster), *leadership_resources_2014(monster)]
+    resources.extend(ResourceDefinition(id=key, name=key.replace('-', ' ').title(), max_uses=uses)
+                     for key, uses in attack_ammunition_2014(monster).items())
     resources.extend(healing_resources_2014(monster))
     resources.extend(innate_spell_resources_2014(monster))
     resources.extend(monster_spell_slot_resources_2014(monster))

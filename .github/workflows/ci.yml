@@ -563,6 +563,8 @@ jobs:
           node frontend/browser-mixed-damage.test.cjs
           node frontend/browser-included-weapon-damage.test.cjs
           node frontend/browser-multiattack-sequences.test.cjs
+          node frontend/browser-attack-ammunition.test.cjs
+          node frontend/browser-manticore-ammunition-2014.test.cjs
           node frontend/browser-veteran-multiattack.test.cjs
           node frontend/browser-grick-sequence.test.cjs
           node frontend/browser-fungus-sequence.test.cjs
@@ -677,6 +679,9 @@ jobs:
           node frontend/browser-ongoing-spell-control.test.cjs
           node frontend/browser-forced-retreat-turn.test.cjs
           node frontend/browser-fear-ui.test.cjs
+          node frontend/browser-2014-beard.test.cjs
+          node frontend/browser-2014-glaive-infernal-wound.test.cjs
+          node frontend/browser-bearded-devil-admission-2014.test.cjs
           node frontend/battle-log-format.test.cjs
           node frontend/figure-visuals.test.cjs
           node frontend/figure-portraits.test.cjs

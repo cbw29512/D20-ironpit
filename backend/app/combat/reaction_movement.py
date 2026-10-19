@@ -34,9 +34,9 @@ def _proposed_position(
         raise
 
 
-def _fear_source_ids(mover: EncounterCombatant) -> set[str]:
+def _fear_source_ids(mover: EncounterCombatant, setup: EncounterSetup) -> set[str]:
     try:
-        if not has_condition(mover.state, FRIGHTENED_EFFECT_ID):
+        if not has_condition(mover.state, FRIGHTENED_EFFECT_ID, setup=setup):
             return set()
         return {
             effect.source_id for effect in mover.state.timed_effects
@@ -54,7 +54,7 @@ def _approaches_fear_source(
     proposed_position: int,
 ) -> bool:
     try:
-        source_ids = _fear_source_ids(mover)
+        source_ids = _fear_source_ids(mover, setup)
         if not source_ids:
             return False
         if setup is None:

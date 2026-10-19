@@ -154,6 +154,8 @@ class WeaponAttack(BaseModel):
     attack_bonus: int
     damage_bonus: int
     damage_die_minimum: int | None = Field(default=None, ge=2, le=100)
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=1000)
     unavailable_reason: str | None = None
     attack_ability: AbilityName | None = None
     attack_ability_modifier: int | None = None

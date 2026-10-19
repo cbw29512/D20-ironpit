@@ -29,6 +29,7 @@ def attack_roll_condition_sources(
     defender: CombatantState,
     distance_ft: int,
     target_id: str | None = None,
+    setup=None,
 ) -> tuple[int, int]:
     """Return Advantage and Disadvantage sources from supported conditions and wards."""
     advantage = d20_test_advantage_sources(attacker)
@@ -39,7 +40,7 @@ def attack_roll_condition_sources(
         disadvantage += 1
     if has_condition(attacker, INVISIBLE_EFFECT_ID) and not can_see(defender, attacker, distance_ft):
         advantage += 1
-    if has_condition(attacker, FRIGHTENED_EFFECT_ID):
+    if has_condition(attacker, FRIGHTENED_EFFECT_ID, setup=setup):
         disadvantage += 1
     if PRONE_EFFECT_ID in attacker.active_effect_ids:
         disadvantage += 1

@@ -9,9 +9,10 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { attackAdvantage: (state) => state.is_unconscious, autoCritical: (state) => state.is_unconscious, has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious, suppressAttackAdvantage: () => false, canSee: (observer, target) => !observer.active_effect_ids.includes("blinded") && !target.active_effect_ids.includes("invisible") };
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
-  function conditionSources(attacker, defender, distance, targetId) {
+  function conditionSources(attacker, defender, distance, targetId, setup = null) {
     let advantage = M().attacksAgainstAdvantage(defender) + B2().attacksAgainstAdvantage(defender) + (M().d20TestAdvantage?.(attacker) || 0), disadvantage = X().attackDisadvantage(attacker) + (window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.attacksAgainstDisadvantage(defender, attacker, distance) || 0); const ignoresUnseen = Boolean(attacker.template.ignore_unseen_target_attack_disadvantage);
     if (Q().has(attacker, "blinded") && !ignoresUnseen) disadvantage += 1; if (Q().has(attacker, "invisible") && !Q().canSee(defender, attacker, distance)) advantage += 1;
+    if (Q().has(attacker, "frightened", setup)) disadvantage += 1;
     if (attacker.active_effect_ids.includes("prone")) disadvantage += 1; if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1; if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1; disadvantage += G()?.attackDisadvantage(attacker, targetId) || 0;
     if (defender.active_effect_ids.includes("dodge") && !Q().incapacitated(defender) && M().effectiveSpeed(defender) > 0 && !G()?.speedIsZero(defender)) disadvantage += 1; if (Q().attackAdvantage(defender)) advantage += 1;
     if (!ignoresUnseen && (Q().has(defender, "invisible") || attacker.template.blind_beyond_blindsight) && !Q().canSee(attacker, defender, distance)) disadvantage += 1; if (defender.active_effect_ids.includes("restrained")) advantage += 1; if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
@@ -38,10 +39,16 @@
     if (!formation?.targetAllowed && (attack.grappleTargetPolicy || "normal") !== "normal") throw new Error("Nonstandard attack target policy requires browser-formation.js.");
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(attacker, target) || null;
     if (ward && !ward.succeeded) { if (spendAction) E().spend(attacker.state, "action"); return window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, attacker, target, attack.name, ward); }
+    const resources = window.IRON_PIT_BROWSER_RESOURCES;
+    if (attack.resourceId && !resources) throw new Error("Finite attack resources require browser-resources.js.");
+    if (attack.resourceId && !resources.available(attacker.state, attack.resourceId, attack.resourceCost || 1))
+      throw new Error(`${attack.id} has insufficient ammunition or other attack resources.`);
+    const ammunitionRemaining = attack.resourceId
+      ? resources.spend(attacker.state, attack.resourceId, attack.resourceCost || 1) : null;
     window.IRON_PIT_BROWSER_TIMED_CONTROL?.registerTurnAttack(attacker.state, extra.offTurn === true);
     const recklessStarted = extra.allowReckless === true && B2().activate(attacker, attack, round);
     if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
-    const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id);
+    const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id, extra.setup);
     const disadvantage = conditions.disadvantage + SAP().disadvantage(attacker.state)
       + (T()?.nextAttackDisadvantage(attacker.state) || 0) + (extra.otherDisadvantageSources || 0) + (window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS?.disadvantageSources(attacker, extra.setup, "attack_rolls") || 0) + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(attacker.state, attack.attackAbility || attack.attack_ability) || 0)
       + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.attackRollDisadvantage(attacker.state) || 0);
@@ -183,6 +190,7 @@
     if (damageOutcome === "relentless_endurance") description += ` ${actualTarget.state.template.name} uses Relentless Endurance and remains at 1 HP.`;
     if (damageOutcome === "undead_fortitude") description += ` ${actualTarget.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     for (const condition of [...new Set(applied)]) description += ` ${actualTarget.state.template.name} is ${condition === "prone" ? "knocked Prone" : condition === "restrained" ? "Restrained while Grappled" : condition.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}.`;
+    if (ammunitionRemaining !== null) description += ` ${attack.name}: ${ammunitionRemaining} ammunition remaining.`;
     const event = { sequence, round_number: round, event_type: "attack", actor_id: attacker.combatant_id, actor_name: attacker.state.template.name,
       target_id: actualTarget.combatant_id, target_name: actualTarget.state.template.name, attack_name: attack.name, target_ac: targetAc,
       attack_roll: resolvedAttackRoll, saving_throw_roll: attackSave?.saveRoll || topple.saveRoll, save_ability: attackSave?.saveAbility || (topple.saveDc === null ? null : "constitution"), save_dc: attackSave?.saveDc || topple.saveDc, save_succeeded: attackSave?.saveSucceeded ?? topple.saveSucceeded,
@@ -193,7 +201,7 @@
       death_save_successes: actualTarget.state.death_save_successes, death_save_failures: actualTarget.state.death_save_failures,
       is_stable: actualTarget.state.is_stable, is_dead: actualTarget.state.is_dead, attack_id: attack.id, weapon_id: attack.id, projectile: attack.projectile || null,
       feature_id: d20Override.featureId || override.featureId || extra.featureId || (recklessStarted ? "reckless-attack" : null), concentration_ended_effect_id: concentrationBefore && !actualTarget.state.concentration ? concentrationBefore : null,
-      resource_remaining: exileApplied?.resourceRemaining ?? deferredEffectArmed?.resourceRemaining ?? null,
+      resource_remaining: exileApplied?.resourceRemaining ?? deferredEffectArmed?.resourceRemaining ?? ammunitionRemaining,
       animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description: description + survivalLog + (window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT?.consumeLog(actualTarget.state) || "") };
     if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, attacker.state.template.name);
     return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;

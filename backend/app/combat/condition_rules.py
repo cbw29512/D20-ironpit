@@ -14,9 +14,9 @@ STUNNED = "stunned"
 UNCONSCIOUS = "unconscious"
 
 
-def has_condition(state: CombatantState, condition_id: str) -> bool:
+def has_condition(state: CombatantState, condition_id: str, *, setup=None) -> bool:
     if condition_id in state.template.innate_condition_ids:
-        return not condition_is_immune(state, condition_id)
+        return not condition_is_immune(state, condition_id, setup=setup)
     if condition_id not in state.active_effect_ids:
         return False
     timed = [effect for effect in state.timed_effects if effect.effect_id == condition_id]
@@ -26,10 +26,11 @@ def has_condition(state: CombatantState, condition_id: str) -> bool:
                 state,
                 condition_id,
                 source_is_magical=effect.source_is_magical,
+                setup=setup,
             )
             for effect in timed
         )
-    return not condition_is_immune(state, condition_id)
+    return not condition_is_immune(state, condition_id, setup=setup)
 
 
 def invisibility_benefits_suppressed(state: CombatantState) -> bool:

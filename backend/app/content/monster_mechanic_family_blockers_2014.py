@@ -8,6 +8,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_basic_attack_effects_2014 import supports_basic_attack_effects_2014
+from app.content.monster_attack_ammunition_2014 import attack_ammunition_2014
 from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
 from app.content.monster_attack_source_corrections_2014 import corrected_attack_range_2014
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
@@ -36,7 +37,7 @@ def mechanic_family_blockers_2014(
         # Classify immutable card capabilities only once per source monster.
         healing_supported = supports_healing_2014(monster)
         innate_supported = supports_innate_spellcasting_2014(monster)
-        bound_limited = set()
+        bound_limited = set(attack_ammunition_2014(monster))
         if healing_supported:
             # Reuse the source's existing healing resource binding
             bound_limited.update(action.resource_id for action in healing_actions_2014(monster) if action.resource_id)

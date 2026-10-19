@@ -84,6 +84,9 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row["attackAbility"] = attack.attack_ability
         if weapon.normal_range_ft is not None:
             row.update(normal=weapon.normal_range_ft, long=weapon.long_range_ft, projectile=weapon.projectile)
+        if attack.resource_id is not None:
+            row["resourceId"] = attack.resource_id
+            row["resourceCost"] = attack.resource_cost
         if attack.unavailable_reason is not None:
             row["unavailableReason"] = attack.unavailable_reason
         if attack.fixed_damage is not None:

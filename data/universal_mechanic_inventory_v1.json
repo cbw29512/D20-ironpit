@@ -5870,12 +5870,11 @@
       "arena:removed": 1,
       "attack:complex": 6,
       "attack:damage-type": 2,
-      "attack:incomplete": 24,
+      "attack:incomplete": 23,
       "attack:none": 3,
       "mechanic:death-trigger": 4,
       "mechanic:defense": 1,
       "mechanic:legendary": 9,
-      "mechanic:limited-use": 1,
       "mechanic:recharge": 10,
       "mechanic:spellcasting": 36,
       "mechanic:swallow": 7,
@@ -6145,6 +6144,14 @@
         "printed_name": "Ooze Cube"
       },
       {
+        "demand_count": 2,
+        "monsters": [
+          "Basilisk",
+          "Medusa"
+        ],
+        "printed_name": "Petrifying Gaze"
+      },
+      {
         "demand_count": 1,
         "monsters": [
           "Weretiger"
@@ -6218,23 +6225,9 @@
       {
         "demand_count": 1,
         "monsters": [
-          "Bearded Devil"
-        ],
-        "printed_name": "Steadfast"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
           "Doppelganger"
         ],
         "printed_name": "Surprise Attack"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Manticore"
-        ],
-        "printed_name": "Tail Spike Regrowth"
       },
       {
         "demand_count": 1,
