@@ -44,4 +44,22 @@ const state = () => ({
   assert.throws(() => R.apply(target, "strength", 1.5), /Invalid ability reduction amount/);
   assert.throws(() => R.effectiveScore(target, "unknown"), /Unknown ability/);
 }
+{
+  const hero = state();
+  hero.template.kind = "hero";
+  const zero = R.apply(hero, "strength", 6, { zeroKills: true });
+  assert.equal(zero.scoreAfter, 0);
+  assert.equal(zero.deathOutcome, "dead");
+  assert.equal(hero.is_dead, true);
+  assert.equal(hero.is_unconscious, false);
+  assert.equal(hero.death_save_failures || 0, 0);
+}
+{
+  const target = state();
+  assert.equal(R.abilityModifierDelta(target, "strength"), 0);
+  R.apply(target, "strength", 2);
+  assert.equal(R.abilityModifierDelta(target, "strength"), -1);
+  assert.equal(R.abilityModifierDelta(target, "dexterity"), 0);
+  assert.equal(R.abilityModifierDelta(target, null), 0);
+}
 console.log("Universal browser ability-score reduction parity passed.");
