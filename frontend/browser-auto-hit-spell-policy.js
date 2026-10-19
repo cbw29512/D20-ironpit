@@ -10,7 +10,8 @@
     const enemies = caster.side === "heroes" ? setup.monsters : setup.heroes;
     const candidates = [];
     for (const [index, action] of (caster.state.template.auto_hit_spell_actions || []).entries()) {
-      if (action.actionCost === "reaction" || !E().available(caster.state, action.actionCost)) continue;
+      if (action.actionCost === "reaction" || !E().available(caster.state, action.actionCost)
+        || !C().spellTurnLegal(caster.state, turnKey, action.actionCost, action.level)) continue;
       for (const slotLevel of C().legalSlotLevels(caster.state, turnKey, action.level, {
         higherSlotScaling: (action.projectilesPerSlotAbove || 0) > 0,
       })) {

@@ -19,6 +19,7 @@ window.IRON_PIT_ACTION_ECONOMY = {
 };
 window.IRON_PIT_BROWSER_SPELLCASTING = {
   slotSpellAvailable: () => true,
+  spellTurnLegal: () => true,
   markSlotSpellCast: () => {},
 };
 window.IRON_PIT_BROWSER_STATE = {

@@ -38,6 +38,8 @@
 
   function resolve(sequence, round, caster, target, spell, setup, turnKey, options = {}) {
     const spendCastCosts = options.spendCastCosts !== false;
+    if (spendCastCosts && !C().spellTurnLegal(caster.state, turnKey, spell.actionCost, spell.level))
+      throw new Error("Spell attack conflicts with another cast on this turn.");
     if (spell.actionCost === "reaction" || (spendCastCosts && !E().available(caster.state, spell.actionCost))) throw new Error(`${spell.name} cannot be cast in this action window.`);
     if (target.side === caster.side || target.state.is_dead || !target.state.is_alive) throw new Error(`${spell.name} requires a living enemy target.`);
     const distance = options.distanceOverrideFt ?? S().distance(caster, target);
@@ -51,8 +53,8 @@
     }
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null;
     if (ward && !ward.succeeded) {
+      if (spendCastCosts) { C().recordSpellTurn(caster.state, turnKey, spell.actionCost, spell.level); E().spend(caster.state, spell.actionCost); }
       if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
-      if (spendCastCosts) E().spend(caster.state, spell.actionCost);
       const rangeRemaining = spendCastCosts ? spendRangeModifier(caster.state, rangeModifier) : null;
       if (spendCastCosts) CE()?.applyTimedResistance(caster, spell, round);
       const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward);
@@ -76,8 +78,8 @@
     M().consumeNextAttackAgainstAdvantage(caster.state, target.combatant_id);
     T()?.consumeNextAttackDisadvantage(caster.state);
     SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
+    if (spendCastCosts) { C().recordSpellTurn(caster.state, turnKey, spell.actionCost, spell.level); E().spend(caster.state, spell.actionCost); }
     if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
-    if (spendCastCosts) E().spend(caster.state, spell.actionCost);
     const rangeRemaining = spendCastCosts ? spendRangeModifier(caster.state, rangeModifier) : null;
     if (spendCastCosts) CE()?.applyTimedResistance(caster, spell, round);
     const natural = attackRoll.selected_roll;

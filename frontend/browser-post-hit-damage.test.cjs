@@ -29,6 +29,7 @@ load("browser-rolls.js");
 function attacker() {
   return {
     template: {
+      ruleset: "2024",
       name: "Aurelia Brightshield",
       max_hp: 20,
       traits: [],

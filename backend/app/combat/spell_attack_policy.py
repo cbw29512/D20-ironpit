@@ -7,7 +7,7 @@ from app.combat.action_economy import is_available
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import spell_attack_expected_damage
 from app.combat.spell_range_modifiers import choose_spell_range_modifier, effective_spell_range_ft
-from app.combat.spellcasting import legal_slot_levels
+from app.combat.spellcasting import legal_slot_levels, spell_turn_legal
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spell_cast_modifiers import ResourceBackedSpellRangeModifier
 from app.domain.spells import SpellAttackAction
@@ -39,7 +39,9 @@ def choose_spell_attack(
     enemies = setup.monsters if caster.side == "heroes" else setup.heroes
     candidates: list[tuple[float, int, int, int, str, SpellAttackAction, EncounterCombatant, ResourceBackedSpellRangeModifier | None]] = []
     for index, action in enumerate(caster.state.template.spell_attack_actions):
-        if action.action_cost == "reaction" or not is_available(caster.state, action.action_cost):
+        if (action.action_cost == "reaction"
+                or not is_available(caster.state, action.action_cost)
+                or not spell_turn_legal(caster.state, turn_key, action.action_cost, action.level)):
             continue
         slot_levels = _slot_levels(caster, action, turn_key)
         if not slot_levels:

@@ -17,7 +17,12 @@
 
   function resourceAvailable(member, action, turnKey = null) {
     if (!action.resourceId) return true;
-    if (slotHeal(action) && (!turnKey || !C().slotSpellAvailable(member.state, turnKey))) return false;
+    if (slotHeal(action)) {
+      if (!turnKey || !C().slotSpellAvailable(member.state, turnKey)) return false;
+      // A slot can remain available in 2014 even when this cast is illegal.
+      const level = Number.parseInt(action.resourceId.slice("spell-slot-".length), 10);
+      if (!C().spellTurnLegal(member.state, turnKey, action.actionCost, level)) return false;
+    }
     return (member.state.resources[action.resourceId] || 0) >= (action.healingFromResourcePool ? 1 : (action.resourceCost || 1));
   }
 

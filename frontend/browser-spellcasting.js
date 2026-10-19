@@ -3,15 +3,61 @@
 
   function slotSpellAvailable(state, turnKey) {
     if (!turnKey) throw new Error("Spell-slot legality requires an active turn key.");
-    return state.spell_slot_expended_turn_key !== turnKey;
+    const ruleset = state.template?.ruleset;
+    if (ruleset !== "2014" && ruleset !== "2024") {
+      throw new Error(`Unsupported spellcasting ruleset: ${ruleset}.`);
+    }
+    return ruleset === "2014" || state.spell_slot_expended_turn_key !== turnKey;
+  }
+
+
+  function spellTurnLegal(state, turnKey, actionCost, spellLevel) {
+    try {
+      if (!turnKey || !["action", "bonus_action", "reaction"].includes(actionCost)) {
+        throw new Error("A spell requires a turn key and supported casting action.");
+      }
+      if (!Number.isInteger(spellLevel) || spellLevel < 0 || spellLevel > 9) {
+        throw new Error("Spell level must be between 0 and 9.");
+      }
+      const ruleset = state.template?.ruleset;
+      if (ruleset === "2024") return spellLevel === 0 || slotSpellAvailable(state, turnKey);
+      if (ruleset !== "2014") throw new Error("Unsupported spellcasting ruleset.");
+      const history = state.feature_last_turn_keys || {};
+      if (actionCost === "bonus_action") return history["spell:action-noncantrip"] !== turnKey;
+      if (history["spell:bonus-action"] === turnKey) return actionCost === "action" && spellLevel === 0;
+      return true;
+    } catch (error) {
+      console.error("Spell turn legality failed", { actionCost, spellLevel, error });
+      throw error;
+    }
+  }
+
+  function recordSpellTurn(state, turnKey, actionCost, spellLevel) {
+    try {
+      if (!spellTurnLegal(state, turnKey, actionCost, spellLevel)) {
+        throw new Error("Spell conflicts with another cast on this turn.");
+      }
+      if (state.template.ruleset === "2014") {
+        state.feature_last_turn_keys ||= {};
+        if (actionCost === "bonus_action") state.feature_last_turn_keys["spell:bonus-action"] = turnKey;
+        else if (spellLevel > 0 || actionCost === "reaction") {
+          state.feature_last_turn_keys["spell:action-noncantrip"] = turnKey;
+        }
+      }
+    } catch (error) {
+      console.error("Spell turn recording failed", { actionCost, spellLevel, error });
+      throw error;
+    }
   }
 
   function legalSlotLevels(state, turnKey, printedLevel, options = {}) {
-    if (printedLevel === 0) return [0];
-    if (!Number.isInteger(printedLevel) || printedLevel < 1 || printedLevel > 9) {
-      throw new Error("Printed spell level must be between 0 and 9.");
+    if (!Number.isInteger(printedLevel) || printedLevel < 0 || printedLevel > 9) {
+      throw new Error("Printed spell level must be an integer between 0 and 9.");
     }
-    if (!slotSpellAvailable(state, turnKey)) return [];
+    // Even slot-free cantrips require a valid ruleset and active turn.
+    const slotAllowed = slotSpellAvailable(state, turnKey);
+    if (printedLevel === 0) return [0];
+    if (!slotAllowed) return [];
     const maximum = options.higherSlotScaling ? 9 : printedLevel;
     const levels = [];
     for (let level = printedLevel; level <= maximum; level += 1) {
@@ -89,7 +135,7 @@
   }
 
   window.IRON_PIT_BROWSER_SPELLCASTING = {
-    legalSlotLevels, markSlotSpellCast, slotSpellAvailable,
+    legalSlotLevels, markSlotSpellCast, slotSpellAvailable, spellTurnLegal, recordSpellTurn,
     safeDamageMaximizer, maximizedRolls, resolveDamageMaximizerAfterCast,
   };
 })();

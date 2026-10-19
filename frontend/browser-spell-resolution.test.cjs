@@ -31,7 +31,11 @@ window.IRON_PIT_ACTION_ECONOMY = {
   available: (state, cost) => Boolean(state[`${cost}_available`]),
   spend: (state, cost) => { state[`${cost}_available`] = false; },
 };
-window.IRON_PIT_BROWSER_SPELLCASTING = { markSlotSpellCast: () => {} };
+window.IRON_PIT_BROWSER_SPELLCASTING = {
+  markSlotSpellCast: () => {},
+  spellTurnLegal: () => true,
+  recordSpellTurn: () => {},
+};
 window.IRON_PIT_DICE = {
   rollMany: () => {
     damageRollCalls += 1;

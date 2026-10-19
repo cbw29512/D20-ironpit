@@ -27,7 +27,7 @@ function member(id, conditions = [], resources = {}, removals = []) {
       action_available: true, bonus_action_available: true, reaction_available: true,
       active_effect_ids: [...conditions], timed_effects: conditions.map((effect_id) => ({ effect_id, source_id: "enemy" })),
       grapple_sources: [], resources: { ...resources }, spell_slot_expended_turn_key: null,
-      template: { name: id, condition_removal_actions: removals, condition_immunities: [] },
+      template: { name: id, ruleset: "2024", condition_removal_actions: removals, condition_immunities: [] },
     },
   };
 }
