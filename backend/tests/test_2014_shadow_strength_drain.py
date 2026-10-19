@@ -10,7 +10,6 @@ from app.content.capability_compiler import compile_combatant
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
-from app.content.monsters import build_commoner
 from app.domain.capability_attacks import AttackCapabilityDefinition
 from app.domain.capability_effects import AbilityScoreReductionEffectDefinition, DiceSpec
 
@@ -24,7 +23,11 @@ def _shadow_state():
 
 
 def _target():
-    return build_combatant_state(build_commoner().model_copy(update={"max_hp": 100}))
+    # Use an actually source-certified 2014 combatant. Legacy 2024 Commoner
+    # does not carry ability scores, so it cannot legally receive stat drain.
+    commoner = next(monster for monster in load_monster_source_2014() if monster.id == "commoner")
+    template = compile_combatant(adapt_basic_monster_2014(commoner))
+    return build_combatant_state(template.model_copy(update={"max_hp": 100}))
 
 
 def test_printed_shadow_is_admitted_and_ability_drain_is_compiled() -> None:
