@@ -54,6 +54,15 @@ class OnHitSaveDamage(BaseModel):
     zero_hp_rider: ZeroHpSaveDamageRider | None = None
 
 
+class OnHitAbilityScoreReduction(BaseModel):
+    """Source-owned die parameters; reduction is always fight-scoped."""
+
+    source: str = Field(min_length=1)
+    ability: AbilityName
+    dice_count: int = Field(ge=1, le=40)
+    dice_size: int = Field(ge=2, le=100)
+
+
 class OnHitContestedMovement(BaseModel):
     source_ability: AbilityName
     target_ability: AbilityName
@@ -167,6 +176,7 @@ class WeaponAttack(BaseModel):
     on_hit_condition_save: OnHitConditionSave | None = None
     on_hit_ongoing_hp_loss: OnHitOngoingHpLoss | None = None
     on_hit_maximum_hp_save: OnHitMaximumHpSave | None = None
+    on_hit_ability_score_reduction: OnHitAbilityScoreReduction | None = None
     on_hit_contested_movement: OnHitContestedMovement | None = None
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
     charge_profile: AttackChargeProfile | None = None
