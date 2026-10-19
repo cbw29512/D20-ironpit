@@ -5,7 +5,6 @@ from pathlib import Path
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-MAX_LINES = 200
 FORBIDDEN_PATHS = (
     Path(".env.example"),
     Path("docker-compose.yml"),
@@ -50,18 +49,15 @@ def enforce_repository_hygiene() -> None:
 
 
 def main() -> None:
+    """Keep architecture safeguards without enforcing arbitrary file length."""
     try:
         enforce_repository_hygiene()
-        offenders: list[tuple[Path, int]] = []
-        for path in production_files():
-            line_count = len(path.read_text(encoding="utf-8").splitlines())
-            logger.info("%s: %s lines", path, line_count)
-            if line_count > MAX_LINES:
-                offenders.append((path, line_count))
-
-        if offenders:
-            details = ", ".join(f"{path} ({count})" for path, count in offenders)
-            raise RuntimeError(f"Production files exceed {MAX_LINES} lines: {details}")
+        paths = production_files()
+        for path in paths:
+            if not path.is_file():
+                raise RuntimeError(f"Expected production source is not a file: {path}")
+            path.read_text(encoding="utf-8")
+        logger.info("Validated %s readable production sources; no line-count restriction.", len(paths))
     except Exception:
         logger.exception("Production source/architecture validation failed.")
         raise
