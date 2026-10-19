@@ -8,6 +8,7 @@ import logging
 import re
 
 from app.content.monster_source_sections_2014 import source_sections_2014
+from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.domain.attack_action_definitions import AttackActionSlot, AttackActionVariant
 
 logger = logging.getLogger(__name__)
@@ -82,11 +83,11 @@ def ammunition_multiattack_variants_2014(monster) -> list[AttackActionVariant]:
         return [
             AttackActionVariant(
                 id=f"2014-{monster.id}-multiattack-melee", attack_kind="melee",
-                slots=[AttackActionSlot(attack_ids=[item]) for item in (first.id, second.id, second.id)],
+                slots=[AttackActionSlot(attack_ids=[attack_id_2014(monster, item)]) for item in (first.id, second.id, second.id)],
             ),
             AttackActionVariant(
                 id=f"2014-{monster.id}-multiattack-ranged", attack_kind="ranged",
-                slots=[AttackActionSlot(attack_ids=[ranged.id]) for _ in range(3)],
+                slots=[AttackActionSlot(attack_ids=[attack_id_2014(monster, ranged.id)]) for _ in range(3)],
             ),
         ]
     except Exception:
