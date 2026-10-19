@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.ability_score_reduction import effective_ability_score
 from app.combat.d20_bonus_dice import (
     apply_d20_bonus_die_if_useful,
     apply_resource_backed_d20_bonus_if_useful,
@@ -68,7 +69,7 @@ def apply_ability_check_minimum(
             raise ValueError(
                 f"{state.template.name} has an ability-check minimum without certified ability scores."
             )
-        floor = scores.score(ability)
+        floor = effective_ability_score(state, ability)
         if roll.total >= floor:
             return roll
         rule = sorted(rules, key=lambda item: item.source_id)[0]
