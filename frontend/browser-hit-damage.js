@@ -151,35 +151,25 @@
     const reduction = ADR()?.apply(defender, attack, rolled) || { components: rolled, used: false, reduction: 0, sourceId: null, sourceName: null };
     const uncanny = RD().applyUncannyDodge(attacker, defender, reduction.components);
     const bypassTypes = resistanceBypassTypes(attacker);
-    const damageComponents = [];
-    let appliedTotal = 0, damageOutcome = null;
-    const monsterTarget = defender.template.kind === "monster";
-    for (const part of uncanny.components) {
-      if (defender.is_dead || (monsterTarget && defender.current_hp <= 0)) break;
-      const resolved = DD().resolveDamage(
-        defender, part.total, part.damage_type, true, part.source_qualifiers || [], bypassTypes.has(part.damage_type),
-      );
-      const component = { ...part, applied_total: resolved.applied, absorbed_healing: resolved.healed || 0,
-        absorption_source_name: resolved.sourceName || null };
-      damageComponents.push(component);
-      appliedTotal += resolved.applied;
-      if (resolved.applied > 0) {
-        // Every applied component calls the same zero-HP resolver. A dead
-        // monster stops; a dying character takes the later death-save failures.
-        damageOutcome = A().applyDamage(
-          defender, resolved.applied, critical, [part.damage_type],
-          options.affectedStates || [], options.setup || null, [component],
-        );
-      }
-    }
-    const damageRoll = { ...aggregate(damageComponents), total: appliedTotal };
+    const damageComponents = uncanny.components.map((part) => { const resolved = DD().resolveDamage(
+      defender, part.total, part.damage_type, true, part.source_qualifiers || [], bypassTypes.has(part.damage_type),
+    );
+      return { ...part, applied_total: resolved.applied, absorbed_healing: resolved.healed || 0,
+        absorption_source_name: resolved.sourceName || null }; });
+    const appliedTotal = damageComponents.reduce((sum, part) => sum + part.applied_total, 0);
+    const damageRoll = { ...aggregate(uncanny.components), total: appliedTotal };
+    const appliedTypes = [...new Set(
+      damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type),
+    )];
+    let damageOutcome = A().applyDamage(
+      defender, appliedTotal, critical, appliedTypes, options.affectedStates || [], options.setup || null, damageComponents,
+    );
     window.IRON_PIT_BROWSER_HUNTERS_MARK_SPLASH?.resolve(
       attacker, null, options.targetId, damageComponents, turnKey, options.setup,
     );
     const effect = attack.onHitSaveDamage;
     if (defender.current_hp === 0 && saveDamageCausedZero(
-      hpBufferBefore, appliedTotal, damageComponents, effect,
-      saveComponentPresent && (!monsterTarget || damageComponents.length === uncanny.components.length),
+      hpBufferBefore, appliedTotal, damageComponents, effect, saveComponentPresent,
     )) {
       applyZeroHpSaveDamageRider(defender, effect, turnKey);
       if (!defender.is_dead) damageOutcome = "unconscious";
