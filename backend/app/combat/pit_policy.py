@@ -7,6 +7,7 @@ from app.combat.attack_legality import attack_allowed_against
 from app.combat.encounter_targeting import active_target_policy, combatant_distance, living_opponents, living_targets
 from app.combat.formation_rows import member_is_backline
 from app.combat.printed_damage import weapon_mean_damage
+from app.combat.resources import action_resource_available
 from app.combat.range import resolve_attack_roll_mode
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import WeaponAttack, WeaponAttackKind
@@ -109,6 +110,7 @@ def choose_attack(
                     clear_line_between_members(attacker, target, setup)
                     and attack_allowed_against(attack, attacker.combatant_id, target.state, [item.state for item in [*setup.heroes, *setup.monsters]])
                     and _attack_in_range(attack, distance)
+                    and action_resource_available(attacker.state, attack)
                 )
             ]
             if legal:
