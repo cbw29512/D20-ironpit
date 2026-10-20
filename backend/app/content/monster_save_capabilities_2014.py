@@ -10,6 +10,7 @@ from app.content.monster_save_control_2014 import (
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_save_outcome_bindings_2014 import source_proven_asymmetric_saves_2014
 from app.content.monster_source_visual_save_bindings_2014 import source_proven_visual_saves_2014
+from app.content.monster_source_opening_area_saves_2014 import source_proven_opening_area_saves_2014
 from app.domain.capability_attacks import SaveCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
 from app.domain.save_damage import SaveDamageComponent
@@ -114,6 +115,7 @@ def unsupported_source_actions_2014(
         )
         allowed.update(item.name.casefold() for item in source_proven_asymmetric_saves_2014(monster))
         allowed.update(item.name.casefold() for item in source_proven_visual_saves_2014(monster))
+        allowed.update(item.name.casefold() for item in source_proven_opening_area_saves_2014(monster))
         if monster.multiattack_slots:
             allowed.add("multiattack")
         if recharge_supported is None:
@@ -176,6 +178,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
             ))
         result.extend(source_proven_asymmetric_saves_2014(monster))
         result.extend(source_proven_visual_saves_2014(monster))
+        result.extend(source_proven_opening_area_saves_2014(monster))
         return result
     except Exception:
         logger.exception("Failed to adapt 2014 save actions for %s.", monster.name)
