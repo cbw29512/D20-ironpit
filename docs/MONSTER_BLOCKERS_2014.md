@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 66 |
+| `source:trait` | 65 |
 | `source:extra-action` | 53 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 21 |
@@ -33,11 +33,11 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**5** monsters have exactly one remaining blocker category.
+**6** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
-| `source:extra-action` | Harpy, Rust Monster | 2 |
+| `source:extra-action` | Harpy, Rust Monster, Sea Hag | 3 |
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
 | `attack:none` | Sea Horse | 1 |
@@ -113,7 +113,7 @@ the underlying ability is already implemented or trivial.
 | Roper | source:extra-action, source:trait | Grasping Tendrils |
 | Rug of Smothering | attack:none, source:extra-action, source:trait | Damage Transfer |
 | Rust Monster | source:extra-action | — |
-| Sea Hag | source:extra-action, source:trait | Horrific Appearance |
+| Sea Hag | source:extra-action | — |
 | Sea Horse | attack:none | — |
 | Shambling Mound | mechanic:swallow, multiattack:complex, source:extra-action | — |
 | Shield Guardian | source:reaction, source:trait | Bound, Spell Storing |
