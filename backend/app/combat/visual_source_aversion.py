@@ -1,16 +1,11 @@
 """Source-scoped visual aversion in mutable fight state."""
 from __future__ import annotations
 import logging
-from dataclasses import dataclass
 from typing import Iterable
 
-log = logging.getLogger(__name__)
+from app.domain.visual_aversion import VisualAversionWindow
 
-@dataclass(frozen=True)
-class VisualAversionWindow:
-    observer_id: str
-    source_combatant_id: str
-    expires_on_observer_turn_start: int
+log = logging.getLogger(__name__)
 
 def _validate(observer_id: str, source_id: str, turns_started: int) -> None:
     try:
@@ -73,3 +68,19 @@ def visual_source_perception(windows: Iterable[VisualAversionWindow], observer_i
     except Exception:
         log.exception("Failed source-scoped visual perception")
         raise
+
+
+def visual_aversion_attack_disadvantage(
+    windows: Iterable[VisualAversionWindow],
+    observer_id: str,
+    target_id: str,
+    observer_turns_started: int,
+) -> int:
+    """Generic one-source attack Disadvantage until the observer's next turn.
+
+    Averting eyes never imposes the global Blinded condition or penalties
+    against unrelated combatants. The source's name is never consulted.
+    """
+    return int(visual_aversion_active(
+        windows, observer_id, target_id, observer_turns_started,
+    ))

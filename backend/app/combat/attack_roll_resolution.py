@@ -39,6 +39,7 @@ from app.combat.timed_ability_d20 import (
 from app.combat.reckless_attack import attacks_against_reckless_advantage, reckless_attack_advantage
 from app.combat.rolls import roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
+from app.combat.visual_source_aversion import visual_aversion_attack_disadvantage
 from app.domain.models import CombatantState, DiceRoll, RollMode, WeaponAttack
 from app.domain.modifiers import ModifierKind
 
@@ -90,6 +91,12 @@ def resolve_attack_roll(
         disadvantage_total = (
             other_disadvantage_sources
             + condition_disadvantage
+            + visual_aversion_attack_disadvantage(
+                attacker.visual_aversion_windows,
+                attacker_event_id,
+                defender_event_id,
+                attacker.turns_started,
+            )
             + sap_disadvantage(attacker)
             + next_attack_disadvantage_sources(attacker)
             + timed_ability_d20_disadvantage_sources(attacker, attack.attack_ability)
