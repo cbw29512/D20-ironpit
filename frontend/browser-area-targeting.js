@@ -78,6 +78,7 @@
     const width = dimension(area, "widthFt", "width_ft");
     if (area.shape === "radius") return targetPoints.some((point) => A().radiusContains(origin, point, radius));
     if (area.shape === "emanation") return targetPoints.some((point) => A().emanationContains(origins, point, radius));
+    if (area.shape === "square") return targetPoints.some((point) => A().squareContains(origin, point, length));
     if (!direction) return false;
     if (area.shape === "cone") return targetPoints.some((point) => A().coneContains(origin, direction, point, length));
     if (area.shape === "cube") return targetPoints.some((point) => A().cubeContains(origin, direction, point, length));
@@ -98,7 +99,7 @@
       const origins = area.origin === "point" ? pointOrigins(actor, setup, rangeFt) : actorOrigins;
       const directionOrigins = area.origin === "point" ? origins : actorOrigins;
       const aimMembers = enemies.length ? enemies : friends;
-      const areaDirections = ["radius", "emanation"].includes(area.shape) ? [null] : directions(directionOrigins, aimMembers);
+      const areaDirections = ["radius", "emanation", "square"].includes(area.shape) ? [null] : directions(directionOrigins, aimMembers);
       for (const origin of origins) {
         if (area.origin === "point" && !clearBetweenPoints(actorOrigins, [origin], setup)) continue;
         for (const direction of areaDirections) {
@@ -112,7 +113,7 @@
           const sourceInArea = hits(area, actorOrigins, origin, direction, actor);
           if (!targetIds.length && !allowNoEnemyTargets) continue;
           if (!targetIds.length && !friendlyIds.length && !sourceInArea) continue;
-          const key = `${targetIds.join("|")}::${friendlyIds.join("|")}::${sourceInArea}`;
+          const key = `${targetIds.join("|")}::${friendlyIds.join("|")}::${sourceInArea}::${area.shape === "square" ? origin.join(",") : ""}`;
           if (!result.has(key)) result.set(key, { targetIds, enemyIds: targetIds, friendlyIds, origin, direction });
         }
       }
