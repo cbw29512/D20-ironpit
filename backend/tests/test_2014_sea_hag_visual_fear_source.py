@@ -44,9 +44,7 @@ def test_complete_pinned_horrific_appearance_source_is_extracted_without_mutatio
 
 @pytest.mark.parametrize("old,new", [
     ("Any humanoid", "Any creature"),
-    ("within 30 feet", "within 200 feet"),
     ("can see the hag's true form", "can hear the hag"),
-    ("DC 11 Wisdom", "DC 15 Wisdom"),
     ("frightened for 1 minute", "frightened for 2 minutes"),
     ("at the end of each of its turns", "at the start of each of its turns"),
     ("with disadvantage if the hag is within line of sight", "without disadvantage"),
@@ -63,6 +61,44 @@ def test_source_changes_fail_closed_including_continuation(old, new):
         changed = monster.model_copy(update={"source_traits": monster.source_traits.replace(old, new)})
         assert source_proven_visual_fear_2014(changed) is None
         assert source_proven_visual_fear_2014(monster) is not None
+    except Exception:
+        raise
+
+
+
+@pytest.mark.parametrize("original,revised,field,expected", [
+    ("within 30 feet", "within 200 feet", "range_ft", 200),
+    ("DC 11 Wisdom", "DC 15 Wisdom", "save_dc", 15),
+])
+def test_source_owned_numbers_are_read_from_edited_cards(original, revised, field, expected):
+    """Changed, valid source numbers are card parameters, not resolver identity."""
+    try:
+        monster = _sea_hag()
+        snapshot = monster.model_dump_json()
+        changed = monster.model_copy(update={
+            "source_traits": monster.source_traits.replace(original, revised)
+        })
+        facts = source_proven_visual_fear_2014(changed)
+        assert facts is not None
+        assert getattr(facts, field) == expected
+        assert monster.model_dump_json() == snapshot
+    except Exception:
+        raise
+
+
+@pytest.mark.parametrize("original,revised", [
+    ("within 30 feet", "within 0 feet"),
+    ("within 30 feet", "within 31 feet"),
+    ("DC 11 Wisdom", "DC 0 Wisdom"),
+    ("DC 11 Wisdom", "DC 41 Wisdom"),
+])
+def test_invalid_source_owned_numbers_fail_closed(original, revised):
+    try:
+        monster = _sea_hag()
+        changed = monster.model_copy(update={
+            "source_traits": monster.source_traits.replace(original, revised)
+        })
+        assert source_proven_visual_fear_2014(changed) is None
     except Exception:
         raise
 
