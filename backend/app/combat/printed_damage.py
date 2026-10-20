@@ -36,3 +36,19 @@ def save_mean_damage(action) -> float:
     except Exception:
         logger.exception("Failed printed save-action damage for %s.", getattr(action, "id", "?"))
         raise
+
+
+
+def save_action_impact(action, target) -> float:
+    """Rank a legal direct-to-zero save by remaining HP, not absent damage dice."""
+    try:
+        printed = save_mean_damage(action)
+        if not getattr(action, "failure_sets_zero_hp", False):
+            return printed
+        hp = getattr(getattr(target, "state", None), "current_hp", None)
+        if type(hp) not in (int, float) or hp < 0:
+            raise ValueError("Zero-HP action ranking needs valid current target HP.")
+        return max(printed, float(hp))
+    except Exception:
+        logger.exception("Failed zero-HP save impact ranking for %s.", getattr(action, "id", "?"))
+        raise

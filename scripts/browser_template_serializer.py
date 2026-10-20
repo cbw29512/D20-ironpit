@@ -300,6 +300,8 @@ def _save(action: Any) -> dict[str, Any]:
         row["requiresTargetSight"] = True
     if getattr(action, "requires_target_to_see_source", False):
         row["requiresTargetToSeeSource"] = True
+    if action.required_target_condition:
+        row["requiredTargetCondition"] = action.required_target_condition
     if action.required_target_creature_types:
         row["requiredTargetCreatureTypes"] = list(action.required_target_creature_types)
     if action.excluded_target_creature_types:

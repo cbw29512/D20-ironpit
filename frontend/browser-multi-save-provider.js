@@ -16,7 +16,7 @@
       if (action.resourceId && !R().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
       const targets = orderedTargets.filter((target) => {
         const distance = F().saveDistance(member, target, action.range);
-        return V().legalAction(action, target, distance, member.combatant_id)
+        return V().legalAction(action, target, distance, member.combatant_id, member)
           && (!action.requiresTargetSight
             || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(member.state, target.state, distance));
       }).slice(0, action.maxTargets);
@@ -42,7 +42,7 @@
     }
     for (const target of targets) {
       const distance = F().saveDistance(member, target, action.range);
-      if (!V().legalAction(action, target, distance, member.combatant_id)
+      if (!V().legalAction(action, target, distance, member.combatant_id, member)
         || (action.requiresTargetSight
           && !window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(member.state, target.state, distance))) {
         throw new Error(`${action.name} has an illegal selected target.`);

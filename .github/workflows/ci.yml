@@ -498,6 +498,8 @@ jobs:
           node frontend/browser-bonus-save-action.test.cjs
           node frontend/browser-attack-outcome-hooks.test.cjs
           node frontend/browser-asymmetric-save-outcomes.test.cjs
+          node frontend/browser-conditioned-save-target.test.cjs
+          node frontend/browser-zero-hp-save-impact.test.cjs
           node frontend/browser-target-chosen-save.test.cjs
           node frontend/browser-deferred-save-effect.test.cjs
           node frontend/browser-deferred-save-effect-2024.test.cjs

@@ -42,6 +42,8 @@
       saveSucceeded: save.succeeded, appliedCondition };
   }
   function legalAction(action, target, distance, sourceId, actor = null) {
+    if (action.requiredTargetCondition && !Q().has(target.state, action.requiredTargetCondition)) return false;
+    if (actor && action.requiresTargetSight && !Q().canSee(actor.state, target.state, distance)) return false;
     if (action.requiresTargetToSeeSource && (!actor || !Q().canSee(target.state, actor.state, S().distance(actor, target)))) return false;
     if (distance > action.range) return false;
     if (sourceId && window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS?.isImmune(target, action, sourceId)) return false;
