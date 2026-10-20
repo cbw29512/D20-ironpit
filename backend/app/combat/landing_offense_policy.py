@@ -14,7 +14,7 @@ from app.combat.encounter_targeting import living_opponents
 from app.combat.intimidating_presence_2014 import can_use_presence
 from app.combat.multi_target_save_actions import choose_multi_target_save_action
 from app.combat.pit_policy import choose_standard_attack, save_distance, target_order
-from app.combat.printed_damage import weapon_mean_damage, save_mean_damage as _save_mean_damage
+from app.combat.printed_damage import weapon_mean_damage, save_mean_damage as _save_mean_damage, save_action_impact
 from app.combat.resources import resource_available
 from app.combat.saving_throws import legal_save_action
 from app.combat.spell_attack_policy import choose_spell_attack
@@ -114,7 +114,7 @@ def decide_post_move_offense(
             if chosen_save is not None:
                 break
         if chosen_save is not None:
-            picks.append(OffensePick("save-action", _save_mean_damage(chosen_save[1]), chosen_save))
+            picks.append(OffensePick("save-action", save_action_impact(chosen_save[1], chosen_save[0]), chosen_save))
         save_zone = choose_damaging_save_zone(attacker, setup, turn_key)
         if save_zone is not None:
             action, center, score = save_zone

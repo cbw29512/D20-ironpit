@@ -18,7 +18,18 @@
   const CH = () => window.IRON_PIT_BROWSER_CHARGE;
   const MS = () => window.IRON_PIT_BROWSER_MULTI_SAVE_PROVIDER;
   const BOTH = Object.freeze(["2014", "2024"]);
-  const printedSave = (action) => (action.damageDiceCount || 0) * ((action.damageDiceSize || 6) + 1) / 2 + (action.damageBonus || 0);
+  function printedSave(action, target = null) {
+    try {
+      const printed = (action.damageDiceCount || 0) * ((action.damageDiceSize || 6) + 1) / 2 + (action.damageBonus || 0);
+      if (!action.failureSetsZeroHp || target == null) return printed;
+      const hp = target.state?.current_hp;
+      if (!Number.isFinite(hp) || hp < 0) throw new Error("Zero-HP action ranking requires valid current target HP.");
+      return Math.max(printed, hp);
+    } catch (error) {
+      console.error("Failed browser zero-HP save impact ranking", { action: action?.id, error });
+      throw error;
+    }
+  }
   const memberById = (setup, id) => [...setup.heroes, ...setup.monsters].find((member) => member.combatant_id === id) || null;
   const actionById = (member, id) => (member.state.template.saving_throw_actions || []).find((action) => action.id === id) || null;
   const register = (descriptor) => S().registerProvider(descriptor);
@@ -117,8 +128,8 @@
       discover: ({ member, setup }) => {
         const selected = saveChoice(member, setup);
         if (!selected) return null;
-        if (selected.targets) return { payload: { targetIds: selected.targets.map((target) => target.combatant_id), actionId: selected.action.id, delivery: "ability", expectedDamage: printedSave(selected.action) * selected.targets.length } };
-        return { payload: { targetId: selected.target.combatant_id, actionId: selected.action.id, distance: selected.distance, delivery: "ability", expectedDamage: printedSave(selected.action) } };
+        if (selected.targets) return { payload: { targetIds: selected.targets.map((target) => target.combatant_id), actionId: selected.action.id, delivery: "ability", expectedDamage: selected.targets.reduce((sum, target) => sum + printedSave(selected.action, target), 0) } };
+        return { payload: { targetId: selected.target.combatant_id, actionId: selected.action.id, distance: selected.distance, delivery: "ability", expectedDamage: printedSave(selected.action, selected.target) } };
       },
       resolve: ({ sequence, round, member, setup }, candidate) => {
         const action = actionById(member, candidate.payload.actionId);
@@ -162,5 +173,5 @@
   }
 
   install();
-  window.IRON_PIT_BROWSER_MAIN_ACTION_PROVIDERS = { install, saveChoice };
+  window.IRON_PIT_BROWSER_MAIN_ACTION_PROVIDERS = { install, saveChoice, printedSave };
 })();
