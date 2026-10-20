@@ -163,8 +163,10 @@ def resolve_save_action(
         applied = apply_failed_save_timed_effect(
             target, actor, action, round_number, affected_states, setup,
         )
-        if applied is not None:
+        if isinstance(applied, str):
             applied_conditions.append(applied)
+        elif applied:
+            applied_conditions.extend(applied)
     if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
         applied_conditions = apply_grapple(
             target.state,

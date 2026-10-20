@@ -1,5 +1,11 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Harpy grouped failed-save control foundation — 2026-10-20
+
+- Owner: Codex, ACTIVE in draft PR #973 on `feat/2014-harpy-grouped-control-20261020`. Generator-owned artifacts were reconciled on the branch; require all certification lanes on the next human-authored exact head. This foundation adds source-neutral grouped failed-save conditions so one save can apply multiple condition ids while one primary timed effect owns repeat saves, expiry, source cleanup and immunity. Python and browser use the same source-effect group; printed cards remain immutable and fight state resets normally.
+- Scope intentionally does not bind or admit Harpy yet. Luring Song still needs generic compelled approach through ordinary movement/pathing and opportunity attacks, damage-triggered and hazardous-terrain repeat saves, and subsequent-turn Bonus Action maintenance/stop lifecycle. Keep `source:extra-action` until every printed behavior is implemented and certified.
+- Focused checks: `backend/tests/test_grouped_failed_save_conditions.py`, `frontend/browser-grouped-failed-save.test.cjs`, and the existing single-condition regressions. Preserve the scalar helper result for ordinary one-condition cards; grouped cards return an ordered list. Required exact-head full Python/browser, hero, roster/paired-edition and parity checks remain pending. Source admission remains 237/327; real webpage fight verification remains separate; Netlify production stays locked.
+
 ## Ability-score reduction follow-up — existing PR #965
 
 - Owner: Codex, ACTIVE on `fix/2014-live-ability-floor-reconciled-20261019`; resume head `919ddaade03d98ee5948585e0c3eb3662a9fe828`. Current main is `1b9a18ea86f3acd9f9669f70acac9dc43d727640`, whose tree matches the Rust dependency already included in integration head `6f12f4572f94a113acb2c635ea4383ead6675873`. Reconcile the main ancestry/shared queue before the final CI head; the combat patch is unchanged. No source-policy code is reimplemented here.
