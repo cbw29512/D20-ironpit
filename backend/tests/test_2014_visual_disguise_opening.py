@@ -105,6 +105,7 @@ def test_monster_and_pregen_forms_share_source_owned_disguise_mechanics():
     """The same printed declaration runs on either card kind without a new resolver."""
     from pydantic import ValidationError
     from app.domain.visual_disguise import VisualDisguiseAction
+    from app.domain.capabilities import CombatantDefinition
     from app.combat.visual_disguise import resolve_visual_disguise_opening
 
     source_fields = [
@@ -125,9 +126,20 @@ def test_monster_and_pregen_forms_share_source_owned_disguise_mechanics():
         "inspection_dc": 19,
     }
     alternate = VisualDisguiseAction.model_validate(synthetic)
-    template = target.state.template.model_copy(update={
-        "kind": "character", "visual_disguise_action": alternate,
+    # Prove the canonical definition -> compiler -> template route, not a
+    # hand-patched runtime state. This is a synthetic pregen form.
+    row = next(m for m in load_monster_source_2014() if m.id == "commoner")
+    form = adapt_basic_monster_2014(row).model_dump()
+    form.update({
+        "kind": "character",
+        "id": "2014-synthetic-card-test",
+        "name": "Synthetic Pregen",
+        "visual_disguise_action": synthetic,
     })
+    definition = CombatantDefinition.model_validate(form)
+    template = compile_combatant(definition)
+    assert template.kind == "character"
+    assert template.visual_disguise_action == alternate
     actor = EncounterCombatant(combatant_id="pregen", side="heroes",
         position_ft=0, state=build_combatant_state(template))
     event = resolve_visual_disguise_opening(1, actor)
