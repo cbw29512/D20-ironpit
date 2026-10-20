@@ -169,7 +169,7 @@
     if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.failedSaveTimedEffect) {
       if (!riderRuntime) throw new Error("Failed-save timed-effect runtime is not loaded.");
       const applied = riderRuntime.apply(actor, target, action, action.failedSaveTimedEffect, round, options.setup || null);
-      if (applied) appliedConditions.push(applied);
+      appliedConditions.push(...applied);
     }
     if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.grappleEscapeDc) {
       appliedConditions = G().apply(
