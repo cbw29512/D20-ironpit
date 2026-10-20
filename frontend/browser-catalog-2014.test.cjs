@@ -23,7 +23,7 @@ load("browser-catalog.js");
   assert.equal(catalog.hero_ready_count, catalog.heroes.length);
   assert.ok(catalog.hero_ready_count >= 120);
   assert.equal(catalog.monster_count, 327);
-  assert.equal(catalog.monster_ready_count, 235);
+  assert.equal(catalog.monster_ready_count, 236);
   assert.equal(catalog.heroes.length, catalog.hero_ready_count);
   assert.equal(catalog.monsters.length, 235);
   assert.ok(catalog.heroes.every((card) => card.ruleset === "2014" && card.kind === "character"));
