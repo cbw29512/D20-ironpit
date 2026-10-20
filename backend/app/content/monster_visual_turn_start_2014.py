@@ -10,6 +10,8 @@ import re
 from html import unescape
 
 from app.domain.visual_turn_start import VisualTurnStartRule
+from app.domain.save_effects import FailedSaveTimedEffect
+from app.content.monster_source_visual_fear_2014 import source_proven_visual_fear_2014
 from app.content.monster_source_2014 import SourceMonster2014
 
 logger = logging.getLogger(__name__)
@@ -45,6 +47,27 @@ def _source_clause_with_continuations(source: str, heading: str) -> str:
 def visual_turn_start_rule_2014(monster: SourceMonster2014) -> VisualTurnStartRule | None:
     """Fail closed unless the actual source supports the whole visual-save policy."""
     try:
+        fear = source_proven_visual_fear_2014(monster)
+        if fear is not None:
+            return VisualTurnStartRule(
+                source_id="visual-fear-source", source_name=fear.source_name,
+                range_ft=fear.range_ft, save_dc=fear.save_dc,
+                save_ability=fear.save_ability,
+                required_target_creature_types=list(fear.target_creature_types),
+                requires_source_sight=False,
+                requires_source_not_incapacitated=False,
+                requires_true_form_visibility=fear.requires_true_form_visibility,
+                source_effect_immunity_on_success=True,
+                failed_save_timed_effect=FailedSaveTimedEffect(
+                    effect_id=fear.effect_id, duration_rounds=fear.duration_rounds,
+                    expiry_timing="target_turn_end",
+                    repeat_save_ability=fear.save_ability,
+                    repeat_save_dc=fear.save_dc,
+                    repeat_save_timing=fear.repeat_save_timing,
+                    repeat_save_disadvantage_while_source_visible=fear.repeat_save_disadvantage_while_source_visible,
+                    source_effect_immunity_on_end=True,
+                ),
+            )
         if _GAZE not in monster.trait_names:
             return None
         source = monster.source_traits or ""

@@ -1,5 +1,12 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Visual fear turn-start grammar — 2026-10-20, new PR pending
+
+- The source-proven 2014 Sea Hag Horrific Appearance can now compile as a **generic timed visual failed-save rule** rather than the old staged petrification mode: humanoid only, 30-ft source-derived range, DC 11 Wisdom, ten rounds, end-turn repeat saves disadvantaged when source visible, and per-source fight-local 24-hour immunity on success or effect ending.
+- A source-neutral visual eligibility policy handles source sight (needed for petrifying gaze, not the hag's passive), source incapacitation, true-form visibility and the automatic initiative-based aversion exception. Card labels are display-only.
+- The generic Python/browser turn-start execution bridge and Illusory Appearance are separate certification dependencies; **do not source-admit Sea Hag until both Python and browser execution + full card Actions are complete**. Source-admitted count remains generated, never hand-edited.
+- The previous attack-roll-only gaze penalty merged in PR #979 with exact-head CI success. No Netlify release.
+
 ## Gaze avoidance attack disadvantage — 2026-10-20 PR pending
 
 - Source-neutral aversion windows already exist for Basilisk/Medusa visual turn-start rules and future Sea Hag visual fear. Browser turn-start records source identity; no creature-name dispatch.
