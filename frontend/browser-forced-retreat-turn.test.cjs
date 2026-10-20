@@ -11,6 +11,7 @@ window.IRON_PIT_BROWSER_STATE = { beginTurn: () => {}, distance: () => 5, neares
 window.IRON_PIT_BROWSER_GRAPPLE = { cleanup: () => {}, shouldEscape: () => false, speedIsZero: () => false };
 window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL = {
   forcedRetreatActive: () => true,
+  resolveForcedApproach: () => null,
   event: (sequence, round, member) => ({
     sequence, round_number: round, event_type: "feature", actor_id: member.combatant_id,
     actor_name: member.state.template.name, target_id: member.combatant_id,
@@ -39,4 +40,29 @@ assert.equal(surgeCalls, 0);
 assert.equal(result.events.length, 1);
 assert.equal(result.events[0].feature_id, "forced-retreat");
 assert.equal(result.events.some((event) => event.event_type === "movement" || event.event_type === "attack"), false);
-console.log("Browser forced-retreat live turn regression passed.");
+let approachCalls = 0;
+window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL.forcedRetreatActive = () => false;
+window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL.resolveForcedApproach = (sequence, round, actor) => {
+  approachCalls += 1;
+  actor.position_ft = 25;
+  return {
+    events: [{ sequence, round_number: round, event_type: "movement", actor_id: actor.combatant_id }],
+    sequence: sequence + 1, movement: {},
+  };
+};
+window.IRON_PIT_BROWSER_TIMED = { suppressesVoluntaryTurn: () => true };
+const compelledMember = {
+  combatant_id: "compelled", side: "heroes", position_ft: 0,
+  state: {
+    template: { name: "Compelled", ruleset: "2024", attacks: [] },
+    timed_effects: [{ turn_behavior: "forced_approach_source", source_id: "goblin" }],
+    is_dead: false, is_unconscious: false,
+  },
+};
+const compelledSetup = { heroes: [compelledMember], monsters: [enemy] };
+const compelled = window.IRON_PIT_BROWSER_TURN.resolveTurn(10, 1, compelledMember, compelledSetup);
+assert.equal(approachCalls, 1);
+assert.equal(compelledMember.position_ft, 25);
+assert.equal(compelled.events.some((event) => event.event_type === "movement"), true);
+assert.equal(supportCalls, 0);
+console.log("Browser forced-retreat and compelled-approach turn regressions passed.");

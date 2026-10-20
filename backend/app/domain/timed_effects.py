@@ -14,7 +14,7 @@ from app.domain.timed_control_limits import TimedControlLimits
 
 logger = logging.getLogger(__name__)
 
-TimedTurnBehavior = Literal["normal", "forced_retreat", "single_activity"]
+TimedTurnBehavior = Literal["normal", "forced_retreat", "single_activity", "forced_approach_source"]
 
 
 class TimedEffect(BaseModel):

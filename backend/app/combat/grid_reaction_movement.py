@@ -33,16 +33,17 @@ def move_toward_on_grid(
     movement_source: MovementSource = "speed",
     disengaged: bool = False,
     turn_key: str | None = None,
+    compelled: bool = False,
 ) -> tuple[list[BattleEvent], int, BattleEvent | None]:
     """Execute a planned grid route one square at a time with RAW reaction windows."""
     try:
         disengaged = disengaged or mover.state.disengaged_this_turn
         if setup.map_definition is None or mover.state.position is None or target.state.position is None:
             raise ValueError("Grid movement requires an authoritative map and grid positions.")
-        if movement_source == "speed" and not voluntary_activity_available(mover.state, "movement"):
+        if movement_source == "speed" and not compelled and not voluntary_activity_available(mover.state, "movement"):
             return [], sequence, None
         members = [*setup.heroes, *setup.monsters]
-        allow_leave_melee = movement_source == "forced"
+        allow_leave_melee = movement_source == "forced" or compelled
         plan = plan_movement_toward(
             setup.map_definition,
             mover,
@@ -63,7 +64,7 @@ def move_toward_on_grid(
         reactors = setup.monsters if mover.side == "heroes" else setup.heroes
 
         for destination in plan.path:
-            if approaches_fear_source(mover, destination, setup):
+            if not compelled and approaches_fear_source(mover, destination, setup):
                 break
             before_position = mover.state.position.model_copy(deep=True)
             step_cost = movement_step_cost_ft(
@@ -113,7 +114,7 @@ def move_toward_on_grid(
                 target.state.position,
                 target.state.template.size,
             )
-            if movement_source == "speed":
+            if movement_source == "speed" and not compelled:
                 claim_voluntary_activity(mover.state, "movement")
             mover.state.position = destination.model_copy(deep=True)
             mover.state.movement_remaining_ft -= step_cost

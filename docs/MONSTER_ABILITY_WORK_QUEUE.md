@@ -1,10 +1,14 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Harpy grouped failed-save control foundation — 2026-10-20
+## Harpy compelled-approach foundation — 2026-10-20
 
-- Owner: Codex, ACTIVE in draft PR #973 on `feat/2014-harpy-grouped-control-20261020`. Generator-owned artifacts were reconciled on the branch; require all certification lanes on the next human-authored exact head. This foundation adds source-neutral grouped failed-save conditions so one save can apply multiple condition ids while one primary timed effect owns repeat saves, expiry, source cleanup and immunity. Python and browser use the same source-effect group; printed cards remain immutable and fight state resets normally.
-- Scope intentionally does not bind or admit Harpy yet. Luring Song still needs generic compelled approach through ordinary movement/pathing and opportunity attacks, damage-triggered and hazardous-terrain repeat saves, and subsequent-turn Bonus Action maintenance/stop lifecycle. Keep `source:extra-action` until every printed behavior is implemented and certified.
-- Focused checks: `backend/tests/test_grouped_failed_save_conditions.py`, `frontend/browser-grouped-failed-save.test.cjs`, and the existing single-condition regressions. Preserve the scalar helper result for ordinary one-condition cards; grouped cards return an ordered list. Required exact-head full Python/browser, hero, roster/paired-edition and parity checks remain pending. Source admission remains 237/327; real webpage fight verification remains separate; Netlify production stays locked.
+- Owner: Codex, ACTIVE in draft PR #974 on `feat/2014-compelled-approach-20261020`, rebased from main `cb42a95025e48649673e98d3b780ec787d503ef8`. Subsystem ownership: timed turn behavior plus reaction-aware movement only.
+- Immutable schema: source-neutral `turn_behavior="forced_approach_source"`; mutable fight state remains the existing timed-effect `source_id` plus normal per-turn movement budget. The creature spends ordinary movement toward its one active source until within 5 feet. Compelled movement does not claim voluntary movement and bypasses willing-movement restrictions, but still opens opportunity-attack windows. Multiple sources or a missing source fail closed.
+- Scope intentionally does not bind or admit Harpy. Persistent hazards currently resolve after square entry, while Luring Song requires a repeat save before damaging terrain. Damage-triggered repeat saves and Bonus Action maintenance/stop lifecycle also remain missing. Keep `source:extra-action`; source admission remains 237/327. Exact-head certification is required; webpage verification is separate and Netlify stays locked.
+
+## Harpy grouped failed-save control foundation — MERGED + CERTIFIED
+
+- PR #973 merged to main as `5234ed63b2b8ee818e199189f8e49c2770d1ddba` after exact-head CI, 2014 Hero Certification and generated-artifact sync passed. It adds source-neutral grouped failed-save conditions with one primary lifecycle owner in Python/browser. Harpy remains blocked and unbound; source admission stayed 237/327.
 
 ## Ability-score reduction follow-up — existing PR #965
 

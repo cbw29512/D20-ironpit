@@ -183,11 +183,11 @@
     try { return member.state.template.traits?.includes("pack-tactics") && hasAdjacentActiveAlly(member, target, setup); }
     catch (error) { console.error("Failed browser Pack Tactics evaluation", { member: member.combatant_id, error }); throw error; }
   }
-  function moveToward(member, target, desired) {
+  function moveToward(member, target, desired, claimActivity = true) {
     const before = distance(member, target);
     const moved = Math.min(Math.max(0, before - desired), member.state.movement_remaining_ft);
     if (!moved) return null;
-    window.IRON_PIT_ACTION_ECONOMY?.claimActivity?.(member.state, "movement");
+    if (claimActivity) window.IRON_PIT_ACTION_ECONOMY?.claimActivity?.(member.state, "movement");
     member.position_ft += (member.position_ft < target.position_ft ? 1 : -1) * moved;
     member.state.movement_remaining_ft -= moved;
     return { before, after: distance(member, target), moved };
