@@ -286,6 +286,8 @@ def _save(action: Any) -> dict[str, Any]:
         row["resourceCost"] = action.resource_cost
     if action.requires_no_active_grapple:
         row["requiresNoActiveGrapple"] = True
+    if action.opening_initiative_only:
+        row["openingInitiativeOnly"] = True
     if action.magical_effect:
         row["magicalEffect"] = True
     if action.effect_tags:
