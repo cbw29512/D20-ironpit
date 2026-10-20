@@ -25,7 +25,7 @@ def _source():
 
 
 def _wail_only_source():
-    # Does not certify the actual Banshee: Horrifying Visage is still blocked.
+    # Isolated Wail-only test variant; full source now also binds Horrifying Visage.
     source = _source()
     without_visage = re.sub(
         r"<p><em><strong>Horrifying Visage\.</strong></em>.*?</p>",
@@ -69,7 +69,7 @@ def _arena():
     return actor, living, hero, construct, undead, deafened, setup
 
 
-def test_printed_wail_compiles_exact_save_parameters_but_full_banshee_is_still_blocked():
+def test_printed_wail_compiles_exact_save_parameters_alongside_visual_fear():
     source = _source()
     matches = source_proven_asymmetric_saves_2014(source)
     assert len(matches) == 1
@@ -83,9 +83,9 @@ def test_printed_wail_compiles_exact_save_parameters_but_full_banshee_is_still_b
     assert action.failure_sets_zero_hp and action.damage_only_on_success
     assert action.damage.count == 3 and action.damage.size == 6
     assert action.damage_type == DamageType.PSYCHIC
-    assert len(save_capabilities_2014(source)) == 1
+    assert len(save_capabilities_2014(source)) == 2
     assert [(r.id, r.max_uses) for r in save_resources_2014(source)] == [("wail", 1)]
-    assert "source:extra-action" in basic_blockers_2014(source)
+    assert "source:extra-action" not in basic_blockers_2014(source)
     assert "source:extra-action" not in basic_blockers_2014(_wail_only_source())
 
 
