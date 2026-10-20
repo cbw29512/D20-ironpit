@@ -11,7 +11,7 @@ def _sprite():
 
 
 def _without_unimplemented_invisibility(sprite):
-    # Proof variant only: the real card keeps Invisibility and stays blocked.
+    # Proof variant isolates Heart Sight; the intact card has both abilities bound.
     source = sprite.source_actions
     assert source is not None and "<strong>Invisibility.</strong>" in source
     return sprite.model_copy(update={
@@ -27,7 +27,7 @@ def test_heart_sight_is_source_verified_neutral_without_dropping_original_action
     assert not verified_nonactionable_action_2014(sprite, "Invisibility")
     assert "Heart Sight" in sprite.action_names
     assert "current emotional state" in (sprite.source_actions or "")
-    assert basic_blockers_2014(sprite) == ("source:extra-action",)
+    assert basic_blockers_2014(sprite) == ()
     assert sprite.model_dump_json() == before
 
 
