@@ -535,6 +535,7 @@ jobs:
           node frontend/browser-visual-turn-start-integration.test.cjs
           node frontend/browser-visual-fear-turn-start.test.cjs
           node frontend/browser-visual-disguise-opening.test.cjs
+          node frontend/browser-visual-disguise-death-expiry.test.cjs
           IRON_PIT_RECORD_GOLDENS=1 node frontend/browser-engine.test.cjs
           node frontend/engine-test-lab.test.cjs
           node --check frontend/engine-test-lab.js
