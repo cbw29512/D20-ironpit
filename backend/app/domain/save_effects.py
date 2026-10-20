@@ -23,6 +23,7 @@ class FailedSaveTimedEffect(BaseModel):
     """Source-neutral timed rider applied only after a failed saving throw."""
 
     effect_id: str
+    additional_effect_ids: list[ConditionName] = Field(default_factory=list)
     duration_rounds: int | None = Field(default=None, ge=1, le=100800)
     expiry_timing: SaveEffectTiming = "target_turn_end"
     repeat_save_ability: AbilityName | None = None
@@ -66,6 +67,7 @@ class FailedSaveTimedEffect(BaseModel):
                 "armor_class_bonus": 0,
                 "saving_throw_flat_bonuses": [],
                 "allowed_removal_action_ids": [],
+                "additional_effect_ids": [],
                 "repeat_save_failure_condition_id": None,
                 "repeat_save_disadvantage_while_source_visible": False,
             }
@@ -91,6 +93,9 @@ class FailedSaveTimedEffect(BaseModel):
     @model_validator(mode="after")
     def validate_repeat_save(self) -> "FailedSaveTimedEffect":
         try:
+            grouped_ids = [self.effect_id, *self.additional_effect_ids]
+            if len(grouped_ids) != len(set(grouped_ids)):
+                raise ValueError("Grouped failed-save condition ids must be distinct.")
             configured = (
                 self.repeat_save_ability is not None,
                 self.repeat_save_dc is not None,

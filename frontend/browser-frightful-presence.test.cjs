@@ -125,4 +125,37 @@ assert.equal(
 );
 const endImmunity = hero.state.timed_effects.find((item) => String(item.effect_id).includes("success-immunity"));
 assert.equal(endImmunity.expires_round, null);
-console.log("Frightful Presence failed-save Frightened, match-scoped source immunity, and printed name stay universal.");
+
+({ dragon, hero } = setupPair());
+window.__saveRoll = 1;
+const groupedAction = {
+  ...action,
+  id: "renamed-group-control",
+  name: "Renamed Group Control",
+  failedSaveTimedEffect: {
+    effectId: "charmed",
+    additionalEffectIds: ["incapacitated"],
+    repeatSaveAbility: "wisdom",
+    repeatSaveDc: 16,
+    repeatSaveTiming: "target_turn_end",
+  },
+};
+const immutableCard = JSON.stringify(groupedAction);
+event = window.IRON_PIT_BROWSER_SAVES.resolveAction(
+  1, 1, dragon, hero, groupedAction, 10,
+);
+assert.deepEqual(event.applied_condition_ids, ["charmed", "incapacitated"]);
+assert.deepEqual(hero.state.active_effect_ids, ["charmed", "incapacitated"]);
+const groupedPrimary = hero.state.timed_effects.find((item) => item.effect_id === "charmed");
+const groupedSecondary = hero.state.timed_effects.find((item) => item.effect_id === "incapacitated");
+assert.equal(groupedPrimary.repeat_save_timing, "target_turn_end");
+assert.equal(groupedSecondary.repeat_save_timing, null);
+assert.equal(groupedPrimary.source_effect_id, groupedSecondary.source_effect_id);
+assert.deepEqual(
+  window.IRON_PIT_BROWSER_TIMED.removeGroup(hero.state, groupedPrimary),
+  ["charmed", "incapacitated"],
+);
+assert.deepEqual(hero.state.active_effect_ids, []);
+assert.equal(JSON.stringify(groupedAction), immutableCard);
+
+console.log("Failed-save condition groups share one lifecycle in the universal browser resolver.");

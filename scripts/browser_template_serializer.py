@@ -384,6 +384,7 @@ def _spell(action: Any) -> dict[str, Any]:
 def _failed_save_timed_effect(rider: Any) -> dict[str, Any]:
     row = {
         "effectId": rider.effect_id,
+        "additionalEffectIds": list(rider.additional_effect_ids),
         "durationRounds": rider.duration_rounds,
         "expiryTiming": rider.expiry_timing,
         "repeatSaveAbility": rider.repeat_save_ability,

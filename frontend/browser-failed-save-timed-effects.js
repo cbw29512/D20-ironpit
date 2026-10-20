@@ -61,38 +61,50 @@
     try {
       const timed = window.IRON_PIT_BROWSER_TIMED;
       if (!timed) throw new Error("Failed-save timed effect requires browser-timed-conditions.js.");
-      return timed.apply(target.state, rider.effectId, actor.combatant_id, {
-        sourceEffectId: action.id,
-        sourceTemplate: actor.state.template,
-        targetActor: target, setup,
-        sourceIsMagical: Boolean(action.magicalEffect),
-        appliedRound: round,
-        expiresRound: rider.durationRounds != null ? round + rider.durationRounds : null,
-        expiryTiming: rider.expiryTiming || "target_turn_end",
-        repeatSaveAbility: rider.repeatSaveAbility || null,
-        repeatSaveDc: rider.repeatSaveDc ?? null,
-        repeatSaveTiming: rider.repeatSaveTiming || null,
-        repeatSaveDisadvantageWhileSourceVisible: Boolean(rider.repeatSaveDisadvantageWhileSourceVisible),
-        repeatSaveFailureConditionId: rider.repeatSaveFailureConditionId || null,
-        allowedRemovalActionIds: [...(rider.allowedRemovalActionIds || [])],
-        turnBehavior: rider.turnBehavior || "normal",
-        endsOnDamage: Boolean(rider.endsOnDamage),
-        endsIfSourceIncapacitated: Boolean(rider.endsIfSourceIncapacitated),
-        endsIfSourceDead: Boolean(rider.endsIfSourceDead),
-        nextAttackDisadvantage: Boolean(rider.nextAttackDisadvantage),
-        suppressReactions: Boolean(rider.blocksReactions),
-        controlLimits: controlLimitsFrom(rider),
-        useDefaultPoisonRecovery: false,
-        repeatSaveFailuresToLock: rider.repeatSaveFailuresToLock || null,
-        escapeCheckAbility: rider.escapeCheckAbility || null,
-        escapeCheckDc: rider.escapeCheckDc ?? null,
-        groundContact: Boolean(rider.groundContact || (
+      const applied = [];
+      const effectIds = [rider.effectId, ...(rider.additionalEffectIds || [])];
+      for (const [index, effectId] of effectIds.entries()) {
+        if (index && !applied.length) break;
+        const ownsLifecycle = index === 0;
+        const groundContact = ownsLifecycle && Boolean(rider.groundContact || (
           (action.createsDifficultTerrain || action.creates_difficult_terrain)
-          && rider.effectId === "restrained"
-        )),
-        endsOnTeleport: Boolean(rider.endsOnTeleport || rider.groundContact),
-        sourceEffectImmunityOnEnd: Boolean(rider.sourceEffectImmunityOnEnd),
-      });
+          && effectId === "restrained"
+        ));
+        const result = timed.apply(target.state, effectId, actor.combatant_id, {
+          sourceEffectId: action.id,
+          sourceTemplate: actor.state.template,
+          targetActor: target, setup,
+          sourceIsMagical: Boolean(action.magicalEffect),
+          appliedRound: round,
+          expiresRound: ownsLifecycle && rider.durationRounds != null
+            ? round + rider.durationRounds : null,
+          expiryTiming: ownsLifecycle ? (rider.expiryTiming || "target_turn_end") : null,
+          repeatSaveAbility: ownsLifecycle ? (rider.repeatSaveAbility || null) : null,
+          repeatSaveDc: ownsLifecycle ? (rider.repeatSaveDc ?? null) : null,
+          repeatSaveTiming: ownsLifecycle ? (rider.repeatSaveTiming || null) : null,
+          repeatSaveDisadvantageWhileSourceVisible: ownsLifecycle
+            && Boolean(rider.repeatSaveDisadvantageWhileSourceVisible),
+          repeatSaveFailureConditionId: ownsLifecycle
+            ? (rider.repeatSaveFailureConditionId || null) : null,
+          allowedRemovalActionIds: ownsLifecycle ? [...(rider.allowedRemovalActionIds || [])] : [],
+          turnBehavior: ownsLifecycle ? (rider.turnBehavior || "normal") : "normal",
+          endsOnDamage: ownsLifecycle && Boolean(rider.endsOnDamage),
+          endsIfSourceIncapacitated: ownsLifecycle && Boolean(rider.endsIfSourceIncapacitated),
+          endsIfSourceDead: ownsLifecycle && Boolean(rider.endsIfSourceDead),
+          nextAttackDisadvantage: ownsLifecycle && Boolean(rider.nextAttackDisadvantage),
+          suppressReactions: ownsLifecycle && Boolean(rider.blocksReactions),
+          controlLimits: ownsLifecycle ? controlLimitsFrom(rider) : null,
+          useDefaultPoisonRecovery: false,
+          repeatSaveFailuresToLock: ownsLifecycle ? (rider.repeatSaveFailuresToLock || null) : null,
+          escapeCheckAbility: ownsLifecycle ? (rider.escapeCheckAbility || null) : null,
+          escapeCheckDc: ownsLifecycle ? (rider.escapeCheckDc ?? null) : null,
+          groundContact,
+          endsOnTeleport: ownsLifecycle && Boolean(rider.endsOnTeleport || groundContact),
+          sourceEffectImmunityOnEnd: ownsLifecycle && Boolean(rider.sourceEffectImmunityOnEnd),
+        });
+        if (result) applied.push(result);
+      }
+      return applied;
     } catch (error) {
       console.error("Failed browser failed-save timed rider application", {
         actionId: action?.id, target: target?.combatant_id, error,
