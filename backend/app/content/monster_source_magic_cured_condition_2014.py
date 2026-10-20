@@ -35,8 +35,14 @@ def source_completed_magic_cured_condition_2014(
     try:
         if attack.source_complete or attack.kind != "ranged":
             return attack
-        if (attack.on_hit_save_effect is not None or attack.control_effect
-                or attack.ongoing_damage_effect or attack.conditional_damage
+        if (attack.on_hit_save_effect is not None or attack.control_effect is not None
+                or attack.ongoing_damage_effect is not None or attack.conditional_damage
+                or attack.conditional_attack_advantage
+                or attack.on_hit_ability_score_reduction is not None
+                or attack.on_hit_contested_movement is not None
+                or attack.resource_id is not None or attack.breakable_restraint is not None
+                or attack.charge_profile is not None or attack.forbid_target_grappled_by_self
+                or attack.grapple_target_policy != "normal"
                 or len(attack.on_hit_damage) != 1):
             return attack
         printed = source_sections_2014(monster.source_actions).get(attack.name, "")

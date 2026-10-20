@@ -1,5 +1,13 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Erinyes integration resumed — 2026-10-20
+
+- Owner: Codex, ACTIVE on existing PR #970 / `feat/2014-erinyes-hellish-poison-binding-20261019`; main `0c8531a6254c3266f2fa639e28100acf7b92b09f`, resumed head `e551850561be6e695f540dbc2781fa5848c3fd7c`. Historical #941 is superseded by this integration. Scope: source proof, focused Python/browser regressions, CI registration and this queue; no new combat primitive.
+- Reconciled newer head `837176a388a455fcccda1dd162b18c45cebe9ec1` before writing: its corrected test explicitly permits a source-owned save DC change and renamed attack. The printed source is authoritative; parser diagnostic text is not another rules input. Preserve that correction. This follow-up rejects additional unprinted effect payloads rather than marking their attacks source-complete.
+- Immutable inputs: the complete printed ranged attack and parsed attack/save/damage facts. Mutable state: existing Poisoned effect only, with no duration or repeat save; shared magical condition removal ends it and fresh fight state resets it. Python: `on_hit_condition_save.resolve_on_hit_condition_save`; browser: `browser-on-hit-condition-save.js` and `browser-condition-removal.js`; serializer: `browser_template_serializer.py`.
+- Edits: `monster_source_magic_cured_condition_2014.py`, Erinyes attack tests, one browser regression and its CI command, plus this queue. Shared schema and combat resolvers are unchanged. Focused checks cover full Python/browser card attacks, miss, independent typed defenses, condition save success/failure, magical removal, indefinite expiry, renamed character reuse and fresh-fight reset. Generated outputs remain generator-owned. Main remains 236/327 source-admitted; this branch projects 237/327. Exact-head CI and webpage fights must be reported separately.
+- 2024 source audited independently: Withering Sword adds Necrotic damage; Entangling Rope is a separate Force/Restrained action. It has no matching Longbow poison/save clause. Do not copy this 2014 rider into 2024.
+
 **Authoritative working order for monster ability decisions and remediation. Updated 2026-10-12.** This is the same existing work-queue file, **not another competing tracker**. Read this table **before** responding to "next", initiating a monster edit, or asking a previously answered question.
 
 **What happened:** the 124-monster / 305-blocker review was recorded in unmerged [PR #680](https://github.com/cbw29512/D20-ironpit/pull/680), while the old operating table was frozen on October 8. Use the reconciled records below, not a guessed next monster. Original source blueprint is available at [the pinned PR commit](https://github.com/cbw29512/D20-ironpit/blob/88881607f1f271a2fdb37ffcf95008d9d8d1a07c/docs/MONSTER_BLOCKER_FIX_BLUEPRINTS_2014.md); source cards and generated current-main blockers are decisive for certification. This ledger does not falsely upgrade a plan to shipped code.
@@ -799,4 +807,3 @@ These are **spell-level decisions**, not Archmage-only exceptions. Preserve the 
 - `PARKED`: precisely stated semantic gap; move to next item.
 
 **Last edited 2026-10-08.** PR states above are snapshots; reconcile them from GitHub before each merge/queue promotion.
-
