@@ -57,7 +57,8 @@ const teammate = member("teammate", "monsters", 4, 2);
 source.state.initiative_total = 20;
 const action = {
   id: "arbitrary-opening-area", name: "Source-neutral Impact",
-  openingInitiativeOnly: true, actionCost: "action", range: 30,
+  openingInitiativeOnly: true, targetScope: "all-other-creatures",
+  actionCost: "action", range: 30,
   area: { shape: "square", origin: "point", length_ft: 10 },
   saveAbility: "strength", saveAbilityChoices: ["strength", "dexterity"],
   dc: 16, successDamage: "half",
