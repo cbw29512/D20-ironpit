@@ -8,6 +8,18 @@
   const state = () => window.IRON_PIT_BROWSER_STATE;
   const immune = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
 
+  function observerSeesTrueForm(source, observer, distanceFt) {
+    if (!Number.isInteger(distanceFt) || distanceFt < 0)
+      throw new Error("True-form visibility requires a valid nonnegative distance.");
+    if (source.state.true_form_visible === false) return false;
+    if (source.state.magical_visual_disguise_active !== true) return true;
+    const senses = window.IRON_PIT_BROWSER_EFFECTIVE_SENSES;
+    if (!senses?.effectiveSenseRangeFt)
+      throw new Error("Effective senses required for source-declared magical visual disguise.");
+    const range = senses.effectiveSenseRangeFt(observer.state, "truesight");
+    return range > 0 && distanceFt <= range;
+  }
+
   function resolve(ctx) {
     const { member: target, setup, round } = ctx;
     const events = [];
@@ -34,7 +46,7 @@
         sourceSeesTarget: conditions().canSee(source.state, target.state, distance),
         targetSeesSource: conditions().canSee(target.state, source.state, distance),
         targetImmune: immune().immune(target.state, rule.failedSaveTimedEffect?.effectId || rule.terminalDebuff || "petrified"),
-        sourceTrueFormVisible: source.state.true_form_visible !== false,
+        sourceTrueFormVisible: observerSeesTrueForm(source, target, distance),
         targetTypeAllowed: !(rule.requiredTargetCreatureTypes || []).length ||
           (rule.requiredTargetCreatureTypes || []).some(type =>
             (target.state.template.creature_type || "").toLowerCase().split(" (", 1)[0] === type.toLowerCase()),
@@ -128,5 +140,5 @@
       resolve,
     });
   }
-  window.IRON_PIT_BROWSER_VISUAL_TURN_START_INTEGRATION = { resolve, installAbilityHooks };
+  window.IRON_PIT_BROWSER_VISUAL_TURN_START_INTEGRATION = { resolve, installAbilityHooks, observerSeesTrueForm };
 })();

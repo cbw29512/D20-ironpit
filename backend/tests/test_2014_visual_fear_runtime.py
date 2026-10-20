@@ -74,6 +74,32 @@ def test_visual_fear_aversion_true_form_and_target_type_qualifiers():
     assert blocked == []
 
 
+def test_magical_disguise_true_form_uses_observer_specific_truesight():
+    from app.combat.visual_true_form import observer_sees_true_form
+
+    setup, source, target, _ = _setup()
+    original_template = target.state.template
+    source.state.magical_visual_disguise_active = True
+    assert not observer_sees_true_form(source.state, target.state, 10)
+    hidden, _ = resolve_visual_turn_start_events(
+        1, 1, target, setup, FixedDiceProvider([1]), ["source", "target"])
+    assert hidden == []
+    target.state.template = original_template.model_copy(update={"truesight_ft": 15})
+    assert observer_sees_true_form(source.state, target.state, 10)
+    exposed, _ = resolve_visual_turn_start_events(
+        1, 1, target, setup, FixedDiceProvider([1]), ["source", "target"])
+    assert exposed and exposed[0].applied_condition_ids == ["frightened"]
+    target.state.template = original_template.model_copy(update={"truesight_ft": 5})
+    assert not observer_sees_true_form(source.state, target.state, 10)
+    target.state.template = original_template.model_copy(update={"truesight_ft": 15})
+    target.state.suppressed_sense_ids.append("truesight")
+    assert not observer_sees_true_form(source.state, target.state, 10)
+    target.state.suppressed_sense_ids.clear()
+    source.state.true_form_visible = False
+    assert not observer_sees_true_form(source.state, target.state, 10)
+    assert not build_combatant_state(source.state.template).magical_visual_disguise_active
+
+
 def test_initial_success_grants_only_that_source_immunity():
     setup, source, target, rule = _setup()
     success, _ = resolve_visual_turn_start_events(

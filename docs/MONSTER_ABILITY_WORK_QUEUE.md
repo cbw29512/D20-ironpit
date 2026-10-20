@@ -1,13 +1,21 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Visual fear turn-start grammar — 2026-10-20, new PR pending
+## 2014 magical visual disguise / Sea Hag Illusory Appearance — source contract
+
+- Source text is combat-relevant **indirectly**: a visual illusion obscures the true form required by *Horrific Appearance*. It must not be silently declared arena-neutral or treated as Advantage, Invisibility, AC, or a global Blinded condition.
+- Exact 2014 card facts: use Action to disguise, owner Bonus Action to end, ends on death, physical contact exposes inconsistencies, and another creature may spend its Action for source-derived DC 16 Intelligence (Investigation) to discern a disguise. A successful check does **not** automatically reveal the underlying true form.
+- Reusable source proof is currently **source-only**, not runtime Action/Bonus Action or detection-check integration. The AI must not automatically self-suppress its own gaze as a free precombat buff. Keep `source:extra-action` and **237/327 admitted, 90 blocked** until a universal runtime route with Python/browser tests is actually available.
+- The visual-fear primitive from merged PR #980 respects `true_form_visible`; an observer-specific magical-disguise visibility check with effective Truesight is now being added in the same source-contract PR. **Activation, removal, Investigation Action and monster adapter remain unimplemented** until separately certified. New cards must be immutable, mutable disguise state fight-only, and labels display-only.
+
+
+## Visual fear turn-start grammar — 2026-10-20, MERGED + CERTIFIED PR #980
 
 - The source-proven 2014 Sea Hag Horrific Appearance can now compile as a **generic timed visual failed-save rule** rather than the old staged petrification mode: humanoid only, 30-ft source-derived range, DC 11 Wisdom, ten rounds, end-turn repeat saves disadvantaged when source visible, and per-source fight-local 24-hour immunity on success or effect ending.
 - A source-neutral visual eligibility policy handles source sight (needed for petrifying gaze, not the hag's passive), source incapacitation, true-form visibility and the automatic initiative-based aversion exception. Card labels are display-only.
-- The shared Python and browser turn-start execution bridges are now implemented on the draft branch and awaiting exact-head certification. **Illusory Appearance and the other printed Actions remain independently blocked**, so the Sea Hag is not playable/admitted. Never count this code as a completed monster without all source Actions and a successful real webpage fight.
+- The shared Python and browser turn-start execution bridges merged in PR #980 after all five exact-head gates passed. **Illusory Appearance remains independently blocked**, so the Sea Hag is not playable/admitted. Never count this code as a completed monster without all source Actions and a successful real webpage fight.
 - The previous attack-roll-only gaze penalty merged in PR #979 with exact-head CI success. No Netlify release.
 
-## Gaze avoidance attack disadvantage — 2026-10-20 PR pending
+## Gaze avoidance attack disadvantage — 2026-10-20, MERGED + CERTIFIED PR #979
 
 - Source-neutral aversion windows already exist for Basilisk/Medusa visual turn-start rules and future Sea Hag visual fear. Browser turn-start records source identity; no creature-name dispatch.
 - Work scope: actually include source-specific aversion in Python/browser shared weapon attack roll Disadvantage, retaining the ordinary Blinded condition only when independently applied, not automatically. Each target/source has independent expiry at the start of observer's next turn and fresh fights start with no windows.

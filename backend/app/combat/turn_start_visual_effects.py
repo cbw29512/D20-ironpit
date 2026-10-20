@@ -11,6 +11,7 @@ from app.combat.source_effect_immunity import (
     grant_source_effect_immunity, has_source_effect_immunity,
 )
 from app.combat.timed_conditions import apply_timed_condition, remove_effect_group
+from app.combat.visual_true_form import observer_sees_true_form
 from app.combat.turn_start_visual_policy import (
     VisualTurnStartFacts, decide_visual_turn_start, initiative_precedes,
     resolve_visual_save_stage,
@@ -54,7 +55,7 @@ def resolve_visual_turn_start_events(
             source_precedes_target=initiative_precedes(
                 turn_order, source.combatant_id, target.combatant_id,
             ),
-            source_true_form_visible=source.state.true_form_visible,
+            source_true_form_visible=observer_sees_true_form(source.state, target.state, distance),
             target_type_allowed=not rule.required_target_creature_types or any(
                 is_creature_type(target.state.template, kind)
                 for kind in rule.required_target_creature_types
