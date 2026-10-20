@@ -22,7 +22,13 @@ def _target():
     template = build_demo_fighter()
     bonuses = dict(template.saving_throw_bonuses)
     bonuses.update(strength=2, dexterity=4)
-    template = template.model_copy(update={"saving_throw_bonuses": bonuses})
+    template = template.model_copy(update={
+        "saving_throw_bonuses": bonuses,
+        "ability_scores": AbilityScores(
+            strength=12, dexterity=14, constitution=12,
+            intelligence=10, wisdom=10, charisma=10,
+        ),
+    })
     return build_combatant_state(template)
 
 
