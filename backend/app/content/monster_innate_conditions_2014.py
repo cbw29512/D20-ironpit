@@ -1,7 +1,7 @@
-"""Source-backed, duration-free combat conditions from 2014 printed traits.
+"""Source-backed, duration-free combat conditions from printed 2014 traits.
 
-The source text is immutable; the shared condition engine owns all mechanics.
-No creature IDs are consulted. Unsupported innate traits remain blocked.
+Use the existing Invisible condition; never construct monster-specific combat
+logic. Parsing must prove the *whole* unconditional printed source clause.
 """
 from __future__ import annotations
 
@@ -9,24 +9,23 @@ import logging
 import re
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_source_sections_2014 import source_sections_2014
 from app.domain.action_types import ConditionName
 
 logger = logging.getLogger(__name__)
 
-# Only the exact unconditional declaration is a starting condition.
-# An action, saving throw, temporary spell or "can become invisible" does not match.
-_INVISIBLE_DECLARATION = re.compile(
-    r"<strong>Invisibility\.</strong>\s*</em>\s*[^<.]{1,100}?\bis invisible\.",
-    re.IGNORECASE,
-)
+# An action, spell, save, temporary buff or "can become invisible" is not
+# an always-on Invisible trait. The printed source states the condition.
+_ALWAYS_INVISIBLE_CLAUSE = re.compile(r"the [a-z][a-z-]* is invisible\\.", re.IGNORECASE)
 
 
 def innate_condition_ids_2014(monster: SourceMonster2014) -> list[ConditionName]:
-    """Bind unconditional printed status to a shared, fight-local condition."""
+    """Bind an exact unconditional printed status to the shared condition."""
     try:
         if "Invisibility" not in monster.trait_names:
             return []
-        if not _INVISIBLE_DECLARATION.search(monster.source_traits or ""):
+        printed = source_sections_2014(monster.source_traits).get("Invisibility", "")
+        if not _ALWAYS_INVISIBLE_CLAUSE.fullmatch(printed.strip()):
             return []
         return ["invisible"]
     except Exception:
