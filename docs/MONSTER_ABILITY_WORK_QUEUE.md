@@ -45,6 +45,8 @@ Checked against main `72fe95258db3793c5aba4d86ba5487217c03da51`, including close
 - Result: all five workflows passed on final head, including 3,182 Python tests. Merged main admission is 228/327 versus 227/327 before this work; this is not a completed-monster claim. Real webpage fights remain unverified: the cloud browser cannot reach the container HTTP server and its security policy rejects local-file URLs. No deployment or production unlock is authorized.
 
 <!-- BEGIN CURRENT 2014 MONSTER ISSUE MATRIX -->
+**Bulette implementation verification (PR #966, 2026-10-19):** The opening impact's target scope is the existing `all-other-creatures` save scope, so a creature allied to the Bulette in the landing square takes its own saving throw, typed damage and possible Prone exactly like an enemy. The actor itself is excluded. This is a source-card binding, not a new monster-specific resolver. Friendly-fire tests were added in both Python and browser, and generated files were synchronized before the final CI head. Do not promote this branch to merged/runtime-certified until exact-head gates pass.
+
 ## Current 2014 monster issue-to-fix matrix — 2026-10-18
 
 **Operational snapshot, not a second tracker.** Derived from the generated `docs/MONSTER_BLOCKERS_2014.md` on main: **227/327 source-admitted, 100 blocked**. This matrix is an execution aid inside the canonical queue. All 100 rows below come from that report, but **fixes are implementation hypotheses**, not evidence that code exists, that an unresolved rule was approved, or that a monster is certified. Recompute from the generated report after merges; do not hand-edit generator output.
