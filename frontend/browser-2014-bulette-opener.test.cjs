@@ -70,7 +70,7 @@ const action = {
 };
 source.state.template.saving_throw_actions = [action];
 const setup = {
-  heroes: [first, second, outside], monsters: [source],
+  heroes: [first, second, outside], monsters: [source, teammate],
   map_definition: { width_squares: 12, height_squares: 12, cell_size_ft: 5 },
 };
 const api = window.IRON_PIT_BROWSER_AREA_SAVES;
