@@ -77,6 +77,11 @@
     state.current_hp = 0;
     state.is_alive = false;
     state.is_dead = true;
+    if (state.template.visualDisguiseAction?.endsIfOwnerDead) {
+      const runtime = window.IRON_PIT_BROWSER_PRECOMBAT_BUFFS;
+      if (!runtime?.endIfOwnerDead) throw new Error("Printed visual disguise death expiry runtime is missing.");
+      runtime.endIfOwnerDead(state);
+    }
     state.is_unconscious = false;
     state.is_stable = false;
     endDodge(state);

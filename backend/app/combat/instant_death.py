@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.visual_disguise_death_lifecycle import end_visual_disguise_if_dead
 from app.combat.zero_hp_replacement import consume_instant_death_prevention
 from app.domain.models import CombatantState
 
@@ -20,6 +21,7 @@ def apply_terminal_death(
         state.current_hp = 0
         state.is_alive = False
         state.is_dead = True
+        end_visual_disguise_if_dead(state)
         state.is_unconscious = False
         state.is_stable = False
         state.active_effect_ids = [effect for effect in state.active_effect_ids if effect != "dodge"]
