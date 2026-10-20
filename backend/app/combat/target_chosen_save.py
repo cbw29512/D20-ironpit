@@ -14,8 +14,8 @@ logger = logging.getLogger(__name__)
 def choose_save_ability(state, abilities, dc, context=None, *, member=None, setup=None) -> str:
     """Choose the highest d20 success probability, before spending/rolling dice."""
     try:
-        if not abilities:
-            raise ValueError("Save ability choice requires two or more declared abilities.")
+        if not isinstance(abilities, (list, tuple)) or len(abilities) < 2 or len(set(abilities)) != len(abilities):
+            raise ValueError("Target-chosen save abilities must be distinct and include multiple options.")
         context = context or SavingThrowContext()
         best_ability = None
         best_chance = -1.0
