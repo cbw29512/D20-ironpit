@@ -53,6 +53,7 @@ const source = member("jumper", "monsters", 1, 1);
 const first = member("first", "heroes", 4, 1);
 const second = member("second", "heroes", 5, 2);
 const outside = member("outside", "heroes", 8, 4);
+const teammate = member("teammate", "monsters", 4, 2);
 source.state.initiative_total = 20;
 const action = {
   id: "arbitrary-opening-area", name: "Source-neutral Impact",
