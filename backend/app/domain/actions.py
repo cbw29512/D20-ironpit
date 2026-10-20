@@ -147,6 +147,7 @@ class SavingThrowAction(BaseModel):
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     requires_no_active_grapple: bool = False
+    opening_initiative_only: bool = Field(default=False, exclude_if=lambda value: not value)
     magical_effect: bool = False
     effect_tags: list[str] = Field(default_factory=list)
     automatic_failure_creature_types: list[str] = Field(default_factory=list)
