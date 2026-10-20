@@ -41,6 +41,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         restrains_while_grappled=grapple.restrains if grapple else False,
         resource_id=definition.resource_id, resource_cost=definition.resource_cost,
         requires_no_active_grapple=definition.requires_no_active_grapple,
+        opening_initiative_only=definition.opening_initiative_only,
         magical_effect=definition.magical_effect, effect_tags=list(definition.effect_tags),
         failed_save_timed_effect=definition.failed_save_timed_effect,
         source_effect_immunity_on_success=definition.source_effect_immunity_on_success,
