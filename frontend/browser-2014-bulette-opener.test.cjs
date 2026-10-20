@@ -77,7 +77,7 @@ const api = window.IRON_PIT_BROWSER_AREA_SAVES;
 assert.equal(api.choose(source, setup), null, "Opening action is excluded from normal Actions");
 const winner = api.choose(source, setup, "action", true);
 assert.ok(winner, "Strict winner has a valid opening area Action");
-assert.deepEqual(new Set(winner.placement.targetIds), new Set(["first", "second"]));
+assert.deepEqual(new Set(winner.placement.targetIds), new Set(["first", "second", "teammate"]));
 assert.equal(winner.placement.direction, null);
 const result = api.resolve(1, 1, source, setup, winner);
 assert.deepEqual(result.events.map((row) => row.target_id), ["first", "second"]);
