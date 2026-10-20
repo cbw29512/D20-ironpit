@@ -12,6 +12,7 @@ from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.combat.target_chosen_save import choose_save_ability
 from app.content.demo import build_demo_fighter
+from app.domain.character_builds import AbilityScores
 from app.content.capability_compiler import _compile_save
 from app.domain.capability_attacks import SaveCapabilityDefinition
 
