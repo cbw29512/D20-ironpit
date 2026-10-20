@@ -18,20 +18,20 @@ from app.domain.targeting import AreaTargeting
 logger = logging.getLogger(__name__)
 
 _LEAP = re.compile(
-    r"If the bulette jumps at least (?P<jump>\\d+) feet as part of its movement, "
-    r"it can then use this action to land on its feet in a space that contains one or more other creatures\\. "
-    r"Each of those creatures must succeed on a DC (?P<dc>\\d+) Strength or Dexterity saving throw "
-    r"\\(target's choice\\) or be knocked prone and take "
-    r"(?P<b_average>\\d+) \\((?P<b_count>\\d+)d(?P<b_size>\\d+) \\+ (?P<b_bonus>\\d+)\\) bludgeoning damage plus "
-    r"(?P<s_average>\\d+) \\((?P<s_count>\\d+)d(?P<s_size>\\d+) \\+ (?P<s_bonus>\\d+)\\) slashing damage\\. "
+    r"If the bulette jumps at least (?P<jump>\d+) feet as part of its movement, "
+    r"it can then use this action to land on its feet in a space that contains one or more other creatures\. "
+    r"Each of those creatures must succeed on a DC (?P<dc>\d+) Strength or Dexterity saving throw "
+    r"\(target's choice\) or be knocked prone and take "
+    r"(?P<b_average>\d+) \((?P<b_count>\d+)d(?P<b_size>\d+) \+ (?P<b_bonus>\d+)\) bludgeoning damage plus "
+    r"(?P<s_average>\d+) \((?P<s_count>\d+)d(?P<s_size>\d+) \+ (?P<s_bonus>\d+)\) slashing damage\. "
     r"On a successful save, the creature takes only half the damage, isn't knocked prone, "
-    r"and is pushed (?P<push>\\d+) feet out of the bulette's space into an unoccupied space of the creature's choice\\. "
-    r"If no unoccupied space is within range, the creature instead falls prone in the bulette's space\\.",
+    r"and is pushed (?P<push>\d+) feet out of the bulette's space into an unoccupied space of the creature's choice\. "
+    r"If no unoccupied space is within range, the creature instead falls prone in the bulette's space\.",
     re.IGNORECASE,
 )
 _STANDING = re.compile(
-    r"Standing Leap\\. The bulette's long jump is up to (?P<long>\\d+) feet and its high jump "
-    r"is up to (?P<high>\\d+) feet, with or without a running start\\.",
+    r"Standing Leap\. The bulette's long jump is up to (?P<long>\d+) feet and its high jump "
+    r"is up to (?P<high>\d+) feet, with or without a running start\.",
     re.IGNORECASE,
 )
 
