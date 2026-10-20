@@ -21,6 +21,7 @@ from app.content.monster_change_shape_policy_2014 import approved_inert_change_s
 from app.content.monster_unnerving_mask_2014 import supports_unnerving_mask_reaction_2014
 from app.content.monster_multiattack_2014 import multiattack_blockers_2014
 from app.content.monster_save_capabilities_2014 import supports_recharge_rules_2014, unsupported_source_actions_2014
+from app.content.monster_source_opening_area_saves_2014 import source_proven_opening_area_saves_2014
 from app.content.monster_trait_bindings_2014 import bound_trait_names_2014, supports_reckless_2014
 from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
@@ -47,6 +48,8 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     try:
         certified = set(ARENA_NEUTRAL_TRAITS_2014) | set(_MODELED_2014_TRAITS)
         certified.update(bound_trait_names_2014(monster))
+        if source_proven_opening_area_saves_2014(monster):
+            certified.add("Standing Leap")
         from app.content.monster_attack_ammunition_2014 import attack_ammunition_2014
         bound_ammo = attack_ammunition_2014(monster)
         certified.update(f"{attack.name} Regrowth" for attack in monster.attacks if attack.id in bound_ammo)

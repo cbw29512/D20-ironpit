@@ -18,7 +18,9 @@ from app.combat.source_effect_immunity import (
 )
 from app.combat.defensive_modifier_rules import saving_throw_advantage_source_names
 from app.combat.resources import action_resource_available, spend_action_resource
+from app.combat.opening_burst import opening_burst_available
 from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.combat.target_chosen_save import choose_save_ability
 from app.combat.zero_hp import apply_damage, reduce_to_zero_hit_points
 from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -65,6 +67,8 @@ def resolve_save_action(
     resource_remaining_override: int | None = None,
     setup: EncounterSetup | None = None,
 ) -> BattleEvent:
+    if action.opening_initiative_only and not opening_burst_available(round_number, actor, setup):
+        raise ValueError(f"{action.name} requires an initiative-winning opening turn.")
     if spend_action and not is_available(actor.state, action.action_cost):
         raise ValueError(f"{action.action_cost} is not available for {action.name}.")
     if not legal_save_action(action, target, distance_ft, source_id=actor.combatant_id, actor=actor):
@@ -88,9 +92,21 @@ def resolve_save_action(
         disadvantage_sources=save_disadvantage_sources,
         advantage_sources=save_advantage_sources,
     )
-    automatic_failure = automatically_fails_save(action, target)
+    selected_ability = (
+        choose_save_ability(
+            target.state, action.save_ability_choices, action.dc, save_context,
+            member=target, setup=setup,
+        ) if action.save_ability_choices else action.save_ability
+    )
+    # A different target may select a different ability for the very same Action.
+    # Keep the original immutable card untouched; only use this per-target copy.
+    active_action = (
+        action.model_copy(update={"save_ability": selected_ability})
+        if selected_ability != action.save_ability else action
+    )
+    automatic_failure = automatically_fails_save(active_action, target)
     advantage_sources = () if automatic_failure else saving_throw_advantage_source_names(
-        target.state, action.save_ability, save_context,
+        target.state, selected_ability, save_context,
     )
     if automatic_failure:
         save_roll = None
@@ -98,7 +114,7 @@ def resolve_save_action(
     else:
         save_roll, succeeded = resolve_saving_throw(
             target.state,
-            action.save_ability,
+            selected_ability,
             action.dc,
             dice,
             save_context,
@@ -111,7 +127,7 @@ def resolve_save_action(
     death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
     concentration_before = target.state.concentration.effect_id if target.state.concentration else None
     applied_total, rolled_components, damage_components = resolve_save_damage_components(
-        target.state, action, dice, succeeded, shared_damage_rolls,
+        target.state, active_action, dice, succeeded, shared_damage_rolls,
     )
     damage_roll = None; damage_outcome = None
     if rolled_components:
@@ -167,7 +183,7 @@ def resolve_save_action(
     if automatic_failure:
         description = (
             f"{target.state.template.name} automatically FAILS a DC {action.dc} "
-            f"{action.save_ability.title()} save against {actor.state.template.name}'s {action.name} "
+            f"{selected_ability.title()} save against {actor.state.template.name}'s {action.name} "
             f"because its creature type is {target.state.template.creature_type}."
         )
     else:
@@ -184,7 +200,7 @@ def resolve_save_action(
     if save_disadvantage_sources:
         source_text = " and ".join(save_disadvantage_sources)
         description += f" {source_text} imposes Disadvantage on the save."
-    if target.state.template.progression_features.evasion and action.save_ability == "dexterity" and action.success_damage == "half":
+    if target.state.template.progression_features.evasion and selected_ability == "dexterity" and action.success_damage == "half":
         description += " Evasion reduces the damage."
     if damage_outcome == "undead_fortitude": description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
     if "grappled" in applied_conditions: description += f" {target.state.template.name} is Grappled."
@@ -195,7 +211,7 @@ def resolve_save_action(
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="saving_throw", actor_id=actor.combatant_id, actor_name=actor.state.template.name,
         target_id=target.combatant_id, target_name=target.state.template.name, saving_throw_roll=save_roll,
-        save_ability=action.save_ability, save_dc=action.dc, save_succeeded=succeeded, damage_roll=damage_roll, damage_components=damage_components,
+        save_ability=selected_ability, save_dc=action.dc, save_succeeded=succeeded, damage_roll=damage_roll, damage_components=damage_components,
         applied_condition_ids=applied_conditions, hp_before=hp_before, hp_after=target.state.current_hp,
         temporary_hp_before=temporary_hp_before, temporary_hp_after=target.state.temporary_hp,
         death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,

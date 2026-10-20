@@ -38,6 +38,16 @@ def line_contains(origin: Point, direction: Direction, point: Point, length_ft: 
     return -_EPSILON <= forward <= length_ft + _EPSILON and sideways <= width_ft / 2.0 + _EPSILON
 
 
+def square_contains(origin: Point, point: Point, side_ft: int) -> bool:
+    """A grid-aligned square using its southwest cell center as the anchor."""
+    if side_ft < 5 or side_ft % 5:
+        raise ValueError("Square side must be positive and grid-aligned.")
+    return (
+        origin[0] - _EPSILON <= point[0] < origin[0] + side_ft - _EPSILON
+        and origin[1] - _EPSILON <= point[1] < origin[1] + side_ft - _EPSILON
+    )
+
+
 def cube_contains(origin: Point, direction: Direction, point: Point, length_ft: int) -> bool:
     return line_contains(origin, direction, point, length_ft, length_ft)
 

@@ -7,6 +7,7 @@ from app.combat.area_save_healing import choose_area_healing_target, resolve_are
 from app.combat.area_save_targeting import legal_area_save_placements
 from app.combat.area_targeting import AreaPlacement
 from app.combat.grapple_queries import source_has_active_grapple
+from app.combat.opening_burst import opening_burst_available
 from app.combat.environment_contexts import actor_inside_environment_context
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.save_targets import resolve_save_targets
@@ -31,10 +32,15 @@ def choose_area_save(
     setup: EncounterSetup,
     *,
     action_cost: str | None = None,
+    opening_only: bool = False,
 ) -> tuple[SavingThrowAction, AreaPlacement] | None:
     try:
         candidates = []
         for action in actor.state.template.saving_throw_actions:
+            if action.opening_initiative_only != opening_only:
+                continue
+            if opening_only and not opening_burst_available(actor.state.current_round or 0, actor, setup):
+                continue
             if action_cost is not None and action.action_cost != action_cost:
                 continue
             if (action.area is None or not action_resource_available(actor.state, action)
@@ -79,6 +85,8 @@ def resolve_area_save(
     try:
         if action.area is None:
             raise ValueError(f"{action.name} has no area geometry.")
+        if action.opening_initiative_only and not opening_burst_available(round_number, actor, setup):
+            raise ValueError(f"{action.name} requires winning initiative in the opening round.")
         if _prohibited_context(actor, setup, action):
             raise ValueError(f"{action.name} is unavailable in its prohibited environment context.")
         if not is_available(actor.state, action.action_cost):

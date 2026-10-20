@@ -12158,8 +12158,10 @@
         "name": "Constrict",
         "action_cost": "action",
         "save_ability": "strength",
+        "save_ability_choices": [],
         "dc": 12,
         "range_ft": 5,
+        "max_targets": 1,
         "target_max_size": "medium",
         "damage": {
           "count": 3,
@@ -12167,6 +12169,7 @@
           "bonus": 0
         },
         "damage_type": "bludgeoning",
+        "damage_components": [],
         "success_damage": "none",
         "grapple": {
           "kind": "grapple",
@@ -12175,6 +12178,7 @@
           "restrains": false,
           "requires_source_free": false
         },
+        "opening_initiative_only": false,
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
@@ -15008,8 +15012,10 @@
         "name": "Constrict",
         "action_cost": "action",
         "save_ability": "strength",
+        "save_ability_choices": [],
         "dc": 14,
         "range_ft": 10,
+        "max_targets": 1,
         "target_max_size": "large",
         "damage": {
           "count": 2,
@@ -15017,6 +15023,7 @@
           "bonus": 4
         },
         "damage_type": "bludgeoning",
+        "damage_components": [],
         "success_damage": "none",
         "grapple": {
           "kind": "grapple",
@@ -15025,6 +15032,7 @@
           "restrains": false,
           "requires_source_free": false
         },
+        "opening_initiative_only": false,
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
@@ -21279,8 +21287,10 @@
         "name": "Fire Breath",
         "action_cost": "action",
         "save_ability": "dexterity",
+        "save_ability_choices": [],
         "dc": 12,
         "range_ft": 15,
+        "max_targets": 1,
         "area": {
           "shape": "cone",
           "origin": "self",
@@ -21292,7 +21302,9 @@
           "bonus": 0
         },
         "damage_type": "fire",
+        "damage_components": [],
         "success_damage": "half",
+        "opening_initiative_only": false,
         "resource_id": "fire-breath",
         "resource_cost": 1,
         "requires_no_active_grapple": false,
@@ -21513,8 +21525,10 @@
         "name": "Acid Breath",
         "action_cost": "action",
         "save_ability": "dexterity",
+        "save_ability_choices": [],
         "dc": 11,
         "range_ft": 15,
+        "max_targets": 1,
         "area": {
           "shape": "line",
           "origin": "self",
@@ -21527,7 +21541,9 @@
           "bonus": 0
         },
         "damage_type": "acid",
+        "damage_components": [],
         "success_damage": "half",
+        "opening_initiative_only": false,
         "resource_id": "acid-breath",
         "resource_cost": 1,
         "requires_no_active_grapple": false,
@@ -21746,8 +21762,10 @@
         "name": "Lightning Breath",
         "action_cost": "action",
         "save_ability": "dexterity",
+        "save_ability_choices": [],
         "dc": 12,
         "range_ft": 30,
+        "max_targets": 1,
         "area": {
           "shape": "line",
           "origin": "self",
@@ -21760,7 +21778,9 @@
           "bonus": 0
         },
         "damage_type": "lightning",
+        "damage_components": [],
         "success_damage": "half",
+        "opening_initiative_only": false,
         "resource_id": "lightning-breath",
         "resource_cost": 1,
         "requires_no_active_grapple": false,
@@ -21977,8 +21997,10 @@
         "name": "Poison Breath",
         "action_cost": "action",
         "save_ability": "constitution",
+        "save_ability_choices": [],
         "dc": 11,
         "range_ft": 15,
+        "max_targets": 1,
         "area": {
           "shape": "cone",
           "origin": "self",
@@ -21990,7 +22012,9 @@
           "bonus": 0
         },
         "damage_type": "poison",
+        "damage_components": [],
         "success_damage": "half",
+        "opening_initiative_only": false,
         "resource_id": "poison-breath",
         "resource_cost": 1,
         "requires_no_active_grapple": false,
@@ -22211,8 +22235,10 @@
         "name": "Fire Breath",
         "action_cost": "action",
         "save_ability": "dexterity",
+        "save_ability_choices": [],
         "dc": 13,
         "range_ft": 15,
+        "max_targets": 1,
         "area": {
           "shape": "cone",
           "origin": "self",
@@ -22224,7 +22250,9 @@
           "bonus": 0
         },
         "damage_type": "fire",
+        "damage_components": [],
         "success_damage": "half",
+        "opening_initiative_only": false,
         "resource_id": "fire-breath",
         "resource_cost": 1,
         "requires_no_active_grapple": false,
@@ -22441,8 +22469,10 @@
         "name": "Cold Breath",
         "action_cost": "action",
         "save_ability": "constitution",
+        "save_ability_choices": [],
         "dc": 12,
         "range_ft": 15,
+        "max_targets": 1,
         "area": {
           "shape": "cone",
           "origin": "self",
@@ -22454,7 +22484,9 @@
           "bonus": 0
         },
         "damage_type": "cold",
+        "damage_components": [],
         "success_damage": "half",
+        "opening_initiative_only": false,
         "resource_id": "cold-breath",
         "resource_cost": 1,
         "requires_no_active_grapple": false,
@@ -22679,8 +22711,10 @@
         "name": "Acid Breath",
         "action_cost": "action",
         "save_ability": "dexterity",
+        "save_ability_choices": [],
         "dc": 14,
         "range_ft": 30,
+        "max_targets": 1,
         "area": {
           "shape": "line",
           "origin": "self",
@@ -22693,7 +22727,9 @@
           "bonus": 0
         },
         "damage_type": "acid",
+        "damage_components": [],
         "success_damage": "half",
+        "opening_initiative_only": false,
         "resource_id": "acid-breath",
         "resource_cost": 1,
         "requires_no_active_grapple": false,
@@ -22918,8 +22954,10 @@
         "name": "Lightning Breath",
         "action_cost": "action",
         "save_ability": "dexterity",
+        "save_ability_choices": [],
         "dc": 16,
         "range_ft": 60,
+        "max_targets": 1,
         "area": {
           "shape": "line",
           "origin": "self",
@@ -22932,7 +22970,9 @@
           "bonus": 0
         },
         "damage_type": "lightning",
+        "damage_components": [],
         "success_damage": "half",
+        "opening_initiative_only": false,
         "resource_id": "lightning-breath",
         "resource_cost": 1,
         "requires_no_active_grapple": false,
@@ -23155,8 +23195,10 @@
         "name": "Poison Breath",
         "action_cost": "action",
         "save_ability": "constitution",
+        "save_ability_choices": [],
         "dc": 14,
         "range_ft": 30,
+        "max_targets": 1,
         "area": {
           "shape": "cone",
           "origin": "self",
@@ -23168,7 +23210,9 @@
           "bonus": 0
         },
         "damage_type": "poison",
+        "damage_components": [],
         "success_damage": "half",
+        "opening_initiative_only": false,
         "resource_id": "poison-breath",
         "resource_cost": 1,
         "requires_no_active_grapple": false,
@@ -23395,8 +23439,10 @@
         "name": "Fire Breath",
         "action_cost": "action",
         "save_ability": "dexterity",
+        "save_ability_choices": [],
         "dc": 17,
         "range_ft": 30,
+        "max_targets": 1,
         "area": {
           "shape": "cone",
           "origin": "self",
@@ -23408,7 +23454,9 @@
           "bonus": 0
         },
         "damage_type": "fire",
+        "damage_components": [],
         "success_damage": "half",
+        "opening_initiative_only": false,
         "resource_id": "fire-breath",
         "resource_cost": 1,
         "requires_no_active_grapple": false,
@@ -23631,8 +23679,10 @@
         "name": "Cold Breath",
         "action_cost": "action",
         "save_ability": "constitution",
+        "save_ability_choices": [],
         "dc": 15,
         "range_ft": 30,
+        "max_targets": 1,
         "area": {
           "shape": "cone",
           "origin": "self",
@@ -23644,7 +23694,9 @@
           "bonus": 0
         },
         "damage_type": "cold",
+        "damage_components": [],
         "success_damage": "half",
+        "opening_initiative_only": false,
         "resource_id": "cold-breath",
         "resource_cost": 1,
         "requires_no_active_grapple": false,

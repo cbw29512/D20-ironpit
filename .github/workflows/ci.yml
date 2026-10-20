@@ -498,6 +498,7 @@ jobs:
           node frontend/browser-bonus-save-action.test.cjs
           node frontend/browser-attack-outcome-hooks.test.cjs
           node frontend/browser-asymmetric-save-outcomes.test.cjs
+          node frontend/browser-target-chosen-save.test.cjs
           node frontend/browser-deferred-save-effect.test.cjs
           node frontend/browser-deferred-save-effect-2024.test.cjs
           node frontend/browser-2014-monk-level19.test.cjs
@@ -639,6 +640,7 @@ jobs:
           node frontend/browser-words-of-creation-2024.test.cjs
           node frontend/browser-superior-inspiration-2024.test.cjs
           node frontend/browser-area-save-actions.test.cjs
+          node frontend/browser-2014-bulette-opener.test.cjs
           node frontend/browser-automatic-save-failures.test.cjs
           node frontend/browser-blur-senses.test.cjs
           node frontend/browser-spell-area.test.cjs

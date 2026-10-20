@@ -35,6 +35,14 @@
       && sideways <= widthFt / 2 + EPSILON;
   }
 
+  function squareContains(origin, point, sideFt) {
+    if (!Number.isInteger(sideFt) || sideFt < 5 || sideFt % 5 !== 0) {
+      throw new Error("Square side must be positive and grid-aligned.");
+    }
+    return point[0] >= origin[0] - EPSILON && point[0] < origin[0] + sideFt - EPSILON
+      && point[1] >= origin[1] - EPSILON && point[1] < origin[1] + sideFt - EPSILON;
+  }
+
   function cubeContains(origin, direction, point, lengthFt) {
     return lineContains(origin, direction, point, lengthFt, lengthFt);
   }
@@ -52,6 +60,7 @@
     emanationContains,
     lineContains,
     cubeContains,
+    squareContains,
     coneContains,
   };
 })();

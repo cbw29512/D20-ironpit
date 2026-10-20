@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from app.combat.barrier_line_of_effect import clear_line_between_points
 from app.combat.area_shapes import (
     Direction, Point, cell_center_ft, cone_contains, cube_contains, emanation_contains,
-    line_contains, normalized, radius_contains,
+    line_contains, normalized, radius_contains, square_contains,
 )
 from app.combat.grid_geometry import occupied_cells
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -71,6 +71,7 @@ def _hits(area: AreaTargeting, origins: tuple[Point, ...], origin: Point, direct
     points = _points(target)
     if area.shape == "radius": return any(radius_contains(origin, point, area.radius_ft or 0) for point in points)
     if area.shape == "emanation": return any(emanation_contains(origins, point, area.radius_ft or 0) for point in points)
+    if area.shape == "square": return any(square_contains(origin, point, area.length_ft or 0) for point in points)
     if direction is None: return False
     if area.shape == "cone": return any(cone_contains(origin, direction, point, area.length_ft or 0) for point in points)
     if area.shape == "cube": return any(cube_contains(origin, direction, point, area.length_ft or 0) for point in points)
@@ -103,7 +104,7 @@ def legal_area_placements(actor: EncounterCombatant, setup: EncounterSetup, area
         origins = _point_origins(actor, setup, range_ft, actor_position) if area.origin == "point" else actor_points
         direction_origins = origins if area.origin == "point" else actor_points
         aim_members = enemies if enemies else friends
-        directions = (None,) if area.shape in {"radius", "emanation"} else _directions(direction_origins, aim_members)
+        directions = (None,) if area.shape in {"radius", "emanation", "square"} else _directions(direction_origins, aim_members)
         placements: dict[tuple[tuple[str, ...], tuple[str, ...], bool], AreaPlacement] = {}
         for origin in origins:
             if (
@@ -136,7 +137,7 @@ def legal_area_placements(actor: EncounterCombatant, setup: EncounterSetup, area
                 source_in_area = _hits(area, actor_points, origin, direction, actor)
                 if not target_ids and not allow_no_enemy_targets: continue
                 if not target_ids and not friendly_ids and not source_in_area: continue
-                key = (target_ids, friendly_ids, source_in_area)
+                key = (target_ids, friendly_ids, source_in_area, origin if area.shape == "square" else None)
                 if key not in placements:
                     placements[key] = AreaPlacement(target_ids, origin, direction, friendly_ids)
         return sorted(

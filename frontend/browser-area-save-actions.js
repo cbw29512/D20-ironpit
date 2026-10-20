@@ -103,10 +103,12 @@
     }
   }
 
-  function choose(member, setup, actionCost = null) {
+  function choose(member, setup, actionCost = null, openingOnly = false) {
     try {
       const candidates = [];
       for (const action of member.state.template.saving_throw_actions || []) {
+        if (Boolean(action.openingInitiativeOnly) !== openingOnly) continue;
+        if (openingOnly && !window.IRON_PIT_BROWSER_CHARGE?.openingEligible(member.state.current_round, member, setup)) continue;
         if (actionCost && (action.actionCost || "action") !== actionCost) continue;
         if (!action.area || !resourceAvailable(member.state, action)
           || prohibitedContext(member, setup, action)) continue;
@@ -144,6 +146,9 @@
     try {
       if (!selected) return null;
       const { action, placement } = selected;
+      if (action.openingInitiativeOnly && !window.IRON_PIT_BROWSER_CHARGE?.openingEligible(round, member, setup)) {
+        throw new Error(`${action.name} requires winning initiative on the opening round.`);
+      }
       if (prohibitedContext(member, setup, action)) throw new Error(`${action.name} is prohibited by the live environment context.`);
       const actionCost = action.actionCost || "action";
       if (!E().available(member.state, actionCost)) return null;
