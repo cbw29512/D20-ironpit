@@ -65,6 +65,7 @@ assert.equal(policy.validate(rule), rule);
 const view = window.IRON_PIT_BROWSER_VISUAL_TURN_START_INTEGRATION.observerSeesTrueForm;
 window.IRON_PIT_BROWSER_EFFECTIVE_SENSES = { effectiveSenseRangeFt: (state) =>
   state.suppressed_sense_ids?.includes("truesight") ? 0 : (state.template.truesight_ft || 0) };
+source.state.true_form_visible = true;
 source.state.magical_visual_disguise_active = true;
 assert.equal(view(source, target, 10), false, "Ordinary vision sees the illusion.");
 target.state.template.truesight_ft = 15;
