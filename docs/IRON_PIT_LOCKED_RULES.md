@@ -103,6 +103,8 @@ Authority: `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md`; `docs/IRON_PIT_RULES_CONTRAC
 
 ## Parked blockers
 
+- **Rust Monster Antennae (2014):** independent equipment-corrosion Action; #819 approves Rust Metal's neutral trait policy only. No Antennae decision was found. Clarification requested; keep `source:extra-action` until its policy and source proof are resolved. The approved trait bindings do not admit the whole monster. Trait policy authority: `docs/IRON_PIT_RULES_CONTRACT.md` §25.
+
 Standing instruction: park, record, continue. Revisit this list after the rest of the current family is finished. Folded from the short-lived `docs/PARKED_BLOCKERS.md` working list after #602/#603/#604.
 
 **2014 poison family (this lane).** Extra poison damage, Poisoned on a failed Con save, repeat-save timing, and half-on-success save-damage already compile through the shared on-hit save / `FailedSaveTimedEffect` / typed-damage primitives. Breath weapons stay out of this family. Remaining poison-named cards are parked because a different family still blocks READY:

@@ -457,7 +457,6 @@ Blocked monsters: **90**. These are grouped by printed ability name so the roste
 | Horrific Appearance | Sea Hag | 1 |
 | Ignited Illumination | Magmin | 1 |
 | Innate Spellcasting | Cloud Giant, Couatl, Deep Gnome (Svirfneblin), Deva, Djinni, Drider, Drow, Dryad, Dust Mephit, Efreeti, Glabrezu, Green Hag, Ice Mephit, Lamia, Magma Mephit, Night Hag, Oni, Pit Fiend, Planetar, Rakshasa, Solar, Steam Mephit, Storm Giant | 23 |
-| Iron Scent | Rust Monster | 1 |
 | Light Sensitivity | Cloaker | 1 |
 | Limited Magic Immunity | Rakshasa | 1 |
 | Misty Escape | Vampire | 1 |
@@ -466,7 +465,6 @@ Blocked monsters: **90**. These are grouped by printed ability name so the roste
 | Pounce (Tiger or Hybrid Form Only) | Weretiger | 1 |
 | Reactive Heads | Hydra | 1 |
 | Reflective Carapace | Tarrasque | 1 |
-| Rust Metal | Rust Monster | 1 |
 | Shapechanger | Doppelganger, Imp, Mimic, Quasit, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf | 11 |
 | Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
@@ -482,7 +480,7 @@ Blocked monsters: **90**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 67 |
+| `source:trait` | 66 |
 | `source:extra-action` | 53 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 21 |
