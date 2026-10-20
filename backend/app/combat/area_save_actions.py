@@ -7,6 +7,7 @@ from app.combat.area_save_healing import choose_area_healing_target, resolve_are
 from app.combat.area_save_targeting import legal_area_save_placements
 from app.combat.area_targeting import AreaPlacement
 from app.combat.grapple_queries import source_has_active_grapple
+from app.combat.printed_damage import save_mean_damage
 from app.combat.opening_burst import opening_burst_available
 from app.combat.environment_contexts import actor_inside_environment_context
 from app.combat.resources import action_resource_available, spend_action_resource
@@ -62,7 +63,7 @@ def choose_area_save(
             candidates,
             key=lambda item: (
                 len(item[1].target_ids),
-                item[0].damage_dice_count,
+                save_mean_damage(item[0]),
                 item[2] is not None,
                 item[0].id,
             ),
