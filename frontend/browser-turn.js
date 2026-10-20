@@ -126,6 +126,11 @@
           description: `${stepped.state.template.name} steps to the front row.`,
         });
       }
+      const compelled = O()?.resolveForcedApproach?.(sequence, round, member, setup, turnKey);
+      if (compelled) { events.push(...compelled.events); sequence = compelled.sequence; }
+      if (member.state.is_dead || member.state.is_unconscious) {
+        return finalize(events, sequence, round, member, setup, turnKey, false);
+      }
       if (window.IRON_PIT_BROWSER_TIMED?.suppressesVoluntaryTurn(member.state)) {
         return finalize(events, sequence, round, member, setup, turnKey, false);
       }

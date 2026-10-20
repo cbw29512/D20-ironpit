@@ -16,7 +16,12 @@ from app.combat.encounter_turn_support import finish_turn, resolve_support_actio
 from app.combat.ability_check_escape import resolve_escape_check, should_escape_check
 from app.combat.grapple import cleanup_grapples, resolve_escape_grapple, should_escape_grapple
 from app.combat.friendly_save_auras import sync_friendly_save_auras
-from app.combat.ongoing_spell_control import build_forced_retreat_event, forced_retreat_active
+from app.combat.ongoing_spell_control import (
+    build_forced_retreat_event,
+    forced_approach_active,
+    forced_retreat_active,
+    resolve_forced_approach,
+)
 from app.combat.offensive_movement_policy import move_to_enable_offense
 from app.combat.orc import should_use_adrenaline_rush, use_adrenaline_rush
 from app.combat.paladin_auras_2014 import sync_paladin_auras_2014
@@ -56,6 +61,13 @@ def resolve_combat_turn(
             ))
             sequence += 1
         turn_key = f"{round_number}:{attacker.combatant_id}"
+        if forced_approach_active(attacker.state):
+            approach_events, sequence = resolve_forced_approach(
+                sequence, round_number, attacker, setup, dice, turn_key,
+            )
+            events.extend(approach_events)
+            if attacker.state.is_dead or attacker.state.is_unconscious:
+                return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=False)
         if suppresses_voluntary_turn(attacker.state):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=False)
         if forced_retreat_active(attacker.state):

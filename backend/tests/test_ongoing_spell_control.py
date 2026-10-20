@@ -2,7 +2,11 @@ from app.combat.concentration import end_concentration, start_concentration
 from app.combat.condition_lifecycle import resolve_target_condition_timing
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_combat_turn import resolve_combat_turn
-from app.combat.ongoing_spell_control import apply_ongoing_spell_condition, forced_retreat_active
+from app.combat.ongoing_spell_control import (
+    apply_ongoing_spell_condition,
+    forced_approach_active,
+    forced_retreat_active,
+)
 from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -105,3 +109,23 @@ def test_lost_concentration_removes_control_condition_and_retreat_behavior() -> 
     assert target.state.timed_effects == []
     assert "frightened" not in target.state.active_effect_ids
     assert forced_retreat_active(target.state) is False
+
+
+def test_compelled_approach_spends_movement_before_incapacitated_turn_ends() -> None:
+    fighter = _member("fighter", "heroes", 0)
+    singer = _member("renamed-source", "monsters", 30)
+    setup = EncounterSetup(
+        heroes=[fighter], monsters=[singer], hero_total_levels=1, monster_total_cr="1",
+    )
+    apply_ongoing_spell_condition(
+        fighter.state, "incapacitated", singer.combatant_id, "renamed-control",
+        "wisdom", 30, applied_round=1, turn_behavior="forced_approach_source",
+    )
+    events, _ = resolve_combat_turn(1, 1, fighter, singer, setup, FixedDiceProvider([1]))
+
+    assert forced_approach_active(fighter.state) is True
+    assert fighter.position_ft == 25
+    assert fighter.state.movement_remaining_ft == 5
+    assert fighter.state.voluntary_turn_activity is None
+    assert any(event.event_type == "movement" for event in events)
+    assert not any(event.event_type == "attack" for event in events)

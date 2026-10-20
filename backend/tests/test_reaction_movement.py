@@ -79,3 +79,17 @@ def test_forced_movement_uses_same_grid_pipeline_without_provoking() -> None:
     assert sum(event.movement_ft or 0 for event in events) == 30
     assert movement is events[-1]
     assert reactor.state.reaction_available is True
+
+
+def test_compelled_speed_bypasses_voluntary_activity_claim_without_suppressing_reactions() -> None:
+    setup, mover, reactor, target = _three_way()
+    mover.state.voluntary_turn_activity = "action"
+    events, _, movement = move_toward_with_reactions(
+        1, 1, mover, target, setup, 5, FixedDiceProvider([2]), compelled=True,
+    )
+
+    assert events[0].feature_id == "opportunity-attack"
+    assert movement is events[-1]
+    assert movement.distance_after_ft == 5
+    assert reactor.state.reaction_available is False
+    assert mover.state.voluntary_turn_activity == "action"

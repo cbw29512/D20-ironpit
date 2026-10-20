@@ -12,6 +12,7 @@ for (const file of [
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
   "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-reactions.js", "browser-reaction-movement.js",
+  "browser-ongoing-spell-control.js",
 ]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE;
@@ -69,5 +70,24 @@ function threeWay(reactorId = "srd-commoner") {
     assert.equal(event.feature_id, "opportunity-attack");
     assert.equal(reactor.state.reaction_available, false);
   }
+}
+{
+  dice();
+  const mover = member("hero-1", "heroes", heroTemplate(), 0);
+  const source = member("renamed-source", "monsters", monsterTemplate("srd-commoner"), 30);
+  const fight = { heroes: [mover], monsters: [source] };
+  S.beginTurn(mover.state);
+  mover.state.voluntary_turn_activity = "action";
+  mover.state.timed_effects.push({
+    effect_id: "incapacitated", source_id: source.combatant_id,
+    source_effect_id: "renamed-control", turn_behavior: "forced_approach_source",
+  });
+  const result = window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL.resolveForcedApproach(
+    1, 1, mover, fight, "1:hero-1",
+  );
+  assert.ok(result.movement);
+  assert.equal(mover.position_ft, 25);
+  assert.equal(mover.state.movement_remaining_ft, 5);
+  assert.equal(mover.state.voluntary_turn_activity, "action");
 }
 console.log("Browser reaction-aware movement regressions passed.");
