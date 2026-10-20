@@ -28,6 +28,7 @@ from app.content.monster_definition_adapter_support_2014 import (
     save_bonuses_2014,
 )
 from app.content.monster_innate_spells_2014 import innate_spell_save_actions_2014
+from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014
 from app.content.monster_innate_support_2014 import (
     innate_alternate_spell_casts_2014,
     innate_condition_removal_2014,
@@ -169,6 +170,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         spell_save_actions=innate_spell_save_actions_2014(monster),
         persistent_save_zone_actions=[zone for zone in [fetid_cloud_zone_2014(monster)] if zone is not None],
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
+            *source_invisibility_action_2014(monster),
             *berserk_self_buffs_2014(monster),
             *heated_body_retaliation_2014(monster),
             *corrosive_form_retaliation_2014(monster),
