@@ -1,4 +1,5 @@
 from __future__ import annotations
+from collections.abc import Sequence
 
 import logging
 from app.combat.spell_offense import resolve_best_spell_offense
@@ -29,6 +30,7 @@ from app.combat.persistent_spell_attacks import resolve_persistent_spell_attack
 from app.combat.replacement_form_policy import resolve_replacement_form_setup
 from app.combat.pit_policy import target_order
 from app.combat.start_turn import begin_turn_with_events
+from app.combat.turn_start_visual_effects import resolve_visual_turn_start_events
 from app.combat.targeted_concentration_damage import resolve_targeted_concentration_damage
 from app.combat.timed_effect_control import suppresses_voluntary_turn
 from app.combat.feature_activation_phase import resolve_feature_activation_phase
@@ -40,6 +42,7 @@ logger = logging.getLogger(__name__)
 def resolve_combat_turn(
     sequence: int, round_number: int, attacker: EncounterCombatant, target: EncounterCombatant,
     setup: EncounterSetup, dice: DiceProvider,
+    *, initiative_order: Sequence[str] | None = None,
 ) -> tuple[list[BattleEvent], int]:
     """Resolve one Iron Pit turn through shared legality, movement, and fallback policy."""
     try:
@@ -52,6 +55,14 @@ def resolve_combat_turn(
             sequence, round_number, attacker.combatant_id, attacker.state, dice, member=attacker,
         )
         events.extend(start_events)
+        if initiative_order is not None:
+            gaze_events, sequence = resolve_visual_turn_start_events(
+                sequence, round_number, attacker, setup, dice, initiative_order,
+            )
+            events.extend(gaze_events)
+            if attacker.state.is_dead or attacker.state.current_hp <= 0:
+                return finish_turn(events, sequence, round_number, attacker, setup, dice,
+                                   f"{round_number}:{attacker.combatant_id}", allow_surge=False)
         for member in sync_formation_rows(setup):
             events.append(BattleEvent(
                 sequence=sequence, round_number=round_number, event_type="feature",

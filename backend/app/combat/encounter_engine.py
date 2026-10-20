@@ -181,6 +181,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 if target is not None:
                     turn_events, sequence = resolve_combat_turn(
                         sequence, round_number, member, target, setup, dice,
+                        initiative_order=initiative.turn_order,
                     )
                     events.extend(turn_events)
                 end_events, sequence = _end_turn_lifecycle(sequence, round_number, member, setup, dice)
