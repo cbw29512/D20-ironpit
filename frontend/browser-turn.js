@@ -160,6 +160,14 @@
       events.push(...preMove.events); sequence = preMove.sequence;
       if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
       const targets = F().targetOrder(member, setup); if (!targets.length) return finalize(events, sequence, round, member, setup, turnKey);
+      // The opening area Action is an alternative to the usual melee turn.
+      const openingArea = window.IRON_PIT_BROWSER_AREA_SAVES?.choose(member, setup, "action", true);
+      if (openingArea) {
+        const opened = window.IRON_PIT_BROWSER_AREA_SAVES.resolve(sequence, round, member, setup, openingArea);
+        if (!opened) throw new Error("Opening area Action was selected but could not be resolved.");
+        events.push(...opened.events);
+        return finalize(events, opened.sequence, round, member, setup, turnKey);
+      }
       const charged = C()?.resolveClosing(sequence, round, member, targets[0], setup);
       if (charged?.handled) { events.push(...charged.events); PA()?.sync(setup); FA()?.sync(setup); return finalize(events, charged.sequence, round, member, setup, turnKey); }
       const movement = OM()?.move(sequence, round, member, setup, turnKey);
