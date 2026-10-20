@@ -18,6 +18,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         name=definition.name,
         action_cost=definition.action_cost,
         save_ability=definition.save_ability,
+        save_ability_choices=list(definition.save_ability_choices),
         dc=definition.dc,
         range_ft=definition.range_ft,
         max_targets=definition.max_targets,
