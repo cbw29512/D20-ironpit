@@ -170,7 +170,7 @@
         if (startZones) { events.push(...startZones.events); sequence = startZones.sequence; }
         if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) events.push(T().deathSave(sequence++, round, member));
         if (member.state.current_hp > 0 && !member.state.is_dead) {
-          const turn = T().resolveTurn(sequence, round, member, setup);
+          const turn = T().resolveTurn(sequence, round, member, setup, init);
           events.push(...turn.events); sequence = turn.sequence;
         }
         const end = lifecycle(sequence, round, member, setup, "target_turn_end", "source_turn_end");

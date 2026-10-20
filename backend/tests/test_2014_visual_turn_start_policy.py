@@ -2,7 +2,7 @@ from __future__ import annotations
 import pytest
 from app.combat.turn_start_visual_policy import (
     VisualTurnStartFacts, VisualTurnStartRule,
-    decide_visual_turn_start, resolve_visual_save_stage,
+    decide_visual_turn_start, initiative_precedes, resolve_visual_save_stage,
 )
 
 BASILISK = VisualTurnStartRule(source_id="source-1", source_name="Petrifying Gaze", range_ft=30, save_dc=12)
@@ -11,14 +11,17 @@ MEDUSA = VisualTurnStartRule(source_id="source-2", source_name="Petrifying Gaze"
 def _facts(**overrides):
     defaults = dict(distance_ft=15, source_active=True, target_active=True,
                     source_sees_target=True, target_sees_source=True,
-                    target_immune=False, target_surprised=False)
+                    target_immune=False, source_precedes_target=False)
     defaults.update(overrides)
     return VisualTurnStartFacts(**defaults)
 
 @pytest.mark.parametrize("rule", [BASILISK, MEDUSA])
-def test_automatic_aversion_and_surprise(rule):
+def test_gaze_priority_uses_resolved_initiative_not_surprise(rule):
     assert decide_visual_turn_start(rule, _facts()) == "averted"
-    assert decide_visual_turn_start(rule, _facts(target_surprised=True)) == "save_required"
+    assert decide_visual_turn_start(rule, _facts(source_precedes_target=True)) == "save_required"
+    assert initiative_precedes(["source", "target"], "source", "target")
+    assert not initiative_precedes(["target", "source"], "source", "target")
+
 
 @pytest.mark.parametrize("override", [
     {"distance_ft": 31}, {"source_active": False}, {"target_active": False},
@@ -63,7 +66,7 @@ def test_strict_distance(bad):
         decide_visual_turn_start(BASILISK, _facts(distance_ft=bad))
 
 @pytest.mark.parametrize("flag", ["source_active", "target_active", "source_sees_target",
-                                  "target_sees_source", "target_immune", "target_surprised"])
+                                  "target_sees_source", "target_immune", "source_precedes_target"])
 def test_strict_eligibility_flags(flag):
     with pytest.raises(ValueError):
         decide_visual_turn_start(BASILISK, _facts(**{flag: 1}))
@@ -83,6 +86,32 @@ def test_visual_save_stages_are_generic_debuffs():
 
 
 def test_visual_eligibility_has_no_manual_aversion_toggle():
-    # Arena AI always averts automatically unless the observer is Surprised.
+    # Initiative priority owns the decision; no ad hoc user toggle.
     with pytest.raises(TypeError):
         VisualTurnStartFacts(**{**_facts().__dict__, "averts_eyes": False})
+
+
+@pytest.mark.parametrize("ordering", [
+    ["source", "target"],  # source wins ordinary initiative
+    ["source", "target", "ally"],  # canonical tie break already resolved
+])
+def test_gaze_priority_works_for_any_card_owner(ordering):
+    assert initiative_precedes(ordering, "source", "target")
+
+
+def test_natural_one_priority_comes_from_canonical_schedule():
+    # Even if a source has a greater numeric initiative total, the
+    # scheduler may put its natural-1 roll in the bottom priority bucket.
+    assert not initiative_precedes(["hero", "gaze"], "gaze", "hero")
+
+
+@pytest.mark.parametrize("bad,source,target", [
+    ([], "source", "target"),
+    (["source", "source", "target"], "source", "target"),
+    (["source", "target"], "source", "unknown"),
+    (["source", "target"], "source", "source"),
+    (["source", 1, "target"], "source", "target"),
+])
+def test_invalid_gaze_initiative_fails_closed(bad, source, target):
+    with pytest.raises(ValueError):
+        initiative_precedes(bad, source, target)

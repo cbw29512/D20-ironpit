@@ -36,12 +36,12 @@ window.IRON_PIT_BROWSER_TIMED = {
 };
 load("browser-visual-turn-start-integration.js");
 const bridge = window.IRON_PIT_BROWSER_VISUAL_TURN_START_INTEGRATION;
-const context = { member: victim, setup, sequence: 0, round: 1 };
+const context = { member: victim, setup, sequence: 0, round: 1, initiative: { turn_order: ["victim", "source"] } };
 let result = bridge.resolve(context);
 assert.match(result.events[0].description, /averts its eyes/);
 assert.equal(victim.state.timed_effects.length, 0);
 assert.equal(victim.state.visual_aversion_windows.length, 1);
-victim.state.is_surprised = true;
+context.initiative.turn_order = ["source", "victim"];
 result = bridge.resolve(context);
 assert.deepEqual(operations, [["apply", "restrained"]]);
 assert.equal(result.events[0].save_dc, 12);
@@ -59,14 +59,16 @@ assert.equal(result.events[0].save_succeeded, true);
 assert.deepEqual(operations, []);
 // Competing gaze sources resolve highest initiative first, independent of array order.
 const second = member("second", rule);
-source.state.initiative_total = 8;
-second.state.initiative_total = 19;
-second.state.is_surprised = false;
+source.state.initiative_total = 99; // deliberately contradict canonical order
+second.state.initiative_total = 3;
 victim.state.timed_effects = [];
 window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow = () => ({ roll: { total: 12 }, succeeded: true });
 const ordered = bridge.resolve({
   ...context, setup: { heroes: [victim], monsters: [source, second] },
+  initiative: { turn_order: ["second", "source", "victim"] },
 });
 assert.equal(ordered.events[0].actor_id, "second");
 assert.equal(ordered.events[1].actor_id, "source");
 console.log("Visual turn-start combat bridge checks passed.");
+
+assert.throws(() => bridge.resolve({ ...context, initiative: null }), /requires resolved initiative/);

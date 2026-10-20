@@ -92,7 +92,7 @@
     return selected ? selector.resolveCandidate(profileId, selected, context) : { events: [], sequence };
   }
 
-  function resolveTurn(sequence, round, member, setup) {
+  function resolveTurn(sequence, round, member, setup, initiative = null) {
     try {
       enablePitRangePolicy();
       const events = []; window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT?.cleanup(setup); H().cleanup(setup); PA()?.sync(setup); FA()?.sync(setup);
@@ -114,7 +114,7 @@
       const hooks = AH();
       if (!hooks) throw new Error("Browser ability-hook runtime is not loaded.");
       const start = hooks.runPhase(hooks.PHASES.TURN_START, {
-        sequence, round, member, setup, turnKey, events: [],
+        sequence, round, member, setup, turnKey, initiative, events: [],
       });
       events.push(...start.events); sequence = start.sequence;
       const promoted = window.IRON_PIT_BROWSER_FORMATION_ROWS?.syncFormationRows(setup) || [];
