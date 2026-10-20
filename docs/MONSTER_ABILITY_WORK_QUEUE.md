@@ -4,7 +4,7 @@
 
 - The source-proven 2014 Sea Hag Horrific Appearance can now compile as a **generic timed visual failed-save rule** rather than the old staged petrification mode: humanoid only, 30-ft source-derived range, DC 11 Wisdom, ten rounds, end-turn repeat saves disadvantaged when source visible, and per-source fight-local 24-hour immunity on success or effect ending.
 - A source-neutral visual eligibility policy handles source sight (needed for petrifying gaze, not the hag's passive), source incapacitation, true-form visibility and the automatic initiative-based aversion exception. Card labels are display-only.
-- The generic Python/browser turn-start execution bridge and Illusory Appearance are separate certification dependencies; **do not source-admit Sea Hag until both Python and browser execution + full card Actions are complete**. Source-admitted count remains generated, never hand-edited.
+- The shared Python and browser turn-start execution bridges are now implemented on the draft branch and awaiting exact-head certification. **Illusory Appearance and the other printed Actions remain independently blocked**, so the Sea Hag is not playable/admitted. Never count this code as a completed monster without all source Actions and a successful real webpage fight.
 - The previous attack-roll-only gaze penalty merged in PR #979 with exact-head CI success. No Netlify release.
 
 ## Gaze avoidance attack disadvantage — 2026-10-20 PR pending
