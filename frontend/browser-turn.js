@@ -117,6 +117,15 @@
         sequence, round, member, setup, turnKey, initiative, events: [],
       });
       events.push(...start.events); sequence = start.sequence;
+      // A printed, Action-economy Bonus Action reveal precedes the next
+      // combatant's turn; it never causes an immediate visual save.
+      const disguise = member.state.template.visualDisguiseAction;
+      if (disguise && member.state.magical_visual_disguise_active) {
+        const opener = window.IRON_PIT_BROWSER_PRECOMBAT_BUFFS;
+        if (!opener?.dismissFirstTurn) throw new Error("Visual disguise turn runtime is missing.");
+        const revealed = opener.dismissFirstTurn(member, sequence, round);
+        if (revealed) { events.push(revealed); sequence++; }
+      }
       const promoted = window.IRON_PIT_BROWSER_FORMATION_ROWS?.syncFormationRows(setup) || [];
       for (const stepped of promoted) {
         events.push({
