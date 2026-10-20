@@ -161,7 +161,12 @@
       if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
       const targets = F().targetOrder(member, setup); if (!targets.length) return finalize(events, sequence, round, member, setup, turnKey);
       // The opening area Action is an alternative to the usual melee turn.
-      const openingArea = window.IRON_PIT_BROWSER_AREA_SAVES?.choose(member, setup, "action", true);
+      const openerCards = (member.state.template.saving_throw_actions || []).some((action) => action.openingInitiativeOnly);
+      const areaRuntime = window.IRON_PIT_BROWSER_AREA_SAVES;
+      if (openerCards && typeof areaRuntime?.choose !== "function") {
+        throw new Error("Opening area save requires the complete browser area-save runtime.");
+      }
+      const openingArea = openerCards ? areaRuntime.choose(member, setup, "action", true) : null;
       if (openingArea) {
         const opened = window.IRON_PIT_BROWSER_AREA_SAVES.resolve(sequence, round, member, setup, openingArea);
         if (!opened) throw new Error("Opening area Action was selected but could not be resolved.");
