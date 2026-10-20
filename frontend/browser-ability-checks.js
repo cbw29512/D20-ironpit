@@ -1,6 +1,21 @@
 (() => {
   "use strict";
 
+  function skillBonus(state, ability, skill) {
+    const scores = state.template.ability_scores;
+    if (!scores || !Number.isInteger(scores[ability]) || typeof skill !== "string" || !skill.trim()) {
+      throw new Error("Skill check requires certified ability scores and source skill.");
+    }
+    const recorded = state.template.skill_bonuses?.[skill.toLowerCase()];
+    const base = recorded == null ? Math.floor((scores[ability] - 10) / 2) : recorded;
+    if (!Number.isInteger(base)) throw new Error("Source skill bonus must be an integer.");
+    const reductions = window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION;
+    if ((state.ability_score_reductions?.[ability] || 0) > 0 && !reductions?.abilityModifierDelta) {
+      throw new Error("Skill checks require live score reduction support.");
+    }
+    return base + (reductions?.abilityModifierDelta(state, ability) || 0);
+  }
+
   function mode(state, advantageSources = 0, disadvantageSources = 0, options = {}) {
     try {
       const generic = window.IRON_PIT_BROWSER_MODIFIERS?.d20TestAdvantage(state) || 0;
@@ -92,5 +107,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_ABILITY_CHECKS = { applyMinimum, mode, resolve };
+  window.IRON_PIT_BROWSER_ABILITY_CHECKS = { applyMinimum, mode, resolve, skillBonus };
 })();
