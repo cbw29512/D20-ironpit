@@ -24,6 +24,10 @@
     if (!slotSpellAvailable(state, turnKey)) {
       throw new Error("A spell slot has already been expended to cast a spell on this turn.");
     }
+    if (!window.IRON_PIT_BROWSER_TIMED?.expireOnOwnerEvent) {
+      throw new Error("Spell casting requires universal owner-action expiry.");
+    }
+    window.IRON_PIT_BROWSER_TIMED.expireOnOwnerEvent(state, "spell_cast");
     state.spell_slot_expended_turn_key = turnKey;
   }
 
