@@ -540,6 +540,7 @@ jobs:
           node frontend/browser-slow.test.cjs
           node frontend/browser-topple.test.cjs
           node frontend/browser-on-hit-condition-save.test.cjs
+          node frontend/browser-2014-erinyes.test.cjs
           node frontend/browser-light-weapons.test.cjs
           node frontend/browser-defense-style.test.cjs
           node frontend/browser-fighter-progression.test.cjs
