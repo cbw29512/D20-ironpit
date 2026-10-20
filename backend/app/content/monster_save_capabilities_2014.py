@@ -48,6 +48,16 @@ def supports_save_action_2014(action: object) -> bool:
                     SaveDamageComponent.model_validate(component)
             except ValueError:
                 return False
+        choices = action.get("save_ability_choices", [])
+        if not isinstance(choices, list):
+            return False
+        if choices and (
+            len(choices) < 2 or
+            len(set(choices)) != len(choices) or
+            action.get("save_ability") not in choices or
+            any(ability not in ("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma") for ability in choices)
+        ):
+            return False
         target_cap = action.get("max_targets", 1)
         if type(target_cap) is not int or not 1 <= target_cap <= 20:
             return False
@@ -142,6 +152,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                 save_ability=str(action["save_ability"]), dc=int(action["dc"]),
                 range_ft=int(action["range_ft"]), area=action.get("area"),
                 max_targets=int(action.get("max_targets", 1)),
+                save_ability_choices=list(action.get("save_ability_choices", [])),
                 damage_components=action.get("damage_components", []),
                 target_scope=str(action.get("target_scope", "enemies")),
                 damage=damage, damage_type=action.get("damage_type"),
