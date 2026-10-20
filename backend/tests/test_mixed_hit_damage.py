@@ -165,7 +165,7 @@ def test_missed_mixed_type_attack_rolls_no_damage_and_spends_its_action() -> Non
         target_event_id=hero.combatant_id,
     )
     assert event.hit is False
-    assert event.turn_terminated is True  # Locked Pit natural-1 rule.
+    assert event.turn_terminated is False  # RAW natural-1 miss leaves turn intact.
     assert event.damage_components == []
     assert hero.state.current_hp == starting_hp
 

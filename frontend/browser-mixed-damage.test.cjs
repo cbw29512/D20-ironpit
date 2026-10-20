@@ -116,7 +116,7 @@ const ritualSickle = {
   window.IRON_PIT_DICE = queuedDice([1]);
   const event = A.resolveAttack(1, 1, attacker, hero, venomBite, 5);
   assert.equal(event.hit, false);
-  assert.equal(event.turn_terminated, true); // Pit natural-1 policy.
+  assert.equal(event.turn_terminated, false); // RAW natural-1 miss does not end turn.
   assert.deepEqual(event.damage_components, []);
   assert.equal(hero.state.current_hp, startingHp);
 }

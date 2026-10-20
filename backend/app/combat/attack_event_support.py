@@ -59,7 +59,6 @@ def build_attack_description(
     hit: bool,
     critical: bool,
     natural_1: bool,
-    natural_1_ends_turn: bool,
     heroic_reroll: bool,
     redirect_used: bool,
     parry_used: bool,
@@ -91,10 +90,8 @@ def build_attack_description(
             description += f" {d20_override_name or d20_override_feature_id} turns the failed attack roll into a 20."
         elif miss_override_feature_id:
             description += f" {miss_override_name or miss_override_feature_id} turns the miss into a hit."
-        elif natural_1_ends_turn:
-            description += " Natural 1: Iron Pit immediately ends the attacker's turn."
         elif natural_1:
-            description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn."
+            description += " Natural 1: automatic miss; remaining legal attacks and actions are unaffected."
         if heroic_reroll:
             description += " Heroic Inspiration rerolls one d20."
         if not hit and damage_roll is not None:

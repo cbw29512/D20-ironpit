@@ -135,14 +135,14 @@ function neutralizeInitiative(setup) {
   );
   assert.equal(event.hit, false);
   assert.equal(event.attack_roll.selected_roll, 1);
-  assert.equal(event.turn_terminated, true);
-  assert.equal(event.turn_termination_reason, "iron-pit-natural-1-attack");
-  assert.equal(monster.state.turn_terminated, true);
-  assert.equal(monster.state.action_available, false);
-  assert.equal(monster.state.bonus_action_available, false);
-  assert.equal(monster.state.movement_remaining_ft, 0);
+  assert.equal(event.turn_terminated, false);
+  assert.equal(event.turn_termination_reason, null);
+  assert.equal(monster.state.turn_terminated, false);
+  assert.equal(monster.state.action_available, false); // Ordinary Attack Action spent.
+  assert.equal(monster.state.bonus_action_available, true);
+  assert.equal(monster.state.movement_remaining_ft, monster.state.template.speed_ft);
   assert.equal(monster.state.reaction_available, true);
-  assert.match(event.description, /immediately ends the attacker's turn/);
+  assert.match(event.description, /automatic miss/);
 
   window.IRON_PIT_BROWSER_STATE.beginTurn(monster.state);
   assert.equal(monster.state.turn_terminated, false);
@@ -168,19 +168,20 @@ function neutralizeInitiative(setup) {
   assert.equal(reactor.state.action_available, true);
   assert.equal(reactor.state.bonus_action_available, true);
   assert.equal(reactor.state.reaction_available, false);
-  assert.match(event.description, /does not terminate a future turn/);
+  assert.match(event.description, /automatic miss/);
 }
 
 {
   const { hero, monster: bear } = basicSetup("srd-black-bear");
   const setup = { heroes: [hero], monsters: [bear] };
   window.IRON_PIT_BROWSER_STATE.beginTurn(bear.state);
-  window.IRON_PIT_DICE = queuedDice([1]);
+  window.IRON_PIT_DICE = queuedDice([1, 1]);
   const result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, bear, setup);
   const attacks = result.events.filter((event) => event.event_type === "attack");
-  assert.equal(attacks.length, 1);
+  assert.equal(attacks.length, 2);
   assert.equal(attacks[0].attack_roll.selected_roll, 1);
-  assert.equal(bear.state.turn_terminated, true);
+  assert.equal(attacks[1].attack_roll.selected_roll, 1);
+  assert.equal(bear.state.turn_terminated, false);
 }
 
 {

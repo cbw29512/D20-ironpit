@@ -19,7 +19,6 @@ from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.modifier_stack import effective_armor_class
 from app.combat.reaction_roll_penalties import apply_reaction_roll_penalty_if_useful, reaction_penalty_description
-from app.combat.state import terminate_turn
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 logger = logging.getLogger(__name__)
@@ -99,11 +98,6 @@ def resolve_attack(
         outcome_adjustment_name = d20_outcome.outcome_adjustment_source_name
         natural_1 = natural == 1
         expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
-        natural_1_ends_turn = natural_1 and not off_turn and not (
-            d20_override_feature_id or miss_override_feature_id
-        )
-        if natural_1_ends_turn:
-            terminate_turn(attacker, "iron-pit-natural-1-attack")
         critical = bool(hit and miss_override_feature_id is None and (
             expanded_critical or (attacker.template.progression_features.critical_hits_against_surprised_targets and actual_defender.is_surprised)
             or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)
@@ -144,7 +138,7 @@ def resolve_attack(
             attacker_name=attacker.template.name, defender_name=defender.template.name,
             actual_defender_name=actual_defender.template.name, weapon_name=weapon.name,
             damage_type=weapon.damage_type.value, hit=hit, critical=critical,
-            natural_1=natural_1, natural_1_ends_turn=natural_1_ends_turn,
+            natural_1=natural_1,
             heroic_reroll=heroic_reroll, redirect_used=redirect_used, parry_used=parry_used,
             d20_override_feature_id=d20_override_feature_id, d20_override_name=d20_override_name,
             miss_override_feature_id=miss_override_feature_id, miss_override_name=miss_override_name,
@@ -193,8 +187,8 @@ def resolve_attack(
             check_dc=contested_movement.source_roll.total if contested_movement and contested_movement.source_roll else None,
             check_succeeded=contested_movement.target_succeeded if contested_movement else None,
             hit=hit, critical=critical, damage_reduction_zeroed_attack=effects.damage_reduction_zeroed_attack,
-            turn_terminated=natural_1_ends_turn,
-            turn_termination_reason="iron-pit-natural-1-attack" if natural_1_ends_turn else None,
+            turn_terminated=False,
+            turn_termination_reason=None,
             hp_before=hp_before, hp_after=actual_defender.current_hp,
             temporary_hp_before=temporary_hp_before, temporary_hp_after=actual_defender.temporary_hp,
             death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
