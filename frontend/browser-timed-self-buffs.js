@@ -32,6 +32,9 @@
         const condition = T().apply(member.state, conditionId, member.combatant_id, {
           sourceEffectId: action.id,
           sourceTemplate: member.state.template,
+          sourceIsMagical: Boolean(action.magicalEffect),
+          endsOnOwnerAttack: Boolean(action.endsOnOwnerAttack),
+          endsOnOwnerSpellCast: Boolean(action.endsOnOwnerSpellCast),
           appliedRound: round,
           expiresRound,
           expiryTiming,
@@ -65,6 +68,9 @@
         T().apply(member.state, action.id, member.combatant_id, {
           sourceEffectId: action.id,
           sourceTemplate: member.state.template,
+          sourceIsMagical: Boolean(action.magicalEffect),
+          endsOnOwnerAttack: Boolean(action.endsOnOwnerAttack),
+          endsOnOwnerSpellCast: Boolean(action.endsOnOwnerSpellCast),
           appliedRound: round,
           expiresRound,
           expiryTiming,
