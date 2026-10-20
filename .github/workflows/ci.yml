@@ -459,6 +459,10 @@ jobs:
       - name: Validate browser JavaScript syntax
         run: |
           for file in frontend/*.js; do node --check "$file"; done
+      - name: Regenerate combat sequence parity fixtures from the Python reference
+        run: |
+          PYTHONPATH=backend:scripts python scripts/grick_sequence_parity_fixture.py > frontend/test-fixtures/grick-sequence.json
+          PYTHONPATH=backend:scripts python scripts/fungus_sequence_parity_fixture.py > frontend/test-fixtures/fungus-sequence.json
       - name: Run browser combat regressions
         run: |
           node frontend/browser-2014-antimagic-susceptibility.test.cjs
