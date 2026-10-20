@@ -135,8 +135,7 @@ def test_monster_and_pregen_forms_share_source_owned_disguise_mechanics():
     assert actor.state.magical_visual_disguise_active
     begin_turn(actor.state)
     dismissal = resolve_visual_disguise_first_turn_dismissal(2, 1, actor)
-    assert dismissal is not None and "using a Action" not in dismissal.description
-    assert "using a Action" not in dismissal.description
+    assert dismissal is not None and "using an Action" in dismissal.description
     assert actor.state.action_available is False
     assert actor.state.bonus_action_available is True
     assert alternate.inspection_dc == 19

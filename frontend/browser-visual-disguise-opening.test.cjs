@@ -71,6 +71,7 @@ P.resolve(10, pregen, { heroes: [pregen], monsters: [] }, { kind: "visual-disgui
 pregen.state.turns_started = 1;
 const pregenResult = P.dismissFirstTurn(pregen, 11, 1);
 assert.equal(pregenResult.feature_id, pregenAction.id);
+assert.match(pregenResult.description, /using an Action/);
 assert.equal(pregen.state.action_available, false);
 assert.equal(pregen.state.bonus_action_available, true);
 assert.equal(pregenAction.inspectionDc, 19);
