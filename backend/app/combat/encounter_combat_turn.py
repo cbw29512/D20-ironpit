@@ -8,6 +8,7 @@ from app.combat.landing_offense_policy import melee_can_land_now
 from app.combat.offensive_movement_policy import melee_can_be_enabled_this_turn
 from app.combat.action_economy import is_available
 from app.combat.charge import resolve_charge_closing
+from app.combat.area_save_actions import choose_area_save, resolve_area_save
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.deferred_save_effect import cleanup_deferred_effects
