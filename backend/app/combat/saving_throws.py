@@ -18,6 +18,7 @@ from app.combat.source_effect_immunity import (
 )
 from app.combat.defensive_modifier_rules import saving_throw_advantage_source_names
 from app.combat.resources import action_resource_available, spend_action_resource
+from app.combat.opening_burst import opening_burst_available
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.target_chosen_save import choose_save_ability
 from app.combat.zero_hp import apply_damage, reduce_to_zero_hit_points
@@ -66,6 +67,8 @@ def resolve_save_action(
     resource_remaining_override: int | None = None,
     setup: EncounterSetup | None = None,
 ) -> BattleEvent:
+    if action.opening_initiative_only and not opening_burst_available(round_number, actor, setup):
+        raise ValueError(f"{action.name} requires an initiative-winning opening turn.")
     if spend_action and not is_available(actor.state, action.action_cost):
         raise ValueError(f"{action.action_cost} is not available for {action.name}.")
     if not legal_save_action(action, target, distance_ft, source_id=actor.combatant_id, actor=actor):
