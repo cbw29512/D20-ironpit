@@ -4,7 +4,7 @@
 
 - Owner: Codex, ACTIVE on `feat/2014-harpy-grouped-control-20261020`. This foundation adds source-neutral grouped failed-save conditions so one save can apply multiple condition ids while one primary timed effect owns repeat saves, expiry, source cleanup and immunity. Python and browser use the same source-effect group; printed cards remain immutable and fight state resets normally.
 - Scope intentionally does not bind or admit Harpy yet. Luring Song still needs generic compelled approach through ordinary movement/pathing and opportunity attacks, damage-triggered and hazardous-terrain repeat saves, and subsequent-turn Bonus Action maintenance/stop lifecycle. Keep `source:extra-action` until every printed behavior is implemented and certified.
-- Focused checks: `backend/tests/test_target_chosen_save.py` and `frontend/browser-frightful-presence.test.cjs`. Required exact-head full Python/browser, hero, roster/paired-edition and parity checks remain pending until the PR head exists. Source admission remains 237/327; real webpage fight verification remains separate; Netlify production stays locked.
+- Focused checks: `backend/tests/test_grouped_failed_save_conditions.py`, `frontend/browser-grouped-failed-save.test.cjs`, and the existing single-condition regressions. Preserve the scalar helper result for ordinary one-condition cards; grouped cards return an ordered list. Required exact-head full Python/browser, hero, roster/paired-edition and parity checks remain pending. Source admission remains 237/327; real webpage fight verification remains separate; Netlify production stays locked.
 
 ## Ability-score reduction follow-up — existing PR #965
 

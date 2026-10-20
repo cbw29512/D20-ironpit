@@ -104,6 +104,7 @@
         });
         if (result) applied.push(result);
       }
+      if (!(rider.additionalEffectIds || []).length) return applied[0] || null;
       return applied;
     } catch (error) {
       console.error("Failed browser failed-save timed rider application", {

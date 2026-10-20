@@ -17,12 +17,12 @@ def apply_failed_save_timed_effect(
     round_number: int,
     affected_states: list[CombatantState] | None,
     setup: EncounterSetup | None = None,
-) -> list[str]:
-    """Apply a failed-save condition group through one primary lifecycle owner."""
+) -> str | list[str] | None:
+    """Apply one condition compatibly, or a grouped set through one lifecycle owner."""
     try:
         rider = action.failed_save_timed_effect
         if rider is None:
-            return []
+            return None
         applied: list[str] = []
         condition_ids = [rider.effect_id, *rider.additional_effect_ids]
         for index, effect_id in enumerate(condition_ids):
@@ -91,6 +91,8 @@ def apply_failed_save_timed_effect(
             )
             if result is not None:
                 applied.append(result)
+        if not rider.additional_effect_ids:
+            return applied[0] if applied else None
         return applied
     except Exception:
         logger.exception(
