@@ -2,7 +2,7 @@
 
 ## Harpy compelled-approach foundation — 2026-10-20
 
-- Owner: Codex, ACTIVE on `feat/2014-compelled-approach-20261020` from main `5234ed63b2b8ee818e199189f8e49c2770d1ddba`; PR pending. Subsystem ownership: timed turn behavior plus reaction-aware movement only.
+- Owner: Codex, ACTIVE in draft PR #974 on `feat/2014-compelled-approach-20261020`, rebased from main `cb42a95025e48649673e98d3b780ec787d503ef8`. Subsystem ownership: timed turn behavior plus reaction-aware movement only.
 - Immutable schema: source-neutral `turn_behavior="forced_approach_source"`; mutable fight state remains the existing timed-effect `source_id` plus normal per-turn movement budget. The creature spends ordinary movement toward its one active source until within 5 feet. Compelled movement does not claim voluntary movement and bypasses willing-movement restrictions, but still opens opportunity-attack windows. Multiple sources or a missing source fail closed.
 - Scope intentionally does not bind or admit Harpy. Persistent hazards currently resolve after square entry, while Luring Song requires a repeat save before damaging terrain. Damage-triggered repeat saves and Bonus Action maintenance/stop lifecycle also remain missing. Keep `source:extra-action`; source admission remains 237/327. Exact-head certification is required; webpage verification is separate and Netlify stays locked.
 
