@@ -63,6 +63,9 @@
 
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     const spendAction = options.spendAction !== false, checkResource = options.checkResource !== false;
+    if (action.openingInitiativeOnly && !window.IRON_PIT_BROWSER_CHARGE?.openingEligible(round, actor, options.setup)) {
+      throw new Error(`${action.name} requires an initiative-winning opening turn.`);
+    }
     const actionCost = action.actionCost || "action";
     if (spendAction && !E().available(actor.state, actionCost)) throw new Error(`${actionCost} is unavailable for ${action.name}.`);
     if (checkResource && action.resourceId && (actor.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);
