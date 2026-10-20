@@ -45,6 +45,11 @@
         caster.state.resources[resourceId] -= 1;
         remaining = caster.state.resources[resourceId];
       }
+      if ((caster.state.timed_effects || []).some((effect) => effect.ends_on_owner_spell_cast)) {
+        const expiry = window.IRON_PIT_BROWSER_TIMED?.expireOnOwnerEvent;
+        if (!expiry) throw new Error("Spell casting owner-expiry runtime is unavailable.");
+        expiry(caster.state, "spell_cast", [...setup.heroes, ...setup.monsters].map((m) => m.state));
+      }
       E().spend(caster.state, spell.actionCost);
       const rangeRemaining = choice.rangeModifier
         ? (P()?.spendRangeModifier
