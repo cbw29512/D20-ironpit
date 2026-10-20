@@ -80,7 +80,7 @@ assert.ok(winner, "Strict winner has a valid opening area Action");
 assert.deepEqual(new Set(winner.placement.targetIds), new Set(["first", "second", "teammate"]));
 assert.equal(winner.placement.direction, null);
 const result = api.resolve(1, 1, source, setup, winner);
-assert.deepEqual(result.events.map((row) => row.target_id), ["first", "second"]);
+assert.deepEqual(result.events.map((row) => row.target_id), ["first", "second", "teammate"]);
 assert.deepEqual(rolls, [[3, 6], [3, 6]], "One roll per type, shared across affected targets");
 assert.ok(result.events.every((row) =>
   row.damage_components[0].damage_type === "bludgeoning"
