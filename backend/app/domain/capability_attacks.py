@@ -110,6 +110,7 @@ class SaveCapabilityDefinition(BaseModel):
     name: str
     action_cost: Literal["action", "bonus_action", "reaction"] = "action"
     save_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
+    save_ability_choices: list[Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]] = Field(default_factory=list)
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
     max_targets: int = Field(default=1, ge=1, le=20)
@@ -147,6 +148,8 @@ class SaveCapabilityDefinition(BaseModel):
             raise ValueError("Save damage dice and damage type must be declared together.")
         if self.damage_components and self.damage is not None:
             raise ValueError("Save damage must use either legacy dice or typed components, not both.")
+        if self.save_ability_choices and (len(self.save_ability_choices) < 2 or len(set(self.save_ability_choices)) != len(self.save_ability_choices) or self.save_ability not in self.save_ability_choices):
+            raise ValueError("Target-chosen save abilities must be distinct and include the primary ability.")
         if self.damage_only_on_success and self.success_damage != "none":
             raise ValueError("Success-only save damage must not declare legacy success scaling.")
         if self.damage_only_on_success and self.damage is None:
