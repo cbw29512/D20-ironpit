@@ -52,6 +52,8 @@
       ends_on_magical_healing: Boolean(options.endsOnMagicalHealing),
       next_attack_disadvantage: Boolean(options.nextAttackDisadvantage),
       ends_on_damage: Boolean(options.endsOnDamage),
+      ends_on_owner_attack: Boolean(options.endsOnOwnerAttack),
+      ends_on_owner_spell_cast: Boolean(options.endsOnOwnerSpellCast),
       ends_if_source_incapacitated: Boolean(options.endsIfSourceIncapacitated),
       ends_if_source_dead: Boolean(options.endsIfSourceDead),
       source_is_magical: Boolean(options.sourceIsMagical),
