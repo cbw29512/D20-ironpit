@@ -87,7 +87,7 @@ def test_winner_has_square_opener_and_loser_or_later_round_has_bite_only():
     actor.state.initiative_total = 20
     actor.state.current_round = 2
     assert choose_area_save(actor, setup, opening_only=True) is None
-    assert any(attack.name == "Bite" for attack in actor.state.template.attacks)
+    assert actor.state.template.weapon_attack.name == "Bite"
 
 
 def test_opener_affects_allied_creatures_inside_impact_area():
