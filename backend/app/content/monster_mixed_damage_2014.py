@@ -10,6 +10,7 @@ import re
 
 from app.content.monster_source_2014 import SourceAttack2014, SourceDamage2014, SourceMonster2014
 from app.content.monster_healing_block_source_2014 import source_completed_healing_block_2014
+from app.content.monster_source_magic_cured_condition_2014 import source_completed_magic_cured_condition_2014
 from app.domain.weapons_base import DamageType
 
 _PATTERN = re.compile(
@@ -29,6 +30,7 @@ def source_completed_mixed_attack_2014(
 ) -> SourceAttack2014:
     """Upgrade a parser-incomplete attack only when both source hit dice are proven."""
     attack = source_completed_healing_block_2014(monster, attack)
+    attack = source_completed_magic_cured_condition_2014(monster, attack)
     if attack.source_complete or attack.kind != "melee":
         return attack
     if attack.on_hit_save_effect or attack.control_effect or attack.ongoing_damage_effect:
