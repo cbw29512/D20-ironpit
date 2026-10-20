@@ -1,7 +1,7 @@
-"""2014 source-only proof of a reusable visual, turn-start fear contract.
+"""Exact 2014 printed source proof for generic visual turn-start fear.
 
-This module never grants a combat capability. A future universal turn-start
-resolver must enforce every returned constraint in both engines before binding.
+Source facts are immutable. The shared Python/browser gaze and timed Frightened
+resolvers own execution; this parser never branches combat on a monster name.
 """
 from __future__ import annotations
 
@@ -35,7 +35,7 @@ _PRINTED = re.compile(
 
 @dataclass(frozen=True)
 class VisualFearSourceFacts:
-    """Immutable facts awaiting universal Python/browser executable binding."""
+    """Immutable printed parameters consumed by the shared visual rule adapter."""
 
     source_name: str
     range_ft: int
