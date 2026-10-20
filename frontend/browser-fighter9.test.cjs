@@ -147,8 +147,8 @@ function state(template, resources = {}) {
   assert.equal(miss.hit, false);
   assert.equal(miss.damage_roll, null);
   assert.equal(missTarget.state.current_hp, hpBefore);
-  assert.equal(miss.turn_terminated, true);
-  assert.equal(missHero.state.turn_terminated, true);
+  assert.equal(miss.turn_terminated, false);
+  assert.equal(missHero.state.turn_terminated, false);
 }
 
 {
