@@ -10,16 +10,22 @@ class VisualDisguiseAction(BaseModel):
 
     id: str = Field(min_length=1)
     name: str = Field(min_length=1)
-    activation_cost: Literal["action"] = "action"
-    dismissal_cost: Literal["bonus_action"] = "bonus_action"
-    conceals_true_form: bool = True
-    magical_illusion: bool = True
-    ends_if_owner_dead: bool = True
-    inspection_cost: Literal["action"] = "action"
-    inspection_ability: Literal["intelligence"] = "intelligence"
-    inspection_skill: Literal["investigation"] = "investigation"
+    # Printed source mechanics: every value is mandatory on the card.
+    # No global Sea Hag/monster/pregen defaults belong in the engine.
+    activation_cost: Literal["action", "bonus_action"]
+    dismissal_cost: Literal["action", "bonus_action"]
+    conceals_true_form: bool
+    magical_illusion: bool
+    ends_if_owner_dead: bool
+    physical_inspection_inconsistent: bool
+    inspection_cost: Literal["action", "bonus_action"]
+    inspection_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
+    inspection_skill: str = Field(min_length=1)
     inspection_dc: int = Field(ge=1, le=40)
-    investigation_reveals_true_form: bool = False
-    opening_priority: int = 20
-    opening_eligible: bool = True
-    dismiss_on_first_turn: bool = True
+    investigation_reveals_true_form: bool
+
+    # Explicit Iron Pit *tactical choices* attached to a specific compiled
+    # card, not RAW mechanics inherent to every magical visual disguise.
+    opening_priority: int = Field(ge=0)
+    opening_eligible: bool
+    dismiss_on_first_turn: bool

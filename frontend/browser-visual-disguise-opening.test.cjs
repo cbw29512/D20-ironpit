@@ -26,6 +26,8 @@ const action = {
   openingEligible: true, openingPriority: 20, concealsTrueForm: true,
   dismissOnFirstTurn: true, inspectionAbility: "intelligence", inspectionDc: 16,
   investigationRevealsTrueForm: false,
+  magicalIllusion: true, endsIfOwnerDead: true, physicalInspectionInconsistent: true,
+  inspectionCost: "action", inspectionSkill: "investigation",
 };
 const template = { name: "Renamed Monster", max_hp: 40, timed_self_buff_actions: [],
   visualDisguiseAction: action };
@@ -60,6 +62,19 @@ assert.equal(member.state.magical_visual_disguise_active, false);
 assert.equal(P.dismissFirstTurn(member, 3, 1), null);
 assert.equal(fresh().state.magical_visual_disguise_active, false);
 assert.equal(template.visualDisguiseAction.inspectionDc, 16);
+const pregenAction = { ...action, name: "Pregen Arcane Mask", dismissalCost: "action",
+  inspectionDc: 19 };
+const pregen = fresh();
+pregen.combatant_id = "pregen";
+pregen.state.template = { ...template, kind: "character", visualDisguiseAction: pregenAction };
+P.resolve(10, pregen, { heroes: [pregen], monsters: [] }, { kind: "visual-disguise", value: pregenAction });
+pregen.state.turns_started = 1;
+const pregenResult = P.dismissFirstTurn(pregen, 11, 1);
+assert.equal(pregenResult.feature_id, pregenAction.id);
+assert.equal(pregen.state.action_available, false);
+assert.equal(pregen.state.bonus_action_available, true);
+assert.equal(pregenAction.inspectionDc, 19);
+assert.equal(action.inspectionDc, 16);
 const second = fresh();
 P.resolve(1, second, { heroes: [], monsters: [second] }, { kind: "visual-disguise", value: action });
 second.state.turns_started = 1;

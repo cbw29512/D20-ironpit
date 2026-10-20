@@ -99,3 +99,51 @@ def test_cannot_get_extra_bonus_action_or_reveal_while_incapacitated():
     source.state.is_unconscious = False
     assert resolve_visual_disguise_first_turn_dismissal(1, 1, source)
     assert not source.state.bonus_action_available
+
+
+def test_monster_and_pregen_forms_share_source_owned_disguise_mechanics():
+    """The same printed declaration runs on either card kind without a new resolver."""
+    from pydantic import ValidationError
+    from app.domain.visual_disguise import VisualDisguiseAction
+    from app.combat.visual_disguise import resolve_visual_disguise_opening
+
+    source_fields = [
+        "activation_cost", "dismissal_cost", "conceals_true_form",
+        "magical_illusion", "ends_if_owner_dead", "physical_inspection_inconsistent",
+        "inspection_cost", "inspection_ability", "inspection_skill", "inspection_dc",
+        "investigation_reveals_true_form", "opening_priority", "opening_eligible",
+        "dismiss_on_first_turn",
+    ]
+    assert all(VisualDisguiseAction.model_fields[x].is_required() for x in source_fields)
+
+    setup, source, target = _setup()
+    original_card = source.state.template.visual_disguise_action
+    assert original_card.physical_inspection_inconsistent
+    synthetic = original_card.model_dump() | {
+        "name": "Unrelated Pregen Visual Mask",
+        "dismissal_cost": "action",
+        "inspection_dc": 19,
+    }
+    alternate = VisualDisguiseAction.model_validate(synthetic)
+    template = target.state.template.model_copy(update={
+        "kind": "character", "visual_disguise_action": alternate,
+    })
+    actor = EncounterCombatant(combatant_id="pregen", side="heroes",
+        position_ft=0, state=build_combatant_state(template))
+    event = resolve_visual_disguise_opening(1, actor)
+    assert event.feature_id == alternate.id
+    assert actor.state.magical_visual_disguise_active
+    begin_turn(actor.state)
+    dismissal = resolve_visual_disguise_first_turn_dismissal(2, 1, actor)
+    assert dismissal is not None and "using a Action" not in dismissal.description
+    assert "using a Action" not in dismissal.description
+    assert actor.state.action_available is False
+    assert actor.state.bonus_action_available is True
+    assert alternate.inspection_dc == 19
+    assert original_card.inspection_dc == 16
+    assert source.state.template.visual_disguise_action is original_card
+
+    with __import__("pytest").raises(ValidationError):
+        VisualDisguiseAction.model_validate({k: v for k, v in synthetic.items() if k != "inspection_dc"})
+    with __import__("pytest").raises(ValidationError):
+        VisualDisguiseAction.model_validate(synthetic | {"dismissal_cost": "free"})

@@ -1231,6 +1231,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 "concealsTrueForm": visual.conceals_true_form,
                 "magicalIllusion": visual.magical_illusion,
                 "endsIfOwnerDead": visual.ends_if_owner_dead,
+                "physicalInspectionInconsistent": visual.physical_inspection_inconsistent,
                 "inspectionCost": visual.inspection_cost,
                 "inspectionAbility": visual.inspection_ability,
                 "inspectionSkill": visual.inspection_skill,

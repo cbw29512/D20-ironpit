@@ -138,7 +138,7 @@
       sequence, round_number: round, event_type: "feature",
       actor_id: member.combatant_id, actor_name: member.state.template.name,
       feature_id: action.id, animation: "condition-ended",
-      description: `${member.state.template.name} dismisses ${action.name} using a Bonus Action; its true form is now visible to eligible observers.`,
+      description: `${member.state.template.name} dismisses ${action.name} using a ${action.dismissalCost === "bonus_action" ? "Bonus Action" : "Action"}; its true form is now visible to eligible observers.`,
     };
   }
   window.IRON_PIT_BROWSER_PRECOMBAT_BUFFS = { choose, prepare, resolve, timedChoice, dismissFirstTurn };

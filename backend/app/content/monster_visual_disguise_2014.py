@@ -17,9 +17,14 @@ def visual_disguise_action_2014(monster: SourceMonster2014) -> VisualDisguiseAct
         conceals_true_form=facts.conceals_true_form,
         magical_illusion=facts.magical_illusion,
         ends_if_owner_dead=facts.ends_if_owner_dead,
+        physical_inspection_inconsistent=facts.physical_inspection_inconsistent,
         inspection_cost=facts.investigation_action_cost,
         inspection_ability=facts.investigation_ability,
         inspection_skill=facts.investigation_skill,
         inspection_dc=facts.investigation_dc,
         investigation_reveals_true_form=facts.investigation_reveals_true_form,
+        # This is a selected arena tactic, not an invented printed rule.
+        opening_priority=20,
+        opening_eligible=True,
+        dismiss_on_first_turn=True,
     )

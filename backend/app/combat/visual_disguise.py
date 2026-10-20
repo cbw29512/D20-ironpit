@@ -39,10 +39,11 @@ def resolve_visual_disguise_first_turn_dismissal(
         return None
     spend(member.state, action.dismissal_cost)
     member.state.magical_visual_disguise_active = False
+    cost_label = "Bonus Action" if action.dismissal_cost == "bonus_action" else "Action"
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="feature",
         actor_id=member.combatant_id, actor_name=member.state.template.name,
         feature_id=action.id, animation="condition-ended",
-        description=(f"{member.state.template.name} dismisses {action.name} using a Bonus Action; "
+        description=(f"{member.state.template.name} dismisses {action.name} using a {cost_label}; "
                      "its true form is now visible to eligible observers."),
     )

@@ -8,6 +8,13 @@ Read alongside [SOUL.md](../SOUL.md). This applies to 2014 and 2024 monsters, pr
 
 A card declares: (1) triggers and action economy; (2) target, range, senses, visibility, area, and immunity eligibility; (3) attack/check/save/automatic resolution and exact DC, dice, modifiers; (4) damage, healing, buffs, debuffs, conditions, movement, transformations, and defeat; (5) stacking, duration, concentration, source dependency, exit rules, recharge, and fight reset. Printed ability names are retained for cards and logs only, never runtime dispatch.
 
+## Visual disguise contract: exact printed mechanics vs arena tactics
+
+- The compiled monster or pregen card declares `visual_disguise_action` with **required fields** for activation/dismissal economy, source visibility, magical vs nonmagical behavior, death expiry, physical inspection, inspection action/ability/skill/DC, and whether recognition actually reveals a true form. Do not hardcode a fixed Bonus Action, DC 16, or a Sea Hag/source name inside the universal resolver.
+- The arena-selected **one free opening buff** and **first-turn dismissal tactic** are explicit per-card tactical settings (`opening_eligible`, `opening_priority`, `dismiss_on_first_turn`), not additional printed RAW mechanics. Other pregens, monsters or homebrew cards may declare different settings while reusing the same Python and browser resolver.
+- Card source and generated browser template must carry the parameters; only `CombatantState` holds the temporary illusion state. Unknown or omitted outcome-changing fields fail validation. A successful inspection check does not reveal the true form unless that outcome is explicitly declared on the card.
+- The Sea Hag source says dismissal costs a Bonus Action and inspection is DC 16 Intelligence (Investigation). Those values belong to the **Sea Hag card**; the engine only consumes the generic declared fields. No ability-name dispatch, global Blinded, or invented AC bonus.
+
 ## Shared form contract and editor modes
 
 The canonical runtime is `CombatantDefinition → CombatantTemplate →
