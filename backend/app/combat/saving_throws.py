@@ -5,7 +5,7 @@ from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 from app.combat.action_economy import is_available, spend
 from app.combat.automatic_save_failures import automatically_fails_save
 from app.combat.barbarian import end_rage_if_incapacitated
-from app.combat.condition_rules import can_see
+from app.combat.condition_rules import can_see, has_condition
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.dice import DiceProvider
 from app.combat.grapple import apply_grapple
@@ -40,6 +40,10 @@ def legal_save_action(
 ) -> bool:
     template = target.state.template
     if source_id and has_source_effect_immunity(target.state, action.id, source_id):
+        return False
+    if action.required_target_condition is not None and not has_condition(target.state, action.required_target_condition):
+        return False
+    if actor is not None and action.requires_target_sight and not can_see(actor.state, target.state, combatant_distance(actor, target)):
         return False
     if action.requires_target_to_see_source:
         if actor is None or not can_see(target.state, actor.state, combatant_distance(actor, target)):
