@@ -12,6 +12,7 @@ from app.content.monster_source_save_outcome_bindings_2014 import source_proven_
 from app.content.monster_source_visual_save_bindings_2014 import source_proven_visual_saves_2014
 from app.domain.capability_attacks import SaveCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
+from app.domain.save_damage import SaveDamageComponent
 from app.domain.combatants import ResourceDefinition
 from app.domain.recharge import RechargeRule
 
@@ -35,6 +36,20 @@ def supports_save_action_2014(action: object) -> bool:
             return False
         count = int(action.get("damage_dice_count", 0) or 0)
         if count and not action.get("damage_type"):
+            return False
+        components = action.get("damage_components", [])
+        if not isinstance(components, list):
+            return False
+        if components:
+            if count or action.get("damage_type") is not None:
+                return False
+            try:
+                for component in components:
+                    SaveDamageComponent.model_validate(component)
+            except ValueError:
+                return False
+        target_cap = action.get("max_targets", 1)
+        if type(target_cap) is not int or not 1 <= target_cap <= 20:
             return False
         area = action.get("area")
         return area is None or isinstance(area, dict)
@@ -126,6 +141,8 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                 id=str(action["id"]), name=str(action["name"]),
                 save_ability=str(action["save_ability"]), dc=int(action["dc"]),
                 range_ft=int(action["range_ft"]), area=action.get("area"),
+                max_targets=int(action.get("max_targets", 1)),
+                damage_components=action.get("damage_components", []),
                 target_scope=str(action.get("target_scope", "enemies")),
                 damage=damage, damage_type=action.get("damage_type"),
                 success_damage=str(action.get("success_damage", "none")),
