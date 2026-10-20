@@ -55,7 +55,7 @@ def fixture():
             assert not dice.calls and [m.state.model_dump() for m in [actor, *targets]] == before
             events, _ = resolve_attack_action(1, 1, actor, setup, dice)
             attacks = [e for e in events if e.event_type == 'attack']
-            expected_count = 0 if distance > 10 else 1 if attack_roll == 1 else count
+            expected_count = 0 if distance > 10 else count
             assert len(attacks) == expected_count
             assert [e.weapon_id for e in attacks] == ['2014-violet-fungus-rotting-touch'] * expected_count
             repetitions = [e for e in events if e.feature_roll is not None]

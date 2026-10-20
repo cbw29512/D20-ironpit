@@ -48,17 +48,18 @@ assert.equal(actor.state.resources["tail-spike"], 0);
 assert.deepEqual(card, cardBefore, "Fighting must not mutate the source card.");
 assert.equal(S.buildState(card).resources["tail-spike"], 24, "Reusing the same card starts a fresh allowance.");
 
-// Natural 1 interrupts the sequence after spending exactly the attempted shot.
+// Natural 1 automatically misses but every printed shot is still attempted.
 actor.state = S.buildState(card);
 actor.state.position = { x: 6, y: 6 };
 target.state.position = { x: 2, y: 6 };
 window.IRON_PIT_DICE = { roll: () => 1, rollMany: () => { throw new Error("A miss cannot roll damage."); } };
 const interrupted = M.resolveAttackAction(1, 1, actor, setup).events.filter(e => e.event_type === "attack");
-assert.equal(interrupted.length, 1);
-assert.equal(interrupted[0].resource_remaining, 23);
-assert.equal(actor.state.turn_terminated, true);
+assert.equal(interrupted.length, 3);
+assert.deepEqual(interrupted.map(e => e.resource_remaining), [23, 22, 21]);
+assert.ok(interrupted.every(e => e.hit === false && e.turn_terminated === false));
+assert.equal(actor.state.turn_terminated, false);
 S.beginTurn(actor.state);
-assert.equal(actor.state.resources["tail-spike"], 23, "A new turn is not a new fight or a long rest.");
+assert.equal(actor.state.resources["tail-spike"], 21, "A new turn is not a new fight or a long rest.");
 
 // The separately sourced 2024 card does not inherit 2014's printed regrowth limit.
 const card2024 = window.IRON_PIT_BROWSER_MONSTERS["srd-manticore"];

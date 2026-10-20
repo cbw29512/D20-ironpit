@@ -78,8 +78,6 @@
     const resolvedAttackRoll = resolved.roll, natural = resolved.natural, targetAc = resolved.targetAc;
     const parry = resolved.parry, outcomeAdjustment = resolved.adjustment, d20Override = resolved.d20, override = resolved.miss, hit = resolved.hit; if (!hit) BS()?.clearPending?.(attacker.state, extra.turnKey);
     const naturalOne = natural === 1;
-    const naturalOneEndsTurn = naturalOne && extra.offTurn !== true && !d20Override.featureId && !override.featureId;
-    if (naturalOneEndsTurn) S().terminateTurn(attacker.state, "iron-pit-natural-1-attack");
     const expandedCritical = natural >= (attacker.state.template.critical_hit_minimum || 20);
     const critical = Boolean(hit && !override.featureId && (expandedCritical || (attacker.state.template.critical_hits_against_surprised_targets && actualTarget.state.is_surprised)
       || (Q().autoCritical(actualTarget.state) && distance <= 5)));
@@ -167,8 +165,7 @@
     if (outcomeAdjustment?.featureId) description += ` ${outcomeAdjustment.sourceName || outcomeAdjustment.featureId} adjusts the attack roll by ${outcomeAdjustment.adjustmentTotal}.`;
     if (d20Override.featureId) description += ` ${d20Override.sourceName || d20Override.featureId} turns the failed attack roll into a 20.`;
     else if (override.featureId) description += ` ${override.sourceName || override.featureId} turns the miss into a hit.`;
-    else if (naturalOneEndsTurn) description += " Natural 1: Iron Pit immediately ends the attacker's turn.";
-    else if (naturalOne) description += " Natural 1: automatic miss; this off-turn attack does not terminate a future turn.";
+    else if (naturalOne) description += " Natural 1: automatic miss; remaining legal attacks and actions are unaffected.";
     if (heroic.used) description += " Heroic Inspiration rerolls one d20."; if (d20Bonus?.sourceName) description += ` ${d20Bonus.sourceName} adds its bonus die to the attack roll.`; if (rollPenalty?.restorationName) description += ` ${rollPenalty.sourceName} uses ${rollPenalty.restorationName}.`; if (rollPenalty) description += ` ${rollPenalty.sourceName} uses ${rollPenalty.actionId} to subtract ${rollPenalty.penaltyTotal} from the attack roll.`;
     if (!hit && damageRoll !== null) description += ` Graze deals ${damageRoll.total} ${attack.damageType} damage.`;
     if (studiedApplied) description += ` Studied Attacks primes the next attack against ${target.state.template.name}.`;
@@ -212,7 +209,7 @@
       target_id: actualTarget.combatant_id, target_name: actualTarget.state.template.name, attack_name: attack.name, target_ac: targetAc,
       attack_roll: resolvedAttackRoll, saving_throw_roll: attackSave?.saveRoll || topple.saveRoll, save_ability: attackSave?.saveAbility || (topple.saveDc === null ? null : "constitution"), save_dc: attackSave?.saveDc || topple.saveDc, save_succeeded: attackSave?.saveSucceeded ?? topple.saveSucceeded,
       damage_roll: damageRoll, damage_components: damageComponents, applied_condition_ids: [...new Set(applied)], hit, critical, damage_reduction_zeroed_attack: Boolean(outcome.damageReductionReaction?.damageReductionZeroedAttack),
-      turn_terminated: naturalOneEndsTurn, turn_termination_reason: naturalOneEndsTurn ? "iron-pit-natural-1-attack" : null,
+      turn_terminated: false, turn_termination_reason: null,
       hp_before: hpBefore, hp_after: actualTarget.state.current_hp, temporary_hp_before: temporaryHpBefore, temporary_hp_after: actualTarget.state.temporary_hp,
       death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
       death_save_successes: actualTarget.state.death_save_successes, death_save_failures: actualTarget.state.death_save_failures,

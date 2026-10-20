@@ -278,7 +278,7 @@ Audit annotation is evidence-only and must never change combat resolution.
 Initiative is a Dexterity check. Normal initiative bonuses and ruleset-specific Initiative mechanics apply, including Advantage and Disadvantage on Initiative.
 
 - A natural 20 on Initiative has no special ordering rule. The check total is the initiative count.
-- A natural 1 on Initiative remains in the bottom-priority bucket as an Iron Pit house rule. This is separate from the combat house rule that a natural 1 on an attack roll ends that attacker's current turn.
+- A natural 1 on Initiative has **no special priority** under RAW; use the total after modifiers. The former bottom-priority house rule was withdrawn on 2026-10-20.
 - Natural 20/1 Initiative does not grant or remove actions, attacks, or rounds.
 - Surprise is resolved separately according to the selected ruleset; it does not automatically move a creature to the bottom of Initiative.
 
@@ -286,7 +286,7 @@ Tie policy (deterministic simulator equivalent of RAW decision ownership):
 
 - 2024 and 2014 RAW give decision ownership rather than a reroll: players decide PC/PC ties; the DM decides monster/monster ties and PC/monster ties.
 - Iron Pit has no live player or DM during resolution, so both engines use this deterministic equivalent and never reroll Initiative to break a tie.
-- Higher initiative count acts first. On an exact tied count inside the same priority bucket: PC/PC uses earlier party/roster order; monster/monster uses earlier encounter order; PC/monster lets heroes act before monsters, then uses the same-side encounter order.
+- Higher initiative count acts first. On an exact tied count: PC/PC uses earlier party/roster order; monster/monster uses earlier encounter order; PC/monster lets heroes act before monsters, then uses the same-side encounter order.
 - Identical monsters that share one RAW group roll are one initiative count, not a tie.
 - First-round extra turns keep their offset initiative count in the normal priority bucket and resolve after any normal turn at that same count.
 
@@ -323,16 +323,16 @@ Tie policy (deterministic simulator equivalent of RAW decision ownership):
 - Dodge is the default when no supported offensive option can be used or made legal after any useful legal approach movement available this turn. Dodge is an ordinary combat outcome, not a skip and not a crash.
 - A legal tactical dead end may resolve to Dodge. Unsupported mechanics, malformed state, impossible source data, mixed position authority, and engine/rules errors must fail closed and must never be converted into Dodge.
 
-### Attack natural 1 — Iron Pit house rule
+### Attack natural 1 — RAW (house rule withdrawn 2026-10-20)
 
-A natural 1 on an attack roll:
-
-1. is an automatic miss;
-2. immediately terminates that creature's current turn;
-3. loses all remaining attacks, Bonus Action, and other voluntary turn actions;
-4. does not undo anything already resolved earlier in the turn.
-
-Turn termination must be a universal combat-state/control primitive consumed by Extra Attack, Multiattack, Light/Nick attacks, Action Surge follow-ups, spell follow-ups, and all other voluntary turn actions.
+A natural 1 on an attack roll is an **automatic miss**, regardless of modifiers.
+It neither ends the turn nor removes remaining attacks, movement, Bonus Actions,
+or other legal opportunities. Each attempted attack still spends its normal
+Action, resource or ammunition. Extra Attack, Multiattack, Light/Nick, Action
+Surge and other permitted follow-ups continue through the normal economy.
+Off-turn attacks follow this same rule. Existing universal turn-termination
+state remains available for genuinely source-defined stop-turn effects, but a
+natural 1 never triggers it.
 
 A flavor-only d6 may narrate the fumble; it has no additional mechanical effect.
 
@@ -615,7 +615,7 @@ All resources return to their immutable-card maximum/default after the match.
 - Preserve printed number/types/required sequence/options.
 - A downed target remains RAW-targetable when applicable.
 - A dead/disintegrated/otherwise invalid target is removed from normal target choice.
-- Iron Pit natural-1 turn termination cancels all remaining attacks/actions immediately.
+- A natural-1 miss does not cancel remaining legal attacks or actions (RAW).
 
 ## 18. Reactions and interrupts
 

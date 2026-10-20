@@ -8,6 +8,12 @@ It does **not** replace `docs/IRON_PIT_RULES_CONTRACT.md`. That file remains the
 
 - **One completed combatant, one engine:** Monster and Character are blank-form authoring modes; both compile into `CombatantDefinition → CombatantTemplate` and fresh fight state. Monster authors enter source-final values; character builders derive values from edition-specific scores, proficiency, weapons, armor and features. Named abilities never select runtime logic. Homebrew uses the same typed primitives as official cards; rejected unsupported mechanics remain blocked. The authoritative details are in [the Rules Contract](IRON_PIT_RULES_CONTRACT.md) under *Universal combatant form and ability resolution*, and the [universal card contract](UNIVERSAL_CARD_COMBAT_CONTRACT.md).
 
+## Universal gaze initiative and automatic eye aversion — 2026-10-20
+
+**User-approved Iron Pit exception:** For any *source-declared avertible gaze or visible-appearance passive*, compare the gaze source and target using the **existing resolved normal initiative order** (including normal RAW totals and established tie-breaking rules). If the source precedes the target, the target **cannot avert its eyes** and must make the printed saving throw when otherwise eligible. If the target precedes the source, it **automatically averts its eyes** and avoids that initial save. Apply this source-target comparison whenever an eligible passive turn-start gaze decision arises; do not invent an independent roll, extra action or surprise state. Initiative remains the same for the encounter.
+
+Averted eyes are **source-scoped**, not the global Blinded condition. Preserve the printed penalty against that source (for example, attack-roll Disadvantage against the Sea Hag), and printed sight, eligibility, immunity and timing requirements. A genuinely unseen/immune/out-of-range gaze source cannot force a save solely by winning initiative. This replaces surprise-only automatic eye-aversion for the Pit; unrelated non-avertible visual Actions remain governed by their own card. For multiple gaze sources, use normal initiative priority and resolve independently. The source's effect (Frightened, Restrained, Petrified, etc.) and DC/duration/repeat saves are always the standard universal mechanics declared on its immutable card; 2014 and 2024 source values remain separate.
+
 ## Universal decision priority — user-locked 2026-10-18
 
 **For ANY game decision in which multiple combatants could act or respond, check combatants in descending initiative order: highest initiative first.** This includes competing reactions, counters, interrupts, and other simultaneous eligible choices. Apply the same initiative priority to monsters and pregens, independent of names or classes. The active combatant still takes its normal initiative turn; this rule settles *competition between eligible decision-makers*, not a grant of extra turns.
@@ -47,7 +53,7 @@ These are explicit arena overrides, not RAW changes outside the Pit.
 
 - **No Flyby leave-reach exemption.** An opportunity-attack exemption does not authorize leaving engagement.
 - **No teleport relocation, plane shift, ethereal/incorporeal movement state, summoning, or vertical flight.**
-- **Natural 1 ends the turn.** A natural 1 on an attack roll is an automatic miss and immediately ends that creature's current turn. It does not undo earlier resolutions.
+- **Natural 1 uses RAW (2026-10-20).** A natural 1 on an attack roll is an automatic miss, not a turn-ending fumble. Unspent attacks/Bonus Actions remain legal. Initiative uses the rolled total plus modifiers; a natural 1 has no special bucket.
 - **Teleport only clears matching movement debuffs in place.** Grappled, Restrained, and other `ends_on_teleport` / ground-snare effects may end. Grid x/y does not change.
 
 Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §7, Attack natural 1, §10.1, §20.
@@ -87,7 +93,7 @@ Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §8, §22, §23; `docs/CANONICAL_CO
 - **Flexible Attack/Multiattack uses legal melee reach, otherwise ranged, then highest legal damage. Complete printed counts/combinations remain intact. Gladiator keeps its shield.** Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §10; architecture: source-preserving flexible attack slots.
 
 1. To-hit bonus + d20 versus AC.
-2. Natural 20 is a critical: automatic hit; double all damage dice required by the selected ruleset. Natural 1 is a miss and ends the turn.
+2. Natural 20 is a critical: automatic hit; double all damage dice required by the selected ruleset. Natural 1 is an automatic miss without prematurely ending the turn.
 3. Apply per-type resistance, vulnerability, and immunity to base damage and to each rider separately.
 4. Total the accepted components, then apply that total to Temporary HP / HP.
 5. Then resolve the on-hit condition save, if any. Condition immunity skips the save and the condition. A failed save applies the shared debuff with the printed duration and repeat-save timing.

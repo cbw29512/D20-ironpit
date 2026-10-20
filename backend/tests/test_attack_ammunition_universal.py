@@ -90,16 +90,16 @@ def test_source_card_exhausts_all_spikes_then_keeps_its_melee_sequence():
         raise
 
 
-def test_source_natural_one_spends_only_the_attempted_shot_and_does_not_refill_next_turn():
+def test_source_natural_one_spends_attempted_shots_without_refilling_next_turn():
     try:
         actor, _, setup = _setup()
         events, _ = resolve_attack_action(1, 1, actor, setup, FixedDice(d20=1))
         attacks = [event for event in events if event.event_type == "attack"]
-        assert len(attacks) == 1
-        assert attacks[0].resource_remaining == 23
-        assert actor.state.turn_terminated
+        assert len(attacks) == 3
+        assert [event.resource_remaining for event in attacks] == [23, 22, 21]
+        assert all(event.turn_terminated is False for event in attacks)
         begin_turn(actor.state)
-        assert actor.state.resources[0].current_uses == 23
+        assert actor.state.resources[0].current_uses == 21
     except Exception:
         logger.exception("Canonical Manticore failed ammunition interruption/turn lifecycle.")
         raise

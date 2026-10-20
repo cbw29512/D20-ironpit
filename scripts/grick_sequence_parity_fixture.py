@@ -94,7 +94,7 @@ def fixture():
             assert [e.weapon_id for e in attacks] == expected
             assert [e.target_id for e in attacks] == [('other' if redirect else 'target')] * count
             assert actor.state.action_available == (distance == 20)
-            assert actor.state.bonus_action_available == (roll != 1), key
+            assert actor.state.bonus_action_available, key
             assert card.model_dump() == card_before, key
             cases.append({'id': key, 'actor': template_row(card), 'target': template_row(base),
                 'initialHp': hp, 'distance': distance, 'firstRoll': roll, 'afterFirst': after_first,

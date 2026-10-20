@@ -15,7 +15,14 @@
     const sources = [...setup.heroes, ...setup.monsters].filter(
       actor => actor.combatant_id !== target.combatant_id &&
         actor.state.template.visualTurnStartRule
-    ).sort((a, b) => (b.state.initiative_total ?? -Infinity) - (a.state.initiative_total ?? -Infinity));
+    );
+    // The initiative scheduler already applies natural-one priority, tie
+    // ownership, and party/monster order. Never re-sort by raw d20 totals.
+    const turnOrder = ctx.initiative?.turn_order;
+    if (sources.length && (!Array.isArray(turnOrder) || !turnOrder.length)) {
+      throw new Error("A visual turn-start source requires resolved initiative order.");
+    }
+    sources.sort((a, b) => turnOrder.indexOf(a.combatant_id) - turnOrder.indexOf(b.combatant_id));
     for (const source of sources) {
       const rule = source.state.template.visualTurnStartRule;
       const distance = state().distance(source, target);
@@ -26,7 +33,7 @@
         sourceSeesTarget: conditions().canSee(source.state, target.state, distance),
         targetSeesSource: conditions().canSee(target.state, source.state, distance),
         targetImmune: immune().immune(target.state, rule.terminalDebuff || "petrified"),
-        targetSurprised: Boolean(target.state.is_surprised),
+        sourcePrecedesTarget: policy().initiativePrecedes(turnOrder, source.combatant_id, target.combatant_id),
       };
       const decision = policy().decide(rule, facts);
       if (decision === "ineligible") continue;

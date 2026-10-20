@@ -260,7 +260,7 @@ def test_level_twenty_stroke_of_luck_replaces_failed_ability_check_with_twenty()
         FixedDiceProvider([1]), spend_action=False,
     )
     assert miss.hit is False
-    assert miss.turn_terminated is True
+    assert miss.turn_terminated is False
 
 
 def test_level_twenty_stroke_of_luck_uses_generic_miss_override_and_exact_source_name() -> None:
@@ -296,5 +296,5 @@ def test_level_twenty_stroke_of_luck_uses_generic_miss_override_and_exact_source
         FixedDiceProvider([1]), spend_action=False,
     )
     assert second.hit is False
-    assert second.turn_terminated is True
-    assert second.turn_termination_reason == "iron-pit-natural-1-attack"
+    assert second.turn_terminated is False
+    assert second.turn_termination_reason is None

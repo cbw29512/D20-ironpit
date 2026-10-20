@@ -29,7 +29,7 @@ def test_nonvisual_sense_does_not_trigger_gaze():
     rule = VisualTurnStartRule(source_id="source-trait", source_name="Printed Name", range_ft=30, save_dc=12)
     facts = dict(distance_ft=15, source_active=True, target_active=True,
                  source_sees_target=True, target_immune=False,
-                 target_surprised=False)
+                 source_precedes_target=False)
     assert decide_visual_turn_start(rule, VisualTurnStartFacts(
         **facts, target_sees_source=visual)) == "ineligible"
     assert decide_visual_turn_start(rule, VisualTurnStartFacts(

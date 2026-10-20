@@ -10,10 +10,10 @@ const P = window.IRON_PIT_BROWSER_TURN_START_VISUAL_POLICY;
 const basilisk = { sourceId: "source-1", sourceName: "Petrifying Gaze", rangeFt: 30, saveDc: 12 };
 const medusa = { sourceId: "source-2", sourceName: "Petrifying Gaze", rangeFt: 30, saveDc: 14, immediatePetrificationMargin: 5 };
 const facts = { distanceFt: 15, sourceActive: true, targetActive: true, sourceSeesTarget: true,
-  targetSeesSource: true, targetImmune: false, targetSurprised: false };
+  targetSeesSource: true, targetImmune: false, sourcePrecedesTarget: false };
 for (const rule of [basilisk, medusa]) {
   assert.equal(P.decide(rule, facts), "averted");
-  assert.equal(P.decide(rule, { ...facts, targetSurprised: true }), "save_required");
+  assert.equal(P.decide(rule, { ...facts, sourcePrecedesTarget: true }), "save_required");
   for (const patch of [{ distanceFt: 31 }, { sourceActive: false }, { targetActive: false },
     { sourceSeesTarget: false }, { targetSeesSource: false }, { targetImmune: true }]) {
     assert.equal(P.decide(rule, { ...facts, ...patch }), "ineligible");
@@ -43,7 +43,7 @@ try {
     assert.throws(() => P.decide(basilisk, { ...facts, distanceFt: value }));
   }
   for (const flag of ["sourceActive", "targetActive", "sourceSeesTarget",
-    "targetSeesSource", "targetImmune", "targetSurprised"]) {
+    "targetSeesSource", "targetImmune", "sourcePrecedesTarget"]) {
     assert.throws(() => P.decide(basilisk, { ...facts, [flag]: 1 }));
   }
   for (const value of [true, false, 9.5, "9"]) {
@@ -75,3 +75,13 @@ try {
   console.error = originalError;
 }
 assert.equal(P.resolveStage({ ...basilisk, saveAbility: "constitution" }, 1), "restrained");
+
+const earlier = P.initiativePrecedes(["gaze", "hero"], "gaze", "hero");
+const later = P.initiativePrecedes(["hero", "gaze"], "gaze", "hero");
+assert.equal(earlier, true, "Gaze first: victim must save");
+assert.equal(later, false, "Target first: automatically averts");
+assert.equal(P.decide({ ...basilisk, sourceName: "Pregen", saveDc: 11 }, { ...facts, sourcePrecedesTarget: earlier }), "save_required");
+assert.equal(P.decide({ ...basilisk, sourceName: "Homebrew" }, { ...facts, sourcePrecedesTarget: later }), "averted");
+assert.throws(() => P.initiativePrecedes(["hero", "hero", "gaze"], "gaze", "hero"));
+assert.throws(() => P.initiativePrecedes(["hero", "gaze"], "gaze", "unknown"));
+assert.throws(() => P.initiativePrecedes([], "gaze", "hero"));
