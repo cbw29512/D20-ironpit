@@ -54,6 +54,7 @@ def test_pinned_card_binds_exact_damage_and_approved_opener_only():
     assert len(actions) == 1
     card = actions[0]
     assert card.opening_initiative_only and card.name == "Deadly Leap"
+    assert card.target_scope == "all-other-creatures"
     assert (card.dc, card.save_ability_choices, card.range_ft) == (16, ["strength", "dexterity"], 30)
     assert card.area.shape == "square" and card.area.length_ft == 10
     assert [d.damage_type for d in card.damage_components] == ["bludgeoning", "slashing"]
