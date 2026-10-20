@@ -187,7 +187,7 @@ function neutralizeInitiative(setup) {
 {
   const { hero: fighter } = basicSetup("srd-commoner", "karnok-stoneward-l2");
   fighter.state.turn_terminated = true;
-  fighter.state.turn_termination_reason = "iron-pit-natural-1-attack";
+  fighter.state.turn_termination_reason = "explicit-source-turn-stop";
   fighter.state.action_available = false;
   fighter.state.resources["action-surge"] = 1;
   assert.equal(window.IRON_PIT_BROWSER_ACTION_SURGE.available(fighter.state, "1:hero-1:karnok-stoneward-l2"), false);

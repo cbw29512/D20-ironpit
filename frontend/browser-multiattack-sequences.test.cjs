@@ -53,7 +53,8 @@ for (const fixture of cases) {
   const { actor, setup } = setupFor(cases[0]);
   window.IRON_PIT_DICE = { roll: () => 1, rollMany: () => { throw new Error("Natural 1 must not roll damage."); } };
   const result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, actor, setup);
-  assert.equal(result.events.filter((e) => e.event_type === "attack").length, 2);
+  assert.equal(result.events.filter((e) => e.event_type === "attack").length, cases[0].weapons.length);
+  assert.ok(result.events.filter((e) => e.event_type === "attack").every(e => e.hit === false && e.turn_terminated === false));
   assert.equal(actor.state.turn_terminated, false);
 }
 assert.equal(cases.length, 6);

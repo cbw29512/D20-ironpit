@@ -99,10 +99,11 @@ def test_gaze_priority_works_for_any_card_owner(ordering):
     assert initiative_precedes(ordering, "source", "target")
 
 
-def test_natural_one_priority_comes_from_canonical_schedule():
-    # Even if a source has a greater numeric initiative total, the
-    # scheduler may put its natural-1 roll in the bottom priority bucket.
+def test_gaze_uses_canonical_initiative_schedule_without_d20_buckets():
+    # Under RAW, the schedule is sorted by the modified total; a natural 1
+    # does not impose a special bottom bucket.
     assert not initiative_precedes(["hero", "gaze"], "gaze", "hero")
+    assert initiative_precedes(["gaze", "hero"], "gaze", "hero")
 
 
 @pytest.mark.parametrize("bad,source,target", [

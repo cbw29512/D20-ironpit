@@ -90,11 +90,11 @@ def test_natural_one_allows_remaining_multiattack_slots() -> None:
     assert attacker.state.turn_terminated is False
 
 
-def test_action_surge_cannot_restart_a_natural_one_terminated_turn() -> None:
+def test_action_surge_cannot_restart_an_explicitly_terminated_turn() -> None:
     setup, _monster, fighter = _setup(hero_id="karnok-stoneward-l2")
     begin_turn(fighter.state)
     fighter.state.turn_terminated = True
-    fighter.state.turn_termination_reason = "iron-pit-natural-1-attack"
+    fighter.state.turn_termination_reason = "explicit-source-turn-stop"
     fighter.state.action_available = False
     fighter.state.bonus_action_available = False
     fighter.state.movement_remaining_ft = 0
