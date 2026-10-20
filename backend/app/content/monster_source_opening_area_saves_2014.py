@@ -65,6 +65,7 @@ def source_proven_opening_area_saves_2014(monster: SourceMonster2014) -> list[Sa
             save_ability="strength", save_ability_choices=["strength", "dexterity"],
             dc=n["dc"], range_ft=jump_range,
             opening_initiative_only=True,
+            target_scope="all-other-creatures",
             area=AreaTargeting(shape="square", origin="point", length_ft=10),
             damage_components=[
                 SaveDamageComponent(
