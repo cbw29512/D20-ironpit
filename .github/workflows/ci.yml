@@ -143,6 +143,10 @@ jobs:
         run: |
           git diff --exit-code -- frontend/browser-heroes.js frontend/figure-profiles.js frontend/browser-monsters-generated.js frontend/browser-monsters-2014.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json
           test -z "$(git status --porcelain --untracked-files=all -- frontend/browser-monsters-generated.js frontend/browser-monsters-2014.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json)"
+      - name: Rebuild Python/browser combat sequence oracles from the same source
+        run: |
+          PYTHONPATH=backend:scripts python scripts/grick_sequence_parity_fixture.py > frontend/test-fixtures/grick-sequence.json
+          PYTHONPATH=backend:scripts python scripts/fungus_sequence_parity_fixture.py > frontend/test-fixtures/fungus-sequence.json
       - name: Certify Python rules reference
         working-directory: backend
         run: timeout 20m pytest -vv --durations=25
