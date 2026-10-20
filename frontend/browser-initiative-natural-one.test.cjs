@@ -68,6 +68,18 @@ function neutralizeInitiative(setup) {
 
 {
   const setup = basicSetup(); neutralizeInitiative(setup);
+  setup.hero.state.template.initiative_bonus = 10;
+  window.IRON_PIT_DICE = queuedDice([1, 2]);
+  const initiative = window.IRON_PIT_BROWSER_INITIATIVE.resolve(setup);
+  assert.equal(initiative.groups[0].side, "heroes");
+  assert.equal(initiative.groups[0].natural_roll, 1);
+  assert.equal(initiative.groups[0].initiative_count, 11);
+  assert.ok(window.IRON_PIT_BROWSER_INITIATIVE.events(initiative, setup)
+    .every(event => !event.description.includes("bottom initiative priority")));
+}
+
+{
+  const setup = basicSetup(); neutralizeInitiative(setup);
   window.IRON_PIT_DICE = queuedDice([14, 14, 3]);
   const initiative = window.IRON_PIT_BROWSER_INITIATIVE.resolve(setup);
   const hero = initiative.groups.find((group) => group.side === "heroes");

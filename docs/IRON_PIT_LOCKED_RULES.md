@@ -53,7 +53,7 @@ These are explicit arena overrides, not RAW changes outside the Pit.
 
 - **No Flyby leave-reach exemption.** An opportunity-attack exemption does not authorize leaving engagement.
 - **No teleport relocation, plane shift, ethereal/incorporeal movement state, summoning, or vertical flight.**
-- **Natural 1 ends the turn.** A natural 1 on an attack roll is an automatic miss and immediately ends that creature's current turn. It does not undo earlier resolutions.
+- **Natural 1 uses RAW (2026-10-20).** A natural 1 on an attack roll is an automatic miss, not a turn-ending fumble. Unspent attacks/Bonus Actions remain legal. Initiative uses the rolled total plus modifiers; a natural 1 has no special bucket.
 - **Teleport only clears matching movement debuffs in place.** Grappled, Restrained, and other `ends_on_teleport` / ground-snare effects may end. Grid x/y does not change.
 
 Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §7, Attack natural 1, §10.1, §20.
@@ -93,7 +93,7 @@ Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §8, §22, §23; `docs/CANONICAL_CO
 - **Flexible Attack/Multiattack uses legal melee reach, otherwise ranged, then highest legal damage. Complete printed counts/combinations remain intact. Gladiator keeps its shield.** Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §10; architecture: source-preserving flexible attack slots.
 
 1. To-hit bonus + d20 versus AC.
-2. Natural 20 is a critical: automatic hit; double all damage dice required by the selected ruleset. Natural 1 is a miss and ends the turn.
+2. Natural 20 is a critical: automatic hit; double all damage dice required by the selected ruleset. Natural 1 is an automatic miss without prematurely ending the turn.
 3. Apply per-type resistance, vulnerability, and immunity to base damage and to each rider separately.
 4. Total the accepted components, then apply that total to Temporary HP / HP.
 5. Then resolve the on-hit condition save, if any. Condition immunity skips the save and the condition. A failed save applies the shared debuff with the printed duration and repeat-save timing.

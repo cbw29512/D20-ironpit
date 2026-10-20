@@ -6,15 +6,6 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { incapacitated: (state) => state.is_unconscious };
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION || { abilityCheckDisadvantage: () => 0, d20Modifier: () => 0 };
 
-  function priority(group) {
-    try {
-      return group.natural_roll === 1 ? 0 : 1;
-    } catch (error) {
-      console.error("Failed to resolve initiative priority bucket", { error });
-      throw error;
-    }
-  }
-
   function ownershipRank(group) {
     try {
       return group.side === "heroes" ? 1 : 0;
@@ -24,19 +15,10 @@
     }
   }
 
-  function sameBucket(left, right) {
-    try {
-      return (left.natural_roll === 1) === (right.natural_roll === 1);
-    } catch (error) {
-      console.error("Failed to compare initiative priority buckets", { error });
-      throw error;
-    }
-  }
-
   function tieNote(group, groups) {
     try {
       const tied = groups.filter((other) => (
-        other.initiative_count === group.initiative_count && sameBucket(group, other)
+        other.initiative_count === group.initiative_count
       ));
       if (tied.length < 2) return "";
       const sides = new Set(tied.map((other) => other.side));
@@ -86,8 +68,7 @@
         member.state.initiative_total = roll.total;
       });
     }
-    groups.sort((a, b) => priority(b) - priority(a)
-      || b.initiative_count - a.initiative_count
+    groups.sort((a, b) => b.initiative_count - a.initiative_count
       || ownershipRank(b) - ownershipRank(a)
       || a.index - b.index);
     const result = {
@@ -113,7 +94,7 @@
         group.members.forEach((member, memberIndex) => {
           slots.push({
             group, groupIndex, memberIndex, count: group.initiative_count,
-            bucket: priority(group), normal: 1, id: member.combatant_id,
+            normal: 1, id: member.combatant_id,
           });
           let grants = member.state.template.first_round_extra_turn_grants || [];
           if (!grants.length && Number.isInteger(member.state.template.first_round_extra_turn_initiative_offset)) {
@@ -127,7 +108,7 @@
             const count = group.initiative_count + grant.initiative_offset;
             slots.push({
               group, groupIndex, memberIndex, count,
-              bucket: 1, normal: 0, id: member.combatant_id,
+              normal: 0, id: member.combatant_id,
             });
             extras.push({
               combatant_id: member.combatant_id,
@@ -138,8 +119,7 @@
           }
         });
       });
-      slots.sort((a, b) => b.bucket - a.bucket
-        || b.count - a.count
+      slots.sort((a, b) => b.count - a.count
         || b.normal - a.normal
         || ownershipRank(b.group) - ownershipRank(a.group)
         || a.groupIndex - b.groupIndex
@@ -170,7 +150,6 @@
       const result = initiative.groups.map((group) => {
         const name = names.get(group.combatant_ids[0]);
         let description = `${name}${group.combatant_ids.length > 1 ? ` group (${group.combatant_ids.length})` : ""} rolls initiative ${group.initiative_count}.`;
-        if (group.natural_roll === 1) description += " Natural 1: bottom initiative priority.";
         description += tieNote(group, initiative.groups);
         return {
           sequence: sequence++, round_number: 0, event_type: "initiative",
@@ -194,5 +173,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_INITIATIVE = { events, firstRoundSchedule, priority, resolve, turnOrderForRound };
+  window.IRON_PIT_BROWSER_INITIATIVE = { events, firstRoundSchedule, resolve, turnOrderForRound };
 })();

@@ -53,7 +53,7 @@ For **each attempted attack**, use this decision table in order:
 | Card entry / input | Existing universal operation | Required outcome |
 |---|---|---|
 | action cost, remaining uses, target and range | action/resource/eligibility gates | Reject an illegal attack; an attempted legal attack spends its declared resource even when it misses |
-| attack bonus, target AC, roll modifiers | shared d20 attack roll | Natural 1 misses **and ends the active Pit turn**; natural 20 hits and uses critical dice; otherwise total >= effective AC hits |
+| attack bonus, target AC, roll modifiers | shared d20 attack roll | Natural 1 misses **without ending the turn**; natural 20 hits and uses critical dice; otherwise total >= effective AC hits |
 | miss | shared outcome and event stream | No on-hit damage or on-hit effect; proceed to next legal action/turn |
 | hit: each *ordered* typed damage component | shared dice + typed-defense resolver | Roll printed dice/bonus; immunity = 0; resistance halves rounded down; vulnerability doubles; resolve each type separately, preserving relevant qualifiers and source-defined exceptions |
 | hit: separate printed rider(s) | shared save/condition/timed-effect resolvers | Trigger only those effects specified on the card; poison **damage** never implies the Poisoned **condition** |

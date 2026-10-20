@@ -9,20 +9,11 @@ from app.domain.models import BattleEvent
 logger = logging.getLogger(__name__)
 
 
-def _same_initiative_bucket(left: InitiativeGroup, right: InitiativeGroup) -> bool:
-    try:
-        return (left.natural_roll == 1) == (right.natural_roll == 1)
-    except Exception as exc:
-        logger.exception("Failed to compare initiative priority buckets.")
-        raise RuntimeError("Initiative priority buckets could not be compared.") from exc
-
-
 def _initiative_tie_note(group: InitiativeGroup, groups: list[InitiativeGroup]) -> str:
     try:
         tied = [
             other for other in groups
             if other.initiative_count == group.initiative_count
-            and _same_initiative_bucket(group, other)
         ]
         if len(tied) < 2:
             return ""
@@ -45,8 +36,6 @@ def build_initiative_events(
         events: list[BattleEvent] = []
         for group in initiative.groups:
             description = f"{', '.join(group.combatant_ids)} act at Initiative {group.initiative_count}."
-            if group.natural_roll == 1:
-                description += " Natural 1: bottom initiative priority."
             description += _initiative_tie_note(group, initiative.groups)
             events.append(BattleEvent(
                 sequence=sequence,

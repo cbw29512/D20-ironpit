@@ -88,16 +88,16 @@ def test_natural_20_is_only_the_check_total() -> None:
     assert all("Tie reroll" not in event.description for event in events)
 
 
-def test_natural_1_has_bottom_priority() -> None:
+def test_natural_one_uses_normal_total_and_can_win_initiative() -> None:
     setup = _setup(["karnok-stoneward-l1"], ["srd-commoner"])
     _neutralize_initiative(setup)
+    setup.heroes[0].state.template.initiative_bonus = 10
     initiative = roll_encounter_initiative(setup, FixedDiceProvider([1, 2]))
-
-    assert initiative.groups[-1].side == "heroes"
-    assert initiative.groups[-1].natural_roll == 1
+    assert initiative.groups[0].side == "heroes"
+    assert initiative.groups[0].natural_roll == 1
+    assert initiative.groups[0].initiative_count == 11
     events, _ = build_initiative_events(initiative, 1)
-    hero_event = next(event for event in events if event.actor_id.startswith("hero-1:"))
-    assert "Natural 1: bottom initiative priority." in hero_event.description
+    assert all("bottom initiative priority" not in event.description for event in events)
 
 
 def test_pc_monster_tie_uses_dm_decision_without_reroll() -> None:

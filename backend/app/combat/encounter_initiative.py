@@ -58,15 +58,6 @@ def _base_groups(setup: EncounterSetup, dice: DiceProvider) -> list[InitiativeGr
     return groups
 
 
-def _priority_bucket(group: InitiativeGroup) -> int:
-    """Return the Iron Pit initiative bucket. Natural 20 is not special; natural 1 stays last."""
-    try:
-        return 0 if group.natural_roll == 1 else 1
-    except Exception as exc:
-        logger.exception("Failed to resolve the initiative priority bucket.")
-        raise RuntimeError("Initiative priority bucket could not be resolved.") from exc
-
-
 def _ownership_rank(group: InitiativeGroup) -> int:
     """Deterministic RAW-compatible tie ownership: DM lets heroes act before monsters."""
     try:
@@ -87,7 +78,7 @@ def _first_round_schedule(
         for group_index, group in enumerate(groups):
             for member_index, combatant_id in enumerate(group.combatant_ids):
                 normal_key = (
-                    _priority_bucket(group), group.initiative_count, 1,
+                    group.initiative_count, 1,
                     _ownership_rank(group),
                     -group_index, -member_index,
                 )
@@ -114,7 +105,7 @@ def _first_round_schedule(
                     count = group.initiative_count + initiative_offset
                     # Extra turns have an initiative count, not a second roll, and stay in the normal bucket.
                     extra_key = (
-                        1, count, 0,
+                        count, 0,
                         _ownership_rank(group),
                         -group_index, -member_index,
                     )
@@ -146,13 +137,12 @@ def turn_order_for_round(
         raise RuntimeError("Encounter turn schedule could not be resolved.") from exc
 
 def roll_encounter_initiative(setup: EncounterSetup, dice: DiceProvider) -> EncounterInitiative:
-    """Resolve initiative by check total, natural-1 house bucket, and deterministic RAW tie ownership."""
+    """Resolve initiative by RAW check total and deterministic tie ownership."""
     try:
         groups = _base_groups(setup, dice)
         indexed = {id(group): index for index, group in enumerate(groups)}
         groups.sort(
             key=lambda group: (
-                _priority_bucket(group),
                 group.initiative_count,
                 _ownership_rank(group),
                 -indexed[id(group)],
