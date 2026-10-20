@@ -118,6 +118,16 @@ def resolve_combat_turn(
         targets = target_order(attacker, setup)
         if not targets:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+        # A source-declared one-time opening Action resolves before closing movement.
+        # It replaces (rather than accompanies) the regular Attack Action.
+        opening_area = choose_area_save(attacker, setup, action_cost="action", opening_only=True)
+        if opening_area is not None:
+            action, placement = opening_area
+            opener_events, sequence = resolve_area_save(
+                sequence, round_number, attacker, setup, action, placement, dice,
+            )
+            events.extend(opener_events)
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         charge_events, sequence, charged = resolve_charge_closing(
             sequence, round_number, attacker, targets[0], dice, setup,
         )
