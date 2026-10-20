@@ -90,6 +90,25 @@ def test_winner_has_square_opener_and_loser_or_later_round_has_bite_only():
     assert any(attack.name == "Bite" for attack in actor.state.template.attacks)
 
 
+def test_opener_affects_allied_creatures_inside_impact_area():
+    actor, first, second, _, setup = _scene()
+    ally = _member("teammate", "monsters", 4, 2, first.state.template)
+    ally.state.initiative_total = 15
+    setup.monsters.append(ally)
+    selected = choose_area_save(actor, setup, opening_only=True)
+    assert selected is not None
+    action, placement = selected
+    assert action.target_scope == "all-other-creatures"
+    assert set(placement.target_ids) == {"first", "second", "teammate"}
+    events, _ = resolve_area_save(
+        1, 1, actor, setup, action, placement,
+        FixedDiceProvider([3] * 6 + [1, 20, 1]),
+    )
+    assert {event.target_id for event in events} == {"first", "second", "teammate"}
+    assert ally.state.current_hp == 74
+    assert "prone" in ally.state.active_effect_ids
+
+
 def test_opener_one_action_two_typed_components_independent_saves():
     actor, first, second, _, setup = _scene()
     selected = choose_area_save(actor, setup, opening_only=True)
