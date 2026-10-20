@@ -77,6 +77,13 @@
       encounterRoller: target,
       setup: options.setup || null,
     };
+    if (action.saveAbilityChoices?.length) {
+      const chooser = window.IRON_PIT_BROWSER_TARGET_CHOSEN_SAVE;
+      if (!chooser?.choose) throw new Error("Target-chosen saving throw runtime unavailable.");
+      const selectedAbility = chooser.choose(target.state, action.saveAbilityChoices, action.dc, saveContext);
+      // Keep every published card immutable while different targets select different saves.
+      action = { ...action, saveAbility: selectedAbility };
+    }
     const targetType = String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase();
     const automaticFailureTypes = (action.automaticFailureCreatureTypes || [])
       .map((creatureType) => String(creatureType).trim().toLowerCase())
