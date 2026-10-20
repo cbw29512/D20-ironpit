@@ -89,6 +89,7 @@ def move_toward_with_reactions(
     movement_source: MovementSource = "speed",
     disengaged: bool = False,
     turn_key: str | None = None,
+    compelled: bool = False,
 ) -> tuple[list[BattleEvent], int, BattleEvent | None]:
     """Open departure Reaction windows, then apply the intended move if it can continue."""
     try:
@@ -107,12 +108,13 @@ def move_toward_with_reactions(
                 movement_source=movement_source,
                 disengaged=disengaged,
                 turn_key=turn_key,
+                compelled=compelled,
             )
 
-        if movement_source == "speed" and not voluntary_activity_available(mover.state, "movement"):
+        if movement_source == "speed" and not compelled and not voluntary_activity_available(mover.state, "movement"):
             return [], sequence, None
         proposed_position, moved = _proposed_position(mover, target, desired_distance_ft)
-        if moved <= 0 or _approaches_fear_source(mover, target, setup, proposed_position):
+        if moved <= 0 or (not compelled and _approaches_fear_source(mover, target, setup, proposed_position)):
             return [], sequence, None
 
         events: list[BattleEvent] = []
@@ -136,7 +138,7 @@ def move_toward_with_reactions(
                 if mover.state.is_dead or mover.state.is_unconscious or speed_is_zero(mover.state) or newly_prone:
                     return events, sequence, None
 
-        if movement_source == "speed":
+        if movement_source == "speed" and not compelled:
             claim_voluntary_activity(mover.state, "movement")
         movement = move_toward_combatant(
             sequence, round_number, mover, target, desired_distance_ft,

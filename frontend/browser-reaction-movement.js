@@ -25,12 +25,12 @@
 
   function gridMoveToward(sequence, round, mover, target, setup, desired, movementSource, options) {
     try {
-      if (movementSource === "speed" && !window.IRON_PIT_ACTION_ECONOMY?.voluntaryActivityAvailable?.(mover.state, "movement")) return { events: [], sequence, movement: null };
+      if (movementSource === "speed" && !options.compelled && !window.IRON_PIT_ACTION_ECONOMY?.voluntaryActivityAvailable?.(mover.state, "movement")) return { events: [], sequence, movement: null };
       if (!setup.map_definition || !mover.state.position || !target.state.position) {
         throw new Error("Grid movement requires map and combatant positions.");
       }
       const members = [...setup.heroes, ...setup.monsters];
-      const allowLeaveMelee = movementSource === "forced";
+      const allowLeaveMelee = movementSource === "forced" || options.compelled === true;
       const plan = GM().planToward(
         setup.map_definition,
         mover,
@@ -45,7 +45,7 @@
       const events = [], reactors = mover.side === "heroes" ? setup.monsters : setup.heroes;
       let lastMovement = null;
       for (const destination of plan.path) {
-        if (GR().approachesFearSource(mover, destination, setup)) break;
+        if (!options.compelled && GR().approachesFearSource(mover, destination, setup)) break;
         const beforePosition = { ...mover.state.position };
         const stepCost = GS().movementStepCostFt(
           setup.map_definition,
@@ -76,7 +76,7 @@
         }
         if (stepCost > mover.state.movement_remaining_ft) break;
         const beforeDistance = S().distance(mover, target);
-        if (movementSource === "speed") window.IRON_PIT_ACTION_ECONOMY?.claimActivity?.(mover.state, "movement");
+        if (movementSource === "speed" && !options.compelled) window.IRON_PIT_ACTION_ECONOMY?.claimActivity?.(mover.state, "movement");
         mover.state.position = { ...destination };
         mover.state.movement_remaining_ft -= stepCost;
         const afterDistance = S().distance(mover, target);
@@ -129,7 +129,7 @@
         if (!mover.state.position || !target.state.position) throw new Error("Grid encounter cannot mix position authority.");
         return gridMoveToward(sequence, round, mover, target, setup, desired, movementSource, options);
       }
-      if (movementSource === "speed" && !window.IRON_PIT_ACTION_ECONOMY?.voluntaryActivityAvailable?.(mover.state, "movement")) return { events: [], sequence, movement: null };
+      if (movementSource === "speed" && !options.compelled && !window.IRON_PIT_ACTION_ECONOMY?.voluntaryActivityAvailable?.(mover.state, "movement")) return { events: [], sequence, movement: null };
       const proposal = preview(mover, target, desired);
       if (!proposal.moved) return { events: [], sequence, movement: null };
       const events = [], wasProne = mover.state.active_effect_ids.includes("prone");
@@ -149,7 +149,7 @@
           }
         }
       }
-      const movement = S().moveToward(mover, target, desired);
+      const movement = S().moveToward(mover, target, desired, !options.compelled);
       return { events, sequence, movement };
     } catch (error) {
       console.error("Failed browser reaction-aware movement", { mover: mover.combatant_id, error });

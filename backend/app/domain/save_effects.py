@@ -32,7 +32,7 @@ class FailedSaveTimedEffect(BaseModel):
     repeat_save_failure_condition_id: ConditionName | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     next_attack_disadvantage: bool = False
-    turn_behavior: Literal["normal", "forced_retreat", "single_activity"] = "normal"
+    turn_behavior: Literal["normal", "forced_retreat", "single_activity", "forced_approach_source"] = "normal"
     ends_on_damage: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
