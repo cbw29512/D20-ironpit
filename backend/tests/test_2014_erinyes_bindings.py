@@ -92,7 +92,6 @@ def test_failed_save_persists_until_shared_condition_removal_no_timer() -> None:
 def test_changed_source_save_and_other_unverified_riders_stay_blocked() -> None:
     source = _source()
     for before, after in (
-        ("DC 14 Constitution", "DC 15 Constitution"),
         ("lesser restoration spell or similar magic", "the end of its next turn"),
         ("piercing damage plus 13 (3d8) poison damage", "piercing damage plus 13 (3d8) fire damage"),
     ):
@@ -113,3 +112,31 @@ def test_printed_hellish_clause_drift_cannot_add_magical_attacks() -> None:
     })
     assert "Hellish Weapons" not in included_weapon_trait_names_2014(mutated)
     assert "source:trait" in basic_blockers_2014(mutated)
+
+
+def test_source_dc_and_renamed_attack_are_data_not_runtime_dispatch() -> None:
+    source = _source()
+    dc_changed = source.model_copy(update={
+        "source_actions": source.source_actions.replace(
+            "DC 14 Constitution", "DC 15 Constitution"
+        ),
+    })
+    revised = source_completed_mixed_attack_2014(dc_changed, _bow(dc_changed))
+    assert revised.source_complete
+    assert revised.on_hit_save_effect["dc"] == 15
+    assert _bow(source).on_hit_save_effect is None
+
+    original_bow = _bow(source)
+    renamed_bow = original_bow.model_copy(update={
+        "id": "arrow-of-thorns", "name": "Arrow of Thorns",
+    })
+    renamed = source.model_copy(update={
+        "id": "synthetic-archer", "name": "Unrelated Archer",
+        "attacks": [renamed_bow],
+        "source_actions": source.source_actions.replace(
+            "<strong>Longbow.</strong>", "<strong>Arrow of Thorns.</strong>"
+        ),
+    })
+    bound = source_completed_mixed_attack_2014(renamed, renamed_bow)
+    assert bound.source_complete and bound.on_hit_save_effect["dc"] == 14
+    assert bound.on_hit_damage == renamed_bow.on_hit_damage
