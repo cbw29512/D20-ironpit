@@ -1,5 +1,6 @@
 from __future__ import annotations
 from app.domain.visual_turn_start import VisualTurnStartRule
+from app.domain.visual_disguise import VisualDisguiseAction
 from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, HpThresholdConditionAction, HpThresholdInstantDeathAction, SavingThrowAction
@@ -144,6 +145,7 @@ class CombatantTemplate(BaseModel):
     turn_start_save_condition_reaction: TurnStartSaveConditionReaction | None = None
     incoming_damage_type_resistance_reaction: IncomingDamageTypeResistanceReaction | None = None
     visual_turn_start_rule: VisualTurnStartRule | None = None
+    visual_disguise_action: VisualDisguiseAction | None = None
     parry_reaction: ParryReaction | None = None
     redirect_attack_reaction: RedirectAttackReaction | None = None
     damage_reaction_attack: DamageReactionAttack | None = None

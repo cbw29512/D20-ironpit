@@ -18,22 +18,25 @@ from app.combat.timed_self_buff_policy import (
     timed_self_buff_resource,
 )
 from app.combat.timed_self_buffs import resolve_timed_self_buff
+from app.combat.visual_disguise import resolve_visual_disguise_opening
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent
 from app.domain.spells import DefensiveSpellAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
+from app.domain.visual_disguise import VisualDisguiseAction
 
 logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
 class OpeningBuffChoice:
-    kind: Literal["spell", "timed-self-buff", "damage-resistance"]
+    kind: Literal["spell", "timed-self-buff", "damage-resistance", "visual-disguise"]
     priority: int
     spell: DefensiveSpellAction | None = None
     slot_level: int | None = None
     resource: object | None = None
     timed_action: TimedSelfBuffAction | None = None
+    visual_disguise_action: VisualDisguiseAction | None = None
 
 
 def _timed_choice(member: EncounterCombatant, setup: EncounterSetup) -> TimedSelfBuffAction | None:
@@ -67,6 +70,12 @@ def choose_opening_buff(
             return None
 
         candidates: list[OpeningBuffChoice] = []
+        visual = member.state.template.visual_disguise_action
+        if visual is not None and visual.opening_eligible and not member.state.magical_visual_disguise_active:
+            candidates.append(OpeningBuffChoice(
+                kind="visual-disguise", priority=visual.opening_priority,
+                visual_disguise_action=visual,
+            ))
         spell_choice = choose_defensive_spell(member, setup)
         if spell_choice is not None:
             spell, slot_level, resource = spell_choice
@@ -118,6 +127,11 @@ def resolve_opening_buff(
             raise ValueError(
                 f"{member.state.template.name} already committed its one opening buff this battle."
             )
+
+        if choice.kind == "visual-disguise":
+            if choice.visual_disguise_action is None:
+                raise ValueError("Opening visual disguise choice is incomplete.")
+            return resolve_visual_disguise_opening(sequence, member)
 
         if choice.kind == "spell":
             if choice.spell is None or choice.slot_level is None or choice.resource is None:

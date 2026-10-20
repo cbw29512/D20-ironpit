@@ -32,6 +32,9 @@
       const spellChoice = P()?.choose(member, setup) || null;
       const timed = T() ? timedChoice(member, setup) : null;
       const candidates = [];
+      const disguise = member.state.template.visualDisguiseAction;
+      if (disguise?.openingEligible === true && !member.state.magical_visual_disguise_active)
+        candidates.push({ kind: "visual-disguise", priority: disguise.openingPriority, level: 0, value: disguise });
       if (spellChoice) candidates.push({
         kind: "spell",
         priority: spellChoice.spell.priority || 0,
@@ -64,6 +67,20 @@
     try {
       if (member.state.opening_buff_id) {
         throw new Error(`${member.state.template.name} already committed its one opening buff this battle.`);
+      }
+      if (choice.kind === "visual-disguise") {
+        const action = choice.value;
+        if (!action || action.openingEligible !== true || member.state.is_dead
+            || member.state.current_hp <= 0 || member.state.magical_visual_disguise_active
+            || action.concealsTrueForm !== true) throw new Error("Invalid opening visual disguise.");
+        member.state.magical_visual_disguise_active = true;
+        member.state.opening_buff_id = action.id;
+        return {
+          sequence, round_number: 0, event_type: "feature",
+          actor_id: member.combatant_id, actor_name: member.state.template.name,
+          feature_id: action.id, animation: "condition",
+          description: `Precombat preparation: ${member.state.template.name} uses ${action.name} as the free opening buff.`,
+        };
       }
       if (choice.kind === "spell") {
         const { spell, slotLevel } = choice.value;
@@ -105,5 +122,24 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_PRECOMBAT_BUFFS = { choose, prepare, resolve, timedChoice };
+  function dismissFirstTurn(member, sequence, round) {
+    const action = member.state.template.visualDisguiseAction;
+    if (!action || action.dismissOnFirstTurn !== true
+        || !member.state.magical_visual_disguise_active
+        || member.state.opening_buff_id !== action.id
+        || member.state.turns_started !== 1) return null;
+    const economy = window.IRON_PIT_ACTION_ECONOMY;
+    if (!economy?.available || !economy?.spend)
+      throw new Error("Visual disguise dismissal requires universal Action economy.");
+    if (!economy.available(member.state, action.dismissalCost)) return null;
+    economy.spend(member.state, action.dismissalCost);
+    member.state.magical_visual_disguise_active = false;
+    return {
+      sequence, round_number: round, event_type: "feature",
+      actor_id: member.combatant_id, actor_name: member.state.template.name,
+      feature_id: action.id, animation: "condition-ended",
+      description: `${member.state.template.name} dismisses ${action.name} using ${action.dismissalCost === "bonus_action" ? "a Bonus Action" : "an Action"}; its true form is now visible to eligible observers.`,
+    };
+  }
+  window.IRON_PIT_BROWSER_PRECOMBAT_BUFFS = { choose, prepare, resolve, timedChoice, dismissFirstTurn };
 })();

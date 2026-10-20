@@ -1,5 +1,6 @@
 from __future__ import annotations
 from app.domain.visual_turn_start import VisualTurnStartRule
+from app.domain.visual_disguise import VisualDisguiseAction
 
 from app.domain.attack_action_definitions import all_action_slots
 
@@ -73,6 +74,7 @@ class CombatantDefinition(BaseModel):
     bonus_attack_grants: list[BonusAttackGrant] = Field(default_factory=list)
     bonus_tactical_action_grants: list[BonusActionTacticalGrant] = Field(default_factory=list)
     visual_turn_start_rule: VisualTurnStartRule | None = None
+    visual_disguise_action: VisualDisguiseAction | None = None
     attacks: list[AttackCapabilityDefinition] = Field(min_length=1)
     primary_attack_id: str
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None

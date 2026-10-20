@@ -1222,6 +1222,25 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 "requiresSourceCanSeeTarget": rule.requires_source_can_see_target,
                 "requiresTargetCanSeeSource": rule.requires_target_can_see_source,
             }
+        if template.visual_disguise_action is not None:
+            visual = template.visual_disguise_action
+            row["visualDisguiseAction"] = {
+                "id": visual.id, "name": visual.name,
+                "activationCost": visual.activation_cost,
+                "dismissalCost": visual.dismissal_cost,
+                "concealsTrueForm": visual.conceals_true_form,
+                "magicalIllusion": visual.magical_illusion,
+                "endsIfOwnerDead": visual.ends_if_owner_dead,
+                "physicalInspectionInconsistent": visual.physical_inspection_inconsistent,
+                "inspectionCost": visual.inspection_cost,
+                "inspectionAbility": visual.inspection_ability,
+                "inspectionSkill": visual.inspection_skill,
+                "inspectionDc": visual.inspection_dc,
+                "investigationRevealsTrueForm": visual.investigation_reveals_true_form,
+                "openingEligible": visual.opening_eligible,
+                "openingPriority": visual.opening_priority,
+                "dismissOnFirstTurn": visual.dismiss_on_first_turn,
+            }
         if template.visual_turn_start_rule is not None:
             rule = template.visual_turn_start_rule
             row["visualTurnStartRule"] = {
