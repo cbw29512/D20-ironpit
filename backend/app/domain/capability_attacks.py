@@ -132,6 +132,7 @@ class SaveCapabilityDefinition(BaseModel):
         default=None, exclude_if=lambda value: value is None,
     )
     grapple: GrappleEffectDefinition | None = None
+    opening_initiative_only: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     requires_no_active_grapple: bool = False
