@@ -1231,7 +1231,14 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 "immediatePetrificationMargin": rule.immediate_petrification_margin,
                 "initialDebuff": rule.initial_debuff,
                 "terminalDebuff": rule.terminal_debuff,
+                "requiredTargetCreatureTypes": list(rule.required_target_creature_types),
+                "requiresSourceSight": rule.requires_source_sight,
+                "requiresSourceNotIncapacitated": rule.requires_source_not_incapacitated,
+                "requiresTrueFormVisibility": rule.requires_true_form_visibility,
+                "sourceEffectImmunityOnSuccess": rule.source_effect_immunity_on_success,
             }
+            if rule.failed_save_timed_effect is not None:
+                row["visualTurnStartRule"]["failedSaveTimedEffect"] = _failed_save_timed_effect(rule.failed_save_timed_effect)
         if template.parry_reaction:
             row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}
         if template.redirect_attack_reaction:

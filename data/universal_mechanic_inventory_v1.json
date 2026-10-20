@@ -5882,7 +5882,7 @@
       "source:extra-action": 53,
       "source:legendary": 9,
       "source:reaction": 3,
-      "source:trait": 66
+      "source:trait": 65
     },
     "unresolved_printed_abilities": [
       {
@@ -6043,13 +6043,6 @@
           "Roper"
         ],
         "printed_name": "Grasping Tendrils"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Sea Hag"
-        ],
-        "printed_name": "Horrific Appearance"
       },
       {
         "demand_count": 1,

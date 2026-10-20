@@ -16,9 +16,11 @@ class VisualTurnStartFacts:
     target_sees_source: bool
     target_immune: bool
     source_precedes_target: bool
+    source_true_form_visible: bool = True
+    target_type_allowed: bool = True
 
 def initiative_precedes(turn_order: Sequence[str], source_id: str, target_id: str) -> bool:
-    """Use the engine's *resolved* initiative order, including natural-one/tie policy."""
+    """Use the engine's resolved RAW initiative order, including ordinary ties."""
     try:
         if not isinstance(turn_order, (list, tuple)) or not turn_order:
             raise ValueError("Gaze priority requires a resolved initiative order.")
@@ -43,7 +45,13 @@ def decide_visual_turn_start(rule: VisualTurnStartRule, facts: VisualTurnStartFa
             raise ValueError("Invalid visual distance")
         if any(type(getattr(facts, key)) is not bool for key in ("source_active", "target_active", "source_sees_target", "target_sees_source", "target_immune", "source_precedes_target")):
             raise ValueError("Visual eligibility flags must be booleans")
-        if facts.distance_ft > rule.range_ft or not all((facts.source_active, facts.target_active, facts.source_sees_target, facts.target_sees_source)) or facts.target_immune:
+        if type(facts.source_true_form_visible) is not bool or type(facts.target_type_allowed) is not bool:
+            raise ValueError("Invalid qualified visual eligibility.")
+        if (facts.distance_ft > rule.range_ft or not facts.source_active or not facts.target_active
+                or (rule.requires_source_sight and not facts.source_sees_target)
+                or not facts.target_sees_source or facts.target_immune
+                or not facts.target_type_allowed
+                or (rule.requires_true_form_visibility and not facts.source_true_form_visible)):
             return "ineligible"
         return "save_required" if facts.source_precedes_target else "averted"
     except Exception:

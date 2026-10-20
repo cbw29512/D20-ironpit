@@ -16,8 +16,8 @@
       actor => actor.combatant_id !== target.combatant_id &&
         actor.state.template.visualTurnStartRule
     );
-    // The initiative scheduler already applies natural-one priority, tie
-    // ownership, and party/monster order. Never re-sort by raw d20 totals.
+    // Consume the already resolved RAW initiative sequence and its tie breaks.
+    // Initiative order decides the explicit Iron Pit eye-aversion exception.
     const turnOrder = ctx.initiative?.turn_order;
     if (sources.length && (!Array.isArray(turnOrder) || !turnOrder.length)) {
       throw new Error("A visual turn-start source requires resolved initiative order.");
@@ -28,13 +28,25 @@
       const distance = state().distance(source, target);
       const facts = {
         distanceFt: distance,
-        sourceActive: source.state.current_hp > 0 && !conditions().incapacitated(source.state),
+        sourceActive: source.state.current_hp > 0 &&
+          (rule.requiresSourceNotIncapacitated === false || !conditions().incapacitated(source.state)),
         targetActive: target.state.current_hp > 0 && !target.state.is_dead,
         sourceSeesTarget: conditions().canSee(source.state, target.state, distance),
         targetSeesSource: conditions().canSee(target.state, source.state, distance),
-        targetImmune: immune().immune(target.state, rule.terminalDebuff || "petrified"),
+        targetImmune: immune().immune(target.state, rule.failedSaveTimedEffect?.effectId || rule.terminalDebuff || "petrified"),
+        sourceTrueFormVisible: source.state.true_form_visible !== false,
+        targetTypeAllowed: !(rule.requiredTargetCreatureTypes || []).length ||
+          (rule.requiredTargetCreatureTypes || []).some(type =>
+            (target.state.template.creature_type || "").toLowerCase().split(" (", 1)[0] === type.toLowerCase()),
         sourcePrecedesTarget: policy().initiativePrecedes(turnOrder, source.combatant_id, target.combatant_id),
       };
+      if (rule.failedSaveTimedEffect) {
+        if (window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS.isImmune(target, { id: rule.sourceId }, source.combatant_id)) continue;
+        const existing = (target.state.timed_effects || []).some(e =>
+          e.source_id === source.combatant_id && e.source_effect_id === rule.sourceId &&
+          e.effect_id === rule.failedSaveTimedEffect.effectId);
+        if (existing) continue; // The existing timed effect owns its repeat-save lifecycle.
+      }
       const decision = policy().decide(rule, facts);
       if (decision === "ineligible") continue;
       if (decision === "averted") {
@@ -50,7 +62,33 @@
         });
         continue;
       }
-      const save = saves().resolveSavingThrow(target.state, rule.saveAbility || "constitution", rule.saveDc);
+      const save = saves().resolveSavingThrow(target.state, rule.saveAbility || "constitution", rule.saveDc,
+        { encounterRoller: target, setup, roundNumber: round });
+      if (rule.failedSaveTimedEffect) {
+        let applied = [];
+        if (save.succeeded) {
+          window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS.grantImmunity(
+            target.state, rule.sourceId, source.combatant_id, round,
+            { sourceTemplate: source.state.template },
+          );
+        } else {
+          const effect = window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS.apply(
+            source, target, { id: rule.sourceId, magicalEffect: false },
+            rule.failedSaveTimedEffect, round, setup,
+          );
+          if (effect) applied = Array.isArray(effect) ? effect : [effect];
+        }
+        events.push({
+          sequence: sequence++, round_number: round, event_type: "saving_throw",
+          actor_id: source.combatant_id, target_id: target.combatant_id,
+          feature_id: rule.sourceId, save_ability: rule.saveAbility || "wisdom",
+          save_dc: rule.saveDc, saving_throw_roll: save.roll, save_succeeded: save.succeeded,
+          applied_condition_ids: applied, animation: "condition",
+          description: target.state.template.name + (save.succeeded ? " resists " : " fails ") + rule.sourceName + ".",
+        });
+        if (target.state.is_dead) break;
+        continue;
+      }
       const current = (target.state.timed_effects || []).find(
         e => e.source_id === source.combatant_id && e.source_effect_id === rule.sourceId &&
           e.effect_id === (rule.initialDebuff || "restrained")
