@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.ability_score_reduction import effective_ability_score
+from app.combat.ability_score_reduction import effective_ability_score, ability_modifier_delta
 from app.combat.d20_bonus_dice import (
     apply_d20_bonus_die_if_useful,
     apply_resource_backed_d20_bonus_if_useful,
@@ -19,6 +19,23 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import CombatantState, DiceRoll, RollMode, RollRevision
 
 logger = logging.getLogger(__name__)
+
+
+def skill_check_bonus(state: CombatantState, ability: AbilityName, skill: str) -> int:
+    """Use the immutable card's finalized skill bonus, or the live ability modifier.
+
+    Unlike a generic saving throw, a skill check uses the source's declared
+    skill proficiency/expertise through `skill_bonuses` when present. Temporary
+    score reductions modify either result only in fight state.
+    """
+    if not isinstance(skill, str) or not skill.strip():
+        raise ValueError("A skill check requires a printed skill name.")
+    if state.template.ability_scores is None:
+        raise ValueError("Skill check requires source-certified ability scores.")
+    base = state.template.skill_bonuses.get(skill.lower())
+    if base is None:
+        base = state.template.ability_scores.modifier(ability)
+    return int(base) + ability_modifier_delta(state, ability)
 
 
 def ability_check_roll_mode(

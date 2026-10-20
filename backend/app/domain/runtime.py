@@ -55,6 +55,7 @@ class CombatantState(BaseModel):
     is_surprised: bool = False
     true_form_visible: bool = True
     magical_visual_disguise_active: bool = False
+    recognized_visual_disguise_source_ids: list[str] = Field(default_factory=list)
     max_hp_bonus: int = Field(default=0, ge=0)
     temporary_hp: int = Field(default=0, ge=0)
     position: GridPosition | None = None
