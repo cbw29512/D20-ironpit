@@ -66,6 +66,17 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
         if trait_name in informational_clauses:
             folded = source.casefold()
             return all(clause.casefold() in folded for clause in informational_clauses[trait_name])
+        if trait_name == "Confer Fire Resistance":
+            # Rider-only resistance has no eligible recipient on the
+            # standard Pit's no-mount board. Do not give it to the owner:
+            # its own printed Fire immunity is separate and remains active.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(source).get(trait_name, "")
+            normalized = " ".join(printed.casefold().replace("’", "'").split())
+            return normalized == (
+                "the nightmare can grant resistance to fire damage "
+                "to anyone riding it."
+            )
         if trait_name == "Sense Magic":
             # This only reports magic's presence. It never grants visibility,
             # target location, Advantage, a save, or a combat action.

@@ -2,7 +2,7 @@ from __future__ import annotations
 from collections import Counter
 import logging
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
-from app.content.monster_arena_action_policy_2014 import PIT_BANNED_ACTION_LABELS_2014
+from app.content.monster_arena_action_policy_2014 import PIT_BANNED_ACTION_LABELS_2014, source_proven_ethereal_shift_action_2014
 from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014, verified_arena_inert_trait_2014
 from app.content.monster_informational_action_proofs_2014 import verified_nonactionable_action_2014
 from app.content.monster_arena_unavailable_reactions_2014 import arena_unavailable_reaction_names_2014
@@ -84,6 +84,11 @@ def _source_name_blockers(
         | _ARENA_ABSENT_CONTEXT_ACTION_LABELS
         | _ARENA_UNAVAILABLE_SUMMON_ACTION_LABELS
         | _ARENA_NEUTRAL_MIND_ACTION_LABELS
+        | {
+            action_label_from_name(name)
+            for name in monster.action_names
+            if source_proven_ethereal_shift_action_2014(monster, name)
+        }
         | ({"animate chains"} if supports_animate_chains_arena_unavailable_2014(monster) else set())
         | ({"change shape"} if approved_inert_change_shape_2014(monster) else set())
         | _leadership_labels(monster)
