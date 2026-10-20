@@ -202,9 +202,11 @@
     if (damageOutcome === "undead_fortitude") description += ` ${actualTarget.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     for (const condition of [...new Set(applied)]) description += ` ${actualTarget.state.template.name} is ${condition === "prone" ? "knocked Prone" : condition === "restrained" ? "Restrained while Grappled" : condition.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}.`;
     if (ammunitionRemaining !== null) description += ` ${attack.name}: ${ammunitionRemaining} ammunition remaining.`;
+    const ownerExpiryRequired = (attacker.state.timed_effects || []).some((effect) => effect.ends_on_owner_attack);
     const expiry = window.IRON_PIT_BROWSER_TIMED?.expireOnOwnerEvent;
-    if (!expiry) throw new Error("Browser weapon attacks require universal owner-action expiry.");
-    const expiredOwnerEffects = expiry(attacker.state, "attack", extra.affectedStates || states(extra.setup));
+    if (ownerExpiryRequired && !expiry) throw new Error("Browser owner-effect expiry is unavailable.");
+    const expiredOwnerEffects = ownerExpiryRequired
+      ? expiry(attacker.state, "attack", extra.affectedStates || states(extra.setup)) : [];
     if (expiredOwnerEffects.length) description += ` ${attacker.state.template.name}'s ${expiredOwnerEffects.join(", ")} ends after the attack.`;
     const event = { sequence, round_number: round, event_type: "attack", actor_id: attacker.combatant_id, actor_name: attacker.state.template.name,
       target_id: actualTarget.combatant_id, target_name: actualTarget.state.template.name, attack_name: attack.name, target_ac: targetAc,
