@@ -50,7 +50,11 @@
     const recklessStarted = extra.allowReckless === true && B2().activate(attacker, attack, round);
     if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id, extra.setup);
-    const disadvantage = conditions.disadvantage + SAP().disadvantage(attacker.state)
+    const visualAversionDisadvantage = window.IRON_PIT_BROWSER_VISUAL_SOURCE_AVERSION?.attackDisadvantage(
+      attacker.state.visual_aversion_windows || [],
+      attacker.combatant_id, target.combatant_id, attacker.state.turns_started || 0,
+    ) || 0;
+    const disadvantage = conditions.disadvantage + visualAversionDisadvantage + SAP().disadvantage(attacker.state)
       + (T()?.nextAttackDisadvantage(attacker.state) || 0) + (extra.otherDisadvantageSources || 0) + (window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS?.disadvantageSources(attacker, extra.setup, "attack_rolls") || 0) + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(attacker.state, attack.attackAbility || attack.attack_ability) || 0)
       + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.attackRollDisadvantage(attacker.state) || 0);
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);

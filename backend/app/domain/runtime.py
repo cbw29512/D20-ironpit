@@ -13,6 +13,7 @@ from app.domain.modifiers import CombatModifier, ConcentrationState
 from app.domain.persistent_spell_attacks import PersistentSpellAttackState
 from app.domain.replacement_forms import ReplacementFormState
 from app.domain.timed_effects import TimedEffect, TimedTurnBehavior
+from app.domain.visual_aversion import VisualAversionWindow
 
 
 class ResourceState(BaseModel):
@@ -79,6 +80,7 @@ class CombatantState(BaseModel):
     voluntary_turn_activity: Literal["movement", "action", "bonus_action"] | None = None
     resources: list[ResourceState] = Field(default_factory=list)
     active_effect_ids: list[str] = Field(default_factory=list)
+    visual_aversion_windows: list[VisualAversionWindow] = Field(default_factory=list)
     suppressed_sense_ids: list[Literal["smell", "blindsight", "truesight"]] = Field(default_factory=list)
     active_buff_effect_ids: list[str] = Field(default_factory=list)
     opening_buff_id: str | None = None

@@ -44,5 +44,8 @@
       return { visualSight: visual, canPerceive: visual || nonvisualPerception };
     } catch (error) { console.error("Failed source-scoped visual perception", error); throw error; }
   }
-  window.IRON_PIT_BROWSER_VISUAL_SOURCE_AVERSION = { record, active, perceive };
+  function attackDisadvantage(windows, observerId, targetId, turn) {
+    return active(windows, observerId, targetId, turn) ? 1 : 0;
+  }
+  window.IRON_PIT_BROWSER_VISUAL_SOURCE_AVERSION = { record, active, perceive, attackDisadvantage };
 })();

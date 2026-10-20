@@ -22,6 +22,9 @@ const second = A.record(first, "observer", "source-b", 1);
 assert.equal(second.length, 2);
 assert.equal(first.length, 1);
 assert.equal(A.record(second, "observer", "source-a", 2).length, 1);
+assert.equal(A.attackDisadvantage(first, "observer", "source-a", 1), 1);
+assert.equal(A.attackDisadvantage(first, "observer", "source-b", 1), 0);
+assert.equal(A.attackDisadvantage(first, "observer", "source-a", 2), 0);
 const rule = { sourceId: "source-trait", sourceName: "Printed Name", rangeFt: 30, saveDc: 12 };
 const facts = { distanceFt: 15, sourceActive: true, targetActive: true,
   sourceSeesTarget: true, targetImmune: false, sourcePrecedesTarget: false };

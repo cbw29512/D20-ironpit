@@ -1,5 +1,12 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Gaze avoidance attack disadvantage — 2026-10-20 PR pending
+
+- Source-neutral aversion windows already exist for Basilisk/Medusa visual turn-start rules and future Sea Hag visual fear. Browser turn-start records source identity; no creature-name dispatch.
+- Work scope: actually include source-specific aversion in Python/browser shared weapon attack roll Disadvantage, retaining the ordinary Blinded condition only when independently applied, not automatically. Each target/source has independent expiry at the start of observer's next turn and fresh fights start with no windows.
+- Full Sea Hag Horrific Appearance, Illusory Appearance and monster admission remain separate. 2014 source admission stays at the generated count until proven. Browser/Python fight completion and Netlify remain unverified/locked.
+
+
 ## Harpy compelled-approach foundation — 2026-10-20
 
 - Owner: Codex, ACTIVE in draft PR #974 on `feat/2014-compelled-approach-20261020`, rebased from main `cb42a95025e48649673e98d3b780ec787d503ef8`. Subsystem ownership: timed turn behavior plus reaction-aware movement only.

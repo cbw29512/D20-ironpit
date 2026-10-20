@@ -531,6 +531,7 @@ jobs:
           node frontend/browser-dice-recording.test.cjs
           node frontend/browser-turn-start-visual-policy.test.cjs
           node frontend/browser-visual-source-aversion.test.cjs
+          node frontend/browser-source-aversion-attack-roll.test.cjs
           node frontend/browser-visual-turn-start-integration.test.cjs
           IRON_PIT_RECORD_GOLDENS=1 node frontend/browser-engine.test.cjs
           node frontend/engine-test-lab.test.cjs
