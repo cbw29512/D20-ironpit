@@ -5864,7 +5864,7 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 92,
+    "blocked_monster_count": 91,
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
@@ -5879,10 +5879,10 @@
       "mechanic:spellcasting": 36,
       "mechanic:swallow": 7,
       "multiattack:complex": 12,
-      "source:extra-action": 54,
+      "source:extra-action": 53,
       "source:legendary": 9,
       "source:reaction": 3,
-      "source:trait": 69
+      "source:trait": 68
     },
     "unresolved_printed_abilities": [
       {
@@ -5919,13 +5919,6 @@
           "Shield Guardian"
         ],
         "printed_name": "Bound"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Nightmare"
-        ],
-        "printed_name": "Confer Fire Resistance"
       },
       {
         "demand_count": 1,
