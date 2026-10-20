@@ -1,5 +1,8 @@
 # Iron Pit Pregen and Content Rules Contract
 
+**Shared form boundary:** Monster and Character are editor choices, but both produce the same validated combatant definition and use the same combat engine. A character's derived AC, attack/damage modifiers, DCs, proficiencies and equipment are computed in its edition-specific *build* layer before combat; a monster's source-final statistics are declared on its card. A renamed or cross-sourced effect runs through identical universal triggers, saves, typed damage and condition logic. Unsupported effects must fail closed. See [Universal Card-to-Combat Contract](UNIVERSAL_CARD_COMBAT_CONTRACT.md), [SOUL](../SOUL.md), and [Universal Combatant Architecture](UNIVERSAL_COMBATANT_ARCHITECTURE.md). No existing pregen legality rule below is relaxed.
+
+
 This document is a mandatory companion to `docs/IRON_PIT_RULES_CONTRACT.md`. It removes ambiguity about how monsters, pregens, and future homebrew content enter Iron Pit.
 
 ## 1. Edition isolation is mandatory

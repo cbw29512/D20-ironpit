@@ -70,13 +70,17 @@
   function targetAllowed(member, target, attack, setup = null) {
     try {
       if (attack.unavailableReason != null) return false;
+      const restrictedFollowUps = attacks(member.state.template).map((item) => item.charge)
+        .filter((charge) => charge?.followUpAttackId === attack.id && charge.followUpRequiredTargetCondition);
+      if (restrictedFollowUps.length && !restrictedFollowUps.some((charge) =>
+        target.state.active_effect_ids?.includes(charge.followUpRequiredTargetCondition))) return false;
       const ownsTarget = (target.state.grapple_sources || []).some(
         (source) => source.source_id === member.combatant_id,
       );
       if (attack.forbidSelfGrappledTarget && ownsTarget) return false;
       const policy = attack.grappleTargetPolicy || "normal";
       if (policy === "normal") return true;
-      if (policy !== "own_grapple_only") throw new Error(`Unsupported grapple target policy: ${policy}`);
+      if (!["own_grapple_only", "auto_hit_own_grapple"].includes(policy)) throw new Error(`Unsupported grapple target policy: ${policy}`);
       if (ownsTarget) return true;
       if (!setup) return true;
       return ![...setup.heroes, ...setup.monsters].some((candidate) =>
@@ -86,6 +90,10 @@
       console.error("Failed browser attack target policy", { member: member?.combatant_id, target: target?.combatant_id, error });
       throw error;
     }
+  }
+  function automaticHit(member, target, attack) {
+    return attack.grappleTargetPolicy === "auto_hit_own_grapple" && (target.state.grapple_sources || [])
+      .some((source) => source.source_id === member.combatant_id);
   }
   function attackDistance(member, target) {
     try {
@@ -120,7 +128,13 @@
   }
   function chooseAttack(member, setup, ids, kind = null, preferBackline = false, targetId = null) {
     const allowed = new Set(ids);
-    const profiles = attacks(member.state.template).filter((attack) => allowed.has(attack.id) && (!kind || attack.kind === kind));
+    const profiles = attacks(member.state.template).filter((attack) => {
+      if (!allowed.has(attack.id) || (kind && attack.kind !== kind)) return false;
+      if (!attack.resourceId) return true;
+      const resource = window.IRON_PIT_BROWSER_RESOURCES;
+      if (!resource) throw new Error("Finite attack resources require browser-resources.js.");
+      return resource.available(member.state, attack.resourceId, attack.resourceCost || 1);
+    });
     for (const target of targetOrder(member, setup, preferBackline)) {
       if (targetId !== null && target.combatant_id !== targetId) continue;
       const distance = attackDistance(member, target);
@@ -162,7 +176,7 @@
   }
   window.IRON_PIT_BROWSER_FORMATION = {
     hasRangedWeaponOffense, hasTrueRangeOffense, usesBackline, isBackline, startingPosition,
-    activeTargetPolicy, targetOrder, alliedFrontlineActive, targetAllowed,
+    activeTargetPolicy, targetOrder, alliedFrontlineActive, targetAllowed, automaticHit,
     attackDistance, saveDistance, weaponMeanDamage, chooseAttack, chooseStandardAttack, meleeCanLandNow,
     flexibleSlotHasBoth, flexibleAttackMode, chooseSlotAttack, backlineHoldsPosition,
   };

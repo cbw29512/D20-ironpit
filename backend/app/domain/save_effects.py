@@ -41,6 +41,7 @@ class FailedSaveTimedEffect(BaseModel):
     ground_contact: bool = False
     ends_on_teleport: bool = False
     source_effect_immunity_on_end: bool = False
+    repeat_save_disadvantage_while_source_visible: bool = False
     speed_multiplier: float = Field(default=1.0, gt=0.0, le=1.0)
     blocks_reactions: bool = False
     action_bonus_exclusive: bool = False
@@ -66,6 +67,7 @@ class FailedSaveTimedEffect(BaseModel):
                 "saving_throw_flat_bonuses": [],
                 "allowed_removal_action_ids": [],
                 "repeat_save_failure_condition_id": None,
+                "repeat_save_disadvantage_while_source_visible": False,
             }
             for key, default in defaults.items():
                 if data.get(key) == default:

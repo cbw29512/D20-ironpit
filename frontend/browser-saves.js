@@ -41,7 +41,8 @@
     return { saveRoll: save.roll, saveAbility: effect.saveAbility, saveDc: effect.dc,
       saveSucceeded: save.succeeded, appliedCondition };
   }
-  function legalAction(action, target, distance, sourceId) {
+  function legalAction(action, target, distance, sourceId, actor = null) {
+    if (action.requiresTargetToSeeSource && (!actor || !Q().canSee(target.state, actor.state, S().distance(actor, target)))) return false;
     if (distance > action.range) return false;
     if (sourceId && window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS?.isImmune(target, action, sourceId)) return false;
     if (action.requiresTargetHearing && target.state.active_effect_ids.includes("deafened")) return false;
@@ -62,10 +63,13 @@
 
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     const spendAction = options.spendAction !== false, checkResource = options.checkResource !== false;
+    if (action.openingInitiativeOnly && !window.IRON_PIT_BROWSER_CHARGE?.openingEligible(round, actor, options.setup)) {
+      throw new Error(`${action.name} requires an initiative-winning opening turn.`);
+    }
     const actionCost = action.actionCost || "action";
     if (spendAction && !E().available(actor.state, actionCost)) throw new Error(`${actionCost} is unavailable for ${action.name}.`);
     if (checkResource && action.resourceId && (actor.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);
-    if (!legalAction(action, target, distance, actor.combatant_id)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
+    if (!legalAction(action, target, distance, actor.combatant_id, actor)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
     if (action.requiresTargetSight && !Q().canSee(actor.state, target.state, distance)) throw new Error(`${action.name} requires the actor to see the target.`);
     const effectTags = [...new Set([...(action.effectTags || []).map((tag) => String(tag).trim().toLowerCase()).filter(Boolean), ...(String(action.damageType || "").trim().toLowerCase() === "poison" ? ["poison"] : [])])];
     const saveContext = {
@@ -76,6 +80,13 @@
       encounterRoller: target,
       setup: options.setup || null,
     };
+    if (action.saveAbilityChoices?.length) {
+      const chooser = window.IRON_PIT_BROWSER_TARGET_CHOSEN_SAVE;
+      if (!chooser?.choose) throw new Error("Target-chosen saving throw runtime unavailable.");
+      const selectedAbility = chooser.choose(target.state, action.saveAbilityChoices, action.dc, saveContext);
+      // Keep every published card immutable while different targets select different saves.
+      action = { ...action, saveAbility: selectedAbility };
+    }
     const targetType = String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase();
     const automaticFailureTypes = (action.automaticFailureCreatureTypes || [])
       .map((creatureType) => String(creatureType).trim().toLowerCase())
@@ -118,7 +129,9 @@
       }
     }
     const count = action.damageDiceCount || 0;
-    if (!action.damageComponents?.length && count && !(save.succeeded && action.successDamage === "none")) {
+    if (!action.damageComponents?.length && count && (
+      action.damageOnlyOnSuccess ? save.succeeded : !(save.succeeded && action.successDamage === "none")
+    )) {
       if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
       const rolls = damageRolls(action, count, options.sharedDamageRolls);
       const rawTotal = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
@@ -144,6 +157,11 @@
         }
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
       }
+    }
+    if (!save.succeeded && action.failureSetsZeroHp) {
+      const zeroHp = window.IRON_PIT_BROWSER_ZERO_HP;
+      if (!zeroHp?.reduceToZero) throw new Error("Direct zero-HP save outcome requires universal zero-HP runtime.");
+      zeroHp.reduceToZero(target.state, states(options.setup));
     }
     const riderRuntime = window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS;
     let appliedConditions = [];
@@ -182,6 +200,7 @@
     if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
     if (appliedConditions.includes("restrained")) description += ` ${target.state.template.name} is Restrained while Grappled.`;
     if (pushedFt) description += ` ${target.state.template.name} is pushed ${pushedFt} feet away.`;
+    if (!save.succeeded && action.failureSetsZeroHp) description += ` ${target.state.template.name} drops directly to 0 HP (not damage).`;
     return { sequence, round_number: round, event_type: "saving_throw", actor_id: actor.combatant_id, actor_name: actor.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll,
       save_ability: action.saveAbility, save_dc: action.dc, save_succeeded: save.succeeded, damage_roll: damageRoll,

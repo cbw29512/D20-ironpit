@@ -41,6 +41,7 @@ window.IRON_PIT_BROWSER_STATE = {
     };
   },
   refreshStartOfTurn() {},
+  refreshReactionsForNewTurn() {},
   distance(left, right) { return Math.abs((left.position_ft || 0) - (right.position_ft || 0)); },
 };
 window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE = {

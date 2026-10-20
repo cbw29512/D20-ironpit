@@ -17,12 +17,17 @@ def legal_area_save_placements(
     filtered: dict[object, AreaPlacement] = {}
     for placement in legal_area_placements(
         actor, setup, action.area, action.range_ft,
-        allow_no_enemy_targets=action.area_healing_rider is not None,
+        allow_no_enemy_targets=(
+            action.area_healing_rider is not None or action.target_scope == "all-other-creatures"
+        ),
     ):
         targets = tuple(
-            target_id for target_id in placement.target_ids
+            target_id for target_id in (
+                (*placement.target_ids, *placement.friendly_ids)
+                if action.target_scope == "all-other-creatures" else placement.target_ids
+            )
             if (target := by_id.get(target_id)) is not None and legal_save_action(
-                action, target, 0, source_id=actor.combatant_id,
+                action, target, 0, source_id=actor.combatant_id, actor=actor,
             )
         )
         placement_key = (

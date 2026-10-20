@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.ability_score_reduction import ability_modifier_delta
 from app.combat.barbarian import rage_active
 from app.combat.condition_rules import automatically_fails_strength_dexterity_save
 from app.combat.danger_sense import danger_sense_advantage
@@ -15,6 +16,7 @@ from app.combat.d20_outcome_adjustments import apply_resource_backed_d20_outcome
 from app.combat.dice import DiceProvider
 from app.combat.dodge import dodge_dex_save_advantage_sources
 from app.combat.exhaustion import saving_throw_disadvantage_sources
+from app.combat.environment_contexts import environment_context_disadvantage_sources
 from app.combat.failed_d20_test_override import apply_failed_d20_test_override
 from app.combat.save_success_override import apply_save_success_override
 from app.combat.failed_save_reroll import apply_failed_save_reroll
@@ -36,6 +38,9 @@ def saving_throw_mode(
     state: CombatantState,
     ability: str,
     context: SavingThrowContext | None = None,
+    *,
+    member: EncounterCombatant | None = None,
+    setup: EncounterSetup | None = None,
 ) -> RollMode:
     try:
         advantage = (
@@ -51,6 +56,10 @@ def saving_throw_mode(
             + modifier_save_disadvantage_sources(state, ability)
             + timed_ability_d20_disadvantage_sources(state, ability)
             + len(context.disadvantage_sources if context is not None else ())
+            + (
+                environment_context_disadvantage_sources(member, setup, "saving_throws")
+                if member is not None else 0
+            )
         )
         if ability == "dexterity" and RESTRAINED_EFFECT_ID in state.active_effect_ids:
             disadvantage += 1
@@ -99,11 +108,15 @@ def resolve_saving_throw(
             return None, False
         if ability not in state.template.saving_throw_bonuses:
             raise ValueError(f"{state.template.name} lacks a certified {ability.title()} saving throw bonus.")
-        modifier = state.template.saving_throw_bonuses[ability] + saving_throw_flat_bonus(state, ability)
+        modifier = (state.template.saving_throw_bonuses[ability]
+                    + ability_modifier_delta(state, ability)
+                    + saving_throw_flat_bonus(state, ability))
         roll = apply_d20_bonus_dice(
             state,
             ModifierKind.SAVING_THROW_BONUS_DIE,
-            roll_d20(dice, modifier, saving_throw_mode(state, ability, context)),
+            roll_d20(dice, modifier, saving_throw_mode(
+                state, ability, context, member=encounter_roller, setup=setup,
+            )),
             dice,
         )
         consume_saving_throw_modifiers(state)

@@ -132,6 +132,8 @@ def sync_friendly_save_auras(setup: EncounterSetup) -> None:
         from app.combat.friendly_weapon_damage_auras import sync_friendly_weapon_damage_auras
         sync_friendly_weapon_damage_auras(setup)
         sync_friendly_recovery_auras(setup)
+        from app.combat.friendly_roll_bonus_auras import sync_friendly_roll_bonus_auras
+        sync_friendly_roll_bonus_auras(setup)
     except Exception:
         logger.exception("Failed to synchronize friendly save auras.")
         raise

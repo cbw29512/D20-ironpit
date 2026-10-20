@@ -84,6 +84,9 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row["attackAbility"] = attack.attack_ability
         if weapon.normal_range_ft is not None:
             row.update(normal=weapon.normal_range_ft, long=weapon.long_range_ft, projectile=weapon.projectile)
+        if attack.resource_id is not None:
+            row["resourceId"] = attack.resource_id
+            row["resourceCost"] = attack.resource_cost
         if attack.unavailable_reason is not None:
             row["unavailableReason"] = attack.unavailable_reason
         if attack.fixed_damage is not None:
@@ -108,6 +111,12 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                  "damageBonus": part.damage_bonus, "damageType": part.damage_type.value}
                 for part in attack.on_hit_damage
             ]
+        if attack.on_hit_ability_score_reduction:
+            effect = attack.on_hit_ability_score_reduction
+            row["onHitAbilityScoreReduction"] = {
+                "source": effect.source, "ability": _value(effect.ability),
+                "diceCount": effect.dice_count, "diceSize": effect.dice_size,
+            }
         if attack.on_hit_save_damage:
             effect = attack.on_hit_save_damage
             save_damage = {
@@ -154,6 +163,17 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                 save_row["repeatSaveTiming"] = _value(effect.repeat_save_timing)
             if effect.repeat_save_failure_condition_id:
                 save_row["repeatSaveFailureConditionId"] = effect.repeat_save_failure_condition_id
+            if effect.failure_margin_escalation:
+                escalation = effect.failure_margin_escalation
+                save_row["failureMarginEscalation"] = {
+                    "margin": escalation.margin,
+                    "additionalConditionIds": list(escalation.additional_condition_ids),
+                    "replacementDurationDiceCount": escalation.replacement_duration_dice_count,
+                    "replacementDurationDiceSize": escalation.replacement_duration_dice_size,
+                    "replacementDurationRoundMultiplier": escalation.replacement_duration_round_multiplier,
+                    "endsOnDamage": escalation.ends_on_damage,
+                    "allowedRemovalActionIds": list(escalation.allowed_removal_action_ids),
+                }
             if effect.failure_push_ft:
                 save_row["failurePushFt"] = effect.failure_push_ft
             if effect.excluded_creature_types:
@@ -239,12 +259,24 @@ def _save(action: Any) -> dict[str, Any]:
         "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
         "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation,
     }
+    if action.save_ability_choices:
+        row["saveAbilityChoices"] = list(action.save_ability_choices)
+    if action.max_targets != 1:
+        row["maxTargets"] = action.max_targets
     if action.damage_components:
         row["damageComponents"] = [
             {"diceCount": item.dice_count, "diceSize": item.dice_size,
              "damageBonus": item.damage_bonus, "damageType": item.damage_type}
             for item in action.damage_components
         ]
+    if action.prohibited_environment_context_id:
+        row["prohibitedEnvironmentContextId"] = action.prohibited_environment_context_id
+    if action.failure_sets_zero_hp:
+        row["failureSetsZeroHp"] = True
+    if action.damage_only_on_success:
+        row["damageOnlyOnSuccess"] = True
+    if action.target_scope != "enemies":
+        row["targetScope"] = action.target_scope
     if action.target_max_size:
         row["targetMaxSize"] = _value(action.target_max_size)
     if action.area:
@@ -254,6 +286,8 @@ def _save(action: Any) -> dict[str, Any]:
         row["resourceCost"] = action.resource_cost
     if action.requires_no_active_grapple:
         row["requiresNoActiveGrapple"] = True
+    if action.opening_initiative_only:
+        row["openingInitiativeOnly"] = True
     if action.magical_effect:
         row["magicalEffect"] = True
     if action.effect_tags:
@@ -264,6 +298,12 @@ def _save(action: Any) -> dict[str, Any]:
         row["requiresTargetHearing"] = True
     if action.requires_target_sight:
         row["requiresTargetSight"] = True
+    if getattr(action, "requires_target_to_see_source", False):
+        row["requiresTargetToSeeSource"] = True
+    if action.required_target_creature_types:
+        row["requiredTargetCreatureTypes"] = list(action.required_target_creature_types)
+    if action.excluded_target_creature_types:
+        row["excludedTargetCreatureTypes"] = list(action.excluded_target_creature_types)
     if action.area_healing_rider is not None:
         row["areaHealingRider"] = {
             "diceCount": action.area_healing_rider.dice_count,
@@ -365,6 +405,8 @@ def _failed_save_timed_effect(rider: Any) -> dict[str, Any]:
         row["escapeCheckDc"] = rider.escape_check_dc
     if rider.source_effect_immunity_on_end:
         row["sourceEffectImmunityOnEnd"] = True
+    if rider.repeat_save_disadvantage_while_source_visible:
+        row["repeatSaveDisadvantageWhileSourceVisible"] = True
     return row
 
 
@@ -693,6 +735,20 @@ def _save_zone(action: Any) -> dict[str, Any]:
             "resourceId": action.resource_id, "resourceCost": action.resource_cost,
             "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
         }
+        if action.target_policy != "enemies":
+            row["targetPolicy"] = action.target_policy
+        if action.save_context != "spell":
+            row["saveContext"] = action.save_context
+        if action.failed_save_suppress_reactions:
+            row["failedSaveSuppressReactions"] = True
+        if action.failed_save_action_bonus_exclusive:
+            row["failedSaveActionBonusExclusive"] = True
+        if action.center_on_source:
+            row["centerOnSource"] = True
+        if action.follows_source:
+            row["followsSource"] = True
+        if action.failed_save_expiry_timing != "target_turn_end":
+            row["failedSaveExpiryTiming"] = action.failed_save_expiry_timing
         if action.source:
             row["source"] = action.source
         return row
@@ -724,6 +780,9 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         "activationTiming": action.activation_timing,
         "resourceId": action.resource_id, "resourceCost": action.resource_cost,
         "durationRounds": action.duration_rounds, "conditionIds": list(action.condition_ids),
+        "magicalEffect": action.magical_effect,
+        "endsOnOwnerAttack": action.ends_on_owner_attack,
+        "endsOnOwnerSpellCast": action.ends_on_owner_spell_cast,
         "damageResistances": [_value(item) for item in action.damage_resistances],
         "expiryTiming": action.expiry_timing, "priority": action.priority,
         "animation": action.animation,
@@ -759,6 +818,8 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["endsIfSourceIncapacitated"] = True
     if action.ends_if_source_dead:
         row["endsIfSourceDead"] = True
+    if action.friendly_roll_bonus_aura is not None:
+        row["friendlyRollBonusAura"] = action.friendly_roll_bonus_aura.model_dump(mode="json")
     if action.friendly_save_advantage_aura is not None:
         row["friendlySaveAdvantageAura"] = action.friendly_save_advantage_aura.model_dump(mode="json")
     if action.friendly_cover_aura is not None:
@@ -1119,10 +1180,13 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 "sourceName": rule.source_name,
                 "attackKinds": list(rule.attack_kinds),
                 "requiredDamageTypes": [item.value for item in rule.required_damage_types],
+                "requiredAttackQualifiers": [tag.value for tag in rule.required_attack_qualifiers], "negateOnSaveDamageTypes": [kind.value for kind in rule.negate_on_save_damage_types],
                 "reductionDiceCount": rule.reduction_dice_count,
                 "reductionDiceSize": rule.reduction_dice_size,
                 "reductionAbility": rule.reduction_ability,
                 "addLevel": rule.add_level,
+                "negateOnSaveAbility": rule.negate_on_save_ability,
+                "negateOnSaveDc": rule.negate_on_save_dc,
                 **(
                     {"zeroDamageRedirect": {
                         "sourceId": rule.zero_damage_redirect.source_id,
@@ -1140,6 +1204,29 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                         "requiresClearLine": rule.zero_damage_redirect.requires_clear_line,
                     }} if rule.zero_damage_redirect else {}
                 ),
+            }
+        if template.turn_start_save_condition_reaction:
+            rule = template.turn_start_save_condition_reaction
+            row["turnStartSaveConditionReaction"] = {
+                "sourceId": rule.source_id,
+                "sourceName": rule.source_name,
+                "rangeFt": rule.range_ft,
+                "saveAbility": rule.save_ability,
+                "saveDc": rule.save_dc,
+                "conditionId": rule.condition_id,
+                "expiryTiming": rule.expiry_timing,
+                "requiresSourceCanSeeTarget": rule.requires_source_can_see_target,
+                "requiresTargetCanSeeSource": rule.requires_target_can_see_source,
+            }
+        if template.visual_turn_start_rule is not None:
+            rule = template.visual_turn_start_rule
+            row["visualTurnStartRule"] = {
+                "sourceId": rule.source_id, "sourceName": rule.source_name,
+                "rangeFt": rule.range_ft, "saveDc": rule.save_dc,
+                "saveAbility": rule.save_ability,
+                "immediatePetrificationMargin": rule.immediate_petrification_margin,
+                "initialDebuff": rule.initial_debuff,
+                "terminalDebuff": rule.terminal_debuff,
             }
         if template.parry_reaction:
             row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}

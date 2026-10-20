@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.owner_action_expiry import expire_on_owner_event
 from app.combat.action_economy import is_available, spend
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.encounter_targeting import combatant_distance
@@ -47,6 +48,9 @@ def resolve_auto_hit_spell(
         if resource is None:
             raise ValueError(f"No level {slot_level} spell slot remains for {action.name}.")
 
+        expire_on_owner_event(caster.state, "spell_cast", [
+            member.state for member in [*setup.heroes, *setup.monsters]
+        ])
         rolls: list[int] = []
         raw_total = 0
         components: list[DamageRollComponent] = []

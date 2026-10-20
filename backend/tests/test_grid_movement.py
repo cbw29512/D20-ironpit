@@ -119,3 +119,54 @@ def test_diagonal_path_cannot_squeeze_between_two_blocked_orthogonal_spaces() ->
     assert plan.movement_cost_ft == 0
     assert plan.final_distance_ft == 10
     assert plan.goal_reachable is False
+
+
+def test_source_granted_hostile_passage_is_opt_in_and_never_changes_default() -> None:
+    """Air/Water Form source grants passage; ordinary enemies remain blocking."""
+    mover = _member("elemental", "monsters", 0, 0)
+    hostile = _member("hostile", "heroes", 1, 1)
+    assert not can_pass_through(mover, hostile)
+    assert can_pass_through(mover, hostile, source_allows_hostile_overlap=True)
+    # This does not grant harmless free movement or change the universal
+    # creature-space difficult-terrain rule.
+    assert creature_space_is_difficult(mover, hostile)
+
+
+def test_source_granted_hostile_passage_reaches_pathfinder_and_preserves_cost() -> None:
+    """A form's passage permission must affect actual path search, not only its predicate."""
+    mover = _member("air-form", "monsters", 0, 3)
+    target = _member("target", "heroes", 3, 3)
+    wall = [_member(f"hostile-{y}", "heroes", 1, y) for y in range(8)]
+    members = [mover, target, *wall]
+    blocked = plan_movement_toward(MAP, mover, target, members, 5, 30)
+    allowed = plan_movement_toward(
+        MAP, mover, target, members, 5, 30,
+        source_allows_hostile_overlap=True,
+    )
+    assert not blocked.goal_reachable
+    assert allowed.goal_reachable
+    assert (1, 3) in [(p.x, p.y) for p in allowed.path]
+    assert (allowed.path[-1].x, allowed.path[-1].y) == (2, 3)
+    assert allowed.movement_cost_ft == 15  # Occupied enemy square is difficult.
+    assert movement_step_cost_ft(
+        MAP, mover, GridPosition(x=1, y=3), members,
+        source_allows_hostile_overlap=True,
+    ) == 10
+
+
+def test_source_owned_passage_template_can_drive_shared_pathfinder() -> None:
+    """Immutable card field, not the monster name, grants the route permission."""
+    mover = _member("unrelated-homebrew", "monsters", 0, 3)
+    mover.state.template = mover.state.template.model_copy(
+        update={"source_allows_hostile_overlap": True},
+    )
+    target = _member("target", "heroes", 3, 3)
+    wall = [_member(f"wall-{y}", "heroes", 1, y) for y in range(8)]
+    members = [mover, target, *wall]
+    result = plan_movement_toward(
+        MAP, mover, target, members, 5, 30,
+        source_allows_hostile_overlap=mover.state.template.source_allows_hostile_overlap,
+    )
+    assert result.goal_reachable
+    assert (result.path[-1].x, result.path[-1].y) == (2, 3)
+    assert result.movement_cost_ft == 15

@@ -55,7 +55,8 @@ def resolve_save_damage_components(
 ) -> tuple[int, list[DamageRollComponent], list[DamageRollComponent]]:
     try:
         specs = _damage_specs(action)
-        if not specs or (succeeded and action.success_damage == "none"):
+        if (not specs or (action.damage_only_on_success and not succeeded)
+                or (succeeded and action.success_damage == "none" and not action.damage_only_on_success)):
             return 0, [], []
         components: list[DamageRollComponent] = []
         for spec, shared in zip(specs, _shared_rolls(specs, shared_damage_rolls), strict=True):

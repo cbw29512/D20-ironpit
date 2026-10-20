@@ -21,6 +21,7 @@ def _affordable_legal_prefix(
     movement_budget_ft: int,
     barriers: list[PersistentBarrierState] | None = None,
     terrain_zones=None,
+    source_allows_hostile_overlap: bool = False,
 ) -> tuple[list[GridPosition], int]:
     """Return the farthest legal stopping point along a precomputed full-map route."""
     try:
@@ -37,6 +38,7 @@ def _affordable_legal_prefix(
                 origin=origin,
                 barriers=barriers,
                 terrain_zones=terrain_zones,
+                source_allows_hostile_overlap=source_allows_hostile_overlap,
             )
             if step_cost is None:
                 raise ValueError(f"Search returned an illegal movement step at {destination}.")
@@ -65,6 +67,7 @@ def plan_movement_toward(
     barriers: list[PersistentBarrierState] | None = None,
     terrain_zones=None,
     allow_leave_melee: bool = False,
+    source_allows_hostile_overlap: bool = False,
 ) -> GridMovementPlan:
     """Search the full route first, then walk the affordable legal prefix this turn."""
     try:
@@ -84,6 +87,7 @@ def plan_movement_toward(
             planned_distance_ft,
             barriers,
             terrain_zones,
+            source_allows_hostile_overlap,
         )
         target_position = position_for(target)
         route_goal_position = route[-1] if route else position_for(mover)
@@ -102,6 +106,7 @@ def plan_movement_toward(
             movement_budget_ft,
             barriers,
             terrain_zones,
+            source_allows_hostile_overlap,
         )
         final_position = path[-1] if path else position_for(mover)
         final_distance = footprint_distance_ft(

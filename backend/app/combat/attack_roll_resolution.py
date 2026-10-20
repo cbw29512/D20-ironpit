@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import logging
 
 from app.combat.attack_advantage_suppression import apply_defender_advantage_suppression
+from app.combat.ability_score_reduction import ability_modifier_delta
 from app.combat.barbarian import extend_rage_from_attack
 from app.combat.bloodied import bloodied_fury_advantage
 from app.combat.brutal_strike import brutal_strike_attack_sources
@@ -46,7 +47,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass(frozen=True)
 class AttackRollResolution:
-    roll: DiceRoll
+    roll: DiceRoll | None
     mode: RollMode
     heroic_reroll: bool
     brutal_strike_disadvantage: int
@@ -79,11 +80,12 @@ def resolve_attack_roll(
     advantage_sources: int,
     other_disadvantage_sources: int,
     close_enemy_active: bool,
+    setup=None,
 ) -> AttackRollResolution:
     """Resolve the shared attack-roll source stack and consume roll-scoped modifiers."""
     try:
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(
-            attacker, defender, distance_ft, defender_event_id,
+            attacker, defender, distance_ft, defender_event_id, setup=setup,
         )
         disadvantage_total = (
             other_disadvantage_sources
@@ -125,6 +127,7 @@ def resolve_attack_roll(
         base_roll = roll_d20(
             dice,
             attack.attack_bonus
+            + ability_modifier_delta(attacker, attack.attack_ability)
             + attack_roll_flat_bonus(attacker, attack.weapon.id)
             + next_incoming_attack_roll_flat_bonus(defender, attacker_event_id),
             mode,

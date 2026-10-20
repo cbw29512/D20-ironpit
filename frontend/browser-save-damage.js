@@ -27,7 +27,8 @@
       if ((action.damageDiceCount || 0) || action.damageType || (action.damageBonus || 0)) {
         throw new Error(`${action.name} mixes component and legacy save damage.`);
       }
-      if (succeeded && action.successDamage === "none") {
+      if ((action.damageOnlyOnSuccess && !succeeded)
+        || (succeeded && action.successDamage === "none" && !action.damageOnlyOnSuccess)) {
         return { components: [], roll: null, appliedTotal: 0, damageTypes: [] };
       }
       const components = action.damageComponents.map((spec, index) => {

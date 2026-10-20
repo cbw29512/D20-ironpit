@@ -4,6 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
+from app.domain.failure_margin import FailureMarginEscalation, require_escalation_duration
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming, HitControlEffect
 from app.domain.charge import AttackChargeProfile, ChargeDamage
 from app.domain.damage_sources import DamageSourceQualifier
@@ -53,6 +54,15 @@ class OnHitSaveDamage(BaseModel):
     zero_hp_rider: ZeroHpSaveDamageRider | None = None
 
 
+class OnHitAbilityScoreReduction(BaseModel):
+    """Source-owned die parameters; reduction is always fight-scoped."""
+
+    source: str = Field(min_length=1)
+    ability: AbilityName
+    dice_count: int = Field(ge=1, le=40)
+    dice_size: int = Field(ge=2, le=100)
+
+
 class OnHitContestedMovement(BaseModel):
     source_ability: AbilityName
     target_ability: AbilityName
@@ -98,6 +108,7 @@ class OnHitConditionSave(BaseModel):
     repeat_save_failure_condition_id: ConditionName | None = None
     failure_push_ft: int = Field(default=0, ge=0)
     cannot_regain_hit_points: bool = False
+    failure_margin_escalation: FailureMarginEscalation | None = None
     excluded_creature_types: list[str] = Field(default_factory=list)
     excluded_creature_subtypes: list[str] = Field(default_factory=list)
 
@@ -113,6 +124,7 @@ class OnHitConditionSave(BaseModel):
             )
         if self.repeat_save_failure_condition_id is not None and self.repeat_save_timing is None:
             raise ValueError("Failure escalation requires a repeat-save timing.")
+        require_escalation_duration(self.failure_margin_escalation, self.duration_rounds)
         return self
 
 
@@ -151,6 +163,8 @@ class WeaponAttack(BaseModel):
     attack_bonus: int
     damage_bonus: int
     damage_die_minimum: int | None = Field(default=None, ge=2, le=100)
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=1000)
     unavailable_reason: str | None = None
     attack_ability: AbilityName | None = None
     attack_ability_modifier: int | None = None
@@ -162,6 +176,7 @@ class WeaponAttack(BaseModel):
     on_hit_condition_save: OnHitConditionSave | None = None
     on_hit_ongoing_hp_loss: OnHitOngoingHpLoss | None = None
     on_hit_maximum_hp_save: OnHitMaximumHpSave | None = None
+    on_hit_ability_score_reduction: OnHitAbilityScoreReduction | None = None
     on_hit_contested_movement: OnHitContestedMovement | None = None
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
     charge_profile: AttackChargeProfile | None = None
@@ -170,5 +185,5 @@ class WeaponAttack(BaseModel):
     knocks_prone_max_size: CreatureSize | None = None
     control_effect: HitControlEffect | None = None
     forbid_target_grappled_by_self: bool = False
-    grapple_target_policy: Literal["normal", "own_grapple_only"] = "normal"
+    grapple_target_policy: Literal["normal", "own_grapple_only", "auto_hit_own_grapple"] = "normal"
     damage_source_qualifiers: list[DamageSourceQualifier] = Field(default_factory=list)

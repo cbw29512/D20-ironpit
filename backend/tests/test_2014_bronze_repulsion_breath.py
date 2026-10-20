@@ -58,8 +58,10 @@ def test_bronze_repulsion_breath_family_binds_shared_failed_save_push() -> None:
 
     assert basic_blockers_2014(_source("bronze-dragon-wyrmling")) == ()
     assert basic_blockers_2014(_source("young-bronze-dragon")) == ()
-    assert basic_blockers_2014(_source("adult-bronze-dragon")) == ("source:extra-action",)
-    assert basic_blockers_2014(_source("ancient-bronze-dragon")) == ("source:extra-action",)
+    # Source-verified, approved Change Shape no longer blocks either adult.
+    # Mutation/fail-closed checks live in test_2014_metallic_dragon_change_shape_source.py.
+    assert basic_blockers_2014(_source("adult-bronze-dragon")) == ()
+    assert basic_blockers_2014(_source("ancient-bronze-dragon")) == ()
 
 
 def test_bronze_wyrmling_repulsion_uses_universal_forced_movement() -> None:

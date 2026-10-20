@@ -8,8 +8,10 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, ConditionName
 from app.domain.capability_effects import AttackEffectDefinition, DiceSpec, GrappleEffectDefinition
 from app.domain.save_effects import FailedSaveTimedEffect
+from app.domain.save_damage import SaveDamageComponent
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
+from app.domain.environment_contexts import EnvironmentContextId
 from app.domain.weapons import (
     ConditionalAttackAdvantage,
     DamageSourceQualifier,
@@ -52,6 +54,8 @@ class AttackCapabilityDefinition(BaseModel):
     id: str
     name: str
     weapon_id: str | None = None
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1, le=1000)
     unavailable_reason: str | None = None
     attack_kind: WeaponAttackKind
     attack_bonus: int
@@ -77,7 +81,7 @@ class AttackCapabilityDefinition(BaseModel):
     effects: list[AttackEffectDefinition] = Field(default_factory=list)
     charge_profile: ChargeProfileDefinition | None = None
     forbid_target_grappled_by_self: bool = False
-    grapple_target_policy: Literal["normal", "own_grapple_only"] = "normal"
+    grapple_target_policy: Literal["normal", "own_grapple_only", "auto_hit_own_grapple"] = "normal"
     damage_source_qualifiers: list[DamageSourceQualifier] = Field(default_factory=list)
 
     @model_validator(mode="after")
@@ -106,14 +110,29 @@ class SaveCapabilityDefinition(BaseModel):
     name: str
     action_cost: Literal["action", "bonus_action", "reaction"] = "action"
     save_ability: Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
+    save_ability_choices: list[Literal["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]] = Field(default_factory=list)
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
+    max_targets: int = Field(default=1, ge=1, le=20)
+    target_scope: Literal["enemies", "all-other-creatures"] = Field(
+        default="enemies", exclude_if=lambda value: value == "enemies",
+    )
     target_max_size: CreatureSize | None = None
     area: AreaTargeting | None = None
     damage: DiceSpec | None = None
     damage_type: DamageType | None = None
+    damage_components: list[SaveDamageComponent] = Field(default_factory=list)
     success_damage: Literal["none", "half"] = "none"
+    failure_sets_zero_hp: bool = Field(default=False, exclude_if=lambda value: not value)
+    damage_only_on_success: bool = Field(default=False, exclude_if=lambda value: not value)
+    requires_target_hearing: bool = Field(default=False, exclude_if=lambda value: not value)
+    requires_target_to_see_source: bool = Field(default=False, exclude_if=lambda value: not value)
+    excluded_target_creature_types: list[str] = Field(default_factory=list, exclude_if=lambda value: not value)
+    prohibited_environment_context_id: EnvironmentContextId | None = Field(
+        default=None, exclude_if=lambda value: value is None,
+    )
     grapple: GrappleEffectDefinition | None = None
+    opening_initiative_only: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     requires_no_active_grapple: bool = False
@@ -128,6 +147,16 @@ class SaveCapabilityDefinition(BaseModel):
     def validate_damage(self) -> "SaveCapabilityDefinition":
         if (self.damage is None) != (self.damage_type is None):
             raise ValueError("Save damage dice and damage type must be declared together.")
+        if self.damage_components and self.damage is not None:
+            raise ValueError("Save damage must use either legacy dice or typed components, not both.")
+        if self.save_ability_choices and (len(self.save_ability_choices) < 2 or len(set(self.save_ability_choices)) != len(self.save_ability_choices) or self.save_ability not in self.save_ability_choices):
+            raise ValueError("Target-chosen save abilities must be distinct and include the primary ability.")
+        if self.damage_only_on_success and self.success_damage != "none":
+            raise ValueError("Success-only save damage must not declare legacy success scaling.")
+        if self.damage_only_on_success and self.damage is None:
+            raise ValueError("Success-only save damage requires typed damage dice.")
+        if self.failure_sets_zero_hp and self.damage is not None and not self.damage_only_on_success:
+            raise ValueError("Zero-HP failure cannot coexist with ordinary failed-save damage.")
         if self.grapple and self.grapple.max_target_size and self.target_max_size:
             if self.grapple.max_target_size != self.target_max_size:
                 raise ValueError("Save target size and grapple target size cannot disagree.")

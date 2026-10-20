@@ -20,6 +20,11 @@
     const resourceId = `spell-slot-${choice.slotLevel}`;
     if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains for ${action.name}.`);
 
+    if ((caster.state.timed_effects || []).some((effect) => effect.ends_on_owner_spell_cast)) {
+      const expiry = window.IRON_PIT_BROWSER_TIMED?.expireOnOwnerEvent;
+      if (!expiry) throw new Error("Auto-hit spell owner-effect expiry is unavailable.");
+      expiry(caster.state, "spell_cast", [...setup.heroes, ...setup.monsters].map((m) => m.state));
+    }
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const components = [], allRolls = [];
     let total = 0;
@@ -58,6 +63,7 @@
       },
       damage_components: components,
       hp_before: hpBefore, hp_after: target.state.current_hp,
+      is_dead: target.state.is_dead, is_stable: target.state.is_stable,
       temporary_hp_before: temporaryHpBefore, temporary_hp_after: target.state.temporary_hp,
       resource_remaining: caster.state.resources[resourceId],
       animation: action.animation || "spell-projectile",

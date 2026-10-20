@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from app.combat.ability_score_reduction import apply_ability_score_reduction
 from app.combat.conditions import apply_hit_conditions
 from app.combat.deferred_save_effect import arm_deferred_save_effect
 from app.combat.exile import apply_on_hit_exile
@@ -71,6 +72,14 @@ def resolve_attack_hit_riders(
     result.on_hit_maximum_hp_save = resolve_on_hit_maximum_hp_save(
         defender, attack, dice, damage_taken
     )
+    # A successful hit rolls score loss exactly once, even when the same
+    # hit's HP damage leaves a hero unconscious; already Dead targets are done.
+    effect = attack.on_hit_ability_score_reduction
+    if effect is not None and not defender.is_dead:
+        lost = sum(dice.roll(effect.dice_size) for _ in range(effect.dice_count))
+        result.ability_reduction = apply_ability_score_reduction(
+            defender, effect.ability, lost, affected_states=affected_states,
+        )
     if attack.on_hit_contested_movement is not None:
         if setup is None:
             raise ValueError("Contested forced movement requires encounter setup.")
@@ -96,6 +105,10 @@ def resolve_attack_hit_riders(
         and result.on_hit_save.applied_condition not in result.applied_conditions
     ):
         result.applied_conditions.append(result.on_hit_save.applied_condition)
+
+    for condition_id in result.on_hit_save.additional_conditions:
+        if condition_id not in result.applied_conditions:
+            result.applied_conditions.append(condition_id)
 
     result.topple = resolve_topple_hit(attacker, defender, attack, dice)
     if result.topple.applied and "prone" not in result.applied_conditions:

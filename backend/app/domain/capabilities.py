@@ -1,4 +1,5 @@
 from __future__ import annotations
+from app.domain.visual_turn_start import VisualTurnStartRule
 
 from app.domain.attack_action_definitions import all_action_slots
 
@@ -24,12 +25,13 @@ from app.domain.tactical_actions import BonusActionTacticalGrant
 from app.domain.effect_removal import EffectRemovalAction, EffectTagConditionGrant
 from app.domain.environment_contexts import EnvironmentContextReaction
 from app.domain.passive_modifiers import PassiveModifierGrant
+from app.domain.persistent_save_zones import PersistentSaveZoneAction
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.recharge import RechargeRule
 from app.domain.regeneration import RegenerationTrait
 from app.domain.save_success_overrides import FailedSaveSuccessOverride
-from app.domain.reactions import ParryReaction, RedirectAttackReaction
+from app.domain.reactions import AttackDamageReductionReaction, ParryReaction, RedirectAttackReaction, TurnStartSaveConditionReaction
 from app.domain.rulesets import RulesetId
 from app.domain.size import CreatureSize
 from app.domain.legendary_actions import LegendaryActionOption
@@ -70,6 +72,7 @@ class CombatantDefinition(BaseModel):
     passive_modifier_grants: list[PassiveModifierGrant] = Field(default_factory=list, exclude_if=lambda items: not items)
     bonus_attack_grants: list[BonusAttackGrant] = Field(default_factory=list)
     bonus_tactical_action_grants: list[BonusActionTacticalGrant] = Field(default_factory=list)
+    visual_turn_start_rule: VisualTurnStartRule | None = None
     attacks: list[AttackCapabilityDefinition] = Field(min_length=1)
     primary_attack_id: str
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
@@ -77,6 +80,7 @@ class CombatantDefinition(BaseModel):
     area_weapon_attack_actions: list[AreaWeaponAttackAction] = Field(default_factory=list)
     save_actions: list[SaveCapabilityDefinition] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
+    persistent_save_zone_actions: list[PersistentSaveZoneAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list, exclude_if=lambda items: not items)
     auto_hit_spell_actions: list[AutoHitSpellAction] = Field(default_factory=list, exclude_if=lambda items: not items)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
@@ -88,6 +92,7 @@ class CombatantDefinition(BaseModel):
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
+    source_allows_hostile_overlap: bool = Field(default=False, exclude_if=lambda value: not value)
     source_trait_names: list[str] = Field(default_factory=list)
     source_turn_relation_damages: list[SourceTurnRelationDamage] = Field(default_factory=list)
     innate_condition_ids: list[ConditionName] = Field(default_factory=list)
@@ -96,6 +101,8 @@ class CombatantDefinition(BaseModel):
     source_limited_use_names: list[str] = Field(default_factory=list)
     source_legendary_action_names: list[str] = Field(default_factory=list)
     source_spellcasting_fingerprint: str | None = None
+    attack_damage_reduction_reaction: AttackDamageReductionReaction | None = None
+    turn_start_save_condition_reaction: TurnStartSaveConditionReaction | None = None
     parry_reaction: ParryReaction | None = None
     redirect_attack_reaction: RedirectAttackReaction | None = None
     fighting_style: str | None = None

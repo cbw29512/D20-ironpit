@@ -128,12 +128,12 @@ def test_two_heads_unlocks_ettin_and_death_dog() -> None:
         assert ordinary.mode == "normal"
 
 
-def test_brave_binds_without_unlocking_remaining_knight_blockers() -> None:
+def test_brave_binds_and_knight_admits_once_leadership_is_source_bound() -> None:
     source = _source_by_id()["knight"]
     assert "Brave" in source.trait_names
     assert "Brave" not in unsupported_traits_2014(source)
     assert "source:trait" not in basic_blockers_2014(source)
-    assert basic_blockers_2014(source) != ()
+    assert basic_blockers_2014(source) == ()
 
 
 def test_cyclops_poor_depth_perception_reuses_printed_rock_range_disadvantage() -> None:

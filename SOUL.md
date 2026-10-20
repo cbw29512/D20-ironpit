@@ -1,10 +1,48 @@
 # D20 Iron Pit — SOUL
 
+**MANDATORY SESSION HANDOFF:** Read [Iron Pit Session Continuity](docs/IRON_PIT_SESSION_CONTINUITY.md) at the start of every development session and scheduled run. It is an entry point to these existing authorities, not a replacement. Never ask the user to repeat the established universal-engine/immutable-card architecture.
+
+**Card-to-combat acceptance gate:** [Universal Card-to-Combat Contract](docs/UNIVERSAL_CARD_COMBAT_CONTRACT.md). Every monster and pregen implementation must preserve this source-data versus universal-behavior separation, including future homebrew.
+
 ## Mandatory monster-queue checkpoint
 
-Before answering "next monster", asking for another monster decision, coding a monster, or starting hourly monster work, **read the existing canonical [monster ability queue](docs/MONSTER_ABILITY_WORK_QUEUE.md)**. Locate the exact monster / issue / approved remediation and inspect the current PR/CI state. An approved plan is not implemented; an open issue is not a new question. Never revisit a user-answered ability just because its code still needs work. Advance in recorded order, one monster and one ability at a time; update the same queue after the result. Avoid unrelated Druid/UI/asset tasks in the monster workflow. The 2014 queue is primary, and new universal mechanics must be reused across editions, monsters and pregens.
+Before answering "next monster", asking for another monster decision, coding a monster, or starting hourly monster work, **read the existing canonical [monster ability queue](docs/MONSTER_ABILITY_WORK_QUEUE.md)**. Locate the exact monster / issue / approved remediation and inspect the current PR/CI state. An approved plan is not implemented; an open issue is not a new question. Never revisit a user-answered ability just because its code still needs work. Advance through approved semantic families, bind equivalent monsters in batches, and update that same queue after a verified result. Avoid unrelated Druid/UI/asset tasks in the monster workflow. The 2014 queue is primary, and new universal mechanics must be reused across editions, monsters and pregens.
 
-This file is the first-read architecture rule for every agent and contributor working on Iron Pit.
+This file is the first-read architecture rule for every agent and contributor working on Iron Pit. [Documentation map](docs/DOCUMENTATION_MAP.md) and [implementation manual](docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md) provide the single navigation/operating path; this document is not an execution-status ledger.
+
+## One form, one combat engine
+
+A monster card, a completed pregen, and a user-created homebrew are the same
+**finished combatant contract**. Monster and Character are **editor modes**,
+not combat engines. An editor starts blank and produces declarative values;
+a monster typically supplies final AC, HP, attack bonuses and damage, while a
+character builder derives legal values from ability scores, proficiency,
+equipment, level and selected features under its ruleset. Both compile into
+the existing `CombatantDefinition → CombatantTemplate` pipeline and build fresh
+`CombatantState` each fight. Source data is immutable.
+
+**Ability names are display/log labels only.** A declared effect is an ordered
+composition of universal primitives: trigger → eligibility → action/resource
+→ roll/save → typed damage/healing/conditions/movement → timing/expiry/reset.
+No name, monster ID, class, source text or editor mode may switch resolution
+behavior. The same capability library must work for monsters, pregens and
+homebrew—including assigning a monster-sourced effect to a character—without
+creating a new resolver for the renamed ability.
+
+Form validation must fail closed on unknown or unsupported *outcome-changing*
+parameters, including nested effects; never silently discard them. The normal
+default for a harmful save effect is failure applies the declared condition,
+success negates it, but explicit printed success effects (including half damage)
+take precedence. Character-specific calculations belong in a shared
+character-building compiler, not in the fight resolver; manually entered
+monster attack values must not be recalculated as character weapon attacks.
+
+**Acceptance test:** rename a synthetic ability, or apply the same supported
+effect to a different form type, and demonstrate identical Python/browser
+resolution and reset with only the source label changed. See
+[universal card contract](docs/UNIVERSAL_CARD_COMBAT_CONTRACT.md) for the
+implementation gate and [form integration](docs/UNIVERSAL_COMBATANT_FORM_INTEGRATION.md)
+for the incremental migration.
 
 ## Core principle
 
@@ -130,52 +168,3 @@ until their distinct source-legal tactical shortlists and Python/browser
 certification pass. A Deva is not a summon and cannot reuse Druid Wild Shape's
 HP/Constitution semantics. Details, adopters and acceptance gates:
 `docs/UNIVERSAL_TACTICAL_FORM_SELECTION.md`.
-
-## Forbidden architecture
-
-Do not add combat behavior that dispatches on:
-
-- class name or class id;
-- subclass name or subclass id;
-- monster name or monster id;
-- spell name;
-- feature/ability name;
-- hero identity;
-- presentation text.
-
-Those identifiers may select content or source data, but they must not decide how a universal combat mechanic resolves.
-
-Do not create a second resolver because a differently named source produces the same mechanical outcome.
-
-Do not copy same-name 2014 and 2024 behavior across editions without source evidence. Edition source data stays isolated even when both editions bind to the same universal primitive.
-
-Do not invent or backport combat capability for a source creature that explicitly has no effective attack or combat action. Keep the source record in the audit corpus and classify it `ARENA_NEUTRAL`/non-runnable unless product policy explicitly removes it.
-
-## Universal runtime model
-
-Combat behavior follows:
-
-`checks -> modifiers -> result -> state update -> audit event`
-
-Source templates/cards are immutable. Fight mutation belongs only to temporary combat state.
-
-Python is the rules-reference/certification oracle. Browser JavaScript is the production fight engine. A capability is not supported until the required Python/browser behavior is equivalent and permanently tested.
-
-Unsupported outcome-changing mechanics fail closed.
-
-## Homebrew requirement
-
-Future homebrew cards use the same engine. `docs/UNIVERSAL_MECHANIC_INVENTORY.md` is the first lookup surface: preserve the complete source ability, select one or more supported universal mechanic IDs for every behavior they can represent, then supply source-specific parameters and the printed homebrew name. If a source ability such as a unique monster attack has no matching printed name in the engine, that is normal: the source ability remains source-specific. If part of its actual behavior cannot be represented by existing primitives, add the smallest reusable universal primitive for that genuinely new semantic remainder, then bind the source ability to it. Never omit, rename, weaken, or approximate a source ability merely because the engine has no same-named capability.
-
-## Authority
-
-This file defines the product philosophy and semantic-engine rule. Day-to-day implementation starts at `docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md` and exactly one small task guide. Detailed rules remain in:
-
-- `docs/IRON_PIT_RULES_CONTRACT.md`
-- `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`
-- `docs/COMBAT_RESOLUTION_PIPELINE.md`
-- `docs/PREGEN_AND_CONTENT_RULES_CONTRACT.md`
-- `docs/CANONICAL_COMBAT_BUILD_POLICY.md`
-- `docs/TWO_AGENT_COORDINATION.md`
-
-When implementation conflicts with this principle, refactor the implementation rather than creating another source-specific exception.

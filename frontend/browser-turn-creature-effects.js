@@ -37,6 +37,7 @@
     const expiryTiming = Object.prototype.hasOwnProperty.call(options, "expiryTiming") ? options.expiryTiming : "source_turn_start";
     const common = {
       sourceEffectId, appliedRound: round, sourceTemplate: source.state.template, sourceIsMagical: true,
+      targetActor: target, setup: options.setup || null,
       expiresRound: expiresRounds == null ? null : round + expiresRounds,
       expiryTiming, endsOnDamage: true,
       endsIfSourceIncapacitated: options.endsIfSourceIncapacitated !== false,
@@ -64,7 +65,7 @@
     if (options.includeFrightened !== false) conditions.push("frightened");
     if (options.includeIncapacitated !== false) conditions.push("incapacitated");
     for (const condition of conditions) {
-      if (!I().immune(target.state, condition)) {
+      if (!I().immune(target.state, condition, null, { actor: target, setup: options.setup || null })) {
         applied.push(T().apply(target.state, condition, source.combatant_id, common));
       }
     }

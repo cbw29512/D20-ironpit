@@ -6,6 +6,7 @@ import re
 
 from app.content.monster_source_sections_2014 import source_sections_2014 as _sections
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_rock_catching_2014 import source_hurled_object_qualifiers_2014
 from app.domain.weapons import DamageSourceQualifier
 
 logger = logging.getLogger(__name__)
@@ -18,6 +19,10 @@ _TRAITS = {
         r"(?:When .+? hits with a metal melee weapon, it deals an extra "
         r"|Any metal melee weapon .+? wields deals an extra )"
         r"\d+ \((\d+)d(\d+)\) fire damage(?: on a hit)? \(included in the attack\)\.", re.I,
+    ),
+    "Hellish Weapons": re.compile(
+        r".+? weapon attacks are magical and deal an extra \d+ \((\d+)d(\d+)\) "
+        r"poison damage on a hit \(included in the attacks\)\.", re.I,
     ),
     "Angelic Weapons": re.compile(
         r".+? weapon attacks are magical\. When .+? hits with any weapon, "
@@ -35,7 +40,7 @@ def _validated_trait(monster: SourceMonster2014, name: str, text: str) -> bool:
             return False
         rider = None if name == "Brute" else (
             int(match[1]), int(match[2]), 0,
-            "fire" if name == "Heated Weapons" else "radiant",
+            {"Heated Weapons": "fire", "Hellish Weapons": "poison", "Angelic Weapons": "radiant"}[name],
         )
         actions = _sections(monster.source_actions)
         included = 0
@@ -66,7 +71,7 @@ def _validated_trait(monster: SourceMonster2014, name: str, text: str) -> bool:
                 if payloads.count(rider) != 1:
                     return False
                 included += 1
-            elif name == "Angelic Weapons":
+            elif name in {"Angelic Weapons", "Hellish Weapons"}:
                 return False
         return included > 0
     except Exception:
@@ -92,9 +97,13 @@ def included_weapon_trait_names_2014(monster: SourceMonster2014) -> frozenset[st
 def weapon_damage_source_qualifiers_2014(monster: SourceMonster2014) -> list[DamageSourceQualifier]:
     try:
         magical = "Magic Weapons" in monster.trait_names or (
-            "Angelic Weapons" in included_weapon_trait_names_2014(monster)
+            bool({"Angelic Weapons", "Hellish Weapons"} & included_weapon_trait_names_2014(monster))
         )
-        return [DamageSourceQualifier.MAGICAL] if magical else []
+        tags = [DamageSourceQualifier.MAGICAL] if magical else []
+        ranged = [attack for attack in monster.attacks if attack.kind == "ranged"]
+        if len(ranged) == 1:
+            tags.extend(source_hurled_object_qualifiers_2014(monster, ranged[0]))
+        return tags
     except Exception:
         logger.exception("Failed to bind weapon damage source qualifiers for %s.", monster.id)
         raise

@@ -33,7 +33,8 @@
     if (!scores || !Number.isInteger(scores[ability])) {
       throw new Error(`${state.template.name} lacks ability scores for a ${ability} check.`);
     }
-    return Math.floor((scores[ability] - 10) / 2);
+    return Math.floor((scores[ability] - 10) / 2)
+      + (window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION?.abilityModifierDelta(state, ability) || 0);
   }
 
   function resolve(sequence, round, actor, setup = null) {
@@ -44,7 +45,7 @@
       const dc = effect.escape_check_dc;
       if (!ability || dc == null) throw new Error(`${actor.state.template.name} escape check is missing ability or DC.`);
       const disadvantage = (actor.state.active_effect_ids.includes(POISONED)
-        || actor.state.active_effect_ids.includes(FRIGHTENED)) ? 1 : 0;
+        || window.IRON_PIT_BROWSER_CONDITION_RULES.has(actor.state, FRIGHTENED, setup)) ? 1 : 0;
       const mode = A()?.mode
         ? A().mode(actor.state, 0, disadvantage)
         : R().modeFromSources(0, disadvantage);

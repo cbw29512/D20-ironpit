@@ -13,6 +13,7 @@ from app.content.monster_innate_spells_2014 import (
 from app.domain.actions import ConditionRemovalAction
 from app.domain.alternate_spell_casts import AlternateSpellCastGrant
 from app.domain.combatants import ResourceDefinition
+from app.domain.movement import MovementModeGrant
 from app.domain.spell_modifiers import SpellModifierEffect
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 
@@ -24,25 +25,51 @@ def innate_timed_self_buffs_2014(monster) -> list[TimedSelfBuffAction]:
     try:
         actions: list[TimedSelfBuffAction] = []
         for spell in _spells(monster):
-            if str(spell.get("id") or "") != "dispel-evil-and-good":
-                continue
-            actions.append(TimedSelfBuffAction(
-                id="dispel-evil-and-good",
-                name="Dispel Evil and Good",
-                action_cost="action",
-                resource_id="dispel-evil-and-good",
-                resource_cost=1,
-                duration_rounds=10,
-                expiry_timing="source_turn_end",
-                concentration=True,
-                modifier_effects=[
-                    SpellModifierEffect(
-                        kind="attacks-against-disadvantage",
-                        source_creature_types=list(_DISPEL_ATTACKER_TYPES_2014),
-                    )
-                ],
-                animation="dispel-evil-and-good",
-            ))
+            spell_id = str(spell.get("id") or "")
+            if spell_id == "dispel-evil-and-good":
+                actions.append(TimedSelfBuffAction(
+                    id="dispel-evil-and-good",
+                    name="Dispel Evil and Good",
+                    action_cost="action",
+                    resource_id="dispel-evil-and-good",
+                    resource_cost=1,
+                    duration_rounds=10,
+                    expiry_timing="source_turn_end",
+                    concentration=True,
+                    modifier_effects=[
+                        SpellModifierEffect(
+                            kind="attacks-against-disadvantage",
+                            source_creature_types=list(_DISPEL_ATTACKER_TYPES_2014),
+                        )
+                    ],
+                    animation="dispel-evil-and-good",
+                ))
+            elif spell_id == "invisibility":
+                actions.append(TimedSelfBuffAction(
+                    id="invisibility",
+                    name="Invisibility",
+                    action_cost="action",
+                    resource_id="invisibility",
+                    resource_cost=1,
+                    duration_rounds=600,
+                    expiry_timing="source_turn_end",
+                    concentration=True,
+                    condition_ids=["invisible"],
+                    animation="invisibility",
+                ))
+            elif spell_id == "fly":
+                actions.append(TimedSelfBuffAction(
+                    id="fly",
+                    name="Fly",
+                    action_cost="action",
+                    resource_id="fly",
+                    resource_cost=1,
+                    duration_rounds=100,
+                    expiry_timing="source_turn_end",
+                    concentration=True,
+                    movement_mode_grants=[MovementModeGrant(mode="fly", fixed_speed_ft=60)],
+                    animation="fly",
+                ))
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 innate timed self-buffs for %s.", monster.name)

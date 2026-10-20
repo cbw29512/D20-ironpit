@@ -428,7 +428,7 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **116**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **90**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
@@ -437,19 +437,14 @@ Blocked monsters: **116**. These are grouped by printed ability name so the rost
 | Air Form | Air Elemental | 1 |
 | Ambusher | Doppelganger | 1 |
 | Bound | Shield Guardian | 1 |
-| Confer Fire Resistance | Nightmare | 1 |
 | Consume Life | Will-o'-Wisp | 1 |
 | Corrode Metal | Gray Ooze | 1 |
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
 | Death Burst | Dust Mephit, Ice Mephit, Magma Mephit, Magmin, Steam Mephit | 5 |
 | Death Throes | Balor | 1 |
-| Detect Life | Banshee | 1 |
-| Divine Awareness | Planetar, Solar | 2 |
 | Divine Eminence | Priest | 1 |
 | Duergar Resilience | Duergar | 1 |
-| Elemental Demise | Djinni, Efreeti | 2 |
 | Ephemeral | Will-o'-Wisp | 1 |
-| Ethereal Sight | Ghost | 1 |
 | False Appearance (Object Form Only) | Mimic | 1 |
 | Fear Aura | Pit Fiend | 1 |
 | Fire Aura | Balor | 1 |
@@ -459,38 +454,23 @@ Blocked monsters: **116**. These are grouped by printed ability name so the rost
 | Gibbering | Gibbering Mouther | 1 |
 | Grappler | Mimic | 1 |
 | Grasping Tendrils | Roper | 1 |
-| Hellish Weapons | Erinyes | 1 |
 | Horrific Appearance | Sea Hag | 1 |
 | Ignited Illumination | Magmin | 1 |
 | Innate Spellcasting | Cloud Giant, Couatl, Deep Gnome (Svirfneblin), Deva, Djinni, Drider, Drow, Dryad, Dust Mephit, Efreeti, Glabrezu, Green Hag, Ice Mephit, Lamia, Magma Mephit, Night Hag, Oni, Pit Fiend, Planetar, Rakshasa, Solar, Steam Mephit, Storm Giant | 23 |
-| Inscrutable | Androsphinx, Gynosphinx | 2 |
-| Iron Scent | Rust Monster | 1 |
 | Light Sensitivity | Cloaker | 1 |
 | Limited Magic Immunity | Rakshasa | 1 |
-| Limited Telepathy | Otyugh, Pseudodragon | 2 |
 | Misty Escape | Vampire | 1 |
 | Multiple Heads | Hydra | 1 |
 | Ooze Cube | Gelatinous Cube | 1 |
-| Petrifying Gaze | Basilisk, Medusa | 2 |
 | Pounce (Tiger or Hybrid Form Only) | Weretiger | 1 |
-| Probing Telepathy | Aboleth | 1 |
-| Reactive | Marilith | 1 |
 | Reactive Heads | Hydra | 1 |
 | Reflective Carapace | Tarrasque | 1 |
-| Rust Metal | Rust Monster | 1 |
-| Sense Magic | Chuul | 1 |
 | Shapechanger | Doppelganger, Imp, Mimic, Quasit, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf | 11 |
-| Shielded Mind | Couatl | 1 |
-| Speak with Beasts and Plants | Dryad | 1 |
 | Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
-| Steadfast | Bearded Devil | 1 |
-| Sunlight Weakness | Shadow | 1 |
 | Surprise Attack | Doppelganger | 1 |
-| Tail Spike Regrowth | Manticore | 1 |
-| Telepathic Bond | Homunculus, Succubus/Incubus | 2 |
+| Telepathic Bond | Succubus/Incubus | 1 |
 | Transparent | Gelatinous Cube | 1 |
-| Tree Stride | Dryad | 1 |
 | Vampire Weaknesses | Vampire, Vampire Spawn | 2 |
 | Variable Illumination | Will-o'-Wisp | 1 |
 | Water Form | Water Elemental | 1 |
@@ -500,21 +480,20 @@ Blocked monsters: **116**. These are grouped by printed ability name so the rost
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 82 |
-| `source:extra-action` | 68 |
+| `source:trait` | 66 |
+| `source:extra-action` | 53 |
 | `mechanic:spellcasting` | 36 |
-| `attack:incomplete` | 24 |
-| `attack:complex` | 12 |
+| `attack:incomplete` | 21 |
 | `multiattack:complex` | 12 |
 | `mechanic:recharge` | 10 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
 | `mechanic:swallow` | 7 |
-| `source:reaction` | 5 |
+| `attack:complex` | 6 |
 | `mechanic:death-trigger` | 4 |
 | `attack:none` | 3 |
+| `source:reaction` | 3 |
 | `attack:damage-type` | 2 |
 | `arena:neutral` | 1 |
 | `arena:removed` | 1 |
 | `mechanic:defense` | 1 |
-| `mechanic:limited-use` | 1 |

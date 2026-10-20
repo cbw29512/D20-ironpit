@@ -20,15 +20,15 @@
     }
   }
 
-  function diagonalAllowed(map, mover, current, destination, members, helpers, barriers = null) {
+  function diagonalAllowed(map, mover, current, destination, members, helpers, barriers = null, sourceAllowsHostileOverlap = false) {
     try {
       const dx = destination.x - current.x;
       const dy = destination.y - current.y;
       if (dx === 0 || dy === 0) return true;
       const sideX = { x: current.x + dx, y: current.y };
       const sideY = { x: current.x, y: current.y + dy };
-      return helpers.movementStepCostFt(map, mover, sideX, members, current, barriers) != null
-        || helpers.movementStepCostFt(map, mover, sideY, members, current, barriers) != null;
+      return helpers.movementStepCostFt(map, mover, sideX, members, current, barriers, null, sourceAllowsHostileOverlap) != null
+        || helpers.movementStepCostFt(map, mover, sideY, members, current, barriers, null, sourceAllowsHostileOverlap) != null;
     } catch (error) {
       console.error("Failed to validate diagonal grid movement", {
         mover: mover.combatant_id,
@@ -38,7 +38,7 @@
     }
   }
 
-  function searchPathToward(map, mover, target, members, desiredDistanceFt, helpers, barriers = null) {
+  function searchPathToward(map, mover, target, members, desiredDistanceFt, helpers, barriers = null, sourceAllowsHostileOverlap = false) {
     try {
       if (desiredDistanceFt < 0) throw new Error("Desired distance cannot be negative.");
       const api = support();
@@ -89,7 +89,7 @@
         for (const [dx, dy] of OFFSETS) {
           const destination = { x: current.x + dx, y: current.y + dy };
           if (destination.x < 0 || destination.y < 0) continue;
-          const stepCost = helpers.movementStepCostFt(map, mover, destination, members, current, barriers);
+          const stepCost = helpers.movementStepCostFt(map, mover, destination, members, current, barriers, null, sourceAllowsHostileOverlap);
           if (stepCost == null || !diagonalAllowed(
             map,
             mover,
@@ -98,6 +98,7 @@
             members,
             helpers,
             barriers,
+            sourceAllowsHostileOverlap,
           )) continue;
           const nextCost = node.cost + stepCost;
           const nextKey = api.keyOf(destination);

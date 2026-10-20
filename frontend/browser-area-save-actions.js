@@ -73,12 +73,45 @@
     }
   }
 
-  function choose(member, setup, actionCost = null) {
+  function prohibitedContext(member, setup, action) {
+    try {
+      if (!action.prohibitedEnvironmentContextId) return false;
+      const runtime = window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS;
+      if (!runtime?.inside) throw new Error("Context-gated Action requires shared environment context resolver.");
+      return runtime.inside(member, setup, action.prohibitedEnvironmentContextId);
+    } catch (error) {
+      console.error("Failed Action environment eligibility.", { source: member?.combatant_id, effect: action?.id, error });
+      throw error;
+    }
+  }
+
+  // Recompute eligibility from the geometric placement before execution.
+  function eligiblePlacement(member, setup, action, placement) {
+    try {
+      const candidates = action.targetScope === "all-other-creatures"
+        ? [...placement.targetIds, ...placement.friendlyIds] : placement.targetIds;
+      const targetIds = candidates.filter((id) => {
+        const target = memberById(setup, id);
+        return target && target.combatant_id !== member.combatant_id
+          && (action.targetScope === "all-other-creatures" || target.side !== member.side)
+          && V().legalAction(action, target, 0, member.combatant_id, member);
+      });
+      return { ...placement, targetIds, target_ids: targetIds };
+    } catch (error) {
+      console.error("Failed browser area-save eligibility", { member: member.combatant_id, action: action.id, error });
+      throw error;
+    }
+  }
+
+  function choose(member, setup, actionCost = null, openingOnly = false) {
     try {
       const candidates = [];
       for (const action of member.state.template.saving_throw_actions || []) {
+        if (Boolean(action.openingInitiativeOnly) !== openingOnly) continue;
+        if (openingOnly && !window.IRON_PIT_BROWSER_CHARGE?.openingEligible(member.state.current_round, member, setup)) continue;
         if (actionCost && (action.actionCost || "action") !== actionCost) continue;
-        if (!action.area || !resourceAvailable(member.state, action)) continue;
+        if (!action.area || !resourceAvailable(member.state, action)
+          || prohibitedContext(member, setup, action)) continue;
         if (action.requiresNoActiveGrapple) {
           const holding = [...setup.heroes, ...setup.monsters].some((target) =>
             target.combatant_id !== member.combatant_id && !target.state.is_dead
@@ -86,15 +119,12 @@
           if (holding) continue;
         }
         const placements = T().legalPlacements(
-          member, setup, action.area, action.range, Boolean(action.areaHealingRider),
+          member, setup, action.area, action.range,
+          Boolean(action.areaHealingRider) || action.targetScope === "all-other-creatures",
         );
         for (const placement of placements) {
-          const targetIds = placement.targetIds.filter((id) => {
-            const target = memberById(setup, id);
-            return target && V().legalAction(action, target, 0, member.combatant_id);
-          });
-          if (!targetIds.length && !action.areaHealingRider) continue;
-          const legal = { ...placement, targetIds, target_ids: targetIds };
+          const legal = eligiblePlacement(member, setup, action, placement);
+          if (!legal.targetIds.length && !action.areaHealingRider) continue;
           const healTarget = healingTarget(member, setup, action, legal, !legal.targetIds.length);
           if (action.areaHealingRider && !healTarget) continue;
           candidates.push({ action, placement: legal, healTarget });
@@ -116,12 +146,18 @@
     try {
       if (!selected) return null;
       const { action, placement } = selected;
+      if (action.openingInitiativeOnly && !window.IRON_PIT_BROWSER_CHARGE?.openingEligible(round, member, setup)) {
+        throw new Error(`${action.name} requires winning initiative on the opening round.`);
+      }
+      if (prohibitedContext(member, setup, action)) throw new Error(`${action.name} is prohibited by the live environment context.`);
       const actionCost = action.actionCost || "action";
       if (!E().available(member.state, actionCost)) return null;
       if (!resourceAvailable(member.state, action)) throw new Error(`${action.name} resource is unavailable.`);
       const legalPlacements = T().legalPlacements(
-        member, setup, action.area, action.range, Boolean(action.areaHealingRider),
-      );
+        member, setup, action.area, action.range,
+        Boolean(action.areaHealingRider) || action.targetScope === "all-other-creatures",
+      ).map((row) => eligiblePlacement(member, setup, action, row))
+        .filter((row) => row.targetIds.length || action.areaHealingRider);
       if (!legalPlacements.some((row) =>
         JSON.stringify(row.origin) === JSON.stringify(placement.origin)
         && JSON.stringify(row.direction) === JSON.stringify(placement.direction)
@@ -137,7 +173,9 @@
         remaining = member.state.resources[action.resourceId];
       }
       E().spend(member.state, actionCost);
-      const shared = action.damageDiceCount ? D().rollMany(action.damageDiceCount, action.damageDiceSize) : null;
+      const shared = action.damageComponents?.length
+        ? action.damageComponents.map((spec) => D().rollMany(spec.diceCount, spec.diceSize))
+        : action.damageDiceCount ? D().rollMany(action.damageDiceCount, action.damageDiceSize) : null;
       const events = [];
       for (const id of placement.targetIds) {
         const target = memberById(setup, id);

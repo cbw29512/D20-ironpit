@@ -38,10 +38,14 @@ def test_nothic_weird_insight_is_arena_neutral_and_rotting_gaze_saves() -> None:
     assert str(gaze.damage_type).split(".")[-1].casefold() == "necrotic"
 
 
-def test_xday_and_legendary_remainders_stay_parked() -> None:
+def test_supported_xday_action_is_admitted_while_other_remainders_stay_parked() -> None:
+    dretch = _source("dretch")
+    assert "Fetid Cloud (1/Day)" in dretch.action_names
+    assert basic_blockers_2014(dretch) == ()
+    compiled = compile_combatant(adapt_basic_monster_2014(dretch))
+    assert any(zone.name == "Fetid Cloud (1/Day)" for zone in compiled.persistent_save_zone_actions)
+    assert any(resource.id == "fetid-cloud" and resource.max_uses == 1 for resource in compiled.resources)
     parked = {
-        "dretch": "source:extra-action",
-        "knight": "source:extra-action",
         "aboleth": "source:legendary",
         "androsphinx": "mechanic:spellcasting",
         "gynosphinx": "mechanic:spellcasting",

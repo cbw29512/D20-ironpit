@@ -19,6 +19,8 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_informational_trait_proofs_2014 import verified_nonactionable_information_2014
+from app.content.monster_arena_inert_trait_proofs_2014 import verified_approved_inert_trait_2014
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +39,8 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
     try:
         if trait_name not in monster.trait_names:
             return False
+        if verified_approved_inert_trait_2014(monster, trait_name):
+            return True
         source = monster.source_traits or ""
         # Context-driven exclusion: this trait only operates underwater, a
         # context absent from the standard Iron Pit. Keep the printed trait.
@@ -46,23 +50,72 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 and "While underwater" in source
                 and "transformative mucus" in source
             )
-        # User-approved arena exclusions: sensing metal and permanent equipment
-        # corrosion have no legal combat-state consumers in the standard Pit.
-        # Require source clauses so unrelated traits cannot inherit the policy.
-        excluded = {
-            "Iron Scent": (
-                "<strong>Iron Scent.</strong>", "by scent",
-                "ferrous metal within 30 feet",
+        # Source-verified informational traits never grant combat coordinates,
+        # actions, saves or targeting. Names validate provenance only.
+        informational_clauses = {
+            "Detect Life": (
+                "<strong>Detect Life.</strong>",
+                "general direction",
+                "exact locations",
             ),
-            "Rust Metal": (
-                "<strong>Rust Metal.</strong>",
-                "nonmagical weapon made of metal",
-                "permanent and cumulative",
-                "nonmagical ammunition made of metal",
+            "Shielded Mind": (
+                "<strong>Shielded Mind.</strong>",
+                "immune to scrying",
+                "sense its emotions",
+                "read its thoughts",
+                "detect its location",
             ),
         }
-        if trait_name in excluded:
-            return all(part.casefold() in source.casefold() for part in excluded[trait_name])
+        if trait_name in informational_clauses:
+            folded = source.casefold()
+            return all(clause.casefold() in folded for clause in informational_clauses[trait_name])
+        if trait_name == "Confer Fire Resistance":
+            # Rider-only resistance has no eligible recipient on the
+            # standard Pit's no-mount board. Do not give it to the owner:
+            # its own printed Fire immunity is separate and remains active.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(source).get(trait_name, "")
+            normalized = " ".join(printed.casefold().replace("’", "'").split())
+            return normalized == (
+                "the nightmare can grant resistance to fire damage "
+                "to anyone riding it."
+            )
+        if trait_name == "Sense Magic":
+            # This only reports magic's presence. It never grants visibility,
+            # target location, Advantage, a save, or a combat action.
+            # Isolate the printed paragraph: no other trait may prove it.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+
+            printed = source_sections_2014(source).get("Sense Magic", "")
+            normalized = printed.casefold().replace("’", "'")
+            return all(clause in normalized for clause in (
+                "senses magic within 120 feet",
+                "at will",
+                "detect magic",
+                "isn't itself magical",
+            ))
+        # Pinned source must prove both the printed trait and its
+        # arena-inert semantics. Other effects remain blocked independently.
+        additional_inert_clauses = {
+            "Elemental Demise": ("dies", "disintegrates"),
+            "Divine Awareness": ("hears", "lie"),
+            "Speak with Beasts and Plants": ("communicate", "beasts", "plants"),
+            "Tree Stride": ("tree", "movement"),
+            "Ethereal Sight": ("ethereal plane",),
+            "Telepathic Bond": ("telepathically",),
+            "Limited Telepathy": ("telepathically",),
+        }
+        if trait_name in additional_inert_clauses:
+            heading = f"<strong>{trait_name}.</strong>"
+            match_start = source.casefold().find(heading.casefold())
+            if match_start < 0:
+                return False
+            remainder = source[match_start + len(heading):]
+            next_heading = remainder.find("<strong>")
+            clause = (remainder[:next_heading] if next_heading >= 0 else remainder).casefold()
+            return all(token in clause for token in additional_inert_clauses[trait_name])
+        if verified_nonactionable_information_2014(monster, trait_name):
+            return True
         if trait_name != "Faultless Tracker":
             return False
         clauses = (

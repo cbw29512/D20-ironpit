@@ -3,8 +3,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const T = () => window.IRON_PIT_BROWSER_TURN;
   const L = () => window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE;
-  const P = () => window.IRON_PIT_BROWSER_PRECOMBAT_BUFFS;
-  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION, B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
+  const P = () => window.IRON_PIT_BROWSER_PRECOMBAT_BUFFS, C = () => window.IRON_PIT_BROWSER_CONCENTRATION, B = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const M = () => window.IRON_PIT_BROWSER_ARENA_MAP;
   const G = () => window.IRON_PIT_BROWSER_GRID_PLACEMENT;
@@ -50,11 +49,11 @@
     } catch (error) { console.error("Failed to apply browser Iron Pit grid deployment", { error }); throw error; }
   }
   function buildSetup(selection) {
-    try {
-      const requestedRuleset = selectedRuleset(selection), registry = rosters(requestedRuleset);
+    try { const requestedRuleset = selectedRuleset(selection), registry = rosters(requestedRuleset);
+      const custom = selection.compiled_monsters || {}; if (Array.isArray(custom) || typeof custom !== "object") throw new Error("Compiled monster registry must be an object."); for (const [id, item] of Object.entries(custom)) if (!item || item.id !== id || item.kind !== "monster" || item.ruleset !== requestedRuleset || !Array.isArray(item.attacks) || !item.attacks.length || !item.primary_attack_id || !Number.isInteger(item.armor_class) || item.armor_class < 1 || !Number.isInteger(item.max_hp) || item.max_hp < 1 || Object.hasOwn(registry.heroes, id) || Object.hasOwn(registry.monsters, id)) throw new Error(`Invalid or colliding compiled monster: ${id}`);
       const collisions = Object.keys(registry.heroes).filter((id) => Object.hasOwn(registry.monsters, id)); if (collisions.length) throw new Error(`Ambiguous certified card IDs: ${collisions.join(", ")}`);
       const card = (id, side) => {
-        const template = registry.heroes[id] || registry.monsters[id];
+        const template = side === "heroes" ? registry.heroes[id] : (custom[id] || registry.monsters[id]);
         if (!template) throw new Error(`Unknown certified ${side === "heroes" ? "hero" : "monster"} for ${requestedRuleset}: ${id}`);
         return cloneTemplate(template); };
       const member = (id, index, side) => {
@@ -154,20 +153,21 @@
         const member = byId.get(id);
         B()?.cleanupDisabledSources(setup);
         window.IRON_PIT_BROWSER_MODIFIERS?.expireSourceTurnStart(states, member.combatant_id);
+        S().refreshReactionsForNewTurn?.(states, member.state);
         S().refreshStartOfTurn(member.state);
         C()?.endIfExpired(member.state, round, states);
         window.IRON_PIT_BROWSER_GRID_BARRIERS?.cleanup(setup, round);
         window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.expire(setup, round);
         window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.sync(setup, round);
+        const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start");
+        events.push(...start.events); sequence = start.sequence; const tsr = window.IRON_PIT_BROWSER_TURN_START_SAVE_CONDITION_REACTION?.resolve(sequence, round, member, setup); if (tsr) { events.push(...tsr.events); sequence = tsr.sequence; }
+        const saveDot = window.IRON_PIT_BROWSER_POST_HIT_SAVE_CONDITION?.resolveStartOfTurn(sequence, round, member, setup);
+        if (saveDot) { events.push(...saveDot.events); sequence = saveDot.sequence; }
         window.IRON_PIT_BROWSER_SAVE_ZONES?.expire(setup, round);
         const startZones = window.IRON_PIT_BROWSER_SAVE_ZONES?.resolveWindow(
           sequence, round, member, setup, `${round}:${member.combatant_id}`, "start_turn",
         );
         if (startZones) { events.push(...startZones.events); sequence = startZones.sequence; }
-        const start = lifecycle(sequence, round, member, setup, "target_turn_start", "source_turn_start");
-        events.push(...start.events); sequence = start.sequence;
-        const saveDot = window.IRON_PIT_BROWSER_POST_HIT_SAVE_CONDITION?.resolveStartOfTurn(sequence, round, member, setup);
-        if (saveDot) { events.push(...saveDot.events); sequence = saveDot.sequence; }
         if (member.state.template.kind === "character" && member.state.current_hp === 0 && !member.state.is_dead && !member.state.is_stable) events.push(T().deathSave(sequence++, round, member));
         if (member.state.current_hp > 0 && !member.state.is_dead) {
           const turn = T().resolveTurn(sequence, round, member, setup);

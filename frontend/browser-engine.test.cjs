@@ -182,3 +182,148 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
 
 console.log("Browser combat regressions passed.");
 require("./browser-initiative-natural-one.test.cjs");
+
+{
+  const custom = structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-goblin-warrior"]);
+  custom.id = "synthetic-unlisted-monster";
+  const hero = Object.values(window.IRON_PIT_BROWSER_HEROES).find(row => row.ruleset === "2024");
+  const selection = {ruleset:"2024",hero_ids:[hero.id],monster_ids:[custom.id],compiled_monsters:{[custom.id]:custom}};
+  const result = window.IRON_PIT_BROWSER_ENGINE.runEncounter(selection);
+  assert.ok(result.events.length);
+  assert.equal(Object.hasOwn(window.IRON_PIT_BROWSER_MONSTERS,custom.id),false);
+}
+
+{
+  // Certified cards must be reusable across battles without fight-state leakage.
+  const encounters = [
+    { heroes: ["karnok-stoneward-l1"], monsters: ["srd-bandit"] },
+    { heroes: ["rokhan-stonefury-l1"], monsters: ["srd-commoner"] },
+    { heroes: ["karnok-stoneward-l1", "rokhan-stonefury-l1"], monsters: ["srd-wolf", "srd-wolf"] },
+  ];
+  for (const [index, encounter] of encounters.entries()) {
+    const run = () => fight(encounter.heroes, encounter.monsters, deterministicDice(800 + index));
+    const beforeHeroes = encounter.heroes.map(id => JSON.stringify(window.IRON_PIT_BROWSER_HEROES[id]));
+    const beforeMonsters = encounter.monsters.map(id => JSON.stringify(window.IRON_PIT_BROWSER_MONSTERS[id]));
+    const first = run(), second = run();
+    assert.notEqual(first.outcome, "active", "certified pregen/monster encounter must resolve");
+    assert.equal(first.outcome, second.outcome, "same seed and immutable cards must resolve identically");
+    assert.equal(first.rounds, second.rounds, "repeated fight rounds must match");
+    assert.deepEqual(first.events.map(event => [event.event_type, event.actor_id, event.target_id, event.damage_roll?.total]),
+      second.events.map(event => [event.event_type, event.actor_id, event.target_id, event.damage_roll?.total]),
+      "repeated fights must have identical observable combat events");
+    assert.deepEqual(encounter.heroes.map(id => JSON.stringify(window.IRON_PIT_BROWSER_HEROES[id])), beforeHeroes,
+      "a fight must not mutate certified pregen definitions");
+    assert.deepEqual(encounter.monsters.map(id => JSON.stringify(window.IRON_PIT_BROWSER_MONSTERS[id])), beforeMonsters,
+      "a fight must not mutate certified monster definitions");
+  }
+}
+
+{
+  // Beta gate: completed encounters preserve fundamental combat-state bounds.
+  // Exercise the existing engine; do not calculate combat outcomes here.
+  const scenarios = [
+    [["karnok-stoneward-l1"], ["srd-bandit"]],
+    [["rokhan-stonefury-l1"], ["srd-commoner"]],
+    [["karnok-stoneward-l1", "rokhan-stonefury-l1"], ["srd-wolf", "srd-wolf"]],
+  ];
+  for (const [index, [heroes, monsters]] of scenarios.entries()) {
+    const battle = fight(heroes, monsters, deterministicDice(19400 + index));
+    assert.notEqual(battle.outcome, "active");
+    for (const member of [...battle.setup.heroes, ...battle.setup.monsters]) {
+      const state = member.state;
+      assert.ok(Number.isFinite(state.current_hp), "HP must remain finite");
+      assert.ok(Number.isFinite(state.temporary_hp) && state.temporary_hp >= 0, "temporary HP must be nonnegative");
+      assert.ok(state.current_hp >= 0, "HP cannot be negative");
+      assert.ok(state.current_hp <= window.IRON_PIT_BROWSER_STATE.effectiveMaxHp(state), "HP cannot exceed effective maximum");
+      assert.equal(Boolean(state.is_alive && state.is_dead), false, "alive and dead states cannot coexist");
+      assert.ok(Number.isInteger(state.death_save_successes) && state.death_save_successes >= 0 && state.death_save_successes <= 3);
+      assert.ok(Number.isInteger(state.death_save_failures) && state.death_save_failures >= 0 && state.death_save_failures <= 3);
+      assert.ok(Object.values(state.resources || {}).every(value => Number.isInteger(value) && value >= 0),
+        "resource counters must be nonnegative integers");
+    }
+  }
+}
+
+{
+  // Beta gate: full 6-vs-6 must resolve deterministically with isolated state.
+  // Use actual certified cards, repeating IDs only as distinct combatant instances.
+  const heroes = Array(6).fill("karnok-stoneward-l1");
+  const monsters = Array(6).fill("srd-commoner");
+  const run = () => fight(heroes, monsters, deterministicDice(62026));
+  const beforeHero = JSON.stringify(window.IRON_PIT_BROWSER_HEROES[heroes[0]]);
+  const beforeMonster = JSON.stringify(window.IRON_PIT_BROWSER_MONSTERS[monsters[0]]);
+  const first = run(), second = run();
+  assert.notEqual(first.outcome, "active", "6v6 must reach a terminal outcome");
+  assert.equal(first.setup.heroes.length, 6, "all six heroes must be instantiated");
+  assert.equal(first.setup.monsters.length, 6, "all six monsters must be instantiated");
+  assert.equal(window.IRON_PIT_BATTLE_LAB?.fingerprint?.(first) || JSON.stringify(first.events),
+    window.IRON_PIT_BATTLE_LAB?.fingerprint?.(second) || JSON.stringify(second.events),
+    "six-versus-six seeded replay must match");
+  assert.equal(JSON.stringify(window.IRON_PIT_BROWSER_HEROES[heroes[0]]), beforeHero);
+  assert.equal(JSON.stringify(window.IRON_PIT_BROWSER_MONSTERS[monsters[0]]), beforeMonster);
+  for (const member of [...first.setup.heroes, ...first.setup.monsters]) {
+    const state = member.state;
+    assert.ok(Number.isFinite(state.current_hp) && state.current_hp >= 0);
+    assert.ok(state.current_hp <= window.IRON_PIT_BROWSER_STATE.effectiveMaxHp(state));
+    assert.ok(!(state.is_alive && state.is_dead));
+  }
+}
+
+{
+  // Beta gate: mixed card definitions must coexist in a full party battle.
+  // Avoid treating six copies of one card as sufficient mixed-party coverage.
+  const heroes = ["karnok-stoneward-l1", "rokhan-stonefury-l1", "karnok-stoneward-l1",
+    "rokhan-stonefury-l1", "karnok-stoneward-l1", "rokhan-stonefury-l1"];
+  const monsters = ["srd-commoner", "srd-bandit", "srd-wolf",
+    "srd-commoner", "srd-bandit", "srd-wolf"];
+  const run = () => fight(heroes, monsters, deterministicDice(622026));
+  const snapshots = [...new Set(heroes)].map(id => JSON.stringify(window.IRON_PIT_BROWSER_HEROES[id]))
+    .concat([...new Set(monsters)].map(id => JSON.stringify(window.IRON_PIT_BROWSER_MONSTERS[id])));
+  const first = run(), second = run();
+  assert.notEqual(first.outcome, "active", "mixed 6v6 must terminate");
+  assert.equal(first.setup.heroes.length, 6);
+  assert.equal(first.setup.monsters.length, 6);
+  const instances = [...first.setup.heroes, ...first.setup.monsters];
+  assert.equal(new Set(instances.map(member => member.combatant_id)).size, 12,
+    "repeated source cards must create twelve separate combatants");
+  assert.equal(new Set(instances.map(member => member.state)).size, 12,
+    "each participant must own isolated fight state");
+  assert.equal(first.outcome, second.outcome);
+  assert.equal(first.rounds, second.rounds);
+  assert.deepEqual(first.events, second.events, "mixed 6v6 must replay the same events");
+  assert.deepEqual([...new Set(heroes)].map(id => JSON.stringify(window.IRON_PIT_BROWSER_HEROES[id]))
+    .concat([...new Set(monsters)].map(id => JSON.stringify(window.IRON_PIT_BROWSER_MONSTERS[id]))), snapshots,
+    "mixed 6v6 must leave all distinct card definitions unchanged");
+  for (const member of [...first.setup.heroes, ...first.setup.monsters]) {
+    assert.ok(Number.isFinite(member.state.current_hp) && member.state.current_hp >= 0);
+    assert.ok(member.state.current_hp <= window.IRON_PIT_BROWSER_STATE.effectiveMaxHp(member.state));
+    assert.ok(!(member.state.is_alive && member.state.is_dead));
+  }
+}
+
+{
+  // Actual browser fights, not a mocked combat resolver. Preserve every event
+  // and compare seeded replays for multiple source monsters and a mixed 3v3.
+  const { transcript, assertReplay } = require("./golden-monster-transcripts.cjs");
+  const encounters = [
+    { hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-commoner"], seed: 1801 },
+    { hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-wolf"], seed: 1802 },
+    { hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-bandit"], seed: 1803 },
+    { hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-black-bear"], seed: 1804 },
+    { hero_ids: ["karnok-stoneward-l1"], monster_ids: ["srd-brown-bear"], seed: 1805 },
+    { hero_ids: ["karnok-stoneward-l1", "rokhan-stonefury-l1", "karnok-stoneward-l1"],
+      monster_ids: ["srd-commoner", "srd-wolf", "srd-bandit"], seed: 1806 },
+  ];
+  const recordings = encounters.map(({ seed, ...selection }) => {
+    const first = transcript(fight(selection.hero_ids, selection.monster_ids, deterministicDice(seed)), selection, seed);
+    const replay = transcript(fight(selection.hero_ids, selection.monster_ids, deterministicDice(seed)), selection, seed);
+    assertReplay(first, replay);
+    assert.ok(first.events.length > 1, "Every golden encounter must execute combat");
+    return first;
+  });
+  if (process.env.IRON_PIT_RECORD_GOLDENS === "1") {
+    const output = path.join(__dirname, "monster-golden-transcripts.json");
+    fs.writeFileSync(output, JSON.stringify(recordings, null, 2) + "\n");
+    console.log(`Recorded ${recordings.length} seeded real-fight transcripts at ${output}`);
+  }
+}

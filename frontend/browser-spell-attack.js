@@ -49,6 +49,11 @@
     if (spendCastCosts && spell.level > 0 && !resourceId) {
       throw new Error(`No level ${castSlotLevel ?? spell.level} spell slot remains for ${spell.name}.`);
     }
+    if (spendCastCosts && (caster.state.timed_effects || []).some((effect) => effect.ends_on_owner_spell_cast)) {
+      const expiry = window.IRON_PIT_BROWSER_TIMED?.expireOnOwnerEvent;
+      if (!expiry) throw new Error("Spell attacks require owner-effect expiry.");
+      expiry(caster.state, "spell_cast", [...setup.heroes, ...setup.monsters].map((m) => m.state));
+    }
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null;
     if (ward && !ward.succeeded) {
       if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
@@ -60,7 +65,7 @@
       if (rangeModifier) event.description += ` ${caster.state.template.name} uses ${rangeModifier.name}.`;
       return event;
     }
-    const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id);
+    const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id, setup);
     const armorAdvantage = spell.advantageIfTargetWearingMetalArmor && target.state.template.wearing_metal_armor ? 1 : 0;
     const buffAdvantage = window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS?.spellAttackAdvantage?.(caster.state) ? 1 : 0;
     const advantage = conditions.advantage + armorAdvantage + buffAdvantage + M().nextAttackAgainstAdvantage(caster.state, target.combatant_id);

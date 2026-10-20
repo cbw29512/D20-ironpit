@@ -57,6 +57,10 @@
       const disadvantage = X().saveDisadvantage(state) + (DF().saveDisadvantage?.(state, ability) || 0)
         + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(state, ability) || 0)
         + (context.disadvantageSources || []).length
+        + (context.encounterRoller
+          ? (window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS?.disadvantageSources(
+            context.encounterRoller, context.setup, "saving_throws",
+          ) || 0) : 0)
         + (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0);
       return R().modeFromSources(advantage, disadvantage);
     } catch (error) {
@@ -90,7 +94,7 @@
       const baseBonus = state.template.saving_throw_bonuses?.[ability];
       if (baseBonus == null) throw new Error(`${state.template.name} lacks a certified ${ability} saving throw bonus.`);
       const modifiers = M();
-      const bonus = baseBonus + (modifiers.savingThrowFlat?.(state, ability) || 0);
+      const bonus = baseBonus + (window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION?.abilityModifierDelta(state, ability) || 0) + (modifiers.savingThrowFlat?.(state, ability) || 0);
       const baseRoll = R().d20(bonus, saveMode(state, ability, context));
       let roll = modifiers.applyD20Bonus?.(state, "saving-throw-bonus-die", baseRoll) || baseRoll; if ((state.active_d20_bonus_dice || []).length) { if (!Number.isInteger(context.roundNumber)) throw new Error("Active d20 bonus die requires saving-throw round context."); roll = DB().applyIfUseful(state, "saving_throw", roll, dc, context.roundNumber).roll; }
       const resourceBacked = state.template.resource_backed_d20_bonus_dice || [];

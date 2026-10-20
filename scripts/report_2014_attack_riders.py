@@ -26,9 +26,8 @@ _FIELDS = (
     "forbid_target_grappled_by_self",
     "grapple_target_policy",
 )
-# Heated Body is now bound; Salamander still has an independent Tail
-# auto-hit-own-grapple blocker. Do not silently certify that attack.
-_EXPECTED_ATTACK_ONLY = frozenset({"salamander"})
+# Failure-margin poison is now source-admitted; no attack-complex-only cards remain.
+_EXPECTED_ATTACK_ONLY = frozenset()
 
 
 def _active(value: object, field: str) -> bool:

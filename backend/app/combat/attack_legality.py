@@ -18,12 +18,14 @@ def attack_allowed_against(
     try:
         if attack.unavailable_reason is not None:
             return False
+        if defender.is_dead or (defender.template.kind == "monster" and defender.current_hp <= 0):
+            return False
         defender_owned = any(source.source_id == attacker_event_id for source in defender.grapple_sources)
         if attack.forbid_target_grappled_by_self and defender_owned:
             return False
         if attack.grapple_target_policy == "normal":
             return True
-        if attack.grapple_target_policy != "own_grapple_only":
+        if attack.grapple_target_policy not in {"own_grapple_only", "auto_hit_own_grapple"}:
             raise ValueError(f"Unsupported grapple target policy: {attack.grapple_target_policy}")
         if defender_owned:
             return True

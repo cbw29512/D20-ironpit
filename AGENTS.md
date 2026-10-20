@@ -10,27 +10,35 @@ Before changing combat code, read:
 
 1. `SOUL.md` — first-read product philosophy.
 2. `docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md` — small router; read only the Pregens, Monsters, or Universal Engine guide needed for the task.
-3. `docs/CURRENT_OPERATING_STATUS.md` — current lane, certified counts, parked PRs, CI spend rules.
+3. `docs/CURRENT_OPERATING_STATUS.md` — navigation and dated snapshot; the generated reports and exact-head CI are current evidence.
 4. `docs/IRON_PIT_LOCKED_RULES.md` — Chris-locked product rules index.
 5. Open detailed contracts only when the selected task guide requires them, the mechanic touches that subsystem, or something is uncertain.
 6. Current source/runtime code and permanent tests.
 7. Generated certification state in `data/hero_certification_manifest.json` and `data/monster_certification_manifest.json`.
 
-Detailed authorities remain available in `docs/IRON_PIT_RULES_CONTRACT.md`, `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md`, `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`, `docs/COMBAT_RESOLUTION_PIPELINE.md`, `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md`, `docs/MAIN_ACTION_SELECTION_CONTRACT.md`, `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md`, `docs/PREGEN_AND_CONTENT_RULES_CONTRACT.md`, and `docs/CANONICAL_COMBAT_BUILD_POLICY.md`.
+Detailed authorities remain available in `docs/IRON_PIT_RULES_CONTRACT.md`, `docs/UNIVERSAL_COMBATANT_ARCHITECTURE.md`, `docs/COMBAT_RESOLUTION_PIPELINE.md`, `docs/ABILITY_HOOK_ENGINE_PROPOSAL.md`, `docs/MAIN_ACTION_SELECTION_CONTRACT.md`, `docs/IRON_PIT_AUDIT_EVENT_SCHEMA.md`, `docs/PREGEN_AND_CONTENT_RULES_CONTRACT.md`, and `docs/CANONICAL_COMBAT_BUILD_POLICY.md`.
+
+The older `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md` is a **historical battlefield design reference**, not current product authority. Its incompatible proposals are superseded by `docs/IRON_PIT_RULES_CONTRACT.md` and the locked rules index.
 
 Repository truth beats chat summaries, historical counts, old milestone prose, uploaded registry dumps, and stale file-library references. External/user-provided files are evidence only until reconciled against the exact current commit.
 
-## Current lane (2026-10-07)
+## Current work (no frozen execution cursor)
 
-- Both editions have **240 / 240** certified hero snapshots.
-- Accepted monsters: 2014 **191/327**, native 2024 **141/330**, after PR #635.
-- Build the next source monster families through certified primitives; M-014 Violet Fungus is complete; next is M-015 Brass Dragon Sleep Breath.
-- One focused changed-family pass, then one final-head CI pass. No duplicate full local suites.
-- One agent on this repository at a time. Grok owns art/presentation; Bestiary work stays out of this lane.
-- Heavy GitHub Actions stay gated to `main` / PRs into `main` / `workflow_dispatch`.
+The only live monster decision/implementation queue is [docs/MONSTER_ABILITY_WORK_QUEUE.md](docs/MONSTER_ABILITY_WORK_QUEUE.md). Its dated entries are evidence, **not** current certified counts. Read generated [2014 blockers](docs/MONSTER_BLOCKERS_2014.md), [universal inventory](docs/UNIVERSAL_MECHANIC_INVENTORY.md), the current main commit and active PR heads before choosing work. Historical 191/327, M-014 and M-015 milestones are not today's next task.
 
-See `docs/CURRENT_OPERATING_STATUS.md`.
+Select a source-approved, unimplemented **semantic family** that resolves the most remaining exact obligations and preferably completes entire monsters; 2014 first, then inspect 2024 reuse. One subsystem owner, one focused family per PR, one final-head full CI pass. No automatic production deployment. See [operating manual](docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md) and [documentation map](docs/DOCUMENTATION_MAP.md).
 
+### Check existing fixes before coding (Chris, 2026-10-19)
+
+Before changing a selected monster or ability, search **open and closed/merged**
+PRs and issues by monster name, printed ability and linked ticket. Inspect the
+relevant branch, merge SHA, current implementation and tests. An open-PR list
+alone is insufficient. Reconcile stale queue rows first. Reuse merged work or
+resume its existing branch; do not recreate a completed mechanic, reopen an
+answered rules question or change its approved policy because a classifier still
+reports a blocker. Identify and record the exact remaining integration gap
+before writing code. If a genuine regression is found, prove it against current
+main and fix that gap without rebuilding the already-completed ability.
 
 ## Mandatory context-transfer / anti-rot gate
 
@@ -52,6 +60,10 @@ Do not copy forward:
 Every feature/mechanic tranche includes a continuous debt audit of the touched subsystem. Correctness, parity, schema/state, edition-isolation, and certification-truth debt found there is part of the tranche and must be fixed before opening unrelated mechanic work. Architecture duplication in the touched subsystem should be collapsed in the same tranche when practical. Cosmetic cleanup may be parked.
 
 The transfer packet is a cache; the repository is the database.
+
+## One-form architecture
+
+Monster, pregen and homebrew definitions converge on the existing `CombatantDefinition` and compiled `CombatantTemplate`; live effects only mutate `CombatantState`. Monster and Character are authoring modes, not separate fight engines. No ability-name dispatch or parallel homebrew mechanics. Character creation derives stats from edition-specific equipment/proficiencies/features; monster cards provide their source-final parameters. Validate all outcome-changing fields, including nested effects, before marking a form runnable. This is specified in `SOUL.md` and `docs/UNIVERSAL_CARD_COMBAT_CONTRACT.md`; do not duplicate the implementation in new subsystems.
 
 ## Non-negotiable engineering contract
 
@@ -85,34 +97,9 @@ The transfer packet is a cache; the repository is the database.
 - If a new clarification conflicts with an existing authoritative rule, stop and reconcile the conflict explicitly in the repository before changing runtime behavior.
 - This gate overrides speed, convenience, and perceived momentum. Asking one targeted question is preferred to implementing the wrong abstraction.
 
-## Mandatory every-task semantic reuse check
+## Semantic reuse gate
 
-Before **every** class, subclass, feat, spell, item, monster, legendary action, lair action, or other combat-mechanic implementation, read:
-
-- `SOUL.md`
-- `docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md`
-- exactly one task guide: `docs/playbooks/MONSTERS.md`, `docs/playbooks/PREGENS.md`, or `docs/playbooks/UNIVERSAL_ENGINE.md`
-- the relevant exact source/card data and current implementation/tests
-
-Do not repeatedly reload every long contract for routine work. Open the detailed authority only when the task guide points to it, the touched subsystem requires it, implementation conflicts with current code/tests, or a rule is uncertain.
-
-Then perform this check **before writing code**:
-
-1. Ignore the source ability name temporarily and describe what it mechanically does.
-2. Decompose it into trigger/timing, action/resource cost, attack/check/save, damage/healing, condition/state change, duration, range/geometry, recharge/use limit, and lifecycle.
-3. Search existing **hero and monster** capabilities/resolvers for each semantic piece.
-4. Reuse an existing primitive when the behavior matches.
-5. Parameterize differences such as DC, save ability, range, damage, duration, resource count, recharge threshold, ruleset, or timing.
-6. Compose named abilities from multiple existing primitives when appropriate.
-7. If behavior still cannot be represented exactly, classify/record the blocker and **park the content instead of inventing engine behavior during the content pass**.
-8. Finish the rest of the current family/pass. Return to parked `ENGINE_TRULY_MISSING` work later as deliberate universal-engine technical debt.
-9. Only then may a genuinely new universal primitive be designed, and only after the reuse/composition search proves it necessary.
-10. Preserve the exact source ability name for cards/player logs; keep generic primitive IDs internally for audit/certification.
-11. After adding or widening a primitive, re-audit both pregens and monsters for other content that can now bind to it.
-
-**Universal state identity is absolute:** Prone is Prone; Grappled is Grappled; Restrained is Restrained; Blinded is Blinded; Frightened is Frightened; Poisoned is Poisoned; Advantage is Advantage; Disadvantage is Disadvantage; a Saving Throw is a Saving Throw. The source card supplies the parameters. The engine supplies the mechanic.
-
-This check is mandatory even when the source comes from a different class, monster, edition, spell, item, or feature name. A different printed name is never sufficient reason for a new resolver.
+Before changing a monster, pregen, spell, feature or item: read the exact source and existing [universal inventory](docs/UNIVERSAL_MECHANIC_INVENTORY.md). Decompose trigger, eligibility, resource/action, attack/save, damage, condition, movement, duration and reset. Reuse, parameterize or compose existing Python **and** browser primitives. If a genuine outcome-changing remainder is missing, park the affected card and continue independent work. Never dispatch on source names. See [SOUL.md](SOUL.md) and the [card-to-combat contract](docs/UNIVERSAL_CARD_COMBAT_CONTRACT.md) for the sole normative architecture wording.
 
 ## Arena/environment invariants
 
@@ -123,7 +110,7 @@ This check is mandatory even when the source comes from a different class, monst
 - Preserve printed movement modes and printed base speeds exactly as source data; never convert Swim/Fly/Climb/Burrow speed into a generic land/base speed just to make a creature runnable.
 - The battlefield is one authoritative 5-foot square grid with real combatant x/y positions.
 - Voluntary movement consumes actual effective movement speed. The old free-closing/fixed-formation path is migration scaffolding only and must not remain the final combat authority.
-- Creature footprint derives from immutable printed size data: Tiny/Small/Medium 1x1, Large 2x2, Huge 3x3, Gargantuan 4x4 unless a more specific supported rule changes occupied space.
+- **Pit magic: every creature size occupies one 5-foot square**, Tiny through Gargantuan. Printed size remains immutable source data for size-sensitive rules. Area effects, hazards, cones, lines and other source-defined geometry retain their independent printed dimensions; never expand creature occupancy by size.
 - Movement, reach, range, collision, Opportunity Attacks, forced movement, auras, line of sight, and area geometry consume the same authoritative grid state.
 - Arena design and AI policy prevent degenerate fleeing/kiting; do not bypass printed movement to force engagement.
 - The card artwork is the moving battlefield token. Current HP, Temporary HP, conditions, buffs/debuffs, concentration, recharge/resource state, and similar live symbols are presentation overlays derived from runtime state and never rule inputs.
@@ -133,26 +120,7 @@ This check is mandatory even when the source comes from a different class, monst
 
 ## Universal mechanic workflow
 
-When content exposes a missing combat mechanic during a monster/pregen pass:
-
-1. search for an existing primitive or exact composition;
-2. if none can represent the behavior, classify it `ENGINE_TRULY_MISSING`;
-3. record the exact missing semantic/RAW question and park the affected content;
-4. keep moving through the rest of the current family/pass;
-5. do not invent a temporary resolver, approximation, source-name branch, or new arena exception.
-
-When the pass is exhausted and parked technical debt is deliberately selected for engine work:
-
-1. identify the smallest reusable mechanic/capability;
-2. define/extend schema, immutable parameters, mutable state, timing, expiry, and reset semantics;
-3. implement the Python oracle;
-4. implement browser-runtime parity;
-5. add permanent regression/parity tests and audit evidence;
-6. regenerate native generated artifacts;
-7. rerun capability/source analysis across monster and canonical hero content;
-8. allow generated certification to promote every newly unblocked card.
-
-Specific source wording beats generic behavior. Resolve each subevent fully and update state before resolving the next.
+Use the shared [implementation manual](docs/IRON_PIT_IMPLEMENTATION_PLAYBOOK.md). Source wording determines the exact effect; resolve each subevent before the next, using canonical state/conditions and immutable card parameters. Only a confirmed missing semantic justifies a new primitive, with Python/browser parity and permanent tests. Park instead of inventing mechanics; do not stall the family.
 
 ## Monsters
 
@@ -177,83 +145,20 @@ Specific source wording beats generic behavior. Resolve each subevent fully and 
 ## Paired-edition monster certification
 
 - Keep 2014 and 2024 source data, rule text, parameters, and certification independent. A shared universal primitive may serve both editions, but one edition's values or behavior must never be copied into the other without matching source evidence.
-- Current operating priority is to catch the 2014 certified roster up to the 2024 certified count before pushing the 2024 count materially farther ahead.
+- Current operating priority is to finish source-approved 2014 monster semantic families before independent 2024 backlog expansion. Never derive priority from a frozen count in this document.
 - During catch-up, prioritize monsters that exist in both editions where the 2024 version is already RAW READY and the 2014 version is blocked, starting with the fewest/highest-yield 2014 blocker families.
-- Once the 2014 certified count reaches the 2024 certified count, process same-named monsters as an edition pair whenever practical: inspect 2014 and 2024 source side by side, identify the common reusable mechanic, then bind each edition's own parameters and timing to that primitive.
+- Process same-named monsters as an edition pair whenever practical after a 2014 semantic family is supported: inspect 2014 and 2024 source side by side, identify the common reusable mechanic, then bind each edition's own parameters and timing to that primitive.
 - When a 2014 monster is certified, immediately inspect the same 2024 monster before moving to an unrelated monster. When a 2024 monster is certified first, immediately inspect the 2014 counterpart.
 - If the two editions differ materially, preserve the difference through ruleset-specific declarative data or explicitly ruleset-scoped behavior; do not force artificial parity merely because the monster name matches.
 - A paired tranche may certify both editions only when they truly share the same mechanic family and both have full Python/browser/source evidence. If one edition still has unrelated blockers, certify the completed edition and record the remaining counterpart blockers without stalling the queue.
 - Re-run the paired-edition progress report plus both normal roster audits after every shared primitive. Use the report as the next-work queue rather than choosing monsters from memory.
 - Track the edition totals independently: 2014 has 327 source monsters; 2024 has 330. Edition-only or renamed monsters remain valid independent work and must not be force-matched.
 
-## Generated artifacts: never hand-edit
+## Generated outputs and verification
 
-Generated files are outputs, not authoring surfaces. Change authoritative schema/data/runtime first, then run the repository exporter.
+Do not edit generated monster blockers, universal inventory, browser bundles, registries, certification manifests or ready flags by hand. Change source/schema/runtime and use the repository's owning exporter. `.github/workflows/ci.yml` is the canonical list of full Python/browser, source-limit, generated-parity, 2014 roster, hero and paired-edition gates. Run focused checks while editing; generate once before the **final** PR head, then require all applicable checks green at that same SHA. Re-read status after any head change.
 
-Runtime monster capability registry:
-
-```bash
-python scripts/export_runtime_monster_capabilities.py
-python scripts/export_runtime_monster_capabilities.py --check
-```
-
-Certification manifests:
-
-```bash
-python scripts/verify_certification_manifests.py --write
-git diff --exit-code -- data/hero_certification_manifest.json data/monster_certification_manifest.json
-python scripts/report_certification_progress.py
-```
-
-Static/browser artifacts:
-
-```bash
-python scripts/export_browser_heroes.py
-python scripts/prepare_static_site.py
-git diff --exit-code -- frontend/browser-heroes.js frontend/figure-profiles.js frontend/browser-monsters-generated.js frontend/browser-spell-effects.js frontend/data/srd_5_2_1_monsters.json
-```
-
-Capability/source reports:
-
-```bash
-python scripts/check_combat_engine_coverage.py
-python scripts/export_roster_mechanic_checklist.py --check
-python scripts/report_zero_engine_monsters.py
-python scripts/report_capability_yield.py
-```
-
-Never splice generated JSON/JS manually to satisfy parity.
-
-## Required verification
-
-From repository root unless a command says otherwise:
-
-```bash
-python scripts/check_source_limits.py
-python scripts/check_combat_engine_coverage.py
-python scripts/export_roster_mechanic_checklist.py --check
-python scripts/export_runtime_monster_capabilities.py --check
-python scripts/export_browser_heroes.py
-python scripts/verify_certification_manifests.py --write
-python scripts/prepare_static_site.py
-```
-
-Python rules reference:
-
-```bash
-cd backend
-pip install -e '.[dev]'
-pytest -q
-cd ..
-```
-
-Browser syntax:
-
-```bash
-for file in frontend/*.js; do node --check "$file"; done
-```
-
-Run the complete permanent browser regression command list and production wiring/backend-free checks exactly as defined by `.github/workflows/ci.yml`; that workflow is the canonical complete CI command set. Final certification requires the exact intended commit to pass GitHub Actions CI.
+Recorded source admission is not runtime certification. Report merged SHA and source-admitted delta, unresolved source obligations, Python/browser status, and generated manifest separately. `docs/MONSTER_BLOCKERS_2014.md` is the current blocker source; don't copy counts from here.
 
 ## Task isolation and source hygiene
 

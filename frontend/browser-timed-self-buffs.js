@@ -1,8 +1,7 @@
 (() => {
   "use strict";
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
-  const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
-  const P = () => window.IRON_PIT_BROWSER_TIMED_SELF_BUFF_POLICY;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS; const P = () => window.IRON_PIT_BROWSER_TIMED_SELF_BUFF_POLICY;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const active = (member, action) => P().active(member, action);
   const choose = (member, setup = null, activationTiming = "action", turnKey = null) =>
@@ -33,6 +32,9 @@
         const condition = T().apply(member.state, conditionId, member.combatant_id, {
           sourceEffectId: action.id,
           sourceTemplate: member.state.template,
+          sourceIsMagical: Boolean(action.magicalEffect),
+          endsOnOwnerAttack: Boolean(action.endsOnOwnerAttack),
+          endsOnOwnerSpellCast: Boolean(action.endsOnOwnerSpellCast),
           appliedRound: round,
           expiresRound,
           expiryTiming,
@@ -53,6 +55,7 @@
         || (action.movementModeGrants || []).length
         || action.friendlySaveAdvantageAura
         || action.friendlyCoverAura
+        || action.friendlyRollBonusAura
         || action.friendlyWeaponDamageAura
         || action.friendlyRecoveryAura
         || action.hostileStartTurnConditionAura
@@ -65,6 +68,9 @@
         T().apply(member.state, action.id, member.combatant_id, {
           sourceEffectId: action.id,
           sourceTemplate: member.state.template,
+          sourceIsMagical: Boolean(action.magicalEffect),
+          endsOnOwnerAttack: Boolean(action.endsOnOwnerAttack),
+          endsOnOwnerSpellCast: Boolean(action.endsOnOwnerSpellCast),
           appliedRound: round,
           expiresRound,
           expiryTiming,

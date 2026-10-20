@@ -4,15 +4,22 @@ import logging
 import re
 logger = logging.getLogger(__name__)
 
-def source_sections_2014(source: str | None) -> dict[str, str]:
+def source_sections_2014(source: str | None, *, include_continuations: bool = False) -> dict[str, str]:
     try:
         sections = {}
+        current_name = None
         for paragraph in re.findall(r"<p>(.*?)</p>", source or "", re.S):
             heading = re.search(r"<strong>(.*?)</strong>", paragraph, re.S)
             if heading:
                 name = unescape(re.sub(r"<[^>]*>", "", heading[1])).rstrip(".")
                 body = re.sub(r"<[^>]*>", "", paragraph[heading.end():])
                 sections[name] = " ".join(unescape(body).split())
+                current_name = name
+            elif include_continuations and current_name is not None:
+                # Exact source proofs must inspect unheaded continuation
+                # paragraphs too; an added rider cannot hide outside a heading.
+                body = " ".join(unescape(re.sub(r"<[^>]*>", "", paragraph)).split())
+                sections[current_name] = " ".join((sections[current_name], body)).strip()
         return sections
     except Exception:
         logger.exception("Failed to read 2014 source sections.")

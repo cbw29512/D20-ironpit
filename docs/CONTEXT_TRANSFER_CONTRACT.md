@@ -1,36 +1,11 @@
-# Context Transfer Contract
+# Context transfer — freshness contract
 
-Iron Pit context transfers are disposable, evidence-backed snapshots. They are not repository authority.
+A handoff is a disposable **cache**, not a second task queue or authority. It must identify the exact `main` SHA, changed subsystem, PR head SHA, owner, tests, remaining blockers and next executable action.
 
-## Non-negotiable
+1. Use the repository [context-transfer skill](../.agents/skills/iron-pit-context-transfer/SKILL.md) before substantial work, agent changes, stale branch resumption and after material merges.
+2. Re-fetch main, open PRs and exact-head jobs. Any changed SHA invalidates previous code/test/certification claims. Generated classifier and manifests outrank copied counts; current source/RAW and locked rule contract outrank remembered decisions.
+3. State immutable card data, fight-local mutable state, Python/browser resolution points, serializer and permanent tests; confirm the current owner has released the subsystem.
+4. List only open **A** correctness/parity risks, **B** touched-architecture duplication, and **C** optional cosmetic debt. Fix A before more combat work; don't let C block the monster lane.
+5. Rebuild a fresh transfer packet following the [skill](../.agents/skills/iron-pit-context-transfer/SKILL.md); never append dated claims to an earlier handoff.
 
-A transfer must be reconstructed from current repository state whenever its recorded `main` SHA or any active PR head SHA changes.
-
-The transfer process is defined in:
-
-`.agents/skills/iron-pit-context-transfer/SKILL.md`
-
-## Required use
-
-Run the context-transfer skill:
-- before substantial work begins;
-- when switching agents/sessions;
-- before resuming stale work;
-- after material merges;
-- before handing off unfinished work.
-
-## Drift prevention
-
-The transfer must never elevate these to current truth without re-verification:
-- chat summaries;
-- remembered certification counts;
-- prior-head CI;
-- stale PR descriptions;
-- old blockers;
-- historical branch assumptions.
-
-Current contracts, exact source, exact tests, current PR metadata, and exact-head CI are authoritative.
-
-## Continuous cleanup rule
-
-Context transfer is paired with continuous technical-debt auditing. New work must audit the subsystem it touches and repair correctness/parity/schema debt as part of the tranche rather than deferring it until the project becomes difficult to reason about.
+The [execution manual](IRON_PIT_IMPLEMENTATION_PLAYBOOK.md) controls implementation. A handoff does not certify combat or authorize a deployment.

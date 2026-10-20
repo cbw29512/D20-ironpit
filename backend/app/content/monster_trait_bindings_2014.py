@@ -1,6 +1,9 @@
 from __future__ import annotations
+from app.content.monster_visual_turn_start_2014 import visual_turn_start_rule_2014
 import logging, re
-from app.content.environment_context_reactions import sunlight_sensitivity_2014
+
+from app.content.environment_context_reactions import verified_sunlight_weakness_2014
+from app.content.monster_environment_context_bindings_2014 import environment_context_reactions_2014
 from app.content.monster_berserk_2014 import berserk_self_buffs_2014
 from app.content.monster_damage_absorption import damage_absorptions_from_source
 from app.content.monster_damage_taken_effects_2014 import damage_taken_timed_effects_2014
@@ -13,6 +16,7 @@ from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.content.monster_legendary_resistance_2014 import legendary_resistance_trait_name_2014
 from app.content.monster_passive_grants_2014 import bound_passive_trait_names_2014, saving_throw_advantage_grants_2014
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
+from app.content.monster_reactive_2014 import supports_reaction_each_turn_2014
 from app.content.monster_heated_body_2014 import heated_body_retaliation_2014, corrosive_form_retaliation_2014
 from app.content.monster_range_trait_bindings_2014 import supports_poor_depth_perception_2014
 from app.content.monster_once_per_turn_traits_2014 import martial_advantage_rider_2014
@@ -21,7 +25,7 @@ from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
 from app.content.monster_terminal_effects_2014 import bound_terminal_effect_trait_names_2014
 from app.content.monster_zero_hp_prevention_2014 import bound_zero_hp_trait_names_2014
 from app.domain.bonus_attacks import BonusAttackGrant
-from app.domain.environment_contexts import EnvironmentContextReaction
+
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.weapons import ConditionalAttackAdvantage
 logger = logging.getLogger(__name__)
@@ -108,20 +112,6 @@ def bonus_attack_grants_2014(monster: SourceMonster2014) -> list[BonusAttackGran
     except Exception:
         logger.exception("Failed to bind 2014 Rampage for %s.", monster.name)
         raise
-def environment_context_reactions_2014(
-    monster: SourceMonster2014,
-) -> list[EnvironmentContextReaction]:
-    """Bind printed Sunlight Sensitivity to the shared sunlight context reaction."""
-    try:
-        if _SUNLIGHT_SENSITIVITY not in monster.trait_names:
-            return []
-        return [sunlight_sensitivity_2014()]
-    except Exception:
-        logger.exception(
-            "Failed to bind 2014 environment-context reactions for %s.",
-            monster.name,
-        )
-        raise
 def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
     """Return source traits that are fully bound to existing universal primitives."""
     try:
@@ -168,11 +158,18 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
                 bound.add(_INNATE_SPELLCASTING)
         if _SUNLIGHT_SENSITIVITY in monster.trait_names:
             bound.add(_SUNLIGHT_SENSITIVITY)
+        if verified_sunlight_weakness_2014(monster):
+            bound.add("Sunlight Weakness")
         if bonus_attack_grants_2014(monster):
             bound.add(_RAMPAGE)
         bound.update(bound_terminal_effect_trait_names_2014(monster))
+        gaze = visual_turn_start_rule_2014(monster)
+        if gaze is not None:
+            bound.add(gaze.source_name)
         if supports_regeneration_2014(monster):
             bound.add("Regeneration")
+        if supports_reaction_each_turn_2014(monster):
+            bound.add("Reactive")
         resistance = legendary_resistance_trait_name_2014(monster)
         if resistance:
             bound.add(resistance)

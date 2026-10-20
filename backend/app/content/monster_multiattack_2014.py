@@ -4,6 +4,7 @@ import logging
 
 from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.content.monster_multiattack_variants_2014 import source_variants_2014
+from app.content.monster_attack_ammunition_2014 import attack_ammunition_2014, ammunition_multiattack_variants_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.domain.capability_attacks import CapabilityActionSlot, MultiattackCapabilityDefinition
 
@@ -13,6 +14,9 @@ logger = logging.getLogger(__name__)
 def multiattack_blockers_2014(monster: SourceMonster2014) -> list[str]:
     """Accept only source-declared slots whose every alternative already exists."""
     try:
+        # Source-coupled mode choices must never become independently mixed slots.
+        if attack_ammunition_2014(monster):
+            return [] if ammunition_multiattack_variants_2014(monster) else ["multiattack:complex"]
         # Coupled choices and replacement policies need their own source audit.
         if monster.multiattack_binding is not None:
             return ["multiattack:complex"]
@@ -36,6 +40,10 @@ def multiattack_2014(monster: SourceMonster2014) -> MultiattackCapabilityDefinit
             raise ValueError(f"Unsupported Multiattack for {monster.id}: {blockers}")
         if not monster.multiattack_slots:
             return None
+        ammo_variants = ammunition_multiattack_variants_2014(monster)
+        if ammo_variants:
+            return MultiattackCapabilityDefinition(id=f"2014-{monster.id}-multiattack",
+                                                   variants=ammo_variants)
         if monster.multiattack_policy is not None:
             return MultiattackCapabilityDefinition(id=f"2014-{monster.id}-multiattack",
                                                    variants=source_variants_2014(monster))

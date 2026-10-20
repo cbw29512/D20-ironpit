@@ -6,6 +6,36 @@ This is the authoritative product/rules contract for Iron Pit. It describes the 
 
 If implementation and this contract disagree, either fix the implementation or make an explicit product decision to revise this file. Historical milestone documents and conversational progress claims are not authority.
 
+## Universal combatant form and ability resolution
+
+**Locked architecture:** monsters, canonical pregens and homebrew use the
+same finished-combatant contract and the same combat engine. The Monster and
+Character creation paths are editors, not separate runtime kinds of logic.
+A monster author may declare final attack bonus, damage dice, AC and HP.
+A character author enters scores, gear, proficiencies, level and features;
+edition-specific character creation resolves the derived values before fight
+entry. Neither path authorizes combat dispatch on identity or ability names.
+
+The submitted ability name is retained exactly on the card and in player
+logs; only declared universal effect IDs and typed parameters drive combat.
+An attack may compose damage with multiple on-hit conditions and independent
+saves. Multiattack is a list of declared action slots. Passive regeneration
+uses source-defined amount, timing, suppression conditions and HP eligibility.
+Resources, concentration, conditions, position and damage are fight-local.
+Permanent declared source buffs stay on immutable source data and derive
+their activation from semantic triggers.
+
+For harmful conditions, form-editor save defaults are failure = apply,
+success = negate; any explicit printed success effect wins. No hardcoded
+example ability is a new mechanic. Unsupported or malformed semantic effects,
+including nested effects, must fail closed. 2014/2024 derivation and source
+parameters remain independent; equivalent mechanics share primitives.
+
+This section governs **architecture only**. All existing locked damage,
+timing, terrain, visibility, Petrified, action-economy and arena overrides
+elsewhere in this contract continue unchanged. Implementation and parity
+gates are in [the universal card contract](UNIVERSAL_CARD_COMBAT_CONTRACT.md).
+
 ## Arena-entry buff casting
 
 When a canonical combatant can legally cast a non-Concentration buff before combat and that buff is selected as its deterministic opening preparation, Iron Pit may mark that specific opening cast as **free at arena entry**. A free opening cast still requires the spell to be legally prepared or known and the combatant to have access to a slot of the printed spell level, but it does not consume that spell slot. This is an explicit arena setup rule, not a change to the spell's RAW casting rules. Runtime data must opt into the rule declaratively; existing opening spells continue to consume slots unless so marked.
@@ -23,7 +53,7 @@ This supersedes the old operating-status exclusion of Javelin from 2024 Smite an
 - Monster and pregen definitions are declarative data wherever practical.
 - Unsupported outcome-changing mechanics fail closed. Never approximate, silently ignore, or invent a combat-relevant mechanic merely to make a card runnable.
 - Python is the reference/certification oracle. The browser engine is the production fight engine. Supported capabilities require behavioral parity and permanent regression coverage.
-- Noncombat-only rules may be omitted from runtime only when they cannot alter an Iron Pit combat outcome.
+- Noncombat-only abilities may omit **combat resolution logic** only when they cannot alter an Iron Pit combat outcome. Source-printed abilities with a beneficial or harmful in-game effect outside the Pit must still be preserved on monster and pregen cards as visible, inactive source-owned buff/debuff status entries as specified below; omission from combat execution must not erase them from card presentation.
 
 ### 1.1 Mandatory semantic-mechanic reuse gate
 
@@ -88,7 +118,20 @@ This is a mandatory architecture rule, not only an implementation preference.
 2. **Legality checks** answer whether the attempt can occur at all: action economy, resource availability, target validity, range/geometry, required state, concentration, recharge, and ruleset restrictions.
 3. **Context checks** inspect only universal facts needed by the mechanic: attacker/defender state, creature type, damage type, magical/nonmagical source, condition identity, movement mode, effect tags, battlefield/environment context, and similar typed facts.
 
-**Battlefield/environment context.** An active source-owned effect may emit a typed environment fact such as `sunlight`. That fact is declarative source data, not a name check, and is not implied by bright light alone. Geometry follows the emitting effect's live emanation and expires with that effect. The standard Iron Pit arena is not sunlight. A creature that reacts to a context owns declarative reaction data; matching reactions apply through the normal Advantage/Disadvantage modifier stack. Example: 2014 Sunlight Sensitivity imposes Disadvantage on attack rolls and on Wisdom (Perception) checks that rely on sight while the creature is inside a live sunlight context.
+**Battlefield/environment context.** An active source-owned effect may emit a typed environment fact such as `sunlight`. That fact is declarative source data, not a name check, and is not implied by bright light alone. Geometry follows the emitting effect's live emanation and expires with that effect. The standard Iron Pit arena is not sunlight.
+
+**Arena-neutral source ability presentation — universal monster/pregen rule (2026-10-19).**
+**Combat-impact classification gate (clarified 2026-10-19):** An ability is an **active Iron Pit buff/debuff** only if it changes a legal combat calculation or outcome under the supported arena rules. "Combat math" includes more than a printed numeric bonus: changing attack/save/check odds, damage, healing, AC, HP, initiative, legal targets, movement/position, visibility, conditions, action/reaction eligibility, resources, timing, defenses, survival, or death is combat-relevant. Preserve and resolve those effects with the existing universal engine. If the printed ability has a beneficial or harmful in-game effect **but cannot change any such outcome within the Iron Pit**, classify it as a **neutral buff/debuff** and retain the exact printed ability on its owning monster/pregen card for completeness. A neutral label is source metadata, not an applied combat effect; no dice, bonus, action, duration, or temporary state may be fabricated. Distinguish **intrinsically arena-neutral** (no supported legal fight can activate it) from **conditionally inactive but combat-relevant** (the current target, situation, or terrain does not satisfy a supported trigger). Do not mark the latter neutral or discard its existing resolver. A mixed source ability keeps its full printed text and binds its combat-relevant clauses, with its out-of-scope clauses retained as source metadata.
+
+An immutable 2014/2024 monster, pregen, or homebrew card must keep the **exact printed name and source** of each arena-neutral ability with a meaningful in-game benefit or penalty outside the standard Pit. A beneficial passive is displayed persistently in the card's **BUFFS** lane as grey/inactive; a harmful passive/weakness is displayed in **DEBUFFS** as grey/inactive. Use the existing permanent source-trait/passive projection and conditionally active grant infrastructure, rather than adding a new timed buff or rules resolver. Pure narrative information can remain in feature/source text without a misleading combat status badge. Noncombat Actions and spells retain their original card listings and are never cast solely to create a fabricated passive badge.
+
+**Schema/state distinction:** Source card metadata owns ability ID, printed name, edition, provenance, benefit/penalty lane, and its supported universal classification/trigger. No arena-neutral entry grants a live modifier, condition, resource, action, or trigger during a standard Pit fight. The battle runtime does not store it as an active or temporary buff; the browser merely projects a persistent inactive badge from immutable card metadata, through the whole fight and after reset. If a printed ability is only *conditionally* inactive (e.g. requires actual sunlight), keep its condition/predicate on the source, show inactive in its absence, and **activate its real shared mechanical effect** if a legal combat event creates the printed trigger. An ability combining inert and combat-relevant clauses must preserve the source declaration and bind its actual combat clauses rather than marking the entire ability arena-neutral. Displaying a grey badge is not evidence that a missing combat resolver has been implemented; unsupported outcome-changing mechanics remain explicit blockers.
+
+**Parity gate:** Both monsters and pregens must serialize source-owned neutral ability labels into the browser's current permanent-buff projector, including class/species/subclass feature-audit labels that are currently retained only in pregen source audits. Test both editions, a synthetic renamed ability, stable visibility throughout turns and a new fight, no impact on seeded combat results, and an actually applicable conditional buff that still changes combat. **Not all buffs are neutral**: any buff that can legally affect the Pit continues to function normally.
+
+**Permanent conditional buffs/debuffs.** A printed permanent trait is immutable source-card data, including when the current Iron Pit has no matching environmental trigger. Its status definition persists in the BUFFS/DEBUFFS lane throughout combat; present it grey/inactive when no trigger is present and bright-white/active when the typed predicate is true. This is *not* a temporary condition and must never expire or disappear through timed effect cleanup. The source-owned reaction can activate immediately if future legal abilities create sunlight, water exposure, or other contexts. The context provides activation, not the trait's existence. Support and certification require exact printed results for a real trigger; simply proving a context unavailable in today's Pit is insufficient to claim a printed conditional behavior is fully implemented. For 2014, Shadow's Sunlight Weakness uses the live sunlight predicate and Disadvantage on attacks, **all** ability checks, and saves. Fire Elemental's Water Susceptibility retains the printed 1 Cold damage per 5 feet moved through water or per gallon splashed, rather than a fictitious water damage type or blanket Cold vulnerability; its future event-triggered damage resolver remains a separate implementation obligation.
+
+A creature that reacts to a context owns declarative reaction data; matching reactions apply through the normal Advantage/Disadvantage modifier stack. Example: 2014 Sunlight Sensitivity imposes Disadvantage on attack rolls and on Wisdom (Perception) checks that rely on sight while the creature is inside a live sunlight context.
 4. **Active modifiers** alter the pending mechanic through universal semantics: Advantage/Disadvantage, flat modifiers, resistance/immunity/vulnerability, buff/debuff counters, condition immunity, targeting gates, damage reductions, replacement effects, and other reusable modifiers.
 5. **Resolution** performs the canonical attack/check/save/damage/healing/movement/resource operation.
 6. **Result** is an explicit mechanical outcome such as legal/illegal, hit/miss, save success/failure, damage amount, condition accepted/rejected, movement allowed/blocked, resource spent/rejected, or effect replaced.
@@ -772,6 +815,19 @@ Monster promotion path:
 2014 Rampage uses an explicit Iron Pit arena simplification. When the creature reduces a hostile combatant to 0 HP with a melee attack on its own turn, and a legal Bite target exists, it spends its available Bonus Action to make exactly one declared Bite attack. Iron Pit omits Rampage's printed move-up-to-half-speed portion; no movement is granted or required by this trigger.
 
 Rampage is implemented as a generic source-melee-zero-HP trigger feeding the universal Bonus Action attack resolver. The source card remains immutable; the qualifying trigger marker and Bonus Action availability exist only in temporary combat state and reset with the match. Player-facing logs preserve the printed ability name. Do not infer 2024 behavior from this 2014 arena rule without separate source reconciliation.
+
+### Source-specific arena-neutral traits (2014)
+
+The Rust Monster's **Iron Scent** is informational and arena-neutral; preserve
+its printed 30-foot range without granting sight, Invisible detection or combat
+modifiers ([approved decision #818](https://github.com/cbw29512/D20-ironpit/issues/818)).
+Its **Rust Metal** trait is also arena-neutral: retain the complete source text
+without equipment corrosion, destruction or weapon penalties
+([approved decision #819](https://github.com/cbw29512/D20-ironpit/issues/819)).
+These are individually source-proven policies. They do not apply to Gray Ooze's
+separately approved fight-only Corrode Metal mechanic (#784), nor do they decide
+the Rust Monster's independent Antennae Action. Unknown or changed source effects
+remain blocked. No original card or equipment record is mutated.
 
 ## 26. Homebrew target architecture
 

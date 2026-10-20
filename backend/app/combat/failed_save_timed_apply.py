@@ -41,6 +41,7 @@ def apply_failed_save_timed_effect(
             repeat_save_ability=rider.repeat_save_ability,
             repeat_save_dc=rider.repeat_save_dc,
             repeat_save_timing=rider.repeat_save_timing,
+            repeat_save_disadvantage_while_source_visible=rider.repeat_save_disadvantage_while_source_visible,
             repeat_save_failure_condition_id=rider.repeat_save_failure_condition_id,
             allowed_removal_action_ids=list(rider.allowed_removal_action_ids),
             turn_behavior=rider.turn_behavior,

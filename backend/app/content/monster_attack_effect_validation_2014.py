@@ -7,6 +7,7 @@ from app.content.monster_zero_hp_save_rider_2014 import (
     supports_zero_hp_save_rider_2014,
 )
 from app.domain.action_types import ConditionName, ConditionTiming
+from app.domain.failure_margin import FailureMarginEscalation, require_escalation_duration
 from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType
 
@@ -17,7 +18,7 @@ _SAVE_CONDITION_KEYS = frozenset({
     "condition_id", "dc", "max_target_size", "save_ability",
     "duration_rounds", "repeat_save_timing", "repeat_save_failure_condition_id",
     "failure_push_ft", "excluded_creature_types", "excluded_creature_subtypes",
-    "cannot_regain_hit_points",
+    "cannot_regain_hit_points", "failure_margin_escalation",
 })
 _SAVE_DAMAGE_KEYS = frozenset({
     "damage_bonus", "damage_dice_count", "damage_dice_size", "damage_type",
@@ -77,6 +78,13 @@ def supported_save_condition_2014(value: object) -> bool:
         timing is None or str(escalation).lower() not in _CONDITIONS
     ):
         return False
+    escalation = value.get("failure_margin_escalation")
+    if escalation is not None:
+        try:
+            rule = FailureMarginEscalation.model_validate(escalation)
+            require_escalation_duration(rule, duration)
+        except (ValueError, TypeError):
+            return False
     push = value.get("failure_push_ft", 0)
     if not isinstance(push, int) or push < 0 or push % 5:
         return False
@@ -125,6 +133,17 @@ def supported_save_max_hp_reduction_2014(value: object) -> bool:
         and str(value.get("save_ability", "")).lower() in _ABILITIES
         and isinstance(value.get("dc"), int) and 0 < int(value["dc"]) <= 40
         and isinstance(value.get("zero_max_hp_kills", False), bool)
+    )
+
+
+def supported_ability_score_reduction_2014(value: object) -> bool:
+    """Reject unsupported or incomplete nested source effects."""
+    if not isinstance(value, dict) or set(value) != {"ability", "dice_count", "dice_size"}:
+        return False
+    return (
+        str(value["ability"]).lower() in _ABILITIES
+        and type(value["dice_count"]) is int and 1 <= value["dice_count"] <= 40
+        and type(value["dice_size"]) is int and 2 <= value["dice_size"] <= 100
     )
 
 

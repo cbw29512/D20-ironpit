@@ -16,6 +16,14 @@ ARENA_NEUTRAL_INNATE_SPELLS_2014 = frozenset({
     "detect-evil-and-good",
     "druidcraft",
     "pass-without-trace",
+    "disguise-self",
+    "scrying",
+    "detect-thoughts",
+    "detect-magic",
+    "mage-hand",
+    "minor-illusion",
+    "plane-shift",
+    "geas",
 })
 _PIT_BANNED_INNATE_SPELLS_2014 = frozenset({
     "teleport",
@@ -105,6 +113,61 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
                     concentration=True,
                     duration_minutes=1,
                     animation="calm-emotions",
+                ))
+            elif spell_id == "charm-person":
+                actions.append(SpellSaveAction(
+                    id="charm-person",
+                    name="Charm Person",
+                    level=1,
+                    range_ft=30,
+                    save_ability="wisdom",
+                    dc=dc,
+                    required_target_creature_types=["humanoid"],
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="charmed",
+                        duration_rounds=600,
+                        expiry_timing="source_turn_end",
+                        ends_on_damage=True,
+                    ),
+                    concentration=False,
+                    animation="spell-save",
+                ))
+            elif spell_id == "suggestion":
+                actions.append(SpellSaveAction(
+                    id="suggestion",
+                    name="Suggestion",
+                    level=2,
+                    range_ft=30,
+                    save_ability="wisdom",
+                    dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="charmed",
+                        duration_rounds=4800,
+                        expiry_timing="source_turn_end",
+                        ends_on_damage=True,
+                    ),
+                    concentration=True,
+                    duration_minutes=480,
+                    animation="spell-save",
+                ))
+            elif spell_id == "dominate-person":
+                actions.append(SpellSaveAction(
+                    id="dominate-person",
+                    name="Dominate Person",
+                    level=5,
+                    range_ft=60,
+                    save_ability="wisdom",
+                    dc=dc,
+                    required_target_creature_types=["humanoid"],
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="charmed",
+                        duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                        ends_on_damage=True,
+                    ),
+                    concentration=True,
+                    duration_minutes=1,
+                    animation="spell-save",
                 ))
         return actions
     except Exception:

@@ -32,6 +32,8 @@ class TimedEffect(BaseModel):
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     turn_behavior: TimedTurnBehavior = "normal"
     ends_on_damage: bool = False
+    ends_on_owner_attack: bool = False
+    ends_on_owner_spell_cast: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
     source_is_magical: bool = False
@@ -75,6 +77,7 @@ class TimedEffect(BaseModel):
     ground_contact: bool = False
     ends_on_teleport: bool = False
     source_effect_immunity_on_end: bool = False
+    repeat_save_disadvantage_while_source_visible: bool = False
     control_limits: TimedControlLimits | None = None
 
     @model_validator(mode="after")

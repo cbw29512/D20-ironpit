@@ -1,0 +1,42 @@
+"use strict";
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const vm = require("node:vm");
+global.window = globalThis;
+for (const file of ["browser-action-economy.js", "browser-state.js"]) {
+  vm.runInThisContext(fs.readFileSync(path.join(__dirname, file), "utf8"), { filename: file });
+}
+const S = window.IRON_PIT_BROWSER_STATE;
+const E = window.IRON_PIT_ACTION_ECONOMY;
+vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-monsters-2014.js"), "utf8"), { filename: "browser-monsters-2014.js" });
+assert.ok(window.IRON_PIT_BROWSER_MONSTERS_2014["2014-marilith"]?.traits.includes("reaction-each-turn"),
+  "the source-bound card must serialize the universal reaction budget");
+const template = (name, traits = []) => ({ name, max_hp: 20, speed_ft: 30, traits, resources: {} });
+const reactive = S.buildState(template("Synthetic non-Marilith creature", ["reaction-each-turn"]));
+const ordinary = S.buildState(template("Ordinary creature"));
+const actor = S.buildState(template("Acting creature"));
+E.spend(reactive, "reaction");
+E.spend(ordinary, "reaction");
+E.spend(actor, "reaction");
+S.refreshReactionsForNewTurn([reactive, ordinary, actor], actor);
+assert.equal(E.available(reactive, "reaction"), true);
+assert.equal(E.available(ordinary, "reaction"), false);
+assert.equal(E.available(actor, "reaction"), false);
+E.spend(reactive, "reaction");
+assert.equal(E.available(reactive, "reaction"), false);
+S.refreshReactionsForNewTurn([reactive, ordinary, actor], actor);
+assert.equal(E.available(reactive, "reaction"), true);
+reactive.reaction_available = false;
+reactive.is_dead = true;
+S.refreshReactionsForNewTurn([reactive, ordinary, actor], actor);
+assert.equal(reactive.reaction_available, false);
+reactive.is_dead = false;
+window.IRON_PIT_BROWSER_TIMED = { suppressesReactions: () => true };
+S.refreshReactionsForNewTurn([reactive, ordinary, actor], actor);
+assert.equal(E.available(reactive, "reaction"), false);
+window.IRON_PIT_BROWSER_TIMED = { suppressesReactions: () => false };
+S.refreshReactionsForNewTurn([reactive, ordinary, actor], actor);
+assert.equal(E.available(reactive, "reaction"), true);
+S.refreshStartOfTurn(ordinary);
+assert.equal(E.available(ordinary, "reaction"), true);

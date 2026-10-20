@@ -10,6 +10,7 @@ from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll
 from app.domain.persistent_save_zones import PersistentSaveZoneState
+from app.domain.timed_control_limits import compiled_control_limits
 from app.domain.saving_throw_context import SavingThrowContext
 
 logger = logging.getLogger(__name__)
@@ -34,9 +35,11 @@ def resolve_save_zone_trigger(
     trigger: str,
 ) -> tuple[list[BattleEvent], int]:
     try:
-        if trigger not in zone.triggers or not member_in_save_zone(target, zone):
+        if trigger not in zone.triggers or not member_in_save_zone(target, zone, setup):
             return [], sequence
-        if target.combatant_id == zone.source_id or target.side == zone.source_side:
+        if zone.target_policy == "enemies" and (
+            target.combatant_id == zone.source_id or target.side == zone.source_side
+        ):
             return [], sequence
         if not target.state.is_alive or target.state.is_dead or target.state.current_hp <= 0:
             return [], sequence
@@ -47,7 +50,10 @@ def resolve_save_zone_trigger(
         requires_save = not zone.save_triggers or trigger in zone.save_triggers
         roll, succeeded = (None, False)
         if requires_save:
-            context = SavingThrowContext(magical_effect=True, spell_effect=True)
+            context = SavingThrowContext(
+                magical_effect=zone.save_context in {"spell", "magical"},
+                spell_effect=zone.save_context == "spell",
+            )
             roll, succeeded = resolve_saving_throw(target.state, zone.save_ability, zone.dc, dice, context)
         hp_before = target.state.current_hp
         applied_total = 0
@@ -88,9 +94,15 @@ def resolve_save_zone_trigger(
                 source_effect_id=zone.action_id,
                 applied_round=round_number,
                 expires_round=round_number + zone.failed_save_duration_rounds,
-                expiry_timing="target_turn_end",
+                expiry_timing=zone.failed_save_expiry_timing,
+                expires_at_start_of_source_turn=False,
                 suppress_action=zone.failed_save_suppress_action,
                 suppress_bonus_action=zone.failed_save_suppress_bonus_action,
+                suppress_reactions=zone.failed_save_suppress_reactions,
+                control_limits=compiled_control_limits(
+                    action_bonus_exclusive=zone.failed_save_action_bonus_exclusive,
+                ),
+                source_is_magical=zone.save_context != "nonmagical",
                 use_default_poison_recovery=False,
             )
             if applied is not None:

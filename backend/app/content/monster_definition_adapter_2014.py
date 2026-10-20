@@ -1,4 +1,5 @@
 from __future__ import annotations
+from app.content.monster_visual_turn_start_2014 import visual_turn_start_rule_2014
 
 from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014, source_conditional_attack_advantage_2014
 from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
@@ -27,6 +28,7 @@ from app.content.monster_definition_adapter_support_2014 import (
     save_bonuses_2014,
 )
 from app.content.monster_innate_spells_2014 import innate_spell_save_actions_2014
+from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014
 from app.content.monster_innate_support_2014 import (
     innate_alternate_spell_casts_2014,
     innate_condition_removal_2014,
@@ -35,9 +37,12 @@ from app.content.monster_innate_support_2014 import (
 )
 from app.content.monster_legendary_bindings_2014 import legendary_action_options_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
+from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014, fetid_cloud_resources_2014
+from app.content.monster_leadership_2014 import leadership_actions_2014, leadership_resources_2014
 from app.content.monster_senses_2014 import special_senses_2014, bounded_blindsight_2014
 from app.content.monster_spell_slot_resources_2014 import monster_spell_slot_resources_2014
 from app.content.monster_multiattack_2014 import multiattack_2014
+from app.content.monster_attack_ammunition_2014 import attack_ammunition_2014
 from app.content.monster_zero_hp_prevention_2014 import (
     damage_threshold_zero_hp_replacements_2014,
     zero_hp_prevention_resources_2014,
@@ -62,6 +67,8 @@ from app.content.monster_multiattack_variants_2014 import attack_unavailable_rea
 from app.domain.character_builds import AbilityScores
 from app.domain.reactions import ParryReaction
 from app.domain.size import CreatureSize
+from app.content.monster_rock_catching_2014 import source_rock_catching_reaction_2014
+from app.content.monster_unnerving_mask_2014 import source_unnerving_mask_reaction_2014
 
 def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapabilityDefinition:
     source_grapple_periodic_proof_2014(monster, attack)
@@ -74,6 +81,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "name": attack.name,
         "attack_kind": attack.kind,
         "attack_bonus": attack.attack_bonus,
+        "resource_id": attack.id if attack.id in attack_ammunition_2014(monster) else None,
         "attack_ability": attack.attack_ability,
         "sneak_attack_eligible": sneak_attack_eligible_2014(monster, attack),
         "conditional_attack_advantage": [
@@ -104,7 +112,6 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         kwargs["projectile"] = "projectile"
     return AttackCapabilityDefinition(**kwargs)
 
-
 def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     blockers = basic_blockers_2014(monster)
     if blockers:
@@ -114,7 +121,9 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     attacks = [_attack(monster, attack) for attack in monster.attacks]
     blindsight_ft, truesight_ft = special_senses_2014(monster)
     bounded = bounded_blindsight_2014(monster)
-    resources = list(save_resources_2014(monster))
+    resources = [*save_resources_2014(monster), *fetid_cloud_resources_2014(monster), *leadership_resources_2014(monster)]
+    resources.extend(ResourceDefinition(id=key, name=key.replace('-', ' ').title(), max_uses=uses)
+                     for key, uses in attack_ammunition_2014(monster).items())
     resources.extend(healing_resources_2014(monster))
     resources.extend(innate_spell_resources_2014(monster))
     resources.extend(monster_spell_slot_resources_2014(monster))
@@ -154,16 +163,19 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         blindsight_deafened_ft=bounded[1] if bounded else None,
         blind_beyond_blindsight=bounded is not None,
         blindsight_requires_smell_when_deafened=bounded is not None,
+        visual_turn_start_rule=visual_turn_start_rule_2014(monster),
         attacks=attacks,
         primary_attack_id=attacks[0].id, attack_action=multiattack_2014(monster),
         save_actions=save_capabilities_2014(monster),
         spell_save_actions=innate_spell_save_actions_2014(monster),
+        persistent_save_zone_actions=[zone for zone in [fetid_cloud_zone_2014(monster)] if zone is not None],
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
+            *source_invisibility_action_2014(monster),
             *berserk_self_buffs_2014(monster),
             *heated_body_retaliation_2014(monster),
             *corrosive_form_retaliation_2014(monster),
             *condition_auras_from_source(monster.source_traits, "2014"),
-            *contextual_save_defenses_2014(monster)[0]],
+            *contextual_save_defenses_2014(monster)[0], *leadership_actions_2014(monster)],
         healing_actions=healing_actions_2014(monster),
         condition_removal_actions=innate_condition_removal_2014(monster),
         terminal_effect_tags=terminal_effect_tags_2014(monster),
@@ -182,9 +194,12 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         saving_throw_bonuses=save_bonuses_2014(monster, scores),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
         innate_condition_ids=innate_condition_ids_2014(monster),
+        source_allows_hostile_overlap=bool({'Air Form', 'Water Form'} & set(monster.trait_names)),
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
         source_turn_relation_damages=source_turn_grappler_damage_2014(monster),
         source_legendary_action_names=list(monster.legendary_action_names),
+        attack_damage_reduction_reaction=source_rock_catching_reaction_2014(monster),
+        turn_start_save_condition_reaction=source_unnerving_mask_reaction_2014(monster),
         parry_reaction=ParryReaction(ac_bonus=monster.parry_ac_bonus)
             if supports_parry_reaction_2014(monster) else None,
         **template_defense_fields_2014(monster),

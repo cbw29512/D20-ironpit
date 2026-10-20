@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming, GrapplePeriodicDamage
 from app.domain.combatants import DamageType
 from app.domain.hit_modifiers import HitModifierEffect
+from app.domain.failure_margin import FailureMarginEscalation, require_escalation_duration
 from app.domain.size import CreatureSize
 from app.domain.zero_hp_effects import ZeroHpSaveDamageRider
 
@@ -35,6 +36,21 @@ class SaveDamageEffectDefinition(BaseModel):
     damage_type: DamageType
     success_damage: Literal["none", "half"] = "half"
     zero_hp_rider: ZeroHpSaveDamageRider | None = None
+
+
+class AbilityScoreReductionEffectDefinition(BaseModel):
+    """Source-declared, unsaved on-hit ability loss; templates remain immutable."""
+
+    kind: Literal["ability_score_reduction"] = "ability_score_reduction"
+    source: str = Field(min_length=1)
+    ability: AbilityName
+    dice: DiceSpec
+
+    @model_validator(mode="after")
+    def validate_roll(self) -> "AbilityScoreReductionEffectDefinition":
+        if self.dice.count < 1 or self.dice.bonus:
+            raise ValueError("Ability-score reduction needs dice without a flat bonus.")
+        return self
 
 
 class SaveMaximumHpReductionEffectDefinition(BaseModel):
@@ -91,6 +107,7 @@ class SaveConditionEffectDefinition(BaseModel):
     repeat_save_failure_condition: ConditionName | None = None
     failure_push_ft: int = Field(default=0, ge=0)
     cannot_regain_hit_points: bool = False
+    failure_margin_escalation: FailureMarginEscalation | None = None
     excluded_creature_types: list[str] = Field(default_factory=list)
     excluded_creature_subtypes: list[str] = Field(default_factory=list)
 
@@ -106,6 +123,7 @@ class SaveConditionEffectDefinition(BaseModel):
             )
         if self.repeat_save_failure_condition is not None and self.repeat_save_timing is None:
             raise ValueError("Failure escalation requires a repeat-save timing.")
+        require_escalation_duration(self.failure_margin_escalation, self.duration_rounds)
         return self
 
 
@@ -131,7 +149,7 @@ class ConditionEffectDefinition(BaseModel):
 
 
 AttackEffectDefinition = Annotated[
-    DamageEffectDefinition | SaveDamageEffectDefinition | SaveMaximumHpReductionEffectDefinition | ContestedMovementEffectDefinition | ProneEffectDefinition | SaveConditionEffectDefinition |
+    DamageEffectDefinition | SaveDamageEffectDefinition | AbilityScoreReductionEffectDefinition | SaveMaximumHpReductionEffectDefinition | ContestedMovementEffectDefinition | ProneEffectDefinition | SaveConditionEffectDefinition |
     GrappleEffectDefinition | ConditionEffectDefinition | OngoingHpLossEffectDefinition | HitModifierEffect,
     Field(discriminator="kind"),
 ]

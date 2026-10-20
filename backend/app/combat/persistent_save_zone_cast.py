@@ -35,6 +35,8 @@ def choose_save_zone_center(
     try:
         if setup.map_definition is None or caster.state.position is None:
             return None
+        if action.center_on_source:
+            return caster.state.position.model_copy(deep=True)
         enemies = setup.monsters if caster.side == "heroes" else setup.heroes
         living = [
             enemy for enemy in enemies
@@ -57,10 +59,10 @@ def choose_save_zone_action(
     turn_key: str,
 ) -> tuple[PersistentSaveZoneAction, GridPosition] | None:
     try:
-        if verbal_casting_blocked(caster, setup):
-            return None
         for action in caster.state.template.persistent_save_zone_actions:
             if action.damage_dice_count:
+                continue
+            if action.save_context != "nonmagical" and verbal_casting_blocked(caster, setup):
                 continue
             if not is_available(caster.state, action.action_cost):
                 continue
@@ -91,10 +93,12 @@ def cast_save_zone(
     dice,
 ) -> tuple[list[BattleEvent], int]:
     try:
-        if verbal_casting_blocked(caster, setup):
+        if action.save_context != "nonmagical" and verbal_casting_blocked(caster, setup):
             raise ValueError(f"{action.name} cannot be cast inside a Silence effect.")
         if not is_available(caster.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")
+        if action.center_on_source and position != caster.state.position:
+            raise ValueError(f"{action.name} must be centered on its source.")
         if not zone_center_legal(setup, position, action.cast_range_ft, caster):
             raise ValueError(f"{action.name} placement exceeds its cast range.")
         resource = _resource(caster, action.resource_id)
@@ -121,6 +125,7 @@ def cast_save_zone(
             zone_id=f"{caster.combatant_id}:{action.id}:{round_number}:{len(setup.save_zones) + 1}",
             source_id=caster.combatant_id,
             source_side=caster.side,
+            follows_source=action.follows_source,
             action_id=action.id,
             action_name=action.name,
             position=position.model_copy(deep=True),
@@ -131,6 +136,8 @@ def cast_save_zone(
             triggers=list(action.triggers),
             save_triggers=list(action.save_triggers),
             once_per_turn=action.once_per_turn,
+            target_policy=action.target_policy,
+            save_context=action.save_context,
             damage_dice_count=_scaled_dice(action, slot_level),
             damage_dice_size=action.damage_dice_size,
             damage_type=action.damage_type,
@@ -139,6 +146,9 @@ def cast_save_zone(
             failed_save_duration_rounds=action.failed_save_duration_rounds,
             failed_save_suppress_action=action.failed_save_suppress_action,
             failed_save_suppress_bonus_action=action.failed_save_suppress_bonus_action,
+            failed_save_suppress_reactions=action.failed_save_suppress_reactions,
+            failed_save_action_bonus_exclusive=action.failed_save_action_bonus_exclusive,
+            failed_save_expiry_timing=action.failed_save_expiry_timing,
             concentration=action.concentration,
             animation=action.animation,
         )

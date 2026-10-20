@@ -1,4 +1,5 @@
 from __future__ import annotations
+from app.domain.visual_turn_start import VisualTurnStartRule
 from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, HpThresholdConditionAction, HpThresholdInstantDeathAction, SavingThrowAction
@@ -23,7 +24,7 @@ from app.domain.suppression_zones import PersistentSuppressionZoneAction
 from app.domain.teleport_actions import TeleportAction
 from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
 from app.domain.progression import ProgressionCombatFeatures
-from app.domain.reactions import (AttackDamageReductionReaction, DamageReactionAttack, IncomingDamageTypeResistanceReaction, ParryReaction, RedirectAttackReaction)
+from app.domain.reactions import (AttackDamageReductionReaction, DamageReactionAttack, IncomingDamageTypeResistanceReaction, ParryReaction, RedirectAttackReaction, TurnStartSaveConditionReaction)
 from app.domain.reaction_roll_penalties import ReactionRollPenaltyAction
 from app.domain.concentration_repeat_saves import ConcentrationRepeatSaveAction
 from app.domain.recharge import RechargeRule
@@ -129,6 +130,7 @@ class CombatantTemplate(BaseModel):
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
+    source_allows_hostile_overlap: bool = Field(default=False, exclude_if=lambda value: not value)
     source_trait_names: list[str] = Field(default_factory=list)
     source_turn_relation_damages: list[SourceTurnRelationDamage] = Field(default_factory=list)
     innate_condition_ids: list[ConditionName] = Field(default_factory=list)
@@ -139,7 +141,9 @@ class CombatantTemplate(BaseModel):
     source_spellcasting_fingerprint: str | None = None
     support_action_modes: list[str] = Field(default_factory=list)
     attack_damage_reduction_reaction: AttackDamageReductionReaction | None = None
+    turn_start_save_condition_reaction: TurnStartSaveConditionReaction | None = None
     incoming_damage_type_resistance_reaction: IncomingDamageTypeResistanceReaction | None = None
+    visual_turn_start_rule: VisualTurnStartRule | None = None
     parry_reaction: ParryReaction | None = None
     redirect_attack_reaction: RedirectAttackReaction | None = None
     damage_reaction_attack: DamageReactionAttack | None = None

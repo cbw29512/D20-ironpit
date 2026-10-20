@@ -52,7 +52,7 @@ def test_whole_alternatives_preserve_source_counts_and_mandatory_combinations(ke
         assert [slot.attack_ids for slot in action.variants[0].slots] == [[f'2014-{key}-scimitar']] * 2 + [[f'2014-{key}-dagger-melee']]
     if key == 'medusa':
         assert [slot.attack_ids for slot in action.variants[0].slots] == [[f'2014-{key}-snake-hair']] + [[f'2014-{key}-shortsword']] * 2
-        assert basic_blockers_2014(monster) == ('source:trait',)
+        assert basic_blockers_2014(monster) == ()
     assert monster.model_dump() == before
 
 

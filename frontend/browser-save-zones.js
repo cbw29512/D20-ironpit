@@ -10,10 +10,14 @@
     ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES
     : (() => { throw new Error("Save-zone damage requires the shared damage resolver."); })();
 
-  function memberInZone(member, zone) {
+  function memberInZone(member, zone, setup = null) {
     if (!member.state.position || !zone.position) return false;
+    const source = zone.followsSource ? [...(setup?.heroes || []), ...(setup?.monsters || [])]
+      .find((actor) => actor.combatant_id === zone.source_id) : null;
+    const center = zone.followsSource ? source?.state.position : zone.position;
+    if (!center) return false;
     return G().footprintDistanceFt(
-      member.state.position, member.state.template.size, zone.position, "medium",
+      member.state.position, member.state.template.size, center, "medium",
     ) <= zone.radius_ft;
   }
 
@@ -23,6 +27,7 @@
 
   function chooseCenter(caster, setup, action) {
     if (!setup.map_definition || !caster.state.position) return null;
+    if (action.centerOnSource) return { ...caster.state.position };
     const enemies = caster.side === "heroes" ? setup.monsters : setup.heroes;
     const living = enemies.filter((enemy) => enemy.state.is_alive && !enemy.state.is_dead && enemy.state.position);
     if (!living.length) return null;
@@ -33,9 +38,9 @@
   }
 
   function choose(caster, setup, turnKey) {
-    if (Z()?.verbalBlocked(caster, setup)) return null;
     for (const action of caster.state.template.persistent_save_zone_actions || []) {
       if (action.damageDiceCount) continue;
+      if (action.saveContext !== "nonmagical" && Z()?.verbalBlocked(caster, setup)) continue;
       if (!E().available(caster.state, action.actionCost)) continue;
       if (action.concentration && caster.state.concentration) continue;
       if (action.expendsSpellSlot && !P()?.slotSpellAvailable(caster.state, turnKey)) continue;
@@ -51,8 +56,9 @@
   }
 
   function resolveTrigger(sequence, round, target, setup, zone, turnKey, trigger) {
-    if (!(zone.triggers || []).includes(trigger) || !memberInZone(target, zone)) return null;
-    if (target.combatant_id === zone.source_id || target.side === zone.source_side) return null;
+    if (!(zone.triggers || []).includes(trigger) || !memberInZone(target, zone, setup)) return null;
+    if ((zone.targetPolicy || "enemies") === "enemies"
+      && (target.combatant_id === zone.source_id || target.side === zone.source_side)) return null;
     if (!target.state.is_alive || target.state.is_dead || target.state.current_hp <= 0) return null;
     if (zone.oncePerTurn !== false && (zone.triggered_turn_keys || {})[target.combatant_id] === turnKey) return null;
     zone.triggered_turn_keys = zone.triggered_turn_keys || {};
@@ -61,7 +67,10 @@
     const requiresSave = !saveTriggers.length || saveTriggers.includes(trigger);
     const save = requiresSave
       ? window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow(
-        target.state, zone.saveAbility, zone.dc, { magicalEffect: true, spellEffect: true, roundNumber: round },
+        target.state, zone.saveAbility, zone.dc, {
+          magicalEffect: (zone.saveContext || "spell") !== "nonmagical",
+          spellEffect: (zone.saveContext || "spell") === "spell", roundNumber: round,
+        },
       )
       : { roll: null, succeeded: false };
     const hpBefore = target.state.current_hp;
@@ -89,9 +98,12 @@
       const applied = window.IRON_PIT_BROWSER_TIMED.apply(target.state, zone.failedSaveConditionId, zone.source_id, {
         sourceEffectId: zone.action_id, appliedRound: round,
         expiresRound: round + (zone.failedSaveDurationRounds || 1),
-        expiryTiming: "target_turn_end",
+        expiryTiming: zone.failedSaveExpiryTiming || "target_turn_end",
         suppressAction: Boolean(zone.failedSaveSuppressAction),
         suppressBonusAction: Boolean(zone.failedSaveSuppressBonusAction),
+        suppressReactions: Boolean(zone.failedSaveSuppressReactions),
+        controlLimits: zone.failedSaveActionBonusExclusive ? { action_bonus_exclusive: true } : null,
+        sourceIsMagical: (zone.saveContext || "spell") !== "nonmagical",
         useDefaultPoisonRecovery: false,
       });
       if (applied) appliedConditions.push(applied);
@@ -121,8 +133,13 @@
   }
 
   function cast(sequence, round, caster, setup, action, position, turnKey) {
-    if (Z()?.verbalBlocked(caster, setup)) throw new Error(`${action.name} cannot be cast inside a Silence effect.`);
+    if (action.saveContext !== "nonmagical" && Z()?.verbalBlocked(caster, setup)) throw new Error(`${action.name} cannot be cast inside a Silence effect.`);
     if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.actionCost} is unavailable for ${action.name}.`);
+    if (action.resourceId && (caster.state.resources?.[action.resourceId] ?? 0) < (action.resourceCost || 1))
+      throw new Error(`Resource ${action.resourceId} is unavailable for ${action.name}.`);
+    if (action.centerOnSource && (!caster.state.position || position.x !== caster.state.position.x || position.y !== caster.state.position.y)) {
+      throw new Error(`${action.name} must be centered on its source.`);
+    }
     let slotLevel = action.level;
     if (action.resourceId && String(action.resourceId).startsWith("spell-slot-")) {
       slotLevel = Number(String(action.resourceId).split("-").pop());
@@ -140,18 +157,22 @@
     setup.save_zones = setup.save_zones || [];
     const zone = {
       zone_id: `${caster.combatant_id}:${action.id}:${round}:${setup.save_zones.length + 1}`,
-      source_id: caster.combatant_id, source_side: caster.side,
+      source_id: caster.combatant_id, source_side: caster.side, followsSource: Boolean(action.followsSource),
       action_id: action.id, action_name: action.name, position: { ...position },
       radius_ft: action.radiusFt, expires_round: round + action.durationRounds,
       saveAbility: action.saveAbility, dc: action.dc,       triggers: [...(action.triggers || [])],
       saveTriggers: [...(action.saveTriggers || [])],
       oncePerTurn: action.oncePerTurn !== false,
+      targetPolicy: action.targetPolicy || "enemies", saveContext: action.saveContext || "spell",
       damageDiceCount: scaledDice(action, slotLevel), damageDiceSize: action.damageDiceSize,
       damageType: action.damageType, successDamage: action.successDamage || "none",
       failedSaveConditionId: action.failedSaveConditionId,
       failedSaveDurationRounds: action.failedSaveDurationRounds || 1,
       failedSaveSuppressAction: Boolean(action.failedSaveSuppressAction),
       failedSaveSuppressBonusAction: Boolean(action.failedSaveSuppressBonusAction),
+      failedSaveSuppressReactions: Boolean(action.failedSaveSuppressReactions),
+      failedSaveActionBonusExclusive: Boolean(action.failedSaveActionBonusExclusive),
+      failedSaveExpiryTiming: action.failedSaveExpiryTiming || "target_turn_end",
       concentration: Boolean(action.concentration), animation: action.animation || "save-zone",
       triggered_turn_keys: {},
     };

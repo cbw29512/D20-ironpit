@@ -214,3 +214,34 @@ const L = window.IRON_PIT_BATTLE_LOG;
 
 console.log("Audit-grade battle log regressions passed.");
 
+
+{
+  const stunning = window.IRON_PIT_BATTLE_LOG.format({
+    event_type: "feature", actor_name: "Kael Stillwater", target_name: "Brown Bear",
+    feature_id: "stunning-strike", description: "Kael spends 1 Ki on Stunning Strike; Brown Bear resists.",
+    save_ability: "constitution", save_dc: 15, save_succeeded: true,
+    saving_throw_roll: { selected_roll: 14, rolls: [14], modifier: 2, total: 16, mode: "normal" },
+    resource_remaining: 2, applied_condition_ids: []
+  });
+  assert.match(stunning, /CONSTITUTION save: d20 14 \+2 = 16 vs DC 15 — SUCCESS/);
+  assert.match(stunning, /Resource remaining: 2/);
+  const failed = window.IRON_PIT_BATTLE_LOG.format({
+    event_type: "feature", actor_name: "Kael", target_name: "Bear",
+    save_ability: "constitution", save_dc: 15, save_succeeded: false,
+    saving_throw_roll: { selected_roll: 3, rolls: [3], modifier: 2, total: 5, mode: "normal" },
+    applied_condition_ids: ["stunned"], resource_remaining: 1
+  });
+  assert.match(failed, /FAILURE/);
+  assert.match(failed, /STUNNED/);
+}
+
+{
+  const event = { event_type: "feature", actor_name: "Kael",
+    description: "Kael escapes the grapple.", check_ability: "dexterity (acrobatics)",
+    ability_check_roll: { rolls: [15], selected_roll: 15, modifier: 3, total: 18, mode: "normal" },
+    check_dc: 16, check_succeeded: true };
+  const rendered = L.format(event);
+  assert.match(rendered, /DC 16/);
+  assert.match(rendered, /SUCCESS/);
+  assert.match(rendered, /15/);
+}

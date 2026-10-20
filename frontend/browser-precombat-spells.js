@@ -16,7 +16,6 @@
       || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id)
       || target.state.timed_effects?.some((effect) => effect.source_effect_id === spell.id));
   }
-
   function typedRelevant(member, setup, spell) {
     const typed = (spell.modifierEffects || []).filter((effect) => effect.sourceCreatureTypes?.length);
     if (!typed.length || (spell.modifierEffects || []).some((effect) => !effect.sourceCreatureTypes?.length)) return true;
@@ -84,12 +83,18 @@
     const side = member.side === "heroes" ? setup.heroes : setup.monsters;
     const legal = side.filter((target) => target.state.is_alive && !target.state.is_dead
         && Math.abs(member.position_ft - target.position_ft) <= (spell.range || 0)
-        && (!spell.shareDamageWithSource || target.combatant_id !== member.combatant_id))
+        && (!spell.shareDamageWithSource || target.combatant_id !== member.combatant_id)
+        && !(spell.conditionIds || []).some((id) => target.state.active_effect_ids?.includes(id)))
       .sort((a, b) => comparePriority(friendlyBuffPriority(member, a, setup), friendlyBuffPriority(member, b, setup)));
     return spell.targetAllLegal === true ? legal : legal.slice(0, spell.targetCount || 1);
   }
-
   function modifierDetail(effect) {
+    if (effect.kind === "debuff-counter") {
+      const counter = effect.debuffCounter || effect.debuff_counter;
+      const id = counter?.debuffId || counter?.debuff_id || "effect", scope = counter?.sourceScope || counter?.source_scope || "any", cost = counter?.movementCostFt ?? counter?.movement_cost_ft;
+      return (counter.mode || "prevent") === "remove-with-movement"
+        ? `${id} (spend ${cost} ft movement to escape; ${scope})` : `${id} prevented (${scope})`;
+    }
     if (effect.kind === "armor-class") return `${effect.flatBonus >= 0 ? "+" : ""}${effect.flatBonus || 0} AC`;
     if (effect.kind === "armor-class-minimum") return `minimum AC ${effect.minimumValue || 0}`;
     if (effect.kind === "speed") return `${effect.flatBonus >= 0 ? "+" : ""}${effect.flatBonus || 0} Speed`;

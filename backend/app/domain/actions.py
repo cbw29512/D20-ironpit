@@ -11,6 +11,7 @@ from app.domain.save_damage import DamageTypeName, SaveDamageComponent
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
+from app.domain.environment_contexts import EnvironmentContextId
 
 from app.domain.action_types import (
     AbilityName, ActionCost, HealingTargetMode, ConditionRemovalTargetMode,
@@ -124,9 +125,13 @@ class SavingThrowAction(BaseModel):
     name: str
     action_cost: ActionCost = "action"
     save_ability: AbilityName
+    save_ability_choices: list[AbilityName] = Field(default_factory=list)
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
     max_targets: int = Field(default=1, ge=1, le=20)
+    target_scope: Literal["enemies", "all-other-creatures"] = Field(
+        default="enemies", exclude_if=lambda value: value == "enemies",
+    )
     target_max_size: CreatureSize | None = None
     area: AreaTargeting | None = None
     damage_dice_count: int = Field(default=0, ge=0, le=40)
@@ -134,16 +139,23 @@ class SavingThrowAction(BaseModel):
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
     success_damage: Literal["none", "half"] = "none"
+    failure_sets_zero_hp: bool = Field(default=False, exclude_if=lambda value: not value)
+    damage_only_on_success: bool = Field(default=False, exclude_if=lambda value: not value)
     damage_components: list[SaveDamageComponent] = Field(default_factory=list)
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     requires_no_active_grapple: bool = False
+    opening_initiative_only: bool = Field(default=False, exclude_if=lambda value: not value)
     magical_effect: bool = False
     effect_tags: list[str] = Field(default_factory=list)
     automatic_failure_creature_types: list[str] = Field(default_factory=list)
     requires_target_hearing: bool = False
+    requires_target_to_see_source: bool = Field(default=False, exclude_if=lambda value: not value)
+    prohibited_environment_context_id: EnvironmentContextId | None = Field(
+        default=None, exclude_if=lambda value: value is None,
+    )
     requires_target_sight: bool = False
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
     source_effect_immunity_on_success: bool = False
@@ -155,6 +167,18 @@ class SavingThrowAction(BaseModel):
     reduce_hit_point_maximum_on_failed_save: bool = False
     animation: str = "save-effect"
 
+    @model_validator(mode="after")
+    def validate_asymmetric_save_outcomes(self) -> "SavingThrowAction":
+        if self.save_ability_choices and (len(self.save_ability_choices) < 2 or len(set(self.save_ability_choices)) != len(self.save_ability_choices) or self.save_ability not in self.save_ability_choices):
+            raise ValueError("Target-chosen save abilities must be distinct and include the primary ability.")
+        if self.damage_only_on_success and self.success_damage != "none":
+            raise ValueError("Success-only damage cannot also be halved or suppressed on success.")
+        has_damage = bool(self.damage_dice_count or self.damage_components)
+        if self.damage_only_on_success and not has_damage:
+            raise ValueError("Success-only damage requires printed typed damage.")
+        if self.failure_sets_zero_hp and has_damage and not self.damage_only_on_success:
+            raise ValueError("Direct zero-HP failure cannot also apply normal failure damage.")
+        return self
 
 
 class HpThresholdConditionAction(BaseModel):

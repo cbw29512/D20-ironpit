@@ -4,7 +4,7 @@
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const A = () => window.IRON_PIT_BROWSER_ABILITY_CHECKS;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { speedZero: (state) => state.active_effect_ids.includes("restrained") };
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { speedZero: (state) => state.active_effect_ids.includes("restrained"), incapacitated: (state) => state.is_unconscious };
   const C = () => window.IRON_PIT_BROWSER_DEBUFF_COUNTERS || {
     movementCost: () => null,
     prevented: () => false,
@@ -70,16 +70,21 @@
   function sourceHasActiveGrapple(setup, sourceId) {
     if (!setup) throw new Error("Source-gated grapple requires encounter setup.");
     return [...setup.heroes, ...setup.monsters].some((member) =>
-      member.combatant_id !== sourceId && member.state.is_alive && !member.state.is_dead
+      member.combatant_id !== sourceId && member.state.is_alive && !member.state.is_dead && !Q().incapacitated(member.state)
       && (member.state.grapple_sources || []).some((grapple) => grapple.source_id === sourceId));
   }
 
   function cleanup(setup) {
     const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
     for (const target of members.values()) {
+      if (target.state.is_dead || !target.state.is_alive) {
+        target.state.grapple_sources = [];
+        sync(target.state);
+        continue;
+      }
       target.state.grapple_sources = target.state.grapple_sources.filter((source) => {
         const grappler = members.get(source.source_id);
-        if (!grappler || grappler.state.is_dead || grappler.state.is_unconscious) return false;
+        if (!grappler || grappler.state.is_dead || !grappler.state.is_alive || Q().incapacitated(grappler.state)) return false;
         return Math.abs(grappler.position_ft - target.position_ft) <= source.range_ft;
       });
       sync(target.state);
@@ -98,7 +103,7 @@
     const bonus = useAthletics ? athletics : acrobatics;
     const ability = useAthletics ? "strength" : "dexterity";
     const advantage = useAthletics && (state.active_effect_ids.includes("rage") || state.template.athletics_advantage) ? 1 : 0;
-    const disadvantage = (state.active_effect_ids.includes("poisoned") || state.active_effect_ids.includes("frightened") ? 1 : 0)
+    const disadvantage = (state.active_effect_ids.includes("poisoned") || Q().has(state, "frightened", setup) ? 1 : 0)
       + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(state, ability) || 0);
     let roll = R().d20(
       bonus,

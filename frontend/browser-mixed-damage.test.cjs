@@ -9,7 +9,7 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-grapple.js", "browser-timed-conditions.js",
-  "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js",
+  "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-damage-defense-rules.js", "browser-hit-damage.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {
@@ -78,6 +78,81 @@ const ritualSickle = {
   assert.deepEqual(event.damage_components.map((part) => part.total), [8, 8]);
   assert.deepEqual(event.damage_components.map((part) => part.applied_total), [4, 0]);
   assert.equal(event.damage_roll.total, 4);
+}
+
+
+{
+  // Names and IDs are card metadata, not branches in the damage resolver.
+  const renamedSourceAttack = structuredClone(venomBite);
+  renamedSourceAttack.id = "synthetic-anonymous-attack";
+  renamedSourceAttack.name = "Completely Different Label";
+  renamedSourceAttack.onHitDamage[0].source = "An Unrelated Effect Label";
+
+  const check = (attack) => {
+    const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+    const attacker = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+    hero.state.template.damage_resistances = ["piercing"];
+    hero.state.template.damage_vulnerabilities = ["poison"];
+    const startingHp = hero.state.current_hp;
+    window.IRON_PIT_DICE = queuedDice([15, 4, 2]);
+    const event = A.resolveAttack(1, 1, attacker, hero, attack, 5);
+    assert.equal(event.hit, true);
+    assert.deepEqual(event.damage_components.map((part) => part.damage_type), ["piercing", "poison"]);
+    assert.deepEqual(event.damage_components.map((part) => part.total), [8, 2]);
+    assert.deepEqual(event.damage_components.map((part) => part.applied_total), [4, 4]);
+    assert.equal(event.damage_roll.total, 8);
+    assert.equal(hero.state.current_hp, startingHp - 8);
+    return event;
+  };
+  const original = check(venomBite);
+  const renamed = check(renamedSourceAttack);
+  assert.notEqual(original.attack_id, renamed.attack_id);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const attacker = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  const startingHp = hero.state.current_hp;
+  window.IRON_PIT_DICE = queuedDice([1]);
+  const event = A.resolveAttack(1, 1, attacker, hero, venomBite, 5);
+  assert.equal(event.hit, false);
+  assert.equal(event.turn_terminated, true); // Pit natural-1 policy.
+  assert.deepEqual(event.damage_components, []);
+  assert.equal(hero.state.current_hp, startingHp);
+}
+
+
+{
+  // The mixed-type damage from one Bite shares a single hit/zero-HP event.
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const monster = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  monster.state.current_hp = 5;
+  window.IRON_PIT_DICE = queuedDice([15, 4, 2]);
+  const event = A.resolveAttack(1, 1, hero, monster, venomBite, 5);
+  assert.equal(event.hit, true);
+  assert.deepEqual(event.damage_components.map((part) => part.damage_type), ["piercing", "poison"]);
+  assert.deepEqual(event.damage_components.map((part) => part.applied_total), [8, 2]);
+  assert.equal(event.damage_roll.total, 10);
+  assert.equal(monster.state.current_hp, 0);
+  assert.equal(monster.state.is_dead, true);
+  assert.throws(() => A.resolveAttack(2, 1, hero, monster, venomBite, 5), /cannot be targeted/);
+}
+
+{
+  const hero = member("hero-1:karnok", "heroes", heroes["karnok-stoneward-l1"]);
+  const attacker = member("monster-1:commoner", "monsters", monsters["srd-commoner"]);
+  hero.state.current_hp = 5;
+  hero.state.resources["relentless-endurance"] = 0;
+  window.IRON_PIT_DICE = queuedDice([15, 4, 2]);
+  const event = A.resolveAttack(1, 1, attacker, hero, venomBite, 5);
+  assert.deepEqual(event.damage_components.map((part) => part.applied_total), [8, 2]);
+  assert.equal(hero.state.current_hp, 0);
+  assert.equal(hero.state.is_unconscious, true);
+  assert.equal(hero.state.is_dead, false);
+  assert.equal(hero.state.death_save_failures, 0);
+  // A *separate* later damaging event at 0 HP incurs a failed save.
+  window.IRON_PIT_BROWSER_ZERO_HP.applyDamage(hero.state, 2, false, ["poison"]);
+  assert.equal(hero.state.death_save_failures, 1);
 }
 
 console.log("Browser mixed typed hit-damage regressions passed, including fixed typed riders.");

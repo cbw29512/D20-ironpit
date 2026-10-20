@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.content.monster_attack_effect_validation_2014 import (
     ADVANTAGE_TRIGGERS_2014,
+    supported_ability_score_reduction_2014,
     supported_contested_movement_2014,
     supported_control_2014,
     supported_damage_row_2014,
@@ -19,6 +20,7 @@ from app.content.monster_hp_loss_effect_2014 import ongoing_hp_loss_effect_2014,
 from app.content.monster_grapple_periodic_2014 import grapple_periodic_damage_2014, supports_grapple_periodic_2014
 from app.content.monster_zero_hp_save_rider_2014 import zero_hp_save_rider_2014
 from app.domain.capability_effects import (
+    AbilityScoreReductionEffectDefinition,
     AttackEffectDefinition,
     ContestedMovementEffectDefinition,
     DamageEffectDefinition,
@@ -57,6 +59,11 @@ def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
         supports_conditional_damage_2014(row) for row in attack.conditional_damage
     ):
         return False
+    if (
+        attack.on_hit_ability_score_reduction is not None
+        and not supported_ability_score_reduction_2014(attack.on_hit_ability_score_reduction)
+    ):
+        return False
     if attack.on_hit_save_effect is not None and not (
         supported_save_condition_2014(attack.on_hit_save_effect)
         or supported_save_damage_2014(attack.on_hit_save_effect)
@@ -77,7 +84,7 @@ def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
         and not supports_charge_profile_2014(attack.charge_profile)
     ):
         return False
-    if attack.grapple_target_policy not in {"normal", "own_grapple_only"}:
+    if attack.grapple_target_policy not in {"normal", "own_grapple_only", "auto_hit_own_grapple"}:
         return False
     if attack.on_hit_damage and not all(
         supported_damage_row_2014(row) for row in attack.on_hit_damage
@@ -121,6 +128,7 @@ def _save_effect_2014(attack: SourceAttack2014) -> AttackEffectDefinition:
             ),
             failure_push_ft=int(row.get("failure_push_ft", 0)),
             cannot_regain_hit_points=bool(row.get("cannot_regain_hit_points", False)),
+            failure_margin_escalation=row.get("failure_margin_escalation"),
             excluded_creature_types=[
                 str(item) for item in row.get("excluded_creature_types") or []
             ],
@@ -163,6 +171,14 @@ def basic_attack_effects_2014(attack: SourceAttack2014, opening_source_name: str
         ))
     if attack.on_hit_save_effect is not None:
         effects.append(_save_effect_2014(attack))
+    if attack.on_hit_ability_score_reduction is not None:
+        row = attack.on_hit_ability_score_reduction
+        assert isinstance(row, dict)
+        effects.append(AbilityScoreReductionEffectDefinition(
+            source=attack.name,
+            ability=str(row["ability"]).lower(),
+            dice=DiceSpec(count=int(row["dice_count"]), size=int(row["dice_size"])),
+        ))
     if attack.on_hit_contested_movement is not None:
         row = attack.on_hit_contested_movement
         assert isinstance(row, dict)

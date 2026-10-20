@@ -5,6 +5,7 @@ import logging
 from app.combat.ability_checks import ability_check_roll_mode, resolve_ability_check_outcome
 from app.combat.action_economy import is_available, spend
 from app.combat.condition_rules import has_condition
+from app.combat.ability_score_reduction import ability_modifier_delta
 from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifier
 from app.combat.rolls import roll_d20
 from app.combat.timed_condition_lifecycle import remove_effect_instance
@@ -39,7 +40,7 @@ def ability_check_bonus(state: CombatantState, ability: str) -> int:
     scores = state.template.ability_scores
     if scores is None:
         raise ValueError(f"{state.template.name} lacks ability scores for a {ability} check.")
-    return scores.modifier(ability)  # type: ignore[arg-type]
+    return scores.modifier(ability) + ability_modifier_delta(state, ability)  # type: ignore[arg-type]
 
 
 def resolve_escape_check(
@@ -62,7 +63,7 @@ def resolve_escape_check(
         disadvantage = ability_check_disadvantage_sources(actor.state, ability)
         disadvantage += int(
             has_condition(actor.state, POISONED_EFFECT_ID)
-            or has_condition(actor.state, FRIGHTENED_EFFECT_ID)
+            or has_condition(actor.state, FRIGHTENED_EFFECT_ID, setup=setup)
         )
         mode = ability_check_roll_mode(
             actor.state,

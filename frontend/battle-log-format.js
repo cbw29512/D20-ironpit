@@ -100,14 +100,30 @@
     return pieces.join(" · ");
   }
 
+  function formatFeature(event) {
+    const pieces = [event.description || `${event.actor_name || "Combatant"} uses ${sourceLabel(event.feature_id)}.`];
+    if (event.save_dc != null) {
+      const target = event.target_name || "Target";
+      const outcome = event.save_succeeded === true ? "SUCCESS" : event.save_succeeded === false ? "FAILURE" : "RESULT UNKNOWN";
+      pieces.push(`${target} ${String(event.save_ability || "save").toUpperCase()} save: ${rollLabel(event.saving_throw_roll)} vs DC ${event.save_dc} — ${outcome}`);
+    }
+    if (event.ability_check_roll) pieces.push(`${event.check_ability || "Ability check"}: ${rollLabel(event.ability_check_roll)} vs DC ${event.check_dc} — ${event.check_succeeded ? "SUCCESS" : "FAILURE"}`);
+    if (event.attack_roll) pieces.push(`Attack: ${rollLabel(event.attack_roll)}`);
+    const damage = damageLabel(event); if (damage) pieces.push(damage);
+    appendState(pieces, event, Boolean(event.damage_roll));
+    if (event.resource_remaining != null) pieces.push(`Resource remaining: ${event.resource_remaining}`);
+    return pieces.join(" · ");
+  }
+
   function format(event) {
     if (event.event_type === "initiative") return formatInitiative(event);
     if (event.event_type === "attack") return formatAttack(event);
     if (event.event_type === "saving_throw") return formatSave(event);
     if (event.event_type === "death_save") return formatDeathSave(event);
+    if (event.event_type === "feature") return formatFeature(event);
     if (event.event_type === "healing" && event.target_name && event.hp_before != null && event.hp_after != null) return `${event.description} · ${event.target_name} HP ${event.hp_before}→${event.hp_after}`;
     return event.description || `${event.actor_name || "Arena"}: ${event.event_type}`;
   }
 
-  window.IRON_PIT_BATTLE_LOG = { format, formatAttack, formatDeathSave, formatInitiative, formatSave, rollLabel };
+  window.IRON_PIT_BATTLE_LOG = { format, formatAttack, formatDeathSave, formatInitiative, formatSave, formatFeature, rollLabel };
 })();

@@ -100,12 +100,30 @@
     } catch (error) { console.error("Failed Multiattack sequence scoring", { id: member?.combatant_id, error }); throw error; }
   }
 
+  function sequenceResourceFundable(member, setup, variant, mode) {
+    try {
+      const reservations = {};
+      const repetitions = variant.repetitions
+        ? variant.repetitions.diceCount * variant.repetitions.diceSize : 1;
+      for (const { choice } of sequenceChoices(member, setup, variant, mode)) {
+        if (!choice?.attack.resourceId) continue;
+        const id = choice.attack.resourceId;
+        reservations[id] = (reservations[id] || 0) + (choice.attack.resourceCost || 1) * repetitions;
+      }
+      const resources = window.IRON_PIT_BROWSER_RESOURCES;
+      if (Object.keys(reservations).length && !resources)
+        throw new Error("Finite attack resources require browser-resources.js.");
+      return Object.entries(reservations).every(([id, cost]) => resources.available(member.state, id, cost));
+    } catch (error) { console.error("Failed Multiattack resource planning", { id: member?.combatant_id, error }); throw error; }
+  }
+
   function selectSequence(member, setup) {
     try {
       const variants = validatedVariants(member);
       const melee = variants.some(v => (!v.attackKind || v.attackKind === "melee") && sequenceChoices(member, setup, v, "melee").some(({ choice }) => choice?.attack.kind === "melee"));
       const mode = melee ? "melee" : "ranged";
-      const candidates = variants.filter((v) => !v.attackKind || v.attackKind === mode);
+      const candidates = variants.filter((v) => (!v.attackKind || v.attackKind === mode)
+        && sequenceResourceFundable(member, setup, v, mode));
       candidates.sort((a, b) => sequenceDamage(member, setup, b, mode) - sequenceDamage(member, setup, a, mode));
       const variant = candidates[0];
       if (!variant || !sequenceChoices(member, setup, variant, mode).some(({ choice, saved }) => choice || saved)) return null;

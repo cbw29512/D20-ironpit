@@ -69,6 +69,9 @@ def resolve_timed_self_buff(
                 member.combatant_id,
                 source_effect_id=action.id,
                 source_template=member.state.template,
+                source_is_magical=action.magical_effect,
+                ends_on_owner_attack=action.ends_on_owner_attack,
+                ends_on_owner_spell_cast=action.ends_on_owner_spell_cast,
                 applied_round=round_number,
                 expires_round=expires_round,
                 expiry_timing=expiry_timing,
@@ -89,6 +92,7 @@ def resolve_timed_self_buff(
             or action.saving_throw_advantage_grants
             or action.movement_mode_grants
             or action.friendly_save_advantage_aura is not None
+            or action.friendly_roll_bonus_aura is not None
             or action.friendly_cover_aura is not None
             or action.friendly_weapon_damage_aura is not None
             or action.friendly_recovery_aura is not None
@@ -107,6 +111,9 @@ def resolve_timed_self_buff(
                 member.combatant_id,
                 source_effect_id=action.id,
                 source_template=member.state.template,
+                source_is_magical=action.magical_effect,
+                ends_on_owner_attack=action.ends_on_owner_attack,
+                ends_on_owner_spell_cast=action.ends_on_owner_spell_cast,
                 applied_round=round_number,
                 expires_round=expires_round,
                 expiry_timing=expiry_timing,

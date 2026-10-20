@@ -1,17 +1,20 @@
 from __future__ import annotations
 
+from app.combat.owner_action_expiry import expire_on_owner_event
 from app.combat.undead_fortitude import consume_survival_save_log
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 import logging
 from app.combat.action_economy import is_available, spend
+from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.timed_attack_cap import register_turn_attack
 from app.combat.attack_roll_resolution import resolve_attack_roll
 from app.combat.attack_legality import attack_allowed_against
+from app.combat.attack_grapple_auto_hit import owned_grapple_auto_hit, automatic_hit_roll, automatic_hit_outcome
 from app.combat.attack_d20_outcome import resolve_attack_d20_outcome
 from app.combat.attack_effect_resolution import resolve_attack_effects
 from app.combat.attack_event_support import attack_damage_reduction_description, build_attack_description, primary_attack_save_fields
 from app.combat.brutal_strike import clear_brutal_strike_pending
-from app.combat.condition_rules import close_hit_is_automatic_critical
+from app.combat.condition_rules import close_hit_is_automatic_critical, is_incapacitated
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.modifier_stack import effective_armor_class
@@ -34,26 +37,28 @@ def resolve_attack(
     reaction_roller: EncounterCombatant | None = None,
 ) -> BattleEvent:
     try:
+        # Spend-action=False means a free/off-turn attack, not permission for an
+        # Incapacitated creature to attack. Both paths share the same gate.
+        if attacker.is_dead or is_incapacitated(attacker):
+            raise ValueError("An incapacitated or dead creature cannot attack.")
         if spend_action and not is_available(attacker, "action"):
             raise ValueError("Action is not available for an attack.")
         weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id
         attacker_event_id = actor_event_id or attacker.template.id
         if not attack_allowed_against(attack, attacker_event_id, defender, affected_states):
             raise ValueError(f"{attack.id} cannot target {defender_event_id} under its current target policy.")
+        if not action_resource_available(attacker, attack):
+            raise ValueError(f"{attack.id} has insufficient ammunition or other attack resources.")
+        ammunition_remaining = spend_action_resource(attacker, attack)
         register_turn_attack(attacker, off_turn=off_turn)
-        roll_resolution = resolve_attack_roll(
-            attacker,
-            defender,
-            attack,
-            distance_ft,
-            dice,
-            defender_event_id=defender_event_id,
-            attacker_event_id=attacker_event_id,
-            round_number=round_number,
-            turn_key=turn_key,
+        auto_hit = owned_grapple_auto_hit(attack, attacker_event_id, defender)
+        roll_resolution = automatic_hit_roll() if auto_hit else resolve_attack_roll(
+            attacker, defender, attack, distance_ft, dice,
+            defender_event_id=defender_event_id, attacker_event_id=attacker_event_id,
+            round_number=round_number, turn_key=turn_key,
             advantage_sources=advantage_sources,
             other_disadvantage_sources=other_disadvantage_sources,
-            close_enemy_active=close_enemy_active,
+            close_enemy_active=close_enemy_active, setup=reaction_setup,
         )
         attack_roll = roll_resolution.roll
         mode = roll_resolution.mode
@@ -61,7 +66,7 @@ def resolve_attack(
         brutal_strike_disadvantage = roll_resolution.brutal_strike_disadvantage
         d20_bonus_source_name = roll_resolution.d20_bonus_source_name
         reaction_penalty = None
-        if reaction_setup is not None and reaction_roller is not None:
+        if not auto_hit and reaction_setup is not None and reaction_roller is not None:
             reaction_penalty = apply_reaction_roll_penalty_if_useful(
                 reaction_roller,
                 reaction_setup,
@@ -77,15 +82,12 @@ def resolve_attack(
         if redirect_target is not None and redirect_target is not defender and defender.template.redirect_attack_reaction is not None and is_available(defender, "reaction"):
             spend(defender, "reaction"); actual_defender = redirect_target
             actual_event_id = redirect_target_event_id or redirect_target.template.id; redirect_used = True
-        d20_outcome = resolve_attack_d20_outcome(
-            attacker,
-            actual_defender,
-            attack,
-            attack_roll,
+        d20_outcome = automatic_hit_outcome(
             effective_armor_class(actual_defender),
-            encounter_roller=reaction_roller,
-            setup=reaction_setup,
-            dice=dice,
+        ) if auto_hit else resolve_attack_d20_outcome(
+            attacker, actual_defender, attack, attack_roll,
+            effective_armor_class(actual_defender),
+            encounter_roller=reaction_roller, setup=reaction_setup, dice=dice,
         )
         attack_roll, target_ac, hit = d20_outcome.roll, d20_outcome.target_ac, d20_outcome.hit
         if not hit:
@@ -155,6 +157,15 @@ def resolve_attack(
             deferred_effect_armed=deferred_effect_armed,
         )
         description += attack_damage_reduction_description(effects, actual_defender.template.name)
+        if effects.ability_reduction is not None:
+            reduction = effects.ability_reduction
+            description += (
+                f" {weapon.name} reduces {actual_defender.template.name}'s "
+                f"{reduction.ability.title()} by {reduction.applied} "
+                f"({reduction.score_before} to {reduction.score_after})."
+            )
+            if reduction.death_outcome == "dead":
+                description += f" {actual_defender.template.name} dies at {reduction.ability.title()} 0."
         if d20_bonus_source_name:
             description += f" {d20_bonus_source_name} adds its bonus die to the attack roll."
         if outcome_adjustment_name:
@@ -167,6 +178,11 @@ def resolve_attack(
             save_damage, on_hit_save, on_hit_maximum_hp_save, contested_movement,
             cunning_strike_obscure, cunning_strike, topple,
         )
+        if ammunition_remaining is not None:
+            description += f" {weapon.name}: {ammunition_remaining} ammunition remaining."
+        expired = expire_on_owner_event(attacker, "attack", affected_states)
+        if expired:
+            description += f" {attacker.template.name}'s {', '.join(expired)} ends after the attack."
         return BattleEvent(
             sequence=sequence, round_number=round_number, event_type="attack", actor_id=attacker_event_id, actor_name=attacker.template.name,
             target_id=actual_event_id, target_name=actual_defender.template.name, attack_name=weapon.name, target_ac=target_ac,
@@ -187,7 +203,7 @@ def resolve_attack(
             feature_id=d20_override_feature_id or miss_override_feature_id or outcome_adjustment_feature_id or feature_id, concentration_ended_effect_id=concentration_before if concentration_before and actual_defender.concentration is None else None,
             resource_remaining=(
                 exile_applied[1] if exile_applied is not None
-                else deferred_effect_armed.resource_remaining if deferred_effect_armed is not None else None
+                else deferred_effect_armed.resource_remaining if deferred_effect_armed is not None else ammunition_remaining
             ),
             animation=weapon.animation, description=description + consume_survival_save_log(actual_defender) + consume_zero_hp_replacement_log(actual_defender),
         )

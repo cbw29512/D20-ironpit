@@ -202,22 +202,20 @@ def test_printed_2014_slow_weaken_stat_blocks_are_not_one_bundle() -> None:
         assert "-2" not in text
 
 
-def test_2014_slow_weaken_unlocks_only_save_action_only_cards() -> None:
+def test_2014_slow_weaken_and_source_verified_change_shape_unlocks_cards() -> None:
     unlocked = {
         "copper-dragon-wyrmling", "young-copper-dragon", "adult-copper-dragon",
         "gold-dragon-wyrmling", "young-gold-dragon", "stone-golem",
     }
-    parked = {
-        "ancient-copper-dragon": "source:extra-action",
-        "adult-gold-dragon": "source:extra-action",
-        "ancient-gold-dragon": "source:extra-action",
+    # Once the independent Change Shape source clauses are verified,
+    # these three have no remaining printed combat-action blockers.
+    newly_admitted_by_change_shape = {
+        "ancient-copper-dragon", "adult-gold-dragon", "ancient-gold-dragon",
     }
     by_id = {monster.id: monster for monster in load_monster_source_2014()}
-    for monster_id in unlocked:
-        assert basic_blockers_2014(by_id[monster_id]) == ()
-    for monster_id, blocker in parked.items():
+    for monster_id in unlocked | newly_admitted_by_change_shape:
         remaining = basic_blockers_2014(by_id[monster_id])
-        assert blocker in remaining
+        assert remaining == ()
         assert "mechanic:save-action" not in remaining
 
 

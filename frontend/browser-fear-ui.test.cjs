@@ -8,7 +8,9 @@ const vm = require("node:vm");
 global.window = globalThis;
 global.document = { getElementById: () => null };
 global.matchMedia = () => ({ matches: true });
-vm.runInThisContext(fs.readFileSync(path.join(__dirname, "battlefield-replay.js"), "utf8"), { filename: "battlefield-replay.js" });
+for (const file of ["battlefield-passive-states.js", "battlefield-replay.js"]) {
+  vm.runInThisContext(fs.readFileSync(path.join(__dirname, file), "utf8"), { filename: file });
+}
 
 const replay = window.IRON_PIT_BATTLEFIELD_REPLAY;
 assert.equal(replay.conditionLabel("frightened"), "😱 FEAR");
@@ -57,6 +59,60 @@ assert.equal(replay.permanentPassiveStates(passiveMember, {})[0].active, false, 
 passiveMember.state.template.ruleset = "2014";
 assert.equal(replay.permanentPassiveStates(passiveMember, {})[0].active, false, "Edition does not change passive display semantics.");
 
+
+let sunlightPresent = false;
+window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS = {
+  inside: (member, setup, contextId) =>
+    Boolean(setup) && member.combatant_id === "environment-test"
+    && contextId === "sunlight" && sunlightPresent,
+};
+const environmentMember = {
+  combatant_id: "environment-test",
+  state: {
+    template: {
+      environment_context_reactions: [{
+        source_id: "synthetic-weakness", source_name: "Sunlight Weakness",
+        context_id: "sunlight",
+        disadvantage_on: ["attack_rolls", "ability_checks", "saving_throws"],
+      }],
+      passive_modifier_grants: [],
+    },
+    active_effect_ids: [],
+    active_modifiers: [],
+  },
+};
+const inactiveWeakness = replay.permanentPassiveStates(environmentMember, {});
+assert.deepEqual(inactiveWeakness, [{
+  id: "synthetic-weakness",
+  label: "Sunlight Weakness",
+  lane: "debuff",
+  active: false,
+  explanation: "Source-owned permanent environmental weakness.",
+}]);
+// Future environmental reactions can be active buffs or non-roll debuffs;
+// their card badges must remain even when no d20 modifier is declared.
+environmentMember.state.template.environment_context_reactions.push({
+  source_id: "future-environment-ward", source_name: "Future Environment Ward",
+  context_id: "sunlight", status_lane: "buff", disadvantage_on: [],
+});
+assert.deepEqual(
+  replay.permanentPassiveStates(environmentMember, {}).map((x) => [x.lane, x.active]),
+  [["debuff", false], ["buff", false]],
+);
+sunlightPresent = true;
+assert.deepEqual(
+  replay.permanentPassiveStates(environmentMember, {}).map((x) => [x.lane, x.active]),
+  [["debuff", true], ["buff", true]],
+);
+environmentMember.state.template.environment_context_reactions.pop();
+
+sunlightPresent = true;
+assert.equal(replay.permanentPassiveStates(environmentMember, {})[0].active, true);
+sunlightPresent = false;
+assert.deepEqual(replay.permanentPassiveStates(environmentMember, {}), inactiveWeakness);
+assert.deepEqual(environmentMember.state.active_effect_ids, [],
+  "Exposure transitions must not create or remove a timed debuff.");
+
 for (const name of ["browser-defensive-modifier-rules.js", "browser-condition-immunity.js", "browser-timed-conditions.js"]) {
   vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 }
@@ -100,11 +156,13 @@ assert.match(css, /condition-pulse/);
 
 assert.match(css, /@keyframes status-enter/, "New statuses need a one-time appearance animation.");
 assert.match(css, /\.passive-badge\.is-inactive/, "Inactive permanent passive must remain visible and grey.");
+assert.match(css, /\.card-status-debuffs \.passive-badge:not\(\.is-inactive\)/, "Exposed conditional weakness must glow white.");
 assert.match(css, /prefers-reduced-motion:reduce/, "Status animation must respect reduced motion.");
 assert.match(fs.readFileSync(path.join(__dirname, "battlefield-replay.js"), "utf8"), /existing = new Map/, "Retain badges while effects remain active.");
 
 const runtime = fs.readFileSync(path.join(__dirname, "browser-state.js"), "utf8");
-const replaySource = fs.readFileSync(path.join(__dirname, "battlefield-replay.js"), "utf8");
+const replaySource = fs.readFileSync(path.join(__dirname, "battlefield-replay.js"), "utf8")
+  + fs.readFileSync(path.join(__dirname, "battlefield-passive-states.js"), "utf8");
 assert.match(runtime, /hasVisibleActiveAllyWithin/, "The visible ally check must be shared by the browser engine.");
 assert.match(replaySource, /permanentPassiveStates\(member, battle\.setup\)/, "Cards must read encounter state, not a presentation flag.");
 assert.match(replaySource, /passive\.active \? "" : " is-inactive"/, "Permanent passives must remain visible while inactive.");

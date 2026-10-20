@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-
 from app.combat.concentration import end_concentration_if_expired
 from app.combat.condition_lifecycle import resolve_source_condition_timing, resolve_target_condition_timing
 from app.combat.death_saves import resolve_death_save
@@ -27,7 +26,7 @@ from app.combat.precombat_buffs import prepare_opening_buffs
 from app.combat.source_bound_effects import cleanup_disabled_source_effects
 from app.combat.start_turn_timed_self_buffs import resolve_start_turn_timed_self_buff
 from app.combat.persistent_barrier_lifecycle import cleanup_persistent_barriers
-from app.combat.state import refresh_start_of_turn
+from app.combat.state import refresh_reactions_for_new_turn, refresh_start_of_turn
 from app.combat.timed_conditions import expire_start_of_turn_conditions
 from app.combat.persistent_save_zone_windows import resolve_save_zone_window
 from app.combat.suppression_zone_effects import expire_suppression_zones, sync_suppression_zone_effects
@@ -35,12 +34,12 @@ from app.combat.legendary_actions import resolve_legendary_actions_after_turn
 from app.combat.triggered_extra_attacks import resolve_triggered_extra_attacks_after_turn
 from app.combat.turn_damage import clear_turn_damage
 from app.combat.timed_emanations import resolve_target_turn_start_emanations
+from app.combat.turn_start_save_condition_reaction import resolve_turn_start_save_condition_reactions
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
 from app.domain.models import BattleEvent
 
 logger = logging.getLogger(__name__)
 MAX_ENCOUNTER_ROUNDS = 100
-
 
 def _combatant_index(combatants: list[EncounterCombatant]) -> dict[str, EncounterCombatant]:
     return {member.combatant_id: member for member in combatants}
@@ -133,6 +132,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 member = by_id[combatant_id]
                 cleanup_disabled_source_effects(setup)
                 expire_source_turn_start_modifiers(affected_states, member.combatant_id)
+                refresh_reactions_for_new_turn(affected_states, member.state)
                 refresh_start_of_turn(member.state)
                 end_concentration_if_expired(member.state, round_number, affected_states)
                 cleanup_persistent_barriers(setup, round_number)
@@ -167,6 +167,8 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     events.append(start_buff)
                     sequence += 1
 
+                reaction_events, sequence = resolve_turn_start_save_condition_reactions(sequence, round_number, member, setup, dice)
+                events.extend(reaction_events)
                 death_event, sequence = _resolve_zero_hp_turn(sequence, round_number, member, dice)
                 if death_event is not None:
                     events.append(death_event)

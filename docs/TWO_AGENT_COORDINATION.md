@@ -39,28 +39,9 @@ If another agent owns a subsystem, do not edit it until ownership is released or
 
 Read-only auditing is allowed across subsystems. Writing is not.
 
-## 3. Default agent split
+## 3. Ownership is explicit, never assigned by assistant name
 
-Unless Chris assigns otherwise:
-
-### Grok
-Owns:
-- active combat/content implementation;
-- the current feature PR;
-- code/tests directly required by that feature;
-- exact-head certification for that tranche.
-
-### ChatGPT
-Owns:
-- repository-state audits;
-- current-main correctness review;
-- stale PR cleanup;
-- operating-status/documentation truth;
-- identifying universal-engine defects;
-- opening narrowly scoped issues for defects found;
-- non-overlapping implementation only when no active owner holds that subsystem.
-
-Either agent may switch roles after an explicit handoff.
+Do not assume Grok, ChatGPT, or another assistant owns combat, art, audits or certification. The current, recorded branch/PR ownership declaration controls. If no current declaration exists, inspect open PR files and handoff evidence before changing that subsystem. Read-only audits may run concurrently; overlapping writers may not.
 
 ## 4. Required ownership declaration
 
@@ -122,57 +103,9 @@ A monster tranche is not complete until:
 4. generated artifacts are current;
 5. 2014 Basic Roster, Paired Edition Monster Report, CI, and 2014 Hero Certification are green on the same exact head.
 
-## 7. Universal-mechanic gate
+## 7. Universal mechanic and edition gate
 
-Before implementing any class, subclass, feat, spell, item, monster, legendary action, reaction, trait, or combat ability:
-
-1. Ignore the printed source name.
-2. Describe the actual mechanical behavior.
-3. Decompose it into:
-   - trigger/timing;
-   - action/resource cost;
-   - attack/check/save;
-   - damage/healing;
-   - condition/state change;
-   - duration;
-   - range/geometry;
-   - movement;
-   - recharge/use limit;
-   - lifecycle/reset.
-4. Search hero and monster implementations for equivalent mechanics.
-5. Reuse existing primitives when behavior matches.
-6. Parameterize source differences.
-7. Compose multi-effect abilities from existing primitives.
-8. Add a new universal primitive only when existing mechanics cannot represent the behavior accurately.
-9. Preserve the printed source ability name for UI/log/audit evidence.
-
-A different ability name is never enough reason for a new resolver.
-
-## 8. State identity rule
-
-Universal state identity is absolute.
-
-- Prone is Prone.
-- Grappled is Grappled.
-- Restrained is Restrained.
-- Blinded is Blinded.
-- Charmed is Charmed.
-- Frightened is Frightened.
-- Poisoned is Poisoned.
-- Advantage is Advantage.
-- Disadvantage is Disadvantage.
-- Resistance is Resistance.
-- A saving throw is a saving throw.
-
-Source data supplies parameters. The engine supplies behavior.
-
-## 9. Cross-edition rule
-
-2014 and 2024 source data remain isolated.
-
-Reuse one engine primitive only when the actual mechanics are equivalent.
-
-Never copy same-name spell/feature behavior across editions without source-equivalence evidence.
+[SOUL.md](../SOUL.md) and the [card-to-combat contract](UNIVERSAL_CARD_COMBAT_CONTRACT.md) own the semantic decomposition, source-neutral dispatch and canonical condition/state rules. One engine, immutable per-edition card parameters, fresh fight state; 2014 before 2024 source binding. This document owns **collisions and handoffs**, not another copy of the engine specification.
 
 ## 10. Handoff packet
 
@@ -224,18 +157,8 @@ If an A-class issue is found:
 - do not merge stale historical branches;
 - do not start implementation if another agent owns the subsystem.
 
-## 13. Current coordination snapshot
+## 13. Freshness of historical coordination records
 
-Baseline reset recorded after merged PR #624:
+The baseline after PR #624 was a historical snapshot, not a current owner or admission count. Recover it from [the prior revision](https://github.com/cbw29512/D20-ironpit/blob/ea26502eca9a4e38a11460b5da36b3482f23ab33/docs/TWO_AGENT_COORDINATION.md) if needed. Never use an old assigned assistant, starting SHA, or roster total to authorize edits today.
 
-- clean baseline main: `007453194fcd5621c0130ffcabf25d3b132a1a07`;
-- exact-head source PR #624 was green on CI, 2014 Basic Roster, Paired Edition Monster Report, and 2014 Hero Certification;
-- 2014 pregens: 240/240;
-- 2024 pregens: 240/240;
-- 2014 monsters: 177/327 runnable on the clean baseline;
-- 2024 monsters: 141/330 runnable on the clean baseline;
-- PR #625 is closed unmerged and is reference-only because it grew across multiple semantic families;
-- monster work resumes from clean `main`, one semantic mechanic family per PR;
-- Netlify production publishing remains manual/locked.
-
-This snapshot becomes stale whenever main changes. Rebuild ownership, counts, and status from repository truth rather than copying it forward.
+Before every write: re-fetch main, inspect existing PR file overlap, declare the subsystem owner, and preserve exact-head certification. After merge: release ownership, close duplicates, regenerate current evidence and resume the single implementation queue.

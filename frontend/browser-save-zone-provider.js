@@ -12,21 +12,23 @@
     const E = window.IRON_PIT_ACTION_ECONOMY;
     const P = window.IRON_PIT_BROWSER_SPELLCASTING;
     const Z = window.IRON_PIT_BROWSER_SUPPRESSION_ZONES;
-    if (Z?.verbalBlocked(caster, setup) || !setup.map_definition) return null;
+    if (!setup.map_definition) return null;
     const enemies = (caster.side === "heroes" ? setup.monsters : setup.heroes)
       .filter((enemy) => enemy.state.is_alive && !enemy.state.is_dead && enemy.state.position);
     if (!enemies.length) return null;
     let best = null;
     for (const action of caster.state.template.persistent_save_zone_actions || []) {
       if (!action.damageDiceCount || !E.available(caster.state, action.actionCost)) continue;
+      if (action.saveContext !== "nonmagical" && Z?.verbalBlocked(caster, setup)) continue;
       if (action.concentration && caster.state.concentration) continue;
       if (action.expendsSpellSlot && !P?.slotSpellAvailable(caster.state, turnKey)) continue;
       if (action.resourceId && (caster.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) continue;
-      for (const enemy of enemies) {
-        const count = coverage(enemy.state.position, enemies, action.radiusFt || action.radius_ft || 0);
+      const centers = action.centerOnSource ? [caster.state.position] : enemies.map((enemy) => enemy.state.position);
+      for (const center of centers) {
+        const count = coverage(center, enemies, action.radiusFt || action.radius_ft || 0);
         if (!count) continue;
         const score = action.damageDiceCount * ((action.damageDiceSize || 6) + 1) / 2 * count;
-        if (!best || score > best.score) best = { action, center: { ...enemy.state.position }, score };
+        if (!best || score > best.score) best = { action, center: { ...center }, score };
       }
     }
     return best;

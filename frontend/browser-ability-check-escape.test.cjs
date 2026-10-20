@@ -29,6 +29,7 @@ window.IRON_PIT_BROWSER_TIMED = {
   },
 };
 
+load("browser-condition-rules.js");
 load("browser-ability-check-escape.js");
 
 const actor = {

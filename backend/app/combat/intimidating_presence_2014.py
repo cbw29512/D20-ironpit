@@ -30,23 +30,23 @@ def _can_perceive_source(target: EncounterCombatant) -> bool:
     return not (has_condition(target.state, "blinded") and has_condition(target.state, "deafened"))
 
 
-def can_use_presence(actor: EncounterCombatant, target: EncounterCombatant) -> bool:
+def can_use_presence(actor: EncounterCombatant, target: EncounterCombatant, setup=None) -> bool:
     dc = actor.state.template.progression_features.intimidating_presence_2014_dc
     return bool(
         actor.state.template.ruleset == "2014" and dc > 0 and is_available(actor.state, "action")
         and target.state.is_alive and not target.state.is_dead and combatant_distance(actor, target) <= 30
-        and _can_perceive_source(target) and not condition_is_immune(target.state, FRIGHTENED)
+        and _can_perceive_source(target) and not condition_is_immune(target.state, FRIGHTENED, actor=target, setup=setup)
         and _immunity_key(actor.combatant_id) not in target.state.feature_last_turn_keys
         and _active_effect(target, actor.combatant_id) is None
     )
 
 
 def resolve_intimidating_presence(
-    sequence: int, round_number: int, actor: EncounterCombatant, target: EncounterCombatant, dice,
+    sequence: int, round_number: int, actor: EncounterCombatant, target: EncounterCombatant, dice, setup=None,
 ) -> BattleEvent | None:
     """Resolve the 2014 Berserker action without approximating a failed or successful save."""
     try:
-        if not can_use_presence(actor, target):
+        if not can_use_presence(actor, target, setup):
             return None
         dc = actor.state.template.progression_features.intimidating_presence_2014_dc
         roll, succeeded = resolve_saving_throw(target.state, "wisdom", dc, dice)
@@ -59,6 +59,7 @@ def resolve_intimidating_presence(
                 target.state, FRIGHTENED, actor.combatant_id, source_effect_id=FEATURE_ID,
                 applied_round=round_number, expires_round=round_number + 1,
                 expiry_timing="source_turn_end", use_default_poison_recovery=False,
+                target_actor=target, setup=setup,
             )
             if effect:
                 applied.append(effect)

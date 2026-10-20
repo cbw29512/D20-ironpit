@@ -30,7 +30,7 @@ def cleanup_disabled_source_effects(setup: EncounterSetup) -> None:
             source = by_id.get(effect.source_id)
             if source is None:
                 continue
-            dead = source.state.is_dead or not source.state.is_alive
+            dead = source.state.is_dead or not source.state.is_alive or source.state.current_hp <= 0
             incapacitated = is_incapacitated(source.state)
             if (effect.ends_if_source_dead and dead) or (effect.ends_if_source_incapacitated and incapacitated):
                 handled.add(key)
