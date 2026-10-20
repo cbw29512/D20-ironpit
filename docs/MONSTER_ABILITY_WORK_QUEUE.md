@@ -5,7 +5,7 @@
 - Source text is combat-relevant **indirectly**: a visual illusion obscures the true form required by *Horrific Appearance*. It must not be silently declared arena-neutral or treated as Advantage, Invisibility, AC, or a global Blinded condition.
 - Exact 2014 card facts: use Action to disguise, owner Bonus Action to end, ends on death, physical contact exposes inconsistencies, and another creature may spend its Action for source-derived DC 16 Intelligence (Investigation) to discern a disguise. A successful check does **not** automatically reveal the underlying true form.
 - Reusable source proof is currently **source-only**, not runtime Action/Bonus Action or detection-check integration. The AI must not automatically self-suppress its own gaze as a free precombat buff. Keep `source:extra-action` and **237/327 admitted, 90 blocked** until a universal runtime route with Python/browser tests is actually available.
-- The visual-fear primitive from merged PR #980 already respects `true_form_visible`; implement the generic disguise activation/removal/check lifecycle, observer-specific sight incl. truesight, and a full monster action adapter before changing source admission. New cards must be immutable, mutable disguise state fight-only, and labels display-only.
+- The visual-fear primitive from merged PR #980 respects `true_form_visible`; an observer-specific magical-disguise visibility check with effective Truesight is now being added in the same source-contract PR. **Activation, removal, Investigation Action and monster adapter remain unimplemented** until separately certified. New cards must be immutable, mutable disguise state fight-only, and labels display-only.
 
 
 ## Visual fear turn-start grammar — 2026-10-20, MERGED + CERTIFIED PR #980
