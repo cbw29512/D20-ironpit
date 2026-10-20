@@ -816,6 +816,19 @@ Monster promotion path:
 
 Rampage is implemented as a generic source-melee-zero-HP trigger feeding the universal Bonus Action attack resolver. The source card remains immutable; the qualifying trigger marker and Bonus Action availability exist only in temporary combat state and reset with the match. Player-facing logs preserve the printed ability name. Do not infer 2024 behavior from this 2014 arena rule without separate source reconciliation.
 
+### Source-specific arena-neutral traits (2014)
+
+The Rust Monster's **Iron Scent** is informational and arena-neutral; preserve
+its printed 30-foot range without granting sight, Invisible detection or combat
+modifiers ([approved decision #818](https://github.com/cbw29512/D20-ironpit/issues/818)).
+Its **Rust Metal** trait is also arena-neutral: retain the complete source text
+without equipment corrosion, destruction or weapon penalties
+([approved decision #819](https://github.com/cbw29512/D20-ironpit/issues/819)).
+These are individually source-proven policies. They do not apply to Gray Ooze's
+separately approved fight-only Corrode Metal mechanic (#784), nor do they decide
+the Rust Monster's independent Antennae Action. Unknown or changed source effects
+remain blocked. No original card or equipment record is mutated.
+
 ## 26. Homebrew target architecture
 
 Future homebrew uses the same rules engine:

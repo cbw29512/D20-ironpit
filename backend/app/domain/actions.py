@@ -125,6 +125,7 @@ class SavingThrowAction(BaseModel):
     name: str
     action_cost: ActionCost = "action"
     save_ability: AbilityName
+    save_ability_choices: list[AbilityName] = Field(default_factory=list)
     dc: int = Field(ge=1, le=40)
     range_ft: int = Field(ge=0)
     max_targets: int = Field(default=1, ge=1, le=20)
@@ -146,6 +147,7 @@ class SavingThrowAction(BaseModel):
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     requires_no_active_grapple: bool = False
+    opening_initiative_only: bool = Field(default=False, exclude_if=lambda value: not value)
     magical_effect: bool = False
     effect_tags: list[str] = Field(default_factory=list)
     automatic_failure_creature_types: list[str] = Field(default_factory=list)
@@ -167,6 +169,8 @@ class SavingThrowAction(BaseModel):
 
     @model_validator(mode="after")
     def validate_asymmetric_save_outcomes(self) -> "SavingThrowAction":
+        if self.save_ability_choices and (len(self.save_ability_choices) < 2 or len(set(self.save_ability_choices)) != len(self.save_ability_choices) or self.save_ability not in self.save_ability_choices):
+            raise ValueError("Target-chosen save abilities must be distinct and include the primary ability.")
         if self.damage_only_on_success and self.success_damage != "none":
             raise ValueError("Success-only damage cannot also be halved or suppressed on success.")
         has_damage = bool(self.damage_dice_count or self.damage_components)

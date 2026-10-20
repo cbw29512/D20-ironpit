@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.combat.owner_action_expiry import expire_on_owner_event
 from app.combat.undead_fortitude import consume_survival_save_log
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 import logging
@@ -179,6 +180,9 @@ def resolve_attack(
         )
         if ammunition_remaining is not None:
             description += f" {weapon.name}: {ammunition_remaining} ammunition remaining."
+        expired = expire_on_owner_event(attacker, "attack", affected_states)
+        if expired:
+            description += f" {attacker.template.name}'s {', '.join(expired)} ends after the attack."
         return BattleEvent(
             sequence=sequence, round_number=round_number, event_type="attack", actor_id=attacker_event_id, actor_name=attacker.template.name,
             target_id=actual_event_id, target_name=actual_defender.template.name, attack_name=weapon.name, target_ac=target_ac,

@@ -21,3 +21,18 @@ def arena_unavailable_recharge_ids_2014(monster: SourceMonster2014) -> frozenset
         action_id for action_id in monster.action_recharges
         if action_id in PIT_BANNED_ACTION_LABELS_2014 and action_id in printed
     )
+
+def source_proven_ethereal_shift_action_2014(
+    monster: SourceMonster2014, action_name: str,
+) -> bool:
+    """Recognize the complete printed plane-shift effect, not its label alone."""
+    if action_name not in monster.action_names:
+        return False
+    from app.content.monster_source_sections_2014 import source_sections_2014
+    printed = source_sections_2014(monster.source_actions).get(action_name, "")
+    normalized = " ".join(printed.casefold().replace("’", "'").split())
+    return normalized == (
+        "the nightmare and up to three willing creatures within 5 feet of it "
+        "magically enter the ethereal plane from the material plane, or vice versa."
+    )
+

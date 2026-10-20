@@ -8,6 +8,7 @@ from app.combat.landing_offense_policy import melee_can_land_now
 from app.combat.offensive_movement_policy import melee_can_be_enabled_this_turn
 from app.combat.action_economy import is_available
 from app.combat.charge import resolve_charge_closing
+from app.combat.area_save_actions import choose_area_save, resolve_area_save
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.deferred_save_effect import cleanup_deferred_effects
@@ -116,6 +117,16 @@ def resolve_combat_turn(
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         targets = target_order(attacker, setup)
         if not targets:
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+        # A source-declared one-time opening Action resolves before closing movement.
+        # It replaces (rather than accompanies) the regular Attack Action.
+        opening_area = choose_area_save(attacker, setup, action_cost="action", opening_only=True)
+        if opening_area is not None:
+            action, placement = opening_area
+            opener_events, sequence = resolve_area_save(
+                sequence, round_number, attacker, setup, action, placement, dice,
+            )
+            events.extend(opener_events)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         charge_events, sequence, charged = resolve_charge_closing(
             sequence, round_number, attacker, targets[0], dice, setup,

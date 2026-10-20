@@ -114,6 +114,14 @@ load("browser-ability-checks.js");
   assert.equal(drained.total, 4);
   assert.equal(drained.revisions[0].replacement_total, 4);
   assert.equal(target.template.ability_scores.strength, 6);
+  const fresh = state();
+  fresh.template.ability_check_minimums = structuredClone(target.template.ability_check_minimums);
+  assert.equal(checks.applyMinimum(fresh, "strength", roll).total, 6);
+  const reducer = window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION;
+  try {
+    window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION = null;
+    assert.throws(() => checks.applyMinimum(target, "strength", roll), /runtime required/);
+  } finally { window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION = reducer; }
   assert.equal(checks.applyMinimum(state(), "strength", roll).total, 1);
   const dex = state();
   dex.template.ability_check_minimums = [{ source_id: "renamed-floor", ability: "dexterity" }];

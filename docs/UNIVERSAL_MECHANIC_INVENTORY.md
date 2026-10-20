@@ -428,7 +428,7 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **95**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **90**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
@@ -437,7 +437,6 @@ Blocked monsters: **95**. These are grouped by printed ability name so the roste
 | Air Form | Air Elemental | 1 |
 | Ambusher | Doppelganger | 1 |
 | Bound | Shield Guardian | 1 |
-| Confer Fire Resistance | Nightmare | 1 |
 | Consume Life | Will-o'-Wisp | 1 |
 | Corrode Metal | Gray Ooze | 1 |
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
@@ -455,11 +454,9 @@ Blocked monsters: **95**. These are grouped by printed ability name so the roste
 | Gibbering | Gibbering Mouther | 1 |
 | Grappler | Mimic | 1 |
 | Grasping Tendrils | Roper | 1 |
-| Hellish Weapons | Erinyes | 1 |
 | Horrific Appearance | Sea Hag | 1 |
 | Ignited Illumination | Magmin | 1 |
 | Innate Spellcasting | Cloud Giant, Couatl, Deep Gnome (Svirfneblin), Deva, Djinni, Drider, Drow, Dryad, Dust Mephit, Efreeti, Glabrezu, Green Hag, Ice Mephit, Lamia, Magma Mephit, Night Hag, Oni, Pit Fiend, Planetar, Rakshasa, Solar, Steam Mephit, Storm Giant | 23 |
-| Iron Scent | Rust Monster | 1 |
 | Light Sensitivity | Cloaker | 1 |
 | Limited Magic Immunity | Rakshasa | 1 |
 | Misty Escape | Vampire | 1 |
@@ -468,7 +465,6 @@ Blocked monsters: **95**. These are grouped by printed ability name so the roste
 | Pounce (Tiger or Hybrid Form Only) | Weretiger | 1 |
 | Reactive Heads | Hydra | 1 |
 | Reflective Carapace | Tarrasque | 1 |
-| Rust Metal | Rust Monster | 1 |
 | Shapechanger | Doppelganger, Imp, Mimic, Quasit, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf | 11 |
 | Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
@@ -484,10 +480,10 @@ Blocked monsters: **95**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 69 |
-| `source:extra-action` | 57 |
+| `source:trait` | 66 |
+| `source:extra-action` | 53 |
 | `mechanic:spellcasting` | 36 |
-| `attack:incomplete` | 22 |
+| `attack:incomplete` | 21 |
 | `multiattack:complex` | 12 |
 | `mechanic:recharge` | 10 |
 | `mechanic:legendary` | 9 |

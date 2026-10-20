@@ -1,4 +1,5 @@
 from __future__ import annotations
+from app.combat.owner_action_expiry import expire_on_owner_event
 from app.combat.undead_fortitude import consume_survival_save_log
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 import logging
@@ -61,6 +62,10 @@ def resolve_spell_attack(
         if spend_cast_costs and spell.level > 0 and resource is None:
             requested = cast_slot_level if cast_slot_level is not None else spell.level
             raise ValueError(f"No level {requested} spell slot remains for {spell.name}.")
+        if spend_cast_costs:
+            expire_on_owner_event(caster.state, "spell_cast", [
+                member.state for member in [*setup.heroes, *setup.monsters]
+            ])
         ward = check_targeting_ward(caster, target, dice)
         if ward is not None and not ward.succeeded:
             if resource is not None:

@@ -64,11 +64,8 @@ def apply_ability_check_minimum(
         ]
         if not rules:
             return roll
-        scores = state.template.ability_scores
-        if scores is None:
-            raise ValueError(
-                f"{state.template.name} has an ability-check minimum without certified ability scores."
-            )
+        # The canonical getter validates source scores and reads fight-only
+        # reductions; a second printed-score path would preserve a stale floor.
         floor = effective_ability_score(state, ability)
         if roll.total >= floor:
             return roll

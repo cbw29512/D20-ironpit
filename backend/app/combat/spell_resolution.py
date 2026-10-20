@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.owner_action_expiry import expire_on_owner_event
 from app.combat.action_economy import is_available, spend
 from app.combat.alternate_spell_casts import spend_alternate_cast
 from app.combat.concentration import start_concentration
@@ -61,6 +62,9 @@ def resolve_spell(
             resource.current_uses -= 1
             remaining = resource.current_uses
 
+        expire_on_owner_event(caster.state, "spell_cast", [
+            member.state for member in [*setup.heroes, *setup.monsters]
+        ])
         spend(caster.state, spell.action_cost)
         range_remaining = spend_spell_range_modifier(caster.state, choice.range_modifier)
         remove_owner_attack_ending_modifiers(caster.state)

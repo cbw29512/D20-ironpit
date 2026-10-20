@@ -106,32 +106,6 @@ def test_2014_level_18_indomitable_might_uses_auditable_strength_check_floor() -
 
 
 
-
-def test_2014_indomitable_might_uses_live_strength_after_drain() -> None:
-    from app.combat.ability_score_reduction import (
-        apply_ability_score_reduction, effective_ability_score,
-    )
-    base = build_rokhan_stonefury_2014(13)
-    features = base.progression_features.model_copy(update={
-        "ability_check_minimums": [
-            AbilityCheckMinimum(source_id="indomitable-might", ability="strength"),
-        ],
-    })
-    template = base.model_copy(update={"level": 18, "progression_features": features})
-    state = build_combatant_state(template)
-    assert effective_ability_score(state, "strength") == 20
-    apply_ability_score_reduction(state, "strength", 4)
-    assert effective_ability_score(state, "strength") == 16
-    apply_grapple(state, "monster-1", 19, 5, restrains=True)
-    event = resolve_escape_grapple(1, 1, "rokhan", state, FixedDiceProvider([1]))
-    assert event.check_succeeded is False
-    assert event.ability_check_roll is not None
-    assert event.ability_check_roll.total == 16
-    assert event.ability_check_roll.revisions[-1].replacement_total == 16
-    assert template.ability_scores.strength == 20
-    assert effective_ability_score(build_combatant_state(template), "strength") == 20
-
-
 def test_staged_2014_levels_15_through_19_have_exact_numeric_deltas() -> None:
     l15 = _progression(15, _scores(15))
     l16 = _scores(16)

@@ -259,6 +259,10 @@ def _save(action: Any) -> dict[str, Any]:
         "damageDiceSize": action.damage_dice_size, "damageBonus": action.damage_bonus,
         "damageType": action.damage_type, "successDamage": action.success_damage, "animation": action.animation,
     }
+    if action.save_ability_choices:
+        row["saveAbilityChoices"] = list(action.save_ability_choices)
+    if action.max_targets != 1:
+        row["maxTargets"] = action.max_targets
     if action.damage_components:
         row["damageComponents"] = [
             {"diceCount": item.dice_count, "diceSize": item.dice_size,
@@ -282,6 +286,8 @@ def _save(action: Any) -> dict[str, Any]:
         row["resourceCost"] = action.resource_cost
     if action.requires_no_active_grapple:
         row["requiresNoActiveGrapple"] = True
+    if action.opening_initiative_only:
+        row["openingInitiativeOnly"] = True
     if action.magical_effect:
         row["magicalEffect"] = True
     if action.effect_tags:
@@ -294,6 +300,10 @@ def _save(action: Any) -> dict[str, Any]:
         row["requiresTargetSight"] = True
     if getattr(action, "requires_target_to_see_source", False):
         row["requiresTargetToSeeSource"] = True
+    if action.required_target_creature_types:
+        row["requiredTargetCreatureTypes"] = list(action.required_target_creature_types)
+    if action.excluded_target_creature_types:
+        row["excludedTargetCreatureTypes"] = list(action.excluded_target_creature_types)
     if action.area_healing_rider is not None:
         row["areaHealingRider"] = {
             "diceCount": action.area_healing_rider.dice_count,
@@ -770,6 +780,9 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         "activationTiming": action.activation_timing,
         "resourceId": action.resource_id, "resourceCost": action.resource_cost,
         "durationRounds": action.duration_rounds, "conditionIds": list(action.condition_ids),
+        "magicalEffect": action.magical_effect,
+        "endsOnOwnerAttack": action.ends_on_owner_attack,
+        "endsOnOwnerSpellCast": action.ends_on_owner_spell_cast,
         "damageResistances": [_value(item) for item in action.damage_resistances],
         "expiryTiming": action.expiry_timing, "priority": action.priority,
         "animation": action.animation,

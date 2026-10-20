@@ -50,6 +50,9 @@ class TimedSelfBuffAction(BaseModel):
     resource_cost: int = Field(default=1, ge=1, le=200)
     duration_rounds: int | None = Field(default=None, ge=1, le=600)
     condition_ids: list[ConditionName] = Field(default_factory=list)
+    magical_effect: bool = False
+    ends_on_owner_attack: bool = False
+    ends_on_owner_spell_cast: bool = False
     damage_resistances: list[DamageType] = Field(default_factory=list)
     melee_hit_retaliation: MeleeHitRetaliation | None = None
     debuff_counters: list[DebuffCounter] = Field(default_factory=list)

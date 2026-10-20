@@ -13,7 +13,7 @@ const deterministicDice = (seed = 2014) => {
 };
 
 assert.equal(window.IRON_PIT_2014_MVP_READY, true, "2014 browser test roster must be loaded");
-assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 232);
+assert.equal(Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length, 237);
 const pudding2014 = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-black-pudding"];
 assert.ok(pudding2014, "Source-complete Pseudopod must make Black Pudding playable");
 const pseudopod2014 = pudding2014.attacks.find((attack) => attack.id === "2014-black-pudding-pseudopod");

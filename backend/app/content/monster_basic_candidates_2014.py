@@ -2,7 +2,7 @@ from __future__ import annotations
 from collections import Counter
 import logging
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
-from app.content.monster_arena_action_policy_2014 import PIT_BANNED_ACTION_LABELS_2014
+from app.content.monster_arena_action_policy_2014 import PIT_BANNED_ACTION_LABELS_2014, source_proven_ethereal_shift_action_2014
 from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014, verified_arena_inert_trait_2014
 from app.content.monster_informational_action_proofs_2014 import verified_nonactionable_action_2014
 from app.content.monster_arena_unavailable_reactions_2014 import arena_unavailable_reaction_names_2014
@@ -11,6 +11,7 @@ from app.content.monster_charge_source_corrections_2014 import corrected_charge_
 from app.content.monster_healing_2014 import healing_action_names_2014
 from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014
 from app.content.monster_innate_support_2014 import innate_spell_names_2014
+from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014
 from app.content.monster_legendary_bindings_2014 import supports_legendary_actions_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_mechanic_family_blockers_2014 import attack_blockers_2014, mechanic_family_blockers_2014
@@ -21,6 +22,7 @@ from app.content.monster_change_shape_policy_2014 import approved_inert_change_s
 from app.content.monster_unnerving_mask_2014 import supports_unnerving_mask_reaction_2014
 from app.content.monster_multiattack_2014 import multiattack_blockers_2014
 from app.content.monster_save_capabilities_2014 import supports_recharge_rules_2014, unsupported_source_actions_2014
+from app.content.monster_source_opening_area_saves_2014 import source_proven_opening_area_saves_2014
 from app.content.monster_trait_bindings_2014 import bound_trait_names_2014, supports_reckless_2014
 from app.domain.traits import CombatTrait
 logger = logging.getLogger(__name__)
@@ -47,6 +49,8 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     try:
         certified = set(ARENA_NEUTRAL_TRAITS_2014) | set(_MODELED_2014_TRAITS)
         certified.update(bound_trait_names_2014(monster))
+        if source_proven_opening_area_saves_2014(monster):
+            certified.add("Standing Leap")
         from app.content.monster_attack_ammunition_2014 import attack_ammunition_2014
         bound_ammo = attack_ammunition_2014(monster)
         certified.update(f"{attack.name} Regrowth" for attack in monster.attacks if attack.id in bound_ammo)
@@ -75,10 +79,16 @@ def _source_name_blockers(
     allowed_extras = (
         healing_action_names_2014(monster)
         | innate_spell_names_2014(monster)
+        | {action.name.casefold() for action in source_invisibility_action_2014(monster)}
         | _PIT_BANNED_ACTION_LABELS
         | _ARENA_ABSENT_CONTEXT_ACTION_LABELS
         | _ARENA_UNAVAILABLE_SUMMON_ACTION_LABELS
         | _ARENA_NEUTRAL_MIND_ACTION_LABELS
+        | {
+            action_label_from_name(name)
+            for name in monster.action_names
+            if source_proven_ethereal_shift_action_2014(monster, name)
+        }
         | ({"animate chains"} if supports_animate_chains_arena_unavailable_2014(monster) else set())
         | ({"change shape"} if approved_inert_change_shape_2014(monster) else set())
         | _leadership_labels(monster)

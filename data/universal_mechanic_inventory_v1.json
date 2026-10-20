@@ -5864,13 +5864,13 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 95,
+    "blocked_monster_count": 90,
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
       "attack:complex": 6,
       "attack:damage-type": 2,
-      "attack:incomplete": 22,
+      "attack:incomplete": 21,
       "attack:none": 3,
       "mechanic:death-trigger": 4,
       "mechanic:defense": 1,
@@ -5879,10 +5879,10 @@
       "mechanic:spellcasting": 36,
       "mechanic:swallow": 7,
       "multiattack:complex": 12,
-      "source:extra-action": 57,
+      "source:extra-action": 53,
       "source:legendary": 9,
       "source:reaction": 3,
-      "source:trait": 69
+      "source:trait": 66
     },
     "unresolved_printed_abilities": [
       {
@@ -5919,13 +5919,6 @@
           "Shield Guardian"
         ],
         "printed_name": "Bound"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Nightmare"
-        ],
-        "printed_name": "Confer Fire Resistance"
       },
       {
         "demand_count": 1,
@@ -6054,13 +6047,6 @@
       {
         "demand_count": 1,
         "monsters": [
-          "Erinyes"
-        ],
-        "printed_name": "Hellish Weapons"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
           "Sea Hag"
         ],
         "printed_name": "Horrific Appearance"
@@ -6100,13 +6086,6 @@
           "Storm Giant"
         ],
         "printed_name": "Innate Spellcasting"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Rust Monster"
-        ],
-        "printed_name": "Iron Scent"
       },
       {
         "demand_count": 1,
@@ -6163,13 +6142,6 @@
           "Tarrasque"
         ],
         "printed_name": "Reflective Carapace"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Rust Monster"
-        ],
-        "printed_name": "Rust Metal"
       },
       {
         "demand_count": 11,

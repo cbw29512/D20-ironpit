@@ -63,6 +63,9 @@
 
   function resolveAction(sequence, round, actor, target, action, distance, options = {}) {
     const spendAction = options.spendAction !== false, checkResource = options.checkResource !== false;
+    if (action.openingInitiativeOnly && !window.IRON_PIT_BROWSER_CHARGE?.openingEligible(round, actor, options.setup)) {
+      throw new Error(`${action.name} requires an initiative-winning opening turn.`);
+    }
     const actionCost = action.actionCost || "action";
     if (spendAction && !E().available(actor.state, actionCost)) throw new Error(`${actionCost} is unavailable for ${action.name}.`);
     if (checkResource && action.resourceId && (actor.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);
@@ -77,6 +80,13 @@
       encounterRoller: target,
       setup: options.setup || null,
     };
+    if (action.saveAbilityChoices?.length) {
+      const chooser = window.IRON_PIT_BROWSER_TARGET_CHOSEN_SAVE;
+      if (!chooser?.choose) throw new Error("Target-chosen saving throw runtime unavailable.");
+      const selectedAbility = chooser.choose(target.state, action.saveAbilityChoices, action.dc, saveContext);
+      // Keep every published card immutable while different targets select different saves.
+      action = { ...action, saveAbility: selectedAbility };
+    }
     const targetType = String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase();
     const automaticFailureTypes = (action.automaticFailureCreatureTypes || [])
       .map((creatureType) => String(creatureType).trim().toLowerCase())
