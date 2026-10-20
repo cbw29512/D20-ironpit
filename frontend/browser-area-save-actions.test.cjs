@@ -378,3 +378,22 @@ console.log("All-other-creatures area-save friendly-fire parity passed.");
   }
 }
 console.log("2014 source Wail eligibility, sunlight and friendly-fire parity passed.");
+
+{
+  // Equal geometry must rank by all typed damage, regardless of printed labels.
+  const attacker = member("monster:ranking", "monsters", 1, 1);
+  const victim = member("hero:ranking", "heroes", 2, 1);
+  const area = { shape: "emanation", origin: "self", radius_ft: 10 };
+  const legacy = { id: "legacy", name: "Old Label", area, range: 0,
+    damageDiceCount: 3, damageDiceSize: 6 };
+  const typed = { id: "typed", name: "Renamed Ability", area, range: 0,
+    damageComponents: [{ diceCount: 2, diceSize: 10, damageType: "fire" },
+      { diceCount: 1, diceSize: 4, damageType: "cold" }] };
+  attacker.state.template.saving_throw_actions = [legacy, typed];
+  const rankingSetup = { heroes: [victim], monsters: [attacker],
+    map_definition: { width_squares: 10, height_squares: 10 } };
+  assert.equal(A.choose(attacker, rankingSetup).action.id, "typed");
+  typed.name = "Entirely Different Label";
+  assert.equal(A.choose(attacker, rankingSetup).action.id, "typed");
+}
+console.log("Universal typed area-save action ranking passed.");
