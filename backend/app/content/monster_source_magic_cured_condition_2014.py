@@ -15,15 +15,15 @@ logger = logging.getLogger(__name__)
 
 # Reject unreviewed additional damage, effects, or different save/expiry terms.
 _RANGED_POISON_UNTIL_CURED = re.compile(
-    r"Ranged Weapon Attack: \\+(?P<to_hit>\\d+) to hit, range "
-    r"(?P<normal>\\d+)/(?P<long>\\d+) ft\\., one target\\. Hit: "
-    r"(?P<base_avg>\\d+) \\((?P<base_n>\\d+)d(?P<base_s>\\d+) \\+ "
-    r"(?P<base_bonus>\\d+)\\) (?P<base_type>\\w+) damage plus "
-    r"(?P<extra_avg>\\d+) \\((?P<extra_n>\\d+)d(?P<extra_s>\\d+)\\) "
-    r"(?P<extra_type>\\w+) damage, and the target must succeed on a DC "
-    r"(?P<dc>\\d+) Constitution saving throw or be poisoned\\. "
+    r"Ranged Weapon Attack: \+(?P<to_hit>\d+) to hit, range "
+    r"(?P<normal>\d+)/(?P<long>\d+) ft\., one target\. Hit: "
+    r"(?P<base_avg>\d+) \((?P<base_n>\d+)d(?P<base_s>\d+) \+ "
+    r"(?P<base_bonus>\d+)\) (?P<base_type>\w+) damage plus "
+    r"(?P<extra_avg>\d+) \((?P<extra_n>\d+)d(?P<extra_s>\d+)\) "
+    r"(?P<extra_type>\w+) damage, and the target must succeed on a DC "
+    r"(?P<dc>\d+) Constitution saving throw or be poisoned\. "
     r"The poison lasts until it is removed by the lesser restoration spell "
-    r"or similar magic\\.",
+    r"or similar magic\.",
     re.IGNORECASE,
 )
 
