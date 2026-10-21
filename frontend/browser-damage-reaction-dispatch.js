@@ -6,6 +6,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const T = () => window.IRON_PIT_BROWSER_SOURCE_DAMAGE_TRIGGERS;
   const B = () => window.IRON_PIT_BROWSER_ZERO_HP_BLESSING;
+  const SB = () => window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS;
 
   function appliedDamageTotal(event) {
     try {
@@ -154,11 +155,18 @@
       const reaction = runtime.resolve(
         sequence, round, reactor, source, setup, appliedDamage, turnKey,
       );
-      if (!reaction) return sourceTrigger;
-      const events = [...sourceTrigger.events, reaction];
-      const nested = resolve(sequence + 1, round, reactor, reaction, setup, turnKey);
-      events.push(...nested.events);
-      return { events, sequence: nested.sequence };
+      const events = [...sourceTrigger.events];
+      if (reaction) {
+        events.push(reaction);
+        const nested = resolve(sequence + 1, round, reactor, reaction, setup, turnKey);
+        events.push(...nested.events);
+        sequence = nested.sequence;
+      }
+      const repeats = SB()?.resolveDamageRepeatSaves?.(
+        sequence, round, source, reactor, setup,
+      ) || { events: [], sequence };
+      events.push(...repeats.events);
+      return { events, sequence: repeats.sequence };
     } catch (error) {
       console.error("Browser post-damage reaction dispatch failed", {
         source: source?.combatant_id, eventSequence: triggeringEvent?.sequence, error,
