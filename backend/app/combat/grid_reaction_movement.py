@@ -15,6 +15,7 @@ from app.combat.persistent_beneficial_zone_effects import sync_persistent_benefi
 from app.combat.persistent_hazards import resolve_persistent_hazard_entries
 from app.combat.persistent_save_zone_windows import resolve_save_zone_window
 from app.combat.suppression_zone_effects import sync_suppression_zone_effects
+from app.combat.source_bound_effects import resolve_damaging_terrain_repeat_saves
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -79,6 +80,13 @@ def move_toward_on_grid(
             )
             if step_cost is None or step_cost > mover.state.movement_remaining_ft:
                 break
+            if compelled:
+                saves, sequence, released = resolve_damaging_terrain_repeat_saves(
+                    sequence, round_number, mover, destination, setup, dice,
+                )
+                events.extend(saves)
+                if released:
+                    return events, sequence, last_movement
             was_prone = "prone" in mover.state.active_effect_ids
             for reactor in reactors:
                 if reactor.state.position is None:
