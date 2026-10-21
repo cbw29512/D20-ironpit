@@ -69,10 +69,15 @@ def _end_group(
         if target.combatant_id in handled:
             continue
         handled.add(target.combatant_id)
+        had_group = any(
+            item.source_id == effect.source_id
+            and item.source_effect_id == effect.source_effect_id
+            for item in target.state.timed_effects
+        )
         removed = remove_effect_group(
             target.state, effect, grant_source_immunity=False,
         )
-        if not removed:
+        if not had_group:
             continue
         events.append(BattleEvent(
             sequence=sequence, round_number=round_number, event_type="feature",
