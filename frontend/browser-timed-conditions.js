@@ -114,8 +114,10 @@
     return !stillActive && !innate;
   }
 
-  function removeGroup(state, effect) {
-    const grantImmunity = Boolean(effect.source_effect_immunity_on_end);
+  function removeGroup(state, effect, options = {}) {
+    const grantImmunity = options.grantSourceImmunity == null
+      ? Boolean(effect.source_effect_immunity_on_end)
+      : Boolean(options.grantSourceImmunity);
     const actionId = effect.source_effect_id;
     const sourceId = effect.source_id;
     const round = state.current_round || 1;
