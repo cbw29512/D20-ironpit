@@ -25,7 +25,6 @@ Blocker categories overlap: a monster may require several fixes.
 | `source:reaction` | 3 |
 | `attack:damage-type` | 2 |
 | `arena:neutral` | 1 |
-| `mechanic:defense` | 1 |
 | `arena:removed` | 1 |
 
 ## Single-blocker completion opportunities
@@ -108,7 +107,7 @@ the underlying ability is already implemented or trivial.
 | Priest | mechanic:spellcasting, source:trait | Divine Eminence, Spellcasting |
 | Purple Worm | attack:complex, mechanic:swallow | — |
 | Quasit | attack:complex, source:extra-action, source:trait | Shapechanger |
-| Rakshasa | mechanic:defense, mechanic:spellcasting, source:trait | Limited Magic Immunity, Innate Spellcasting |
+| Rakshasa | mechanic:spellcasting, source:trait | Limited Magic Immunity, Innate Spellcasting |
 | Remorhaz | mechanic:swallow, source:extra-action | — |
 | Roper | source:extra-action, source:trait | Grasping Tendrils |
 | Rug of Smothering | attack:none, source:extra-action, source:trait | Damage Transfer |
