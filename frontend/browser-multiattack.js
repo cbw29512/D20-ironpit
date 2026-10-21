@@ -53,7 +53,7 @@
         const data = MC.slotData(slot);
         const followup = MC.followupTarget(data, previousAttack?.event_type === "attack" ? previousAttack.hit : null, previousAttack?.target_id);
         previousAttack = null;
-        if (!followup.eligible) continue;
+        if (!followup.eligible || !MC.slotEligible(member, setup, data)) continue;
         const deferred = DE()?.resolve(sequence, round, member, setup) || null;
         if (deferred) {
           events.push(deferred); sequence += 1; openingFeature = null;
