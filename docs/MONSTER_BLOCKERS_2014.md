@@ -14,8 +14,8 @@ Blocker categories overlap: a monster may require several fixes.
 | `source:extra-action` | 53 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 21 |
-| `multiattack:complex` | 12 |
 | `mechanic:recharge` | 10 |
+| `multiattack:complex` | 10 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
 | `mechanic:swallow` | 7 |
@@ -86,7 +86,7 @@ the underlying ability is already implemented or trivial.
 | Guardian Naga | mechanic:spellcasting, source:extra-action, source:trait | Spellcasting |
 | Gynosphinx | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Harpy | source:extra-action | — |
-| Hydra | multiattack:complex, source:extra-action, source:trait | Multiple Heads, Reactive Heads |
+| Hydra | source:extra-action, source:trait | Multiple Heads, Reactive Heads |
 | Ice Devil | mechanic:recharge, source:extra-action | — |
 | Ice Mephit | mechanic:death-trigger, mechanic:spellcasting, source:trait | Death Burst, Innate Spellcasting |
 | Imp | source:extra-action, source:trait | Shapechanger |
@@ -114,7 +114,7 @@ the underlying ability is already implemented or trivial.
 | Rust Monster | source:extra-action | — |
 | Sea Hag | source:extra-action | — |
 | Sea Horse | attack:none | — |
-| Shambling Mound | mechanic:swallow, multiattack:complex, source:extra-action | — |
+| Shambling Mound | mechanic:swallow, source:extra-action | — |
 | Shield Guardian | source:reaction, source:trait | Bound, Spell Storing |
 | Shrieker | attack:none, source:reaction | — |
 | Solar | attack:incomplete, mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Innate Spellcasting |
