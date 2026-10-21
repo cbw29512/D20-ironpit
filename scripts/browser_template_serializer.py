@@ -417,6 +417,8 @@ def _failed_save_timed_effect(rider: Any) -> dict[str, Any]:
         row["escapeCheckDc"] = rider.escape_check_dc
     if rider.source_effect_immunity_on_end:
         row["sourceEffectImmunityOnEnd"] = True
+    if rider.source_effect_immunity_on_repeat_save_success:
+        row["sourceEffectImmunityOnRepeatSaveSuccess"] = True
     if rider.repeat_save_disadvantage_while_source_visible:
         row["repeatSaveDisadvantageWhileSourceVisible"] = True
     return row
