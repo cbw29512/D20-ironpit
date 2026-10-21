@@ -88,7 +88,7 @@
         const dead = source.state.is_dead || !source.state.is_alive || source.state.current_hp <= 0;
         const incapacitated = C().incapacitated(source.state);
         if ((effect.ends_if_source_dead && dead) || (effect.ends_if_source_incapacitated && incapacitated)) {
-          handled.add(key(effect)); T().removeGroupAfterRepeatSave(target.state, effect);
+          handled.add(key(effect)); T().removeGroup(target.state, effect);
         }
       }
     }

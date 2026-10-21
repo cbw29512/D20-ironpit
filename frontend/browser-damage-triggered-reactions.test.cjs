@@ -69,6 +69,9 @@ window.IRON_PIT_BROWSER_TIMED = {
     state.active_effect_ids = state.active_effect_ids.filter((id) => !removed.includes(id));
     return removed;
   },
+  removeGroupAfterRepeatSave(state, effect) {
+    return this.removeGroup(state, effect);
+  },
 };
 window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE = {
   repeatSave: () => ({
