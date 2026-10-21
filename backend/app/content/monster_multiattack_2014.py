@@ -5,6 +5,7 @@ import logging
 from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.content.monster_multiattack_variants_2014 import source_variants_2014
 from app.content.monster_attack_ammunition_2014 import attack_ammunition_2014, ammunition_multiattack_variants_2014
+from app.content.monster_save_capabilities_2014 import supports_save_action_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.domain.capability_attacks import CapabilityActionSlot, MultiattackCapabilityDefinition
 
@@ -18,7 +19,7 @@ def source_bound_slots_2014(monster: SourceMonster2014) -> list[CapabilityAction
         return None
     attack_ids = {attack.id for attack in monster.attacks if attack.source_complete}
     save_ids = {str(action["id"]) for action in monster.saving_throw_actions
-                if isinstance(action, dict) and action.get("id")}
+                if supports_save_action_2014(action)}
     slots: list[CapabilityActionSlot] = []
     for raw in binding["slots"]:
         if not isinstance(raw, dict):
