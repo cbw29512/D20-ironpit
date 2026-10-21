@@ -22,12 +22,12 @@
 - Full Sea Hag Horrific Appearance, Illusory Appearance and monster admission remain separate. 2014 source admission stays at the generated count until proven. Browser/Python fight completion and Netlify remain unverified/locked.
 
 
-## Harpy damaging-terrain pre-entry repeat-save foundation — 2026-10-20
+## Harpy damaging-terrain pre-entry repeat-save foundation — MERGED + CERTIFIED
 
-- Owner: Codex, ACTIVE on `feat/2014-damaging-terrain-repeat-save-20261020` from main `a5a8f3d3827d50bf3203a06d0e50cf6df3ab8ca8`. Subsystem: source-bound timed-effect lifecycle at the authoritative grid step boundary plus the existing persistent-hazard geometry predicate.
-- Printed-source decomposition: trigger = before an affected creature would cross from outside to inside active hostile damaging terrain; eligibility = primary grouped effect declares this repeat-save clause; action/resource = none; attack/save = stored ability/DC/context; damage/condition = no damage before the save, success removes the whole group; movement/timing = a successful save cancels that compelled step before position, movement budget, hazard, or opportunity-reaction mutation; duration/removal otherwise unchanged.
-- Immutable schema: `repeat_save_before_damaging_terrain`; mutable state copies it only to the primary timed effect and resets with fresh combat state. Hazard identity and geometry remain fight-local; names never dispatch. Python/browser share outside→inside, hostile, unexpired, positive-damage/capacity checks.
-- PR #978 merged as `a5a8f3d3827d50bf3203a06d0e50cf6df3ab8ca8` after exact-head CI #23276, generated sync #8827 and Hero #11537 passed. Damage-triggered repeat saves are certified. Harpy remains unbound pending this tranche and subsequent-turn Bonus Action maintenance/stop lifecycle; source admission remains 237/327 and webpage verification remains separate. Netlify production stays locked.
+- [PR #985](https://github.com/cbw29512/D20-ironpit/pull/985) merged to main as `1233e9d617bb70374c5255f1279a5fc5ccbf754b` after exact-head CI #23281, generated sync #8832 and Hero #11542 passed on `99027f6eba7697591fca026eadeb9e980a0ce5e1`. Ownership is released.
+- Certified source-neutral contract: before a compelled grid step crosses from outside into active hostile damaging terrain, the stored repeat save resolves before position, movement budget, opportunity reaction or hazard damage changes. Success removes the whole source/effect group and cancels the step; failure increments fight-local failure count and movement continues.
+- Immutable schema is `repeat_save_before_damaging_terrain`; only the primary grouped effect owns its fight-local copy. Python/browser share the persistent-hazard boundary predicate and source-bound repeat-save oracle. Names remain log-only.
+- Harpy is still unbound and not admitted. Next independent work is the subsequent-turn Bonus Action continuation/voluntary-stop lifecycle, followed by full Luring Song source binding, paired-edition inspection and actual webpage fights. Preserve `source:extra-action`, 237/327 admitted and 90 blocked until those steps are certified. Netlify production stays locked.
 
 ## Harpy compelled-approach foundation — MERGED + CERTIFIED
 
