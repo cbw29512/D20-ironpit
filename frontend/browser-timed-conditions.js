@@ -43,6 +43,8 @@
       repeat_save_timing: defaultPoison ? "target_turn_start" : (options.repeatSaveTiming || null),
       damage_repeat_save_trigger: options.damageRepeatSaveTrigger || "none",
       repeat_save_before_damaging_terrain: Boolean(options.repeatSaveBeforeDamagingTerrain),
+      source_maintenance_action_cost: options.sourceMaintenanceActionCost || "none",
+      source_turn_count_at_application: options.sourceTurnCountAtApplication ?? null,
       repeat_save_disadvantage_while_source_visible: Boolean(options.repeatSaveDisadvantageWhileSourceVisible),
       allowed_removal_action_ids: [...(options.allowedRemovalActionIds || [])],
       turn_behavior: options.turnBehavior || "normal",
@@ -112,8 +114,10 @@
     return !stillActive && !innate;
   }
 
-  function removeGroup(state, effect) {
-    const grantImmunity = Boolean(effect.source_effect_immunity_on_end);
+  function removeGroup(state, effect, options = {}) {
+    const grantImmunity = options.grantSourceImmunity == null
+      ? Boolean(effect.source_effect_immunity_on_end)
+      : Boolean(options.grantSourceImmunity);
     const actionId = effect.source_effect_id;
     const sourceId = effect.source_id;
     const round = state.current_round || 1;

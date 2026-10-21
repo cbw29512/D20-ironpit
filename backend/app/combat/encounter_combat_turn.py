@@ -30,6 +30,7 @@ from app.combat.persistent_spell_attacks import resolve_persistent_spell_attack
 from app.combat.replacement_form_policy import resolve_replacement_form_setup
 from app.combat.pit_policy import target_order
 from app.combat.start_turn import begin_turn_with_events
+from app.combat.source_maintenance import resolve_source_maintenance
 from app.combat.turn_start_visual_effects import resolve_visual_turn_start_events
 from app.combat.visual_disguise import resolve_visual_disguise_first_turn_dismissal
 from app.combat.targeted_concentration_damage import resolve_targeted_concentration_damage
@@ -64,6 +65,10 @@ def resolve_combat_turn(
             if attacker.state.is_dead or attacker.state.current_hp <= 0:
                 return finish_turn(events, sequence, round_number, attacker, setup, dice,
                                    f"{round_number}:{attacker.combatant_id}", allow_surge=False)
+        maintenance_events, sequence = resolve_source_maintenance(
+            sequence, round_number, attacker, setup,
+        )
+        events.extend(maintenance_events)
         # Printed Bonus Action dismissal occurs on the owner's initiative turn.
         # No gaze saves are triggered at the instant the illusion is dropped.
         reveal = resolve_visual_disguise_first_turn_dismissal(sequence, round_number, attacker)

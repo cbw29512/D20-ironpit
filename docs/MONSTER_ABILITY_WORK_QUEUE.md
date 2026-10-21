@@ -1,5 +1,15 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+
+## Harpy subsequent-turn source maintenance — IN PR #991
+
+- Owner: Codex on `feat/2014-source-maintenance-lifecycle-20261021`. This scope is independent of roster-wide damage defenses in #989 and Multiattack inventory in #990.
+- Immutable card schema: `source_maintenance_action_cost` on a failed-save timed effect. Fight-local primary state: `source_turn_count_at_application`; secondary grouped conditions own no maintenance lifecycle. The source's first application turn is free, and every later source turn (including a same-round extra turn) requires the printed cost.
+- Shared Python/browser policy explicitly continues at most one due group, preferring the group affecting the most opponents; all other due groups end. Voluntary stop is immediate and free. An unavailable Bonus Action ends the source/effect group on every target without granting the success-only source immunity. Source and card names remain log-only.
+- PR #991 adds paired action-economy integration, sparse browser export, source-turn checkpointing, meaningful end/continue events and renamed-card regressions. Production modules remain within the 150-line limit. Generated blocker/inventory artifacts are unchanged because Harpy is not source-bound or admitted in this foundation.
+- Before merge: require exact-final-head source/Python, browser, Hero, generated-sync and applicable paired-roster checks, then recheck current main and active file ownership. Netlify production stays locked.
+- After certified merge: bind the complete 2014 Luring Song source card using the grouped save/control, compelled approach, damage repeat save, damaging-terrain repeat save and this maintenance lifecycle; then inspect the 2024 counterpart independently and complete actual webpage fights. Preserve **237/327 admitted, 90 blocked** and zero finished Harpy until those later steps pass.
+
 ## 2014 magical visual disguise / Sea Hag Illusory Appearance — source contract
 
 - Source text is combat-relevant **indirectly**: a visual illusion obscures the true form required by *Horrific Appearance*. It must not be silently declared arena-neutral or treated as Advantage, Invisibility, AC, or a global Blinded condition.

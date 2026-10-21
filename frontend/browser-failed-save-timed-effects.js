@@ -86,6 +86,11 @@
             ? (rider.damageRepeatSaveTrigger || "none") : "none",
           repeatSaveBeforeDamagingTerrain: ownsLifecycle
             && Boolean(rider.repeatSaveBeforeDamagingTerrain),
+          sourceMaintenanceActionCost: ownsLifecycle
+            ? (rider.sourceMaintenanceActionCost || "none") : "none",
+          sourceTurnCountAtApplication: ownsLifecycle
+            && rider.sourceMaintenanceActionCost !== "none"
+            ? (actor.state.turns_started || 0) : null,
           repeatSaveDisadvantageWhileSourceVisible: ownsLifecycle
             && Boolean(rider.repeatSaveDisadvantageWhileSourceVisible),
           repeatSaveFailureConditionId: ownsLifecycle

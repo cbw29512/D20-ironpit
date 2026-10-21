@@ -404,6 +404,8 @@ def _failed_save_timed_effect(rider: Any) -> dict[str, Any]:
         row["damageRepeatSaveTrigger"] = rider.damage_repeat_save_trigger
     if rider.repeat_save_before_damaging_terrain:
         row["repeatSaveBeforeDamagingTerrain"] = True
+    if rider.source_maintenance_action_cost != "none":
+        row["sourceMaintenanceActionCost"] = rider.source_maintenance_action_cost
     if rider.repeat_save_failure_condition_id:
         row["repeatSaveFailureConditionId"] = rider.repeat_save_failure_condition_id
     if rider.allowed_removal_action_ids:

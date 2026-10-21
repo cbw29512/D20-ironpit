@@ -36,9 +36,17 @@ def remove_on_magical_healing(state: CombatantState) -> list[str]:
         raise
 
 
-def remove_effect_group(state: CombatantState, effect: TimedEffect) -> list[str]:
+def remove_effect_group(
+    state: CombatantState,
+    effect: TimedEffect,
+    *,
+    grant_source_immunity: bool | None = None,
+) -> list[str]:
     try:
-        grant_immunity = effect.source_effect_immunity_on_end
+        grant_immunity = (
+            effect.source_effect_immunity_on_end
+            if grant_source_immunity is None else grant_source_immunity
+        )
         action_id = effect.source_effect_id
         source_id = effect.source_id
         round_number = state.current_round or 1
