@@ -191,7 +191,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
             *condition_auras_from_source(monster.source_traits, "2014"),
             *contextual_save_defenses_2014(monster)[0], *leadership_actions_2014(monster)],
         healing_actions=healing_actions_2014(monster),
-        condition_removal_actions=innate_condition_removal_2014(monster),
+        condition_removal_actions=list(core.condition_removal_actions),
         terminal_effect_tags=terminal_effect_tags_2014(monster),
         effect_tag_condition_grants=effect_tag_condition_grants_2014(monster),
         legendary_actions=legendary_options,
