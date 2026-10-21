@@ -98,6 +98,8 @@ class TimedEffect(BaseModel):
                 raise ValueError("A timed effect cannot end and repeat its save on the same damage.")
             if self.repeat_save_before_damaging_terrain and not all(item is not None for item in repeat_fields):
                 raise ValueError("Damaging-terrain repeat saves require ability, DC, and timing.")
+            if self.source_effect_immunity_on_repeat_save_success and not all(item is not None for item in repeat_fields):
+                raise ValueError("Repeat-save success immunity requires ability, DC, and timing.")
             if self.source_maintenance_action_cost != "none" and self.source_turn_count_at_application is None:
                 raise ValueError("Source-maintained effects require the source turn count at application.")
             if (self.escape_check_ability is None) != (self.escape_check_dc is None):
