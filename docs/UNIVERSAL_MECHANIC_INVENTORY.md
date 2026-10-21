@@ -483,8 +483,8 @@ Blocked monsters: **90**. These are grouped by printed ability name so the roste
 | `source:extra-action` | 53 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 21 |
-| `multiattack:complex` | 12 |
 | `mechanic:recharge` | 10 |
+| `multiattack:complex` | 10 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
 | `mechanic:swallow` | 7 |
