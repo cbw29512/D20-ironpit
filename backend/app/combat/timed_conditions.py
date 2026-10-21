@@ -92,6 +92,7 @@ def apply_timed_condition(
     ground_contact: bool = False,
     ends_on_teleport: bool = False,
     source_effect_immunity_on_end: bool = False,
+    source_effect_immunity_on_repeat_save_success: bool = False,
     control_limits=None,
     target_actor=None, setup=None,
 ) -> str | None:
@@ -170,6 +171,7 @@ def apply_timed_condition(
             ground_contact=ground_contact,
             ends_on_teleport=ends_on_teleport or ground_contact,
             source_effect_immunity_on_end=source_effect_immunity_on_end,
+            source_effect_immunity_on_repeat_save_success=source_effect_immunity_on_repeat_save_success,
             control_limits=control_limits,
         ))
         if effect_id not in state.active_effect_ids:
