@@ -42,7 +42,11 @@
       let lightTrigger = null, previousAttack = null;
       const turnKey = `${round}:${member.combatant_id}`;
 
+      let attacksRemaining = slots.length;
       for (let index = 0; index < slots.length; index += 1) {
+        // A miss or skipped optional action still spends a sequence slot.
+        // The next attack checks the updated battle state.
+        attacksRemaining -= 1;
         if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
         const data = MC.slotData(slots[index]);
         const followup = MC.followupTarget(data, previousAttack?.event_type === "attack" ? previousAttack.hit : null, previousAttack?.target_id);
