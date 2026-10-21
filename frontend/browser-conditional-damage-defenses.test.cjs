@@ -60,6 +60,20 @@ assert.equal(D.adjustedDamage(werewolf, 10, "piercing", true, ordinary), 0);
 assert.equal(D.adjustedDamage(werewolf, 10, "piercing", true, [...ordinary, "silvered"]), 10);
 assert.equal(D.adjustedDamage(werewolf, 10, "piercing", true, [...ordinary, "magical"]), 10);
 
+const magicPiercing = member({
+  damage_resistances: [], damage_immunities: [], damage_vulnerabilities: [],
+  conditional_damage_defenses: [
+    { id: "magic-piercing", kind: "vulnerability", damageTypes: ["piercing"],
+      requiredSourceQualifiers: ["attack", "weapon", "magical"], forbiddenSourceQualifiers: [] },
+    { id: "nonmagic-weapon", kind: "immunity", damageTypes: ["piercing"],
+      requiredSourceQualifiers: ["attack"], forbiddenSourceQualifiers: ["magical"] },
+  ],
+});
+assert.equal(D.adjustedDamage(magicPiercing, 11, "piercing", true, ordinary), 0);
+assert.equal(D.adjustedDamage(magicPiercing, 11, "piercing", true, [...ordinary, "magical"]), 22);
+assert.equal(D.adjustedDamage(magicPiercing, 11, "slashing", true, [...ordinary, "magical"]), 11);
+assert.equal(D.adjustedDamage(magicPiercing, 11, "piercing", true, ["magical"]), 11);
+
 const manufacturedQualifiers = (hero) => (hero.attacks || [])
   .filter((attack) => attack.weaponId !== "unarmed-strike" && String(attack.name || "").toLowerCase() !== "unarmed strike")
   .map((attack) => attack.damageSourceQualifiers || []);
