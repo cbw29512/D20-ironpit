@@ -6,7 +6,7 @@ from app.content.roster import build_arena_roster
 
 def test_character_zero_hp_is_not_death_trigger():
     cards = build_arena_roster()
-    template = next(card for card in cards if card.kind == "character")
+    template = cards.characters[0]
     state = build_combatant_state(template)
     state.active_buff_effect_ids.append(DEATH_TRIGGER_BUFF)
     state.current_hp = 0
@@ -21,7 +21,7 @@ def test_character_zero_hp_is_not_death_trigger():
 
 def test_monster_zero_hp_death_trigger_once():
     cards = build_arena_roster()
-    template = next(card for card in cards if card.kind == "monster")
+    template = cards.monsters[0]
     state = build_combatant_state(template)
     state.active_buff_effect_ids.append(DEATH_TRIGGER_BUFF)
     state.current_hp = 0
