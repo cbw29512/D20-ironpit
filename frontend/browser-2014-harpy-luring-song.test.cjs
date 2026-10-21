@@ -30,6 +30,7 @@ const other = {
 };
 const targetTemplate = structuredClone(window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"]);
 targetTemplate.saving_throw_bonuses = { ...targetTemplate.saving_throw_bonuses, wisdom: 0 };
+targetTemplate.creature_type = "humanoid";
 const target = {
   combatant_id: "target", side: "heroes", position_ft: 10,
   state: S.buildState(targetTemplate),
