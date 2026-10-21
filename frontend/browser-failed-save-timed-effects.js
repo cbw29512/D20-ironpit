@@ -91,6 +91,8 @@
           sourceTurnCountAtApplication: ownsLifecycle
             && rider.sourceMaintenanceActionCost !== "none"
             ? (actor.state.turns_started || 0) : null,
+          exclusiveSourceEffectGroupId: ownsLifecycle
+            ? (rider.exclusiveSourceEffectGroupId || null) : null,
           repeatSaveDisadvantageWhileSourceVisible: ownsLifecycle
             && Boolean(rider.repeatSaveDisadvantageWhileSourceVisible),
           repeatSaveFailureConditionId: ownsLifecycle
