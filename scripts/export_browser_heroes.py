@@ -135,6 +135,8 @@ def _save(action: Any) -> dict[str, Any]:
             row["failedSaveTimedEffect"]["exclusiveSourceEffectGroupId"] = action.failed_save_timed_effect.exclusive_source_effect_group_id
     if action.failed_save_timed_effect is not None and action.failed_save_timed_effect.source_effect_immunity_on_end:
         row["failedSaveTimedEffect"]["sourceEffectImmunityOnEnd"] = True
+    if action.failed_save_timed_effect is not None and action.failed_save_timed_effect.source_effect_immunity_on_repeat_save_success:
+        row["failedSaveTimedEffect"]["sourceEffectImmunityOnRepeatSaveSuccess"] = True
     if action.source_effect_immunity_on_success:
         row["sourceEffectImmunityOnSuccess"] = True
     return row
