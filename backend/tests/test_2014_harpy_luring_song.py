@@ -37,7 +37,7 @@ def _battle():
     harpy_template = compile_combatant(adapt_basic_monster_2014(_source()))
     harpy = _member("source", "monsters", 1, harpy_template)
     other = _member("other-source", "monsters", 2, harpy_template)
-    base = build_aurelia_brightshield_2014(1).model_copy(update={"max_hp": 60})
+    base = build_aurelia_brightshield_2014(1).model_copy(update={"max_hp": 60, "creature_type": "humanoid"})
     ally = _member("humanoid-ally", "monsters", 3, base.model_copy(update={"kind": "monster"}))
     human = _member("human", "heroes", 4, base)
     giant = _member("giant", "heroes", 5, base.model_copy(update={"creature_type": "giant"}))
