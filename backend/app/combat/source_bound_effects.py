@@ -3,7 +3,6 @@ from __future__ import annotations
 import logging
 
 from app.combat.condition_rules import is_incapacitated
-from app.combat.persistent_hazards import position_enters_damaging_hazard
 from app.combat.timed_condition_saves import resolve_repeat_save
 from app.combat.timed_conditions import remove_effect_group
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -59,6 +58,9 @@ def resolve_damaging_terrain_repeat_saves(
 ) -> tuple[list[BattleEvent], int, bool]:
     """Resolve a grouped save before a compelled step enters damaging terrain."""
     try:
+        # Lazy import preserves zero_hp -> source_bound_effects without cycling through damage.
+        from app.combat.persistent_hazards import position_enters_damaging_hazard
+
         if target.state.is_dead or not target.state.is_alive:
             return [], sequence, False
         if not position_enters_damaging_hazard(target, destination, setup, round_number):
