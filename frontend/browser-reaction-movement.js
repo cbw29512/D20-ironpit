@@ -56,6 +56,14 @@
           setup.persistent_barriers || [],
         );
         if (stepCost == null || stepCost > mover.state.movement_remaining_ft) break;
+        if (options.compelled) {
+          const preEntry = window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS?.resolveDamagingTerrainRepeatSaves(
+            sequence, round, mover, destination, setup,
+          );
+          if (!preEntry) throw new Error("Compelled hazard entry requires source-bound repeat-save runtime.");
+          events.push(...preEntry.events); sequence = preEntry.sequence;
+          if (preEntry.released) return { events, sequence, movement: lastMovement };
+        }
         const wasProne = mover.state.active_effect_ids.includes("prone");
         for (const reactor of reactors) {
           if (!reactor.state.position) continue;
