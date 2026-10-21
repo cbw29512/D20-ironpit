@@ -66,7 +66,11 @@ def resolve_attack_action(
         turn_key = f"{round_number}:{attacker.combatant_id}"
 
         previous_attack = None
+        attacks_remaining = len(slots)
         for index, slot in enumerate(slots):
+            # A missed or skipped conditional slot still consumes its place.
+            # State and eligibility are re-evaluated before each later slot.
+            attacks_remaining -= 1
             if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
                 break
             eligible, target_id = followup_target(slot, previous_attack.hit if previous_attack and previous_attack.event_type == "attack" else None,
