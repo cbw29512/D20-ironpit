@@ -33,7 +33,7 @@ jobs:
         run: |
           python scripts/check_documentation_authority.py
           PYTHONPATH=. pytest -q scripts/test_check_documentation_authority.py
-      - name: Validate Chain grapple Python contract
+      - name: Audit 2014 armor class across the entire source roster\n        run: PYTHONPATH=backend:. pytest -q backend/tests/test_2014_roster_wide_armor_class.py\n      - name: Validate Chain grapple Python contract
         run: pytest -q backend/tests/test_2014_chain_devil_grapple_periodic.py
       - name: Reconcile canonical 2014 source-derived artifacts
         if: ${{ github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'feat/2014-') && github.event.pull_request.head.repo.full_name == github.repository }}
