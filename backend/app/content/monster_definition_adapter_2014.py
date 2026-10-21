@@ -38,6 +38,7 @@ from app.content.monster_innate_support_2014 import (
 )
 from app.content.monster_legendary_bindings_2014 import legendary_action_options_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
+from app.content.monster_core_fields_2014 import monster_core_fields_2014
 from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014, fetid_cloud_resources_2014
 from app.content.monster_leadership_2014 import leadership_actions_2014, leadership_resources_2014
 from app.content.monster_senses_2014 import special_senses_2014, bounded_blindsight_2014
@@ -117,6 +118,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     blockers = basic_blockers_2014(monster)
     if blockers:
         raise ValueError(f"{monster.id} is not a basic 2014 candidate: {', '.join(blockers)}")
+    core = monster_core_fields_2014(monster.id)
     scores = AbilityScores(**ability_values_2014(monster))
     movement = movement_modes_2014(monster)
     attacks = [_attack(monster, attack) for attack in monster.attacks]
@@ -158,7 +160,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         challenge_rating=monster.challenge_rating, kind="monster", ruleset="2014",
         creature_type=monster.creature_type,
         size=CreatureSize(monster.size.lower()), ability_scores=scores,
-        armor_class=monster.armor_class, max_hp=monster.max_hp, speed_ft=standard_arena_closing_speed_from_modes(movement),
+        armor_class=core.armor_class, max_hp=monster.max_hp, speed_ft=standard_arena_closing_speed_from_modes(movement),
         movement_modes=movement, initiative_bonus=scores.modifier("dexterity"),
         blindsight_ft=blindsight_ft, truesight_ft=truesight_ft,
         blindsight_deafened_ft=bounded[1] if bounded else None,
