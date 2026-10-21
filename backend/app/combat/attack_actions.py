@@ -4,7 +4,7 @@ import logging
 
 from app.combat.action_economy import is_available, spend
 from app.combat.ally_context import pack_tactics_active
-from app.combat.attack_action_choices import attack_choice, save_choice, followup_target
+from app.combat.attack_action_choices import attack_choice, save_choice, followup_target, slot_grapple_eligible
 from app.combat.attack_action_sequences import select_sequence, expanded_sequence_slots
 from app.combat.attack_action_event_target import event_target
 from app.combat.attack_action_rules import validate_attack_action_slots
@@ -78,7 +78,7 @@ def resolve_attack_action(
             eligible, target_id = followup_target(slot, previous_attack.hit if previous_attack and previous_attack.event_type == "attack" else None,
                                                  previous_attack.target_id if previous_attack else None)
             previous_attack = None
-            if not eligible:
+            if not eligible or not slot_grapple_eligible(attacker, setup, slot):
                 continue
             deferred = resolve_deferred_effect_attack_slot(
                 sequence,
