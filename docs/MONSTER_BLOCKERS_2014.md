@@ -14,8 +14,8 @@ Blocker categories overlap: a monster may require several fixes.
 | `source:extra-action` | 53 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 21 |
-| `multiattack:complex` | 10 |
 | `mechanic:recharge` | 10 |
+| `multiattack:complex` | 10 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
 | `mechanic:swallow` | 7 |
