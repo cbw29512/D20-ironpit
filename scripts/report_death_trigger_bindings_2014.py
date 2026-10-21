@@ -27,7 +27,7 @@ def report() -> dict:
                 invalid.append(card.id)
                 continue
             ids.append(action["id"])
-        declared.append({"monster": card.id, "effect_ids": ids})
+        declared.append({"monster": card.id, "effect_ids": ids, "actions": card.death_trigger_actions})
     return {
         "source_cards": len(cards),
         "cards_with_death_trigger_actions": len(declared),
