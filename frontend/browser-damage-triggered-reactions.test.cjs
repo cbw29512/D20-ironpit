@@ -58,6 +58,26 @@ window.IRON_PIT_BROWSER_ATTACK = {
 
 load("browser-damage-triggered-reactions.js");
 load("browser-source-damage-triggers.js");
+let damageRepeatSaveSucceeds = true;
+window.IRON_PIT_BROWSER_TIMED = {
+  removeGroup(state, effect) {
+    const grouped = state.timed_effects.filter((item) =>
+      item.source_id === effect.source_id
+      && item.source_effect_id === effect.source_effect_id);
+    const removed = grouped.map((item) => item.effect_id);
+    state.timed_effects = state.timed_effects.filter((item) => !grouped.includes(item));
+    state.active_effect_ids = state.active_effect_ids.filter((id) => !removed.includes(id));
+    return removed;
+  },
+};
+window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE = {
+  repeatSave: () => ({
+    roll: { total: damageRepeatSaveSucceeds ? 20 : 1 },
+    succeeded: damageRepeatSaveSucceeds,
+    buffs: [],
+  }),
+};
+load("browser-source-bound-effects.js");
 load("browser-damage-reaction-dispatch.js");
 
 window.IRON_PIT_BROWSER_LIGHT_ATTACK = {
@@ -83,6 +103,7 @@ function member(id, side, position, reaction = false) {
       action_available: true,
       reaction_available: true,
       active_effect_ids: [],
+      timed_effects: [],
       grapple_sources: [],
       template: {
         name: id,
@@ -305,3 +326,52 @@ console.log("Browser universal post-damage reaction parity passed.");
     "1:rampage-source",
   );
 }
+
+
+
+{
+  const target = member("song-target", "heroes", 0, false);
+  const attacker = member("other-damage-source", "monsters", 5, false);
+  const singer = member("renamed-singer", "monsters", 30, false);
+  target.state.active_effect_ids.push("incapacitated");
+  target.state.timed_effects.push({
+    effect_id: "incapacitated", source_id: singer.combatant_id,
+    source_effect_id: "renamed-song", repeat_save_ability: "wisdom",
+    repeat_save_dc: 12, repeat_save_timing: "target_turn_end",
+    damage_repeat_save_trigger: "other_than_effect_source",
+    repeat_save_failure_count: 0,
+  });
+  const setup = { heroes: [target], monsters: [attacker, singer] };
+  damageRepeatSaveSucceeds = true;
+  const result = window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH.resolve(
+    2, 1, attacker, damageEvent(attacker, target), setup,
+  );
+  assert.equal(result.events.length, 1);
+  assert.equal(result.events[0].event_type, "saving_throw");
+  assert.equal(result.events[0].feature_id, "renamed-song");
+  assert.deepEqual(result.events[0].removed_condition_ids, ["incapacitated"]);
+  assert.equal(target.state.active_effect_ids.includes("incapacitated"), false);
+  assert.equal(result.sequence, 3);
+}
+
+{
+  const target = member("same-source-target", "heroes", 0, false);
+  const singer = member("same-source-singer", "monsters", 5, false);
+  target.state.active_effect_ids.push("incapacitated");
+  target.state.timed_effects.push({
+    effect_id: "incapacitated", source_id: singer.combatant_id,
+    source_effect_id: "same-source-song", repeat_save_ability: "wisdom",
+    repeat_save_dc: 12, repeat_save_timing: "target_turn_end",
+    damage_repeat_save_trigger: "other_than_effect_source",
+    repeat_save_failure_count: 0,
+  });
+  const setup = { heroes: [target], monsters: [singer] };
+  const result = window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH.resolve(
+    2, 1, singer, damageEvent(singer, target), setup,
+  );
+  assert.deepEqual(result.events, []);
+  assert.equal(target.state.active_effect_ids.includes("incapacitated"), true);
+  assert.equal(result.sequence, 2);
+}
+
+console.log("Browser source-qualified damage repeat-save parity passed.");

@@ -6,10 +6,12 @@ from app.combat.damage_reaction_events import applied_damage_total, resolve_dama
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.state import build_combatant_state
+from app.combat.timed_conditions import apply_timed_condition
 from app.content.demo import build_demo_fighter, build_goblin_warrior
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.character_builds import AbilityScores
 from app.domain.reactions import DamageReactionAttack
+from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.progression_primitives import (
     SourceDamageTemporaryHpGrant,
     SourceReducesHostileToZeroHpTemporaryHp,
@@ -287,3 +289,56 @@ def test_source_damage_trigger_requires_matching_action_and_actual_damage() -> N
     assert all(item.feature_id != "test-damage-vitality" for item in followups)
     assert hero.state.temporary_hp == 0
     assert sequence == 2
+
+
+
+def test_damage_repeat_save_requires_other_damage_source_and_actual_damage() -> None:
+    hero, attacker, setup = _setup()
+    hero.state.template.damage_reaction_attack = None
+    singer = _member("renamed-singer", "monsters", 30, build_goblin_warrior())
+    setup.monsters.append(singer)
+    apply_timed_condition(
+        hero.state, "incapacitated", singer.combatant_id,
+        source_effect_id="renamed-song", applied_round=1,
+        expiry_timing="target_turn_end", repeat_save_ability="wisdom",
+        repeat_save_dc=12, repeat_save_timing="target_turn_end",
+        damage_repeat_save_trigger="other_than_effect_source",
+        use_default_poison_recovery=False,
+    )
+    event = _triggering_attack(attacker, hero, setup)
+    followups, sequence = resolve_damage_event_reactions(
+        2, 1, attacker, event, setup, FixedDiceProvider([20]),
+    )
+    assert [item.event_type for item in followups] == ["saving_throw"]
+    assert followups[0].feature_id == "renamed-song"
+    assert followups[0].save_succeeded is True
+    assert followups[0].removed_condition_ids == ["incapacitated"]
+    assert sequence == 3
+
+
+def test_damage_repeat_save_ignores_effect_source_damage() -> None:
+    hero, attacker, setup = _setup()
+    hero.state.template.damage_reaction_attack = None
+    apply_timed_condition(
+        hero.state, "incapacitated", attacker.combatant_id,
+        source_effect_id="same-source-song", applied_round=1,
+        expiry_timing="target_turn_end", repeat_save_ability="wisdom",
+        repeat_save_dc=12, repeat_save_timing="target_turn_end",
+        damage_repeat_save_trigger="other_than_effect_source",
+        use_default_poison_recovery=False,
+    )
+    event = _triggering_attack(attacker, hero, setup)
+    followups, sequence = resolve_damage_event_reactions(
+        2, 1, attacker, event, setup, FixedDiceProvider([1]),
+    )
+    assert followups == []
+    assert sequence == 2
+    assert "incapacitated" in hero.state.active_effect_ids
+
+
+def test_damage_repeat_save_card_requires_complete_repeat_save_contract() -> None:
+    with pytest.raises(ValueError, match="require ability, DC, and timing"):
+        FailedSaveTimedEffect(
+            effect_id="incapacitated",
+            damage_repeat_save_trigger="other_than_effect_source",
+        )
