@@ -46,6 +46,7 @@ class FailedSaveTimedEffect(BaseModel):
     ground_contact: bool = False
     ends_on_teleport: bool = False
     source_effect_immunity_on_end: bool = False
+    source_effect_immunity_on_repeat_save_success: bool = False
     repeat_save_disadvantage_while_source_visible: bool = False
     speed_multiplier: float = Field(default=1.0, gt=0.0, le=1.0)
     blocks_reactions: bool = False
@@ -78,6 +79,7 @@ class FailedSaveTimedEffect(BaseModel):
                 "repeat_save_before_damaging_terrain": False,
                 "source_maintenance_action_cost": "none",
                 "exclusive_source_effect_group_id": None,
+                "source_effect_immunity_on_repeat_save_success": False,
             }
             for key, default in defaults.items():
                 if data.get(key) == default:
