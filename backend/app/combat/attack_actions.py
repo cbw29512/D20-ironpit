@@ -67,9 +67,11 @@ def resolve_attack_action(
 
         previous_attack = None
         attacks_remaining = len(slots)
-        for index, slot in enumerate(slots):
-            # A missed or skipped conditional slot still consumes its place.
-            # State and eligibility are re-evaluated before each later slot.
+        slot_index = 0
+        while attacks_remaining > 0:
+            slot = slots[slot_index]
+            slot_index += 1
+            # Missed and skipped slots are consumed before the next action.
             attacks_remaining -= 1
             if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
                 break
