@@ -75,6 +75,10 @@ from app.content.monster_unnerving_mask_2014 import source_unnerving_mask_reacti
 def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapabilityDefinition:
     source_grapple_periodic_proof_2014(monster, attack)
     attack = source_completed_mixed_attack_2014(monster, attack)
+    printed_attack = next((item for item in monster_core_fields_2014(monster.id).attacks
+                           if item.source_id == attack.id), None)
+    if printed_attack is None:
+        raise ValueError(f"{monster.id} attack {attack.id} is missing from the 327-card registry")
     charge_source = corrected_charge_profile_2014(monster, attack)
     normal_range_ft, long_range_ft = corrected_attack_range_2014(monster, attack)
     kwargs = {
@@ -82,7 +86,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "weapon_id": attack_id_2014(monster, attack.id),
         "name": attack.name,
         "attack_kind": attack.kind,
-        "attack_bonus": attack.attack_bonus,
+        "attack_bonus": printed_attack.attack_bonus,
         "resource_id": attack.id if attack.id in attack_ammunition_2014(monster) else None,
         "attack_ability": attack.attack_ability,
         "sneak_attack_eligible": sneak_attack_eligible_2014(monster, attack),
