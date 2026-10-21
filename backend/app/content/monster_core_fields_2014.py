@@ -15,6 +15,7 @@ from app.domain.character_builds import AbilityScores
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
 from app.content.monster_innate_conditions_2014 import innate_condition_ids_2014
+from app.content.monster_innate_support_2014 import innate_condition_removal_2014
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,7 @@ class MonsterCoreFields2014:
     saving_throw_bonuses: tuple[tuple[str, int], ...]
     condition_immunities: tuple[str, ...]
     innate_condition_ids: tuple[str, ...]
+    condition_removal_actions: tuple[object, ...]
     attacks: tuple[MonsterAttackFields2014, ...]
     blockers: tuple[str, ...]
 
@@ -73,6 +75,7 @@ def all_monster_core_fields_2014() -> tuple[MonsterCoreFields2014, ...]:
                 saving_throw_bonuses=tuple(save_bonuses_2014(card, scores).items()),
                 condition_immunities=tuple(item.lower() for item in card.condition_immunities),
                 innate_condition_ids=tuple(innate_condition_ids_2014(card)),
+                condition_removal_actions=tuple(innate_condition_removal_2014(card)),
                 attacks=tuple(
                     MonsterAttackFields2014(
                         source_id=attack.id,
