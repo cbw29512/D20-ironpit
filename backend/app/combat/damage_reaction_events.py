@@ -11,6 +11,7 @@ from app.combat.source_zero_hp_triggers import (
     resolve_witnessed_zero_hp_triggers,
 )
 from app.combat.source_damage_triggers import resolve_source_damage_temporary_hp
+from app.combat.source_bound_effects import resolve_damage_repeat_saves
 from app.combat.dice import DiceProvider
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -70,30 +71,22 @@ def resolve_damage_event_reactions(
             return source_events, sequence
 
         reaction = resolve_damage_reaction_attack(
-            sequence,
-            round_number,
-            reactor,
-            source,
-            setup,
-            applied_damage,
-            dice,
+            sequence, round_number, reactor, source, setup, applied_damage, dice,
             turn_key=turn_key,
         )
-        if reaction is None:
-            return source_events, sequence
-
-        events = [*source_events, reaction]
-        nested, next_sequence = resolve_damage_event_reactions(
-            sequence + 1,
-            round_number,
-            reactor,
-            reaction,
-            setup,
-            dice,
-            turn_key=turn_key,
+        events = list(source_events)
+        if reaction is not None:
+            events.append(reaction)
+            nested, sequence = resolve_damage_event_reactions(
+                sequence + 1, round_number, reactor, reaction, setup, dice,
+                turn_key=turn_key,
+            )
+            events.extend(nested)
+        repeats, sequence = resolve_damage_repeat_saves(
+            sequence, round_number, source, reactor, setup, dice,
         )
-        events.extend(nested)
-        return events, next_sequence
+        events.extend(repeats)
+        return events, sequence
     except ValueError:
         raise
     except Exception as exc:

@@ -29,6 +29,7 @@ class TimedEffect(BaseModel):
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
+    damage_repeat_save_trigger: Literal["none", "other_than_effect_source"] = "none"
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     turn_behavior: TimedTurnBehavior = "normal"
     ends_on_damage: bool = False
@@ -86,6 +87,10 @@ class TimedEffect(BaseModel):
             repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
             if any(item is not None for item in repeat_fields) and not all(item is not None for item in repeat_fields):
                 raise ValueError("Timed effect repeat save requires ability, DC, and timing together.")
+            if self.damage_repeat_save_trigger != "none" and not all(item is not None for item in repeat_fields):
+                raise ValueError("Damage-triggered repeat saves require ability, DC, and timing.")
+            if self.damage_repeat_save_trigger != "none" and self.ends_on_damage:
+                raise ValueError("A timed effect cannot end and repeat its save on the same damage.")
             if (self.escape_check_ability is None) != (self.escape_check_dc is None):
                 raise ValueError("Timed effect escape check requires ability and DC together.")
             if self.expires_round is not None and self.applied_round is not None and self.expires_round <= self.applied_round:

@@ -140,5 +140,7 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE = { resolveSourceTiming, resolveTargetTiming };
+  window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE = {
+    repeatSave, resolveSourceTiming, resolveTargetTiming,
+  };
 })();
