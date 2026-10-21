@@ -79,6 +79,7 @@ class CombatantDefinition(BaseModel):
     primary_attack_id: str
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
     attack_action: MultiattackCapabilityDefinition | None = None
+    death_trigger_effect_ids: list[str] = Field(default_factory=list)
     area_weapon_attack_actions: list[AreaWeaponAttackAction] = Field(default_factory=list)
     save_actions: list[SaveCapabilityDefinition] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
