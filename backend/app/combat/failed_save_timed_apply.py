@@ -59,6 +59,13 @@ def apply_failed_save_timed_effect(
                 repeat_save_before_damaging_terrain=(
                     rider.repeat_save_before_damaging_terrain if owns_lifecycle else False
                 ),
+                source_maintenance_action_cost=(
+                    rider.source_maintenance_action_cost if owns_lifecycle else "none"
+                ),
+                source_turn_count_at_application=(
+                    actor.state.turns_started if owns_lifecycle
+                    and rider.source_maintenance_action_cost != "none" else None
+                ),
                 repeat_save_disadvantage_while_source_visible=(
                     rider.repeat_save_disadvantage_while_source_visible
                     if owns_lifecycle else False
