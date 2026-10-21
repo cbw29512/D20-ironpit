@@ -66,7 +66,13 @@ def resolve_attack_action(
         turn_key = f"{round_number}:{attacker.combatant_id}"
 
         previous_attack = None
-        for index, slot in enumerate(slots):
+        attacks_remaining = len(slots)
+        slot_index = 0
+        while attacks_remaining > 0:
+            slot = slots[slot_index]
+            slot_index += 1
+            # Missed and skipped slots are consumed before the next action.
+            attacks_remaining -= 1
             if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
                 break
             eligible, target_id = followup_target(slot, previous_attack.hit if previous_attack and previous_attack.event_type == "attack" else None,
