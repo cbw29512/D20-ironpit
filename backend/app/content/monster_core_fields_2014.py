@@ -30,6 +30,8 @@ class MonsterAttackFields2014:
     damage_bonus: int
     damage_type: str | None
     source_complete: bool
+    on_hit_save_effect: object | None
+    control_effect: object | None
 
 
 @dataclass(frozen=True, slots=True)
@@ -80,6 +82,8 @@ def all_monster_core_fields_2014() -> tuple[MonsterCoreFields2014, ...]:
                         damage_bonus=attack.damage.bonus,
                         damage_type=attack.damage.type,
                         source_complete=attack.source_complete,
+                        on_hit_save_effect=attack.on_hit_save_effect,
+                        control_effect=attack.control_effect,
                     )
                     for attack in (source_completed_mixed_attack_2014(card, item) for item in card.attacks)
                 ),
