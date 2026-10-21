@@ -41,21 +41,51 @@ def test_2014_nonmagical_defense_family_binds_all_printed_clauses() -> None:
             bound.append(monster.id)
             assert len(defenses) == len(monster.unsupported_defense_text)
 
-    assert set(bound) == {item.id for item in with_defense} - {"rakshasa"}
-    assert leftover == [(
-        "rakshasa",
-        ["piercing from magic weapons wielded by good creatures"],
-    )]
+    assert set(bound) == {item.id for item in with_defense}
+    assert leftover == []
     rakshasa = _monster("rakshasa")
     assert [item.kind for item in conditional_damage_defenses_2014(rakshasa)] == [
         DamageDefenseKind.IMMUNITY,
+        DamageDefenseKind.VULNERABILITY,
     ]
-    assert "mechanic:defense" in basic_blockers_2014(rakshasa)
+    assert "mechanic:defense" not in basic_blockers_2014(rakshasa)
     clay = _monster("clay-golem")
     assert remaining_unsupported_defense_text_2014(clay) == []
     assert "mechanic:defense" not in basic_blockers_2014(clay)
     assert "source:trait" not in basic_blockers_2014(clay)
 
+
+
+def test_rakshasa_magic_piercing_arena_override_uses_generic_defenses() -> None:
+    from app.content.demo import build_demo_fighter
+
+    # The printed source stays unchanged; a renamed, unrelated combatant can
+    # receive the same generic defense without a Rakshasa-specific resolver.
+    source = _monster("rakshasa")
+    assert "piercing from magic weapons wielded by good creatures" in source.unsupported_defense_text
+    target = build_combatant_state(build_demo_fighter())
+    target.template = target.template.model_copy(update={
+        "conditional_damage_defenses": conditional_damage_defenses_2014(source),
+    })
+    magic_weapon = {*_ORDINARY_ATTACK, DamageSourceQualifier.MAGICAL}
+
+    assert adjusted_damage_amount(
+        11, DamageType.PIERCING, target, source_qualifiers=_ORDINARY_ATTACK,
+    ) == 0  # Nonmagical piercing attack remains immune.
+    assert adjusted_damage_amount(
+        11, DamageType.PIERCING, target, source_qualifiers=magic_weapon,
+    ) == 22  # Magical piercing weapon doubles, without alignment.
+    assert adjusted_damage_amount(
+        11, DamageType.SLASHING, target, source_qualifiers=magic_weapon,
+    ) == 11  # Other magical weapon damage does not double.
+    assert adjusted_damage_amount(
+        11, DamageType.PIERCING, target,
+        source_qualifiers={DamageSourceQualifier.MAGICAL},
+    ) == 11  # A magical effect is not automatically a weapon attack.
+    assert adjusted_damage_amount(
+        11, DamageType.PIERCING, target,
+        source_qualifiers=magic_weapon, allow_vulnerability=False,
+    ) == 11  # The ordinary universal vulnerability switch still applies.
 
 def test_2014_silvered_and_adamantine_qualifiers_use_shared_forbidden_set() -> None:
     werewolf = conditional_damage_defenses_2014(_monster("werewolf"))[0]
