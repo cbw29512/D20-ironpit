@@ -8,7 +8,7 @@ const S = window.IRON_PIT_BROWSER_STATE;
 const card = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-harpy"];
 assert.ok(card, "the actual exported 2014 Harpy card must exist");
 const original = JSON.stringify(card);
-const action = card.savingThrowActions.find((item) => item.id === "luring-song");
+const action = card.saving_throw_actions.find((item) => item.id === "luring-song");
 assert.ok(action, "the source-proven Luring Song must be exported");
 assert.equal(action.actionCost, "action");
 assert.equal(action.range, 300);
