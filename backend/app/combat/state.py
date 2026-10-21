@@ -29,6 +29,7 @@ def build_combatant_state(template: CombatantTemplate) -> CombatantState:
                 for r in template.resources
             ],
             active_effect_ids=list(template.innate_condition_ids),
+            active_buff_effect_ids=(["death-trigger"] if template.death_trigger_effect_ids else []),
             active_modifiers=opening_modifiers(template),
         )
     except Exception as exc:

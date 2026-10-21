@@ -95,6 +95,7 @@ class CombatantTemplate(BaseModel):
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
     attack_action: AttackActionDefinition | None = None
+    death_trigger_effect_ids: list[str] = Field(default_factory=list)
     attack_action_weapon_buffs: list[AttackActionWeaponBuff] = Field(default_factory=list)
     bonus_attack_grants: list[BonusAttackGrant] = Field(default_factory=list)
     bonus_tactical_action_grants: list[BonusActionTacticalGrant] = Field(default_factory=list)
