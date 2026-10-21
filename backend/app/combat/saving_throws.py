@@ -41,6 +41,15 @@ def legal_save_action(
     template = target.state.template
     if source_id and has_source_effect_immunity(target.state, action.id, source_id):
         return False
+    exclusive_group = (
+        action.failed_save_timed_effect.exclusive_source_effect_group_id
+        if action.failed_save_timed_effect is not None else None
+    )
+    if exclusive_group and any(
+        effect.exclusive_source_effect_group_id == exclusive_group
+        for effect in target.state.timed_effects
+    ):
+        return False
     if action.required_target_condition is not None and not has_condition(target.state, action.required_target_condition):
         return False
     if actor is not None and action.requires_target_sight and not can_see(actor.state, target.state, combatant_distance(actor, target)):
