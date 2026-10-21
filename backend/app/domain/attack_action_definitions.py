@@ -23,6 +23,7 @@ class PreviousAttackRequirement(BaseModel):
 
 
 class AttackActionSlot(BaseModel):
+    requires_source_grapple: bool = False
     previous_attack: PreviousAttackRequirement | None = None
     attack_ids: list[str] = Field(default_factory=list, max_length=16)
     save_action_ids: list[str] = Field(default_factory=list, max_length=16)
