@@ -10,7 +10,8 @@ from dataclasses import dataclass
 from functools import lru_cache
 
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
-from app.content.monster_definition_adapter_support_2014 import ability_values_2014
+from app.content.monster_definition_adapter_support_2014 import ability_values_2014, save_bonuses_2014
+from app.domain.character_builds import AbilityScores
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
 
@@ -39,6 +40,7 @@ class MonsterCoreFields2014:
     max_hp: int
     dexterity_score: int
     initiative_bonus: int
+    saving_throw_bonuses: tuple[tuple[str, int], ...]
     attacks: tuple[MonsterAttackFields2014, ...]
     blockers: tuple[str, ...]
 
@@ -54,14 +56,16 @@ def all_monster_core_fields_2014() -> tuple[MonsterCoreFields2014, ...]:
         cards = load_monster_source_2014()
         rows: list[MonsterCoreFields2014] = []
         for card in cards:
-            dexterity = ability_values_2014(card)["dexterity"]
+            scores = AbilityScores(**ability_values_2014(card))
+            dexterity = scores.dexterity
             rows.append(MonsterCoreFields2014(
                 source_id=card.id,
                 name=card.name,
                 armor_class=card.armor_class,
                 max_hp=card.max_hp,
                 dexterity_score=dexterity,
-                initiative_bonus=(dexterity - 10) // 2,
+                initiative_bonus=scores.modifier("dexterity"),
+                saving_throw_bonuses=tuple(save_bonuses_2014(card, scores).items()),
                 attacks=tuple(
                     MonsterAttackFields2014(
                         source_id=attack.id,
