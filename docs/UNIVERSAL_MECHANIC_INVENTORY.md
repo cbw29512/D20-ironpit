@@ -495,4 +495,3 @@ Blocked monsters: **90**. These are grouped by printed ability name so the roste
 | `attack:damage-type` | 2 |
 | `arena:neutral` | 1 |
 | `arena:removed` | 1 |
-| `mechanic:defense` | 1 |

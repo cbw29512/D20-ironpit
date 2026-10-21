@@ -41,20 +41,20 @@ def test_2014_nonmagical_defense_family_binds_all_printed_clauses() -> None:
             bound.append(monster.id)
             assert len(defenses) == len(monster.unsupported_defense_text)
 
-    assert set(bound) == {item.id for item in with_defense} - {"rakshasa"}
-    assert leftover == [(
-        "rakshasa",
-        ["piercing from magic weapons wielded by good creatures"],
-    )]
+    assert set(bound) == {item.id for item in with_defense}
+    assert leftover == []
     rakshasa = _monster("rakshasa")
     assert [item.kind for item in conditional_damage_defenses_2014(rakshasa)] == [
         DamageDefenseKind.IMMUNITY,
+        DamageDefenseKind.VULNERABILITY,
     ]
-    assert "mechanic:defense" in basic_blockers_2014(rakshasa)
+    assert "mechanic:defense" not in basic_blockers_2014(rakshasa)
     clay = _monster("clay-golem")
     assert remaining_unsupported_defense_text_2014(clay) == []
     assert "mechanic:defense" not in basic_blockers_2014(clay)
     assert "source:trait" not in basic_blockers_2014(clay)
+
+
 
 
 def test_2014_silvered_and_adamantine_qualifiers_use_shared_forbidden_set() -> None:
