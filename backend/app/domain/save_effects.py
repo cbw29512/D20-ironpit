@@ -31,6 +31,7 @@ class FailedSaveTimedEffect(BaseModel):
     repeat_save_timing: SaveEffectTiming | None = None
     damage_repeat_save_trigger: Literal["none", "other_than_effect_source"] = "none"
     repeat_save_before_damaging_terrain: bool = False
+    source_maintenance_action_cost: Literal["none", "bonus_action"] = "none"
     repeat_save_failure_condition_id: ConditionName | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     next_attack_disadvantage: bool = False
@@ -74,6 +75,7 @@ class FailedSaveTimedEffect(BaseModel):
                 "repeat_save_disadvantage_while_source_visible": False,
                 "damage_repeat_save_trigger": "none",
                 "repeat_save_before_damaging_terrain": False,
+                "source_maintenance_action_cost": "none",
             }
             for key, default in defaults.items():
                 if data.get(key) == default:
