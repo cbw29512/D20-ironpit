@@ -963,6 +963,7 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "goblin-boss-scimitar",
             "goblin-boss-shortbow"
@@ -970,6 +971,7 @@
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "goblin-boss-scimitar",
             "goblin-boss-shortbow"
@@ -2802,12 +2804,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "black-bear-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "black-bear-rend"
           ],
@@ -3017,12 +3021,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "brown-bear-bite"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "brown-bear-claw"
           ],
@@ -4788,12 +4794,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "triceratops-gore"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "triceratops-gore"
           ],
@@ -5735,6 +5743,7 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-druid-vine-staff",
             "srd-druid-verdant-wisp"
@@ -5742,6 +5751,7 @@
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-druid-vine-staff",
             "srd-druid-verdant-wisp"
@@ -6034,12 +6044,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "hippogriff-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "hippogriff-rend"
           ],
@@ -8497,12 +8509,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "polar-bear-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "polar-bear-rend"
           ],
@@ -11077,12 +11091,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "owlbear-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "owlbear-rend"
           ],
@@ -11251,12 +11267,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "saber-toothed-tiger-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "saber-toothed-tiger-rend"
           ],
@@ -11459,6 +11477,7 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "scout-longbow",
             "scout-shortsword"
@@ -11466,6 +11485,7 @@
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "scout-longbow",
             "scout-shortsword"
@@ -12396,18 +12416,21 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-giant-scorpion-claw"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-giant-scorpion-claw"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-giant-scorpion-sting"
           ],
@@ -12615,12 +12638,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-grick-beak"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-grick-tentacles"
           ],
@@ -12801,12 +12826,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-griffon-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-griffon-rend"
           ],
@@ -13362,12 +13389,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "wyvern-bite"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "wyvern-sting"
           ],
@@ -14055,12 +14084,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "archelon-bite"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "archelon-bite"
           ],
@@ -14236,12 +14267,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "ankylosaurus-tail"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "ankylosaurus-tail"
           ],
@@ -14423,12 +14456,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "giant-eagle-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "giant-eagle-rend"
           ],
@@ -14813,12 +14848,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "giant-crocodile-bite"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "giant-crocodile-tail"
           ],
@@ -14991,12 +15028,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "giant-constrictor-snake-bite"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [],
           "save_action_ids": [
             "giant-constrictor-snake-constrict"
@@ -15243,12 +15282,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "tyrannosaurus-rex-bite"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "tyrannosaurus-rex-tail"
           ],
@@ -15419,12 +15460,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-animated-armor-slam"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-animated-armor-slam"
           ],
@@ -15804,6 +15847,7 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-earth-elemental-slam",
             "srd-earth-elemental-rock-launch"
@@ -15811,6 +15855,7 @@
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-earth-elemental-slam",
             "srd-earth-elemental-rock-launch"
@@ -16484,12 +16529,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-gargoyle-claw"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-gargoyle-claw"
           ],
@@ -16891,6 +16938,7 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-guard-captain-javelin-melee",
             "srd-guard-captain-javelin-ranged",
@@ -16899,6 +16947,7 @@
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-guard-captain-javelin-melee",
             "srd-guard-captain-javelin-ranged",
@@ -17069,12 +17118,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-hippopotamus-bite"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-hippopotamus-bite"
           ],
@@ -17288,6 +17339,7 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-hill-giant-tree-club",
             "srd-hill-giant-trash-lob"
@@ -17295,6 +17347,7 @@
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-hill-giant-tree-club",
             "srd-hill-giant-trash-lob"
@@ -17815,6 +17868,7 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-manticore-rend",
             "srd-manticore-tail-spike"
@@ -17822,6 +17876,7 @@
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-manticore-rend",
             "srd-manticore-tail-spike"
@@ -17829,6 +17884,7 @@
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-manticore-rend",
             "srd-manticore-tail-spike"
@@ -19060,18 +19116,21 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-troll-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-troll-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-troll-rend"
           ],
@@ -19655,12 +19714,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-violet-fungus-rotting-touch"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-violet-fungus-rotting-touch"
           ],
@@ -19862,24 +19923,28 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-xorn-bite"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-xorn-claw"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-xorn-claw"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-xorn-claw"
           ],
@@ -20226,12 +20291,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-giant-shark-bite"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-giant-shark-bite"
           ],
@@ -20881,12 +20948,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-sahuagin-warrior-claw"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-sahuagin-warrior-claw"
           ],
@@ -21266,12 +21335,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-hell-hound-bite"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-hell-hound-bite"
           ],
@@ -21504,12 +21575,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-black-dragon-wyrmling-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-black-dragon-wyrmling-rend"
           ],
@@ -21741,12 +21814,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-blue-dragon-wyrmling-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-blue-dragon-wyrmling-rend"
           ],
@@ -21976,12 +22051,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-green-dragon-wyrmling-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-green-dragon-wyrmling-rend"
           ],
@@ -22214,12 +22291,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-red-dragon-wyrmling-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-red-dragon-wyrmling-rend"
           ],
@@ -22448,12 +22527,14 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-white-dragon-wyrmling-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-white-dragon-wyrmling-rend"
           ],
@@ -22684,18 +22765,21 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-young-black-dragon-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-young-black-dragon-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-young-black-dragon-rend"
           ],
@@ -22927,18 +23011,21 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-young-blue-dragon-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-young-blue-dragon-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-young-blue-dragon-rend"
           ],
@@ -23168,18 +23255,21 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-young-green-dragon-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-young-green-dragon-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-young-green-dragon-rend"
           ],
@@ -23412,18 +23502,21 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-young-red-dragon-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-young-red-dragon-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-young-red-dragon-rend"
           ],
@@ -23652,18 +23745,21 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-young-white-dragon-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-young-white-dragon-rend"
           ],
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-young-white-dragon-rend"
           ],
@@ -24638,6 +24734,7 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-bandit-captain-scimitar",
             "srd-bandit-captain-pistol"
@@ -24645,6 +24742,7 @@
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-bandit-captain-scimitar",
             "srd-bandit-captain-pistol"
@@ -24876,6 +24974,7 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-knight-greatsword",
             "srd-knight-heavy-crossbow"
@@ -24883,6 +24982,7 @@
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-knight-greatsword",
             "srd-knight-heavy-crossbow"
@@ -25249,6 +25349,7 @@
       "name": "Multiattack",
       "slots": [
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-warrior-veteran-greatsword",
             "srd-warrior-veteran-heavy-crossbow"
@@ -25256,6 +25357,7 @@
           "save_action_ids": []
         },
         {
+          "requires_source_grapple": false,
           "attack_ids": [
             "srd-warrior-veteran-greatsword",
             "srd-warrior-veteran-heavy-crossbow"

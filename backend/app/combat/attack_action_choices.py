@@ -16,6 +16,17 @@ from app.domain.models import WeaponAttackKind
 logger = logging.getLogger(__name__)
 
 
+def slot_grapple_eligible(attacker, setup, slot) -> bool:
+    """Check current fight state, not a previous attack's cached outcome."""
+    if not slot.requires_source_grapple:
+        return True
+    return any(
+        any(grapple.source_id == attacker.combatant_id for grapple in target.state.grapple_sources)
+        for target in [*setup.heroes, *setup.monsters]
+        if target.combatant_id != attacker.combatant_id and not target.state.is_dead
+    )
+
+
 def save_choice(
     attacker: EncounterCombatant,
     setup: EncounterSetup,

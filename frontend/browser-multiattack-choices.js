@@ -3,8 +3,8 @@
   const F = () => window.IRON_PIT_BROWSER_FORMATION;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
-  const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [], previousAttack: null }
-    : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [], previousAttack: slot.previousAttack ?? null };
+  const slotData = (slot) => Array.isArray(slot) ? { attackIds: slot, saveActionIds: [], previousAttack: null, requiresSourceGrapple: false }
+    : { attackIds: slot.attackIds || [], saveActionIds: slot.saveActionIds || [], previousAttack: slot.previousAttack ?? null, requiresSourceGrapple: slot.requiresSourceGrapple ?? false };
 
   function validatedVariants(member) {
     try {
@@ -54,6 +54,13 @@
     }
   }
 
+  function slotEligible(member, setup, data) {
+    if (!data.requiresSourceGrapple) return true;
+    return [...setup.heroes, ...setup.monsters].some(target => target.combatant_id !== member.combatant_id
+      && !target.state.is_dead && (target.state.grapple_sources || target.state.grappleSources || []).some(grapple =>
+        (grapple.source_id || grapple.sourceId) === member.combatant_id));
+  }
+
   function saveChoice(member, setup, data) {
     try {
       const allowed = new Set(data.saveActionIds);
@@ -82,8 +89,8 @@
       let previous = null;
       return variant.slots.map(slot => {
         const data = slotData(slot), followup = followupTarget(data, previous ? true : null, previous?.target.combatant_id);
-        const choice = followup.eligible ? F().chooseSlotAttack(member, setup, data.attackIds, mode, followup.targetId) : null;
-        const saved = followup.eligible && !choice ? saveChoice(member, setup, data) : null;
+        const choice = followup.eligible && slotEligible(member, setup, data) ? F().chooseSlotAttack(member, setup, data.attackIds, mode, followup.targetId) : null;
+        const saved = followup.eligible && slotEligible(member, setup, data) && !choice ? saveChoice(member, setup, data) : null;
         previous = choice;
         return { choice, saved };
       });
@@ -172,6 +179,6 @@
     }
   }
   window.IRON_PIT_BROWSER_MULTIATTACK_CHOICES = {
-    slotData, expandedSlots, followupTarget, saveChoice, selectSequence, validatedVariants, available, legalChoiceAvailable, meleeAvailable, expectedDamage,
+    slotData, slotEligible, expandedSlots, followupTarget, saveChoice, selectSequence, validatedVariants, available, legalChoiceAvailable, meleeAvailable, expectedDamage,
   };
 })();
