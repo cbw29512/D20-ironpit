@@ -117,6 +117,10 @@
         sequence, round, member, setup, turnKey, initiative, events: [],
       });
       events.push(...start.events); sequence = start.sequence;
+      const maintenance = resolveBonusActionCheckpoint(
+        sequence, round, member, setup, turnKey, "sourceMaintenance", events,
+      );
+      events.push(...maintenance.events); sequence = maintenance.sequence;
       // A printed, Action-economy Bonus Action reveal precedes the next
       // combatant's turn; it never causes an immediate visual save.
       const disguise = member.state.template.visualDisguiseAction;
