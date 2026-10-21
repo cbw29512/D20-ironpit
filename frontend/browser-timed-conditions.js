@@ -43,6 +43,8 @@
       repeat_save_timing: defaultPoison ? "target_turn_start" : (options.repeatSaveTiming || null),
       damage_repeat_save_trigger: options.damageRepeatSaveTrigger || "none",
       repeat_save_before_damaging_terrain: Boolean(options.repeatSaveBeforeDamagingTerrain),
+      source_maintenance_action_cost: options.sourceMaintenanceActionCost || "none",
+      source_turn_count_at_application: options.sourceTurnCountAtApplication ?? null,
       repeat_save_disadvantage_while_source_visible: Boolean(options.repeatSaveDisadvantageWhileSourceVisible),
       allowed_removal_action_ids: [...(options.allowedRemovalActionIds || [])],
       turn_behavior: options.turnBehavior || "normal",
