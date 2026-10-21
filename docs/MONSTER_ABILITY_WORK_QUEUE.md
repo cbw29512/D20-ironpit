@@ -22,11 +22,16 @@
 - Full Sea Hag Horrific Appearance, Illusory Appearance and monster admission remain separate. 2014 source admission stays at the generated count until proven. Browser/Python fight completion and Netlify remain unverified/locked.
 
 
-## Harpy compelled-approach foundation — 2026-10-20
+## Harpy damage-triggered repeat-save foundation — 2026-10-20
 
-- Owner: Codex, ACTIVE in draft PR #974 on `feat/2014-compelled-approach-20261020`, rebased from main `cb42a95025e48649673e98d3b780ec787d503ef8`. Subsystem ownership: timed turn behavior plus reaction-aware movement only.
-- Immutable schema: source-neutral `turn_behavior="forced_approach_source"`; mutable fight state remains the existing timed-effect `source_id` plus normal per-turn movement budget. The creature spends ordinary movement toward its one active source until within 5 feet. Compelled movement does not claim voluntary movement and bypasses willing-movement restrictions, but still opens opportunity-attack windows. Multiple sources or a missing source fail closed.
-- Scope intentionally does not bind or admit Harpy. Persistent hazards currently resolve after square entry, while Luring Song requires a repeat save before damaging terrain. Damage-triggered repeat saves and Bonus Action maintenance/stop lifecycle also remain missing. Keep `source:extra-action`; source admission remains 237/327. Exact-head certification is required; webpage verification is separate and Netlify stays locked.
+- Owner: Codex, ACTIVE in draft PR [#978](https://github.com/cbw29512/D20-ironpit/pull/978) on `feat/2014-damage-repeat-save-20261020`, reconciled onto main `a9d5db3f392c23d9398c2900583a67a3d10402d0`. Subsystem ownership: source-bound timed-effect lifecycle at the applied-damage event boundary.
+- Printed-source decomposition for this unit: trigger = the affected creature takes actual damage; eligibility = damage source combatant differs from the effect owner; action/resource = none; attack/save = immediate repeat of the stored ability/DC/context; damage/condition/movement = no new damage or movement, successful save removes the whole grouped condition; timing = after damage-trigger reaction eligibility is evaluated; duration/removal = normal duration remains on failure, grouped removal and any existing source-effect immunity occur on success.
+- Immutable card schema is `damage_repeat_save_trigger="other_than_effect_source"`; mutable fight state copies that mode onto the primary timed effect while retaining existing source id, repeat-save fields, context and failure count. Invalid incomplete cards and contradictory `ends_on_damage` combinations fail closed. Python/browser use applied damage, combatant IDs and the existing repeat-save oracle; printed names appear only in event logs.
+- Scope intentionally does not bind or admit Harpy. Luring Song still needs the separate repeat save before entering damaging terrain plus subsequent-turn Bonus Action maintenance/stop lifecycle. Keep `source:extra-action`; source admission remains 237/327. Exact-head full certification is required; real webpage fight verification remains separate and Netlify production stays locked.
+
+## Harpy compelled-approach foundation — MERGED + CERTIFIED
+
+- PR #974 merged to main as `e17087dde612db3d9351931e3107e0b8d0f91062` after exact-head CI, browser regressions, 2014 Hero Certification and generated-artifact sync passed. It adds paired source-neutral compelled approach through ordinary movement and reaction-aware pathing. Harpy remains unbound; source admission stayed 237/327.
 
 ## Harpy grouped failed-save control foundation — MERGED + CERTIFIED
 
