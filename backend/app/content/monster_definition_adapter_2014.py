@@ -180,6 +180,8 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         visual_disguise_action=visual_disguise_action_2014(monster),
         attacks=attacks,
         primary_attack_id=attacks[0].id, attack_action=multiattack_2014(monster),
+        death_trigger_effect_ids=[str(action['id']) for action in monster.death_trigger_actions
+            if isinstance(action, dict) and isinstance(action.get('id'), str) and action['id']],
         save_actions=save_capabilities_2014(monster),
         spell_save_actions=innate_spell_save_actions_2014(monster),
         persistent_save_zone_actions=[zone for zone in [fetid_cloud_zone_2014(monster)] if zone is not None],
