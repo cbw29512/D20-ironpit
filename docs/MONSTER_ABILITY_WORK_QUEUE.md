@@ -1,14 +1,16 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
 
-## Harpy subsequent-turn source maintenance — IN PR #991
+## Harpy Luring Song — IN PR #992
 
-- Owner: Codex on `feat/2014-source-maintenance-lifecycle-20261021`. This scope is independent of roster-wide damage defenses in #989 and Multiattack inventory in #990.
-- Immutable card schema: `source_maintenance_action_cost` on a failed-save timed effect. Fight-local primary state: `source_turn_count_at_application`; secondary grouped conditions own no maintenance lifecycle. The source's first application turn is free, and every later source turn (including a same-round extra turn) requires the printed cost.
-- Shared Python/browser policy explicitly continues at most one due group, preferring the group affecting the most opponents; all other due groups end. Voluntary stop is immediate and free. An unavailable Bonus Action ends the source/effect group on every target without granting the success-only source immunity. Source and card names remain log-only.
-- PR #991 adds paired action-economy integration, sparse browser export, source-turn checkpointing, meaningful end/continue events and renamed-card regressions. Production modules remain within the 150-line limit. Generated blocker/inventory artifacts are unchanged because Harpy is not source-bound or admitted in this foundation.
-- Before merge: require exact-final-head source/Python, browser, Hero, generated-sync and applicable paired-roster checks, then recheck current main and active file ownership. Netlify production stays locked.
-- After certified merge: bind the complete 2014 Luring Song source card using the grouped save/control, compelled approach, damage repeat save, damaging-terrain repeat save and this maintenance lifecycle; then inspect the 2024 counterpart independently and complete actual webpage fights. Preserve **237/327 admitted, 90 blocked** and zero finished Harpy until those later steps pass.
+- PR #991 merged as `02065c068edcce3b22bb5cead80a2e11ec42d106` after exact-head source/Python, browser, combat, Hero and generated-sync certification. Its source-neutral maintenance lifecycle is now on main; ownership is released.
+- Owner: Codex on `feat/2014-harpy-luring-song-20261021`. This scope is independent of roster-wide damage defenses in #989 and Multiattack inventory in #990.
+- Immutable 2014 card contract: Action; magical audible 300-foot self emanation; every other Humanoid or Giant that can hear; DC 11 Wisdom; Charmed plus Incapacitated; ignore competing harpy songs; ordinary direct-route movement to within 5 feet without avoiding opportunity attacks; repeat save before damaging terrain, after damage from a source other than the singing harpy, and at target-turn end; successful initial or repeat save grants 24-hour source-specific immunity; subsequent source turns require a Bonus Action; voluntary stop or source incapacitation ends the group without success immunity.
+- Fight-local state owns grouped timed effects, source identity, the application-turn checkpoint, exclusive-song group identity, action economy and source-specific immunity. Printed card values remain immutable and fresh fights reset them.
+- PR #992 composes the existing grouped-condition, compelled-approach, damage-trigger, damaging-terrain and source-maintenance primitives. It adds only reusable schema for required target creature types, mutually exclusive source-effect groups and repeat-save-success immunity, with paired Python/browser semantics and actual-card regressions. Resolver dispatch never uses the Harpy or Luring Song names.
+- Source proof must include the two unheaded continuation paragraphs; partial or edited clauses fail closed. Generated admission/blocker/inventory/browser artifacts remain generator-owned. Do not claim the expected 238/327 admission until the owning sync workflow and all exact-final-head certification lanes pass.
+- Independent 2024 check: SRD 5.2.1 Harpy (p. 297) retains DC 11, Humanoid/Giant 300-foot emanation, grouped Charmed/Incapacitated, direct-route movement, the same repeat-save triggers and 24-hour source immunity, but its song lasts by **Concentration** instead of 2014 Bonus Action upkeep. Keep that edition-specific lifecycle separate.
+- Real webpage fights remain unverified, so this work adds zero finished monsters until live current-code fight evidence exists. Netlify production stays locked.
 
 ## 2014 magical visual disguise / Sea Hag Illusory Appearance — source contract
 
