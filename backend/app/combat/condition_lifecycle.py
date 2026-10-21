@@ -6,7 +6,11 @@ from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_removal import remove_condition
 from app.combat.modifier_stack import expire_target_turn_modifiers
 from app.combat.timed_condition_saves import resolve_repeat_save
-from app.combat.timed_conditions import apply_terminal_condition_outcome, remove_effect_group
+from app.combat.timed_conditions import (
+    apply_terminal_condition_outcome,
+    remove_effect_group,
+    remove_effect_group_after_repeat_save,
+)
 from app.combat.timed_effect_expiry import timed_effect_expiry_due
 from app.domain.actions import ConditionTiming
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -46,7 +50,7 @@ def resolve_target_condition_timing(
                 continue
             if _repeat_save_due(effect, round_number, timing):
                 roll, succeeded, buffs = resolve_repeat_save(target, effect, dice, round_number, setup)
-                removed = remove_effect_group(target.state, effect) if succeeded else []
+                removed = remove_effect_group_after_repeat_save(target.state, effect) if succeeded else []
                 applied: list[str] = []
                 if not succeeded:
                     effect.repeat_save_failure_count += 1
