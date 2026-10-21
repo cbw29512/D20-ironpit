@@ -12,6 +12,7 @@ from functools import lru_cache
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_definition_adapter_support_2014 import ability_values_2014
 from app.content.monster_source_2014 import load_monster_source_2014
+from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +23,7 @@ class MonsterAttackFields2014:
     name: str
     kind: str
     attack_bonus: int
+    damage_average: int
     damage_dice_count: int
     damage_dice_size: int
     damage_bonus: int
@@ -66,13 +68,14 @@ def all_monster_core_fields_2014() -> tuple[MonsterCoreFields2014, ...]:
                         name=attack.name,
                         kind=attack.kind,
                         attack_bonus=attack.attack_bonus,
+                        damage_average=attack.damage.average,
                         damage_dice_count=attack.damage.dice_count,
                         damage_dice_size=attack.damage.dice_size,
                         damage_bonus=attack.damage.bonus,
                         damage_type=attack.damage.type,
                         source_complete=attack.source_complete,
                     )
-                    for attack in card.attacks
+                    for attack in (source_completed_mixed_attack_2014(card, item) for item in card.attacks)
                 ),
                 blockers=basic_blockers_2014(card),
             ))
