@@ -43,7 +43,7 @@
       if (effect.damage_repeat_save_trigger === "other_than_effect_source"
         && damageSource.combatant_id === effect.source_id) continue;
       const save = L().repeatSave(target, effect, round, setup);
-      const removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
+      const removed = save.succeeded ? T().removeGroupAfterRepeatSave(target.state, effect) : [];
       if (!save.succeeded) effect.repeat_save_failure_count = (effect.repeat_save_failure_count || 0) + 1;
       events.push(saveEvent(sequence++, round, target, effect, save, removed,
         `after damage from ${damageSource.state.template.name}`));
@@ -64,7 +64,7 @@
         if (handled.has(key(effect)) || !effect.repeat_save_before_damaging_terrain) continue;
         handled.add(key(effect));
         const save = L().repeatSave(target, effect, round, setup);
-        const removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
+        const removed = save.succeeded ? T().removeGroupAfterRepeatSave(target.state, effect) : [];
         if (save.succeeded && effect.turn_behavior === "forced_approach_source") released = true;
         if (!save.succeeded) effect.repeat_save_failure_count = (effect.repeat_save_failure_count || 0) + 1;
         events.push(saveEvent(sequence++, round, target, effect, save, removed,
@@ -88,7 +88,7 @@
         const dead = source.state.is_dead || !source.state.is_alive || source.state.current_hp <= 0;
         const incapacitated = C().incapacitated(source.state);
         if ((effect.ends_if_source_dead && dead) || (effect.ends_if_source_incapacitated && incapacitated)) {
-          handled.add(key(effect)); T().removeGroup(target.state, effect);
+          handled.add(key(effect)); T().removeGroupAfterRepeatSave(target.state, effect);
         }
       }
     }
