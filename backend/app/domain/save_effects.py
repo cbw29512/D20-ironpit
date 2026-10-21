@@ -119,6 +119,8 @@ class FailedSaveTimedEffect(BaseModel):
                 raise ValueError("A timed effect cannot end and repeat its save on the same damage.")
             if self.repeat_save_before_damaging_terrain and not all(configured):
                 raise ValueError("Damaging-terrain repeat saves require ability, DC, and timing.")
+            if self.source_effect_immunity_on_repeat_save_success and not all(configured):
+                raise ValueError("Repeat-save success immunity requires ability, DC, and timing.")
             if self.repeat_save_failure_condition_id is not None and not all(configured):
                 raise ValueError(
                     "Repeat-save failure escalation requires ability, DC, and timing."
