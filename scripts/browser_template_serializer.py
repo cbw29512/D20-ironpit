@@ -1046,8 +1046,6 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "saving_throw_bonuses": template.saving_throw_bonuses, "skill_bonuses": template.skill_bonuses,
             "attacks": [attack_row(item, traits) for item in attacks], "primary_attack_id": template.weapon_attack.id,
             "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
-            "death_trigger_effect_ids": list(template.death_trigger_effect_ids),
-            "death_trigger_actions": [_save(item) for item in template.death_trigger_actions],
             "hp_threshold_condition_actions": [
                 {
                     "id": item.id, "name": item.name, "actionCost": item.action_cost,
@@ -1098,6 +1096,9 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        if template.death_trigger_actions:
+            row["death_trigger_effect_ids"] = list(template.death_trigger_effect_ids)
+            row["death_trigger_actions"] = [_save(item) for item in template.death_trigger_actions]
         if template.innate_condition_ids:
             row["innate_condition_ids"] = list(template.innate_condition_ids)
         if template.source_turn_relation_damages:
