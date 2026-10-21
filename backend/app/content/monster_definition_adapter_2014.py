@@ -199,7 +199,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         progression_features=features, passive_modifier_grants=conditional_immunity_grants_2014(monster),
         bonus_attack_grants=bonus_attack_grants_2014(monster),
         bonus_tactical_action_grants=aggressive_tactical_grants_2014(monster),
-        saving_throw_bonuses=save_bonuses_2014(monster, scores),
+        saving_throw_bonuses=dict(core.saving_throw_bonuses),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
         innate_condition_ids=innate_condition_ids_2014(monster),
         source_allows_hostile_overlap=bool({'Air Form', 'Water Form'} & set(monster.trait_names)),
