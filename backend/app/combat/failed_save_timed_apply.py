@@ -104,6 +104,10 @@ def apply_failed_save_timed_effect(
                 source_effect_immunity_on_end=(
                     rider.source_effect_immunity_on_end if owns_lifecycle else False
                 ),
+                source_effect_immunity_on_repeat_save_success=(
+                    rider.source_effect_immunity_on_repeat_save_success
+                    if owns_lifecycle else False
+                ),
             )
             if result is not None:
                 applied.append(result)
