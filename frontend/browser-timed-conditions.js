@@ -45,6 +45,7 @@
       repeat_save_before_damaging_terrain: Boolean(options.repeatSaveBeforeDamagingTerrain),
       source_maintenance_action_cost: options.sourceMaintenanceActionCost || "none",
       source_turn_count_at_application: options.sourceTurnCountAtApplication ?? null,
+      exclusive_source_effect_group_id: options.exclusiveSourceEffectGroupId || null,
       repeat_save_disadvantage_while_source_visible: Boolean(options.repeatSaveDisadvantageWhileSourceVisible),
       allowed_removal_action_ids: [...(options.allowedRemovalActionIds || [])],
       turn_behavior: options.turnBehavior || "normal",
