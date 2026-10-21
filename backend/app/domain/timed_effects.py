@@ -82,6 +82,7 @@ class TimedEffect(BaseModel):
     ground_contact: bool = False
     ends_on_teleport: bool = False
     source_effect_immunity_on_end: bool = False
+    source_effect_immunity_on_repeat_save_success: bool = False
     repeat_save_disadvantage_while_source_visible: bool = False
     control_limits: TimedControlLimits | None = None
 
