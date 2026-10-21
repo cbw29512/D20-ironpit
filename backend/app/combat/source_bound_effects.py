@@ -4,7 +4,10 @@ import logging
 
 from app.combat.condition_rules import is_incapacitated
 from app.combat.timed_condition_saves import resolve_repeat_save
-from app.combat.timed_conditions import remove_effect_group
+from app.combat.timed_conditions import (
+    remove_effect_group,
+    remove_effect_group_after_repeat_save,
+)
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
 from app.domain.models import BattleEvent, CombatantState
@@ -41,7 +44,7 @@ def resolve_damage_repeat_saves(
                 and damage_source.combatant_id == effect.source_id):
             continue
         roll, succeeded, buffs = resolve_repeat_save(target, effect, dice, round_number, setup)
-        removed = remove_effect_group(target.state, effect) if succeeded else []
+        removed = remove_effect_group_after_repeat_save(target.state, effect) if succeeded else []
         if not succeeded:
             effect.repeat_save_failure_count += 1
         events.append(_repeat_save_event(
@@ -76,7 +79,7 @@ def resolve_damaging_terrain_repeat_saves(
             roll, succeeded, buffs = resolve_repeat_save(
                 target, effect, dice, round_number, setup,
             )
-            removed = remove_effect_group(target.state, effect) if succeeded else []
+            removed = remove_effect_group_after_repeat_save(target.state, effect) if succeeded else []
             if succeeded and effect.turn_behavior == "forced_approach_source":
                 released = True
             if not succeeded:
