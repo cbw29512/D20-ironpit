@@ -59,6 +59,7 @@ def _strip_extension_defaults(value):
             "conditional_damage_defenses",
             "damage_absorptions",
             "damage_threshold_zero_hp_replacements",
+            "death_trigger_effect_ids",
         } and item == []:
             continue
         if key == "replacement_form_actions" and item == []:
