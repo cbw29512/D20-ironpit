@@ -160,7 +160,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         challenge_rating=monster.challenge_rating, kind="monster", ruleset="2014",
         creature_type=monster.creature_type,
         size=CreatureSize(monster.size.lower()), ability_scores=scores,
-        armor_class=core.armor_class, max_hp=monster.max_hp, speed_ft=standard_arena_closing_speed_from_modes(movement),
+        armor_class=core.armor_class, max_hp=core.max_hp, speed_ft=standard_arena_closing_speed_from_modes(movement),
         movement_modes=movement, initiative_bonus=scores.modifier("dexterity"),
         blindsight_ft=blindsight_ft, truesight_ft=truesight_ft,
         blindsight_deafened_ft=bounded[1] if bounded else None,
