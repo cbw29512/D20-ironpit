@@ -61,10 +61,16 @@
         (grapple.source_id || grapple.sourceId) === member.combatant_id));
   }
 
+  function targetGrappledByActor(member, target) {
+    return (target.state.grapple_sources || target.state.grappleSources || []).some(source =>
+      (source.source_id || source.sourceId) === member.combatant_id);
+  }
+
   function saveChoice(member, setup, data) {
     try {
       const allowed = new Set(data.saveActionIds);
       for (const target of F().targetOrder(member, setup)) {
+        if (data.requiresSourceGrapple && !targetGrappledByActor(member, target)) continue;
         const action = (member.state.template.saving_throw_actions || []).find((item) =>
           allowed.has(item.id) && V().legalAction(item, target, F().saveDistance(member, target, item.range), member.combatant_id));
         if (action) return { target, save: action, distance: F().saveDistance(member, target, action.range) };

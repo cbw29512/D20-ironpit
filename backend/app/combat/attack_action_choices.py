@@ -27,6 +27,11 @@ def slot_grapple_eligible(attacker, setup, slot) -> bool:
     )
 
 
+def target_grappled_by_actor(actor, target) -> bool:
+    """Only an actor's own grapple authorizes grapple-gated target actions."""
+    return any(source.source_id == actor.combatant_id for source in target.state.grapple_sources)
+
+
 def save_choice(
     attacker: EncounterCombatant,
     setup: EncounterSetup,
@@ -35,6 +40,8 @@ def save_choice(
     try:
         allowed = set(slot.save_action_ids)
         for target in target_order(attacker, setup):
+            if slot.requires_source_grapple and not target_grappled_by_actor(attacker, target):
+                continue
             for action in attacker.state.template.saving_throw_actions:
                 if action.id not in allowed:
                     continue
