@@ -41,6 +41,7 @@ class MonsterCoreFields2014:
     dexterity_score: int
     initiative_bonus: int
     saving_throw_bonuses: tuple[tuple[str, int], ...]
+    condition_immunities: tuple[str, ...]
     attacks: tuple[MonsterAttackFields2014, ...]
     blockers: tuple[str, ...]
 
@@ -66,6 +67,7 @@ def all_monster_core_fields_2014() -> tuple[MonsterCoreFields2014, ...]:
                 dexterity_score=dexterity,
                 initiative_bonus=scores.modifier("dexterity"),
                 saving_throw_bonuses=tuple(save_bonuses_2014(card, scores).items()),
+                condition_immunities=tuple(item.lower() for item in card.condition_immunities),
                 attacks=tuple(
                     MonsterAttackFields2014(
                         source_id=attack.id,
