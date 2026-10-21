@@ -1,7 +1,7 @@
-"""Immutable core combat fields for every 2014 monster, including blocked cards.
+"""Source-owned combat values across the complete 2014 monster catalog.
 
-This is a source-data bridge, not a second combat engine or a bypass around
-full combat admission. Runtime resolution still uses the universal engine.
+This module exposes printed values; the one universal combat engine resolves them.
+Unsupported actions remain blocked for admission rather than being discarded.
 """
 from __future__ import annotations
 
@@ -16,11 +16,27 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True, slots=True)
+class MonsterAttackFields2014:
+    source_id: str
+    name: str
+    kind: str
+    attack_bonus: int
+    damage_dice_count: int
+    damage_dice_size: int
+    damage_bonus: int
+    damage_type: str | None
+    source_complete: bool
+
+
+@dataclass(frozen=True, slots=True)
 class MonsterCoreFields2014:
     source_id: str
     name: str
     armor_class: int
     max_hp: int
+    dexterity_score: int
+    initiative_bonus: int
+    attacks: tuple[MonsterAttackFields2014, ...]
     blockers: tuple[str, ...]
 
     @property
@@ -30,34 +46,50 @@ class MonsterCoreFields2014:
 
 @lru_cache(maxsize=1)
 def all_monster_core_fields_2014() -> tuple[MonsterCoreFields2014, ...]:
-    """Keep printed AC/HP available for all 327, including non-runnable cards."""
+    """Read all 327 printed cards, independent of complete-action certification."""
     try:
         cards = load_monster_source_2014()
-        fields = tuple(
-            MonsterCoreFields2014(
+        rows: list[MonsterCoreFields2014] = []
+        for card in cards:
+            dexterity = card.abilities["dexterity"]
+            rows.append(MonsterCoreFields2014(
                 source_id=card.id,
                 name=card.name,
                 armor_class=card.armor_class,
                 max_hp=card.max_hp,
+                dexterity_score=dexterity,
+                initiative_bonus=(dexterity - 10) // 2,
+                attacks=tuple(
+                    MonsterAttackFields2014(
+                        source_id=attack.id,
+                        name=attack.name,
+                        kind=attack.kind,
+                        attack_bonus=attack.attack_bonus,
+                        damage_dice_count=attack.damage.dice_count,
+                        damage_dice_size=attack.damage.dice_size,
+                        damage_bonus=attack.damage.bonus,
+                        damage_type=attack.damage.type,
+                        source_complete=attack.source_complete,
+                    )
+                    for attack in card.attacks
+                ),
                 blockers=basic_blockers_2014(card),
-            )
-            for card in cards
-        )
-        if len(fields) != 327 or len({row.source_id for row in fields}) != 327:
-            raise ValueError("The complete 2014 core-stat bridge requires 327 unique cards.")
-        return fields
+            ))
+        if len(rows) != 327 or len({row.source_id for row in rows}) != 327:
+            raise ValueError("Complete 2014 catalog requires 327 unique monster cards.")
+        return tuple(rows)
     except Exception:
-        logger.exception("Could not build complete 2014 monster core-stat bindings.")
+        logger.exception("Failed to bind all 2014 monsters' core combat fields.")
         raise
 
 
 def monster_core_fields_2014(source_id: str) -> MonsterCoreFields2014:
-    """Read source-owned statistics without pretending unsupported actions work."""
+    """Look up immutable card data; combat still uses canonical state/resolvers."""
     try:
         return next(row for row in all_monster_core_fields_2014() if row.source_id == source_id)
     except StopIteration as exc:
-        logger.error("Unknown 2014 monster source id: %s", source_id)
-        raise KeyError(f"Unknown 2014 monster source id: {source_id}") from exc
+        logger.error("Unknown 2014 monster source ID: %s", source_id)
+        raise KeyError(f"Unknown 2014 monster source ID: {source_id}") from exc
     except Exception:
-        logger.exception("Failed 2014 core-stat lookup for %s", source_id)
+        logger.exception("2014 monster field lookup failed: %s", source_id)
         raise
