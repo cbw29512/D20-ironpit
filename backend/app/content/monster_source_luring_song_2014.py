@@ -41,7 +41,7 @@ def source_proven_luring_song_2014(
         name = "Luring Song"
         if name not in monster.action_names:
             return []
-        printed = source_sections_2014(monster.source_actions).get(name)
+        printed = source_sections_2014(monster.source_actions, include_continuations=True).get(name)
         if printed is None:
             return []
         normalized = " ".join(printed.replace("’", "'").split())
