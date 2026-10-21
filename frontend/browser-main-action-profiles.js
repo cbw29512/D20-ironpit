@@ -2,6 +2,7 @@
   "use strict";
 
   const CATEGORIES = Object.freeze({
+    VISUAL_DISGUISE_INSPECTION: "visual-disguise-inspection",
     REPLACEMENT_FORM_SETUP: "replacement-form-setup",
     SPELL_OFFENSE: "spell-offense",
     INTIMIDATING_PRESENCE_2014: "intimidating-presence-2014",
@@ -34,6 +35,7 @@
       CATEGORIES.SAVE_ZONE,
       CATEGORIES.STANDARD_ATTACK,
       CATEGORIES.DODGE,
+      CATEGORIES.VISUAL_DISGUISE_INSPECTION,
     ]),
     actionSurgeAttack: Object.freeze([
       CATEGORIES.AREA_WEAPON_ATTACK,

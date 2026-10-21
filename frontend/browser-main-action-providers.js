@@ -172,6 +172,33 @@
     });
   }
 
+
+    register({
+      id: "visual-disguise-inspection", category: C().VISUAL_DISGUISE_INSPECTION, rulesets: BOTH,
+      discover: ({ member, setup }) => {
+        if (!E().available(member.state, "action")) return null;
+        const runtime = window.IRON_PIT_BROWSER_VISUAL_DISGUISE_INSPECTION;
+        if (!runtime) return null;
+        for (const source of [...(setup.heroes || []), ...(setup.monsters || [])]) {
+          if (source.combatant_id === member.combatant_id) continue;
+          const rule = source.state?.template?.visualDisguiseAction;
+          if (!rule || !source.state.magical_visual_disguise_active) continue;
+          if (source.state.is_dead || source.state.current_hp <= 0) continue;
+          const recognized = member.state.recognized_visual_disguise_source_ids || [];
+          if (recognized.includes(source.combatant_id)) continue;
+          const distance = ST().distance(member, source);
+          if (!window.IRON_PIT_BROWSER_CONDITION_RULES?.canSee(member.state, source.state, distance)) continue;
+          return { payload: { sourceId: source.combatant_id, delivery: "inspection", expectedDamage: 0 } };
+        }
+        return null;
+      },
+      resolve: ({ sequence, round, member, setup }, candidate) => {
+        const runtime = window.IRON_PIT_BROWSER_VISUAL_DISGUISE_INSPECTION;
+        const source = [...(setup.heroes || []), ...(setup.monsters || [])].find(s => s.combatant_id === candidate.payload.sourceId);
+        if (!source || !runtime) throw new Error("Visual disguise inspection target missing.");
+        return [runtime.inspect(sequence, round, member, source, setup)];
+      },
+    });
   install();
   window.IRON_PIT_BROWSER_MAIN_ACTION_PROVIDERS = { install, saveChoice, printedSave };
 })();

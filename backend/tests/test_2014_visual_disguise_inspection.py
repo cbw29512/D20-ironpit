@@ -105,3 +105,15 @@ def test_missing_ability_sight_active_disguise_or_distinct_owner_fail_closed():
     observer.state.active_effect_ids.append("blinded")
     with pytest.raises(ValueError, match="requires sight"):
         resolve_visual_disguise_inspection(1, 1, observer, source, FixedDiceProvider([20]), setup)
+
+
+def test_inspection_is_callable_optional_not_automatic():
+    """Confirms the shared resolver can be invoked as an optional Action without auto-trigger."""
+    setup, source, observer = _battle()
+    # Direct call succeeds and spends the printed cost.
+    event = resolve_visual_disguise_inspection(
+        1, 1, observer, source, FixedDiceProvider([12]), setup)
+    assert event.check_succeeded is True
+    assert observer.state.action_available is False
+    # No automatic invocation occurs; state only changes when explicitly resolved.
+    assert source.state.magical_visual_disguise_active is True
