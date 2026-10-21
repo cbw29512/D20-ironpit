@@ -82,6 +82,7 @@
       ground_contact: Boolean(options.groundContact),
       ends_on_teleport: Boolean(options.endsOnTeleport || options.groundContact),
       source_effect_immunity_on_end: Boolean(options.sourceEffectImmunityOnEnd),
+      source_effect_immunity_on_repeat_save_success: Boolean(options.sourceEffectImmunityOnRepeatSaveSuccess),
       control_limits: options.controlLimits || null,
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
@@ -136,6 +137,12 @@
       window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS?.grantImmunity(state, actionId, sourceId, round, { sourceIsMagical });
     }
     return removed;
+  }
+
+  function removeGroupAfterRepeatSave(state, effect) {
+    return removeGroup(state, effect, {
+      grantSourceImmunity: effect.source_effect_immunity_on_repeat_save_success ? true : null,
+    });
   }
 
   function expireOnOwnerEvent(state, event, affectedStates = []) {
@@ -232,7 +239,7 @@
 
   window.IRON_PIT_BROWSER_TIMED = {
     apply, applyTerminalOutcome, expireOnOwnerEvent, consumeNextAttackDisadvantage, expireSourceStart, nextAttackDisadvantage, ownsDamageResistance,
-    removeEffect, removeGroup, removeOnMagicalHealing, resolveMovementCounters, suppressesAction, suppressesBonusAction,
+    removeEffect, removeGroup, removeGroupAfterRepeatSave, removeOnMagicalHealing, resolveMovementCounters, suppressesAction, suppressesBonusAction,
     suppressesMovement, suppressesReactions, suppressesVoluntaryTurn,
   };
 })();
