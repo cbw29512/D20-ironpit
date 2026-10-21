@@ -33,6 +33,7 @@ class TimedEffect(BaseModel):
     repeat_save_before_damaging_terrain: bool = False
     source_maintenance_action_cost: Literal["none", "bonus_action"] = "none"
     source_turn_count_at_application: int | None = Field(default=None, ge=0)
+    exclusive_source_effect_group_id: str | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     turn_behavior: TimedTurnBehavior = "normal"
     ends_on_damage: bool = False
