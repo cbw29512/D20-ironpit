@@ -1,16 +1,12 @@
 from __future__ import annotations
-
 import logging
 from collections import defaultdict
-
 from app.combat.action_economy import is_available, spend
 from app.combat.timed_condition_lifecycle import remove_effect_group
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, TimedEffect
-
 logger = logging.getLogger(__name__)
 MaintainedGroup = list[tuple[EncounterCombatant, TimedEffect]]
-
 
 def _maintained_groups(
     source: EncounterCombatant,
@@ -35,7 +31,6 @@ def _maintained_groups(
             groups[effect.source_effect_id].append((target, effect))
     return groups
 
-
 def _selected_group(
     source: EncounterCombatant,
     groups: dict[str, MaintainedGroup],
@@ -55,7 +50,6 @@ def _selected_group(
         ),
     )
     return ranked[0]
-
 
 def _end_group(
     sequence: int,
@@ -95,7 +89,6 @@ def _end_group(
         sequence += 1
     return events, sequence
 
-
 def stop_source_maintained_effects(
     sequence: int,
     round_number: int,
@@ -114,7 +107,6 @@ def stop_source_maintained_effects(
     except Exception:
         logger.exception("Failed to stop source-maintained effects for %s.", source.combatant_id)
         raise
-
 
 def resolve_source_maintenance(
     sequence: int,
