@@ -16,6 +16,7 @@ from app.domain.runtime import TimedTurnBehavior
 from app.combat.timed_condition_lifecycle import (
     expire_start_of_turn_conditions,
     remove_effect_group,
+    remove_effect_group_after_repeat_save,
     remove_effect_instance,
 )
 
