@@ -52,6 +52,20 @@ def _kind_for_clause(monster: SourceMonster2014, clause: str) -> DamageDefenseKi
 
 
 def _parse_clause(monster: SourceMonster2014, clause: str) -> ConditionalDamageDefense | None:
+    # Iron Pit alignment-neutral arena override: the card retains its RAW text.
+    # A magical piercing weapon triggers the fight-long vulnerability; no
+    # attacker alignment field is introduced for a single defense clause.
+    if _normalize(clause.strip()) == "piercing from magic weapons wielded by good creatures":
+        return ConditionalDamageDefense(
+            id="arena-magic-piercing-vulnerability",
+            kind=DamageDefenseKind.VULNERABILITY,
+            damage_types=[DamageType.PIERCING],
+            required_source_qualifiers=[
+                DamageSourceQualifier.ATTACK,
+                DamageSourceQualifier.WEAPON,
+                DamageSourceQualifier.MAGICAL,
+            ],
+        )
     match = _CLAUSE.match(_normalize(clause.strip()))
     if match is None:
         return None
