@@ -66,6 +66,9 @@ def apply_failed_save_timed_effect(
                     actor.state.turns_started if owns_lifecycle
                     and rider.source_maintenance_action_cost != "none" else None
                 ),
+                exclusive_source_effect_group_id=(
+                    rider.exclusive_source_effect_group_id if owns_lifecycle else None
+                ),
                 repeat_save_disadvantage_while_source_visible=(
                     rider.repeat_save_disadvantage_while_source_visible
                     if owns_lifecycle else False
