@@ -56,6 +56,9 @@ def apply_failed_save_timed_effect(
                 damage_repeat_save_trigger=(
                     rider.damage_repeat_save_trigger if owns_lifecycle else "none"
                 ),
+                repeat_save_before_damaging_terrain=(
+                    rider.repeat_save_before_damaging_terrain if owns_lifecycle else False
+                ),
                 repeat_save_disadvantage_while_source_visible=(
                     rider.repeat_save_disadvantage_while_source_visible
                     if owns_lifecycle else False

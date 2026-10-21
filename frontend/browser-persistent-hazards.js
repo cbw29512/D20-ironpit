@@ -78,6 +78,25 @@
     };
   }
 
+
+  function entersDamaging(mover, destination, setup, round) {
+    try {
+      if (!mover.state.position) return false;
+      return hazards(setup).some((item) => {
+        if (item.sourceSide === mover.side || round >= item.expiresRound
+          || item.remainingDamageCapacity <= 0
+          || Math.max(item.failureDamage, item.successDamage) <= 0) return false;
+        const side = G().effectSquareSide(item.footprintSize);
+        const before = G().squareAreaDistanceFt(mover.state.position, 1, item.position, side);
+        const after = G().squareAreaDistanceFt(destination, 1, item.position, side);
+        return before > item.triggerRadiusFt && after <= item.triggerRadiusFt;
+      });
+    } catch (error) {
+      console.error("Damaging-hazard entry check failed", { mover: mover?.combatant_id, error });
+      throw error;
+    }
+  }
+
   function resolveEntries(sequence, round, mover, setup, turnKey) {
     if (!mover.state.position) return { events: [], sequence };
     hazards(setup);
@@ -126,5 +145,5 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_PERSISTENT_HAZARDS = { cast, positionLegal, resolveEntries };
+  window.IRON_PIT_BROWSER_PERSISTENT_HAZARDS = { cast, entersDamaging, positionLegal, resolveEntries };
 })();

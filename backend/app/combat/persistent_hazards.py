@@ -13,6 +13,35 @@ from app.combat.persistent_hazard_cast import cast_persistent_hazard
 
 logger = logging.getLogger(__name__)
 
+def position_enters_damaging_hazard(
+    mover: EncounterCombatant,
+    destination,
+    setup: EncounterSetup,
+    round_number: int,
+) -> bool:
+    """Return whether one step crosses into an active hostile damage radius."""
+    try:
+        if mover.state.position is None:
+            return False
+        for hazard in setup.persistent_hazards:
+            if (
+                hazard.source_side == mover.side
+                or round_number >= hazard.expires_round
+                or hazard.remaining_damage_capacity <= 0
+                or max(hazard.failure_damage, hazard.success_damage) <= 0
+            ):
+                continue
+            side = effect_square_side_squares(hazard.footprint_size)
+            before = square_area_distance_ft(mover.state.position, 1, hazard.position, side)
+            after = square_area_distance_ft(destination, 1, hazard.position, side)
+            if before > hazard.trigger_radius_ft and after <= hazard.trigger_radius_ft:
+                return True
+        return False
+    except Exception as exc:
+        logger.exception("Damaging-hazard entry check failed for %s.", mover.combatant_id)
+        raise RuntimeError("Damaging-hazard entry could not be checked.") from exc
+
+
 
 def resolve_persistent_hazard_entries(
     sequence: int,

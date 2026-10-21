@@ -402,6 +402,8 @@ def _failed_save_timed_effect(rider: Any) -> dict[str, Any]:
         row["additionalEffectIds"] = list(rider.additional_effect_ids)
     if rider.damage_repeat_save_trigger != "none":
         row["damageRepeatSaveTrigger"] = rider.damage_repeat_save_trigger
+    if rider.repeat_save_before_damaging_terrain:
+        row["repeatSaveBeforeDamagingTerrain"] = True
     if rider.repeat_save_failure_condition_id:
         row["repeatSaveFailureConditionId"] = rider.repeat_save_failure_condition_id
     if rider.allowed_removal_action_ids:

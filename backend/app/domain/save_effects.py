@@ -30,6 +30,7 @@ class FailedSaveTimedEffect(BaseModel):
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: SaveEffectTiming | None = None
     damage_repeat_save_trigger: Literal["none", "other_than_effect_source"] = "none"
+    repeat_save_before_damaging_terrain: bool = False
     repeat_save_failure_condition_id: ConditionName | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     next_attack_disadvantage: bool = False
@@ -72,6 +73,7 @@ class FailedSaveTimedEffect(BaseModel):
                 "repeat_save_failure_condition_id": None,
                 "repeat_save_disadvantage_while_source_visible": False,
                 "damage_repeat_save_trigger": "none",
+                "repeat_save_before_damaging_terrain": False,
             }
             for key, default in defaults.items():
                 if data.get(key) == default:
@@ -109,6 +111,8 @@ class FailedSaveTimedEffect(BaseModel):
                 raise ValueError("Damage-triggered repeat saves require ability, DC, and timing.")
             if self.damage_repeat_save_trigger != "none" and self.ends_on_damage:
                 raise ValueError("A timed effect cannot end and repeat its save on the same damage.")
+            if self.repeat_save_before_damaging_terrain and not all(configured):
+                raise ValueError("Damaging-terrain repeat saves require ability, DC, and timing.")
             if self.repeat_save_failure_condition_id is not None and not all(configured):
                 raise ValueError(
                     "Repeat-save failure escalation requires ability, DC, and timing."

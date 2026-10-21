@@ -644,6 +644,7 @@ jobs:
           node frontend/browser-gorgon-petrifying-breath.test.cjs
           node frontend/browser-persistent-barriers.test.cjs
           node frontend/browser-damage-triggered-reactions.test.cjs
+          node frontend/browser-damaging-terrain-repeat-save.test.cjs
           node frontend/browser-fiendish-resilience-2014.test.cjs
           node frontend/browser-conditional-damage-defenses.test.cjs
           node frontend/browser-damage-absorption.test.cjs

@@ -84,6 +84,8 @@
           repeatSaveTiming: ownsLifecycle ? (rider.repeatSaveTiming || null) : null,
           damageRepeatSaveTrigger: ownsLifecycle
             ? (rider.damageRepeatSaveTrigger || "none") : "none",
+          repeatSaveBeforeDamagingTerrain: ownsLifecycle
+            && Boolean(rider.repeatSaveBeforeDamagingTerrain),
           repeatSaveDisadvantageWhileSourceVisible: ownsLifecycle
             && Boolean(rider.repeatSaveDisadvantageWhileSourceVisible),
           repeatSaveFailureConditionId: ownsLifecycle
