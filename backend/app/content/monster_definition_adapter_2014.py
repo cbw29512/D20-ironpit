@@ -38,6 +38,7 @@ from app.content.monster_innate_support_2014 import (
 )
 from app.content.monster_legendary_bindings_2014 import legendary_action_options_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
+from app.content.monster_core_fields_2014 import monster_core_fields_2014
 from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014, fetid_cloud_resources_2014
 from app.content.monster_leadership_2014 import leadership_actions_2014, leadership_resources_2014
 from app.content.monster_senses_2014 import special_senses_2014, bounded_blindsight_2014
@@ -74,6 +75,14 @@ from app.content.monster_unnerving_mask_2014 import source_unnerving_mask_reacti
 def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapabilityDefinition:
     source_grapple_periodic_proof_2014(monster, attack)
     attack = source_completed_mixed_attack_2014(monster, attack)
+    printed_attack = next((item for item in monster_core_fields_2014(monster.id).attacks
+                           if item.source_id == attack.id), None)
+    if printed_attack is None:
+        raise ValueError(f"{monster.id} attack {attack.id} is missing from the 327-card registry")
+    attack = attack.model_copy(update={
+        "on_hit_save_effect": printed_attack.on_hit_save_effect,
+        "control_effect": printed_attack.control_effect,
+    })
     charge_source = corrected_charge_profile_2014(monster, attack)
     normal_range_ft, long_range_ft = corrected_attack_range_2014(monster, attack)
     kwargs = {
@@ -81,7 +90,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "weapon_id": attack_id_2014(monster, attack.id),
         "name": attack.name,
         "attack_kind": attack.kind,
-        "attack_bonus": attack.attack_bonus,
+        "attack_bonus": printed_attack.attack_bonus,
         "resource_id": attack.id if attack.id in attack_ammunition_2014(monster) else None,
         "attack_ability": attack.attack_ability,
         "sneak_attack_eligible": sneak_attack_eligible_2014(monster, attack),
@@ -89,7 +98,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
             *conditional_attack_advantage_2014(monster, attack),
             *source_conditional_attack_advantage_2014(attack),
         ],
-        "damage_type": str(attack.damage.type).lower(),
+        "damage_type": str(printed_attack.damage_type).lower(),
         "animation": "projectile" if attack.kind == "ranged" else "slash",
         "reach_ft": attack.reach_ft,
         "effects": basic_attack_effects_2014(attack, opening_initiative_damage_source_2014(monster)),
@@ -99,14 +108,14 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "unavailable_reason": attack_unavailable_reason_2014(monster, attack),
         "damage_source_qualifiers": weapon_damage_source_qualifiers_2014(monster),
     }
-    if attack.damage.dice_count:
+    if printed_attack.damage_dice_count:
         kwargs["damage"] = DiceSpec(
-            count=attack.damage.dice_count,
-            size=attack.damage.dice_size,
-            bonus=attack.damage.bonus,
+            count=printed_attack.damage_dice_count,
+            size=printed_attack.damage_dice_size,
+            bonus=printed_attack.damage_bonus,
         )
     else:
-        kwargs["fixed_damage"] = attack.damage.average
+        kwargs["fixed_damage"] = printed_attack.damage_average
     if attack.kind == "ranged":
         kwargs["normal_range_ft"] = normal_range_ft
         kwargs["long_range_ft"] = long_range_ft
@@ -117,6 +126,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     blockers = basic_blockers_2014(monster)
     if blockers:
         raise ValueError(f"{monster.id} is not a basic 2014 candidate: {', '.join(blockers)}")
+    core = monster_core_fields_2014(monster.id)
     scores = AbilityScores(**ability_values_2014(monster))
     movement = movement_modes_2014(monster)
     attacks = [_attack(monster, attack) for attack in monster.attacks]
@@ -153,13 +163,15 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         ]
     if feature_update:
         features = features.model_copy(update=feature_update)
+    defenses = template_defense_fields_2014(monster)
+    defenses["condition_immunities"] = list(core.condition_immunities)
     return CombatantDefinition(
         id=f"2014-{monster.id}", name=monster.name, archetype=f"2014 {monster.creature_type}",
         challenge_rating=monster.challenge_rating, kind="monster", ruleset="2014",
         creature_type=monster.creature_type,
         size=CreatureSize(monster.size.lower()), ability_scores=scores,
-        armor_class=monster.armor_class, max_hp=monster.max_hp, speed_ft=standard_arena_closing_speed_from_modes(movement),
-        movement_modes=movement, initiative_bonus=scores.modifier("dexterity"),
+        armor_class=core.armor_class, max_hp=core.max_hp, speed_ft=standard_arena_closing_speed_from_modes(movement),
+        movement_modes=movement, initiative_bonus=core.initiative_bonus,
         blindsight_ft=blindsight_ft, truesight_ft=truesight_ft,
         blindsight_deafened_ft=bounded[1] if bounded else None,
         blind_beyond_blindsight=bounded is not None,
@@ -179,7 +191,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
             *condition_auras_from_source(monster.source_traits, "2014"),
             *contextual_save_defenses_2014(monster)[0], *leadership_actions_2014(monster)],
         healing_actions=healing_actions_2014(monster),
-        condition_removal_actions=innate_condition_removal_2014(monster),
+        condition_removal_actions=list(core.condition_removal_actions),
         terminal_effect_tags=terminal_effect_tags_2014(monster),
         effect_tag_condition_grants=effect_tag_condition_grants_2014(monster),
         legendary_actions=legendary_options,
@@ -193,9 +205,9 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         progression_features=features, passive_modifier_grants=conditional_immunity_grants_2014(monster),
         bonus_attack_grants=bonus_attack_grants_2014(monster),
         bonus_tactical_action_grants=aggressive_tactical_grants_2014(monster),
-        saving_throw_bonuses=save_bonuses_2014(monster, scores),
+        saving_throw_bonuses=dict(core.saving_throw_bonuses),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
-        innate_condition_ids=innate_condition_ids_2014(monster),
+        innate_condition_ids=list(core.innate_condition_ids),
         source_allows_hostile_overlap=bool({'Air Form', 'Water Form'} & set(monster.trait_names)),
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
         source_turn_relation_damages=source_turn_grappler_damage_2014(monster),
@@ -204,7 +216,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         turn_start_save_condition_reaction=source_unnerving_mask_reaction_2014(monster),
         parry_reaction=ParryReaction(ac_bonus=monster.parry_ac_bonus)
             if supports_parry_reaction_2014(monster) else None,
-        **template_defense_fields_2014(monster),
+        **defenses,
         visual=VisualLoadout(armor=monster.creature_type, main_hand=monster.attacks[0].name, body_style=monster.creature_type),
         source=f"SRD 5.1 (2014) {monster.name}",
     )
