@@ -159,6 +159,8 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         ]
     if feature_update:
         features = features.model_copy(update=feature_update)
+    defenses = template_defense_fields_2014(monster)
+    defenses["condition_immunities"] = list(core.condition_immunities)
     return CombatantDefinition(
         id=f"2014-{monster.id}", name=monster.name, archetype=f"2014 {monster.creature_type}",
         challenge_rating=monster.challenge_rating, kind="monster", ruleset="2014",
@@ -210,7 +212,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         turn_start_save_condition_reaction=source_unnerving_mask_reaction_2014(monster),
         parry_reaction=ParryReaction(ac_bonus=monster.parry_ac_bonus)
             if supports_parry_reaction_2014(monster) else None,
-        **template_defense_fields_2014(monster),
+        **defenses,
         visual=VisualLoadout(armor=monster.creature_type, main_hand=monster.attacks[0].name, body_style=monster.creature_type),
         source=f"SRD 5.1 (2014) {monster.name}",
     )
