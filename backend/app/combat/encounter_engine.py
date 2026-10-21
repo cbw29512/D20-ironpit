@@ -4,6 +4,7 @@ import logging
 from app.combat.concentration import end_concentration_if_expired
 from app.combat.condition_lifecycle import resolve_source_condition_timing, resolve_target_condition_timing
 from app.combat.death_saves import resolve_death_save
+from app.combat.death_trigger_dispatch import resolve_pending_death_triggers
 from app.combat.delayed_resource_refill import resolve_delayed_resource_refill_end_turn
 from app.combat.dice import DiceProvider
 from app.combat.encounter_combat_turn import resolve_combat_turn
@@ -124,6 +125,8 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 member.state.current_round = round_number
             round_turn_order = initiative.first_round_turn_order if round_number == 1 else initiative.turn_order
             for combatant_id in round_turn_order:
+                triggered_events, sequence = resolve_pending_death_triggers(sequence, round_number, setup, dice)
+                events.extend(triggered_events)
                 outcome = resolve_encounter_outcome(setup)
                 if outcome != "active":
                     events.append(build_finish_event(sequence, round_number, outcome))
@@ -175,6 +178,8 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 if member.state.current_hp <= 0 or member.state.is_dead:
                     end_events, sequence = _end_turn_lifecycle(sequence, round_number, member, setup, dice)
                     events.extend(end_events)
+                    triggered_events, sequence = resolve_pending_death_triggers(sequence, round_number, setup, dice)
+                    events.extend(triggered_events)
                     continue
 
                 target = select_nearest_target(member, setup)
@@ -186,7 +191,11 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     events.extend(turn_events)
                 end_events, sequence = _end_turn_lifecycle(sequence, round_number, member, setup, dice)
                 events.extend(end_events)
+                triggered_events, sequence = resolve_pending_death_triggers(sequence, round_number, setup, dice)
+                events.extend(triggered_events)
 
+            triggered_events, sequence = resolve_pending_death_triggers(sequence, round_number, setup, dice)
+            events.extend(triggered_events)
             outcome = resolve_encounter_outcome(setup)
             if outcome != "active":
                 events.append(build_finish_event(sequence, round_number, outcome))
