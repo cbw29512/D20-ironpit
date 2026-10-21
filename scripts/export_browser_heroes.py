@@ -131,6 +131,8 @@ def _save(action: Any) -> dict[str, Any]:
             row["failedSaveTimedEffect"]["allowedRemovalActionIds"] = list(action.failed_save_timed_effect.allowed_removal_action_ids)
         if action.failed_save_timed_effect.source_maintenance_action_cost != "none":
             row["failedSaveTimedEffect"]["sourceMaintenanceActionCost"] = action.failed_save_timed_effect.source_maintenance_action_cost
+        if action.failed_save_timed_effect.exclusive_source_effect_group_id:
+            row["failedSaveTimedEffect"]["exclusiveSourceEffectGroupId"] = action.failed_save_timed_effect.exclusive_source_effect_group_id
     if action.failed_save_timed_effect is not None and action.failed_save_timed_effect.source_effect_immunity_on_end:
         row["failedSaveTimedEffect"]["sourceEffectImmunityOnEnd"] = True
     if action.source_effect_immunity_on_success:
