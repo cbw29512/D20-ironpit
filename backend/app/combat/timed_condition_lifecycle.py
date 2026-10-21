@@ -89,6 +89,18 @@ def remove_effect_group(
         raise
 
 
+def remove_effect_group_after_repeat_save(
+    state: CombatantState, effect: TimedEffect,
+) -> list[str]:
+    """Remove a successful repeat-save group with its exact immunity contract."""
+    return remove_effect_group(
+        state, effect,
+        grant_source_immunity=(
+            True if effect.source_effect_immunity_on_repeat_save_success else None
+        ),
+    )
+
+
 def _source_start_expired(effect: TimedEffect, round_number: int) -> bool:
     try:
         source_start = (
