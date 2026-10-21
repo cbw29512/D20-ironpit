@@ -18,6 +18,7 @@ on:
       - "backend/app/domain/weapons.py"
       - "scripts/report_2014_basic_candidates.py"
       - "scripts/report_2014_attack_riders.py"
+      - "scripts/report_monster_defenses_2014.py"
       - ".github/workflows/2014-basic-roster.yml"
   pull_request:
     paths:
@@ -55,3 +56,5 @@ jobs:
         run: python scripts/report_2014_basic_candidates.py
       - name: Report exact attack rider blocker shapes
         run: python scripts/report_2014_attack_riders.py
+      - name: Report all 327 monster damage defenses
+        run: python scripts/report_monster_defenses_2014.py
