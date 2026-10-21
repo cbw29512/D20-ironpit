@@ -43,12 +43,14 @@
       const turnKey = `${round}:${member.combatant_id}`;
 
       let attacksRemaining = slots.length;
-      for (let index = 0; index < slots.length; index += 1) {
-        // A miss or skipped optional action still spends a sequence slot.
-        // The next attack checks the updated battle state.
+      let index = 0;
+      while (attacksRemaining > 0) {
+        const slot = slots[index];
+        index += 1;
+        // Missed and skipped slots are consumed before the next action.
         attacksRemaining -= 1;
         if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
-        const data = MC.slotData(slots[index]);
+        const data = MC.slotData(slot);
         const followup = MC.followupTarget(data, previousAttack?.event_type === "attack" ? previousAttack.hit : null, previousAttack?.target_id);
         previousAttack = null;
         if (!followup.eligible) continue;
