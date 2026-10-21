@@ -47,6 +47,9 @@
     if (action.requiresTargetToSeeSource && (!actor || !Q().canSee(target.state, actor.state, S().distance(actor, target)))) return false;
     if (distance > action.range) return false;
     if (sourceId && window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS?.isImmune(target, action, sourceId)) return false;
+    const exclusiveGroup = action.failedSaveTimedEffect?.exclusiveSourceEffectGroupId;
+    if (exclusiveGroup && (target.state.timed_effects || []).some((effect) =>
+      effect.exclusive_source_effect_group_id === exclusiveGroup)) return false;
     if (action.requiresTargetHearing && target.state.active_effect_ids.includes("deafened")) return false;
     const type = String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase();
     if ((action.requiredTargetCreatureTypes || []).length) {
