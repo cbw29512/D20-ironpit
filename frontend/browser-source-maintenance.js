@@ -38,8 +38,11 @@
     for (const { target, effect } of entries) {
       if (handled.has(target.combatant_id)) continue;
       handled.add(target.combatant_id);
+      const hadGroup = target.state.timed_effects.some((item) =>
+        item.source_id === effect.source_id
+        && item.source_effect_id === effect.source_effect_id);
       const removed = T().removeGroup(target.state, effect, { grantSourceImmunity: false });
-      if (!removed.length) continue;
+      if (!hadGroup) continue;
       events.push({
         sequence: sequence++, round_number: round, event_type: "feature",
         actor_id: source.combatant_id, actor_name: source.state.template.name,
