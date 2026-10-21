@@ -76,7 +76,7 @@ def source_proven_luring_song_2014(
                 repeat_save_before_damaging_terrain=True,
                 turn_behavior="forced_approach_source",
                 ends_if_source_incapacitated=True,
-                source_effect_immunity_on_end=True,
+                source_effect_immunity_on_repeat_save_success=True,
                 source_maintenance_action_cost="bonus_action",
                 exclusive_source_effect_group_id="audible-luring-song",
             ),
