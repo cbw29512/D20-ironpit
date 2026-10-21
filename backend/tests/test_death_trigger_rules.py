@@ -28,3 +28,22 @@ def test_monster_zero_hp_death_trigger_once():
     state.is_dead = True
     assert consume_death_trigger(state)
     assert not consume_death_trigger(state)
+
+
+def test_card_declared_death_trigger_starts_as_fight_local_buff():
+    cards = build_arena_roster()
+    template = cards.monsters[0].model_copy(
+        update={"death_trigger_effect_ids": ["death-burst"]}
+    )
+    first = build_combatant_state(template)
+    assert DEATH_TRIGGER_BUFF in first.active_buff_effect_ids
+    assert not consume_death_trigger(first)
+    first.is_dead = True
+    first.current_hp = 0
+    assert consume_death_trigger(first)
+    assert first.feature_use_counts[DEATH_TRIGGER_BUFF] == 1
+
+    # Building a new fight restores the unconsumed source-declared buff.
+    second = build_combatant_state(template)
+    assert DEATH_TRIGGER_BUFF in second.active_buff_effect_ids
+    assert second.feature_use_counts.get(DEATH_TRIGGER_BUFF, 0) == 0
