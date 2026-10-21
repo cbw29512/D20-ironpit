@@ -50,12 +50,12 @@
       if (!target.state.timed_effects.includes(effect)) continue;
       if (repeatSaveDue(effect, round, timing)) {
         const save = repeatSave(target, effect, round, setup);
-        let removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
+        let removed = save.succeeded ? T().removeGroupAfterRepeatSave(target.state, effect) : [];
         const applied = [];
         if (!save.succeeded) {
           effect.repeat_save_failure_count = (effect.repeat_save_failure_count || 0) + 1;
           if (effect.repeat_save_failure_condition_id) {
-            removed = T().removeGroup(target.state, effect);
+            removed = T().removeGroupAfterRepeatSave(target.state, effect);
             const escalated = effect.repeat_save_failure_condition_id;
             const immune = window.IRON_PIT_BROWSER_CONDITION_IMMUNITY?.immune(target.state, escalated, null) || false;
             if (!immune) {
@@ -80,7 +80,7 @@
         if (save.succeeded) continue;
       }
       if (expiryDue(effect, round, timing, target.state.turns_started || 0)) {
-        const removed = T().removeGroup(target.state, effect); if (!removed.length) continue;
+        const removed = T().removeGroupAfterRepeatSave(target.state, effect); if (!removed.length) continue;
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
           actor_id: target.combatant_id, actor_name: target.state.template.name,
@@ -127,7 +127,7 @@
       );
       for (const effect of expiring) {
         if (!target.state.timed_effects.includes(effect)) continue;
-        const removed = T().removeGroup(target.state, effect); if (!removed.length) continue;
+        const removed = T().removeGroupAfterRepeatSave(target.state, effect); if (!removed.length) continue;
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
           actor_id: source.combatant_id, actor_name: source.state.template.name,
