@@ -2,6 +2,34 @@
 
 **Operational lane only.** The [execution manual](../IRON_PIT_IMPLEMENTATION_PLAYBOOK.md) owns the universal process, [SOUL](../../SOUL.md) owns architecture, [locked rules](../IRON_PIT_LOCKED_RULES.md) own explicit Pit exceptions, and [this queue](../MONSTER_ABILITY_WORK_QUEUE.md) is the **single** source of previously approved monster decisions. This guide owns **monster-specific implementation order and throughput**.
 
+## Locked 327-card field-pass workflow (2026-10-20)
+
+Treat the **entire 327-card 2014 source catalog as one roster**, whether a card
+is presently admitted to playable combat or has unsupported actions. Never
+exclude a card's AC, HP, Dexterity, attack values or other independently
+supported source fields merely because one of its unrelated abilities is
+blocked.
+
+Advance **one field family across the full roster** in this order: AC; maximum
+HP and defeat lifecycle; initiative; to-hit; ordered typed damage and
+defenses; Multiattack; saves; conditions; buffs/debuffs; spells; actions,
+reactions and traits; resources/duration; logs; then exceptional semantics
+and actual browser-fight certification. A printed field with no applicable
+mechanic is explicitly recorded as *not applicable*, not fabricated.
+
+For each field: reuse source-owned values and the existing shared
+Python/browser resolver. Inspect one or two working cards as the template,
+bulk-bind equivalent declarations, resolve only genuine missing universal
+semantics, and keep the printed ability name in the player log. Noncombat
+traits remain source-preserved arena-neutral information. Never bypass
+unsupported outcome-changing abilities or mark a partially bound combatant
+playable. Keep existing essential CI/engine tests; do not add redundant
+per-monster basic-arithmetic suites.
+
+Only cross off a field when all 327 source cards are accounted for at that
+field and its integration evidence is verified. Record **field coverage**
+separately from complete-monster admission and webpage-fight certification.
+
 ## Pick the next actionable family
 
 **Default is a card-only integration.** Work the [executable card-field → shared-resolver contract](../UNIVERSAL_CARD_COMBAT_CONTRACT.md#executable-card-field--shared-resolver-contract-chris-2026-10-19) in order: card field → compiled capability → Python primitive → browser primitive → regression. Printed attacks with multiple damage types call one to-hit roll and the same typed-damage resolver once per component; Multiattack and Bonus Actions are action scheduling, not new attack algorithms. Do not write a new monster resolver when this path is already implemented.
