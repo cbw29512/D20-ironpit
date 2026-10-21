@@ -94,7 +94,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
             *conditional_attack_advantage_2014(monster, attack),
             *source_conditional_attack_advantage_2014(attack),
         ],
-        "damage_type": str(attack.damage.type).lower(),
+        "damage_type": str(printed_attack.damage_type).lower(),
         "animation": "projectile" if attack.kind == "ranged" else "slash",
         "reach_ft": attack.reach_ft,
         "effects": basic_attack_effects_2014(attack, opening_initiative_damage_source_2014(monster)),
@@ -104,14 +104,14 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "unavailable_reason": attack_unavailable_reason_2014(monster, attack),
         "damage_source_qualifiers": weapon_damage_source_qualifiers_2014(monster),
     }
-    if attack.damage.dice_count:
+    if printed_attack.damage_dice_count:
         kwargs["damage"] = DiceSpec(
-            count=attack.damage.dice_count,
-            size=attack.damage.dice_size,
-            bonus=attack.damage.bonus,
+            count=printed_attack.damage_dice_count,
+            size=printed_attack.damage_dice_size,
+            bonus=printed_attack.damage_bonus,
         )
     else:
-        kwargs["fixed_damage"] = attack.damage.average
+        kwargs["fixed_damage"] = printed_attack.damage_average
     if attack.kind == "ranged":
         kwargs["normal_range_ft"] = normal_range_ft
         kwargs["long_range_ft"] = long_range_ft
