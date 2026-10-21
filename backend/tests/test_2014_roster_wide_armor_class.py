@@ -11,7 +11,7 @@ from app.content.monster_roster_2014 import build_basic_2014_monsters
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.combat.modifier_stack import effective_armor_class
 from app.combat.state import build_combatant_state
-from browser_template_serializer import template_row
+from scripts.browser_template_serializer import template_row
 
 logger = logging.getLogger(__name__)
 
