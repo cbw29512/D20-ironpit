@@ -18,7 +18,7 @@ assert.equal(action.requiresTargetHearing, true);
 assert.equal(action.failedSaveTimedEffect.sourceMaintenanceActionCost, "bonus_action");
 assert.equal(action.failedSaveTimedEffect.exclusiveSourceEffectGroupId, "audible-luring-song");
 assert.equal(action.failedSaveTimedEffect.sourceEffectImmunityOnRepeatSaveSuccess, true);
-assert.equal(action.failedSaveTimedEffect.sourceEffectImmunityOnEnd, false);
+assert.ok(!action.failedSaveTimedEffect.sourceEffectImmunityOnEnd);
 
 const source = {
   combatant_id: "source", side: "monsters", position_ft: 0,
