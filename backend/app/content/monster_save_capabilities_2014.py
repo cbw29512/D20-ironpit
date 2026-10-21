@@ -12,6 +12,7 @@ from app.content.monster_source_save_outcome_bindings_2014 import source_proven_
 from app.content.monster_source_visual_save_bindings_2014 import source_proven_visual_saves_2014
 from app.content.monster_source_conditioned_save_2014 import source_proven_conditioned_saves_2014
 from app.content.monster_source_opening_area_saves_2014 import source_proven_opening_area_saves_2014
+from app.content.monster_source_luring_song_2014 import source_proven_luring_song_2014
 from app.domain.capability_attacks import SaveCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
 from app.domain.save_damage import SaveDamageComponent
@@ -118,6 +119,7 @@ def unsupported_source_actions_2014(
         allowed.update(item.name.casefold() for item in source_proven_visual_saves_2014(monster))
         allowed.update(item.name.casefold() for item in source_proven_conditioned_saves_2014(monster))
         allowed.update(item.name.casefold() for item in source_proven_opening_area_saves_2014(monster))
+        allowed.update(item.name.casefold() for item in source_proven_luring_song_2014(monster))
         if monster.multiattack_slots:
             allowed.add("multiattack")
         if recharge_supported is None:
@@ -164,6 +166,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                 failure_sets_zero_hp=bool(action.get("failure_sets_zero_hp", False)),
                 damage_only_on_success=bool(action.get("damage_only_on_success", False)),
                 requires_target_hearing=bool(action.get("requires_target_hearing", False)),
+                required_target_creature_types=list(action.get("required_target_creature_types", [])),
                 excluded_target_creature_types=list(action.get("excluded_target_creature_types", [])),
                 prohibited_environment_context_id=action.get("prohibited_environment_context_id"),
                 resource_id=action.get("resource_id"),
@@ -182,6 +185,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
         result.extend(source_proven_visual_saves_2014(monster))
         result.extend(source_proven_conditioned_saves_2014(monster))
         result.extend(source_proven_opening_area_saves_2014(monster))
+        result.extend(source_proven_luring_song_2014(monster))
         return result
     except Exception:
         logger.exception("Failed to adapt 2014 save actions for %s.", monster.name)
