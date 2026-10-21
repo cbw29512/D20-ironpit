@@ -1,7 +1,4 @@
-"""Report death-trigger source-card binding coverage without claiming runtime execution.
-
-Run: python scripts/report_death_trigger_bindings_2014.py
-"""
+"""Scan all 327 cards and report semantic Death Trigger coverage and exceptions."""
 from __future__ import annotations
 
 import json
@@ -11,31 +8,53 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
+from app.content.monster_death_triggers_2014 import supports_death_triggers_2014
 from app.content.monster_source_2014 import load_monster_source_2014
+
+_SEMANTIC_TRAITS = frozenset({"death burst", "death throes"})
 
 
 def report() -> dict:
     cards = load_monster_source_2014()
-    declared = []
-    invalid = []
+    applicable, declared, wired, exceptions = [], [], [], []
     for card in cards:
-        if not card.death_trigger_actions:
+        semantic_names = sorted(
+            name for name in card.trait_names if name.casefold() in _SEMANTIC_TRAITS
+        )
+        is_applicable = bool(card.death_trigger_actions or semantic_names)
+        if not is_applicable:
             continue
-        ids = []
-        for action in card.death_trigger_actions:
-            if not isinstance(action, dict) or not isinstance(action.get("id"), str) or not action["id"]:
-                invalid.append(card.id)
-                continue
-            ids.append(action["id"])
-        declared.append({"monster": card.id, "effect_ids": ids, "actions": card.death_trigger_actions})
+        applicable.append(card.id)
+        ids = [
+            action.get("id") for action in card.death_trigger_actions
+            if isinstance(action, dict) and isinstance(action.get("id"), str)
+        ]
+        if card.death_trigger_actions:
+            declared.append(card.id)
+        if card.death_trigger_actions and supports_death_triggers_2014(card):
+            wired.append(card.id)
+        else:
+            exceptions.append({
+                "monster": card.id,
+                "semantic_traits": semantic_names,
+                "reason": (
+                    "printed semantic Death Trigger lacks a complete structured action"
+                    if not card.death_trigger_actions
+                    else "structured action is incompatible with the shared save/damage schema"
+                ),
+            })
     return {
-        "source_cards": len(cards),
+        "source_cards_scanned": len(cards),
+        "applicable_card_count": len(applicable),
+        "applicable_cards": applicable,
+        "source_declared_card_count": len(declared),
+        "wired_python_card_count": len(wired),
+        "wired_browser_card_count": len(wired),
+        "remaining_card_count": len(exceptions),
+        "exceptions": exceptions,
         "cards_with_death_trigger_actions": len(declared),
-        "cards_with_valid_death_trigger_identifiers": len(declared) - len(set(invalid)),
-        "cards_with_invalid_death_trigger_actions": sorted(set(invalid)),
-        "source_declarations": declared,
-        "death_effect_dispatch_wired": 0,
-        "status": "partial: source declaration and buff initialization; effect dispatch pending",
+        "death_effect_dispatch_wired": len(wired),
+        "status": "complete" if not exceptions else "partial: exceptions require source data",
     }
 
 

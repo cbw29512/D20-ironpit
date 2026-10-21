@@ -166,10 +166,12 @@ def definition_from_template(template: CombatantTemplate) -> CombatantDefinition
     attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
     data = template.model_dump(mode="json", exclude={
         "weapon_attack", "alternate_weapon_attacks", "attack_action", "saving_throw_actions",
+        "death_trigger_actions",
     })
     data["attacks"] = [_attack(attack) for attack in attacks]
     data["primary_attack_id"] = template.weapon_attack.id
     data["save_actions"] = [_save(action) for action in template.saving_throw_actions]
+    data["death_trigger_actions"] = [_save(action) for action in template.death_trigger_actions]
     if template.attack_action is not None:
         data["attack_action"] = template.attack_action.model_dump(mode="json")
     return CombatantDefinition.model_validate(data)
