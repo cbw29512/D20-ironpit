@@ -44,8 +44,13 @@ def test_death_throes_uses_exact_immutable_source_parameters():
     assert source.death_trigger_actions == []
 
 
-def test_death_throes_is_carried_by_the_compiled_arena_card():
-    template = compile_combatant(adapt_basic_monster_2014(_source("balor")))
+def test_source_proven_death_throes_survives_capability_compilation():
+    actions = death_trigger_actions_2014(_source("balor"))
+    definition = adapt_basic_monster_2014(_source("ape")).model_copy(update={
+        "death_trigger_effect_ids": [action.id for action in actions],
+        "death_trigger_actions": actions,
+    })
+    template = compile_combatant(definition)
     assert template.death_trigger_effect_ids == ["death-throes"]
     action, = template.death_trigger_actions
     assert action.id == "death-throes" and action.range_ft == 30
