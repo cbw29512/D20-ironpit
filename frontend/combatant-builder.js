@@ -45,6 +45,7 @@
         animation: attack_kind === "melee" ? "slash" : "projectile"
       }],
       primary_attack_id: attackId,
+      visual: {armor: kind === "monster" ? "natural" : "unarmored", main_hand: attack_kind === "melee" ? "weapon" : "bow", body_style: kind === "monster" ? "beast" : "humanoid"},
       source: "user-authored combatant builder draft"
     };
     if (values.secondary_enabled === "on") {
