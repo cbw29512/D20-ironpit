@@ -75,7 +75,7 @@
     for (const [index, row] of effects.entries()) {
       if (!row || !["damage", "prone", "save_condition"].includes(row.kind))
         throw new Error("Unsupported on-hit effect at position " + (index + 1));
-      const targetAttack = base.attacks.find(attack => attack.id === row.attack_id);
+      const targetAttack = base.attacks.find(attack => attack.id === (row.attack_id || attackId));
       if (!targetAttack) throw new Error("Choose an existing attack for effect " + (index + 1));
       if (row.kind === "damage") {
         if (!["slashing","piercing","bludgeoning","fire","cold","lightning","thunder","acid","poison","necrotic","radiant","psychic","force"].includes(row.damage_type))
@@ -150,6 +150,12 @@
   const secondaryFields = document.getElementById("secondary-attack-fields");
   secondaryToggle.addEventListener("change", () => {
     secondaryFields.hidden = !secondaryToggle.checked;
+    document.querySelectorAll("#effect-list [data-effect-row]").forEach(row => {
+      const selector = row.querySelector('[data-field="attack_id"]');
+      const other = selector?.querySelector('option[value="__secondary__"]');
+      if (other) other.disabled = !secondaryToggle.checked;
+      if (!secondaryToggle.checked && selector?.value === "__secondary__") selector.value = "__primary__";
+    });
     draft = null;
     exportButton.disabled = true;
     if (saveButton) saveButton.disabled = true;
@@ -179,6 +185,10 @@
       '<label>Duration (rounds)<input data-field="duration_rounds" type="number" min="1" value="1"></label>' +
       '<button type="button" class="secondary" data-remove>Remove effect</button>';
     const refresh = () => {
+      const secondaryOption = row.querySelector('[data-field="attack_id"] option[value="__secondary__"]');
+      secondaryOption.disabled = !secondaryToggle.checked;
+      if (!secondaryToggle.checked && row.querySelector('[data-field="attack_id"]').value === "__secondary__")
+        row.querySelector('[data-field="attack_id"]').value = "__primary__";
       const selected = row.querySelector('[data-field="kind"]').value;
       for (const field of ["damage_type","count","size","bonus","save_ability","dc","condition","duration_rounds"]) {
         const el = row.querySelector('[data-field="' + field + '"]');
