@@ -146,6 +146,60 @@
       button.disabled = false;
     }
   });
+  // Greedy source-declaration coverage: select distinct combatant feature shapes,
+  // then observe what the real runtime actually executes. An unobserved
+  // declaration is a coverage gap, never an automatic test pass.
+  function declaredMechanics(card) {
+    const found = new Set();
+    const attacks = card.attacks || [];
+    for (const attack of attacks) {
+      if (attack.attack_kind) found.add("attack:" + attack.attack_kind);
+      if (attack.damage_type) found.add("damage:" + attack.damage_type);
+      for (const effect of attack.effects || []) {
+        if (effect.kind) found.add("effect:" + effect.kind);
+        if (effect.condition) found.add("condition:" + effect.condition);
+        if (effect.damage_type) found.add("damage:" + effect.damage_type);
+      }
+    }
+    for (const trait of card.traits || []) found.add("trait:" + trait);
+    for (const item of card.saving_throw_actions || []) found.add("save:" + (item.id || item.name || "action"));
+    for (const item of card.spell_save_actions || []) found.add("spell:" + (item.id || item.name || "save"));
+    if (card.attack_action) found.add("multiattack");
+    if ((card.legendary_actions || []).length) found.add("legendary");
+    for (const id of Object.keys(card.resources || {})) found.add("resource:" + id);
+    return [...found];
+  }
+  $("generate-coverage").addEventListener("click", () => guarded(() => {
+    const edition = $("edition").value, count = integer("matrix-size", 1, 100);
+    const seed = integer("seed", 1, 4294967295);
+    const heroes = unique(heroRoster().filter(x => x.ruleset === edition));
+    const monsters = unique(monsterRoster(edition).filter(x => x.ruleset === edition));
+    if (!heroes.length || !monsters.length) throw new Error("No certified roster for coverage generation.");
+    const cards = [...heroes.map(card=>({card,side:"hero"})), ...monsters.map(card=>({card,side:"monster"}))];
+    const candidates = cards.map(({card,side}) => ({card,side,mechanics:declaredMechanics(card)}));
+    const covered = new Set(), chosen = [];
+    while (chosen.length < count && candidates.length) {
+      candidates.sort((a,b) =>
+        b.mechanics.filter(key=>!covered.has(key)).length - a.mechanics.filter(key=>!covered.has(key)).length ||
+        String(a.card.id).localeCompare(String(b.card.id)));
+      const next = candidates.shift();
+      if (!next.mechanics.some(key=>!covered.has(key)) && chosen.length > 0) break;
+      chosen.push(next);
+      next.mechanics.forEach(key=>covered.add(key));
+    }
+    const entries = chosen.map((choice,i)=>({
+      seed: seed+i <= 4294967295 ? seed+i : seed,
+      selection: {ruleset:edition,
+        hero_ids:[choice.side === "hero" ? choice.card.id : heroes[i % heroes.length].id],
+        monster_ids:[choice.side === "monster" ? choice.card.id : monsters[i % monsters.length].id]}
+    }));
+    execute(entries,true);
+    report.generation = {method:"greedy distinct declared mechanics",edition,
+      selected_cards:chosen.map(c=>({id:c.card.id,side:c.side,declared_mechanics:c.mechanics})),
+      declared_covered:[...covered].sort(),
+      caveat:"Source declarations selected for observation, not proof each mechanic fired or is RAW correct."};
+    $("status").textContent += " Generated " + chosen.length + " deterministic matchups covering " + covered.size + " distinct declared mechanic labels. Full logs and declared coverage in JSON.";
+  }));
   $("download").addEventListener("click",()=>{
     if (!report) return;
     const url=URL.createObjectURL(new Blob([JSON.stringify(report,null,2)],{type:"application/json"}));
