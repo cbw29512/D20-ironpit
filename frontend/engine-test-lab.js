@@ -62,23 +62,24 @@
         const battle = fight(entry.selection, entry.seed);
         const stable = repeat ? signature(battle) === signature(fight(entry.selection, entry.seed)) : null;
         const cards_unchanged = before === cardSnapshot(entry.selection);
-        results.push({selection:entry.selection,seed:entry.seed,cards_unchanged,outcome:battle.outcome,rounds:battle.rounds,
+        const required_aspects = entry.recipe ? entry.recipe.aspects.map(aspect => ({kind:aspect.kind,value:aspect.value,observed:window.IRON_PIT_COMBAT_PRESETS.aspectFired(battle,aspect)})) : [];
+        results.push({pattern:entry.recipe?.title || null,required_aspects,selection:entry.selection,seed:entry.seed,cards_unchanged,outcome:battle.outcome,rounds:battle.rounds,
           events:battle.events.length,observed:observed(battle.events),stable,ms:Math.round(performance.now()-start),log:battle.events});
-      } catch (error) { results.push({selection:entry.selection,seed:entry.seed,error:String(error.message || error)}); }
+      } catch (error) { results.push({pattern:entry.recipe?.title || null,selection:entry.selection,seed:entry.seed,error:String(error.message || error)}); }
     }
     report = {generated_at:new Date().toISOString(),engine:"IRON_PIT_BROWSER_ENGINE.runEncounter",coverage_kind:"observed events only; not RAW correctness",results};
-    const failed = results.filter(row => row.error || row.stable === false || row.cards_unchanged === false).length;
+    const failed = results.filter(row => row.error || row.stable === false || row.cards_unchanged === false || row.required_aspects?.some(aspect => !aspect.observed)).length;
     $("status").textContent = `${results.length} runs; ${failed} engine errors, replay mismatches or card mutations.`;
     $("summary").textContent = `${results.filter(row => row.outcome === "heroes_win").length} hero wins, ${results.filter(row => row.outcome === "monsters_win").length} monster wins, ${results.filter(row => row.outcome === "draw").length} draws.`;
     const table = document.createElement("table");
     const head = document.createElement("tr");
-    for (const key of ["Seed","Heroes","Monsters","Outcome / Error","Rounds","Events","Replay","Cards unchanged"]) {
+    for (const key of ["Pattern","Seed","Heroes","Monsters","Outcome / Error","Rounds","Events","Replay","Cards unchanged","Required mechanics"]) {
       const th = document.createElement("th"); th.textContent=key; head.append(th);
     }
     table.append(head);
     results.forEach(row => {
       const tr=document.createElement("tr");
-      for (const value of [row.seed,row.selection.hero_ids.length,row.selection.monster_ids.length,row.error || row.outcome,row.rounds ?? "—",row.events ?? "—",row.stable === null || row.stable === undefined ? "Not checked" : row.stable ? "PASS" : "FAIL",row.cards_unchanged === undefined ? "—" : row.cards_unchanged ? "PASS" : "FAIL"]) {
+      for (const value of [row.pattern || "Ad hoc",row.seed,row.selection.hero_ids.length,row.selection.monster_ids.length,row.error || row.outcome,row.rounds ?? "—",row.events ?? "—",row.stable === null || row.stable === undefined ? "Not checked" : row.stable ? "PASS" : "FAIL",row.cards_unchanged === undefined ? "—" : row.cards_unchanged ? "PASS" : "FAIL",row.required_aspects ? row.required_aspects.every(a => a.observed) ? "PASS" : "FAIL" : "Not asserted"]) {
         const td=document.createElement("td"); td.textContent=String(value); tr.append(td);
       }
       tr.addEventListener("click",()=>{$("events").textContent=JSON.stringify(row.log || row.error,null,2);});
@@ -119,6 +120,32 @@
     execute(entries,true);
     $("status").textContent += ` Matrix matchups ${offset+1}–${offset+entries.length} of ${heroes.length*monsters.length}.`;
   }));
+  $("all-presets").addEventListener("click", async () => {
+    const button = $("all-presets");
+    button.disabled = true;
+    $("status").textContent = "Building certified 2014/2024 preset fights…";
+    try {
+      const recipes = window.IRON_PIT_COMBAT_PRESET_RECIPES.recipes;
+      const catalogs = {};
+      for (const edition of ["2014", "2024"]) catalogs[edition] = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog(edition);
+      const entries = recipes.map(recipe => {
+        const roster = window.IRON_PIT_COMBAT_PRESETS.resolve(recipe, catalogs[recipe.ruleset]);
+        return {
+          recipe, seed: recipe.seed,
+          selection: {ruleset:recipe.ruleset,
+            hero_ids:roster.heroes.map(card=>card.runnable_template_id),
+            monster_ids:roster.monsters.map(card=>card.runnable_template_id)}
+        };
+      });
+      // One sequential run per recipe. Each entry retains its full event log.
+      execute(entries, true);
+      $("status").textContent += " All preset patterns checked with repeat-seed, source-card immutability and required event assertions. Select a result row for its preserved log.";
+    } catch (error) {
+      $("status").textContent = "Fight All configuration error: " + String(error.message || error);
+    } finally {
+      button.disabled = false;
+    }
+  });
   $("download").addEventListener("click",()=>{
     if (!report) return;
     const url=URL.createObjectURL(new Blob([JSON.stringify(report,null,2)],{type:"application/json"}));
