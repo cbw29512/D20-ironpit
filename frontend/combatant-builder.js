@@ -129,6 +129,16 @@
     scores.hidden = !character;
     level.hidden = !character;
     document.getElementById("archetype-label").firstChild.textContent = character ? "Class / archetype" : "Type / archetype";
+    const monsterArchetype = document.getElementById("monster-archetype");
+    const characterClass = document.getElementById("character-class");
+    monsterArchetype.hidden = character;
+    monsterArchetype.disabled = character;
+    monsterArchetype.required = !character;
+    characterClass.hidden = !character;
+    characterClass.disabled = !character;
+    characterClass.required = character;
+    characterClass.name = character ? "archetype" : "";
+    document.querySelector('[name="armor_class"]').min = character ? "1" : "0";
     draft = null;
     exportButton.disabled = true;
   };
