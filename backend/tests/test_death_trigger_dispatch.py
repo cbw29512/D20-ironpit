@@ -2,11 +2,13 @@
 from app.combat.death_trigger_dispatch import _declared_actions
 from app.combat.death_trigger_rules import DEATH_TRIGGER_BUFF, consume_death_trigger
 from app.combat.state import build_combatant_state
+from app.content.capability_compiler import compile_combatant
 from app.content.monster_death_triggers_2014 import (
     death_trigger_actions_2014,
     semantic_death_trigger_names_2014,
     supports_death_triggers_2014,
 )
+from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.roster import build_arena_roster
 
@@ -40,6 +42,15 @@ def test_death_throes_uses_exact_immutable_source_parameters():
     assert (action.damage.count, action.damage.size, action.damage.bonus) == (20, 6, 0)
     assert action.damage_type.value == "fire" and action.success_damage == "half"
     assert source.death_trigger_actions == []
+
+
+def test_death_throes_is_carried_by_the_compiled_arena_card():
+    template = compile_combatant(adapt_basic_monster_2014(_source("balor")))
+    assert template.death_trigger_effect_ids == ["death-throes"]
+    action, = template.death_trigger_actions
+    assert action.id == "death-throes" and action.range_ft == 30
+    state = build_combatant_state(template)
+    assert DEATH_TRIGGER_BUFF in state.active_buff_effect_ids
 
 
 def test_changed_death_throes_clause_fails_closed():
