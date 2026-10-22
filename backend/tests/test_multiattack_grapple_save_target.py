@@ -8,7 +8,7 @@ from app.domain.attack_action_definitions import AttackActionSlot
 
 def test_conditional_save_filters_non_grappled_targets():
     actor = NS(combatant_id="chuul", state=NS(template=NS(
-        saving_throw_actions=[NS(id="tentacles", range_ft=10)])))
+        saving_throw_actions=[NS(id="tentacles", range_ft=10, resource_id=None, resource_cost=0)])))
     unrelated = NS(combatant_id="unrelated", state=NS(grapple_sources=[]))
     grappled = NS(combatant_id="grappled", state=NS(
         grapple_sources=[NS(source_id="chuul")]))
@@ -23,7 +23,7 @@ def test_conditional_save_filters_non_grappled_targets():
 
 def test_grappled_by_someone_else_does_not_qualify():
     actor = NS(combatant_id="chuul", state=NS(template=NS(
-        saving_throw_actions=[NS(id="tentacles", range_ft=10)])))
+        saving_throw_actions=[NS(id="tentacles", range_ft=10, resource_id=None, resource_cost=0)])))
     target = NS(combatant_id="target", state=NS(
         grapple_sources=[NS(source_id="another-monster")]))
     slot = AttackActionSlot(save_action_ids=["tentacles"], requires_source_grapple=True)
