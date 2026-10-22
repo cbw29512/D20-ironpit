@@ -1,9 +1,10 @@
 (() => {
   "use strict";
 
-  const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
+  const H = () => window.IRON_PIT_BROWSER_HEALING;
 
   function apply(state) {
+    try {
     const trait = state.template.regeneration;
     if (!trait) return { healed: 0, died: false, suppressed: false };
     const taken = new Set(state.damage_types_taken_since_regen || []);
@@ -20,25 +21,18 @@
       }
       return { healed: 0, died: false, suppressed };
     }
-    const before = state.current_hp;
-    if (typeof Z().restoreHitPoints === "function") {
-      Z().restoreHitPoints(state, trait.amount);
-    } else {
-      if (state.is_dead || trait.amount <= 0
-        || (state.timed_effects || []).some((effect) => effect.cannot_regain_hit_points)) return { healed: 0, died: false, suppressed: false };
-      const maximum = window.IRON_PIT_BROWSER_STATE.effectiveMaxHp(state);
-      state.current_hp = Math.min(maximum, state.current_hp + trait.amount);
-      if (state.current_hp > before) {
-        state.is_alive = true;
-        state.is_unconscious = false;
-        state.is_stable = false;
-        state.death_save_successes = 0;
-        state.death_save_failures = 0;
-      }
+    // Regeneration uses precisely the same HP/condition/buff lifecycle as other healing.
+    const healing = H();
+    if (typeof healing?.restore !== "function") {
+      throw new Error("Regeneration requires the shared browser healing resolver.");
     }
-    const healed = state.current_hp - before;
+    const healed = healing.restore(state, trait.amount);
     if (healed > 0) window.IRON_PIT_BROWSER_TRIGGERED_EXTRA_ATTACKS?.clearRegenerationOwnedStacks(state);
     return { healed, died: false, suppressed: false };
+    } catch (error) {
+      console.error("Failed browser Regeneration application.", { combatant: state?.template?.name, error });
+      throw error;
+    }
   }
 
   function resolve(sequence, round, member) {
