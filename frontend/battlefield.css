@@ -61,6 +61,12 @@
 .screen-shake{animation:screen-hit .12s linear 3}
 #combat-fx-overlay.critical-screen{opacity:1;background:radial-gradient(circle,rgba(255,30,30,.72),rgba(85,0,0,.7) 58%,rgba(10,0,0,.9));color:#fff}
 #combat-fx-overlay.critical-screen strong{top:42%;font-size:clamp(2.2rem,8vw,6rem)}
+.battle-card.card-attacking{animation:card-attack-jolt .22s ease-out 1}
+.battle-card.card-hit{animation:card-impact-shake .22s linear 1;border-color:#ff9d7c}
+.battle-card.occupied.custom-card{border:3px solid #b980f5;box-shadow:inset 0 0 0 1px rgba(185,128,245,.24)}
+.battle-card.occupied.custom-card .card-meta{color:#ddbbff}
+@keyframes card-attack-jolt{0%,100%{transform:translateX(0)}40%{transform:translateX(5px)}70%{transform:translateX(-2px)}}
+@keyframes card-impact-shake{0%,100%{transform:translate(0)}20%{transform:translate(-5px,2px)}45%{transform:translate(5px,-2px)}70%{transform:translate(-3px,1px)}}
 @keyframes card-turn-shake{0%,100%{transform:translate(0,0) rotate(0)}25%{transform:translate(-2px,1px) rotate(-.4deg)}75%{transform:translate(2px,-1px) rotate(.4deg)}}
 @keyframes screen-hit{0%,100%{transform:translate(0)}25%{transform:translate(-7px,3px)}75%{transform:translate(7px,-3px)}}
 @media(min-width:720px){
@@ -94,6 +100,6 @@
   .battle-controls .fight-button{max-width:240px;font-size:clamp(1.7rem,3vw,2.35rem);padding:26px 28px}
 }
 @media(prefers-reduced-motion:reduce){
-  .battle-card.turn-active,.screen-shake{animation:none!important}
+  .battle-card.turn-active,.battle-card.card-attacking,.battle-card.card-hit,.screen-shake{animation:none!important}
   .battle-card{transition:none!important}
 }
