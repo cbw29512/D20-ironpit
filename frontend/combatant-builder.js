@@ -260,4 +260,58 @@
     URL.revokeObjectURL(url);
   });
   changeMode();
+  const editKey = new URLSearchParams(window.location.search).get("edit");
+  if (editKey && pageMode) {
+    const separator = editKey.indexOf(":");
+    const ruleset = editKey.slice(0, separator), id = editKey.slice(separator + 1);
+    const saved = separator > 0 ? window.IRON_PIT_CUSTOM_LIBRARY?.find(pageMode, ruleset, id) : null;
+    if (!saved) {
+      status.dataset.error = "true";
+      status.textContent = "Saved custom card not found in this browser.";
+    } else {
+      const values = {
+        ...saved,
+        attack_id: saved.attacks?.[0]?.id, attack_name: saved.attacks?.[0]?.name,
+        attack_kind: saved.attacks?.[0]?.attack_kind, attack_bonus: saved.attacks?.[0]?.attack_bonus,
+        damage_count: saved.attacks?.[0]?.damage?.count, damage_size: saved.attacks?.[0]?.damage?.size,
+        damage_bonus: saved.attacks?.[0]?.damage?.bonus, damage_type: saved.attacks?.[0]?.damage_type,
+      };
+      if (saved.attacks?.[1]) Object.assign(values, {
+        secondary_attack_id: saved.attacks[1].id, secondary_attack_name: saved.attacks[1].name,
+        secondary_attack_kind: saved.attacks[1].attack_kind,
+        secondary_attack_bonus: saved.attacks[1].attack_bonus,
+        secondary_damage_count: saved.attacks[1].damage?.count,
+        secondary_damage_size: saved.attacks[1].damage?.size,
+        secondary_damage_bonus: saved.attacks[1].damage?.bonus,
+        secondary_damage_type: saved.attacks[1].damage_type
+      });
+      if (saved.ability_scores) Object.assign(values, saved.ability_scores);
+      for (const [name, value] of Object.entries(values)) {
+        const field = Array.from(form.elements).find(el => el.name === name && !el.disabled);
+        if (field && value != null && typeof value !== "object") field.value = String(value);
+      }
+      if (pageMode === "character") document.getElementById("character-class").value = saved.archetype;
+      if (saved.attacks?.[1]) {
+        secondaryToggle.checked = true;
+        secondaryToggle.dispatchEvent(new Event("change"));
+      }
+      for (const [attackIndex, attack] of (saved.attacks || []).entries()) for (const effect of (attack.effects || [])) {
+        addEffect.click();
+        const row = effectList.lastElementChild;
+        const set = (field, value) => {
+          const node = row?.querySelector('[data-field="' + field + '"]');
+          if (node && value != null) node.value = String(value);
+        };
+        set("attack_id", attackIndex ? "__secondary__" : "__primary__");
+        set("kind", effect.kind);
+        row.querySelector('[data-field="kind"]').dispatchEvent(new Event("change"));
+        set("damage_type", effect.damage_type);
+        set("count", effect.dice?.count); set("size", effect.dice?.size);
+        set("bonus", effect.dice?.bonus);
+        set("save_ability", effect.save_ability); set("dc", effect.dc);
+        set("condition", effect.condition); set("duration_rounds", effect.duration_rounds);
+      }
+      status.textContent = "Editing saved draft. Validate and Save to Custom to update this card.";
+    }
+  }
 })();
