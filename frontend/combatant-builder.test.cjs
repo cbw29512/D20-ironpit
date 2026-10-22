@@ -91,3 +91,10 @@ test("effect chains attach only to their declared attacks", () => {
   assert.deepEqual(result.attacks[1].effects.map(effect=>effect.damage_type),["poison"]);
   assert.throws(()=>makeDefinition({...row,secondary_enabled:undefined}),/Choose an existing attack/);
 });
+
+test("browser-created custom cards contain the required canonical visual loadout", () => {
+  const monster = makeDefinition(fields());
+  assert.equal(typeof monster.visual.armor, "string");
+  assert.equal(typeof monster.visual.main_hand, "string");
+  assert.equal(typeof monster.visual.body_style, "string");
+});
