@@ -23,11 +23,11 @@ _DAMAGE_DEATH_TRIGGER = re.compile(
     re.IGNORECASE,
 )
 _CONDITION_DEATH_TRIGGER = re.compile(
-    r"^When the .+? dies, it explodes in a burst of dust\\. Each creature within "
-    r"(?P<range>\\d+) feet of it must then succeed on a DC (?P<dc>\\d+) "
+    r"^When the .+? dies, it explodes in a burst of dust\. Each creature within "
+    r"(?P<range>\d+) feet of it must then succeed on a DC (?P<dc>\d+) "
     r"(?P<ability>[A-Za-z]+) saving throw or be (?P<condition>[a-z]+) for "
-    r"(?P<minutes>\\d+) minute(?:s)?\\. A (?P=condition) creature can repeat the "
-    r"saving throw on each of its turns, ending the effect on itself on a success\\.$",
+    r"(?P<minutes>\d+) minute(?:s)?\. A (?P=condition) creature can repeat the "
+    r"saving throw on each of its turns, ending the effect on itself on a success\.$",
     re.IGNORECASE,
 )
 _IGNORED_OBJECT_AFTERMATH = re.compile(
