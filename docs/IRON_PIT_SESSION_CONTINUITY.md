@@ -9,6 +9,14 @@ This is a **handoff entry point**, not a competing rules ledger. Read this befor
 - Preserve the established Iron Pit exceptions in the locked rules; 2014 first, then 2024. Petrified is immediate defeat in the Pit. Do not ask to reconsider settled design unless incompatible source facts require a genuinely new ruling.
 - New monsters and homebrew should compose the existing mechanics without engine changes when their effects already exist.
 
+## Priority override — 2026-10-22: complete mechanic families across all 327 cards
+
+**This overrides older monster-by-monster selection and one-blocker-first advice wherever those conflict.** Follow the locked 327-card field-pass workflow in [the monster playbook](playbooks/MONSTERS.md). First audit a shared field/ability family across **all** 2014 source cards, reuse or complete one universal Python/browser resolver, and bulk-bind every equivalent source declaration (monster and reusable pregen forms). A remaining unrelated blocker on a monster must not stop its other fields from being completed. Record not-applicable and arena-neutral clauses accurately; never fabricate effects or mark partially bound monsters battle-ready.
+
+**Working order:** AC → HP/death → initiative → to-hit → typed damage/defenses → Multiattack → saves → conditions → buffs/debuffs → spells → actions/reactions/traits → resources/durations → logs → exceptional abilities → webpage fights. Before opening a monster-specific PR, identify the cross-roster family and its full affected-card set. Existing single-monster branches are integration sources for their shared family, not the default work queue. Group identical behavior; preserve immutable source parameters and printed labels; no name-based runtime dispatch.
+
+**Progress reporting:** lead with verified family coverage (source cards accounted for / 327, exact exceptions and unresolved ability obligations); report source-admitted monsters separately and do not use the latter as a proxy for mechanic progress. Run focused regressions during development and required exact-head CI only at merge gates; never skip mandated checks or unlock production.
+
 ## User-approved execution decisions — 2026-10-18 (do not reopen)
 
 1. **Finished monster = verified source-card behavior, passing automated Python and browser combat tests, merged implementation, AND successful real fights through the Iron Pit webpage.** Source admission alone is not finished. A simulated or exported test with no webpage fight evidence cannot be reported as finished.
