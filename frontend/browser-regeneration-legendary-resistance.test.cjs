@@ -28,6 +28,8 @@ window.IRON_PIT_BROWSER_ROLLS = {
 };
 
 load("browser-zero-hp.js");
+window.IRON_PIT_BROWSER_HEALING_POLICY = { swarm: () => false };
+load("browser-healing.js");
 load("browser-regeneration.js");
 load("browser-save-success-override.js");
 load("browser-saving-throws.js");
@@ -53,6 +55,32 @@ function monster(extra = {}) {
     resources: extra.resources || {},
     damage_types_taken_since_regen: [],
   };
+}
+
+{
+  const state = monster();
+  state.current_hp = 25;
+  state.damage_types_taken_since_regen = ["slashing"];
+  const canonical = window.IRON_PIT_BROWSER_HEALING;
+  delete window.IRON_PIT_BROWSER_HEALING;
+  try {
+    assert.throws(() => window.IRON_PIT_BROWSER_REGENERATION.apply(state), /shared browser healing resolver/);
+    assert.equal(state.current_hp, 25);
+    assert.deepEqual(state.damage_types_taken_since_regen, ["slashing"]);
+  } finally {
+    window.IRON_PIT_BROWSER_HEALING = canonical;
+  }
+}
+
+{
+  const state = monster();
+  state.current_hp = 37;
+  state.timed_effects.push({ cannot_regain_hit_points: true });
+  assert.equal(window.IRON_PIT_BROWSER_REGENERATION.apply(state).healed, 0);
+  assert.equal(state.current_hp, 37);
+  state.timed_effects = [];
+  assert.equal(window.IRON_PIT_BROWSER_REGENERATION.apply(state).healed, 3);
+  assert.equal(state.current_hp, 40);
 }
 
 {
