@@ -14,7 +14,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid 
 button{background:#306aaa;color:white;border:1px solid #86aecc;padding:12px 16px;border-radius:8px;cursor:pointer;font:inherit;font-weight:650}
 button.secondary{background:#263c50}button:hover{filter:brightness(1.14)}
 .actions{display:flex;gap:12px;flex-wrap:wrap}.hint{font-size:.86rem;color:#bfd1e0}#status{min-height:2em;font-weight:600}#status[data-error="true"]{color:#ffb6b6}
-pre{background:#081019;border:1px solid #445669;border-radius:10px;padding:16px;max-height:420px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.effect-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;border:1px solid #667b90;border-radius:8px;padding:14px;margin:12px 0}pre{background:#081019;border:1px solid #445669;border-radius:10px;padding:16px;max-height:420px;overflow:auto;white-space:pre-wrap;word-break:break-word}
 [hidden]{display:none!important}
 </style>
 <script defer src="./combatant-builder.js"></script>
@@ -68,6 +68,11 @@ pre{background:#081019;border:1px solid #445669;border-radius:10px;padding:16px;
 <label>Damage modifier<input type="number" name="secondary_damage_bonus" min="-100" max="100" value="2"></label>
 <label>Damage type<select name="secondary_damage_type"><option>slashing</option><option>piercing</option><option>bludgeoning</option><option>fire</option><option>cold</option><option>lightning</option><option>thunder</option><option>acid</option><option>poison</option><option>necrotic</option><option>radiant</option><option>psychic</option><option>force</option></select></label>
 </div></div></fieldset>
+<fieldset><legend>On-hit effect chain</legend>
+<p class="hint">Add effects in resolution order. Every effect uses the shared engine. Save or condition effects apply the chosen condition on a failed saving throw.</p>
+<div id="effect-list" aria-label="Ordered on-hit effects"></div>
+<button type="button" class="secondary" id="add-effect">Add on-hit effect</button>
+</fieldset>
 <div class="actions"><button type="submit">Validate & preview</button><button type="button" id="export" class="secondary" disabled>Export JSON</button></div>
 <p id="status" role="status" aria-live="polite"></p>
 </form>
