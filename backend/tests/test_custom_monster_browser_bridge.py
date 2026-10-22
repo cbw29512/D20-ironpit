@@ -20,6 +20,7 @@ def source_card():
             }],
         }],
         "primary_attack_id": "tap", "source": "homebrew test",
+        "visual": {"armor": "natural", "main_hand": "claw", "body_style": "beast"},
     }
 
 
