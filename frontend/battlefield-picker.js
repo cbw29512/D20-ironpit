@@ -5,6 +5,18 @@
   const P = () => window.IRON_PIT_ENCOUNTER_PICKER;
   const ready = (item) => Boolean(item?.coverage_status === "raw_ready" && item?.runnable_template_id);
   let active = null;
+  const customCards = (kind, ruleset) => window.IRON_PIT_CUSTOM_LIBRARY?.list(kind, ruleset) || [];
+  const customPreview = (card) => {
+    const frame = el("picker-portrait");
+    if (frame && card?.custom) {
+      frame.classList.add("custom-card-preview");
+      frame.setAttribute("data-custom-card", "true");
+    } else if (frame) {
+      frame.classList.remove("custom-card-preview");
+      frame.removeAttribute("data-custom-card");
+    }
+  };
+
 
   function option(value, text, selected = false, disabled = false) {
     const node = document.createElement("option");
@@ -13,6 +25,7 @@
   }
 
   function chosenHero(state) {
+    if (el("picker-class").value === "custom") return customCards("character", state.ruleset).find(item => item.id === el("picker-level").value) || null;
     const candidates = P().heroBuilds(state.catalog.heroes, el("picker-class").value, Number(el("picker-level").value));
     return P().preferredHero(candidates);
   }
@@ -38,6 +51,7 @@
     frame.className = `picker-portrait-frame fighter-portrait ${side} ${kind}${hasArt}`;
     frame.innerHTML = `${artwork}${fallback}`;
     window.IRON_PIT_FIGURE_VISUALS?.decorate(frame, template);
+    customPreview(card);
   }
 
   function populateHero(state, existing) {
@@ -45,6 +59,7 @@
     heroSelect.replaceChildren(); levelSelect.replaceChildren();
     const fallback = existing || state.catalog.heroes.find(ready) || state.catalog.heroes[0];
     P().classOptions(state.catalog.heroes).forEach((item) => heroSelect.append(option(item.id, item.name, item.id === fallback.class_id)));
+    if (customCards("character", state.ruleset).length) heroSelect.append(option("custom", "✦ Custom Pregens", Boolean(existing?.custom)));
     P().LEVELS.forEach((level) => levelSelect.append(option(level, level, level === Number(fallback.level))));
 
     function refresh() {
@@ -57,7 +72,16 @@
       renderPreview(chosen, "heroes");
     }
     heroSelect.value = fallback.class_id; levelSelect.value = String(fallback.level);
-    heroSelect.onchange = refresh; levelSelect.onchange = refresh; refresh();
+    const refreshLevels = () => {
+      levelSelect.replaceChildren();
+      if (heroSelect.value === "custom") {
+        customCards("character", state.ruleset).forEach(card => levelSelect.append(option(card.id, card.name + " · Lv " + card.level + " · draft")));
+      } else P().LEVELS.forEach(level => levelSelect.append(option(level, level)));
+      refresh();
+    };
+    heroSelect.onchange = refreshLevels; levelSelect.onchange = refresh;
+    if (existing?.custom) heroSelect.value = "custom";
+    refreshLevels();
   }
 
   function monsterNote(state, rows, chosen) {
@@ -69,9 +93,10 @@
   }
 
   function populateMonster(state, existing, side = "monsters") {
-    const all = state.catalog.monsters, crSelect = el("picker-cr"), monsterSelect = el("picker-monster");
+    const all = [...state.catalog.monsters, ...customCards("monster", state.ruleset)], crSelect = el("picker-cr"), monsterSelect = el("picker-monster");
     crSelect.replaceChildren(option("all", `All CRs · ${all.length} monsters`, true));
-    P().challengeRatings(all).forEach((cr) => crSelect.append(option(cr, `CR ${cr}`)));
+    P().challengeRatings(state.catalog.monsters).forEach((cr) => crSelect.append(option(cr, `CR ${cr}`)));
+    if (all.some(item => item.custom)) crSelect.append(option("custom", "✦ Custom Monsters"));
 
     function refreshNote(rows) {
       const chosen = rows.find((monster) => monster.id === monsterSelect.value) || null;
@@ -81,9 +106,9 @@
       renderPreview(chosen, "monsters");
     }
     function refreshMonsters() {
-      const rows = P().sortedMonsters(all, crSelect.value); monsterSelect.replaceChildren();
+      const rows = crSelect.value === "custom" ? all.filter(item => item.custom) : P().sortedMonsters(all.filter(item => !item.custom), crSelect.value); monsterSelect.replaceChildren();
       rows.forEach((monster) => monsterSelect.append(option(
-        monster.id, `CR ${monster.challenge_rating} · ${monster.name}${ready(monster) ? "" : " · not available"}`,
+        monster.id, monster.custom ? `✦ CUSTOM · ${monster.name} · draft (not certified)` : `CR ${monster.challenge_rating} · ${monster.name}${ready(monster) ? "" : " · not available"}`,
         monster.id === existing?.id,
       )));
       const existingShown = existing && rows.some((monster) => monster.id === existing.id), firstReady = rows.find(ready);
@@ -92,16 +117,16 @@
       else if (rows[0]) monsterSelect.value = rows[0].id;
       refreshNote(rows);
     }
-    if (existing) crSelect.value = String(existing.challenge_rating);
+    if (existing) crSelect.value = existing.custom ? "custom" : String(existing.challenge_rating);
     crSelect.onchange = refreshMonsters;
-    monsterSelect.onchange = () => refreshNote(P().sortedMonsters(all, crSelect.value));
+    monsterSelect.onchange = () => refreshNote(crSelect.value === "custom" ? all.filter(item => item.custom) : P().sortedMonsters(all.filter(item => !item.custom), crSelect.value));
     refreshMonsters();
   }
 
   function selectedCard(state) {
     if (!active) return null;
     if (el("picker-kind").value === "pregen") return chosenHero(state);
-    return state.catalog.monsters.find((monster) => monster.id === el("picker-monster").value) || null;
+    return [...state.catalog.monsters, ...customCards("monster", state.ruleset)].find((monster) => monster.id === el("picker-monster").value) || null;
   }
 
   function open(state, side, index, onConfirm, onRemove) {
