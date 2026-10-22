@@ -21,7 +21,7 @@ This is a **handoff entry point**, not a competing rules ledger. Read this befor
 
 1. **Finished monster = verified source-card behavior, passing automated Python and browser combat tests, merged implementation, AND successful real fights through the Iron Pit webpage.** Source admission alone is not finished. A simulated or exported test with no webpage fight evidence cannot be reported as finished.
 2. **Prioritize universal mechanics unlocking the largest groups of monsters.** No monster-name-based combat dispatch; card data owns DC, attacks, damage, timings, and effects.
-3. **If a needed universal mechanic is missing, document the exact blocker and move to monsters that the existing mechanics can already handle.** Do not spend an indefinite cycle inventing the absent mechanic. Return to its shared family according to throughput priority.
+3. **If a universal mechanic is missing, record that precise semantic gap for the active family, then continue the roster-wide pass on all equivalent abilities already supported.** Do not switch to a separate monster-by-monster queue or invent monster-specific resolvers. Return to the missing primitive in the shared-family queue.
 4. **When all required tests pass, automatically merge approved work to main.** Keep production publishing locked, with beta preview separate. Do not merge unverified code; record merge SHA and test evidence.
 5. **Report progress on distinct axes:** source-admitted, automated certified, merged, and successfully webpage battle-tested. Use only evidence, not approximations or discussion counts.
 
@@ -32,7 +32,7 @@ These choices supersede any older process suggestion that says a missing mechani
 ## Required execution order, every session
 1. Read [SOUL](../SOUL.md), [implementation playbook](IRON_PIT_IMPLEMENTATION_PLAYBOOK.md), [monster playbook](playbooks/MONSTERS.md), [locked rules](IRON_PIT_LOCKED_RULES.md), [canonical monster queue](MONSTER_ABILITY_WORK_QUEUE.md), [generated blockers](MONSTER_BLOCKERS_2014.md), and [mechanic inventory](UNIVERSAL_MECHANIC_INVENTORY.md).
 2. Inspect **live main**, relevant existing PR branches/heads, and exact-head CI. Generated data and current repo state override old chat summaries and historical numbers.
-3. **Do implementation work**, not another architecture explanation. Select approved unfinished semantic families that can finish the most monsters. Avoid PR overlap; finish existing branches and tests before opening unrelated work.
+3. **Do implementation work across the full 327-card roster for the next unfinished field or semantic family**, not another architecture explanation or isolated monster choice. Reuse overlapping PR implementations as inputs to their shared family, reconciling conflicts without letting stale per-monster branches dictate the queue.
 4. Bind immutable card facts to universal primitives. Write positive, negative and mutation tests for source proof; Python/browser combat parity; regenerate generated artifacts using their scripts.
 5. Do not merge without exact-head required gates. Keep production Netlify publishing locked; beta preview separate.
 6. Report **verified** merged monster completions, source-admitted count vs truly battle-certified status, remaining blockers, commit/PR, CI evidence, and exact unresolved blocker. Do not claim progress from discussions, plans, commits, or a draft PR alone.
