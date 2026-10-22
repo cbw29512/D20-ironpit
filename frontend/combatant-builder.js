@@ -195,6 +195,7 @@
     event.preventDefault();
     try {
       const values = Object.fromEntries(new FormData(form).entries());
+      if (pageMode) values.kind = pageMode;
       values.on_hit_effects = Array.from(document.querySelectorAll("#effect-list [data-effect-row]"), row => {
         const read = name => row.querySelector('[data-field="' + name + '"]')?.value;
         return {kind: read("kind"), damage_type: read("damage_type"),
