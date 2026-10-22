@@ -205,6 +205,20 @@
       status.textContent = error.message;
     }
   });
+  const saveButton = document.getElementById("save-custom");
+  if (saveButton) saveButton.addEventListener("click", () => {
+    if (!draft) return;
+    try {
+      const library = window.IRON_PIT_CUSTOM_LIBRARY;
+      if (!library) throw new Error("Custom library is unavailable.");
+      library.save(draft);
+      status.dataset.error = "false";
+      status.textContent = draft.name + " saved to Custom " + (draft.kind === "monster" ? "Monsters" : "Pregens") + ". This draft is not combat-certified yet.";
+    } catch (error) {
+      status.dataset.error = "true";
+      status.textContent = error.message;
+    }
+  });
   exportButton.addEventListener("click", () => {
     if (!draft) return;
     const blob = new Blob([JSON.stringify(draft, null, 2) + "\n"], {type: "application/json"});
