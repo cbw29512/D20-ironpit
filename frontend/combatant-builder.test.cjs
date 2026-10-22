@@ -36,3 +36,43 @@ test("unknown kind and ruleset cannot change the runtime contract",()=>{
   assert.throws(()=>makeDefinition({...fields(),kind:"npc"}),/mode/);
   assert.throws(()=>makeDefinition({...fields(),ruleset:"3e"}),/ruleset/);
 });
+
+test("second attack retains independent damage and avoids overriding the primary", () => {
+  const values={...fields(),secondary_enabled:"on",secondary_attack_id:"bite",
+    secondary_attack_name:"Bite",secondary_attack_kind:"melee",
+    secondary_attack_bonus:"7",secondary_damage_count:"2",
+    secondary_damage_size:"8",secondary_damage_bonus:"4",secondary_damage_type:"piercing"};
+  const result=makeDefinition(values);
+  assert.equal(result.attacks.length,2);
+  assert.equal(result.primary_attack_id,"claw");
+  assert.equal(result.attacks[1].id,"bite");
+  assert.equal(result.attacks[1].damage_type,"piercing");
+  assert.deepEqual(result.attacks[1].damage,{count:2,size:8,bonus:4});
+  assert.throws(()=>makeDefinition({...values,secondary_attack_id:"claw"}),/unique lowercase ID/);
+  assert.throws(()=>makeDefinition({...values,secondary_damage_count:"0"}),/secondary_damage_count/);
+});
+
+test("ordered hit chain declares multiple damage types and failed-save condition", () => {
+  const values={...fields(),on_hit_effects:[
+    {kind:"damage",damage_type:"fire",count:"2",size:"6",bonus:"1"},
+    {kind:"prone"},
+    {kind:"save_condition",save_ability:"constitution",dc:"15",condition:"poisoned",duration_rounds:"2"}
+  ]};
+  const result=makeDefinition(values);
+  assert.deepEqual(result.attacks[0].effects.map(e=>e.kind),["damage","prone","save_condition"]);
+  assert.equal(result.attacks[0].effects[0].damage_type,"fire");
+  assert.equal(result.attacks[0].effects[2].condition,"poisoned");
+  assert.equal(result.attacks[0].effects[2].dc,15);
+});
+test("unknown on-hit effect and invalid saving throw fail closed", () => {
+  assert.throws(()=>makeDefinition({...fields(),on_hit_effects:[{kind:"invented"}]}),/Unsupported on-hit effect/);
+  assert.throws(()=>makeDefinition({...fields(),on_hit_effects:[{kind:"save_condition",save_ability:"luck",dc:12,condition:"poisoned",duration_rounds:1}]}),/Invalid save ability/);
+});
+
+test("homebrew permits AC zero but pregen does not", () => {
+  assert.equal(makeDefinition({...fields(),armor_class:"0"}).armor_class,0);
+  const character={...fields(),kind:"character",archetype:"fighter",level:"3",
+    strength:"16",dexterity:"12",constitution:"14",intelligence:"8",wisdom:"10",charisma:"10"};
+  assert.throws(()=>makeDefinition({...character,armor_class:"0"}),/armor_class/);
+  assert.throws(()=>makeDefinition({...character,archetype:"custom-demon"}),/base class/);
+});

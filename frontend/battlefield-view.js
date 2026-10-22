@@ -42,13 +42,15 @@
     const template = runtimeTemplate(card, side), node = document.createElement("article");
     const monsterCard = card.kind === "monster";
     const kind = side === "monsters" ? "Team B" : "Team A";
-    node.className = `battle-card occupied ${side}`; node.dataset.slotIndex = String(index);
+    node.className = `battle-card occupied ${side}${card.custom ? " custom-card" : ""}`; node.dataset.slotIndex = String(index);
     node.tabIndex = 0;
     node.setAttribute("aria-label", `${card.name}, ${kind} slot ${index + 1}`);
     node.innerHTML = `<button type="button" class="card-trash"${locked ? " disabled" : ""} aria-label="Remove ${card.name}"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 3h6l1 2h5v2H3V5h5l1-2zm1 6h2v10h-2V9zm4 0h2v10h-2V9zM6 7h12v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7z"/></svg></button><span class="slot-number">${index + 1}</span><span class="initiative-badge" aria-label="Initiative">—</span>${figureMarkup(template)}<strong class="card-name"></strong><small class="card-meta"></small><div class="card-status-lanes"><div class="card-status-lane card-status-buffs" aria-label="Buffs"><small>BUFFS</small><div class="card-concentration" hidden></div><div class="card-buffs"></div></div><div class="card-status-lane card-status-debuffs" aria-label="Debuffs"><small>DEBUFFS</small><div class="card-debuffs"></div></div></div><div class="card-hp"><span></span></div><small class="hp-text"></small><span class="death-stamp">✕ DEAD</span>`;
     node.querySelector(".card-name").textContent = card.name;
-    node.querySelector(".card-meta").textContent = monsterCard ? `${card.monster_type} · CR ${card.challenge_rating}` : `${card.class_name} · Level ${card.level}`;
-    const hp = Number(template?.max_hp || card.hit_points || 0);
+    node.querySelector(".card-meta").textContent = monsterCard
+      ? `${card.custom ? "✦ CUSTOM · " : ""}${card.monster_type || card.creature_type || card.archetype || "Monster"} · CR ${card.challenge_rating ?? "—"}`
+      : `${card.custom ? "✦ CUSTOM · " : ""}${card.class_name || card.archetype || "Character"} · Level ${card.level ?? "—"}`;
+    const hp = Number(template?.max_hp ?? card.max_hp ?? card.hit_points ?? 0);
     node.dataset.maxHp = String(hp); node.dataset.currentHp = String(hp); node.querySelector(".hp-text").textContent = `${hp} / ${hp} HP`;
     node.querySelector(".card-hp span").style.width = "100%"; if (template) V()?.decorate(node, template);
     node.querySelector(".card-trash").addEventListener("click", (event) => {

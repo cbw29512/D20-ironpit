@@ -5,6 +5,22 @@
   const P = () => window.IRON_PIT_ENCOUNTER_PICKER;
   const ready = (item) => Boolean(item?.coverage_status === "raw_ready" && item?.runnable_template_id);
   let active = null;
+  const customCards = (kind, ruleset) => window.IRON_PIT_CUSTOM_LIBRARY?.list(kind, ruleset) || [];
+  const customPreview = (card) => {
+    const frame = el("picker-portrait");
+    if (frame && card?.custom) {
+      frame.classList.add("custom-card-preview");
+      frame.setAttribute("data-custom-card", "true");
+      frame.style.outline = "3px solid #cf9dff";
+      frame.style.outlineOffset = "3px";
+    } else if (frame) {
+      frame.classList.remove("custom-card-preview");
+      frame.removeAttribute("data-custom-card");
+      frame.style.outline = "";
+      frame.style.outlineOffset = "";
+    }
+  };
+
 
   function option(value, text, selected = false, disabled = false) {
     const node = document.createElement("option");
@@ -13,6 +29,7 @@
   }
 
   function chosenHero(state) {
+    if (el("picker-class").value === "custom") return customCards("character", state.ruleset).find(item => item.id === el("picker-level").value) || null;
     const candidates = P().heroBuilds(state.catalog.heroes, el("picker-class").value, Number(el("picker-level").value));
     return P().preferredHero(candidates);
   }
@@ -38,6 +55,7 @@
     frame.className = `picker-portrait-frame fighter-portrait ${side} ${kind}${hasArt}`;
     frame.innerHTML = `${artwork}${fallback}`;
     window.IRON_PIT_FIGURE_VISUALS?.decorate(frame, template);
+    customPreview(card);
   }
 
   function populateHero(state, existing) {
@@ -45,11 +63,12 @@
     heroSelect.replaceChildren(); levelSelect.replaceChildren();
     const fallback = existing || state.catalog.heroes.find(ready) || state.catalog.heroes[0];
     P().classOptions(state.catalog.heroes).forEach((item) => heroSelect.append(option(item.id, item.name, item.id === fallback.class_id)));
+    if (customCards("character", state.ruleset).length) heroSelect.append(option("custom", "✦ Custom Pregens", Boolean(existing?.custom)));
     P().LEVELS.forEach((level) => levelSelect.append(option(level, level, level === Number(fallback.level))));
 
     function refresh() {
       const chosen = chosenHero(state);
-      el("picker-note").textContent = ready(chosen)
+      el("picker-note").textContent = chosen?.custom ? `✦ CUSTOM PREGEN · ${chosen.name} · saved draft. Combat certification required before use.` : ready(chosen)
         ? `${chosen.name} · ${chosen.class_name} ${chosen.level} is ready to fight.`
         : `${chosen?.name || "This hero"} level ${levelSelect.value} is not available yet.`;
       el("confirm-card").disabled = !ready(chosen);
@@ -57,21 +76,35 @@
       renderPreview(chosen, "heroes");
     }
     heroSelect.value = fallback.class_id; levelSelect.value = String(fallback.level);
-    heroSelect.onchange = refresh; levelSelect.onchange = refresh; refresh();
+    const refreshLevels = () => {
+      levelSelect.replaceChildren();
+      if (heroSelect.value === "custom") {
+        customCards("character", state.ruleset).forEach(card => levelSelect.append(option(card.id, card.name + " · Lv " + card.level + " · draft")));
+      } else {
+        P().LEVELS.forEach(level => levelSelect.append(option(level, level)));
+        levelSelect.value = String(existing?.level || fallback.level || 1);
+      }
+      refresh();
+    };
+    heroSelect.onchange = refreshLevels; levelSelect.onchange = refresh;
+    if (existing?.custom) heroSelect.value = "custom";
+    refreshLevels();
   }
 
   function monsterNote(state, rows, chosen) {
     const certified = rows.filter(ready).length;
     if (!rows.length) return "No monsters exist at this Challenge Rating.";
+    if (chosen?.custom) return `✦ CUSTOM MONSTER · ${chosen.name} · saved draft. Combat certification required before use.`;
     if (chosen && !ready(chosen)) return `${chosen.name} is listed, but is not ready to fight yet.`;
     if (state.ruleset === "2014") return `${rows.length} 2014 monster${rows.length === 1 ? "" : "s"} at this Challenge Rating.`;
     return `${rows.length} monster${rows.length === 1 ? "" : "s"} shown · ${certified} ready to fight.`;
   }
 
   function populateMonster(state, existing, side = "monsters") {
-    const all = state.catalog.monsters, crSelect = el("picker-cr"), monsterSelect = el("picker-monster");
+    const all = [...state.catalog.monsters, ...customCards("monster", state.ruleset)], crSelect = el("picker-cr"), monsterSelect = el("picker-monster");
     crSelect.replaceChildren(option("all", `All CRs · ${all.length} monsters`, true));
-    P().challengeRatings(all).forEach((cr) => crSelect.append(option(cr, `CR ${cr}`)));
+    P().challengeRatings(state.catalog.monsters).forEach((cr) => crSelect.append(option(cr, `CR ${cr}`)));
+    if (all.some(item => item.custom)) crSelect.append(option("custom", "✦ Custom Monsters"));
 
     function refreshNote(rows) {
       const chosen = rows.find((monster) => monster.id === monsterSelect.value) || null;
@@ -81,9 +114,9 @@
       renderPreview(chosen, "monsters");
     }
     function refreshMonsters() {
-      const rows = P().sortedMonsters(all, crSelect.value); monsterSelect.replaceChildren();
+      const rows = crSelect.value === "custom" ? all.filter(item => item.custom) : P().sortedMonsters(all.filter(item => !item.custom), crSelect.value); monsterSelect.replaceChildren();
       rows.forEach((monster) => monsterSelect.append(option(
-        monster.id, `CR ${monster.challenge_rating} · ${monster.name}${ready(monster) ? "" : " · not available"}`,
+        monster.id, monster.custom ? `✦ CUSTOM · ${monster.name} · draft (not certified)` : `CR ${monster.challenge_rating} · ${monster.name}${ready(monster) ? "" : " · not available"}`,
         monster.id === existing?.id,
       )));
       const existingShown = existing && rows.some((monster) => monster.id === existing.id), firstReady = rows.find(ready);
@@ -92,16 +125,16 @@
       else if (rows[0]) monsterSelect.value = rows[0].id;
       refreshNote(rows);
     }
-    if (existing) crSelect.value = String(existing.challenge_rating);
+    if (existing) crSelect.value = existing.custom ? "custom" : String(existing.challenge_rating);
     crSelect.onchange = refreshMonsters;
-    monsterSelect.onchange = () => refreshNote(P().sortedMonsters(all, crSelect.value));
+    monsterSelect.onchange = () => refreshNote(crSelect.value === "custom" ? all.filter(item => item.custom) : P().sortedMonsters(all.filter(item => !item.custom), crSelect.value));
     refreshMonsters();
   }
 
   function selectedCard(state) {
     if (!active) return null;
     if (el("picker-kind").value === "pregen") return chosenHero(state);
-    return state.catalog.monsters.find((monster) => monster.id === el("picker-monster").value) || null;
+    return [...state.catalog.monsters, ...customCards("monster", state.ruleset)].find((monster) => monster.id === el("picker-monster").value) || null;
   }
 
   function open(state, side, index, onConfirm, onRemove) {
