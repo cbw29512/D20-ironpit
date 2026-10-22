@@ -21,6 +21,41 @@ class ReplacementFormResult:
     reverted: bool = False
 
 
+
+def enter_declared_precombat_form(
+    state: CombatantState,
+    *,
+    forms: dict[str, CombatantTemplate],
+    opening_form: str,
+    required_forms: tuple[str, ...] = (),
+    source_id: str = "shapechanger",
+    source_name: str = "Shapechanger",
+) -> ReplacementFormResult:
+    """Apply a precombat form with owner HP; preserve legal alternatives externally.
+
+    Only callers with source-certified, fully compiled forms may use this path.
+    It must run before initiative and never spends a combat Action.
+    """
+    from app.content.monster_form_entry_2014 import opening_form_id
+
+    selected = opening_form_id(forms, opening_form=opening_form, required_forms=required_forms)
+    if state.replacement_form is not None or state.initiative_roll is not None or state.turns_started:
+        raise ValueError("Precombat form entry requires fresh untransformed fight state.")
+    form = forms[selected]
+    if form.kind != state.template.kind or form.ruleset != state.template.ruleset:
+        raise ValueError("Precombat form must preserve kind and ruleset.")
+    original = state.template
+    state.replacement_form = ReplacementFormState(
+        source_id=source_id, source_name=source_name,
+        original_template=original, form_template=form,
+        original_hp=state.current_hp, form_hp=state.current_hp,
+        form_max_hp=original.max_hp, hp_mode="retain_owner",
+        voluntary_revert_action="action",
+    )
+    state.template = form
+    return ReplacementFormResult(source_id=source_id, form_name=form.name, resource_remaining=None)
+
+
 def enter_replacement_form(
     state: CombatantState,
     *,
