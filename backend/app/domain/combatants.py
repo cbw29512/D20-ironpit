@@ -77,7 +77,7 @@ class CombatantTemplate(BaseModel):
     creature_type: str | None = None
     size: CreatureSize = CreatureSize.MEDIUM
     ability_scores: AbilityScores | None = None
-    armor_class: int = Field(ge=1)
+    armor_class: int = Field(ge=0)
     max_hp: int = Field(ge=1)
     speed_ft: int = Field(ge=0)
     movement_modes: MovementModes
