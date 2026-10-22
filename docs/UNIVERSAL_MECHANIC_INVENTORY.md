@@ -440,7 +440,7 @@ Blocked monsters: **90**. These are grouped by printed ability name so the roste
 | Consume Life | Will-o'-Wisp | 1 |
 | Corrode Metal | Gray Ooze | 1 |
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
-| Death Burst | Dust Mephit, Ice Mephit, Magma Mephit, Magmin, Steam Mephit | 5 |
+| Death Burst | Dust Mephit | 1 |
 | Death Throes | Balor | 1 |
 | Divine Eminence | Priest | 1 |
 | Duergar Resilience | Duergar | 1 |
@@ -489,7 +489,6 @@ Blocked monsters: **90**. These are grouped by printed ability name so the roste
 | `source:legendary` | 9 |
 | `mechanic:swallow` | 7 |
 | `attack:complex` | 6 |
-| `mechanic:death-trigger` | 4 |
 | `attack:none` | 3 |
 | `source:reaction` | 3 |
 | `attack:damage-type` | 2 |
