@@ -55,7 +55,19 @@ pre{background:#081019;border:1px solid #445669;border-radius:10px;padding:16px;
 <label>Damage die size<select name="damage_size"><option>4</option><option>6</option><option selected>8</option><option>10</option><option>12</option><option>20</option></select></label>
 <label>Damage modifier<input name="damage_bonus" type="number" min="-100" max="100" value="2"></label>
 <label>Damage type<select name="damage_type"><option>slashing</option><option>piercing</option><option>bludgeoning</option><option>fire</option><option>cold</option><option>lightning</option><option>thunder</option><option>acid</option><option>poison</option><option>necrotic</option><option>radiant</option><option>psychic</option><option>force</option></select></label>
-</div></fieldset>
+</div>
+<label style="margin-top:16px"><input type="checkbox" name="secondary_enabled" style="width:auto;margin-right:8px">Add another attack</label>
+<div id="secondary-attack-fields" hidden>
+<h3>Second attack</h3><div class="grid">
+<label>Attack ID<input name="secondary_attack_id" value="bite" pattern="[a-z0-9][a-z0-9-]*"></label>
+<label>Attack name<input name="secondary_attack_name" value="Bite"></label>
+<label>Attack type<select name="secondary_attack_kind"><option value="melee">Melee</option><option value="ranged">Ranged</option></select></label>
+<label>To-hit bonus<input type="number" name="secondary_attack_bonus" min="-50" max="50" value="4"></label>
+<label>Damage dice count<input type="number" name="secondary_damage_count" min="1" max="100" value="1"></label>
+<label>Damage die size<select name="secondary_damage_size"><option>4</option><option>6</option><option selected>8</option><option>10</option><option>12</option><option>20</option></select></label>
+<label>Damage modifier<input type="number" name="secondary_damage_bonus" min="-100" max="100" value="2"></label>
+<label>Damage type<select name="secondary_damage_type"><option>slashing</option><option>piercing</option><option>bludgeoning</option><option>fire</option><option>cold</option><option>lightning</option><option>thunder</option><option>acid</option><option>poison</option><option>necrotic</option><option>radiant</option><option>psychic</option><option>force</option></select></label>
+</div></div></fieldset>
 <div class="actions"><button type="submit">Validate & preview</button><button type="button" id="export" class="secondary" disabled>Export JSON</button></div>
 <p id="status" role="status" aria-live="polite"></p>
 </form>
