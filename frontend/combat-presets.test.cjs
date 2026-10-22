@@ -1,5 +1,7 @@
 "use strict";
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
 require("./browser-test-runtime.cjs").loadWebsite();
 require("./browser-catalog.js"); require("./battle-lab.js"); require("./browser-turbo.js");
 require("./combat-preset-recipes.js"); require("./combat-presets.js");
@@ -15,6 +17,7 @@ require("./combat-preset-recipes.js"); require("./combat-presets.js");
   const classes = { "2014": new Set(), "2024": new Set() };
   const sizes = new Set();
   const fired = [];
+  const results = [];
   for (const recipe of IRON_PIT_COMBAT_PRESETS.recipes) {
     const catalog = catalogs[recipe.ruleset];
     const { heroes, monsters, difficulty, adjusted } = IRON_PIT_COMBAT_PRESETS.resolve(recipe, catalog);
@@ -54,6 +57,7 @@ require("./combat-preset-recipes.js"); require("./combat-presets.js");
       );
     }
     fired.push(`${recipe.id}@${recipe.seed}:${recipe.aspects.map((spec) => spec.kind).join("+")}`);
+    results.push({id:recipe.id,edition:recipe.ruleset,seed:recipe.seed,heroes:heroes.length,monsters:monsters.length,outcome:battle.outcome,rounds:battle.rounds,event_count:battle.events.length,required_mechanics:recipe.aspects.map(spec=>({kind:spec.kind,value:spec.value,passed:true})),feature_ids:[...new Set(battle.events.map(event=>event.feature_id).filter(Boolean))].sort(),event_types:[...new Set(battle.events.map(event=>event.event_type).filter(Boolean))].sort(),conditions:[...new Set(battle.events.flatMap(event=>event.applied_condition_ids||[]))].sort()});
     if (recipe.id === "goblins") { assert.equal(difficulty, "Medium"); assert.equal(adjusted, 200); }
     if (recipe.id === "party") { assert.equal(difficulty, "Hard"); assert.equal(adjusted, 26100); }
     if (recipe.id === "2024-undead") {
@@ -72,5 +76,8 @@ require("./combat-preset-recipes.js"); require("./combat-presets.js");
   }
   assert.equal(JSON.stringify(catalogs["2014"]), snapshot["2014"], "fights must never mutate 2014 preset source cards");
   assert.equal(JSON.stringify(catalogs["2024"]), snapshot["2024"], "fights must never mutate 2024 preset source cards");
+  const report = {schema_version:1,suite:"Iron Pit preset combat outcomes",total:results.length,passed:results.length,failed:0,results};
+  const destination = process.env.IRON_PIT_RESULTS_PATH;
+  if (destination) {fs.mkdirSync(path.dirname(destination),{recursive:true});fs.writeFileSync(destination,JSON.stringify(report,null,2)+"\\n");}
   console.log(`${IRON_PIT_COMBAT_PRESETS.recipes.length} presets passed aspect seeds; ${fired.join(" | ")}`);
 })().catch((error) => { console.error("Combat preset regression failed", error); process.exitCode = 1; });
