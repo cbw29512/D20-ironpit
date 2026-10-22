@@ -67,7 +67,7 @@ the underlying ability is already implemented or trivial.
 | Druid | mechanic:spellcasting, source:trait | Spellcasting |
 | Dryad | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Duergar | attack:incomplete, source:extra-action, source:trait | Duergar Resilience |
-| Dust Mephit | mechanic:recharge, mechanic:spellcasting, source:extra-action, source:trait | Death Burst, Innate Spellcasting |
+| Dust Mephit | mechanic:recharge, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Efreeti | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Ettercap | attack:complex, attack:damage-type, mechanic:recharge | — |
 | Fire Elemental | attack:complex, source:trait | Fire Form, Water Susceptibility |
