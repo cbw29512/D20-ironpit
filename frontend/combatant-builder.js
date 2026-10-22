@@ -47,6 +47,28 @@
       primary_attack_id: attackId,
       source: "user-authored combatant builder draft"
     };
+    if (values.secondary_enabled === "on") {
+      const secondId = textValue(values, "secondary_attack_id");
+      if (!/^[a-z0-9][a-z0-9-]*$/.test(secondId) || secondId === attackId)
+        throw new Error("Secondary attack needs a unique lowercase ID.");
+      const secondKind = textValue(values, "secondary_attack_kind");
+      const secondType = textValue(values, "secondary_damage_type");
+      if (!["melee", "ranged"].includes(secondKind) ||
+          !["slashing","piercing","bludgeoning","fire","cold","lightning","thunder","acid","poison","necrotic","radiant","psychic","force"].includes(secondType))
+        throw new Error("Invalid secondary attack type.");
+      base.attacks.push({
+        id: secondId, name: textValue(values, "secondary_attack_name"),
+        attack_kind: secondKind,
+        attack_bonus: number(values, "secondary_attack_bonus", -50, 50),
+        damage: {
+          count: number(values, "secondary_damage_count", 1, 100),
+          size: number(values, "secondary_damage_size", 2, 20),
+          bonus: number(values, "secondary_damage_bonus", -100, 100)
+        },
+        damage_type: secondType,
+        animation: secondKind === "melee" ? "slash" : "projectile"
+      });
+    }
     if (values.creature_type && String(values.creature_type).trim()) base.creature_type = String(values.creature_type).trim();
     if (kind === "character") {
       base.level = number(values, "level", 1, 20);
@@ -76,6 +98,13 @@
     draft = null;
     exportButton.disabled = true;
   };
+  const secondaryToggle = document.querySelector('[name="secondary_enabled"]');
+  const secondaryFields = document.getElementById("secondary-attack-fields");
+  secondaryToggle.addEventListener("change", () => {
+    secondaryFields.hidden = !secondaryToggle.checked;
+    draft = null;
+    exportButton.disabled = true;
+  });
   kind.addEventListener("change", changeMode);
   form.addEventListener("input", () => { draft = null; exportButton.disabled = true; });
   form.addEventListener("submit", event => {
