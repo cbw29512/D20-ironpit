@@ -68,3 +68,11 @@ test("unknown on-hit effect and invalid saving throw fail closed", () => {
   assert.throws(()=>makeDefinition({...fields(),on_hit_effects:[{kind:"invented"}]}),/Unsupported on-hit effect/);
   assert.throws(()=>makeDefinition({...fields(),on_hit_effects:[{kind:"save_condition",save_ability:"luck",dc:12,condition:"poisoned",duration_rounds:1}]}),/Invalid save ability/);
 });
+
+test("homebrew permits AC zero but pregen does not", () => {
+  assert.equal(makeDefinition({...fields(),armor_class:"0"}).armor_class,0);
+  const character={...fields(),kind:"character",archetype:"fighter",level:"3",
+    strength:"16",dexterity:"12",constitution:"14",intelligence:"8",wisdom:"10",charisma:"10"};
+  assert.throws(()=>makeDefinition({...character,armor_class:"0"}),/armor_class/);
+  assert.throws(()=>makeDefinition({...character,archetype:"custom-demon"}),/base class/);
+});
