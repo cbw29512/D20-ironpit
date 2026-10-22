@@ -1,4 +1,3 @@
-"""Compile immutable 2014 source death actions into shared save capabilities."""
 from __future__ import annotations
 
 import logging
@@ -109,15 +108,12 @@ def _source_condition_action(name: str, body: str) -> SaveCapabilityDefinition |
     effect_id = re.sub(r"[^a-z0-9]+", "-", name.casefold()).strip("-")
     return SaveCapabilityDefinition(
         id=effect_id, name=name, save_ability=match["ability"].casefold(),
-        dc=dc, range_ft=radius, max_targets=20,
-        target_scope="all-other-creatures",
+        dc=dc, range_ft=radius, max_targets=20, target_scope="all-other-creatures",
         area={"shape": "emanation", "origin": "self", "radius_ft": radius},
         failed_save_timed_effect=FailedSaveTimedEffect(
-            effect_id=condition,
-            duration_rounds=int(match["minutes"]) * 10,
+            effect_id=condition, duration_rounds=int(match["minutes"]) * 10,
             expiry_timing="target_turn_end",
-            repeat_save_ability=match["ability"].casefold(),
-            repeat_save_dc=dc,
+            repeat_save_ability=match["ability"].casefold(), repeat_save_dc=dc,
             repeat_save_timing="target_turn_end",
         ),
         animation="death-trigger",
