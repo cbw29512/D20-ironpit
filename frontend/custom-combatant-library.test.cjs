@@ -22,3 +22,16 @@ test("same ID may exist for distinct editions and kinds; saving again replaces o
 test("invalid custom combatants are rejected", () => {
   assert.throws(()=>lib.save({kind:"monster",ruleset:"2014",id:"Bad ID"}),/Invalid custom combatant/);
 });
+
+test("delete affects only exact type, ruleset and ID", () => {
+  lib.save({id:"same",name:"2014 Monster",kind:"monster",ruleset:"2014"});
+  lib.save({id:"same",name:"2014 Pregen",kind:"character",ruleset:"2014"});
+  lib.save({id:"same",name:"2024 Monster",kind:"monster",ruleset:"2024"});
+  assert.equal(lib.find("monster","2014","same").name,"2014 Monster");
+  assert.equal(lib.remove("monster","2014","same"),true);
+  assert.equal(lib.find("monster","2014","same"),null);
+  assert.ok(lib.find("character","2014","same"));
+  assert.ok(lib.find("monster","2024","same"));
+  assert.equal(lib.remove("monster","2014","same"),false);
+  assert.throws(()=>lib.remove("monster","2014","../other"),/Invalid custom card identity/);
+});
