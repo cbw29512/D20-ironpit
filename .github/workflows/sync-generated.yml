@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   sync:
-    if: github.actor != 'github-actions[bot]' && (github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && (startsWith(github.head_ref, 'feat/2014-') || github.head_ref == 'feat/browser-death-trigger-state-parity')))
+    if: github.actor != 'github-actions[bot]' && (github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.head_ref, 'feat/2014-')))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
