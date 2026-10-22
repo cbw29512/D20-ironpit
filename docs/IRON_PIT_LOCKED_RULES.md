@@ -4,6 +4,12 @@ This is the single index of **Chris-locked** Iron Pit rules. It exists so those 
 
 It does **not** replace `docs/IRON_PIT_RULES_CONTRACT.md`. That file remains the detailed product/combat contract. Architecture, battlefield UI, and pregen construction stay in their existing docs. If this index and a cited file disagree, stop and reconcile in the cited file. Do not write a third copy of the same rule.
 
+## Lycanthrope precombat form selection — 2026-10-22
+
+- **2014 lycanthropes start combat in whichever of their printed legal forms produces the highest expected damage per ordinary combat turn.** Compare the complete legal attack sequence (including form-specific Multiattack, attack count, typed damage and applicable on-hit riders), not just a single weapon's maximum die roll. The winner is chosen before initiative as fight-local starting state, without spending an Action or Bonus Action; equal choices may prefer the hybrid form.
+- Honor all printed form restrictions: hybrid, humanoid, and beast forms do not inherit options restricted to another form. The printed Shapechanger trait and all forms remain on the immutable source card. Use the shared form/action/damage evaluators; no creature-name-specific resolver.
+- Form choice is **Iron Pit automatic combat tactic**, not a D&D RAW mandate to transform. It does not confer free mid-fight transformations, alter source stats, or certify otherwise unsupported Shapechanger mechanics. Start-form support must be proved separately from full form-changing and complete monster admission.
+
 ## Canonical combatant form
 
 - **One completed combatant, one engine:** Monster and Character are blank-form authoring modes; both compile into `CombatantDefinition → CombatantTemplate` and fresh fight state. Monster authors enter source-final values; character builders derive values from edition-specific scores, proficiency, weapons, armor and features. Named abilities never select runtime logic. Homebrew uses the same typed primitives as official cards; rejected unsupported mechanics remain blocked. The authoritative details are in [the Rules Contract](IRON_PIT_RULES_CONTRACT.md) under *Universal combatant form and ability resolution*, and the [universal card contract](UNIVERSAL_CARD_COMBAT_CONTRACT.md).
