@@ -22,7 +22,21 @@
     catch { throw new Error("Couldn't save custom card in this browser. Check available storage."); }
     return copy;
   }
-  const api = {load, save, list: (kind, ruleset) => load().filter(row => row.kind === kind && row.ruleset === ruleset)};
+  function remove(kind, ruleset, id) {
+    if (!["monster","character"].includes(kind) || !["2014","2024"].includes(ruleset) ||
+        typeof id !== "string" || !/^[a-z0-9][a-z0-9-]*$/.test(id))
+      throw new Error("Invalid custom card identity.");
+    const existing = load();
+    const remaining = existing.filter(item => !(item.kind === kind && item.ruleset === ruleset && item.id === id));
+    if (remaining.length === existing.length) return false;
+    try { localStorage.setItem(KEY, JSON.stringify(remaining)); }
+    catch { throw new Error("Couldn't update custom card storage."); }
+    return true;
+  }
+  function find(kind, ruleset, id) {
+    return load().find(item => item.kind === kind && item.ruleset === ruleset && item.id === id) || null;
+  }
+  const api = {load, save, remove, find, list: (kind, ruleset) => load().filter(row => row.kind === kind && row.ruleset === ruleset)};
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   if (typeof window !== "undefined") window.IRON_PIT_CUSTOM_LIBRARY = api;
 })();
