@@ -17,8 +17,10 @@ const member = (id, dead, position) => ({ combatant_id: id, position_ft: positio
 const source = member("source", true, 0), target = member("target", false, 5);
 window.IRON_PIT_BROWSER_STATE = { distance: (a, b) => Math.abs(a.position_ft - b.position_ft) };
 window.IRON_PIT_DICE = { rollMany: () => [4] };
-window.IRON_PIT_BROWSER_SAVES = { resolveAction: (sequence, _round, _source, victim) => {
-  victim.state.current_hp -= 4;
+let lastAction = null;
+window.IRON_PIT_BROWSER_SAVES = { resolveAction: (sequence, _round, _source, victim, actionArg) => {
+  lastAction = actionArg;
+  victim.state.current_hp -= actionArg.damageDiceCount ? 4 : 0;
   return { sequence, event_type: "saving_throw", target_id: victim.combatant_id };
 } };
 window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH = {
@@ -30,6 +32,21 @@ const first = window.IRON_PIT_BROWSER_DEATH_TRIGGER_DISPATCH.resolvePending(1, 2
 assert.equal(first.events.length, 1);
 assert.equal(target.state.current_hp, 6);
 assert.equal(source.state.feature_use_counts["death-trigger"], 1);
+const conditionAction = { id: "dust-burst", name: "Dust Burst", saveAbility: "constitution",
+  dc: 10, range: 5, damageDiceCount: 0, damageDiceSize: 6, damageBonus: 0,
+  damageType: null, successDamage: "none", targetScope: "all-other-creatures",
+  failedSaveTimedEffect: { effectId: "blinded", durationRounds: 10,
+    expiryTiming: "target_turn_end", repeatSaveAbility: "constitution",
+    repeatSaveDc: 10, repeatSaveTiming: "target_turn_end" } };
+const conditionSource = member("condition-source", true, 0);
+conditionSource.state.template.death_trigger_effect_ids = ["dust-burst"];
+conditionSource.state.template.death_trigger_actions = [conditionAction];
+const conditionResult = window.IRON_PIT_BROWSER_DEATH_TRIGGER_DISPATCH.resolvePending(
+  first.sequence, 2, { heroes: [target], monsters: [conditionSource] },
+);
+assert.equal(conditionResult.events.length, 1);
+assert.equal(lastAction.failedSaveTimedEffect.effectId, "blinded");
+assert.equal(lastAction.failedSaveTimedEffect.repeatSaveTiming, "target_turn_end");
 const second = window.IRON_PIT_BROWSER_DEATH_TRIGGER_DISPATCH.resolvePending(first.sequence, 2, setup);
 assert.equal(second.events.length, 0);
 assert.throws(() => window.IRON_PIT_BROWSER_DEATH_TRIGGER_DISPATCH.declaredActions({

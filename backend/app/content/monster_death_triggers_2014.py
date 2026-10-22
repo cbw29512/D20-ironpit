@@ -8,6 +8,7 @@ from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_sections_2014 import source_sections_2014
 from app.domain.capabilities import SaveCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
+from app.domain.save_effects import FailedSaveTimedEffect
 
 logger = logging.getLogger(__name__)
 _DEATH_SAVE_TRIGGER = re.compile(
@@ -19,6 +20,14 @@ _DAMAGE_DEATH_TRIGGER = re.compile(
     r"taking (?P<average>\d+) \((?P<count>\d+)d(?P<size>\d+)\) "
     r"(?P<damage_type>[a-z]+) damage on a failed save, or half as much damage "
     r"on a successful one\. (?P<trailing>.+)$",
+    re.IGNORECASE,
+)
+_CONDITION_DEATH_TRIGGER = re.compile(
+    r"^When the .+? dies, it explodes in a burst of dust\\. Each creature within "
+    r"(?P<range>\\d+) feet of it must then succeed on a DC (?P<dc>\\d+) "
+    r"(?P<ability>[A-Za-z]+) saving throw or be (?P<condition>[a-z]+) for "
+    r"(?P<minutes>\\d+) minute(?:s)?\\. A (?P=condition) creature can repeat the "
+    r"saving throw on each of its turns, ending the effect on itself on a success\\.$",
     re.IGNORECASE,
 )
 _IGNORED_OBJECT_AFTERMATH = re.compile(
@@ -89,6 +98,32 @@ def _source_damage_action(name: str, body: str) -> SaveCapabilityDefinition | No
     )
 
 
+def _source_condition_action(name: str, body: str) -> SaveCapabilityDefinition | None:
+    match = _CONDITION_DEATH_TRIGGER.fullmatch(body)
+    if match is None:
+        return None
+    condition = match["condition"].casefold()
+    if condition != "blinded":
+        return None
+    radius, dc = int(match["range"]), int(match["dc"])
+    effect_id = re.sub(r"[^a-z0-9]+", "-", name.casefold()).strip("-")
+    return SaveCapabilityDefinition(
+        id=effect_id, name=name, save_ability=match["ability"].casefold(),
+        dc=dc, range_ft=radius, max_targets=20,
+        target_scope="all-other-creatures",
+        area={"shape": "emanation", "origin": "self", "radius_ft": radius},
+        failed_save_timed_effect=FailedSaveTimedEffect(
+            effect_id=condition,
+            duration_rounds=int(match["minutes"]) * 10,
+            expiry_timing="target_turn_end",
+            repeat_save_ability=match["ability"].casefold(),
+            repeat_save_dc=dc,
+            repeat_save_timing="target_turn_end",
+        ),
+        animation="death-trigger",
+    )
+
+
 def death_trigger_actions_2014(
     monster: SourceMonster2014,
 ) -> list[SaveCapabilityDefinition]:
@@ -98,7 +133,8 @@ def death_trigger_actions_2014(
     sections = source_sections_2014(monster.source_traits)
     return [
         action for name in semantic_death_trigger_names_2014(monster)
-        if (action := _source_damage_action(name, sections[name])) is not None
+        if (action := _source_damage_action(name, sections[name])
+            or _source_condition_action(name, sections[name])) is not None
     ]
 
 

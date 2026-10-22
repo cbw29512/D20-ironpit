@@ -37,7 +37,7 @@ def report() -> dict:
                 "semantic_traits": semantic_names,
                 "reason": (
                     "printed Death Trigger is not representable by the shared "
-                    "save/damage schema"
+                    "save/damage/timed-effect schema"
                     if not card.death_trigger_actions
                     else "structured action is incompatible with the shared save/damage schema"
                 ),
