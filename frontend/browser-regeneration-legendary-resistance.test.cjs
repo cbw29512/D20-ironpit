@@ -60,11 +60,13 @@ function monster(extra = {}) {
 {
   const state = monster();
   state.current_hp = 25;
+  state.damage_types_taken_since_regen = ["slashing"];
   const canonical = window.IRON_PIT_BROWSER_HEALING;
   delete window.IRON_PIT_BROWSER_HEALING;
   try {
     assert.throws(() => window.IRON_PIT_BROWSER_REGENERATION.apply(state), /shared browser healing resolver/);
     assert.equal(state.current_hp, 25);
+    assert.deepEqual(state.damage_types_taken_since_regen, ["slashing"]);
   } finally {
     window.IRON_PIT_BROWSER_HEALING = canonical;
   }
