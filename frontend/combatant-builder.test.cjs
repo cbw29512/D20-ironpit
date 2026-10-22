@@ -76,3 +76,18 @@ test("homebrew permits AC zero but pregen does not", () => {
   assert.throws(()=>makeDefinition({...character,armor_class:"0"}),/armor_class/);
   assert.throws(()=>makeDefinition({...character,archetype:"custom-demon"}),/base class/);
 });
+
+test("effect chains attach only to their declared attacks", () => {
+  const row = {...fields(),secondary_enabled:"on",secondary_attack_id:"bite",
+    secondary_attack_name:"Bite",secondary_attack_kind:"melee",
+    secondary_attack_bonus:"5",secondary_damage_count:"1",
+    secondary_damage_size:"8",secondary_damage_bonus:"1",secondary_damage_type:"piercing",
+    on_hit_effects:[
+      {kind:"prone",attack_id:"claw"},
+      {kind:"damage",attack_id:"bite",damage_type:"poison",count:"1",size:"6",bonus:"0"}
+    ]};
+  const result = makeDefinition(row);
+  assert.deepEqual(result.attacks[0].effects.map(effect=>effect.kind),["prone"]);
+  assert.deepEqual(result.attacks[1].effects.map(effect=>effect.damage_type),["poison"]);
+  assert.throws(()=>makeDefinition({...row,secondary_enabled:undefined}),/Choose an existing attack/);
+});
