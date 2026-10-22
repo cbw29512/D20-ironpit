@@ -123,6 +123,7 @@
   const status = document.getElementById("status");
   const preview = document.getElementById("preview");
   const exportButton = document.getElementById("export");
+  const saveButton = document.getElementById("save-custom");
   let draft = null;
   const changeMode = () => {
     const character = kind.value === "character";
@@ -141,6 +142,7 @@
     document.querySelector('[name="armor_class"]').min = character ? "1" : "0";
     draft = null;
     exportButton.disabled = true;
+    if (saveButton) saveButton.disabled = true;
   };
   const secondaryToggle = document.querySelector('[name="secondary_enabled"]');
   const secondaryFields = document.getElementById("secondary-attack-fields");
@@ -148,6 +150,7 @@
     secondaryFields.hidden = !secondaryToggle.checked;
     draft = null;
     exportButton.disabled = true;
+    if (saveButton) saveButton.disabled = true;
   });
   const effectList = document.getElementById("effect-list");
   const addEffect = document.getElementById("add-effect");
@@ -180,6 +183,12 @@
     effectList.appendChild(row);
     refresh();
   });
+  const pageMode = window.location.pathname.endsWith("custom-monster-builder.html") ? "monster"
+    : window.location.pathname.endsWith("custom-pregen-builder.html") ? "character" : null;
+  if (pageMode) {
+    kind.value = pageMode;
+    kind.disabled = true;
+  }
   kind.addEventListener("change", changeMode);
   form.addEventListener("input", () => { draft = null; exportButton.disabled = true; });
   form.addEventListener("submit", event => {
@@ -198,14 +207,15 @@
       status.dataset.error = "false";
       status.textContent = draft.kind === "character" ? "Character draft only: RAW class progression, proficiency, saves, damage, and feature legality require the edition-specific character builder before combat use." : "Homebrew draft validated locally. Use the canonical compiler for full combat legality.";
       exportButton.disabled = false;
+      if (saveButton) saveButton.disabled = false;
     } catch (error) {
       draft = null;
       exportButton.disabled = true;
+    if (saveButton) saveButton.disabled = true;
       status.dataset.error = "true";
       status.textContent = error.message;
     }
   });
-  const saveButton = document.getElementById("save-custom");
   if (saveButton) saveButton.addEventListener("click", () => {
     if (!draft) return;
     try {
