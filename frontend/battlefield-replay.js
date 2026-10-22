@@ -136,11 +136,25 @@
     actor.classList.add("fumble-blackout"); await sleep(360); actor.classList.remove("fumble-blackout");
   }
 
+  async function attackImpact(event, actor, target) {
+    if (event.event_type !== "attack" || !actor) return;
+    // The attacker reacts to performing an attack; the defender reacts only
+    // when the engine reports a hit. Do not treat misses as received hits.
+    const defenderHit = event.hit === true || event.attack_roll?.hit === true ||
+      (event.hp_before != null && event.hp_after != null && Number(event.hp_after) < Number(event.hp_before));
+    actor.classList.add("card-attacking");
+    if (defenderHit && target) target.classList.add("card-hit");
+    await sleep(220);
+    actor.classList.remove("card-attacking");
+    if (target) target.classList.remove("card-hit");
+  }
+
   async function eventStep(event) {
     el("pit-round").textContent = `ROUND ${event.round_number}`;
     const actor = nodes.get(event.actor_id), target = nodes.get(event.target_id);
     if (actor) actor.classList.add("turn-active");
     await fumbleFx(event, actor); await critFx(event);
+    await attackImpact(event, actor, target);
     if (target && event.hp_after != null) hp(target, event.hp_after);
     if (actor && event.event_type === "healing" && event.hp_after != null) hp(actor, event.hp_after);
     if (actor && event.event_type === "death_save" && event.hp_after != null) hp(actor, event.hp_after);
