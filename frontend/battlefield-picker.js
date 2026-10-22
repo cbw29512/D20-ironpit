@@ -11,9 +11,13 @@
     if (frame && card?.custom) {
       frame.classList.add("custom-card-preview");
       frame.setAttribute("data-custom-card", "true");
+      frame.style.outline = "3px solid #cf9dff";
+      frame.style.outlineOffset = "3px";
     } else if (frame) {
       frame.classList.remove("custom-card-preview");
       frame.removeAttribute("data-custom-card");
+      frame.style.outline = "";
+      frame.style.outlineOffset = "";
     }
   };
 
@@ -64,7 +68,7 @@
 
     function refresh() {
       const chosen = chosenHero(state);
-      el("picker-note").textContent = ready(chosen)
+      el("picker-note").textContent = chosen?.custom ? `✦ CUSTOM PREGEN · ${chosen.name} · saved draft. Combat certification required before use.` : ready(chosen)
         ? `${chosen.name} · ${chosen.class_name} ${chosen.level} is ready to fight.`
         : `${chosen?.name || "This hero"} level ${levelSelect.value} is not available yet.`;
       el("confirm-card").disabled = !ready(chosen);
@@ -76,7 +80,10 @@
       levelSelect.replaceChildren();
       if (heroSelect.value === "custom") {
         customCards("character", state.ruleset).forEach(card => levelSelect.append(option(card.id, card.name + " · Lv " + card.level + " · draft")));
-      } else P().LEVELS.forEach(level => levelSelect.append(option(level, level)));
+      } else {
+        P().LEVELS.forEach(level => levelSelect.append(option(level, level)));
+        levelSelect.value = String(existing?.level || fallback.level || 1);
+      }
       refresh();
     };
     heroSelect.onchange = refreshLevels; levelSelect.onchange = refresh;
@@ -87,6 +94,7 @@
   function monsterNote(state, rows, chosen) {
     const certified = rows.filter(ready).length;
     if (!rows.length) return "No monsters exist at this Challenge Rating.";
+    if (chosen?.custom) return `✦ CUSTOM MONSTER · ${chosen.name} · saved draft. Combat certification required before use.`;
     if (chosen && !ready(chosen)) return `${chosen.name} is listed, but is not ready to fight yet.`;
     if (state.ruleset === "2014") return `${rows.length} 2014 monster${rows.length === 1 ? "" : "s"} at this Challenge Rating.`;
     return `${rows.length} monster${rows.length === 1 ? "" : "s"} shown · ${certified} ready to fight.`;
