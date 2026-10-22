@@ -152,10 +152,16 @@
     exportButton.disabled = true;
     if (saveButton) saveButton.disabled = true;
   });
+  const invalidateDraft = () => {
+    draft = null;
+    exportButton.disabled = true;
+    if (saveButton) saveButton.disabled = true;
+  };
   const effectList = document.getElementById("effect-list");
   const addEffect = document.getElementById("add-effect");
   if (effectList && addEffect) addEffect.addEventListener("click", () => {
     if (effectList.children.length >= 12) return;
+    invalidateDraft();
     const row = document.createElement("div");
     row.dataset.effectRow = "true";
     row.className = "effect-row";
@@ -178,8 +184,8 @@
           (selected === "save_condition" && ["damage_type","count","size","bonus"].includes(field));
       }
     };
-    row.querySelector('[data-field="kind"]').addEventListener("change", refresh);
-    row.querySelector("[data-remove]").addEventListener("click", () => row.remove());
+    row.querySelector('[data-field="kind"]').addEventListener("change", () => { refresh(); invalidateDraft(); });
+    row.querySelector("[data-remove]").addEventListener("click", () => { row.remove(); invalidateDraft(); });
     effectList.appendChild(row);
     refresh();
   });
