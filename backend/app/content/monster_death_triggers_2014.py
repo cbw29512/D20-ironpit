@@ -1,9 +1,37 @@
 """Compile immutable 2014 source death actions into shared save capabilities."""
 from __future__ import annotations
 
+import logging
+import re
+
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_source_sections_2014 import source_sections_2014
 from app.domain.capabilities import SaveCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
+
+logger = logging.getLogger(__name__)
+_DEATH_SAVE_TRIGGER = re.compile(
+    r"\bwhen\b.+?\bdies\b.*?\bsaving throw\b", re.IGNORECASE,
+)
+_DAMAGE_DEATH_TRIGGER = re.compile(
+    r"^When the .+? dies, it explodes, and each creature within (?P<range>\d+) feet "
+    r"of it must make a DC (?P<dc>\d+) (?P<ability>[A-Za-z]+) saving throw, "
+    r"taking (?P<average>\d+) \((?P<count>\d+)d(?P<size>\d+)\) "
+    r"(?P<damage_type>[a-z]+) damage on a failed save, or half as much damage "
+    r"on a successful one\. (?P<trailing>.+)$",
+    re.IGNORECASE,
+)
+_IGNORED_OBJECT_AFTERMATH = re.compile(
+    r"^The explosion ignites flammable objects in that area that aren't being worn "
+    r"or carried, and it destroys the .+?'s weapons\.$",
+    re.IGNORECASE,
+)
+
+
+def semantic_death_trigger_names_2014(monster: SourceMonster2014) -> tuple[str, ...]:
+    """Find printed death-save effects by trigger/effect semantics, not labels."""
+    sections = source_sections_2014(monster.source_traits)
+    return tuple(name for name, body in sections.items() if _DEATH_SAVE_TRIGGER.search(body))
 
 
 def _compile(raw: object) -> SaveCapabilityDefinition:
@@ -41,17 +69,49 @@ def _compile(raw: object) -> SaveCapabilityDefinition:
     )
 
 
+def _source_damage_action(name: str, body: str) -> SaveCapabilityDefinition | None:
+    match = _DAMAGE_DEATH_TRIGGER.fullmatch(body)
+    if match is None or _IGNORED_OBJECT_AFTERMATH.fullmatch(match["trailing"]) is None:
+        return None
+    count, size, average = int(match["count"]), int(match["size"]), int(match["average"])
+    if count < 1 or size < 2 or average != count * (size + 1) // 2:
+        return None
+    radius = int(match["range"])
+    effect_id = re.sub(r"[^a-z0-9]+", "-", name.casefold()).strip("-")
+    return SaveCapabilityDefinition(
+        id=effect_id, name=name, save_ability=match["ability"].casefold(),
+        dc=int(match["dc"]), range_ft=radius, max_targets=20,
+        target_scope="all-other-creatures",
+        area={"shape": "emanation", "origin": "self", "radius_ft": radius},
+        damage=DiceSpec(count=count, size=size),
+        damage_type=match["damage_type"].casefold(), success_damage="half",
+        animation="death-trigger",
+    )
+
+
 def death_trigger_actions_2014(
     monster: SourceMonster2014,
 ) -> list[SaveCapabilityDefinition]:
-    return [_compile(raw) for raw in monster.death_trigger_actions]
+    """Compile structured declarations or exact source-proven damage triggers."""
+    if monster.death_trigger_actions:
+        return [_compile(raw) for raw in monster.death_trigger_actions]
+    sections = source_sections_2014(monster.source_traits)
+    return [
+        action for name in semantic_death_trigger_names_2014(monster)
+        if (action := _source_damage_action(name, sections[name])) is not None
+    ]
 
 
 def supports_death_triggers_2014(monster: SourceMonster2014) -> bool:
-    if not monster.death_trigger_actions:
+    semantic_names = semantic_death_trigger_names_2014(monster)
+    if not monster.death_trigger_actions and not semantic_names:
         return True
     try:
         actions = death_trigger_actions_2014(monster)
-        return len({action.id for action in actions}) == len(actions)
+        return (
+            len(actions) == len(semantic_names)
+            and len({action.id for action in actions}) == len(actions)
+        )
     except (KeyError, TypeError, ValueError):
+        logger.info("Unsupported 2014 Death Trigger source shape for %s.", monster.id)
         return False

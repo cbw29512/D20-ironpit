@@ -441,7 +441,6 @@ Blocked monsters: **90**. These are grouped by printed ability name so the roste
 | Corrode Metal | Gray Ooze | 1 |
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
 | Death Burst | Dust Mephit | 1 |
-| Death Throes | Balor | 1 |
 | Divine Eminence | Priest | 1 |
 | Duergar Resilience | Duergar | 1 |
 | Ephemeral | Will-o'-Wisp | 1 |

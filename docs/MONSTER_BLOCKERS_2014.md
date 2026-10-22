@@ -49,7 +49,7 @@ the underlying ability is already implemented or trivial.
 | Air Elemental | mechanic:recharge, source:extra-action, source:trait | Air Form |
 | Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Spellcasting |
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
-| Balor | attack:incomplete, source:trait | Death Throes, Fire Aura |
+| Balor | attack:incomplete, source:trait | Fire Aura |
 | Behir | mechanic:recharge, source:extra-action | — |
 | Chuul | attack:incomplete, multiattack:complex, source:extra-action | — |
 | Clay Golem | mechanic:recharge, source:extra-action | — |
