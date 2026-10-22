@@ -75,25 +75,27 @@
     for (const [index, row] of effects.entries()) {
       if (!row || !["damage", "prone", "save_condition"].includes(row.kind))
         throw new Error("Unsupported on-hit effect at position " + (index + 1));
+      const targetAttack = base.attacks.find(attack => attack.id === row.attack_id);
+      if (!targetAttack) throw new Error("Choose an existing attack for effect " + (index + 1));
       if (row.kind === "damage") {
         if (!["slashing","piercing","bludgeoning","fire","cold","lightning","thunder","acid","poison","necrotic","radiant","psychic","force"].includes(row.damage_type))
           throw new Error("Invalid chained damage type.");
-        base.attacks[0].effects = base.attacks[0].effects || [];
-        base.attacks[0].effects.push({
+        targetAttack.effects = targetAttack.effects || [];
+        targetAttack.effects.push({
           kind: "damage", source: "on-hit-" + (index + 1),
           dice: {count: number(row, "count", 1, 100), size: number(row, "size", 2, 100), bonus: number(row, "bonus", -100, 100)},
           damage_type: row.damage_type
         });
       } else if (row.kind === "prone") {
-        base.attacks[0].effects = base.attacks[0].effects || [];
-        base.attacks[0].effects.push({kind: "prone"});
+        targetAttack.effects = targetAttack.effects || [];
+        targetAttack.effects.push({kind: "prone"});
       } else {
         const conditions = ["blinded","charmed","deafened","frightened","grappled","incapacitated","invisible","paralyzed","petrified","poisoned","prone","restrained","stunned","unconscious"];
         if (!conditions.includes(row.condition)) throw new Error("Unsupported condition.");
         if (!["strength","dexterity","constitution","intelligence","wisdom","charisma"].includes(row.save_ability))
           throw new Error("Invalid save ability.");
-        base.attacks[0].effects = base.attacks[0].effects || [];
-        base.attacks[0].effects.push({
+        targetAttack.effects = targetAttack.effects || [];
+        targetAttack.effects.push({
           kind: "save_condition", save_ability: row.save_ability,
           dc: number(row, "dc", 1, 40), condition: row.condition,
           duration_rounds: number(row, "duration_rounds", 1, 100800)
@@ -165,7 +167,8 @@
     const row = document.createElement("div");
     row.dataset.effectRow = "true";
     row.className = "effect-row";
-    row.innerHTML = '<label>Effect type<select data-field="kind"><option value="damage">Additional damage</option><option value="prone">Knock Prone</option><option value="save_condition">Save or condition</option></select></label>' +
+    row.innerHTML = '<label>Attack<select data-field="attack_id"><option value="__primary__">Primary attack</option><option value="__secondary__">Second attack</option></select></label>' +
+      '<label>Effect type<select data-field="kind"><option value="damage">Additional damage</option><option value="prone">Knock Prone</option><option value="save_condition">Save or condition</option></select></label>' +
       '<label>Damage type<select data-field="damage_type">' + ["acid","bludgeoning","cold","fire","force","lightning","necrotic","piercing","poison","psychic","radiant","slashing","thunder"].map(x=>'<option>'+x+'</option>').join("") + '</select></label>' +
       '<label>Dice count<input data-field="count" type="number" min="1" value="1"></label>' +
       '<label>Die size<select data-field="size"><option>4</option><option selected>6</option><option>8</option><option>10</option><option>12</option><option>20</option></select></label>' +
@@ -204,7 +207,7 @@
       if (pageMode) values.kind = pageMode;
       values.on_hit_effects = Array.from(document.querySelectorAll("#effect-list [data-effect-row]"), row => {
         const read = name => row.querySelector('[data-field="' + name + '"]')?.value;
-        return {kind: read("kind"), damage_type: read("damage_type"),
+        return {kind: read("kind"), attack_id: read("attack_id") === "__secondary__" ? values.secondary_attack_id : values.attack_id, damage_type: read("damage_type"),
           count: read("count"), size: read("size"), bonus: read("bonus"),
           save_ability: read("save_ability"), dc: read("dc"),
           condition: read("condition"), duration_rounds: read("duration_rounds")};
