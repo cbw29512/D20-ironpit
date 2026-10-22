@@ -36,3 +36,18 @@ test("unknown kind and ruleset cannot change the runtime contract",()=>{
   assert.throws(()=>makeDefinition({...fields(),kind:"npc"}),/mode/);
   assert.throws(()=>makeDefinition({...fields(),ruleset:"3e"}),/ruleset/);
 });
+
+test("second attack retains independent damage and avoids overriding the primary", () => {
+  const values={...fields(),secondary_enabled:"on",secondary_attack_id:"bite",
+    secondary_attack_name:"Bite",secondary_attack_kind:"melee",
+    secondary_attack_bonus:"7",secondary_damage_count:"2",
+    secondary_damage_size:"8",secondary_damage_bonus:"4",secondary_damage_type:"piercing"};
+  const result=makeDefinition(values);
+  assert.equal(result.attacks.length,2);
+  assert.equal(result.primary_attack_id,"claw");
+  assert.equal(result.attacks[1].id,"bite");
+  assert.equal(result.attacks[1].damage_type,"piercing");
+  assert.deepEqual(result.attacks[1].damage,{count:2,size:8,bonus:4});
+  assert.throws(()=>makeDefinition({...values,secondary_attack_id:"claw"}),/unique lowercase ID/);
+  assert.throws(()=>makeDefinition({...values,secondary_damage_count:"0"}),/secondary_damage_count/);
+});
