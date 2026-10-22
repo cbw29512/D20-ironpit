@@ -66,13 +66,21 @@
       (source.source_id || source.sourceId) === member.combatant_id);
   }
 
+  function saveResourceAvailable(state, action) {
+    if (!action.resourceId) return true;
+    const resources = window.IRON_PIT_BROWSER_RESOURCES;
+    if (!resources || typeof resources.available !== "function")
+      throw new Error("Finite Multiattack save resources require browser-resources.js.");
+    return resources.available(state, action.resourceId, action.resourceCost || 1);
+  }
+
   function saveChoice(member, setup, data) {
     try {
       const allowed = new Set(data.saveActionIds);
       for (const target of F().targetOrder(member, setup)) {
         if (data.requiresSourceGrapple && !targetGrappledByActor(member, target)) continue;
         const action = (member.state.template.saving_throw_actions || []).find((item) =>
-          allowed.has(item.id) && (!item.resourceId || window.IRON_PIT_BROWSER_RESOURCES?.available(member.state, item.resourceId, item.resourceCost || 1)) && V().legalAction(item, target, F().saveDistance(member, target, item.range), member.combatant_id));
+          allowed.has(item.id) && saveResourceAvailable(member.state, item) && V().legalAction(item, target, F().saveDistance(member, target, item.range), member.combatant_id));
         if (action) return { target, save: action, distance: F().saveDistance(member, target, action.range) };
       }
       return null;
