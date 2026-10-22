@@ -9,6 +9,7 @@
   const G = () => window.IRON_PIT_BROWSER_GRID_PLACEMENT;
   const I = () => window.IRON_PIT_BROWSER_INITIATIVE;
   const IR = () => window.IRON_PIT_BROWSER_INITIATIVE_RESOURCE_REFILL;
+  const DT = () => window.IRON_PIT_BROWSER_DEATH_TRIGGER_DISPATCH;
   function cloneTemplate(template) { return structuredClone(template); }
   function selectedRuleset(selection) {
     try {
@@ -124,6 +125,16 @@
     }
     return { events, sequence: nextSequence };
   }
+  function drainDeathTriggers(events, sequence, round, setup) {
+    const runtime = DT();
+    const hasDeclared = [...setup.heroes, ...setup.monsters]
+      .some((member) => member.state.template.death_trigger_effect_ids?.length);
+    if (hasDeclared && !runtime?.resolvePending) throw new Error("Declared Death Trigger requires browser dispatcher.");
+    if (!runtime) return sequence;
+    const resolved = runtime.resolvePending(sequence, round, setup);
+    events.push(...resolved.events);
+    return resolved.sequence;
+  }
   function runEncounter(selection) {
     if (!selection.hero_ids?.length || !selection.monster_ids?.length || selection.hero_ids.length > 6 || selection.monster_ids.length > 6) throw new Error("Iron Pit requires 1-6 cards per side.");
     const setup = buildSetup(selection);
@@ -148,6 +159,7 @@
         round === 1 && Array.isArray(init.first_round_turn_order)
       ) ? init.first_round_turn_order : init.turn_order;
       for (const id of roundTurnOrder) {
+        sequence = drainDeathTriggers(events, sequence, round, setup);
         const current = outcome(setup);
         if (current !== "active") return finish(setup, init, events, current, round, sequence);
         const member = byId.get(id);
@@ -186,7 +198,9 @@
         if (legend) { events.push(...legend.events); sequence = legend.sequence; }
         window.IRON_PIT_BROWSER_TRIGGERED_EXTRA_ATTACKS?.clearTurnDamage(setup);
         window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.expireCurrentTurnTypeResistances(setup);
+        sequence = drainDeathTriggers(events, sequence, round, setup);
       }
+      sequence = drainDeathTriggers(events, sequence, round, setup);
       const current = outcome(setup);
       if (current !== "active") return finish(setup, init, events, current, round, sequence);
     }

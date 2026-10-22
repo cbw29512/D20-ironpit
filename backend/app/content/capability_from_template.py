@@ -137,7 +137,8 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
 def _save(action) -> dict[str, object]:
     result: dict[str, object] = {
         "id": action.id, "name": action.name, "action_cost": action.action_cost, "save_ability": action.save_ability,
-        "dc": action.dc, "range_ft": action.range_ft, "target_max_size": action.target_max_size,
+        "dc": action.dc, "range_ft": action.range_ft, "max_targets": action.max_targets,
+        "target_scope": action.target_scope, "target_max_size": action.target_max_size,
         "area": action.area.model_dump(mode="json") if action.area else None,
         "success_damage": action.success_damage, "resource_id": action.resource_id,
         "resource_cost": action.resource_cost, "requires_no_active_grapple": action.requires_no_active_grapple,
@@ -166,10 +167,12 @@ def definition_from_template(template: CombatantTemplate) -> CombatantDefinition
     attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
     data = template.model_dump(mode="json", exclude={
         "weapon_attack", "alternate_weapon_attacks", "attack_action", "saving_throw_actions",
+        "death_trigger_actions",
     })
     data["attacks"] = [_attack(attack) for attack in attacks]
     data["primary_attack_id"] = template.weapon_attack.id
     data["save_actions"] = [_save(action) for action in template.saving_throw_actions]
+    data["death_trigger_actions"] = [_save(action) for action in template.death_trigger_actions]
     if template.attack_action is not None:
         data["attack_action"] = template.attack_action.model_dump(mode="json")
     return CombatantDefinition.model_validate(data)

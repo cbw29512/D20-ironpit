@@ -73,6 +73,7 @@ def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
         primary = attack_by_id[definition.primary_attack_id]
         kwargs = definition.model_dump(exclude={
             "schema_version", "attacks", "primary_attack_id", "attack_action", "save_actions",
+            "death_trigger_actions",
             "unsupported_capabilities", "movement_modes",
         })
         if definition.movement_modes is not None:
@@ -83,6 +84,7 @@ def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
             alternate_weapon_attacks=[attack for attack in attacks if attack.id != primary.id],
             attack_action=_compile_attack_action(definition),
             saving_throw_actions=[_compile_save(item) for item in definition.save_actions],
+            death_trigger_actions=[_compile_save(item) for item in definition.death_trigger_actions],
         )
     except UnsupportedCapabilityError:
         raise

@@ -20,7 +20,6 @@ Blocker categories overlap: a monster may require several fixes.
 | `source:legendary` | 9 |
 | `mechanic:swallow` | 7 |
 | `attack:complex` | 6 |
-| `mechanic:death-trigger` | 4 |
 | `attack:none` | 3 |
 | `source:reaction` | 3 |
 | `attack:damage-type` | 2 |
@@ -88,14 +87,14 @@ the underlying ability is already implemented or trivial.
 | Harpy | source:extra-action | — |
 | Hydra | source:extra-action, source:trait | Multiple Heads, Reactive Heads |
 | Ice Devil | mechanic:recharge, source:extra-action | — |
-| Ice Mephit | mechanic:death-trigger, mechanic:spellcasting, source:trait | Death Burst, Innate Spellcasting |
+| Ice Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Imp | source:extra-action, source:trait | Shapechanger |
 | Kraken | attack:incomplete, mechanic:legendary, mechanic:swallow, multiattack:complex, source:extra-action, source:legendary, source:trait | Freedom of Movement |
 | Lamia | attack:incomplete, mechanic:spellcasting, multiattack:complex, source:extra-action, source:trait | Innate Spellcasting |
 | Lich | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Mage | mechanic:spellcasting, source:trait | Spellcasting |
-| Magma Mephit | mechanic:death-trigger, mechanic:spellcasting, source:trait | Death Burst, Innate Spellcasting |
-| Magmin | attack:incomplete, mechanic:death-trigger, source:trait | Death Burst, Ignited Illumination |
+| Magma Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
+| Magmin | attack:incomplete, source:trait | Ignited Illumination |
 | Mimic | attack:incomplete, source:trait | Shapechanger, Adhesive (Object Form Only), False Appearance (Object Form Only), Grappler |
 | Mummy | attack:incomplete, source:extra-action | — |
 | Mummy Lord | attack:incomplete, mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Spellcasting |
@@ -120,7 +119,7 @@ the underlying ability is already implemented or trivial.
 | Solar | attack:incomplete, mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Innate Spellcasting |
 | Spectator | source:extra-action, source:reaction | — |
 | Spirit Naga | mechanic:spellcasting, source:trait | Spellcasting |
-| Steam Mephit | mechanic:death-trigger, mechanic:spellcasting, source:trait | Death Burst, Innate Spellcasting |
+| Steam Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Stirge | arena:removed | — |
 | Storm Giant | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Succubus/Incubus | source:extra-action, source:trait | Telepathic Bond, Shapechanger |

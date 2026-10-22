@@ -1096,6 +1096,9 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        if template.death_trigger_actions:
+            row["death_trigger_effect_ids"] = list(template.death_trigger_effect_ids)
+            row["death_trigger_actions"] = [_save(item) for item in template.death_trigger_actions]
         if template.innate_condition_ids:
             row["innate_condition_ids"] = list(template.innate_condition_ids)
         if template.source_turn_relation_damages:

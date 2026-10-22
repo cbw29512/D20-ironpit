@@ -5872,7 +5872,6 @@
       "attack:damage-type": 2,
       "attack:incomplete": 21,
       "attack:none": 3,
-      "mechanic:death-trigger": 4,
       "mechanic:legendary": 9,
       "mechanic:recharge": 10,
       "mechanic:spellcasting": 36,
@@ -5942,13 +5941,9 @@
         "printed_name": "Damage Transfer"
       },
       {
-        "demand_count": 5,
+        "demand_count": 1,
         "monsters": [
-          "Dust Mephit",
-          "Ice Mephit",
-          "Magma Mephit",
-          "Magmin",
-          "Steam Mephit"
+          "Dust Mephit"
         ],
         "printed_name": "Death Burst"
       },
