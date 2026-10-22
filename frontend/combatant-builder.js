@@ -33,7 +33,7 @@
       schema_version: 1,
       id, name: textValue(values, "name"), archetype: textValue(values, "archetype"),
       kind, ruleset, size,
-      armor_class: number(values, "armor_class", 1, 99),
+      armor_class: number(values, "armor_class", kind === "monster" ? 0 : 1, 99),
       max_hp: number(values, "max_hp", 1, 100000),
       speed_ft: number(values, "speed_ft", 0, 1000),
       initiative_bonus: number(values, "initiative_bonus", -50, 50),
@@ -102,6 +102,9 @@
     }
     if (values.creature_type && String(values.creature_type).trim()) base.creature_type = String(values.creature_type).trim();
     if (kind === "character") {
+      const classes = ["artificer","barbarian","bard","cleric","druid","fighter","monk","paladin","ranger","rogue","sorcerer","warlock","wizard"];
+      if (!classes.includes(base.archetype.toLowerCase()))
+        throw new Error("Choose a supported base class for a pregen.");
       base.level = number(values, "level", 1, 20);
       base.ability_scores = Object.fromEntries(
         ["strength","dexterity","constitution","intelligence","wisdom","charisma"].map(key => [key, number(values, key, 1, 30)])
@@ -183,7 +186,7 @@
       draft = makeDefinition(values);
       preview.textContent = JSON.stringify(draft, null, 2);
       status.dataset.error = "false";
-      status.textContent = "Draft validated locally. Use the canonical compiler for full combat legality.";
+      status.textContent = draft.kind === "character" ? "Character draft only: RAW class progression, proficiency, saves, damage, and feature legality require the edition-specific character builder before combat use." : "Homebrew draft validated locally. Use the canonical compiler for full combat legality.";
       exportButton.disabled = false;
     } catch (error) {
       draft = null;
