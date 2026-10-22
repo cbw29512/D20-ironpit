@@ -23,7 +23,8 @@ def test_all_compatible_death_actions_compile_to_shared_damage_saves():
     compatible = [card for card in cards if death_trigger_actions_2014(card)]
     assert sum(len(card.death_trigger_actions) for card in structured) == 4
     assert [card.id for card in compatible] == [
-        "balor", "ice-mephit", "magma-mephit", "magmin", "steam-mephit",
+        "balor", "dust-mephit", "ice-mephit", "magma-mephit", "magmin",
+        "steam-mephit",
     ]
     for card in compatible:
         actions = death_trigger_actions_2014(card)
@@ -71,11 +72,31 @@ def test_changed_death_throes_clause_fails_closed():
     assert not supports_death_triggers_2014(mutant)
 
 
-def test_condition_death_burst_remains_explicit_schema_exception():
+def test_condition_death_burst_uses_exact_immutable_source_parameters():
     source = _source("dust-mephit")
-    assert semantic_death_trigger_names_2014(source) == ("Death Burst",)
-    assert death_trigger_actions_2014(source) == []
-    assert not supports_death_triggers_2014(source)
+    action, = death_trigger_actions_2014(source)
+    assert action.id == "death-burst" and action.name == "Death Burst"
+    assert action.range_ft == 5 and action.dc == 10
+    assert action.save_ability == "constitution" and action.damage is None
+    rider = action.failed_save_timed_effect
+    assert rider is not None and rider.effect_id == "blinded"
+    assert rider.duration_rounds == 10 and rider.expiry_timing == "target_turn_end"
+    assert (rider.repeat_save_ability, rider.repeat_save_dc) == ("constitution", 10)
+    assert rider.repeat_save_timing == "target_turn_end"
+    assert source.death_trigger_actions == []
+    assert supports_death_triggers_2014(source)
+
+
+def test_changed_death_burst_repeat_save_clause_fails_closed():
+    source = _source("dust-mephit")
+    mutant = source.model_copy(update={
+        "source_traits": source.source_traits.replace(
+            "on each of its turns", "at the end of each of its turns",
+        ),
+    })
+    assert semantic_death_trigger_names_2014(mutant) == ("Death Burst",)
+    assert death_trigger_actions_2014(mutant) == []
+    assert not supports_death_triggers_2014(mutant)
 
 
 def test_declared_effect_ids_fail_closed_when_payload_is_missing():

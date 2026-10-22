@@ -5943,13 +5943,6 @@
       {
         "demand_count": 1,
         "monsters": [
-          "Dust Mephit"
-        ],
-        "printed_name": "Death Burst"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
           "Priest"
         ],
         "printed_name": "Divine Eminence"
