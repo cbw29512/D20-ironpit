@@ -4,11 +4,12 @@ This is the single index of **Chris-locked** Iron Pit rules. It exists so those 
 
 It does **not** replace `docs/IRON_PIT_RULES_CONTRACT.md`. That file remains the detailed product/combat contract. Architecture, battlefield UI, and pregen construction stay in their existing docs. If this index and a cited file disagree, stop and reconcile in the cited file. Do not write a third copy of the same rule.
 
-## Lycanthrope precombat form selection — 2026-10-22
+## Lycanthrope forms and precombat entry — 2026-10-22 (supersedes damage-optimal selection)
 
-- **2014 lycanthropes start combat in whichever of their printed legal forms produces the highest expected damage per ordinary combat turn.** Compare the complete legal attack sequence (including form-specific Multiattack, attack count, typed damage and applicable on-hit riders), not just a single weapon's maximum die roll. The winner is chosen before initiative as fight-local starting state, without spending an Action or Bonus Action; equal choices may prefer the hybrid form.
-- Honor all printed form restrictions: hybrid, humanoid, and beast forms do not inherit options restricted to another form. The printed Shapechanger trait and all forms remain on the immutable source card. Use the shared form/action/damage evaluators; no creature-name-specific resolver.
-- Form choice is **Iron Pit automatic combat tactic**, not a D&D RAW mandate to transform. It does not confer free mid-fight transformations, alter source stats, or certify otherwise unsupported Shapechanger mechanics. Start-form support must be proved separately from full form-changing and complete monster admission.
+- **2014 lycanthropes always begin combat in their printed beast (animal) form**, regardless of its damage relative to humanoid or hybrid form. Select this as fight-local starting state before initiative at no Action or Bonus Action cost. Never substitute hybrid form as the default.
+- **Retain and compile every printed legal form**, including humanoid and hybrid where applicable, with form-specific stats, equipment, attacks, Multiattack sequences, restrictions and Shapechanger options. These remain available to the universal form-change system for legal later transitions; starting in beast form does not delete or prohibit other forms.
+- Honor printed form restrictions and costs for any **mid-fight** transformation. Cards remain immutable, the active form is fight-local state, and one source-neutral form/attack resolver must work for every lycanthrope and compatible homebrew creature. Preserve the printed trait in the log/card. Do not mark a monster fully admitted merely because its opening form works.
+- This deterministic beast-form entry is an explicit **Iron Pit tactical house rule**, not a RAW requirement to begin transformed; it replaces the prior highest-expected-damage opening selection.
 
 ## Canonical combatant form
 
