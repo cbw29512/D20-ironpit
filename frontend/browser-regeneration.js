@@ -5,30 +5,32 @@
 
   function apply(state) {
     try {
-    const trait = state.template.regeneration;
-    if (!trait) return { healed: 0, died: false, suppressed: false };
-    const taken = new Set(state.damage_types_taken_since_regen || []);
-    state.damage_types_taken_since_regen = [];
-    const suppressed = (trait.suppressed_by_damage_types || []).some((item) => taken.has(String(item)));
-    if (suppressed || (trait.requires_positive_hp && state.current_hp <= 0)) {
-      if (trait.survives_zero_until_turn && state.current_hp <= 0 && !state.is_dead) {
-        state.current_hp = 0;
-        state.is_alive = false;
-        state.is_dead = true;
-        state.is_unconscious = false;
-        state.is_stable = false;
-        return { healed: 0, died: true, suppressed };
+      const trait = state.template.regeneration;
+      if (!trait) return { healed: 0, died: false, suppressed: false };
+      const taken = new Set(state.damage_types_taken_since_regen || []);
+      const suppressed = (trait.suppressed_by_damage_types || []).some((item) => taken.has(String(item)));
+      const eligibleToHeal = !suppressed && !(trait.requires_positive_hp && state.current_hp <= 0);
+      // Validate the shared resolver before consuming any turn-local suppression state.
+      const healing = H();
+      if (eligibleToHeal && typeof healing?.restore !== "function") {
+        throw new Error("Regeneration requires the shared browser healing resolver.");
       }
-      return { healed: 0, died: false, suppressed };
-    }
-    // Regeneration uses precisely the same HP/condition/buff lifecycle as other healing.
-    const healing = H();
-    if (typeof healing?.restore !== "function") {
-      throw new Error("Regeneration requires the shared browser healing resolver.");
-    }
-    const healed = healing.restore(state, trait.amount);
-    if (healed > 0) window.IRON_PIT_BROWSER_TRIGGERED_EXTRA_ATTACKS?.clearRegenerationOwnedStacks(state);
-    return { healed, died: false, suppressed: false };
+      state.damage_types_taken_since_regen = [];
+      if (suppressed || (trait.requires_positive_hp && state.current_hp <= 0)) {
+        if (trait.survives_zero_until_turn && state.current_hp <= 0 && !state.is_dead) {
+          state.current_hp = 0;
+          state.is_alive = false;
+          state.is_dead = true;
+          state.is_unconscious = false;
+          state.is_stable = false;
+          return { healed: 0, died: true, suppressed };
+        }
+        return { healed: 0, died: false, suppressed };
+      }
+      // Regeneration shares the healing lifecycle, including immunity and HP-sensitive buffs.
+      const healed = healing.restore(state, trait.amount);
+      if (healed > 0) window.IRON_PIT_BROWSER_TRIGGERED_EXTRA_ATTACKS?.clearRegenerationOwnedStacks(state);
+      return { healed, died: false, suppressed: false };
     } catch (error) {
       console.error("Failed browser Regeneration application.", { combatant: state?.template?.name, error });
       throw error;
