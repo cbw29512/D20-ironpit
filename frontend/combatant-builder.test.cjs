@@ -51,3 +51,20 @@ test("second attack retains independent damage and avoids overriding the primary
   assert.throws(()=>makeDefinition({...values,secondary_attack_id:"claw"}),/unique lowercase ID/);
   assert.throws(()=>makeDefinition({...values,secondary_damage_count:"0"}),/secondary_damage_count/);
 });
+
+test("ordered hit chain declares multiple damage types and failed-save condition", () => {
+  const values={...fields(),on_hit_effects:[
+    {kind:"damage",damage_type:"fire",count:"2",size:"6",bonus:"1"},
+    {kind:"prone"},
+    {kind:"save_condition",save_ability:"constitution",dc:"15",condition:"poisoned",duration_rounds:"2"}
+  ]};
+  const result=makeDefinition(values);
+  assert.deepEqual(result.attacks[0].effects.map(e=>e.kind),["damage","prone","save_condition"]);
+  assert.equal(result.attacks[0].effects[0].damage_type,"fire");
+  assert.equal(result.attacks[0].effects[2].condition,"poisoned");
+  assert.equal(result.attacks[0].effects[2].dc,15);
+});
+test("unknown on-hit effect and invalid saving throw fail closed", () => {
+  assert.throws(()=>makeDefinition({...fields(),on_hit_effects:[{kind:"invented"}]}),/Unsupported on-hit effect/);
+  assert.throws(()=>makeDefinition({...fields(),on_hit_effects:[{kind:"save_condition",save_ability:"luck",dc:12,condition:"poisoned",duration_rounds:1}]}),/Invalid save ability/);
+});
