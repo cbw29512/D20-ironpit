@@ -17,7 +17,7 @@ button.secondary{background:#263c50}button:hover{filter:brightness(1.14)}
 .effect-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;border:1px solid #667b90;border-radius:8px;padding:14px;margin:12px 0}pre{background:#081019;border:1px solid #445669;border-radius:10px;padding:16px;max-height:420px;overflow:auto;white-space:pre-wrap;word-break:break-word}
 [hidden]{display:none!important}
 </style>
-<script defer src="./custom-combatant-library.js"></script><script defer src="./combatant-builder.js"></script>
+<script defer src="./custom-combatant-library.js"></script><script defer src="./custom-monster-runtime.js"></script><script defer src="./combatant-builder.js"></script>
 </head>
 <body><main>
 <header><div><a href="./index.html" style="color:#a8d1ff">← Iron Pit</a><h1>Combatant Builder</h1><p><a href="custom-monster-builder.html" style="color:#a8d1ff">Monster editor</a> · <a href="custom-pregen-builder.html" style="color:#a8d1ff">Pregen editor</a></p><p>Create a homebrew monster or a pregen using Iron Pit's universal combatant schema.</p></div></header>
@@ -78,5 +78,5 @@ button.secondary{background:#263c50}button:hover{filter:brightness(1.14)}
 <p id="status" role="status" aria-live="polite"></p>
 </form>
 <section aria-label="Canonical JSON preview"><h2>Universal combatant data</h2><pre id="preview" tabindex="0">Complete the form and select Validate & preview.</pre>
-<p class="hint">Exported JSON is a draft for the canonical Python compiler. Full legality and advanced ability support are verified when imported; this editor does not certify a monster or pregen.</p>
+<p class="hint">Supported custom monster attacks can be played in browser fights after saving. Unsupported effects stay drafts. Custom pregens require RAW class progression before combat. Full canonical Python certification remains separate.</p>
 </section></main></body></html>
