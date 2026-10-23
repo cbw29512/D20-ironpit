@@ -19,10 +19,6 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 
 def _source():
-    # Other corpus-audit tests deliberately mutate cached source rows to prove
-    # fail-closed behavior. Reload the pinned file so this integration test
-    # always exercises the immutable source card rather than leaked test state.
-    load_monster_source_2014.cache_clear()
     return next(card for card in load_monster_source_2014() if card.id == "harpy")
 
 
