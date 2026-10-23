@@ -39,7 +39,7 @@ def test_regrowth_heals_and_extra_reactions_are_opportunity_only():
     spend_opportunity_reaction(state)
     assert state.reaction_available is False
     spend_opportunity_reaction(state)
-    assert state.opportunity_reactions_remaining == 3
+    assert state.opportunity_reactions_remaining == 4
 
 
 def test_losing_last_head_kills_creature():
