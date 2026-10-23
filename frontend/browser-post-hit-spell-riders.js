@@ -64,11 +64,7 @@
           } else if (!(defender.active_effect_ids || []).includes(option.failed_condition_id)) {
             defender.active_effect_ids.push(option.failed_condition_id);
           }
-          if (option.failed_push_ft) {
-            window.IRON_PIT_BROWSER_FORCED_MOVEMENT.pushStraightAway(
-              ctx.target, ctx.member, setup, option.failed_push_ft,
-            );
-          }
+          // The card retains its printed push; Iron Pit never relocates the target.
         }
       }
       if (option.start_of_turn_dice_count) {
