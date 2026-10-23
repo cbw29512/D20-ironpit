@@ -64,7 +64,7 @@ window.IRON_PIT_ENCOUNTER_PICKER={
 };
 vm.runInThisContext(fs.readFileSync(path.join(__dirname,"battlefield-picker.js"),"utf8"),{filename:"battlefield-picker.js"});
 const picker=window.IRON_PIT_BATTLEFIELD_PICKER;
-const state={ruleset:"2014",catalog:{heroes:[],monsters:[]},
+const state={ruleset:"2014",catalog:{heroes:[{id:"hero-fighter",name:"Fighter",class_id:"fighter",class_name:"Fighter",level:5,kind:"character",ruleset:"2014",coverage_status:"raw_ready",runnable_template_id:Object.values(window.IRON_PIT_BROWSER_HEROES).find(h=>h.ruleset==="2014"&&h.class_id==="fighter"&&h.level===5).id}],monsters:[]},
   heroSlots:Array(6).fill(null),monsterSlots:Array(6).fill(null)};
 picker.bind(()=>state);
 let selected=null;
