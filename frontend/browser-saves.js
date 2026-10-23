@@ -188,9 +188,11 @@
       );
     }
     let pushedFt = 0;
+    let ignoredPushFt = 0;
     if (!save.succeeded && target.state.is_alive && !target.state.is_dead && (action.failedSavePushFt || 0) > 0) {
       if (!options.setup || !FM()) throw new Error(`${action.name} forced movement requires encounter setup.`);
       pushedFt = FM().pushStraightAway(target, actor, options.setup, action.failedSavePushFt);
+      if (pushedFt === 0) ignoredPushFt = action.failedSavePushFt;
     }
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "";
     let description = automaticallyFails
@@ -206,6 +208,7 @@
     if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
     if (appliedConditions.includes("restrained")) description += ` ${target.state.template.name} is Restrained while Grappled.`;
     if (pushedFt) description += ` ${target.state.template.name} is pushed ${pushedFt} feet away.`;
+    else if (ignoredPushFt) description += ` Iron Pit ignores the printed ${ignoredPushFt}-foot forced displacement; ${target.state.template.name} remains in place.`;
     if (!save.succeeded && action.failureSetsZeroHp) description += ` ${target.state.template.name} drops directly to 0 HP (not damage).`;
     return { sequence, round_number: round, event_type: "saving_throw", actor_id: actor.combatant_id, actor_name: actor.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll,
