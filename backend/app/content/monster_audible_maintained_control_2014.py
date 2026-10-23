@@ -47,7 +47,7 @@ def semantic_audible_control_candidate_names_2014(
     """Find printed audible area control Actions before compatibility checks."""
     try:
         return tuple(
-            name for name, body in source_sections_2014(monster.source_actions).items()
+            name for name, body in source_sections_2014(monster.source_actions, include_continuations=True).items()
             if _OPENING.search(_normalized(body))
         )
     except Exception:
@@ -58,7 +58,7 @@ def semantic_audible_control_candidate_names_2014(
 def semantic_audible_maintained_control_names_2014(
     monster: SourceMonster2014,
 ) -> tuple[str, ...]:
-    sections = source_sections_2014(monster.source_actions)
+    sections = source_sections_2014(monster.source_actions, include_continuations=True)
     return tuple(
         name for name in semantic_audible_control_candidate_names_2014(monster)
         if all(clause in _normalized(sections[name]) for clause in _REQUIRED_CLAUSES)
@@ -111,7 +111,7 @@ def _compile(name: str, body: str) -> SaveCapabilityDefinition | None:
 def source_proven_audible_maintained_controls_2014(
     monster: SourceMonster2014,
 ) -> list[SaveCapabilityDefinition]:
-    sections = source_sections_2014(monster.source_actions)
+    sections = source_sections_2014(monster.source_actions, include_continuations=True)
     return [
         action
         for name in semantic_audible_maintained_control_names_2014(monster)
