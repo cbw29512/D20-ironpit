@@ -5880,7 +5880,7 @@
       "source:extra-action": 50,
       "source:legendary": 9,
       "source:reaction": 3,
-      "source:trait": 65
+      "source:trait": 64
     },
     "unresolved_printed_abilities": [
       {
@@ -5896,13 +5896,6 @@
           "Mimic"
         ],
         "printed_name": "Adhesive (Object Form Only)"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Air Elemental"
-        ],
-        "printed_name": "Air Form"
       },
       {
         "demand_count": 1,
@@ -6194,13 +6187,6 @@
           "Will-o'-Wisp"
         ],
         "printed_name": "Variable Illumination"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Water Elemental"
-        ],
-        "printed_name": "Water Form"
       },
       {
         "demand_count": 1,

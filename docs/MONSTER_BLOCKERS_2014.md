@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 65 |
+| `source:trait` | 64 |
 | `source:extra-action` | 50 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 21 |
@@ -47,7 +47,7 @@ the underlying ability is already implemented or trivial.
 |---|---|---|
 | Aboleth | attack:incomplete, mechanic:legendary, source:extra-action, source:legendary | — |
 | Acolyte | mechanic:spellcasting, source:trait | Spellcasting |
-| Air Elemental | mechanic:recharge, source:extra-action, source:trait | Air Form |
+| Air Elemental | mechanic:recharge, source:extra-action | — |
 | Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Spellcasting |
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
 | Balor | attack:incomplete, source:trait | Fire Aura |
@@ -127,7 +127,7 @@ the underlying ability is already implemented or trivial.
 | Vampire | attack:incomplete, mechanic:legendary, multiattack:complex, source:extra-action, source:legendary, source:trait | Shapechanger, Misty Escape, Vampire Weaknesses |
 | Vampire Spawn | attack:incomplete, multiattack:complex, source:trait | Vampire Weaknesses |
 | Vrock | mechanic:recharge, source:extra-action | — |
-| Water Elemental | mechanic:recharge, source:extra-action, source:trait | Water Form, Freeze |
+| Water Elemental | mechanic:recharge, source:extra-action, source:trait | Freeze |
 | Werebear | multiattack:complex, source:trait | Shapechanger |
 | Wereboar | multiattack:complex, source:extra-action, source:trait | Shapechanger |
 | Wererat | multiattack:complex, source:extra-action, source:trait | Shapechanger |

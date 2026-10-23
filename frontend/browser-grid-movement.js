@@ -54,7 +54,7 @@
 
   function planToward(
     map, mover, target, members, desiredDistanceFt, movementBudgetFt, barriers = null, allowLeaveMelee = false,
-    sourceAllowsHostileOverlap = false,
+    sourceAllowsHostileOverlap = Boolean(mover?.state?.template?.sourceAllowsHostileOverlap),
   ) {
     try {
       if (desiredDistanceFt < 0 || movementBudgetFt < 0) {
