@@ -58,13 +58,14 @@
   function validate(cards, side) {
     const label = side === "heroes" ? "Team A" : "Team B";
     if (!cards.length) return `${label} side needs at least one card.`;
-    const blocked = cards.find((card) => card.coverage_status !== "raw_ready" || !card.runnable_template_id);
+    const blocked = cards.find((card) => !(card.coverage_status === "raw_ready" && card.runnable_template_id) && !(side === "monsters" && card.custom && card.coverage_status === "custom_ready" && card.compiled_template?.id === card.runnable_template_id));
     return blocked ? `${blocked.name} is not ready for a fight yet.` : null;
   }
   function matchup() {
     const heroes = selected("heroes"), monsters = selected("monsters");
     const error = validate(heroes.cards, "heroes") || validate(monsters.cards, "monsters");
-    return { heroes, monsters, error, selection: { ruleset: state.ruleset, hero_ids: heroes.cards.map((card) => card.runnable_template_id), monster_ids: monsters.cards.map((card) => card.runnable_template_id) } };
+    const compiled = Object.fromEntries(monsters.cards.filter(card => card.custom && card.compiled_template).map(card => [card.runnable_template_id, card.compiled_template]));
+    return { heroes, monsters, error, selection: { ruleset: state.ruleset, hero_ids: heroes.cards.map((card) => card.runnable_template_id), monster_ids: monsters.cards.map((card) => card.runnable_template_id), ...(Object.keys(compiled).length ? {compiled_monsters:compiled} : {}) } };
   }
 
   function resetBattle(clearBoard = false) {

@@ -103,6 +103,12 @@
         });
       }
     }
+    if (kind === "monster") {
+      const cr = String(values.challenge_rating || "0").trim();
+      if (!["0","1/8","1/4","1/2",...Array.from({length:30},(_,i)=>String(i+1))].includes(cr))
+        throw new Error("Choose a valid monster Challenge Rating.");
+      base.challenge_rating = cr;
+    }
     if (values.creature_type && String(values.creature_type).trim()) base.creature_type = String(values.creature_type).trim();
     if (kind === "character") {
       const classes = ["artificer","barbarian","bard","cleric","druid","fighter","monk","paladin","ranger","rogue","sorcerer","warlock","wizard"];
@@ -131,6 +137,8 @@
   const changeMode = () => {
     const character = kind.value === "character";
     scores.hidden = !character;
+    const monsterCr = document.getElementById("monster-cr-label");
+    if (monsterCr) { monsterCr.hidden = character; monsterCr.querySelector("select").disabled = character; }
     level.hidden = !character;
     document.getElementById("archetype-label").firstChild.textContent = character ? "Class / archetype" : "Type / archetype";
     const monsterArchetype = document.getElementById("monster-archetype");
@@ -242,9 +250,12 @@
     try {
       const library = window.IRON_PIT_CUSTOM_LIBRARY;
       if (!library) throw new Error("Custom library is unavailable.");
-      library.save(draft);
+      const saved = library.save(draft);
+      const playable = saved.kind === "monster" ? window.IRON_PIT_CUSTOM_MONSTER_RUNTIME?.decorate(saved) : null;
       status.dataset.error = "false";
-      status.textContent = draft.name + " saved to Custom " + (draft.kind === "monster" ? "Monsters" : "Pregens") + ". This draft is not combat-certified yet.";
+      status.textContent = playable?.coverage_status === "custom_ready"
+        ? saved.name + " saved to Custom Monsters and ready for homebrew browser fights (not RAW-certified)."
+        : saved.name + " saved as a Custom draft. " + (playable?.compile_error || "Pregens require RAW progression before they can fight.");
     } catch (error) {
       status.dataset.error = "true";
       status.textContent = error.message;

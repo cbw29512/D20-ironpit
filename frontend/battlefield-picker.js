@@ -3,9 +3,9 @@
 
   const el = (id) => document.getElementById(id);
   const P = () => window.IRON_PIT_ENCOUNTER_PICKER;
-  const ready = (item) => Boolean(item?.coverage_status === "raw_ready" && item?.runnable_template_id);
+  const ready = (item) => Boolean(item?.runnable_template_id && (item?.coverage_status === "raw_ready" || (active?.side === "monsters" && item?.custom && item?.kind === "monster" && item.coverage_status === "custom_ready" && item.compiled_template)));
   let active = null;
-  const customCards = (kind, ruleset) => window.IRON_PIT_CUSTOM_LIBRARY?.list(kind, ruleset) || [];
+  const customCards = (kind, ruleset) => (window.IRON_PIT_CUSTOM_LIBRARY?.list(kind, ruleset) || []).map(item => kind === "monster" ? window.IRON_PIT_CUSTOM_MONSTER_RUNTIME?.decorate(item) || item : item);
   const customPreview = (card) => {
     const frame = el("picker-portrait");
     if (frame && card?.custom) {
@@ -35,6 +35,7 @@
   }
 
   function runtimeTemplate(card, side) {
+    if (card?.compiled_template) return card.compiled_template;
     if (!card?.runnable_template_id) return { id: card?.id, name: card?.name, kind: card?.kind, class_id: card?.class_id, ruleset: card?.ruleset };
     if (card.kind === "character") return window.IRON_PIT_BROWSER_HEROES?.[card.runnable_template_id] || card;
     return (card.ruleset === "2014"
@@ -94,7 +95,7 @@
   function monsterNote(state, rows, chosen) {
     const certified = rows.filter(ready).length;
     if (!rows.length) return "No monsters exist at this Challenge Rating.";
-    if (chosen?.custom) return `✦ CUSTOM MONSTER · ${chosen.name} · saved draft. Combat certification required before use.`;
+    if (chosen?.custom) return ready(chosen) ? `✦ CUSTOM MONSTER · ${chosen.name} · ready for homebrew battle (not official RAW-certified).` : `✦ CUSTOM MONSTER · ${chosen.name} · ${chosen.compile_error || "draft not ready for combat"}`;
     if (chosen && !ready(chosen)) return `${chosen.name} is listed, but is not ready to fight yet.`;
     if (state.ruleset === "2014") return `${rows.length} 2014 monster${rows.length === 1 ? "" : "s"} at this Challenge Rating.`;
     return `${rows.length} monster${rows.length === 1 ? "" : "s"} shown · ${certified} ready to fight.`;
@@ -116,7 +117,7 @@
     function refreshMonsters() {
       const rows = crSelect.value === "custom" ? all.filter(item => item.custom) : P().sortedMonsters(all.filter(item => !item.custom), crSelect.value); monsterSelect.replaceChildren();
       rows.forEach((monster) => monsterSelect.append(option(
-        monster.id, monster.custom ? `✦ CUSTOM · ${monster.name} · draft (not certified)` : `CR ${monster.challenge_rating} · ${monster.name}${ready(monster) ? "" : " · not available"}`,
+        monster.id, monster.custom ? `✦ CUSTOM · ${monster.name} · ${ready(monster) ? "playable homebrew" : "draft (not ready)"}` : `CR ${monster.challenge_rating} · ${monster.name}${ready(monster) ? "" : " · not available"}`,
         monster.id === existing?.id,
       )));
       const existingShown = existing && rows.some((monster) => monster.id === existing.id), firstReady = rows.find(ready);

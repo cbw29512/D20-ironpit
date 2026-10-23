@@ -52,6 +52,7 @@
   function renderPreview(state) {
     try {
       const runtime = (card, side) => {
+        if (card?.compiled_template) return card.compiled_template;
         if (!card?.runnable_template_id) return null;
         if (card.ruleset === "2014") {
           return side === "heroes"

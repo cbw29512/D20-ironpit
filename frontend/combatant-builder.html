@@ -17,7 +17,7 @@ button.secondary{background:#263c50}button:hover{filter:brightness(1.14)}
 .effect-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;border:1px solid #667b90;border-radius:8px;padding:14px;margin:12px 0}pre{background:#081019;border:1px solid #445669;border-radius:10px;padding:16px;max-height:420px;overflow:auto;white-space:pre-wrap;word-break:break-word}
 [hidden]{display:none!important}
 </style>
-<script defer src="./custom-combatant-library.js"></script><script defer src="./combatant-builder.js"></script>
+<script defer src="./custom-combatant-library.js"></script><script defer src="./custom-monster-runtime.js"></script><script defer src="./combatant-builder.js"></script>
 </head>
 <body><main>
 <header><div><a href="./index.html" style="color:#a8d1ff">← Iron Pit</a><h1>Combatant Builder</h1><p><a href="custom-monster-builder.html" style="color:#a8d1ff">Monster editor</a> · <a href="custom-pregen-builder.html" style="color:#a8d1ff">Pregen editor</a></p><p>Create a homebrew monster or a pregen using Iron Pit's universal combatant schema.</p></div></header>
@@ -29,6 +29,7 @@ button.secondary{background:#263c50}button:hover{filter:brightness(1.14)}
 <label>Card ID<input name="id" required pattern="[a-z0-9][a-z0-9-]*" placeholder="ashfang"></label>
 <label id="archetype-label">Type / archetype<input id="monster-archetype" name="archetype" required placeholder="beast"><select id="character-class" hidden disabled aria-label="Base character class"><option value="">Choose base class</option><option value="barbarian">Barbarian</option><option value="bard">Bard</option><option value="cleric">Cleric</option><option value="druid">Druid</option><option value="fighter">Fighter</option><option value="monk">Monk</option><option value="paladin">Paladin</option><option value="ranger">Ranger</option><option value="rogue">Rogue</option><option value="sorcerer">Sorcerer</option><option value="warlock">Warlock</option><option value="wizard">Wizard</option><option value="artificer">Artificer</option></select></label>
 <label id="level-label" hidden>Character level<input name="level" type="number" min="1" max="20" value="1"></label>
+<label id="monster-cr-label">Challenge Rating<select name="challenge_rating"><option value="0">CR 0</option><option value="1/8">CR 1/8</option><option value="1/4">CR 1/4</option><option value="1/2">CR 1/2</option><option value="1">CR 1</option><option value="2">CR 2</option><option value="3">CR 3</option><option value="4">CR 4</option><option value="5">CR 5</option><option value="6">CR 6</option><option value="7">CR 7</option><option value="8">CR 8</option><option value="9">CR 9</option><option value="10">CR 10</option><option value="11">CR 11</option><option value="12">CR 12</option><option value="13">CR 13</option><option value="14">CR 14</option><option value="15">CR 15</option><option value="16">CR 16</option><option value="17">CR 17</option><option value="18">CR 18</option><option value="19">CR 19</option><option value="20">CR 20</option><option value="21">CR 21</option><option value="22">CR 22</option><option value="23">CR 23</option><option value="24">CR 24</option><option value="25">CR 25</option><option value="26">CR 26</option><option value="27">CR 27</option><option value="28">CR 28</option><option value="29">CR 29</option><option value="30">CR 30</option></select></label>
 <label>Creature type<input name="creature_type" placeholder="Beast or Humanoid"></label>
 <label>Size<select name="size"><option>medium</option><option>tiny</option><option>small</option><option>large</option><option>huge</option><option>gargantuan</option></select></label>
 </div></fieldset>
@@ -77,5 +78,5 @@ button.secondary{background:#263c50}button:hover{filter:brightness(1.14)}
 <p id="status" role="status" aria-live="polite"></p>
 </form>
 <section aria-label="Canonical JSON preview"><h2>Universal combatant data</h2><pre id="preview" tabindex="0">Complete the form and select Validate & preview.</pre>
-<p class="hint">Exported JSON is a draft for the canonical Python compiler. Full legality and advanced ability support are verified when imported; this editor does not certify a monster or pregen.</p>
+<p class="hint">Supported custom monster attacks can be played in browser fights after saving. Unsupported effects stay drafts. Custom pregens require RAW class progression before combat. Full canonical Python certification remains separate.</p>
 </section></main></body></html>

@@ -9,6 +9,7 @@
   const MAX_SLOTS = 6;
 
   function runtimeTemplate(card, side) {
+    if (card?.compiled_template) return card.compiled_template;
     if (!card?.runnable_template_id) return null;
     if (card.kind === "character") return window.IRON_PIT_BROWSER_HEROES?.[card.runnable_template_id] || null;
     return card.ruleset === "2014"
