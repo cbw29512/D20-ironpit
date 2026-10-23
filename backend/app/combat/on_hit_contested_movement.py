@@ -7,7 +7,6 @@ from app.combat.ability_check_escape import ability_check_bonus
 from app.combat.ability_checks import ability_check_roll_mode, resolve_ability_check_outcome
 from app.combat.condition_rules import has_condition
 from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifier
-from app.combat.forced_movement import pull_straight_toward, push_straight_away
 from app.combat.rolls import roll_d20
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import DiceRoll, WeaponAttack
@@ -55,7 +54,7 @@ def resolve_on_hit_contested_movement(
     *,
     round_number: int,
 ) -> OnHitContestedMovementResolution:
-    """Resolve an opposed ability check and apply declarative forced movement on target failure."""
+    """Resolve the printed contest; positional displacement is arena-inert."""
     try:
         effect = attack.on_hit_contested_movement
         if effect is None or target.state.is_dead or not target.state.is_alive:
@@ -88,16 +87,8 @@ def resolve_on_hit_contested_movement(
             encounter_roller=target,
             setup=setup,
         )
+        # Preserve contested rolls and their outcome, but never mutate position.
         moved = 0
-        if not target_succeeded:
-            mover = pull_straight_toward if effect.direction == "toward_source" else push_straight_away
-            moved = mover(
-                target,
-                source,
-                setup,
-                effect.distance_ft,
-                round_number=round_number,
-            )
         return OnHitContestedMovementResolution(
             source_roll=source_roll,
             target_roll=target_roll,
