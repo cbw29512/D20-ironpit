@@ -31,14 +31,23 @@ function labels(card) {
     const monsterRuntime=edition==="2014"?IRON_PIT_BROWSER_MONSTERS_2014:IRON_PIT_BROWSER_MONSTERS;
     const candidates=monsters.map(c=>({card:c,mechanics:labels(monsterRuntime[c.runnable_template_id]||{})}));
     const covered=new Set(), selected=[];
+    const heroGroups=new Map();
+    for(const hero of heroes) {
+      const key=hero.class_id||hero.archetype||"unknown";
+      if(!heroGroups.has(key))heroGroups.set(key,[]);
+      heroGroups.get(key).push(hero);
+    }
+    const spreadHeroes=[...heroGroups.values()];
+    // Exhaust new mechanic labels first, then continue choosing untested monsters
+    // until the 50-fight budget is reached. This measures more actual fights
+    // rather than stopping after the last newly declared trait label.
     while(candidates.length&&selected.length<50){
       candidates.sort((a,b)=>b.mechanics.filter(m=>!covered.has(m)).length-a.mechanics.filter(m=>!covered.has(m)).length||a.card.id.localeCompare(b.card.id));
       const next=candidates.shift();
-      if(selected.length&&!next.mechanics.some(m=>!covered.has(m)))break;
       selected.push(next);next.mechanics.forEach(m=>covered.add(m));
     }
     for(let i=0;i<selected.length;i++){
-      const selectedMonster=selected[i],hero=heroes[i%heroes.length];
+      const selectedMonster=selected[i],group=spreadHeroes[i%spreadHeroes.length],hero=group[Math.floor(i/spreadHeroes.length)%group.length];
       const selection={ruleset:edition,hero_ids:[hero.runnable_template_id],monster_ids:[selectedMonster.card.runnable_template_id]};
       const seed=27001+i, before=JSON.stringify([heroRuntime[hero.runnable_template_id],monsterRuntime[selectedMonster.card.runnable_template_id]]);
       try{
@@ -53,7 +62,7 @@ function labels(card) {
           status:"PASS"});
       }catch(error){cases.push({edition,hero:hero.runnable_template_id,monster:selectedMonster.card.runnable_template_id,seed,declared:selectedMonster.mechanics,status:"FAIL",error:String(error)});}
     }
-    summary[edition]={selected_fights:selected.length,declared_mechanic_labels:covered.size};
+    summary[edition]={selected_fights:selected.length,distinct_monsters:selected.length,distinct_hero_classes:spreadHeroes.length,declared_mechanic_labels:covered.size};
   }
   const report={schema_version:1,scope:"generated monster diversity probes; observed events do not certify RAW",summary,total:cases.length,passed:cases.filter(c=>c.status==="PASS").length,failed:cases.filter(c=>c.status==="FAIL").length,cases};
   if(process.env.IRON_PIT_GENERATED_RESULTS_PATH){const dest=process.env.IRON_PIT_GENERATED_RESULTS_PATH;fs.mkdirSync(path.dirname(dest),{recursive:true});fs.writeFileSync(dest,JSON.stringify(report,null,2)+"\n");}
