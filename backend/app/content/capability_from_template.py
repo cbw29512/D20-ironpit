@@ -146,6 +146,12 @@ def _save(action) -> dict[str, object]:
     }
     if action.effect_tags:
         result["effect_tags"] = list(action.effect_tags)
+    if action.required_target_creature_types:
+        result["required_target_creature_types"] = list(action.required_target_creature_types)
+    if action.prohibited_target_source_effect_ids:
+        result["prohibited_target_source_effect_ids"] = list(action.prohibited_target_source_effect_ids)
+    if action.excluded_target_creature_types:
+        result["excluded_target_creature_types"] = list(action.excluded_target_creature_types)
     if action.automatic_failure_creature_types:
         result["automatic_failure_creature_types"] = list(action.automatic_failure_creature_types)
     if action.damage_dice_count:
