@@ -159,6 +159,16 @@ const inaccessible = M.planToward(map, passageMover, passageTarget, passageMembe
 const passable = M.planToward(map, passageMover, passageTarget, passageMembers, 5, 30, null, false, true);
 assert.equal(inaccessible.goal_reachable, false);
 assert.equal(passable.goal_reachable, true);
+passageMover.state.template.sourceAllowsHostileOverlap = true;
+const implicitFromTemplate = M.planToward(map, passageMover, passageTarget, passageMembers, 5, 30);
+assert.deepEqual(implicitFromTemplate, passable, "Source field should enable the shared route search.");
+assert.equal(implicitFromTemplate.path.at(-1).x, 2, "Pit still forbids sharing the final square.");
+passageMover.state.template.sourceAllowsHostileOverlap = false;
+assert.deepEqual(
+  M.planToward(map, passageMover, passageTarget, passageMembers, 5, 30),
+  inaccessible,
+  "Ordinary combatants are still blocked by occupied hostile spaces.",
+);
 assert.ok(passable.path.some((square) => square.x === 1));
 assert.deepEqual(passable.path.at(-1), { x: 2, y: 3 });
 
