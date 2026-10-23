@@ -52,7 +52,7 @@ def semantic_variable_head_sections_2014(
 ) -> tuple[tuple[str, str], tuple[str, str]] | None:
     """Locate the lifecycle and OA clauses by meaning, never card identity/name."""
     traits = source_sections_2014(monster.source_traits)
-    reactions = source_sections_2014(monster.source_reactions)
+    reaction_sections = traits
     lifecycle = next(
         ((name, body) for name, body in traits.items()
          if _HAS_HEADS.search(body) and _SEVER.search(body)
@@ -60,7 +60,7 @@ def semantic_variable_head_sections_2014(
         None,
     )
     reaction = next(
-        ((name, body) for name, body in reactions.items()
+        ((name, body) for name, body in reaction_sections.items()
          if _EXTRA_REACTION.search(body)),
         None,
     )
@@ -68,7 +68,7 @@ def semantic_variable_head_sections_2014(
         _HAS_HEADS.search(monster.source_traits or "")
         or _SEVER.search(monster.source_traits or "")
         or _REGROW.search(monster.source_traits or "")
-        or _EXTRA_REACTION.search(monster.source_reactions or "")
+        or _EXTRA_REACTION.search(monster.source_traits or "")
         or _HEAD_MULTIATTACK.search(monster.source_actions or "")
     )
     if not any_signal:

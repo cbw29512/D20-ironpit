@@ -17,7 +17,7 @@ def test_semantic_scan_binds_source_parameters_without_identity_dispatch():
     assert profile.healing_per_regrown_head == 10
     assert profile.regrowth_blocking_damage_types == ["fire"]
     assert profile.source_name in card.trait_names
-    assert profile.reaction_source_name in card.reaction_names
+    assert profile.reaction_source_name in card.trait_names
 
 
 def test_variable_head_coverage_report_is_complete():
