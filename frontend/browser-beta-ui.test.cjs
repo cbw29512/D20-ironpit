@@ -42,7 +42,7 @@ global.document = {
 };
 global.requestAnimationFrame = (callback) => callback();
 load("browser-catalog.js"); load("encounter-picker.js"); load("battle-log-format.js"); load("battle-lab.js"); load("browser-audit.js");
-load("battlefield-view.js"); load("battle-log-export.js"); load("browser-turbo.js"); load("turbo-view.js"); load("browser-execution.js"); load("battle-actions.js");
+load("custom-monster-runtime.js"); load("battlefield-view.js"); load("battle-log-export.js"); load("browser-turbo.js"); load("turbo-view.js"); load("browser-execution.js"); load("battle-actions.js");
 const view = window.IRON_PIT_BATTLEFIELD_VIEW;
 const actions = window.IRON_PIT_BATTLE_ACTIONS;
 let api = null;
@@ -199,6 +199,27 @@ const click = async (id) => { await el(id).listeners.click(); };
   assert.equal(api.state.monsterSlots.filter(Boolean).length, 2);
   assert.ok(api.state.monsterSlots.filter(Boolean).every((card) => card.runnable_template_id === "srd-goblin-warrior"));
   assert.match(el("status").textContent, /Rage/);
+  // Actual main-app matchup must pass its custom monster's compiled template
+  // through the same execution selection used by Fight, Step and Replay.
+  const source = {
+    schema_version:1,id:"website-dummy",name:"Website Dummy",kind:"monster",ruleset:"2024",
+    archetype:"construct",size:"medium",armor_class:0,max_hp:20,speed_ft:30,
+    initiative_bonus:0,primary_attack_id:"punch",
+    visual:{armor:"natural",main_hand:"fist",body_style:"humanoid"},
+    attacks:[{id:"punch",name:"Punch",attack_kind:"melee",attack_bonus:3,
+      damage:{count:1,size:4,bonus:0},damage_type:"bludgeoning",animation:"slash"}],
+  };
+  const customCard=window.IRON_PIT_CUSTOM_MONSTER_RUNTIME.decorate({...source,custom:true});
+  assert.equal(customCard.coverage_status,"custom_ready");
+  api.state.monsterSlots[0]=customCard;
+  api.state.monsterSlots[1]=null;
+  const actualMatch=api.matchup();
+  assert.equal(actualMatch.error,null);
+  assert.equal(actualMatch.selection.compiled_monsters[customCard.runnable_template_id].armor_class,0);
+  const actualFight=window.IRON_PIT_BROWSER_ENGINE.runEncounter(actualMatch.selection);
+  assert.ok(actualFight.events.length>0);
+  assert.equal(actualFight.setup.monsters[0].state.template.id,customCard.runnable_template_id);
+  assert.equal(source.armor_class,0);
   assert.equal(errors.length, 0, JSON.stringify(errors));
   console.log("2014 sample + 2024 preset load + Load Combat review + actual UI log/result wiring: Fight, rerun, Step/Watch, Turbo and replay passed.");
 })().catch((error) => { priorError(error); process.exitCode = 1; }).finally(() => { console.error = priorError; });
