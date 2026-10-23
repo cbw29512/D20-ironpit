@@ -1,36 +1,21 @@
-const fs=require("fs"),vm=require("vm"),assert=require("assert");
-global.window=global;
-for(const file of [
-  "frontend/browser-grid-geometry.js",
-  "frontend/browser-grid-barriers.js",
-  "frontend/browser-forced-movement.js",
-]) vm.runInThisContext(fs.readFileSync(file,"utf8"));
-const member=(id,side,x,y)=>({combatant_id:id,side,state:{position:{x,y},movement_remaining_ft:30,template:{size:"medium"}}});
-const map={width_squares:8,height_squares:8,cell_size_ft:5};
-let source=member("source","heroes",1,1),target=member("target","monsters",2,1);
-let setup={heroes:[source],monsters:[target],map_definition:map,persistent_barriers:[]};
-assert.strictEqual(window.IRON_PIT_BROWSER_FORCED_MOVEMENT.pushStraightAway(target,source,setup,15),15);
-assert.deepStrictEqual(target.state.position,{x:5,y:1});
-assert.strictEqual(target.state.movement_remaining_ft,30);
-source=member("source","heroes",1,1); target=member("target","monsters",2,1);
-const blocker=member("blocker","monsters",4,1);
-setup={heroes:[source],monsters:[target,blocker],map_definition:map,persistent_barriers:[]};
-assert.strictEqual(window.IRON_PIT_BROWSER_FORCED_MOVEMENT.pushStraightAway(target,source,setup,15),5);
-assert.deepStrictEqual(target.state.position,{x:3,y:1});
-source=member("source","heroes",1,1); target=member("target","monsters",2,1);
-setup={
-  heroes:[source],
-  monsters:[target],
-  map_definition:map,
-  persistent_barriers:[{
-    blocks_movement:true,
-    sections:[{
-      current_hp:10,
-      destroyed:false,
-      edges:[{first:{x:3,y:1},second:{x:4,y:1}}],
-    }],
-  }],
-};
-assert.strictEqual(window.IRON_PIT_BROWSER_FORCED_MOVEMENT.pushStraightAway(target,source,setup,10),5);
-assert.deepStrictEqual(target.state.position,{x:3,y:1});
-console.log("browser forced movement tests passed");
+const fs = require("fs");
+const vm = require("vm");
+const assert = require("assert");
+
+global.window = global;
+vm.runInThisContext(fs.readFileSync("frontend/browser-forced-movement.js", "utf8"));
+const member = (id, x, y) => ({
+  combatant_id: id,
+  state: {position: {x, y}, movement_remaining_ft: 30, current_hp: 17},
+});
+const source = member("source", 1, 1), target = member("target", 2, 1);
+const setup = {heroes: [source], monsters: [target]};
+const initial = JSON.parse(JSON.stringify(target.state));
+assert.strictEqual(window.IRON_PIT_BROWSER_FORCED_MOVEMENT.pushStraightAway(target, source, setup, 15), 0);
+assert.strictEqual(window.IRON_PIT_BROWSER_FORCED_MOVEMENT.pullStraightToward(target, source, setup, 10), 0);
+assert.deepStrictEqual(target.state, initial, "Displacement must leave HP, position and movement intact.");
+target.state.position = null;
+assert.strictEqual(window.IRON_PIT_BROWSER_FORCED_MOVEMENT.pushStraightAway(target, source, setup, 5), 0);
+assert.strictEqual(window.IRON_PIT_BROWSER_FORCED_MOVEMENT.pullStraightToward(target, source, setup, 5), 0);
+assert.throws(() => window.IRON_PIT_BROWSER_FORCED_MOVEMENT.pushStraightAway(target, source, setup, -5));
+console.log("browser forced displacement exclusion passed");
