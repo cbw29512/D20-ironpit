@@ -3,9 +3,9 @@
 
   const el = (id) => document.getElementById(id);
   const P = () => window.IRON_PIT_ENCOUNTER_PICKER;
-  const ready = (item) => Boolean(item?.runnable_template_id && (item?.coverage_status === "raw_ready" || (active?.side === "monsters" && item?.custom && item?.kind === "monster" && item.coverage_status === "custom_ready" && item.compiled_template)));
+  const ready = (item) => Boolean(item?.runnable_template_id && (item?.coverage_status === "raw_ready" || (active?.side === "monsters" && item?.custom && item?.kind === "monster" && item.coverage_status === "custom_ready" && item.compiled_template) || (active?.side === "heroes" && item?.custom && item?.kind === "character" && item.coverage_status === "custom_ready" && item.compiled_template)));
   let active = null;
-  const customCards = (kind, ruleset) => (window.IRON_PIT_CUSTOM_LIBRARY?.list(kind, ruleset) || []).map(item => kind === "monster" ? window.IRON_PIT_CUSTOM_MONSTER_RUNTIME?.decorate(item) || item : item);
+  const customCards = (kind, ruleset) => (window.IRON_PIT_CUSTOM_LIBRARY?.list(kind, ruleset) || []).map(item => kind === "monster" ? window.IRON_PIT_CUSTOM_MONSTER_RUNTIME?.decorate(item) || item : window.IRON_PIT_CUSTOM_PREGEN_RUNTIME?.decorate(item) || item);
   const customPreview = (card) => {
     const frame = el("picker-portrait");
     if (frame && card?.custom) {
@@ -69,7 +69,7 @@
 
     function refresh() {
       const chosen = chosenHero(state);
-      el("picker-note").textContent = chosen?.custom ? `✦ CUSTOM PREGEN · ${chosen.name} · saved draft. Combat certification required before use.` : ready(chosen)
+      el("picker-note").textContent = chosen?.custom ? `✦ CUSTOM PREGEN · ${chosen.name} · ${ready(chosen) ? "Playable RAW canonical "+chosen.class_name+" level "+chosen.level : (chosen.compile_error || "Draft not ready for combat")}` : ready(chosen)
         ? `${chosen.name} · ${chosen.class_name} ${chosen.level} is ready to fight.`
         : `${chosen?.name || "This hero"} level ${levelSelect.value} is not available yet.`;
       el("confirm-card").disabled = !ready(chosen);
@@ -80,7 +80,7 @@
     const refreshLevels = () => {
       levelSelect.replaceChildren();
       if (heroSelect.value === "custom") {
-        customCards("character", state.ruleset).forEach(card => levelSelect.append(option(card.id, card.name + " · Lv " + card.level + " · draft")));
+        customCards("character", state.ruleset).forEach(card => levelSelect.append(option(card.id, card.name + " · Lv " + card.level + (ready(card) ? " · RAW playable" : " · draft"))));
       } else {
         P().LEVELS.forEach(level => levelSelect.append(option(level, level)));
         levelSelect.value = String(existing?.level || fallback.level || 1);

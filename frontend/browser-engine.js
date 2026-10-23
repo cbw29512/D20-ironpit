@@ -52,9 +52,27 @@
   function buildSetup(selection) {
     try { const requestedRuleset = selectedRuleset(selection), registry = rosters(requestedRuleset);
       const custom = selection.compiled_monsters || {}; if (Array.isArray(custom) || typeof custom !== "object") throw new Error("Compiled monster registry must be an object."); for (const [id, item] of Object.entries(custom)) if (!item || item.id !== id || item.kind !== "monster" || item.ruleset !== requestedRuleset || !Array.isArray(item.attacks) || !item.attacks.length || !item.primary_attack_id || !Number.isInteger(item.armor_class) || item.armor_class < 0 || !Number.isInteger(item.max_hp) || item.max_hp < 1 || Object.hasOwn(registry.heroes, id) || Object.hasOwn(registry.monsters, id)) throw new Error(`Invalid or colliding compiled monster: ${id}`);
+      const customHeroes = selection.compiled_heroes || {};
+      if (!customHeroes || typeof customHeroes !== "object" || Array.isArray(customHeroes))
+        throw new Error("Compiled hero registry must be an object.");
+      for (const [id, item] of Object.entries(customHeroes)) {
+        if (!item || item.id !== id || !id.startsWith("custom-pregen-" + requestedRuleset + "-") ||
+            item.kind !== "character" || item.ruleset !== requestedRuleset ||
+            !Number.isInteger(item.level) || item.level < 1 || item.level > 20 ||
+            typeof item.class_id !== "string" || typeof item.name !== "string" ||
+            !item.name.trim() || item.name.length > 100 ||
+            Object.hasOwn(registry.heroes,id) || Object.hasOwn(registry.monsters,id) || Object.hasOwn(custom,id))
+          throw new Error("Invalid or colliding custom pregen: " + id);
+        const originals = Object.values(registry.heroes).filter(hero =>
+          hero.class_id === item.class_id && hero.level === item.level && hero.ruleset === requestedRuleset);
+        if (originals.length !== 1) throw new Error("Custom pregen lacks a unique certified RAW source: " + id);
+        const expected = {...item,id:originals[0].id,name:originals[0].name};
+        if (JSON.stringify(expected) !== JSON.stringify(originals[0]))
+          throw new Error("Custom pregen may only rename certified RAW build: " + id);
+      }
       const collisions = Object.keys(registry.heroes).filter((id) => Object.hasOwn(registry.monsters, id)); if (collisions.length) throw new Error(`Ambiguous certified card IDs: ${collisions.join(", ")}`);
       const card = (id, side) => {
-        const template = side === "heroes" ? registry.heroes[id] : (custom[id] || registry.monsters[id]);
+        const template = side === "heroes" ? (customHeroes[id] || registry.heroes[id]) : (custom[id] || registry.monsters[id]);
         if (!template) throw new Error(`Unknown certified ${side === "heroes" ? "hero" : "monster"} for ${requestedRuleset}: ${id}`);
         return cloneTemplate(template); };
       const member = (id, index, side) => {

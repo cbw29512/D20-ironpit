@@ -42,7 +42,7 @@ global.document = {
 };
 global.requestAnimationFrame = (callback) => callback();
 load("browser-catalog.js"); load("encounter-picker.js"); load("battle-log-format.js"); load("battle-lab.js"); load("browser-audit.js");
-load("custom-monster-runtime.js"); load("battlefield-view.js"); load("battle-log-export.js"); load("browser-turbo.js"); load("turbo-view.js"); load("browser-execution.js"); load("battle-actions.js");
+load("custom-monster-runtime.js"); load("custom-pregen-runtime.js"); load("battlefield-view.js"); load("battle-log-export.js"); load("browser-turbo.js"); load("turbo-view.js"); load("browser-execution.js"); load("battle-actions.js");
 const view = window.IRON_PIT_BATTLEFIELD_VIEW;
 const actions = window.IRON_PIT_BATTLE_ACTIONS;
 let api = null;
@@ -220,6 +220,18 @@ const click = async (id) => { await el(id).listeners.click(); };
   assert.ok(actualFight.events.length>0);
   assert.equal(actualFight.setup.monsters[0].state.template.id,customCard.runnable_template_id);
   assert.equal(source.armor_class,0);
+  const rawPregen=window.IRON_PIT_CUSTOM_PREGEN_RUNTIME.decorate({
+    kind:"character",build_mode:"canonical_raw_snapshot",ruleset:"2024",
+    class_id:"fighter",level:5,id:"website-fighter",name:"Custom Website Fighter"
+  });
+  assert.equal(rawPregen.coverage_status,"custom_ready");
+  api.state.heroSlots[0]=rawPregen;
+  const rawMatch=api.matchup();
+  assert.equal(rawMatch.error,null);
+  assert.ok(rawMatch.selection.compiled_heroes[rawPregen.runnable_template_id]);
+  const rawFight=window.IRON_PIT_BROWSER_ENGINE.runEncounter(rawMatch.selection);
+  assert.ok(rawFight.events.length>0);
+  assert.equal(rawFight.setup.heroes[0].state.template.name,"Custom Website Fighter");
   assert.equal(errors.length, 0, JSON.stringify(errors));
   console.log("2014 sample + 2024 preset load + Load Combat review + actual UI log/result wiring: Fight, rerun, Step/Watch, Turbo and replay passed.");
 })().catch((error) => { priorError(error); process.exitCode = 1; }).finally(() => { console.error = priorError; });
