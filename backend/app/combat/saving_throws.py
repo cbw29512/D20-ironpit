@@ -186,10 +186,13 @@ def resolve_save_action(
             source_is_magical=action.magical_effect,
         )
     pushed_ft = 0
+    ignored_push_ft = 0
     if not succeeded and target.state.is_alive and not target.state.is_dead and action.failed_save_push_ft:
         if setup is None:
             raise ValueError(f"{action.name} forced movement requires encounter setup.")
         pushed_ft = push_straight_away(target, actor, setup, action.failed_save_push_ft, round_number=round_number)
+        if pushed_ft == 0:
+            ignored_push_ft = action.failed_save_push_ft
     outcome = "SUCCEEDS" if succeeded else "FAILS"
     if automatic_failure:
         description = (
@@ -216,7 +219,13 @@ def resolve_save_action(
     if damage_outcome == "undead_fortitude": description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
     if "grappled" in applied_conditions: description += f" {target.state.template.name} is Grappled."
     if "restrained" in applied_conditions: description += f" {target.state.template.name} is Restrained while Grappled."
-    if pushed_ft: description += f" {target.state.template.name} is pushed {pushed_ft} feet away."
+    if pushed_ft:
+        description += f" {target.state.template.name} is pushed {pushed_ft} feet away."
+    elif ignored_push_ft:
+        description += (
+            f" Iron Pit ignores the printed {ignored_push_ft}-foot forced displacement;"
+            f" {target.state.template.name} remains in place."
+        )
     if not succeeded and action.failure_sets_zero_hp:
         description += f" {target.state.template.name} drops directly to 0 HP (not damage)."
     return BattleEvent(
