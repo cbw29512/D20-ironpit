@@ -69,3 +69,11 @@ def end_owner_turn(state: CombatantState) -> tuple[int, int]:
     state.heads_lost_since_owner_turn = 0
     state.head_regrowth_blocked = False
     return grown, healed
+
+
+def current_heads_save_advantage(state: CombatantState, condition_id: str | None) -> bool:
+    """True when more than one head grants Advantage vs the listed conditions."""
+    profile = state.template.variable_heads
+    if not profile or not condition_id or (state.current_heads or 0) <= 1:
+        return False
+    return condition_id.casefold() in {c.casefold() for c in profile.save_advantage_conditions}

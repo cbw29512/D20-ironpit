@@ -1,3 +1,7 @@
+## Hydra Multiple Heads save advantage — IN PR (this branch)
+
+- Owner: Grok. Extends existing VariableHeadProfile with source-parsed save_advantage_conditions. When current_heads > 1, grants Advantage on saves against those conditions (blinded, charmed, etc.). Python oracle and browser saveMode parity. Permanent test added. Source-proof via existing semantic parser. Clears Hydra source:trait once generators run. No monster-name dispatch.
+
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
 

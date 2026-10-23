@@ -9,6 +9,7 @@ from app.content.monster_creature_types import base_creature_type
 from app.domain.models import CombatantState, CombatantTemplate
 from app.domain.modifiers import CombatModifier, ModifierKind
 from app.combat.modifier_stack import d20_test_advantage_sources
+from app.combat.variable_heads import current_heads_save_advantage
 from app.domain.saving_throw_context import SavingThrowContext
 
 logger = logging.getLogger(__name__)
@@ -99,7 +100,8 @@ def saving_throw_advantage_sources(
     ability: str,
     context: SavingThrowContext | None = None,
 ) -> int:
-    return len(_saving_throw_advantage_modifiers(state, ability, context)) + d20_test_advantage_sources(state)
+    head_adv = 1 if context and current_heads_save_advantage(state, context.condition_id) else 0
+    return len(_saving_throw_advantage_modifiers(state, ability, context)) + d20_test_advantage_sources(state) + head_adv
 
 
 def saving_throw_advantage_source_names(
@@ -114,6 +116,7 @@ def saving_throw_advantage_source_names(
             if item.kind is ModifierKind.D20_TEST_ADVANTAGE
         ]
         return sorted({
+            *(["Multiple Heads"] if context and current_heads_save_advantage(state, context.condition_id) else []),
             item.source_name or item.source_effect_id
             for item in [*contextual, *universal]
         })

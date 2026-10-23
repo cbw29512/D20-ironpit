@@ -12,6 +12,7 @@ class VariableHeadProfile(BaseModel):
     heads_per_regrowth: int = Field(ge=1)
     healing_per_regrown_head: int = Field(ge=0)
     regrowth_blocking_damage_types: list[str] = Field(min_length=1)
+    save_advantage_conditions: list[str] = Field(default_factory=list)
     multiattack_per_head: bool = True
     extra_opportunity_reactions_per_head_beyond_one: bool = True
 

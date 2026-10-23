@@ -94,6 +94,7 @@ def resolve_save_action(
     if str(action.damage_type or "").casefold() == "poison":
         effect_tags.add("poison")
     save_context = SavingThrowContext(
+        condition_id=action.failed_save_timed_effect.effect_id if action.failed_save_timed_effect else None,
         magical_effect=action.magical_effect,
         spell_effect=spell_effect,
         source_creature_type=source_type,

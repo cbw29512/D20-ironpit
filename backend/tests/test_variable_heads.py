@@ -47,3 +47,18 @@ def test_losing_last_head_kills_creature():
     state.current_heads = 1
     assert apply_damage(state, 25, damage_types={DamageType.SLASHING}) == "dead"
     assert state.is_dead is True
+
+
+def test_multiple_heads_grant_save_advantage_against_listed_conditions():
+    from app.combat.defensive_modifier_rules import saving_throw_advantage_sources
+    from app.domain.saving_throw_context import SavingThrowContext
+    state = _state()
+    state.current_heads = 3
+    profile = state.template.variable_heads.model_copy(update={"save_advantage_conditions": ["blinded", "charmed"]})
+    state.template = state.template.model_copy(update={"variable_heads": profile})
+    context = SavingThrowContext(condition_id="blinded")
+    assert saving_throw_advantage_sources(state, "wisdom", context) >= 1
+    context_other = SavingThrowContext(condition_id="poisoned")
+    assert saving_throw_advantage_sources(state, "constitution", context_other) == 0
+    state.current_heads = 1
+    assert saving_throw_advantage_sources(state, "wisdom", context) == 0

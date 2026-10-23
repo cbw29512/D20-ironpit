@@ -33,6 +33,9 @@ _EXTRA_REACTION = re.compile(
     r"extra reaction.+?only for opportunity attacks", re.IGNORECASE,
 )
 _HEAD_MULTIATTACK = re.compile(
+_SAVE_ADV = re.compile(
+    r"advantage on saving throws against being (?P<conditions>.+?)\.", re.IGNORECASE,
+)
     r"makes as many (?P<attack>[A-Za-z][A-Za-z -]*?) attacks as it has heads",
     re.IGNORECASE,
 )
@@ -109,6 +112,11 @@ def variable_head_profile_2014(monster: SourceMonster2014) -> VariableHeadProfil
         regrow = _REGROW.search(body)
         blocker = _BLOCK.search(body)
         healing = _HEAL.search(body)
+        save_adv = _SAVE_ADV.search(body)
+        conditions = []
+        if save_adv:
+            raw = save_adv["conditions"].replace("and ", "")
+            conditions = [c.strip().casefold() for c in raw.split(",") if c.strip()]
         if None in {initial, sever, regrow, blocker, healing}:
             raise ValueError("Variable-head semantic match lost a required source clause.")
         return VariableHeadProfile(
@@ -119,6 +127,7 @@ def variable_head_profile_2014(monster: SourceMonster2014) -> VariableHeadProfil
             heads_per_regrowth=_number(regrow["count"]),
             healing_per_regrown_head=int(healing["amount"]),
             regrowth_blocking_damage_types=[blocker["kind"].casefold()],
+            save_advantage_conditions=conditions,
         )
     except Exception:
         logger.exception("Failed semantic variable-head binding for %s.", monster.id)

@@ -65,8 +65,16 @@
     return { grown, healed };
   }
 
+
+  function headsSaveAdvantage(state, conditionId) {
+    const rule = profile(state);
+    if (!rule || !conditionId || !(state.current_heads > 1)) return false;
+    const list = (rule.saveAdvantageConditions || []).map(c => String(c).toLowerCase());
+    return list.includes(String(conditionId).toLowerCase());
+  }
+
   window.IRON_PIT_BROWSER_VARIABLE_HEADS = {
     endOwnerTurn, initialize, noteDamage, opportunityReactionAvailable,
-    refreshOpportunityReactions, spendOpportunityReaction,
+    refreshOpportunityReactions, spendOpportunityReaction, headsSaveAdvantage,
   };
 })();

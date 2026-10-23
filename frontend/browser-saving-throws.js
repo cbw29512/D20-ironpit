@@ -54,6 +54,7 @@
         + DG().dexSaveAdvantageSources(state, ability) + DF().saveAdvantage(state, ability, context)
         + sureFootedAdvantage(state, ability, context)
         + (context.advantageSources || []).length;
+        + (window.IRON_PIT_BROWSER_VARIABLE_HEADS?.headsSaveAdvantage(state, context.conditionId) ? 1 : 0);
       const disadvantage = X().saveDisadvantage(state) + (DF().saveDisadvantage?.(state, ability) || 0)
         + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(state, ability) || 0)
         + (context.disadvantageSources || []).length
