@@ -126,5 +126,9 @@ def variable_head_profile_2014(monster: SourceMonster2014) -> VariableHeadProfil
 
 
 def variable_head_trait_names_2014(monster: SourceMonster2014) -> set[str]:
-    profile = variable_head_profile_2014(monster)
-    return {profile.source_name, profile.reaction_source_name} if profile else set()
+    try:
+        profile = variable_head_profile_2014(monster)
+        return {profile.source_name, profile.reaction_source_name} if profile else set()
+    except ValueError:
+        logger.info("Variable-head source remains fail-closed for %s.", monster.id)
+        return set()
