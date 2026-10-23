@@ -43,6 +43,11 @@ def legal_save_action(
         return False
     if action.required_target_condition is not None and not has_condition(target.state, action.required_target_condition):
         return False
+    if action.prohibited_target_source_effect_ids and any(
+        effect.source_effect_id in action.prohibited_target_source_effect_ids
+        for effect in target.state.timed_effects
+    ):
+        return False
     if actor is not None and action.requires_target_sight and not can_see(actor.state, target.state, combatant_distance(actor, target)):
         return False
     if action.requires_target_to_see_source:
