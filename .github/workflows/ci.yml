@@ -531,6 +531,7 @@ jobs:
           node frontend/browser-execution.test.cjs
           node frontend/browser-beta-ui.test.cjs
           IRON_PIT_RESULTS_PATH=artifacts/combat-presets-results.json node frontend/combat-presets.test.cjs
+          IRON_PIT_GENERATED_RESULTS_PATH=artifacts/generated-coverage-results.json node frontend/generated-coverage.test.cjs
           node frontend/combat-review.test.cjs
           node frontend/browser-audit.test.cjs
           node frontend/browser-roll-revisions.test.cjs
@@ -741,6 +742,13 @@ jobs:
         with:
           name: iron-pit-preset-fight-results
           path: artifacts/combat-presets-results.json
+          if-no-files-found: warn
+      - name: Upload generated mechanic fight outcomes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-mechanic-fight-results
+          path: artifacts/generated-coverage-results.json
           if-no-files-found: warn
       - name: Upload deterministic monster fight transcripts
         if: ${{ always() }}
