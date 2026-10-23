@@ -6,7 +6,6 @@ import logging
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.failure_margin_runtime import escalation_duration
-from app.combat.forced_movement import push_straight_away
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import apply_terminal_condition_outcome, apply_timed_condition
 from app.content.monster_creature_types import creature_matches_kind
@@ -127,19 +126,8 @@ def resolve_on_hit_condition_save(
                     )
                     if added is not None:
                         additional.append(added)
+        # Ignore printed displacement after resolving the save and conditions.
         moved = 0
-        if not succeeded and effect.failure_push_ft:
-            if setup is None or target_id is None or source_id is None:
-                raise ValueError("Failed-save forced movement requires encounter identities and setup.")
-            members = {item.combatant_id: item for item in [*setup.heroes, *setup.monsters]}
-            source_member = members.get(source_id)
-            target_member = members.get(target_id)
-            if source_member is None or target_member is None:
-                raise ValueError("Failed-save forced movement combatants are missing from encounter setup.")
-            moved = push_straight_away(
-                target_member, source_member, setup, effect.failure_push_ft,
-                round_number=round_number or 1,
-            )
         return OnHitConditionSaveResolution(
             save_roll, effect.save_ability, effect.dc, succeeded, applied, moved,
             tuple(additional),
