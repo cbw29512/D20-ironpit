@@ -54,6 +54,8 @@
           members,
           beforePosition,
           setup.persistent_barriers || [],
+          null,
+          Boolean(mover.state.template.sourceAllowsHostileOverlap),
         );
         if (stepCost == null || stepCost > mover.state.movement_remaining_ft) break;
         if (options.compelled) {
