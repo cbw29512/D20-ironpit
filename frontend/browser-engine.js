@@ -196,6 +196,14 @@
         if (triggered) { events.push(...triggered.events); sequence = triggered.sequence; }
         const legend = window.IRON_PIT_BROWSER_LEGENDARY_ACTIONS?.resolveAfterTurn(sequence, round, member, setup);
         if (legend) { events.push(...legend.events); sequence = legend.sequence; }
+        const regrowth = window.IRON_PIT_BROWSER_VARIABLE_HEADS?.endOwnerTurn(member.state);
+        if (regrowth?.grown) {
+          const rule = member.state.template.variableHeads;
+          events.push({ sequence: sequence++, round_number: round, event_type: "feature",
+            actor_id: member.combatant_id, actor_name: member.state.template.name,
+            feature_id: "variable-head-regrowth", animation: "heal",
+            description: `${member.state.template.name}: ${rule.sourceName} regrows ${regrowth.grown} heads and restores ${regrowth.healed} HP.` });
+        }
         window.IRON_PIT_BROWSER_TRIGGERED_EXTRA_ATTACKS?.clearTurnDamage(setup);
         window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.expireCurrentTurnTypeResistances(setup);
         sequence = drainDeathTriggers(events, sequence, round, setup);

@@ -152,7 +152,13 @@ def apply_damage(
         incoming = amount
         types = damage_types or set()
         note_incoming_damage_types(state, types)
-        note_turn_damage_and_trigger(state, incoming, types, damage_components)
+        lost_last_head = note_turn_damage_and_trigger(
+            state, incoming, types, damage_components,
+        )
+        if lost_last_head:
+            return _finish_damage(
+                state, _mark_dead(state), incoming, dice, affected_states,
+            )
         amount = _after_temporary_hp(state, amount)
         amount, _ = apply_replacement_form_damage(state, amount)
         if state.current_hp == 0:

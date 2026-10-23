@@ -67,13 +67,15 @@ def note_turn_damage_and_trigger(
     amount: int,
     damage_types: set,
     damage_components=None,
-) -> None:
-    """Record applied typed damage, then dispatch source-owned damage triggers."""
+) -> bool:
+    """Record typed damage; return whether a variable-head creature lost its last head."""
     try:
         before = dict(state.damage_taken_this_turn_by_type)
         note_turn_damage(state, amount, damage_types, damage_components)
         from app.combat.damage_taken_effects import apply_damage_taken_timed_effects
         apply_damage_taken_timed_effects(state, before)
+        from app.combat.variable_heads import note_variable_head_damage
+        return note_variable_head_damage(state, before)
     except Exception:
         logger.exception("Failed to dispatch typed-damage triggers for %s.", state.template.name)
         raise

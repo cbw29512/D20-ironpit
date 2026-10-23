@@ -28,9 +28,21 @@ def sequence_choices(attacker, setup, variant, mode):
         raise
 
 
+def _sequence_multiplier(attacker, variant, *, maximum: bool) -> float:
+    definition = attacker.state.template.attack_action
+    if definition and definition.repeat_count_from_variable_heads:
+        return int(attacker.state.current_heads or 0)
+    if variant.repetitions:
+        return (
+            variant.repetitions.dice_count * variant.repetitions.dice_size
+            if maximum else variant.repetitions.dice_count * (variant.repetitions.dice_size + 1) / 2
+        )
+    return 1
+
+
 def sequence_damage(attacker, setup, variant, mode) -> float:
     try:
-        multiplier = variant.repetitions.dice_count * (variant.repetitions.dice_size + 1) / 2 if variant.repetitions else 1
+        multiplier = _sequence_multiplier(attacker, variant, maximum=False)
         return multiplier * sum(weapon_mean_damage(chosen[1]) if chosen else save_mean_damage(saved[1]) if saved else 0
                    for chosen, saved in sequence_choices(attacker, setup, variant, mode))
     except Exception:
@@ -42,8 +54,7 @@ def sequence_resource_fundable(attacker, setup, variant, mode) -> bool:
     """A full printed sequence may not promise more shots than remain."""
     try:
         reservations = {}
-        multiplier = (variant.repetitions.dice_count * variant.repetitions.dice_size
-                      if variant.repetitions else 1)
+        multiplier = int(_sequence_multiplier(attacker, variant, maximum=True))
         for chosen, _ in sequence_choices(attacker, setup, variant, mode):
             if chosen is None:
                 continue
@@ -102,9 +113,12 @@ def attack_action_damage(attacker, setup) -> float:
         raise
 
 
-def expanded_sequence_slots(variant, dice):
+def expanded_sequence_slots(variant, dice, attacker_state=None):
     """Freeze a printed random count once, after Action spending, using shared dice."""
     try:
+        definition = attacker_state.template.attack_action if attacker_state is not None else None
+        if definition and definition.repeat_count_from_variable_heads:
+            return variant.slots * int(attacker_state.current_heads or 0), None
         if variant.repetitions is None:
             return variant.slots, None
         spec = variant.repetitions

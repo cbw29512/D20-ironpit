@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Literal
 
-from app.combat.action_economy import is_available
-from app.combat.condition_rules import BLINDED, has_condition
+from app.combat.condition_rules import BLINDED, has_condition, is_incapacitated
 from app.combat.policy import weapon_attack_profiles
+from app.combat.variable_heads import opportunity_reaction_available
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import WeaponAttack, WeaponAttackKind
 from app.domain.modifiers import ModifierKind
@@ -27,10 +27,10 @@ def _can_react(
 ) -> bool:
     return (
         reactor.side != mover.side and not disengaged and can_see
-        and not has_condition(reactor.state, BLINDED)
+        and not has_condition(reactor.state, BLINDED) and not is_incapacitated(reactor.state)
         and not opportunity_attacks_suppressed(reactor)
         and movement_source in _PROVOKING_SOURCES
-        and is_available(reactor.state, "reaction")
+        and opportunity_reaction_available(reactor.state)
     )
 
 

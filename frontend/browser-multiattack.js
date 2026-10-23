@@ -29,7 +29,7 @@
       const { mode, variant } = selected;
       const events = [];
       E().spend(member.state, "action");
-      const { slots, repetitionRoll } = MC.expandedSlots(variant);
+      const { slots, repetitionRoll } = MC.expandedSlots(variant, member);
       if (repetitionRoll) {
         events.push({ sequence: sequence++, round_number: round, event_type: "feature", actor_id: member.combatant_id,
           actor_name: member.state.template.name, feature_id: variant.id, feature_roll: repetitionRoll, animation: "feature",

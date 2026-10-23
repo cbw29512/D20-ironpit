@@ -1,6 +1,7 @@
 from __future__ import annotations
 from app.content.monster_visual_turn_start_2014 import visual_turn_start_rule_2014
 from app.content.monster_visual_disguise_2014 import visual_disguise_action_2014
+from app.content.monster_variable_heads_2014 import variable_head_profile_2014
 
 from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014, source_conditional_attack_advantage_2014
 from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
@@ -200,6 +201,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         legendary_actions=legendary_options,
         resources=resources, recharge_rules=recharge_rules_2014(monster),
         regeneration=regeneration_trait_2014(monster),
+        variable_heads=variable_head_profile_2014(monster),
         damage_taken_timed_effects=damage_taken_timed_effects_2014(monster),
         damage_threshold_zero_hp_replacements=damage_threshold_zero_hp_replacements_2014(monster),
         save_success_overrides=[legendary_override] if legendary_override else [],

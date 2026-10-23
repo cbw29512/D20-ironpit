@@ -1381,6 +1381,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 attack_slot_row(slot)
                 for slot in template.attack_action.slots
             ]}
+            if template.attack_action.repeat_count_from_variable_heads:
+                row["attack_action"]["repeatCountFromVariableHeads"] = True
         if template.attack_action and template.attack_action.variants:
             row["attack_action"]["variants"] = [
                 {"id": variant.id, "attackKind": _value(variant.attack_kind) if variant.attack_kind else None,
@@ -1389,6 +1391,16 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                  **({"repetitions": {"diceCount": variant.repetitions.dice_count, "diceSize": variant.repetitions.dice_size}} if variant.repetitions else {})}
                 for variant in template.attack_action.variants
             ]
+        if template.variable_heads is not None:
+            profile = template.variable_heads
+            row["variableHeads"] = {
+                "sourceName": profile.source_name, "reactionSourceName": profile.reaction_source_name,
+                "initialHeads": profile.initial_heads, "severDamageThreshold": profile.sever_damage_threshold,
+                "headsPerRegrowth": profile.heads_per_regrowth, "healingPerRegrownHead": profile.healing_per_regrown_head,
+                "regrowthBlockingDamageTypes": list(profile.regrowth_blocking_damage_types),
+                "multiattackPerHead": profile.multiattack_per_head,
+                "extraOpportunityReactionsPerHeadBeyondOne": profile.extra_opportunity_reactions_per_head_beyond_one,
+            }
         if template.regeneration is not None:
             row["regeneration"] = template.regeneration.model_dump(mode="json")
         if template.damage_threshold_zero_hp_replacements:

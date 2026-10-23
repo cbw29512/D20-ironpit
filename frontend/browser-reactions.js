@@ -30,7 +30,12 @@
     const canSee = options.canSee ?? Q().canSee(reactor.state, mover.state);
     if (reactor.side === mover.side || canSee === false || options.disengaged === true) return null;
     if (opportunityAttacksSuppressed(reactor.state)) return null;
-    if (Q()?.has(reactor.state, "blinded") || !PROVOKING.has(source) || !E().available(reactor.state, "reaction")) return null;
+    const variableHeads = window.IRON_PIT_BROWSER_VARIABLE_HEADS;
+    const reactionAvailable = variableHeads
+      ? variableHeads.opportunityReactionAvailable(reactor.state)
+      : E().available(reactor.state, "reaction");
+    if (Q()?.has(reactor.state, "blinded") || Q()?.incapacitated(reactor.state)
+      || reactor.state.is_dead || !PROVOKING.has(source) || !reactionAvailable) return null;
     const weapon = (reactor.state.template.attacks || []).find((attack) =>
       attack.kind === "melee" && before <= (attack.reach || 5) && after > (attack.reach || 5));
     if (weapon) return weapon;
@@ -72,7 +77,9 @@
   function resolveOpportunityAttack(sequence, round, reactor, mover, setup, before, after, movementSource, options = {}) {
     const attack = opportunityAttackWeapon(reactor, mover, before, after, movementSource, options);
     if (!attack) return null;
-    E().spend(reactor.state, "reaction");
+    const variableHeads = window.IRON_PIT_BROWSER_VARIABLE_HEADS;
+    if (variableHeads) variableHeads.spendOpportunityReaction(reactor.state);
+    else E().spend(reactor.state, "reaction");
     const pack = S().packTactics(reactor, mover, setup);
     const escapeHorde = mover.state.template.opportunity_attacks_against_disadvantage
       || mover.state.template.progression_features?.opportunity_attacks_against_disadvantage;

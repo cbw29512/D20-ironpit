@@ -58,12 +58,17 @@ class AttackActionDefinition(BaseModel):
     slots: list[AttackActionSlot] = Field(default_factory=list, max_length=8)
     variants: list[AttackActionVariant] = Field(default_factory=list, max_length=16)
     is_attack_action: bool = False
+    repeat_count_from_variable_heads: bool = False
 
     @model_validator(mode="after")
     def validate_sequences(self) -> "AttackActionDefinition":
         try:
             if bool(self.slots) == bool(self.variants):
                 raise ValueError("Attack action requires either slots or complete variants.")
+            if self.repeat_count_from_variable_heads and (
+                self.variants or len(self.slots) != 1
+            ):
+                raise ValueError("Variable-head repetition requires exactly one fixed slot.")
             if len({v.id for v in self.variants}) != len(self.variants):
                 raise ValueError("Attack-action variant IDs must be unique.")
             for variant in self.variants:

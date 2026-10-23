@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from app.combat.action_economy import spend
 from app.combat.ally_context import pack_tactics_active
 from app.combat.condition_rules import can_see as can_see_target
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.opportunity_attack_rules import MovementSource, opportunity_attack_weapon, unarmed_opportunity_available
+from app.combat.variable_heads import spend_opportunity_reaction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DamageType, Weapon, WeaponAttack, WeaponAttackKind
 
@@ -45,7 +45,7 @@ def resolve_opportunity_attack(
         attack = _unarmed_damage_attack(reactor)
     if attack is None:
         return None
-    spend(reactor.state, "reaction")
+    spend_opportunity_reaction(reactor.state)
     pack = pack_tactics_active(reactor, mover, setup)
     escape_horde = mover.state.template.progression_features.opportunity_attacks_against_disadvantage
     return resolve_encounter_attack(
