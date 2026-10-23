@@ -59,8 +59,9 @@ def semantic_variable_head_sections_2014(
     traits = {name: _plain(body) for name, body in source_sections_2014(monster.source_traits).items()}
     reaction_sections = traits
     all_traits = " ".join(traits.values())
+    all_source = " ".join((all_traits, _plain(monster.source_actions), _plain(monster.source_reactions)))
     lifecycle = next(
-        ((name, all_traits) for name, body in traits.items()
+        ((name, all_source) for name, body in traits.items()
          if _HAS_HEADS.search(body) and _SEVER.search(body)),
         None,
     )
@@ -79,16 +80,16 @@ def semantic_variable_head_sections_2014(
     if not any_signal:
         return None
     complete_lifecycle = all((
-        _HAS_HEADS.search(all_traits), _SEVER.search(all_traits),
-        _REGROW.search(all_traits), _BLOCK.search(all_traits), _HEAL.search(all_traits),
+        _HAS_HEADS.search(all_source), _SEVER.search(all_source),
+        _REGROW.search(all_source), _BLOCK.search(all_source), _HEAL.search(all_source),
     ))
     if lifecycle is None or reaction is None or not complete_lifecycle:
         found = {
-            "initial": bool(_HAS_HEADS.search(all_traits)),
-            "sever": bool(_SEVER.search(all_traits)),
-            "regrow": bool(_REGROW.search(all_traits)),
-            "block": bool(_BLOCK.search(all_traits)),
-            "heal": bool(_HEAL.search(all_traits)),
+            "initial": bool(_HAS_HEADS.search(all_source)),
+            "sever": bool(_SEVER.search(all_source)),
+            "regrow": bool(_REGROW.search(all_source)),
+            "block": bool(_BLOCK.search(all_source)),
+            "heal": bool(_HEAL.search(all_source)),
             "reaction": reaction is not None,
         }
         raise ValueError(f"Printed variable-head card has incomplete semantic clauses: {found}")
