@@ -75,7 +75,9 @@ def test_incomplete_printed_lifecycle_fails_closed():
 
 def test_existing_matching_source_effect_blocks_other_source_until_song_ends():
     harpy_template = compile_combatant(adapt_basic_monster_2014(_source()))
-    target_template = build_aurelia_brightshield_2014(1).model_copy(\n        update={"max_hp": 60, "creature_type": "humanoid"}\n    )
+    target_template = build_aurelia_brightshield_2014(1).model_copy(
+        update={"max_hp": 60, "creature_type": "humanoid"}
+    )
     first = _member("first-harpy", "monsters", 0, harpy_template)
     second = _member("second-harpy", "monsters", 5, harpy_template)
     target = _member("target", "heroes", 10, target_template)
