@@ -250,9 +250,12 @@
     try {
       const library = window.IRON_PIT_CUSTOM_LIBRARY;
       if (!library) throw new Error("Custom library is unavailable.");
-      library.save(draft);
+      const saved = library.save(draft);
+      const playable = saved.kind === "monster" ? window.IRON_PIT_CUSTOM_MONSTER_RUNTIME?.decorate(saved) : null;
       status.dataset.error = "false";
-      status.textContent = draft.name + " saved to Custom " + (draft.kind === "monster" ? "Monsters" : "Pregens") + ". This draft is not combat-certified yet.";
+      status.textContent = playable?.coverage_status === "custom_ready"
+        ? saved.name + " saved to Custom Monsters and ready for homebrew browser fights (not RAW-certified)."
+        : saved.name + " saved as a Custom draft. " + (playable?.compile_error || "Pregens require RAW progression before they can fight.");
     } catch (error) {
       status.dataset.error = "true";
       status.textContent = error.message;
