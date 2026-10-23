@@ -4,7 +4,6 @@
   const FEATURE = "brutal-strike", PENDING = "brutal-strike-pending", HIT = "brutal-strike-hit", EFFECT = "brutal-strike-effect";
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
-  const F = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
   const R = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT;
 
   function eligible(state, attack, turnKey, hasDisadvantage = false) {
@@ -48,10 +47,13 @@
   }
 
   function forceful(attacker, defender, setup) {
-    return F().pushStraightAway(defender, attacker, setup, 15);
+    // Forceful Blow retains its damage but never displaces a target in Iron Pit.
+    return 0;
   }
 
   function followForceful(sequence, round, attacker, defender, setup, options = {}) {
+    // With displacement suppressed there is no pushed target to follow.
+    return null;
     const allowance = Math.floor(M().effectiveSpeed(attacker.state) / 2);
     const normalRemaining = attacker.state.movement_remaining_ft;
     attacker.state.movement_remaining_ft = allowance;
