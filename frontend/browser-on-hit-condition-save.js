@@ -87,13 +87,8 @@
         }
       }
     }
-    let forcedMovementFt = 0;
-    if (!save.succeeded && (effect.failurePushFt || 0) > 0) {
-      if (!setup || !attacker) throw new Error("Failed-save forced movement requires encounter setup and attacker.");
-      forcedMovementFt = window.IRON_PIT_BROWSER_FORCED_MOVEMENT.pushStraightAway(
-        target, attacker, setup, effect.failurePushFt,
-      );
-    }
+    // Retain the printed push on the attack card, but never relocate in Iron Pit.
+    const forcedMovementFt = 0;
     return {
       saveRoll: save.roll, saveAbility: effect.saveAbility, saveDc: effect.dc,
       saveSucceeded: save.succeeded, appliedCondition, additionalConditions, forcedMovementFt,
