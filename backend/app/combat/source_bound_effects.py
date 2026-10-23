@@ -132,4 +132,4 @@ def cleanup_disabled_source_effects(setup: EncounterSetup) -> None:
             incapacitated = is_incapacitated(source.state)
             if (effect.ends_if_source_dead and dead) or (effect.ends_if_source_incapacitated and incapacitated):
                 handled.add(key)
-                remove_effect_group(target.state, effect)
+                remove_effect_group(target.state, effect, grant_source_immunity=False)
