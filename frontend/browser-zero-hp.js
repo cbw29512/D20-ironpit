@@ -157,6 +157,11 @@
     const damageEffects = state.template.damage_taken_timed_effects || [];
     if (damageEffects.length && !window.IRON_PIT_BROWSER_DAMAGE_TAKEN_EFFECTS) throw new Error("Declared damage-triggered timed effects require browser-damage-taken-effects.js.");
     window.IRON_PIT_BROWSER_DAMAGE_TAKEN_EFFECTS?.apply(state, damageBefore);
+    const lostLastHead = window.IRON_PIT_BROWSER_VARIABLE_HEADS?.noteDamage(state, damageBefore) || false;
+    if (lostLastHead) {
+      markDead(state);
+      return finish(state, state.is_dead ? "dead" : "unconscious", incoming, affectedStates, setup);
+    }
     const absorbed = Math.min(state.temporary_hp, amount);
     state.temporary_hp -= absorbed;
     amount -= absorbed;

@@ -11,6 +11,7 @@ from app.combat.timed_conditions import resolve_movement_countered_conditions
 from app.combat.timed_effect_control import suppresses_action, suppresses_bonus_action, suppresses_movement, suppresses_reactions
 from app.combat.opening_modifiers import opening_modifiers
 from app.combat.survivor import apply_survivor_start_turn_heal
+from app.combat.variable_heads import initialize_variable_heads, refresh_opportunity_reactions
 from app.domain.models import CombatantState, CombatantTemplate, ResourceState
 from app.domain.traits import CombatTrait
 
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 def build_combatant_state(template: CombatantTemplate) -> CombatantState:
     try:
-        return CombatantState(
+        state = CombatantState(
             template=template,
             current_hp=template.max_hp,
             movement_remaining_ft=0,
@@ -32,6 +33,8 @@ def build_combatant_state(template: CombatantTemplate) -> CombatantState:
             active_buff_effect_ids=(["death-trigger"] if template.death_trigger_effect_ids else []),
             active_modifiers=opening_modifiers(template),
         )
+        initialize_variable_heads(state)
+        return state
     except Exception as exc:
         logger.exception("Failed to build runtime state for %s.", template.name)
         raise RuntimeError("Combatant state could not be created.") from exc
@@ -60,6 +63,7 @@ def refresh_reactions_for_new_turn(
 def refresh_start_of_turn(state: CombatantState) -> None:
     try:
         refresh_reaction(state)
+        refresh_opportunity_reactions(state)
         for resource_id in state.template.progression_features.start_turn_resource_refill_ids:
             resource = next((item for item in state.resources if item.id == resource_id), None)
             if resource is None:

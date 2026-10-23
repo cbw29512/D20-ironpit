@@ -7,6 +7,7 @@ from app.content.monster_multiattack_variants_2014 import source_variants_2014
 from app.content.monster_attack_ammunition_2014 import attack_ammunition_2014, ammunition_multiattack_variants_2014
 from app.content.monster_save_capabilities_2014 import supports_save_action_2014
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_variable_heads_2014 import variable_head_profile_2014
 from app.domain.capability_attacks import CapabilityActionSlot, MultiattackCapabilityDefinition
 
 logger = logging.getLogger(__name__)
@@ -71,6 +72,14 @@ def multiattack_2014(monster: SourceMonster2014) -> MultiattackCapabilityDefinit
             raise ValueError(f"Unsupported Multiattack for {monster.id}: {blockers}")
         bound_slots = source_bound_slots_2014(monster)
         if bound_slots:
+            profile = variable_head_profile_2014(monster)
+            if profile and profile.multiattack_per_head:
+                if any(slot != bound_slots[0] for slot in bound_slots):
+                    raise ValueError("Variable-head Multiattack must declare identical initial slots.")
+                return MultiattackCapabilityDefinition(
+                    id=f"2014-{monster.id}-multiattack", slots=[bound_slots[0]],
+                    is_attack_action=False, repeat_count_from_variable_heads=True,
+                )
             return MultiattackCapabilityDefinition(
                 id=f"2014-{monster.id}-multiattack", slots=bound_slots,
                 is_attack_action=False,

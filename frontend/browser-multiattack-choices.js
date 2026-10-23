@@ -12,6 +12,7 @@
       if (!definition) return [];
       if (Boolean(definition.slots?.length) === Boolean(definition.variants?.length)) throw new Error("Multiattack requires slots or variants.");
       const variants = definition.variants?.length ? definition.variants : [{ id: definition.id, slots: definition.slots }];
+      if (definition.repeatCountFromVariableHeads && (definition.variants?.length || definition.slots?.length !== 1)) throw new Error("Variable-head repetition requires exactly one fixed slot.");
       if (!Array.isArray(variants) || variants.length > 16 || new Set(variants.map((v) => v.id)).size !== variants.length) throw new Error("Invalid Multiattack variants.");
       for (const variant of variants) {
         if (definition.variants?.length && typeof variant.id !== "string") throw new Error("Invalid Multiattack variant ID.");
@@ -110,9 +111,14 @@
       });
     } catch (error) { console.error("Failed conditional sequence preview", { id: member?.combatant_id, error }); throw error; }
   }
+  function sequenceMultiplier(member, variant, maximum) {
+    if (member.state.template.attack_action?.repeatCountFromVariableHeads) return member.state.current_heads || 0;
+    if (!variant.repetitions) return 1;
+    return variant.repetitions.diceCount * (maximum ? variant.repetitions.diceSize : (variant.repetitions.diceSize + 1) / 2);
+  }
   function sequenceDamage(member, setup, variant, mode) {
     try {
-      const multiplier = variant.repetitions ? variant.repetitions.diceCount * (variant.repetitions.diceSize + 1) / 2 : 1;
+      const multiplier = sequenceMultiplier(member, variant, false);
       return multiplier * sequenceChoices(member, setup, variant, mode).reduce((total, { choice, saved }) => {
         if (choice) return total + F().weaponMeanDamage(choice.attack);
         const parts = saved?.save.damageComponents?.length ? saved.save.damageComponents : saved ? [saved.save] : [];
@@ -124,8 +130,7 @@
   function sequenceResourceFundable(member, setup, variant, mode) {
     try {
       const reservations = {};
-      const repetitions = variant.repetitions
-        ? variant.repetitions.diceCount * variant.repetitions.diceSize : 1;
+      const repetitions = sequenceMultiplier(member, variant, true);
       for (const { choice } of sequenceChoices(member, setup, variant, mode)) {
         if (!choice?.attack.resourceId) continue;
         const id = choice.attack.resourceId;
@@ -152,8 +157,9 @@
     } catch (error) { console.error("Failed complete Multiattack selection", { id: member?.combatant_id, error }); throw error; }
   }
 
-  function expandedSlots(variant) {
+  function expandedSlots(variant, member) {
     try {
+      if (member?.state?.template?.attack_action?.repeatCountFromVariableHeads) return { slots: Array.from({ length: member.state.current_heads || 0 }, () => variant.slots).flat(), repetitionRoll: null };
       const r = variant.repetitions;
       if (!r) return { slots: variant.slots, repetitionRoll: null };
       const rolls = window.IRON_PIT_DICE.rollMany(r.diceCount, r.diceSize), total = rolls.reduce((sum, roll) => sum + roll, 0);

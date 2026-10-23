@@ -34,6 +34,7 @@ from app.combat.suppression_zone_effects import expire_suppression_zones, sync_s
 from app.combat.legendary_actions import resolve_legendary_actions_after_turn
 from app.combat.triggered_extra_attacks import resolve_triggered_extra_attacks_after_turn
 from app.combat.turn_damage import clear_turn_damage
+from app.combat.variable_heads import end_owner_turn
 from app.combat.timed_emanations import resolve_target_turn_start_emanations
 from app.combat.turn_start_save_condition_reaction import resolve_turn_start_save_condition_reactions
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
@@ -100,6 +101,17 @@ def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
         sequence, round_number, member, setup, dice,
     )
     events.extend(legendary)
+    grown, healed = end_owner_turn(member.state)
+    if grown:
+        profile = member.state.template.variable_heads
+        events.append(BattleEvent(
+            sequence=sequence, round_number=round_number, event_type="feature",
+            actor_id=member.combatant_id, actor_name=member.state.template.name,
+            feature_id="variable-head-regrowth", animation="heal",
+            description=(f"{member.state.template.name}: {profile.source_name} regrows "
+                         f"{grown} heads and restores {healed} HP."),
+        ))
+        sequence += 1
     clear_turn_damage(setup)
     return events, sequence
 

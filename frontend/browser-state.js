@@ -17,7 +17,7 @@
   const rawMax = (state) => state.template.max_hp + (state.max_hp_bonus || 0) - (state.hit_point_maximum_reduction || 0);
   const effectiveMaxHp = (state) => Math.max(1, X()?.effectiveMaxHp(state, rawMax(state)) ?? rawMax(state));
   function buildState(template) {
-    return {
+    const state = {
       template, current_hp: template.max_hp, max_hp_bonus: 0, temporary_hp: 0, position: null,
       initiative_roll: null, initiative_total: null, is_surprised: false, true_form_visible: true, magical_visual_disguise_active: false, recognized_visual_disguise_source_ids: [], is_alive: true,
       is_unconscious: false, is_stable: false, is_dead: false, exhaustion_level: 0,
@@ -35,7 +35,11 @@
       hit_point_maximum_reduction: 0, ability_score_reductions: {}, active_curses: [],
       damage_share_source_id: null, damage_share_range_ft: 0, damage_share_effect_id: null, emanation_triggers_this_turn: {},
       rage_expires_round: null, rage_max_round: null,
+      current_heads: null, heads_lost_since_owner_turn: 0, head_regrowth_blocked: false,
+      opportunity_reactions_remaining: 0,
     };
+    window.IRON_PIT_BROWSER_VARIABLE_HEADS?.initialize(state);
+    return state;
   }
   function grantTemporaryHp(state, amount) {
     if (amount < 0) throw new Error("Temporary HP cannot be negative.");
@@ -53,6 +57,7 @@
   }
   function refreshStartOfTurn(state) {
     refreshReaction(state);
+    window.IRON_PIT_BROWSER_VARIABLE_HEADS?.refreshOpportunityReactions(state);
     for (const resourceId of state.template.start_turn_resource_refill_ids || []) {
       if (!Object.prototype.hasOwnProperty.call(state.resources || {}, resourceId)) {
         throw new Error(`Start-turn refill references missing resource ${resourceId}.`);

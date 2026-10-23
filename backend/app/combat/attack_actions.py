@@ -42,7 +42,7 @@ def resolve_attack_action(
 
         spend(attacker.state, "action")
         variant, mode = selected
-        slots, repetition_roll = expanded_sequence_slots(variant, dice)
+        slots, repetition_roll = expanded_sequence_slots(variant, dice, attacker.state)
         events: list[BattleEvent] = []
         if repetition_roll is not None:
             events.append(BattleEvent(sequence=sequence, round_number=round_number, event_type="feature",

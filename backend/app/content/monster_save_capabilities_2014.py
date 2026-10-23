@@ -118,7 +118,7 @@ def unsupported_source_actions_2014(
         allowed.update(item.name.casefold() for item in source_proven_visual_saves_2014(monster))
         allowed.update(item.name.casefold() for item in source_proven_conditioned_saves_2014(monster))
         allowed.update(item.name.casefold() for item in source_proven_opening_area_saves_2014(monster))
-        if monster.multiattack_slots:
+        if monster.multiattack_slots or monster.multiattack_policy is not None or monster.multiattack_binding is not None:
             allowed.add("multiattack")
         if recharge_supported is None:
             recharge_supported = supports_recharge_rules_2014(monster)
