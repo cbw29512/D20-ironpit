@@ -163,6 +163,7 @@ class SavingThrowAction(BaseModel):
     failed_save_push_ft: int = Field(default=0, ge=0)
     area_healing_rider: AreaHealingRider | None = None
     required_target_creature_types: list[str] = Field(default_factory=list)
+    prohibited_target_source_effect_ids: list[str] = Field(default_factory=list)
     excluded_target_creature_types: list[str] = Field(default_factory=list)
     minimum_remaining_hp: int = Field(default=0, ge=0)
     reduce_hit_point_maximum_on_failed_save: bool = False
@@ -179,6 +180,13 @@ class SavingThrowAction(BaseModel):
             raise ValueError("Success-only damage requires printed typed damage.")
         if self.failure_sets_zero_hp and has_damage and not self.damage_only_on_success:
             raise ValueError("Direct zero-HP failure cannot also apply normal failure damage.")
+        target_filters = [
+            *self.required_target_creature_types,
+            *self.prohibited_target_source_effect_ids,
+            *self.excluded_target_creature_types,
+        ]
+        if any(not item.strip() for item in target_filters):
+            raise ValueError("Save target filters must be nonblank.")
         return self
 
 

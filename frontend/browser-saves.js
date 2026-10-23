@@ -43,6 +43,9 @@
   }
   function legalAction(action, target, distance, sourceId, actor = null) {
     if (action.requiredTargetCondition && !Q().has(target.state, action.requiredTargetCondition)) return false;
+    if ((action.prohibitedTargetSourceEffectIds || []).length && (target.state.timed_effects || []).some(
+      (effect) => action.prohibitedTargetSourceEffectIds.includes(effect.source_effect_id),
+    )) return false;
     if (actor && action.requiresTargetSight && !Q().canSee(actor.state, target.state, distance)) return false;
     if (action.requiresTargetToSeeSource && (!actor || !Q().canSee(target.state, actor.state, S().distance(actor, target)))) return false;
     if (distance > action.range) return false;

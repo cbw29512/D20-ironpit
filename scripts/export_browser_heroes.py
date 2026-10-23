@@ -135,6 +135,12 @@ def _save(action: Any) -> dict[str, Any]:
         row["failedSaveTimedEffect"]["sourceEffectImmunityOnEnd"] = True
     if action.source_effect_immunity_on_success:
         row["sourceEffectImmunityOnSuccess"] = True
+    if action.required_target_creature_types:
+        row["requiredTargetCreatureTypes"] = list(action.required_target_creature_types)
+    if action.prohibited_target_source_effect_ids:
+        row["prohibitedTargetSourceEffectIds"] = list(action.prohibited_target_source_effect_ids)
+    if action.excluded_target_creature_types:
+        row["excludedTargetCreatureTypes"] = list(action.excluded_target_creature_types)
     return row
 
 
