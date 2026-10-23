@@ -29,8 +29,7 @@ _HEAL = re.compile(
     re.IGNORECASE,
 )
 _EXTRA_REACTION = re.compile(
-    r"for each head .+? beyond one, it gets an extra reaction that can be used "
-    r"only for opportunity attacks", re.IGNORECASE,
+    r"extra reaction.+?only for opportunity attacks", re.IGNORECASE,
 )
 _HEAD_MULTIATTACK = re.compile(
     r"makes as many (?P<attack>[A-Za-z][A-Za-z -]*?) attacks as it has heads",
@@ -53,10 +52,10 @@ def semantic_variable_head_sections_2014(
     """Locate the lifecycle and OA clauses by meaning, never card identity/name."""
     traits = source_sections_2014(monster.source_traits)
     reaction_sections = traits
+    all_traits = " ".join(traits.values())
     lifecycle = next(
-        ((name, body) for name, body in traits.items()
-         if _HAS_HEADS.search(body) and _SEVER.search(body)
-         and _REGROW.search(body) and _BLOCK.search(body) and _HEAL.search(body)),
+        ((name, all_traits) for name, body in traits.items()
+         if _HAS_HEADS.search(body) and _SEVER.search(body)),
         None,
     )
     reaction = next(
@@ -73,7 +72,11 @@ def semantic_variable_head_sections_2014(
     )
     if not any_signal:
         return None
-    if lifecycle is None or reaction is None:
+    complete_lifecycle = all((
+        _HAS_HEADS.search(all_traits), _SEVER.search(all_traits),
+        _REGROW.search(all_traits), _BLOCK.search(all_traits), _HEAL.search(all_traits),
+    ))
+    if lifecycle is None or reaction is None or not complete_lifecycle:
         raise ValueError("Printed variable-head card is missing a complete lifecycle or OA clause.")
     if _HEAD_MULTIATTACK.search(monster.source_actions or "") is None:
         raise ValueError("Printed variable-head card lacks a head-count Multiattack clause.")
