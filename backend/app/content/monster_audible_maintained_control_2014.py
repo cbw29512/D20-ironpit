@@ -41,20 +41,28 @@ def _normalized(text: str) -> str:
     return " ".join(text.replace("’", "'").casefold().split())
 
 
+def semantic_audible_control_candidate_names_2014(
+    monster: SourceMonster2014,
+) -> tuple[str, ...]:
+    """Find printed audible area control Actions before compatibility checks."""
+    try:
+        return tuple(
+            name for name, body in source_sections_2014(monster.source_actions).items()
+            if _OPENING.search(_normalized(body))
+        )
+    except Exception:
+        logger.exception("Failed to classify audible control for %s.", monster.id)
+        raise
+
+
 def semantic_audible_maintained_control_names_2014(
     monster: SourceMonster2014,
 ) -> tuple[str, ...]:
-    """Find complete maintained audible control Actions by printed semantics."""
-    try:
-        names = []
-        for name, body in source_sections_2014(monster.source_actions).items():
-            text = _normalized(body)
-            if _OPENING.search(text) and all(clause in text for clause in _REQUIRED_CLAUSES):
-                names.append(name)
-        return tuple(names)
-    except Exception:
-        logger.exception("Failed to classify maintained audible control for %s.", monster.id)
-        raise
+    sections = source_sections_2014(monster.source_actions)
+    return tuple(
+        name for name in semantic_audible_control_candidate_names_2014(monster)
+        if all(clause in _normalized(sections[name]) for clause in _REQUIRED_CLAUSES)
+    )
 
 
 def _compile(name: str, body: str) -> SaveCapabilityDefinition | None:
@@ -112,8 +120,8 @@ def source_proven_audible_maintained_controls_2014(
 
 
 def supports_audible_maintained_controls_2014(monster: SourceMonster2014) -> bool:
-    names = semantic_audible_maintained_control_names_2014(monster)
-    if not names:
+    candidates = semantic_audible_control_candidate_names_2014(monster)
+    if not candidates:
         return True
     actions = source_proven_audible_maintained_controls_2014(monster)
-    return len(actions) == len(names) and len({action.id for action in actions}) == len(actions)
+    return len(actions) == len(candidates) and len({action.id for action in actions}) == len(actions)
