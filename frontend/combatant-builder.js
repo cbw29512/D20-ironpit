@@ -103,6 +103,12 @@
         });
       }
     }
+    if (kind === "monster") {
+      const cr = String(values.challenge_rating || "0").trim();
+      if (!["0","1/8","1/4","1/2",...Array.from({length:30},(_,i)=>String(i+1))].includes(cr))
+        throw new Error("Choose a valid monster Challenge Rating.");
+      base.challenge_rating = cr;
+    }
     if (values.creature_type && String(values.creature_type).trim()) base.creature_type = String(values.creature_type).trim();
     if (kind === "character") {
       const classes = ["artificer","barbarian","bard","cleric","druid","fighter","monk","paladin","ranger","rogue","sorcerer","warlock","wizard"];
@@ -131,6 +137,8 @@
   const changeMode = () => {
     const character = kind.value === "character";
     scores.hidden = !character;
+    const monsterCr = document.getElementById("monster-cr-label");
+    if (monsterCr) { monsterCr.hidden = character; monsterCr.querySelector("select").disabled = character; }
     level.hidden = !character;
     document.getElementById("archetype-label").firstChild.textContent = character ? "Class / archetype" : "Type / archetype";
     const monsterArchetype = document.getElementById("monster-archetype");
