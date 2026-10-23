@@ -11,7 +11,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Blocker | Monsters |
 |---|---:|
 | `source:trait` | 65 |
-| `source:extra-action` | 53 |
+| `source:extra-action` | 51 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 21 |
 | `mechanic:recharge` | 10 |
@@ -31,7 +31,7 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**6** monsters have exactly one remaining blocker category.
+**7** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
@@ -39,6 +39,7 @@ the underlying ability is already implemented or trivial.
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
 | `attack:none` | Sea Horse | 1 |
+| `source:trait` | Hydra | 1 |
 
 ## Every blocked monster
 
@@ -78,14 +79,14 @@ the underlying ability is already implemented or trivial.
 | Giant Frog | mechanic:swallow, source:extra-action | — |
 | Giant Spider | attack:complex, attack:damage-type, mechanic:recharge | — |
 | Giant Toad | mechanic:swallow, source:extra-action | — |
-| Gibbering Mouther | multiattack:complex, source:extra-action, source:trait | Aberrant Ground, Gibbering |
+| Gibbering Mouther | multiattack:complex, source:trait | Aberrant Ground, Gibbering |
 | Glabrezu | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Gray Ooze | attack:incomplete, source:trait | Corrode Metal |
 | Green Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Guardian Naga | mechanic:spellcasting, source:extra-action, source:trait | Spellcasting |
 | Gynosphinx | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Harpy | source:extra-action | — |
-| Hydra | source:extra-action, source:trait | Multiple Heads, Reactive Heads |
+| Hydra | source:trait | Multiple Heads, Reactive Heads |
 | Ice Devil | mechanic:recharge, source:extra-action | — |
 | Ice Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Imp | source:extra-action, source:trait | Shapechanger |

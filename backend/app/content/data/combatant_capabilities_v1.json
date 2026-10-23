@@ -980,7 +980,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -2819,7 +2820,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -3036,7 +3038,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -4809,7 +4812,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -5760,7 +5764,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [
@@ -6059,7 +6064,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -8524,7 +8530,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -11106,7 +11113,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -11282,7 +11290,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -11494,7 +11503,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -12438,7 +12448,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -12653,7 +12664,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -12841,7 +12853,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -13404,7 +13417,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -14099,7 +14113,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -14282,7 +14297,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -14471,7 +14487,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -14863,7 +14880,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -15043,7 +15061,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [
       {
@@ -15297,7 +15316,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -15475,7 +15495,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -15864,7 +15885,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -16544,7 +16566,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -16957,7 +16980,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -17133,7 +17157,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -17356,7 +17381,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -17893,7 +17919,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -19138,7 +19165,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -19729,7 +19757,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -19952,7 +19981,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -20306,7 +20336,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -20963,7 +20994,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -21350,7 +21382,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [
       {
@@ -21590,7 +21623,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [
       {
@@ -21829,7 +21863,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [
       {
@@ -22066,7 +22101,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [
       {
@@ -22306,7 +22342,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [
       {
@@ -22542,7 +22579,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [
       {
@@ -22787,7 +22825,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [
       {
@@ -23033,7 +23072,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [
       {
@@ -23277,7 +23317,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [
       {
@@ -23524,7 +23565,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [
       {
@@ -23767,7 +23809,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [
       {
@@ -24751,7 +24794,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -24991,7 +25035,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
@@ -25366,7 +25411,8 @@
         }
       ],
       "variants": [],
-      "is_attack_action": false
+      "is_attack_action": false,
+      "repeat_count_from_variable_heads": false
     },
     "save_actions": [],
     "spell_save_actions": [],
