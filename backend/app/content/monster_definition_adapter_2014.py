@@ -2,6 +2,7 @@ from __future__ import annotations
 from app.content.monster_visual_turn_start_2014 import visual_turn_start_rule_2014
 from app.content.monster_visual_disguise_2014 import visual_disguise_action_2014
 from app.content.monster_variable_heads_2014 import variable_head_profile_2014
+from app.content.monster_fluid_form_passage_2014 import source_proven_fluid_form_passage_2014
 
 from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014, source_conditional_attack_advantage_2014
 from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
@@ -213,7 +214,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         saving_throw_bonuses=dict(core.saving_throw_bonuses),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
         innate_condition_ids=list(core.innate_condition_ids),
-        source_allows_hostile_overlap=bool({'Air Form', 'Water Form'} & set(monster.trait_names)),
+        source_allows_hostile_overlap=bool(source_proven_fluid_form_passage_2014(monster)),
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
         source_turn_relation_damages=source_turn_grappler_damage_2014(monster),
         source_legendary_action_names=list(monster.legendary_action_names),
