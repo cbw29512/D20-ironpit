@@ -161,6 +161,13 @@ class SaveCapabilityDefinition(BaseModel):
             raise ValueError("Success-only save damage requires typed damage dice.")
         if self.failure_sets_zero_hp and self.damage is not None and not self.damage_only_on_success:
             raise ValueError("Zero-HP failure cannot coexist with ordinary failed-save damage.")
+        target_filters = [
+            *self.required_target_creature_types,
+            *self.prohibited_target_source_effect_ids,
+            *self.excluded_target_creature_types,
+        ]
+        if any(not item.strip() for item in target_filters):
+            raise ValueError("Save target filters must be nonblank.")
         if self.grapple and self.grapple.max_target_size and self.target_max_size:
             if self.grapple.max_target_size != self.target_max_size:
                 raise ValueError("Save target size and grapple target size cannot disagree.")
