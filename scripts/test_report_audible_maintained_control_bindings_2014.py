@@ -11,3 +11,5 @@ def test_audible_maintained_control_inventory_covers_pinned_corpus():
     assert data["applicable_cards"] == ["harpy"]
     assert data["wired_python_card_count"] == 1
     assert data["remaining_card_count"] == 0
+    assert data["exceptions"] == []
+    assert data["status"] == "complete"
