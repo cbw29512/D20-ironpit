@@ -83,10 +83,12 @@
     const attacks=draft.attacks.map(attackRow);
     if (new Set(attacks.map(a=>a.id)).size !== attacks.length || !attacks.some(a=>a.id===draft.primary_attack_id))
       fail("duplicate attack IDs or missing primary attack.");
+    const cr=String(draft.challenge_rating || "0");
+    if (!["0","1/8","1/4","1/2",...Array.from({length:30},(_,i)=>String(i+1))].includes(cr)) fail("invalid Challenge Rating.");
     const runtimeId="custom-"+draft.ruleset+"-"+draft.id;
     return {id:runtimeId,name:draft.name,archetype:draft.archetype,
       kind:"monster",ruleset:draft.ruleset,size:draft.size,
-      creature_type:draft.creature_type||null,challenge_rating:draft.challenge_rating||"0",
+      creature_type:draft.creature_type||null,challenge_rating:cr,
       armor_class:draft.armor_class,max_hp:draft.max_hp,speed_ft:draft.speed_ft,
       initiative_bonus:draft.initiative_bonus,visual:structuredClone(draft.visual),
       movement_modes:{walk_ft:draft.speed_ft,fly_ft:0,climb_ft:0,swim_ft:0,burrow_ft:0,hover:false},
