@@ -103,6 +103,7 @@ def test_bronze_wyrmling_repulsion_uses_universal_forced_movement() -> None:
 
     assert event.save_succeeded is False
     assert action.failed_save_push_ft == 30
-    assert target.state.position == GridPosition(x=8, y=0)
-    assert "pushed 30 feet away" in event.description
+    assert target.state.position == GridPosition(x=2, y=0)
+    assert "ignores the printed 30-foot forced displacement" in event.description
+    assert "remains in place" in event.description
     assert next(item for item in dragon.state.resources if item.id == "breath-weapons").current_uses == 0
