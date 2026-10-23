@@ -186,11 +186,15 @@ require("./browser-initiative-natural-one.test.cjs");
 {
   const custom = structuredClone(window.IRON_PIT_BROWSER_MONSTERS["srd-goblin-warrior"]);
   custom.id = "synthetic-unlisted-monster";
+  custom.armor_class = 0; // Supported for explicitly custom test-dummy monsters.
   const hero = Object.values(window.IRON_PIT_BROWSER_HEROES).find(row => row.ruleset === "2024");
   const selection = {ruleset:"2024",hero_ids:[hero.id],monster_ids:[custom.id],compiled_monsters:{[custom.id]:custom}};
   const result = window.IRON_PIT_BROWSER_ENGINE.runEncounter(selection);
   assert.ok(result.events.length);
+  assert.equal(result.setup.monsters[0].state.template.armor_class,0);
   assert.equal(Object.hasOwn(window.IRON_PIT_BROWSER_MONSTERS,custom.id),false);
+  const invalid = structuredClone(custom);invalid.armor_class = -1;
+  assert.throws(()=>window.IRON_PIT_BROWSER_ENGINE.runEncounter({...selection,compiled_monsters:{[invalid.id]:invalid}}),/Invalid or colliding compiled monster/);
 }
 
 {
