@@ -1,0 +1,40 @@
+{
+  "applicable_card_count": 4,
+  "exceptions": [
+    {
+      "blockers": [
+        "arena:neutral"
+      ],
+      "monster_id": "frog",
+      "monster_name": "Frog"
+    },
+    {
+      "blockers": [
+        "attack:none",
+        "source:extra-action",
+        "source:trait"
+      ],
+      "monster_id": "rug-of-smothering",
+      "monster_name": "Rug of Smothering"
+    },
+    {
+      "blockers": [
+        "attack:none",
+        "source:reaction"
+      ],
+      "monster_id": "shrieker",
+      "monster_name": "Shrieker"
+    }
+  ],
+  "mechanic": "non-offensive-dodge-fallback",
+  "remaining_card_count": 3,
+  "schema_version": 1,
+  "source_card_count": 327,
+  "wired": [
+    {
+      "monster_id": "sea-horse",
+      "monster_name": "Sea Horse"
+    }
+  ],
+  "wired_card_count": 1
+}
