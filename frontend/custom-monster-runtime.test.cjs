@@ -9,7 +9,7 @@ const {compile,decorate} = require("./custom-monster-runtime.js");
 function fields(ruleset) {
   return {
     id:"combat-dummy",name:"Combat Dummy",kind:"monster",ruleset,archetype:"training construct",size:"medium",
-    armor_class:"0",max_hp:"50",speed_ft:"30",initiative_bonus:"0",
+    challenge_rating:"1/4",armor_class:"0",max_hp:"50",speed_ft:"30",initiative_bonus:"0",
     attack_id:"claw",attack_name:"Claw",attack_kind:"melee",attack_bonus:"5",
     damage_count:"1",damage_size:"6",damage_bonus:"2",damage_type:"slashing",
     on_hit_effects:[
@@ -25,6 +25,7 @@ for(const [edition,heroId] of [["2014","karnok-stoneward-2014-l1"],["2024","karn
   const card=decorate({...source,custom:true,coverage_status:"custom_draft",runnable_template_id:null});
   assert.equal(card.coverage_status,"custom_ready",edition);
   assert.equal(card.compiled_template.armor_class,0);
+  assert.equal(card.compiled_template.challenge_rating,"1/4");
   assert.equal(card.compiled_template.attacks[0].onHitDamage[0].damageType,"fire");
   assert.equal(card.compiled_template.attacks[0].proneMaxSize,"gargantuan");
   assert.equal(card.compiled_template.attacks[0].onHitConditionSave.conditionId,"poisoned");
@@ -43,6 +44,7 @@ assert.equal(decorate(invalid).coverage_status,"custom_draft");
 assert.match(decorate(invalid).compile_error,/effect/);
 assert.throws(()=>compile({...makeDefinition(fields("2014")),unknown_innate_spell:"fireball"}),/unsupported field/);
 assert.throws(()=>compile({...makeDefinition(fields("2014")),kind:"character"}),/unsupported schema/);
+assert.throws(()=>compile({...makeDefinition(fields("2014")),challenge_rating:"100"}),/Challenge Rating/);
 for(const page of ["index.html","../index.html"]) {
   const html=fs.readFileSync(path.join(__dirname,page),"utf8");
   assert.ok(html.includes('src="custom-monster-runtime.js"'));
