@@ -434,7 +434,6 @@ Blocked monsters: **89**. These are grouped by printed ability name so the roste
 |---|---|---:|
 | Aberrant Ground | Gibbering Mouther | 1 |
 | Adhesive (Object Form Only) | Mimic | 1 |
-| Air Form | Air Elemental | 1 |
 | Ambusher | Doppelganger | 1 |
 | Bound | Shield Guardian | 1 |
 | Consume Life | Will-o'-Wisp | 1 |
@@ -470,14 +469,13 @@ Blocked monsters: **89**. These are grouped by printed ability name so the roste
 | Transparent | Gelatinous Cube | 1 |
 | Vampire Weaknesses | Vampire, Vampire Spawn | 2 |
 | Variable Illumination | Will-o'-Wisp | 1 |
-| Water Form | Water Elemental | 1 |
 | Water Susceptibility | Fire Elemental | 1 |
 
 ## Monster blocker categories
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 65 |
+| `source:trait` | 64 |
 | `source:extra-action` | 50 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 21 |
