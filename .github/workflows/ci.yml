@@ -531,6 +531,7 @@ jobs:
           node frontend/browser-execution.test.cjs
           node frontend/browser-beta-ui.test.cjs
           node frontend/custom-monster-runtime.test.cjs
+          node frontend/custom-pregen-runtime.test.cjs
           IRON_PIT_RESULTS_PATH=artifacts/combat-presets-results.json node frontend/combat-presets.test.cjs
           IRON_PIT_GENERATED_RESULTS_PATH=artifacts/generated-coverage-results.json node frontend/generated-coverage.test.cjs
           node frontend/combat-review.test.cjs
