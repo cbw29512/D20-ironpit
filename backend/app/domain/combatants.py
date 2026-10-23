@@ -92,7 +92,7 @@ class CombatantTemplate(BaseModel):
     progression_features: ProgressionCombatFeatures = Field(default_factory=ProgressionCombatFeatures)
     environment_context_reactions: list[EnvironmentContextReaction] = Field(default_factory=list)
     passive_modifier_grants: list[PassiveModifierGrant] = Field(default_factory=list)
-    weapon_attack: WeaponAttack
+    weapon_attack: WeaponAttack | None = None
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
     attack_action: AttackActionDefinition | None = None

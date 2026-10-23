@@ -44,7 +44,9 @@ def _spell_level_available(member: EncounterCombatant, level: int, turn_key: str
 def _weapon_ranges(attacker: EncounterCombatant, target: EncounterCombatant) -> list[OffensiveRange]:
     try:
         ranges: list[OffensiveRange] = []
-        attacks = [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
+        attacks = [attack for attack in [
+            attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks,
+        ] if attack is not None]
         for attack in attacks:
             if not attack_allowed_against(attack, attacker.combatant_id, target.state):
                 continue
@@ -113,7 +115,9 @@ def tightest_usable_melee_reach_ft(
 ) -> int | None:
     """Smallest currently legal melee reach among Attack/Multiattack slots, else any melee."""
     try:
-        attacks = [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
+        attacks = [attack for attack in [
+            attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks,
+        ] if attack is not None]
         by_id = {attack.id: attack for attack in attacks}
         reaches: list[int] = []
         definition = attacker.state.template.attack_action
