@@ -4,7 +4,6 @@
   const FEATURE = "brutal-strike", PENDING = "brutal-strike-pending", HIT = "brutal-strike-hit", EFFECT = "brutal-strike-effect";
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
-  const R = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT;
 
   function eligible(state, attack, turnKey, hasDisadvantage = false) {
     return Boolean(state?.template?.ruleset !== "2014"
@@ -52,16 +51,13 @@
   }
 
   function followForceful(sequence, round, attacker, defender, setup, options = {}) {
-    // With displacement suppressed there is no pushed target to follow.
-    return null;
-    const allowance = Math.floor(M().effectiveSpeed(attacker.state) / 2);
-    const normalRemaining = attacker.state.movement_remaining_ft;
-    attacker.state.movement_remaining_ft = allowance;
     try {
-      return R().moveToward(sequence, round, attacker, defender, setup, 5, "forced",
-        { ...options, disengaged: true });
-    } finally {
-      attacker.state.movement_remaining_ft = normalRemaining;
+      // The optional follow applies only after real displacement.
+      // No displacement happens in Iron Pit, so it grants no free move.
+      return null;
+    } catch (error) {
+      console.error("Forceful Blow follow resolution failed.", error);
+      throw error;
     }
   }
 
