@@ -1,6 +1,7 @@
 """Semantic 2014 variable-head binding; runtime resolution is source-neutral."""
 from __future__ import annotations
 
+import html
 import logging
 import re
 
@@ -37,6 +38,11 @@ _HEAD_MULTIATTACK = re.compile(
 )
 
 
+def _plain(value: str | None) -> str:
+    without_tags = re.sub(r"<[^>]+>", " ", html.unescape(value or ""))
+    return " ".join(without_tags.split())
+
+
 def _number(value: str) -> int:
     try:
         return int(value)
@@ -50,7 +56,7 @@ def semantic_variable_head_sections_2014(
     monster: SourceMonster2014,
 ) -> tuple[tuple[str, str], tuple[str, str]] | None:
     """Locate the lifecycle and OA clauses by meaning, never card identity/name."""
-    traits = source_sections_2014(monster.source_traits)
+    traits = {name: _plain(body) for name, body in source_sections_2014(monster.source_traits).items()}
     reaction_sections = traits
     all_traits = " ".join(traits.values())
     lifecycle = next(
@@ -68,7 +74,7 @@ def semantic_variable_head_sections_2014(
         or _SEVER.search(monster.source_traits or "")
         or _REGROW.search(monster.source_traits or "")
         or _EXTRA_REACTION.search(monster.source_traits or "")
-        or _HEAD_MULTIATTACK.search(monster.source_actions or "")
+        or _HEAD_MULTIATTACK.search(_plain(monster.source_actions))
     )
     if not any_signal:
         return None
@@ -77,8 +83,16 @@ def semantic_variable_head_sections_2014(
         _REGROW.search(all_traits), _BLOCK.search(all_traits), _HEAL.search(all_traits),
     ))
     if lifecycle is None or reaction is None or not complete_lifecycle:
-        raise ValueError("Printed variable-head card is missing a complete lifecycle or OA clause.")
-    if _HEAD_MULTIATTACK.search(monster.source_actions or "") is None:
+        found = {
+            "initial": bool(_HAS_HEADS.search(all_traits)),
+            "sever": bool(_SEVER.search(all_traits)),
+            "regrow": bool(_REGROW.search(all_traits)),
+            "block": bool(_BLOCK.search(all_traits)),
+            "heal": bool(_HEAL.search(all_traits)),
+            "reaction": reaction is not None,
+        }
+        raise ValueError(f"Printed variable-head card has incomplete semantic clauses: {found}")
+    if _HEAD_MULTIATTACK.search(_plain(monster.source_actions)) is None:
         raise ValueError("Printed variable-head card lacks a head-count Multiattack clause.")
     return lifecycle, reaction
 
