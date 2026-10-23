@@ -50,4 +50,44 @@ for(const page of ["index.html","../index.html"]) {
   assert.ok(html.includes('src="custom-monster-runtime.js"'));
   assert.ok(html.indexOf('src="custom-monster-runtime.js"')<html.indexOf('src="battlefield-picker.js"'));
 }
+
+const vm=require("node:vm");
+const storage=new Map();
+global.localStorage={getItem:key=>storage.get(key)||null,setItem:(key,value)=>storage.set(key,value)};
+const library=require("./custom-combatant-library.js");
+library.save(makeDefinition(fields("2014")));
+const elements=new Map();
+function fakeNode() {
+  return {value:"",selected:false,disabled:false,hidden:false,children:[],listeners:{},style:{},
+    classList:{add(){},remove(){}},dataset:{},
+    append(...items){this.children.push(...items);if(!this.value&&items[0]?.value)this.value=items[0].value;},
+    replaceChildren(...items){this.children=[...items];this.value=items.find(item=>item.selected)?.value||items[0]?.value||"";},
+    addEventListener(event,handler){this.listeners[event]=handler;},
+    showModal(){this.open=true;},close(){this.open=false;this.listeners.close?.();},
+    setAttribute(){},removeAttribute(){},
+    get options(){return this.children;}
+  };
+}
+global.document={
+  getElementById(id){if(!elements.has(id))elements.set(id,fakeNode());return elements.get(id);},
+  createElement(){return fakeNode();}
+};
+window.IRON_PIT_ENCOUNTER_PICKER={
+  challengeRatings:()=>["0","1/4"],sortedMonsters:(cards)=>cards,
+  classOptions:()=>[],LEVELS:[1],heroBuilds:()=>[],preferredHero:()=>null,
+};
+vm.runInThisContext(fs.readFileSync(path.join(__dirname,"battlefield-picker.js"),"utf8"),{filename:"battlefield-picker.js"});
+const picker=window.IRON_PIT_BATTLEFIELD_PICKER;
+const state={ruleset:"2014",catalog:{heroes:[],monsters:[]},
+  heroSlots:Array(6).fill(null),monsterSlots:Array(6).fill(null)};
+picker.bind(()=>state);
+let picked=null;
+picker.open(state,"monsters",0,(_side,_index,card)=>{picked=card;},()=>{});
+const crSelect=elements.get("picker-cr");
+crSelect.value="custom";crSelect.onchange();
+assert.equal(elements.get("confirm-card").disabled,false,"saved supported monster must be selectable");
+elements.get("confirm-card").listeners.click();
+assert.equal(picked?.coverage_status,"custom_ready");
+assert.equal(picked?.compiled_template.armor_class,0);
+
 console.log("Saved custom monster homebrew browser runtime fights passed 2014 and 2024.");
