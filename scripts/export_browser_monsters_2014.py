@@ -11,12 +11,12 @@ from browser_template_serializer import template_row
 logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parents[1]
 DESTINATION = ROOT / "frontend" / "browser-monsters-2014.js"
-_EXPECTED_COUNT = 238
+_EXPECTED_COUNT = 239
 
 
 def _add_charge_follow_up_metadata(template, row: dict[str, object]) -> None:
     browser_attacks = {attack["id"]: attack for attack in row["attacks"]}
-    attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+    attacks = [attack for attack in [template.weapon_attack, *template.alternate_weapon_attacks] if attack is not None]
     for attack in attacks:
         profile = charge_profile_for_attack(attack)
         if profile is None or profile.follow_up_attack_id is None:

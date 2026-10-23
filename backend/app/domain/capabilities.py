@@ -76,8 +76,8 @@ class CombatantDefinition(BaseModel):
     bonus_tactical_action_grants: list[BonusActionTacticalGrant] = Field(default_factory=list)
     visual_turn_start_rule: VisualTurnStartRule | None = None
     visual_disguise_action: VisualDisguiseAction | None = None
-    attacks: list[AttackCapabilityDefinition] = Field(min_length=1)
-    primary_attack_id: str
+    attacks: list[AttackCapabilityDefinition] = Field(default_factory=list)
+    primary_attack_id: str | None = None
     unarmed_opportunity_attack: UnarmedStrikeDamage | None = None
     attack_action: MultiattackCapabilityDefinition | None = None
     death_trigger_effect_ids: list[str] = Field(default_factory=list)
@@ -160,8 +160,10 @@ class CombatantDefinition(BaseModel):
             raise ValueError("Character combatant definitions require ability scores.")
         if len(attack_ids) != len(self.attacks) or len(save_ids) != len(self.save_actions):
             raise ValueError("Capability ids must be unique within their action family.")
-        if self.primary_attack_id not in attack_ids:
+        if self.attacks and self.primary_attack_id not in attack_ids:
             raise ValueError("primary_attack_id must reference a declared attack.")
+        if not self.attacks and self.primary_attack_id is not None:
+            raise ValueError("Attack-free definitions cannot declare primary_attack_id.")
         if self.attack_action:
             for slot in all_action_slots(self.attack_action):
                 if not set(slot.attack_ids) <= attack_ids or not set(slot.save_action_ids) <= save_ids:

@@ -72,7 +72,7 @@ def _attack_profiles(attacker: EncounterCombatant, allowed_ids: list[str], kind:
     return [
         attack
         for attack in [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
-        if attack.id in allowed and (kind is None or attack.weapon.attack_kind is kind)
+        if attack is not None and attack.id in allowed and (kind is None or attack.weapon.attack_kind is kind)
     ]
 
 
@@ -131,8 +131,9 @@ def choose_standard_attack(
 ) -> tuple[EncounterCombatant, WeaponAttack, int] | None:
     """Use legal range now: ranged holds position; melee is preferred when engaged."""
     ids = [
-        attacker.state.template.weapon_attack.id,
-        *(attack.id for attack in attacker.state.template.alternate_weapon_attacks),
+        attack.id
+        for attack in [attacker.state.template.weapon_attack, *attacker.state.template.alternate_weapon_attacks]
+        if attack is not None
     ]
     melee = choose_attack(attacker, setup, ids, kind=WeaponAttackKind.MELEE)
     if melee is not None:

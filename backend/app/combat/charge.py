@@ -16,7 +16,11 @@ from app.domain.weapons import OnHitConditionSave
 
 
 def _charge_attack(attacker: CombatantState) -> WeaponAttack | None:
-    attacks = [attacker.template.weapon_attack, *attacker.template.alternate_weapon_attacks]
+    attacks = [
+        attack
+        for attack in [attacker.template.weapon_attack, *attacker.template.alternate_weapon_attacks]
+        if attack is not None
+    ]
     return next((attack for attack in attacks if charge_profile_for_attack(attack) is not None), None)
 
 

@@ -170,13 +170,13 @@ def _save(action) -> dict[str, object]:
 
 
 def definition_from_template(template: CombatantTemplate) -> CombatantDefinition:
-    attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+    attacks = [attack for attack in [template.weapon_attack, *template.alternate_weapon_attacks] if attack is not None]
     data = template.model_dump(mode="json", exclude={
         "weapon_attack", "alternate_weapon_attacks", "attack_action", "saving_throw_actions",
         "death_trigger_actions",
     })
     data["attacks"] = [_attack(attack) for attack in attacks]
-    data["primary_attack_id"] = template.weapon_attack.id
+    data["primary_attack_id"] = template.weapon_attack.id if template.weapon_attack is not None else None
     data["save_actions"] = [_save(action) for action in template.saving_throw_actions]
     data["death_trigger_actions"] = [_save(action) for action in template.death_trigger_actions]
     if template.attack_action is not None:
