@@ -15,10 +15,13 @@ def has_ranged_weapon_offense(template: CombatantTemplate) -> bool:
         and attack.weapon.long_range_ft is not None
         and attack.weapon.long_range_ft > 5
         for attack in [template.weapon_attack, *template.alternate_weapon_attacks]
+        if attack is not None
     )
 
 
 def _primary_weapon_is_ranged(template: CombatantTemplate) -> bool:
+    if template.weapon_attack is None:
+        return False
     weapon = template.weapon_attack.weapon
     return (
         weapon.attack_kind is WeaponAttackKind.RANGED

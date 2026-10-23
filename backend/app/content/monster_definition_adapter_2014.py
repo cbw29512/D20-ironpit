@@ -181,7 +181,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         visual_turn_start_rule=visual_turn_start_rule_2014(monster),
         visual_disguise_action=visual_disguise_action_2014(monster),
         attacks=attacks,
-        primary_attack_id=attacks[0].id, attack_action=multiattack_2014(monster),
+        primary_attack_id=attacks[0].id if attacks else None, attack_action=multiattack_2014(monster),
         death_trigger_effect_ids=[action.id for action in death_trigger_actions_2014(monster)],
         death_trigger_actions=death_trigger_actions_2014(monster),
         save_actions=save_capabilities_2014(monster),
@@ -222,6 +222,6 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         parry_reaction=ParryReaction(ac_bonus=monster.parry_ac_bonus)
             if supports_parry_reaction_2014(monster) else None,
         **defenses,
-        visual=VisualLoadout(armor=monster.creature_type, main_hand=monster.attacks[0].name, body_style=monster.creature_type),
+        visual=VisualLoadout(armor=monster.creature_type, main_hand=monster.attacks[0].name if monster.attacks else "none", body_style=monster.creature_type),
         source=f"SRD 5.1 (2014) {monster.name}",
     )

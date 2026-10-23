@@ -144,14 +144,17 @@ def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     if is_arena_neutral_monster_2014(monster):
         return ("arena:neutral",)
     blockers: list[str] = []
-    if not monster.attacks:
-        blockers.append("attack:none")
     blockers.extend(attack_blockers_2014(monster))
     blockers.extend(multiattack_blockers_2014(monster))
     # One source-classification decision feeds both action and resource checks.
     recharge_supported = supports_recharge_rules_2014(monster)
     blockers.extend(_source_name_blockers(monster, recharge_supported=recharge_supported))
     blockers.extend(mechanic_family_blockers_2014(monster, recharge_supported=recharge_supported))
+    # Attack-free cards use the universal Dodge fallback only when every printed
+    # mechanic is otherwise supported. Preserve attack:none on incompatible cards
+    # so the roster-wide report keeps the missing source shape visible.
+    if not monster.attacks and blockers:
+        blockers.append("attack:none")
     return tuple(sorted(set(blockers)))
 def is_basic_candidate_2014(monster: SourceMonster2014) -> bool:
     return not basic_blockers_2014(monster)

@@ -1035,7 +1035,7 @@ def _bonus_attack_grant(item: Any) -> dict[str, Any]:
 def template_row(template: CombatantTemplate) -> dict[str, Any]:
     try:
         traits = {item.value for item in template.combat_traits}
-        attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+        attacks = [attack for attack in [template.weapon_attack, *template.alternate_weapon_attacks] if attack is not None]
         row: dict[str, Any] = {
             "id": template.id, "name": template.name, "archetype": template.archetype,
             "level": template.level, "challenge_rating": template.challenge_rating, "kind": template.kind,
@@ -1046,7 +1046,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "initiative_bonus": template.initiative_bonus,
         "blindsight_ft": template.blindsight_ft, "truesight_ft": template.truesight_ft,
             "saving_throw_bonuses": template.saving_throw_bonuses, "skill_bonuses": template.skill_bonuses,
-            "attacks": [attack_row(item, traits) for item in attacks], "primary_attack_id": template.weapon_attack.id,
+            "attacks": [attack_row(item, traits) for item in attacks],
+            "primary_attack_id": template.weapon_attack.id if template.weapon_attack is not None else None,
             "saving_throw_actions": [_save(item) for item in template.saving_throw_actions],
             "hp_threshold_condition_actions": [
                 {

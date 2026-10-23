@@ -72,7 +72,7 @@ def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
             )
         attacks = [compile_attack(item) for item in definition.attacks]
         attack_by_id = {attack.id: attack for attack in attacks}
-        primary = attack_by_id[definition.primary_attack_id]
+        primary = attack_by_id[definition.primary_attack_id] if definition.primary_attack_id is not None else None
         kwargs = definition.model_dump(exclude={
             "schema_version", "attacks", "primary_attack_id", "attack_action", "save_actions",
             "death_trigger_actions",
@@ -83,7 +83,7 @@ def compile_combatant(definition: CombatantDefinition) -> CombatantTemplate:
         return CombatantTemplate(
             **kwargs,
             weapon_attack=primary,
-            alternate_weapon_attacks=[attack for attack in attacks if attack.id != primary.id],
+            alternate_weapon_attacks=[attack for attack in attacks if primary is None or attack.id != primary.id],
             attack_action=_compile_attack_action(definition),
             saving_throw_actions=[_compile_save(item) for item in definition.save_actions],
             death_trigger_actions=[_compile_save(item) for item in definition.death_trigger_actions],

@@ -9,7 +9,10 @@ logger = logging.getLogger(__name__)
 
 
 def weapon_attack_profiles(state: CombatantState) -> list[WeaponAttack]:
-    return [state.template.weapon_attack, *state.template.alternate_weapon_attacks]
+    return [
+        attack for attack in [state.template.weapon_attack, *state.template.alternate_weapon_attacks]
+        if attack is not None
+    ]
 
 
 def _legal_attack(attack: WeaponAttack, distance_ft: int) -> bool:
@@ -67,5 +70,6 @@ def preferred_distance_for_attacks(state: CombatantState, allowed_ids: list[str]
 
 
 def preferred_approach_distance(state: CombatantState) -> int:
-    """Close to the primary attack's melee reach or normal ranged distance."""
-    return preferred_distance_for_attacks(state, [state.template.weapon_attack.id])
+    """Close to the primary attack range; attack-free cards do not chase."""
+    primary = state.template.weapon_attack
+    return 0 if primary is None else preferred_distance_for_attacks(state, [primary.id])
