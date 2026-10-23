@@ -13,20 +13,22 @@ def test_forced_displacement_inventory_scans_all_2014_cards() -> None:
     report = forced_displacement_inventory_2014(load_monster_source_2014())
 
     assert report["source_card_count"] == 327
-    assert report["applicable_card_count"] == 15
+    assert report["applicable_card_count"] == 17
     assert report["python_wired_card_count"] == 6
     assert report["browser_wired_card_count"] == 6
-    assert report["remaining_card_count"] == 9
+    assert report["remaining_card_count"] == 11
     assert {row["monster_id"] for row in report["exceptions"]} == {
         "air-elemental",
         "balor",
         "bulette",
         "djinni",
         "gelatinous-cube",
+        "ice-devil",
         "kraken",
         "minotaur",
         "minotaur-skeleton",
         "roper",
+        "water-elemental",
     }
 
 
