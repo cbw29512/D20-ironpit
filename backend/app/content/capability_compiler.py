@@ -37,6 +37,8 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         requires_target_to_see_source=definition.requires_target_to_see_source,
         requires_target_sight=definition.requires_target_sight,
         required_target_condition=definition.required_target_condition,
+        required_target_creature_types=list(definition.required_target_creature_types),
+        prohibited_target_source_effect_ids=list(definition.prohibited_target_source_effect_ids),
         excluded_target_creature_types=list(definition.excluded_target_creature_types),
         prohibited_environment_context_id=definition.prohibited_environment_context_id,
         grapple_escape_dc=grapple.escape_dc if grapple else None,
