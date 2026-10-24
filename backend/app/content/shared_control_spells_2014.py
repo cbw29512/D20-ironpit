@@ -97,3 +97,33 @@ def spirit_guardians_2014(save_dc: int) -> TimedSelfBuffAction:
     except Exception:
         logger.exception("Failed to build shared 2014 Spirit Guardians.")
         raise
+
+def hold_monster_2014(save_dc: int) -> SpellSaveAction:
+    """Build base-level 2014 Hold Monster using the shared save-condition lifecycle."""
+    try:
+        return SpellSaveAction(
+            id="hold-monster",
+            name="Hold Monster",
+            level=5,
+            action_cost="action",
+            range_ft=90,
+            save_ability="wisdom",
+            dc=save_dc,
+            requires_target_sight=True,
+            excluded_target_creature_types=["undead"],
+            failed_save_timed_effect=FailedSaveTimedEffect(
+                effect_id="paralyzed",
+                duration_rounds=10,
+                expiry_timing="target_turn_end",
+                repeat_save_ability="wisdom",
+                repeat_save_dc=save_dc,
+                repeat_save_timing="target_turn_end",
+            ),
+            concentration=True,
+            duration_minutes=1,
+            animation="hold-monster",
+        )
+    except Exception:
+        logger.exception("Failed to build shared 2014 Hold Monster.")
+        raise
+
