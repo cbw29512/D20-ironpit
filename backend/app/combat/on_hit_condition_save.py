@@ -7,9 +7,9 @@ from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.failure_margin_runtime import escalation_duration
 from app.combat.forced_movement import push_straight_away
+from app.combat.on_hit_condition_targeting import excluded_on_hit_condition_target
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import apply_terminal_condition_outcome, apply_timed_condition
-from app.content.monster_creature_types import creature_matches_kind
 from app.domain.models import CombatantState, CombatantTemplate, DiceRoll, WeaponAttack
 from app.domain.saving_throw_context import SavingThrowContext
 from app.domain.size import size_at_most
@@ -27,14 +27,6 @@ class OnHitConditionSaveResolution:
     forced_movement_ft: int = 0
     additional_conditions: tuple[str, ...] = ()
 
-
-def _excluded_target(defender: CombatantState, effect) -> bool:
-    try:
-        kinds = [*effect.excluded_creature_types, *effect.excluded_creature_subtypes]
-        return any(creature_matches_kind(defender.template, kind) for kind in kinds)
-    except Exception:
-        logger.exception("Failed to evaluate on-hit condition-save exclusions for %s.", defender.template.name)
-        raise
 
 
 def resolve_on_hit_condition_save(
@@ -55,7 +47,7 @@ def resolve_on_hit_condition_save(
             return OnHitConditionSaveResolution()
         if effect.max_target_size is not None and not size_at_most(defender.template.size, effect.max_target_size):
             return OnHitConditionSaveResolution()
-        if _excluded_target(defender, effect):
+        if excluded_on_hit_condition_target(defender, effect):
             return OnHitConditionSaveResolution()
         target_actor = next((item for item in [*setup.heroes, *setup.monsters] if item.state is defender), None) if setup else None
         if condition_is_immune(defender, effect.condition_id, source_template, actor=target_actor, setup=setup):
