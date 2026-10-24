@@ -42,6 +42,7 @@
       source_turn_count_at_application: options.sourceTurnCountAtApplication ?? null,
       repeat_save_disadvantage_while_source_visible: Boolean(options.repeatSaveDisadvantageWhileSourceVisible),
       allowed_removal_action_ids: [...(options.allowedRemovalActionIds || [])],
+      owned_curse_ids: [...(options.ownedCurseIds || [])],
       turn_behavior: options.turnBehavior || "normal",
       suppress_action: Boolean(options.suppressAction),
       suppress_bonus_action: Boolean(options.suppressBonusAction),
@@ -79,6 +80,9 @@
       control_limits: options.controlLimits || null,
     });
     if (!state.active_effect_ids.includes(effectId)) state.active_effect_ids.push(effectId);
+    for (const curseId of options.ownedCurseIds || []) {
+      if (!(state.active_curses || []).includes(curseId)) state.active_curses.push(curseId);
+    }
     if (effectId === "unconscious" && !state.active_effect_ids.includes("prone") && !I().immune(state, "prone")) state.active_effect_ids.push("prone");
     applyTerminalOutcome(state, effectId, options.affectedStates || []);
     RF()?.revertIfIncapacitated(state);
@@ -101,6 +105,10 @@
   const suppressesVoluntaryTurn = (state) => suppressesAction(state) && suppressesBonusAction(state) && suppressesMovement(state);
   function removeEffect(state, effect) {
     state.timed_effects = state.timed_effects.filter((item) => item !== effect);
+    for (const curseId of effect.owned_curse_ids || []) {
+      const stillOwned = state.timed_effects.some((item) => (item.owned_curse_ids || []).includes(curseId));
+      if (!stillOwned) state.active_curses = (state.active_curses || []).filter((id) => id !== curseId);
+    }
     const stillActive = state.timed_effects.some((item) => item.effect_id === effect.effect_id);
     const innate = (state.template?.innate_condition_ids || []).includes(effect.effect_id);
     if (!stillActive && !innate) state.active_effect_ids = state.active_effect_ids.filter((id) => id !== effect.effect_id);
