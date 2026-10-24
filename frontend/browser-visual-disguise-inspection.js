@@ -12,7 +12,7 @@
       const rule = sourceState.template.visualDisguiseAction;
       if (!rule?.physicalInspectionInconsistent
           || !sourceState.magical_visual_disguise_active
-          || sourceState.is_dead || !sourceState.is_alive || sourceState.current_hp <= 0) {
+          || sourceState.is_dead || !sourceState.is_alive) {
         return false;
       }
       const recognized = observerState.recognized_visual_disguise_source_ids;
