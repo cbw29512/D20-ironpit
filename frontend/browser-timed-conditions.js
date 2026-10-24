@@ -4,9 +4,7 @@
   const C = () => window.IRON_PIT_BROWSER_DEBUFF_COUNTERS || { movementCost: () => null };
   const RF = () => window.IRON_PIT_BROWSER_REPLACEMENT_FORMS;
   const T = () => window.IRON_PIT_BROWSER_TERMINAL_EFFECTS;
-  const POISONED = "poisoned";
-  const TERMINAL = new Set(["petrified"]);
-  const POISON_RECOVERY_DC = 10;
+  const POISONED = "poisoned", TERMINAL = new Set(["petrified"]), POISON_RECOVERY_DC = 10;
   function applyTerminalOutcome(state, effectId, affectedStates = []) {
     if (!TERMINAL.has(effectId) || state.is_dead) return false;
     if (!T()?.applyTerminalDeath) throw new Error("Browser terminal-effect runtime is not loaded.");
