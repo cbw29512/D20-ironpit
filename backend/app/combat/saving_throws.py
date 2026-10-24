@@ -21,7 +21,7 @@ from app.combat.resources import action_resource_available, spend_action_resourc
 from app.combat.opening_burst import opening_burst_available
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.target_chosen_save import choose_save_ability
-from app.combat.visual_disguise import recognize_visual_disguise_by_physical_inspection
+from app.combat.visual_disguise_physical_inspection import recognize_visual_disguise_by_physical_inspection
 from app.combat.zero_hp import apply_damage, reduce_to_zero_hit_points
 from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
