@@ -6,6 +6,8 @@
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const K = () => window.IRON_PIT_BROWSER_CREATURE_KIND
     || (() => { throw new Error("browser-creature-kind.js is required."); })();
+  const L = () => window.IRON_PIT_BROWSER_ON_HIT_CONDITION_LIFECYCLE
+    || (() => { throw new Error("browser-on-hit-condition-lifecycle.js is required."); })();
 
   function resolve(target, attack, sourceTemplate = null, round = null, setup = null, attacker = null) {
     try {
@@ -39,11 +41,10 @@
       const timed = duration != null || effect.repeatSaveTiming;
       if (timed) {
         if (!T()?.apply) throw new Error("Timed on-hit condition save requires browser-timed-conditions.js.");
-        appliedCondition = T().apply(target.state, effect.conditionId, attacker?.combatant_id || sourceTemplate?.id || "on-hit-save", {
-          sourceEffectId: attack.name || attack.id,
-          sourceTemplate,
-          targetActor: target, setup,
-          appliedRound: round,
+        const ownerId = attacker?.combatant_id || sourceTemplate?.id || "on-hit-save";
+        const sourceEffectId = attack.name || attack.id;
+        appliedCondition = T().apply(target.state, effect.conditionId, ownerId, {
+          sourceEffectId, sourceTemplate, targetActor: target, setup, appliedRound: round,
           expiresRound: duration != null && round != null ? round + duration : null,
           expiryTiming: duration != null ? "target_turn_end" : null,
           repeatSaveAbility: effect.repeatSaveTiming ? effect.saveAbility : null,
@@ -52,10 +53,10 @@
           repeatSaveFailureConditionId: effect.repeatSaveFailureConditionId || null,
           useDefaultPoisonRecovery: false,
           cannotRegainHitPoints: Boolean(effect.cannotRegainHitPoints),
-          startOfTurnDiceCount: effect.startOfTurnDamageDiceCount || 0,
-          startOfTurnDiceSize: effect.startOfTurnDamageDiceSize || 6,
-          startOfTurnDamageType: effect.startOfTurnDamageType || null,
         }) || null;
+        if (appliedCondition) {
+          L().attachStartTurnDamage(target.state, effect.conditionId, ownerId, sourceEffectId, effect);
+        }
       } else if (!target.state.active_effect_ids.includes(effect.conditionId)) {
         target.state.active_effect_ids.push(effect.conditionId);
         T()?.applyTerminalOutcome?.(target.state, effect.conditionId);
