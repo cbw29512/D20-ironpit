@@ -19,6 +19,8 @@ _SAVE_CONDITION_KEYS = frozenset({
     "duration_rounds", "repeat_save_timing", "repeat_save_failure_condition_id",
     "failure_push_ft", "excluded_creature_types", "excluded_creature_subtypes",
     "cannot_regain_hit_points", "failure_margin_escalation",
+    "start_of_turn_damage_dice_count", "start_of_turn_damage_dice_size",
+    "start_of_turn_damage_type",
 })
 _SAVE_DAMAGE_KEYS = frozenset({
     "damage_bonus", "damage_dice_count", "damage_dice_size", "damage_type",
@@ -87,6 +89,15 @@ def supported_save_condition_2014(value: object) -> bool:
             return False
     push = value.get("failure_push_ft", 0)
     if not isinstance(push, int) or push < 0 or push % 5:
+        return False
+    start_count = value.get("start_of_turn_damage_dice_count", 0)
+    start_size = value.get("start_of_turn_damage_dice_size", 6)
+    start_type = value.get("start_of_turn_damage_type")
+    if not isinstance(start_count, int) or start_count < 0 or start_count > 40:
+        return False
+    if not isinstance(start_size, int) or start_size < 2 or start_size > 100:
+        return False
+    if (start_count > 0) != (str(start_type).lower() in _DAMAGE_TYPES if start_type is not None else False):
         return False
     return (
         str(value.get("condition_id", "")).lower() in _CONDITIONS
