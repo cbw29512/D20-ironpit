@@ -99,6 +99,8 @@ def test_success_immunity_is_source_scoped_and_survives_rounds_not_new_fights():
         )
         assert passed[0].save_succeeded is True
         assert has_source_effect_immunity(target.state, "fear-aura", source.combatant_id)
+        immunity = next(effect for effect in target.state.timed_effects if "success-immunity" in effect.effect_id)
+        assert immunity.status_lane == "buff"
         repeated, _ = resolve_target_turn_start_emanations(
             sequence, 500, target, setup, _no_rolls(),
         )
