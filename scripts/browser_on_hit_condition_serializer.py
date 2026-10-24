@@ -23,9 +23,10 @@ def serialize_on_hit_condition_save(effect: OnHitConditionSave) -> dict[str, Any
             "saveAbility": _value(effect.save_ability),
             "dc": effect.dc,
             "conditionId": effect.condition_id,
-            "effectId": effect.effect_id,
             "maxTargetSize": _value(effect.max_target_size) if effect.max_target_size else None,
         }
+        if effect.effect_id is not None:
+            row["effectId"] = effect.effect_id
         if effect.duration_rounds is not None:
             row["durationRounds"] = effect.duration_rounds
         if effect.repeat_save_timing is not None:
