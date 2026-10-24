@@ -33,9 +33,7 @@
           if (aura && aura.trigger === "enemy_turn_start" && distance <= aura.radius_ft) {
             if (aura.inactive_while_source_incapacitated) {
               const conditions = window.IRON_PIT_BROWSER_CONDITION_RULES;
-              if (!conditions?.incapacitated) {
-                throw new Error("Hostile condition aura source gate requires condition-rules runtime.");
-              }
+              if (!conditions?.incapacitated) throw new Error("Hostile condition aura source gate requires condition-rules runtime.");
               if (conditions.incapacitated(source.state)) continue;
             }
             const immunityId = `${action.id}:success-immunity:${source.combatant_id}`;
