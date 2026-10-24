@@ -1,8 +1,9 @@
-"""Exact 2014 source proof for visual disguises; does not grant a combat Action.
+"""Exact 2014 source proof for visual disguises; no runtime identity dispatch.
 
 A printed illusion can conceal the appearance needed to trigger another
-source's visual passive. Full action/bonus-action/check lifecycle must be
-implemented before any source-admission change.
+source's visual passive. Runtime action, dismissal, inspection and owner-death
+lifecycle are provided by shared visual-disguise primitives; admission may
+recognize this Action only when the complete source proof below succeeds.
 """
 from __future__ import annotations
 
