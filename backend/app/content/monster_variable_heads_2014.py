@@ -26,7 +26,7 @@ _BLOCK = re.compile(
     re.IGNORECASE,
 )
 _HEAL = re.compile(
-    r"regains (?P<amount>\d+) hit points for each head regrown this way",
+    r"regains (?P<amount>\d+) hit points for each head regrown (?:in )?this way",
     re.IGNORECASE,
 )
 _EXTRA_REACTION = re.compile(
