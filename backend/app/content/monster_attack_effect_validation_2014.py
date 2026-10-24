@@ -74,8 +74,6 @@ def supported_save_condition_2014(value: object) -> bool:
     duration = value.get("duration_rounds")
     timing = value.get("repeat_save_timing")
     escalation = value.get("repeat_save_failure_condition_id")
-    if timing is not None and duration is None and escalation is None:
-        return False
     if escalation is not None and (
         timing is None or str(escalation).lower() not in _CONDITIONS
     ):
