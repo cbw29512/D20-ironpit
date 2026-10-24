@@ -20,6 +20,7 @@ class BonusAttackGrant(BaseModel):
     trigger: Literal["always", "source_melee_zero_hp_this_turn"] = "always"
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
+    required_active_effect_id: str | None = Field(default=None, min_length=1)
     priority: int = Field(default=100, ge=0, le=1000)
     on_hit_condition_save: OnHitConditionSave | None = None
 
