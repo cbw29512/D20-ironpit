@@ -18,7 +18,7 @@ from app.combat.slow import apply_weapon_slow
 from app.combat.tactical_master import apply_tactical_master_sap
 from app.combat.topple import resolve_topple_hit
 from app.combat.vex import apply_vex_mastery
-from app.combat.visual_disguise import recognize_visual_disguise_by_physical_inspection
+from app.combat.visual_disguise_physical_inspection import recognize_visual_disguise_by_physical_inspection
 
 
 def resolve_attack_hit_riders(
