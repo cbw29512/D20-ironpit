@@ -150,6 +150,16 @@ def resolve_attack(
             topple=topple, damage_outcome=damage_outcome, applied_conditions=applied_conditions,
             deferred_effect_armed=deferred_effect_armed,
         )
+        if effects.attacker_recognized_target_disguise:
+            description += (
+                f" {attacker.template.name} recognizes {actual_defender.template.name}'s "
+                "visual disguise through physical inspection."
+            )
+        if effects.target_recognized_attacker_disguise:
+            description += (
+                f" {actual_defender.template.name} recognizes {attacker.template.name}'s "
+                "visual disguise through physical inspection."
+            )
         description += attack_damage_reduction_description(effects, actual_defender.template.name)
         if effects.ability_reduction is not None:
             reduction = effects.ability_reduction

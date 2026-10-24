@@ -21,6 +21,10 @@ It does **not** replace `docs/IRON_PIT_RULES_CONTRACT.md`. That file remains the
 
 Averted eyes are **source-scoped**, not the global Blinded condition. Preserve the printed penalty against that source (for example, attack-roll Disadvantage against the Sea Hag), and printed sight, eligibility, immunity and timing requirements. A genuinely unseen/immune/out-of-range gaze source cannot force a save solely by winning initiative. This replaces surprise-only automatic eye-aversion for the Pit; unrelated non-avertible visual Actions remain governed by their own card. For multiple gaze sources, use normal initiative priority and resolve independently. The source's effect (Frightened, Restrained, Petrified, etc.) and DC/duration/repeat saves are always the standard universal mechanics declared on its immutable card; 2014 and 2024 source values remain separate.
 
+## Universal visual-disguise tactile inspection — user-locked 2026-10-24
+
+Deliberate direct tactile inspection automatically exposes a source-declared physical inconsistency to that observer; **newly establishing Grappled qualifies**, while ordinary weapon/unarmed attack contact alone does not. Recognition is observer-scoped, does not end the disguise, and does not reveal the underlying true form. Universal details: [Iron Pit Rules Contract](IRON_PIT_RULES_CONTRACT.md) under *Universal visual-disguise tactile inspection*.
+
 ## Universal decision priority — user-locked 2026-10-18
 
 **For ANY game decision in which multiple combatants could act or respond, check combatants in descending initiative order: highest initiative first.** This includes competing reactions, counters, interrupts, and other simultaneous eligible choices. Apply the same initiative priority to monsters and pregens, independent of names or classes. The active combatant still takes its normal initiative turn; this rule settles *competition between eligible decision-makers*, not a grant of extra turns.

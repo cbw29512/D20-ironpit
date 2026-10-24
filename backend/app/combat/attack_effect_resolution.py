@@ -42,6 +42,8 @@ class AttackEffectResolution:
     damage_reduction_zeroed_attack: bool = False
     deferred_effect_armed: Any = None
     exile_applied: Any = None
+    attacker_recognized_target_disguise: bool = False
+    target_recognized_attacker_disguise: bool = False
 
 
 def _copy_hit_damage(result: AttackEffectResolution, hit_damage, defender) -> None:

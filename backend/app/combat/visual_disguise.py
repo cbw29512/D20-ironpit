@@ -9,8 +9,6 @@ from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifi
 from app.combat.rolls import roll_d20
 from app.domain.encounters import EncounterCombatant
 from app.domain.events import BattleEvent
-
-
 def resolve_visual_disguise_opening(
     sequence: int, member: EncounterCombatant,
 ) -> BattleEvent:

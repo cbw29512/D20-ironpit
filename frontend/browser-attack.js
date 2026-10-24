@@ -97,6 +97,7 @@
     let abilityReduction = null;
     let contestedMovement = null;
     let cunningStrikeTrip = null, cunningStrikeObscure = null;
+    let attackerRecognizedTargetDisguise = false, targetRecognizedAttackerDisguise = false;
     const applied = outcome.appliedConditions;
     if (hit) {
       const affectedStates = states(extra.setup), damage = HD().resolve(attacker.state, actualTarget.state, attack, critical, mode,
@@ -115,7 +116,20 @@
       const living = actualTarget.state.is_alive && !actualTarget.state.is_dead, proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(actualTarget, proneMax) && !I().immune(actualTarget.state, "prone")) { if (!actualTarget.state.active_effect_ids.includes("prone")) actualTarget.state.active_effect_ids.push("prone"); applied.push("prone"); }
       const control = attack.controlEffect;
-      if (living && control?.grappleEscapeDc && (!control.maxTargetSize || S().sizeAtMost(actualTarget, control.maxTargetSize)) && (!control.grappleRequiresSourceFree || !G().sourceHasActiveGrapple(extra.setup, attacker.combatant_id))) applied.push(...G().apply(actualTarget.state, attacker.combatant_id, control.grappleEscapeDc, attack.reach || 5, Boolean(control.restrainsWhileGrappled), false, control.grapplePeriodicDamage || null));
+      if (living && control?.grappleEscapeDc && (!control.maxTargetSize || S().sizeAtMost(actualTarget, control.maxTargetSize)) && (!control.grappleRequiresSourceFree || !G().sourceHasActiveGrapple(extra.setup, attacker.combatant_id))) {
+        const grappled = G().apply(actualTarget.state, attacker.combatant_id, control.grappleEscapeDc, attack.reach || 5, Boolean(control.restrainsWhileGrappled), false, control.grapplePeriodicDamage || null);
+        applied.push(...grappled);
+        if (grappled.includes("grappled")) {
+          const targetNeedsInspection = Boolean(actualTarget.state.template.visualDisguiseAction?.physicalInspectionInconsistent && actualTarget.state.magical_visual_disguise_active);
+          const attackerNeedsInspection = Boolean(attacker.state.template.visualDisguiseAction?.physicalInspectionInconsistent && attacker.state.magical_visual_disguise_active);
+          if (targetNeedsInspection || attackerNeedsInspection) {
+            const visual = window.IRON_PIT_BROWSER_VISUAL_DISGUISE_INSPECTION;
+            if (!visual?.recognizePhysicalInspection) throw new Error("Physical visual-disguise inspection runtime is unavailable.");
+            if (targetNeedsInspection) attackerRecognizedTargetDisguise = visual.recognizePhysicalInspection(attacker.state, actualTarget.state, actualTarget.combatant_id);
+            if (attackerNeedsInspection) targetRecognizedAttackerDisguise = visual.recognizePhysicalInspection(actualTarget.state, attacker.state, attacker.combatant_id);
+          }
+        }
+      }
       if (living && control?.conditionId) {
         const timed = T().apply(actualTarget.state, control.conditionId, attacker.combatant_id, { sourceEffectId: attack.id, appliedRound: round,
           expiresAtStartOfSourceTurn: Boolean(control.expiresAtStartOfSourceTurn), expiryTiming: control.expiryTiming || null,
@@ -176,6 +190,8 @@
     if (outcome.damageReductionReaction) description += ` ${actualTarget.state.template.name} uses ${outcome.damageReductionReaction.damageReductionReactionSourceName || "Reaction"} to reduce the attack's damage by ${outcome.damageReductionReaction.damageReductionReactionReduction}.`;
     if (recklessStarted) description += ` ${attacker.state.template.name} uses Reckless Attack.`; if (outcome.brutalStrikeEffects?.length) description += ` Brutal Strike applies ${outcome.brutalStrikeEffects.map((item) => item.replaceAll("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())).join(", ")}.`;
     if (redirected) description += ` ${target.state.template.name} uses Redirect Attack; ${actualTarget.state.template.name} becomes the target.`;
+    if (attackerRecognizedTargetDisguise) description += ` ${attacker.state.template.name} recognizes ${actualTarget.state.template.name}'s visual disguise through physical inspection.`;
+    if (targetRecognizedAttackerDisguise) description += ` ${actualTarget.state.template.name} recognizes ${attacker.state.template.name}'s visual disguise through physical inspection.`;
     if (parry.used) description += ` ${actualTarget.state.template.name} uses Parry.`;
     if (sapApplied === "weapon") description += ` Sap mastery affects ${actualTarget.state.template.name}.`;
     if (sapApplied === "tactical") description += ` Tactical Master applies Sap to ${actualTarget.state.template.name}.`;

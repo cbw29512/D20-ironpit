@@ -36,6 +36,14 @@ timing, terrain, visibility, Petrified, action-economy and arena overrides
 elsewhere in this contract continue unchanged. Implementation and parity
 gates are in [the universal card contract](UNIVERSAL_CARD_COMBAT_CONTRACT.md).
 
+### Universal visual-disguise tactile inspection — 2026-10-24
+
+When an active visual disguise declares that its physical changes fail under inspection, Iron Pit treats **deliberate direct tactile inspection** as automatic observer-scoped recognition of the inconsistency. No ability check is rolled and no extra action is charged beyond the action or effect that already created the qualifying physical inspection.
+
+A newly established **Grappled** relationship qualifies because it represents sustained hands-on control of the disguised creature. A deliberate touch/grab or future effect that explicitly requires direct tactile inspection may call the same universal recognition primitive. An ordinary weapon hit, ranged hit, spell damage, incidental collision, or ordinary unarmed strike does **not** qualify merely because physical contact occurred.
+
+Tactile recognition uses the same fight-local observer knowledge as a successful source-declared visual Investigation: the observer records that the source is disguised. It does **not** end the source's disguise, reveal the underlying true form, globally expose the disguise to other creatures, or trigger a hidden gaze/save. The immutable card supplies whether physical inspection is inconsistent; runtime dispatch never checks Sea Hag, Illusory Appearance, or another source/ability name.
+
 ## Arena-entry buff casting
 
 When a canonical combatant can legally cast a non-Concentration buff before combat and that buff is selected as its deterministic opening preparation, Iron Pit may mark that specific opening cast as **free at arena entry**. A free opening cast still requires the spell to be legally prepared or known and the combatant to have access to a slot of the printed spell level, but it does not consume that spell slot. This is an explicit arena setup rule, not a change to the spell's RAW casting rules. Runtime data must opt into the rule declaratively; existing opening spells continue to consume slots unless so marked.

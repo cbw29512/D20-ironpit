@@ -78,19 +78,31 @@
   }
 
   function cleanupDisabledSources(setup) {
-    const members = [...setup.heroes, ...setup.monsters];
-    const byId = new Map(members.map((member) => [member.combatant_id, member]));
-    for (const target of members) {
-      const handled = new Set();
-      for (const effect of [...target.state.timed_effects]) {
-        if (handled.has(key(effect))) continue;
-        const source = byId.get(effect.source_id); if (!source) continue;
+    try {
+      const members = [...setup.heroes, ...setup.monsters];
+      const byId = new Map(members.map((member) => [member.combatant_id, member]));
+      for (const source of members) {
+        const rule = source.state.template.visualDisguiseAction;
         const dead = source.state.is_dead || !source.state.is_alive || source.state.current_hp <= 0;
-        const incapacitated = C().incapacitated(source.state);
-        if ((effect.ends_if_source_dead && dead) || (effect.ends_if_source_incapacitated && incapacitated)) {
-          handled.add(key(effect)); T().removeGroup(target.state, effect, { grantSourceImmunity: false });
+        if (rule?.endsIfOwnerDead && dead && source.state.magical_visual_disguise_active) {
+          source.state.magical_visual_disguise_active = false;
         }
       }
+      for (const target of members) {
+        const handled = new Set();
+        for (const effect of [...target.state.timed_effects]) {
+          if (handled.has(key(effect))) continue;
+          const source = byId.get(effect.source_id); if (!source) continue;
+          const dead = source.state.is_dead || !source.state.is_alive || source.state.current_hp <= 0;
+          const incapacitated = C().incapacitated(source.state);
+          if ((effect.ends_if_source_dead && dead) || (effect.ends_if_source_incapacitated && incapacitated)) {
+            handled.add(key(effect)); T().removeGroup(target.state, effect, { grantSourceImmunity: false });
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Disabled source-effect cleanup failed", { error });
+      throw error;
     }
   }
 
