@@ -33,6 +33,7 @@ load("browser-spellcasting.js");
 load("browser-healing-policy.js");
 load("browser-healing-resolution.js");
 load("browser-healing.js");
+load("browser-condition-removal-policy.js");
 load("browser-condition-removal.js");
 load("browser-effect-removal.js");
 load("browser-ability-hooks.js");
