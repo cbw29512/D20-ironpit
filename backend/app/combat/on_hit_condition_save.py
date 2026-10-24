@@ -98,6 +98,9 @@ def resolve_on_hit_condition_save(
                     affected_states=affected_states,
                     use_default_poison_recovery=False,
                     cannot_regain_hit_points=effect.cannot_regain_hit_points,
+                    start_of_turn_dice_count=effect.start_of_turn_damage_dice_count,
+                    start_of_turn_dice_size=effect.start_of_turn_damage_dice_size,
+                    start_of_turn_damage_type=effect.start_of_turn_damage_type,
                 )
             elif effect.condition_id not in defender.active_effect_ids:
                 defender.active_effect_ids.append(effect.condition_id)
