@@ -3,9 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.domain.models import BattleEvent, CombatantState, EncounterCombatant, EncounterSetup, TimedEffect
-
 logger = logging.getLogger(__name__)
-
 
 def remove_effect_instance(state: CombatantState, effect: TimedEffect) -> bool:
     try:
@@ -24,7 +22,6 @@ def remove_effect_instance(state: CombatantState, effect: TimedEffect) -> bool:
         logger.exception("Failed to remove timed effect instance %s.", effect.effect_id)
         raise
 
-
 def remove_on_magical_healing(state: CombatantState) -> list[str]:
     """Close only effects marked for magical-healing removal, regardless of actual HP restored."""
     try:
@@ -38,7 +35,6 @@ def remove_on_magical_healing(state: CombatantState) -> list[str]:
     except Exception:
         logger.exception("Failed magical-healing effect cleanup for %s.", state.template.name)
         raise
-
 
 def remove_effect_group(
     state: CombatantState,
@@ -92,7 +88,6 @@ def remove_effect_group(
         )
         raise
 
-
 def _source_start_expired(effect: TimedEffect, round_number: int) -> bool:
     try:
         source_start = (
@@ -105,7 +100,6 @@ def _source_start_expired(effect: TimedEffect, round_number: int) -> bool:
     except Exception:
         logger.exception("Failed to evaluate timed effect expiry for %s.", effect.effect_id)
         raise
-
 
 def expire_start_of_turn_conditions(
     sequence: int,
