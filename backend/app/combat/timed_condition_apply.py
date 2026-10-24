@@ -12,12 +12,10 @@ from app.domain.models import CombatantState, CombatantTemplate, DebuffCounter, 
 from app.domain.movement import MovementModeGrant
 from app.domain.runtime import TimedTurnBehavior
 from app.domain.saving_throw_context import SavingThrowContext
-
 logger = logging.getLogger(__name__)
 POISONED_EFFECT_ID = "poisoned"
 ARENA_POISON_RECOVERY_DC = 10
 TERMINAL_CONDITIONS = frozenset({"petrified"})
-
 
 def apply_terminal_condition_outcome(
     state: CombatantState, effect_id: str, *,
@@ -31,7 +29,6 @@ def apply_terminal_condition_outcome(
     except Exception:
         logger.exception("Terminal condition outcome failed for %s.", state.template.name)
         raise
-
 
 def apply_timed_condition(
     state: CombatantState, effect_id: str, source_id: str, *,
