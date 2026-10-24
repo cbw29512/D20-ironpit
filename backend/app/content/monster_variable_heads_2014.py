@@ -26,7 +26,7 @@ _BLOCK = re.compile(
     re.IGNORECASE,
 )
 _HEAL = re.compile(
-    r"regains (?P<amount>\d+) hit points for each head regrown this way",
+    r"regains (?P<amount>\d+) hit points for each head regrown (?:in )?this way",
     re.IGNORECASE,
 )
 _EXTRA_REACTION = re.compile(
@@ -56,8 +56,8 @@ def semantic_variable_head_sections_2014(
     monster: SourceMonster2014,
 ) -> tuple[tuple[str, str], tuple[str, str]] | None:
     """Locate the lifecycle and OA clauses by meaning, never card identity/name."""
-    traits = {name: _plain(body) for name, body in source_sections_2014(monster.source_traits).items()}
-    reaction_sections = traits
+    traits = {name: _plain(body) for name, body in source_sections_2014(monster.source_traits, include_continuations=True).items()}
+    reaction_sections = traits  # continuations already included
     all_traits = " ".join(traits.values())
     all_source = " ".join((all_traits, _plain(monster.source_actions), _plain(monster.source_reactions)))
     lifecycle = next(
