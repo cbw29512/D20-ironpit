@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.condition_rules import is_incapacitated
 from app.combat.timed_condition_saves import resolve_repeat_save
 from app.combat.timed_conditions import remove_effect_group
+from app.combat.source_bound_cleanup import cleanup_disabled_source_effects
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
 from app.domain.models import BattleEvent, CombatantState
@@ -115,21 +115,3 @@ def _repeat_save_event(
         ),
     )
 
-
-def cleanup_disabled_source_effects(setup: EncounterSetup) -> None:
-    members = [*setup.heroes, *setup.monsters]
-    by_id = {member.combatant_id: member for member in members}
-    for target in members:
-        handled: set[tuple[str, str | None]] = set()
-        for effect in list(target.state.timed_effects):
-            key = (effect.source_id, effect.source_effect_id)
-            if key in handled:
-                continue
-            source = by_id.get(effect.source_id)
-            if source is None:
-                continue
-            dead = source.state.is_dead or not source.state.is_alive or source.state.current_hp <= 0
-            incapacitated = is_incapacitated(source.state)
-            if (effect.ends_if_source_dead and dead) or (effect.ends_if_source_incapacitated and incapacitated):
-                handled.add(key)
-                remove_effect_group(target.state, effect, grant_source_immunity=False)
