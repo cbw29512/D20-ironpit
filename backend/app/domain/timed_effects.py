@@ -20,6 +20,7 @@ TimedTurnBehavior = Literal["normal", "forced_retreat", "single_activity", "forc
 class TimedEffect(BaseModel):
     effect_id: str
     source_id: str
+    status_lane: Literal["buff", "debuff"] = "debuff"
     source_effect_id: str | None = None
     applied_round: int | None = Field(default=None, ge=0)
     expires_round: int | None = Field(default=None, ge=1)
