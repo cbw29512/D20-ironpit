@@ -16,7 +16,7 @@ for (const file of [
   "browser-condition-lifecycle.js", "browser-charge.js", "browser-light-weapons.js", "browser-light-attack.js",
   "browser-standard-attack-action.js", "browser-multiattack-choices.js", "browser-multiattack.js", "browser-spellcasting.js", "browser-spell-area.js",
   "browser-healing-policy.js", "browser-healing-resolution.js", "browser-group-healing.js", "browser-healing.js",
-  "browser-condition-removal.js", "browser-support.js", "browser-dodge.js", "browser-formation.js",
+  "browser-condition-removal-policy.js", "browser-condition-removal.js", "browser-support.js", "browser-dodge.js", "browser-formation.js",
   "browser-arena-map.js", "browser-grid-geometry.js", "browser-grid-movement-support.js",
   "browser-grid-path-search-support.js", "browser-grid-path-search.js", "browser-grid-movement.js",
   "browser-grid-reaction-support.js", "browser-reaction-movement.js", "browser-offensive-ranges.js",
