@@ -49,6 +49,7 @@ def apply_timed_condition(
     source_turn_count_at_application: int | None = None,
     repeat_save_disadvantage_while_source_visible: bool = False,
     allowed_removal_action_ids: list[str] | None = None,
+    owned_curse_ids: list[str] | None = None,
     affected_states: list[CombatantState] | None = None, turn_behavior: TimedTurnBehavior = "normal",
     ends_on_damage: bool = False, ends_on_owner_attack: bool = False,
     ends_on_owner_spell_cast: bool = False, ends_if_source_incapacitated: bool = False,
@@ -102,7 +103,8 @@ def apply_timed_condition(
             source_maintenance_action_cost=source_maintenance_action_cost,
             source_turn_count_at_application=source_turn_count_at_application,
             repeat_save_disadvantage_while_source_visible=repeat_save_disadvantage_while_source_visible,
-            allowed_removal_action_ids=allowed_removal_action_ids or [], turn_behavior=turn_behavior,
+            allowed_removal_action_ids=allowed_removal_action_ids or [],
+            owned_curse_ids=owned_curse_ids or [], turn_behavior=turn_behavior,
             ends_on_damage=ends_on_damage, ends_on_owner_attack=ends_on_owner_attack,
             ends_on_owner_spell_cast=ends_on_owner_spell_cast,
             ends_if_source_incapacitated=ends_if_source_incapacitated,
@@ -132,6 +134,9 @@ def apply_timed_condition(
         ))
         if effect_id not in state.active_effect_ids:
             state.active_effect_ids.append(effect_id)
+        for curse_id in owned_curse_ids or []:
+            if curse_id not in state.active_curses:
+                state.active_curses.append(curse_id)
         if (
             effect_id == "unconscious" and "prone" not in state.active_effect_ids
             and not condition_is_immune(state, "prone")
