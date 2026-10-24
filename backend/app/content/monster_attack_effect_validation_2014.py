@@ -1,27 +1,16 @@
 from __future__ import annotations
 
-from typing import get_args
-
+from app.content.monster_save_condition_validation_2014 import supported_save_condition_2014
 from app.content.monster_zero_hp_save_rider_2014 import (
     ZERO_HP_SAVE_RIDER_KEYS_2014,
     supports_zero_hp_save_rider_2014,
 )
-from app.domain.action_types import ConditionName, ConditionTiming
-from app.domain.failure_margin import FailureMarginEscalation, require_escalation_duration
 from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType
 
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 _DAMAGE_KEYS = frozenset({"average", "bonus", "dice_count", "dice_size", "type"})
 _CONTROL_KEYS = frozenset({"grapple_escape_dc", "max_target_size", "restrains_while_grappled"})
-_SAVE_CONDITION_KEYS = frozenset({
-    "condition_id", "dc", "max_target_size", "save_ability",
-    "duration_rounds", "repeat_save_timing", "repeat_save_failure_condition_id",
-    "failure_push_ft", "excluded_creature_types", "excluded_creature_subtypes",
-    "cannot_regain_hit_points", "failure_margin_escalation",
-    "start_of_turn_damage_dice_count", "start_of_turn_damage_dice_size",
-    "start_of_turn_damage_type",
-})
 _SAVE_DAMAGE_KEYS = frozenset({
     "damage_bonus", "damage_dice_count", "damage_dice_size", "damage_type",
     "dc", "save_ability", "success_damage",
@@ -29,8 +18,6 @@ _SAVE_DAMAGE_KEYS = frozenset({
 _ABILITIES = frozenset({
     "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",
 })
-_CONDITIONS = frozenset(get_args(ConditionName))
-_TIMINGS = frozenset(get_args(ConditionTiming))
 ADVANTAGE_TRIGGERS_2014 = frozenset({"target_grappled_by_self"})
 
 
@@ -65,48 +52,6 @@ def supported_control_2014(value: object) -> bool:
         and int(value["grapple_escape_dc"]) > 0
         and isinstance(value.get("restrains_while_grappled", False), bool)
         and optional_size_2014(value.get("max_target_size"))
-    )
-
-
-def supported_save_condition_2014(value: object) -> bool:
-    if not isinstance(value, dict) or not set(value) <= _SAVE_CONDITION_KEYS:
-        return False
-    duration = value.get("duration_rounds")
-    timing = value.get("repeat_save_timing")
-    escalation = value.get("repeat_save_failure_condition_id")
-    if escalation is not None and (
-        timing is None or str(escalation).lower() not in _CONDITIONS
-    ):
-        return False
-    escalation = value.get("failure_margin_escalation")
-    if escalation is not None:
-        try:
-            rule = FailureMarginEscalation.model_validate(escalation)
-            require_escalation_duration(rule, duration)
-        except (ValueError, TypeError):
-            return False
-    push = value.get("failure_push_ft", 0)
-    if not isinstance(push, int) or push < 0 or push % 5:
-        return False
-    start_count = value.get("start_of_turn_damage_dice_count", 0)
-    start_size = value.get("start_of_turn_damage_dice_size", 6)
-    start_type = value.get("start_of_turn_damage_type")
-    if not isinstance(start_count, int) or start_count < 0 or start_count > 40:
-        return False
-    if not isinstance(start_size, int) or start_size < 2 or start_size > 100:
-        return False
-    if (start_count > 0) != (str(start_type).lower() in _DAMAGE_TYPES if start_type is not None else False):
-        return False
-    return (
-        str(value.get("condition_id", "")).lower() in _CONDITIONS
-        and isinstance(value.get("dc"), int) and 0 < int(value["dc"]) <= 40
-        and str(value.get("save_ability", "")).lower() in _ABILITIES
-        and optional_size_2014(value.get("max_target_size"))
-        and isinstance(value.get("cannot_regain_hit_points", False), bool)
-        and (duration is None or isinstance(duration, int) and 0 < duration <= 100800)
-        and (timing is None or str(timing).lower() in _TIMINGS)
-        and optional_name_list_2014(value.get("excluded_creature_types"))
-        and optional_name_list_2014(value.get("excluded_creature_subtypes"))
     )
 
 
