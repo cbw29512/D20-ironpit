@@ -29,6 +29,9 @@ def test_clay_haste_serializes_active_effect_gate_and_recharge():
         assert haste["modifierEffects"] == [{
             "kind": "armor-class",
             "flatBonus": 2,
+            "diceCount": 0,
+            "diceSize": 0,
+            "damageType": None,
         }]
         assert haste["savingThrowAdvantageGrants"][0]["abilities"] == ["dexterity"]
         assert grant["requiredActiveEffectId"] == "haste"
