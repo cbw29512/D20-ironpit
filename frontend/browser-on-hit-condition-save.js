@@ -16,7 +16,7 @@
     if (effect.maxTargetSize && !S().sizeAtMost(target, effect.maxTargetSize)) return null;
     const kinds = [...(effect.excludedCreatureTypes || []), ...(effect.excludedCreatureSubtypes || [])];
     if (kinds.some((kind) => K().matches(target.state.template, kind))) return null;
-    if (I().immune(target.state, effect.conditionId, sourceTemplate, { actor: target, setup })) return null;
+    if (effect.conditionId && I().immune(target.state, effect.conditionId, sourceTemplate, { actor: target, setup })) return null;
     const save = window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow(target.state, effect.saveAbility, effect.dc, {
       conditionId: effect.conditionId,
       effectTags: effect.conditionId === "poisoned" ? ["poison"] : [],
@@ -38,12 +38,15 @@
     }
     if (escalated && duration == null) throw new Error("Escalated timed conditions require a source-declared duration.");
     if (!save.succeeded) {
-      const timed = duration != null || effect.repeatSaveTiming;
+      const runtimeEffectId = effect.effectId || effect.conditionId;
+      if (!runtimeEffectId) throw new Error("Failed-save effect has no runtime effect id.");
+      const timed = duration != null || effect.repeatSaveTiming || effect.effectId
+        || effect.cannotRegainHitPoints || effect.allowedRemovalActionIds?.length || effect.curseId;
       if (timed) {
         if (!T()?.apply) throw new Error("Timed on-hit condition save requires browser-timed-conditions.js.");
         const ownerId = attacker?.combatant_id || sourceTemplate?.id || "on-hit-save";
         const sourceEffectId = attack.name || attack.id;
-        appliedCondition = T().apply(target.state, effect.conditionId, ownerId, {
+        appliedCondition = T().apply(target.state, runtimeEffectId, ownerId, {
           sourceEffectId, sourceTemplate, targetActor: target, setup, appliedRound: round,
           expiresRound: duration != null && round != null ? round + duration : null,
           expiryTiming: duration != null ? "target_turn_end" : null,
@@ -53,14 +56,16 @@
           repeatSaveFailureConditionId: effect.repeatSaveFailureConditionId || null,
           useDefaultPoisonRecovery: false,
           cannotRegainHitPoints: Boolean(effect.cannotRegainHitPoints),
+          allowedRemovalActionIds: effect.allowedRemovalActionIds || [],
+          ownedCurseIds: effect.curseId ? [effect.curseId] : [],
         }) || null;
         if (appliedCondition) {
-          L().attachStartTurnDamage(target.state, effect.conditionId, ownerId, sourceEffectId, effect);
+          L().attachStartTurnDamage(target.state, runtimeEffectId, ownerId, sourceEffectId, effect);
         }
-      } else if (!target.state.active_effect_ids.includes(effect.conditionId)) {
-        target.state.active_effect_ids.push(effect.conditionId);
-        T()?.applyTerminalOutcome?.(target.state, effect.conditionId);
-        appliedCondition = effect.conditionId;
+      } else if (!target.state.active_effect_ids.includes(runtimeEffectId)) {
+        target.state.active_effect_ids.push(runtimeEffectId);
+        if (effect.conditionId) T()?.applyTerminalOutcome?.(target.state, effect.conditionId);
+        appliedCondition = runtimeEffectId;
       }
       if (escalated) {
         if (!T()?.apply) throw new Error("Escalated conditions require browser-timed-conditions.js.");
