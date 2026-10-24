@@ -144,7 +144,15 @@
           window.IRON_PIT_BROWSER_EXHAUSTION.reduce(target.state, action.reducesExhaustionLevels);
         }
         if (wanted.has("curse") && target.state.active_curses?.length && (action.removesCurses || action.removesAllCurses)) {
-          target.state.active_curses = action.removesAllCurses ? [] : target.state.active_curses.slice(1);
+          const removedCurses = action.removesAllCurses
+            ? [...target.state.active_curses]
+            : [target.state.active_curses[0]];
+          for (const effect of [...(target.state.timed_effects || [])]) {
+            if ((effect.owned_curse_ids || []).some((curseId) => removedCurses.includes(curseId))) {
+              window.IRON_PIT_BROWSER_TIMED.removeGroup(target.state, effect);
+            }
+          }
+          target.state.active_curses = target.state.active_curses.filter((curseId) => !removedCurses.includes(curseId));
         }
         if (wanted.has("ability-score-reduction") && action.removesAbilityScoreReductions
           && Object.keys(target.state.ability_score_reductions || {}).length) {
