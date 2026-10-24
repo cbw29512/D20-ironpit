@@ -13,7 +13,7 @@ load("browser-action-economy.js");
 load("browser-spellcasting.js");
 load("browser-state.js");
 load("browser-timed-conditions.js");
-load("browser-condition-removal.js");
+load("browser-condition-removal-policy.js");\nload("browser-condition-removal.js");
 
 const C = window.IRON_PIT_BROWSER_CONDITION_REMOVAL;
 
