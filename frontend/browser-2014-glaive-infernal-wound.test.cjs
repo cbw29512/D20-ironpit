@@ -36,6 +36,7 @@ load("browser-creature-kind.js");
 load("browser-on-hit-condition-lifecycle.js");
 load("browser-on-hit-condition-save.js");
 load("browser-timed-conditions.js");
+load("browser-timed-condition-lifecycle.js");
 
 const wound = window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE.resolveOngoingHpLoss;
 const burn = window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN;
