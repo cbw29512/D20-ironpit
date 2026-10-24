@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from app.combat.forced_movement import push_straight_away
 from app.combat.modifier_stack import add_modifier
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import CombatantState
@@ -34,8 +33,13 @@ def apply_forceful_blow(
     setup: EncounterSetup,
     round_number: int,
 ) -> int:
-    """Push the target 15 feet straight away. Following the target remains optional."""
-    return push_straight_away(defender, attacker, setup, 15, round_number=round_number)
+    """Forceful Blow retains its printed push, but the Pit ignores displacement."""
+    try:
+        return 0
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Failed Forceful Blow arena resolution.")
+        raise
 
 
 def apply_staggering_blow(defender: CombatantState, source_id: str) -> bool:
