@@ -290,6 +290,8 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 
 ### 032. Clay Golem
 
+- **ACTIVE BRANCH `feat/2014-clay-golem-haste`:** 2014 Haste is composed from existing timed self-buff, AC modifier, Dexterity-save Advantage, Bonus Action attack, source-turn-end expiry and Recharge primitives. The only generic schema delta is `BonusAttackGrant.required_active_effect_id`, so the extra Slam exists only while the Haste effect is active. Pinned source mutations fail closed. 2024 was audited separately: its **Hasten** is a different Bonus Action (Dash + Disengage, and three Slams in Multiattack that turn), so the 2014 Haste composition must not be copied forward. Do not check this entry complete or change generated counts until exact-head Python/browser/generated gates pass.
+
 - [ ] **SOURCE REVIEW / BIND / TEST / CERTIFY / MERGE** — not yet individually verified by this worksheet.
 - **Recorded blockers:** `mechanic:recharge`, `source:extra-action`.
 - **Unbound printed traits:** None listed; inspect actions/other blockers.
