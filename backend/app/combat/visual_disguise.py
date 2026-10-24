@@ -1,8 +1,6 @@
 """Source-neutral encounter visual-disguise activation and first-turn dismissal."""
 from __future__ import annotations
 
-import logging
-
 from app.combat.action_economy import is_available, spend
 from app.combat.ability_checks import ability_check_roll_mode, resolve_ability_check_outcome, skill_check_bonus
 from app.combat.condition_rules import can_see, has_condition
@@ -11,42 +9,6 @@ from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifi
 from app.combat.rolls import roll_d20
 from app.domain.encounters import EncounterCombatant
 from app.domain.events import BattleEvent
-from app.domain.runtime import CombatantState
-
-logger = logging.getLogger(__name__)
-
-
-def recognize_visual_disguise_by_physical_inspection(
-    observer: CombatantState,
-    source: CombatantState,
-    source_id: str,
-) -> bool:
-    """Record observer-scoped recognition from qualifying tactile inspection."""
-    try:
-        rule = source.template.visual_disguise_action
-        if (
-            rule is None
-            or not rule.physical_inspection_inconsistent
-            or not source.magical_visual_disguise_active
-            or source.is_dead
-            or not source.is_alive
-            or source.current_hp <= 0
-        ):
-            return False
-        recognized = observer.recognized_visual_disguise_source_ids
-        if source_id in recognized:
-            return False
-        recognized.append(source_id)
-        return True
-    except Exception as exc:
-        logger.exception(
-            "Physical visual-disguise inspection failed for source %s.", source_id
-        )
-        raise RuntimeError(
-            "Physical visual-disguise inspection could not be resolved."
-        ) from exc
-
-
 def resolve_visual_disguise_opening(
     sequence: int, member: EncounterCombatant,
 ) -> BattleEvent:
