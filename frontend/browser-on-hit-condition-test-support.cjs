@@ -18,18 +18,20 @@ const load = (name) => {
   }
 };
 
-for (const file of [
-  "browser-heroes.js", "browser-monsters-2014.js", "browser-condition-immunity.js",
-  "browser-condition-rules.js", "browser-action-economy.js", "browser-grapple.js",
-  "browser-modifier-validation.js", "browser-modifiers.js", "browser-state.js",
-  "browser-rage.js", "browser-sneak-attack.js", "browser-rolls.js",
-  "browser-undead-fortitude.js", "browser-terminal-effects.js", "browser-zero-hp.js",
-  "browser-timed-conditions.js", "browser-weapon-mastery.js", "browser-ability-hooks.js",
-  "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js",
-  "browser-creature-kind.js", "browser-on-hit-condition-lifecycle.js",
-  "browser-on-hit-condition-save.js", "browser-saves.js", "browser-condition-lifecycle.js",
-  "browser-source-bound-effects.js",
-]) load(file);
+if (!window.IRON_PIT_BROWSER_STATE) {
+  for (const file of [
+    "browser-heroes.js", "browser-monsters-2014.js", "browser-condition-immunity.js",
+    "browser-condition-rules.js", "browser-action-economy.js", "browser-grapple.js",
+    "browser-modifier-validation.js", "browser-modifiers.js", "browser-state.js",
+    "browser-rage.js", "browser-sneak-attack.js", "browser-rolls.js",
+    "browser-undead-fortitude.js", "browser-terminal-effects.js", "browser-zero-hp.js",
+    "browser-timed-conditions.js", "browser-weapon-mastery.js", "browser-ability-hooks.js",
+    "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js",
+    "browser-creature-kind.js", "browser-on-hit-condition-lifecycle.js",
+    "browser-on-hit-condition-save.js", "browser-saves.js", "browser-condition-lifecycle.js",
+  ]) load(file);
+}
+if (!window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS) load("browser-source-bound-effects.js");
 
 const S = window.IRON_PIT_BROWSER_STATE;
 const base = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-l1"];
