@@ -7,7 +7,7 @@ for (const name of [
   'browser-monsters-2014.js', 'browser-heroes.js', 'browser-state.js',
   'browser-condition-immunity.js', 'browser-condition-rules.js',
   'browser-modifiers.js', 'browser-concentration.js', 'browser-replacement-forms.js',
-  'browser-timed-conditions.js", "browser-timed-condition-lifecycle.js', 'browser-action-economy.js', 'browser-spellcasting.js',
+  'browser-timed-conditions.js', 'browser-timed-condition-lifecycle.js', 'browser-action-economy.js', 'browser-spellcasting.js',
   'browser-effect-tag-conditions.js', 'browser-effect-removal.js',
 ]) vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), 'utf8'), { filename: name });
 const armor = Object.values(window.IRON_PIT_BROWSER_MONSTERS_2014).find(item => item.name === 'Animated Armor');
