@@ -17,6 +17,7 @@ from app.domain.capability_effects import (
     SaveConditionEffectDefinition,
     SaveDamageEffectDefinition,
     SaveMaximumHpReductionEffectDefinition,
+    SavePersistentEffectDefinition,
 )
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.models import ConditionalDamage, OnHitDamage
@@ -109,6 +110,17 @@ def compile_attack_effects(definition: AttackCapabilityDefinition) -> CompiledAt
                     failure_margin_escalation=effect.failure_margin_escalation,
                     excluded_creature_types=list(effect.excluded_creature_types),
                     excluded_creature_subtypes=list(effect.excluded_creature_subtypes),
+                )
+            elif isinstance(effect, SavePersistentEffectDefinition):
+                result.on_hit_save = OnHitConditionSave(
+                    save_ability=effect.save_ability, dc=effect.dc,
+                    effect_id=effect.effect_id, curse_id=effect.curse_id,
+                    allowed_removal_action_ids=list(effect.allowed_removal_action_ids),
+                    cannot_regain_hit_points=effect.cannot_regain_hit_points,
+                    delayed_max_hp_reduction_delay_hours=effect.delayed_max_hp_reduction_delay_hours,
+                    delayed_max_hp_reduction_dice_count=effect.delayed_max_hp_reduction_dice_count,
+                    delayed_max_hp_reduction_dice_size=effect.delayed_max_hp_reduction_dice_size,
+                    delayed_max_hp_reduction_zero_kills=effect.delayed_max_hp_reduction_zero_kills,
                 )
             elif isinstance(effect, OngoingHpLossEffectDefinition):
                 result.on_hit_hp_loss = OnHitOngoingHpLoss(
