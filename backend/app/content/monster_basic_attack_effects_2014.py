@@ -128,6 +128,12 @@ def _save_effect_2014(attack: SourceAttack2014) -> AttackEffectDefinition:
             ),
             failure_push_ft=int(row.get("failure_push_ft", 0)),
             cannot_regain_hit_points=bool(row.get("cannot_regain_hit_points", False)),
+            start_of_turn_damage_dice_count=int(row.get("start_of_turn_damage_dice_count", 0)),
+            start_of_turn_damage_dice_size=int(row.get("start_of_turn_damage_dice_size", 6)),
+            start_of_turn_damage_type=(
+                DamageType(str(row["start_of_turn_damage_type"]).lower())
+                if row.get("start_of_turn_damage_type") is not None else None
+            ),
             failure_margin_escalation=row.get("failure_margin_escalation"),
             excluded_creature_types=[
                 str(item) for item in row.get("excluded_creature_types") or []
