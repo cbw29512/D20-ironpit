@@ -12,7 +12,7 @@ window.IRON_PIT_BROWSER_REPLACEMENT_FORMS = {
   revertIfIncapacitated: () => { formLifecycleChecks += 1; return false; },
 };
 vm.runInThisContext(
-  fs.readFileSync(path.join(__dirname, "browser-timed-conditions.js"), "utf8"),
+  fs.readFileSync(path.join(__dirname, "browser-timed-conditions.js", "browser-timed-condition-lifecycle.js"), "utf8"),
   { filename: "browser-timed-conditions.js" },
 );
 
