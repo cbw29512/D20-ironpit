@@ -21,7 +21,7 @@
       if ((state.timed_effects || []).some((effect) => effect.effect_id === id)) return id;
       const timed = window.IRON_PIT_BROWSER_TIMED;
       if (!timed) throw new Error("Source-effect immunity requires browser-timed-conditions.js.");
-      return timed.apply(state, id, sourceId, {
+      const applied = timed.apply(state, id, sourceId, {
         sourceEffectId: `${actionId}:success-immunity`,
         sourceTemplate: options.sourceTemplate || null,
         sourceIsMagical: Boolean(options.sourceIsMagical),
@@ -31,6 +31,13 @@
         expiresAtStartOfSourceTurn: false,
         useDefaultPoisonRecovery: false,
       });
+      if (applied != null) {
+        const effect = (state.timed_effects || []).find((item) =>
+          item.effect_id === id && item.source_id === sourceId);
+        if (!effect) throw new Error("Granted source-effect immunity state is missing.");
+        effect.status_lane = "buff";
+      }
+      return applied;
     } catch (error) {
       console.error("Failed source-effect immunity grant", { actionId, sourceId, error });
       throw error;
