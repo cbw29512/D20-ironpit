@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 from app.content.monster_source_2014 import load_monster_source_2014
+from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_source_start_turn_damage_condition_2014 import (
     source_proven_start_turn_damage_condition_2014,
 )
@@ -82,3 +84,27 @@ def test_preexisting_unreviewed_attack_rider_fails_closed():
     })
 
     assert source_proven_start_turn_damage_condition_2014(monster, bite) is None
+
+def test_source_completion_pipeline_clears_only_the_attack_incomplete_blocker():
+    try:
+        monster = _source()
+        completed = source_completed_mixed_attack_2014(monster, _bite(monster))
+
+        assert completed.source_complete is True
+        assert completed.on_hit_save_effect == {
+            "save_ability": "constitution",
+            "dc": 21,
+            "condition_id": "poisoned",
+            "cannot_regain_hit_points": True,
+            "start_of_turn_damage_dice_count": 6,
+            "start_of_turn_damage_dice_size": 6,
+            "start_of_turn_damage_type": "poison",
+            "repeat_save_timing": "target_turn_end",
+        }
+        blockers = basic_blockers_2014(monster)
+        assert "attack:incomplete" not in blockers
+        assert "mechanic:spellcasting" in blockers
+        assert "source:trait" in blockers
+    except Exception:
+        raise
+
