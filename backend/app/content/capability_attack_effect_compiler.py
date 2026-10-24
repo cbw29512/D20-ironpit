@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import logging
 
 from app.content.capability_errors import UnsupportedCapabilityError
-from app.domain.actions import HitControlEffect
+from app.content.capability_attack_control_compiler import compile_attack_control
 from app.domain.capabilities import AttackCapabilityDefinition
 from app.domain.capability_effects import (
     AbilityScoreReductionEffectDefinition,
@@ -47,32 +47,6 @@ class CompiledAttackEffects:
     on_hit_ability_score_reduction: OnHitAbilityScoreReduction | None
     on_hit_contested_movement: OnHitContestedMovement | None
 
-
-def _compile_control(
-    effect: GrappleEffectDefinition | ConditionEffectDefinition,
-) -> HitControlEffect:
-    try:
-        if isinstance(effect, GrappleEffectDefinition):
-            return HitControlEffect(
-                max_target_size=effect.max_target_size,
-                grapple_escape_dc=effect.escape_dc,
-                restrains_while_grappled=effect.restrains,
-                grapple_requires_source_free=effect.requires_source_free,
-                grapple_periodic_damage=effect.periodic_damage,
-            )
-        return HitControlEffect(
-            max_target_size=effect.max_target_size,
-            condition_id=effect.condition,
-            expires_at_start_of_source_turn=effect.expires_at_start_of_source_turn,
-            expiry_timing=effect.expiry_timing,
-            repeat_save_ability=effect.repeat_save_ability,
-            repeat_save_dc=effect.repeat_save_dc,
-            repeat_save_timing=effect.repeat_save_timing,
-            allowed_removal_action_ids=effect.allowed_removal_action_ids,
-        )
-    except Exception:
-        logger.exception("Failed to compile attack control effect.")
-        raise
 
 
 def compile_attack_effects(definition: AttackCapabilityDefinition) -> CompiledAttackEffects:
@@ -148,7 +122,7 @@ def compile_attack_effects(definition: AttackCapabilityDefinition) -> CompiledAt
             elif isinstance(effect, HitModifierEffect):
                 result.on_hit_modifiers.append(effect)
             elif isinstance(effect, (GrappleEffectDefinition, ConditionEffectDefinition)):
-                result.control = _compile_control(effect)
+                result.control = compile_attack_control(effect)
             else:
                 raise UnsupportedCapabilityError(f"Unsupported attack effect: {effect!r}")
         return result
