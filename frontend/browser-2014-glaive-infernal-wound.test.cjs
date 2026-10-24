@@ -32,6 +32,7 @@ window.IRON_PIT_BROWSER_ZERO_HP = { reduceToZero: (state) => {
   state.current_hp = 0; state.is_unconscious = true;
 } };
 load("browser-start-of-turn-timed-burn.js");
+load("browser-creature-kind.js");
 load("browser-on-hit-condition-save.js");
 load("browser-timed-conditions.js");
 
