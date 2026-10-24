@@ -12,6 +12,7 @@ from app.domain.save_damage import SaveDamageComponent
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
+from app.domain.weapons import DamageType
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +32,7 @@ class SaveCapabilityDefinition(BaseModel):
     target_max_size: CreatureSize | None = None
     area: AreaTargeting | None = None
     damage: DiceSpec | None = None
-    damage_type: str | None = None
+    damage_type: DamageType | None = None
     damage_components: list[SaveDamageComponent] = Field(default_factory=list)
     success_damage: Literal["none", "half"] = "none"
     failure_sets_zero_hp: bool = Field(default=False, exclude_if=lambda value: not value)
