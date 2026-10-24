@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.condition_immunity import condition_is_immune
+from app.combat.condition_rules import is_incapacitated
 from app.domain.saving_throw_context import SavingThrowContext
 
 from app.combat.saving_throw_rolls import resolve_saving_throw
@@ -31,6 +32,8 @@ def resolve_hostile_condition_aura(
     try:
         aura = action.hostile_start_turn_condition_aura
         if aura is None or aura.trigger != "enemy_turn_start" or distance > aura.radius_ft:
+            return None, sequence
+        if aura.inactive_while_source_incapacitated and is_incapacitated(source.state):
             return None, sequence
 
         if target.state.is_dead or condition_is_immune(

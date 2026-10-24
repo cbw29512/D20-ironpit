@@ -12,6 +12,7 @@ for (const file of [
   "browser-condition-immunity.js", "browser-defensive-modifier-rules.js", "browser-rolls.js",
   "browser-saving-throws.js", "browser-saves.js", "browser-timed-conditions.js", "browser-condition-lifecycle.js",
   "browser-failed-save-timed-effects.js", "browser-timed-emanations.js",
+  "battlefield-passive-states.js",
 ]) load(file);
 const S = window.IRON_PIT_BROWSER_STATE;
 const E = window.IRON_PIT_BROWSER_TIMED_EMANATIONS;
@@ -55,6 +56,7 @@ function fixture() {
   const passed = E.resolveStartOfTurn(ended.sequence, 2, target, setup);
   assert.equal(passed.events[0].save_succeeded, true);
   assert.equal(target.state.timed_effects[0].expires_round, null);
+  assert.equal(target.state.timed_effects[0].status_lane, "buff");
   assert.deepEqual(E.resolveStartOfTurn(passed.sequence, 500, target, setup).events, []);
   const other = member(sourceTemplate, "source-b", "monsters", 10);
   setup.monsters.push(other);
@@ -116,7 +118,22 @@ for (const magical of [false, true]) {
   assert.equal(result.events[0].feature_id, "stench");
   assert.equal(result.claimed, false);
 }
+{
+  const { source, setup } = fixture();
+  const action = source.state.template.timed_self_buff_actions[0];
+  action.name = "Renamed Dread Aura";
+  action.id = "renamed-dread-aura";
+  action.hostileStartTurnConditionAura.inactive_while_source_incapacitated = true;
+  source.state.template.source_trait_names = ["Renamed Dread Aura"];
+  const project = window.IRON_PIT_BATTLEFIELD_PASSIVE_STATES.permanentPassiveStates;
+  assert.deepEqual(project(source, setup).filter((item) => item.label === action.name)
+    .map((item) => item.active), [true]);
+  source.state.active_effect_ids.push("stunned");
+  assert.deepEqual(project(source, setup).filter((item) => item.label === action.name)
+    .map((item) => item.active), [false]);
+}
 console.log("Shared passive condition aura source, immunity, expiry, reset and edition regressions passed.");
+require("./browser-pit-fiend-fear-aura.test.cjs");
 for (const [x, expected] of [[2, 1], [3, 0]]) {
   const { target, source, setup } = fixture();
   source.state.position = { x: 0, y: 0 };

@@ -1,0 +1,5 @@
+{
+  "pit-fiend": {
+    "source_traits": "<p><em><strong>Fear Aura.</strong></em> Any creature hostile to the pit fiend that starts its turn within 20 feet of the pit fiend must make a DC 21 Wisdom saving throw, unless the pit fiend is incapacitated. On a failed save, the creature is frightened until the start of its next turn. If a creature's saving throw is successful, the creature is immune to the pit fiend's Fear Aura for the next 24 hours.</p><p><em><strong>Magic Resistance.</strong></em> The pit fiend has advantage on saving throws against spells and other magical effects.</p><p><em><strong>Magic Weapons.</strong></em> The pit fiend's weapon attacks are magical.</p><p><em><strong>Innate Spellcasting.</strong></em> The pit fiend's spellcasting ability is Charisma (spell save DC 21). The pit fiend can innately cast the following spells, requiring no material components:</p><p>At will: detect magic, fireball</p><p>3/day each: hold monster, wall of fire</p>"
+  }
+}

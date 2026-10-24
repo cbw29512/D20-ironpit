@@ -3,30 +3,21 @@
 
   const el = (id) => document.getElementById(id);
   const nodes = new Map();
-  const SELF_BUFFS = new Set(["rage", "dodge"]);
-  const DEBUFF_MODIFIERS = new Set(["attacks-against-advantage"]);
   const reduced = () => window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, reduced() ? Math.min(ms, 70) : ms));
   const cleanLabel = (id) => String(id || "").replace(/^weapon-mastery-/, "").replace(/^tactical-master-/, "").replaceAll("_", " ").replaceAll("-", " ").toUpperCase();
   const conditionLabel = (id) => id === "frightened" ? "😱 FEAR" : cleanLabel(id);
   const concentrationLabel = (id) => id ? `✨ CONCENTRATING · ${cleanLabel(id)}` : "";
 
-  function modifierIsDebuff(modifier) {
-    return DEBUFF_MODIFIERS.has(modifier.kind) || Number(modifier.flat_bonus || 0) < 0;
-  }
-
   function classifyStatusLanes(state) {
-    const buffs = new Set(state.active_buff_effect_ids || []), debuffs = new Set();
-    for (const id of state.active_effect_ids || []) (SELF_BUFFS.has(id) ? buffs : debuffs).add(id);
-    for (const effect of state.timed_effects || []) debuffs.add(effect.effect_id);
-    const permanentIds = new Set((state.template?.passive_modifier_grants || []).map((grant) => grant.source_id));
-    for (const modifier of state.active_modifiers || []) {
-      const id = modifier.source_effect_id; if (!id || permanentIds.has(id)) continue;
-      (modifierIsDebuff(modifier) ? debuffs : buffs).add(id);
+    try {
+      const classify = window.IRON_PIT_BATTLEFIELD_PASSIVE_STATES?.classifyStatusLanes;
+      if (!classify) throw new Error("Battlefield status-lane runtime is not loaded.");
+      return classify(state);
+    } catch (error) {
+      console.error("Failed to classify replay status lanes", { state, error });
+      throw error;
     }
-    if (state.concentration?.effect_id) buffs.delete(state.concentration.effect_id);
-    for (const id of debuffs) buffs.delete(id);
-    return { buffs: [...buffs].sort(), debuffs: [...debuffs].sort() };
   }
 
   const permanentPassiveStates = (...args) => {
@@ -63,55 +54,18 @@
     node.dataset.concentration = effectId || "";
   }
 
-  function renderLane(node, selector, ids, kind, permanent = []) {
+  function renderStateLanes(node, state, permanent = []) {
     try {
-      const rack = node?.querySelector(selector); if (!rack) return;
-      // Reuse the same DOM badge while its engine-owned effect remains active.
-      // Newly applied statuses animate once; expired statuses leave immediately.
-      const existing = new Map([...rack.children].map((badge) => [badge.dataset.effect, badge]));
-      const badges = ids.map((id) => {
-        const old = existing.get(id);
-        if (old) return old;
-        const badge = document.createElement("span");
-        badge.className = kind === "buff" ? `buff-badge buff-${id} status-enter` : `debuff-badge condition-badge condition-${id} status-enter`;
-        badge.dataset.effect = id; badge.textContent = kind === "debuff" ? conditionLabel(id) : cleanLabel(id);
-        badge.setAttribute("aria-label", `${kind === "buff" ? "Buff" : "Debuff"}: ${cleanLabel(id)}`);
-        return badge;
-      });
-      for (const passive of permanent) {
-        const badge = existing.get(passive.id) || document.createElement("span");
-        badge.className = `${kind === "debuff" ? "debuff-badge" : "buff-badge"} passive-badge${passive.active ? "" : " is-inactive"}`;
-        badge.dataset.effect = passive.id;
-        badge.textContent = String(passive.label || passive.id).toUpperCase();
-        badge.title = `${passive.explanation} Currently ${passive.active ? "active" : "inactive"}.`;
-        badge.setAttribute("aria-label", badge.title);
-        badges.push(badge);
-      }
-      // Transient condition updates must not remove permanent passives.
-      if (!permanent.length) {
-        for (const badge of existing.values()) {
-          if (badge.classList.contains("passive-badge")) badges.push(badge);
-        }
-      }
-      rack.replaceChildren(...badges);
+      const render = window.IRON_PIT_BATTLEFIELD_STATUS_RENDER?.renderStateLanes;
+      if (!render) throw new Error("Battlefield status renderer is not loaded.");
+      render(node, state, permanent, { cleanLabel, conditionLabel });
     } catch (error) {
-      console.error("Failed to render combat status lane", { selector, kind, error });
+      console.error("Failed replay status rendering", { state, error });
       throw error;
     }
   }
 
-  function renderStateLanes(node, state, permanent = []) {
-    if (!node) return;
-    const lanes = classifyStatusLanes(state);
-    const buffs = permanent.filter((item) => item.lane !== "debuff");
-    const debuffs = permanent.filter((item) => item.lane === "debuff");
-    renderLane(node, ".card-buffs", lanes.buffs, "buff", buffs);
-    renderLane(node, ".card-debuffs", lanes.debuffs, "debuff", debuffs);
-    node.classList.toggle("has-buff", lanes.buffs.length > 0 || buffs.some((item) => item.active) || Boolean(state.concentration));
-    node.classList.toggle("has-debuff", lanes.debuffs.length > 0 || debuffs.some((item) => item.active));
-    node.classList.toggle("has-condition", lanes.debuffs.length > 0);
-  }
-
+  // battlefield-status-render.js owns badge retention via existing = new Map.
   function conditions(node, added = [], removed = []) {
     if (!node) return;
     const set = new Set((node.dataset.conditions || "").split(",").filter(Boolean));
