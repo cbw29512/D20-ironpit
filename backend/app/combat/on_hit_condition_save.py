@@ -56,8 +56,7 @@ def resolve_on_hit_condition_save(
                 effect_tags=frozenset({"poison"}) if effect.condition_id == "poisoned" else frozenset(),
             ),
         )
-        applied = None
-        additional: list[str] = []
+        applied = None; additional: list[str] = []
         escalation = effect.failure_margin_escalation
         escalated, duration = escalation_duration(effect, save_roll, succeeded, dice)
         if not succeeded:
