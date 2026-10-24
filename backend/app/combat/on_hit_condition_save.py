@@ -13,9 +13,7 @@ from app.combat.timed_conditions import apply_terminal_condition_outcome, apply_
 from app.domain.models import CombatantState, CombatantTemplate, DiceRoll, WeaponAttack
 from app.domain.saving_throw_context import SavingThrowContext
 from app.domain.size import size_at_most
-
 logger = logging.getLogger(__name__)
-
 
 @dataclass(frozen=True)
 class OnHitConditionSaveResolution:
@@ -26,8 +24,6 @@ class OnHitConditionSaveResolution:
     applied_condition: str | None = None
     forced_movement_ft: int = 0
     additional_conditions: tuple[str, ...] = ()
-
-
 
 def resolve_on_hit_condition_save(
     defender: CombatantState,
