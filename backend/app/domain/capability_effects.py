@@ -9,7 +9,11 @@ from app.domain.combatants import DamageType
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
 from app.domain.zero_hp_effects import ZeroHpSaveDamageRider
-from app.domain.save_condition_effects import OngoingHpLossEffectDefinition, SaveConditionEffectDefinition
+from app.domain.save_condition_effects import (
+    OngoingHpLossEffectDefinition,
+    SaveConditionEffectDefinition,
+    SavePersistentEffectDefinition,
+)
 
 
 class DiceSpec(BaseModel):
@@ -105,6 +109,7 @@ class ConditionEffectDefinition(BaseModel):
 
 AttackEffectDefinition = Annotated[
     DamageEffectDefinition | SaveDamageEffectDefinition | AbilityScoreReductionEffectDefinition | SaveMaximumHpReductionEffectDefinition | ContestedMovementEffectDefinition | ProneEffectDefinition | SaveConditionEffectDefinition |
-    GrappleEffectDefinition | ConditionEffectDefinition | OngoingHpLossEffectDefinition | HitModifierEffect,
+    GrappleEffectDefinition | ConditionEffectDefinition | OngoingHpLossEffectDefinition |
+    SavePersistentEffectDefinition | HitModifierEffect,
     Field(discriminator="kind"),
 ]
