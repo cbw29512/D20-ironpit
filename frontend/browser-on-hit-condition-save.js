@@ -62,6 +62,9 @@
           repeatSaveFailureConditionId: effect.repeatSaveFailureConditionId || null,
           useDefaultPoisonRecovery: false,
           cannotRegainHitPoints: Boolean(effect.cannotRegainHitPoints),
+          startOfTurnDiceCount: effect.startOfTurnDamageDiceCount || 0,
+          startOfTurnDiceSize: effect.startOfTurnDamageDiceSize || 6,
+          startOfTurnDamageType: effect.startOfTurnDamageType || null,
         }) || null;
       } else if (!target.state.active_effect_ids.includes(effect.conditionId)) {
         target.state.active_effect_ids.push(effect.conditionId);
