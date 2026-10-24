@@ -109,6 +109,8 @@ function fixture(sourceId = "source-a", sourcePosition = 20) {
   const passed = E.resolveStartOfTurn(1, 1, target, setup);
   assert.equal(passed.events[0].save_succeeded, true);
   assert.match(passed.events[0].description, /rest of the match/);
+  assert.equal(target.state.timed_effects.find((item) =>
+    item.effect_id.includes("success-immunity")).status_lane, "buff");
   queue = [];
   assert.deepEqual(E.resolveStartOfTurn(passed.sequence, 500, target, setup).events, []);
   const other = member(source.state.template, "source-b", "monsters", 20);
