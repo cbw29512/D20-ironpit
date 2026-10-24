@@ -21,6 +21,7 @@ from app.combat.resources import action_resource_available, spend_action_resourc
 from app.combat.opening_burst import opening_burst_available
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.target_chosen_save import choose_save_ability
+from app.combat.visual_disguise import recognize_visual_disguise_by_physical_inspection
 from app.combat.zero_hp import apply_damage, reduce_to_zero_hit_points
 from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -163,6 +164,8 @@ def resolve_save_action(
     if not succeeded and action.failure_sets_zero_hp:
         reduce_to_zero_hit_points(target.state, dice=dice, affected_states=affected_states)
     applied_conditions: list[str] = []
+    actor_recognized_target_disguise = False
+    target_recognized_actor_disguise = False
     if succeeded and action.source_effect_immunity_on_success:
         grant_source_effect_immunity(
             target.state, action.id, actor.combatant_id, round_number,
@@ -185,6 +188,17 @@ def resolve_save_action(
             restrains=action.restrains_while_grappled,
             source_is_magical=action.magical_effect,
         )
+        if "grappled" in applied_conditions:
+            actor_recognized_target_disguise = (
+                recognize_visual_disguise_by_physical_inspection(
+                    actor.state, target.state, target.combatant_id
+                )
+            )
+            target_recognized_actor_disguise = (
+                recognize_visual_disguise_by_physical_inspection(
+                    target.state, actor.state, actor.combatant_id
+                )
+            )
     pushed_ft = 0
     if not succeeded and target.state.is_alive and not target.state.is_dead and action.failed_save_push_ft:
         if setup is None:
@@ -216,6 +230,16 @@ def resolve_save_action(
     if damage_outcome == "undead_fortitude": description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
     if "grappled" in applied_conditions: description += f" {target.state.template.name} is Grappled."
     if "restrained" in applied_conditions: description += f" {target.state.template.name} is Restrained while Grappled."
+    if actor_recognized_target_disguise:
+        description += (
+            f" {actor.state.template.name} recognizes {target.state.template.name}'s "
+            "visual disguise through physical inspection."
+        )
+    if target_recognized_actor_disguise:
+        description += (
+            f" {target.state.template.name} recognizes {actor.state.template.name}'s "
+            "visual disguise through physical inspection."
+        )
     if pushed_ft: description += f" {target.state.template.name} is pushed {pushed_ft} feet away."
     if not succeeded and action.failure_sets_zero_hp:
         description += f" {target.state.template.name} drops directly to 0 HP (not damage)."
