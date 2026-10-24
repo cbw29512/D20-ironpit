@@ -3,6 +3,8 @@ const assert = require("node:assert/strict");
 require("./browser-test-runtime.cjs").loadWebsite();
 const S = window.IRON_PIT_BROWSER_STATE;
 const I = window.IRON_PIT_BROWSER_VISUAL_DISGUISE_INSPECTION;
+const Attack = window.IRON_PIT_BROWSER_ATTACK;
+const Saves = window.IRON_PIT_BROWSER_SAVES;
 assert.ok(I?.inspect, "Shared visual inspection module must be loaded by the site.");
 const original = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-commoner"];
 assert.ok(original, "Real 2014 card must exist.");
@@ -78,6 +80,91 @@ function makeFight({ roll=12, modifier=4, dc=16, cost="action", sourceKind="mons
   source.state.magical_visual_disguise_active = true;
   observer.state.active_effect_ids.push("blinded");
   assert.throws(() => I.inspect(1, 1, observer, source, setup), /requires sight/);
+}
+{
+  const { observer, source } = makeFight();
+  observer.state.active_effect_ids.push("blinded");
+  assert.equal(I.recognizePhysicalInspection(observer.state, source.state, source.combatant_id), true);
+  assert.deepEqual(observer.state.recognized_visual_disguise_source_ids, ["source"]);
+  assert.equal(source.state.magical_visual_disguise_active, true);
+  assert.equal(I.recognizePhysicalInspection(observer.state, source.state, source.combatant_id), false,
+    "Recognition is observer-scoped and idempotent.");
+}
+{
+  const { observer, source } = makeFight();
+  source.state.template = {
+    ...source.state.template,
+    visualDisguiseAction: { ...source.state.template.visualDisguiseAction, physicalInspectionInconsistent: false },
+  };
+  assert.equal(I.recognizePhysicalInspection(observer.state, source.state, source.combatant_id), false);
+  assert.deepEqual(observer.state.recognized_visual_disguise_source_ids, []);
+}
+{
+  let fight = makeFight();
+  let rolls = [15, 1];
+  window.IRON_PIT_DICE = {
+    roll: (sides) => ((rolls.shift() ?? 1) - 1) % sides + 1,
+    rollMany: (n, sides) => Array.from({ length: n }, () => window.IRON_PIT_DICE.roll(sides)),
+  };
+  const plainAttack = { ...fight.observer.state.template.attacks[0] };
+  const plain = Attack.resolveAttack(1, 1, fight.observer, fight.source, plainAttack, 5, { setup: fight.setup });
+  assert.equal(plain.hit, true);
+  assert.deepEqual(fight.observer.state.recognized_visual_disguise_source_ids, [],
+    "Ordinary weapon contact is not physical inspection.");
+  assert.equal(fight.source.state.magical_visual_disguise_active, true);
+
+  fight = makeFight();
+  rolls = [15, 1];
+  window.IRON_PIT_DICE = {
+    roll: (sides) => ((rolls.shift() ?? 1) - 1) % sides + 1,
+    rollMany: (n, sides) => Array.from({ length: n }, () => window.IRON_PIT_DICE.roll(sides)),
+  };
+  const grappleAttack = {
+    ...fight.observer.state.template.attacks[0],
+    controlEffect: { grappleEscapeDc: 10 },
+  };
+  const grapple = Attack.resolveAttack(1, 1, fight.observer, fight.source, grappleAttack, 5, { setup: fight.setup });
+  assert.equal(grapple.hit, true);
+  assert.ok(grapple.applied_condition_ids.includes("grappled"));
+  assert.deepEqual(fight.observer.state.recognized_visual_disguise_source_ids, ["source"]);
+  assert.match(grapple.description, /recognizes .* visual disguise through physical inspection/);
+  assert.equal(fight.source.state.magical_visual_disguise_active, true);
+}
+{
+  const fight = makeFight();
+  let rolls = [15, 1];
+  window.IRON_PIT_DICE = {
+    roll: (sides) => ((rolls.shift() ?? 1) - 1) % sides + 1,
+    rollMany: (n, sides) => Array.from({ length: n }, () => window.IRON_PIT_DICE.roll(sides)),
+  };
+  const grappleAttack = {
+    ...fight.source.state.template.attacks[0],
+    controlEffect: { grappleEscapeDc: 10 },
+  };
+  const event = Attack.resolveAttack(1, 1, fight.source, fight.observer, grappleAttack, 5, { setup: fight.setup });
+  assert.equal(event.hit, true);
+  assert.ok(event.applied_condition_ids.includes("grappled"));
+  assert.deepEqual(fight.observer.state.recognized_visual_disguise_source_ids, ["source"],
+    "The creature held by a disguised grappler also detects the tactile inconsistency.");
+  assert.equal(fight.source.state.magical_visual_disguise_active, true);
+}
+{
+  const fight = makeFight();
+  window.IRON_PIT_DICE = { roll: () => 1, rollMany: (n) => Array.from({ length: n }, () => 1) };
+  const action = {
+    id: "renamed-direct-grab", name: "Renamed Direct Grab", actionCost: "action",
+    saveAbility: "strength", dc: 40, range: 5, maxTargets: 1,
+    damageDiceCount: 0, damageDiceSize: 6, damageBonus: 0, successDamage: "none",
+    grappleEscapeDc: 10, restrainsWhileGrappled: false, resourceCost: 1,
+    magicalEffect: false, effectTags: [], automaticFailureCreatureTypes: [],
+    requiredTargetCreatureTypes: [], prohibitedTargetSourceEffectIds: [], excludedTargetCreatureTypes: [],
+  };
+  const event = Saves.resolveAction(1, 1, fight.observer, fight.source, action, 5, { setup: fight.setup });
+  assert.equal(event.save_succeeded, false);
+  assert.ok(event.applied_condition_ids.includes("grappled"));
+  assert.deepEqual(fight.observer.state.recognized_visual_disguise_source_ids, ["source"]);
+  assert.match(event.description, /recognizes .* visual disguise through physical inspection/);
+  assert.equal(fight.source.state.magical_visual_disguise_active, true);
 }
 assert.deepEqual(original, baseCard, "Source card must remain immutable.");
 console.log("Source-neutral disguise Investigation uses printed ability, skill, DC, Action and real rolls.");
