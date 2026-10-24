@@ -43,3 +43,26 @@ def test_valid_source_owned_ac_parameter_is_data_not_dispatch():
         ]
     except Exception:
         raise
+
+
+def test_recharge_action_display_name_is_not_dispatch_identity():
+    try:
+        source = _source()
+        changed = source.model_copy(update={
+            "source_actions": source.source_actions.replace(
+                "Haste (Recharge 5–6)", "Overclock (Recharge 5–6)"
+            ),
+            "action_names": [
+                "Overclock (Recharge 5–6)" if name == "Haste (Recharge 5–6)" else name
+                for name in source.action_names
+            ],
+            "action_recharges": {"overclock": 5},
+        })
+        bindings = recharge_self_buff_bindings_2014(changed)
+        assert len(bindings) == 1
+        assert bindings[0].action.id == "overclock"
+        assert bindings[0].action.name == "Overclock"
+        assert bindings[0].recharge.resource_id == "overclock"
+        assert bindings[0].bonus_attack_grant.required_active_effect_id == "overclock"
+    except Exception:
+        raise
