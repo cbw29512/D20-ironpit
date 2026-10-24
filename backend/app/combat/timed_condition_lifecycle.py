@@ -10,6 +10,10 @@ logger = logging.getLogger(__name__)
 def remove_effect_instance(state: CombatantState, effect: TimedEffect) -> bool:
     try:
         state.timed_effects = [item for item in state.timed_effects if item != effect]
+        for curse_id in effect.owned_curse_ids:
+            still_owned = any(curse_id in item.owned_curse_ids for item in state.timed_effects)
+            if not still_owned:
+                state.active_curses = [item for item in state.active_curses if item != curse_id]
         still_active = any(item.effect_id == effect.effect_id for item in state.timed_effects)
         innate = effect.effect_id in state.template.innate_condition_ids
         if not still_active and not innate and effect.effect_id in state.active_effect_ids:
