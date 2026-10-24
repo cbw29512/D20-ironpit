@@ -4,18 +4,8 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const T = () => window.IRON_PIT_BROWSER_TIMED;
-
-  function creatureMatchesKind(template, kind) {
-    const expected = String(kind || "").trim().toLowerCase();
-    if (!expected) return false;
-    const raw = String(template?.creature_type || "");
-    const base = raw.split(" (")[0].trim().toLowerCase();
-    if (base === expected) return true;
-    const open = raw.indexOf("(");
-    const close = raw.lastIndexOf(")");
-    if (open < 0 || close <= open) return false;
-    return raw.slice(open + 1, close).split(",").some((part) => part.trim().toLowerCase() === expected);
-  }
+  const K = () => window.IRON_PIT_BROWSER_CREATURE_KIND
+    || (() => { throw new Error("browser-creature-kind.js is required."); })();
 
   function resolve(target, attack, sourceTemplate = null, round = null, setup = null, attacker = null) {
     try {
@@ -23,7 +13,7 @@
     if (!effect || target.state.is_dead || !target.state.is_alive) return null;
     if (effect.maxTargetSize && !S().sizeAtMost(target, effect.maxTargetSize)) return null;
     const kinds = [...(effect.excludedCreatureTypes || []), ...(effect.excludedCreatureSubtypes || [])];
-    if (kinds.some((kind) => creatureMatchesKind(target.state.template, kind))) return null;
+    if (kinds.some((kind) => K().matches(target.state.template, kind))) return null;
     if (I().immune(target.state, effect.conditionId, sourceTemplate, { actor: target, setup })) return null;
     const save = window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow(target.state, effect.saveAbility, effect.dc, {
       conditionId: effect.conditionId,
@@ -111,7 +101,7 @@
       const rule = attack.onHitOngoingHpLoss;
       if (!rule || target.state.is_dead || !target.state.is_alive) return null;
       const exclusions = rule.excludedCreatureTypes || [];
-      if (exclusions.some((kind) => creatureMatchesKind(target.state.template, kind))) return null;
+      if (exclusions.some((kind) => K().matches(target.state.template, kind))) return null;
       const sourceId = attacker?.combatant_id;
       if (!sourceId) throw new Error("Source-owned persistent HP loss requires a combatant source id.");
       const H = window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN;
@@ -148,5 +138,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE = { resolve, resolveOngoingHpLoss, creatureMatchesKind };
+  window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE = { resolve, resolveOngoingHpLoss, creatureMatchesKind: K().matches };
 })();
