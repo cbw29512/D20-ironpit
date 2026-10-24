@@ -1,6 +1,5 @@
 (() => {
   "use strict";
-
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const C = () => window.IRON_PIT_BROWSER_DEBUFF_COUNTERS || { movementCost: () => null };
   const RF = () => window.IRON_PIT_BROWSER_REPLACEMENT_FORMS;
@@ -8,13 +7,11 @@
   const POISONED = "poisoned";
   const TERMINAL = new Set(["petrified"]);
   const POISON_RECOVERY_DC = 10;
-
   function applyTerminalOutcome(state, effectId, affectedStates = []) {
     if (!TERMINAL.has(effectId) || state.is_dead) return false;
     if (!T()?.applyTerminalDeath) throw new Error("Browser terminal-effect runtime is not loaded.");
     return T().applyTerminalDeath(state, affectedStates) === "dead";
   }
-
   function apply(state, effectId, sourceId, options = {}) {
     if (I().immune(state, effectId, options.sourceTemplate || null, {
       sourceIsMagical: options.sourceIsMagical === true,
@@ -89,7 +86,6 @@
     RF()?.revertIfIncapacitated(state);
     return effectId;
   }
-
   const committedActivity = (state) => Boolean((state.delayed_resource_refills || []).length);
   const suppressesAction = (state) => committedActivity(state) || (state.timed_effects || []).some((e) => e.suppress_action);
   const suppressesBonusAction = (state) => committedActivity(state) || (state.timed_effects || []).some((e) => e.suppress_bonus_action);
@@ -105,7 +101,6 @@
     return consumed;
   }
   const suppressesVoluntaryTurn = (state) => suppressesAction(state) && suppressesBonusAction(state) && suppressesMovement(state);
-
   function removeEffect(state, effect) {
     state.timed_effects = state.timed_effects.filter((item) => item !== effect);
     const stillActive = state.timed_effects.some((item) => item.effect_id === effect.effect_id);
@@ -113,7 +108,6 @@
     if (!stillActive && !innate) state.active_effect_ids = state.active_effect_ids.filter((id) => id !== effect.effect_id);
     return !stillActive && !innate;
   }
-
   function removeGroup(state, effect, options = {}) {
     const grantImmunity = options.grantSourceImmunity == null
       ? Boolean(effect.source_effect_immunity_on_end)
@@ -136,7 +130,6 @@
     }
     return removed;
   }
-
   function resolveMovementCounters(state) {
     const resolved = [
       ...(window.IRON_PIT_BROWSER_FLIGHT_GROUND?.resolveGroundConditions(state) || []),
@@ -151,10 +144,8 @@
     }
     return resolved;
   }
-
   window.IRON_PIT_BROWSER_TIMED = {
-    apply, applyTerminalOutcome, consumeNextAttackDisadvantage, nextAttackDisadvantage,
-    removeEffect, removeGroup, resolveMovementCounters, suppressesAction, suppressesBonusAction,
-    suppressesMovement, suppressesReactions, suppressesVoluntaryTurn,
+    apply, applyTerminalOutcome, consumeNextAttackDisadvantage, nextAttackDisadvantage, removeEffect, removeGroup,
+    resolveMovementCounters, suppressesAction, suppressesBonusAction, suppressesMovement, suppressesReactions, suppressesVoluntaryTurn,
   };
 })();
