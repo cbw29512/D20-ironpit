@@ -3,11 +3,16 @@ from __future__ import annotations
 
 import logging
 
+import pytest
+
 from app.combat.attacks import resolve_attack
 from app.combat.dice import FixedDiceProvider
 from app.combat.restoration_riders import apply_restoration_riders
 from app.combat.zero_hp import restore_hit_points
 from app.content.shared_restoration_spells_2014 import remove_curse_2014
+from app.content.capability_attack_compiler import compile_attack
+from app.domain.capabilities import AttackCapabilityDefinition
+from app.domain.capability_effects import DiceSpec, SaveDamageEffectDefinition, SavePersistentEffectDefinition
 from app.domain.encounters import EncounterCombatant
 from app.domain.on_hit_conditions import OnHitConditionSave
 from test_on_hit_condition_save import _attacker, _target
@@ -108,4 +113,52 @@ def test_remove_curse_cleans_owned_effect_and_restores_healing() -> None:
         assert restore_hit_points(target.state, 5) == 5
     except Exception:
         logger.exception("Persistent curse removal regression failed.")
+        raise
+
+
+def test_persistent_effect_compiles_through_generic_attack_capability() -> None:
+    try:
+        definition = AttackCapabilityDefinition(
+            id="renamed-fist", name="Renamed Fist", attack_kind="melee",
+            attack_bonus=5, damage=DiceSpec(count=1, size=6, bonus=2),
+            damage_type="bludgeoning", animation="strike",
+            effects=[SavePersistentEffectDefinition(
+                save_ability="constitution", dc=16, effect_id="generic-rot",
+                curse_id="generic-rot", cannot_regain_hit_points=True,
+                allowed_removal_action_ids=["remove-curse"],
+                delayed_max_hp_reduction_delay_hours=24,
+                delayed_max_hp_reduction_dice_count=3,
+                delayed_max_hp_reduction_dice_size=6,
+                delayed_max_hp_reduction_zero_kills=True,
+            )],
+        )
+        compiled = compile_attack(definition)
+        assert compiled.on_hit_condition_save is not None
+        assert compiled.on_hit_condition_save.dc == 16
+        assert compiled.on_hit_condition_save.effect_id == "generic-rot"
+        assert compiled.on_hit_condition_save.curse_id == "generic-rot"
+        assert compiled.on_hit_condition_save.condition_id is None
+    except Exception:
+        logger.exception("Persistent-effect generic compiler regression failed.")
+        raise
+
+
+def test_persistent_effect_counts_as_the_single_on_hit_save_slot() -> None:
+    try:
+        persistent = SavePersistentEffectDefinition(
+            save_ability="constitution", dc=12, effect_id="generic-rot",
+        )
+        damage_save = SaveDamageEffectDefinition(
+            source="secondary", save_ability="dexterity", dc=12,
+            dice=DiceSpec(count=1, size=6), damage_type="fire",
+        )
+        with pytest.raises(ValueError):
+            AttackCapabilityDefinition(
+                id="illegal-double-save", name="Illegal Double Save", attack_kind="melee",
+                attack_bonus=5, damage=DiceSpec(count=1, size=6),
+                damage_type="bludgeoning", animation="strike",
+                effects=[persistent, damage_save],
+            )
+    except Exception:
+        logger.exception("Persistent-effect save-slot validation regression failed.")
         raise
