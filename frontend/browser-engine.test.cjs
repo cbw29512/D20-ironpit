@@ -327,7 +327,8 @@ require("./browser-initiative-natural-one.test.cjs");
   });
   if (process.env.IRON_PIT_RECORD_GOLDENS === "1") {
     const output = path.join(__dirname, "monster-golden-transcripts.json");
-    fs.writeFileSync(output, JSON.stringify(recordings, null, 2) + "\n");
+    fs.writeFileSync(output, JSON.stringify(recordings, null, 2) + "
+");
     console.log(`Recorded ${recordings.length} seeded real-fight transcripts at ${output}`);
   }
 }
