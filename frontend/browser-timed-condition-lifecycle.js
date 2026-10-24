@@ -81,7 +81,23 @@
     }
   }
 
+  function resolveMovementCounters(state) {
+    const C = () => window.IRON_PIT_BROWSER_DEBUFF_COUNTERS || { movementCost: () => null };
+    const resolved = [
+      ...(window.IRON_PIT_BROWSER_FLIGHT_GROUND?.resolveGroundConditions(state) || []),
+    ];
+    for (const effect of [...(state.timed_effects || [])]) {
+      const cost = C().movementCost(state, effect.effect_id, { sourceIsMagical: Boolean(effect.source_is_magical) });
+      if (cost == null || state.movement_remaining_ft < cost) continue;
+      const removed = removeGroup(state, effect);
+      if (!removed.length) continue;
+      state.movement_remaining_ft -= cost;
+      for (const debuffId of removed) resolved.push({ debuffId, sourceId: effect.source_id, movementCost: cost });
+    }
+    return resolved;
+  }
+
   const timed = T();
   if (!timed) throw new Error("Timed-condition lifecycle extensions require browser-timed-conditions.js.");
-  Object.assign(timed, { expireOnOwnerEvent, expireSourceStart, ownsDamageResistance, removeOnMagicalHealing });
+  Object.assign(timed, { expireOnOwnerEvent, expireSourceStart, ownsDamageResistance, removeOnMagicalHealing, resolveMovementCounters });
 })();
