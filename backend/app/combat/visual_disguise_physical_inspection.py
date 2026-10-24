@@ -22,7 +22,6 @@ def recognize_visual_disguise_by_physical_inspection(
             or not source.magical_visual_disguise_active
             or source.is_dead
             or not source.is_alive
-            or source.current_hp <= 0
         ):
             return False
         recognized = observer.recognized_visual_disguise_source_ids
