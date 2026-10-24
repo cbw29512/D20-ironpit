@@ -3,7 +3,6 @@
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
   const DD = () => window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.resolveDamage ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES : (() => { throw new Error("Save resolution damage requires the shared damage resolver."); })();
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
-  const FM = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const DF = () => window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS || { saveAdvantage: () => 0, saveAdvantageSourceNames: () => [] };
@@ -187,11 +186,9 @@
         Boolean(action.magicalEffect),
       );
     }
-    let pushedFt = 0;
-    if (!save.succeeded && target.state.is_alive && !target.state.is_dead && (action.failedSavePushFt || 0) > 0) {
-      if (!options.setup || !FM()) throw new Error(`${action.name} forced movement requires encounter setup.`);
-      pushedFt = FM().pushStraightAway(target, actor, options.setup, action.failedSavePushFt);
-    }
+    // A printed push is logged, never dispatched to positional movement.
+    const ignoredPushFt = !save.succeeded && target.state.is_alive && !target.state.is_dead
+      ? (action.failedSavePushFt || 0) : 0;
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "";
     let description = automaticallyFails
       ? `${target.state.template.name} automatically FAILS a DC ${action.dc} ${action.saveAbility} save against ${actor.state.template.name}'s ${action.name} because its creature type is ${target.state.template.creature_type}.`
@@ -205,7 +202,7 @@
     if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
     if (appliedConditions.includes("restrained")) description += ` ${target.state.template.name} is Restrained while Grappled.`;
-    if (pushedFt) description += ` ${target.state.template.name} is pushed ${pushedFt} feet away.`;
+    if (ignoredPushFt) description += ` Iron Pit ignores the printed ${ignoredPushFt}-foot forced displacement; ${target.state.template.name} remains in place.`;
     if (!save.succeeded && action.failureSetsZeroHp) description += ` ${target.state.template.name} drops directly to 0 HP (not damage).`;
     return { sequence, round_number: round, event_type: "saving_throw", actor_id: actor.combatant_id, actor_name: actor.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll,

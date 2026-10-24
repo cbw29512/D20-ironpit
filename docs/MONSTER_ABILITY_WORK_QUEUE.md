@@ -1,5 +1,16 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Forced displacement — 2026-10-23 arena policy audit (PR #1032; pending certification)
+
+**Decision:** The displacement component of any source ability is **arena-inert**, retained on the immutable card and available for logging. No involuntary push, pull, drag, slide or shove changes x/y. Damage, saves, conditions, resource costs, grapples, restrained state, and other independent riders are **not** cleared. Do not demand a forced-movement path or distance algorithm for 2014 or 2024; do not remove any other printed-effect blocker to make a monster READY.
+
+**Roster audit (current PR source report):** 327 cards scanned; 17 have displacement-related source or structured data; 6 have structured push/pull parameters (Adult Bronze Dragon, Ancient Bronze Dragon, Bronze Dragon Wyrmling, Dragon Turtle, Merrow, Young Bronze Dragon). These 6 already route positional effects through an inert shared runtime; this does **not** change their source admission count. The remaining 11 are **source-text-only review items**, not 11 unsolved forced-movement implementations: Air Elemental, Balor, Bulette, Djinni, Gelatinous Cube, Ice Devil, Kraken, Minotaur, Minotaur Skeleton, Roper, Water Elemental.
+
+**Disposition of all 11:** The displacement clause is cleared by global arena rule; the owning ability remains in the queue until its *non-movement* clauses are individually source-proven and bound. Do not classify the whole source Action/Trait as harmless merely because a movement sentence is inert. For instance, an elemental Whirlwind/Whelm still needs its damage/save/condition/action/recharge behavior; a grapple/restrain/pull ability still needs its grapple/restrain mechanics. The source inventory's `remaining_card_count: 11` describes *unstructured source audit coverage*, **not 11 remaining displacement behaviors**. No roster promotion is authorized by this audit alone.
+
+**Next steps:** (1) finish exact-head CI for PR #1032; (2) audit each of the 11 source abilities by nonmovement effect using existing shared mechanisms, preferably batch identical effect signatures; (3) regenerate blocker and inventory reports using their owning scripts and count only newly source-admitted monsters; (4) do not merge or publish while CI is red. Maintain one owner for overlapping combat files.
+
+
 
 ## Harpy subsequent-turn source maintenance — IN PR #991
 

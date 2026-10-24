@@ -108,7 +108,7 @@ const pronePair = member(thunderous);
 pronePair.attacker.state.position = { x: 4, y: 7 };
 window.IRON_PIT_BROWSER_POST_HIT_SPELL_RIDERS.applyRiders(ctx(pronePair.attacker, pronePair.defender));
 assert.ok(pronePair.defender.state.active_effect_ids.includes("prone"));
-assert.notEqual(pronePair.defender.state.position.x, 5);
+assert.deepEqual(pronePair.defender.state.position, { x: 5, y: 7 }, "Thunderous Smite applies Prone but Iron Pit ignores forced push.");
 
 const blinding = {
   id: "blinding-smite",

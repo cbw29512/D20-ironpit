@@ -403,13 +403,17 @@ Permanent arena rules:
 - Clear line of sight by default; only combat effects such as Darkness, Fog Cloud, Blindness, Invisibility, or similar supported mechanics alter visibility.
 - No default pits, lava, traps, difficult terrain, water, or random arena hazards. A supported RAW effect may create an area/hazard.
 - Flyers cannot use altitude to become permanently unreachable. A melee flyer must enter its legal reach to attack.
-- Opportunity Attacks, forced movement, Disengage consequences, speed changes, Grappled/Prone movement effects, Frightened movement restrictions, and other combat-relevant movement rules remain RAW where applicable.
+- Opportunity Attacks, Disengage consequences, speed changes, Grappled/Prone movement effects, Frightened movement restrictions, and other combat-relevant movement rules remain RAW where applicable. Forced displacement is excluded by the Iron Pit rule below.
+
+### 10.0a Forced-displacement exclusion (Chris-locked 2026-10-23)
+
+In the standard Iron Pit, every forced push, pull, drag, slide, shove, or other involuntary positional displacement is ignored. The affected combatant remains in its authoritative square regardless of the source (monster, pregen, spell, weapon, or feature) and edition. Teleport relocation is independently disallowed under §10.1. Resolve all other printed components of the same ability normally: attack, check, save, damage, conditions, resource expenditure, duration, and other applicable effects. Preserve printed RAW movement text on immutable cards and report displacement as ignored under Iron Pit rules, not as a failed save or cancelled ability. This is an explicit arena simplification, not tabletop RAW. Normal voluntary movement and its legal restrictions are unchanged.
 
 ### 10.1 Iron Pit engagement, flying, and in-place teleport (2026-10-04)
 
 The standard Iron Pit is a brutal ring. Monsters and pregens close and stay in melee. People come to watch carnage, not cowards. These are explicit arena overrides, not RAW changes outside the Pit.
 
-- Voluntary movement planned relative to an opponent the combatant is already in melee reach of cannot increase that distance. The default engagement distance is 5 feet. Leaving one foe only to close on another remains legal and still provokes Opportunity Attacks. Forced movement may push a combatant out of melee.
+- Voluntary movement planned relative to an opponent the combatant is already in melee reach of cannot increase that distance. The default engagement distance is 5 feet. Leaving one foe only to close on another remains legal and still provokes Opportunity Attacks. Forced displacement never changes a combatant's square under the Iron Pit arena rule.
 - Flying, running, Dash, Disengage, circling, and leave-reach movement do not create a kiting exception. Arena AI and other voluntary planners cannot open distance from the engaged opponent. A flyer cannot leave melee and stay gone.
 - Horizontal fly remains fly. There is no vertical flight, altitude band, or unreachable-by-height state.
 - Flying is only a buff that counters **ground-contact** debuffs. Thorns, Entangle plants, temporary Difficult Terrain, and similar ground snares do not affect a combatant while it has an effective Fly speed. Flying grants no other combat benefit and does not change rows to escape.

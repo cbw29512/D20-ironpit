@@ -81,7 +81,8 @@ const event = window.IRON_PIT_BROWSER_SAVES.resolveAction(
   1, 1, actor, target, action, 5, { setup },
 );
 assert.equal(event.save_succeeded, false);
-assert.deepEqual(target.state.position, { x: 4, y: 1 });
-assert.match(event.description, /pushed 10 feet away/);
+assert.deepEqual(target.state.position, { x: 2, y: 1 });
+assert.match(event.description, /ignores the printed 10-foot forced displacement/);
+assert.match(event.description, /remains in place/);
 
 console.log("browser failed-save forced movement tests passed");

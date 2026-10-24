@@ -5,7 +5,6 @@ import logging
 from app.combat.concentration import start_concentration
 from app.combat.condition_removal import remove_condition
 from app.combat.exile import EXILED_EFFECT_ID
-from app.combat.forced_movement import push_straight_away
 from app.combat.modifier_stack import add_modifier
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.spell_modifiers import build_spell_modifier
@@ -116,10 +115,8 @@ def resolve_paid_post_hit_spell_riders(
                 elif option.failed_condition_id not in defender.state.active_effect_ids:
                     defender.state.active_effect_ids.append(option.failed_condition_id)
                 applied.append(option.failed_condition_id)
-                if option.failed_push_ft:
-                    push_straight_away(
-                        defender, attacker, setup, option.failed_push_ft, round_number=round_number,
-                    )
+                # The printed push is source metadata only in the Iron Pit.
+                # The save and its condition are applied above; never change x/y.
         if option.start_of_turn_dice_count:
             slot = int(attacker.state.feature_last_turn_keys.get("paid-post-hit-slot") or option.level)
             count = option.start_of_turn_dice_count + option.start_of_turn_dice_per_slot_above * max(

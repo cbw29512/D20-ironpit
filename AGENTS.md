@@ -111,10 +111,10 @@ Before changing a monster, pregen, spell, feature or item: read the exact source
 - The battlefield is one authoritative 5-foot square grid with real combatant x/y positions.
 - Voluntary movement consumes actual effective movement speed. The old free-closing/fixed-formation path is migration scaffolding only and must not remain the final combat authority.
 - **Pit magic: every creature size occupies one 5-foot square**, Tiny through Gargantuan. Printed size remains immutable source data for size-sensitive rules. Area effects, hazards, cones, lines and other source-defined geometry retain their independent printed dimensions; never expand creature occupancy by size.
-- Movement, reach, range, collision, Opportunity Attacks, forced movement, auras, line of sight, and area geometry consume the same authoritative grid state.
+- Movement, reach, range, collision, Opportunity Attacks, auras, line of sight, and area geometry consume the same authoritative grid state. Forced displacement is globally ignored under `docs/IRON_PIT_RULES_CONTRACT.md` §10.0a.
 - Arena design and AI policy prevent degenerate fleeing/kiting; do not bypass printed movement to force engagement.
 - The card artwork is the moving battlefield token. Current HP, Temporary HP, conditions, buffs/debuffs, concentration, recharge/resource state, and similar live symbols are presentation overlays derived from runtime state and never rule inputs.
-- Reach/range still determine legal attack geometry. Forced movement, Opportunity Attacks, speed-changing effects, Grappled/Prone interactions, and any feature that explicitly depends on movement remain real mechanics and must follow the selected ruleset.
+- Reach/range still determine legal attack geometry. Opportunity Attacks, speed-changing effects, Grappled/Prone interactions, and features explicitly depending on voluntary movement remain real mechanics and follow the selected ruleset. Forced displacement remains printed on cards but has no positional effect.
 - The arena must not create a hidden combat buff/debuff from a creature's locomotion type.
 - Summoning/conjuring/creating a separate combat entity is currently arena-unavailable. Preserve the RAW option in source/audit data, but Arena AI never selects it and it does not by itself block an otherwise complete hero or monster from certification. Revisit only when the global summon policy is explicitly reopened.
 

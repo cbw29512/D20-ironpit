@@ -231,3 +231,27 @@ console.log("Browser 2014 failed-save escalation and wake-on-damage parity passe
   const removed = window.IRON_PIT_BROWSER_TIMED.removeGroup(target.state, poison);
   assert.deepEqual(new Set(removed), new Set(["poisoned", "unconscious"]));
 }
+
+
+{
+  // An on-hit save can still apply its condition with no movement module or geometry.
+  const fighter = member("push-save-attacker", "heroes", {
+    onHitConditionSave: {
+      saveAbility: "constitution", dc: 12, conditionId: "poisoned", failurePushFt: 15,
+    },
+  });
+  const target = member("push-save-target", "monsters", { position: 5 });
+  const originalPosition = target.position_ft;
+  const resolver = window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
+  window.IRON_PIT_BROWSER_FORCED_MOVEMENT = undefined;
+  try {
+    const event = attack(fighter, target, [15, 4, 4, 4]);
+    assert.equal(event.hit, true);
+    assert.equal(event.save_succeeded, false);
+    assert.ok(event.applied_condition_ids.includes("poisoned"));
+    assert.equal(target.position_ft, originalPosition);
+    assert.equal(event.forced_movement_ft || 0, 0);
+  } finally {
+    window.IRON_PIT_BROWSER_FORCED_MOVEMENT = resolver;
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "applicable_card_count": 17,
+  "browser_wired_card_count": 6,
+  "exceptions": [
+    {
+      "monster_id": "air-elemental",
+      "monster_name": "Air Elemental",
+      "reason": "Printed forced-displacement clause lacks complete structured source parameters; no approximation was admitted."
+    },
+    {
+      "monster_id": "balor",
+      "monster_name": "Balor",
+      "reason": "Printed forced-displacement clause lacks complete structured source parameters; no approximation was admitted."
+    },
+    {
+      "monster_id": "bulette",
+      "monster_name": "Bulette",
+      "reason": "Printed forced-displacement clause lacks complete structured source parameters; no approximation was admitted."
+    },
+    {
+      "monster_id": "djinni",
+      "monster_name": "Djinni",
+      "reason": "Printed forced-displacement clause lacks complete structured source parameters; no approximation was admitted."
+    },
+    {
+      "monster_id": "gelatinous-cube",
+      "monster_name": "Gelatinous Cube",
+      "reason": "Printed forced-displacement clause lacks complete structured source parameters; no approximation was admitted."
+    },
+    {
+      "monster_id": "ice-devil",
+      "monster_name": "Ice Devil",
+      "reason": "Printed forced-displacement clause lacks complete structured source parameters; no approximation was admitted."
+    },
+    {
+      "monster_id": "kraken",
+      "monster_name": "Kraken",
+      "reason": "Printed forced-displacement clause lacks complete structured source parameters; no approximation was admitted."
+    },
+    {
+      "monster_id": "minotaur",
+      "monster_name": "Minotaur",
+      "reason": "Printed forced-displacement clause lacks complete structured source parameters; no approximation was admitted."
+    },
+    {
+      "monster_id": "minotaur-skeleton",
+      "monster_name": "Minotaur Skeleton",
+      "reason": "Printed forced-displacement clause lacks complete structured source parameters; no approximation was admitted."
+    },
+    {
+      "monster_id": "roper",
+      "monster_name": "Roper",
+      "reason": "Printed forced-displacement clause lacks complete structured source parameters; no approximation was admitted."
+    },
+    {
+      "monster_id": "water-elemental",
+      "monster_name": "Water Elemental",
+      "reason": "Printed forced-displacement clause lacks complete structured source parameters; no approximation was admitted."
+    }
+  ],
+  "mechanic": "forced-displacement-arena-exclusion",
+  "python_wired_card_count": 6,
+  "remaining_card_count": 11,
+  "schema_version": 1,
+  "source_card_count": 327,
+  "wired": [
+    {
+      "bindings": [
+        {
+          "direction": "away_from_source",
+          "distance_ft": 60,
+          "source_id": "repulsion-breath",
+          "source_kind": "saving_throw_action"
+        }
+      ],
+      "monster_id": "adult-bronze-dragon",
+      "monster_name": "Adult Bronze Dragon"
+    },
+    {
+      "bindings": [
+        {
+          "direction": "away_from_source",
+          "distance_ft": 60,
+          "source_id": "repulsion-breath",
+          "source_kind": "saving_throw_action"
+        }
+      ],
+      "monster_id": "ancient-bronze-dragon",
+      "monster_name": "Ancient Bronze Dragon"
+    },
+    {
+      "bindings": [
+        {
+          "direction": "away_from_source",
+          "distance_ft": 30,
+          "source_id": "repulsion-breath",
+          "source_kind": "saving_throw_action"
+        }
+      ],
+      "monster_id": "bronze-dragon-wyrmling",
+      "monster_name": "Bronze Dragon Wyrmling"
+    },
+    {
+      "bindings": [
+        {
+          "direction": "away_from_source",
+          "distance_ft": 10,
+          "source_id": "tail",
+          "source_kind": "on_hit_save"
+        }
+      ],
+      "monster_id": "dragon-turtle",
+      "monster_name": "Dragon Turtle"
+    },
+    {
+      "bindings": [
+        {
+          "direction": "toward_source",
+          "distance_ft": 20,
+          "source_id": "harpoon",
+          "source_kind": "on_hit_contested_movement"
+        },
+        {
+          "direction": "toward_source",
+          "distance_ft": 20,
+          "source_id": "harpoon-ranged",
+          "source_kind": "on_hit_contested_movement"
+        }
+      ],
+      "monster_id": "merrow",
+      "monster_name": "Merrow"
+    },
+    {
+      "bindings": [
+        {
+          "direction": "away_from_source",
+          "distance_ft": 40,
+          "source_id": "repulsion-breath",
+          "source_kind": "saving_throw_action"
+        }
+      ],
+      "monster_id": "young-bronze-dragon",
+      "monster_name": "Young Bronze Dragon"
+    }
+  ]
+}

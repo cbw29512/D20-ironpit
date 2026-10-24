@@ -4,6 +4,11 @@ This is the single index of **Chris-locked** Iron Pit rules. It exists so those 
 
 It does **not** replace `docs/IRON_PIT_RULES_CONTRACT.md`. That file remains the detailed product/combat contract. Architecture, battlefield UI, and pregen construction stay in their existing docs. If this index and a cited file disagree, stop and reconcile in the cited file. Do not write a third copy of the same rule.
 
+## Universal forced-displacement exclusion — 2026-10-23
+
+- **Forced push/pull/drag/shove/reposition never changes grid x/y**, for every edition, source, monster, and pregen. Damage, saves, conditions, and all other independent riders still resolve normally; immutable source cards preserve printed movement. Normal voluntary movement remains supported.
+- Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §10.0a. This supersedes earlier RAW forced-movement language in the arena movement contract.
+
 ## Lycanthrope forms and precombat entry — 2026-10-22 (supersedes damage-optimal selection)
 
 - **2014 lycanthropes always begin combat in their printed beast (animal) form**, regardless of its damage relative to humanoid or hybrid form. Select this as fight-local starting state before initiative at no Action or Bonus Action cost. Never substitute hybrid form as the default.

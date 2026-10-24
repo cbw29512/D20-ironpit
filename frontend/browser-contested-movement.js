@@ -5,7 +5,6 @@
   const E = () => window.IRON_PIT_BROWSER_ABILITY_CHECK_ESCAPE;
   const R = () => window.IRON_PIT_BROWSER_ROLLS;
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
-  const F = () => window.IRON_PIT_BROWSER_FORCED_MOVEMENT;
 
   function disadvantage(state, ability, setup = null) {
     try {
@@ -43,12 +42,8 @@
       });
       targetRoll = targetResolved.roll;
       const targetSucceeded = targetResolved.succeeded;
-      let movementFt = 0;
-      if (!targetSucceeded) {
-        movementFt = effect.direction === "toward_source"
-          ? F().pullStraightToward(target, source, setup, effect.distanceFt)
-          : F().pushStraightAway(target, source, setup, effect.distanceFt);
-      }
+      // Contested roll remains a RAW log result; the Pit suppresses displacement.
+      const movementFt = 0;
       return {
         sourceRoll, targetRoll,
         sourceAbility: effect.sourceAbility,

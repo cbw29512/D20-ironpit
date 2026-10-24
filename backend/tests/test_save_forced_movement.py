@@ -53,11 +53,12 @@ def test_failed_save_push_uses_universal_forced_movement() -> None:
     )
 
     assert event.save_succeeded is False
-    assert target.state.position == GridPosition(x=4, y=1)
-    assert "pushed 10 feet away" in event.description
+    assert target.state.position == GridPosition(x=2, y=1)
+    assert "ignores the printed 10-foot forced displacement" in event.description
+    assert "remains in place" in event.description
 
 
-def test_failed_save_push_stops_at_live_persistent_barrier() -> None:
+def test_failed_save_push_is_ignored_independently_of_persistent_barriers() -> None:
     actor = _member("actor", "heroes", 1, 1)
     target = _member("target", "monsters", 2, 1)
     barrier = PersistentBarrierState(
@@ -95,5 +96,6 @@ def test_failed_save_push_stops_at_live_persistent_barrier() -> None:
         1, 1, actor, target, _action(), 5, FixedDiceProvider([1]), setup=setup,
     )
 
-    assert target.state.position == GridPosition(x=3, y=1)
-    assert "pushed 5 feet away" in event.description
+    assert target.state.position == GridPosition(x=2, y=1)
+    assert "ignores the printed 10-foot forced displacement" in event.description
+    assert "remains in place" in event.description

@@ -1,4 +1,4 @@
-from app.combat.forced_movement import push_straight_away
+from app.combat.forced_movement import push_straight_away, pull_straight_toward
 from app.combat.state import build_combatant_state
 from app.content.demo import build_goblin_warrior
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -22,35 +22,23 @@ def _setup(source, target, *extra):
     )
 
 
-def test_push_straight_away_moves_three_squares_without_spending_speed():
+def test_push_and_pull_ignore_displacement_and_preserve_combat_state():
     source = _member("source", "heroes", 1, 1)
     target = _member("target", "monsters", 2, 1)
     setup = _setup(source, target)
-    assert push_straight_away(target, source, setup, 15) == 15
-    assert target.state.position == GridPosition(x=5, y=1)
+    original = target.state.position.model_copy(deep=True)
+    hp = target.state.current_hp
+    assert push_straight_away(target, source, setup, 15) == 0
+    assert pull_straight_toward(target, source, setup, 10) == 0
+    assert target.state.position == original
     assert target.state.movement_remaining_ft == 30
+    assert target.state.current_hp == hp
 
 
-def test_push_straight_away_preserves_non_diagonal_source_ray():
-    source = _member("source", "heroes", 1, 1)
-    target = _member("target", "monsters", 3, 2)
-    setup = _setup(source, target)
-    assert push_straight_away(target, source, setup, 5) == 5
-    assert target.state.position == GridPosition(x=5, y=3)
-
-
-def test_push_straight_away_stops_before_occupied_space():
+def test_forced_movement_does_not_need_grid_position_to_be_ignored():
     source = _member("source", "heroes", 1, 1)
     target = _member("target", "monsters", 2, 1)
-    blocker = _member("blocker", "monsters", 4, 1)
-    setup = _setup(source, target, blocker)
-    assert push_straight_away(target, source, setup, 15) == 5
-    assert target.state.position == GridPosition(x=3, y=1)
-
-
-def test_push_straight_away_stops_at_map_boundary():
-    source = _member("source", "heroes", 5, 1)
-    target = _member("target", "monsters", 6, 1)
     setup = _setup(source, target)
-    assert push_straight_away(target, source, setup, 15) == 5
-    assert target.state.position == GridPosition(x=7, y=1)
+    target.state.position = None
+    assert push_straight_away(target, source, setup, 5) == 0
+    assert pull_straight_toward(target, source, setup, 5) == 0
