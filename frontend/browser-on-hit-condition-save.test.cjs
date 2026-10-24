@@ -117,6 +117,41 @@ function attack(attacker, target, values) {
   assert.match(event.description, /Paralyzed/);
 }
 
+{
+  const fighter = member("unrelated-cursor", "heroes", {
+    onHitConditionSave: {
+      saveAbility: "constitution", dc: 12, conditionId: null,
+      effectId: "synthetic-rot", curseId: "synthetic-rot",
+      cannotRegainHitPoints: true, allowedRemovalActionIds: ["remove-curse"],
+      delayedMaxHpReduction: { delayHours: 24, diceCount: 3, diceSize: 6, zeroMaxHpKills: true },
+    },
+  });
+  const target = member("persistent-target", "monsters", { position: 5 });
+  const event = attack(fighter, target, [15, 4, 4, 1]);
+  assert.equal(event.save_succeeded, false);
+  assert.ok(event.applied_condition_ids.includes("synthetic-rot"));
+  assert.deepEqual(target.state.active_curses, ["synthetic-rot"]);
+  const timed = target.state.timed_effects.find((item) => item.effect_id === "synthetic-rot");
+  assert.ok(timed);
+  assert.equal(timed.cannot_regain_hit_points, true);
+  assert.deepEqual(timed.owned_curse_ids, ["synthetic-rot"]);
+  assert.equal(target.state.hit_point_maximum_reduction, 0);
+}
+
+{
+  const fighter = member("unrelated-success", "heroes", {
+    onHitConditionSave: {
+      saveAbility: "constitution", dc: 12, conditionId: null,
+      effectId: "renamed-curse", curseId: "renamed-curse", cannotRegainHitPoints: true,
+    },
+  });
+  const target = member("successful-target", "monsters", { position: 5 });
+  const event = attack(fighter, target, [15, 4, 4, 20]);
+  assert.equal(event.save_succeeded, true);
+  assert.deepEqual(target.state.active_curses, []);
+  assert.equal(target.state.timed_effects.length, 0);
+}
+
 console.log("Browser universal on-hit condition-save riders beyond Prone passed.");
 
 require("./browser-on-hit-condition-save-terminal.test.cjs");
