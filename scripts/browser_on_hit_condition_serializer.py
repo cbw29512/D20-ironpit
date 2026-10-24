@@ -23,6 +23,7 @@ def serialize_on_hit_condition_save(effect: OnHitConditionSave) -> dict[str, Any
             "saveAbility": _value(effect.save_ability),
             "dc": effect.dc,
             "conditionId": effect.condition_id,
+            "effectId": effect.effect_id,
             "maxTargetSize": _value(effect.max_target_size) if effect.max_target_size else None,
         }
         if effect.duration_rounds is not None:
@@ -48,6 +49,17 @@ def serialize_on_hit_condition_save(effect: OnHitConditionSave) -> dict[str, Any
             row["excludedCreatureTypes"] = list(effect.excluded_creature_types)
         if effect.excluded_creature_subtypes:
             row["excludedCreatureSubtypes"] = list(effect.excluded_creature_subtypes)
+        if effect.curse_id:
+            row["curseId"] = effect.curse_id
+        if effect.allowed_removal_action_ids:
+            row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
+        if effect.delayed_max_hp_reduction_delay_hours is not None:
+            row["delayedMaxHpReduction"] = {
+                "delayHours": effect.delayed_max_hp_reduction_delay_hours,
+                "diceCount": effect.delayed_max_hp_reduction_dice_count,
+                "diceSize": effect.delayed_max_hp_reduction_dice_size,
+                "zeroMaxHpKills": effect.delayed_max_hp_reduction_zero_kills,
+            }
         if effect.cannot_regain_hit_points:
             row["cannotRegainHitPoints"] = True
         if effect.start_of_turn_damage_dice_count:
