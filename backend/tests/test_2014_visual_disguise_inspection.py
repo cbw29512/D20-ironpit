@@ -3,16 +3,10 @@ from __future__ import annotations
 
 import pytest
 
-from app.combat.attacks import resolve_attack
 from app.combat.dice import FixedDiceProvider
 from app.combat.precombat_buffs import prepare_opening_buffs
-from app.combat.saving_throws import resolve_save_action
 from app.combat.state import build_combatant_state
 from app.combat.visual_disguise import resolve_visual_disguise_inspection
-from app.combat.visual_disguise_physical_inspection import (
-    recognize_visual_disguise_by_physical_inspection,
-)
-from app.domain.models import HitControlEffect, SavingThrowAction
 from app.domain.visual_disguise import VisualDisguiseAction
 from test_2014_visual_disguise_opening import _setup
 
