@@ -56,6 +56,15 @@ function setDice(values) {
   assert.equal(source.state.magical_visual_disguise_active, true);
   assert.equal(I.recognizePhysicalInspection(observer.state, source.state, "source"), false);
 
+  const downed = makeFight();
+  downed.source.state.template.kind = "character";
+  downed.source.state.current_hp = 0;
+  downed.source.state.is_alive = true;
+  downed.source.state.is_dead = false;
+  downed.source.state.is_unconscious = true;
+  assert.equal(I.recognizePhysicalInspection(downed.observer.state, downed.source.state, "source"), true);
+  assert.equal(downed.source.state.magical_visual_disguise_active, true);
+
   const other = makeFight(false);
   assert.equal(I.recognizePhysicalInspection(other.observer.state, other.source.state, "source"), false);
   assert.deepEqual(other.observer.state.recognized_visual_disguise_source_ids, []);
