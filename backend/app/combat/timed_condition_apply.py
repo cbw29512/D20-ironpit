@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 import logging
-
 from app.combat.concentration import end_concentration_if_incapacitated
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.instant_death import apply_terminal_death
@@ -16,7 +14,6 @@ logger = logging.getLogger(__name__)
 POISONED_EFFECT_ID = "poisoned"
 ARENA_POISON_RECOVERY_DC = 10
 TERMINAL_CONDITIONS = frozenset({"petrified"})
-
 def apply_terminal_condition_outcome(
     state: CombatantState, effect_id: str, *,
     affected_states: list[CombatantState] | None = None,
@@ -29,7 +26,6 @@ def apply_terminal_condition_outcome(
     except Exception:
         logger.exception("Terminal condition outcome failed for %s.", state.template.name)
         raise
-
 def apply_timed_condition(
     state: CombatantState, effect_id: str, source_id: str, *,
     source_effect_id: str | None = None, source_template: CombatantTemplate | None = None,
