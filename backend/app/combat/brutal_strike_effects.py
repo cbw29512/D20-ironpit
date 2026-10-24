@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 from app.combat.modifier_stack import add_modifier
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import CombatantState
@@ -35,10 +39,10 @@ def apply_forceful_blow(
 ) -> int:
     """Forceful Blow retains its printed push, but the Pit ignores displacement."""
     try:
+        logger.debug("Iron Pit ignores Forceful Blow displacement for %s.", defender.combatant_id)
         return 0
     except Exception:
-        import logging
-        logging.getLogger(__name__).exception("Failed Forceful Blow arena resolution.")
+        logger.exception("Failed Forceful Blow arena resolution for %s.", defender.combatant_id)
         raise
 
 
