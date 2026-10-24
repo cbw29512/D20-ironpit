@@ -108,6 +108,9 @@ class OnHitConditionSave(BaseModel):
     repeat_save_failure_condition_id: ConditionName | None = None
     failure_push_ft: int = Field(default=0, ge=0)
     cannot_regain_hit_points: bool = False
+    start_of_turn_damage_dice_count: int = Field(default=0, ge=0, le=40)
+    start_of_turn_damage_dice_size: int = Field(default=6, ge=2, le=100)
+    start_of_turn_damage_type: DamageType | None = None
     failure_margin_escalation: FailureMarginEscalation | None = None
     excluded_creature_types: list[str] = Field(default_factory=list)
     excluded_creature_subtypes: list[str] = Field(default_factory=list)
@@ -124,6 +127,9 @@ class OnHitConditionSave(BaseModel):
             )
         if self.repeat_save_failure_condition_id is not None and self.repeat_save_timing is None:
             raise ValueError("Failure escalation requires a repeat-save timing.")
+        has_start_damage = self.start_of_turn_damage_dice_count > 0
+        if has_start_damage != (self.start_of_turn_damage_type is not None):
+            raise ValueError("Start-of-turn condition damage requires both dice and damage type.")
         require_escalation_duration(self.failure_margin_escalation, self.duration_rounds)
         return self
 
