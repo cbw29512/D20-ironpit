@@ -3,13 +3,11 @@ from __future__ import annotations
 
 import logging
 
-from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.monster_animate_chains_2014 import supports_animate_chains_arena_unavailable_2014
 from app.content.monster_arena_action_policy_2014 import (
     PIT_BANNED_ACTION_LABELS_2014,
     source_proven_ethereal_shift_action_2014,
 )
-from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014
 from app.content.monster_arena_unavailable_reactions_2014 import arena_unavailable_reaction_names_2014
 from app.content.monster_change_shape_policy_2014 import approved_inert_change_shape_2014
 from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014
