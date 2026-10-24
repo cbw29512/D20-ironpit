@@ -502,6 +502,8 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 
 ### 062. Sea Hag
 
+- **Draft PR #1037:** stacked on #1036; source-neutral classifier recognizes a fully source-proven visual-disguise Action alongside the already-bound Horrific Appearance and Death Glare mechanics. Focused regressions require the complete pinned source to produce no basic blockers and restore blockers when tactile or visual-fear text is changed. Do not check this entry complete or change generated counts until #1036 and #1037 receive exact-head certification.
+
 - [ ] **SOURCE REVIEW / BIND / TEST / CERTIFY / MERGE** — not yet individually verified by this worksheet.
 - **Recorded blockers:** `source:extra-action`, `source:trait`.
 - **Unbound printed traits:** Horrific Appearance
