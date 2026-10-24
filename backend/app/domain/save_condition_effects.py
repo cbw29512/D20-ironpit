@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -15,7 +16,7 @@ logger = logging.getLogger(__name__)
 class OngoingHpLossEffectDefinition(BaseModel):
     """Immutable attack-source data; the encounter owns the live wound state."""
 
-    kind: str = "ongoing_hp_loss"
+    kind: Literal["ongoing_hp_loss"] = "ongoing_hp_loss"
     effect_id: str = Field(min_length=1)
     source_name: str = Field(min_length=1)
     save_ability: AbilityName
@@ -28,7 +29,7 @@ class OngoingHpLossEffectDefinition(BaseModel):
 
 
 class SaveConditionEffectDefinition(BaseModel):
-    kind: str = "save_condition"
+    kind: Literal["save_condition"] = "save_condition"
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     condition: ConditionName
