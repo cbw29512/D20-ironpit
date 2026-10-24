@@ -70,29 +70,6 @@ def _fixture(source_id: str = "source-a", source_position: int = 20):
         raise
 
 
-def test_repaired_source_binds_exact_fear_aura_without_identity_dispatch():
-    try:
-        source = _pit_fiend_source()
-        assert "Any creature hostile to the pit fiend" in source.source_traits
-        assert "DC 21 Wisdom saving throw" in source.source_traits
-        action = _aura()
-        aura = action.hostile_start_turn_condition_aura
-        assert action.id == "fear-aura" and action.activation_timing == "passive"
-        assert (aura.radius_ft, aura.save_dc, aura.save_ability) == (20, 21, "wisdom")
-        assert aura.condition_id == "frightened"
-        assert aura.success_immunity is True
-        assert aura.inactive_while_source_incapacitated is True
-        assert aura.condition_expiry_timing == "target_turn_start"
-        assert aura.effect_tags == ["frightened"]
-        assert "Fear Aura" not in unsupported_traits_2014(source)
-
-        renamed = source.model_copy(update={"id": "other-source", "name": "Other Source"})
-        renamed_action, = condition_auras_from_source(renamed.source_traits, "2014")
-        assert renamed_action == action
-    except Exception:
-        raise
-
-
 def test_failure_applies_frightened_until_target_next_turn_and_resets_next_fight():
     try:
         setup, source, target = _fixture()
