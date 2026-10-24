@@ -30,6 +30,18 @@ def test_tactile_inspection_uses_existing_observer_recognition_without_action_co
     ) is False
 
 
+    setup, source, observer = _battle()
+    source.state.template = source.state.template.model_copy(update={"kind": "character"})
+    source.state.current_hp = 0
+    source.state.is_alive = True
+    source.state.is_dead = False
+    source.state.is_unconscious = True
+    assert recognize_visual_disguise_by_physical_inspection(
+        observer.state, source.state, source.combatant_id,
+    ) is True
+    assert source.state.magical_visual_disguise_active is True
+
+
 def test_physical_inspection_flag_false_does_not_invent_recognition():
     _setup_value, source, observer = _battle()
     declared = source.state.template.visual_disguise_action
