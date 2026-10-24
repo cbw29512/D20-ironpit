@@ -1,8 +1,6 @@
 from __future__ import annotations
-
 from dataclasses import dataclass
 import logging
-
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.failure_margin_runtime import escalation_duration
@@ -14,7 +12,6 @@ from app.domain.models import CombatantState, CombatantTemplate, DiceRoll, Weapo
 from app.domain.saving_throw_context import SavingThrowContext
 from app.domain.size import size_at_most
 logger = logging.getLogger(__name__)
-
 @dataclass(frozen=True)
 class OnHitConditionSaveResolution:
     save_roll: DiceRoll | None = None
@@ -24,7 +21,6 @@ class OnHitConditionSaveResolution:
     applied_condition: str | None = None
     forced_movement_ft: int = 0
     additional_conditions: tuple[str, ...] = ()
-
 def resolve_on_hit_condition_save(
     defender: CombatantState,
     attack: WeaponAttack,
