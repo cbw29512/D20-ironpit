@@ -121,7 +121,7 @@ def test_success_immunity_is_source_scoped_and_survives_rounds_not_new_fights():
 
 def test_range_incapacitation_condition_immunity_and_death_gate_without_rolls():
     try:
-        for reason in ("range", "incapacitated", "condition-immune", "dead"):
+        for reason in ("range", "incapacitated", "condition-immune", "dead", "ally"):
             setup, source, target = _fixture()
             if reason == "range":
                 source.position_ft = 25
@@ -131,9 +131,11 @@ def test_range_incapacitation_condition_immunity_and_death_gate_without_rolls():
                 target.state.template = target.state.template.model_copy(
                     update={"condition_immunities": ["frightened"]},
                 )
-            else:
+            elif reason == "dead":
                 source.state.is_dead = True
                 source.state.is_alive = False
+            else:
+                source.side = "heroes"
             events, sequence = resolve_target_turn_start_emanations(
                 1, 1, target, setup, _no_rolls(),
             )
