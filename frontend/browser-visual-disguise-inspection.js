@@ -7,6 +7,27 @@
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES;
   const X = () => window.IRON_PIT_BROWSER_EXHAUSTION;
 
+  function recognizePhysicalInspection(observerState, sourceState, sourceId) {
+    try {
+      const rule = sourceState.template.visualDisguiseAction;
+      if (!rule?.physicalInspectionInconsistent
+          || !sourceState.magical_visual_disguise_active
+          || sourceState.is_dead || !sourceState.is_alive || sourceState.current_hp <= 0) {
+        return false;
+      }
+      const recognized = observerState.recognized_visual_disguise_source_ids;
+      if (!Array.isArray(recognized)) {
+        throw new Error("Observer's disguise recognition state is unavailable.");
+      }
+      if (recognized.includes(sourceId)) return false;
+      recognized.push(sourceId);
+      return true;
+    } catch (error) {
+      console.error("Physical visual-disguise inspection failed", { sourceId, error });
+      throw error;
+    }
+  }
+
   function inspect(sequence, round, observer, source, setup = null) {
     try {
       if (observer.combatant_id === source.combatant_id) {
@@ -64,5 +85,5 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_VISUAL_DISGUISE_INSPECTION = { inspect };
+  window.IRON_PIT_BROWSER_VISUAL_DISGUISE_INSPECTION = { inspect, recognizePhysicalInspection };
 })();
