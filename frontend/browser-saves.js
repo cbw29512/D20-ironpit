@@ -170,6 +170,7 @@
     }
     const riderRuntime = window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS;
     let appliedConditions = [];
+    let actorRecognizedTargetDisguise = false, targetRecognizedActorDisguise = false;
     if (save.succeeded && action.sourceEffectImmunityOnSuccess) riderRuntime.grantImmunity(target.state, action.id, actor.combatant_id, round, { sourceTemplate: actor.state.template, sourceIsMagical: Boolean(action.magicalEffect) });
     if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.failedSaveTimedEffect) {
       if (!riderRuntime) throw new Error("Failed-save timed-effect runtime is not loaded.");
@@ -186,6 +187,16 @@
         Boolean(action.restrainsWhileGrappled),
         Boolean(action.magicalEffect),
       );
+      if (appliedConditions.includes("grappled")) {
+        const targetNeedsInspection = Boolean(target.state.template.visualDisguiseAction?.physicalInspectionInconsistent && target.state.magical_visual_disguise_active);
+        const actorNeedsInspection = Boolean(actor.state.template.visualDisguiseAction?.physicalInspectionInconsistent && actor.state.magical_visual_disguise_active);
+        if (targetNeedsInspection || actorNeedsInspection) {
+          const visual = window.IRON_PIT_BROWSER_VISUAL_DISGUISE_INSPECTION;
+          if (!visual?.recognizePhysicalInspection) throw new Error("Physical visual-disguise inspection runtime is unavailable.");
+          if (targetNeedsInspection) actorRecognizedTargetDisguise = visual.recognizePhysicalInspection(actor.state, target.state, target.combatant_id);
+          if (actorNeedsInspection) targetRecognizedActorDisguise = visual.recognizePhysicalInspection(target.state, actor.state, actor.combatant_id);
+        }
+      }
     }
     let pushedFt = 0;
     if (!save.succeeded && target.state.is_alive && !target.state.is_dead && (action.failedSavePushFt || 0) > 0) {
@@ -205,6 +216,8 @@
     if (damageOutcome === "undead_fortitude") description += ` ${target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
     if (appliedConditions.includes("grappled")) description += ` ${target.state.template.name} is Grappled.`;
     if (appliedConditions.includes("restrained")) description += ` ${target.state.template.name} is Restrained while Grappled.`;
+    if (actorRecognizedTargetDisguise) description += ` ${actor.state.template.name} recognizes ${target.state.template.name}'s visual disguise through physical inspection.`;
+    if (targetRecognizedActorDisguise) description += ` ${target.state.template.name} recognizes ${actor.state.template.name}'s visual disguise through physical inspection.`;
     if (pushedFt) description += ` ${target.state.template.name} is pushed ${pushedFt} feet away.`;
     if (!save.succeeded && action.failureSetsZeroHp) description += ` ${target.state.template.name} drops directly to 0 HP (not damage).`;
     return { sequence, round_number: round, event_type: "saving_throw", actor_id: actor.combatant_id, actor_name: actor.state.template.name,
