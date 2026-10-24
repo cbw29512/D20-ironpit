@@ -46,14 +46,6 @@ class OnHitConditionSave(BaseModel):
     @model_validator(mode="after")
     def validate_condition_lifecycle(self) -> "OnHitConditionSave":
         try:
-            if (
-                self.repeat_save_timing is not None
-                and self.duration_rounds is None
-                and self.repeat_save_failure_condition_id is None
-            ):
-                raise ValueError(
-                    "On-hit repeat saves require a duration or a failure escalation condition."
-                )
             if self.repeat_save_failure_condition_id is not None and self.repeat_save_timing is None:
                 raise ValueError("Failure escalation requires a repeat-save timing.")
             has_start_damage = self.start_of_turn_damage_dice_count > 0
