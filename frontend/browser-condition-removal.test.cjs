@@ -119,4 +119,29 @@ const lesserRestoration = {
   assert.equal(C.chooseReaction(remover, setup, "condition_applied_to_self", ally, turnKey), null);
 }
 
+{
+  const removeCurse = {
+    id: "generic-curse-removal", name: "Generic Curse Removal", actionCost: "action", range: 5,
+    targetMode: "self_or_ally", removableConditions: [], maxConditionsPerUse: 1,
+    resourceCosts: {}, resourceCostsPerCondition: {}, expendsSpellSlot: false, removesAllCurses: true,
+  };
+  const remover = member("curse-cleanser", [], {}, [removeCurse]);
+  const ally = member("curse-target");
+  ally.state.active_curses = ["synthetic-rot"];
+  ally.state.active_effect_ids = ["synthetic-rot"];
+  ally.state.timed_effects = [{
+    effect_id: "synthetic-rot", source_id: "renamed-source", source_effect_id: "Renamed Hit",
+    allowed_removal_action_ids: ["remove-curse"], owned_curse_ids: ["synthetic-rot"],
+    cannot_regain_hit_points: true,
+  }];
+  const setup = { heroes: [remover, ally], monsters: [] }, turnKey = key(1, remover);
+  const choice = C.chooseAction(remover, setup, turnKey);
+  assert.ok(choice);
+  assert.deepEqual(choice.conditions, ["curse"]);
+  C.resolve(1, 1, remover, ally, choice.action, choice.conditions, turnKey);
+  assert.deepEqual(ally.state.active_curses, []);
+  assert.deepEqual(ally.state.active_effect_ids, []);
+  assert.deepEqual(ally.state.timed_effects, []);
+}
+
 console.log("Browser 2024 condition-removal regressions passed.");
