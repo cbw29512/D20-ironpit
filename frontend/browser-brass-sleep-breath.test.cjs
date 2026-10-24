@@ -27,7 +27,8 @@ window.IRON_PIT_BROWSER_STATE = {
   distance: () => 5,
   effectiveMaxHp: (state) => state.current_hp,
 };
-load("browser-condition-removal-policy.js");\nload("browser-condition-removal.js");
+load("browser-condition-removal-policy.js");\nload("browser-condition-removal-policy.js");
+load("browser-condition-removal.js");
 
 function member(id, side) {
   return {
