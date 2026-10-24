@@ -25,7 +25,7 @@ window.IRON_PIT_BROWSER_STATE = {
 };
 for (const f of [
   "browser-timed-conditions.js", "browser-healing.js",
-  "browser-on-hit-condition-save.js", "browser-condition-lifecycle.js",
+  "browser-creature-kind.js", "browser-on-hit-condition-save.js", "browser-condition-lifecycle.js",
 ]) load(f);
 const onHit = window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE;
 const timed = window.IRON_PIT_BROWSER_TIMED;
