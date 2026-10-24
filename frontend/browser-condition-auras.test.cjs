@@ -133,6 +133,7 @@ for (const magical of [false, true]) {
     .map((item) => item.active), [false]);
 }
 console.log("Shared passive condition aura source, immunity, expiry, reset and edition regressions passed.");
+require("./browser-pit-fiend-fear-aura.test.cjs");
 for (const [x, expected] of [[2, 1], [3, 0]]) {
   const { target, source, setup } = fixture();
   source.state.position = { x: 0, y: 0 };
