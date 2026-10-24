@@ -946,6 +946,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
                 "trigger": item.trigger,
                 "resourceId": item.resource_id, "resourceCost": item.resource_cost,
                 "priority": item.priority,
+                **({"requiredActiveEffectId": item.required_active_effect_id}
+                   if item.required_active_effect_id is not None else {}),
                 **(
                     {
                         "onHitConditionSave": {
