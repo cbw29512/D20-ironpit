@@ -8,6 +8,8 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
+from app.content.monster_source_repairs_2014 import apply_source_text_repairs_2014
+
 logger = logging.getLogger(__name__)
 _DATA_DIR = Path(__file__).with_name("data")
 _CATALOG_PATH = _DATA_DIR / "srd_5_1_monsters_catalog.json"
@@ -106,6 +108,7 @@ def load_monster_source_2014() -> tuple[SourceMonster2014, ...]:
     try:
         manifest = json.loads(_MANIFEST_PATH.read_text(encoding="utf-8"))
         rows = TypeAdapter(list[SourceMonster2014]).validate_json(_CATALOG_PATH.read_text(encoding="utf-8"))
+        rows = apply_source_text_repairs_2014(rows)
         expected = int(manifest["monster_count"])
         ids = {row.id for row in rows}
         if manifest.get("ruleset") != "2014" or expected != 327:
