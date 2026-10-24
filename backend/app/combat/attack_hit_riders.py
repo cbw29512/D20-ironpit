@@ -18,6 +18,7 @@ from app.combat.slow import apply_weapon_slow
 from app.combat.tactical_master import apply_tactical_master_sap
 from app.combat.topple import resolve_topple_hit
 from app.combat.vex import apply_vex_mastery
+from app.combat.visual_disguise import recognize_visual_disguise_by_physical_inspection
 
 
 def resolve_attack_hit_riders(
@@ -39,17 +40,27 @@ def resolve_attack_hit_riders(
         result.applied_conditions.append("prone")
     if result.cunning_strike_obscure.applied:
         result.applied_conditions.append("blinded")
-    result.applied_conditions.extend(
-        apply_hit_conditions(
-            attack,
-            defender,
-            attacker_event_id,
-            round_number,
-            affected_states,
-            attacker.template,
-            setup,
-        )
+    contact_conditions = apply_hit_conditions(
+        attack,
+        defender,
+        attacker_event_id,
+        round_number,
+        affected_states,
+        attacker.template,
+        setup,
     )
+    result.applied_conditions.extend(contact_conditions)
+    if "grappled" in contact_conditions:
+        result.attacker_recognized_target_disguise = (
+            recognize_visual_disguise_by_physical_inspection(
+                attacker, defender, actual_event_id
+            )
+        )
+        result.target_recognized_attacker_disguise = (
+            recognize_visual_disguise_by_physical_inspection(
+                defender, attacker, attacker_event_id
+            )
+        )
     result.on_hit_save = resolve_on_hit_condition_save(
         defender,
         attack,
