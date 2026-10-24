@@ -39,9 +39,10 @@ def grant_source_effect_immunity(
     try:
         if has_source_effect_immunity(state, action_id, source_id):
             return immunity_effect_id(action_id, source_id)
-        return apply_timed_condition(
+        effect_id = immunity_effect_id(action_id, source_id)
+        applied = apply_timed_condition(
             state,
-            immunity_effect_id(action_id, source_id),
+            effect_id,
             source_id,
             source_effect_id=f"{action_id}:success-immunity",
             source_template=source_template,
@@ -52,6 +53,13 @@ def grant_source_effect_immunity(
             expires_at_start_of_source_turn=False,
             use_default_poison_recovery=False,
         )
+        if applied is not None:
+            effect = next(
+                item for item in state.timed_effects
+                if item.effect_id == effect_id and item.source_id == source_id
+            )
+            effect.status_lane = "buff"
+        return applied
     except Exception:
         logger.exception(
             "Failed to grant source-effect immunity for %s from %s.",
