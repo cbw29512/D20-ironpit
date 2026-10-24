@@ -34,6 +34,7 @@ class TimedEffect(BaseModel):
     source_maintenance_action_cost: Literal["none", "bonus_action"] = "none"
     source_turn_count_at_application: int | None = Field(default=None, ge=0)
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
+    owned_curse_ids: list[str] = Field(default_factory=list)
     turn_behavior: TimedTurnBehavior = "normal"
     ends_on_damage: bool = False
     ends_on_owner_attack: bool = False
