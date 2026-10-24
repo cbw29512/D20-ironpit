@@ -62,6 +62,11 @@ from app.content.monster_legendary_resistance_2014 import (
 )
 from app.content.movement_modes import standard_arena_closing_speed_from_modes
 from app.content.monster_regeneration_2014 import regeneration_trait_2014
+from app.content.monster_recharge_self_buffs_2014 import (
+    recharge_self_buff_actions_2014,
+    recharge_self_buff_grants_2014,
+    recharge_self_buff_resources_2014,
+)
 from app.content.monster_save_capabilities_2014 import recharge_rules_2014, save_capabilities_2014, save_resources_2014
 from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.capabilities import CombatantDefinition
@@ -141,6 +146,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     resources.extend(innate_spell_resources_2014(monster))
     resources.extend(monster_spell_slot_resources_2014(monster))
     resources.extend(zero_hp_prevention_resources_2014(monster))
+    resources.extend(recharge_self_buff_resources_2014(monster))
     legendary_resource = legendary_resistance_resource_2014(monster)
     if legendary_resource is not None:
         resources.append(legendary_resource)
@@ -193,7 +199,8 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
             *heated_body_retaliation_2014(monster),
             *corrosive_form_retaliation_2014(monster),
             *condition_auras_from_source(monster.source_traits, "2014"),
-            *contextual_save_defenses_2014(monster)[0], *leadership_actions_2014(monster)],
+            *contextual_save_defenses_2014(monster)[0], *leadership_actions_2014(monster),
+            *recharge_self_buff_actions_2014(monster)],
         healing_actions=healing_actions_2014(monster),
         condition_removal_actions=list(core.condition_removal_actions),
         terminal_effect_tags=terminal_effect_tags_2014(monster),
@@ -208,7 +215,10 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         combat_traits=modeled_combat_traits_2014(monster),
         environment_context_reactions=environment_context_reactions_2014(monster),
         progression_features=features, passive_modifier_grants=conditional_immunity_grants_2014(monster),
-        bonus_attack_grants=bonus_attack_grants_2014(monster),
+        bonus_attack_grants=[
+            *bonus_attack_grants_2014(monster),
+            *recharge_self_buff_grants_2014(monster),
+        ],
         bonus_tactical_action_grants=aggressive_tactical_grants_2014(monster),
         saving_throw_bonuses=dict(core.saving_throw_bonuses),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
