@@ -49,14 +49,6 @@ class SaveConditionEffectDefinition(BaseModel):
     @model_validator(mode="after")
     def validate_condition_lifecycle(self) -> "SaveConditionEffectDefinition":
         try:
-            if (
-                self.repeat_save_timing is not None
-                and self.duration_rounds is None
-                and self.repeat_save_failure_condition is None
-            ):
-                raise ValueError(
-                    "Save-condition repeat saves require a duration or a failure escalation condition."
-                )
             if self.repeat_save_failure_condition is not None and self.repeat_save_timing is None:
                 raise ValueError("Failure escalation requires a repeat-save timing.")
             has_start_damage = self.start_of_turn_damage_dice_count > 0
