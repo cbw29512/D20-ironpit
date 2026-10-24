@@ -19,6 +19,8 @@
           || String(a.id).localeCompare(String(b.id)));
 
       for (const grant of grants) {
+        if (grant.requiredActiveEffectId
+          && !(state.active_effect_ids || []).includes(grant.requiredActiveEffectId)) continue;
         if (grant.trigger === "source_melee_zero_hp_this_turn"
           && state.feature_last_turn_keys?.[`bonus-attack-trigger:${grant.id}`] !== turnKey) continue;
         const cost = grant.resourceCost || 1;
