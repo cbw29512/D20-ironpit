@@ -126,3 +126,4 @@ for (const [x, expected] of [[2, 1], [3, 0]]) {
   assert.equal(result.events.length, expected);
   if (expected) assert.equal(result.events[0].distance_before_ft, 10);
 }
+require("./browser-fear-aura.test.cjs");
