@@ -113,3 +113,34 @@ def source_proven_start_turn_damage_condition_2014(
             attack.id,
         )
         raise
+
+def source_completed_start_turn_damage_condition_2014(
+    monster: SourceMonster2014,
+    attack: SourceAttack2014,
+) -> SourceAttack2014:
+    """Complete an exact source attack with generic timed-condition parameters."""
+    try:
+        proof = source_proven_start_turn_damage_condition_2014(monster, attack)
+        if proof is None:
+            return attack
+        return attack.model_copy(update={
+            "source_complete": True,
+            "on_hit_save_effect": {
+                "save_ability": proof.save_ability,
+                "dc": proof.dc,
+                "condition_id": proof.condition_id,
+                "cannot_regain_hit_points": proof.cannot_regain_hit_points,
+                "start_of_turn_damage_dice_count": proof.start_of_turn_damage_dice_count,
+                "start_of_turn_damage_dice_size": proof.start_of_turn_damage_dice_size,
+                "start_of_turn_damage_type": proof.start_of_turn_damage_type,
+                "repeat_save_timing": proof.repeat_save_timing,
+            },
+        })
+    except Exception:
+        logger.exception(
+            "Failed to complete start-turn damage condition source for %s/%s.",
+            monster.id,
+            attack.id,
+        )
+        raise
+
