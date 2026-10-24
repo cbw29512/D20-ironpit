@@ -3,30 +3,21 @@
 
   const el = (id) => document.getElementById(id);
   const nodes = new Map();
-  const SELF_BUFFS = new Set(["rage", "dodge"]);
-  const DEBUFF_MODIFIERS = new Set(["attacks-against-advantage"]);
   const reduced = () => window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, reduced() ? Math.min(ms, 70) : ms));
   const cleanLabel = (id) => String(id || "").replace(/^weapon-mastery-/, "").replace(/^tactical-master-/, "").replaceAll("_", " ").replaceAll("-", " ").toUpperCase();
   const conditionLabel = (id) => id === "frightened" ? "😱 FEAR" : cleanLabel(id);
   const concentrationLabel = (id) => id ? `✨ CONCENTRATING · ${cleanLabel(id)}` : "";
 
-  function modifierIsDebuff(modifier) {
-    return DEBUFF_MODIFIERS.has(modifier.kind) || Number(modifier.flat_bonus || 0) < 0;
-  }
-
   function classifyStatusLanes(state) {
-    const buffs = new Set(state.active_buff_effect_ids || []), debuffs = new Set();
-    for (const id of state.active_effect_ids || []) (SELF_BUFFS.has(id) ? buffs : debuffs).add(id);
-    for (const effect of state.timed_effects || []) debuffs.add(effect.effect_id);
-    const permanentIds = new Set((state.template?.passive_modifier_grants || []).map((grant) => grant.source_id));
-    for (const modifier of state.active_modifiers || []) {
-      const id = modifier.source_effect_id; if (!id || permanentIds.has(id)) continue;
-      (modifierIsDebuff(modifier) ? debuffs : buffs).add(id);
+    try {
+      const classify = window.IRON_PIT_BATTLEFIELD_PASSIVE_STATES?.classifyStatusLanes;
+      if (!classify) throw new Error("Battlefield status-lane runtime is not loaded.");
+      return classify(state);
+    } catch (error) {
+      console.error("Failed to classify replay status lanes", { state, error });
+      throw error;
     }
-    if (state.concentration?.effect_id) buffs.delete(state.concentration.effect_id);
-    for (const id of debuffs) buffs.delete(id);
-    return { buffs: [...buffs].sort(), debuffs: [...debuffs].sort() };
   }
 
   const permanentPassiveStates = (...args) => {
