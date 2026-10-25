@@ -9,15 +9,13 @@
       "reason": "10-round onset and stage-specific removal are wired, but the source attack still requires generic 100-round out-of-water acid damage with moisture suppression"
     }
   ],
-  "latent_activation_contract_card_count": 1,
+  "latent_activation_contract_card_count": 0,
   "remaining_card_count": 1,
   "removal_contract_card_count": 1,
   "source_cards_scanned": 327,
-  "stage_wired_browser_card_count": 1,
-  "stage_wired_cards": [
-    "aboleth"
-  ],
-  "stage_wired_python_card_count": 1,
+  "stage_wired_browser_card_count": 0,
+  "stage_wired_cards": [],
+  "stage_wired_python_card_count": 0,
   "status": "partial: periodic environment lifecycle still required",
   "wired_browser_card_count": 0,
   "wired_cards": [],
