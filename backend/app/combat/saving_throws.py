@@ -12,13 +12,14 @@ from app.combat.saving_throw_damage import resolve_save_damage
 from app.combat.saving_throw_effects import apply_save_effects
 from app.combat.saving_throw_event import build_save_event
 from app.combat.saving_throw_legality import legal_save_action
+from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, SavingThrowAction
 from app.domain.runtime import CombatantState
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["legal_save_action", "resolve_save_action"]
+__all__ = ["legal_save_action", "resolve_save_action", "resolve_saving_throw"]
 
 
 def resolve_save_action(
