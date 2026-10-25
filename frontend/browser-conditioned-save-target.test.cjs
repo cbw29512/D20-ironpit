@@ -23,6 +23,14 @@ window.IRON_PIT_BROWSER_ZERO_HP = { reduceToZero: state => {
 } };
 window.IRON_PIT_BROWSER_ROGUE_DEFENSES = { evasionDamage: (_s, _a, _ok, _mode, n) => n };
 window.IRON_PIT_BROWSER_ATTACK = { applyDamage: () => { throw new Error("Must not apply damage"); } };
+load("browser-save-immunity.js");
+load("browser-save-action-support.js");
+load("browser-save-action-attempt.js");
+load("browser-save-damage.js");
+load("browser-save-damage-legacy.js");
+load("browser-save-damage-apply.js");
+load("browser-save-action-effects.js");
+load("browser-save-event.js");
 load("browser-saves.js");
 const S = window.IRON_PIT_BROWSER_SAVES;
 const actor = { combatant_id: "source", side: "monsters", state: {
