@@ -17,6 +17,7 @@ from app.content.monster_source_persistent_effect_2014 import (
 from app.content.monster_source_start_turn_damage_condition_2014 import (
     source_completed_start_turn_damage_condition_2014,
 )
+from app.content.monster_source_staged_disease_2014 import source_bound_staged_disease_2014
 from app.domain.weapons_base import DamageType
 
 _PATTERN = re.compile(
@@ -39,6 +40,7 @@ def source_completed_mixed_attack_2014(
     attack = source_completed_magic_cured_condition_2014(monster, attack)
     attack = source_completed_persistent_save_2014(monster, attack)
     attack = source_completed_start_turn_damage_condition_2014(monster, attack)
+    attack = source_bound_staged_disease_2014(monster, attack)
     if attack.source_complete or attack.kind != "melee":
         return attack
     if attack.on_hit_save_effect or attack.control_effect or attack.ongoing_damage_effect:
@@ -76,3 +78,4 @@ def source_completed_mixed_attack_2014(
             "source_complete": True, "damage": base, "on_hit_damage": [extra],
         })
     return attack
+
