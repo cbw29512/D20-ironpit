@@ -8,6 +8,7 @@ from app.combat.forced_movement import push_straight_away
 from app.combat.on_hit_condition_targeting import excluded_on_hit_condition_target
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import apply_terminal_condition_outcome, apply_timed_condition
+from app.combat.timed_effect_transition import requires_timed_effect, schedule_on_hit_transition
 from app.domain.models import CombatantState, CombatantTemplate, DiceRoll, WeaponAttack
 from app.domain.saving_throw_context import SavingThrowContext
 from app.domain.size import size_at_most
@@ -63,19 +64,13 @@ def resolve_on_hit_condition_save(
             runtime_effect_id = effect.effect_id or effect.condition_id
             if runtime_effect_id is None:
                 raise ValueError("Failed-save effect has no runtime effect id.")
-            timed = (
-                duration is not None
-                or effect.repeat_save_timing is not None
-                or effect.effect_id is not None
-                or effect.cannot_regain_hit_points
-                or bool(effect.allowed_removal_action_ids)
-                or effect.curse_id is not None
-            )
+            owner_id = source_id or (source_template.id if source_template is not None else "on-hit-save")
+            timed = requires_timed_effect(effect, duration)
             if timed:
                 applied = apply_timed_condition(
                     defender,
                     runtime_effect_id,
-                    source_id or (source_template.id if source_template is not None else "on-hit-save"),
+                    owner_id,
                     source_effect_id=attack.weapon.name,
                     source_template=source_template,
                     target_actor=target_actor, setup=setup,
@@ -99,6 +94,8 @@ def resolve_on_hit_condition_save(
                     start_of_turn_dice_size=effect.start_of_turn_damage_dice_size,
                     start_of_turn_damage_type=effect.start_of_turn_damage_type,
                 )
+                if applied is not None:
+                    schedule_on_hit_transition(defender, runtime_effect_id, owner_id, attack.weapon.name, effect)
             elif runtime_effect_id not in defender.active_effect_ids:
                 defender.active_effect_ids.append(runtime_effect_id)
                 if effect.condition_id is not None:
