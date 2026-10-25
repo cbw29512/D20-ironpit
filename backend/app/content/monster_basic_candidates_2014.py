@@ -40,7 +40,9 @@ _PIT_BANNED_ACTION_LABELS = PIT_BANNED_ACTION_LABELS_2014
 _ARENA_ABSENT_CONTEXT_ACTION_LABELS = frozenset({"ink cloud"})
 _ARENA_UNAVAILABLE_SUMMON_ACTION_LABELS = frozenset({"animate trees", "children of the night", "create specter"})
 _ARENA_NEUTRAL_MIND_ACTION_LABELS = frozenset({"weird insight"})
-_PIT_REMOVED_MONSTER_IDS_2014 = frozenset({"stirge"})
+# Rust Monster removed 2026-10-24: Antennae equipment corrosion is its defining
+# ability and is unique; without it the creature is not useful in the Pit.
+_PIT_REMOVED_MONSTER_IDS_2014 = frozenset({"stirge", "rust-monster"})
 _PIT_ARENA_NEUTRAL_MONSTER_IDS_2014 = frozenset({"frog"})
 def _supported_charge(monster: SourceMonster2014) -> bool:
     return any(
