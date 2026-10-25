@@ -49,7 +49,10 @@
     if (actor && action.requiresTargetSight && !Q().canSee(actor.state, target.state, distance)) return false;
     if (action.requiresTargetToSeeSource && (!actor || !Q().canSee(target.state, actor.state, S().distance(actor, target)))) return false;
     if (distance > action.range) return false;
-    if (sourceId && window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS?.isImmune(target, action, sourceId)) return false;
+    const timedEffects = window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS;
+    if (sourceId && timedEffects?.isImmune(target, action, sourceId)) return false;
+    if ((action.sourceEffectImmunityKeysBlocking || []).length
+      && timedEffects?.hasSharedImmunity(target.state, action.sourceEffectImmunityKeysBlocking)) return false;
     if (action.requiresTargetHearing && target.state.active_effect_ids.includes("deafened")) return false;
     const type = String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase();
     if ((action.requiredTargetCreatureTypes || []).length) {
@@ -171,6 +174,11 @@
     const riderRuntime = window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS;
     let appliedConditions = [];
     if (save.succeeded && action.sourceEffectImmunityOnSuccess) riderRuntime.grantImmunity(target.state, action.id, actor.combatant_id, round, { sourceTemplate: actor.state.template, sourceIsMagical: Boolean(action.magicalEffect) });
+    if (save.succeeded && (action.sourceEffectImmunityKeysOnSuccess || []).length) {
+      riderRuntime.grantSharedImmunities(target.state, action.sourceEffectImmunityKeysOnSuccess,
+        actor.combatant_id, round, { sourceTemplate: actor.state.template,
+          sourceIsMagical: Boolean(action.magicalEffect) });
+    }
     if (!save.succeeded && target.state.is_alive && !target.state.is_dead && action.failedSaveTimedEffect) {
       if (!riderRuntime) throw new Error("Failed-save timed-effect runtime is not loaded.");
       const applied = riderRuntime.apply(actor, target, action, action.failedSaveTimedEffect, round, options.setup || null,
