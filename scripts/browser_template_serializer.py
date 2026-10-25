@@ -318,6 +318,10 @@ def _save(action: Any) -> dict[str, Any]:
         row["failedSaveTimedEffect"] = _failed_save_timed_effect(action.failed_save_timed_effect)
     if action.source_effect_immunity_on_success:
         row["sourceEffectImmunityOnSuccess"] = True
+    if action.source_effect_immunity_keys_on_success:
+        row["sourceEffectImmunityKeysOnSuccess"] = list(action.source_effect_immunity_keys_on_success)
+    if action.source_effect_immunity_keys_blocking:
+        row["sourceEffectImmunityKeysBlocking"] = list(action.source_effect_immunity_keys_blocking)
     if action.failed_save_push_ft:
         row["failedSavePushFt"] = action.failed_save_push_ft
     if action.grapple_escape_dc is not None:
