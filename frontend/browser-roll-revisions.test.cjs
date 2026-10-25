@@ -57,6 +57,14 @@ window.IRON_PIT_BROWSER_INDOMITABLE = {
   use: () => ({ notation: "1d20 [Indomitable +9]", rolls: [10], modifier: 9, selected_roll: 10, mode: "normal", total: 19 }),
 };
 load("browser-saving-throws.js");
+load("browser-save-immunity.js");
+load("browser-save-action-support.js");
+load("browser-save-action-attempt.js");
+load("browser-save-damage.js");
+load("browser-save-damage-legacy.js");
+load("browser-save-damage-apply.js");
+load("browser-save-action-effects.js");
+load("browser-save-event.js");
 load("browser-saves.js");
 {
   const state = { template: { name: "Karnok", saving_throw_bonuses: { wisdom: 0 } }, active_effect_ids: [] };
