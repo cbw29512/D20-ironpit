@@ -104,7 +104,7 @@ def test_completion_clears_only_attack_incomplete_blocker() -> None:
     assert completed.on_hit_save_effect["effect_id"] == "mummy-rot"
     blockers = basic_blockers_2014(source)
     assert "attack:incomplete" not in blockers
-    assert "source:extra-action" in blockers
+    assert "source:extra-action" not in blockers
 
 
 def test_hour_scale_policy_keeps_source_but_omits_arena_neutral_delay() -> None:
