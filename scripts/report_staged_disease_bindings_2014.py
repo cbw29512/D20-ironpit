@@ -15,15 +15,18 @@ from app.content.monster_staged_disease_2014 import staged_disease_candidates_20
 from app.content.monster_source_staged_disease_2014 import source_bound_staged_disease_2014
 
 
+def _has_bound_transition(card) -> bool:
+    for attack in card.attacks:
+        effect = source_bound_staged_disease_2014(card, attack).on_hit_save_effect
+        if isinstance(effect, dict) and "delayed_transition" in effect:
+            return True
+    return False
+
+
 def report() -> dict:
     cards = load_monster_source_2014()
     applicable = [card.id for card in staged_disease_candidates_2014(cards)]
-    stage_wired = [
-        card.id for card in cards if any(
-            source_bound_staged_disease_2014(card, attack).on_hit_save_effect is not None
-            for attack in card.attacks
-        )
-    ]
+    stage_wired = [card.id for card in cards if _has_bound_transition(card)]
     exceptions = [{
         "monster": card_id,
         "reason": (
