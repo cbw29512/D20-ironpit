@@ -19,7 +19,7 @@ _SOURCE = re.compile(
     r"The (?P<source>mummy(?: lord)?) targets one creature it can see within "
     r"(?P<range>\d+) feet of it\. If the target can see the (?P=source), it must "
     r"succeed on a DC (?P<dc>\d+) Wisdom saving throw against this magic or "
-    r"become frightened until the end of the (?P=source)'s next turn\. "
+    r"become frightened until the end of the mummy's next turn\. "
     r"If the target fails the saving throw by (?P<margin>\d+) or more, it is also "
     r"paralyzed for the same duration\. A target that succeeds on the saving throw "
     r"is immune to the Dreadful Glare of all mummies "
