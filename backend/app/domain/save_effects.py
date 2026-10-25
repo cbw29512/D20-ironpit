@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_serializer, model_validator
 
 from app.domain.action_types import ConditionName
 from app.domain.character_builds import AbilityName
+from app.domain.failure_margin import FailureMarginEscalation, require_escalation_duration
 from app.domain.timed_control_limits import TimedControlLimits, TimedSaveFlatBonus, compiled_control_limits
 
 logger = logging.getLogger(__name__)
@@ -24,6 +25,7 @@ class FailedSaveTimedEffect(BaseModel):
 
     effect_id: str
     additional_effect_ids: list[ConditionName] = Field(default_factory=list)
+    failure_margin_escalation: FailureMarginEscalation | None = None
     duration_rounds: int | None = Field(default=None, ge=1, le=100800)
     expiry_timing: SaveEffectTiming = "target_turn_end"
     repeat_save_ability: AbilityName | None = None
@@ -102,6 +104,7 @@ class FailedSaveTimedEffect(BaseModel):
             grouped_ids = [self.effect_id, *self.additional_effect_ids]
             if len(grouped_ids) != len(set(grouped_ids)):
                 raise ValueError("Grouped failed-save condition ids must be distinct.")
+            require_escalation_duration(self.failure_margin_escalation, self.duration_rounds)
             configured = (
                 self.repeat_save_ability is not None,
                 self.repeat_save_dc is not None,
