@@ -863,6 +863,20 @@ These are **spell-level decisions**, not Archmage-only exceptions. Preserve the 
 
 - [ ] **2014 Archmage — Time Stop -> Meteor Swarm (9th-level) — USER-APPROVED / QUEUED:** Preserve original printed Time Stop on the source and card, but omit it from the separate 2014 Archmage Pit combat loadout; legally prepare **Meteor Swarm** as the 9th-level Wizard combat spell instead. RAW 2014: **Action, 1 mile range, four points visible to the caster, 40-ft-radius sphere from each**, immediate effect, **one Dexterity saving throw per creature in the union of those areas**, **20d6 Fire + 20d6 Bludgeoning** on a failure, **half each typed component on a success**. The four areas may overlap, but a creature caught in multiple bursts must be **affected only once** (not four saves or multiplied damage). **Friendly fire applies** including allies, and the AI must account for expected friendly damage when choosing up to four placement points. Apply shared typed damage defenses separately after saving throw, 9th-level slot charge, one normal Action, 2014 square-grid area coverage. Reuse universal single-area targeting, shared multi-component save damage and defensive modifiers; require a **generic multi-center AoE union/dedup extension** in Python and browser rather than Archmage-specific spell branches. Preserve edition-specific rules for future 2024 users; don't automatically replace Time Stop on other casters. Add tests for overlap dedup, all four centers, source visibility, friendly-fire hit, correct 40-ft radius, saves, resistance/immunity by damage type, spell slot, and Python/browser parity. **No implementation/certification claimed.**
 
+## >1-hour delayed-effect blocker cleanup — 2026-10-25
+
+Global authority is now `IRON_PIT_RULES_CONTRACT.md §6.1`: a **required delay greater than 1 hour is arena-neutral**, remains on immutable source/card data, never executes or persists across matches, and cannot by itself block admission. Immediate/combat-relevant clauses from the same source remain active.
+
+2014 audit results:
+- **Mummy / Mummy Lord — Mummy Rot:** immediate failed-save curse + healing block remain active; 24-hour 3d6 maximum-HP reduction is source metadata only. Rotting Fist long-delay blocker cleared in PR #1041.
+- **Flameskull, Guardian Naga, Lich, Mummy Lord, Spirit Naga, Lemure — Rejuvenation/Hellish Rejuvenation:** already proven post-combat delayed and excluded from unsupported-trait blockers by permanent regression coverage. No resurrection timer is required.
+- **Shadow / Wight delayed corpse-creation text:** already excluded from dynamic-combatant lifecycle blockers; no delayed spawn is created in a match.
+- **Printed 24-hour success immunities:** remain match-scoped source immunity under the existing rule; no 14,400-round timer and no cross-match persistence.
+- **Aboleth Tentacle disease:** **not cleared by this cutoff** because its first mechanical onset is after 1 minute, which is <=1 hour and therefore potentially reachable in combat. Keep its elapsed-round/healing restriction work.
+- **Immediate max-HP reductions / ability reductions that merely recover after a rest or long duration:** remain combat-active because the reduction happens now; only their between-fight recovery text is irrelevant. Do not neutralize Vampire/Wraith/Shadow-style immediate combat effects.
+
+This audit removes campaign-time implementation debt without weakening any clause that can change the current fight.
+
 ## Status accounting
 
 - `QUEUED`: named blocker only; source/mechanic check not completed.
