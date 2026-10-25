@@ -13,7 +13,9 @@ from app.combat.forced_movement import push_straight_away
 from app.combat.failed_save_timed_apply import apply_failed_save_timed_effect
 from app.combat.failed_d20_test_override import source_name_for_roll
 from app.combat.source_effect_immunity import (
+    grant_shared_source_effect_immunities,
     grant_source_effect_immunity,
+    has_shared_source_effect_immunity,
     has_source_effect_immunity,
 )
 from app.combat.defensive_modifier_rules import saving_throw_advantage_source_names
@@ -40,6 +42,10 @@ def legal_save_action(
 ) -> bool:
     template = target.state.template
     if source_id and has_source_effect_immunity(target.state, action.id, source_id):
+        return False
+    if action.source_effect_immunity_keys_blocking and has_shared_source_effect_immunity(
+        target.state, action.source_effect_immunity_keys_blocking
+    ):
         return False
     if action.required_target_condition is not None and not has_condition(target.state, action.required_target_condition):
         return False
@@ -166,6 +172,12 @@ def resolve_save_action(
     if succeeded and action.source_effect_immunity_on_success:
         grant_source_effect_immunity(
             target.state, action.id, actor.combatant_id, round_number,
+            source_template=actor.state.template, source_is_magical=action.magical_effect,
+        )
+    if succeeded and action.source_effect_immunity_keys_on_success:
+        grant_shared_source_effect_immunities(
+            target.state, action.source_effect_immunity_keys_on_success,
+            actor.combatant_id, round_number,
             source_template=actor.state.template, source_is_magical=action.magical_effect,
         )
     if not succeeded and target.state.is_alive and not target.state.is_dead:
