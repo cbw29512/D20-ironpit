@@ -1,0 +1,16 @@
+{
+  "applicable_card_count": 1,
+  "applicable_cards": [
+    "aboleth"
+  ],
+  "exceptions": [
+    {}
+  ],
+  "remaining_card_count": 1,
+  "removal_contract_card_count": 1,
+  "source_cards_scanned": 327,
+  "status": "partial: exact staged lifecycle still required",
+  "wired_browser_card_count": 0,
+  "wired_cards": [],
+  "wired_python_card_count": 0
+}
