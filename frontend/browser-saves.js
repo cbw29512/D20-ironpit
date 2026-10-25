@@ -51,8 +51,12 @@
     if (distance > action.range) return false;
     const timedEffects = window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS;
     if (sourceId && timedEffects?.isImmune(target, action, sourceId)) return false;
-    if ((action.sourceEffectImmunityKeysBlocking || []).length
-      && timedEffects?.hasSharedImmunity(target.state, action.sourceEffectImmunityKeysBlocking)) return false;
+    if ((action.sourceEffectImmunityKeysBlocking || []).length) {
+      if (!timedEffects?.hasSharedImmunity) {
+        throw new Error("Shared save-immunity lookup runtime is unavailable.");
+      }
+      if (timedEffects.hasSharedImmunity(target.state, action.sourceEffectImmunityKeysBlocking)) return false;
+    }
     if (action.requiresTargetHearing && target.state.active_effect_ids.includes("deafened")) return false;
     const type = String(target.state.template.creature_type || "").split(" (")[0].trim().toLowerCase();
     if ((action.requiredTargetCreatureTypes || []).length) {
@@ -175,6 +179,9 @@
     let appliedConditions = [];
     if (save.succeeded && action.sourceEffectImmunityOnSuccess) riderRuntime.grantImmunity(target.state, action.id, actor.combatant_id, round, { sourceTemplate: actor.state.template, sourceIsMagical: Boolean(action.magicalEffect) });
     if (save.succeeded && (action.sourceEffectImmunityKeysOnSuccess || []).length) {
+      if (!riderRuntime?.grantSharedImmunities) {
+        throw new Error("Shared save-immunity grant runtime is unavailable.");
+      }
       riderRuntime.grantSharedImmunities(target.state, action.sourceEffectImmunityKeysOnSuccess,
         actor.combatant_id, round, { sourceTemplate: actor.state.template,
           sourceIsMagical: Boolean(action.magicalEffect) });
