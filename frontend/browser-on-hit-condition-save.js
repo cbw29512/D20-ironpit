@@ -1,6 +1,5 @@
 (() => {
   "use strict";
-
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const T = () => window.IRON_PIT_BROWSER_TIMED;
@@ -8,7 +7,6 @@
     || (() => { throw new Error("browser-creature-kind.js is required."); })();
   const L = () => window.IRON_PIT_BROWSER_ON_HIT_CONDITION_LIFECYCLE
     || (() => { throw new Error("browser-on-hit-condition-lifecycle.js is required."); })();
-
   function resolve(target, attack, sourceTemplate = null, round = null, setup = null, attacker = null) {
     try {
     const effect = attack.onHitConditionSave;
@@ -43,8 +41,8 @@
     if (!save.succeeded) {
       const runtimeEffectId = effect.effectId || effect.conditionId;
       if (!runtimeEffectId) throw new Error("Failed-save effect has no runtime effect id.");
-      const timed = duration != null || effect.repeatSaveTiming || effect.effectId
-        || effect.cannotRegainHitPoints || effect.allowedRemovalActionIds?.length || effect.curseId;
+      const timed = duration != null || effect.repeatSaveTiming || effect.effectId || effect.cannotRegainHitPoints
+        || effect.allowedRemovalActionIds?.length || effect.curseId || effect.removalEffectTag || effect.delayedTransition;
       if (timed) {
         if (!T()?.apply) throw new Error("Timed on-hit condition save requires browser-timed-conditions.js.");
         const ownerId = attacker?.combatant_id || sourceTemplate?.id || "on-hit-save";
@@ -64,6 +62,9 @@
         }) || null;
         if (appliedCondition) {
           L().attachStartTurnDamage(target.state, runtimeEffectId, ownerId, sourceEffectId, effect);
+          const D = window.IRON_PIT_BROWSER_DELAYED_EFFECT_TRANSITION;
+          if (!D?.schedule && (effect.delayedTransition || effect.removalEffectTag)) throw new Error("Delayed effect runtime is required.");
+          D?.schedule(target.state, runtimeEffectId, ownerId, sourceEffectId, effect);
         }
       } else if (!target.state.active_effect_ids.includes(runtimeEffectId)) {
         target.state.active_effect_ids.push(runtimeEffectId);
@@ -104,7 +105,6 @@
       console.error("On-hit condition save resolution failed", { target: target?.combatant_id, error }); throw error;
     }
   }
-
   function resolveOngoingHpLoss(target, attack, sourceTemplate = null, round = null, setup = null, attacker = null) {
     try {
       const rule = attack.onHitOngoingHpLoss;
@@ -146,6 +146,5 @@
       throw error;
     }
   }
-
   window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE = { resolve, resolveOngoingHpLoss, creatureMatchesKind: K().matches };
 })();
