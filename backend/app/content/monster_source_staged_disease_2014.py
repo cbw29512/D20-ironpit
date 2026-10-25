@@ -1,27 +1,21 @@
 """Semantic 2014 source binding for delayed disease-stage attack effects."""
 from __future__ import annotations
 
-import html
 import re
 
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
+from app.content.monster_source_sections_2014 import source_sections_2014
 
 _ATTACK = re.compile(
-    r"(?P<name>[\w \-']+)\.\s*Melee Weapon Attack:\s*\+(?P<hit>\d+) to hit,\s*"
+    r"Melee Weapon Attack:\s*\+(?P<hit>\d+) to hit,\s*"
     r"reach (?P<reach>\d+) ft\.,\s*one target\.\s*Hit:\s*"
     r"(?P<average>\d+) \((?P<count>\d+)d(?P<size>\d+)\s*\+\s*(?P<bonus>\d+)\)"
-    r" (?P<damage_type>\w+) damage\.\s*If the target is a creature, it must succeed on a DC "
-    r"(?P<dc>\d+) Constitution saving throw or become diseased\. The disease has no effect for "
-    r"(?P<minutes>\d+) minute and can be removed by any magic that cures disease\. After "
-    r"(?P=minutes) minute, the diseased creature can't regain hit points unless it is underwater, "
-    r"and the disease can be removed only by heal or another disease-curing spell of "
-    r"(?P<level>\d+)th level or higher\.",
+    r" (?P<damage_type>\w+) damage\.",
     re.IGNORECASE,
 )
-
-
-def _source(monster: SourceMonster2014) -> str:
-    return " ".join(html.unescape(re.sub(r"<[^>]+>", " ", monster.source_actions or "")).split())
+_SAVE = re.compile(r"DC (?P<dc>\d+) Constitution saving throw or become diseased", re.I)
+_DELAY = re.compile(r"disease has no effect for (?P<minutes>\d+) minute", re.I)
+_LEVEL = re.compile(r"disease-curing spell of (?P<level>\d+)(?:st|nd|rd|th) level", re.I)
 
 
 def supported_staged_disease_effect_2014(row: object) -> bool:
@@ -40,11 +34,22 @@ def source_bound_staged_disease_2014(
     """Bind the reachable stage; unresolved later clauses keep source incomplete."""
     if attack.source_complete or attack.kind != "melee" or attack.on_hit_save_effect:
         return attack
-    for match in _ATTACK.finditer(_source(monster)):
+    section = source_sections_2014(
+        monster.source_actions, include_continuations=True,
+    ).get(attack.name, "")
+    folded = section.casefold()
+    required = (
+        "any magic that cures disease", "after 1 minute",
+        "disease can be removed only by", "heal",
+        "regain hit points unless it is underwater",
+    )
+    save, delay, level = _SAVE.search(section), _DELAY.search(section), _LEVEL.search(section)
+    if not all(token in folded for token in required) or not all((save, delay, level)):
+        return attack
+    for match in _ATTACK.finditer(section):
         row = match.groupdict()
         damage = attack.damage
-        if (row["name"].strip().lower() != attack.name.strip().lower()
-                or int(row["hit"]) != attack.attack_bonus
+        if (int(row["hit"]) != attack.attack_bonus
                 or int(row["reach"]) != attack.reach_ft
                 or int(row["average"]) != damage.average
                 or int(row["count"]) != damage.dice_count
@@ -52,16 +57,16 @@ def source_bound_staged_disease_2014(
                 or int(row["bonus"]) != damage.bonus
                 or row["damage_type"].lower() != damage.type):
             continue
-        turns = int(row["minutes"]) * 10
+        turns = int(delay.group("minutes")) * 10
         effect = {
-            "save_ability": "constitution", "dc": int(row["dc"]),
+            "save_ability": "constitution", "dc": int(save.group("dc")),
             "effect_id": "diseased", "cannot_regain_hit_points": False,
             "removal_effect_tag": "disease", "minimum_removal_spell_level": 0,
             "removal_action_exceptions": [],
             "delayed_transition": {
                 "target_turns": turns, "cannot_regain_hit_points": True,
                 "removal_effect_tag": "disease",
-                "minimum_removal_spell_level": int(row["level"]),
+                "minimum_removal_spell_level": int(level.group("level")),
                 "removal_action_exceptions": ["heal"],
             },
         }
