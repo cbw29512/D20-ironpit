@@ -20,6 +20,7 @@ from app.content.monster_save_persistent_validation_2014 import (
     supported_save_persistent_2014,
 )
 from app.content.monster_source_2014 import SourceAttack2014
+from app.content.monster_source_staged_disease_2014 import supported_staged_disease_effect_2014
 from app.domain.weapons import ConditionalAttackAdvantage
 
 logger = logging.getLogger(__name__)
@@ -71,6 +72,7 @@ def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
             or supported_save_damage_2014(attack.on_hit_save_effect)
             or supported_save_max_hp_reduction_2014(attack.on_hit_save_effect)
             or supported_save_persistent_2014(attack.on_hit_save_effect)
+            or supported_staged_disease_effect_2014(attack.on_hit_save_effect)
             or supported_ongoing_hp_loss_2014(attack)
         ):
             return False
@@ -113,3 +115,4 @@ def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
     except Exception:
         logger.exception("Failed to classify basic attack effects for %s.", attack.id)
         raise
+
