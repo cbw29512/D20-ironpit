@@ -21,7 +21,7 @@ def _member(template, combatant_id: str, side: str, position_ft: int):
 
 
 def test_death_trigger_dispatch_drains_a_newly_killed_source() -> None:
-    roster = build_arena_roster()
+    roster = build_arena_roster("2014")
     magmin = next(card for card in roster.monsters if card.id == "magmin")
     hero = roster.characters[0]
     source = _member(magmin, "source", "monsters", 0)
@@ -54,7 +54,7 @@ def test_death_trigger_dispatch_drains_a_newly_killed_source() -> None:
 
 
 def test_death_trigger_consumption_resets_with_new_fight_state() -> None:
-    roster = build_arena_roster()
+    roster = build_arena_roster("2014")
     magmin = next(card for card in roster.monsters if card.id == "magmin")
     hero = roster.characters[0]
 
