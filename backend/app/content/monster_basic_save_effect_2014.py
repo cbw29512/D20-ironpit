@@ -14,6 +14,7 @@ from app.content.monster_save_persistent_validation_2014 import (
     supported_save_persistent_2014,
 )
 from app.content.monster_source_2014 import SourceAttack2014
+from app.content.monster_source_staged_disease_2014 import supported_staged_disease_effect_2014
 from app.content.monster_zero_hp_save_rider_2014 import zero_hp_save_rider_2014
 from app.domain.capability_effects import (
     AttackEffectDefinition,
@@ -51,6 +52,16 @@ def save_effect_2014(attack: SourceAttack2014) -> AttackEffectDefinition:
                 curse_id=str(row["curse_id"]),
                 cannot_regain_hit_points=bool(row["cannot_regain_hit_points"]),
                 allowed_removal_action_ids=list(row["allowed_removal_action_ids"]),
+            )
+        if supported_staged_disease_effect_2014(row):
+            return SavePersistentEffectDefinition(
+                save_ability=str(row["save_ability"]).lower(), dc=int(row["dc"]),
+                effect_id=str(row["effect_id"]),
+                cannot_regain_hit_points=bool(row["cannot_regain_hit_points"]),
+                removal_effect_tag=str(row["removal_effect_tag"]),
+                minimum_removal_spell_level=int(row["minimum_removal_spell_level"]),
+                removal_action_exceptions=list(row["removal_action_exceptions"]),
+                delayed_transition=row["delayed_transition"],
             )
         if supported_save_condition_2014(row):
             max_size = row.get("max_target_size")
@@ -107,3 +118,4 @@ def save_effect_2014(attack: SourceAttack2014) -> AttackEffectDefinition:
     except Exception:
         logger.exception("Failed to compile 2014 save effect for %s.", attack.id)
         raise
+
