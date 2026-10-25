@@ -261,8 +261,11 @@ Audit annotation is evidence-only and must never change combat resolution.
 - Preserve explicit RAW in-combat timing when a feature names a specific start/end-of-turn, round, reaction, or other legal trigger.
 - When a combat effect is armed now but has **no required minimum delay** and is resolved by a later voluntary action or activation, Arena AI uses it at the **next legal activation opportunity** when doing so is tactically meaningful. In ordinary turn flow this will usually be the creature's next turn/round.
 - A long printed duration is an **expiry window**, not an instruction for Arena AI to wait that long. An effect that can remain armed for minutes, hours, or days may still be activated on the next legal turn when RAW allows it.
-- If a printed delay or required trigger is genuinely longer than a plausible Iron Pit fight, classify and re-evaluate the mechanic before certification. Do not silently wait out combat, silently fire it early, or ignore an outcome-changing delayed effect.
-- Delayed mechanics must use fresh per-fight runtime state and reset completely between matches.
+- **Required delays greater than 1 hour are outside Iron Pit combat.** Preserve the printed clause on immutable source/card data for RAW provenance, but do not schedule, tick, persist, or execute that delayed outcome in fight state. Such a delayed clause is `ARENA_NEUTRAL` for certification and is not by itself a monster/pregen blocker.
+- **Immediate or earlier portions still apply.** A curse, disease, poison, wound, ability reduction, healing block, condition, damage rider, immunity, or other state that applies now remains a normal fight-local effect even when the same source also describes a later >1-hour consequence.
+- **Exactly 1 hour or less remains potentially combat-relevant.** Do not discard it merely because normal fights are usually shorter; preserve and resolve it when its trigger can legally occur before the match ends.
+- Match end discards every fight-local effect. The next fight reconstructs fresh state from immutable cards, so >1-hour consequences never carry into a later match.
+- Examples: Mummy Rot's immediate curse/healing block applies, while its 24-hour maximum-HP reduction does not; delayed corpse spawning and multi-hour/day Rejuvenation remain source metadata/post-combat-inert; printed 24-hour success immunities use the separate match-scoped immunity rule rather than a calendar timer.
 
 ### 6.2 Committed timed activities
 
