@@ -8,6 +8,7 @@ from app.content.monster_condition_aura_source_corrections_2014 import (
 )
 from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_source_2014 import load_monster_source_2014
+from scripts.browser_template_serializer import _timed_self_buff
 
 logger = logging.getLogger(__name__)
 
@@ -78,3 +79,22 @@ def test_generic_fear_aura_parser_is_not_source_identity_keyed() -> None:
     except Exception:
         logger.exception("Generic Fear Aura source renaming regression failed.")
         raise
+
+
+def test_real_source_serializes_through_generic_browser_bridge() -> None:
+    card = _pit_fiend()
+    action, = condition_auras_from_source(card.source_traits, "2014")
+
+    row = _timed_self_buff(action)
+    aura = row["hostileStartTurnConditionAura"]
+
+    assert row["name"] == "Fear Aura"
+    assert row["activationTiming"] == "passive"
+    assert aura["radius_ft"] == 20
+    assert aura["save_ability"] == "wisdom"
+    assert aura["save_dc"] == 21
+    assert aura["condition_id"] == "frightened"
+    assert aura["success_immunity"] is True
+    assert aura["source_is_magical"] is False
+    assert aura["requires_source_not_incapacitated"] is True
+    assert aura["condition_expiry_timing"] == "target_turn_start"
