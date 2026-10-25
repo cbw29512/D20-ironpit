@@ -16,7 +16,7 @@ for (const file of [
   "browser-grapple.js", "browser-timed-conditions.js", "browser-weapon-mastery.js",
   "browser-state.js", "browser-rage.js", "browser-frenzy-2014.js", "browser-rolls.js", "browser-zero-hp.js",
   "browser-damage-defense-rules.js", "browser-graze.js", "browser-vex.js", "browser-attack.js", "browser-reactions.js",
-  "browser-dodge.js", "browser-saving-throws.js", "browser-failed-save-timed-effects.js", "browser-saves.js", "browser-2014-monk.js", "browser-condition-lifecycle.js", "browser-charge.js",
+  "browser-dodge.js", "browser-saving-throws.js", "browser-failed-save-timed-effects.js", "browser-save-immunity.js", "browser-save-action-support.js", "browser-save-action-attempt.js", "browser-save-damage.js", "browser-save-damage-legacy.js", "browser-save-damage-apply.js", "browser-save-action-effects.js", "browser-save-event.js", "browser-saves.js", "browser-2014-monk.js", "browser-condition-lifecycle.js", "browser-charge.js",
   "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
   "browser-multiattack-choices.js", "browser-multiattack.js", "browser-spellcasting.js", "browser-spell-area.js",
   "browser-healing-policy.js", "browser-healing-resolution.js", "browser-group-healing.js", "browser-healing.js",
