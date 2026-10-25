@@ -1,0 +1,29 @@
+{
+  "applicable_card_count": 6,
+  "applicable_cards": [
+    "balor",
+    "dust-mephit",
+    "ice-mephit",
+    "magma-mephit",
+    "magmin",
+    "steam-mephit"
+  ],
+  "cards_with_death_trigger_actions": 4,
+  "death_effect_dispatch_wired": 6,
+  "exceptions": [],
+  "remaining_card_count": 0,
+  "source_cards_scanned": 327,
+  "source_declared_card_count": 6,
+  "status": "complete",
+  "structured_source_card_count": 4,
+  "wired_browser_card_count": 6,
+  "wired_cards": [
+    "balor",
+    "dust-mephit",
+    "ice-mephit",
+    "magma-mephit",
+    "magmin",
+    "steam-mephit"
+  ],
+  "wired_python_card_count": 6
+}
