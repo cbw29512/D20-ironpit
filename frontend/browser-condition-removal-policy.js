@@ -50,11 +50,20 @@
     if (action.requiresExplicitEffectPermission) {
       return effects.length > 0 && effects.every((effect) => effect.allowed_removal_action_ids?.includes(action.id));
     }
-    return effects.every((effect) => !effect.allowed_removal_action_ids?.length
-      || effect.allowed_removal_action_ids.includes(action.id));
+    return effects.every((effect) => {
+      if (effect.allowed_removal_action_ids?.length
+        && !effect.allowed_removal_action_ids.includes(action.id)) return false;
+      if (!effect.removal_effect_tag || effect.removal_action_exceptions?.includes(action.id)) return true;
+      return (action.removalEffectTags || []).includes(effect.removal_effect_tag)
+        && (action.spellLevel || 0) >= (effect.minimum_removal_spell_level || 0);
+    });
   }
   function removable(target, action) {
     const allowed = new Set(action.removableConditions || []);
+    for (const effect of target.state.timed_effects || []) {
+      if ((action.removalEffectTags || []).includes(effect.removal_effect_tag)
+        || effect.removal_action_exceptions?.includes(action.id)) allowed.add(effect.effect_id);
+    }
     const effects = [...new Set(target.state.active_effect_ids)]
       .filter((id) => allowed.has(id) && !(target.state.template.innate_condition_ids || []).includes(id)
         && effectAllows(target, id, action));
