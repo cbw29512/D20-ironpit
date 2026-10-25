@@ -51,3 +51,32 @@ def test_death_trigger_dispatch_drains_a_newly_killed_source() -> None:
     assert target.state.current_hp < target_hp
     assert source.state.feature_use_counts["death-trigger"] == 1
     assert chained.state.feature_use_counts["death-trigger"] == 1
+
+
+def test_death_trigger_consumption_resets_with_new_fight_state() -> None:
+    roster = build_arena_roster()
+    magmin = next(card for card in roster.monsters if card.id == "magmin")
+    hero = roster.characters[0]
+
+    for fight_number in (1, 2):
+        source = _member(magmin, f"source-{fight_number}", "monsters", 0)
+        target = _member(hero, f"target-{fight_number}", "heroes", 5)
+        source.state.current_hp = 0
+        source.state.is_alive = False
+        source.state.is_dead = True
+        setup = EncounterSetup(
+            heroes=[target],
+            monsters=[source],
+            hero_total_levels=1,
+            monster_total_cr="1/2",
+        )
+
+        events, _ = resolve_pending_death_triggers(
+            1, 1, setup, _OnesDice(),
+        )
+
+        assert any(event.event_type == "saving_throw" for event in events)
+        assert source.state.feature_use_counts["death-trigger"] == 1
+        assert "death-trigger" in source.state.active_buff_effect_ids
+
+    assert magmin.death_trigger_effect_ids == ["death-burst"]
