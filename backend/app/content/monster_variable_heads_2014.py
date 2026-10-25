@@ -32,6 +32,14 @@ _HEAL = re.compile(
 _EXTRA_REACTION = re.compile(
     r"extra reaction.+?only for opportunity attacks", re.IGNORECASE,
 )
+_ADVANTAGE = re.compile(
+    r"advantage on saving throws against being (?P<conditions>.+?)(?:\.|$)",
+    re.IGNORECASE,
+)
+_CONDITION_MAP = {
+    "blinded": "blinded", "charmed": "charmed", "deafened": "deafened",
+    "frightened": "frightened", "stunned": "stunned", "knocked unconscious": "unconscious",
+}
 _HEAD_MULTIATTACK = re.compile(
     r"makes as many (?P<attack>[A-Za-z][A-Za-z -]*?) attacks as it has heads",
     re.IGNORECASE,
@@ -56,7 +64,7 @@ def semantic_variable_head_sections_2014(
     monster: SourceMonster2014,
 ) -> tuple[tuple[str, str], tuple[str, str]] | None:
     """Locate the lifecycle and OA clauses by meaning, never card identity/name."""
-    traits = {name: _plain(body) for name, body in source_sections_2014(monster.source_traits).items()}
+    traits = {name: _plain(body) for name, body in source_sections_2014(monster.source_traits, include_continuations=True).items()}
     reaction_sections = traits
     all_traits = " ".join(traits.values())
     all_source = " ".join((all_traits, _plain(monster.source_actions), _plain(monster.source_reactions)))
@@ -111,6 +119,13 @@ def variable_head_profile_2014(monster: SourceMonster2014) -> VariableHeadProfil
         healing = _HEAL.search(body)
         if None in {initial, sever, regrow, blocker, healing}:
             raise ValueError("Variable-head semantic match lost a required source clause.")
+        advantage = _ADVANTAGE.search(body)
+        tags = []
+        if advantage:
+            raw = advantage["conditions"]
+            for key, tag in _CONDITION_MAP.items():
+                if key in raw.casefold():
+                    tags.append(tag)
         return VariableHeadProfile(
             source_name=source_name,
             reaction_source_name=reaction_name,
@@ -119,6 +134,7 @@ def variable_head_profile_2014(monster: SourceMonster2014) -> VariableHeadProfil
             heads_per_regrowth=_number(regrow["count"]),
             healing_per_regrown_head=int(healing["amount"]),
             regrowth_blocking_damage_types=[blocker["kind"].casefold()],
+            save_advantage_condition_tags=tags,
         )
     except Exception:
         logger.exception("Failed semantic variable-head binding for %s.", monster.id)
