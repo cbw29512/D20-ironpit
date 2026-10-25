@@ -10,7 +10,11 @@ from app.combat.timed_condition_apply import (
     apply_terminal_condition_outcome,
     apply_timed_condition,
 )
-from app.combat.timed_condition_lifecycle import remove_effect_group
+from app.combat.timed_condition_lifecycle import (
+    expire_start_of_turn_conditions,
+    remove_effect_group,
+    remove_effect_instance,
+)
 from app.domain.models import CombatantState
 
 logger = logging.getLogger(__name__)
