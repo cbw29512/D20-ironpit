@@ -117,6 +117,10 @@ def compile_attack_effects(definition: AttackCapabilityDefinition) -> CompiledAt
                     effect_id=effect.effect_id, curse_id=effect.curse_id,
                     allowed_removal_action_ids=list(effect.allowed_removal_action_ids),
                     cannot_regain_hit_points=effect.cannot_regain_hit_points,
+                    removal_effect_tag=effect.removal_effect_tag,
+                    minimum_removal_spell_level=effect.minimum_removal_spell_level,
+                    removal_action_exceptions=list(effect.removal_action_exceptions),
+                    delayed_transition=effect.delayed_transition,
                 )
             elif isinstance(effect, OngoingHpLossEffectDefinition):
                 result.on_hit_hp_loss = OnHitOngoingHpLoss(
@@ -137,3 +141,4 @@ def compile_attack_effects(definition: AttackCapabilityDefinition) -> CompiledAt
     except Exception:
         logger.exception("Failed to compile attack effects for %s.", definition.id)
         raise
+
