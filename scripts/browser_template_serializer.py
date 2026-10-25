@@ -402,6 +402,12 @@ def _failed_save_timed_effect(rider: Any) -> dict[str, Any]:
     }
     if rider.additional_effect_ids:
         row["additionalEffectIds"] = list(rider.additional_effect_ids)
+    if rider.failure_margin_escalation is not None:
+        escalation = rider.failure_margin_escalation
+        row["failureMarginEscalation"] = {
+            "margin": escalation.margin,
+            "additionalConditionIds": list(escalation.additional_condition_ids),
+        }
     if rider.damage_repeat_save_trigger != "none":
         row["damageRepeatSaveTrigger"] = rider.damage_repeat_save_trigger
     if rider.repeat_save_before_damaging_terrain:
