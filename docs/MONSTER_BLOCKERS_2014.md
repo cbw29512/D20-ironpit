@@ -11,7 +11,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Blocker | Monsters |
 |---|---:|
 | `source:trait` | 65 |
-| `source:extra-action` | 49 |
+| `source:extra-action` | 48 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 18 |
 | `mechanic:recharge` | 10 |
@@ -95,7 +95,7 @@ the underlying ability is already implemented or trivial.
 | Magma Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Magmin | attack:incomplete, source:trait | Ignited Illumination |
 | Mimic | attack:incomplete, source:trait | Shapechanger, Adhesive (Object Form Only), False Appearance (Object Form Only), Grappler |
-| Mummy Lord | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Spellcasting |
+| Mummy Lord | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Night Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Oni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Otyugh | attack:incomplete, source:extra-action | — |
