@@ -6,6 +6,9 @@ from app.content.monster_attack_effect_validation_2014 import (
     supported_save_condition_2014,
     supported_save_max_hp_reduction_2014,
 )
+from app.content.monster_delayed_effect_policy_2014 import (
+    arena_active_delayed_max_hp_fields_2014,
+)
 from app.content.monster_hp_loss_effect_2014 import (
     ongoing_hp_loss_effect_2014,
     supported_ongoing_hp_loss_2014,
@@ -51,18 +54,7 @@ def save_effect_2014(attack: SourceAttack2014) -> AttackEffectDefinition:
                 curse_id=str(row["curse_id"]),
                 cannot_regain_hit_points=bool(row["cannot_regain_hit_points"]),
                 allowed_removal_action_ids=list(row["allowed_removal_action_ids"]),
-                delayed_max_hp_reduction_delay_hours=int(
-                    row["delayed_max_hp_reduction_delay_hours"]
-                ),
-                delayed_max_hp_reduction_dice_count=int(
-                    row["delayed_max_hp_reduction_dice_count"]
-                ),
-                delayed_max_hp_reduction_dice_size=int(
-                    row["delayed_max_hp_reduction_dice_size"]
-                ),
-                delayed_max_hp_reduction_zero_kills=bool(
-                    row["delayed_max_hp_reduction_zero_kills"]
-                ),
+                **arena_active_delayed_max_hp_fields_2014(row),
             )
         if supported_save_condition_2014(row):
             max_size = row.get("max_target_size")

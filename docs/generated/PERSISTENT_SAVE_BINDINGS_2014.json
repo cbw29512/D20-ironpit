@@ -4,6 +4,17 @@
     "mummy",
     "mummy-lord"
   ],
+  "arena_active_delayed_component_card_count": 0,
+  "arena_neutral_delayed_component_card_count": 2,
+  "arena_neutral_delayed_component_cards": [
+    "mummy",
+    "mummy-lord"
+  ],
+  "delayed_source_component_card_count": 2,
+  "delayed_source_component_cards": [
+    "mummy",
+    "mummy-lord"
+  ],
   "exceptions": [],
   "remaining_card_count": 0,
   "source_cards_scanned": 327,

@@ -10,6 +10,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 DEFAULT_OUTPUT = ROOT / "docs" / "generated" / "PERSISTENT_SAVE_BINDINGS_2014.json"
 
+from app.content.monster_delayed_effect_policy_2014 import (
+    delayed_effect_is_arena_neutral_2014,
+)
 from app.content.monster_save_persistent_validation_2014 import (
     supported_save_persistent_2014,
 )
@@ -23,6 +26,7 @@ from app.content.monster_source_persistent_effect_2014 import (
 def report() -> dict:
     cards = load_monster_source_2014()
     applicable, wired, exceptions = [], [], []
+    delayed_source, arena_neutral_delayed = [], []
     for card in cards:
         names = semantic_persistent_save_names_2014(card)
         if not names:
@@ -40,15 +44,22 @@ def report() -> dict:
                 })
                 continue
             completed = source_completed_persistent_save_2014(card, attack)
+            row = completed.on_hit_save_effect
             if (
                 not completed.source_complete
-                or not supported_save_persistent_2014(completed.on_hit_save_effect)
+                or not supported_save_persistent_2014(row)
             ):
                 card_wired = False
                 exceptions.append({
                     "monster": card.id, "ability": name,
                     "reason": "printed parameters do not exactly match persistent-save schema",
                 })
+                continue
+            delay = row.get("delayed_max_hp_reduction_delay_hours")
+            if delay is not None:
+                delayed_source.append(card.id)
+                if delayed_effect_is_arena_neutral_2014(delay):
+                    arena_neutral_delayed.append(card.id)
         if card_wired:
             wired.append(card.id)
     return {
@@ -58,6 +69,17 @@ def report() -> dict:
         "wired_python_card_count": len(wired),
         "wired_browser_card_count": len(wired),
         "wired_cards": wired,
+        "delayed_source_component_card_count": len(set(delayed_source)),
+        "delayed_source_component_cards": sorted(set(delayed_source)),
+        "arena_neutral_delayed_component_card_count": len(
+            set(arena_neutral_delayed)
+        ),
+        "arena_neutral_delayed_component_cards": sorted(
+            set(arena_neutral_delayed)
+        ),
+        "arena_active_delayed_component_card_count": len(
+            set(delayed_source) - set(arena_neutral_delayed)
+        ),
         "remaining_card_count": len(exceptions),
         "exceptions": exceptions,
         "status": "complete" if not exceptions else "partial: explicit exceptions remain",
