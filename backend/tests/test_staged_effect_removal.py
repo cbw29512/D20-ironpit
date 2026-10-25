@@ -67,4 +67,8 @@ def test_all_327_cards_are_scanned_and_aboleth_remains_explicitly_blocked() -> N
     assert data["wired_python_card_count"] == 0
     assert data["remaining_card_count"] == 1
     assert "100-round acid/moisture" in data["exceptions"][0]["reason"]
-    assert render().endswith("\n")
+    expected = (
+        Path(__file__).resolve().parents[2]
+        / "docs" / "generated" / "STAGED_DISEASE_BINDINGS_2014.json"
+    ).read_text(encoding="utf-8")
+    assert expected == render()
