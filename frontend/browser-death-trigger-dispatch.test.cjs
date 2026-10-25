@@ -55,7 +55,7 @@ assert.equal(lastAction.failedSaveTimedEffect.repeatSaveTiming, "target_turn_end
 const second = window.IRON_PIT_BROWSER_DEATH_TRIGGER_DISPATCH.resolvePending(first.sequence, 2, setup);
 assert.equal(second.events.length, 0);
 
-const chainSource = member("chain-source", true, 0);
+const chainSource = member("source", true, 0);
 const chainMiddle = member("chain-middle", false, 5);
 const chainTarget = member("chain-target", false, 10);
 chainMiddle.state.current_hp = 4;
@@ -68,6 +68,7 @@ const chained = window.IRON_PIT_BROWSER_DEATH_TRIGGER_DISPATCH.resolvePending(
 assert.equal(chained.events.length, 2);
 assert.equal(chainMiddle.state.is_dead, true);
 assert.equal(chainTarget.state.current_hp, 6);
+assert.notEqual(chainSource, source);
 assert.equal(chainSource.state.feature_use_counts["death-trigger"], 1);
 assert.equal(chainMiddle.state.feature_use_counts["death-trigger"], 1);
 
