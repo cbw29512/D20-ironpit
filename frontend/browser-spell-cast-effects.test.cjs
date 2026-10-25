@@ -10,6 +10,7 @@ const load = (name) => vm.runInThisContext(
 );
 
 load("browser-timed-conditions.js");
+load("browser-timed-condition-lifecycle.js");
 load("browser-spell-cast-effects.js");
 
 const state = {
