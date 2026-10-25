@@ -13,32 +13,6 @@
     || !effects?.apply || !events?.build) {
     throw new Error("Browser save-action split runtimes are unavailable.");
   }
-  function resolveSavingThrow(...args) {
-    try {
-      const runtime = window.IRON_PIT_BROWSER_SAVING_THROWS;
-      if (!runtime?.resolveSavingThrow) {
-        throw new Error("Browser saving-throw resolver is unavailable.");
-      }
-      return runtime.resolveSavingThrow(...args);
-    } catch (error) {
-      console.error("Browser saving-throw delegation failed", { error });
-      throw error;
-    }
-  }
-
-  function saveMode(...args) {
-    try {
-      const runtime = window.IRON_PIT_BROWSER_SAVING_THROWS;
-      if (!runtime?.saveMode) {
-        throw new Error("Browser save-mode resolver is unavailable.");
-      }
-      return runtime.saveMode(...args);
-    } catch (error) {
-      console.error("Browser save-mode delegation failed", { error });
-      throw error;
-    }
-  }
-
   function resolveAction(
     sequence, round, actor, target, action, distance, options = {},
   ) {
@@ -147,7 +121,7 @@
     legalAction: support.legalAction,
     resolveAction,
     resolveOnHitConditionSave: support.resolveOnHitConditionSave,
-    resolveSavingThrow,
-    saveMode,
+    resolveSavingThrow: support.resolveSavingThrow,
+    saveMode: support.saveMode,
   };
 })();
