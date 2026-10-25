@@ -39,7 +39,7 @@ def _fight():
             position_ft=5,
             state=target_state,
         )
-        return attacker, target, attack, EncounterSetup(heroes=[target], monsters=[attacker])
+        return attacker, target, attack, EncounterSetup(heroes=[target], monsters=[attacker], hero_total_levels=1, monster_total_cr="1")
     except Exception as exc:
         raise AssertionError("Failed to build start-turn condition test fight.") from exc
 
