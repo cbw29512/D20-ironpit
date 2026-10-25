@@ -60,6 +60,20 @@ def test_capability_schema_accepts_repeat_save_until_success_without_duration() 
         raise
 
 
+def test_source_only_delayed_fields_fail_closed_at_runtime_boundary() -> None:
+    try:
+        OnHitConditionSave.model_validate({
+            "save_ability": "constitution",
+            "dc": 12,
+            "effect_id": "synthetic-rot",
+            "delayed_max_hp_reduction_delay_hours": 24,
+        })
+    except ValueError as exc:
+        assert "Extra inputs are not permitted" in str(exc)
+    else:
+        raise AssertionError("Source-only delayed metadata entered the combat schema.")
+
+
 def test_persistent_failed_save_effect_serializes_only_arena_active_state() -> None:
     try:
         definition = SavePersistentEffectDefinition(

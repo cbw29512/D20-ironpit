@@ -52,6 +52,16 @@ def test_persistent_effect_compiles_through_generic_attack_capability() -> None:
         raise
 
 
+def test_source_only_delayed_fields_fail_closed_at_capability_boundary() -> None:
+    with pytest.raises(ValueError, match="Extra inputs are not permitted"):
+        SavePersistentEffectDefinition.model_validate({
+            "save_ability": "constitution",
+            "dc": 12,
+            "effect_id": "synthetic-rot",
+            "delayed_max_hp_reduction_delay_hours": 24,
+        })
+
+
 def test_persistent_effect_counts_as_the_single_on_hit_save_slot() -> None:
     try:
         persistent = SavePersistentEffectDefinition(

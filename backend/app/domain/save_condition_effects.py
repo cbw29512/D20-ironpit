@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Literal
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming
 from app.domain.combatants import DamageType
@@ -65,6 +65,8 @@ class SaveConditionEffectDefinition(BaseModel):
 
 class SavePersistentEffectDefinition(BaseModel):
     """Immutable failed-save effect that persists until a declared exit removes it."""
+
+    model_config = ConfigDict(extra="forbid")
 
     kind: Literal["save_persistent_effect"] = "save_persistent_effect"
     save_ability: AbilityName

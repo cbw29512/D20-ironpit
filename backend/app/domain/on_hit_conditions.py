@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming
 from app.domain.failure_margin import FailureMarginEscalation, require_escalation_duration
@@ -27,6 +27,8 @@ class OnHitOngoingHpLoss(BaseModel):
 
 
 class OnHitConditionSave(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     condition_id: ConditionName | None = None

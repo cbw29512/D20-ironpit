@@ -13,6 +13,9 @@
     try {
     const effect = attack.onHitConditionSave;
     if (!effect || target.state.is_dead || !target.state.is_alive) return null;
+    if (Object.prototype.hasOwnProperty.call(effect, "delayedMaxHpReduction")) {
+      throw new Error("Source-only delayed maximum-HP metadata cannot enter browser combat.");
+    }
     if (effect.maxTargetSize && !S().sizeAtMost(target, effect.maxTargetSize)) return null;
     const kinds = [...(effect.excludedCreatureTypes || []), ...(effect.excludedCreatureSubtypes || [])];
     if (kinds.some((kind) => K().matches(target.state.template, kind))) return null;

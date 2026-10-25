@@ -99,6 +99,20 @@ function effect(id = "synthetic-rot") {
 }
 
 {
+  const source = member("stale-source", "monsters", 0);
+  const target = member("stale-target", "heroes", 5);
+  const setup = { heroes: [target], monsters: [source] };
+  const stale = effect("stale-curse");
+  stale.delayedMaxHpReduction = { delayHours: 24, diceCount: 3, diceSize: 6 };
+  setDice([1]);
+  assert.throws(
+    () => O.resolve(target, { id: "stale-hit", name: "Stale Hit", onHitConditionSave: stale },
+      source.state.template, 1, setup, source),
+    /Source-only delayed maximum-HP metadata cannot enter browser combat/,
+  );
+}
+
+{
   const source = member("other-source", "monsters", 0);
   const target = member("other-target", "heroes", 5);
   const setup = { heroes: [target], monsters: [source] };
