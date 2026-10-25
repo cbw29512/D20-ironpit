@@ -144,4 +144,28 @@ const lesserRestoration = {
   assert.deepEqual(ally.state.timed_effects, []);
 }
 
+
+{
+  const lesser = {
+    id: "lesser-restoration", name: "Lesser Restoration", actionCost: "action", range: 5,
+    targetMode: "self_or_ally", removableConditions: [], removalEffectTags: ["disease"],
+    spellLevel: 2, maxConditionsPerUse: 1, resourceCosts: {}, resourceCostsPerCondition: {},
+  };
+  const greater = { ...lesser, id: "greater-restoration", spellLevel: 6 };
+  const heal = { ...lesser, id: "heal", removalEffectTags: [], spellLevel: 0 };
+  const remover = member("cleanser", [], {}, [lesser]);
+  const ally = member("ally", ["renamed-disease"]);
+  ally.state.timed_effects = [{
+    effect_id: "renamed-disease", source_id: "renamed-source",
+    removal_effect_tag: "disease", minimum_removal_spell_level: 6,
+    removal_action_exceptions: ["heal"],
+  }];
+  const setup = { heroes: [remover, ally], monsters: [] }, turnKey = key(1, remover);
+  assert.equal(C.chooseAction(remover, setup, turnKey), null);
+  remover.state.template.condition_removal_actions = [greater];
+  assert.ok(C.chooseAction(remover, setup, turnKey));
+  remover.state.template.condition_removal_actions = [heal];
+  assert.ok(C.chooseAction(remover, setup, turnKey));
+}
+
 console.log("Browser 2024 condition-removal regressions passed.");
