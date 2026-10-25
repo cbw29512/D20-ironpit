@@ -78,6 +78,7 @@ Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §7, Attack natural 1, §10.1, §20
 - **Match end resets all effects.**
 - **Printed 24-hour immunities are match-scoped.** They last for the rest of the current fight only. Do not simulate calendar 24 hours and do not persist immunity across fights.
 - **Required delayed consequences over 1 hour are arena-neutral.** Keep their printed text on the immutable source/card, but never schedule or persist the delayed outcome across fights. Immediate/combat-relevant portions of the same effect still apply as fight-local debuffs/buffs. Delays of exactly 1 hour or less remain potentially combat-relevant and are not automatically discarded.
+- **Pending delayed debuffs stay visible.** When a harmful effect is already applied but its mechanics begin later within the supported fight window, show the debuff immediately as grey/inactive with its countdown. When the countdown expires, activate that same debuff entry; do not add a second status. Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §6.1.
 
 Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §3, §8 Turn-start buff versus debuff, Calm Emotions, §10.1, §16.
 
