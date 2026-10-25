@@ -45,10 +45,6 @@ class OnHitConditionSave(BaseModel):
     failure_margin_escalation: FailureMarginEscalation | None = None
     excluded_creature_types: list[str] = Field(default_factory=list)
     excluded_creature_subtypes: list[str] = Field(default_factory=list)
-    delayed_max_hp_reduction_delay_hours: int | None = Field(default=None, ge=1)
-    delayed_max_hp_reduction_dice_count: int = Field(default=0, ge=0, le=40)
-    delayed_max_hp_reduction_dice_size: int = Field(default=6, ge=2, le=100)
-    delayed_max_hp_reduction_zero_kills: bool = False
 
     @model_validator(mode="after")
     def validate_condition_lifecycle(self) -> "OnHitConditionSave":
@@ -64,9 +60,6 @@ class OnHitConditionSave(BaseModel):
             has_start_damage = self.start_of_turn_damage_dice_count > 0
             if has_start_damage != (self.start_of_turn_damage_type is not None):
                 raise ValueError("Start-of-turn condition damage requires both dice and damage type.")
-            delayed = self.delayed_max_hp_reduction_delay_hours is not None
-            if delayed != (self.delayed_max_hp_reduction_dice_count > 0):
-                raise ValueError("Delayed maximum-HP reduction requires both delay and damage dice.")
             require_escalation_duration(self.failure_margin_escalation, self.duration_rounds)
             return self
         except ValueError:

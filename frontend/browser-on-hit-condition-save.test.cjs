@@ -123,7 +123,6 @@ function attack(attacker, target, values) {
       saveAbility: "constitution", dc: 12, conditionId: null,
       effectId: "synthetic-rot", curseId: "synthetic-rot",
       cannotRegainHitPoints: true, allowedRemovalActionIds: ["remove-curse"],
-      delayedMaxHpReduction: { delayHours: 24, diceCount: 3, diceSize: 6, zeroMaxHpKills: true },
     },
   });
   const target = member("persistent-target", "monsters", { position: 5 });

@@ -57,7 +57,6 @@ function effect(id = "synthetic-rot") {
       saveAbility: "constitution", dc: 12, conditionId: null,
       effectId: id, curseId: id, cannotRegainHitPoints: true,
       allowedRemovalActionIds: ["remove-curse"],
-      delayedMaxHpReduction: { delayHours: 24, diceCount: 3, diceSize: 6, zeroMaxHpKills: true },
     };
   } catch (error) {
     console.error("Failed to build browser persistent curse.", { id, error });

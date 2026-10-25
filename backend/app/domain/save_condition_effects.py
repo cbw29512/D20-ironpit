@@ -73,19 +73,12 @@ class SavePersistentEffectDefinition(BaseModel):
     curse_id: str | None = Field(default=None, min_length=1)
     cannot_regain_hit_points: bool = False
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
-    delayed_max_hp_reduction_delay_hours: int | None = Field(default=None, ge=1)
-    delayed_max_hp_reduction_dice_count: int = Field(default=0, ge=0, le=40)
-    delayed_max_hp_reduction_dice_size: int = Field(default=6, ge=2, le=100)
-    delayed_max_hp_reduction_zero_kills: bool = False
 
     @model_validator(mode="after")
     def validate_persistent_effect(self) -> "SavePersistentEffectDefinition":
         try:
             if any(not item.strip() for item in self.allowed_removal_action_ids):
                 raise ValueError("Removal action ids must be nonblank.")
-            delayed = self.delayed_max_hp_reduction_delay_hours is not None
-            if delayed != (self.delayed_max_hp_reduction_dice_count > 0):
-                raise ValueError("Delayed maximum-HP reduction requires both delay and dice.")
             return self
         except ValueError:
             raise

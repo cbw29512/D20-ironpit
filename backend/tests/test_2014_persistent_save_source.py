@@ -5,7 +5,7 @@ from app.content.capability_attack_compiler import compile_attack
 from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_delayed_effect_policy_2014 import (
-    arena_active_delayed_max_hp_fields_2014,
+    delayed_effect_is_arena_neutral_2014,
 )
 from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
 from app.content.monster_source_2014 import load_monster_source_2014
@@ -84,14 +84,8 @@ def test_hour_scale_policy_keeps_source_but_omits_arena_neutral_delay() -> None:
     row = completed.on_hit_save_effect
 
     assert row["delayed_max_hp_reduction_delay_hours"] == 24
-    assert arena_active_delayed_max_hp_fields_2014(row) == {}
-    one_hour = dict(row, delayed_max_hp_reduction_delay_hours=1)
-    assert arena_active_delayed_max_hp_fields_2014(one_hour) == {
-        "delayed_max_hp_reduction_delay_hours": 1,
-        "delayed_max_hp_reduction_dice_count": 3,
-        "delayed_max_hp_reduction_dice_size": 6,
-        "delayed_max_hp_reduction_zero_kills": True,
-    }
+    assert delayed_effect_is_arena_neutral_2014(24) is True
+    assert delayed_effect_is_arena_neutral_2014(1) is False
 
 
 def test_real_source_compiles_and_serializes_through_universal_bridge() -> None:
@@ -122,7 +116,7 @@ def test_real_source_compiles_and_serializes_through_universal_bridge() -> None:
     row = serialize_on_hit_condition_save(compiled.on_hit_condition_save)
 
     assert persistent.dc == 12
-    assert persistent.delayed_max_hp_reduction_delay_hours is None
+    assert not hasattr(persistent, "delayed_max_hp_reduction_delay_hours")
     assert row["saveAbility"] == "constitution"
     assert row["dc"] == 12
     assert row["effectId"] == "mummy-rot"

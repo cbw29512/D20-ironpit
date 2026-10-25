@@ -34,10 +34,6 @@ def test_persistent_effect_compiles_through_generic_attack_capability() -> None:
                     curse_id="generic-rot",
                     cannot_regain_hit_points=True,
                     allowed_removal_action_ids=["remove-curse"],
-                    delayed_max_hp_reduction_delay_hours=24,
-                    delayed_max_hp_reduction_dice_count=3,
-                    delayed_max_hp_reduction_dice_size=6,
-                    delayed_max_hp_reduction_zero_kills=True,
                 )
             ],
         )
@@ -47,6 +43,10 @@ def test_persistent_effect_compiles_through_generic_attack_capability() -> None:
         assert compiled.on_hit_condition_save.effect_id == "generic-rot"
         assert compiled.on_hit_condition_save.curse_id == "generic-rot"
         assert compiled.on_hit_condition_save.condition_id is None
+        assert not hasattr(
+            compiled.on_hit_condition_save,
+            "delayed_max_hp_reduction_delay_hours",
+        )
     except Exception:
         logger.exception("Persistent-effect generic compiler regression failed.")
         raise

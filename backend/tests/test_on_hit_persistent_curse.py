@@ -24,10 +24,6 @@ def _persistent_curse(dc: int = 12, *, effect_id: str = "synthetic-rot") -> OnHi
             curse_id=effect_id,
             cannot_regain_hit_points=True,
             allowed_removal_action_ids=["remove-curse"],
-            delayed_max_hp_reduction_delay_hours=24,
-            delayed_max_hp_reduction_dice_count=3,
-            delayed_max_hp_reduction_dice_size=6,
-            delayed_max_hp_reduction_zero_kills=True,
         )
     except Exception:
         logger.exception("Failed to build synthetic persistent curse effect.")
