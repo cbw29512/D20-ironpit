@@ -11,10 +11,12 @@ let formLifecycleChecks = 0;
 window.IRON_PIT_BROWSER_REPLACEMENT_FORMS = {
   revertIfIncapacitated: () => { formLifecycleChecks += 1; return false; },
 };
-vm.runInThisContext(
-  fs.readFileSync(path.join(__dirname, "browser-timed-conditions.js", "browser-timed-condition-lifecycle.js"), "utf8"),
-  { filename: "browser-timed-conditions.js" },
-);
+for (const name of ["browser-timed-conditions.js", "browser-timed-condition-lifecycle.js"]) {
+  vm.runInThisContext(
+    fs.readFileSync(path.join(__dirname, name), "utf8"),
+    { filename: name },
+  );
+}
 
 const timed = window.IRON_PIT_BROWSER_TIMED;
 const state = { active_effect_ids: [], timed_effects: [] };
