@@ -11,6 +11,7 @@ from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_save_outcome_bindings_2014 import source_proven_asymmetric_saves_2014
 from app.content.monster_source_visual_save_bindings_2014 import source_proven_visual_saves_2014
 from app.content.monster_source_conditioned_save_2014 import source_proven_conditioned_saves_2014
+from app.content.monster_source_dreadful_glare_2014 import source_proven_dreadful_glare_2014
 from app.content.monster_source_opening_area_saves_2014 import source_proven_opening_area_saves_2014
 from app.content.monster_audible_maintained_control_2014 import source_proven_audible_maintained_controls_2014
 from app.domain.capability_attacks import SaveCapabilityDefinition
@@ -118,6 +119,7 @@ def unsupported_source_actions_2014(
         allowed.update(item.name.casefold() for item in source_proven_asymmetric_saves_2014(monster))
         allowed.update(item.name.casefold() for item in source_proven_visual_saves_2014(monster))
         allowed.update(item.name.casefold() for item in source_proven_conditioned_saves_2014(monster))
+        allowed.update(item.name.casefold() for item in source_proven_dreadful_glare_2014(monster))
         allowed.update(item.name.casefold() for item in source_proven_opening_area_saves_2014(monster))
         allowed.update(item.name.casefold() for item in source_proven_audible_maintained_controls_2014(monster))
         if monster.multiattack_slots or monster.multiattack_policy is not None or monster.multiattack_binding is not None:
@@ -183,6 +185,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
         result.extend(source_proven_asymmetric_saves_2014(monster))
         result.extend(source_proven_visual_saves_2014(monster))
         result.extend(source_proven_conditioned_saves_2014(monster))
+        result.extend(source_proven_dreadful_glare_2014(monster))
         result.extend(source_proven_opening_area_saves_2014(monster))
         result.extend(source_proven_audible_maintained_controls_2014(monster))
         return result
