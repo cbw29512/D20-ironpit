@@ -1,7 +1,18 @@
 (() => {
   "use strict";
 
-  const T = () => window.IRON_PIT_BROWSER_TIMED;
+  function timedRuntime() {
+    try {
+      const runtime = window.IRON_PIT_BROWSER_TIMED;
+      if (!runtime?.removeEffect || !runtime?.removeGroup) {
+        throw new Error("Timed-condition core runtime is unavailable.");
+      }
+      return runtime;
+    } catch (error) {
+      console.error("Timed-condition lifecycle core lookup failed.", { error });
+      throw error;
+    }
+  }
 
   function expireOnOwnerEvent(state, event, affectedStates = []) {
     try {
@@ -18,7 +29,7 @@
             && item.source_effect_id === concentration.effect_id).map((item) => item.effect_id);
           if (!window.IRON_PIT_BROWSER_CONCENTRATION?.end) throw new Error("Owner expiry requires the concentration engine.");
           window.IRON_PIT_BROWSER_CONCENTRATION.end(state, affectedStates);
-        } else ids = T().removeGroup(state, effect);
+        } else ids = timedRuntime().removeGroup(state, effect);
         for (const id of ids) if (!removed.includes(id)) removed.push(id);
       }
       return removed;
@@ -33,7 +44,7 @@
       const removed = [];
       for (const effect of [...(state.timed_effects || [])]) {
         if (!effect.ends_on_magical_healing) continue;
-        if (T().removeEffect(state, effect) && !removed.includes(effect.effect_id)) removed.push(effect.effect_id);
+        if (timedRuntime().removeEffect(state, effect) && !removed.includes(effect.effect_id)) removed.push(effect.effect_id);
       }
       return removed;
     } catch (error) {
@@ -62,7 +73,7 @@
           && (!effect.expires_round || round >= effect.expires_round));
         for (const effect of expiring) {
           if (!target.state.timed_effects.includes(effect)) continue;
-          const removed = T().removeGroup(target.state, effect);
+          const removed = timedRuntime().removeGroup(target.state, effect);
           if (!removed.length) continue;
           events.push({
             sequence: sequence++, round_number: round, event_type: "feature",
@@ -82,22 +93,31 @@
   }
 
   function resolveMovementCounters(state) {
-    const C = () => window.IRON_PIT_BROWSER_DEBUFF_COUNTERS || { movementCost: () => null };
-    const resolved = [
-      ...(window.IRON_PIT_BROWSER_FLIGHT_GROUND?.resolveGroundConditions(state) || []),
-    ];
-    for (const effect of [...(state.timed_effects || [])]) {
-      const cost = C().movementCost(state, effect.effect_id, { sourceIsMagical: Boolean(effect.source_is_magical) });
-      if (cost == null || state.movement_remaining_ft < cost) continue;
-      const removed = removeGroup(state, effect);
-      if (!removed.length) continue;
-      state.movement_remaining_ft -= cost;
-      for (const debuffId of removed) resolved.push({ debuffId, sourceId: effect.source_id, movementCost: cost });
+    try {
+      const counters = window.IRON_PIT_BROWSER_DEBUFF_COUNTERS || { movementCost: () => null };
+      const resolved = [
+        ...(window.IRON_PIT_BROWSER_FLIGHT_GROUND?.resolveGroundConditions(state) || []),
+      ];
+      for (const effect of [...(state.timed_effects || [])]) {
+        const cost = counters.movementCost(state, effect.effect_id, {
+          sourceIsMagical: Boolean(effect.source_is_magical),
+        });
+        if (cost == null || state.movement_remaining_ft < cost) continue;
+        const removed = timedRuntime().removeGroup(state, effect);
+        if (!removed.length) continue;
+        state.movement_remaining_ft -= cost;
+        for (const debuffId of removed) {
+          resolved.push({ debuffId, sourceId: effect.source_id, movementCost: cost });
+        }
+      }
+      return resolved;
+    } catch (error) {
+      console.error("Timed movement-counter resolution failed.", { error });
+      throw error;
     }
-    return resolved;
   }
 
-  const timed = T();
+  const timed = timedRuntime();
   if (!timed) throw new Error("Timed-condition lifecycle extensions require browser-timed-conditions.js.");
   Object.assign(timed, { expireOnOwnerEvent, expireSourceStart, ownsDamageResistance, removeOnMagicalHealing, resolveMovementCounters });
 })();
