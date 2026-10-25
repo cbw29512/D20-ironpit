@@ -105,6 +105,17 @@ class FailedSaveTimedEffect(BaseModel):
             if len(grouped_ids) != len(set(grouped_ids)):
                 raise ValueError("Grouped failed-save condition ids must be distinct.")
             require_escalation_duration(self.failure_margin_escalation, self.duration_rounds)
+            if self.failure_margin_escalation is not None:
+                escalation = self.failure_margin_escalation
+                if (
+                    escalation.replacement_duration_dice_count is not None
+                    or escalation.ends_on_damage
+                    or escalation.allowed_removal_action_ids
+                ):
+                    raise ValueError(
+                        "Save-action failure-margin escalation supports same-lifecycle "
+                        "additional conditions only."
+                    )
             configured = (
                 self.repeat_save_ability is not None,
                 self.repeat_save_dc is not None,
