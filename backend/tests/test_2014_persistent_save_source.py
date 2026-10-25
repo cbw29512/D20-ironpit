@@ -26,10 +26,39 @@ def _fist(card):
     return next(attack for attack in card.attacks if attack.id == "rotting-fist")
 
 
+def _compiled_browser_row(card):
+    attack = source_completed_mixed_attack_2014(card, _fist(card))
+    effects = basic_attack_effects_2014(attack)
+    persistent = next(
+        effect for effect in effects
+        if isinstance(effect, SavePersistentEffectDefinition)
+    )
+    definition = AttackCapabilityDefinition(
+        id=attack.id,
+        name=attack.name,
+        attack_kind=attack.kind,
+        attack_bonus=attack.attack_bonus,
+        damage=DiceSpec(
+            count=attack.damage.dice_count,
+            size=attack.damage.dice_size,
+            bonus=attack.damage.bonus,
+        ),
+        damage_type=attack.damage.type,
+        animation="slash",
+        reach_ft=attack.reach_ft,
+        effects=effects,
+    )
+    compiled = compile_attack(definition)
+    return persistent, serialize_on_hit_condition_save(
+        compiled.on_hit_condition_save
+    )
+
+
 def test_all_semantic_candidates_bind_source_declared_parameters() -> None:
     cards = load_monster_source_2014()
     candidates = [card for card in cards if semantic_persistent_save_names_2014(card)]
 
+    assert len(cards) == 327
     assert [card.id for card in candidates] == ["mummy", "mummy-lord"]
     expected = {"mummy": 12, "mummy-lord": 16}
     for card in candidates:
@@ -88,39 +117,20 @@ def test_hour_scale_policy_keeps_source_but_omits_arena_neutral_delay() -> None:
     assert delayed_effect_is_arena_neutral_2014(1) is False
 
 
-def test_real_source_compiles_and_serializes_through_universal_bridge() -> None:
-    source = _card("mummy")
-    attack = source_completed_mixed_attack_2014(source, _fist(source))
-    effects = basic_attack_effects_2014(attack)
-    persistent = next(
-        effect for effect in effects
-        if isinstance(effect, SavePersistentEffectDefinition)
-    )
-    definition = AttackCapabilityDefinition(
-        id=attack.id,
-        name=attack.name,
-        attack_kind=attack.kind,
-        attack_bonus=attack.attack_bonus,
-        damage=DiceSpec(
-            count=attack.damage.dice_count,
-            size=attack.damage.dice_size,
-            bonus=attack.damage.bonus,
-        ),
-        damage_type=attack.damage.type,
-        animation="slash",
-        reach_ft=attack.reach_ft,
-        effects=effects,
-    )
+def test_every_applicable_source_serializes_only_arena_active_state() -> None:
+    cards = load_monster_source_2014()
+    candidates = [card for card in cards if semantic_persistent_save_names_2014(card)]
+    expected_dc = {"mummy": 12, "mummy-lord": 16}
 
-    compiled = compile_attack(definition)
-    row = serialize_on_hit_condition_save(compiled.on_hit_condition_save)
+    for card in candidates:
+        persistent, row = _compiled_browser_row(card)
 
-    assert persistent.dc == 12
-    assert not hasattr(persistent, "delayed_max_hp_reduction_delay_hours")
-    assert row["saveAbility"] == "constitution"
-    assert row["dc"] == 12
-    assert row["effectId"] == "mummy-rot"
-    assert row["curseId"] == "mummy-rot"
-    assert row["cannotRegainHitPoints"] is True
-    assert row["allowedRemovalActionIds"] == ["remove-curse"]
-    assert "delayedMaxHpReduction" not in row
+        assert persistent.dc == expected_dc[card.id]
+        assert not hasattr(persistent, "delayed_max_hp_reduction_delay_hours")
+        assert row["saveAbility"] == "constitution"
+        assert row["dc"] == expected_dc[card.id]
+        assert row["effectId"] == "mummy-rot"
+        assert row["curseId"] == "mummy-rot"
+        assert row["cannotRegainHitPoints"] is True
+        assert row["allowedRemovalActionIds"] == ["remove-curse"]
+        assert "delayedMaxHpReduction" not in row
