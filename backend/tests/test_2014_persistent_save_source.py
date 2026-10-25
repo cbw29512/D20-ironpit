@@ -1,6 +1,8 @@
 """Source binding regressions for persistent failed-save attack effects."""
 from __future__ import annotations
 
+from app.content.capability_attack_compiler import compile_attack
+from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
 from app.content.monster_source_2014 import load_monster_source_2014
@@ -8,6 +10,9 @@ from app.content.monster_source_persistent_effect_2014 import (
     semantic_persistent_save_names_2014,
     source_proven_persistent_save_2014,
 )
+from app.domain.capabilities import AttackCapabilityDefinition
+from app.domain.capability_effects import DiceSpec, SavePersistentEffectDefinition
+from scripts.browser_on_hit_condition_serializer import serialize_on_hit_condition_save
 
 
 def _card(card_id: str):
@@ -68,3 +73,45 @@ def test_completion_clears_only_attack_incomplete_blocker() -> None:
     blockers = basic_blockers_2014(source)
     assert "attack:incomplete" not in blockers
     assert "source:extra-action" in blockers
+
+
+def test_real_source_compiles_and_serializes_through_universal_bridge() -> None:
+    source = _card("mummy")
+    attack = source_completed_mixed_attack_2014(source, _fist(source))
+    effects = basic_attack_effects_2014(attack)
+    persistent = next(
+        effect for effect in effects
+        if isinstance(effect, SavePersistentEffectDefinition)
+    )
+    definition = AttackCapabilityDefinition(
+        id=attack.id,
+        name=attack.name,
+        attack_kind=attack.kind,
+        attack_bonus=attack.attack_bonus,
+        damage=DiceSpec(
+            count=attack.damage.dice_count,
+            size=attack.damage.dice_size,
+            bonus=attack.damage.bonus,
+        ),
+        damage_type=attack.damage.type,
+        animation="slash",
+        reach_ft=attack.reach_ft,
+        effects=effects,
+    )
+
+    compiled = compile_attack(definition)
+    row = serialize_on_hit_condition_save(compiled.on_hit_condition_save)
+
+    assert persistent.dc == 12
+    assert row["saveAbility"] == "constitution"
+    assert row["dc"] == 12
+    assert row["effectId"] == "mummy-rot"
+    assert row["curseId"] == "mummy-rot"
+    assert row["cannotRegainHitPoints"] is True
+    assert row["allowedRemovalActionIds"] == ["remove-curse"]
+    assert row["delayedMaxHpReduction"] == {
+        "delayHours": 24,
+        "diceCount": 3,
+        "diceSize": 6,
+        "zeroMaxHpKills": True,
+    }
