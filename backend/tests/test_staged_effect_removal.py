@@ -1,4 +1,5 @@
 """Generic staged-effect removal capability and 327-card source coverage."""
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -15,6 +16,7 @@ from scripts.report_staged_disease_bindings_2014 import render, report
 def _action(action_id: str, level: int, tags: list[str]) -> ConditionRemovalAction:
     return ConditionRemovalAction(
         id=action_id, name=action_id, action_cost="action",
+        removable_conditions=["poisoned"] if not tags else [],
         removal_effect_tags=tags, spell_level=level,
     )
 
