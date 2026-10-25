@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming
 from app.domain.failure_margin import FailureMarginEscalation, require_escalation_duration
+from app.domain.delayed_effect_transition import DelayedTimedEffectTransition
 from app.domain.size import CreatureSize
 from app.domain.weapons_base import DamageType
 
@@ -35,6 +36,10 @@ class OnHitConditionSave(BaseModel):
     effect_id: str | None = Field(default=None, min_length=1)
     curse_id: str | None = Field(default=None, min_length=1)
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
+    removal_effect_tag: str | None = None
+    minimum_removal_spell_level: int = Field(default=0, ge=0, le=9)
+    removal_action_exceptions: list[str] = Field(default_factory=list)
+    delayed_transition: DelayedTimedEffectTransition | None = None
     max_target_size: CreatureSize | None = None
     duration_rounds: int | None = Field(default=None, ge=1, le=100800)
     repeat_save_timing: ConditionTiming | None = None
@@ -57,6 +62,8 @@ class OnHitConditionSave(BaseModel):
                 raise ValueError("A curse-linked on-hit save requires a persistent effect id.")
             if any(not item.strip() for item in self.allowed_removal_action_ids):
                 raise ValueError("Removal action ids must be nonblank.")
+            if self.minimum_removal_spell_level and not self.removal_effect_tag:
+                raise ValueError("Minimum removal spell level requires an effect tag.")
             if self.repeat_save_failure_condition_id is not None and self.repeat_save_timing is None:
                 raise ValueError("Failure escalation requires a repeat-save timing.")
             has_start_damage = self.start_of_turn_damage_dice_count > 0
@@ -69,3 +76,4 @@ class OnHitConditionSave(BaseModel):
         except Exception as exc:
             logger.exception("On-hit condition lifecycle validation failed.")
             raise ValueError("On-hit condition lifecycle could not be validated.") from exc
+
