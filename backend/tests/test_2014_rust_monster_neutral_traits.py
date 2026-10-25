@@ -1,6 +1,7 @@
-"""Approved source policies remove traits only; Antennae remains fail-closed."""
+"""Approved source policies remove traits and Antennae; no equipment corrosion."""
 import logging
 
+from app.content.monster_arena_neutral_actions_2014 import verified_arena_neutral_action_2014
 from app.content.monster_arena_neutral_traits_2014 import verified_arena_inert_trait_2014
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014, unsupported_traits_2014
 from app.content.monster_save_capabilities_2014 import unsupported_source_actions_2014
@@ -18,19 +19,20 @@ def _source(monster_id="rust-monster"):
         raise
 
 
-def test_approved_traits_are_preserved_without_admitting_antennae():
+def test_approved_traits_and_antennae_admit_without_equipment_effects():
     try:
         source = _source()
         original = source.model_dump_json()
         assert verified_arena_inert_trait_2014(source, "Iron Scent")
         assert verified_arena_inert_trait_2014(source, "Rust Metal")
+        assert verified_arena_neutral_action_2014(source, "Antennae")
         assert unsupported_traits_2014(source) == ()
-        assert basic_blockers_2014(source) == ("source:extra-action",)
+        assert basic_blockers_2014(source) == ()
         assert unsupported_source_actions_2014(source) == ["Antennae"]
         assert source.attacks[0].name == "Bite" and source.attacks[0].damage.bonus == 1
         assert source.model_dump_json() == original
     except Exception:
-        logger.exception("Approved Rust Monster source policy changed its card or admitted Antennae.")
+        logger.exception("Approved Rust Monster source policy changed its card or failed to admit Antennae.")
         raise
 
 
@@ -51,6 +53,22 @@ def test_unknown_effects_and_changed_range_stay_blocked():
             assert "source:trait" in basic_blockers_2014(changed)
     except Exception:
         logger.exception("Unapproved source mutation inherited a neutral trait classification.")
+        raise
+
+
+def test_antennae_source_mutation_restores_extra_action_blocker():
+    try:
+        source = _source()
+        changed = source.model_copy(update={
+            "source_actions": source.source_actions.replace(
+                "permanent and cumulative \u22121 penalty",
+                "permanent and cumulative -2 penalty",
+            )
+        })
+        assert not verified_arena_neutral_action_2014(changed, "Antennae")
+        assert "source:extra-action" in basic_blockers_2014(changed)
+    except Exception:
+        logger.exception("Mutated Antennae source still received neutral admission.")
         raise
 
 
@@ -91,7 +109,8 @@ def test_source_identity_is_not_a_runtime_dispatch_key():
         renamed = _source().model_copy(update={"id": "unrelated-source", "name": "Other Creature"})
         for name in ("Iron Scent", "Rust Metal"):
             assert verified_arena_inert_trait_2014(renamed, name)
-        assert basic_blockers_2014(renamed) == ("source:extra-action",)
+        assert verified_arena_neutral_action_2014(renamed, "Antennae")
+        assert basic_blockers_2014(renamed) == ()
     except Exception:
         logger.exception("Neutral source proof incorrectly depended on a combatant ID/name.")
         raise
