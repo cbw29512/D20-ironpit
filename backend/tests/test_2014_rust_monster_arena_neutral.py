@@ -22,9 +22,9 @@ def test_approved_trait_remains_on_immutable_source_but_has_no_combat_binding(tr
     assert verified_arena_inert_trait_2014(monster, trait)
     assert trait not in unsupported_traits_2014(monster)
     assert monster.model_dump_json() == before
-    # Antennae is source-proven arena-neutral; no equipment corrosion is applied.
+    # Removal is the authoritative classification.
     assert verified_arena_neutral_action_2014(monster, "Antennae")
-    assert basic_blockers_2014(monster) == ()
+    assert basic_blockers_2014(monster) == ("arena:removed",)
 
 
 @pytest.mark.parametrize("trait,clause", [
