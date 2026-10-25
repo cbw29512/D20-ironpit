@@ -7,7 +7,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.saving_throws import legal_save_action, resolve_save_action
 from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
-from app.content.capability_compiler import compile_combatant
+from app.content.capability_compiler import _compile_save, compile_combatant
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_dreadful_glare_2014 import source_proven_dreadful_glare_2014
@@ -101,19 +101,21 @@ def test_fail_by_five_adds_paralyzed_for_same_lifecycle() -> None:
 def test_success_immunity_scope_matches_printed_mummy_families() -> None:
     first = _monster("mummy", "mummy:a")
     second = _monster("mummy", "mummy:b")
-    lord = _monster("mummy-lord", "mummy-lord:a")
+    lord = _monster("mummy", "mummy-lord:a")
+    lord_action, = source_proven_dreadful_glare_2014(_source("mummy-lord"))
+    lord_action = _compile_save(lord_action)
     target = _target()
     action = _glare(first)
     event = resolve_save_action(1, 1, first, target, action, 10, FixedDiceProvider([20]))
     assert event.save_succeeded is True
     assert not legal_save_action(_glare(second), target, 10, second.combatant_id, second)
-    assert legal_save_action(_glare(lord), target, 10, lord.combatant_id, lord)
+    assert legal_save_action(lord_action, target, 10, lord.combatant_id, lord)
 
     target = _target()
-    event = resolve_save_action(2, 1, lord, target, _glare(lord), 10, FixedDiceProvider([20]))
+    event = resolve_save_action(2, 1, lord, target, lord_action, 10, FixedDiceProvider([20]))
     assert event.save_succeeded is True
     assert not legal_save_action(_glare(second), target, 10, second.combatant_id, second)
-    assert not legal_save_action(_glare(lord), target, 10, lord.combatant_id, lord)
+    assert not legal_save_action(lord_action, target, 10, lord.combatant_id, lord)
 
 
 def test_mutated_source_fails_closed() -> None:
