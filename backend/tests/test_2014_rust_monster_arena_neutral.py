@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import pytest
 
+from app.content.monster_arena_neutral_actions_2014 import verified_arena_neutral_action_2014
 from app.content.monster_arena_neutral_traits_2014 import verified_arena_inert_trait_2014
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014, unsupported_traits_2014
 from app.content.monster_source_2014 import load_monster_source_2014
@@ -21,8 +22,9 @@ def test_approved_trait_remains_on_immutable_source_but_has_no_combat_binding(tr
     assert verified_arena_inert_trait_2014(monster, trait)
     assert trait not in unsupported_traits_2014(monster)
     assert monster.model_dump_json() == before
-    # Antennae remains an independent unapproved combat action blocker.
-    assert "source:extra-action" in basic_blockers_2014(monster)
+    # Antennae is source-proven arena-neutral; no equipment corrosion is applied.
+    assert verified_arena_neutral_action_2014(monster, "Antennae")
+    assert basic_blockers_2014(monster) == ()
 
 
 @pytest.mark.parametrize("trait,clause", [
