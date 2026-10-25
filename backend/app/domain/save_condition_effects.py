@@ -8,6 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming
 from app.domain.combatants import DamageType
 from app.domain.failure_margin import FailureMarginEscalation, require_escalation_duration
+from app.domain.delayed_effect_transition import DelayedTimedEffectTransition
 from app.domain.size import CreatureSize
 
 logger = logging.getLogger(__name__)
@@ -75,15 +76,22 @@ class SavePersistentEffectDefinition(BaseModel):
     curse_id: str | None = Field(default=None, min_length=1)
     cannot_regain_hit_points: bool = False
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
+    removal_effect_tag: str | None = None
+    minimum_removal_spell_level: int = Field(default=0, ge=0, le=9)
+    removal_action_exceptions: list[str] = Field(default_factory=list)
+    delayed_transition: DelayedTimedEffectTransition | None = None
 
     @model_validator(mode="after")
     def validate_persistent_effect(self) -> "SavePersistentEffectDefinition":
         try:
             if any(not item.strip() for item in self.allowed_removal_action_ids):
                 raise ValueError("Removal action ids must be nonblank.")
+            if self.minimum_removal_spell_level and not self.removal_effect_tag:
+                raise ValueError("Minimum removal spell level requires an effect tag.")
             return self
         except ValueError:
             raise
         except Exception as exc:
             logger.exception("Persistent failed-save effect validation failed for %s.", self.effect_id)
             raise ValueError("Persistent failed-save effect could not be validated.") from exc
+
