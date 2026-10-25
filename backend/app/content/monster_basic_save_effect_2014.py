@@ -10,6 +10,9 @@ from app.content.monster_hp_loss_effect_2014 import (
     ongoing_hp_loss_effect_2014,
     supported_ongoing_hp_loss_2014,
 )
+from app.content.monster_save_persistent_validation_2014 import (
+    supported_save_persistent_2014,
+)
 from app.content.monster_source_2014 import SourceAttack2014
 from app.content.monster_zero_hp_save_rider_2014 import zero_hp_save_rider_2014
 from app.domain.capability_effects import (
@@ -18,6 +21,7 @@ from app.domain.capability_effects import (
     SaveConditionEffectDefinition,
     SaveDamageEffectDefinition,
     SaveMaximumHpReductionEffectDefinition,
+    SavePersistentEffectDefinition,
 )
 from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType
@@ -38,6 +42,27 @@ def save_effect_2014(attack: SourceAttack2014) -> AttackEffectDefinition:
                 dc=int(row["dc"]),
                 reduction="damage_taken",
                 zero_max_hp_kills=bool(row.get("zero_max_hp_kills", False)),
+            )
+        if supported_save_persistent_2014(row):
+            return SavePersistentEffectDefinition(
+                save_ability=str(row["save_ability"]).lower(),
+                dc=int(row["dc"]),
+                effect_id=str(row["effect_id"]),
+                curse_id=str(row["curse_id"]),
+                cannot_regain_hit_points=bool(row["cannot_regain_hit_points"]),
+                allowed_removal_action_ids=list(row["allowed_removal_action_ids"]),
+                delayed_max_hp_reduction_delay_hours=int(
+                    row["delayed_max_hp_reduction_delay_hours"]
+                ),
+                delayed_max_hp_reduction_dice_count=int(
+                    row["delayed_max_hp_reduction_dice_count"]
+                ),
+                delayed_max_hp_reduction_dice_size=int(
+                    row["delayed_max_hp_reduction_dice_size"]
+                ),
+                delayed_max_hp_reduction_zero_kills=bool(
+                    row["delayed_max_hp_reduction_zero_kills"]
+                ),
             )
         if supported_save_condition_2014(row):
             max_size = row.get("max_target_size")
