@@ -1,12 +1,14 @@
 """Scan all 327 cards for persistent failed-save attack effects."""
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
+DEFAULT_OUTPUT = ROOT / "docs" / "generated" / "PERSISTENT_SAVE_BINDINGS_2014.json"
 
 from app.content.monster_save_persistent_validation_2014 import (
     supported_save_persistent_2014,
@@ -62,5 +64,23 @@ def report() -> dict:
     }
 
 
+def render() -> str:
+    return json.dumps(report(), indent=2, sort_keys=True) + "\n"
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--check", action="store_true")
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    args = parser.parse_args()
+    rendered = render()
+    if args.check:
+        if not args.output.exists() or args.output.read_text(encoding="utf-8") != rendered:
+            raise SystemExit(f"{args.output} is stale; regenerate with this script.")
+        return
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(rendered, encoding="utf-8")
+
+
 if __name__ == "__main__":
-    print(json.dumps(report(), indent=2, sort_keys=True))
+    main()

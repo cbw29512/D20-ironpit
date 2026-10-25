@@ -1,0 +1,17 @@
+{
+  "applicable_card_count": 2,
+  "applicable_cards": [
+    "mummy",
+    "mummy-lord"
+  ],
+  "exceptions": [],
+  "remaining_card_count": 0,
+  "source_cards_scanned": 327,
+  "status": "complete",
+  "wired_browser_card_count": 2,
+  "wired_cards": [
+    "mummy",
+    "mummy-lord"
+  ],
+  "wired_python_card_count": 2
+}
