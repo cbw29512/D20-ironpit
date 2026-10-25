@@ -70,6 +70,8 @@ class ConditionRemovalAction(BaseModel):
     range_ft: int = Field(default=5, ge=0)
     target_mode: ConditionRemovalTargetMode = "self_or_ally"
     removable_conditions: list[ConditionName] = Field(default_factory=list)
+    removal_effect_tags: list[str] = Field(default_factory=list)
+    spell_level: int = Field(default=0, ge=0, le=9)
     requires_explicit_effect_permission: bool = False
     excluded_creature_types: list[str] = Field(default_factory=list)
     max_conditions_per_use: int = Field(default=1, ge=1, le=16)
@@ -101,13 +103,14 @@ class ConditionRemovalAction(BaseModel):
             raise ValueError("Spell-slot resources and expends_spell_slot must agree.")
         if not (
             self.removable_conditions
+            or self.removal_effect_tags
             or self.reduces_exhaustion_levels
             or self.removes_curses
             or self.removes_all_curses
             or self.removes_ability_score_reductions
             or self.removes_hit_point_maximum_reductions
         ):
-            raise ValueError("Condition-removal actions require a removable condition or restoration rider.")
+            raise ValueError("Condition-removal actions require a removable condition, effect tag, or restoration rider.")
         return self
 
 
