@@ -1,247 +1,148 @@
 from __future__ import annotations
 
-from app.combat.undead_fortitude import consume_survival_save_log
-from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
+import logging
+
 from app.combat.action_economy import is_available, spend
-from app.combat.automatic_save_failures import automatically_fails_save
-from app.combat.barbarian import end_rage_if_incapacitated
-from app.combat.condition_rules import can_see, has_condition
-from app.combat.encounter_targeting import combatant_distance
+from app.combat.condition_rules import can_see
 from app.combat.dice import DiceProvider
-from app.combat.grapple import apply_grapple
-from app.combat.forced_movement import push_straight_away
-from app.combat.failed_save_timed_apply import apply_failed_save_timed_effect
-from app.combat.failed_d20_test_override import source_name_for_roll
-from app.combat.source_effect_immunity import (
-    grant_shared_source_effect_immunities,
-    grant_source_effect_immunity,
-    has_shared_source_effect_immunity,
-    has_source_effect_immunity,
-)
-from app.combat.defensive_modifier_rules import saving_throw_advantage_source_names
-from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.opening_burst import opening_burst_available
-from app.combat.saving_throw_rolls import resolve_saving_throw
-from app.combat.target_chosen_save import choose_save_ability
-from app.combat.zero_hp import apply_damage, reduce_to_zero_hit_points
-from app.content.monster_creature_types import is_creature_type
+from app.combat.resources import action_resource_available, spend_action_resource
+from app.combat.saving_throw_attempt import resolve_save_attempt
+from app.combat.saving_throw_damage import resolve_save_damage
+from app.combat.saving_throw_effects import apply_save_effects
+from app.combat.saving_throw_event import build_save_event
+from app.combat.saving_throw_legality import legal_save_action
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from app.domain.models import BattleEvent, DamageRollComponent, DamageType, DiceRoll, SavingThrowAction
+from app.domain.models import BattleEvent, SavingThrowAction
 from app.domain.runtime import CombatantState
-from app.combat.save_damage_components import resolve_save_damage_components
-from app.domain.saving_throw_context import SavingThrowContext
-from app.domain.size import size_at_most
 
+logger = logging.getLogger(__name__)
 
-def legal_save_action(
-    action: SavingThrowAction,
-    target: EncounterCombatant,
-    distance_ft: int,
-    source_id: str | None = None,
-    actor: EncounterCombatant | None = None,
-) -> bool:
-    template = target.state.template
-    if source_id and has_source_effect_immunity(target.state, action.id, source_id):
-        return False
-    if action.source_effect_immunity_keys_blocking and has_shared_source_effect_immunity(
-        target.state, action.source_effect_immunity_keys_blocking
-    ):
-        return False
-    if action.required_target_condition is not None and not has_condition(target.state, action.required_target_condition):
-        return False
-    if action.prohibited_target_source_effect_ids and any(
-        effect.source_effect_id in action.prohibited_target_source_effect_ids
-        for effect in target.state.timed_effects
-    ):
-        return False
-    if actor is not None and action.requires_target_sight and not can_see(actor.state, target.state, combatant_distance(actor, target)):
-        return False
-    if action.requires_target_to_see_source:
-        if actor is None or not can_see(target.state, actor.state, combatant_distance(actor, target)):
-            return False
-    if distance_ft > action.range_ft or (
-        action.requires_target_hearing and "deafened" in target.state.active_effect_ids
-    ):
-        return False
-    if action.required_target_creature_types and not any(
-        is_creature_type(template, kind) for kind in action.required_target_creature_types
-    ):
-        return False
-    if any(is_creature_type(template, kind) for kind in action.excluded_target_creature_types):
-        return False
-    return action.target_max_size is None or size_at_most(template.size, action.target_max_size)
+__all__ = ["legal_save_action", "resolve_save_action"]
 
 
 def resolve_save_action(
-    sequence: int, round_number: int, actor: EncounterCombatant, target: EncounterCombatant,
-    action: SavingThrowAction, distance_ft: int, dice: DiceProvider, *, spend_action: bool = True,
-    check_resource: bool = True, spend_resource: bool = True,
-    shared_damage_rolls: list[int] | list[list[int]] | None = None, affected_states: list[CombatantState] | None = None,
-    spell_effect: bool = False, save_disadvantage_sources: tuple[str, ...] = (),
+    sequence: int,
+    round_number: int,
+    actor: EncounterCombatant,
+    target: EncounterCombatant,
+    action: SavingThrowAction,
+    distance_ft: int,
+    dice: DiceProvider,
+    *,
+    spend_action: bool = True,
+    check_resource: bool = True,
+    spend_resource: bool = True,
+    shared_damage_rolls: list[int] | list[list[int]] | None = None,
+    affected_states: list[CombatantState] | None = None,
+    spell_effect: bool = False,
+    save_disadvantage_sources: tuple[str, ...] = (),
     save_advantage_sources: tuple[str, ...] = (),
     resource_remaining_override: int | None = None,
     setup: EncounterSetup | None = None,
 ) -> BattleEvent:
-    if action.opening_initiative_only and not opening_burst_available(round_number, actor, setup):
-        raise ValueError(f"{action.name} requires an initiative-winning opening turn.")
-    if spend_action and not is_available(actor.state, action.action_cost):
-        raise ValueError(f"{action.action_cost} is not available for {action.name}.")
-    if not legal_save_action(action, target, distance_ft, source_id=actor.combatant_id, actor=actor):
-        raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
-    if action.requires_target_sight and not can_see(actor.state, target.state):
-        raise ValueError(f"{action.name} requires the actor to see the target.")
-    if check_resource and not action_resource_available(actor.state, action):
-        raise ValueError(f"{action.name} resource is unavailable.")
-    remaining = spend_action_resource(actor.state, action) if spend_resource else None
-    if resource_remaining_override is not None:
-        remaining = resource_remaining_override
-    source_type = str(actor.state.template.creature_type).split(" (")[0].strip().casefold() if actor.state.template.creature_type else None
-    effect_tags = {str(tag).strip().casefold() for tag in action.effect_tags if str(tag).strip()}
-    if str(action.damage_type or "").casefold() == "poison":
-        effect_tags.add("poison")
-    save_context = SavingThrowContext(
-        magical_effect=action.magical_effect,
-        spell_effect=spell_effect,
-        source_creature_type=source_type,
-        effect_tags=frozenset(effect_tags),
-        disadvantage_sources=save_disadvantage_sources,
-        advantage_sources=save_advantage_sources,
-    )
-    selected_ability = (
-        choose_save_ability(
-            target.state, action.save_ability_choices, action.dc, save_context,
-            member=target, setup=setup,
-        ) if action.save_ability_choices else action.save_ability
-    )
-    # A different target may select a different ability for the very same Action.
-    # Keep the original immutable card untouched; only use this per-target copy.
-    active_action = (
-        action.model_copy(update={"save_ability": selected_ability})
-        if selected_ability != action.save_ability else action
-    )
-    automatic_failure = automatically_fails_save(active_action, target)
-    advantage_sources = () if automatic_failure else saving_throw_advantage_source_names(
-        target.state, selected_ability, save_context,
-    )
-    if automatic_failure:
-        save_roll = None
-        succeeded = False
-    else:
-        save_roll, succeeded = resolve_saving_throw(
-            target.state,
-            selected_ability,
-            action.dc,
+    try:
+        if (
+            action.opening_initiative_only
+            and not opening_burst_available(round_number, actor, setup)
+        ):
+            raise ValueError(
+                f"{action.name} requires an initiative-winning opening turn."
+            )
+        if spend_action and not is_available(actor.state, action.action_cost):
+            raise ValueError(
+                f"{action.action_cost} is not available for {action.name}."
+            )
+        if not legal_save_action(
+            action,
+            target,
+            distance_ft,
+            source_id=actor.combatant_id,
+            actor=actor,
+        ):
+            raise ValueError(
+                f"{action.name} has no legal target at {distance_ft} feet."
+            )
+        if action.requires_target_sight and not can_see(
+            actor.state, target.state
+        ):
+            raise ValueError(f"{action.name} requires the actor to see the target.")
+        if check_resource and not action_resource_available(actor.state, action):
+            raise ValueError(f"{action.name} resource is unavailable.")
+
+        remaining = (
+            spend_action_resource(actor.state, action)
+            if spend_resource
+            else None
+        )
+        if resource_remaining_override is not None:
+            remaining = resource_remaining_override
+
+        attempt = resolve_save_attempt(
+            actor,
+            target,
+            action,
             dice,
-            save_context,
-            round_number=round_number,
-            encounter_roller=target,
+            round_number,
+            spell_effect=spell_effect,
+            save_disadvantage_sources=save_disadvantage_sources,
+            save_advantage_sources=save_advantage_sources,
             setup=setup,
         )
-    if spend_action: spend(actor.state, action.action_cost)
-    hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
-    death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures
-    concentration_before = target.state.concentration.effect_id if target.state.concentration else None
-    applied_total, rolled_components, damage_components = resolve_save_damage_components(
-        target.state, active_action, dice, succeeded, shared_damage_rolls,
-    )
-    damage_roll = None; damage_outcome = None
-    if rolled_components:
-        damage_roll = DiceRoll(notation=" + ".join(component.notation for component in rolled_components),
-                               rolls=[roll for component in rolled_components for roll in component.rolls],
-                               modifier=sum(component.modifier for component in rolled_components), total=applied_total)
-    if applied_total:
-        applied_types = {part.damage_type for part in damage_components if part.applied_total > 0}
-        incoming = applied_total
-        if action.minimum_remaining_hp:
-            applied_total = min(applied_total, max(0, target.state.current_hp - action.minimum_remaining_hp))
-        damage_outcome = apply_damage(
-            target.state, applied_total, damage_types=applied_types, dice=dice,
-            affected_states=affected_states, setup=setup, damage_components=damage_components,
+        if spend_action:
+            spend(actor.state, action.action_cost)
+
+        hp_before = target.state.current_hp
+        temporary_hp_before = target.state.temporary_hp
+        death_success_before = target.state.death_save_successes
+        death_failure_before = target.state.death_save_failures
+        concentration_before = (
+            target.state.concentration.effect_id
+            if target.state.concentration
+            else None
         )
-        end_rage_if_incapacitated(target.state)
-        if (
-            not succeeded
-            and action.reduce_hit_point_maximum_on_failed_save
-            and incoming
-        ):
-            from app.combat.restoration_riders import apply_hit_point_maximum_reduction
-            apply_hit_point_maximum_reduction(target, incoming)
-    if not succeeded and action.failure_sets_zero_hp:
-        reduce_to_zero_hit_points(target.state, dice=dice, affected_states=affected_states)
-    applied_conditions: list[str] = []
-    if succeeded and action.source_effect_immunity_on_success:
-        grant_source_effect_immunity(
-            target.state, action.id, actor.combatant_id, round_number,
-            source_template=actor.state.template, source_is_magical=action.magical_effect,
+
+        damage = resolve_save_damage(
+            target,
+            attempt.action,
+            dice,
+            attempt.succeeded,
+            shared_damage_rolls=shared_damage_rolls,
+            affected_states=affected_states,
+            setup=setup,
         )
-    if succeeded and action.source_effect_immunity_keys_on_success:
-        grant_shared_source_effect_immunities(
-            target.state, action.source_effect_immunity_keys_on_success,
-            actor.combatant_id, round_number,
-            source_template=actor.state.template, source_is_magical=action.magical_effect,
+        effects = apply_save_effects(
+            actor,
+            target,
+            action,
+            attempt.succeeded,
+            attempt.save_roll,
+            round_number,
+            affected_states=affected_states,
+            setup=setup,
         )
-    if not succeeded and target.state.is_alive and not target.state.is_dead:
-        applied = apply_failed_save_timed_effect(
-            target, actor, action, round_number, affected_states, setup,
-            save_total=save_roll.total if save_roll is not None else None,
+        return build_save_event(
+            sequence,
+            round_number,
+            actor,
+            target,
+            action,
+            attempt,
+            damage,
+            effects,
+            resource_remaining=remaining,
+            hp_before=hp_before,
+            temporary_hp_before=temporary_hp_before,
+            death_success_before=death_success_before,
+            death_failure_before=death_failure_before,
+            concentration_before=concentration_before,
+            save_disadvantage_sources=save_disadvantage_sources,
         )
-        if isinstance(applied, str):
-            applied_conditions.append(applied)
-        elif applied:
-            applied_conditions.extend(applied)
-    if not succeeded and target.state.is_alive and not target.state.is_dead and action.grapple_escape_dc is not None:
-        applied_conditions = apply_grapple(
-            target.state,
+    except Exception:
+        logger.exception(
+            "Failed to resolve save action %s from %s against %s.",
+            action.id,
             actor.combatant_id,
-            action.grapple_escape_dc,
-            action.range_ft,
-            restrains=action.restrains_while_grappled,
-            source_is_magical=action.magical_effect,
+            target.combatant_id,
         )
-    pushed_ft = 0
-    if not succeeded and target.state.is_alive and not target.state.is_dead and action.failed_save_push_ft:
-        if setup is None:
-            raise ValueError(f"{action.name} forced movement requires encounter setup.")
-        pushed_ft = push_straight_away(target, actor, setup, action.failed_save_push_ft, round_number=round_number)
-    outcome = "SUCCEEDS" if succeeded else "FAILS"
-    if automatic_failure:
-        description = (
-            f"{target.state.template.name} automatically FAILS a DC {action.dc} "
-            f"{selected_ability.title()} save against {actor.state.template.name}'s {action.name} "
-            f"because its creature type is {target.state.template.creature_type}."
-        )
-    else:
-        description = f"{target.state.template.name} {outcome} a DC {action.dc} {action.save_ability.title()} save against {actor.state.template.name}'s {action.name}."
-        if save_roll is not None and save_roll.outcome_override_name:
-            remaining = save_roll.outcome_override_uses_remaining
-            description += (
-                f" {save_roll.outcome_override_name} turns the failure into a success"
-                f" ({remaining} uses remain)."
-            )
-    if advantage_sources:
-        source_text = " and ".join(advantage_sources)
-        description += f" {source_text} grants Advantage on the save."
-    if save_disadvantage_sources:
-        source_text = " and ".join(save_disadvantage_sources)
-        description += f" {source_text} imposes Disadvantage on the save."
-    if target.state.template.progression_features.evasion and selected_ability == "dexterity" and action.success_damage == "half":
-        description += " Evasion reduces the damage."
-    if damage_outcome == "undead_fortitude": description += f" {target.state.template.name} succeeds on Undead Fortitude and remains at 1 HP."
-    if "grappled" in applied_conditions: description += f" {target.state.template.name} is Grappled."
-    if "restrained" in applied_conditions: description += f" {target.state.template.name} is Restrained while Grappled."
-    if pushed_ft: description += f" {target.state.template.name} is pushed {pushed_ft} feet away."
-    if not succeeded and action.failure_sets_zero_hp:
-        description += f" {target.state.template.name} drops directly to 0 HP (not damage)."
-    return BattleEvent(
-        sequence=sequence, round_number=round_number, event_type="saving_throw", actor_id=actor.combatant_id, actor_name=actor.state.template.name,
-        target_id=target.combatant_id, target_name=target.state.template.name, saving_throw_roll=save_roll,
-        save_ability=selected_ability, save_dc=action.dc, save_succeeded=succeeded, damage_roll=damage_roll, damage_components=damage_components,
-        applied_condition_ids=applied_conditions, hp_before=hp_before, hp_after=target.state.current_hp,
-        temporary_hp_before=temporary_hp_before, temporary_hp_after=target.state.temporary_hp,
-        death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
-        death_save_successes=target.state.death_save_successes, death_save_failures=target.state.death_save_failures,
-        is_stable=target.state.is_stable, is_dead=target.state.is_dead, feature_id=action.id,
-        resource_remaining=remaining,
-        concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
-        animation=action.animation, description=description + consume_survival_save_log(target.state) + consume_zero_hp_replacement_log(target.state),
-    )
+        raise
