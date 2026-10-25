@@ -55,10 +55,50 @@
   ) {
     try {
       const impl = window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE;
-      if (!impl?.resolve) {
-        throw new Error("On-hit condition-save runtime is unavailable.");
+      if (impl?.resolve) {
+        return impl.resolve(
+          target, attack, sourceTemplate, round, setup, attacker,
+        );
       }
-      return impl.resolve(target, attack, sourceTemplate, round, setup, attacker);
+      const effect = attack.onHitConditionSave;
+      if (!effect || target.state.is_dead || !target.state.is_alive) return null;
+      const S = window.IRON_PIT_BROWSER_STATE;
+      const I = window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || {
+        immune: () => false,
+      };
+      if (effect.maxTargetSize
+        && !S.sizeAtMost(target, effect.maxTargetSize)) return null;
+      if (I.immune(
+        target.state, effect.conditionId, sourceTemplate, { actor: target, setup },
+      )) return null;
+      if (effect.durationRounds || effect.repeatSaveTiming
+        || (effect.excludedCreatureTypes || []).length
+        || (effect.excludedCreatureSubtypes || []).length) {
+        throw new Error("On-hit condition save lifecycle runtime is not loaded.");
+      }
+      const effectTags = effect.conditionId === "poisoned" ? ["poison"] : [];
+      const save = window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow(
+        target.state, effect.saveAbility, effect.dc, {
+          conditionId: effect.conditionId,
+          effectTags,
+          roundNumber: round,
+          encounterRoller: target,
+          setup,
+        },
+      );
+      let appliedCondition = null;
+      if (!save.succeeded
+        && !target.state.active_effect_ids.includes(effect.conditionId)) {
+        target.state.active_effect_ids.push(effect.conditionId);
+        appliedCondition = effect.conditionId;
+      }
+      return {
+        saveRoll: save.roll,
+        saveAbility: effect.saveAbility,
+        saveDc: effect.dc,
+        saveSucceeded: save.succeeded,
+        appliedCondition,
+      };
     } catch (error) {
       console.error("Browser on-hit condition-save delegation failed", {
         attackId: attack?.id, target: target?.combatant_id, error,
