@@ -81,6 +81,14 @@ load("browser-modifier-validation.js");
 load("browser-modifiers.js");
 load("browser-attack.js");
 load("browser-saving-throws.js");
+load("browser-save-immunity.js");
+load("browser-save-action-support.js");
+load("browser-save-action-attempt.js");
+load("browser-save-damage.js");
+load("browser-save-damage-legacy.js");
+load("browser-save-damage-apply.js");
+load("browser-save-action-effects.js");
+load("browser-save-event.js");
 load("browser-saves.js");
 load("browser-indomitable.js");
 
