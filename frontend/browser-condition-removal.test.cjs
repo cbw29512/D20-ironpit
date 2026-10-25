@@ -15,6 +15,7 @@ load("browser-state.js");
 load("browser-timed-conditions.js");
 load("browser-condition-removal-policy.js");
 load("browser-condition-removal.js");
+load("browser-delayed-effect-transition.js");
 
 const C = window.IRON_PIT_BROWSER_CONDITION_REMOVAL;
 
@@ -168,4 +169,30 @@ const lesserRestoration = {
   assert.ok(C.chooseAction(remover, setup, turnKey));
 }
 
+{
+  const target = member("delayed-target", ["diseased"]);
+  target.state.turns_started = 0;
+  target.state.timed_effects[0].source_effect_id = "Renamed Hit";
+  const rule = {
+    removalEffectTag: "disease", minimumRemovalSpellLevel: 0,
+    removalActionExceptions: [],
+    delayedTransition: {
+      targetTurns: 10, cannotRegainHitPoints: true, removalEffectTag: "disease",
+      minimumRemovalSpellLevel: 6, removalActionExceptions: ["heal"],
+    },
+  };
+  const D = window.IRON_PIT_BROWSER_DELAYED_EFFECT_TRANSITION;
+  D.schedule(target.state, "diseased", "enemy", "Renamed Hit", rule);
+  target.state.turns_started = 9;
+  assert.equal(D.activateDue(1, 9, target).events.length, 0);
+  target.state.turns_started = 10;
+  const activated = D.activateDue(1, 10, target);
+  assert.equal(activated.events.length, 1);
+  assert.equal(target.state.timed_effects[0].cannot_regain_hit_points, true);
+  assert.equal(target.state.timed_effects[0].minimum_removal_spell_level, 6);
+  assert.deepEqual(target.state.timed_effects[0].removal_action_exceptions, ["heal"]);
+  assert.equal(D.activateDue(activated.sequence, 11, target).events.length, 0);
+}
+
 console.log("Browser 2024 condition-removal regressions passed.");
+
