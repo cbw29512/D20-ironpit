@@ -864,6 +864,7 @@ def _removal(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
         "targetMode": action.target_mode, "removableConditions": list(action.removable_conditions),
+        "removalEffectTags": list(action.removal_effect_tags), "spellLevel": action.spell_level,
         "excludedCreatureTypes": list(action.excluded_creature_types),
         "maxConditionsPerUse": action.max_conditions_per_use, "resourceCosts": dict(action.resource_costs),
         "resourceCostsPerCondition": dict(action.resource_costs_per_condition),
