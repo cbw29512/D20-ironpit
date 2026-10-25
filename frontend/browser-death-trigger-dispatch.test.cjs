@@ -21,6 +21,11 @@ let lastAction = null;
 window.IRON_PIT_BROWSER_SAVES = { resolveAction: (sequence, _round, _source, victim, actionArg) => {
   lastAction = actionArg;
   victim.state.current_hp -= actionArg.damageDiceCount ? 4 : 0;
+  if (victim.state.current_hp <= 0) {
+    victim.state.current_hp = 0;
+    victim.state.is_alive = false;
+    victim.state.is_dead = true;
+  }
   return { sequence, event_type: "saving_throw", target_id: victim.combatant_id };
 } };
 window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH = {
@@ -49,6 +54,23 @@ assert.equal(lastAction.failedSaveTimedEffect.effectId, "blinded");
 assert.equal(lastAction.failedSaveTimedEffect.repeatSaveTiming, "target_turn_end");
 const second = window.IRON_PIT_BROWSER_DEATH_TRIGGER_DISPATCH.resolvePending(first.sequence, 2, setup);
 assert.equal(second.events.length, 0);
+
+const chainSource = member("chain-source", true, 0);
+const chainMiddle = member("chain-middle", false, 5);
+const chainTarget = member("chain-target", false, 10);
+chainMiddle.state.current_hp = 4;
+chainMiddle.state.active_buff_effect_ids = ["death-trigger"];
+chainMiddle.state.template.death_trigger_effect_ids = ["burst"];
+chainMiddle.state.template.death_trigger_actions = [action];
+const chained = window.IRON_PIT_BROWSER_DEATH_TRIGGER_DISPATCH.resolvePending(
+  second.sequence, 3, { heroes: [chainTarget], monsters: [chainSource, chainMiddle] },
+);
+assert.equal(chained.events.length, 2);
+assert.equal(chainMiddle.state.is_dead, true);
+assert.equal(chainTarget.state.current_hp, 6);
+assert.equal(chainSource.state.feature_use_counts["death-trigger"], 1);
+assert.equal(chainMiddle.state.feature_use_counts["death-trigger"], 1);
+
 assert.throws(() => window.IRON_PIT_BROWSER_DEATH_TRIGGER_DISPATCH.declaredActions({
   state: { template: { id: "broken", death_trigger_effect_ids: ["missing"],
     death_trigger_actions: [] } },
