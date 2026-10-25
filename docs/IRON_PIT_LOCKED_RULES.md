@@ -77,6 +77,7 @@ Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §7, Attack natural 1, §10.1, §20
 - **All printed monster limited-use resources are fight-scoped.** A printed `1/Day`, `3/Day`, or `recharges after a short/long rest` label sets its allowed uses **within one Iron Pit fight**; it never creates real-world day/rest tracking between battles. On each new fight, construct fresh combat state from the immutable monster template with its complete printed resource allowance. Do not replenish a spent limited-use resource during the same fight unless an independently supported combat recharge trigger explicitly does so. This applies to every monster, not just Dretch; keep original printed source/card wording unchanged.
 - **Match end resets all effects.**
 - **Printed 24-hour immunities are match-scoped.** They last for the rest of the current fight only. Do not simulate calendar 24 hours and do not persist immunity across fights.
+- **Required delayed consequences over 1 hour are arena-neutral.** Keep their printed text on the immutable source/card, but never schedule or persist the delayed outcome across fights. Immediate/combat-relevant portions of the same effect still apply as fight-local debuffs/buffs. Delays of exactly 1 hour or less remain potentially combat-relevant and are not automatically discarded.
 
 Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §3, §8 Turn-start buff versus debuff, Calm Emotions, §10.1, §16.
 
