@@ -157,6 +157,27 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                 "conditionId": effect.condition_id,
                 "maxTargetSize": _value(effect.max_target_size) if effect.max_target_size else None,
             }
+            if effect.effect_id:
+                save_row["effectId"] = effect.effect_id
+            if effect.curse_id:
+                save_row["curseId"] = effect.curse_id
+            if effect.allowed_removal_action_ids:
+                save_row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
+            if effect.removal_effect_tag:
+                save_row["removalEffectTag"] = effect.removal_effect_tag
+            if effect.minimum_removal_spell_level:
+                save_row["minimumRemovalSpellLevel"] = effect.minimum_removal_spell_level
+            if effect.removal_action_exceptions:
+                save_row["removalActionExceptions"] = list(effect.removal_action_exceptions)
+            if effect.delayed_transition:
+                transition = effect.delayed_transition
+                save_row["delayedTransition"] = {
+                    "targetTurns": transition.target_turns,
+                    "cannotRegainHitPoints": transition.cannot_regain_hit_points,
+                    "removalEffectTag": transition.removal_effect_tag,
+                    "minimumRemovalSpellLevel": transition.minimum_removal_spell_level,
+                    "removalActionExceptions": list(transition.removal_action_exceptions),
+                }
             if effect.duration_rounds is not None:
                 save_row["durationRounds"] = effect.duration_rounds
             if effect.repeat_save_timing is not None:
