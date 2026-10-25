@@ -4,7 +4,10 @@
     "aboleth"
   ],
   "exceptions": [
-    {}
+    {
+      "monster": "aboleth",
+      "reason": "removal capability is representable, but the source attack still requires generic 10-round activation plus 100-round acid/moisture lifecycle"
+    }
   ],
   "remaining_card_count": 1,
   "removal_contract_card_count": 1,
