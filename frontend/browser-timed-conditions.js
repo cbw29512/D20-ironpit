@@ -1,7 +1,6 @@
 (() => {
   "use strict";
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
-  const C = () => window.IRON_PIT_BROWSER_DEBUFF_COUNTERS || { movementCost: () => null };
   const RF = () => window.IRON_PIT_BROWSER_REPLACEMENT_FORMS;
   const T = () => window.IRON_PIT_BROWSER_TERMINAL_EFFECTS;
   const POISONED = "poisoned", TERMINAL = new Set(["petrified"]), POISON_RECOVERY_DC = 10;
@@ -136,15 +135,8 @@
     }
     return removed;
   }
-  function resolveMovementCounters(state) {
-    try {
-      const resolved = [...(window.IRON_PIT_BROWSER_FLIGHT_GROUND?.resolveGroundConditions(state) || [])];
-      for (const effect of [...(state.timed_effects || [])]) { const cost = C().movementCost(state, effect.effect_id, { sourceIsMagical: Boolean(effect.source_is_magical) }); if (cost == null || state.movement_remaining_ft < cost) continue; const removed = removeGroup(state, effect); if (!removed.length) continue; state.movement_remaining_ft -= cost; for (const id of removed) resolved.push({ debuffId: id, sourceId: effect.source_id, movementCost: cost }); }
-      return resolved;
-    } catch (error) { console.error("Timed movement-counter resolution failed.", { error }); throw error; }
-  }
   window.IRON_PIT_BROWSER_TIMED = {
     apply, applyTerminalOutcome, consumeNextAttackDisadvantage, nextAttackDisadvantage, removeEffect, removeGroup,
-    resolveMovementCounters, suppressesAction, suppressesBonusAction, suppressesMovement, suppressesReactions, suppressesVoluntaryTurn,
+    suppressesAction, suppressesBonusAction, suppressesMovement, suppressesReactions, suppressesVoluntaryTurn,
   };
 })();
