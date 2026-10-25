@@ -163,6 +163,8 @@ class SavingThrowAction(BaseModel):
     requires_target_sight: bool = False
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
     source_effect_immunity_on_success: bool = False
+    source_effect_immunity_keys_on_success: list[str] = Field(default_factory=list)
+    source_effect_immunity_keys_blocking: list[str] = Field(default_factory=list)
     failed_save_push_ft: int = Field(default=0, ge=0)
     area_healing_rider: AreaHealingRider | None = None
     required_target_creature_types: list[str] = Field(default_factory=list)
@@ -190,6 +192,12 @@ class SavingThrowAction(BaseModel):
         ]
         if any(not item.strip() for item in target_filters):
             raise ValueError("Save target filters must be nonblank.")
+        immunity_keys = [
+            *self.source_effect_immunity_keys_on_success,
+            *self.source_effect_immunity_keys_blocking,
+        ]
+        if any(not item.strip() for item in immunity_keys):
+            raise ValueError("Save immunity keys must be nonblank.")
         return self
 
 
