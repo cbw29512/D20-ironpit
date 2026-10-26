@@ -76,6 +76,10 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             "damageBonus": attack.damage_bonus, "damageType": weapon.damage_type.value,
             "reach": weapon.reach_ft, "animation": weapon.animation,
         }
+        if weapon.material is not None:
+            row["weaponMaterial"] = weapon.material
+        if weapon.is_magical is not None:
+            row["weaponMagical"] = weapon.is_magical
         if weapon.damage_type_choices:
             row["damageTypeChoices"] = [item.value for item in weapon.damage_type_choices]
         if attack.damage_source_qualifiers:
@@ -1428,6 +1432,16 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                  **({"repetitions": {"diceCount": variant.repetitions.dice_count, "diceSize": variant.repetitions.dice_size}} if variant.repetitions else {})}
                 for variant in template.attack_action.variants
             ]
+        if template.weapon_hit_corrosion is not None:
+            rule = template.weapon_hit_corrosion
+            row["weaponHitCorrosion"] = {
+                "sourceName": rule.source_name,
+                "qualifyingMaterials": list(rule.qualifying_materials),
+                "requiresNonmagical": rule.requires_nonmagical,
+                "penaltyPerHit": rule.penalty_per_hit,
+                "unusableAtPenalty": rule.unusable_at_penalty,
+                "fightOnly": rule.fight_only,
+            }
         if template.variable_heads is not None:
             profile = template.variable_heads
             row["variableHeads"] = {
