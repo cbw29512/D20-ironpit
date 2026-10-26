@@ -123,6 +123,7 @@ class CombatantState(BaseModel):
     opportunity_reactions_remaining: int = Field(default=0, ge=0)
     triggered_extra_attack_stack_counts: dict[str, int] = Field(default_factory=dict)
     source_owned_exhaustion_levels: dict[str, int] = Field(default_factory=dict)
+    weapon_corrosion_penalties: dict[str, int] = Field(default_factory=dict)
 
 
 class BattlefieldState(BaseModel):
