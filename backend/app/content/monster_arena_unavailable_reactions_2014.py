@@ -4,6 +4,7 @@ import logging
 import re
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_audible_alert_2014 import arena_inert_audible_alert_reactions_2014
 
 logger = logging.getLogger(__name__)
 
@@ -17,12 +18,13 @@ def arena_unavailable_reaction_names_2014(monster: SourceMonster2014) -> frozens
     """Source-verified reactions whose only outcome violates the no-spawn rule."""
     try:
         source = monster.source_reactions or ""
-        if not (_SPLIT_OFFSPRING.search(source) and _SPLIT_TRIGGER.search(source)):
-            return frozenset()
-        return frozenset(
-            name for name in monster.reaction_names
-            if name == "Split" and "<strong>Split.</strong>" in source
-        )
+        inert = set(arena_inert_audible_alert_reactions_2014(monster))
+        if _SPLIT_OFFSPRING.search(source) and _SPLIT_TRIGGER.search(source):
+            inert.update(
+                name for name in monster.reaction_names
+                if name == "Split" and "<strong>Split.</strong>" in source
+            )
+        return frozenset(inert)
     except Exception:
         logger.exception("Failed arena reaction classification for %s.", monster.name)
         raise
