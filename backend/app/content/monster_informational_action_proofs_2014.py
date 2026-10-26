@@ -1,6 +1,6 @@
 """Source proofs for 2014 Actions that yield only out-of-arena information.
 
-An information-only Action stays printed on the source card; it is not cast
+An information-only or source-proven equipment-only Action stays printed; it is not cast
 in Iron Pit and never acquires a fabricated combat roll, resource, or buff.
 These checks classify *source text*, not combat resolution by ability name.
 """
@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import logging
 
+from app.content.monster_equipment_only_action_2014 import verified_arena_inert_equipment_action_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_sections_2014 import source_sections_2014
 
@@ -30,6 +31,8 @@ def verified_nonactionable_action_2014(monster: SourceMonster2014, action_name: 
     try:
         if action_name not in monster.action_names:
             return False
+        if verified_arena_inert_equipment_action_2014(monster, action_name):
+            return True
         expected = _NONCOMBAT_ACTION_CLAUSES_2014.get(action_name)
         if expected is None:
             return False
