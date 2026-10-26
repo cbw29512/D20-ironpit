@@ -141,6 +141,11 @@
         attacker.feature_last_turn_keys["savage-attacker"] = turnKey;
       }
     }
+    if (Object.keys(attacker.weapon_corrosion_penalties || {}).length) {
+      const consumer = window.IRON_PIT_BROWSER_WEAPON_CORROSION_ROLL;
+      if (!consumer) throw new Error("Weapon corrosion damage-roll runtime missing.");
+      rolled = consumer.adjust(attacker, attack, rolled);
+    }
     const components = [{ source: attack.name, damage_type: replacement?.damageType || selectedDamageType, ...rolled }];
     const brutal = critical && attack.kind === "melee" ? attacker.template.brutal_critical_dice || 0 : 0;
     if (brutal) components.push(damageComponent({ source: "Brutal Critical", diceCount: brutal, diceSize: attack.diceSize, damageBonus: 0, damageType: attack.damageType }, false));
