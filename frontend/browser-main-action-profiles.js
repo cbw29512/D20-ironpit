@@ -8,6 +8,7 @@
     DEFERRED_EFFECT: "deferred-effect",
     AREA_WEAPON_ATTACK: "area-weapon-attack",
     ATTACK_ACTION: "attack-action",
+    SWALLOW: "swallow",
     AREA_SAVE: "area-save",
     SAVE_ACTION: "save-action",
     SAVE_ZONE: "save-zone",
@@ -19,7 +20,7 @@
 
   const PROFILES = Object.freeze({
     signatureThreshold: Object.freeze([CATEGORIES.HP_THRESHOLD_INSTANT_DEATH, CATEGORIES.HP_THRESHOLD_CONDITION]),
-    normalPreMove: Object.freeze([CATEGORIES.REPLACEMENT_FORM_SETUP, CATEGORIES.SPELL_OFFENSE]),
+    normalPreMove: Object.freeze([CATEGORIES.REPLACEMENT_FORM_SETUP, CATEGORIES.SWALLOW, CATEGORIES.SPELL_OFFENSE]),
     normalPostMove: Object.freeze([
       CATEGORIES.HP_THRESHOLD_INSTANT_DEATH,
       CATEGORIES.HP_THRESHOLD_CONDITION,
