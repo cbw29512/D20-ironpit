@@ -104,6 +104,9 @@ class Weapon(BaseModel):
     heavy: bool = False
     two_handed: bool = False
     versatile: bool = False
+    # Never infer material or magical status from a display name or damage qualifier.
+    material: Literal["metal", "wood", "other"] | None = None
+    is_magical: bool | None = None
 
 
     @model_validator(mode="after")
