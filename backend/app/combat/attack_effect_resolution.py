@@ -6,6 +6,7 @@ from typing import Any
 
 from app.combat.attack_hit_damage import resolve_attack_hit_damage
 from app.combat.attack_hit_riders import resolve_attack_hit_riders
+from app.combat.weapon_hit_corrosion import resolve_weapon_hit_corrosion
 from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
@@ -115,6 +116,7 @@ def resolve_attack_effects(
             setup=setup,
         )
         _copy_hit_damage(result, hit_damage, defender)
+        resolve_weapon_hit_corrosion(attacker, defender, attack)
         resolve_attack_hit_riders(
             result,
             attacker,
