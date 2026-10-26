@@ -37,7 +37,7 @@ def _members():
         raise
 
 
-def test_pinned_death_glare_compiles_card_owned_facts_without_admitting_illusion():
+def test_pinned_death_glare_compiles_with_source_verified_illusion():
     try:
         source = _hag()
         before = source.model_dump_json()
@@ -50,7 +50,7 @@ def test_pinned_death_glare_compiles_card_owned_facts_without_admitting_illusion
         assert action.requires_target_sight and action.requires_target_to_see_source
         assert action.failure_sets_zero_hp and action.magical_effect
         assert source.model_dump_json() == before
-        assert "source:extra-action" in basic_blockers_2014(source)
+        assert basic_blockers_2014(source) == ()
     except Exception:
         raise
 
