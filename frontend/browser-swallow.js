@@ -13,8 +13,7 @@
     if (SIZES.indexOf(target.template.size) > SIZES.indexOf(action.maxTargetSize)) return false;
     if (action.requiresExistingGrapple && !(target.grapple_sources || []).some(g => g.source_id === ownerId))
       return false;
-    if (![owner.template.weapon_attack, ...(owner.template.alternate_weapon_attacks || [])]
-      .filter(Boolean).some(a => a.id === action.attackId))
+    if (!(owner.template.attacks || []).some(a => a.id === action.attackId))
       throw new Error("Swallow must reference its printed Bite attack.");
     if (!GRAPPLE()) throw new Error("Swallow requires shared grapple lifecycle.");
     GRAPPLE().release(target, ownerId);
