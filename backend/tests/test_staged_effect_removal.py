@@ -19,6 +19,12 @@ from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from scripts.browser_template_serializer import _removal
 from scripts.report_staged_disease_bindings_2014 import render, report
+from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014
+from app.content.capability_attack_compiler import compile_attack
+from app.domain.capabilities import AttackCapabilityDefinition
+from app.domain.capability_effects import DiceSpec
+from scripts.browser_on_hit_condition_serializer import serialize_on_hit_condition_save
+from scripts.browser_template_serializer import attack_row
 
 
 def _action(action_id: str, level: int, tags: list[str]) -> ConditionRemovalAction:
@@ -171,3 +177,33 @@ def test_unexpected_later_source_rider_is_not_silently_ignored() -> None:
         "dice_count": 1, "dice_size": 12, "damage_type": "acid",
     }
 
+
+def test_aboleth_hit_save_stage_serializes_identically_in_both_browser_paths() -> None:
+    card = next(card for card in load_monster_source_2014() if card.id == "aboleth")
+    original = next(attack for attack in card.attacks if not attack.source_complete)
+    attack = source_completed_mixed_attack_2014(card, original)
+    effects = basic_attack_effects_2014(attack)
+    definition = AttackCapabilityDefinition(
+        id=attack.id, name=attack.name, attack_kind=attack.kind,
+        attack_bonus=attack.attack_bonus,
+        damage=DiceSpec(
+            count=attack.damage.dice_count, size=attack.damage.dice_size,
+            bonus=attack.damage.bonus,
+        ),
+        damage_type=attack.damage.type, animation="slash",
+        reach_ft=attack.reach_ft, effects=effects,
+    )
+    compiled = compile_attack(definition)
+    row = attack_row(compiled, set())
+    saved = row["onHitConditionSave"]
+    assert saved == serialize_on_hit_condition_save(compiled.on_hit_condition_save)
+    assert saved["dc"] == 14
+    assert saved["saveAbility"] == "constitution"
+    assert saved["effectId"] == "diseased"
+    assert saved["delayedTransition"]["targetTurns"] == 10
+    assert saved["delayedTransition"]["cannotRegainHitPoints"] is True
+    assert saved["delayedTransition"]["minimumRemovalSpellLevel"] == 6
+    assert "startOfTurnDamageDiceCount" not in saved
+    assert "delayedMaxHpReduction" not in saved
+    assert row["diceCount"] == 2 and row["diceSize"] == 6
+    assert row["damageType"] == "bludgeoning"
