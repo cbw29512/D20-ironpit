@@ -103,6 +103,11 @@
         extra.turnKey || `${round}:${attacker.combatant_id}`, { bonusDamage: extra.bonusDamage || null,
           targetId: actualTarget.combatant_id, sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false, affectedStates, setup: extra.setup || null, naturalRoll: natural });
       damageComponents = damage.damageComponents; damageRoll = damage.damageRoll; damageOutcome = damage.damageOutcome; saveDamage = damage.saveDamage; outcome.damageReductionReaction = damage.damageReductionReactionUsed ? damage : null;
+      if (actualTarget.state.template.weaponHitCorrosion) {
+        const corrosion = window.IRON_PIT_BROWSER_WEAPON_HIT_CORROSION;
+        if (!corrosion) throw new Error("Declared on-hit corrosion requires browser-weapon-hit-corrosion.js.");
+        corrosion.afterHit(attacker.state, actualTarget.state, attack);
+      }
       if (attack.onHitAbilityScoreReduction && !actualTarget.state.is_dead) {
         const score = window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION;
         if (!score?.applyOnHit) throw new Error("On-hit ability reduction requires its shared browser runtime.");
