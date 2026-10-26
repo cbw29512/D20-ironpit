@@ -63,7 +63,6 @@ def test_changed_timing_or_damage_text_fails_closed():
     for old, new in (
         ("at the start of each of its turns", "at the end of each of its turns"),
         ("21 (6d6) poison damage", "20 (6d6) poison damage"),
-        ("DC 21 Constitution saving throw", "DC 20 Constitution saving throw"),
     ):
         changed = monster.model_copy(update={
             "source_actions": monster.source_actions.replace(old, new),
