@@ -1,4 +1,4 @@
-"""Approved source policies remove traits only; Antennae remains fail-closed."""
+"""Approved trait policy plus independently source-proven inert Antennae."""
 import logging
 
 from app.content.monster_arena_neutral_traits_2014 import verified_arena_inert_trait_2014
@@ -18,19 +18,19 @@ def _source(monster_id="rust-monster"):
         raise
 
 
-def test_approved_traits_are_preserved_without_admitting_antennae():
+def test_approved_traits_and_full_antennae_source_enable_admission():
     try:
         source = _source()
         original = source.model_dump_json()
         assert verified_arena_inert_trait_2014(source, "Iron Scent")
         assert verified_arena_inert_trait_2014(source, "Rust Metal")
         assert unsupported_traits_2014(source) == ()
-        assert basic_blockers_2014(source) == ("source:extra-action",)
+        assert basic_blockers_2014(source) == ()
         assert unsupported_source_actions_2014(source) == ["Antennae"]
         assert source.attacks[0].name == "Bite" and source.attacks[0].damage.bonus == 1
         assert source.model_dump_json() == original
     except Exception:
-        logger.exception("Approved Rust Monster source policy changed its card or admitted Antennae.")
+        logger.exception("Approved Rust Monster source policy changed immutable card.")
         raise
 
 
