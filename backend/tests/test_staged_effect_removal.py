@@ -11,7 +11,12 @@ from app.domain.actions import ConditionRemovalAction
 from app.domain.timed_effects import TimedEffect
 from app.domain.delayed_effect_transition import DelayedTimedEffectTransition
 from app.combat.timed_effect_transition import activate_due_transitions
-from app.content.monster_source_staged_disease_2014 import source_bound_staged_disease_2014
+from app.content.monster_source_staged_disease_2014 import (
+    source_bound_staged_disease_2014,
+    source_proven_arena_neutral_periodic_2014,
+)
+from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from scripts.browser_template_serializer import _removal
 from scripts.report_staged_disease_bindings_2014 import render, report
 
@@ -61,7 +66,7 @@ def test_browser_serialization_preserves_removal_capability() -> None:
     assert row["spellLevel"] == 6
 
 
-def test_all_327_cards_are_scanned_and_aboleth_remains_explicitly_blocked() -> None:
+def test_all_327_cards_scanned_and_reachable_disease_fully_wired() -> None:
     cards = load_monster_source_2014()
     assert [card.id for card in staged_disease_candidates_2014(cards)] == ["aboleth"]
     data = report()
@@ -69,9 +74,18 @@ def test_all_327_cards_are_scanned_and_aboleth_remains_explicitly_blocked() -> N
     assert data["applicable_card_count"] == 1
     assert data["stage_wired_python_card_count"] == 1
     assert data["stage_wired_browser_card_count"] == 1
-    assert data["wired_python_card_count"] == 0
-    assert data["remaining_card_count"] == 1
-    assert "100-round out-of-water acid damage" in data["exceptions"][0]["reason"]
+    assert data["wired_python_card_count"] == 1
+    assert data["wired_browser_card_count"] == 1
+    assert data["wired_cards"] == ["aboleth"]
+    assert data["remaining_card_count"] == 0
+    assert data["exceptions"] == []
+    assert data["arena_neutral_periodic_component_count"] == 1
+    assert data["arena_neutral_periodic_components"] == [{
+        "monster": "aboleth", "interval_minutes": 10,
+        "moisture_suppression_minutes": 10, "dice_count": 1,
+        "dice_size": 12, "damage_type": "acid",
+    }]
+    assert data["status"] == "complete"
     expected = (
         Path(__file__).resolve().parents[2]
         / "docs" / "generated" / "STAGED_DISEASE_BINDINGS_2014.json"
@@ -106,12 +120,54 @@ def test_delayed_transition_activates_once_on_declared_target_turn() -> None:
     assert activate_due_transitions(sequence, 11, target) == ([], sequence)
 
 
-def test_source_binding_is_semantic_and_keeps_unresolved_attack_incomplete() -> None:
+def test_source_binding_proves_neutral_rider_and_completes_attack() -> None:
     card = next(card for card in load_monster_source_2014() if card.id == "aboleth")
     original = next(attack for attack in card.attacks if not attack.source_complete)
     bound = source_bound_staged_disease_2014(card, original)
-    assert bound.source_complete is False
+    assert bound.source_complete is True
     assert bound.on_hit_save_effect["delayed_transition"]["target_turns"] == 10
     assert bound.on_hit_save_effect["delayed_transition"]["minimum_removal_spell_level"] == 6
     assert original.on_hit_save_effect is None
+    assert "attack:incomplete" not in basic_blockers_2014(card)
+    assert "mechanic:legendary" in basic_blockers_2014(card)
+
+
+def test_unknown_or_modified_periodic_rider_fails_closed() -> None:
+    card = next(card for card in load_monster_source_2014() if card.id == "aboleth")
+    original = next(attack for attack in card.attacks if not attack.source_complete)
+    snapshot = card.model_dump_json()
+    for old, new in (
+        ("acid damage every 10 minutes", "acid damage every 3 rounds"),
+        ("moisture is applied to the skin", "a healer touches the target"),
+        ("6 (1d12) acid damage", "7 (1d12) acid damage"),
+    ):
+        assert old in card.source_actions
+        altered = card.model_copy(update={
+            "source_actions": card.source_actions.replace(old, new),
+        })
+        result = source_completed_mixed_attack_2014(altered, original)
+        assert result.source_complete is False
+    renamed = card.model_copy(update={"id": "renamed-source", "name": "Another Creature"})
+    assert source_completed_mixed_attack_2014(renamed, original).source_complete
+    assert card.model_dump_json() == snapshot
+
+
+def test_unexpected_later_source_rider_is_not_silently_ignored() -> None:
+    card = next(card for card in load_monster_source_2014() if card.id == "aboleth")
+    original = next(attack for attack in card.attacks if not attack.source_complete)
+    altered = card.model_copy(update={
+        "source_actions": card.source_actions.replace(
+            "before 10 minutes have passed.",
+            "before 10 minutes have passed. The target explodes after one turn.",
+        ),
+    })
+    assert not source_completed_mixed_attack_2014(altered, original).source_complete
+    assert source_proven_arena_neutral_periodic_2014(
+        "When the creature is outside a body of water, it takes "
+        "6 (1d12) acid damage every 10 minutes unless moisture is "
+        "applied to the skin before 10 minutes have passed."
+    ) == {
+        "interval_minutes": 10, "moisture_suppression_minutes": 10,
+        "dice_count": 1, "dice_size": 12, "damage_type": "acid",
+    }
 
