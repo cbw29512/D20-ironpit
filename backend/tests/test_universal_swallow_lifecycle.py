@@ -78,3 +78,15 @@ def test_owner_turn_acid_damage_and_source_death_release():
     assert "restrained" not in target.active_effect_ids
     assert "prone" in target.active_effect_ids
     assert release_invalid_swallowed(setup) == []
+
+
+def test_swallowed_target_has_total_cover_from_external_attacks():
+    from app.combat.attack_legality import attack_allowed_against
+
+    _, action, owner, target = _make("giant-toad")
+    target.template = target.template.model_copy(update={"size": CreatureSize.MEDIUM})
+    apply_grapple(target, "toad", 13, 5, restrains=True)
+    assert swallow_after_bite("toad", owner, "victim", target, action, bite_hit=True)
+    attack = owner.template.weapon_attack
+    assert not attack_allowed_against(attack, "outside-attacker", target, [owner, target])
+    assert not attack_allowed_against(attack, "toad", target, [owner, target])
