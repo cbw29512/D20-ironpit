@@ -39,7 +39,7 @@ def test_exact_source_proves_generic_start_turn_damage_condition_parameters():
         proof.start_of_turn_damage_dice_count,
         proof.start_of_turn_damage_dice_size,
         proof.start_of_turn_damage_type,
-    ) == (4, 6, "poison")
+    ) == (6, 6, "poison")
     assert proof.repeat_save_timing == "target_turn_end"
     assert monster.model_dump_json() == snapshot
 
@@ -62,7 +62,7 @@ def test_changed_timing_or_damage_text_fails_closed():
     bite = _bite(monster)
     for old, new in (
         ("at the start of each of its turns", "at the end of each of its turns"),
-        ("14 (4d6) poison damage", "21 (6d6) poison damage"),
+        ("21 (6d6) poison damage", "14 (4d6) poison damage"),
         ("DC 21 Constitution saving throw", "DC 20 Constitution saving throw"),
     ):
         changed = monster.model_copy(update={
@@ -96,7 +96,7 @@ def test_source_completion_pipeline_clears_only_the_attack_incomplete_blocker():
             "dc": 21,
             "condition_id": "poisoned",
             "cannot_regain_hit_points": True,
-            "start_of_turn_damage_dice_count": 4,
+            "start_of_turn_damage_dice_count": 6,
             "start_of_turn_damage_dice_size": 6,
             "start_of_turn_damage_type": "poison",
             "repeat_save_timing": "target_turn_end",
