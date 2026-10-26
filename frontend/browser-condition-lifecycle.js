@@ -4,7 +4,6 @@
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
-
   const label = (id) => id.replaceAll("_", " ").replace(/\b\w/g, (char) => char.toUpperCase());
   function repeatSaveDue(effect, round, timing) {
     if (effect.repeat_save_timing !== timing) return false;
@@ -46,6 +45,10 @@
 
   function resolveTargetTiming(sequence, round, target, timing, setup = null) {
     const events = [];
+    if (timing === "target_turn_start") {
+      const transition = window.IRON_PIT_BROWSER_DELAYED_EFFECT_TRANSITION?.activateDue(sequence, round, target);
+      if (transition) { events.push(...transition.events); sequence = transition.sequence; }
+    }
     for (const effect of [...target.state.timed_effects]) {
       if (!target.state.timed_effects.includes(effect)) continue;
       if (repeatSaveDue(effect, round, timing)) {

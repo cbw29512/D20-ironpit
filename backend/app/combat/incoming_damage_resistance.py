@@ -3,7 +3,8 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
-from app.combat.timed_conditions import apply_timed_condition, remove_effect_instance
+from app.combat.timed_condition_apply import apply_timed_condition
+from app.combat.timed_condition_lifecycle import remove_effect_instance
 from app.domain.encounters import EncounterSetup
 from app.domain.models import CombatantState, DamageType
 

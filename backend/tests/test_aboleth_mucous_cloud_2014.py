@@ -45,9 +45,11 @@ def test_mucous_cloud_and_probing_telepathy_each_require_their_own_source_proof(
     assert "Probing Telepathy" in unsupported_traits_2014(changed)
 
 
-def test_aboleth_remains_blocked_by_independent_combat_mechanics() -> None:
+def test_aboleth_attack_is_complete_but_legendary_actions_still_block_admission() -> None:
     monster = aboleth()
     blockers = basic_blockers_2014(monster)
     assert "source:trait" not in blockers  # Printed information traits are verified.
-    assert "attack:incomplete" in blockers
+    assert "attack:incomplete" not in blockers
+    assert "mechanic:legendary" in blockers
+    assert "source:extra-action" in blockers
     assert "source:legendary" in blockers

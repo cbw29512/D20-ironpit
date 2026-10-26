@@ -25,7 +25,17 @@ window.IRON_PIT_ACTION_ECONOMY = {
 load("frontend/browser-grid-geometry.js");
 load("frontend/browser-grid-barriers.js");
 load("frontend/browser-forced-movement.js");
-load("frontend/browser-saves.js");
+for (const file of [
+  "browser-save-immunity.js",
+  "browser-save-action-support.js",
+  "browser-save-action-attempt.js",
+  "browser-save-damage.js",
+  "browser-save-damage-legacy.js",
+  "browser-save-damage-apply.js",
+  "browser-save-action-effects.js",
+  "browser-save-event.js",
+  "browser-saves.js",
+]) load(`frontend/${file}`);
 
 function member(id, side, x, y) {
   return {

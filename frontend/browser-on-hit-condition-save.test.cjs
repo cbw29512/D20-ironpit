@@ -17,8 +17,8 @@ for (const file of [
   "browser-action-economy.js", "browser-grapple.js", "browser-modifier-validation.js", "browser-modifiers.js",
   "browser-state.js", "browser-rage.js", "browser-sneak-attack.js", "browser-rolls.js", "browser-undead-fortitude.js",
   "browser-terminal-effects.js", "browser-zero-hp.js", "browser-timed-conditions.js", "browser-weapon-mastery.js", "browser-ability-hooks.js",
-  "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js", "browser-on-hit-condition-save.js",
-  "browser-saves.js", "browser-condition-lifecycle.js",
+  "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js", "browser-creature-kind.js", "browser-on-hit-condition-lifecycle.js", "browser-on-hit-condition-save.js",
+  "browser-save-immunity.js", "browser-save-action-support.js", "browser-save-action-attempt.js", "browser-save-damage.js", "browser-save-damage-legacy.js", "browser-save-damage-apply.js", "browser-save-action-effects.js", "browser-save-event.js", "browser-saves.js", "browser-condition-lifecycle.js",
 ]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE;
@@ -117,117 +117,41 @@ function attack(attacker, target, values) {
   assert.match(event.description, /Paralyzed/);
 }
 
-console.log("Browser universal on-hit condition-save riders beyond Prone passed.");
-
-
 {
-  const fighter = member("petrifier", "heroes", {
-    onHitConditionSave: { saveAbility: "constitution", dc: 12, conditionId: "petrified" },
+  const fighter = member("unrelated-cursor", "heroes", {
+    onHitConditionSave: {
+      saveAbility: "constitution", dc: 12, conditionId: null,
+      effectId: "synthetic-rot", curseId: "synthetic-rot",
+      cannotRegainHitPoints: true, allowedRemovalActionIds: ["remove-curse"],
+    },
   });
-  const target = member("petrified-target", "monsters", { position: 5 });
+  const target = member("persistent-target", "monsters", { position: 5 });
   const event = attack(fighter, target, [15, 4, 4, 1]);
   assert.equal(event.save_succeeded, false);
-  assert.ok(target.state.active_effect_ids.includes("petrified"));
-  assert.equal(target.state.is_dead, true);
-  assert.equal(target.state.is_alive, false);
-  assert.equal(target.state.current_hp, 0);
+  assert.ok(event.applied_condition_ids.includes("synthetic-rot"));
+  assert.deepEqual(target.state.active_curses, ["synthetic-rot"]);
+  const timed = target.state.timed_effects.find((item) => item.effect_id === "synthetic-rot");
+  assert.ok(timed);
+  assert.equal(timed.cannot_regain_hit_points, true);
+  assert.deepEqual(timed.owned_curse_ids, ["synthetic-rot"]);
+  assert.equal(target.state.hit_point_maximum_reduction, 0);
 }
 
 {
-  const fighter = member("staged-petrifier", "heroes", {
+  const fighter = member("unrelated-success", "heroes", {
     onHitConditionSave: {
-      saveAbility: "constitution", dc: 12, conditionId: "restrained",
-      repeatSaveTiming: "target_turn_end", repeatSaveFailureConditionId: "petrified",
+      saveAbility: "constitution", dc: 12, conditionId: null,
+      effectId: "renamed-curse", curseId: "renamed-curse", cannotRegainHitPoints: true,
     },
   });
-  const target = member("staged-target", "monsters", { position: 5 });
-  const first = attack(fighter, target, [15, 4, 4, 1]);
-  assert.equal(first.save_succeeded, false);
-  assert.ok(target.state.active_effect_ids.includes("restrained"));
-  assert.equal(target.state.is_dead, false);
-  dice([1]);
-  const lifecycle = window.IRON_PIT_BROWSER_CONDITION_LIFECYCLE.resolveTargetTiming(
-    2, 1, target, "target_turn_end",
-  );
-  assert.equal(lifecycle.events[0].save_succeeded, false);
-  assert.ok(target.state.active_effect_ids.includes("petrified"));
-  assert.equal(target.state.active_effect_ids.includes("restrained"), false);
-  assert.equal(target.state.is_dead, true);
-  assert.equal(target.state.current_hp, 0);
+  const target = member("successful-target", "monsters", { position: 5 });
+  const event = attack(fighter, target, [15, 4, 4, 20]);
+  assert.equal(event.save_succeeded, true);
+  assert.deepEqual(target.state.active_curses, []);
+  assert.equal(target.state.timed_effects.length, 0);
 }
 
+console.log("Browser universal on-hit condition-save riders beyond Prone passed.");
 
-{
-  const fighter = member("renamed-escalator", "heroes", {
-    onHitConditionSave: {
-      saveAbility: "constitution", dc: 12, conditionId: "poisoned",
-      durationRounds: 10,
-      failureMarginEscalation: {
-        margin: 5, additionalConditionIds: ["unconscious"],
-        replacementDurationDiceCount: 1, replacementDurationDiceSize: 10,
-        replacementDurationRoundMultiplier: 10, endsOnDamage: true,
-        allowedRemovalActionIds: ["wake-sleeper"],
-      },
-    },
-  });
-  fighter.state.template.attacks[0].name = "Renamed Homebrew Sleep Sting";
-  const target = member("escalated-target", "monsters", { position: 5 });
-  const event = attack(fighter, target, [15, 4, 4, 3, 4]);
-  assert.equal(event.save_succeeded, false);
-  assert.deepEqual(["poisoned", "unconscious"].every(id => event.applied_condition_ids.includes(id)), true);
-  const poisoned = target.state.timed_effects.find(item => item.effect_id === "poisoned");
-  const sleeping = target.state.timed_effects.find(item => item.effect_id === "unconscious");
-  assert.equal(poisoned.expires_round, 41);
-  assert.equal(sleeping.expires_round, 41);
-  assert.notEqual(poisoned.source_effect_id, sleeping.source_effect_id);
-  assert.equal(sleeping.ends_on_damage, true);
-  assert.deepEqual(sleeping.allowed_removal_action_ids, ["wake-sleeper"]);
-  assert.equal(target.state.active_effect_ids.includes("prone"), true);
-  load("browser-source-bound-effects.js");
-  assert.deepEqual(window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS.endDamageSensitive(target.state), ["unconscious"]);
-  assert.equal(target.state.active_effect_ids.includes("poisoned"), true);
-  assert.equal(target.state.active_effect_ids.includes("unconscious"), false);
-}
-
-{
-  const effect = {
-    saveAbility: "constitution", dc: 12, conditionId: "poisoned", durationRounds: 10,
-    failureMarginEscalation: {
-      margin: 5, additionalConditionIds: ["unconscious"],
-      replacementDurationDiceCount: 1, replacementDurationDiceSize: 10,
-      replacementDurationRoundMultiplier: 10, endsOnDamage: true,
-      allowedRemovalActionIds: ["wake-sleeper"],
-    },
-  };
-  for (const [save, expectedSuccess] of [[9, false], [15, true]]) {
-    const fighter = member("partial-" + save, "heroes", { onHitConditionSave: effect });
-    const target = member("target-" + save, "monsters", { position: 5 });
-    const event = attack(fighter, target, [15, 4, 4, save]);
-    assert.equal(event.save_succeeded, expectedSuccess);
-    assert.equal(target.state.active_effect_ids.includes("unconscious"), false);
-  }
-}
-console.log("Browser 2014 failed-save escalation and wake-on-damage parity passed.");
-
-
-{
-  const fighter = member("linked-poison-source", "heroes", {
-    onHitConditionSave: {
-      saveAbility: "constitution", dc: 10, conditionId: "poisoned", durationRounds: 10,
-      failureMarginEscalation: {
-        margin: 5, additionalConditionIds: ["unconscious"],
-        replacementDurationDiceCount: 1, replacementDurationDiceSize: 10,
-        replacementDurationRoundMultiplier: 10, endsOnDamage: false,
-        allowedRemovalActionIds: [],
-      },
-    },
-  });
-  const target = member("linked-sleeper", "monsters", { position: 5 });
-  const event = attack(fighter, target, [15, 4, 4, 3, 2]);
-  assert.ok(event.applied_condition_ids.includes("unconscious"));
-  const poison = target.state.timed_effects.find(item => item.effect_id === "poisoned");
-  const sleep = target.state.timed_effects.find(item => item.effect_id === "unconscious");
-  assert.equal(poison.source_effect_id, sleep.source_effect_id);
-  const removed = window.IRON_PIT_BROWSER_TIMED.removeGroup(target.state, poison);
-  assert.deepEqual(new Set(removed), new Set(["poisoned", "unconscious"]));
-}
+require("./browser-on-hit-condition-save-terminal.test.cjs");
+require("./browser-on-hit-condition-save-escalation.test.cjs");

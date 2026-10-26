@@ -80,6 +80,7 @@ const state = (hp = 18, kind = "character") => ({
   assert.equal(target.timed_effects[0].source_id, "devil-two");
 }
 load("browser-timed-conditions.js");
+load("browser-timed-condition-lifecycle.js");
 {
   const target = state();
   assert.equal(H.applyOrStackHpLoss(target, "persistent-wound", "devil-one", "Glaive", 1, 10, true), 1);

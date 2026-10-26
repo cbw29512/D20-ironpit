@@ -10,7 +10,7 @@ for (const file of [
   "browser-heroes.js", "browser-monsters-2014.js", "browser-ability-hooks.js",
   "browser-opening-modifiers.js", "browser-condition-rules.js", "browser-grid-geometry.js", "browser-state.js",
   "browser-condition-immunity.js", "browser-defensive-modifier-rules.js", "browser-rolls.js",
-  "browser-saving-throws.js", "browser-saves.js", "browser-timed-conditions.js", "browser-condition-lifecycle.js",
+  "browser-saving-throws.js", "browser-save-immunity.js", "browser-save-action-support.js", "browser-save-action-attempt.js", "browser-save-damage.js", "browser-save-damage-legacy.js", "browser-save-damage-apply.js", "browser-save-action-effects.js", "browser-save-event.js", "browser-saves.js", "browser-timed-conditions.js", "browser-condition-lifecycle.js",
   "browser-failed-save-timed-effects.js", "browser-timed-emanations.js",
 ]) load(file);
 const S = window.IRON_PIT_BROWSER_STATE;

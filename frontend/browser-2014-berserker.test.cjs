@@ -9,10 +9,10 @@ global.window = globalThis;
 const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"), { filename: name });
 for (const name of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js",
-  "browser-action-economy.js", "browser-ability-checks.js", "browser-grapple.js", "browser-timed-conditions.js",
+  "browser-action-economy.js", "browser-ability-checks.js", "browser-grapple.js", "browser-timed-conditions.js", "browser-timed-condition-lifecycle.js",
   "browser-exhaustion.js", "browser-modifier-validation.js", "browser-modifiers.js", "browser-state.js", "browser-resources.js", "browser-rage.js",
   "browser-barbarian2.js", "browser-barbarian3.js", "browser-rolls.js", "browser-zero-hp.js",
-  "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-formation.js", "browser-frenzy-2014.js", "browser-saving-throws.js", "browser-saves.js",
+  "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js", "browser-formation.js", "browser-frenzy-2014.js", "browser-saving-throws.js", "browser-save-immunity.js", "browser-save-action-support.js", "browser-save-action-attempt.js", "browser-save-damage.js", "browser-save-damage-legacy.js", "browser-save-damage-apply.js", "browser-save-action-effects.js", "browser-save-event.js", "browser-saves.js",
   "browser-intimidating-presence-2014.js",
 ]) load(name);
 

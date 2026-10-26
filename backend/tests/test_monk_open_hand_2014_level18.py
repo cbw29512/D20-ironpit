@@ -7,7 +7,7 @@ from app.combat.damage_defenses import adjusted_damage_amount
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_turn_support import resolve_support_actions
 from app.combat.state import begin_turn, build_combatant_state
-from app.combat.timed_conditions import expire_start_of_turn_conditions
+from app.combat.timed_condition_lifecycle import expire_start_of_turn_conditions
 from app.combat.timed_self_buffs import choose_timed_self_buff_action, resolve_timed_self_buff
 from app.content.fighter_champion_2014_runtime import build_karnok_stoneward_2014
 from app.content.monk_open_hand_2014_combat_profile import build_kael_2014_combat_profile

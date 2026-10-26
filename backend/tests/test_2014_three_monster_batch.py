@@ -18,7 +18,7 @@ def test_sea_hag_hydra_and_clay_golem_compile_into_one_roster():
             assert basic_blockers_2014(source[monster_id]) == ()
         templates = build_basic_2014_monsters()
         names = {template.id for template in templates}
-        assert len(names) == len(templates) == 243
+        assert len(names) == len(templates) == 244
         assert {f"2014-{monster_id}" for monster_id in expected} <= names
         actual = {template.id: template for template in templates}
         hydra = actual["2014-hydra"]

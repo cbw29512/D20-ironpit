@@ -4,6 +4,7 @@ import logging
 
 from app.combat.exhaustion import reduce_exhaustion
 from app.combat.hit_points import effective_max_hp
+from app.combat.timed_condition_lifecycle import remove_effect_group
 from app.domain.actions import ConditionRemovalAction
 from app.domain.encounters import EncounterCombatant
 
@@ -29,10 +30,18 @@ def apply_restoration_riders(
         if "curse" in wanted and target.state.active_curses and (
             action.removes_curses or action.removes_all_curses
         ):
-            if action.removes_all_curses:
-                target.state.active_curses = []
-            else:
-                target.state.active_curses = target.state.active_curses[1:]
+            removed_curses = (
+                list(target.state.active_curses)
+                if action.removes_all_curses
+                else [target.state.active_curses[0]]
+            )
+            for effect in list(target.state.timed_effects):
+                if any(curse_id in effect.owned_curse_ids for curse_id in removed_curses):
+                    remove_effect_group(target.state, effect)
+            target.state.active_curses = [
+                curse_id for curse_id in target.state.active_curses
+                if curse_id not in removed_curses
+            ]
             applied.append("curse")
         if (
             "ability-score-reduction" in wanted

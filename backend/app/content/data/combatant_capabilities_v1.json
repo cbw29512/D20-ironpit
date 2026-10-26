@@ -12212,6 +12212,8 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_keys_on_success": [],
+        "source_effect_immunity_keys_blocking": [],
         "failed_save_push_ft": 0,
         "animation": "constrict"
       }
@@ -15094,6 +15096,8 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_keys_on_success": [],
+        "source_effect_immunity_keys_blocking": [],
         "failed_save_push_ft": 0,
         "animation": "constrict"
       }
@@ -21413,6 +21417,8 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_keys_on_success": [],
+        "source_effect_immunity_keys_blocking": [],
         "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
@@ -21655,6 +21661,8 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_keys_on_success": [],
+        "source_effect_immunity_keys_blocking": [],
         "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
@@ -21895,6 +21903,8 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_keys_on_success": [],
+        "source_effect_immunity_keys_blocking": [],
         "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
@@ -22132,6 +22142,8 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_keys_on_success": [],
+        "source_effect_immunity_keys_blocking": [],
         "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
@@ -22373,6 +22385,8 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_keys_on_success": [],
+        "source_effect_immunity_keys_blocking": [],
         "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
@@ -22610,6 +22624,8 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_keys_on_success": [],
+        "source_effect_immunity_keys_blocking": [],
         "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
@@ -22857,6 +22873,8 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_keys_on_success": [],
+        "source_effect_immunity_keys_blocking": [],
         "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
@@ -23104,6 +23122,8 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_keys_on_success": [],
+        "source_effect_immunity_keys_blocking": [],
         "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
@@ -23348,6 +23368,8 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_keys_on_success": [],
+        "source_effect_immunity_keys_blocking": [],
         "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
@@ -23596,6 +23618,8 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_keys_on_success": [],
+        "source_effect_immunity_keys_blocking": [],
         "failed_save_push_ft": 0,
         "animation": "save-effect"
       }
@@ -23840,6 +23864,8 @@
         "resource_cost": 1,
         "requires_no_active_grapple": false,
         "magical_effect": false,
+        "source_effect_immunity_keys_on_success": [],
+        "source_effect_immunity_keys_blocking": [],
         "failed_save_push_ft": 0,
         "animation": "save-effect"
       }

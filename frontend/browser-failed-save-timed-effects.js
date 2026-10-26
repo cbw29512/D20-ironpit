@@ -37,6 +37,8 @@
     }
   }
 
+
+
   function controlLimitsFrom(rider) {
     if (rider.controlLimits) return rider.controlLimits;
     const abilities = [...(rider.d20DisadvantageAbilities || [])];
@@ -57,12 +59,17 @@
     };
   }
 
-  function apply(actor, target, action, rider, round, setup = null) {
+  function apply(actor, target, action, rider, round, setup = null, saveTotal = null) {
     try {
       const timed = window.IRON_PIT_BROWSER_TIMED;
       if (!timed) throw new Error("Failed-save timed effect requires browser-timed-conditions.js.");
       const applied = [];
       const effectIds = [rider.effectId, ...(rider.additionalEffectIds || [])];
+      const escalation = rider.failureMarginEscalation || null;
+      if (escalation && Number.isFinite(saveTotal)
+        && saveTotal <= action.dc - escalation.margin) {
+        effectIds.push(...(escalation.additionalConditionIds || []));
+      }
       for (const [index, effectId] of effectIds.entries()) {
         if (index && !applied.length) break;
         const ownsLifecycle = index === 0;
@@ -113,7 +120,7 @@
         });
         if (result) applied.push(result);
       }
-      if (!(rider.additionalEffectIds || []).length) return applied[0] || null;
+      if (effectIds.length === 1) return applied[0] || null;
       return applied;
     } catch (error) {
       console.error("Failed browser failed-save timed rider application", {
@@ -123,5 +130,7 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS = { apply, isImmune, grantImmunity, immunityId };
+  window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS = {
+    apply, isImmune, grantImmunity, immunityId,
+  };
 })();

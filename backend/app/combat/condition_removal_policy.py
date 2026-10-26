@@ -81,15 +81,25 @@ def _effect_allows_removal(
         return bool(effects) and all(
             action.id in effect.allowed_removal_action_ids for effect in effects
         )
-    return all(
-        not effect.allowed_removal_action_ids or action.id in effect.allowed_removal_action_ids
-        for effect in effects
-    )
+    for effect in effects:
+        if effect.allowed_removal_action_ids and action.id not in effect.allowed_removal_action_ids:
+            return False
+        if effect.removal_effect_tag and action.id not in effect.removal_action_exceptions:
+            if effect.removal_effect_tag not in action.removal_effect_tags:
+                return False
+            if action.spell_level < effect.minimum_removal_spell_level:
+                return False
+    return True
 
 
 def removable(target: EncounterCombatant, action: ConditionRemovalAction) -> list[str]:
     try:
         allowed = set(action.removable_conditions)
+        allowed.update(
+            effect.effect_id for effect in target.state.timed_effects
+            if effect.removal_effect_tag in action.removal_effect_tags
+            or action.id in effect.removal_action_exceptions
+        )
         effects = [
             effect for effect in set(target.state.active_effect_ids)
             if effect in allowed and effect not in target.state.template.innate_condition_ids

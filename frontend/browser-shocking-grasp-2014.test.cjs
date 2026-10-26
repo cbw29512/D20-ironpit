@@ -14,9 +14,9 @@ const load = (name) => vm.runInThisContext(
 for (const file of [
   "browser-damage-defense-rules.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
-  "browser-timed-conditions.js", "browser-grapple.js", "browser-modifier-validation.js", "browser-modifiers.js", "browser-state.js",
+  "browser-timed-conditions.js", "browser-timed-condition-lifecycle.js", "browser-grapple.js", "browser-modifier-validation.js", "browser-modifiers.js", "browser-state.js",
   "browser-rage.js", "browser-rolls.js", "browser-undead-fortitude.js", "browser-zero-hp.js",
-  "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js", "browser-saves.js",
+  "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js", "browser-save-immunity.js", "browser-save-action-support.js", "browser-save-action-attempt.js", "browser-save-damage.js", "browser-save-damage-legacy.js", "browser-save-damage-apply.js", "browser-save-action-effects.js", "browser-save-event.js", "browser-saves.js",
   "browser-spellcasting.js", "browser-spell-modifiers.js", "browser-spell-attack.js",
 ]) load(file);
 

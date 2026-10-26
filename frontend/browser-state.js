@@ -80,7 +80,7 @@
     const speed = M().effectiveSpeed(state);
     state.dash_uses_this_turn = 0;
     state.movement_remaining_ft = speed;
-    const countered = [...T().resolveMovementCounters(state), ...(G()?.resolveMovementCounters?.(state) || [])];
+    const countered = [...(T().resolveMovementCounters?.(state) || []), ...(G()?.resolveMovementCounters?.(state) || [])];
     const speedZero = G()?.speedIsZero(state) || false;
     if (speedZero || T().suppressesMovement(state)) state.movement_remaining_ft = 0;
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");

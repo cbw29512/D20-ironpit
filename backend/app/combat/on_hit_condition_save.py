@@ -1,22 +1,18 @@
 from __future__ import annotations
-
 from dataclasses import dataclass
 import logging
-
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.failure_margin_runtime import escalation_duration
 from app.combat.forced_movement import push_straight_away
+from app.combat.on_hit_condition_targeting import excluded_on_hit_condition_target
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import apply_terminal_condition_outcome, apply_timed_condition
-from app.content.monster_creature_types import creature_matches_kind
+from app.combat.timed_effect_transition import requires_timed_effect, schedule_on_hit_transition
 from app.domain.models import CombatantState, CombatantTemplate, DiceRoll, WeaponAttack
 from app.domain.saving_throw_context import SavingThrowContext
 from app.domain.size import size_at_most
-
 logger = logging.getLogger(__name__)
-
-
 @dataclass(frozen=True)
 class OnHitConditionSaveResolution:
     save_roll: DiceRoll | None = None
@@ -26,17 +22,6 @@ class OnHitConditionSaveResolution:
     applied_condition: str | None = None
     forced_movement_ft: int = 0
     additional_conditions: tuple[str, ...] = ()
-
-
-def _excluded_target(defender: CombatantState, effect) -> bool:
-    try:
-        kinds = [*effect.excluded_creature_types, *effect.excluded_creature_subtypes]
-        return any(creature_matches_kind(defender.template, kind) for kind in kinds)
-    except Exception:
-        logger.exception("Failed to evaluate on-hit condition-save exclusions for %s.", defender.template.name)
-        raise
-
-
 def resolve_on_hit_condition_save(
     defender: CombatantState,
     attack: WeaponAttack,
@@ -55,10 +40,12 @@ def resolve_on_hit_condition_save(
             return OnHitConditionSaveResolution()
         if effect.max_target_size is not None and not size_at_most(defender.template.size, effect.max_target_size):
             return OnHitConditionSaveResolution()
-        if _excluded_target(defender, effect):
+        if excluded_on_hit_condition_target(defender, effect):
             return OnHitConditionSaveResolution()
         target_actor = next((item for item in [*setup.heroes, *setup.monsters] if item.state is defender), None) if setup else None
-        if condition_is_immune(defender, effect.condition_id, source_template, actor=target_actor, setup=setup):
+        if effect.condition_id is not None and condition_is_immune(
+            defender, effect.condition_id, source_template, actor=target_actor, setup=setup
+        ):
             return OnHitConditionSaveResolution()
         save_roll, succeeded = resolve_saving_throw(
             defender,
@@ -70,17 +57,20 @@ def resolve_on_hit_condition_save(
                 effect_tags=frozenset({"poison"}) if effect.condition_id == "poisoned" else frozenset(),
             ),
         )
-        applied = None
-        additional: list[str] = []
+        applied = None; additional: list[str] = []
         escalation = effect.failure_margin_escalation
         escalated, duration = escalation_duration(effect, save_roll, succeeded, dice)
         if not succeeded:
-            timed = duration is not None or effect.repeat_save_timing is not None
+            runtime_effect_id = effect.effect_id or effect.condition_id
+            if runtime_effect_id is None:
+                raise ValueError("Failed-save effect has no runtime effect id.")
+            owner_id = source_id or (source_template.id if source_template is not None else "on-hit-save")
+            timed = requires_timed_effect(effect, duration)
             if timed:
                 applied = apply_timed_condition(
                     defender,
-                    effect.condition_id,
-                    source_id or (source_template.id if source_template is not None else "on-hit-save"),
+                    runtime_effect_id,
+                    owner_id,
                     source_effect_id=attack.weapon.name,
                     source_template=source_template,
                     target_actor=target_actor, setup=setup,
@@ -93,18 +83,26 @@ def resolve_on_hit_condition_save(
                     repeat_save_ability=effect.save_ability if effect.repeat_save_timing else None,
                     repeat_save_dc=effect.dc if effect.repeat_save_timing else None,
                     repeat_save_timing=effect.repeat_save_timing,
+                    allowed_removal_action_ids=effect.allowed_removal_action_ids,
+                    owned_curse_ids=[effect.curse_id] if effect.curse_id else [],
                     repeat_save_failure_condition_id=effect.repeat_save_failure_condition_id,
                     expires_at_start_of_source_turn=False,
                     affected_states=affected_states,
                     use_default_poison_recovery=False,
                     cannot_regain_hit_points=effect.cannot_regain_hit_points,
+                    start_of_turn_dice_count=effect.start_of_turn_damage_dice_count,
+                    start_of_turn_dice_size=effect.start_of_turn_damage_dice_size,
+                    start_of_turn_damage_type=effect.start_of_turn_damage_type,
                 )
-            elif effect.condition_id not in defender.active_effect_ids:
-                defender.active_effect_ids.append(effect.condition_id)
-                apply_terminal_condition_outcome(
-                    defender, effect.condition_id, affected_states=affected_states
-                )
-                applied = effect.condition_id
+                if applied is not None:
+                    schedule_on_hit_transition(defender, runtime_effect_id, owner_id, attack.weapon.name, effect)
+            elif runtime_effect_id not in defender.active_effect_ids:
+                defender.active_effect_ids.append(runtime_effect_id)
+                if effect.condition_id is not None:
+                    apply_terminal_condition_outcome(
+                        defender, effect.condition_id, affected_states=affected_states
+                    )
+                applied = runtime_effect_id
             if escalated:
                 for condition_id in escalation.additional_condition_ids:
                     added = apply_timed_condition(
