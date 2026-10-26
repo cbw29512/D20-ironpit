@@ -1,6 +1,16 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
 
+## Staged disease semantic family — IN PR #1041, not merged
+
+- Source: 2014 Tentacle attack's hit applies ordinary Bludgeoning damage, then the victim makes its printed DC 14 Constitution save. Failure attaches a fight-local latent disease; the printed one-minute delay is exactly 10 target turns. An initial successful save does not infect.
+- On activation, healing is blocked in the standard no-water Pit and removal requires *heal* or disease-curing magic of 6th level or higher. During latency, ordinary disease-curing magic is sufficient. Disease reset and timed-effect transitions use the shared Python/browser lifecycle; no monster identity dispatch.
+- The distinct out-of-water 1d12 Acid / 10-minute / moisture-suppression rider is source-verified, immutable, and explicitly arena-neutral. It neither enters the fight timer nor creates a second active rider; changed or unknown printed text fails source proof.
+- Generator-owned `docs/generated/STAGED_DISEASE_BINDINGS_2014.json`: 327 scanned; one applicable, one Python wired, one browser wired, zero remaining, zero exceptions; one preserved arena-neutral periodic source component. This is **mechanic coverage**, not a completed monster or successful webpage fight.
+- The generated Aboleth blocker row still lists unrelated extra Action and Legendary Action gaps. PR #1041 also requires reconciliation with overlapping shared files in #1038 and green **exact-final-head** CI. Production stays locked.
+
+
+
 ## Harpy subsequent-turn source maintenance — IN PR #991
 
 - Owner: Codex on `feat/2014-source-maintenance-lifecycle-20261021`. This scope is independent of roster-wide damage defenses in #989 and Multiattack inventory in #990.
