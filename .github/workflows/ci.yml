@@ -510,6 +510,7 @@ jobs:
           node frontend/browser-resource-hit-save.test.cjs
           node frontend/browser-hit-rider-integration.test.cjs
           node frontend/browser-attack-damage-reduction.test.cjs
+          node frontend/browser-weapon-corrosion.test.cjs
           node frontend/browser-attack-damage-redirect.test.cjs
           node frontend/browser-monk13-2024.test.cjs
           node frontend/browser-monk14-2024.test.cjs
