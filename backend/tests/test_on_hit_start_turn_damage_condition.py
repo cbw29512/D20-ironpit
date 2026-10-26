@@ -17,7 +17,7 @@ def _fight():
     try:
         effect = OnHitConditionSave(
             save_ability="constitution",
-            dc=21,
+            dc=20,
             condition_id="poisoned",
             repeat_save_timing="target_turn_end",
             cannot_regain_hit_points=True,
@@ -60,7 +60,7 @@ def test_failed_save_stores_generic_poison_lifecycle_and_blocks_healing():
     effect = next(item for item in target.state.timed_effects if item.effect_id == "poisoned")
     assert effect.cannot_regain_hit_points is True
     assert effect.repeat_save_ability == "constitution"
-    assert effect.repeat_save_dc == 21
+    assert effect.repeat_save_dc == 20
     assert effect.repeat_save_timing == "target_turn_end"
     assert effect.start_of_turn_dice_count == 6
     assert effect.start_of_turn_dice_size == 6
