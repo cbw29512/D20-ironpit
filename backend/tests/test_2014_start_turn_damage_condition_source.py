@@ -62,7 +62,7 @@ def test_changed_timing_or_damage_text_fails_closed():
     bite = _bite(monster)
     for old, new in (
         ("at the start of each of its turns", "at the end of each of its turns"),
-        ("21 (6d6) poison damage", "14 (4d6) poison damage"),
+        ("21 (6d6) poison damage", "20 (6d6) poison damage"),
         ("DC 21 Constitution saving throw", "DC 20 Constitution saving throw"),
     ):
         changed = monster.model_copy(update={
