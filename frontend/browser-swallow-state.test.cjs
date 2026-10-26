@@ -5,7 +5,7 @@ const load=(file)=>vm.runInThisContext(fs.readFileSync(path.join(__dirname,file)
 load("browser-grapple.js");load("browser-swallow.js");
 const swallow=window.IRON_PIT_BROWSER_SWALLOW;
 const frog={is_alive:true,is_dead:false,current_hp:20,template:{
-  size:"medium",weapon_attack:{id:"bite"},alternate_weapon_attacks:[]},swallowed_target_ids:[]};
+  size:"medium",attacks:[{id:"bite"}]},swallowed_target_ids:[]};
 const tiny={is_alive:true,is_dead:false,current_hp:30,template:{size:"small"},
   active_effect_ids:[],grapple_sources:[],timed_effects:[],swallowed:null};
 const action={sourceName:"Swallow",attackId:"bite",requiresExistingGrapple:true,maxTargetSize:"small",
