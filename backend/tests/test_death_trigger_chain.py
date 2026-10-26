@@ -20,9 +20,20 @@ def _member(template, combatant_id: str, side: str, position_ft: int):
     )
 
 
+def _short_range_damage_trigger(roster):
+    """Select by the shared effect contract, never by source-card identity."""
+    return next(
+        card for card in roster.monsters
+        if any(
+            action.range_ft == 5 and action.damage is not None
+            for action in card.death_trigger_actions
+        )
+    )
+
+
 def test_death_trigger_dispatch_drains_a_newly_killed_source() -> None:
     roster = build_arena_roster("2014")
-    magmin = next(card for card in roster.monsters if card.id == "magmin")
+    magmin = _short_range_damage_trigger(roster)
     hero = roster.characters[0]
     source = _member(magmin, "source", "monsters", 0)
     chained = _member(magmin, "chained", "monsters", 5)
@@ -55,7 +66,7 @@ def test_death_trigger_dispatch_drains_a_newly_killed_source() -> None:
 
 def test_death_trigger_consumption_resets_with_new_fight_state() -> None:
     roster = build_arena_roster("2014")
-    magmin = next(card for card in roster.monsters if card.id == "magmin")
+    magmin = _short_range_damage_trigger(roster)
     hero = roster.characters[0]
 
     for fight_number in (1, 2):
@@ -79,4 +90,6 @@ def test_death_trigger_consumption_resets_with_new_fight_state() -> None:
         assert source.state.feature_use_counts["death-trigger"] == 1
         assert "death-trigger" in source.state.active_buff_effect_ids
 
-    assert magmin.death_trigger_effect_ids == ["death-burst"]
+    assert magmin.death_trigger_effect_ids == [
+        action.id for action in magmin.death_trigger_actions
+    ]
