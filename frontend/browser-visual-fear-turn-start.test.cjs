@@ -5,6 +5,13 @@ const vm = require("node:vm");
 const path = require("node:path");
 global.window = globalThis;
 const load = name => vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), "utf8"));
+const siteScripts = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
+const sensesScript = 'src="browser-effective-senses.js"';
+const gazeScript = 'src="browser-visual-turn-start-integration.js"';
+assert.ok(siteScripts.includes(sensesScript), "Production page must load shared effective senses.");
+assert.ok(siteScripts.indexOf(sensesScript) < siteScripts.indexOf(gazeScript),
+  "Shared effective senses must initialize before universal visual-gaze hooks.");
+
 load("browser-turn-start-visual-policy.js");
 load("browser-visual-source-aversion.js");
 const policy = window.IRON_PIT_BROWSER_TURN_START_VISUAL_POLICY;

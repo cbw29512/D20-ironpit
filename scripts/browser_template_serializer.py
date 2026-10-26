@@ -1009,6 +1009,8 @@ def _bonus_attack_grant(item: Any) -> dict[str, Any]:
         "resourceCost": item.resource_cost,
         "priority": item.priority,
     }
+    if item.required_active_effect_id is not None:
+        row["requiredActiveEffectId"] = item.required_active_effect_id
     if item.on_hit_condition_save is not None:
         effect = item.on_hit_condition_save
         save_row: dict[str, Any] = {

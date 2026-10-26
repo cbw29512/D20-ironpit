@@ -29,6 +29,11 @@ def resolve_bonus_attack_grant(
             return [], sequence
         grants = sorted(state.template.bonus_attack_grants, key=lambda item: (item.priority, item.id))
         for grant in grants:
+            if (
+                grant.required_active_effect_id is not None
+                and grant.required_active_effect_id not in state.active_effect_ids
+            ):
+                continue
             if grant.trigger == "source_melee_zero_hp_this_turn" and (
                 state.feature_last_turn_keys.get(f"bonus-attack-trigger:{grant.id}") != turn_key
             ):
