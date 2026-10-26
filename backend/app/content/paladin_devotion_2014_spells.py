@@ -59,6 +59,7 @@ def lesser_restoration_2014() -> ConditionRemovalAction:
         id="lesser-restoration", name="Lesser Restoration", action_cost="action",
         range_ft=5, target_mode="self_or_ally",
         removable_conditions=["blinded", "deafened", "paralyzed", "poisoned"],
+        removal_effect_tags=["disease"], spell_level=2,
         max_conditions_per_use=1, resource_costs={"spell-slot-2": 1},
         expends_spell_slot=True, animation="lesser-restoration",
     )

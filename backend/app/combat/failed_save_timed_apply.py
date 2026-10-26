@@ -17,6 +17,7 @@ def apply_failed_save_timed_effect(
     round_number: int,
     affected_states: list[CombatantState] | None,
     setup: EncounterSetup | None = None,
+    save_total: int | None = None,
 ) -> str | list[str] | None:
     """Apply one condition compatibly, or a grouped set through one lifecycle owner."""
     try:
@@ -25,6 +26,13 @@ def apply_failed_save_timed_effect(
             return None
         applied: list[str] = []
         condition_ids = [rider.effect_id, *rider.additional_effect_ids]
+        escalation = rider.failure_margin_escalation
+        if (
+            escalation is not None
+            and save_total is not None
+            and save_total <= action.dc - escalation.margin
+        ):
+            condition_ids.extend(escalation.additional_condition_ids)
         for index, effect_id in enumerate(condition_ids):
             # A secondary condition is meaningful only when the primary effect
             # applies. It shares the source-effect group but owns no timers or
@@ -104,7 +112,7 @@ def apply_failed_save_timed_effect(
             )
             if result is not None:
                 applied.append(result)
-        if not rider.additional_effect_ids:
+        if len(condition_ids) == 1:
             return applied[0] if applied else None
         return applied
     except Exception:

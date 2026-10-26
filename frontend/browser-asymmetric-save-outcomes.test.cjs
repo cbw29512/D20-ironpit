@@ -43,6 +43,14 @@ window.IRON_PIT_BROWSER_ZERO_HP = {
 window.IRON_PIT_DICE = { rollMany: () => [1, 2, 3] };
 window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS = { saveAdvantageSourceNames: () => [] };
 window.IRON_PIT_BROWSER_CONCENTRATION = { endIfIncapacitated: () => {} };
+load("browser-save-immunity.js");
+load("browser-save-action-support.js");
+load("browser-save-action-attempt.js");
+load("browser-save-damage.js");
+load("browser-save-damage-legacy.js");
+load("browser-save-damage-apply.js");
+load("browser-save-action-effects.js");
+load("browser-save-event.js");
 load("browser-saves.js");
 const S = window.IRON_PIT_BROWSER_SAVES;
 

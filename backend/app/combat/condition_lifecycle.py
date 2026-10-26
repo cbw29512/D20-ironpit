@@ -8,6 +8,7 @@ from app.combat.modifier_stack import expire_target_turn_modifiers
 from app.combat.timed_condition_saves import resolve_repeat_save
 from app.combat.timed_conditions import apply_terminal_condition_outcome, remove_effect_group
 from app.combat.timed_effect_expiry import timed_effect_expiry_due
+from app.combat.timed_effect_transition import activate_due_transitions
 from app.domain.actions import ConditionTiming
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -41,6 +42,9 @@ def resolve_target_condition_timing(
     """Resolve expiry and one repeat save per grouped source effect on the affected creature's turn."""
     try:
         events: list[BattleEvent] = []
+        if timing == "target_turn_start":
+            transition_events, sequence = activate_due_transitions(sequence, round_number, target)
+            events.extend(transition_events)
         for effect in list(target.state.timed_effects):
             if effect not in target.state.timed_effects:
                 continue

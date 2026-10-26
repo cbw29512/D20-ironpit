@@ -15,6 +15,7 @@ window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
 load("browser-action-economy.js");
 load("browser-condition-rules.js");
 load("browser-timed-conditions.js");
+load("browser-timed-condition-lifecycle.js");
 load("browser-spellcasting.js");
 load("browser-timed-self-buff-policy.js");
 load("browser-timed-self-buffs.js");

@@ -1,6 +1,16 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
 
+## Staged disease semantic family — IN PR #1041, not merged
+
+- Source: 2014 Tentacle attack's hit applies ordinary Bludgeoning damage, then the victim makes its printed DC 14 Constitution save. Failure attaches a fight-local latent disease; the printed one-minute delay is exactly 10 target turns. An initial successful save does not infect.
+- On activation, healing is blocked in the standard no-water Pit and removal requires *heal* or disease-curing magic of 6th level or higher. During latency, ordinary disease-curing magic is sufficient. Disease reset and timed-effect transitions use the shared Python/browser lifecycle; no monster identity dispatch.
+- The distinct out-of-water 1d12 Acid / 10-minute / moisture-suppression rider is source-verified, immutable, and explicitly arena-neutral. It neither enters the fight timer nor creates a second active rider; changed or unknown printed text fails source proof.
+- Generator-owned `docs/generated/STAGED_DISEASE_BINDINGS_2014.json`: 327 scanned; one applicable, one Python wired, one browser wired, zero remaining, zero exceptions; one preserved arena-neutral periodic source component. This is **mechanic coverage**, not a completed monster or successful webpage fight.
+- The generated Aboleth blocker row still lists unrelated extra Action and Legendary Action gaps. PR #1041 also requires reconciliation with overlapping shared files in #1038 and green **exact-final-head** CI. Production stays locked.
+
+
+
 ## Harpy subsequent-turn source maintenance — IN PR #991
 
 - Owner: Codex on `feat/2014-source-maintenance-lifecycle-20261021`. This scope is independent of roster-wide damage defenses in #989 and Multiattack inventory in #990.
@@ -190,8 +200,8 @@ Checked against main `72fe95258db3793c5aba4d86ba5487217c03da51`, including close
 | Manticore | `mechanic:limited-use`, `source:trait` | Tail Spike Regrowth | Bind source per-fight resource and refill/use rule to generic resources. |
 | Medusa | `source:trait` | Petrifying Gaze | Same gaze grammar as Basilisk; DC 14 Con, 30-ft; initial failure by 5+ immediately Petrified; otherwise staged saves (settled). |
 | Mimic | `attack:incomplete`, `source:trait` | Shapechanger, Adhesive (Object Form Only), False Appearance (Object Form Only), Grappler | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
-| Mummy | `attack:incomplete`, `source:extra-action` | — | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
-| Mummy Lord | `attack:incomplete`, `mechanic:legendary`, `mechanic:spellcasting`, `source:extra-action`, `source:legendary`, `source:trait` | Spellcasting | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Mummy | `source:extra-action` (generated recheck pending) | — | **Rotting Fist + Dreadful Glare implemented in PR #1041:** Rotting Fist applies fight-local Mummy Rot/healing block; its 24-hour max-HP rider is arena-neutral. Dreadful Glare is source-proven as a DC 11 Wisdom Action at 60 ft, requires mutual sight, Frightened until the end of the Mummy's next turn, adds Paralyzed on fail-by-5, and grants match-scoped immunity to all normal Mummies on success. Runtime is source-neutral; generated blocker/certification gates still must execute. |
+| Mummy Lord | `mechanic:legendary`, `mechanic:spellcasting`, `source:extra-action` (generated recheck pending), `source:legendary`, `source:trait` | Spellcasting | **Rotting Fist + Dreadful Glare implemented in PR #1041:** Dreadful Glare uses the same generic save/failure-margin engine at DC 16 and grants success immunity against both normal Mummies and Mummy Lords. Remaining blockers are independent spellcasting / legendary / trait obligations; regenerate before removing any stale `source:extra-action` marker. |
 | Night Hag | `mechanic:spellcasting`, `source:extra-action`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
 | Nightmare | `source:extra-action`, `source:trait` (baseline) | Confer Fire Resistance; Ethereal Stride | [PR #969](https://github.com/cbw29512/D20-ironpit/pull/969) source-proves only a rider-dependent Fire resistance (no mounted rider exists in Iron Pit) and an Ethereal Plane transition (Pit-forbidden). Both remain on immutable card as arena-ineligible; Hooves typed damage and own Fire immunity stay fully active. Branch admitted 236/327, generated artifacts refreshed; full Python/browser exact-head CI, merge and webpage fight still required. |
 | Oni | `attack:incomplete`, `mechanic:spellcasting`, `source:extra-action`, `source:trait` | Innate Spellcasting | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
@@ -329,7 +339,7 @@ Checked against main `72fe95258db3793c5aba4d86ba5487217c03da51`, including close
 |---|---|---|
 | Aboleth #681 — Enslave | Temporary effective allegiance with original sides immutable; source-linked Charmed and damage-triggered repeat save. Enslave does not automatically win the match. | **DECISION RECORDED / NOT CERTIFIED:** shared effective ally/foe predicate in Python and browser, tests for targeting, AI and fight reset. |
 | Aboleth #681 — Psychic Drain | Bloodied (at or below half HP) prioritizes healing from an enslaved target when legendary actions available; damage offers printed repeat save. Bloodied changes **AI preference only**, not legal availability. | **DECISION RECORDED / NOT CERTIFIED:** shared source-driven tactical scoring + legendary action/heal parity. |
-| Aboleth #681 — Tentacle disease | Combat may exceed ten rounds: preserve onset after first minute, healing restrictions and any later source-defined effects rather than classifying all disease neutral. | **DECISION RECORDED / NOT CERTIFIED:** elapsed-round timed debuff and healing eligibility parity. |
+| Aboleth #681 — Tentacle disease | Failed DC 14 Constitution save adds the disease to fight state immediately as pending/inactive. Show the DEBUFF grey with a 10-round countdown and apply no disease penalty during the countdown. When the countdown expires, flip that same debuff active and apply the source-defined combat effects; do not create a duplicate status. The later 10-minute acid interval is arena-neutral under §6.1. | **DECISION RECORDED / NOT CERTIFIED:** pending-to-active delayed debuff state, countdown UI, healing eligibility parity, and fight-reset coverage. |
 | Aboleth #681 — Mucous Cloud | Underwater-only; default Pit has no water. Retain printed source text, no invented Poisoned status/damage. | **ARENA-NEUTRAL DECISION / NOT CERTIFIED:** source binding/exclusion still requires test evidence. |
 | Acolyte #682 | Six printed 2014 spells and slot use through universal casting, already reviewed. | **DECISION RECORDED / NOT CERTIFIED:** source spell binding and parity; no repeat rules discussion. |
 | Adult Bronze/Gold/Silver dragons #675 | Change Shape already reviewed; preserve printed form, no extra HP; avoid AI use absent proven value. | **DECISION RECORDED / NOT CERTIFIED:** reconcile existing #663 work; do not create separate duplicate mechanics. |
@@ -862,6 +872,20 @@ These are **spell-level decisions**, not Archmage-only exceptions. Preserve the 
 - [ ] **Universal Finger of Death Zombie suppression — USER RECONFIRMED / QUEUED:** Both editions; keep 7d8+30 Necrotic save-for-half and standard targeting/action/slot. If a Humanoid is killed by the spell, **never spawn a Zombie in Iron Pit**, never repurpose the target as a new combatant, and leave the original printed rider on source/card unchanged. Existing `finger_of_death_2014` already suppresses spawn; apply the same source-neutral contract to all 2014/2024 spell users and verify Python/browser parity. Distinct from the 2014 Archmage legal Teleport-to-Finger-of-Death arena spell-loadout choice. Not newly implemented/certified.
 
 - [ ] **2014 Archmage — Time Stop -> Meteor Swarm (9th-level) — USER-APPROVED / QUEUED:** Preserve original printed Time Stop on the source and card, but omit it from the separate 2014 Archmage Pit combat loadout; legally prepare **Meteor Swarm** as the 9th-level Wizard combat spell instead. RAW 2014: **Action, 1 mile range, four points visible to the caster, 40-ft-radius sphere from each**, immediate effect, **one Dexterity saving throw per creature in the union of those areas**, **20d6 Fire + 20d6 Bludgeoning** on a failure, **half each typed component on a success**. The four areas may overlap, but a creature caught in multiple bursts must be **affected only once** (not four saves or multiplied damage). **Friendly fire applies** including allies, and the AI must account for expected friendly damage when choosing up to four placement points. Apply shared typed damage defenses separately after saving throw, 9th-level slot charge, one normal Action, 2014 square-grid area coverage. Reuse universal single-area targeting, shared multi-component save damage and defensive modifiers; require a **generic multi-center AoE union/dedup extension** in Python and browser rather than Archmage-specific spell branches. Preserve edition-specific rules for future 2024 users; don't automatically replace Time Stop on other casters. Add tests for overlap dedup, all four centers, source visibility, friendly-fire hit, correct 40-ft radius, saves, resistance/immunity by damage type, spell slot, and Python/browser parity. **No implementation/certification claimed.**
+
+## >1-hour delayed-effect blocker cleanup — 2026-10-25
+
+Global authority is now `IRON_PIT_RULES_CONTRACT.md §6.1`: a **required delay greater than 1 hour is arena-neutral**, remains on immutable source/card data, never executes or persists across matches, and cannot by itself block admission. Immediate/combat-relevant clauses from the same source remain active.
+
+2014 audit results:
+- **Mummy / Mummy Lord — Mummy Rot:** immediate failed-save curse + healing block remain active; 24-hour 3d6 maximum-HP reduction is source metadata only. Rotting Fist long-delay blocker cleared in PR #1041.
+- **Flameskull, Guardian Naga, Lich, Mummy Lord, Spirit Naga, Lemure — Rejuvenation/Hellish Rejuvenation:** already proven post-combat delayed and excluded from unsupported-trait blockers by permanent regression coverage. No resurrection timer is required.
+- **Shadow / Wight delayed corpse-creation text:** already excluded from dynamic-combatant lifecycle blockers; no delayed spawn is created in a match.
+- **Printed 24-hour success immunities:** remain match-scoped source immunity under the existing rule; no 14,400-round timer and no cross-match persistence.
+- **Aboleth Tentacle disease:** **not cleared by this cutoff** because its first mechanical onset is after 1 minute, which is <=1 hour and therefore potentially reachable in combat. Keep its elapsed-round/healing restriction work.
+- **Immediate max-HP reductions / ability reductions that merely recover after a rest or long duration:** remain combat-active because the reduction happens now; only their between-fight recovery text is irrelevant. Do not neutralize Vampire/Wraith/Shadow-style immediate combat effects.
+
+This audit removes campaign-time implementation debt without weakening any clause that can change the current fight.
 
 ## Status accounting
 

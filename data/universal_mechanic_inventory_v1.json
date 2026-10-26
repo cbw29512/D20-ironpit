@@ -5864,20 +5864,20 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 84,
+    "blocked_monster_count": 83,
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
       "attack:complex": 6,
       "attack:damage-type": 2,
-      "attack:incomplete": 21,
+      "attack:incomplete": 17,
       "attack:none": 2,
       "mechanic:legendary": 9,
       "mechanic:recharge": 9,
       "mechanic:spellcasting": 36,
       "mechanic:swallow": 7,
       "multiattack:complex": 10,
-      "source:extra-action": 47,
+      "source:extra-action": 45,
       "source:legendary": 9,
       "source:reaction": 3,
       "source:trait": 64

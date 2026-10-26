@@ -1,30 +1,23 @@
 (() => {
   "use strict";
-
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const T = () => window.IRON_PIT_BROWSER_TIMED;
-
-  function creatureMatchesKind(template, kind) {
-    const expected = String(kind || "").trim().toLowerCase();
-    if (!expected) return false;
-    const raw = String(template?.creature_type || "");
-    const base = raw.split(" (")[0].trim().toLowerCase();
-    if (base === expected) return true;
-    const open = raw.indexOf("(");
-    const close = raw.lastIndexOf(")");
-    if (open < 0 || close <= open) return false;
-    return raw.slice(open + 1, close).split(",").some((part) => part.trim().toLowerCase() === expected);
-  }
-
+  const K = () => window.IRON_PIT_BROWSER_CREATURE_KIND
+    || (() => { throw new Error("browser-creature-kind.js is required."); })();
+  const L = () => window.IRON_PIT_BROWSER_ON_HIT_CONDITION_LIFECYCLE
+    || (() => { throw new Error("browser-on-hit-condition-lifecycle.js is required."); })();
   function resolve(target, attack, sourceTemplate = null, round = null, setup = null, attacker = null) {
     try {
     const effect = attack.onHitConditionSave;
     if (!effect || target.state.is_dead || !target.state.is_alive) return null;
+    if (Object.prototype.hasOwnProperty.call(effect, "delayedMaxHpReduction")) {
+      throw new Error("Source-only delayed maximum-HP metadata cannot enter browser combat.");
+    }
     if (effect.maxTargetSize && !S().sizeAtMost(target, effect.maxTargetSize)) return null;
     const kinds = [...(effect.excludedCreatureTypes || []), ...(effect.excludedCreatureSubtypes || [])];
-    if (kinds.some((kind) => creatureMatchesKind(target.state.template, kind))) return null;
-    if (I().immune(target.state, effect.conditionId, sourceTemplate, { actor: target, setup })) return null;
+    if (kinds.some((kind) => K().matches(target.state.template, kind))) return null;
+    if (effect.conditionId && I().immune(target.state, effect.conditionId, sourceTemplate, { actor: target, setup })) return null;
     const save = window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow(target.state, effect.saveAbility, effect.dc, {
       conditionId: effect.conditionId,
       effectTags: effect.conditionId === "poisoned" ? ["poison"] : [],
@@ -46,14 +39,16 @@
     }
     if (escalated && duration == null) throw new Error("Escalated timed conditions require a source-declared duration.");
     if (!save.succeeded) {
-      const timed = duration != null || effect.repeatSaveTiming;
+      const runtimeEffectId = effect.effectId || effect.conditionId;
+      if (!runtimeEffectId) throw new Error("Failed-save effect has no runtime effect id.");
+      const timed = duration != null || effect.repeatSaveTiming || effect.effectId || effect.cannotRegainHitPoints
+        || effect.allowedRemovalActionIds?.length || effect.curseId || effect.removalEffectTag || effect.delayedTransition;
       if (timed) {
         if (!T()?.apply) throw new Error("Timed on-hit condition save requires browser-timed-conditions.js.");
-        appliedCondition = T().apply(target.state, effect.conditionId, attacker?.combatant_id || sourceTemplate?.id || "on-hit-save", {
-          sourceEffectId: attack.name || attack.id,
-          sourceTemplate,
-          targetActor: target, setup,
-          appliedRound: round,
+        const ownerId = attacker?.combatant_id || sourceTemplate?.id || "on-hit-save";
+        const sourceEffectId = attack.name || attack.id;
+        appliedCondition = T().apply(target.state, runtimeEffectId, ownerId, {
+          sourceEffectId, sourceTemplate, targetActor: target, setup, appliedRound: round,
           expiresRound: duration != null && round != null ? round + duration : null,
           expiryTiming: duration != null ? "target_turn_end" : null,
           repeatSaveAbility: effect.repeatSaveTiming ? effect.saveAbility : null,
@@ -62,11 +57,19 @@
           repeatSaveFailureConditionId: effect.repeatSaveFailureConditionId || null,
           useDefaultPoisonRecovery: false,
           cannotRegainHitPoints: Boolean(effect.cannotRegainHitPoints),
+          allowedRemovalActionIds: effect.allowedRemovalActionIds || [],
+          ownedCurseIds: effect.curseId ? [effect.curseId] : [],
         }) || null;
-      } else if (!target.state.active_effect_ids.includes(effect.conditionId)) {
-        target.state.active_effect_ids.push(effect.conditionId);
-        T()?.applyTerminalOutcome?.(target.state, effect.conditionId);
-        appliedCondition = effect.conditionId;
+        if (appliedCondition) {
+          L().attachStartTurnDamage(target.state, runtimeEffectId, ownerId, sourceEffectId, effect);
+          const D = window.IRON_PIT_BROWSER_DELAYED_EFFECT_TRANSITION;
+          if (!D?.schedule && (effect.delayedTransition || effect.removalEffectTag)) throw new Error("Delayed effect runtime is required.");
+          D?.schedule(target.state, runtimeEffectId, ownerId, sourceEffectId, effect);
+        }
+      } else if (!target.state.active_effect_ids.includes(runtimeEffectId)) {
+        target.state.active_effect_ids.push(runtimeEffectId);
+        if (effect.conditionId) T()?.applyTerminalOutcome?.(target.state, effect.conditionId);
+        appliedCondition = runtimeEffectId;
       }
       if (escalated) {
         if (!T()?.apply) throw new Error("Escalated conditions require browser-timed-conditions.js.");
@@ -102,13 +105,12 @@
       console.error("On-hit condition save resolution failed", { target: target?.combatant_id, error }); throw error;
     }
   }
-
   function resolveOngoingHpLoss(target, attack, sourceTemplate = null, round = null, setup = null, attacker = null) {
     try {
       const rule = attack.onHitOngoingHpLoss;
       if (!rule || target.state.is_dead || !target.state.is_alive) return null;
       const exclusions = rule.excludedCreatureTypes || [];
-      if (exclusions.some((kind) => creatureMatchesKind(target.state.template, kind))) return null;
+      if (exclusions.some((kind) => K().matches(target.state.template, kind))) return null;
       const sourceId = attacker?.combatant_id;
       if (!sourceId) throw new Error("Source-owned persistent HP loss requires a combatant source id.");
       const H = window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN;
@@ -144,6 +146,5 @@
       throw error;
     }
   }
-
-  window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE = { resolve, resolveOngoingHpLoss, creatureMatchesKind };
+  window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE = { resolve, resolveOngoingHpLoss, creatureMatchesKind: K().matches };
 })();

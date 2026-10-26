@@ -21,6 +21,7 @@ for (const file of [
   "browser-modifiers.js",
   "browser-grapple.js",
   "browser-timed-conditions.js",
+  "browser-timed-condition-lifecycle.js",
   "browser-state.js",
   "browser-action-economy.js",
   "browser-grid-geometry.js",

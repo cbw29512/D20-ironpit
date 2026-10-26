@@ -32,8 +32,11 @@ window.IRON_PIT_BROWSER_ZERO_HP = { reduceToZero: (state) => {
   state.current_hp = 0; state.is_unconscious = true;
 } };
 load("browser-start-of-turn-timed-burn.js");
+load("browser-creature-kind.js");
+load("browser-on-hit-condition-lifecycle.js");
 load("browser-on-hit-condition-save.js");
 load("browser-timed-conditions.js");
+load("browser-timed-condition-lifecycle.js");
 
 const wound = window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE.resolveOngoingHpLoss;
 const burn = window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN;

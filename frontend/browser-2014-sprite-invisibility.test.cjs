@@ -16,6 +16,7 @@ window.IRON_PIT_BROWSER_MODIFIERS = { removeSource: () => {} };
 load("browser-action-economy.js");
 load("browser-condition-rules.js");
 load("browser-timed-conditions.js");
+load("browser-timed-condition-lifecycle.js");
 load("browser-concentration.js");
 load("browser-spellcasting.js");
 load("browser-timed-self-buff-policy.js");

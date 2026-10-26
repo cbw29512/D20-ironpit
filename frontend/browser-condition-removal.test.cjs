@@ -13,7 +13,9 @@ load("browser-action-economy.js");
 load("browser-spellcasting.js");
 load("browser-state.js");
 load("browser-timed-conditions.js");
+load("browser-condition-removal-policy.js");
 load("browser-condition-removal.js");
+load("browser-delayed-effect-transition.js");
 
 const C = window.IRON_PIT_BROWSER_CONDITION_REMOVAL;
 
@@ -116,6 +118,80 @@ const lesserRestoration = {
   assert.equal(C.chooseAction(remover, setup, turnKey), null, "reaction options must never fire as normal turn actions");
   assert.ok(C.chooseReaction(remover, setup, "condition_applied_to_ally", ally, turnKey));
   assert.equal(C.chooseReaction(remover, setup, "condition_applied_to_self", ally, turnKey), null);
+}
+
+{
+  const removeCurse = {
+    id: "generic-curse-removal", name: "Generic Curse Removal", actionCost: "action", range: 5,
+    targetMode: "self_or_ally", removableConditions: [], maxConditionsPerUse: 1,
+    resourceCosts: {}, resourceCostsPerCondition: {}, expendsSpellSlot: false, removesAllCurses: true,
+  };
+  const remover = member("curse-cleanser", [], {}, [removeCurse]);
+  const ally = member("curse-target");
+  ally.state.active_curses = ["synthetic-rot"];
+  ally.state.active_effect_ids = ["synthetic-rot"];
+  ally.state.timed_effects = [{
+    effect_id: "synthetic-rot", source_id: "renamed-source", source_effect_id: "Renamed Hit",
+    allowed_removal_action_ids: ["remove-curse"], owned_curse_ids: ["synthetic-rot"],
+    cannot_regain_hit_points: true,
+  }];
+  const setup = { heroes: [remover, ally], monsters: [] }, turnKey = key(1, remover);
+  const choice = C.chooseAction(remover, setup, turnKey);
+  assert.ok(choice);
+  assert.deepEqual(choice.conditions, ["curse"]);
+  C.resolve(1, 1, remover, ally, choice.action, choice.conditions, turnKey);
+  assert.deepEqual(ally.state.active_curses, []);
+  assert.deepEqual(ally.state.active_effect_ids, []);
+  assert.deepEqual(ally.state.timed_effects, []);
+}
+
+
+{
+  const lesser = {
+    id: "lesser-restoration", name: "Lesser Restoration", actionCost: "action", range: 5,
+    targetMode: "self_or_ally", removableConditions: [], removalEffectTags: ["disease"],
+    spellLevel: 2, maxConditionsPerUse: 1, resourceCosts: {}, resourceCostsPerCondition: {},
+  };
+  const greater = { ...lesser, id: "greater-restoration", spellLevel: 6 };
+  const heal = { ...lesser, id: "heal", removalEffectTags: [], spellLevel: 0 };
+  const remover = member("cleanser", [], {}, [lesser]);
+  const ally = member("ally", ["renamed-disease"]);
+  ally.state.timed_effects = [{
+    effect_id: "renamed-disease", source_id: "renamed-source",
+    removal_effect_tag: "disease", minimum_removal_spell_level: 6,
+    removal_action_exceptions: ["heal"],
+  }];
+  const setup = { heroes: [remover, ally], monsters: [] }, turnKey = key(1, remover);
+  assert.equal(C.chooseAction(remover, setup, turnKey), null);
+  remover.state.template.condition_removal_actions = [greater];
+  assert.ok(C.chooseAction(remover, setup, turnKey));
+  remover.state.template.condition_removal_actions = [heal];
+  assert.ok(C.chooseAction(remover, setup, turnKey));
+}
+
+{
+  const target = member("delayed-target", ["diseased"]);
+  target.state.turns_started = 0;
+  target.state.timed_effects[0].source_effect_id = "Renamed Hit";
+  const rule = {
+    removalEffectTag: "disease", minimumRemovalSpellLevel: 0,
+    removalActionExceptions: [],
+    delayedTransition: {
+      targetTurns: 10, cannotRegainHitPoints: true, removalEffectTag: "disease",
+      minimumRemovalSpellLevel: 6, removalActionExceptions: ["heal"],
+    },
+  };
+  const D = window.IRON_PIT_BROWSER_DELAYED_EFFECT_TRANSITION;
+  D.schedule(target.state, "diseased", "enemy", "Renamed Hit", rule);
+  target.state.turns_started = 9;
+  assert.equal(D.activateDue(1, 9, target).events.length, 0);
+  target.state.turns_started = 10;
+  const activated = D.activateDue(1, 10, target);
+  assert.equal(activated.events.length, 1);
+  assert.equal(target.state.timed_effects[0].cannot_regain_hit_points, true);
+  assert.equal(target.state.timed_effects[0].minimum_removal_spell_level, 6);
+  assert.deepEqual(target.state.timed_effects[0].removal_action_exceptions, ["heal"]);
+  assert.equal(D.activateDue(activated.sequence, 11, target).events.length, 0);
 }
 
 console.log("Browser 2024 condition-removal regressions passed.");

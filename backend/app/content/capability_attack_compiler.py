@@ -1,186 +1,70 @@
 from __future__ import annotations
 
+import logging
+
+from app.content.capability_attack_effect_compiler import compile_attack_effects
 from app.content.capability_charge_compiler import compile_charge
-from app.domain.actions import HitControlEffect
+from app.content.capability_errors import UnsupportedCapabilityError
 from app.domain.capabilities import AttackCapabilityDefinition
-from app.domain.capability_effects import (
-    AbilityScoreReductionEffectDefinition,
-    ConditionEffectDefinition,
-    ContestedMovementEffectDefinition,
-    DamageEffectDefinition,
-    GrappleEffectDefinition,
-    ProneEffectDefinition,
-    OngoingHpLossEffectDefinition,
-    SaveConditionEffectDefinition,
-    SaveDamageEffectDefinition,
-    SaveMaximumHpReductionEffectDefinition,
-)
-from app.domain.hit_modifiers import HitModifierEffect
-from app.domain.models import ConditionalDamage, OnHitDamage, Weapon, WeaponAttack
-from app.domain.weapons import OnHitAbilityScoreReduction, OnHitConditionSave, OnHitContestedMovement, OnHitMaximumHpSave, OnHitSaveDamage, OnHitOngoingHpLoss
+from app.domain.models import Weapon, WeaponAttack
 
-
-class UnsupportedCapabilityError(ValueError):
-    pass
-
-
-def _compile_control(effect: GrappleEffectDefinition | ConditionEffectDefinition) -> HitControlEffect:
-    if isinstance(effect, GrappleEffectDefinition):
-        return HitControlEffect(
-            max_target_size=effect.max_target_size,
-            grapple_escape_dc=effect.escape_dc,
-            restrains_while_grappled=effect.restrains,
-            grapple_requires_source_free=effect.requires_source_free,
-            grapple_periodic_damage=effect.periodic_damage,
-        )
-    return HitControlEffect(
-        max_target_size=effect.max_target_size,
-        condition_id=effect.condition,
-        expires_at_start_of_source_turn=effect.expires_at_start_of_source_turn,
-        expiry_timing=effect.expiry_timing,
-        repeat_save_ability=effect.repeat_save_ability,
-        repeat_save_dc=effect.repeat_save_dc,
-        repeat_save_timing=effect.repeat_save_timing,
-        allowed_removal_action_ids=effect.allowed_removal_action_ids,
-    )
+logger = logging.getLogger(__name__)
 
 
 def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
-    damage = definition.damage
-    weapon = Weapon(
-        id=definition.weapon_id or definition.id,
-        name=definition.name,
-        attack_kind=definition.attack_kind,
-        dice_count=damage.count if damage else 0,
-        dice_size=damage.size if damage else 2,
-        damage_type=definition.damage_type,
-        animation=definition.animation,
-        reach_ft=definition.reach_ft,
-        normal_range_ft=definition.normal_range_ft,
-        long_range_ft=definition.long_range_ft,
-        projectile=definition.projectile,
-        mastery_property=definition.mastery_property,
-        light=definition.light,
-        finesse=definition.finesse,
-        heavy=definition.heavy,
-        two_handed=definition.two_handed,
-        versatile=definition.versatile,
-    )
-    on_hit: list[OnHitDamage] = []
-    on_hit_modifiers: list[HitModifierEffect] = []
-    conditional: list[ConditionalDamage] = []
-    prone_size = None
-    control = None
-    on_hit_save = None
-    on_hit_hp_loss = None
-    on_hit_save_damage = None
-    on_hit_maximum_hp_save = None
-    on_hit_ability_score_reduction = None
-    on_hit_contested_movement = None
-    for effect in definition.effects:
-        if isinstance(effect, DamageEffectDefinition):
-            if effect.trigger == "on_hit":
-                on_hit.append(OnHitDamage(
-                    source=effect.source,
-                    dice_count=effect.dice.count,
-                    dice_size=effect.dice.size,
-                    damage_bonus=effect.dice.bonus,
-                    damage_type=effect.damage_type,
-                ))
-            else:
-                conditional.append(ConditionalDamage(
-                    trigger=effect.trigger,
-                    source_name=effect.source if effect.trigger == "round1_initiative_lead" else None,
-                    mode=effect.mode,
-                    dice_count=effect.dice.count,
-                    dice_size=effect.dice.size,
-                    damage_bonus=effect.dice.bonus,
-                    damage_type=effect.damage_type,
-                ))
-        elif isinstance(effect, SaveDamageEffectDefinition):
-            on_hit_save_damage = OnHitSaveDamage(
-                source=effect.source, save_ability=effect.save_ability, dc=effect.dc,
-                dice_count=effect.dice.count, dice_size=effect.dice.size, damage_bonus=effect.dice.bonus,
-                damage_type=effect.damage_type, success_damage=effect.success_damage,
-                zero_hp_rider=effect.zero_hp_rider,
-            )
-        elif isinstance(effect, AbilityScoreReductionEffectDefinition):
-            on_hit_ability_score_reduction = OnHitAbilityScoreReduction(
-                source=effect.source, ability=effect.ability,
-                dice_count=effect.dice.count, dice_size=effect.dice.size,
-            )
-        elif isinstance(effect, ContestedMovementEffectDefinition):
-            on_hit_contested_movement = OnHitContestedMovement(
-                source_ability=effect.source_ability,
-                target_ability=effect.target_ability,
-                max_target_size=effect.max_target_size,
-                distance_ft=effect.distance_ft,
-                direction=effect.direction,
-            )
-        elif isinstance(effect, SaveMaximumHpReductionEffectDefinition):
-            on_hit_maximum_hp_save = OnHitMaximumHpSave(
-                save_ability=effect.save_ability,
-                dc=effect.dc,
-                reduction=effect.reduction,
-                zero_max_hp_kills=effect.zero_max_hp_kills,
-            )
-        elif isinstance(effect, ProneEffectDefinition):
-            prone_size = effect.max_target_size
-        elif isinstance(effect, SaveConditionEffectDefinition):
-            on_hit_save = OnHitConditionSave(
-                save_ability=effect.save_ability, dc=effect.dc,
-                condition_id=effect.condition, max_target_size=effect.max_target_size,
-                duration_rounds=effect.duration_rounds,
-                repeat_save_timing=effect.repeat_save_timing,
-                repeat_save_failure_condition_id=effect.repeat_save_failure_condition,
-                failure_push_ft=effect.failure_push_ft,
-                cannot_regain_hit_points=effect.cannot_regain_hit_points,
-                failure_margin_escalation=effect.failure_margin_escalation,
-                excluded_creature_types=list(effect.excluded_creature_types),
-                excluded_creature_subtypes=list(effect.excluded_creature_subtypes),
-            )
-        elif isinstance(effect, OngoingHpLossEffectDefinition):
-            on_hit_hp_loss = OnHitOngoingHpLoss(
-                effect_id=effect.effect_id, source_name=effect.source_name,
-                save_ability=effect.save_ability, dc=effect.dc,
-                dice_count=effect.dice_count, dice_size=effect.dice_size,
-                excluded_creature_types=list(effect.excluded_creature_types),
-                stacks_on_reapply=effect.stacks_on_reapply,
-                ends_on_magical_healing=effect.ends_on_magical_healing,
-            )
-        elif isinstance(effect, HitModifierEffect):
-            on_hit_modifiers.append(effect)
-        elif isinstance(effect, (GrappleEffectDefinition, ConditionEffectDefinition)):
-            control = _compile_control(effect)
-        else:
-            raise UnsupportedCapabilityError(f"Unsupported attack effect: {effect!r}")
-    return WeaponAttack(
-        id=definition.id,
-        weapon=weapon,
-        resource_id=definition.resource_id,
-        resource_cost=definition.resource_cost,
-        attack_bonus=definition.attack_bonus,
-        damage_bonus=damage.bonus if damage else 0,
-        attack_ability=definition.attack_ability,
-        attack_ability_modifier=definition.attack_ability_modifier,
-        rage_eligible=definition.rage_eligible,
-        sneak_attack_eligible=definition.sneak_attack_eligible,
-        fixed_damage=definition.fixed_damage,
-        conditional_damage=conditional,
-        conditional_attack_advantage=definition.conditional_attack_advantage,
-        on_hit_damage=on_hit,
-        on_hit_save_damage=on_hit_save_damage,
-        on_hit_condition_save=on_hit_save,
-        on_hit_ongoing_hp_loss=on_hit_hp_loss,
-        on_hit_maximum_hp_save=on_hit_maximum_hp_save,
-        on_hit_ability_score_reduction=on_hit_ability_score_reduction,
-        on_hit_contested_movement=on_hit_contested_movement,
-        on_hit_modifier_effects=on_hit_modifiers,
-        charge_profile=compile_charge(definition.charge_profile),
-        knocks_prone_max_size=prone_size,
-        control_effect=control,
-        forbid_target_grappled_by_self=definition.forbid_target_grappled_by_self,
-        grapple_target_policy=definition.grapple_target_policy,
-        unavailable_reason=definition.unavailable_reason,
-        damage_source_qualifiers=list(definition.damage_source_qualifiers),
-    )
+    """Compile one declarative attack without source-name dispatch."""
+    try:
+        damage = definition.damage
+        weapon = Weapon(
+            id=definition.weapon_id or definition.id,
+            name=definition.name,
+            attack_kind=definition.attack_kind,
+            dice_count=damage.count if damage else 0,
+            dice_size=damage.size if damage else 2,
+            damage_type=definition.damage_type,
+            animation=definition.animation,
+            reach_ft=definition.reach_ft,
+            normal_range_ft=definition.normal_range_ft,
+            long_range_ft=definition.long_range_ft,
+            projectile=definition.projectile,
+            mastery_property=definition.mastery_property,
+            light=definition.light,
+            finesse=definition.finesse,
+            heavy=definition.heavy,
+            two_handed=definition.two_handed,
+            versatile=definition.versatile,
+        )
+        effects = compile_attack_effects(definition)
+        return WeaponAttack(
+            id=definition.id,
+            weapon=weapon,
+            resource_id=definition.resource_id,
+            resource_cost=definition.resource_cost,
+            attack_bonus=definition.attack_bonus,
+            damage_bonus=damage.bonus if damage else 0,
+            attack_ability=definition.attack_ability,
+            attack_ability_modifier=definition.attack_ability_modifier,
+            rage_eligible=definition.rage_eligible,
+            sneak_attack_eligible=definition.sneak_attack_eligible,
+            fixed_damage=definition.fixed_damage,
+            conditional_damage=effects.conditional,
+            conditional_attack_advantage=definition.conditional_attack_advantage,
+            on_hit_damage=effects.on_hit,
+            on_hit_save_damage=effects.on_hit_save_damage,
+            on_hit_condition_save=effects.on_hit_save,
+            on_hit_ongoing_hp_loss=effects.on_hit_hp_loss,
+            on_hit_maximum_hp_save=effects.on_hit_maximum_hp_save,
+            on_hit_ability_score_reduction=effects.on_hit_ability_score_reduction,
+            on_hit_contested_movement=effects.on_hit_contested_movement,
+            on_hit_modifier_effects=effects.on_hit_modifiers,
+            charge_profile=compile_charge(definition.charge_profile),
+            knocks_prone_max_size=effects.prone_size,
+            control_effect=effects.control,
+            forbid_target_grappled_by_self=definition.forbid_target_grappled_by_self,
+            grapple_target_policy=definition.grapple_target_policy,
+            unavailable_reason=definition.unavailable_reason,
+            damage_source_qualifiers=list(definition.damage_source_qualifiers),
+        )
+    except Exception:
+        logger.exception("Failed to compile attack capability %s.", definition.id)
+        raise

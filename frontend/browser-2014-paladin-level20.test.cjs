@@ -18,7 +18,7 @@ for (const file of [
   "browser-action-economy.js",
   "browser-ability-hooks.js",
   "browser-modifier-validation.js", "browser-modifiers.js",
-  "browser-timed-conditions.js",
+  "browser-timed-conditions.js", "browser-timed-condition-lifecycle.js",
   "browser-timed-self-buff-policy.js",
   "browser-timed-self-buffs.js",
   "browser-state.js",

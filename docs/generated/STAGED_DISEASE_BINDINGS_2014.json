@@ -1,0 +1,33 @@
+{
+  "applicable_card_count": 1,
+  "applicable_cards": [
+    "aboleth"
+  ],
+  "arena_neutral_periodic_component_count": 1,
+  "arena_neutral_periodic_components": [
+    {
+      "damage_type": "acid",
+      "dice_count": 1,
+      "dice_size": 12,
+      "interval_minutes": 10,
+      "moisture_suppression_minutes": 10,
+      "monster": "aboleth"
+    }
+  ],
+  "exceptions": [],
+  "latent_activation_contract_card_count": 1,
+  "remaining_card_count": 0,
+  "removal_contract_card_count": 1,
+  "source_cards_scanned": 327,
+  "stage_wired_browser_card_count": 1,
+  "stage_wired_cards": [
+    "aboleth"
+  ],
+  "stage_wired_python_card_count": 1,
+  "status": "complete",
+  "wired_browser_card_count": 1,
+  "wired_cards": [
+    "aboleth"
+  ],
+  "wired_python_card_count": 1
+}

@@ -157,6 +157,27 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                 "conditionId": effect.condition_id,
                 "maxTargetSize": _value(effect.max_target_size) if effect.max_target_size else None,
             }
+            if effect.effect_id:
+                save_row["effectId"] = effect.effect_id
+            if effect.curse_id:
+                save_row["curseId"] = effect.curse_id
+            if effect.allowed_removal_action_ids:
+                save_row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
+            if effect.removal_effect_tag:
+                save_row["removalEffectTag"] = effect.removal_effect_tag
+            if effect.minimum_removal_spell_level:
+                save_row["minimumRemovalSpellLevel"] = effect.minimum_removal_spell_level
+            if effect.removal_action_exceptions:
+                save_row["removalActionExceptions"] = list(effect.removal_action_exceptions)
+            if effect.delayed_transition:
+                transition = effect.delayed_transition
+                save_row["delayedTransition"] = {
+                    "targetTurns": transition.target_turns,
+                    "cannotRegainHitPoints": transition.cannot_regain_hit_points,
+                    "removalEffectTag": transition.removal_effect_tag,
+                    "minimumRemovalSpellLevel": transition.minimum_removal_spell_level,
+                    "removalActionExceptions": list(transition.removal_action_exceptions),
+                }
             if effect.duration_rounds is not None:
                 save_row["durationRounds"] = effect.duration_rounds
             if effect.repeat_save_timing is not None:
@@ -318,6 +339,10 @@ def _save(action: Any) -> dict[str, Any]:
         row["failedSaveTimedEffect"] = _failed_save_timed_effect(action.failed_save_timed_effect)
     if action.source_effect_immunity_on_success:
         row["sourceEffectImmunityOnSuccess"] = True
+    if action.source_effect_immunity_keys_on_success:
+        row["sourceEffectImmunityKeysOnSuccess"] = list(action.source_effect_immunity_keys_on_success)
+    if action.source_effect_immunity_keys_blocking:
+        row["sourceEffectImmunityKeysBlocking"] = list(action.source_effect_immunity_keys_blocking)
     if action.failed_save_push_ft:
         row["failedSavePushFt"] = action.failed_save_push_ft
     if action.grapple_escape_dc is not None:
@@ -402,6 +427,12 @@ def _failed_save_timed_effect(rider: Any) -> dict[str, Any]:
     }
     if rider.additional_effect_ids:
         row["additionalEffectIds"] = list(rider.additional_effect_ids)
+    if rider.failure_margin_escalation is not None:
+        escalation = rider.failure_margin_escalation
+        row["failureMarginEscalation"] = {
+            "margin": escalation.margin,
+            "additionalConditionIds": list(escalation.additional_condition_ids),
+        }
     if rider.damage_repeat_save_trigger != "none":
         row["damageRepeatSaveTrigger"] = rider.damage_repeat_save_trigger
     if rider.repeat_save_before_damaging_terrain:
@@ -864,6 +895,7 @@ def _removal(action: Any) -> dict[str, Any]:
     row = {
         "id": action.id, "name": action.name, "actionCost": action.action_cost, "range": action.range_ft,
         "targetMode": action.target_mode, "removableConditions": list(action.removable_conditions),
+        "removalEffectTags": list(action.removal_effect_tags), "spellLevel": action.spell_level,
         "excludedCreatureTypes": list(action.excluded_creature_types),
         "maxConditionsPerUse": action.max_conditions_per_use, "resourceCosts": dict(action.resource_costs),
         "resourceCostsPerCondition": dict(action.resource_costs_per_condition),

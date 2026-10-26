@@ -34,6 +34,14 @@ window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS = { saveAdvantageSourceNames: () => 
 window.IRON_PIT_BROWSER_MODIFIERS = { expireTargetTurn: () => {} };
 window.IRON_PIT_BROWSER_TIMED = { removeGroup: () => [] };
 window.IRON_PIT_ACTION_ECONOMY = { available: () => true };
+load("browser-save-immunity.js");
+load("browser-save-action-support.js");
+load("browser-save-action-attempt.js");
+load("browser-save-damage.js");
+load("browser-save-damage-legacy.js");
+load("browser-save-damage-apply.js");
+load("browser-save-action-effects.js");
+load("browser-save-event.js");
 load("browser-saves.js");
 load("browser-condition-lifecycle.js");
 

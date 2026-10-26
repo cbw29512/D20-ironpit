@@ -12,7 +12,7 @@ for (const file of [
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-timed-conditions.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-zero-hp.js", "browser-weapon-mastery.js", "browser-damage-defense-rules.js", "browser-graze.js", "browser-vex.js", "browser-ability-hooks.js", "browser-attack-outcome.js", "browser-attack.js",
-  "browser-reactions.js", "browser-saving-throws.js", "browser-saves.js", "browser-charge.js", "browser-light-weapons.js", "browser-light-attack.js",
+  "browser-reactions.js", "browser-saving-throws.js", "browser-save-immunity.js", "browser-save-action-support.js", "browser-save-action-attempt.js", "browser-save-damage.js", "browser-save-damage-legacy.js", "browser-save-damage-apply.js", "browser-save-action-effects.js", "browser-save-event.js", "browser-saves.js", "browser-charge.js", "browser-light-weapons.js", "browser-light-attack.js",
   "browser-standard-attack-action.js", "browser-multiattack-choices.js", "browser-multiattack.js", "browser-action-surge.js", "browser-formation.js",
   "browser-ability-checks.js", "browser-initiative.js",
 ]) load(file);

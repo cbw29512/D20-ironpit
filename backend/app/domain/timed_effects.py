@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, ConditionTiming
 from app.domain.combatants import DamageType
 from app.domain.debuffs import DebuffCounter
+from app.domain.delayed_effect_transition import DelayedTimedEffectTransition
 from app.domain.movement import MovementModeGrant
 from app.domain.saving_throw_context import SavingThrowContext
 from app.domain.timed_control_limits import TimedControlLimits
@@ -34,6 +35,12 @@ class TimedEffect(BaseModel):
     source_maintenance_action_cost: Literal["none", "bonus_action"] = "none"
     source_turn_count_at_application: int | None = Field(default=None, ge=0)
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
+    removal_effect_tag: str | None = None
+    minimum_removal_spell_level: int = Field(default=0, ge=0, le=9)
+    removal_action_exceptions: list[str] = Field(default_factory=list)
+    activates_target_turn_count: int | None = Field(default=None, ge=1)
+    pending_transition: DelayedTimedEffectTransition | None = None
+    owned_curse_ids: list[str] = Field(default_factory=list)
     turn_behavior: TimedTurnBehavior = "normal"
     ends_on_damage: bool = False
     ends_on_owner_attack: bool = False
@@ -90,6 +97,12 @@ class TimedEffect(BaseModel):
             repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
             if any(item is not None for item in repeat_fields) and not all(item is not None for item in repeat_fields):
                 raise ValueError("Timed effect repeat save requires ability, DC, and timing together.")
+            if self.minimum_removal_spell_level and not self.removal_effect_tag:
+                raise ValueError("Minimum removal spell level requires an effect tag.")
+            if self.removal_effect_tag is not None and not self.removal_effect_tag.strip():
+                raise ValueError("Removal effect tag cannot be blank.")
+            if (self.activates_target_turn_count is None) != (self.pending_transition is None):
+                raise ValueError("Delayed transition requires activation count and rule together.")
             if self.damage_repeat_save_trigger != "none" and not all(item is not None for item in repeat_fields):
                 raise ValueError("Damage-triggered repeat saves require ability, DC, and timing.")
             if self.damage_repeat_save_trigger != "none" and self.ends_on_damage:
