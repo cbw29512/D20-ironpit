@@ -16,7 +16,7 @@ def attack_allowed_against(
     encounter_states: Iterable[CombatantState] | None = None,
 ) -> bool:
     try:
-        if attack.unavailable_reason is not None:
+        if attack.unavailable_reason is not None or defender.swallowed is not None:
             return False
         if defender.is_dead or (defender.template.kind == "monster" and defender.current_hp <= 0):
             return False

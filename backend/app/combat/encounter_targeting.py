@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 def _removed_from_battlefield(state) -> bool:
-    return any(effect.removed_from_battlefield for effect in state.timed_effects)
+    return state.swallowed is not None or any(effect.removed_from_battlefield for effect in state.timed_effects)
 
 
 def combatant_distance(attacker: EncounterCombatant, target: EncounterCombatant) -> int:
@@ -100,6 +100,9 @@ def living_opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> lis
 def living_targets(attacker: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:
     """Return ordinary opponents unless an active buff explicitly broadens target policy."""
     try:
+        if attacker.state.swallowed is not None:
+            return [target for target in living_opponents(attacker, setup)
+                    if target.combatant_id == attacker.state.swallowed.source_id]
         if active_target_policy(attacker) != "nearest_visible_creature":
             return living_opponents(attacker, setup)
         candidates = [
