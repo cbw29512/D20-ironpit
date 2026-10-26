@@ -54,6 +54,21 @@ def serialize_on_hit_condition_save(effect: OnHitConditionSave) -> dict[str, Any
             row["curseId"] = effect.curse_id
         if effect.allowed_removal_action_ids:
             row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
+        if effect.removal_effect_tag:
+            row["removalEffectTag"] = effect.removal_effect_tag
+        if effect.minimum_removal_spell_level:
+            row["minimumRemovalSpellLevel"] = effect.minimum_removal_spell_level
+        if effect.removal_action_exceptions:
+            row["removalActionExceptions"] = list(effect.removal_action_exceptions)
+        if effect.delayed_transition:
+            transition = effect.delayed_transition
+            row["delayedTransition"] = {
+                "targetTurns": transition.target_turns,
+                "cannotRegainHitPoints": transition.cannot_regain_hit_points,
+                "removalEffectTag": transition.removal_effect_tag,
+                "minimumRemovalSpellLevel": transition.minimum_removal_spell_level,
+                "removalActionExceptions": list(transition.removal_action_exceptions),
+            }
         if effect.cannot_regain_hit_points:
             row["cannotRegainHitPoints"] = True
         if effect.start_of_turn_damage_dice_count:
