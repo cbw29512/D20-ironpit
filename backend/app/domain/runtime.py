@@ -124,6 +124,8 @@ class CombatantState(BaseModel):
     triggered_extra_attack_stack_counts: dict[str, int] = Field(default_factory=dict)
     source_owned_exhaustion_levels: dict[str, int] = Field(default_factory=dict)
     weapon_corrosion_penalties: dict[str, int] = Field(default_factory=dict)
+    armor_corrosion_penalties: dict[str, int] = Field(default_factory=dict)
+    destroyed_armor_ids: list[str] = Field(default_factory=list)
 
 
 class BattlefieldState(BaseModel):

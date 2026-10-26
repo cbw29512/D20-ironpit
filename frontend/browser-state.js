@@ -37,6 +37,7 @@
       rage_expires_round: null, rage_max_round: null,
       current_heads: null, heads_lost_since_owner_turn: 0, head_regrowth_blocked: false,
       weapon_corrosion_penalties: {},
+      armor_corrosion_penalties: {}, destroyed_armor_ids: [],
       opportunity_reactions_remaining: 0,
     };
     window.IRON_PIT_BROWSER_VARIABLE_HEADS?.initialize(state);
