@@ -3,10 +3,21 @@
   "applicable_cards": [
     "aboleth"
   ],
+  "arena_neutral_periodic_component_count": 1,
+  "arena_neutral_periodic_components": [
+    {
+      "damage_type": "acid",
+      "dice_count": 1,
+      "dice_size": 12,
+      "interval_minutes": 10,
+      "moisture_suppression_minutes": 10,
+      "monster": "aboleth"
+    }
+  ],
   "exceptions": [
     {
       "monster": "aboleth",
-      "reason": "10-round onset and stage-specific removal are wired, but the source attack still requires generic 100-round out-of-water acid damage with moisture suppression"
+      "reason": "Source-proof or Python/browser staged-disease integration incomplete"
     }
   ],
   "latent_activation_contract_card_count": 1,
@@ -18,8 +29,8 @@
     "aboleth"
   ],
   "stage_wired_python_card_count": 1,
-  "status": "partial: periodic environment lifecycle still required",
+  "status": "partial: source integration incomplete",
   "wired_browser_card_count": 0,
   "wired_cards": [],
-  "wired_python_card_count": 0
+  "wired_python_card_count": 1
 }

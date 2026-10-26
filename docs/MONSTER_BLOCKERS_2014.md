@@ -13,7 +13,7 @@ Blocker categories overlap: a monster may require several fixes.
 | `source:trait` | 65 |
 | `source:extra-action` | 48 |
 | `mechanic:spellcasting` | 36 |
-| `attack:incomplete` | 18 |
+| `attack:incomplete` | 17 |
 | `mechanic:recharge` | 10 |
 | `multiattack:complex` | 10 |
 | `mechanic:legendary` | 9 |
@@ -44,7 +44,7 @@ the underlying ability is already implemented or trivial.
 
 | Monster | Remaining blockers | Unbound traits |
 |---|---|---|
-| Aboleth | attack:incomplete, mechanic:legendary, source:extra-action, source:legendary | — |
+| Aboleth | mechanic:legendary, source:extra-action, source:legendary | — |
 | Acolyte | mechanic:spellcasting, source:trait | Spellcasting |
 | Air Elemental | mechanic:recharge, source:extra-action, source:trait | Air Form |
 | Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Spellcasting |
