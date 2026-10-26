@@ -18,6 +18,7 @@ from app.content.monster_source_2014 import load_monster_source_2014
     ("homunculus", "Telepathic Bond"),
     ("otyugh", "Limited Telepathy"),
     ("pseudodragon", "Limited Telepathy"),
+    ("magmin", "Ignited Illumination"),
 ])
 def test_source_proven_inert_trait_is_safe_without_changing_source(monster_id: str, trait: str) -> None:
     rows = load_monster_source_2014()
