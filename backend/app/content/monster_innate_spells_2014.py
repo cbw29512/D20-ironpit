@@ -3,6 +3,15 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_innate_source_2014 import (
+    ARENA_NEUTRAL_INNATE_SPELLS_2014,
+    PIT_BANNED_INNATE_SPELLS_2014 as _PIT_BANNED_INNATE_SPELLS_2014,
+    DISPEL_ATTACKER_TYPES_2014 as _DISPEL_ATTACKER_TYPES_2014,
+    innate_spellcasting_source_2014 as _innate,
+    innate_spells_2014 as _spells,
+    innate_spell_save_dc_2014 as _dc,
+)
+from app.content.shared_control_spells_2014 import hold_monster_2014
 from app.domain.debuffs import DebuffCounter
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.spell_modifiers import SpellModifierEffect
@@ -10,52 +19,6 @@ from app.domain.spells import SpellSaveAction
 from app.domain.targeting import AreaTargeting
 
 logger = logging.getLogger(__name__)
-
-# These printed innate spells do not change Iron Pit combat state.
-ARENA_NEUTRAL_INNATE_SPELLS_2014 = frozenset({
-    "detect-evil-and-good",
-    "druidcraft",
-    "pass-without-trace",
-    "disguise-self",
-    "scrying",
-    "detect-thoughts",
-    "detect-magic",
-    "mage-hand",
-    "minor-illusion",
-    "plane-shift",
-    "geas",
-})
-_PIT_BANNED_INNATE_SPELLS_2014 = frozenset({
-    "teleport",
-    "plane-shift",
-    "dimension-door",
-    "misty-step",
-})
-_DISPEL_ATTACKER_TYPES_2014 = ("celestial", "elemental", "fey", "fiend", "undead")
-
-
-def _innate(monster: SourceMonster2014) -> dict[str, object] | None:
-    raw = monster.innate_spellcasting
-    return raw if isinstance(raw, dict) else None
-
-
-def _spells(monster: SourceMonster2014) -> list[dict[str, object]]:
-    data = _innate(monster)
-    if data is None:
-        return []
-    spells = data.get("spells") or []
-    if not isinstance(spells, list):
-        raise ValueError(f"{monster.name} innate spell list is not structured.")
-    return [item for item in spells if isinstance(item, dict)]
-
-
-def _dc(monster: SourceMonster2014) -> int | None:
-    data = _innate(monster)
-    if data is None:
-        return None
-    raw = data.get("save_dc")
-    return int(raw) if raw is not None else None
-
 
 def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSaveAction]:
     """Bind printed combat innate save spells. Arena-neutral spells stay source-only."""
@@ -169,6 +132,8 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
                     duration_minutes=1,
                     animation="spell-save",
                 ))
+            elif spell_id == "hold-monster":
+                actions.append(hold_monster_2014(dc))
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 innate save spells for %s.", monster.name)
