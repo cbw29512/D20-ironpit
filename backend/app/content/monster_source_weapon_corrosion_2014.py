@@ -9,6 +9,7 @@ from dataclasses import dataclass
 import re
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.domain.weapon_hit_corrosion import WeaponHitCorrosionRule
 from app.content.monster_source_sections_2014 import source_sections_2014
 
 _CORRODE_WEAPON_CLAUSE = re.compile(
@@ -42,3 +43,19 @@ def source_weapon_corrosion_2014(
     if text is None or _CORRODE_WEAPON_CLAUSE.fullmatch(text) is None:
         return None
     return SourceWeaponCorrosion2014()
+
+
+def source_weapon_hit_corrosion_rule_2014(
+    monster: SourceMonster2014,
+) -> WeaponHitCorrosionRule | None:
+    """Translate a complete printed corrosion trait into a generic trigger."""
+    parsed = source_weapon_corrosion_2014(monster)
+    if parsed is None:
+        return None
+    return WeaponHitCorrosionRule(
+        source_name=parsed.source_name,
+        qualifying_materials=["metal"],
+        requires_nonmagical=parsed.requires_nonmagical_metal_weapon,
+        penalty_per_hit=parsed.damage_penalty_per_hit,
+        unusable_at_penalty=parsed.unusable_at_penalty,
+    )
