@@ -4,6 +4,7 @@ import html
 import logging
 import re
 
+from app.content.monster_condition_aura_source_corrections_2014 import corrected_condition_aura_source_2014
 from app.domain.timed_self_buffs import TimedHostileConditionAura, TimedSelfBuffAction
 
 logger = logging.getLogger(__name__)
@@ -14,6 +15,15 @@ _AURA_2014 = re.compile(
     r"(?P<ability>Constitution) saving throw or be (?P<condition>poisoned) "
     r"until the start of its next turn\. On a successful saving throw, the creature "
     r"is immune to the (?P=creature)['’]s (?P<label>[^.]+?) for 24 hours\.",
+    re.IGNORECASE,
+)
+_FEAR_AURA_2014 = re.compile(
+    r"(?P<name>[^.]+)\. Any creature hostile to the (?P<creature>[^.]+?) that "
+    r"starts its turn within (?P<radius>\d+) feet of the (?P=creature) must make "
+    r"a DC (?P<dc>\d+) (?P<ability>Wisdom) saving throw, unless the (?P=creature) "
+    r"is incapacitated\. On a failed save, the creature is (?P<condition>frightened) "
+    r"until the start of its next turn\. If a creature['’]s saving throw is successful, "
+    r"the creature is immune to the (?P=creature)['’]s (?P<label>[^.]+?) for the next 24 hours\.",
     re.IGNORECASE,
 )
 _AURA_2024 = re.compile(
@@ -32,12 +42,17 @@ def condition_auras_from_source(source_traits: object, ruleset: str) -> list[Tim
     try:
         if ruleset not in {"2014", "2024"}:
             raise ValueError("Condition aura intake requires an explicit supported ruleset.")
-        text = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", str(source_traits or "")))).strip()
+        raw_source = corrected_condition_aura_source_2014(source_traits) if ruleset == "2014" else str(source_traits or "")
+        text = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", raw_source))).strip()
         # HTML formatting may leave a space between the heading and its period.
         text = re.sub(r"\s+\.", ".", text)
-        pattern = _AURA_2014 if ruleset == "2014" else _AURA_2024
+        patterns = [_AURA_2014, _FEAR_AURA_2014] if ruleset == "2014" else [_AURA_2024]
+        matches = sorted(
+            (match for pattern in patterns for match in pattern.finditer(text)),
+            key=lambda match: match.start(),
+        )
         actions = []
-        for match in pattern.finditer(text):
+        for match in matches:
             name = match.group("name").strip()
             label = match.group("label")
             if label and label.casefold() != name.casefold():
@@ -60,7 +75,13 @@ def condition_auras_from_source(source_traits: object, ruleset: str) -> list[Tim
                     # turns in this round; a round-number timer would not.
                     condition_duration_rounds=None,
                     condition_expiry_timing="target_turn_start",
-                    effect_tags=["poison"],
+                    effect_tags=(
+                        ["poison"] if match.group("condition").casefold() == "poisoned"
+                        else ["fear"]
+                    ),
+                    requires_source_not_incapacitated=(
+                        match.re is _FEAR_AURA_2014
+                    ),
                 ),
                 animation="condition-aura",
             ))

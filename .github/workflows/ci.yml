@@ -33,6 +33,8 @@ jobs:
         run: python scripts/report_persistent_save_bindings_2014.py --check
       - name: Audit 327-card start-turn damage condition coverage
         run: python scripts/report_start_turn_damage_condition_bindings_2014.py --check
+      - name: Audit 327-card passive Fear Aura coverage
+        run: python scripts/report_fear_aura_bindings_2014.py --check
       - name: Audit 327-card audible maintained control coverage
         run: python scripts/report_audible_maintained_control_bindings_2014.py
       - name: Audit 327-card non-offensive Dodge coverage

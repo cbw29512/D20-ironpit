@@ -49,6 +49,7 @@ class TimedHostileConditionAura(BaseModel):
     condition_id: ConditionName
     success_immunity: bool = False
     source_is_magical: bool = True
+    requires_source_not_incapacitated: bool = False
     # Target lifetime is independent of the source aura lifetime.
     condition_duration_rounds: int | None = Field(default=None, ge=1, le=600)
     condition_expiry_timing: ConditionTiming | None = None
