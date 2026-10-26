@@ -12,6 +12,8 @@ from app.content.monster_innate_source_2014 import (
     innate_spell_save_dc_2014 as _dc,
 )
 from app.content.shared_control_spells_2014 import hold_monster_2014
+from app.content.shared_zone_spells_2014 import wall_of_fire_2014
+from app.domain.persistent_save_zones import PersistentSaveZoneAction
 from app.domain.debuffs import DebuffCounter
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.spell_modifiers import SpellModifierEffect
@@ -137,4 +139,22 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 innate save spells for %s.", monster.name)
+        raise
+
+
+def innate_persistent_save_zone_actions_2014(
+    monster: SourceMonster2014,
+) -> list[PersistentSaveZoneAction]:
+    """Bind printed innate persistent zones with their own fight-local uses."""
+    try:
+        dc = _dc(monster)
+        if dc is None:
+            return []
+        return [
+            wall_of_fire_2014(dc).model_copy(update={"resource_id": "wall-of-fire"})
+            for spell in _spells(monster)
+            if str(spell.get("id") or "") == "wall-of-fire"
+        ]
+    except Exception:
+        logger.exception("Failed to compile 2014 innate save zones for %s.", monster.name)
         raise
