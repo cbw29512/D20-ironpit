@@ -10,14 +10,14 @@
     const stacks = (state.weapon_corrosion_penalties || {})[key(id)] ?? 0;
     if (!Number.isInteger(stacks) || stacks < 0 || stacks > MAX_STACKS)
       throw new Error("Invalid encounter-local corrosion stacks.");
-    return -stacks;
+    return stacks === 0 ? 0 : -stacks;
   }
   function available(state, id) { return modifier(state, id) > -MAX_STACKS; }
   function afterHit(state, id, { hit, nonmagicalMetal }) {
     const weaponId = key(id), previous = -modifier(state, weaponId);
     if (typeof hit !== "boolean" || typeof nonmagicalMetal !== "boolean")
       throw new Error("Corrosion requires verified hit and material flags.");
-    if (!hit || !nonmagicalMetal) return -previous;
+    if (!hit || !nonmagicalMetal) return previous === 0 ? 0 : -previous;
     if (previous === MAX_STACKS)
       throw new Error("A destroyed weapon cannot hit again this fight.");
     if (!state.weapon_corrosion_penalties)
