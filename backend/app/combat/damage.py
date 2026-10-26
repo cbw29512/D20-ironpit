@@ -17,6 +17,7 @@ from app.combat.modifier_stack import (
     weapon_damage_flat_bonus,
 )
 from app.combat.once_per_turn_hit_damage import once_per_turn_weapon_hit_bonus_damages
+from app.combat.weapon_corrosion_roll import corrosion_adjusted_weapon_component
 from app.combat.post_hit_damage import post_hit_resource_bonus_damage
 from app.combat.savage_attacker import roll_weapon_component
 from app.combat.sneak_attack import sneak_attack_bonus_damage
@@ -112,6 +113,7 @@ def resolve_weapon_damage(
                 critical=critical, turn_key=turn_key, damage_die_minimum=attack.damage_die_minimum,
             )]
 
+        components[0] = corrosion_adjusted_weapon_component(attacker, attack.weapon.id, components[0])
         _append_bonus_component(
             components, dice, brutal_critical_bonus_damage(attacker, attack, critical), critical=False,
         )
