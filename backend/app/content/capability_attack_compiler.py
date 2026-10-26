@@ -33,6 +33,8 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             heavy=definition.heavy,
             two_handed=definition.two_handed,
             versatile=definition.versatile,
+            material=definition.weapon_material,
+            is_magical=definition.weapon_is_magical,
         )
         effects = compile_attack_effects(definition)
         return WeaponAttack(
