@@ -15,20 +15,20 @@ from app.content.monster_source_sections_2014 import source_sections_2014
 logger = logging.getLogger(__name__)
 
 _OBJECT_ONLY_CORROSION = re.compile(
-    r"The (?P<actor>[\\w -]+) corrodes a nonmagical ferrous metal object "
-    r"it can see within (?P<reach>\\d+) feet of it\\. "
+    r"The (?P<actor>[\w -]+) corrodes a nonmagical ferrous metal object "
+    r"it can see within (?P<reach>\d+) feet of it\. "
     r"If the object isn't being worn or carried, the touch destroys a "
-    r"1-foot cube of it\\. "
+    r"1-foot cube of it\. "
     r"If the object is being worn or carried by a creature, the creature "
-    r"can make a DC (?P<dc>\\d+) Dexterity saving throw to avoid the "
-    r"(?P=actor)'s touch\\. "
+    r"can make a DC (?P<dc>\d+) Dexterity saving throw to avoid the "
+    r"(?P=actor)'s touch\. "
     r"If the object touched is either metal armor or a metal shield being "
     r"worn or carried, it takes a permanent and cumulative −1 penalty "
-    r"to the AC it offers\\. "
-    r"Armor reduced to an AC of 10 or a shield that drops to a \\+0 bonus "
-    r"is destroyed\\. "
+    r"to the AC it offers\. "
+    r"Armor reduced to an AC of 10 or a shield that drops to a \+0 bonus "
+    r"is destroyed\. "
     r"If the object touched is a held metal weapon, it rusts as described "
-    r"in the Rust Metal trait\\.",
+    r"in the Rust Metal trait\.",
     re.IGNORECASE,
 )
 
