@@ -56,6 +56,25 @@
     const selection = S();
     if (!selection) throw new Error("Main Action provider installation requires browser-main-action-selection.js.");
     register({
+      id: "swallow", category: C().SWALLOW, rulesets: ["2014"],
+      discover: ({member, setup}) => {
+        if (!(member.state.template.swallowActions || []).length) return null;
+        const runtime = window.IRON_PIT_BROWSER_SWALLOW;
+        if (!runtime?.choose) throw new Error("Swallow action resolver is not loaded.");
+        const selected = runtime.choose(member, setup);
+        return selected ? {payload: {
+          targetId: selected.target.combatant_id, attackId: selected.action.attackId,
+          delivery: "melee", expectedDamage: F().weaponMeanDamage(selected.attack),
+        }} : null;
+      },
+      resolve: ({sequence, round, member, setup, turnKey}, candidate) => {
+        const runtime = window.IRON_PIT_BROWSER_SWALLOW;
+        if (!runtime?.resolve) throw new Error("Swallow action resolver is not loaded.");
+        return runtime.resolve(sequence, round, member, setup, turnKey,
+          candidate.payload.targetId, candidate.payload.attackId);
+      },
+    });
+    register({
       id: "spell-offense", category: C().SPELL_OFFENSE, rulesets: BOTH,
       discover: ({ member, setup, turnKey, opportunityProfile }) => {
         if (opportunityProfile === "normalPreMove"
