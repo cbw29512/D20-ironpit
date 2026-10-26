@@ -49,6 +49,7 @@ from app.domain.traits import CombatTrait
 from app.domain.zero_hp_effects import DamageThresholdZeroHpReplacement
 from app.domain.unarmed import UnarmedStrikeDamage
 from app.domain.variable_heads import VariableHeadProfile
+from app.domain.weapon_hit_corrosion import WeaponHitCorrosionRule
 from app.domain.weapons import (
     ConditionalAttackAdvantage,
     ConditionalDamage,
