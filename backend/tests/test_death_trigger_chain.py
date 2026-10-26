@@ -1,6 +1,10 @@
 """Integration proof that Death Trigger cascades drain before combat removal."""
 from app.combat.death_trigger_dispatch import resolve_pending_death_triggers
 from app.combat.state import build_combatant_state
+from app.content.capability_compiler import compile_combatant
+from app.content.monster_death_triggers_2014 import death_trigger_actions_2014
+from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.roster import build_arena_roster
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
@@ -20,20 +24,26 @@ def _member(template, combatant_id: str, side: str, position_ft: int):
     )
 
 
-def _short_range_damage_trigger(roster):
-    """Select by the shared effect contract, never by source-card identity."""
-    return next(
-        card for card in roster.monsters
-        if any(
-            action.range_ft == 5 and action.damage is not None
-            for action in card.death_trigger_actions
-        )
+def _short_range_damage_trigger():
+    """Compile a source card selected only by the shared effect contract."""
+    candidates = (
+        (card, death_trigger_actions_2014(card))
+        for card in load_monster_source_2014()
     )
+    card, actions = next(
+        (card, actions) for card, actions in candidates
+        if any(action.range_ft == 5 and action.damage is not None for action in actions)
+    )
+    definition = adapt_basic_monster_2014(card).model_copy(update={
+        "death_trigger_effect_ids": [action.id for action in actions],
+        "death_trigger_actions": actions,
+    })
+    return compile_combatant(definition)
 
 
 def test_death_trigger_dispatch_drains_a_newly_killed_source() -> None:
     roster = build_arena_roster("2014")
-    magmin = _short_range_damage_trigger(roster)
+    magmin = _short_range_damage_trigger()
     hero = roster.characters[0]
     source = _member(magmin, "source", "monsters", 0)
     chained = _member(magmin, "chained", "monsters", 5)
@@ -66,7 +76,7 @@ def test_death_trigger_dispatch_drains_a_newly_killed_source() -> None:
 
 def test_death_trigger_consumption_resets_with_new_fight_state() -> None:
     roster = build_arena_roster("2014")
-    magmin = _short_range_damage_trigger(roster)
+    magmin = _short_range_damage_trigger()
     hero = roster.characters[0]
 
     for fight_number in (1, 2):
