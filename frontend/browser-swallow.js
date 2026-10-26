@@ -45,5 +45,27 @@
       && !target.active_effect_ids.includes("prone")) target.active_effect_ids.push("prone");
     return true;
   }
-  window.IRON_PIT_BROWSER_SWALLOW = {swallowAfterBite, release};
+  function cleanup(setup) {
+    try {
+      const members = new Map([...setup.heroes, ...setup.monsters].map(member => [member.combatant_id, member]));
+      const released = [];
+      for (const victim of members.values()) {
+        const record = victim.state.swallowed;
+        if (!record) continue;
+        const owner = members.get(record.source_id);
+        if (owner && owner.state.is_alive && !owner.state.is_dead && owner.state.current_hp > 0
+          && victim.state.is_alive && !victim.state.is_dead && victim.state.current_hp > 0) continue;
+        if (!owner) throw new Error("Swallowed victim references an unknown encounter owner.");
+        if (release(owner.combatant_id, owner.state, victim.combatant_id, victim.state,
+          victim.state.is_alive && !victim.state.is_dead && victim.state.current_hp > 0)) {
+          released.push(victim.combatant_id);
+        }
+      }
+      return released;
+    } catch (error) {
+      console.error("Browser Swallow lifecycle cleanup failed.", {error});
+      throw error;
+    }
+  }
+  window.IRON_PIT_BROWSER_SWALLOW = {swallowAfterBite, release, cleanup};
 })();
