@@ -59,3 +59,16 @@ def test_additional_combat_rider_fails_closed():
     })
     assert "source:extra-action" in basic_blockers_2014(changed)
     assert not verified_arena_inert_equipment_action_2014(source, "Bite")
+
+
+def test_equipment_only_proof_does_not_dispatch_on_monster_id():
+    source = _source()
+    renamed = source.model_copy(update={
+        "id": "renamed-object-eater",
+        "name": "Gear Eater",
+        "source_actions": source.source_actions.replace(
+            "rust monster", "gear eater"
+        ),
+    })
+    assert verified_arena_inert_equipment_action_2014(renamed, "Antennae")
+    assert not verified_arena_inert_equipment_action_2014(source, "Not An Action")
