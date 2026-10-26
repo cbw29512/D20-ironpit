@@ -1,4 +1,6 @@
 """2014 Hydra binding must compile using the immutable printed source text."""
+import pytest
+
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_variable_heads_2014 import variable_head_profile_2014, variable_head_trait_names_2014
 
@@ -40,4 +42,31 @@ def test_source_verified_hydra_enters_real_compiled_2014_roster():
         assert source.model_dump_json() == snapshot
     except Exception:
         logger.exception("Hydra real-card admission proof failed.")
+        raise
+
+@pytest.mark.parametrize("source_field,old,new", [
+    ("source_traits", "in a single turn", "in a single round"),
+    ("source_traits", "unless it has taken fire damage", "unless it has taken cold damage since last month"),
+    ("source_traits", "for each head regrown in this way", "for each tail regrown in this way"),
+    ("source_traits", "extra reaction", "one fewer reaction"),
+    ("source_actions", "as many bite attacks as it has heads", "one bite attack"),
+])
+def test_unproved_head_lifecycle_fails_closed(source_field, old, new):
+    """Invalid printed semantics never enable a partial universal head profile."""
+    import logging
+
+    logger = logging.getLogger(__name__)
+    try:
+        hydra = next(m for m in load_monster_source_2014() if m.id == "hydra")
+        source_text = getattr(hydra, source_field)
+        assert old in source_text
+        changed = hydra.model_copy(update={
+            source_field: source_text.replace(old, new),
+        })
+        with pytest.raises(ValueError):
+            variable_head_profile_2014(changed)
+        assert variable_head_trait_names_2014(changed) == set()
+        assert variable_head_profile_2014(hydra) is not None
+    except Exception:
+        logger.exception("Hydra source mutation fail-closed proof failed.")
         raise
