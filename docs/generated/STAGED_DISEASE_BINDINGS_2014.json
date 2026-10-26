@@ -14,14 +14,9 @@
       "monster": "aboleth"
     }
   ],
-  "exceptions": [
-    {
-      "monster": "aboleth",
-      "reason": "Source-proof or Python/browser staged-disease integration incomplete"
-    }
-  ],
+  "exceptions": [],
   "latent_activation_contract_card_count": 1,
-  "remaining_card_count": 1,
+  "remaining_card_count": 0,
   "removal_contract_card_count": 1,
   "source_cards_scanned": 327,
   "stage_wired_browser_card_count": 1,
@@ -29,8 +24,10 @@
     "aboleth"
   ],
   "stage_wired_python_card_count": 1,
-  "status": "partial: source integration incomplete",
-  "wired_browser_card_count": 0,
-  "wired_cards": [],
+  "status": "complete",
+  "wired_browser_card_count": 1,
+  "wired_cards": [
+    "aboleth"
+  ],
   "wired_python_card_count": 1
 }
