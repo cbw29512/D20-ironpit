@@ -33,7 +33,11 @@ def _short_range_damage_trigger():
         (card, actions) for card, actions in candidates
         if any(action.range_ft == 5 and action.damage is not None for action in actions)
     )
-    scaffold = next(candidate for candidate in cards if not basic_blockers_2014(candidate))
+    scaffold = next(
+        candidate for candidate in cards
+        if not basic_blockers_2014(candidate)
+        and "Legendary Resistance" not in candidate.source_traits
+    )
     definition = adapt_basic_monster_2014(scaffold).model_copy(update={
         "id": card.id,
         "name": card.name,
