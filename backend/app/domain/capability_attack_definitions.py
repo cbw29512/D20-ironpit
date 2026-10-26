@@ -75,6 +75,8 @@ class AttackCapabilityDefinition(BaseModel):
     heavy: bool = False
     two_handed: bool = False
     versatile: bool = False
+    weapon_material: Literal["metal", "wood", "other"] | None = None
+    weapon_is_magical: bool | None = None
     attack_ability: AbilityName | None = None
     attack_ability_modifier: int | None = None
     rage_eligible: bool = False
