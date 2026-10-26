@@ -30,7 +30,7 @@ def _states_and_attack(material="metal", magical=False, ranged=False):
     old_weapon = source.weapon_attack.weapon
     weapon = old_weapon.model_copy(update={
         "material": material, "is_magical": magical,
-        **({"attack_kind": "ranged"} if ranged else {}),
+        **({"attack_kind": old_weapon.attack_kind.__class__("ranged")} if ranged else {}),
     })
     attack = source.weapon_attack.model_copy(update={"weapon": weapon})
     return source, attacker, defender, attack
