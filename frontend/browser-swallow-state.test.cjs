@@ -47,6 +47,7 @@ assert.ok(!heldVictim.active_effect_ids.includes("blinded"));
 assert.ok(!heldVictim.active_effect_ids.includes("restrained"));
 assert.deepEqual(deadOwner.swallowed_target_ids,[]);
 assert.deepEqual(swallow.cleanup(deadSetup),[]);
+assert.ok(fs.readFileSync(path.join(__dirname,"browser-turn.js"),"utf8").includes("window.IRON_PIT_BROWSER_SWALLOW?.cleanup(setup)"));
 for(const page of ["../index.html","index.html"]) {
   const text=fs.readFileSync(path.join(__dirname,page),"utf8");
   assert.ok(text.includes('src="browser-swallow.js"'));
