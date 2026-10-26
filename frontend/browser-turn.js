@@ -38,7 +38,14 @@
     else if (natural >= 10) { state.death_save_successes = Math.min(3, state.death_save_successes + 1); result = "success"; }
     else state.death_save_failures = Math.min(3, state.death_save_failures + 1);
     if (state.death_save_failures >= 3) result += "; dies";
-    if (state.death_save_failures >= 3) { state.is_alive = false; state.is_dead = true; state.is_unconscious = false; state.is_stable = false; }
+    if (state.death_save_failures >= 3) {
+      state.is_alive = false; state.is_dead = true; state.is_unconscious = false; state.is_stable = false;
+      if (state.template.visualDisguiseAction?.endsIfOwnerDead) {
+        const runtime = window.IRON_PIT_BROWSER_PRECOMBAT_BUFFS;
+        if (!runtime?.endIfOwnerDead) throw new Error("Printed visual disguise death expiry runtime is missing.");
+        runtime.endIfOwnerDead(state);
+      }
+    }
     else if (state.death_save_successes >= 3) { state.is_stable = true; state.is_unconscious = true; state.death_save_successes = 0; state.death_save_failures = 0; result = "third success; becomes Stable"; }
     return { sequence, round_number: round, event_type: "death_save", actor_id: member.combatant_id, actor_name: state.template.name,
       death_save_roll: deathRoll, hp_after: state.current_hp,

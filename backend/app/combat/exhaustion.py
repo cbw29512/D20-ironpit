@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.timed_ability_d20 import timed_ability_d20_disadvantage_sources
+from app.combat.visual_disguise_death_lifecycle import end_visual_disguise_if_dead
 from app.domain.models import CombatantState
 
 
@@ -58,6 +59,7 @@ def gain_exhaustion(state: CombatantState, levels: int = 1) -> int:
         state.is_unconscious = False
         state.is_stable = False
         state.is_dead = True
+        end_visual_disguise_if_dead(state)
     return state.exhaustion_level
 
 
