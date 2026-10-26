@@ -1,3 +1,5 @@
+> **Superseded historical evidence.** Not the live execution cursor. See [MONSTER_ABILITY_WORK_QUEUE.md](MONSTER_ABILITY_WORK_QUEUE.md). Old Actions URLs in this file will age out.
+
 # 2014 Open Hand Monk Levels 18–20 Capability Audit
 
 Base: `ec6a2b974aa8e61e23cdb0aca4c8fc9a611f27e4` (`main` after certified Monk 17).

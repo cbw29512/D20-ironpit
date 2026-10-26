@@ -1,3 +1,5 @@
+> **Superseded historical evidence.** Not the live execution cursor. See [MONSTER_ABILITY_WORK_QUEUE.md](MONSTER_ABILITY_WORK_QUEUE.md). Old Actions URLs in this file will age out.
+
 # Grick conditional sequence audit
 
 Owner ChatGPT; branch `feat/2014-grick-followup`. Complete, merged #633. Exact starting main `ec84f726f799f03db78beacfe433c85b353f270f`. Preceding family #632 cleared both Veterans; accepted roster 189/327.
