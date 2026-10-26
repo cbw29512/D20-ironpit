@@ -2,6 +2,7 @@
 from app.combat.death_trigger_dispatch import resolve_pending_death_triggers
 from app.combat.state import build_combatant_state
 from app.content.capability_compiler import compile_combatant
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_death_triggers_2014 import death_trigger_actions_2014
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
@@ -26,15 +27,16 @@ def _member(template, combatant_id: str, side: str, position_ft: int):
 
 def _short_range_damage_trigger():
     """Compile a source card selected only by the shared effect contract."""
-    candidates = (
-        (card, death_trigger_actions_2014(card))
-        for card in load_monster_source_2014()
-    )
+    cards = load_monster_source_2014()
+    candidates = ((card, death_trigger_actions_2014(card)) for card in cards)
     card, actions = next(
         (card, actions) for card, actions in candidates
         if any(action.range_ft == 5 and action.damage is not None for action in actions)
     )
-    definition = adapt_basic_monster_2014(card).model_copy(update={
+    scaffold = next(candidate for candidate in cards if not basic_blockers_2014(candidate))
+    definition = adapt_basic_monster_2014(scaffold).model_copy(update={
+        "id": card.id,
+        "name": card.name,
         "death_trigger_effect_ids": [action.id for action in actions],
         "death_trigger_actions": actions,
     })
