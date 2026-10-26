@@ -428,7 +428,7 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **88**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **85**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
@@ -457,10 +457,8 @@ Blocked monsters: **88**. These are grouped by printed ability name so the roste
 | Light Sensitivity | Cloaker | 1 |
 | Limited Magic Immunity | Rakshasa | 1 |
 | Misty Escape | Vampire | 1 |
-| Multiple Heads | Hydra | 1 |
 | Ooze Cube | Gelatinous Cube | 1 |
 | Pounce (Tiger or Hybrid Form Only) | Weretiger | 1 |
-| Reactive Heads | Hydra | 1 |
 | Reflective Carapace | Tarrasque | 1 |
 | Shapechanger | Doppelganger, Imp, Mimic, Quasit, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf | 11 |
 | Spell Storing | Shield Guardian | 1 |
@@ -477,13 +475,13 @@ Blocked monsters: **88**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 65 |
-| `source:extra-action` | 50 |
+| `source:trait` | 64 |
+| `source:extra-action` | 48 |
 | `mechanic:spellcasting` | 36 |
 | `attack:incomplete` | 21 |
-| `mechanic:recharge` | 10 |
 | `multiattack:complex` | 10 |
 | `mechanic:legendary` | 9 |
+| `mechanic:recharge` | 9 |
 | `source:legendary` | 9 |
 | `mechanic:swallow` | 7 |
 | `attack:complex` | 6 |
