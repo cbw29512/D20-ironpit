@@ -47,6 +47,40 @@ assert.ok(!heldVictim.active_effect_ids.includes("blinded"));
 assert.ok(!heldVictim.active_effect_ids.includes("restrained"));
 assert.deepEqual(deadOwner.swallowed_target_ids,[]);
 assert.deepEqual(swallow.cleanup(deadSetup),[]);
+
+// Verify the real browser Swallow selector uses a held target and the generic Bite resolver.
+let resolvedBite=null;
+window.IRON_PIT_ACTION_ECONOMY={available:(state,cost)=>cost==="action" && state.action_available};
+window.IRON_PIT_BROWSER_STATE={distance:(a,b)=>Math.abs(a.position_ft-b.position_ft)};
+window.IRON_PIT_BROWSER_ATTACK={resolveAttack:(sequence,round,attacker,target,attack,distance,options)=>{
+  resolvedBite={attack,distance,options};
+  attacker.state.action_available=false;
+  return {sequence,round_number:round,event_type:"attack",hit:true,description:"Bite hits.",
+    applied_condition_ids:[]};
+}};
+const combatFrog={combatant_id:"frog-combat",side:"monsters",position_ft:5,state:{
+  is_alive:true,is_dead:false,current_hp:20,action_available:true,swallowed_target_ids:[],
+  template:{size:"medium",name:"Giant Frog",attacks:[{id:"bite",kind:"melee",reach:5,
+    controlEffect:{grappleEscapeDc:11},grappleTargetPolicy:"forbid-grappled-by-self"}],
+    swallowActions:[action]},
+}};
+const combatVictim={combatant_id:"target-combat",side:"heroes",position_ft:10,state:{
+  is_alive:true,is_dead:false,current_hp:30,template:{size:"small",name:"Hero"},
+  grapple_sources:[],swallowed:null,active_effect_ids:[],timed_effects:[],
+}};
+const combatSetup={heroes:[combatVictim],monsters:[combatFrog]};
+assert.equal(swallow.choose(combatFrog,combatSetup),null);
+window.IRON_PIT_BROWSER_GRAPPLE.apply(combatVictim.state,"frog-combat",11,5,true);
+assert.equal(swallow.choose(combatFrog,combatSetup).target,combatVictim);
+const attackResult=swallow.resolve(1,1,combatFrog,combatSetup,"1:frog-combat","target-combat","bite");
+assert.equal(attackResult.sequence,2);
+assert.equal(attackResult.events[0].feature_id,undefined);
+assert.equal(resolvedBite.attack.controlEffect,null);
+assert.equal(resolvedBite.attack.grappleTargetPolicy,"normal");
+assert.equal(resolvedBite.options.featureId,"swallow");
+assert.equal(combatVictim.state.swallowed.source_id,"frog-combat");
+assert.equal(combatFrog.state.action_available,false);
+assert.equal(swallow.choose(combatFrog,combatSetup),null);
 assert.ok(fs.readFileSync(path.join(__dirname,"browser-turn.js"),"utf8").includes("window.IRON_PIT_BROWSER_SWALLOW?.cleanup(setup)"));
 for(const page of ["../index.html","index.html"]) {
   const text=fs.readFileSync(path.join(__dirname,page),"utf8");
