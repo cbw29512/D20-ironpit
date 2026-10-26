@@ -1,0 +1,17 @@
+{
+  "applicable_card_count": 2,
+  "applicable_cards": [
+    "efreeti",
+    "pit-fiend"
+  ],
+  "exceptions": [],
+  "remaining_card_count": 0,
+  "source_cards_scanned": 327,
+  "status": "complete",
+  "wired_browser_card_count": 2,
+  "wired_cards": [
+    "efreeti",
+    "pit-fiend"
+  ],
+  "wired_python_card_count": 2
+}
