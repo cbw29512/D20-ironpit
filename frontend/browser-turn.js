@@ -95,7 +95,7 @@
   function resolveTurn(sequence, round, member, setup, initiative = null) {
     try {
       enablePitRangePolicy();
-      const events = []; window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT?.cleanup(setup); H().cleanup(setup); PA()?.sync(setup); FA()?.sync(setup);
+      const events = []; window.IRON_PIT_BROWSER_DEFERRED_SAVE_EFFECT?.cleanup(setup); H().cleanup(setup); window.IRON_PIT_BROWSER_SWALLOW?.cleanup(setup); PA()?.sync(setup); FA()?.sync(setup);
       const countered = S().beginTurn(member.state) || [];
       const startCheck = window.IRON_PIT_BROWSER_TURN_START_CONDITIONS?.events(sequence, round, member)
         || { events: [], sequence };
