@@ -5971,13 +5971,6 @@
       {
         "demand_count": 1,
         "monsters": [
-          "Pit Fiend"
-        ],
-        "printed_name": "Fear Aura"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
           "Balor"
         ],
         "printed_name": "Fire Aura"

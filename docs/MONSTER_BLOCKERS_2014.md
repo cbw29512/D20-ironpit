@@ -95,7 +95,7 @@ the underlying ability is already implemented or trivial.
 | Night Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Oni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Otyugh | attack:incomplete, source:extra-action | — |
-| Pit Fiend | mechanic:spellcasting, source:trait | Fear Aura, Innate Spellcasting |
+| Pit Fiend | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Planetar | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Priest | mechanic:spellcasting, source:trait | Divine Eminence, Spellcasting |
 | Purple Worm | attack:complex, mechanic:swallow | — |

@@ -30,6 +30,9 @@
         for (const action of activeEmanations(source)) {
           const distance = S().distance(source, target);
           const aura = action.hostileStartTurnConditionAura;
+          if (aura?.requires_source_not_incapacitated
+              && (!window.IRON_PIT_BROWSER_CONDITION_RULES?.incapacitated
+                  || window.IRON_PIT_BROWSER_CONDITION_RULES.incapacitated(source.state))) continue;
           if (aura && aura.trigger === "enemy_turn_start" && distance <= aura.radius_ft) {
             const immunityId = `${action.id}:success-immunity:${source.combatant_id}`;
             const immune = (target.state.timed_effects || []).some((effect) => effect.effect_id === immunityId);
