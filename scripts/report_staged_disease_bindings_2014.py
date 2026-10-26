@@ -13,6 +13,14 @@ DEFAULT_OUTPUT = ROOT / "docs" / "generated" / "STAGED_DISEASE_BINDINGS_2014.jso
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_staged_disease_2014 import staged_disease_candidates_2014
 from app.content.monster_source_staged_disease_2014 import source_bound_staged_disease_2014
+from app.content.monster_source_staged_disease_2014 import source_proven_arena_neutral_periodic_2014
+from app.content.monster_source_sections_2014 import source_sections_2014
+from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
+from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014
+from app.content.capability_attack_compiler import compile_attack
+from app.domain.capabilities import AttackCapabilityDefinition
+from app.domain.capability_effects import DiceSpec, SavePersistentEffectDefinition
+from scripts.browser_on_hit_condition_serializer import serialize_on_hit_condition_save
 
 
 def _has_bound_transition(card) -> bool:
@@ -23,17 +31,65 @@ def _has_bound_transition(card) -> bool:
     return False
 
 
+
+def _compiled_paths(card) -> tuple[bool, bool]:
+    """Prove genuine Python capability compilation and browser serialization."""
+    for original in card.attacks:
+        attack = source_completed_mixed_attack_2014(card, original)
+        if not attack.source_complete or not isinstance(attack.on_hit_save_effect, dict):
+            continue
+        if "delayed_transition" not in attack.on_hit_save_effect:
+            continue
+        effects = basic_attack_effects_2014(attack)
+        if not any(isinstance(item, SavePersistentEffectDefinition) for item in effects):
+            continue
+        definition = AttackCapabilityDefinition(
+            id=attack.id, name=attack.name, attack_kind=attack.kind,
+            attack_bonus=attack.attack_bonus,
+            damage=DiceSpec(
+                count=attack.damage.dice_count, size=attack.damage.dice_size,
+                bonus=attack.damage.bonus,
+            ),
+            damage_type=attack.damage.type, animation="slash",
+            reach_ft=attack.reach_ft, effects=effects,
+        )
+        compiled = compile_attack(definition)
+        if compiled.on_hit_condition_save is None:
+            return False, False
+        row = serialize_on_hit_condition_save(compiled.on_hit_condition_save)
+        return True, row.get("delayedTransition", {}).get("targetTurns") == (
+            attack.on_hit_save_effect["delayed_transition"]["target_turns"]
+        )
+    return False, False
+
+
 def report() -> dict:
     cards = load_monster_source_2014()
-    applicable = [card.id for card in staged_disease_candidates_2014(cards)]
+    candidates = staged_disease_candidates_2014(cards)
+    applicable = [card.id for card in candidates]
     stage_wired = [card.id for card in cards if _has_bound_transition(card)]
-    exceptions = [{
-        "monster": card_id,
-        "reason": (
-            "10-round onset and stage-specific removal are wired, but the source attack still "
-            "requires generic 100-round out-of-water acid damage with moisture suppression"
-        ),
-    } for card_id in applicable]
+    wired_python, wired_browser, exceptions, neutral = [], [], [], []
+    for card in candidates:
+        py, js = _compiled_paths(card)
+        if py:
+            wired_python.append(card.id)
+        if js:
+            wired_browser.append(card.id)
+        if not (py and js):
+            exceptions.append({
+                "monster": card.id,
+                "reason": "Source-proof or Python/browser staged-disease integration incomplete",
+            })
+        for attack in card.attacks:
+            section = source_sections_2014(
+                card.source_actions, include_continuations=True,
+            ).get(attack.name, "")
+            proof = source_proven_arena_neutral_periodic_2014(section)
+            if proof is not None and source_bound_staged_disease_2014(
+                card, attack,
+            ).source_complete:
+                neutral.append({"monster": card.id, **proof})
+    complete = sorted(set(wired_python) & set(wired_browser))
     return {
         "source_cards_scanned": len(cards),
         "applicable_card_count": len(applicable),
@@ -43,12 +99,14 @@ def report() -> dict:
         "stage_wired_python_card_count": len(stage_wired),
         "stage_wired_browser_card_count": len(stage_wired),
         "stage_wired_cards": stage_wired,
-        "wired_python_card_count": 0,
-        "wired_browser_card_count": 0,
-        "wired_cards": [],
+        "wired_python_card_count": len(wired_python),
+        "wired_browser_card_count": len(wired_browser),
+        "wired_cards": complete,
+        "arena_neutral_periodic_component_count": len(neutral),
+        "arena_neutral_periodic_components": neutral,
         "remaining_card_count": len(exceptions),
         "exceptions": exceptions,
-        "status": "partial: periodic environment lifecycle still required",
+        "status": "complete" if not exceptions else "partial: source integration incomplete",
     }
 
 
