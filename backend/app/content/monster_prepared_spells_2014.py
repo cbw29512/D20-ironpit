@@ -10,6 +10,7 @@ from app.content.cleric_2014_level1_spells import (
     bless_2014, cure_wounds_2014, sacred_flame_2014,
 )
 from app.content.shared_spells_2014 import sanctuary_2014
+from app.content.monster_definition_adapter_support_2014 import ability_values_2014
 
 # Printed utility cantrips: retain in source/card, but no action in standard arena.
 _ARENA_NEUTRAL_2014 = frozenset({"light", "thaumaturgy"})
@@ -26,7 +27,7 @@ def prepared_spell_actions_2014(monster):
     spells = source.get("spells")
     if not isinstance(spells, list) or not spells:
         raise ValueError(f"{monster.name}: prepared spell list is missing")
-    wisdom = monster.abilities.get("wisdom")
+    wisdom = ability_values_2014(monster)["wisdom"]
     if type(wisdom) is not int or not 1 <= wisdom <= 30:
         raise ValueError(f"{monster.name}: invalid Wisdom for cleric spell binding")
     wisdom_mod = (wisdom - 10) // 2
@@ -35,7 +36,8 @@ def prepared_spell_actions_2014(monster):
         raise ValueError(f"{monster.name}: missing printed spell save DC")
 
     actions = {"spell_save_actions": [], "healing_actions": [],
-               "defensive_spell_actions": [], "unbound_spell_ids": []}
+               "defensive_spell_actions": [], "unbound_spell_ids": [],
+               "arena_neutral_spell_ids": []}
     seen = set()
     for entry in spells:
         if not isinstance(entry, dict) or not isinstance(entry.get("id"), str):
