@@ -127,3 +127,32 @@ def hold_monster_2014(save_dc: int) -> SpellSaveAction:
         logger.exception("Failed to build shared 2014 Hold Monster.")
         raise
 
+
+def blindness_deafness_2014(save_dc: int) -> SpellSaveAction:
+    """Build the offensive Blinded choice of 2014 Blindness/Deafness."""
+    try:
+        return SpellSaveAction(
+            id="blindness-deafness",
+            name="Blindness/Deafness",
+            level=2,
+            action_cost="action",
+            range_ft=30,
+            requires_target_sight=True,
+            save_ability="constitution",
+            dc=save_dc,
+            failed_save_timed_effect=FailedSaveTimedEffect(
+                effect_id="blinded",
+                duration_rounds=10,
+                expiry_timing="target_turn_end",
+                repeat_save_ability="constitution",
+                repeat_save_dc=save_dc,
+                repeat_save_timing="target_turn_end",
+            ),
+            concentration=False,
+            duration_minutes=1,
+            animation="blinded",
+        )
+    except Exception:
+        logger.exception("Failed to build shared 2014 Blindness/Deafness.")
+        raise
+
