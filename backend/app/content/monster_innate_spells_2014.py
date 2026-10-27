@@ -17,6 +17,7 @@ from app.content.shared_control_spells_2014 import (
 )
 from app.content.shared_zone_spells_2014 import wall_of_fire_2014
 from app.content.sorcerer_draconic_2014_spells import fireball_2014
+from app.content.bard_2014_vicious_mockery import vicious_mockery_action_2014
 from app.domain.persistent_save_zones import PersistentSaveZoneAction
 from app.domain.debuffs import DebuffCounter
 from app.domain.save_effects import FailedSaveTimedEffect
@@ -144,6 +145,8 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
                 actions.append(blindness_deafness_2014(dc))
             elif spell_id == "fireball":
                 actions.append(fireball_2014(dc))
+            elif spell_id == "vicious-mockery":
+                actions.append(vicious_mockery_action_2014(dc))
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 innate save spells for %s.", monster.name)
