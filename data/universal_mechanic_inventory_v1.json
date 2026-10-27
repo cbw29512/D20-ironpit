@@ -5864,7 +5864,7 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 80,
+    "blocked_monster_count": 79,
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
@@ -5874,13 +5874,13 @@
       "attack:none": 1,
       "mechanic:legendary": 9,
       "mechanic:recharge": 9,
-      "mechanic:spellcasting": 34,
+      "mechanic:spellcasting": 33,
       "mechanic:swallow": 7,
       "multiattack:complex": 10,
       "source:extra-action": 45,
       "source:legendary": 9,
       "source:reaction": 2,
-      "source:trait": 62
+      "source:trait": 61
     },
     "unresolved_printed_abilities": [
       {
@@ -6025,11 +6025,10 @@
         "printed_name": "Ignited Illumination"
       },
       {
-        "demand_count": 21,
+        "demand_count": 20,
         "monsters": [
           "Cloud Giant",
           "Couatl",
-          "Deep Gnome (Svirfneblin)",
           "Deva",
           "Djinni",
           "Drider",

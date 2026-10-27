@@ -428,7 +428,7 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **80**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **79**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
@@ -452,7 +452,7 @@ Blocked monsters: **80**. These are grouped by printed ability name so the roste
 | Grappler | Mimic | 1 |
 | Grasping Tendrils | Roper | 1 |
 | Ignited Illumination | Magmin | 1 |
-| Innate Spellcasting | Cloud Giant, Couatl, Deep Gnome (Svirfneblin), Deva, Djinni, Drider, Drow, Dryad, Dust Mephit, Efreeti, Glabrezu, Green Hag, Ice Mephit, Lamia, Magma Mephit, Night Hag, Oni, Planetar, Rakshasa, Solar, Storm Giant | 21 |
+| Innate Spellcasting | Cloud Giant, Couatl, Deva, Djinni, Drider, Drow, Dryad, Dust Mephit, Efreeti, Glabrezu, Green Hag, Ice Mephit, Lamia, Magma Mephit, Night Hag, Oni, Planetar, Rakshasa, Solar, Storm Giant | 20 |
 | Light Sensitivity | Cloaker | 1 |
 | Limited Magic Immunity | Rakshasa | 1 |
 | Misty Escape | Vampire | 1 |
@@ -474,9 +474,9 @@ Blocked monsters: **80**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 62 |
+| `source:trait` | 61 |
 | `source:extra-action` | 45 |
-| `mechanic:spellcasting` | 34 |
+| `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 17 |
 | `multiattack:complex` | 10 |
 | `mechanic:legendary` | 9 |

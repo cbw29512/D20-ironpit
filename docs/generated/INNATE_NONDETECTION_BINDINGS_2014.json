@@ -1,0 +1,15 @@
+{
+  "applicable_card_count": 1,
+  "applicable_cards": [
+    "deep-gnome-svirfneblin"
+  ],
+  "exceptions": [],
+  "remaining_card_count": 0,
+  "source_cards_scanned": 327,
+  "status": "complete",
+  "wired_browser_card_count": 1,
+  "wired_cards": [
+    "deep-gnome-svirfneblin"
+  ],
+  "wired_python_card_count": 1
+}

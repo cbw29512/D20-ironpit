@@ -19,6 +19,7 @@ ARENA_NEUTRAL_INNATE_SPELLS_2014 = frozenset({
     "detect-magic",
     "mage-hand",
     "minor-illusion",
+    "nondetection",
     "plane-shift",
     "geas",
 })

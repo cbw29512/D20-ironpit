@@ -75,7 +75,7 @@ def test_full_327_card_scan_exposes_attack_free_shrieker_once():
     from app.content.monster_roster_2014 import build_basic_2014_monsters
 
     roster = build_basic_2014_monsters()
-    assert len(roster) == 247
+    assert len(roster) == 248
     matches = [card for card in roster if card.id == "2014-shrieker"]
     assert len(matches) == 1
     assert matches[0].weapon_attack is None
