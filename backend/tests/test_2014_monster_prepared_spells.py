@@ -22,7 +22,8 @@ def test_shared_pregen_spell_builders_are_used_for_monsters():
     assert [x.id for x in result["defensive_spell_actions"]] == ["bless", "sanctuary"]
     assert result["spell_save_actions"][0].dc == 12
     assert result["healing_actions"][0].healing_bonus == 2
-    assert result["unbound_spell_ids"] == ["light"]
+    assert result["unbound_spell_ids"] == []
+    assert result["arena_neutral_spell_ids"] == ["light"]
 
 
 def test_incomplete_source_cannot_be_treated_as_certified():
@@ -46,5 +47,5 @@ def test_real_acolyte_source_reuses_prepared_actions_without_admission():
         item.id for field in ("spell_save_actions", "healing_actions", "defensive_spell_actions")
         for item in result[field]
     }
-    assert covered | set(result["unbound_spell_ids"]) == expected
+    assert covered | set(result["unbound_spell_ids"]) | set(result["arena_neutral_spell_ids"]) == expected
     assert {"sacred-flame", "cure-wounds", "bless", "sanctuary"} <= covered
