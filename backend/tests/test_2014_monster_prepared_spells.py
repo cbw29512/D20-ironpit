@@ -35,3 +35,16 @@ def test_invalid_spell_save_dc_fails_closed():
     monster.spellcasting["save_dc"] = None
     with pytest.raises(ValueError, match="save DC"):
         prepared_spell_actions_2014(monster)
+
+
+def test_real_acolyte_source_reuses_prepared_actions_without_admission():
+    from app.content.monster_source_2014 import load_monster_source_2014
+    source = next(m for m in load_monster_source_2014() if m.id == "acolyte")
+    result = prepared_spell_actions_2014(source)
+    expected = {spell["id"] for spell in source.spellcasting["spells"]}
+    covered = {
+        item.id for field in ("spell_save_actions", "healing_actions", "defensive_spell_actions")
+        for item in result[field]
+    }
+    assert covered | set(result["unbound_spell_ids"]) == expected
+    assert {"sacred-flame", "cure-wounds", "bless", "sanctuary"} <= covered
