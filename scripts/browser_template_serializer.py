@@ -1160,10 +1160,11 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         if template.kind == "monster":
             row["creature_type"] = template.creature_type
             row["source_trait_names"] = list(template.source_trait_names)
-            # 2014 Amphibious is arena-neutral; retain its source label for a grey card badge.
+            # Source-proven standard-arena neutral traits stay printed on grey badges.
             if template.ruleset == "2014":
                 row["arena_neutral_trait_names"] = [
-                    name for name in template.source_trait_names if name == "Amphibious"
+                    name for name in template.source_trait_names
+                    if name in {"Amphibious", "Standing Leap"}
                 ]
             row["source_reaction_names"] = list(template.source_reaction_names)
             row["source_bonus_action_names"] = list(template.source_bonus_action_names)
