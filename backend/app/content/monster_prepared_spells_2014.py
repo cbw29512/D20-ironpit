@@ -12,6 +12,9 @@ from app.content.cleric_2014_level1_spells import (
 from app.content.shared_spells_2014 import sanctuary_2014
 from app.content.monster_definition_adapter_support_2014 import ability_values_2014
 
+# Source adapters may bind an existing capability; they must never implement
+# distinct monster-only spell resolution. The capability engine owns effects.
+
 # Printed utility cantrips: retain in source/card, but no action in standard arena.
 _ARENA_NEUTRAL_2014 = frozenset({"light", "thaumaturgy"})
 
