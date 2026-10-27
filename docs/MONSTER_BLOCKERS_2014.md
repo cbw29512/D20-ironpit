@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 61 |
+| `source:trait` | 60 |
 | `source:extra-action` | 45 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 17 |
@@ -31,12 +31,13 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**2** monsters have exactly one remaining blocker category.
+**3** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
+| `attack:incomplete` | Balor | 1 |
 
 ## Every blocked monster
 
@@ -47,7 +48,7 @@ the underlying ability is already implemented or trivial.
 | Air Elemental | mechanic:recharge, source:extra-action, source:trait | Air Form |
 | Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Spellcasting |
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
-| Balor | attack:incomplete, source:trait | Fire Aura |
+| Balor | attack:incomplete | — |
 | Behir | mechanic:recharge, source:extra-action | — |
 | Chuul | attack:incomplete, multiattack:complex, source:extra-action | — |
 | Cloaker | attack:incomplete, source:extra-action, source:trait | Damage Transfer, Light Sensitivity |

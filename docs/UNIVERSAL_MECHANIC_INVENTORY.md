@@ -444,7 +444,6 @@ Blocked monsters: **79**. These are grouped by printed ability name so the roste
 | Duergar Resilience | Duergar | 1 |
 | Ephemeral | Will-o'-Wisp | 1 |
 | False Appearance (Object Form Only) | Mimic | 1 |
-| Fire Aura | Balor | 1 |
 | Fire Form | Fire Elemental | 1 |
 | Freedom of Movement | Kraken | 1 |
 | Freeze | Water Elemental | 1 |
@@ -474,7 +473,7 @@ Blocked monsters: **79**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 61 |
+| `source:trait` | 60 |
 | `source:extra-action` | 45 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 17 |
