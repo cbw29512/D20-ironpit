@@ -84,7 +84,7 @@ def test_preexisting_unreviewed_attack_rider_fails_closed():
 
     assert source_proven_start_turn_damage_condition_2014(monster, bite) is None
 
-def test_source_completion_pipeline_clears_only_the_attack_incomplete_blocker():
+def test_source_completion_pipeline_leaves_no_blocker_after_innate_spell_integration():
     try:
         monster = _source()
         completed = source_completed_mixed_attack_2014(monster, _bite(monster))
@@ -102,7 +102,6 @@ def test_source_completion_pipeline_clears_only_the_attack_incomplete_blocker():
         }
         blockers = basic_blockers_2014(monster)
         assert "attack:incomplete" not in blockers
-        assert "mechanic:spellcasting" in blockers
-        assert "source:trait" in blockers
+        assert blockers == ()
     except Exception:
         raise
