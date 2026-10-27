@@ -11,12 +11,22 @@ from app.content.cleric_2014_level1_spells import (
 )
 from app.content.shared_spells_2014 import sanctuary_2014
 from app.content.monster_definition_adapter_support_2014 import ability_values_2014
+from app.content.cleric_2014_spell_package import _CANTRIPS, _PREPARED, _DOMAIN
 
 # Source adapters may bind an existing capability; they must never implement
 # distinct monster-only spell resolution. The capability engine owns effects.
 
 # Printed utility cantrips: retain in source/card, but no action in standard arena.
 _ARENA_NEUTRAL_2014 = frozenset({"light", "thaumaturgy"})
+_CANONICAL_LEVELS = {choice.id: choice.spell_level for choice in (*_CANTRIPS, *_PREPARED, *_DOMAIN)}
+
+# References existing pregen builders; the universal engine resolves the results.
+_SHARED_ACTION_BUILDERS_2014 = {
+    "sacred-flame": ("spell_save_actions", lambda dc, mod: sacred_flame_2014(dc)),
+    "cure-wounds": ("healing_actions", lambda dc, mod: cure_wounds_2014(mod, 0)),
+    "bless": ("defensive_spell_actions", lambda dc, mod: bless_2014()),
+    "sanctuary": ("defensive_spell_actions", lambda dc, mod: sanctuary_2014(dc)),
+}
 
 
 def prepared_spell_actions_2014(monster):
@@ -52,15 +62,14 @@ def prepared_spell_actions_2014(monster):
         level = entry.get("level")
         if type(level) is not int or not 0 <= level <= 9:
             raise ValueError(f"{monster.name}: invalid prepared spell level for {spell_id}")
-        if spell_id == "sacred-flame" and level == 0:
-            actions["spell_save_actions"].append(sacred_flame_2014(dc))
-        elif spell_id == "cure-wounds" and level == 1:
-            actions["healing_actions"].append(cure_wounds_2014(wisdom_mod, 0))
-        elif spell_id == "bless" and level == 1:
-            actions["defensive_spell_actions"].append(bless_2014())
-        elif spell_id == "sanctuary" and level == 1:
-            actions["defensive_spell_actions"].append(sanctuary_2014(dc))
-        elif spell_id in _ARENA_NEUTRAL_2014 and level == 0:
+        if _CANONICAL_LEVELS.get(spell_id) != level:
+            actions["unbound_spell_ids"].append(spell_id)
+            continue
+        builder = _SHARED_ACTION_BUILDERS_2014.get(spell_id)
+        if builder is not None:
+            category, construct = builder
+            actions[category].append(construct(dc, wisdom_mod))
+        elif spell_id in _ARENA_NEUTRAL_2014:
             actions["arena_neutral_spell_ids"].append(spell_id)
         else:
             actions["unbound_spell_ids"].append(spell_id)
