@@ -9,12 +9,11 @@ from app.domain.spells import SpellSaveAction
 logger = logging.getLogger(__name__)
 
 
-def vicious_mockery_2014(level: int, charisma_modifier: int) -> SpellSaveAction:
-    """Build 2014 Vicious Mockery from shared save damage and timed debuff primitives."""
+def vicious_mockery_action_2014(save_dc: int, dice_count: int = 1) -> SpellSaveAction:
+    """Build source-neutral 2014 Vicious Mockery from its declared DC and scaling."""
     try:
-        if level not in range(1, 21):
-            raise ValueError("2014 Vicious Mockery supports character levels 1 through 20.")
-        dice_count = 1 + int(level >= 5) + int(level >= 11) + int(level >= 17)
+        if save_dc < 1 or dice_count not in range(1, 5):
+            raise ValueError("2014 Vicious Mockery requires a positive DC and 1-4 dice.")
         return SpellSaveAction(
             id="vicious-mockery",
             name="Vicious Mockery",
@@ -22,7 +21,7 @@ def vicious_mockery_2014(level: int, charisma_modifier: int) -> SpellSaveAction:
             action_cost="action",
             range_ft=60,
             save_ability="wisdom",
-            dc=8 + proficiency_bonus(level) + charisma_modifier,
+            dc=save_dc,
             damage_dice_count=dice_count,
             damage_dice_size=4,
             damage_type="psychic",
@@ -37,5 +36,16 @@ def vicious_mockery_2014(level: int, charisma_modifier: int) -> SpellSaveAction:
             animation="vicious-mockery",
         )
     except Exception:
-        logger.exception("Failed to build 2014 Vicious Mockery at level %s.", level)
+        logger.exception("Failed to build 2014 Vicious Mockery for DC %s.", save_dc)
         raise
+
+
+def vicious_mockery_2014(level: int, charisma_modifier: int) -> SpellSaveAction:
+    """Build hero Vicious Mockery using 2014 cantrip scaling and spell-save math."""
+    if level not in range(1, 21):
+        raise ValueError("2014 Vicious Mockery supports character levels 1 through 20.")
+    dice_count = 1 + int(level >= 5) + int(level >= 11) + int(level >= 17)
+    return vicious_mockery_action_2014(
+        8 + proficiency_bonus(level) + charisma_modifier,
+        dice_count,
+    )
