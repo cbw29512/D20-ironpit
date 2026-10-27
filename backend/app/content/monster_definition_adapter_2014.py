@@ -47,6 +47,7 @@ from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014, fetid_cl
 from app.content.monster_leadership_2014 import leadership_actions_2014, leadership_resources_2014
 from app.content.monster_senses_2014 import special_senses_2014, bounded_blindsight_2014
 from app.content.monster_spell_slot_resources_2014 import monster_spell_slot_resources_2014
+from app.content.monster_prepared_spells_2014 import prepared_spell_actions_2014
 from app.content.monster_multiattack_2014 import multiattack_2014
 from app.content.monster_death_triggers_2014 import death_trigger_actions_2014
 from app.content.monster_attack_ammunition_2014 import attack_ammunition_2014
@@ -174,6 +175,9 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         ]
     if feature_update:
         features = features.model_copy(update=feature_update)
+    prepared = prepared_spell_actions_2014(monster)
+    if prepared["unbound_spell_ids"]:
+        raise ValueError(f"{monster.name} has unbound prepared spells: {prepared['unbound_spell_ids']}")
     defenses = template_defense_fields_2014(monster)
     defenses["condition_immunities"] = list(core.condition_immunities)
     return CombatantDefinition(
@@ -194,7 +198,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         death_trigger_effect_ids=[action.id for action in death_trigger_actions_2014(monster)],
         death_trigger_actions=death_trigger_actions_2014(monster),
         save_actions=save_capabilities_2014(monster),
-        spell_save_actions=innate_spell_save_actions_2014(monster),
+        spell_save_actions=[*innate_spell_save_actions_2014(monster), *prepared["spell_save_actions"]],
         persistent_save_zone_actions=[
             *[zone for zone in [fetid_cloud_zone_2014(monster)] if zone is not None],
             *innate_persistent_save_zone_actions_2014(monster),
@@ -207,7 +211,8 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
             *condition_auras_from_source(monster.source_traits, "2014"),
             *contextual_save_defenses_2014(monster)[0], *leadership_actions_2014(monster),
             *recharge_self_buff_actions_2014(monster)],
-        healing_actions=healing_actions_2014(monster),
+        healing_actions=[*healing_actions_2014(monster), *prepared["healing_actions"]],
+        defensive_spell_actions=prepared["defensive_spell_actions"],
         condition_removal_actions=list(core.condition_removal_actions),
         terminal_effect_tags=terminal_effect_tags_2014(monster),
         effect_tag_condition_grants=effect_tag_condition_grants_2014(monster),
