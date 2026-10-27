@@ -83,18 +83,20 @@ class TimedSelfBuffAction(BaseModel):
         try:
             if self.activation_timing == "passive":
                 # Passive source data is discovered directly, never cast/spent.
-                if sum(aura is not None for aura in (
-                    self.hostile_start_turn_condition_aura, self.friendly_save_advantage_aura,
-                    self.melee_hit_retaliation,
-                )) != 1:
-                    raise ValueError("Passive activation requires exactly one condition or friendly-save aura.")
+                has_emanation = self.start_turn_emanation_damage is not None
+                has_retaliation = self.melee_hit_retaliation is not None
+                has_condition = self.hostile_start_turn_condition_aura is not None
+                has_friendly = self.friendly_save_advantage_aura is not None
+                aura_count = sum((has_emanation, has_retaliation, has_condition, has_friendly))
+                if aura_count == 0 or (aura_count > 2) or (has_emanation and not has_retaliation) or (has_retaliation and not has_emanation and not has_condition and not has_friendly):
+                    raise ValueError("Passive activation requires a supported aura combination.")
                 if self.resource_id or self.concentration or self.duration_rounds is not None or self.ends_if_source_incapacitated:
                     raise ValueError("Passive condition auras cannot own activation resources or a source timer.")
                 if any((self.condition_ids, self.damage_resistances,
                     self.debuff_counters, self.saving_throw_advantage_grants, self.movement_mode_grants,
                     self.friendly_cover_aura, self.friendly_roll_bonus_aura,
                     self.friendly_weapon_damage_aura, self.friendly_recovery_aura,
-                    self.start_turn_emanation_damage, self.emitted_environment_contexts,
+                    self.emitted_environment_contexts,
                     self.spell_save_dc_bonus, self.spell_attack_advantage, self.modifier_effects)):
                     raise ValueError("Passive effects cannot silently include activation-owned effects.")
                 aura = self.hostile_start_turn_condition_aura
