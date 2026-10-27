@@ -98,3 +98,19 @@ def test_malformed_prepared_spell_level_fails_closed(bad_level):
     monster.spellcasting["spells"][0]["level"] = bad_level
     with pytest.raises(ValueError, match="invalid prepared spell level"):
         prepared_spell_actions_2014(monster)
+
+
+def test_all_pinned_prepared_casters_account_for_every_source_spell_without_mutation():
+    from app.content.monster_source_2014 import load_monster_source_2014
+    casters = [m for m in load_monster_source_2014() if m.spellcasting]
+    assert len(casters) == 13
+    for monster in casters:
+        original = monster.model_dump(mode="json")
+        result = prepared_spell_actions_2014(monster)
+        actual = [
+            action.id for category in ("spell_save_actions", "healing_actions", "defensive_spell_actions")
+            for action in result[category]
+        ] + result["arena_neutral_spell_ids"] + result["unbound_spell_ids"]
+        expected = [entry["id"] for entry in monster.spellcasting["spells"]]
+        assert sorted(actual) == sorted(expected), monster.name
+        assert monster.model_dump(mode="json") == original, monster.name
