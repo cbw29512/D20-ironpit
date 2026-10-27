@@ -734,6 +734,7 @@ jobs:
           node frontend/browser-ongoing-spell-control.test.cjs
           node frontend/browser-forced-retreat-turn.test.cjs
           node frontend/browser-fear-ui.test.cjs
+          node frontend/browser-arena-neutral-card.test.cjs
           node frontend/browser-2014-beard.test.cjs
           node frontend/browser-2014-glaive-infernal-wound.test.cjs
           node frontend/browser-bearded-devil-admission-2014.test.cjs
