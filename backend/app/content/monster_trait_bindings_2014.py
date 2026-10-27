@@ -1,4 +1,5 @@
 from __future__ import annotations
+from app.content.monster_damage_transfer_2014 import supports_damage_transfer_2014
 from app.content.monster_visual_turn_start_2014 import visual_turn_start_rule_2014
 import logging, re
 
@@ -143,6 +144,9 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add("Evasion")
         bound.update(bound_passive_trait_names_2014(monster))
         bound.update(rule.source_name for rule in source_turn_grappler_damage_2014(monster))
+        transfer = supports_damage_transfer_2014(monster)
+        if transfer:
+            bound.add(transfer)
         if bounded_blindsight_2014(monster) is not None:
             bound.add("Blind Senses")
         if "invisible" in innate_condition_ids_2014(monster):
