@@ -9,7 +9,7 @@ try {
   const file = path.join(__dirname, "battlefield-passive-states.js");
   vm.runInThisContext(fs.readFileSync(file, "utf8"), { filename: file });
   const member = {combatant_id:"2014-frog",state:{
-    template:{source_trait_names:["Amphibious","Standing Leap"],arena_neutral_trait_names:["Amphibious"],passive_modifier_grants:[],
+    template:{source_trait_names:["Amphibious","Standing Leap"],arena_neutral_trait_names:["Amphibious","Standing Leap"],passive_modifier_grants:[],
       environment_context_reactions:[]},active_modifiers:[],active_effect_ids:[],
   }};
   const projected = window.IRON_PIT_BATTLEFIELD_PASSIVE_STATES.permanentPassiveStates(
@@ -21,7 +21,7 @@ try {
     assert.equal(badge.lane, "buff");
   }
   assert.match(projected.find(item => item.label === "Amphibious").explanation, /Arena-neutral/);
-  assert.match(projected.find(item => item.label === "Standing Leap").explanation, /not yet classified/);
+  assert.match(projected.find(item => item.label === "Standing Leap").explanation, /Arena-neutral/);
   const replay = fs.readFileSync(path.join(__dirname, "battlefield-replay.js"), "utf8");
   assert.match(replay, /passive\.active \? "" : " is-inactive"/,
     "Inactive source traits must render as greyed card badges");
