@@ -1,0 +1,17 @@
+{
+  "applicable_card_count": 2,
+  "applicable_cards": [
+    "deep-gnome-svirfneblin",
+    "steam-mephit"
+  ],
+  "exceptions": [],
+  "remaining_card_count": 0,
+  "source_cards_scanned": 327,
+  "status": "complete",
+  "wired_browser_card_count": 2,
+  "wired_cards": [
+    "deep-gnome-svirfneblin",
+    "steam-mephit"
+  ],
+  "wired_python_card_count": 2
+}

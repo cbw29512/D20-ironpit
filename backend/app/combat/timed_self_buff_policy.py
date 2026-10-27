@@ -54,6 +54,7 @@ def concentration_grant_only(action: TimedSelfBuffAction) -> bool:
             or action.melee_hit_retaliation
             or action.spell_save_dc_bonus
             or action.spell_attack_advantage
+            or action.modifier_effects
         )
     except Exception:
         logger.exception("Failed concentration-grant-only check for %s.", action.id)
