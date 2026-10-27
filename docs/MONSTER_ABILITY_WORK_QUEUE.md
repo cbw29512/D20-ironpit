@@ -1,6 +1,12 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
 
+## Shapechanger source foundation — draft PR 2026-10-27
+
+- Owner: this session. Source-proofs the printed 2014 Shapechanger Action for the 11 roster cards (Doppelganger, Imp, Mimic, Quasit, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf).
+- Immutable parameters recorded for Imp and Quasit beast forms (speed changes only; stats otherwise identical). Runtime binding to the existing replacement-form primitive, AI selection, browser parity, and any lycanthrope precombat beast-form entry remain subsequent steps. No monster is admitted.
+- Tests prove Imp source clauses and fail-closed on edited text. Do not claim admission until exact-head CI and full form compilation.
+
 ## Staged disease semantic family — IN PR #1041, not merged
 
 - Source: 2014 Tentacle attack's hit applies ordinary Bludgeoning damage, then the victim makes its printed DC 14 Constitution save. Failure attaches a fight-local latent disease; the printed one-minute delay is exactly 10 target turns. An initial successful save does not infect.
