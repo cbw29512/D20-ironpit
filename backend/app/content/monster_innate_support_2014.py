@@ -71,6 +71,24 @@ def innate_timed_self_buffs_2014(monster) -> list[TimedSelfBuffAction]:
                     movement_mode_grants=[MovementModeGrant(mode="fly", fixed_speed_ft=60)],
                     animation="fly",
                 ))
+            elif spell_id == "blur":
+                actions.append(TimedSelfBuffAction(
+                    id="blur",
+                    name="Blur",
+                    action_cost="action",
+                    resource_id="blur",
+                    resource_cost=1,
+                    duration_rounds=10,
+                    expiry_timing="source_turn_start",
+                    magical_effect=True,
+                    concentration=True,
+                    modifier_effects=[SpellModifierEffect(
+                        kind="attacks-against-disadvantage",
+                        bypass_attacker_senses=["blindsight", "truesight"],
+                    )],
+                    priority=70,
+                    animation="blur",
+                ))
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 innate timed self-buffs for %s.", monster.name)

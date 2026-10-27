@@ -92,6 +92,7 @@
       || action.meleeHitRetaliation
       || action.spellSaveDcBonus
       || action.spellAttackAdvantage
+      || (action.modifierEffects || []).length
       || (action.targetPolicy || "normal") !== "normal"
     );
   }
