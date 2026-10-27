@@ -1,5 +1,11 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## 2014 lycanthrope opening beast form — source policy (this PR)
+
+- Locked rule (IRON_PIT_LOCKED_RULES.md): 2014 lycanthropes always begin combat in their printed beast (animal) form at no Action/Bonus Action cost. True form is humanoid. All legal forms remain available for later Shapechanger Action.
+- Source-verified for Werebear, Wereboar, Wererat, Weretiger, Werewolf via exact Shapechanger clause match (action to polymorph into hybrid or beast, true form humanoid, reverts on death). Opening form ID is "beast". Fail-closed on non-matching source.
+- Policy lives in monster_lycanthrope_opening_form_2014.py; tests cover all five + negative. No runtime name dispatch. Mid-fight form change, form-specific stats/attacks, and browser opening-state binding are follow-up (do not claim admission). Regenerated artifacts unchanged. Do not claim ready until exact-head CI.
+
 
 ## Staged disease semantic family — IN PR #1041, not merged
 
