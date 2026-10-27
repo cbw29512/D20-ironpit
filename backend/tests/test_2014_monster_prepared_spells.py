@@ -77,3 +77,24 @@ def test_utility_cantrips_are_accounted_for_without_combat_effects():
     assert result["spell_save_actions"] == []
     assert result["healing_actions"] == []
     assert result["defensive_spell_actions"] == []
+
+
+@pytest.mark.parametrize("spell_id,wrong_level", [
+    ("sacred-flame", 1), ("bless", 0), ("cure-wounds", 0), ("sanctuary", 0),
+])
+def test_wrong_level_never_binds_a_combat_spell(spell_id, wrong_level):
+    monster = _monster([spell_id])
+    monster.spellcasting["spells"][0]["level"] = wrong_level
+    result = prepared_spell_actions_2014(monster)
+    assert result["unbound_spell_ids"] == [spell_id]
+    assert result["spell_save_actions"] == []
+    assert result["healing_actions"] == []
+    assert result["defensive_spell_actions"] == []
+
+
+@pytest.mark.parametrize("bad_level", [None, True, -1, 10, "1"])
+def test_malformed_prepared_spell_level_fails_closed(bad_level):
+    monster = _monster(["bless"])
+    monster.spellcasting["spells"][0]["level"] = bad_level
+    with pytest.raises(ValueError, match="invalid prepared spell level"):
+        prepared_spell_actions_2014(monster)
