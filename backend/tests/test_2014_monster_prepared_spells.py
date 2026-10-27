@@ -58,3 +58,22 @@ def test_source_ability_abbreviation_matches_shared_monster_normalizer():
     source.abilities = {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 14, "cha": 10}
     actions = prepared_spell_actions_2014(source)
     assert actions["healing_actions"][0].healing_bonus == 2
+
+
+def test_light_is_only_arena_neutral_as_a_cantrip():
+    source = _monster(["light"])
+    source.spellcasting["spells"][0]["level"] = 1
+    result = prepared_spell_actions_2014(source)
+    assert result["arena_neutral_spell_ids"] == []
+    assert result["unbound_spell_ids"] == ["light"]
+
+
+def test_utility_cantrips_are_accounted_for_without_combat_effects():
+    source = _monster(["light", "thaumaturgy"])
+    for spell in source.spellcasting["spells"]:
+        spell["level"] = 0
+    result = prepared_spell_actions_2014(source)
+    assert result["arena_neutral_spell_ids"] == ["light", "thaumaturgy"]
+    assert result["spell_save_actions"] == []
+    assert result["healing_actions"] == []
+    assert result["defensive_spell_actions"] == []
