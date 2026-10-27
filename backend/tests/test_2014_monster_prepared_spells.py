@@ -49,3 +49,10 @@ def test_real_acolyte_source_reuses_prepared_actions_without_admission():
     }
     assert covered | set(result["unbound_spell_ids"]) | set(result["arena_neutral_spell_ids"]) == expected
     assert {"sacred-flame", "cure-wounds", "bless", "sanctuary"} <= covered
+
+
+def test_source_ability_abbreviation_matches_shared_monster_normalizer():
+    source = _monster(["cure-wounds"])
+    source.abilities = {"str": 10, "dex": 10, "con": 10, "int": 10, "wis": 14, "cha": 10}
+    actions = prepared_spell_actions_2014(source)
+    assert actions["healing_actions"][0].healing_bonus == 2
