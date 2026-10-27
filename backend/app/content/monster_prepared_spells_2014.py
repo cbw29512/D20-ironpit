@@ -11,12 +11,16 @@ from app.content.cleric_2014_level1_spells import (
 )
 from app.content.shared_spells_2014 import sanctuary_2014
 
+# Printed utility cantrips: retain in source/card, but no action in standard arena.
+_ARENA_NEUTRAL_2014 = frozenset({"light", "thaumaturgy"})
+
 
 def prepared_spell_actions_2014(monster):
     source = monster.spellcasting
     if source is None:
         return {"spell_save_actions": [], "healing_actions": [],
-                "defensive_spell_actions": [], "unbound_spell_ids": []}
+                "defensive_spell_actions": [], "unbound_spell_ids": [],
+                "arena_neutral_spell_ids": []}
     if not isinstance(source, dict) or source.get("source_complete") is not True:
         raise ValueError(f"{monster.name}: prepared spell source is incomplete")
     spells = source.get("spells")
@@ -48,6 +52,8 @@ def prepared_spell_actions_2014(monster):
             actions["defensive_spell_actions"].append(bless_2014())
         elif spell_id == "sanctuary":
             actions["defensive_spell_actions"].append(sanctuary_2014(dc))
+        elif spell_id in _ARENA_NEUTRAL_2014 and entry.get("level") == 0:
+            actions["arena_neutral_spell_ids"].append(spell_id)
         else:
             actions["unbound_spell_ids"].append(spell_id)
     return actions
