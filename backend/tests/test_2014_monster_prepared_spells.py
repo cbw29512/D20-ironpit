@@ -10,7 +10,7 @@ def _monster(spells, *, complete=True):
         name="Source-defined Cleric", abilities={"strength": 10, "dexterity": 10, "constitution": 10,
                                               "intelligence": 10, "wisdom": 14, "charisma": 10},
         spellcasting={"source_complete": complete, "save_dc": 12,
-                      "spells": [{"id": spell, "level": 0 if spell == "sacred-flame" else 1}
+                      "spells": [{"id": spell, "level": 0 if spell in {"sacred-flame", "light", "thaumaturgy"} else 1}
                                  for spell in spells]},
     )
 
