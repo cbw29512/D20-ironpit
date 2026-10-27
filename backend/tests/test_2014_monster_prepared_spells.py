@@ -50,6 +50,7 @@ def test_real_acolyte_source_reuses_prepared_actions_without_admission():
     }
     assert covered | set(result["unbound_spell_ids"]) | set(result["arena_neutral_spell_ids"]) == expected
     assert {"sacred-flame", "cure-wounds", "bless", "sanctuary"} <= covered
+    assert result["unbound_spell_ids"] == [], "Acolyte must not be treated as spell-ready with missing effects"
 
 
 def test_source_ability_abbreviation_matches_shared_monster_normalizer():
