@@ -44,14 +44,18 @@
       // Every printed source trait appears as a permanent buff for completeness,
       // even when arena-neutral. Active only if already projected above.
       const seen = new Set(result.map((item) => item.label || item.id));
+      const neutralNames = new Set(member.state.template.arena_neutral_trait_names || []);
       for (const name of member.state.template.source_trait_names || []) {
         if (!name || seen.has(name)) continue;
+        const arenaNeutral = neutralNames.has(name);
         result.push({
           id: name,
           label: name,
           lane: "buff",
           active: false,
-          explanation: "Source-owned permanent trait (arena-neutral or inactive).",
+          explanation: arenaNeutral
+            ? "Arena-neutral: printed source trait retained; no standard Pit combat effect."
+            : "Printed source trait: inactive or not yet classified for card presentation.",
         });
         seen.add(name);
       }
