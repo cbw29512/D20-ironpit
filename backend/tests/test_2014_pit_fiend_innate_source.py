@@ -55,8 +55,8 @@ def test_reviewed_pit_fiend_innate_source_is_repaired_without_mutation() -> None
 def test_innate_spell_names_use_the_corrected_structured_view() -> None:
     try:
         monster = _pit_fiend()
-        assert innate_spell_names_2014(monster) == {"hold monster", "wall of fire"}
-        assert supports_innate_spellcasting_2014(monster) is False
+        assert innate_spell_names_2014(monster) == {"fireball", "hold monster", "wall of fire"}
+        assert supports_innate_spellcasting_2014(monster) is True
     except Exception:
         logger.exception("Pit Fiend corrected innate-name regression failed.")
         raise

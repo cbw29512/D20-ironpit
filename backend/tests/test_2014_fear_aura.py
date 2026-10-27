@@ -45,7 +45,7 @@ def test_pinned_source_correction_binds_generic_fear_aura_parameters() -> None:
 
         unsupported = unsupported_traits_2014(card)
         assert "Fear Aura" not in unsupported
-        assert "Innate Spellcasting" in unsupported
+        assert unsupported == ()
     except Exception:
         logger.exception("Pinned 2014 Fear Aura source binding regression failed.")
         raise

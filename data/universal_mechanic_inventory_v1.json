@@ -5864,7 +5864,7 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 82,
+    "blocked_monster_count": 81,
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
@@ -5874,13 +5874,13 @@
       "attack:none": 1,
       "mechanic:legendary": 9,
       "mechanic:recharge": 9,
-      "mechanic:spellcasting": 36,
+      "mechanic:spellcasting": 35,
       "mechanic:swallow": 7,
       "multiattack:complex": 10,
       "source:extra-action": 45,
       "source:legendary": 9,
       "source:reaction": 2,
-      "source:trait": 64
+      "source:trait": 63
     },
     "unresolved_printed_abilities": [
       {
@@ -6025,7 +6025,7 @@
         "printed_name": "Ignited Illumination"
       },
       {
-        "demand_count": 23,
+        "demand_count": 22,
         "monsters": [
           "Cloud Giant",
           "Couatl",
@@ -6044,7 +6044,6 @@
           "Magma Mephit",
           "Night Hag",
           "Oni",
-          "Pit Fiend",
           "Planetar",
           "Rakshasa",
           "Solar",
