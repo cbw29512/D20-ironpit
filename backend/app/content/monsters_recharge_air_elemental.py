@@ -9,8 +9,8 @@ from app.domain.actions import SavingThrowAction
 from app.domain.combatants import ResourceDefinition
 from app.domain.models import CombatantTemplate, DamageType, VisualLoadout
 from app.domain.recharge import RechargeRule
+from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.size import CreatureSize
-from app.domain.targeting import AreaTargeting
 
 
 def _row(name: str) -> dict[str, object]:
@@ -24,9 +24,7 @@ def build_air_elemental() -> CombatantTemplate:
     """Source-bind 2014 Air Elemental Whirlwind (Recharge 4-6).
 
     Forced displacement is ignored per locked arena rule (PR #1032).
-    Damage and Prone on failed save remain. Full AI/browser parity and
-    remaining blockers (Air Form already in #1031) are follow-ups.
-    Does not claim admission.
+    Damage and Prone on failed save remain. Does not claim admission.
     """
     row = _row("Air Elemental")
     defenses = parse_defense_profile(row)
@@ -41,13 +39,17 @@ def build_air_elemental() -> CombatantTemplate:
         save_ability="strength",
         dc=13,
         range_ft=0,
-        area=AreaTargeting(shape="self", origin="self", length_ft=0),
+        max_targets=20,
         damage_dice_count=3,
         damage_dice_size=8,
         damage_bonus=2,
         damage_type="bludgeoning",
         success_damage="half",
-        # Prone on failure is a condition rider; forced movement ignored.
+        failed_save_timed_effect=FailedSaveTimedEffect(
+            effect_id="prone",
+            expiry_timing="target_turn_end",
+        ),
+        failed_save_push_ft=20,
         resource_id="whirlwind",
     )
     return CombatantTemplate(
