@@ -43,6 +43,8 @@ jobs:
         run: python scripts/report_fireball_bindings_2014.py --check
       - name: Verify 2014 innate Blur binding coverage
         run: python scripts/report_innate_blur_bindings_2014.py --check
+      - name: Verify 2014 innate Blindness binding coverage
+        run: python scripts/report_innate_blindness_bindings_2014.py --check
       - name: Audit 327-card audible maintained control coverage
         run: python scripts/report_audible_maintained_control_bindings_2014.py
       - name: Audit 327-card non-offensive Dodge coverage
@@ -644,6 +646,7 @@ jobs:
           node frontend/browser-unicorn-2014.test.cjs
           node frontend/browser-2014-innate-fireball.test.cjs
           node frontend/browser-2014-innate-blur.test.cjs
+          node frontend/browser-2014-innate-blindness.test.cjs
           node frontend/browser-frightful-presence.test.cjs
           node frontend/browser-grouped-failed-save.test.cjs
           node frontend/browser-source-visible-repeat-save.test.cjs
