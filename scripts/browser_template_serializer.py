@@ -2,6 +2,12 @@ from __future__ import annotations
 
 import logging
 from typing import Any
+from functools import lru_cache
+
+from app.content.monster_arena_neutral_traits_2014 import (
+    ARENA_NEUTRAL_TRAITS_2014, verified_arena_inert_trait_2014,
+)
+from app.content.monster_source_2014 import load_monster_source_2014
 
 from app.combat.charge_profiles import charge_profile_for_attack
 from app.domain.models import CombatantTemplate, WeaponAttack
@@ -15,6 +21,19 @@ except ModuleNotFoundError:
     from browser_attack_action_slots import attack_slot_row
 
 logger = logging.getLogger(__name__)
+
+
+@lru_cache(maxsize=1)
+def _source_monsters_2014():
+    return {f"2014-{monster.id}": monster for monster in load_monster_source_2014()}
+
+
+def _neutral_trait_names_2014(template: CombatantTemplate) -> list[str]:
+    source = _source_monsters_2014().get(template.id)
+    if source is None:
+        raise ValueError(f"2014 monster card lacks pinned source: {template.id}")
+    return [name for name in template.source_trait_names if name in ARENA_NEUTRAL_TRAITS_2014
+            or verified_arena_inert_trait_2014(source, name)]
 
 
 def _value(item: Any) -> Any:
@@ -1162,10 +1181,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["source_trait_names"] = list(template.source_trait_names)
             # Source-proven standard-arena neutral traits stay printed on grey badges.
             if template.ruleset == "2014":
-                row["arena_neutral_trait_names"] = [
-                    name for name in template.source_trait_names
-                    if name in {"Amphibious", "Standing Leap"}
-                ]
+                row["arena_neutral_trait_names"] = _neutral_trait_names_2014(template)
             row["source_reaction_names"] = list(template.source_reaction_names)
             row["source_bonus_action_names"] = list(template.source_bonus_action_names)
             row["source_limited_use_names"] = list(template.source_limited_use_names)
