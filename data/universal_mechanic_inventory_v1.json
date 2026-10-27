@@ -5880,7 +5880,7 @@
       "source:extra-action": 45,
       "source:legendary": 9,
       "source:reaction": 2,
-      "source:trait": 61
+      "source:trait": 60
     },
     "unresolved_printed_abilities": [
       {
@@ -5967,13 +5967,6 @@
           "Mimic"
         ],
         "printed_name": "False Appearance (Object Form Only)"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Balor"
-        ],
-        "printed_name": "Fire Aura"
       },
       {
         "demand_count": 1,

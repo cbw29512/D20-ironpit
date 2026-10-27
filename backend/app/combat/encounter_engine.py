@@ -35,7 +35,7 @@ from app.combat.legendary_actions import resolve_legendary_actions_after_turn
 from app.combat.triggered_extra_attacks import resolve_triggered_extra_attacks_after_turn
 from app.combat.turn_damage import clear_turn_damage
 from app.combat.variable_heads import end_owner_turn
-from app.combat.timed_emanations import resolve_target_turn_start_emanations
+from app.combat.timed_emanations import resolve_target_turn_start_emanations, resolve_source_turn_start_emanations
 from app.combat.turn_start_save_condition_reaction import resolve_turn_start_save_condition_reactions
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
 from app.domain.models import BattleEvent
@@ -170,6 +170,11 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     turn_key=f"{round_number}:{member.combatant_id}",
                 )
                 events.extend(emanation_events)
+                source_events, sequence = resolve_source_turn_start_emanations(
+                    sequence, round_number, member, setup, dice,
+                    turn_key=f"{round_number}:{member.combatant_id}",
+                )
+                events.extend(source_events)
                 zone_events, sequence = resolve_save_zone_window(
                     sequence, round_number, member, setup, dice,
                     f"{round_number}:{member.combatant_id}", "start_turn",

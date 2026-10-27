@@ -1,5 +1,11 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Balor Fire Aura — IN PR (this branch)
+
+- Source-verified 2014 Fire Aura: at the start of each of the balor's turns, each creature within 5 feet takes 10 (3d6) fire damage; a creature that touches the balor or hits it with a melee attack while within 5 feet takes the same damage.
+- Bound as a single passive TimedSelfBuffAction: MeleeHitRetaliation (on_contact=True, 3d6 fire, 5 ft) + TimedEmanationDamage (trigger=source_turn_start, radius 5, 3d6 fire). No monster-name dispatch.
+- Python oracle and browser parity tests cover melee hit at 5 ft, miss at 10 ft, and source-turn-start emanation. Generated blockers now list Balor as attack:incomplete only; Fire Aura unbound trait cleared.
+- Admission count unchanged (248/327) because attack:incomplete remains. Exact-final-head CI and merge still required before any admission promotion.
 
 ## Staged disease semantic family — IN PR #1041, not merged
 

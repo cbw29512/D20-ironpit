@@ -116,6 +116,31 @@
     }
   }
 
+
+  function resolveSourceTurnStart(sequence, round, source, setup) {
+    try {
+      const events = [];
+      for (const action of activeEmanations(source)) {
+        const emanation = action.startTurnEmanationDamage;
+        if (!emanation || emanation.trigger !== "source_turn_start") continue;
+        for (const target of members(setup)) {
+          if (target.side === source.side || target.state.is_dead || !target.state.is_alive) continue;
+          const hit = window.IRON_PIT_BROWSER_EMANATION_SAVE_DAMAGE.resolveHit(
+            sequence, round, source, target, action, setup, `${round}:${source.combatant_id}`,
+          );
+          if (hit.event) {
+            events.push(hit.event);
+            sequence = hit.sequence;
+          }
+        }
+      }
+      return { events, sequence };
+    } catch (error) {
+      console.error("Failed browser source-turn-start emanation.", { combatant: source?.combatant_id, error });
+      throw error;
+    }
+  }
+
   function installAbilityHook() {
     const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
     if (!hooks) {
@@ -131,17 +156,19 @@
       rulesets: ["2014", "2024"],
       appliesTo: (_member, ctx) => members(ctx.setup).some((source) =>
         activeEmanations(source).some((action) =>
-          ["enemy_turn_start", "enter_or_start"].includes(action.startTurnEmanationDamage?.trigger || "")
+          ["enemy_turn_start", "enter_or_start", "source_turn_start"].includes(action.startTurnEmanationDamage?.trigger || "")
           || action.hostileStartTurnConditionAura?.trigger === "enemy_turn_start")),
       resolve: ({ sequence, round, member, setup }) => {
         const result = resolveStartOfTurn(sequence, round, member, setup);
-        return result.events.length
-          ? { events: result.events, sequence: result.sequence, claimed: false }
+        const sourceResult = resolveSourceTurnStart(result.sequence, round, member, setup);
+        const events = [...result.events, ...sourceResult.events];
+        return events.length
+          ? { events, sequence: sourceResult.sequence, claimed: false }
           : null;
       },
     });
   }
 
-  window.IRON_PIT_BROWSER_TIMED_EMANATIONS = { activeEmanations, installAbilityHook, resolveStartOfTurn };
+  window.IRON_PIT_BROWSER_TIMED_EMANATIONS = { activeEmanations, installAbilityHook, resolveStartOfTurn, resolveSourceTurnStart };
   installAbilityHook();
 })();
