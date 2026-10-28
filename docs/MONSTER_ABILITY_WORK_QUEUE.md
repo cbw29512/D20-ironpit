@@ -1,5 +1,13 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Sleep spell semantic family — source-data blocker recorded 2026-10-28
+
+- The mandatory semantic scan covers all 327 immutable 2014 monster cards and finds four applicable cards: Dust Mephit, Night Hag, Oni, and Spirit Naga.
+- The cards declare Sleep access and their per-day or prepared-spell access, but omit the spell's effect payload: range, area, hit-point-pool dice, duration, damage/wake exits, and creature/condition exclusions. Those values are not inferred from monster or spell names.
+- The existing shared Python/browser Unconscious lifecycle, damage exit, and explicit `wake-sleeper` Action are reusable evidence from the certified Brass Dragon Sleep Breath family, but they are not a substitute for the missing spell payload or a complete Sleep cast action.
+- Generator-owned `docs/generated/SLEEP_BINDINGS_2014.json`: 327 scanned; 4 applicable; 0 Python wired; 0 browser wired; 4 remaining; 4 explicit missing-data exceptions. Ingest a pinned 2014 spell source before binding all four cards together.
+- No monster admission, runtime mechanic, or finished fight is claimed. Production remains locked.
+
 
 ## Staged disease semantic family — IN PR #1041, not merged
 
