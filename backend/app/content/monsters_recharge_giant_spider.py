@@ -11,6 +11,7 @@ from app.domain.models import CombatantTemplate, DamageType, VisualLoadout
 from app.domain.recharge import RechargeRule
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.size import CreatureSize
+from app.domain.targeting import AreaTargeting
 
 
 def _row(name: str) -> dict[str, object]:
@@ -23,8 +24,9 @@ def _row(name: str) -> dict[str, object]:
 def build_giant_spider() -> CombatantTemplate:
     """Source-bind 2014 Giant Spider Web (Recharge 5-6).
 
-    Foundation only. Does not claim admission. Remaining attack:incomplete
-    and attack:damage-type blockers stay until full Bite/Poison parity.
+    Combat path: area is a 5-ft self emanation so the existing choose_area_save
+    path can select it. Recharge gating is handled by the existing RechargeRule.
+    Does not claim admission. Remaining attack blockers stay until full Bite/Poison.
     """
     row = _row("Giant Spider")
     defenses = parse_defense_profile(row)
@@ -40,6 +42,7 @@ def build_giant_spider() -> CombatantTemplate:
         dc=11,
         range_ft=30,
         max_targets=1,
+        area=AreaTargeting(shape="emanation", origin="self", radius_ft=5),
         damage_dice_count=0,
         success_damage="none",
         failed_save_timed_effect=FailedSaveTimedEffect(
