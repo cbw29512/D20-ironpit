@@ -25,6 +25,11 @@ def build_air_elemental() -> CombatantTemplate:
 
     Forced displacement is ignored per locked arena rule (PR #1032).
     Damage and Prone on failed save remain. Does not claim admission.
+
+    Combat path: the SavingThrowAction is already on the template. To be
+    selectable in a fight it must be included in the action list the AI or
+    player sees; recharge gating is handled by the existing RechargeRule.
+    Next wiring step is to surface it in the legal actions for the turn.
     """
     row = _row("Air Elemental")
     defenses = parse_defense_profile(row)
