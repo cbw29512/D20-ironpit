@@ -13,6 +13,7 @@ from app.content.monster_mechanic_family_blockers_2014 import attack_blockers_20
 from app.content.monster_rock_catching_2014 import supports_rock_catching_reaction_2014
 from app.content.monster_reactive_2014 import supports_reaction_each_turn_2014
 from app.content.monster_unnerving_mask_2014 import supports_unnerving_mask_reaction_2014
+from app.content.monster_source_reactions_2014 import supports_source_reaction_2014
 from app.content.monster_multiattack_2014 import multiattack_blockers_2014
 from app.content.monster_death_triggers_2014 import death_trigger_actions_2014, supports_death_triggers_2014
 from app.content.monster_supported_extra_actions_2014 import source_supported_extra_action_labels_2014
@@ -82,7 +83,7 @@ def _source_name_blockers(
         blockers.append("source:extra-action")
     if unsupported_traits_2014(monster):
         blockers.append("source:trait")
-    if (set(monster.reaction_names) - arena_unavailable_reaction_names_2014(monster) or monster.parry_ac_bonus is not None) and not (supports_parry_reaction_2014(monster) or supports_rock_catching_reaction_2014(monster) or supports_unnerving_mask_reaction_2014(monster)):
+    if (set(monster.reaction_names) - arena_unavailable_reaction_names_2014(monster) or monster.parry_ac_bonus is not None) and not (supports_parry_reaction_2014(monster) or supports_rock_catching_reaction_2014(monster) or supports_unnerving_mask_reaction_2014(monster) or supports_source_reaction_2014(monster)):
         blockers.append("source:reaction")
     if monster.legendary_action_names and not supports_legendary_actions_2014(monster):
         blockers.append("source:legendary")
