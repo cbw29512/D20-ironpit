@@ -114,3 +114,18 @@ def test_all_pinned_prepared_casters_account_for_every_source_spell_without_muta
         expected = [entry["id"] for entry in monster.spellcasting["spells"]]
         assert sorted(actual) == sorted(expected), monster.name
         assert monster.model_dump(mode="json") == original, monster.name
+
+
+def test_acolyte_admitted_via_shared_prepared_spells_and_immutable_source():
+    from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+    from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+    from app.content.monster_source_2014 import load_monster_source_2014
+    source = next(m for m in load_monster_source_2014() if m.id == "acolyte")
+    before = source.model_dump(mode="json")
+    assert basic_blockers_2014(source) == ()
+    definition = adapt_basic_monster_2014(source)
+    assert {action.id for action in definition.spell_save_actions} >= {"sacred-flame"}
+    assert {action.id for action in definition.healing_actions} >= {"cure-wounds"}
+    assert {action.id for action in definition.defensive_spell_actions} >= {"bless", "sanctuary"}
+    assert any(resource.id == "spell-slot-1" for resource in definition.resources)
+    assert source.model_dump(mode="json") == before
