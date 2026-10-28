@@ -5,6 +5,21 @@
 
 This is the durable implementation contract for D20 Iron Pit.
 
+
+## Non-negotiable reuse-first implementation gate
+
+**Find → Reuse → Connect → Test.** Every new monster, pregen, character, homebrew form, feature, spell, item, buff, debuff, attack, defense, or condition follows this gate.
+
+1. **Find:** Search the existing shared capabilities, canonical spell/action definitions, triggers, effects, and combat resolvers before writing implementation code. Record what is reused.
+2. **Reuse:** A capability has exactly one edition-appropriate implementation. Source names and combatant category are *not* runtime dispatch keys. Never clone Sacred Flame (or any other spell) for a monster, pregen, or homebrew user.
+3. **Connect:** Immutable source JSON supplies capability IDs and parameters (such as casting ability, save DC, scaling level, spell slots, weapon bonuses, target restrictions, effect duration, and source provenance). Adapters only validate and translate source values into the common `CombatantDefinition → CombatantTemplate` contract. One shared combat engine processes every combatant.
+4. **Test:** Exercise the **same capability** from at least two different source types when applicable (for example monster + pregen), verifying equivalent resolution for identical inputs, and verifying different outputs only where source parameters differ. Check edition isolation, resource spending, concentration, targeting, conditions, browser parity, and immutability as applicable. Fail closed if source data or a required binding is incomplete.
+5. **Rescan:** After a shared engine addition or correction, re-evaluate all **327 immutable 2014 monster source cards** and update generated blockers/admission reports; do not claim an admission without green exact-head certification.
+
+**Preservation:** Printed abilities remain on immutable cards even when inapplicable to this arena. Mark arena-neutral/out-of-scope features greyed out with their original source descriptions, not deleted. `Light` and `Thaumaturgy` are arena-neutral in the default illuminated arena; `Light` may become relevant only if ordinary darkness/visibility is modeled. Light is not sunlight and does not activate Drow Sunlight Sensitivity. Do not turn long-duration effects into immediate combat effects.
+
+**Review rejection conditions:** Reject a PR that adds a monster-only or pregen-only resolver when a universal one already exists, branches on printed creature names to select mechanics, silently discards an unbound ability, alters immutable source fields for combat convenience, or bypasses the 327-card rescan/certification after a shared mechanic change. Reviewers must identify the existing shared entrypoint and describe the source-to-capability mapping in the PR.
+
 ## KISS principle
 
 Build the character or monster first. Combat reads that finished creature.

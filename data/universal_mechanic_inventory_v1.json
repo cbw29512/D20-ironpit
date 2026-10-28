@@ -5864,7 +5864,7 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 79,
+    "blocked_monster_count": 78,
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
@@ -5874,13 +5874,13 @@
       "attack:none": 1,
       "mechanic:legendary": 9,
       "mechanic:recharge": 9,
-      "mechanic:spellcasting": 33,
+      "mechanic:spellcasting": 32,
       "mechanic:swallow": 7,
       "multiattack:complex": 10,
       "source:extra-action": 45,
       "source:legendary": 9,
       "source:reaction": 2,
-      "source:trait": 61
+      "source:trait": 60
     },
     "unresolved_printed_abilities": [
       {
@@ -6117,9 +6117,8 @@
         "printed_name": "Spell Storing"
       },
       {
-        "demand_count": 13,
+        "demand_count": 12,
         "monsters": [
-          "Acolyte",
           "Androsphinx",
           "Archmage",
           "Cult Fanatic",
