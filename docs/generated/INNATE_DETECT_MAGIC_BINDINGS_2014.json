@@ -1,0 +1,31 @@
+{
+  "applicable_card_count": 9,
+  "applicable_cards": [
+    "cloud-giant",
+    "couatl",
+    "djinni",
+    "efreeti",
+    "glabrezu",
+    "night-hag",
+    "pit-fiend",
+    "rakshasa",
+    "storm-giant"
+  ],
+  "exceptions": [],
+  "remaining_card_count": 0,
+  "source_cards_scanned": 327,
+  "status": "complete",
+  "wired_browser_card_count": 9,
+  "wired_cards": [
+    "cloud-giant",
+    "couatl",
+    "djinni",
+    "efreeti",
+    "glabrezu",
+    "night-hag",
+    "pit-fiend",
+    "rakshasa",
+    "storm-giant"
+  ],
+  "wired_python_card_count": 9
+}

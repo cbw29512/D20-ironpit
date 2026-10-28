@@ -51,6 +51,8 @@ jobs:
         run: python scripts/report_innate_vicious_mockery_bindings_2014.py --check
       - name: Verify 2014 innate Magic Missile coverage
         run: python scripts/report_innate_magic_missile_bindings_2014.py --check
+      - name: Verify 2014 innate Detect Magic coverage
+        run: python scripts/report_innate_detect_magic_bindings_2014.py --check
       - name: Audit 327-card audible maintained control coverage
         run: python scripts/report_audible_maintained_control_bindings_2014.py
       - name: Audit 327-card non-offensive Dodge coverage
