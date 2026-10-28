@@ -11,6 +11,7 @@ from app.domain.models import CombatantTemplate, DamageType, VisualLoadout
 from app.domain.recharge import RechargeRule
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.size import CreatureSize
+from app.domain.targeting import AreaTargeting
 
 
 def _row(name: str) -> dict[str, object]:
@@ -26,10 +27,8 @@ def build_air_elemental() -> CombatantTemplate:
     Forced displacement is ignored per locked arena rule (PR #1032).
     Damage and Prone on failed save remain. Does not claim admission.
 
-    Combat path: the SavingThrowAction is already on the template. To be
-    selectable in a fight it must be included in the action list the AI or
-    player sees; recharge gating is handled by the existing RechargeRule.
-    Next wiring step is to surface it in the legal actions for the turn.
+    Combat path: area is a 5-ft self emanation so the existing choose_area_save
+    path can select it. Recharge gating is handled by the existing RechargeRule.
     """
     row = _row("Air Elemental")
     defenses = parse_defense_profile(row)
@@ -45,6 +44,7 @@ def build_air_elemental() -> CombatantTemplate:
         dc=13,
         range_ft=0,
         max_targets=20,
+        area=AreaTargeting(shape="emanation", origin="self", radius_ft=5),
         damage_dice_count=3,
         damage_dice_size=8,
         damage_bonus=2,
