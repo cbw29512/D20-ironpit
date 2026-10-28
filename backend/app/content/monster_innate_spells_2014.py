@@ -20,11 +20,12 @@ from app.content.sorcerer_draconic_2014_spells import fireball_2014
 from app.content.sorcerer_draconic_2014_spell_support import magic_missile_2014
 from app.content.bard_2014_vicious_mockery import vicious_mockery_action_2014
 from app.domain.auto_hit_spells import AutoHitSpellAction
+from app.domain.hit_effects import OnHitTimedEffect
 from app.domain.persistent_save_zones import PersistentSaveZoneAction
 from app.domain.debuffs import DebuffCounter
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.spell_modifiers import SpellModifierEffect
-from app.domain.spells import SpellSaveAction
+from app.domain.spells import SpellAttackAction, SpellSaveAction
 from app.domain.targeting import AreaTargeting
 
 logger = logging.getLogger(__name__)
@@ -40,6 +41,39 @@ def innate_auto_hit_spell_actions_2014(monster: SourceMonster2014) -> list[AutoH
         ]
     except Exception:
         logger.exception("Failed to compile 2014 innate auto-hit spells for %s.", monster.name)
+        raise
+
+
+def innate_spell_attack_actions_2014(monster: SourceMonster2014) -> list[SpellAttackAction]:
+    """Bind printed innate spell attacks without monster or ability-name dispatch."""
+    try:
+        attack_bonus = (_innate(monster) or {}).get("attack_bonus")
+        dc = _dc(monster)
+        actions: list[SpellAttackAction] = []
+        for spell in _spells(monster):
+            if str(spell.get("id") or "") != "ray-of-enfeeblement":
+                continue
+            if attack_bonus is None or dc is None:
+                raise ValueError(f"{monster.name} Ray of Enfeeblement lacks attack bonus or save DC.")
+            actions.append(SpellAttackAction(
+                id="ray-of-enfeeblement", name="Ray of Enfeeblement", level=2,
+                range_ft=60, attack_bonus=int(attack_bonus),
+                on_hit_modifier_effects=[SpellModifierEffect(
+                    kind="weapon-attack-damage-multiplier", multiplier=0.5,
+                    required_attack_ability="strength",
+                )],
+                on_hit_timed_effects=[OnHitTimedEffect(
+                    effect_id="ray-of-enfeeblement", duration_rounds=10,
+                    expiry_timing="source_turn_start", repeat_save_ability="constitution",
+                    repeat_save_dc=dc, repeat_save_timing="target_turn_end",
+                )],
+                concentration=True, duration_minutes=1,
+                animation="ray-of-enfeeblement",
+                source="D&D Basic Rules 2014: Ray of Enfeeblement",
+            ))
+        return actions
+    except Exception:
+        logger.exception("Failed to compile 2014 innate spell attacks for %s.", monster.name)
         raise
 
 def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSaveAction]:

@@ -36,6 +36,8 @@ def build_spell_modifier(
         source_is_magical=True,
         kind=ModifierKind(effect.kind),
         flat_bonus=effect.flat_bonus,
+        multiplier=effect.multiplier,
+        required_attack_ability=effect.required_attack_ability,
         minimum_value=effect.minimum_value,
         dice_count=effect.dice_count,
         dice_size=effect.dice_size,

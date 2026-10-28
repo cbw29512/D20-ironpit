@@ -460,6 +460,10 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
     }
     if effect.condition_id:
         row["conditionId"] = effect.condition_id
+    if effect.multiplier != 1.0:
+        row["multiplier"] = effect.multiplier
+    if effect.required_attack_ability is not None:
+        row["requiredAttackAbility"] = effect.required_attack_ability
     if effect.minimum_value:
         row["minimumValue"] = effect.minimum_value
     if effect.debuff_counter is not None:
@@ -513,6 +517,20 @@ def _spell_attack(action: Any) -> dict[str, Any]:
         "upcastDicePerLevel": action.upcast_dice_per_level,
         "matchingDiceLeapRangeFt": action.matching_dice_leap_range_ft,
         "onHitModifierEffects": [_modifier_effect(effect) for effect in action.on_hit_modifier_effects],
+        "onHitTimedEffects": [
+            {
+                "effectId": effect.effect_id,
+                "durationRounds": effect.duration_rounds,
+                "expiryTiming": effect.expiry_timing,
+                "sourceIsMagical": effect.source_is_magical,
+                "repeatSaveAbility": effect.repeat_save_ability,
+                "repeatSaveDc": effect.repeat_save_dc,
+                "repeatSaveTiming": effect.repeat_save_timing,
+            }
+            for effect in action.on_hit_timed_effects
+        ],
+        "concentration": action.concentration,
+        "durationMinutes": action.duration_minutes,
         "animation": action.animation,
     }
     if action.source:

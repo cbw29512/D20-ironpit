@@ -6,7 +6,7 @@
     "armor-class", "armor-class-minimum", "cover-armor-class", "attack-roll-flat", "saving-throw-flat", "cover-saving-throw-flat", "condition-immunity", ...DIE_KINDS,
     "saving-throw-advantage", "d20-test-advantage", "saving-throw-disadvantage", "death-save-advantage", "healing-maximize", "attacks-against-advantage",
     "attacks-against-disadvantage", "next-attack-against-advantage", "next-incoming-attack-roll-flat", "targeting-save-gate", "speed", "debuff-counter",
-    "zero-hp-replacement", "opportunity-attack-suppressed", "damage-source-qualifier", "weapon-damage-type-choice", "weapon-damage-flat", "invisibility-benefits-suppressed", "speed-multiplier",
+    "zero-hp-replacement", "opportunity-attack-suppressed", "damage-source-qualifier", "weapon-damage-type-choice", "weapon-damage-flat", "weapon-attack-damage-multiplier", "invisibility-benefits-suppressed", "speed-multiplier",
   ]);
 
   function validate(item) {
@@ -38,9 +38,16 @@
       throw new Error("Only saving-throw Advantage can require magical-effect context.");
     }
     if (item.kind === "speed" && !(item.flat_bonus || 0)) throw new Error("Speed modifiers require a nonzero flat bonus.");
-    if (item.kind === "speed-multiplier") {
+    if (item.kind === "weapon-attack-damage-multiplier") {
+      if (!(item.multiplier > 0) || item.multiplier === 1 || !item.required_attack_ability) {
+        throw new Error("Weapon-attack damage multiplier requires a non-1 multiplier and attack ability.");
+      }
+    } else if (item.kind === "speed-multiplier") {
       if ((item.flat_bonus || 0) !== 0 || !(item.multiplier > 0) || item.multiplier === 1) throw new Error("Speed multiplier requires a non-1 multiplier and no flat bonus.");
     } else if (item.multiplier != null && item.multiplier !== 1) throw new Error(`${item.kind} does not accept a multiplier.`);
+    if (item.kind !== "weapon-attack-damage-multiplier" && item.required_attack_ability) {
+      throw new Error(`${item.kind} does not accept a required attack ability.`);
+    }
     if (item.kind === "next-attack-against-advantage" && !item.target_id) throw new Error("Target-scoped attack Advantage requires a target id.");
     if (item.consume_on_attack_against && item.kind !== "attacks-against-advantage") throw new Error("Only defender-wide attack Advantage can use consume_on_attack_against.");
     if (item.consume_on_saving_throw && item.kind !== "saving-throw-disadvantage") throw new Error("Only saving-throw Disadvantage can use consume_on_saving_throw.");

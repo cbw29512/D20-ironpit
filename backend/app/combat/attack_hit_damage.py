@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import logging
 
 from app.combat.damage import BonusDamageSpec, aggregate_damage_components, resolve_weapon_damage
+from app.combat.modifier_stack import weapon_attack_damage_multiplier
 from app.combat.hunters_mark_splash import resolve_hunters_mark_splash
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.cunning_strike import (
@@ -89,6 +90,30 @@ class AttackHitDamageResolution:
     deflect_missiles_reduction: int = 0
 
 
+def _scale_attack_components(
+    components: list[DamageRollComponent], multiplier: float,
+) -> list[DamageRollComponent]:
+    try:
+        if multiplier == 1.0 or not components:
+            return components
+        target_total = int(sum(item.total for item in components) * multiplier)
+        scaled = [int(item.total * multiplier) for item in components]
+        remainder = target_total - sum(scaled)
+        for index in range(remainder):
+            scaled[index % len(scaled)] += 1
+        return [
+            item.model_copy(update={"total": amount})
+            for item, amount in zip(components, scaled, strict=True)
+        ]
+    except Exception:
+        logger.exception(
+            "Failed to scale %d attack-damage components by multiplier %s.",
+            len(components),
+            multiplier,
+        )
+        raise
+
+
 def resolve_attack_hit_damage(
     attacker: CombatantState,
     defender: CombatantState,
@@ -122,6 +147,9 @@ def resolve_attack_hit_damage(
     reduction = apply_attack_damage_reduction(defender, attack, rolled_components, dice)
     rolled_components = reduction.components
     rolled_components, uncanny_used = apply_uncanny_dodge(attacker, defender, rolled_components)
+    rolled_components = _scale_attack_components(
+        rolled_components, weapon_attack_damage_multiplier(attacker, attack),
+    )
     damage_roll = aggregate_damage_components(rolled_components)
     applied_total, components = apply_damage_defenses(
         defender,

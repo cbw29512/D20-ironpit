@@ -4,6 +4,8 @@ from app.combat.undead_fortitude import consume_survival_save_log
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 import logging
 from app.combat.action_economy import is_available, spend
+from app.combat.alternate_spell_casts import spend_alternate_cast
+from app.combat.concentration import start_concentration
 from app.combat.condition_rules import close_hit_is_automatic_critical
 from app.combat.environment_contexts import environment_context_disadvantage_sources
 from app.combat.conditions import attack_roll_condition_sources
@@ -34,6 +36,7 @@ from app.domain.events import BattleEvent
 from app.domain.modifiers import ModifierKind
 from app.domain.spell_cast_modifiers import ResourceBackedSpellRangeModifier
 from app.domain.spells import SpellAttackAction
+from app.domain.alternate_spell_casts import AlternateSpellCastGrant
 logger = logging.getLogger(__name__)
 def resolve_spell_attack(
     sequence: int, round_number: int, caster: EncounterCombatant, target: EncounterCombatant,
@@ -43,6 +46,7 @@ def resolve_spell_attack(
     cast_slot_level: int | None = None,
     spend_cast_costs: bool = True,
     skip_range_check: bool = False,
+    alternate_cast: AlternateSpellCastGrant | None = None,
 ) -> BattleEvent:
     try:
         if spell.action_cost == "reaction":
@@ -57,17 +61,30 @@ def resolve_spell_attack(
             raise ValueError(f"{spell.name} target is out of range.")
         resource = (
             cast_slot_resource(caster, spell, turn_key, cast_slot_level)
-            if spend_cast_costs and spell.level > 0 else None
+            if spend_cast_costs and spell.level > 0 and alternate_cast is None else None
         )
-        if spend_cast_costs and spell.level > 0 and resource is None:
+        if alternate_cast is not None and (
+            alternate_cast.spell_id != spell.id
+            or alternate_cast.cast_level != (cast_slot_level or spell.level)
+        ):
+            raise ValueError(f"Alternate cast does not match {spell.name}.")
+        if spend_cast_costs and spell.level > 0 and resource is None and alternate_cast is None:
             requested = cast_slot_level if cast_slot_level is not None else spell.level
             raise ValueError(f"No level {requested} spell slot remains for {spell.name}.")
         if spend_cast_costs:
             expire_on_owner_event(caster.state, "spell_cast", [
                 member.state for member in [*setup.heroes, *setup.monsters]
             ])
+            if spell.concentration:
+                start_concentration(
+                    caster.state, caster.combatant_id, spell.id, round_number,
+                    [member.state for member in [*setup.heroes, *setup.monsters]],
+                    expires_round=round_number + int(spell.duration_minutes or 0) * 10,
+                    slot_level=(cast_slot_level or spell.level) if spell.level > 0 else None,
+                )
         ward = check_targeting_ward(caster, target, dice)
         if ward is not None and not ward.succeeded:
+            alternate_remaining = spend_alternate_cast(caster.state, alternate_cast) if alternate_cast is not None else None
             if resource is not None:
                 mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
             if spend_cast_costs:
@@ -79,7 +96,7 @@ def resolve_spell_attack(
             if spend_cast_costs:
                 apply_spell_cast_timed_resistance(caster, spell, round_number)
             event = blocked_targeting_event(sequence, round_number, caster, target, spell.name, ward)
-            event.resource_remaining = resource.current_uses if resource is not None else range_remaining
+            event.resource_remaining = resource.current_uses if resource is not None else alternate_remaining if alternate_cast is not None else range_remaining
             if range_modifier is not None:
                 event.description += f" {caster.state.template.name} uses {range_modifier.name}."
             return event
@@ -117,6 +134,7 @@ def resolve_spell_attack(
         consume_sap(caster.state); consume_attacks_against_advantage(target.state)
         if resource is not None:
             mark_slot_spell_cast(caster.state, turn_key); resource.current_uses -= 1
+        alternate_remaining = spend_alternate_cast(caster.state, alternate_cast) if alternate_cast is not None else None
         if spend_cast_costs:
             spend(caster.state, spell.action_cost)
         range_remaining = (
@@ -136,7 +154,7 @@ def resolve_spell_attack(
             round_number=round_number, turn_key=turn_key, dice=dice,
             slot_level=cast_slot_level,
         )
-        remaining = resource.current_uses if resource is not None else None
+        remaining = resource.current_uses if resource is not None else alternate_remaining
         outcome = "CRITICAL HIT" if critical else "HIT" if hit else "MISS"
         description = f"{caster.state.template.name}: {outcome} with {spell.name}."
         if range_modifier is not None:
@@ -156,7 +174,7 @@ def resolve_spell_attack(
             death_save_successes_before=death_success_before, death_save_failures_before=death_failure_before,
             death_save_successes=target.state.death_save_successes, death_save_failures=target.state.death_save_failures,
             is_stable=target.state.is_stable, is_dead=target.state.is_dead, feature_id=spell.id,
-            resource_remaining=remaining if resource is not None else range_remaining,
+            resource_remaining=remaining if (resource is not None or alternate_cast is not None) else range_remaining,
             concentration_ended_effect_id=concentration_before if concentration_before and target.state.concentration is None else None,
             animation=spell.animation, description=description + consume_survival_save_log(target.state) + consume_zero_hp_replacement_log(target.state),
         )

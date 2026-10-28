@@ -80,7 +80,16 @@
     const factor = damageFactor(target.state, spell.damageType);
     const normal = meanDamage(spell.damageDiceCount || 0, spell.damageDiceSize || 6, spell.damageBonus || 0) * factor;
     const critical = meanDamage((spell.damageDiceCount || 0) * 2, spell.damageDiceSize || 6, spell.damageBonus || 0) * factor;
-    return Math.max(0, (probabilities.hit - probabilities.critical) * normal + probabilities.critical * critical);
+    let control = 0;
+    for (const effect of spell.onHitModifierEffects || []) {
+      if (effect.kind !== "weapon-attack-damage-multiplier" || !effect.requiredAttackAbility) continue;
+      const strengthDamage = Math.max(0, ...(target.state.template.attacks || [])
+        .filter((attack) => (attack.attackAbility || attack.attack_ability) === effect.requiredAttackAbility)
+        .map((attack) => meanDamage(attack.diceCount || 0, attack.diceSize || 6, attack.damageBonus || 0)));
+      control += strengthDamage * (1 - (effect.multiplier ?? 1)) * 3;
+    }
+    return Math.max(0, (probabilities.hit - probabilities.critical) * normal
+      + probabilities.critical * critical + probabilities.hit * control);
   }
 
   function autoHitSpell(target, action, projectileCount) {

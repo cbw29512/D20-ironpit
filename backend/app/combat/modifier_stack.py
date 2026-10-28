@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
+import logging
 
 from app.combat.cover_modifiers import strongest_cover_bonus
 from app.combat.debuff_counters import debuff_is_countered
@@ -18,6 +19,8 @@ from app.domain.damage_sources import DamageSourceQualifier
 from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.runtime import CombatantState
 from app.domain.weapons import WeaponAttack
+
+logger = logging.getLogger(__name__)
 
 
 def add_modifier(state: CombatantState, modifier: CombatModifier) -> None:
@@ -103,6 +106,31 @@ def attack_damage_source_qualifiers(
         and item.source_qualifier is not None
     )
     return qualifiers
+
+
+def weapon_attack_damage_multiplier(state: CombatantState, attack: WeaponAttack) -> float:
+    """Stack distinct effects, but keep only the strongest identical damage multiplier."""
+    try:
+        strongest: dict[tuple[str, str | None], float] = {}
+        for item in state.active_modifiers:
+            if (
+                item.kind is not ModifierKind.WEAPON_ATTACK_DAMAGE_MULTIPLIER
+                or item.required_attack_ability != attack.attack_ability
+            ):
+                continue
+            key = (item.source_effect_id, item.required_attack_ability)
+            strongest[key] = min(strongest.get(key, 1.0), item.multiplier)
+        result = 1.0
+        for multiplier in strongest.values():
+            result *= multiplier
+        return result
+    except Exception:
+        logger.exception(
+            "Failed to resolve weapon-attack damage multipliers for %s using %s.",
+            state.template.name,
+            attack.weapon.id,
+        )
+        raise
 
 
 def effective_speed(state: CombatantState) -> int:

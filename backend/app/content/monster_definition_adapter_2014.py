@@ -31,6 +31,7 @@ from app.content.monster_definition_adapter_support_2014 import (
 )
 from app.content.monster_innate_spells_2014 import (
     innate_auto_hit_spell_actions_2014,
+    innate_spell_attack_actions_2014,
     innate_persistent_save_zone_actions_2014,
     innate_spell_save_actions_2014,
 )
@@ -201,6 +202,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         death_trigger_actions=death_trigger_actions_2014(monster),
         save_actions=save_capabilities_2014(monster),
         spell_save_actions=innate_spell_save_actions_2014(monster),
+        spell_attack_actions=innate_spell_attack_actions_2014(monster),
         auto_hit_spell_actions=innate_auto_hit_spell_actions_2014(monster),
         persistent_save_zone_actions=[
             *[zone for zone in [fetid_cloud_zone_2014(monster)] if zone is not None],

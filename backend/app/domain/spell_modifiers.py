@@ -14,6 +14,7 @@ SpellModifierKind = Literal[
     "death-save-advantage", "healing-maximize", "condition-immunity", "attacks-against-advantage",
     "attacks-against-disadvantage", "targeting-save-gate", "bonus-damage", "weapon-damage-flat",
     "speed", "debuff-counter",
+    "weapon-attack-damage-multiplier",
     "zero-hp-replacement", "invisibility-benefits-suppressed",
 ]
 
@@ -23,6 +24,8 @@ class SpellModifierEffect(BaseModel):
 
     kind: SpellModifierKind
     flat_bonus: int = 0
+    multiplier: float = Field(default=1.0, gt=0.0, le=4.0)
+    required_attack_ability: AbilityName | None = None
     minimum_value: int = Field(default=0, ge=0, le=100)
     dice_count: int = Field(default=0, ge=0, le=20)
     dice_size: int = Field(default=0, ge=0, le=100)
@@ -50,6 +53,11 @@ class SpellModifierEffect(BaseModel):
             raise ValueError(f"{self.kind} does not accept dice.")
         if self.kind in {"attack-roll-flat", "saving-throw-flat", "weapon-damage-flat"} and not self.flat_bonus:
             raise ValueError(f"{self.kind} requires a nonzero flat bonus.")
+        if self.kind == "weapon-attack-damage-multiplier":
+            if self.multiplier == 1.0 or self.required_attack_ability is None:
+                raise ValueError("Weapon-attack damage multipliers require a non-unity multiplier and attack ability.")
+        elif self.multiplier != 1.0 or self.required_attack_ability is not None:
+            raise ValueError(f"{self.kind} does not accept a damage multiplier or attack ability.")
         if self.kind == "armor-class-minimum":
             if self.minimum_value < 1 or self.flat_bonus:
                 raise ValueError("Minimum AC effects require a positive minimum and no flat bonus.")

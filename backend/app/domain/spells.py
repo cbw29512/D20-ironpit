@@ -89,6 +89,8 @@ class SpellAttackAction(BaseModel):
     on_hit_timed_effects: list[OnHitTimedEffect] = Field(default_factory=list)
     miss_damage: Literal["none", "half"] = "none"
     matching_dice_leap_range_ft: int = Field(default=0, ge=0)
+    concentration: bool = False
+    duration_minutes: int | None = Field(default=None, ge=1)
     animation: str = "spell-attack"
     source: str | None = None
 
@@ -98,6 +100,8 @@ class SpellAttackAction(BaseModel):
             raise ValueError("Damaging spell attacks require a damage type.")
         if self.level == 0 and (self.attacks_per_slot_above or self.upcast_dice_per_level):
             raise ValueError("Cantrip spell attacks cannot scale by spell-slot level.")
+        if self.concentration and self.duration_minutes is None:
+            raise ValueError("Concentration spell attacks require a certified duration.")
         if self.matching_dice_leap_range_ft:
             if self.matching_dice_leap_range_ft % 5:
                 raise ValueError("Matching-dice leap range must use 5-foot increments.")

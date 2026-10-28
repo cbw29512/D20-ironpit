@@ -1,0 +1,19 @@
+{
+  "applicable_2024_card_count": 0,
+  "applicable_2024_cards": [],
+  "applicable_card_count": 1,
+  "applicable_cards": [
+    "night-hag"
+  ],
+  "edition_audit_note": "No 2024 source card declares the same Strength-weapon damage-halving debuff.",
+  "exceptions": [],
+  "remaining_card_count": 0,
+  "source_cards_2024_audited": 330,
+  "source_cards_scanned": 327,
+  "status": "complete",
+  "wired_browser_card_count": 1,
+  "wired_cards": [
+    "night-hag"
+  ],
+  "wired_python_card_count": 1
+}

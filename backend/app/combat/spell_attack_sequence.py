@@ -11,6 +11,7 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent
 from app.domain.spell_cast_modifiers import ResourceBackedSpellRangeModifier
 from app.domain.spells import SpellAttackAction
+from app.domain.alternate_spell_casts import AlternateSpellCastGrant
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +58,7 @@ def resolve_spell_attack_sequence(
     *,
     slot_level: int = 0,
     range_modifier: ResourceBackedSpellRangeModifier | None = None,
+    alternate_cast: AlternateSpellCastGrant | None = None,
 ) -> tuple[list[BattleEvent], int]:
     """Resolve one spell cast containing one or more independent spell attacks."""
     try:
@@ -81,6 +83,7 @@ def resolve_spell_attack_sequence(
                 range_modifier=range_modifier,
                 cast_slot_level=slot_level if spell.level > 0 else None,
                 spend_cast_costs=index == 0,
+                alternate_cast=alternate_cast if index == 0 else None,
             )
             chain, next_sequence = damage_event_chain(
                 next_sequence + 1,
