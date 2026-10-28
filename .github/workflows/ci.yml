@@ -49,6 +49,8 @@ jobs:
         run: python scripts/report_innate_nondetection_bindings_2014.py --check
       - name: Verify 2014 innate Vicious Mockery coverage
         run: python scripts/report_innate_vicious_mockery_bindings_2014.py --check
+      - name: Verify 2014 innate Magic Missile coverage
+        run: python scripts/report_innate_magic_missile_bindings_2014.py --check
       - name: Audit 327-card audible maintained control coverage
         run: python scripts/report_audible_maintained_control_bindings_2014.py
       - name: Audit 327-card non-offensive Dodge coverage
@@ -653,6 +655,7 @@ jobs:
           node frontend/browser-2014-innate-blindness.test.cjs
           node frontend/browser-2014-innate-nondetection.test.cjs
           node frontend/browser-2014-innate-vicious-mockery.test.cjs
+          node frontend/browser-2014-innate-magic-missile.test.cjs
           node frontend/browser-frightful-presence.test.cjs
           node frontend/browser-grouped-failed-save.test.cjs
           node frontend/browser-source-visible-repeat-save.test.cjs

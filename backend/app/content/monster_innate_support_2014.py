@@ -8,6 +8,7 @@ from app.content.monster_innate_spells_2014 import (
     _DISPEL_ATTACKER_TYPES_2014,
     _innate,
     _spells,
+    innate_auto_hit_spell_actions_2014,
     innate_persistent_save_zone_actions_2014,
     innate_spell_save_actions_2014,
 )
@@ -120,6 +121,7 @@ def innate_spell_resources_2014(monster) -> list[ResourceDefinition]:
     try:
         resources: list[ResourceDefinition] = []
         bound = {action.id for action in innate_spell_save_actions_2014(monster)}
+        bound.update(action.id for action in innate_auto_hit_spell_actions_2014(monster))
         bound.update(action.id for action in innate_persistent_save_zone_actions_2014(monster))
         bound.update(action.id for action in innate_timed_self_buffs_2014(monster))
         for spell in _spells(monster):
@@ -141,15 +143,26 @@ def innate_spell_resources_2014(monster) -> list[ResourceDefinition]:
 
 
 def innate_alternate_spell_casts_2014(monster) -> list[AlternateSpellCastGrant]:
-    """Spend printed 1/day innate uses instead of hero spell slots."""
+    """Use printed innate frequency instead of hero spell slots."""
     try:
         resources = {item.id for item in innate_spell_resources_2014(monster)}
+        rows = {str(item.get("id") or ""): item for item in _spells(monster)}
+        actions = [
+            *[
+                action for action in innate_spell_save_actions_2014(monster)
+                if action.id in resources
+            ],
+            *innate_auto_hit_spell_actions_2014(monster),
+        ]
         return [
             AlternateSpellCastGrant(
                 source_id=action.id, source_name=action.name, spell_id=action.id,
-                cast_level=max(1, action.level), resource_id=action.id, resource_cost=1,
+                cast_level=action.level,
+                resource_id=action.id if action.id in resources else None,
+                resource_cost=1,
             )
-            for action in innate_spell_save_actions_2014(monster) if action.id in resources
+            for action in actions
+            if action.level > 0 and action.id in rows
         ]
     except Exception:
         logger.exception("Failed to compile 2014 innate alternate casts for %s.", monster.name)
@@ -158,6 +171,7 @@ def innate_alternate_spell_casts_2014(monster) -> list[AlternateSpellCastGrant]:
 
 def innate_spell_names_2014(monster) -> set[str]:
     names = {action.name.casefold() for action in innate_spell_save_actions_2014(monster)}
+    names.update(action.name.casefold() for action in innate_auto_hit_spell_actions_2014(monster))
     names.update(action.name.casefold() for action in innate_persistent_save_zone_actions_2014(monster))
     names.update(action.name.casefold() for action in innate_timed_self_buffs_2014(monster))
     names.update(action.name.casefold() for action in innate_condition_removal_2014(monster))
@@ -177,6 +191,8 @@ def supports_innate_spellcasting_2014(monster) -> bool:
             return False
         bound = ARENA_NEUTRAL_INNATE_SPELLS_2014 | _PIT_BANNED_INNATE_SPELLS_2014 | {
             action.id for action in innate_spell_save_actions_2014(monster)
+        } | {
+            action.id for action in innate_auto_hit_spell_actions_2014(monster)
         } | {
             action.id for action in innate_timed_self_buffs_2014(monster)
         } | {
