@@ -74,3 +74,30 @@ def prepared_spell_actions_2014(monster):
         else:
             actions["unbound_spell_ids"].append(spell_id)
     return actions
+
+
+def supports_prepared_spellcasting_2014(monster) -> bool:
+    """Certify source-to-shared-capability binding, never a new spell resolver."""
+    if monster.spellcasting is None:
+        return False
+    try:
+        from app.content.monster_spell_slot_resources_2014 import monster_spell_slot_resources_2014
+        actions = prepared_spell_actions_2014(monster)
+        resources = monster_spell_slot_resources_2014(monster)
+        if actions["unbound_spell_ids"] or not resources:
+            return False
+        available = {resource.id for resource in resources}
+        if not any(actions[field] for field in
+                   ("spell_save_actions", "healing_actions", "defensive_spell_actions")):
+            return False
+        for category in ("healing_actions",):
+            for action in actions[category]:
+                if action.resource_id and action.resource_id not in available:
+                    return False
+        for category in ("defensive_spell_actions",):
+            for action in actions[category]:
+                if action.level and f"spell-slot-{action.level}" not in available:
+                    return False
+        return True
+    except ValueError:
+        return False
