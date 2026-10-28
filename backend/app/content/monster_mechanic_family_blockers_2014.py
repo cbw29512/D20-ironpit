@@ -23,6 +23,7 @@ from app.content.monster_legendary_bindings_2014 import supports_legendary_actio
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_save_capabilities_2014 import unsupported_save_actions_2014
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_prepared_spells_2014 import supports_prepared_spellcasting_2014
 from app.content.monster_grapple_auto_hit_source_2014 import source_proves_grapple_auto_hit_2014
 from app.content.monster_zero_hp_prevention_2014 import supports_zero_hp_prevention_2014
 from app.content.monster_death_triggers_2014 import supports_death_triggers_2014
@@ -59,7 +60,8 @@ def mechanic_family_blockers_2014(
             "limited-use": unbound_limited,
             "spellcasting": (
                 None if (
-                    innate_supported and not monster.spellcasting
+                    (innate_supported and not monster.spellcasting)
+                    or (supports_prepared_spellcasting_2014(monster) and not monster.innate_spellcasting)
                 ) else (monster.innate_spellcasting or monster.spellcasting)
             ),
             "zero-hp": monster.zero_hp_prevention if not supports_zero_hp_prevention_2014(monster) else None,
