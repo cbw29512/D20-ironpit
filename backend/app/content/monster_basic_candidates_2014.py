@@ -108,7 +108,8 @@ def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     if monster.id in _PIT_REMOVED_MONSTER_IDS_2014:
         return ("arena:removed",)
     if is_arena_neutral_monster_2014(monster):
-        return ("arena:neutral",)
+        # Arena-neutral traits have no outcome-changing effect in the standard Pit; do not block source admission.
+        pass
     blockers: list[str] = []
     blockers.extend(attack_blockers_2014(monster))
     blockers.extend(multiattack_blockers_2014(monster))
