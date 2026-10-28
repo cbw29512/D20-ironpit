@@ -144,6 +144,6 @@ def test_acolyte_serializes_existing_spell_actions_for_browser():
     assert "sacred-flame" in {action["id"] for action in row["spell_save_actions"]}
     assert "cure-wounds" in {action["id"] for action in row["healingActions"]}
     assert {"bless", "sanctuary"} <= {
-        action["id"] for action in row["defensiveSpellActions"]
+        action["id"] for action in row["defensive_spell_actions"]
     }
     assert row["resources"]["spell-slot-1"] == source.spellcasting["slots"]["1"]
