@@ -30,6 +30,7 @@ from app.content.monster_definition_adapter_support_2014 import (
     save_bonuses_2014,
 )
 from app.content.monster_innate_spells_2014 import (
+    innate_auto_hit_spell_actions_2014,
     innate_persistent_save_zone_actions_2014,
     innate_spell_save_actions_2014,
 )
@@ -136,6 +137,11 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     blockers = basic_blockers_2014(monster)
     if blockers:
         raise ValueError(f"{monster.id} is not a basic 2014 candidate: {', '.join(blockers)}")
+    return adapt_monster_mechanics_2014(monster)
+
+
+def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinition:
+    """Compile modeled mechanics without claiming full basic-roster admission."""
     core = monster_core_fields_2014(monster.id)
     scores = AbilityScores(**ability_values_2014(monster))
     movement = movement_modes_2014(monster)
@@ -195,6 +201,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
         death_trigger_actions=death_trigger_actions_2014(monster),
         save_actions=save_capabilities_2014(monster),
         spell_save_actions=innate_spell_save_actions_2014(monster),
+        auto_hit_spell_actions=innate_auto_hit_spell_actions_2014(monster),
         persistent_save_zone_actions=[
             *[zone for zone in [fetid_cloud_zone_2014(monster)] if zone is not None],
             *innate_persistent_save_zone_actions_2014(monster),

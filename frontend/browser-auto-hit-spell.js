@@ -16,9 +16,20 @@
     if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.name} cannot be cast in this action window.`);
     if (target.side === caster.side || target.state.is_dead || !target.state.is_alive) throw new Error(`${action.name} requires a living enemy target.`);
     if (S().distance(caster, target) > action.range) throw new Error(`${action.name} target is out of range.`);
-    if (!C().slotSpellAvailable(caster.state, turnKey)) throw new Error("A spell slot was already expended this turn.");
-    const resourceId = `spell-slot-${choice.slotLevel}`;
-    if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains for ${action.name}.`);
+    const alternate = choice.alternateCast || null;
+    const resourceId = alternate?.resource_id || `spell-slot-${choice.slotLevel}`;
+    if (alternate) {
+      if (alternate.spell_id !== action.id || alternate.cast_level !== choice.slotLevel) {
+        throw new Error("Alternate auto-hit spell cast does not match the selected spell.");
+      }
+      if (alternate.resource_id
+        && !((caster.state.resources?.[alternate.resource_id] || 0) >= (alternate.resource_cost || 1))) {
+        throw new Error(`Insufficient ${alternate.resource_id} for ${alternate.source_name}.`);
+      }
+    } else {
+      if (!C().slotSpellAvailable(caster.state, turnKey)) throw new Error("A spell slot was already expended this turn.");
+      if (!(caster.state.resources?.[resourceId] > 0)) throw new Error(`No level ${choice.slotLevel} spell slot remains for ${action.name}.`);
+    }
 
     if ((caster.state.timed_effects || []).some((effect) => effect.ends_on_owner_spell_cast)) {
       const expiry = window.IRON_PIT_BROWSER_TIMED?.expireOnOwnerEvent;
@@ -48,8 +59,11 @@
 
     const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
     A().applyDamage(target.state, total, false, total > 0 ? [action.damageType] : [], states, setup, components);
-    C().markSlotSpellCast(caster.state, turnKey);
-    caster.state.resources[resourceId] -= 1;
+    if (alternate?.resource_id) caster.state.resources[resourceId] -= (alternate.resource_cost || 1);
+    else if (!alternate) {
+      C().markSlotSpellCast(caster.state, turnKey);
+      caster.state.resources[resourceId] -= 1;
+    }
     E().spend(caster.state, action.actionCost);
 
     return {
@@ -65,7 +79,7 @@
       hp_before: hpBefore, hp_after: target.state.current_hp,
       is_dead: target.state.is_dead, is_stable: target.state.is_stable,
       temporary_hp_before: temporaryHpBefore, temporary_hp_after: target.state.temporary_hp,
-      resource_remaining: caster.state.resources[resourceId],
+      resource_remaining: alternate && !alternate.resource_id ? null : caster.state.resources[resourceId],
       animation: action.animation || "spell-projectile",
       description: `${caster.state.template.name} casts ${action.name}: ${choice.projectileCount} projectiles automatically strike ${target.state.template.name}.`,
     };

@@ -4,12 +4,14 @@ import logging
 
 from app.combat.owner_action_expiry import expire_on_owner_event
 from app.combat.action_economy import is_available, spend
+from app.combat.alternate_spell_casts import spend_alternate_cast
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.combat.zero_hp import apply_damage
 from app.combat.spell_damage_maximizers import maximized_auto_hit_rolls
 from app.domain.auto_hit_spells import AutoHitSpellAction
+from app.domain.alternate_spell_casts import AlternateSpellCastGrant
 from app.domain.combatants import DamageType
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spell_damage_maximizers import SpellDamageMaximizerGrant
@@ -30,6 +32,7 @@ def resolve_auto_hit_spell(
     turn_key: str,
     dice,
     damage_maximizer: SpellDamageMaximizerGrant | None = None,
+    alternate_cast: AlternateSpellCastGrant | None = None,
 ) -> BattleEvent:
     try:
         if not is_available(caster.state, action.action_cost):
@@ -38,15 +41,22 @@ def resolve_auto_hit_spell(
             raise ValueError(f"{action.name} requires a living enemy target.")
         if combatant_distance(caster, target) > action.range_ft:
             raise ValueError(f"{action.name} target is out of range.")
-        if not slot_spell_available(caster.state, turn_key):
-            raise ValueError(f"A spell slot was already expended this turn.")
-        resource = next(
-            (item for item in caster.state.resources
-             if item.id == f"spell-slot-{slot_level}" and item.current_uses > 0),
-            None,
-        )
-        if resource is None:
-            raise ValueError(f"No level {slot_level} spell slot remains for {action.name}.")
+        resource = None
+        if alternate_cast is not None:
+            if alternate_cast.spell_id != action.id or alternate_cast.cast_level != slot_level:
+                raise ValueError("Alternate auto-hit spell cast does not match the selected spell.")
+            remaining = spend_alternate_cast(caster.state, alternate_cast)
+        else:
+            if not slot_spell_available(caster.state, turn_key):
+                raise ValueError(f"A spell slot was already expended this turn.")
+            resource = next(
+                (item for item in caster.state.resources
+                 if item.id == f"spell-slot-{slot_level}" and item.current_uses > 0),
+                None,
+            )
+            if resource is None:
+                raise ValueError(f"No level {slot_level} spell slot remains for {action.name}.")
+            remaining = resource.current_uses - 1
 
         expire_on_owner_event(caster.state, "spell_cast", [
             member.state for member in [*setup.heroes, *setup.monsters]
@@ -90,8 +100,9 @@ def resolve_auto_hit_spell(
             affected_states=affected_states,
             damage_components=applied_components,
         )
-        mark_slot_spell_cast(caster.state, turn_key)
-        resource.current_uses -= 1
+        if resource is not None:
+            mark_slot_spell_cast(caster.state, turn_key)
+            resource.current_uses -= 1
         spend(caster.state, action.action_cost)
 
         return BattleEvent(
@@ -114,7 +125,7 @@ def resolve_auto_hit_spell(
             hp_after=target.state.current_hp,
             temporary_hp_before=temp_before,
             temporary_hp_after=target.state.temporary_hp,
-            resource_remaining=resource.current_uses,
+            resource_remaining=remaining,
             animation=action.animation,
             description=(
                 f"{caster.state.template.name} casts {action.name}: "

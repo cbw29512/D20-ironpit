@@ -5,11 +5,13 @@ from dataclasses import dataclass
 
 from app.combat.barrier_line_of_effect import clear_line_between_members
 from app.combat.action_economy import is_available
+from app.combat.alternate_spell_casts import available_alternate_casts
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import auto_hit_spell_expected_damage
 from app.combat.spellcasting import legal_slot_levels
 from app.combat.spell_damage_maximizers import safe_maximizer_for_spell
 from app.domain.auto_hit_spells import AutoHitSpellAction
+from app.domain.alternate_spell_casts import AlternateSpellCastGrant
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spell_damage_maximizers import SpellDamageMaximizerGrant
 
@@ -24,6 +26,7 @@ class AutoHitSpellChoice:
     projectile_count: int
     expected_damage: float
     damage_maximizer: SpellDamageMaximizerGrant | None = None
+    alternate_cast: AlternateSpellCastGrant | None = None
 
 
 def choose_auto_hit_spell(
@@ -37,12 +40,17 @@ def choose_auto_hit_spell(
         for index, action in enumerate(caster.state.template.auto_hit_spell_actions):
             if action.action_cost == "reaction" or not is_available(caster.state, action.action_cost):
                 continue
-            for slot_level in legal_slot_levels(
+            cast_options = [(slot_level, None) for slot_level in legal_slot_levels(
                 caster.state,
                 turn_key,
                 action.level,
                 higher_slot_scaling=action.projectiles_per_slot_above > 0,
-            ):
+            )]
+            cast_options.extend(
+                (grant.cast_level, grant)
+                for grant in available_alternate_casts(caster.state, action.id)
+            )
+            for slot_level, alternate_cast in cast_options:
                 projectile_count = action.projectile_count + (
                     slot_level - action.level
                 ) * action.projectiles_per_slot_above
@@ -64,6 +72,7 @@ def choose_auto_hit_spell(
                         damage_maximizer=safe_maximizer_for_spell(
                             caster, action.id, slot_level,
                         ),
+                        alternate_cast=alternate_cast,
                     )
                     candidates.append((
                         score, -action.level, -index, target.combatant_id, choice,

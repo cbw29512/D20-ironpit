@@ -69,6 +69,7 @@ def resolve_best_spell_offense(
                 turn_key,
                 dice,
                 damage_maximizer=auto_hit.damage_maximizer,
+                alternate_cast=auto_hit.alternate_cast,
             )
             chain_events, next_sequence = damage_event_chain(
                 sequence + 1,

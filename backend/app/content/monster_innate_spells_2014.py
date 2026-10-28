@@ -17,7 +17,9 @@ from app.content.shared_control_spells_2014 import (
 )
 from app.content.shared_zone_spells_2014 import wall_of_fire_2014
 from app.content.sorcerer_draconic_2014_spells import fireball_2014
+from app.content.sorcerer_draconic_2014_spell_support import magic_missile_2014
 from app.content.bard_2014_vicious_mockery import vicious_mockery_action_2014
+from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.persistent_save_zones import PersistentSaveZoneAction
 from app.domain.debuffs import DebuffCounter
 from app.domain.save_effects import FailedSaveTimedEffect
@@ -26,6 +28,19 @@ from app.domain.spells import SpellSaveAction
 from app.domain.targeting import AreaTargeting
 
 logger = logging.getLogger(__name__)
+
+
+def innate_auto_hit_spell_actions_2014(monster: SourceMonster2014) -> list[AutoHitSpellAction]:
+    """Bind printed innate auto-hit spells without monster-name dispatch."""
+    try:
+        return [
+            magic_missile_2014()
+            for spell in _spells(monster)
+            if str(spell.get("id") or "") == "magic-missile"
+        ]
+    except Exception:
+        logger.exception("Failed to compile 2014 innate auto-hit spells for %s.", monster.name)
+        raise
 
 def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSaveAction]:
     """Bind printed combat innate save spells. Arena-neutral spells stay source-only."""
