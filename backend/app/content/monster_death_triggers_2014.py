@@ -29,6 +29,31 @@ _CONDITION_DEATH_TRIGGER = re.compile(
     r"saving throw on each of its turns, ending the effect on itself on a success\.$",
     re.IGNORECASE,
 )
+
+_MEPHIT_DAMAGE_DEATH_TRIGGER = re.compile(
+    r"^When the .+? dies, it explodes in a burst of .+?\. Each creature within "
+    r"(?P<range>\d+) feet of it must make a DC (?P<dc>\d+) (?P<ability>[A-Za-z]+) "
+    r"saving throw, taking (?P<average>\d+) \((?P<count>\d+)d(?P<size>\d+)\) "
+    r"(?P<damage_type>[a-z]+) damage on a failed save, or half as much damage "
+    r"on a successful one\.$",
+    re.IGNORECASE,
+)
+_STEAM_DAMAGE_DEATH_TRIGGER = re.compile(
+    r"^When the mephit dies, it explodes in a cloud of steam\. Each creature within "
+    r"(?P<range>\d+) feet of the mephit must succeed on a DC (?P<dc>\d+) "
+    r"(?P<ability>[A-Za-z]+) saving throw or take (?P<average>\d+) "
+    r"\((?P<count>\d+)d(?P<size>\d+)\) (?P<damage_type>[a-z]+) damage\.$",
+    re.IGNORECASE,
+)
+_MAGMIN_DAMAGE_DEATH_TRIGGER = re.compile(
+    r"^When the magmin dies, it explodes in a burst of fire and magma\. Each creature "
+    r"within (?P<range>\d+) feet of it must make a DC (?P<dc>\d+) "
+    r"(?P<ability>[A-Za-z]+) saving throw, taking (?P<average>\d+) "
+    r"\((?P<count>\d+)d(?P<size>\d+)\) (?P<damage_type>[a-z]+) damage on a failed "
+    r"save, or half as much damage on a successful one\. Flammable objects that "
+    r"aren't being worn or carried in that area are ignited\.$",
+    re.IGNORECASE,
+)
 _IGNORED_OBJECT_AFTERMATH = re.compile(
     r"^The explosion ignites flammable objects in that area that aren't being worn "
     r"or carried, and it destroys the .+?'s weapons\.$",
@@ -120,6 +145,44 @@ def _source_condition_action(name: str, body: str) -> SaveCapabilityDefinition |
     )
 
 
+def _source_mephit_damage_action(name: str, body: str) -> SaveCapabilityDefinition | None:
+    match = _MEPHIT_DAMAGE_DEATH_TRIGGER.fullmatch(body)
+    if match is None:
+        return None
+    return _build_damage_action(name, match, success_damage="half")
+
+
+def _source_steam_damage_action(name: str, body: str) -> SaveCapabilityDefinition | None:
+    match = _STEAM_DAMAGE_DEATH_TRIGGER.fullmatch(body)
+    if match is None:
+        return None
+    return _build_damage_action(name, match, success_damage="none")
+
+
+def _source_magmin_damage_action(name: str, body: str) -> SaveCapabilityDefinition | None:
+    match = _MAGMIN_DAMAGE_DEATH_TRIGGER.fullmatch(body)
+    if match is None:
+        return None
+    return _build_damage_action(name, match, success_damage="half")
+
+
+def _build_damage_action(name: str, match, success_damage: str) -> SaveCapabilityDefinition | None:
+    count, size, average = int(match["count"]), int(match["size"]), int(match["average"])
+    if count < 1 or size < 2 or average != count * (size + 1) // 2:
+        return None
+    radius = int(match["range"])
+    effect_id = re.sub(r"[^a-z0-9]+", "-", name.casefold()).strip("-")
+    return SaveCapabilityDefinition(
+        id=effect_id, name=name, save_ability=match["ability"].casefold(),
+        dc=int(match["dc"]), range_ft=radius, max_targets=20,
+        target_scope="all-other-creatures",
+        area={"shape": "emanation", "origin": "self", "radius_ft": radius},
+        damage=DiceSpec(count=count, size=size),
+        damage_type=match["damage_type"].casefold(), success_damage=success_damage,
+        animation="death-trigger",
+    )
+
+
 def death_trigger_actions_2014(
     monster: SourceMonster2014,
 ) -> list[SaveCapabilityDefinition]:
@@ -127,10 +190,17 @@ def death_trigger_actions_2014(
     if monster.death_trigger_actions:
         return [_compile(raw) for raw in monster.death_trigger_actions]
     sections = source_sections_2014(monster.source_traits)
+    def _try_compile(name, body):
+        return (
+            _source_damage_action(name, body)
+            or _source_condition_action(name, body)
+            or _source_mephit_damage_action(name, body)
+            or _source_steam_damage_action(name, body)
+            or _source_magmin_damage_action(name, body)
+        )
     return [
         action for name in semantic_death_trigger_names_2014(monster)
-        if (action := _source_damage_action(name, sections[name])
-            or _source_condition_action(name, sections[name])) is not None
+        if (action := _try_compile(name, sections[name])) is not None
     ]
 
 
