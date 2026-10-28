@@ -129,3 +129,21 @@ def test_acolyte_admitted_via_shared_prepared_spells_and_immutable_source():
     assert {action.id for action in definition.defensive_spell_actions} >= {"bless", "sanctuary"}
     assert any(resource.id == "spell-slot-1" for resource in definition.resources)
     assert source.model_dump(mode="json") == before
+
+
+def test_acolyte_serializes_existing_spell_actions_for_browser():
+    from app.content.monster_source_2014 import load_monster_source_2014
+    from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+    from app.content.capability_compiler import compile_combatant
+    from scripts.browser_template_serializer import template_row
+
+    source = next(m for m in load_monster_source_2014() if m.id == "acolyte")
+    template = compile_combatant(adapt_basic_monster_2014(source))
+    row = template_row(template)
+    assert row["id"] == "2014-acolyte"
+    assert "sacred-flame" in {action["id"] for action in row["spell_save_actions"]}
+    assert "cure-wounds" in {action["id"] for action in row["healingActions"]}
+    assert {"bless", "sanctuary"} <= {
+        action["id"] for action in row["defensiveSpellActions"]
+    }
+    assert row["resources"]["spell-slot-1"] == source.spellcasting["slots"]["1"]
