@@ -9,6 +9,7 @@ from app.content.monster_innate_spells_2014 import (
     _innate,
     _spells,
     innate_auto_hit_spell_actions_2014,
+    innate_spell_attack_actions_2014,
     innate_persistent_save_zone_actions_2014,
     innate_spell_save_actions_2014,
 )
@@ -122,6 +123,7 @@ def innate_spell_resources_2014(monster) -> list[ResourceDefinition]:
         resources: list[ResourceDefinition] = []
         bound = {action.id for action in innate_spell_save_actions_2014(monster)}
         bound.update(action.id for action in innate_auto_hit_spell_actions_2014(monster))
+        bound.update(action.id for action in innate_spell_attack_actions_2014(monster))
         bound.update(action.id for action in innate_persistent_save_zone_actions_2014(monster))
         bound.update(action.id for action in innate_timed_self_buffs_2014(monster))
         for spell in _spells(monster):
@@ -153,6 +155,7 @@ def innate_alternate_spell_casts_2014(monster) -> list[AlternateSpellCastGrant]:
                 if action.id in resources
             ],
             *innate_auto_hit_spell_actions_2014(monster),
+            *innate_spell_attack_actions_2014(monster),
         ]
         return [
             AlternateSpellCastGrant(
@@ -172,6 +175,7 @@ def innate_alternate_spell_casts_2014(monster) -> list[AlternateSpellCastGrant]:
 def innate_spell_names_2014(monster) -> set[str]:
     names = {action.name.casefold() for action in innate_spell_save_actions_2014(monster)}
     names.update(action.name.casefold() for action in innate_auto_hit_spell_actions_2014(monster))
+    names.update(action.name.casefold() for action in innate_spell_attack_actions_2014(monster))
     names.update(action.name.casefold() for action in innate_persistent_save_zone_actions_2014(monster))
     names.update(action.name.casefold() for action in innate_timed_self_buffs_2014(monster))
     names.update(action.name.casefold() for action in innate_condition_removal_2014(monster))
@@ -193,6 +197,8 @@ def supports_innate_spellcasting_2014(monster) -> bool:
             action.id for action in innate_spell_save_actions_2014(monster)
         } | {
             action.id for action in innate_auto_hit_spell_actions_2014(monster)
+        } | {
+            action.id for action in innate_spell_attack_actions_2014(monster)
         } | {
             action.id for action in innate_timed_self_buffs_2014(monster)
         } | {

@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.combatants import DamageType
 from app.domain.debuffs import DebuffCounter
 from app.domain.damage_sources import DamageSourceQualifier
+from app.domain.action_types import AbilityName
 
 
 class ModifierKind(StrEnum):
@@ -31,6 +32,7 @@ class ModifierKind(StrEnum):
     TARGETING_SAVE_GATE = "targeting-save-gate"
     BONUS_DAMAGE = "bonus-damage"
     WEAPON_DAMAGE_FLAT = "weapon-damage-flat"
+    WEAPON_ATTACK_DAMAGE_MULTIPLIER = "weapon-attack-damage-multiplier"
     SPEED = "speed"
     SPEED_MULTIPLIER = "speed-multiplier"
     DEBUFF_COUNTER = "debuff-counter"
@@ -50,6 +52,7 @@ class CombatModifier(BaseModel):
     kind: ModifierKind
     flat_bonus: int = 0
     multiplier: float = Field(default=1.0, gt=0.0, le=4.0)
+    required_attack_ability: AbilityName | None = None
     minimum_value: int = Field(default=0, ge=0, le=100)
     dice_count: int = Field(default=0, ge=0, le=20)
     dice_size: int = Field(default=0, ge=0, le=100)

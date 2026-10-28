@@ -41,10 +41,13 @@ def apply_spell_attack_damage_outcome(
             target_event_id=target.combatant_id if hit else None,
             slot_level=slot_level,
         )
+        if not rolled:
+            damage_roll = None
         if miss_half:
             rolled = [item.model_copy(update={"total": item.total // 2}) for item in rolled]
         applied_total, damage_components = apply_damage_defenses(target.state, rolled)
-        damage_roll.total = applied_total
+        if damage_roll is not None:
+            damage_roll.total = applied_total
         affected_states = [entry.state for entry in [*setup.heroes, *setup.monsters]]
         apply_damage(
             target.state,
@@ -60,7 +63,8 @@ def apply_spell_attack_damage_outcome(
             for index, effect in enumerate(spell.on_hit_modifier_effects):
                 add_modifier(target.state, build_spell_modifier(
                     caster.combatant_id, target.combatant_id, spell.id, effect, index,
-                    spell.name, round_number=round_number,
+                    spell.name, concentration_required=spell.concentration,
+                    round_number=round_number,
                 ))
             for effect in spell.on_hit_timed_effects:
                 applied = apply_timed_condition(
@@ -75,6 +79,9 @@ def apply_spell_attack_damage_outcome(
                     applied_round=round_number,
                     expires_round=round_number + effect.duration_rounds,
                     expiry_timing=effect.expiry_timing,
+                    repeat_save_ability=effect.repeat_save_ability,
+                    repeat_save_dc=effect.repeat_save_dc,
+                    repeat_save_timing=effect.repeat_save_timing,
                     affected_states=affected_states,
                     use_default_poison_recovery=False,
                 )

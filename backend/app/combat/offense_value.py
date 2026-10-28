@@ -88,7 +88,20 @@ def spell_attack_expected_damage(
     factor = _damage_factor(target.state, DamageType(spell.damage_type) if spell.damage_type else None)
     normal = _mean_damage(spell.damage_dice_count, spell.damage_dice_size, spell.damage_bonus) * factor
     crit = _mean_damage(spell.damage_dice_count * 2, spell.damage_dice_size, spell.damage_bonus) * factor
-    return max(0.0, (hit - critical) * normal + critical * crit)
+    control = 0.0
+    for effect in spell.on_hit_modifier_effects:
+        if effect.kind != "weapon-attack-damage-multiplier" or effect.required_attack_ability is None:
+            continue
+        strength_damage = max((
+            _mean_damage(
+                attack.weapon.dice_count, attack.weapon.dice_size, attack.damage_bonus,
+            )
+            for attack in [target.state.template.weapon_attack, *target.state.template.alternate_weapon_attacks]
+            if attack is not None
+            if attack.attack_ability == effect.required_attack_ability
+        ), default=0.0)
+        control += strength_damage * (1.0 - effect.multiplier) * 3.0
+    return max(0.0, (hit - critical) * normal + critical * crit + hit * control)
 
 
 def _save_success_probability(target, action: SpellSaveAction) -> float:

@@ -128,6 +128,26 @@
     };
   }
 
+  function scaleAttackComponents(components, multiplier) {
+    try {
+      if (multiplier === 1 || !components.length) return components;
+      const targetTotal = Math.trunc(
+        components.reduce((sum, part) => sum + part.total, 0) * multiplier,
+      );
+      const totals = components.map((part) => Math.trunc(part.total * multiplier));
+      let remainder = targetTotal - totals.reduce((sum, value) => sum + value, 0);
+      for (let index = 0; remainder > 0; index += 1, remainder -= 1) {
+        totals[index % totals.length] += 1;
+      }
+      return components.map((part, index) => ({ ...part, total: totals[index] }));
+    } catch (error) {
+      console.error("Failed to scale browser attack-damage components.", {
+        componentCount: components?.length, multiplier, error,
+      });
+      throw error;
+    }
+  }
+
   function resolve(attacker, defender, attack, critical, mode, turnKey, options = {}) {
     const hpBufferBefore = defender.current_hp + defender.temporary_hp;
     const members = options.setup ? [...options.setup.heroes, ...options.setup.monsters] : [];
@@ -150,14 +170,17 @@
     if (defender.template.attackDamageReductionReaction && typeof ADR()?.apply !== "function") throw new Error("Declared attack damage reduction Reaction requires browser-attack-damage-reduction.js.");
     const reduction = ADR()?.apply(defender, attack, rolled) || { components: rolled, used: false, reduction: 0, sourceId: null, sourceName: null };
     const uncanny = RD().applyUncannyDodge(attacker, defender, reduction.components);
+    const scaled = scaleAttackComponents(
+      uncanny.components, M().weaponAttackDamageMultiplier?.(attacker, attack) ?? 1,
+    );
     const bypassTypes = resistanceBypassTypes(attacker);
-    const damageComponents = uncanny.components.map((part) => { const resolved = DD().resolveDamage(
+    const damageComponents = scaled.map((part) => { const resolved = DD().resolveDamage(
       defender, part.total, part.damage_type, true, part.source_qualifiers || [], bypassTypes.has(part.damage_type),
     );
       return { ...part, applied_total: resolved.applied, absorbed_healing: resolved.healed || 0,
         absorption_source_name: resolved.sourceName || null }; });
     const appliedTotal = damageComponents.reduce((sum, part) => sum + part.applied_total, 0);
-    const damageRoll = { ...aggregate(uncanny.components), total: appliedTotal };
+    const damageRoll = { ...aggregate(scaled), total: appliedTotal };
     const appliedTypes = [...new Set(
       damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type),
     )];
@@ -193,6 +216,6 @@
   }
 
   window.IRON_PIT_BROWSER_HIT_DAMAGE = {
-    aggregate, applyZeroHpSaveDamageRider, resolve, resolveSaveDamage, saveDamageCausedZero,
+    aggregate, applyZeroHpSaveDamageRider, resolve, resolveSaveDamage, saveDamageCausedZero, scaleAttackComponents,
   };
 })();

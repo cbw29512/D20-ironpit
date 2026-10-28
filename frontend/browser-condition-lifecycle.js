@@ -9,6 +9,25 @@
     if (effect.repeat_save_timing !== timing) return false;
     return !(effect.effect_id === "poisoned" && effect.applied_round != null && round <= effect.applied_round);
   }
+
+  function endMatchingSourceConcentration(effect, setup) {
+    try {
+      if (!setup || !effect.source_effect_id) return false;
+      const members = [...setup.heroes, ...setup.monsters];
+      const source = members.find((member) => member.combatant_id === effect.source_id);
+      const concentration = source?.state.concentration;
+      if (concentration?.source_id !== effect.source_id
+          || concentration?.effect_id !== effect.source_effect_id) return false;
+      return Boolean(window.IRON_PIT_BROWSER_CONCENTRATION?.end(
+        source.state, members.map((member) => member.state),
+      ));
+    } catch (error) {
+      console.error("Failed to end matching source concentration after repeat save.", {
+        effectId: effect?.effect_id, sourceId: effect?.source_id, error,
+      });
+      throw error;
+    }
+  }
   function expiryDue(effect, round, timing, targetTurnsStarted = null) {
     if (effect.expiry_timing !== timing) return false;
     if (effect.expires_round != null && round < effect.expires_round) return false;
@@ -54,6 +73,7 @@
       if (repeatSaveDue(effect, round, timing)) {
         const save = repeatSave(target, effect, round, setup);
         let removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
+        if (save.succeeded) endMatchingSourceConcentration(effect, setup);
         const applied = [];
         if (!save.succeeded) {
           effect.repeat_save_failure_count = (effect.repeat_save_failure_count || 0) + 1;

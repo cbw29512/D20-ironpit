@@ -114,6 +114,7 @@ def resolve_best_spell_offense(
                 dice,
                 slot_level=attack.slot_level,
                 range_modifier=attack.range_modifier,
+                alternate_cast=attack.alternate_cast,
             )
         assert save is not None
         return resolve_spell(sequence, round_number, caster, setup, save, turn_key, dice)

@@ -9,6 +9,7 @@ from app.combat.timed_condition_saves import resolve_repeat_save
 from app.combat.timed_conditions import apply_terminal_condition_outcome, remove_effect_group
 from app.combat.timed_effect_expiry import timed_effect_expiry_due
 from app.combat.timed_effect_transition import activate_due_transitions
+from app.combat.concentration import end_concentration
 from app.domain.actions import ConditionTiming
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -28,6 +29,27 @@ def _repeat_save_due(effect, round_number: int, timing: ConditionTiming) -> bool
         and effect.applied_round is not None
         and round_number <= effect.applied_round
     )
+
+
+def _end_matching_source_concentration(effect, setup: EncounterSetup | None) -> bool:
+    try:
+        if setup is None or effect.source_effect_id is None:
+            return False
+        members = [*setup.heroes, *setup.monsters]
+        source = next((item for item in members if item.combatant_id == effect.source_id), None)
+        if source is None or source.state.concentration is None:
+            return False
+        concentration = source.state.concentration
+        if concentration.source_id != effect.source_id or concentration.effect_id != effect.source_effect_id:
+            return False
+        return end_concentration(source.state, [item.state for item in members])
+    except Exception:
+        logger.exception(
+            "Failed to end source concentration for timed effect %s from %s.",
+            effect.effect_id,
+            effect.source_id,
+        )
+        raise
 
 
 
@@ -51,6 +73,8 @@ def resolve_target_condition_timing(
             if _repeat_save_due(effect, round_number, timing):
                 roll, succeeded, buffs = resolve_repeat_save(target, effect, dice, round_number, setup)
                 removed = remove_effect_group(target.state, effect) if succeeded else []
+                if succeeded:
+                    _end_matching_source_concentration(effect, setup)
                 applied: list[str] = []
                 if not succeeded:
                     effect.repeat_save_failure_count += 1

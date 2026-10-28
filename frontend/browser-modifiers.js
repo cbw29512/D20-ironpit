@@ -75,6 +75,23 @@
   const weaponDamageFlat = (state, weaponId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "weapon-damage-flat" && (!item.weapon_id || item.weapon_id === weaponId))
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
+  function weaponAttackDamageMultiplier(state, attack) {
+    try {
+      const strongest = new Map();
+      for (const item of state.active_modifiers || []) {
+        if (item.kind !== "weapon-attack-damage-multiplier"
+            || item.required_attack_ability !== (attack.attackAbility || attack.attack_ability)) continue;
+        const key = `${item.source_effect_id}:${item.required_attack_ability}`;
+        strongest.set(key, Math.min(strongest.get(key) ?? 1, item.multiplier ?? 1));
+      }
+      return [...strongest.values()].reduce((value, multiplier) => value * multiplier, 1);
+    } catch (error) {
+      console.error("Failed to resolve browser weapon-attack damage multiplier.", {
+        combatantId: state?.combatant_id, attackId: attack?.id || attack?.weapon?.id, error,
+      });
+      throw error;
+    }
+  }
   const nextIncomingAttackRollFlat = (state, attackerId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "next-incoming-attack-roll-flat" && item.source_id !== attackerId)
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
@@ -156,6 +173,7 @@
   window.IRON_PIT_BROWSER_MODIFIERS = {
     add, applyD20Bonus, applyHitEffects, attackRollFlat, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage, d20TestAdvantage,
     damageSourceQualifiers, consumeNextAttackAgainstAdvantage, consumeNextIncomingAttackRollFlat, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
-    expireTargetTurn, nextAttackAgainstAdvantage, nextIncomingAttackRollFlat, removeSource, savingThrowFlat, validate, weaponDamageFlat,
+    expireTargetTurn, nextAttackAgainstAdvantage, nextIncomingAttackRollFlat, removeSource, savingThrowFlat, validate,
+    weaponAttackDamageMultiplier, weaponDamageFlat,
   };
 })();

@@ -16,6 +16,26 @@
   const T = () => window.IRON_PIT_BROWSER_TIMED;
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };
   const CE = () => window.IRON_PIT_BROWSER_SPELL_CAST_EFFECTS;
+  const CON = () => window.IRON_PIT_BROWSER_CONCENTRATION;
+
+  function spendAlternate(state, grant) {
+    try {
+      if (!grant) return null;
+      if (grant.resource_id == null) return null;
+      const cost = grant.resource_cost || 1;
+      const current = state.resources?.[grant.resource_id] || 0;
+      if (current < cost) throw new Error(`Insufficient ${grant.resource_id} for ${grant.source_name}.`);
+      state.resources[grant.resource_id] = current - cost;
+      return state.resources[grant.resource_id];
+    } catch (error) {
+      console.error("Failed to spend an alternate spell-attack cast.", {
+        resourceId: grant?.resource_id,
+        sourceName: grant?.source_name,
+        error,
+      });
+      throw error;
+    }
+  }
 
   function spendRangeModifier(state, option) {
     if (!option) return null;
@@ -45,8 +65,11 @@
     const allowedRange = spell.range * (rangeModifier?.rangeMultiplier || 1);
     if (!options.skipRangeCheck && distance > allowedRange) throw new Error(`${spell.name} target is out of range.`);
     const castSlotLevel = options.castSlotLevel ?? null;
-    const resourceId = spendCastCosts ? slotResource(caster, spell, turnKey, castSlotLevel) : null;
-    if (spendCastCosts && spell.level > 0 && !resourceId) {
+    const alternateCast = options.alternateCast || null;
+    if (alternateCast && (alternateCast.spell_id !== spell.id
+      || alternateCast.cast_level !== (castSlotLevel ?? spell.level))) throw new Error(`Alternate cast does not match ${spell.name}.`);
+    const resourceId = spendCastCosts && !alternateCast ? slotResource(caster, spell, turnKey, castSlotLevel) : null;
+    if (spendCastCosts && spell.level > 0 && !resourceId && !alternateCast) {
       throw new Error(`No level ${castSlotLevel ?? spell.level} spell slot remains for ${spell.name}.`);
     }
     if (spendCastCosts && (caster.state.timed_effects || []).some((effect) => effect.ends_on_owner_spell_cast)) {
@@ -54,14 +77,25 @@
       if (!expiry) throw new Error("Spell attacks require owner-effect expiry.");
       expiry(caster.state, "spell_cast", [...setup.heroes, ...setup.monsters].map((m) => m.state));
     }
+    if (spendCastCosts && spell.concentration) {
+      if (!CON()) throw new Error("Concentration spell attacks require the browser Concentration runtime.");
+      CON().start(
+        caster.state, caster.combatant_id, spell.id, round,
+        [...setup.heroes, ...setup.monsters].map((entry) => entry.state),
+        round + (spell.durationMinutes || 0) * 10,
+        spell.level > 0 ? (castSlotLevel ?? spell.level) : null,
+      );
+    }
     const ward = window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null;
     if (ward && !ward.succeeded) {
+      const alternateRemaining = spendCastCosts ? spendAlternate(caster.state, alternateCast) : null;
       if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
       if (spendCastCosts) E().spend(caster.state, spell.actionCost);
       const rangeRemaining = spendCastCosts ? spendRangeModifier(caster.state, rangeModifier) : null;
       if (spendCastCosts) CE()?.applyTimedResistance(caster, spell, round);
       const event = window.IRON_PIT_BROWSER_TARGETING_WARDS.blocked(sequence, round, caster, target, spell.name, ward);
-      event.resource_remaining = resourceId ? caster.state.resources[resourceId] : rangeRemaining;
+      event.resource_remaining = resourceId ? caster.state.resources[resourceId]
+        : alternateCast ? alternateRemaining : rangeRemaining;
       if (rangeModifier) event.description += ` ${caster.state.template.name} uses ${rangeModifier.name}.`;
       return event;
     }
@@ -82,6 +116,7 @@
     T()?.consumeNextAttackDisadvantage(caster.state);
     SAP().consume(caster.state); M().consumeAttacksAgainstAdvantage(target.state);
     if (resourceId) { C().markSlotSpellCast(caster.state, turnKey); caster.state.resources[resourceId] -= 1; }
+    const alternateRemaining = spendCastCosts ? spendAlternate(caster.state, alternateCast) : null;
     if (spendCastCosts) E().spend(caster.state, spell.actionCost);
     const rangeRemaining = spendCastCosts ? spendRangeModifier(caster.state, rangeModifier) : null;
     if (spendCastCosts) CE()?.applyTimedResistance(caster, spell, round);
@@ -154,6 +189,9 @@
             appliedRound: round,
             expiresRound: round + effect.durationRounds,
             expiryTiming: effect.expiryTiming,
+            repeatSaveAbility: effect.repeatSaveAbility || null,
+            repeatSaveDc: effect.repeatSaveDc ?? null,
+            repeatSaveTiming: effect.repeatSaveTiming || null,
             suppressAction: Boolean(effect.suppressAction),
             suppressBonusAction: Boolean(effect.suppressBonusAction),
             suppressReactions: Boolean(effect.suppressReactions),
@@ -191,7 +229,8 @@
       death_save_successes: target.state.death_save_successes, death_save_failures: target.state.death_save_failures,
       is_stable: target.state.is_stable, is_dead: target.state.is_dead, weapon_id: null, projectile: null, feature_id: spell.id,
       concentration_ended_effect_id: concentrationBefore && !target.state.concentration ? concentrationBefore : null,
-      resource_remaining: resourceId ? caster.state.resources[resourceId] : rangeRemaining, animation: spell.animation || "spell-attack",
+      resource_remaining: resourceId ? caster.state.resources[resourceId]
+        : alternateCast ? alternateRemaining : rangeRemaining, animation: spell.animation || "spell-attack",
       description: description + survivalLog + (window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT?.consumeLog(target.state) || ""),
     };
     if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, caster.state.template.name);

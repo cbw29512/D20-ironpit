@@ -69,6 +69,7 @@
             rangeModifier: choice.rangeModifier || null,
             castSlotLevel: spell.level > 0 ? slotLevel : null,
             spendCastCosts: index === 0,
+            alternateCast: index === 0 ? (choice.alternateCast || null) : null,
           },
         );
         sequence += 1;

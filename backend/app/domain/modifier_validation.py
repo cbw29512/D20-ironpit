@@ -33,6 +33,14 @@ def validate_combat_modifier_payload(modifier) -> None:
         raise ValueError("Flat attack modifiers require a nonzero bonus.")
     if modifier.kind is ModifierKind.WEAPON_DAMAGE_FLAT and modifier.flat_bonus == 0:
         raise ValueError("Flat weapon-damage modifiers require a nonzero bonus.")
+    if modifier.kind is ModifierKind.WEAPON_ATTACK_DAMAGE_MULTIPLIER:
+        if modifier.multiplier == 1.0 or modifier.required_attack_ability is None:
+            raise ValueError("Weapon-attack damage multipliers require a non-unity multiplier and attack ability.")
+    elif (
+        modifier.kind is not ModifierKind.SPEED_MULTIPLIER
+        and (modifier.multiplier != 1.0 or modifier.required_attack_ability is not None)
+    ):
+        raise ValueError(f"{modifier.kind.value} does not accept a damage multiplier or attack ability.")
     if modifier.kind is ModifierKind.NEXT_INCOMING_ATTACK_ROLL_FLAT and modifier.flat_bonus == 0:
         raise ValueError("Next incoming attack-roll flat modifiers require a nonzero bonus.")
     weapon_scoped_kinds = {
@@ -121,7 +129,10 @@ def validate_combat_modifier_payload(modifier) -> None:
     if modifier.kind is ModifierKind.SPEED_MULTIPLIER:
         if modifier.flat_bonus != 0 or modifier.multiplier == 1.0:
             raise ValueError("Speed multipliers require a non-1 multiplier and no flat bonus.")
-    elif modifier.multiplier != 1.0:
+    elif (
+        modifier.kind is not ModifierKind.WEAPON_ATTACK_DAMAGE_MULTIPLIER
+        and modifier.multiplier != 1.0
+    ):
         raise ValueError(f"{modifier.kind.value} does not accept a multiplier.")
     if modifier.kind is ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE and modifier.target_id is None:
         raise ValueError("Target-scoped attack Advantage requires a target id.")
