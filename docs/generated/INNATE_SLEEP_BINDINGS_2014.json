@@ -1,0 +1,113 @@
+{
+  "applicable_card_count": 4,
+  "applicable_cards": [
+    "dust-mephit",
+    "night-hag",
+    "oni",
+    "spirit-naga"
+  ],
+  "declared_access": [
+    {
+      "level": null,
+      "monster": "dust-mephit",
+      "source_kind": "innate",
+      "usage": "per_day",
+      "uses_per_day": 1
+    },
+    {
+      "level": null,
+      "monster": "night-hag",
+      "source_kind": "innate",
+      "usage": "per_day",
+      "uses_per_day": 2
+    },
+    {
+      "level": null,
+      "monster": "oni",
+      "source_kind": "innate",
+      "usage": "per_day",
+      "uses_per_day": 1
+    },
+    {
+      "level": 1,
+      "monster": "spirit-naga",
+      "source_kind": "prepared",
+      "usage": null,
+      "uses_per_day": null
+    }
+  ],
+  "exceptions": [
+    {
+      "missing_fields": [
+        "range_ft",
+        "area_radius_ft",
+        "pool_dice_count",
+        "pool_dice_size",
+        "duration_rounds",
+        "ends_on_damage",
+        "allowed_removal_action_ids",
+        "excluded_creature_types",
+        "excluded_condition_immunities"
+      ],
+      "monster": "dust-mephit",
+      "reason": "monster card declares spell access but omits the Sleep effect payload"
+    },
+    {
+      "missing_fields": [
+        "range_ft",
+        "area_radius_ft",
+        "pool_dice_count",
+        "pool_dice_size",
+        "duration_rounds",
+        "ends_on_damage",
+        "allowed_removal_action_ids",
+        "excluded_creature_types",
+        "excluded_condition_immunities"
+      ],
+      "monster": "night-hag",
+      "reason": "monster card declares spell access but omits the Sleep effect payload"
+    },
+    {
+      "missing_fields": [
+        "range_ft",
+        "area_radius_ft",
+        "pool_dice_count",
+        "pool_dice_size",
+        "duration_rounds",
+        "ends_on_damage",
+        "allowed_removal_action_ids",
+        "excluded_creature_types",
+        "excluded_condition_immunities"
+      ],
+      "monster": "oni",
+      "reason": "monster card declares spell access but omits the Sleep effect payload"
+    },
+    {
+      "missing_fields": [
+        "range_ft",
+        "area_radius_ft",
+        "pool_dice_count",
+        "pool_dice_size",
+        "duration_rounds",
+        "ends_on_damage",
+        "allowed_removal_action_ids",
+        "excluded_creature_types",
+        "excluded_condition_immunities"
+      ],
+      "monster": "spirit-naga",
+      "reason": "monster card declares spell access but omits the Sleep effect payload"
+    }
+  ],
+  "remaining_card_count": 4,
+  "shared_lifecycle_evidence": {
+    "condition": "unconscious",
+    "ends_on_damage_supported": true,
+    "python_browser_parity_test": "2014 Brass Dragon Sleep Breath",
+    "wake_action_id": "wake-sleeper"
+  },
+  "source_cards_scanned": 327,
+  "status": "blocked: immutable monster cards omit required Sleep spell-rule parameters",
+  "wired_browser_card_count": 0,
+  "wired_cards": [],
+  "wired_python_card_count": 0
+}
