@@ -4,6 +4,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_source_duergar_resilience_2014 import source_duergar_resilience_2014
 from app.content.monster_ally_immunity_2014 import visible_ally_immunity_grants_2014
 from app.content.monster_contextual_save_defenses import contextual_save_defenses_2014
 from app.domain.progression import SavingThrowAdvantageGrant
@@ -20,6 +21,7 @@ _BRAVE = "Brave"
 _GNOME_CUNNING = "Gnome Cunning"
 _FEY_ANCESTRY = "Fey Ancestry"
 _AGGRESSIVE = "Aggressive"
+_DUERGAR_RESILIENCE = "Duergar Resilience"
 _TWO_HEAD_TRAITS = frozenset({"Two-Headed", "Two Heads"})
 _TWO_HEAD_SAVE_TAGS = (
     "blinded", "charm", "charmed", "deafened", "frightened", "stunned", "unconscious",
@@ -83,6 +85,22 @@ def saving_throw_advantage_grants_2014(monster: SourceMonster2014) -> list[Savin
                 trait_name,
                 _TWO_HEAD_SAVE_TAGS,
             ))
+        resilience = source_duergar_resilience_2014(monster)
+        if resilience is not None:
+            if resilience.magical_effect_advantage:
+                grants.append(SavingThrowAdvantageGrant(
+                    source_id="duergar-resilience-magical",
+                    source_name=resilience.source_name,
+                    abilities=list(_ALL_SAVE_ABILITIES),
+                    requires_magical_effect=True,
+                ))
+            for tag in resilience.effect_tags:
+                grants.append(SavingThrowAdvantageGrant(
+                    source_id=f"duergar-resilience-{tag}",
+                    source_name=resilience.source_name,
+                    abilities=list(_ALL_SAVE_ABILITIES),
+                    required_effect_tags=[tag],
+                ))
         grants.extend(contextual_save_defenses_2014(monster)[1])
         return grants
     except Exception:
@@ -128,6 +146,8 @@ def bound_passive_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]
         if _AGGRESSIVE in monster.trait_names:
             bound.add(_AGGRESSIVE)
         bound.update(name for name in monster.trait_names if name in _TWO_HEAD_TRAITS)
+        if source_duergar_resilience_2014(monster) is not None:
+            bound.add(_DUERGAR_RESILIENCE)
         return frozenset(bound)
     except Exception:
         logger.exception("Failed to classify 2014 passive grant traits for %s.", monster.name)
