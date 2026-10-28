@@ -897,3 +897,13 @@ This audit removes campaign-time implementation debt without weakening any claus
 - `PARKED`: precisely stated semantic gap; move to next item.
 
 **Last edited 2026-10-08.** PR states above are snapshots; reconcile them from GitHub before each merge/queue promotion.
+
+## Shapechanger semantic family — selected next high-yield 2026-10-27
+
+- Highest-yield remaining semantic family not covered by dedicated open implementation PR (source:trait foundation #1083 is general planning).
+- Affects ~10 monsters: Doppelganger, Imp, Mimic, Quasit, Succubus/Incubus, Werebear, Wereboar, Wererat, Weretiger, Werewolf, and others with Change Shape.
+- Existing universal tactical form selection and replacement_forms.py provide the reusable primitive; no name dispatch.
+- Source-verified example: Imp Shapechanger uses Action to polymorph into rat/raven/spider forms with specific speed changes; statistics otherwise same; reverts on death. Forms may be combat-relevant via speed; not automatically arena-neutral.
+- Approved arena-neutral cases (from open issues) for Doppelganger, Mimic, Vampire, Werebear must be source-proved individually before classification.
+- This foundation does not clear blockers, admit monsters, or claim CI. Exact-head required before any admission.
+- Next: source-prove and bind approved neutral cases using verified_arena_inert_trait_2014, then combat-significant forms via existing form selection.
