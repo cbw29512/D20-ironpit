@@ -103,6 +103,7 @@ def build_ice_devil() -> CombatantTemplate:
         save_ability="dexterity",
         dc=17,
         range_ft=60,
+        area=AreaTargeting(shape="emanation", origin="self", radius_ft=5),
         damage_dice_count=10,
         damage_dice_size=6,
         damage_type="cold",
