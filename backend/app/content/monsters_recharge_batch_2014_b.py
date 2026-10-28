@@ -84,6 +84,7 @@ def build_ettercap() -> CombatantTemplate:
         dc=11,
         range_ft=30,
         max_targets=1,
+        area=AreaTargeting(shape="emanation", origin="self", radius_ft=5),
         damage_dice_count=0,
         success_damage="none",
         failed_save_timed_effect=FailedSaveTimedEffect(
@@ -107,6 +108,7 @@ def build_ghost() -> CombatantTemplate:
         dc=13,
         range_ft=5,
         max_targets=1,
+        area=AreaTargeting(shape="emanation", origin="self", radius_ft=5),
         damage_dice_count=0,
         success_damage="none",
         failed_save_timed_effect=FailedSaveTimedEffect(
