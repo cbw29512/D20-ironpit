@@ -11,6 +11,7 @@ from app.domain.models import CombatantTemplate, DamageType, VisualLoadout
 from app.domain.recharge import RechargeRule
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.size import CreatureSize
+from app.domain.targeting import AreaTargeting
 
 
 def _row(name: str) -> dict[str, object]:
@@ -23,8 +24,11 @@ def _row(name: str) -> dict[str, object]:
 def build_water_elemental() -> CombatantTemplate:
     """Source-bind 2014 Water Elemental Whelm (Recharge 4-6).
 
-    Foundation only. Forced displacement ignored per locked #1032.
+    Forced displacement ignored per locked #1032.
     Damage and conditions on failed save remain. Does not claim admission.
+
+    Combat path: area is a 5-ft self emanation so the existing choose_area_save
+    path can select it. Recharge gating is handled by the existing RechargeRule.
     """
     row = _row("Water Elemental")
     defenses = parse_defense_profile(row)
@@ -40,6 +44,7 @@ def build_water_elemental() -> CombatantTemplate:
         dc=15,
         range_ft=0,
         max_targets=20,
+        area=AreaTargeting(shape="emanation", origin="self", radius_ft=5),
         damage_dice_count=2,
         damage_dice_size=8,
         damage_bonus=2,
