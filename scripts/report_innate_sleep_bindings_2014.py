@@ -9,7 +9,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 sys.path.insert(0, str(ROOT))
-DEFAULT_OUTPUT = ROOT / "docs" / "generated" / "INNATE_SLEEP_BINDINGS_2014.json"
+DEFAULT_OUTPUT = ROOT / "docs" / "generated" / "SLEEP_BINDINGS_2014.json"
 
 from app.content.monster_innate_source_2014 import innate_spells_2014
 from app.content.monster_source_2014 import load_monster_source_2014
