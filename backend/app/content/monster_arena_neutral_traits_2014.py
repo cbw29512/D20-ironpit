@@ -94,6 +94,19 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "detect magic",
                 "isn't itself magical",
             ))
+
+        if trait_name == "Vampire Weaknesses":
+            # All clauses require absent Pit contexts: residence, running water,
+            # resting place, sunlight. No combat outcome changes.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(source).get("Vampire Weaknesses", "")
+            normalized = printed.casefold().replace("’", "'")
+            return all(clause in normalized for clause in (
+                "forbiddance",
+                "running water",
+                "stake to the heart",
+                "sunlight hypersensitivity",
+            ))
         # Pinned source must prove both the printed trait and its
         # arena-inert semantics. Other effects remain blocked independently.
         additional_inert_clauses = {
