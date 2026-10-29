@@ -435,7 +435,6 @@ Blocked monsters: **77**. These are grouped by printed ability name so the roste
 | Aberrant Ground | Gibbering Mouther | 1 |
 | Adhesive (Object Form Only) | Mimic | 1 |
 | Air Form | Air Elemental | 1 |
-| Ambusher | Doppelganger | 1 |
 | Bound | Shield Guardian | 1 |
 | Consume Life | Will-o'-Wisp | 1 |
 | Corrode Metal | Gray Ooze | 1 |
@@ -462,7 +461,6 @@ Blocked monsters: **77**. These are grouped by printed ability name so the roste
 | Shapechanger | Doppelganger, Imp, Mimic, Quasit, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf | 11 |
 | Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
-| Surprise Attack | Doppelganger | 1 |
 | Telepathic Bond | Succubus/Incubus | 1 |
 | Transparent | Gelatinous Cube | 1 |
 | Vampire Weaknesses | Vampire, Vampire Spawn | 2 |
@@ -482,7 +480,7 @@ Blocked monsters: **77**. These are grouped by printed ability name so the roste
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
 | `mechanic:recharge` | 8 |
-| `attack:complex` | 6 |
+| `attack:complex` | 5 |
 | `mechanic:swallow` | 5 |
 | `attack:damage-type` | 2 |
 | `source:reaction` | 2 |

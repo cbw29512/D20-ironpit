@@ -65,3 +65,20 @@ def test_target_grappled_by_self_advantage_requires_matching_grapple_source() ->
     assert conditional_attack_advantage_sources(attack, target, "ankheg") == 0
     target.grapple_sources.append(GrappleSource(source_id="ankheg", escape_dc=13))
     assert conditional_attack_advantage_sources(attack, target, "ankheg") == 1
+
+
+def test_round_one_initiative_lead_advantage_uses_fight_local_turn_state() -> None:
+    attacker = build_combatant_state(build_goblin_warrior())
+    target = build_combatant_state(build_demo_fighter())
+    attack = _attack().model_copy(update={
+        "conditional_attack_advantage": [
+            ConditionalAttackAdvantage(trigger="round1_initiative_lead"),
+        ],
+    })
+    attacker.turns_started = 1
+    assert conditional_attack_advantage_sources(attack, target, None, attacker) == 1
+    target.turns_started = 1
+    assert conditional_attack_advantage_sources(attack, target, None, attacker) == 0
+    target.turns_started = 0
+    attacker.turns_started = 2
+    assert conditional_attack_advantage_sources(attack, target, None, attacker) == 0

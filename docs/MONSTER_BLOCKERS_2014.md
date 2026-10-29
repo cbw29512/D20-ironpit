@@ -18,7 +18,7 @@ Blocker categories overlap: a monster may require several fixes.
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
 | `mechanic:recharge` | 8 |
-| `attack:complex` | 6 |
+| `attack:complex` | 5 |
 | `mechanic:swallow` | 5 |
 | `attack:damage-type` | 2 |
 | `source:reaction` | 2 |
@@ -58,7 +58,7 @@ the underlying ability is already implemented or trivial.
 | Darkmantle | attack:incomplete, source:extra-action | — |
 | Deva | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Djinni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
-| Doppelganger | attack:complex, source:extra-action, source:trait | Shapechanger, Ambusher, Surprise Attack |
+| Doppelganger | source:extra-action, source:trait | Shapechanger |
 | Drider | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Drow | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Druid | mechanic:spellcasting, source:trait | Spellcasting |

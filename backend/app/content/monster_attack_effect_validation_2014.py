@@ -18,7 +18,9 @@ _SAVE_DAMAGE_KEYS = frozenset({
 _ABILITIES = frozenset({
     "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",
 })
-ADVANTAGE_TRIGGERS_2014 = frozenset({"target_grappled_by_self"})
+ADVANTAGE_TRIGGERS_2014 = frozenset({
+    "target_grappled_by_self", "round1_initiative_lead",
+})
 
 
 def optional_size_2014(value: object) -> bool:

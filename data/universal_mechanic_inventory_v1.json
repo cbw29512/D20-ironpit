@@ -5868,7 +5868,7 @@
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
-      "attack:complex": 6,
+      "attack:complex": 5,
       "attack:damage-type": 2,
       "attack:incomplete": 17,
       "attack:none": 1,
@@ -5903,13 +5903,6 @@
           "Air Elemental"
         ],
         "printed_name": "Air Form"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Doppelganger"
-        ],
-        "printed_name": "Ambusher"
       },
       {
         "demand_count": 1,
@@ -6134,13 +6127,6 @@
           "Spirit Naga"
         ],
         "printed_name": "Spellcasting"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Doppelganger"
-        ],
-        "printed_name": "Surprise Attack"
       },
       {
         "demand_count": 1,

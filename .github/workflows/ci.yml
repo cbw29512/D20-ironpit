@@ -63,6 +63,8 @@ jobs:
         run: python scripts/report_recharge_save_half_damage_bindings_2014.py --check
       - name: Audit 327-card Swallow and Engulf source coverage
         run: python scripts/report_swallow_bindings_2014.py --check
+      - name: Audit 327-card surprise-opening source coverage
+        run: python scripts/report_surprise_opening_bindings_2014.py --check
       - name: Audit 327-card audible maintained control coverage
         run: python scripts/report_audible_maintained_control_bindings_2014.py
       - name: Audit 327-card non-offensive Dodge coverage
