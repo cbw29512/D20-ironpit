@@ -5,6 +5,7 @@ import logging
 
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.swallow_state import release_swallowed
+from app.combat.swallowed_damage_accounting import swallowed_regurgitation_ready
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,9 @@ def resolve_swallow_regurgitation(
             return False, None
         threshold = record.regurgitation_damage_threshold
         if threshold is None or damage_from_swallowed_on_turn < threshold:
+            return False, None
+        # The caller's total must reflect the same encounter-turn effect ledger.
+        if not swallowed_regurgitation_ready(record):
             return False, None
         if record.regurgitation_save_ability is None or record.regurgitation_save_dc is None:
             raise ValueError("Regurgitation threshold requires a printed saving throw.")
