@@ -164,5 +164,32 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN = { resolve, loseHitPoints, applyOrStackHpLoss };
+  function resolveEndTurn(sequence, round, member, setup) {
+    const events = [];
+    const states = members(setup).map(item => item.state || item);
+    if (member.state.is_dead || !member.state.is_alive) return {events, sequence};
+    for (const effect of [...(member.state.timed_effects || [])]) {
+      if (!(effect.end_of_turn_dice_count > 0)) continue;
+      if (!effect.end_of_turn_damage_type) throw new Error("End-turn damage type missing.");
+      let total = 0;
+      for (let i = 0; i < effect.end_of_turn_dice_count; i++)
+        total += D().roll(effect.end_of_turn_dice_size || 6);
+      const damageType = effect.end_of_turn_damage_type;
+      const hpBefore = member.state.current_hp;
+      const resolved = DD().resolveDamage(member.state, total, damageType);
+      A().applyDamage(member.state, resolved.applied, false, [damageType], states, setup);
+      const name = effect.source_effect_id || effect.effect_id;
+      events.push({
+        sequence: sequence++, round_number: round, event_type: "feature",
+        actor_id: member.combatant_id, actor_name: member.state.template.name,
+        target_id: member.combatant_id, target_name: member.state.template.name,
+        feature_id: name, hp_before: hpBefore, hp_after: member.state.current_hp,
+        animation: "feature",
+        description: `${name} deals ${resolved.applied} ${damageType} damage at turn end.`,
+      });
+      if (member.state.is_dead || !member.state.is_alive) break;
+    }
+    return {events, sequence};
+  }
+  window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN = { resolve, resolveEndTurn, loseHitPoints, applyOrStackHpLoss };
 })();
