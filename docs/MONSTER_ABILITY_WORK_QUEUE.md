@@ -1,5 +1,12 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Damage Transfer — implementation 2026-10-29
+
+- The mandatory source-semantic scan covers all 327 immutable cards and finds exactly two applicable cards: Cloaker and Rug of Smothering. Binding follows the complete printed split clause rather than monster or trait identity.
+- Both cards compile an immutable rule that activates only from the fight-local owner-to-target grapple/attachment relation. Incoming damage is split once before removal: the source takes half rounded down and the linked creature takes the remainder; transferred damage cannot recursively trigger another transfer. A fresh fight starts with no relation.
+- Generator-owned `docs/generated/DAMAGE_TRANSFER_BINDINGS_2014.json`: 327 scanned; 2 applicable; 2 Python wired; 2 browser wired; zero remaining; zero exceptions.
+- This clears only the Damage Transfer trait obligation. Cloaker and Rug of Smothering retain independent attack/Action/trait blockers, so source admission stays 250/327 and no completed fight is claimed. Production remains locked.
+
 ## Surprise-opening attack modifiers — implementation 2026-10-29
 
 - The mandatory source-semantic scan covers all 327 immutable cards and finds two applicable cards: Bugbear and Doppelganger. It does not route on monster or trait name.

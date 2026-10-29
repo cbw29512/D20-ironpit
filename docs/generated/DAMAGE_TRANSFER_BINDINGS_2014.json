@@ -1,0 +1,44 @@
+{
+  "applicable_card_count": 2,
+  "applicable_cards": [
+    "cloaker",
+    "rug-of-smothering"
+  ],
+  "bindings": [
+    {
+      "browser_wired": true,
+      "card_id": "cloaker",
+      "card_name": "Cloaker",
+      "parameters": {
+        "relation": "source_grapples_target",
+        "source_name": "Damage Transfer",
+        "source_rounding": "down",
+        "source_text": "While attached to a creature, the cloaker takes only half the damage dealt to it (rounded down), and that creature takes the other half.",
+        "transferred_damage_retriggers": false
+      },
+      "python_wired": true
+    },
+    {
+      "browser_wired": true,
+      "card_id": "rug-of-smothering",
+      "card_name": "Rug of Smothering",
+      "parameters": {
+        "relation": "source_grapples_target",
+        "source_name": "Damage Transfer",
+        "source_rounding": "down",
+        "source_text": "While it is grappling a creature, the rug takes only half the damage dealt to it, and the creature grappled by the rug takes the other half.",
+        "transferred_damage_retriggers": false
+      },
+      "python_wired": true
+    }
+  ],
+  "exceptions": [],
+  "remaining_card_count": 0,
+  "source_cards_scanned": 327,
+  "wired_browser_card_count": 2,
+  "wired_cards": [
+    "cloaker",
+    "rug-of-smothering"
+  ],
+  "wired_python_card_count": 2
+}

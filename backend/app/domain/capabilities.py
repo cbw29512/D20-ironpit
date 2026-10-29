@@ -22,6 +22,7 @@ from app.domain.character_builds import AbilityScores
 from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.damage_sources import ConditionalDamageDefense, DamageTakenTimedEffect
 from app.domain.damage_absorption import DamageAbsorptionRule
+from app.domain.damage_transfer import DamageTransferRule
 from app.domain.tactical_actions import BonusActionTacticalGrant
 from app.domain.effect_removal import EffectRemovalAction, EffectTagConditionGrant
 from app.domain.environment_contexts import EnvironmentContextReaction
@@ -120,6 +121,7 @@ class CombatantDefinition(BaseModel):
     damage_vulnerabilities: list[DamageType] = Field(default_factory=list)
     damage_immunities: list[DamageType] = Field(default_factory=list)
     damage_absorptions: list[DamageAbsorptionRule] = Field(default_factory=list)
+    damage_transfer: DamageTransferRule | None = None
     conditional_damage_defenses: list[ConditionalDamageDefense] = Field(default_factory=list)
     condition_immunities: list[ConditionName] = Field(default_factory=list)
     terminal_effect_tags: list[str] = Field(default_factory=list)
