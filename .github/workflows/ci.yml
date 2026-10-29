@@ -65,6 +65,8 @@ jobs:
         run: python scripts/report_swallow_bindings_2014.py --check
       - name: Audit 327-card surprise-opening source coverage
         run: python scripts/report_surprise_opening_bindings_2014.py --check
+      - name: Audit 327-card Damage Transfer source coverage
+        run: python scripts/report_damage_transfer_bindings_2014.py --check
       - name: Audit 327-card audible maintained control coverage
         run: python scripts/report_audible_maintained_control_bindings_2014.py
       - name: Audit 327-card non-offensive Dodge coverage
@@ -411,6 +413,7 @@ jobs:
           grep -q 'browser-champion.js' frontend/index.html
           grep -q 'browser-undead-fortitude.js' frontend/index.html
           grep -q 'browser-zero-hp.js' frontend/index.html
+          grep -q 'browser-damage-transfer.js' frontend/index.html
           grep -q 'browser-timed-conditions.js' frontend/index.html
           grep -q 'browser-timed-control-limits.js' frontend/index.html
           grep -q 'browser-timed-self-buffs.js' frontend/index.html
@@ -625,6 +628,7 @@ jobs:
           node frontend/browser-deathmatch.test.cjs
           node frontend/browser-zero-hp-lifecycle.test.cjs
           node frontend/browser-zero-hp-replacement.test.cjs
+          node frontend/browser-damage-transfer.test.cjs
           node frontend/browser-threshold-zero-hp.test.cjs
           node frontend/browser-replacement-forms.test.cjs
           node frontend/browser-replacement-form-provider.test.cjs

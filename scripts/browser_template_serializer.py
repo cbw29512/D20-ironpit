@@ -1169,6 +1169,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 {"sourceId": item.source_id, "sourceName": item.source_name, "damageType": _value(item.damage_type)}
                 for item in template.damage_absorptions
             ]
+        if template.damage_transfer:
+            row["damage_transfer"] = template.damage_transfer.model_dump(mode="json")
         if template.support_action_modes:
             row["support_action_modes"] = list(template.support_action_modes)
         if template.environment_context_reactions:

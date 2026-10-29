@@ -141,6 +141,7 @@ def apply_damage(
     affected_states: list[CombatantState] | None = None,
     setup=None,
     damage_components: list[DamageRollComponent] | None = None,
+    allow_damage_transfer: bool = True,
 ) -> ZeroHpOutcome:
     """Apply Temporary HP, Concentration, and SRD 5.2.1 zero-HP lifecycle rules."""
     try:
@@ -149,6 +150,11 @@ def apply_damage(
         if amount == 0 or state.is_dead:
             return "unchanged"
 
+        if allow_damage_transfer and state.template.damage_transfer:
+            from app.combat.damage_transfer import resolve_damage_transfer_for_state
+            amount, damage_components = resolve_damage_transfer_for_state(
+                state, amount, setup, dice, damage_types or set(), damage_components,
+            )
         incoming = amount
         types = damage_types or set()
         note_incoming_damage_types(state, types)

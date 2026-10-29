@@ -7,6 +7,7 @@ from app.content.monster_environment_context_bindings_2014 import environment_co
 from app.content.monster_berserk_2014 import berserk_self_buffs_2014
 from app.content.monster_damage_absorption import damage_absorptions_from_source
 from app.content.monster_damage_taken_effects_2014 import damage_taken_timed_effects_2014
+from app.content.monster_damage_transfer_2014 import damage_transfer_rule_2014
 from app.content.monster_included_weapon_traits_2014 import included_weapon_trait_names_2014
 from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_innate_conditions_2014 import innate_condition_ids_2014
@@ -127,6 +128,9 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             monster.source_traits, {item.lower() for item in monster.damage_immunities},
         ))
         bound.update(rule.source_name for rule in damage_taken_timed_effects_2014(monster))
+        damage_transfer = damage_transfer_rule_2014(monster)
+        if damage_transfer:
+            bound.add(damage_transfer.source_name)
         if _BLOOD_FRENZY in monster.trait_names and any(attack.kind == "melee" for attack in monster.attacks):
             bound.add(_BLOOD_FRENZY)
         if supports_reckless_2014(monster):

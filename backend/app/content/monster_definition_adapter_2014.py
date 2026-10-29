@@ -20,6 +20,7 @@ from app.content.monster_healing_2014 import healing_actions_2014, healing_resou
 from app.content.monster_heated_body_2014 import heated_body_retaliation_2014, corrosive_form_retaliation_2014
 from app.content.monster_grapple_periodic_2014 import supports_grapple_periodic_2014, source_grapple_periodic_proof_2014
 from app.content.monster_damage_taken_effects_2014 import damage_taken_timed_effects_2014
+from app.content.monster_damage_transfer_2014 import damage_transfer_rule_2014
 from app.content.monster_included_weapon_traits_2014 import weapon_damage_source_qualifiers_2014
 from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_innate_conditions_2014 import innate_condition_ids_2014
@@ -232,6 +233,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             swallow_action_from_source(source_grapple_swallow_2014(monster))
         ] if item is not None],
         damage_taken_timed_effects=damage_taken_timed_effects_2014(monster),
+        damage_transfer=damage_transfer_rule_2014(monster),
         damage_threshold_zero_hp_replacements=damage_threshold_zero_hp_replacements_2014(monster),
         save_success_overrides=[legendary_override] if legendary_override else [],
         combat_traits=modeled_combat_traits_2014(monster),

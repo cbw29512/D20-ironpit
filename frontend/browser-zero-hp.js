@@ -148,7 +148,15 @@
     }
   }
 
-  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null, damageComponents = []) {
+  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null, damageComponents = [], allowDamageTransfer = true) {
+    if (allowDamageTransfer && state.template.damage_transfer) {
+      if (!window.IRON_PIT_BROWSER_DAMAGE_TRANSFER) throw new Error("Declared Damage Transfer requires browser-damage-transfer.js.");
+      const transferred = window.IRON_PIT_BROWSER_DAMAGE_TRANSFER.resolveForState(
+        state, amount, setup, damageTypes, damageComponents,
+      );
+      amount = transferred.amount;
+      damageComponents = transferred.damageComponents;
+    }
     const incoming = amount;
     if (!incoming || state.is_dead) return "damaged";
     noteRegenTypes(state, damageTypes);
