@@ -12,7 +12,7 @@ from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.targeting import AreaTargeting
 
 logger = logging.getLogger(__name__)
-_RECHARGE = re.compile(r"^(?P<name>.+?) \\(Recharge (?P<minimum>[1-6])(?:-6)?\\)$", re.I)
+_RECHARGE = re.compile(r"^(?P<name>.+?) \(Recharge (?P<minimum>[1-6])(?:-6)?\)$", re.I)
 _BLINDING_CONE = re.compile(
     r"The [^.]+? exhales a (?P<length>\d+)-foot cone of blinding dust\. "
     r"Each creature in that area must succeed on a DC (?P<dc>\d+) Dexterity saving throw "
