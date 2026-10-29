@@ -125,6 +125,25 @@
       }
       if (living) M().applyHitEffects?.(actualTarget.state, attacker.combatant_id, attack);
       hitSave = living ? window.IRON_PIT_BROWSER_SAVES?.resolveOnHitConditionSave(actualTarget, attack, attacker.state.template, round, extra.setup, attacker) || null : null;
+      if (living && attack.onHitEndTurnDamage) {
+        const burn = attack.onHitEndTurnDamage;
+        if (!Number.isInteger(burn.diceCount) || burn.diceCount <= 0
+          || !Number.isInteger(burn.diceSize) || burn.diceSize < 2 || !burn.damageType)
+          throw new Error("Card-defined end-turn damage is incomplete.");
+        actualTarget.state.timed_effects ||= [];
+        if (!actualTarget.state.timed_effects.some(effect => effect.effect_id === burn.effectId)) {
+          actualTarget.state.timed_effects.push({
+            effect_id: burn.effectId, source_id: attacker.combatant_id,
+            source_effect_id: attack.id, end_of_turn_dice_count: burn.diceCount,
+            end_of_turn_dice_size: burn.diceSize,
+            end_of_turn_damage_type: burn.damageType, ends_if_source_dead: false,
+          });
+          actualTarget.state.active_effect_ids ||= [];
+          if (!actualTarget.state.active_effect_ids.includes(burn.effectId))
+            actualTarget.state.active_effect_ids.push(burn.effectId);
+          if (!applied.includes(burn.effectId)) applied.push(burn.effectId);
+        }
+      }
       if (living && attack.onHitOngoingHpLoss)
         hitSave = window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE.resolveOngoingHpLoss(actualTarget, attack, attacker.state.template, round, extra.setup, attacker) || hitSave;
       for (const id of [hitSave?.appliedCondition, ...(hitSave?.additionalConditions || [])]) if (id && !applied.includes(id)) applied.push(id);
