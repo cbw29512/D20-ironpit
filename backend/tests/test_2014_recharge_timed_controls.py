@@ -125,7 +125,7 @@ def test_recharge_timed_control_source_proof_fails_closed_but_not_on_card_name()
     renamed = source.model_copy(update={"id": "renamed-source", "name": "Renamed Source"})
     assert _binding("dust-mephit").id == source_proven_recharge_timed_controls_2014(renamed)[0].id
     edited = source.model_copy(update={
-        "source_actions": source.source_actions.replace("15-foot cone", "20-foot cone"),
+        "source_actions": source.source_actions.replace("blinding dust", "glittering dust"),
     })
     assert source_proven_recharge_timed_controls_2014(edited) == []
     assert not supports_recharge_rules_2014(edited)
