@@ -74,3 +74,24 @@ def test_generic_action_and_fight_state_retain_regurgitation_rules():
     assert victim.swallowed.regurgitation_damage_threshold == 30
     assert victim.swallowed.regurgitation_save_dc == 14
     assert victim.swallowed.regurgitation_range_ft == 10
+
+
+def test_behir_compiles_into_shared_runtime_and_browser_action():
+    from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+    from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+    from app.content.capability_compiler import compile_combatant
+    from scripts.browser_template_serializer import template_row
+
+    source = next(m for m in load_monster_source_2014() if m.id == "behir")
+    assert basic_blockers_2014(source) == ()
+    compiled = compile_combatant(adapt_basic_monster_2014(source))
+    assert len(compiled.swallow_actions) == 1
+    rule = compiled.swallow_actions[0]
+    assert rule.attack_id == "2014-behir-bite"
+    assert rule.regurgitation_damage_threshold == 30
+    assert rule.regurgitation_save_dc == 14
+    row = template_row(compiled)["swallowActions"][0]
+    assert row["regurgitationDamageThreshold"] == 30
+    assert row["regurgitationSaveDc"] == 14
+    assert row["damageDiceCount"] == 6
+    assert row["damageDiceSize"] == 6
