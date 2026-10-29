@@ -80,6 +80,17 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "the nightmare can grant resistance to fire damage "
                 "to anyone riding it."
             )
+        if trait_name == "Ignited Illumination":
+            # Light radii do not alter the arena's combat/visibility model.
+            # The separately printed Touch fire and Death Burst are still live mechanics.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(source).get(trait_name, "")
+            normalized = " ".join(printed.casefold().replace("’", "'").split())
+            return normalized == (
+                "as a bonus action, the magmin can set itself ablaze or extinguish "
+                "its flames. while ablaze, the magmin sheds bright light in a "
+                "10-foot radius and dim light for an additional 10 feet."
+            )
         if trait_name == "Sense Magic":
             # This only reports magic's presence. It never grants visibility,
             # target location, Advantage, a save, or a combat action.
