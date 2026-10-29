@@ -11,6 +11,7 @@ import re
 
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_sections_2014 import source_sections_2014
+from app.domain.size import CreatureSize
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +40,7 @@ _PATTERN = re.compile(
 class RegurgitatingSwallowProof2014:
     source_name: str
     attack_id: str
-    max_target_size: str
+    max_target_size: CreatureSize
     damage_dice_count: int
     damage_dice_size: int
     damage_type: str
@@ -66,6 +67,8 @@ def source_proven_regurgitating_swallow_2014(
             return None
         values = match.groupdict()
         if values["actor"].casefold() != monster.name.split()[-1].casefold():
+            return None
+        if len(monster.swallow_actions) != 1:
             return None
         attacks = [
             a for a in monster.attacks
@@ -94,9 +97,25 @@ def source_proven_regurgitating_swallow_2014(
             "piercing", "slashing",
         }:
             return None
+        data = monster.swallow_actions[0]
+        if not isinstance(data, dict) or any((
+            data.get("attack_id") != attacks[0].id,
+            data.get("max_target_size") != values["size"].casefold(),
+            data.get("requires_existing_grapple") is not True,
+            data.get("damage_dice_count") != count,
+            data.get("damage_dice_size") != sides,
+            data.get("damage_type") != values["type"].casefold(),
+            data.get("max_swallowed") != 1,
+            data.get("regurgitation_damage_threshold") != threshold,
+            data.get("regurgitation_save_dc") != dc,
+            data.get("regurgitation_save_ability") != values["ability"].casefold(),
+            data.get("regurgitation_range_ft") != regurg_range,
+            data.get("exit_movement_ft") != exit_ft,
+        )):
+            return None
         return RegurgitatingSwallowProof2014(
             source_name="Swallow", attack_id=attacks[0].id,
-            max_target_size=values["size"].casefold(),
+            max_target_size=CreatureSize(values["size"].casefold()),
             damage_dice_count=count, damage_dice_size=sides,
             damage_type=values["type"].casefold(), max_swallowed=1,
             regurgitation_damage_threshold=threshold,
