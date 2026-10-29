@@ -37,11 +37,13 @@ _PATTERN = re.compile(
 
 @dataclass(frozen=True)
 class RegurgitatingSwallowProof2014:
+    source_name: str
     attack_id: str
     max_target_size: str
     damage_dice_count: int
     damage_dice_size: int
     damage_type: str
+    max_swallowed: int
     regurgitation_damage_threshold: int
     regurgitation_save_ability: str
     regurgitation_save_dc: int
@@ -93,10 +95,10 @@ def source_proven_regurgitating_swallow_2014(
         }:
             return None
         return RegurgitatingSwallowProof2014(
-            attack_id=attacks[0].id,
+            source_name="Swallow", attack_id=attacks[0].id,
             max_target_size=values["size"].casefold(),
             damage_dice_count=count, damage_dice_size=sides,
-            damage_type=values["type"].casefold(),
+            damage_type=values["type"].casefold(), max_swallowed=1,
             regurgitation_damage_threshold=threshold,
             regurgitation_save_ability=values["ability"].casefold(),
             regurgitation_save_dc=dc,
