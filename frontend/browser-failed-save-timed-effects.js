@@ -85,7 +85,7 @@
           appliedRound: round,
           expiresRound: ownsLifecycle && rider.durationRounds != null
             ? round + rider.durationRounds : null,
-          expiryTiming: ownsLifecycle ? (rider.expiryTiming || "target_turn_end") : null,
+          expiryTiming: ownsLifecycle ? (Object.hasOwn(rider, "expiryTiming") ? rider.expiryTiming : "target_turn_end") : null,
           repeatSaveAbility: ownsLifecycle ? (rider.repeatSaveAbility || null) : null,
           repeatSaveDc: ownsLifecycle ? (rider.repeatSaveDc ?? null) : null,
           repeatSaveTiming: ownsLifecycle ? (rider.repeatSaveTiming || null) : null,
