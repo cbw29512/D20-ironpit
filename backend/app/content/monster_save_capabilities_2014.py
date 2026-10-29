@@ -97,28 +97,34 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
 
 
 def save_resources_2014(monster: SourceMonster2014) -> list[ResourceDefinition]:
-    ids = {
-        action.resource_id for action in save_capabilities_2014(monster)
-        if action.resource_id is not None and action.resource_id in monster.action_recharges
-    }
-    resources = [
-        ResourceDefinition(id=resource_id, name=resource_id.replace("-", " ").title(), max_uses=1)
-        for resource_id in sorted(ids)
-    ]
-    for action in source_proven_asymmetric_saves_2014(monster):
-        if action.resource_id and action.resource_id not in ids:
-            resources.append(ResourceDefinition(
-                id=action.resource_id, name=action.name, max_uses=1,
-            ))
-    return resources
+    try:
+        ids = {
+            action.resource_id for action in save_capabilities_2014(monster)
+            if action.resource_id is not None and action.resource_id in monster.action_recharges
+        }
+        resources = [
+            ResourceDefinition(id=resource_id, name=resource_id.replace("-", " ").title(), max_uses=1)
+            for resource_id in sorted(ids)
+        ]
+        for action in source_proven_asymmetric_saves_2014(monster):
+            if action.resource_id and action.resource_id not in ids:
+                resources.append(ResourceDefinition(id=action.resource_id, name=action.name, max_uses=1))
+        return resources
+    except Exception:
+        logger.exception("Failed to adapt 2014 save resources for %s.", monster.name)
+        raise
 
 
 def recharge_rules_2014(monster: SourceMonster2014) -> list[RechargeRule]:
-    if not supports_recharge_rules_2014(monster):
-        return []
-    excluded_ids = arena_unavailable_recharge_ids_2014(monster)
-    return [
-        RechargeRule(resource_id=action_id, minimum_roll=minimum)
-        for action_id, minimum in sorted(monster.action_recharges.items())
-        if action_id not in excluded_ids
-    ]
+    try:
+        if not supports_recharge_rules_2014(monster):
+            return []
+        excluded_ids = arena_unavailable_recharge_ids_2014(monster)
+        return [
+            RechargeRule(resource_id=action_id, minimum_roll=minimum)
+            for action_id, minimum in sorted(monster.action_recharges.items())
+            if action_id not in excluded_ids
+        ]
+    except Exception:
+        logger.exception("Failed to adapt 2014 Recharge rules for %s.", monster.name)
+        raise
