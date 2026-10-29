@@ -18,6 +18,7 @@ from app.combat.multi_target_save_actions import resolve_multi_target_save_actio
 from app.combat.persistent_save_zone_cast import cast_save_zone
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
+from app.combat.encounter_swallow_action import resolve_swallow_action
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,11 @@ def resolve_post_move_action(events, sequence, round_number, attacker, target, s
         threshold_event, sequence = resolve_hp_threshold_turn(sequence, round_number, attacker, setup, dice)
         if threshold_event is not None:
             events.extend(threshold_event if isinstance(threshold_event, list) else [threshold_event])
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+        swallowed = resolve_swallow_action(sequence, round_number, attacker, setup, dice)
+        if swallowed is not None:
+            more, sequence = swallowed
+            events.extend(more)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         pick = decide_post_move_offense(attacker, setup, turn_key)
         if pick.family == "save-zone":

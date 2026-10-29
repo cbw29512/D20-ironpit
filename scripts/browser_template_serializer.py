@@ -1446,6 +1446,22 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                  **({"repetitions": {"diceCount": variant.repetitions.dice_count, "diceSize": variant.repetitions.dice_size}} if variant.repetitions else {})}
                 for variant in template.attack_action.variants
             ]
+        if template.swallow_actions:
+            row["swallowActions"] = [
+                {
+                    "sourceName": action.source_name, "attackId": action.attack_id,
+                    "maxTargetSize": action.max_target_size.value,
+                    "requiresExistingGrapple": action.requires_existing_grapple,
+                    "damageDiceCount": action.damage_dice_count,
+                    "damageDiceSize": action.damage_dice_size,
+                    "damageType": action.damage_type,
+                    "maxSwallowed": action.max_swallowed,
+                    "exitMovementFt": action.exit_movement_ft,
+                    "blindsAndRestrains": action.blinds_and_restrains,
+                    "grantsTotalExternalCover": action.grants_total_external_cover,
+                }
+                for action in template.swallow_actions
+            ]
         if template.variable_heads is not None:
             profile = template.variable_heads
             row["variableHeads"] = {

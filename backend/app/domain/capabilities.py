@@ -44,6 +44,7 @@ from app.domain.traits import CombatTrait
 from app.domain.zero_hp_effects import DamageThresholdZeroHpReplacement
 from app.domain.unarmed import UnarmedStrikeDamage
 from app.domain.variable_heads import VariableHeadProfile
+from app.domain.swallow_actions import GrappleSwallowAction
 from app.domain.weapons import DamageType
 
 
@@ -130,6 +131,7 @@ class CombatantDefinition(BaseModel):
     recharge_rules: list[RechargeRule] = Field(default_factory=list)
     regeneration: RegenerationTrait | None = None
     variable_heads: VariableHeadProfile | None = None
+    swallow_actions: list[GrappleSwallowAction] = Field(default_factory=list)
     damage_threshold_zero_hp_replacements: list[DamageThresholdZeroHpReplacement] = Field(default_factory=list)
     triggered_extra_attack_stacks: list[TriggeredExtraAttackStack] = Field(default_factory=list)
     damage_taken_timed_effects: list[DamageTakenTimedEffect] = Field(default_factory=list)

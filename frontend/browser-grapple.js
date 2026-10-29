@@ -16,7 +16,7 @@
 
   function sync(state) {
     const grappled = state.grapple_sources.length > 0;
-    const restrained = state.grapple_sources.some((source) => source.restrains);
+    const restrained = Boolean(state.swallowed) || state.grapple_sources.some((source) => source.restrains);
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "grappled" && id !== "restrained");
     if (grappled) {
       state.active_effect_ids.push("grappled");

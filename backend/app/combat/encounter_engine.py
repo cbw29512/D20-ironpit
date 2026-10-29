@@ -35,6 +35,7 @@ from app.combat.legendary_actions import resolve_legendary_actions_after_turn
 from app.combat.triggered_extra_attacks import resolve_triggered_extra_attacks_after_turn
 from app.combat.turn_damage import clear_turn_damage
 from app.combat.variable_heads import end_owner_turn
+from app.combat.swallow_lifecycle import release_invalid_swallowed, source_turn_swallowed_damage
 from app.combat.timed_emanations import resolve_target_turn_start_emanations
 from app.combat.turn_start_save_condition_reaction import resolve_turn_start_save_condition_reactions
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
@@ -144,6 +145,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     events.append(build_finish_event(sequence, round_number, outcome))
                     return build_encounter_result(setup, initiative, events, outcome, round_number)
 
+                release_invalid_swallowed(setup)
                 member = by_id[combatant_id]
                 cleanup_disabled_source_effects(setup)
                 expire_source_turn_start_modifiers(affected_states, member.combatant_id)
@@ -155,6 +157,10 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     sequence, round_number, member, setup,
                 )
                 events.extend(expiry_events)
+                swallow_events, sequence = source_turn_swallowed_damage(
+                    sequence, round_number, member, setup, dice,
+                )
+                events.extend(swallow_events)
                 save_dot_events, sequence = resolve_start_of_turn_save_condition_damage_events(
                     sequence, round_number, member, setup, dice,
                 )
@@ -201,8 +207,10 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                         initiative_order=initiative.turn_order,
                     )
                     events.extend(turn_events)
+                    release_invalid_swallowed(setup)
                 end_events, sequence = _end_turn_lifecycle(sequence, round_number, member, setup, dice)
                 events.extend(end_events)
+                release_invalid_swallowed(setup)
                 triggered_events, sequence = resolve_pending_death_triggers(sequence, round_number, setup, dice)
                 events.extend(triggered_events)
 

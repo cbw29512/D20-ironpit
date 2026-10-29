@@ -61,6 +61,9 @@
         const target = ordered.find((candidate) =>
           candidate.side !== member.side
           && candidate.state.is_alive && !candidate.state.is_dead && candidate.state.current_hp > 0
+          && (member.state.swallowed
+            ? candidate.combatant_id === member.state.swallowed.source_id
+            : candidate.state.swallowed == null)
           && ST().distance(member, candidate) <= allowedRange);
         if (!target) break;
         const event = AR().resolve(

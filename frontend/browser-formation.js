@@ -41,17 +41,23 @@
     return policies.values().next().value || "normal";
   }
   function livingTargets(member, setup) {
+    const pool = enemies(member, setup);
+    if (member.state.swallowed) {
+      const owner = pool.find(target => target.combatant_id === member.state.swallowed.source_id);
+      return owner && alive(owner) ? [owner] : [];
+    }
     if (activeTargetPolicy(member) === "nearest_visible_creature") {
       const conditions = window.IRON_PIT_BROWSER_CONDITION_RULES;
       if (!conditions?.canSee) throw new Error("Nearest-visible target policy requires condition visibility rules.");
       return [...setup.heroes, ...setup.monsters]
-        .filter((target) => target !== member && alive(target))
+        .filter((target) => target !== member && alive(target) && target.state.swallowed == null)
         .filter((target) => conditions.canSee(member.state, target.state, S().distance(member, target)));
     }
-    const pool = enemies(member, setup), active = pool.filter(alive);
+    const active = pool.filter(target => alive(target) && target.state.swallowed == null);
     if (active.length) return active;
     return pool.filter((target) => target.state.template.kind === "character"
-      && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0);
+      && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0
+      && target.state.swallowed == null);
   }
   function targetOrder(member, setup, preferBackline = false) {
     const targets = livingTargets(member, setup);
@@ -69,7 +75,7 @@
   }
   function targetAllowed(member, target, attack, setup = null) {
     try {
-      if (attack.unavailableReason != null) return false;
+      if (attack.unavailableReason != null || target.state.swallowed != null) return false;
       const restrictedFollowUps = attacks(member.state.template).map((item) => item.charge)
         .filter((charge) => charge?.followUpAttackId === attack.id && charge.followUpRequiredTargetCondition);
       if (restrictedFollowUps.length && !restrictedFollowUps.some((charge) =>
