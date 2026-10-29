@@ -1,0 +1,744 @@
+{
+  "applicable_card_count": 30,
+  "applicable_cards": [
+    "adult-black-dragon",
+    "adult-blue-dragon",
+    "adult-green-dragon",
+    "adult-red-dragon",
+    "adult-white-dragon",
+    "ancient-black-dragon",
+    "ancient-blue-dragon",
+    "ancient-green-dragon",
+    "ancient-red-dragon",
+    "ancient-white-dragon",
+    "ankheg",
+    "behir",
+    "black-dragon-wyrmling",
+    "blue-dragon-wyrmling",
+    "chimera",
+    "dragon-turtle",
+    "green-dragon-wyrmling",
+    "half-red-dragon-veteran",
+    "hell-hound",
+    "iron-golem",
+    "magma-mephit",
+    "red-dragon-wyrmling",
+    "storm-giant",
+    "white-dragon-wyrmling",
+    "winter-wolf",
+    "young-black-dragon",
+    "young-blue-dragon",
+    "young-green-dragon",
+    "young-red-dragon",
+    "young-white-dragon"
+  ],
+  "bindings": [
+    {
+      "browser_wired": true,
+      "card_id": "adult-black-dragon",
+      "card_name": "Adult Black Dragon",
+      "parameters": {
+        "area": {
+          "length_ft": 60,
+          "origin": "self",
+          "shape": "line",
+          "width_ft": 5
+        },
+        "damage_dice": "12d8",
+        "damage_type": "acid",
+        "dc": 18,
+        "range_ft": 60,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Acid Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales acid in a 60-\u00adfoot line that is 5 feet wide. Each creature in that line must make a DC 18 Dexterity saving throw, taking 54 (12d8) acid damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "adult-blue-dragon",
+      "card_name": "Adult Blue Dragon",
+      "parameters": {
+        "area": {
+          "length_ft": 90,
+          "origin": "self",
+          "shape": "line",
+          "width_ft": 5
+        },
+        "damage_dice": "12d10",
+        "damage_type": "lightning",
+        "dc": 19,
+        "range_ft": 90,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Lightning Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales lightning in a 90-\u00adfoot line that is 5 feet wide. Each creature in that line must make a DC 19 Dexterity saving throw, taking 66 (12d10) lightning damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "adult-green-dragon",
+      "card_name": "Adult Green Dragon",
+      "parameters": {
+        "area": {
+          "length_ft": 60,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "16d6",
+        "damage_type": "poison",
+        "dc": 18,
+        "range_ft": 60,
+        "recharge_minimum": 5,
+        "save_ability": "constitution",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Poison Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales poisonous gas in a 60-foot cone. Each creature in that area must make a DC 18 Constitution saving throw, taking 56 (16d6) poison damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "adult-red-dragon",
+      "card_name": "Adult Red Dragon",
+      "parameters": {
+        "area": {
+          "length_ft": 60,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "18d6",
+        "damage_type": "fire",
+        "dc": 21,
+        "range_ft": 60,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Fire Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales fire in a 60-foot cone. Each creature in that area must make a DC 21 Dexterity saving throw, taking 63 (18d6) fire damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "adult-white-dragon",
+      "card_name": "Adult White Dragon",
+      "parameters": {
+        "area": {
+          "length_ft": 60,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "12d8",
+        "damage_type": "cold",
+        "dc": 19,
+        "range_ft": 60,
+        "recharge_minimum": 5,
+        "save_ability": "constitution",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Cold Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales an icy blast in a 60-foot cone. Each creature in that area must make a DC 19 Constitution saving throw, taking 54 (12d8) cold damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "ancient-black-dragon",
+      "card_name": "Ancient Black Dragon",
+      "parameters": {
+        "area": {
+          "length_ft": 90,
+          "origin": "self",
+          "shape": "line",
+          "width_ft": 10
+        },
+        "damage_dice": "15d8",
+        "damage_type": "acid",
+        "dc": 22,
+        "range_ft": 90,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Acid Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales acid in a 90-foot line that is 10 feet wide. Each creature in that line must make a DC 22 Dexterity saving throw, taking 67 (15d8) acid damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "ancient-blue-dragon",
+      "card_name": "Ancient Blue Dragon",
+      "parameters": {
+        "area": {
+          "length_ft": 120,
+          "origin": "self",
+          "shape": "line",
+          "width_ft": 10
+        },
+        "damage_dice": "16d10",
+        "damage_type": "lightning",
+        "dc": 23,
+        "range_ft": 120,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Lightning Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales lightning in a 120-\u00ad-foot line that is 10 feet wide. Each creature in that line must make a DC 23 Dexterity saving throw, taking 88 (16d10) lightning damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "ancient-green-dragon",
+      "card_name": "Ancient Green Dragon",
+      "parameters": {
+        "area": {
+          "length_ft": 90,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "22d6",
+        "damage_type": "poison",
+        "dc": 22,
+        "range_ft": 90,
+        "recharge_minimum": 5,
+        "save_ability": "constitution",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Poison Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales poisonous gas in a 90-\u00ad-foot cone. Each creature in that area must make a DC 22 Constitution saving throw, taking 77 (22d6) poison damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "ancient-red-dragon",
+      "card_name": "Ancient Red Dragon",
+      "parameters": {
+        "area": {
+          "length_ft": 90,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "26d6",
+        "damage_type": "fire",
+        "dc": 24,
+        "range_ft": 90,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Fire Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales fire in a 90-foot cone. Each creature in that area must make a DC 24 Dexterity saving throw, taking 91 (26d6) fire damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "ancient-white-dragon",
+      "card_name": "Ancient White Dragon",
+      "parameters": {
+        "area": {
+          "length_ft": 90,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "16d8",
+        "damage_type": "cold",
+        "dc": 22,
+        "range_ft": 90,
+        "recharge_minimum": 5,
+        "save_ability": "constitution",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Cold Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales an icy blast in a 90-foot cone. Each creature in that area must make a DC 22 Constitution saving throw, taking 72 (16d8) cold damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "ankheg",
+      "card_name": "Ankheg",
+      "parameters": {
+        "area": {
+          "length_ft": 30,
+          "origin": "self",
+          "shape": "line",
+          "width_ft": 5
+        },
+        "damage_dice": "3d6",
+        "damage_type": "acid",
+        "dc": 13,
+        "range_ft": 30,
+        "recharge_minimum": 6,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Acid Spray (Recharge 6)",
+      "source_text": "The ankheg spits acid in a line that is 30 feet long and 5 feet wide, provided that it has no creature grappled. Each creature in that line must make a DC 13 Dexterity saving throw, taking 10 (3d6) acid damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "behir",
+      "card_name": "Behir",
+      "parameters": {
+        "area": {
+          "length_ft": 20,
+          "origin": "self",
+          "shape": "line",
+          "width_ft": 5
+        },
+        "damage_dice": "12d10",
+        "damage_type": "lightning",
+        "dc": 16,
+        "range_ft": 20,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Lightning Breath (Recharge 5\u20136)",
+      "source_text": "The behir exhales a line of lightning that is 20 feet long and 5 feet wide. Each creature in that line must make a DC 16 Dexterity saving throw, taking 66 (12d10) lightning damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "black-dragon-wyrmling",
+      "card_name": "Black Dragon Wyrmling",
+      "parameters": {
+        "area": {
+          "length_ft": 15,
+          "origin": "self",
+          "shape": "line",
+          "width_ft": 5
+        },
+        "damage_dice": "5d8",
+        "damage_type": "acid",
+        "dc": 11,
+        "range_ft": 15,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Acid Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales acid in a 15-\u00adfoot line that is 5 feet wide. Each creature in that line must make a DC 11 Dexterity saving throw, taking 22 (5d8) acid damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "blue-dragon-wyrmling",
+      "card_name": "Blue Dragon Wyrmling",
+      "parameters": {
+        "area": {
+          "length_ft": 30,
+          "origin": "self",
+          "shape": "line",
+          "width_ft": 5
+        },
+        "damage_dice": "4d10",
+        "damage_type": "lightning",
+        "dc": 12,
+        "range_ft": 30,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Lightning Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales lightning in a 30-\u00adfoot line that is 5 feet wide. Each creature in that line must make a DC 12 Dexterity saving throw, taking 22 (4d10) lightning damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "chimera",
+      "card_name": "Chimera",
+      "parameters": {
+        "area": {
+          "length_ft": 15,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "7d8",
+        "damage_type": "fire",
+        "dc": 15,
+        "range_ft": 15,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Fire Breath (Recharge 5\u20136)",
+      "source_text": "The dragon head exhales fire in a 15-\u00ad-foot cone. Each creature in that area must make a DC 15 Dexterity saving throw, taking 31 (7d8) fire damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "dragon-turtle",
+      "card_name": "Dragon Turtle",
+      "parameters": {
+        "area": {
+          "length_ft": 60,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "15d6",
+        "damage_type": "fire",
+        "dc": 18,
+        "range_ft": 60,
+        "recharge_minimum": 5,
+        "save_ability": "constitution",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Steam Breath (Recharge 5\u20136)",
+      "source_text": "The dragon turtle exhales scalding steam in a 60-foot cone. Each creature in that area must make a DC 18 Constitution saving throw, taking 52 (15d6) fire damage on a failed save, or half as much damage on a successful one. Being underwater doesn't grant resistance against this damage."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "green-dragon-wyrmling",
+      "card_name": "Green Dragon Wyrmling",
+      "parameters": {
+        "area": {
+          "length_ft": 15,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "6d6",
+        "damage_type": "poison",
+        "dc": 11,
+        "range_ft": 15,
+        "recharge_minimum": 5,
+        "save_ability": "constitution",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Poison Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales poisonous gas in a 15-foot cone. Each creature in that area must make a DC 11 Constitution saving throw, taking 21 (6d6) poison damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "half-red-dragon-veteran",
+      "card_name": "Half-Red Dragon Veteran",
+      "parameters": {
+        "area": {
+          "length_ft": 15,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "7d6",
+        "damage_type": "fire",
+        "dc": 15,
+        "range_ft": 15,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Fire Breath (Recharge 5\u20136)",
+      "source_text": "The veteran exhales fire in a 15-foot cone. Each creature in that area must make a DC 15 Dexterity saving throw, taking 24 (7d6) fire damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "hell-hound",
+      "card_name": "Hell Hound",
+      "parameters": {
+        "area": {
+          "length_ft": 15,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "6d6",
+        "damage_type": "fire",
+        "dc": 12,
+        "range_ft": 15,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Fire Breath (Recharge 5\u20136)",
+      "source_text": "The hound exhales fire in a 15-foot cone. Each creature in that area must make a DC 12 Dexterity saving throw, taking 21 (6d6) fire damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "iron-golem",
+      "card_name": "Iron Golem",
+      "parameters": {
+        "area": {
+          "length_ft": 15,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "10d8",
+        "damage_type": "poison",
+        "dc": 19,
+        "range_ft": 15,
+        "recharge_minimum": 6,
+        "save_ability": "constitution",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Poison Breath (Recharge 6)",
+      "source_text": "The golem exhales poisonous gas in a 15-foot cone. Each creature in that area must make a DC 19 Constitution saving throw, taking 45 (10d8) poison damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "magma-mephit",
+      "card_name": "Magma Mephit",
+      "parameters": {
+        "area": {
+          "length_ft": 15,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "2d6",
+        "damage_type": "fire",
+        "dc": 11,
+        "range_ft": 15,
+        "recharge_minimum": 6,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Fire Breath (Recharge 6)",
+      "source_text": "The mephit exhales a 15-foot cone of fire. Each creature in that area must make a DC 11 Dexterity saving throw, taking 7 (2d6) fire damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "red-dragon-wyrmling",
+      "card_name": "Red Dragon Wyrmling",
+      "parameters": {
+        "area": {
+          "length_ft": 15,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "7d6",
+        "damage_type": "fire",
+        "dc": 13,
+        "range_ft": 15,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Fire Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales fire in a 15-foot cone. Each creature in that area must make a DC 13 Dexterity saving throw, taking 24 (7d6) fire damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "storm-giant",
+      "card_name": "Storm Giant",
+      "parameters": {
+        "area": {
+          "origin": "point",
+          "radius_ft": 10,
+          "shape": "radius"
+        },
+        "damage_dice": "12d8",
+        "damage_type": "lightning",
+        "dc": 17,
+        "range_ft": 500,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Lightning Strike (Recharge 5\u20136)",
+      "source_text": "The giant hurls a magical lightning bolt at a point it can see within 500 feet of it. Each creature within 10 feet of that point must make a DC 17 Dexterity saving throw, taking 54 (12d8) lightning damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "white-dragon-wyrmling",
+      "card_name": "White Dragon Wyrmling",
+      "parameters": {
+        "area": {
+          "length_ft": 15,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "5d8",
+        "damage_type": "cold",
+        "dc": 12,
+        "range_ft": 15,
+        "recharge_minimum": 5,
+        "save_ability": "constitution",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Cold Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales an icy blast of hail in a 15-foot cone. Each creature in that area must make a DC 12 Constitution saving throw, taking 22 (5d8) cold damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "winter-wolf",
+      "card_name": "Winter Wolf",
+      "parameters": {
+        "area": {
+          "length_ft": 15,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "4d8",
+        "damage_type": "cold",
+        "dc": 12,
+        "range_ft": 15,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Cold Breath (Recharge 5\u20136)",
+      "source_text": "The wolf exhales a blast of freezing wind in a 15-foot cone. Each creature in that area must make a DC 12 Dexterity saving throw, taking 18 (4d8) cold damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "young-black-dragon",
+      "card_name": "Young Black Dragon",
+      "parameters": {
+        "area": {
+          "length_ft": 30,
+          "origin": "self",
+          "shape": "line",
+          "width_ft": 5
+        },
+        "damage_dice": "11d8",
+        "damage_type": "acid",
+        "dc": 14,
+        "range_ft": 30,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Acid Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales acid in a 30\u00ad-foot line that is 5 feet wide. Each creature in that line must make a DC 14 Dexterity saving throw, taking 49 (11d8) acid damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "young-blue-dragon",
+      "card_name": "Young Blue Dragon",
+      "parameters": {
+        "area": {
+          "length_ft": 60,
+          "origin": "self",
+          "shape": "line",
+          "width_ft": 5
+        },
+        "damage_dice": "10d10",
+        "damage_type": "lightning",
+        "dc": 16,
+        "range_ft": 60,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Lightning Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales lightning in an 60-foot line that is 5 feet wide. Each creature in that line must make a DC 16 Dexterity saving throw, taking 55 (10d10) lightning damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "young-green-dragon",
+      "card_name": "Young Green Dragon",
+      "parameters": {
+        "area": {
+          "length_ft": 30,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "12d6",
+        "damage_type": "poison",
+        "dc": 14,
+        "range_ft": 30,
+        "recharge_minimum": 5,
+        "save_ability": "constitution",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Poison Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales poisonous gas in a 30-foot cone. Each creature in that area must make a DC 14 Constitution saving throw, taking 42 (12d6) poison damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "young-red-dragon",
+      "card_name": "Young Red Dragon",
+      "parameters": {
+        "area": {
+          "length_ft": 30,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "16d6",
+        "damage_type": "fire",
+        "dc": 17,
+        "range_ft": 30,
+        "recharge_minimum": 5,
+        "save_ability": "dexterity",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Fire Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales fire in a 30-foot cone. Each creature in that area must make a DC 17 Dexterity saving throw, taking 56 (16d6) fire damage on a failed save, or half as much damage on a successful one."
+    },
+    {
+      "browser_wired": true,
+      "card_id": "young-white-dragon",
+      "card_name": "Young White Dragon",
+      "parameters": {
+        "area": {
+          "length_ft": 30,
+          "origin": "self",
+          "shape": "cone"
+        },
+        "damage_dice": "10d8",
+        "damage_type": "cold",
+        "dc": 15,
+        "range_ft": 30,
+        "recharge_minimum": 5,
+        "save_ability": "constitution",
+        "success_damage": "half"
+      },
+      "python_wired": true,
+      "source_action": "Cold Breath (Recharge 5\u20136)",
+      "source_text": "The dragon exhales an icy blast in a 30-foot cone. Each creature in that area must make a DC 15 Constitution saving throw, taking 45 (10d8) cold damage on a failed save, or half as much damage on a successful one."
+    }
+  ],
+  "exceptions": [],
+  "remaining_card_count": 0,
+  "source_cards_scanned": 327,
+  "wired_browser_card_count": 30,
+  "wired_cards": [
+    "adult-black-dragon",
+    "adult-blue-dragon",
+    "adult-green-dragon",
+    "adult-red-dragon",
+    "adult-white-dragon",
+    "ancient-black-dragon",
+    "ancient-blue-dragon",
+    "ancient-green-dragon",
+    "ancient-red-dragon",
+    "ancient-white-dragon",
+    "ankheg",
+    "behir",
+    "black-dragon-wyrmling",
+    "blue-dragon-wyrmling",
+    "chimera",
+    "dragon-turtle",
+    "green-dragon-wyrmling",
+    "half-red-dragon-veteran",
+    "hell-hound",
+    "iron-golem",
+    "magma-mephit",
+    "red-dragon-wyrmling",
+    "storm-giant",
+    "white-dragon-wyrmling",
+    "winter-wolf",
+    "young-black-dragon",
+    "young-blue-dragon",
+    "young-green-dragon",
+    "young-red-dragon",
+    "young-white-dragon"
+  ],
+  "wired_python_card_count": 30
+}

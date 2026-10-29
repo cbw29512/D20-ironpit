@@ -17,7 +17,7 @@ Blocker categories overlap: a monster may require several fixes.
 | `multiattack:complex` | 10 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
-| `mechanic:recharge` | 9 |
+| `mechanic:recharge` | 8 |
 | `mechanic:swallow` | 7 |
 | `attack:complex` | 6 |
 | `attack:damage-type` | 2 |
@@ -31,12 +31,13 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**2** monsters have exactly one remaining blocker category.
+**3** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
+| `source:extra-action` | Behir | 1 |
 
 ## Every blocked monster
 
@@ -48,7 +49,7 @@ the underlying ability is already implemented or trivial.
 | Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Spellcasting |
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
 | Balor | attack:incomplete, source:trait | Fire Aura |
-| Behir | mechanic:recharge, source:extra-action | — |
+| Behir | source:extra-action | — |
 | Chuul | attack:incomplete, multiattack:complex, source:extra-action | — |
 | Cloaker | attack:incomplete, source:extra-action, source:trait | Damage Transfer, Light Sensitivity |
 | Cloud Giant | mechanic:spellcasting, source:trait | Innate Spellcasting |
