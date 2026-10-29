@@ -31,7 +31,7 @@ def release_invalid_swallowed(setup: EncounterSetup) -> list[str]:
             target.state.swallowed = None
             target.state.active_effect_ids = [
                 c for c in target.state.active_effect_ids
-                if c not in ("blinded", "restrained")
+                if c not in ("blinded", "restrained", "swallowed")
             ]
         released.append(target.combatant_id)
     return released

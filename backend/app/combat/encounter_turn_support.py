@@ -89,6 +89,11 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
         )
         if rage_event is not None:
             events.append(rage_event)
+        from app.combat.swallow_turn_resolution import resolve_swallowed_end_turn
+        swallow_events, sequence = resolve_swallowed_end_turn(
+            events, sequence, round_number, attacker, setup, dice, turn_key,
+        )
+        events.extend(swallow_events)
         return events, sequence
     except Exception:
         logger.exception("Failed to finalize turn for %s.", attacker.combatant_id)

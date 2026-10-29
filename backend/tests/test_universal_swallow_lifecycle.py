@@ -36,6 +36,7 @@ def test_swallow_requires_live_hit_owned_grapple_target_size_and_slot():
     assert target.swallowed.source_id == "frog"
     assert target.grapple_sources == []
     assert "restrained" in target.active_effect_ids
+    assert "swallowed" in target.active_effect_ids
     assert "blinded" in target.active_effect_ids
     assert owner.swallowed_target_ids == ["victim"]
     assert not swallow_after_bite("frog", owner, "victim", target, action, bite_hit=True)
@@ -76,6 +77,7 @@ def test_owner_turn_acid_damage_and_source_death_release():
     assert owner.swallowed_target_ids == []
     assert "blinded" not in target.active_effect_ids
     assert "restrained" not in target.active_effect_ids
+    assert "swallowed" not in target.active_effect_ids
     assert "prone" in target.active_effect_ids
     assert release_invalid_swallowed(setup) == []
 
@@ -115,3 +117,16 @@ def test_real_admitted_frog_resolves_its_compiled_bite_then_swallows():
     assert victim_state.swallowed is not None
     assert victim_state.swallowed.source_id == "frog"
     assert frog_state.swallowed_target_ids == ["victim"]
+
+
+def test_swallowed_debuff_removed_on_regurgitation_without_erasing_other_conditions():
+    from app.combat.swallow_state import release_swallowed
+
+    _, action, owner, target = _make("giant-toad")
+    apply_grapple(target, "eater", 13, 5, restrains=True)
+    assert swallow_after_bite("eater", owner, "victim", target, action, bite_hit=True)
+    assert "swallowed" in target.active_effect_ids
+    assert release_swallowed(owner, "victim", target, owner_id="eater")
+    assert "swallowed" not in target.active_effect_ids
+    assert target.swallowed is None
+    assert "prone" in target.active_effect_ids

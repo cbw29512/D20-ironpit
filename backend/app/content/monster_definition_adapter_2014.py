@@ -3,6 +3,7 @@ from app.content.monster_visual_turn_start_2014 import visual_turn_start_rule_20
 from app.content.monster_visual_disguise_2014 import visual_disguise_action_2014
 from app.content.monster_variable_heads_2014 import variable_head_profile_2014
 from app.content.monster_grapple_swallow_source_2014 import source_grapple_swallow_2014
+from app.content.monster_regurgitating_swallow_source_2014 import source_proven_regurgitating_swallow_2014
 from app.domain.swallow_actions import swallow_action_from_source
 
 from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014, source_conditional_attack_advantage_2014
@@ -229,7 +230,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         swallow_actions=[item.model_copy(update={
             "attack_id": attack_id_2014(monster, item.attack_id),
         }) for item in [
-            swallow_action_from_source(source_grapple_swallow_2014(monster))
+            swallow_action_from_source(source_grapple_swallow_2014(monster) or source_proven_regurgitating_swallow_2014(monster))
         ] if item is not None],
         damage_taken_timed_effects=damage_taken_timed_effects_2014(monster),
         damage_threshold_zero_hp_replacements=damage_threshold_zero_hp_replacements_2014(monster),

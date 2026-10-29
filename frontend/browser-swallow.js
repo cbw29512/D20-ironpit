@@ -25,9 +25,14 @@
       damage_dice_count: action.damageDiceCount,
       damage_dice_size: action.damageDiceSize, damage_type: action.damageType,
       exit_movement_ft: action.exitMovementFt,
+      regurgitation_damage_threshold: action.regurgitationDamageThreshold ?? null,
+      regurgitation_save_ability: action.regurgitationSaveAbility ?? null,
+      regurgitation_save_dc: action.regurgitationSaveDc ?? null,
+      regurgitation_range_ft: action.regurgitationRangeFt ?? null,
     };
     (owner.swallowed_target_ids ||= []).push(targetId);
     target.active_effect_ids = (target.active_effect_ids || []).filter(c => c !== "dodge");
+    if (!target.active_effect_ids.includes("swallowed")) target.active_effect_ids.push("swallowed");
     for (const condition of ["blinded", "restrained"]) {
       if (!I().immune(target, condition) && !target.active_effect_ids.includes(condition))
         target.active_effect_ids.push(condition);
@@ -38,6 +43,7 @@
     if (!target.swallowed || target.swallowed.source_id !== ownerId) return false;
     owner.swallowed_target_ids = (owner.swallowed_target_ids || []).filter(id => id !== targetId);
     target.swallowed = null;
+    target.active_effect_ids = (target.active_effect_ids || []).filter(c => c !== "swallowed");
     for (const condition of ["blinded", "restrained"]) {
       const ownedElsewhere = (target.timed_effects || []).some(effect => effect.effect_id === condition)
         || (condition === "restrained" && (target.grapple_sources || []).some(g => g.restrains));
@@ -115,6 +121,52 @@
       throw error;
     }
   }
+  function endTurnRegurgitation(events, sequence, round, actor, setup, turnKey) {
+    const record = actor.state.swallowed;
+    if (!record || record.regurgitation_damage_threshold == null)
+      return {events: [], sequence};
+    const owner = [...setup.heroes, ...setup.monsters]
+      .find(member => member.combatant_id === record.source_id);
+    if (!owner || !owner.state.is_alive || owner.state.is_dead)
+      return {events: [], sequence};
+    let damage = 0;
+    for (const event of events) {
+      if (event.actor_id !== actor.combatant_id || event.target_id !== owner.combatant_id)
+        continue;
+      if (Number.isFinite(event.hp_before) && Number.isFinite(event.hp_after))
+        damage += Math.max(0, event.hp_before - event.hp_after);
+      if (Number.isFinite(event.temporary_hp_before) && Number.isFinite(event.temporary_hp_after))
+        damage += Math.max(0, event.temporary_hp_before - event.temporary_hp_after);
+    }
+    if (record.damage_tracking_turn_key !== turnKey) {
+      record.damage_tracking_turn_key = turnKey;
+      record.damage_from_victim_this_turn = 0;
+    }
+    record.damage_from_victim_this_turn += damage;
+    if (record.damage_from_victim_this_turn < record.regurgitation_damage_threshold)
+      return {events: [], sequence};
+    if (!record.regurgitation_save_ability || !record.regurgitation_save_dc)
+      throw new Error("Regurgitation threshold requires source-defined save values.");
+    const saves = window.IRON_PIT_BROWSER_SAVING_THROWS;
+    if (!saves?.resolveSavingThrow)
+      throw new Error("Regurgitation requires the shared saving-throw engine.");
+    const result = saves.resolveSavingThrow(
+      owner.state, record.regurgitation_save_ability, record.regurgitation_save_dc,
+      {roundNumber: round, encounterRoller: owner, setup},
+    );
+    const released = !result.succeeded
+      && release(owner.combatant_id, owner.state, actor.combatant_id, actor.state);
+    const event = {
+      sequence: sequence++, round_number: round, event_type: "feature",
+      actor_id: owner.combatant_id, actor_name: owner.state.template.name,
+      target_id: actor.combatant_id, target_name: actor.state.template.name,
+      feature_id: "swallow-regurgitation", saving_throw_roll: result.roll,
+      save_ability: record.regurgitation_save_ability, save_dc: record.regurgitation_save_dc,
+      save_succeeded: result.succeeded, animation: "feature",
+      description: `${owner.state.template.name} ${released ? "regurgitates" : "retains"} ${actor.state.template.name} after ${record.damage_from_victim_this_turn} damage from inside this turn.`,
+    };
+    return {events: [event], sequence};
+  }
   function choose(member, setup) {
     try {
       if (!window.IRON_PIT_ACTION_ECONOMY?.available(member.state, "action")) return null;
@@ -164,6 +216,6 @@
     }
   }
   window.IRON_PIT_BROWSER_SWALLOW = {
-    swallowAfterBite, release, cleanup, sourceTurnDamage, choose, resolve,
+    swallowAfterBite, release, cleanup, sourceTurnDamage, endTurnRegurgitation, choose, resolve,
   };
 })();

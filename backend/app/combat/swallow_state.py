@@ -13,6 +13,7 @@ from app.domain.swallowed_state import SwallowedState
 from app.domain.swallow_actions import GrappleSwallowAction
 
 _SWALLOW_CONDITIONS = ("blinded", "restrained")
+_SWALLOWED_DEBUFF = "swallowed"
 
 
 def swallow_after_bite(
@@ -51,8 +52,14 @@ def swallow_after_bite(
         damage_type=action.damage_type,
         exit_movement_ft=action.exit_movement_ft,
         target_size=action.max_target_size,
+        regurgitation_damage_threshold=action.regurgitation_damage_threshold,
+        regurgitation_save_ability=action.regurgitation_save_ability,
+        regurgitation_save_dc=action.regurgitation_save_dc,
+        regurgitation_range_ft=action.regurgitation_range_ft,
     )
     owner.swallowed_target_ids.append(target_id)
+    if _SWALLOWED_DEBUFF not in target.active_effect_ids:
+        target.active_effect_ids.append(_SWALLOWED_DEBUFF)
     for condition in _SWALLOW_CONDITIONS:
         if not condition_is_immune(target, condition) and condition not in target.active_effect_ids:
             target.active_effect_ids.append(condition)
@@ -72,6 +79,9 @@ def release_swallowed(
     if target_id in owner.swallowed_target_ids:
         owner.swallowed_target_ids.remove(target_id)
     target.swallowed = None
+    target.active_effect_ids = [
+        effect for effect in target.active_effect_ids if effect != _SWALLOWED_DEBUFF
+    ]
     # Source-bound swallowed conditions are removed only when no independent
     # timed effect or grapple still owns the same condition.
     for condition in _SWALLOW_CONDITIONS:

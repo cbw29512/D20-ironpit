@@ -19,6 +19,10 @@ class GrappleSwallowAction(BaseModel):
     exit_movement_ft: int = Field(ge=0)
     blinds_and_restrains: bool = True
     grants_total_external_cover: bool = True
+    regurgitation_damage_threshold: int | None = Field(default=None, ge=1)
+    regurgitation_save_ability: str | None = None
+    regurgitation_save_dc: int | None = Field(default=None, ge=1, le=40)
+    regurgitation_range_ft: int | None = Field(default=None, ge=1)
 
 
 def swallow_action_from_source(source) -> GrappleSwallowAction | None:
@@ -33,4 +37,8 @@ def swallow_action_from_source(source) -> GrappleSwallowAction | None:
         damage_type=source.damage_type,
         max_swallowed=source.max_swallowed,
         exit_movement_ft=source.exit_movement_ft,
+        regurgitation_damage_threshold=getattr(source, 'regurgitation_damage_threshold', None),
+        regurgitation_save_ability=getattr(source, 'regurgitation_save_ability', None),
+        regurgitation_save_dc=getattr(source, 'regurgitation_save_dc', None),
+        regurgitation_range_ft=getattr(source, 'regurgitation_range_ft', None),
     )
