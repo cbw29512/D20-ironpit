@@ -127,6 +127,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             monster.source_traits, {item.lower() for item in monster.damage_immunities},
         ))
         bound.update(rule.source_name for rule in damage_taken_timed_effects_2014(monster))
+        if _source_grappler_advantage_2014(monster):
+            bound.add("Grappler")
         if _BLOOD_FRENZY in monster.trait_names and any(attack.kind == "melee" for attack in monster.attacks):
             bound.add(_BLOOD_FRENZY)
         if supports_reckless_2014(monster):
@@ -186,12 +188,27 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         logger.exception("Failed to classify bound 2014 traits for %s.", monster.name)
         raise
 
+def _source_grappler_advantage_2014(monster: SourceMonster2014) -> bool:
+    """Proof of printed Advantage against creatures the attacker grapples."""
+    if "Grappler" not in monster.trait_names:
+        return False
+    from app.content.monster_source_sections_2014 import source_sections_2014
+    source = source_sections_2014(
+        monster.source_traits, include_continuations=True,
+    ).get("Grappler", "")
+    return " ".join(source.casefold().split()) == (
+        "the mimic has advantage on attack rolls against any creature grappled by it."
+    )
+
+
 def conditional_attack_advantage_2014(
     monster: SourceMonster2014,
     attack: SourceAttack2014,
 ) -> list[ConditionalAttackAdvantage]:
     """Bind Blood Frenzy to the shared target-not-full-HP Advantage primitive."""
     try:
+        if _source_grappler_advantage_2014(monster):
+            return [ConditionalAttackAdvantage(trigger="target_grappled_by_self")]
         if _BLOOD_FRENZY not in bound_trait_names_2014(monster) or attack.kind != "melee":
             return []
         return [ConditionalAttackAdvantage(trigger="target_not_full_hp")]
