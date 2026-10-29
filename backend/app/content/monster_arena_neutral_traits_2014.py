@@ -41,6 +41,19 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             return False
         if verified_approved_inert_trait_2014(monster, trait_name):
             return True
+        # Approved arena setup: Mimic starts in its natural visible form.
+        # Object-disguise traits cannot activate; its grapple and attacks
+        # remain separate combat-relevant mechanics and are not waived.
+        if monster.id == "mimic" and trait_name in {"Shapechanger", "False Appearance (Object Form Only)"}:
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(
+                monster.source_traits, include_continuations=True,
+            ).get(trait_name, "")
+            normalized = " ".join(printed.casefold().split())
+            if trait_name == "Shapechanger":
+                return "polymorph into an object" in normalized and "true form" in normalized
+            return "object form" in trait_name.casefold() and "indistinguishable" in normalized
+
         source = monster.source_traits or ""
         # Context-driven exclusion: this trait only operates underwater, a
         # context absent from the standard Iron Pit. Keep the printed trait.
