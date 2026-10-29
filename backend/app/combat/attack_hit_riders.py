@@ -80,6 +80,7 @@ def resolve_attack_hit_riders(
                 end_of_turn_dice_size=attack.on_hit_end_turn_dice_size,
                 end_of_turn_damage_type=attack.on_hit_end_turn_damage_type,
                 ends_if_source_dead=False,
+                expires_at_start_of_source_turn=False,
             ))
             if "burning" not in defender.active_effect_ids:
                 defender.active_effect_ids.append("burning")
