@@ -63,6 +63,10 @@
       sequence, round, member, setup, turnKey, turnEvents: [...events], events: [],
     });
     events.push(...cleanup.events); sequence = cleanup.sequence;
+    const burn = window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN?.resolveEndTurn(
+      sequence, round, member, setup,
+    ) || {events: [], sequence};
+    events.push(...burn.events); sequence = burn.sequence;
     return { events, sequence };
   }
 
