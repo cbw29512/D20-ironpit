@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
+from app.domain.swallowed_state import SwallowedState
 
 from app.domain.actions import GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
@@ -88,6 +89,8 @@ class CombatantState(BaseModel):
     active_buff_effect_ids: list[str] = Field(default_factory=list)
     opening_buff_id: str | None = None
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
+    swallowed: SwallowedState | None = None
+    swallowed_target_ids: list[str] = Field(default_factory=list)
     timed_effects: list[TimedEffect] = Field(default_factory=list)
     deferred_effects: list[DeferredEffectState] = Field(default_factory=list)
     delayed_resource_refills: list[DelayedResourceRefillState] = Field(default_factory=list)
