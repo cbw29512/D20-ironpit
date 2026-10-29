@@ -29,7 +29,7 @@ ARENA_NEUTRAL_TRAITS_2014 = frozenset({
     "Ice Walk", "Illumination", "Keen Hearing", "Keen Hearing and Smell", "Keen Hearing and Sight",
     "Keen Sight", "Keen Sight and Smell", "Keen Smell", "Labyrinthine Recall", "Limited Amphibiousness",
     "Mimicry", "Earth Glide", "Running Leap", "Shark Telepathy", "Snow Camouflage", "Stone Camouflage",
-    "Spider Climb", "Treasure Sense", "Tunneler", "Water Breathing", "Devil's Sight",
+    "Spider Climb", "Vampire Weaknesses", "Treasure Sense", "Tunneler", "Water Breathing", "Devil's Sight",
     "Underwater Camouflage", "Web Sense", "Web Walker", "Rejuvenation", "Hellish Rejuvenation",
     "Wakeful", "Ethereal Jaunt", "Incorporeal Movement", "Immutable Form",
 })
@@ -104,6 +104,12 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             "Ethereal Sight": ("ethereal plane",),
             "Telepathic Bond": ("telepathically",),
             "Limited Telepathy": ("telepathically",),
+            "Vampire Weaknesses": (
+                "can't enter a residence",
+                "running water",
+                "stake",
+                "sunlight",
+            ),
         }
         if trait_name in additional_inert_clauses:
             heading = f"<strong>{trait_name}.</strong>"
