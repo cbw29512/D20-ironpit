@@ -137,6 +137,7 @@
             source_effect_id: attack.id, end_of_turn_dice_count: burn.diceCount,
             end_of_turn_dice_size: burn.diceSize,
             end_of_turn_damage_type: burn.damageType, ends_if_source_dead: false,
+            expires_at_start_of_source_turn: false,
           });
           actualTarget.state.active_effect_ids ||= [];
           if (!actualTarget.state.active_effect_ids.includes(burn.effectId))
