@@ -18,10 +18,12 @@ assert.equal(tiny.swallowed.source_id,"frog");
 assert.deepEqual(tiny.grapple_sources,[]);
 assert.ok(tiny.active_effect_ids.includes("restrained"));
 assert.ok(tiny.active_effect_ids.includes("blinded"));
+assert.ok(tiny.active_effect_ids.includes("swallowed"));
 assert.deepEqual(frog.swallowed_target_ids,["victim"]);
 assert.equal(swallow.swallowAfterBite("frog",frog,"victim",tiny,action,true),false);
 assert.equal(swallow.release("frog",frog,"victim",tiny),true);
 assert.equal(tiny.swallowed,null);
+assert.ok(!tiny.active_effect_ids.includes("swallowed"));
 assert.deepEqual(frog.swallowed_target_ids,[]);
 assert.ok(tiny.active_effect_ids.includes("prone"));
 assert.ok(!tiny.active_effect_ids.includes("restrained"));
@@ -33,6 +35,7 @@ assert.equal(swallow.swallowAfterBite("toad",toad,"medium",medium,{...action,max
 window.IRON_PIT_BROWSER_GRAPPLE.apply(medium,"toad",13,5,true);
 assert.equal(swallow.swallowAfterBite("toad",toad,"medium",medium,{...action,maxTargetSize:"medium",damageDiceCount:3,damageDiceSize:6},true),true);
 assert.equal(medium.swallowed.damage_dice_count,3);
+assert.ok(medium.active_effect_ids.includes("swallowed"));
 window.IRON_PIT_DICE={rollMany:(count,size)=>Array.from({length:count},()=>size)};
 window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES={resolveDamage:(_state,total,type)=>{
   assert.equal(type,"acid"); return {applied:total};
@@ -60,6 +63,7 @@ const deadSetup={heroes:[{combatant_id:"held",state:heldVictim}],
   monsters:[{combatant_id:"dead-owner",state:deadOwner}]};
 assert.deepEqual(swallow.cleanup(deadSetup),["held"]);
 assert.equal(heldVictim.swallowed,null);
+assert.ok(!heldVictim.active_effect_ids.includes("swallowed"));
 assert.ok(heldVictim.active_effect_ids.includes("prone"));
 assert.ok(!heldVictim.active_effect_ids.includes("blinded"));
 assert.ok(!heldVictim.active_effect_ids.includes("restrained"));
