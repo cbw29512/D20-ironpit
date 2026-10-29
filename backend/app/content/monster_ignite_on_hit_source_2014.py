@@ -28,7 +28,7 @@ def source_ignite_on_hit_2014(monster, attack):
         monster.source_actions, include_continuations=True
     ).get(attack.name, "")
     match = _IGNITES.search(text)
-    if match is None or not attack.source_complete:
+    if match is None:
         return None
     count, sides, average = (
         int(match["count"]), int(match["sides"]), int(match["average"])
