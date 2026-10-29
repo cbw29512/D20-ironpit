@@ -8,12 +8,7 @@ from app.domain.failure_margin import FailureMarginEscalation, require_escalatio
 from app.domain.timed_control_limits import TimedControlLimits, TimedSaveFlatBonus, compiled_control_limits
 from app.domain.weapons_base import DamageType
 logger = logging.getLogger(__name__)
-SaveEffectTiming = Literal[
-    "source_turn_start",
-    "source_turn_end",
-    "target_turn_start",
-    "target_turn_end",
-]
+SaveEffectTiming = Literal["source_turn_start", "source_turn_end", "target_turn_start", "target_turn_end"]
 
 class FailedSaveTimedEffect(BaseModel):
     """Source-neutral timed rider applied only after a failed saving throw."""
@@ -87,15 +82,18 @@ class FailedSaveTimedEffect(BaseModel):
             raise
 
     def compiled_limits(self) -> TimedControlLimits | None:
-        return compiled_control_limits(
-            speed_multiplier=self.speed_multiplier,
-            action_bonus_exclusive=self.action_bonus_exclusive,
-            max_attacks_per_turn=self.max_attacks_per_turn,
-            d20_disadvantage_abilities=list(self.d20_disadvantage_abilities),
-            disadvantage_strength_d20_tests=self.disadvantage_strength_d20_tests,
-            armor_class_bonus=self.armor_class_bonus,
-            saving_throw_flat_bonuses=list(self.saving_throw_flat_bonuses),
-        )
+        try:
+            return compiled_control_limits(
+                speed_multiplier=self.speed_multiplier, action_bonus_exclusive=self.action_bonus_exclusive,
+                max_attacks_per_turn=self.max_attacks_per_turn,
+                d20_disadvantage_abilities=list(self.d20_disadvantage_abilities),
+                disadvantage_strength_d20_tests=self.disadvantage_strength_d20_tests,
+                armor_class_bonus=self.armor_class_bonus,
+                saving_throw_flat_bonuses=list(self.saving_throw_flat_bonuses),
+            )
+        except Exception:
+            logger.exception("Failed to compile timed control limits for %s.", self.effect_id)
+            raise
 
     @model_validator(mode="after")
     def validate_repeat_save(self) -> "FailedSaveTimedEffect":
