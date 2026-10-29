@@ -16,6 +16,7 @@ if str(BACKEND) not in sys.path:
 from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_grapple_swallow_source_2014 import source_grapple_swallow_2014
+from app.content.monster_regurgitating_swallow_source_2014 import source_proven_regurgitating_swallow_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_sections_2014 import source_sections_2014
 from browser_template_serializer import template_row
@@ -55,7 +56,7 @@ def build_report() -> dict[str, object]:
             and "restrained" in printed.casefold()
         ):
             continue
-        profile = source_grapple_swallow_2014(monster)
+        profile = source_grapple_swallow_2014(monster) or source_proven_regurgitating_swallow_2014(monster)
         python_wired = profile is not None
         browser_wired = False
         parameters = None
@@ -68,6 +69,8 @@ def build_report() -> dict[str, object]:
                 "max_swallowed": profile.max_swallowed,
                 "exit_movement_ft": profile.exit_movement_ft,
                 "requires_existing_grapple": True,
+                "regurgitation_damage_threshold": getattr(profile, "regurgitation_damage_threshold", None),
+                "regurgitation_save_dc": getattr(profile, "regurgitation_save_dc", None),
             }
             serialized = template_row(
                 compile_combatant(adapt_monster_mechanics_2014(monster))
@@ -84,6 +87,10 @@ def build_report() -> dict[str, object]:
                 "exitMovementFt": profile.exit_movement_ft,
                 "grantsTotalExternalCover": True,
                 "blindsAndRestrains": True,
+                "regurgitationDamageThreshold": getattr(profile, "regurgitation_damage_threshold", None),
+                "regurgitationSaveAbility": getattr(profile, "regurgitation_save_ability", None),
+                "regurgitationSaveDc": getattr(profile, "regurgitation_save_dc", None),
+                "regurgitationRangeFt": getattr(profile, "regurgitation_range_ft", None),
             }
         if not (python_wired and browser_wired):
             exceptions.append({"card_id": monster.id, "reason": _incompatibility(monster)})
