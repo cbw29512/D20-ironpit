@@ -85,6 +85,9 @@ class AttackCapabilityDefinition(BaseModel):
     forbid_target_grappled_by_self: bool = False
     grapple_target_policy: Literal["normal", "own_grapple_only", "auto_hit_own_grapple"] = "normal"
     damage_source_qualifiers: list[DamageSourceQualifier] = Field(default_factory=list)
+    on_hit_end_turn_dice_count: int = Field(default=0, ge=0, le=40)
+    on_hit_end_turn_dice_size: int = Field(default=6, ge=2, le=100)
+    on_hit_end_turn_damage_type: DamageType | None = None
 
     @model_validator(mode="after")
     def validate_attack_shape(self) -> "AttackCapabilityDefinition":
