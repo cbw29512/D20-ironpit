@@ -63,6 +63,10 @@
       sequence, round, member, setup, turnKey, turnEvents: [...events], events: [],
     });
     events.push(...cleanup.events); sequence = cleanup.sequence;
+    const regurgitation = window.IRON_PIT_BROWSER_SWALLOW?.endTurnRegurgitation(
+      events, sequence, round, member, setup, turnKey,
+    ) || {events: [], sequence};
+    events.push(...regurgitation.events); sequence = regurgitation.sequence;
     return { events, sequence };
   }
 
