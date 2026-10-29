@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 61 |
+| `source:trait` | 60 |
 | `source:extra-action` | 45 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 17 |
@@ -50,7 +50,7 @@ the underlying ability is already implemented or trivial.
 | Balor | attack:incomplete, source:trait | Fire Aura |
 | Behir | mechanic:recharge, source:extra-action | — |
 | Chuul | attack:incomplete, multiattack:complex, source:extra-action | — |
-| Cloaker | attack:incomplete, source:extra-action, source:trait | Damage Transfer, Light Sensitivity |
+| Cloaker | attack:incomplete, source:extra-action, source:trait | Light Sensitivity |
 | Cloud Giant | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Couatl | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Cult Fanatic | mechanic:spellcasting, source:trait | Spellcasting |
@@ -101,7 +101,7 @@ the underlying ability is already implemented or trivial.
 | Rakshasa | mechanic:spellcasting, source:trait | Limited Magic Immunity, Innate Spellcasting |
 | Remorhaz | mechanic:swallow, source:extra-action | — |
 | Roper | source:extra-action, source:trait | Grasping Tendrils |
-| Rug of Smothering | attack:none, source:extra-action, source:trait | Damage Transfer |
+| Rug of Smothering | attack:none, source:extra-action | — |
 | Shambling Mound | mechanic:swallow, source:extra-action | — |
 | Shield Guardian | source:reaction, source:trait | Bound, Spell Storing |
 | Solar | attack:incomplete, mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Innate Spellcasting |

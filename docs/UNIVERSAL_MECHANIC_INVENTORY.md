@@ -439,7 +439,6 @@ Blocked monsters: **79**. These are grouped by printed ability name so the roste
 | Bound | Shield Guardian | 1 |
 | Consume Life | Will-o'-Wisp | 1 |
 | Corrode Metal | Gray Ooze | 1 |
-| Damage Transfer | Cloaker, Rug of Smothering | 2 |
 | Divine Eminence | Priest | 1 |
 | Duergar Resilience | Duergar | 1 |
 | Ephemeral | Will-o'-Wisp | 1 |
@@ -474,7 +473,7 @@ Blocked monsters: **79**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 61 |
+| `source:trait` | 60 |
 | `source:extra-action` | 45 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 17 |
