@@ -99,6 +99,8 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
     })
     charge_source = corrected_charge_profile_2014(monster, attack)
     normal_range_ft, long_range_ft = corrected_attack_range_2014(monster, attack)
+    from app.content.monster_ignite_on_hit_source_2014 import source_ignite_on_hit_2014
+    ignition = source_ignite_on_hit_2014(monster, attack)
     kwargs = {
         "id": attack_id_2014(monster, attack.id),
         "weapon_id": attack_id_2014(monster, attack.id),
@@ -121,6 +123,9 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "grapple_target_policy": attack.grapple_target_policy,
         "unavailable_reason": attack_unavailable_reason_2014(monster, attack),
         "damage_source_qualifiers": weapon_damage_source_qualifiers_2014(monster),
+        "on_hit_end_turn_dice_count": ignition.damage_dice_count if ignition else 0,
+        "on_hit_end_turn_dice_size": ignition.damage_dice_size if ignition else 6,
+        "on_hit_end_turn_damage_type": ignition.damage_type if ignition else None,
     }
     if printed_attack.damage_dice_count:
         kwargs["damage"] = DiceSpec(

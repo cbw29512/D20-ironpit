@@ -134,6 +134,9 @@ class WeaponAttack(BaseModel):
     on_hit_save_damage: OnHitSaveDamage | None = None
     on_hit_condition_save: OnHitConditionSave | None = None
     on_hit_ongoing_hp_loss: OnHitOngoingHpLoss | None = None
+    on_hit_end_turn_dice_count: int = Field(default=0, ge=0, le=40)
+    on_hit_end_turn_dice_size: int = Field(default=6, ge=2, le=100)
+    on_hit_end_turn_damage_type: DamageType | None = None
     on_hit_maximum_hp_save: OnHitMaximumHpSave | None = None
     on_hit_ability_score_reduction: OnHitAbilityScoreReduction | None = None
     on_hit_contested_movement: OnHitContestedMovement | None = None

@@ -88,7 +88,9 @@ def attack_blockers_2014(monster: SourceMonster2014) -> list[str]:
         blockers: list[str] = []
         for source_attack in monster.attacks:
             attack = source_completed_mixed_attack_2014(monster, source_attack)
-            if not attack.source_complete or not source_proves_ability_score_reduction_2014(monster, attack):
+            from app.content.monster_ignite_on_hit_source_2014 import source_ignite_on_hit_2014
+            ignition = source_ignite_on_hit_2014(monster, attack)
+            if (not attack.source_complete and ignition is None) or not source_proves_ability_score_reduction_2014(monster, attack):
                 blockers.append("attack:incomplete")
             if attack.damage.type not in _DAMAGE_TYPES:
                 blockers.append("attack:damage-type")
