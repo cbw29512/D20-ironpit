@@ -1,0 +1,24 @@
+{
+  "source_cards_scanned": 327,
+  "applicable_card_count": 2,
+  "applicable_cards": [
+    "vampire",
+    "vampire-spawn"
+  ],
+  "wired_python_card_count": 0,
+  "wired_browser_card_count": 0,
+  "wired_cards": [],
+  "remaining_card_count": 2,
+  "exceptions": [
+    {
+      "monster": "vampire",
+      "reason": "requires environment presence (sunlight / running water) not supplied by current arena; damage and disadvantage primitives exist but environment trigger is missing"
+    },
+    {
+      "monster": "vampire-spawn",
+      "reason": "requires environment presence (sunlight / running water) not supplied by current arena; damage and disadvantage primitives exist but environment trigger is missing"
+    }
+  ],
+  "status": "blocked: arena lacks sunlight and running-water environment triggers",
+  "notes": "Reuses existing start-turn and end-turn typed damage primitives once environment is available. No name dispatch. Forbiddance and Stake parked as non-combat-arena."
+}
