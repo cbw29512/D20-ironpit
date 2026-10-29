@@ -1,15 +1,12 @@
 from __future__ import annotations
-
 import logging
 from typing import Literal
-
 from pydantic import BaseModel, Field, model_serializer, model_validator
-
 from app.domain.action_types import ConditionName
 from app.domain.character_builds import AbilityName
 from app.domain.failure_margin import FailureMarginEscalation, require_escalation_duration
 from app.domain.timed_control_limits import TimedControlLimits, TimedSaveFlatBonus, compiled_control_limits
-
+from app.domain.weapons import DamageType
 logger = logging.getLogger(__name__)
 
 SaveEffectTiming = Literal[
@@ -56,6 +53,9 @@ class FailedSaveTimedEffect(BaseModel):
     disadvantage_strength_d20_tests: bool = False
     armor_class_bonus: int = 0
     saving_throw_flat_bonuses: list[TimedSaveFlatBonus] = Field(default_factory=list)
+    start_of_turn_damage_dice_count: int = Field(default=0, ge=0, le=40)
+    start_of_turn_damage_dice_size: int = Field(default=6, ge=2, le=100)
+    start_of_turn_damage_type: DamageType | None = None
 
     @model_serializer(mode="wrap")
     def serialize_without_default_control_limits(self, handler):
@@ -71,8 +71,9 @@ class FailedSaveTimedEffect(BaseModel):
                 "disadvantage_strength_d20_tests": False,
                 "armor_class_bonus": 0,
                 "saving_throw_flat_bonuses": [],
-                "allowed_removal_action_ids": [],
-                "additional_effect_ids": [],
+                "allowed_removal_action_ids": [], "additional_effect_ids": [],
+                "start_of_turn_damage_dice_count": 0, "start_of_turn_damage_dice_size": 6,
+                "start_of_turn_damage_type": None,
                 "repeat_save_failure_condition_id": None,
                 "repeat_save_disadvantage_while_source_visible": False,
                 "damage_repeat_save_trigger": "none",
@@ -135,6 +136,9 @@ class FailedSaveTimedEffect(BaseModel):
                 )
             if (self.escape_check_ability is None) != (self.escape_check_dc is None):
                 raise ValueError("Escape-check riders require ability and DC together.")
+            has_start_damage = self.start_of_turn_damage_dice_count > 0
+            if has_start_damage != (self.start_of_turn_damage_type is not None):
+                raise ValueError("Start-of-turn rider damage requires both dice and damage type.")
             return self
         except Exception:
             logger.exception(
