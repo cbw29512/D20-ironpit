@@ -149,7 +149,12 @@
   }
 
   function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null, damageComponents = []) {
-    const incoming = amount;
+    let incoming = amount;
+    if (setup && (state.template.source_trait_names || []).includes('Damage Transfer')) {
+      const keeps = window.IRON_PIT_BROWSER_DAMAGE_TRANSFER?.resolve(state, incoming, setup) || incoming;
+      amount = keeps;
+      incoming = keeps;
+    }
     if (!incoming || state.is_dead) return "damaged";
     noteRegenTypes(state, damageTypes);
     const damageBefore = { ...(state.damage_taken_this_turn_by_type || {}) };

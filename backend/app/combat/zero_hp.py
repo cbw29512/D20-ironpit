@@ -151,6 +151,14 @@ def apply_damage(
 
         incoming = amount
         types = damage_types or set()
+        if setup is not None and 'Damage Transfer' in (state.template.source_trait_names or []):
+            from app.combat.damage_transfer import resolve_damage_transfer
+            keeps, _ = resolve_damage_transfer(
+                next(m for m in [*setup.heroes, *setup.monsters] if m.state is state),
+                incoming, setup, dice,
+            )
+            amount = keeps
+            incoming = keeps
         note_incoming_damage_types(state, types)
         lost_last_head = note_turn_damage_and_trigger(
             state, incoming, types, damage_components,

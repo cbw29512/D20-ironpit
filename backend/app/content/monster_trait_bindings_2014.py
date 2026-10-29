@@ -170,6 +170,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add("Regeneration")
         if supports_reaction_each_turn_2014(monster):
             bound.add("Reactive")
+        if "Damage Transfer" in monster.trait_names:
+            bound.add("Damage Transfer")
         resistance = legendary_resistance_trait_name_2014(monster)
         if resistance:
             bound.add(resistance)
