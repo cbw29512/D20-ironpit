@@ -204,6 +204,13 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             if effect.cannot_regain_hit_points:
                 save_row["cannotRegainHitPoints"] = True
             row["onHitConditionSave"] = save_row
+        if attack.on_hit_end_turn_dice_count:
+            row["onHitEndTurnDamage"] = {
+                "effectId": "burning",
+                "diceCount": attack.on_hit_end_turn_dice_count,
+                "diceSize": attack.on_hit_end_turn_dice_size,
+                "damageType": _value(attack.on_hit_end_turn_damage_type),
+            }
         if attack.on_hit_ongoing_hp_loss:
             effect = attack.on_hit_ongoing_hp_loss
             row["onHitOngoingHpLoss"] = {
