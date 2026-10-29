@@ -21,6 +21,7 @@ from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014
 from app.content.monster_visual_disguise_2014 import visual_disguise_action_2014
 from app.content.monster_grapple_swallow_source_2014 import source_grapple_swallow_2014
+from app.content.monster_regurgitating_swallow_source_2014 import source_proven_regurgitating_swallow_2014
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +65,7 @@ def source_supported_extra_action_labels_2014(monster: SourceMonster2014) -> set
         disguise = visual_disguise_action_2014(monster)
         if disguise is not None:
             allowed.add(_label(disguise.name))
-        swallow = source_grapple_swallow_2014(monster)
+        swallow = source_grapple_swallow_2014(monster) or source_proven_regurgitating_swallow_2014(monster)
         if swallow is not None:
             allowed.add(_label(swallow.source_name))
         return allowed
