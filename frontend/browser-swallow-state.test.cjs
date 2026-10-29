@@ -116,3 +116,17 @@ for(const [file,needle] of [
   ["browser-spell-offense.js","candidate.state.swallowed == null"],
 ]) assert.ok(fs.readFileSync(path.join(__dirname,file),"utf8").includes(needle),`${file} must enforce total external cover`);
 console.log("Browser Swallow state parity and source-owned size/capacity checks pass.");
+
+// Generic source-defined regurgitation values follow the Swallowed debuff.
+const hold = {is_alive:true,is_dead:false,current_hp:30,template:{size:"medium",attacks:[{id:"bite"}]},swallowed_target_ids:[]};
+const captive = {is_alive:true,is_dead:false,current_hp:30,template:{size:"medium"},active_effect_ids:[],grapple_sources:[],timed_effects:[],swallowed:null};
+window.IRON_PIT_BROWSER_GRAPPLE.apply(captive,"owner-2",16,5,true);
+const regurgitationAction = {...action,maxTargetSize:"medium",attackId:"bite",regurgitationDamageThreshold:30,regurgitationSaveAbility:"constitution",regurgitationSaveDc:14,regurgitationRangeFt:10};
+assert.equal(swallow.swallowAfterBite("owner-2",hold,"captive",captive,regurgitationAction,true),true);
+assert.ok(captive.active_effect_ids.includes("swallowed"));
+assert.equal(captive.swallowed.regurgitation_damage_threshold,30);
+assert.equal(captive.swallowed.regurgitation_save_ability,"constitution");
+assert.equal(captive.swallowed.regurgitation_save_dc,14);
+assert.equal(captive.swallowed.regurgitation_range_ft,10);
+assert.equal(swallow.release("owner-2",hold,"captive",captive),true);
+assert.ok(!captive.active_effect_ids.includes("swallowed"));
