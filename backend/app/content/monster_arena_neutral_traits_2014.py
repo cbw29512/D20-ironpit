@@ -51,7 +51,7 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             ).get(trait_name, "")
             normalized = " ".join(printed.casefold().split())
             if trait_name == "Shapechanger":
-                return "polymorph into an object" in normalized and "true form" in normalized
+                return "polymorph into an object" in normalized and "amorphous form" in normalized
             return "object form" in trait_name.casefold() and "indistinguishable" in normalized
 
         source = monster.source_traits or ""
