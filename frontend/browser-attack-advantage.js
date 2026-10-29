@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  function sources(attack, target, attackerId = null) {
+  function sources(attack, target, attackerId = null, attacker = null) {
     try {
       let total = 0;
       const effectiveMaxHp = target.template.max_hp + (target.max_hp_bonus || 0);
@@ -9,6 +9,11 @@
         if (spec.trigger === "target_grappled_by_self") {
           if (!attackerId) throw new Error("Self-grapple Advantage requires attacker identity.");
           total += (target.grapple_sources || []).some((source) => source.source_id === attackerId) ? 1 : 0;
+          continue;
+        }
+        if (spec.trigger === "round1_initiative_lead") {
+          if (!attacker) throw new Error("Opening-initiative Advantage requires attacker state.");
+          total += attacker.turns_started === 1 && target.turns_started === 0 ? 1 : 0;
           continue;
         }
         throw new Error(`Unsupported conditional attack Advantage trigger: ${spec.trigger}`);

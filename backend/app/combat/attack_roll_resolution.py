@@ -119,7 +119,9 @@ def resolve_attack_roll(
             + attacks_against_advantage_sources(defender)
             + attacks_against_reckless_advantage(defender)
             + reckless_advantage
-            + conditional_attack_advantage_sources(attack, defender, attacker_event_id)
+            + conditional_attack_advantage_sources(
+                attack, defender, attacker_event_id, attacker,
+            )
             + next_attack_against_advantage_sources(attacker, defender_event_id)
             + marked_target_advantage_sources(attacker, defender_event_id)
             + first_turn_target_advantage_sources(attacker, defender),

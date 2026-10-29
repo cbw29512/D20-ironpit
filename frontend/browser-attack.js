@@ -64,7 +64,7 @@
       attacker.state, attack, extra.turnKey, disadvantage > 0 || rangedDisadvantage,
     ) || 0;
     const unsuppressedAdvantage = (extra.advantage || 0) + conditions.advantage + bloodiedFury(attacker.state, attack)
-      + Math.max(0, recklessAdvantage - brutalSuppression) + A().sources(attack, target.state, attacker.combatant_id)
+      + Math.max(0, recklessAdvantage - brutalSuppression) + A().sources(attack, target.state, attacker.combatant_id, attacker.state)
       + M().nextAttackAgainstAdvantage(attacker.state, target.combatant_id)
       + (attacker.state.template.advantage_against_unacted_targets ? A().firstTurnTargetAdvantageSources(attacker.state, target.state) : 0)
       + (attacker.state.template.advantage_against_marked_effect_id && attacker.state.active_modifiers?.some((item) => item.source_effect_id === attacker.state.template.advantage_against_marked_effect_id && item.target_id === target.combatant_id) ? 1 : 0);

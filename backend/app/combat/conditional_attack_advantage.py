@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 def conditional_attack_advantage_sources(
     attack: WeaponAttack, target: CombatantState, attacker_event_id: str | None = None,
+    attacker: CombatantState | None = None,
 ) -> int:
     """Return declarative attack-roll Advantage sources satisfied by target state."""
     try:
@@ -22,6 +23,11 @@ def conditional_attack_advantage_sources(
                 if attacker_event_id is None:
                     raise ValueError("Self-grapple Advantage requires attacker identity.")
                 total += int(any(source.source_id == attacker_event_id for source in target.grapple_sources))
+                continue
+            if spec.trigger == "round1_initiative_lead":
+                if attacker is None:
+                    raise ValueError("Opening-initiative Advantage requires attacker state.")
+                total += int(attacker.turns_started == 1 and target.turns_started == 0)
                 continue
             raise ValueError(f"Unsupported conditional attack Advantage trigger: {spec.trigger!r}.")
         return total

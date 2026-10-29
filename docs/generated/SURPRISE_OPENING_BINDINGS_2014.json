@@ -1,0 +1,70 @@
+{
+  "applicable_card_count": 2,
+  "applicable_cards": [
+    "bugbear",
+    "doppelganger"
+  ],
+  "bindings": [
+    {
+      "browser_wired": true,
+      "card_id": "bugbear",
+      "card_name": "Bugbear",
+      "parameters": {
+        "ambusher_text": null,
+        "ambusher_trait": null,
+        "attacks": [
+          {
+            "advantage": false,
+            "attack_id": "2014-bugbear-morningstar",
+            "damage_dice": "2d6",
+            "damage_type": "piercing"
+          },
+          {
+            "advantage": false,
+            "attack_id": "2014-bugbear-javelin-melee",
+            "damage_dice": "2d6",
+            "damage_type": "piercing"
+          },
+          {
+            "advantage": false,
+            "attack_id": "2014-bugbear-javelin-ranged",
+            "damage_dice": "2d6",
+            "damage_type": "piercing"
+          }
+        ],
+        "surprise_damage_text": "If the bugbear surprises a creature and hits it with an attack during the first round of combat, the target takes an extra 7 (2d6) damage from the attack.",
+        "surprise_damage_trait": "Surprise Attack"
+      },
+      "python_wired": true
+    },
+    {
+      "browser_wired": true,
+      "card_id": "doppelganger",
+      "card_name": "Doppelganger",
+      "parameters": {
+        "ambusher_text": "The doppelganger has advantage on attack rolls against any creature it has surprised.",
+        "ambusher_trait": "Ambusher",
+        "attacks": [
+          {
+            "advantage": true,
+            "attack_id": "2014-doppelganger-slam",
+            "damage_dice": "3d6",
+            "damage_type": "bludgeoning"
+          }
+        ],
+        "surprise_damage_text": "If the doppelganger surprises a creature and hits it with an attack during the first round of combat, the target takes an extra 10 (3d6) damage from the attack.",
+        "surprise_damage_trait": "Surprise Attack"
+      },
+      "python_wired": true
+    }
+  ],
+  "exceptions": [],
+  "remaining_card_count": 0,
+  "source_cards_scanned": 327,
+  "wired_browser_card_count": 2,
+  "wired_cards": [
+    "bugbear",
+    "doppelganger"
+  ],
+  "wired_python_card_count": 2
+}
