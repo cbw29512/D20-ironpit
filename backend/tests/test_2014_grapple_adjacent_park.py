@@ -43,10 +43,11 @@ def test_blink_dog_teleport_is_arena_excluded_but_bite_is_retained() -> None:
     assert not any(resource.id == "teleport" for resource in blink.resources)
 
 
-def test_swallow_attach_and_pull_or_removal_remain_explicit() -> None:
+def test_wired_swallow_and_parked_attach_or_pull_remain_explicit() -> None:
+    for monster_id in ("giant-frog", "giant-toad"):
+        assert "mechanic:swallow" not in basic_blockers_2014(_source(monster_id))
+
     parked = {
-        "giant-frog": "mechanic:swallow",
-        "giant-toad": "mechanic:swallow",
         "stirge": "arena:removed",
         "roper": "source:extra-action",
     }
