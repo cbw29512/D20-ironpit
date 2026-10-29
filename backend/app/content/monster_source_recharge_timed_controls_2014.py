@@ -32,9 +32,10 @@ _POISON_SPORES = re.compile(
 
 def _normalize(text: str) -> str:
     try:
-        return " ".join(
+        normalized = " ".join(
             text.replace("\u00ad", "").replace("’", "'").replace("‑", "-").replace("‐", "-").replace("–", "-").split()
         )
+        return re.sub(r"(?<=\\d)-\\s+(?=[A-Za-z])", "-", normalized)
     except Exception:
         logger.exception("Failed to normalize Recharge timed-control source text.")
         raise
