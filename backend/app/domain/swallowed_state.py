@@ -21,3 +21,6 @@ class SwallowedState(BaseModel):
     regurgitation_save_ability: str | None = None
     regurgitation_save_dc: int | None = Field(default=None, ge=1, le=40)
     regurgitation_range_ft: int | None = Field(default=None, ge=1)
+    # Fight-only accumulation of damage dealt by the swallowed victim to its owner.
+    damage_from_victim_this_turn: int = Field(default=0, ge=0)
+    damage_tracking_turn_key: str | None = None
