@@ -1,0 +1,1 @@
+Foundation for Ambusher/Surprise Attack semantic family. Source-verified from 2014 Doppelganger: advantage vs surprised; +3d6 on first-round surprised hit. Reuse existing advantage and on-hit damage rider primitives. No name dispatch. Python/browser parity pending full bind.
