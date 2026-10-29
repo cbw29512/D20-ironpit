@@ -6,7 +6,7 @@ from app.domain.action_types import ConditionName
 from app.domain.character_builds import AbilityName
 from app.domain.failure_margin import FailureMarginEscalation, require_escalation_duration
 from app.domain.timed_control_limits import TimedControlLimits, TimedSaveFlatBonus, compiled_control_limits
-from app.domain.weapons import DamageType
+from app.domain.weapons_base import DamageType
 logger = logging.getLogger(__name__)
 SaveEffectTiming = Literal[
     "source_turn_start",
