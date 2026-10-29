@@ -20,6 +20,7 @@ from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_recharge_timed_controls_2014 import (
     source_proven_recharge_timed_controls_2014,
 )
+from app.content.monster_source_sections_2014 import source_sections_2014
 from app.domain.models import EncounterSelection
 from app.combat.encounter_setup import build_encounter_setup
 
@@ -34,7 +35,10 @@ def _source(monster_id: str):
 
 
 def _binding(monster_id: str):
-    return source_proven_recharge_timed_controls_2014(_source(monster_id))[0]
+    source = _source(monster_id)
+    bindings = source_proven_recharge_timed_controls_2014(source)
+    assert len(bindings) == 1, source_sections_2014(source.source_actions, include_continuations=True)
+    return bindings[0]
 
 
 def test_dust_mephit_blinding_breath_is_exact_source_owned_recharge_control() -> None:
