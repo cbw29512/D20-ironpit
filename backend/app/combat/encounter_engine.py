@@ -69,6 +69,9 @@ def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
         sequence, round_number, member, "target_turn_end", dice, setup,
     )
     events.extend(lifecycle)
+    from app.combat.end_of_turn_timed_damage import resolve_end_of_turn_timed_damage
+    recurring, sequence = resolve_end_of_turn_timed_damage(sequence, round_number, member, setup, dice)
+    events.extend(recurring)
     exile_events, sequence = resolve_source_exile_returns(
         sequence, round_number, member, setup, dice,
     )
