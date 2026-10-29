@@ -8,14 +8,12 @@ from app.domain.failure_margin import FailureMarginEscalation, require_escalatio
 from app.domain.timed_control_limits import TimedControlLimits, TimedSaveFlatBonus, compiled_control_limits
 from app.domain.weapons import DamageType
 logger = logging.getLogger(__name__)
-
 SaveEffectTiming = Literal[
     "source_turn_start",
     "source_turn_end",
     "target_turn_start",
     "target_turn_end",
 ]
-
 
 class FailedSaveTimedEffect(BaseModel):
     """Source-neutral timed rider applied only after a failed saving throw."""
@@ -24,7 +22,7 @@ class FailedSaveTimedEffect(BaseModel):
     additional_effect_ids: list[ConditionName] = Field(default_factory=list)
     failure_margin_escalation: FailureMarginEscalation | None = None
     duration_rounds: int | None = Field(default=None, ge=1, le=100800)
-    expiry_timing: SaveEffectTiming = "target_turn_end"
+    expiry_timing: SaveEffectTiming | None = "target_turn_end"
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: SaveEffectTiming | None = None
@@ -106,6 +104,8 @@ class FailedSaveTimedEffect(BaseModel):
             if len(grouped_ids) != len(set(grouped_ids)):
                 raise ValueError("Grouped failed-save condition ids must be distinct.")
             require_escalation_duration(self.failure_margin_escalation, self.duration_rounds)
+            if self.duration_rounds is not None and self.expiry_timing is None:
+                raise ValueError("Timed failed-save duration requires an expiry timing.")
             if self.failure_margin_escalation is not None:
                 escalation = self.failure_margin_escalation
                 if (
