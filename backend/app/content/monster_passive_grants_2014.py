@@ -15,6 +15,7 @@ _ALL_SAVE_ABILITIES = (
     "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",
 )
 _MAGIC_RESISTANCE = "Magic Resistance"
+_LIMITED_MAGIC_IMMUNITY = "Limited Magic Immunity"
 _DARK_DEVOTION = "Dark Devotion"
 _BRAVE = "Brave"
 _GNOME_CUNNING = "Gnome Cunning"
@@ -60,6 +61,13 @@ def saving_throw_advantage_grants_2014(monster: SourceMonster2014) -> list[Savin
             grants.append(SavingThrowAdvantageGrant(
                 source_id="magic-resistance",
                 source_name=_MAGIC_RESISTANCE,
+                abilities=list(_ALL_SAVE_ABILITIES),
+                requires_magical_effect=True,
+            ))
+        if _LIMITED_MAGIC_IMMUNITY in monster.trait_names:
+            grants.append(SavingThrowAdvantageGrant(
+                source_id="limited-magic-immunity",
+                source_name=_LIMITED_MAGIC_IMMUNITY,
                 abilities=list(_ALL_SAVE_ABILITIES),
                 requires_magical_effect=True,
             ))
@@ -117,6 +125,8 @@ def bound_passive_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]
         bound.update(item.source_name for item in grants)
         if _MAGIC_RESISTANCE in monster.trait_names:
             bound.add(_MAGIC_RESISTANCE)
+        if _LIMITED_MAGIC_IMMUNITY in monster.trait_names:
+            bound.add(_LIMITED_MAGIC_IMMUNITY)
         if _DARK_DEVOTION in monster.trait_names:
             bound.add(_DARK_DEVOTION)
         if _BRAVE in monster.trait_names:

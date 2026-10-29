@@ -20,7 +20,7 @@ _MODELED_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _DECLARATIVE_ATTACK_TRAITS = frozenset({"Blood Frenzy"})
-_DECLARATIVE_TEMPLATE_TRAITS = frozenset({"Loathsome Limbs (4/Day)", "Magic Resistance", "Regeneration"})
+_DECLARATIVE_TEMPLATE_TRAITS = frozenset({"Loathsome Limbs (4/Day)", "Magic Resistance", "Limited Magic Immunity", "Regeneration"})
 _ARENA_NEUTRAL_TRAITS = frozenset({
     "Agile", "Amphibious", "Beast of Burden", "False Appearance", "Flyby", "Hellish Restoration",
     "Hold Breath", "Ice Walk", "Illumination", "Jumper", "Keen Hearing", "Keen Hearing and Sight",
@@ -80,6 +80,15 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             issues.append("trait-runtime-missing:magic-resistance")
     elif any(grant.source_id == "magic-resistance" for grant in template.progression_features.saving_throw_advantage_grants):
         issues.append("trait-source-missing:magic-resistance")
+    if "Limited Magic Immunity" in expected:
+        grants = template.progression_features.saving_throw_advantage_grants
+        matching = [grant for grant in grants if grant.source_id == "limited-magic-immunity"]
+        if len(matching) != 1 or not matching[0].requires_magical_effect or set(matching[0].abilities) != {
+            "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"
+        }:
+            issues.append("trait-runtime-missing:limited-magic-immunity")
+    elif any(grant.source_id == "limited-magic-immunity" for grant in template.progression_features.saving_throw_advantage_grants):
+        issues.append("trait-source-missing:limited-magic-immunity")
     expected_regeneration = regeneration_trait_2024(row.get("traits", ""))
     if expected_regeneration is not None:
         if template.regeneration is None:
