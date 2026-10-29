@@ -1,0 +1,33 @@
+{
+  "applicable_card_count": 1,
+  "applicable_cards": [
+    "magmin"
+  ],
+  "exceptions": [
+    {
+      "missing_fields": [
+        "removal_action_range_ft"
+      ],
+      "monster": "magmin",
+      "reason": "source permits a creature to douse the fire but omits the grid range for a different creature performing that Action"
+    }
+  ],
+  "remaining_card_count": 1,
+  "source_cards_scanned": 327,
+  "source_declared_parameters": [
+    {
+      "action": "Touch",
+      "apply_on": "hit",
+      "damage_type": "fire",
+      "dice_count": 1,
+      "dice_size": 6,
+      "monster": "magmin",
+      "removal_action_cost": "action",
+      "tick_timing": "target_turn_end"
+    }
+  ],
+  "status": "blocked: source omits another-creature douse Action range",
+  "wired_browser_card_count": 0,
+  "wired_cards": [],
+  "wired_python_card_count": 0
+}
