@@ -25,9 +25,14 @@
       damage_dice_count: action.damageDiceCount,
       damage_dice_size: action.damageDiceSize, damage_type: action.damageType,
       exit_movement_ft: action.exitMovementFt,
+      regurgitation_damage_threshold: action.regurgitationDamageThreshold ?? null,
+      regurgitation_save_ability: action.regurgitationSaveAbility ?? null,
+      regurgitation_save_dc: action.regurgitationSaveDc ?? null,
+      regurgitation_range_ft: action.regurgitationRangeFt ?? null,
     };
     (owner.swallowed_target_ids ||= []).push(targetId);
     target.active_effect_ids = (target.active_effect_ids || []).filter(c => c !== "dodge");
+    if (!target.active_effect_ids.includes("swallowed")) target.active_effect_ids.push("swallowed");
     for (const condition of ["blinded", "restrained"]) {
       if (!I().immune(target, condition) && !target.active_effect_ids.includes(condition))
         target.active_effect_ids.push(condition);
@@ -38,6 +43,7 @@
     if (!target.swallowed || target.swallowed.source_id !== ownerId) return false;
     owner.swallowed_target_ids = (owner.swallowed_target_ids || []).filter(id => id !== targetId);
     target.swallowed = null;
+    target.active_effect_ids = (target.active_effect_ids || []).filter(c => c !== "swallowed");
     for (const condition of ["blinded", "restrained"]) {
       const ownedElsewhere = (target.timed_effects || []).some(effect => effect.effect_id === condition)
         || (condition === "restrained" && (target.grapple_sources || []).some(g => g.restrains));
