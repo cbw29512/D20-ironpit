@@ -1,5 +1,12 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Recharge save-for-half typed damage — implementation 2026-10-29
+
+- The mandatory semantic scan covers all 327 immutable cards and finds 30 direct Recharge Actions whose complete printed outcome is typed damage on a failed save and half on success.
+- All 30 are wired in Python and browser with source-declared save ability/DC, range/area, damage dice/type, half-damage outcome, Recharge threshold and one-use resource. Behir's previously missing Lightning Breath binding adds its exact 20-by-5-foot line, DC 16 Dexterity save, 12d10 Lightning damage and Recharge 5–6 without monster-name runtime dispatch.
+- Generator-owned `docs/generated/RECHARGE_SAVE_HALF_DAMAGE_BINDINGS_2014.json`: 327 scanned; 30 applicable; 30 Python wired; 30 browser wired; zero remaining; zero exceptions.
+- Behir's `mechanic:recharge` blocker is removed. Its separate printed Swallow Action remains fail-closed under `source:extra-action`, so source admission remains 248/327 and no finished-monster claim is made. Production remains locked.
+
 ## End-turn recurring typed damage — source-data blocker recorded 2026-10-29
 
 - The mandatory semantic scan covers all 327 immutable cards and finds one applicable card: Magmin Touch.

@@ -14,6 +14,7 @@ from app.content.monster_source_conditioned_save_2014 import source_proven_condi
 from app.content.monster_source_dreadful_glare_2014 import source_proven_dreadful_glare_2014
 from app.content.monster_source_opening_area_saves_2014 import source_proven_opening_area_saves_2014
 from app.content.monster_recharge_self_buffs_2014 import recharge_self_buff_bindings_2014
+from app.content.monster_source_recharge_line_damage_2014 import source_proven_recharge_line_damage_2014
 from app.content.monster_audible_maintained_control_2014 import source_proven_audible_maintained_controls_2014
 from app.domain.capability_attacks import SaveCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
@@ -90,6 +91,11 @@ def supports_recharge_rules_2014(monster: SourceMonster2014) -> bool:
         supported_resources.update(
             item.action.resource_id for item in self_buffs if item.action.resource_id
         )
+        line_damage = source_proven_recharge_line_damage_2014(monster)
+        supported_ids.update(item.id for item in line_damage)
+        supported_resources.update(
+            item.resource_id for item in line_damage if item.resource_id
+        )
         excluded_ids = arena_unavailable_recharge_ids_2014(monster)
         return all(
             action_id in supported_ids or action_id in supported_resources or action_id in excluded_ids
@@ -129,6 +135,7 @@ def unsupported_source_actions_2014(
         allowed.update(item.name.casefold() for item in source_proven_opening_area_saves_2014(monster))
         allowed.update(item.name.casefold() for item in source_proven_audible_maintained_controls_2014(monster))
         allowed.update(item.action.name.casefold() for item in recharge_self_buff_bindings_2014(monster))
+        allowed.update(item.name.casefold() for item in source_proven_recharge_line_damage_2014(monster))
         if monster.multiattack_slots or monster.multiattack_policy is not None or monster.multiattack_binding is not None:
             allowed.add("multiattack")
         if recharge_supported is None:
@@ -195,6 +202,11 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
         result.extend(source_proven_dreadful_glare_2014(monster))
         result.extend(source_proven_opening_area_saves_2014(monster))
         result.extend(source_proven_audible_maintained_controls_2014(monster))
+        existing_ids = {item.id for item in result}
+        result.extend(
+            item for item in source_proven_recharge_line_damage_2014(monster)
+            if item.id not in existing_ids
+        )
         return result
     except Exception:
         logger.exception("Failed to adapt 2014 save actions for %s.", monster.name)
