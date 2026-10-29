@@ -66,6 +66,24 @@ def resolve_attack_hit_riders(
             defender, attack, dice, source_id=attacker_event_id,
             round_number=round_number,
         )
+    if attack.on_hit_end_turn_dice_count:
+        from app.domain.timed_effects import TimedEffect
+        if attack.on_hit_end_turn_damage_type is None:
+            raise ValueError("Recurring damage on hit requires a damage type.")
+        # A live combatant carries the debuff. The source card is immutable.
+        # Repeated hits refresh nothing and do not stack duplicate Burning ticks.
+        if not any(effect.effect_id == "burning" for effect in defender.timed_effects):
+            defender.timed_effects.append(TimedEffect(
+                effect_id="burning", source_id=attacker_event_id,
+                source_effect_id=attack.id,
+                end_of_turn_dice_count=attack.on_hit_end_turn_dice_count,
+                end_of_turn_dice_size=attack.on_hit_end_turn_dice_size,
+                end_of_turn_damage_type=attack.on_hit_end_turn_damage_type,
+                ends_if_source_dead=False,
+            ))
+            if "burning" not in defender.active_effect_ids:
+                defender.active_effect_ids.append("burning")
+            result.applied_conditions.append("burning")
     damage_taken = sum(
         component.applied_total or 0 for component in result.damage_components
     )
