@@ -1,5 +1,12 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## End-turn recurring typed damage — source-data blocker recorded 2026-10-29
+
+- The mandatory semantic scan covers all 327 immutable cards and finds one applicable card: Magmin Touch.
+- The card supplies hit application, 1d6 Fire, target-turn-end timing, and an Action exit. It does not supply the grid range for a different creature taking that douse Action; Iron Pit does not copy the 5-foot Wake Sleeper range or invent another value.
+- Generator-owned `docs/generated/END_TURN_RECURRING_DAMAGE_BINDINGS_2014.json`: 327 scanned; one applicable; zero Python wired; zero browser wired; one remaining; one explicit missing-data exception.
+- PR #1096's Python-only synthetic lifecycle is not integration evidence and must not merge without resolving this source gap, binding Python/browser together, and regenerating this report. Production remains locked.
+
 ## Sleep spell semantic family — source-data blocker recorded 2026-10-28
 
 - The mandatory semantic scan covers all 327 immutable 2014 monster cards and finds four applicable cards: Dust Mephit, Night Hag, Oni, and Spirit Naga.
