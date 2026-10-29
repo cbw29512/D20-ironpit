@@ -46,3 +46,31 @@ def test_unrelated_simple_swallow_does_not_match():
     for monster in load_monster_source_2014():
         if monster.id in {"giant-frog", "giant-toad"}:
             assert source_proven_regurgitating_swallow_2014(monster) is None
+
+
+def test_generic_action_and_fight_state_retain_regurgitation_rules():
+    from app.content.demo import build_demo_fighter
+    from app.combat.grapple import apply_grapple
+    from app.combat.swallow_state import swallow_after_bite
+    from app.combat.state import build_combatant_state
+    from app.domain.swallow_actions import swallow_action_from_source
+    from app.domain.size import CreatureSize
+
+    monster = next(m for m in load_monster_source_2014() if m.id == "behir")
+    proof = source_proven_regurgitating_swallow_2014(monster)
+    assert proof is not None
+    # The shared capability is parameterized, not keyed to the Behir name.
+    action = swallow_action_from_source(proof)
+    assert action.regurgitation_damage_threshold == 30
+    assert action.regurgitation_save_dc == 14
+    fighter = build_demo_fighter()
+    bite = fighter.weapon_attack.model_copy(update={"id": "bite"})
+    owner = build_combatant_state(fighter.model_copy(update={"weapon_attack": bite}))
+    victim = build_combatant_state(fighter.model_copy(update={"size": CreatureSize.MEDIUM}))
+    apply_grapple(victim, "generic-source", 16, 5, restrains=True)
+    assert swallow_after_bite(
+        "generic-source", owner, "victim", victim, action, bite_hit=True,
+    )
+    assert victim.swallowed.regurgitation_damage_threshold == 30
+    assert victim.swallowed.regurgitation_save_dc == 14
+    assert victim.swallowed.regurgitation_range_ft == 10
