@@ -32,7 +32,7 @@ _SIMPLE = re.compile(
 class GrappleSwallowSource2014:
     source_name: str
     attack_id: str
-    delivery_mode: str = "action_attack"
+    delivery_mode: str
     max_target_size: CreatureSize
     damage_dice_count: int
     damage_dice_size: int
@@ -90,7 +90,7 @@ def _simple_profile(monster: SourceMonster2014) -> GrappleSwallowSource2014 | No
         ):
             return None
         return GrappleSwallowSource2014(
-            source_name="Swallow", attack_id=attack.id,
+            source_name="Swallow", attack_id=attack.id, delivery_mode="action_attack",
             max_target_size=size, damage_dice_count=count, damage_dice_size=sides,
             damage_type=groups["type"].lower(), max_swallowed=1,
             exit_movement_ft=int(groups["exit"]),
