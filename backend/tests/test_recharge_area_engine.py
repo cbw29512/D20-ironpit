@@ -111,3 +111,33 @@ def test_turn_moves_for_recharge_cone_then_uses_it_before_normal_attack() -> Non
     assert offense[0].event_type == "saving_throw"
     assert offense[0].feature_id == "recharge-area"
     assert actor.state.resources[0].current_uses == 0
+
+
+def test_mixed_recharge_families_follow_declared_resource_order() -> None:
+    actor, setup = _setup()
+    attack = actor.state.template.weapon_attack.model_copy(update={"resource_id": "attack-use"})
+    actor.state.template = actor.state.template.model_copy(update={
+        "weapon_attack": attack,
+        "resources": [
+            ResourceDefinition(
+                id="area-use", name="Area Use", max_uses=1,
+                recharge=RechargeRule(minimum_roll=5),
+            ),
+            ResourceDefinition(
+                id="attack-use", name="Attack Use", max_uses=1,
+                recharge=RechargeRule(minimum_roll=5),
+            ),
+        ],
+    })
+    actor.state.resources = [
+        actor.state.resources[0],
+        actor.state.resources[0].model_copy(update={
+            "id": "attack-use", "name": "Attack Use", "current_uses": 1, "max_uses": 1,
+        }),
+    ]
+
+    choice = recharge_action_choice(actor, setup)
+
+    assert choice is not None
+    assert choice[0] == "area-save"
+    assert choice[1][0].id == "recharge-area"
