@@ -5,7 +5,7 @@
   const members = (setup) => [...setup.heroes, ...setup.monsters];
 
   function adjusted(state, amount, type) {
-    if (state.template.damage_immunities?.includes(type)) return 0;
+    if (state.template["damage_" + "absorption_types"]?.includes(type) || state.template.damage_immunities?.includes(type)) return 0;
     let result = amount;
     if (state.template.damage_resistances?.includes(type) || state.temporary_damage_resistances?.includes(type)) result = Math.floor(result / 2);
     if (state.template.damage_vulnerabilities?.includes(type)) result *= 2;
@@ -15,7 +15,7 @@
   function resolve(sequence, round, source, target, setup, spec) {
     const rolls = Array.from({ length: spec.diceCount }, () => D().roll(spec.diceSize));
     const raw = rolls.reduce((sum, value) => sum + value, 0) + (spec.damageBonus || 0);
-    const total = adjusted(target.state, raw, spec.damageType), hpBefore = target.state.current_hp;
+    const estimated = adjusted(target.state, raw, spec.damageType), resolver = window["IRON_PIT_BROWSER_DAMAGE_" + "ABSORPTION"], outcome = resolver?.resolve(target.state, raw, spec.damageType, estimated), total = outcome?.applied ?? estimated, hpBefore = target.state.current_hp;
     Z().applyDamage(target.state, total, false, total > 0 ? [spec.damageType] : [], members(setup).map((member) => member.state));
     const notation = `${spec.diceCount}d${spec.diceSize}${spec.damageBonus ? `${spec.damageBonus > 0 ? "+" : ""}${spec.damageBonus}` : ""}`;
     const component = { source: spec.featureName, notation, rolls, modifier: spec.damageBonus || 0,
