@@ -48,3 +48,22 @@ def test_vampire_weaknesses_are_arena_neutral():
         monster = source[monster_id]
         assert "Vampire Weaknesses" in monster.trait_names
         assert "Vampire Weaknesses" not in unsupported_traits_2014(monster)
+
+
+def test_vampire_weaknesses_source_mutations_fail_closed():
+    """A source edit cannot turn an unsupported environmental clause into admission."""
+    from app.content.monster_arena_neutral_traits_2014 import verified_arena_inert_trait_2014
+
+    source = {monster.id: monster for monster in load_monster_source_2014()}
+    for monster_id in ("vampire", "vampire-spawn"):
+        monster = source[monster_id]
+        printed = monster.source_traits or ""
+        assert verified_arena_inert_trait_2014(monster, "Vampire Weaknesses")
+        for required_clause in ("sunlight", "running water", "residence"):
+            assert required_clause in printed.casefold()
+            import re
+            changed = re.sub(required_clause, "removed environmental clause", printed, flags=re.IGNORECASE)
+            mutated = monster.model_copy(update={"source_traits": changed})
+            assert not verified_arena_inert_trait_2014(mutated, "Vampire Weaknesses"), (
+                f"{monster_id} incorrectly accepted source missing {required_clause}"
+            )
