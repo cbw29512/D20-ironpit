@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 from app.domain.rule_types import AbilityName, ConditionName, ConditionTiming
-from app.domain.save_effects import SaveFailureEffectDefinition
+from app.domain.save_effects import PeriodicDamageEffectDefinition, SaveFailureEffectDefinition
 from app.domain.save_damage import SaveDamageComponent
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
@@ -16,6 +16,7 @@ DamageTypeName = Literal["acid", "bludgeoning", "cold", "fire", "force", "lightn
 
 class GrappleSource(BaseModel):
     source_id: str
+    source_effect_id: str | None = None
     escape_dc: int = Field(ge=1, le=40)
     range_ft: int = Field(default=5, ge=0)
     restrains: bool = False
@@ -26,6 +27,8 @@ class HitControlEffect(BaseModel):
     max_target_size: CreatureSize | None = None
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
+    grapple_linked_conditions: list[ConditionName] = Field(default_factory=list)
+    grapple_periodic_damage: PeriodicDamageEffectDefinition | None = None
     conditions_while_grappled: list[ConditionName] = Field(default_factory=list)
     condition_id: ConditionName | None = None
     expires_at_start_of_source_turn: bool = False
