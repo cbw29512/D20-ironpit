@@ -42,6 +42,13 @@ def save_action_issues(action: Any, actions: str) -> list[str]:
         action.damage_bonus,
     ).search(actions):
         issues.append(f"save-damage-mismatch:{action.id}")
+    for component in action.additional_damage_components:
+        if not _dice_pattern(
+            component.dice_count, component.dice_size, component.damage_bonus,
+        ).search(actions):
+            issues.append(f"save-additional-damage-mismatch:{action.id}:{component.damage_type.value}")
+        if component.damage_type.value.lower() not in actions:
+            issues.append(f"save-additional-damage-type-missing:{action.id}:{component.damage_type.value}")
     if not _push_present(action, actions):
         issues.append(f"save-push-rider-mismatch:{action.id}")
     if action.grapple_escape_dc is not None:
