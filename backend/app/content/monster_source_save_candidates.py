@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 
+from app.content.monster_movement_led_save_candidates import movement_led_save_candidates
 from app.content.monster_source_grapple_save_candidates import grapple_save_candidates
 from app.content.monster_source_limited_resources import source_limited_resource
 from app.content.monster_source_repeat_save_candidates import repeat_condition_save_candidates
