@@ -109,6 +109,18 @@ def apply_failed_save_timed_effect(
                 source_effect_immunity_on_end=(
                     rider.source_effect_immunity_on_end if owns_lifecycle else False
                 ),
+                start_of_turn_dice_count=(
+                    rider.start_of_turn_damage.dice_count
+                    if owns_lifecycle and rider.start_of_turn_damage is not None else 0
+                ),
+                start_of_turn_dice_size=(
+                    rider.start_of_turn_damage.dice_size
+                    if owns_lifecycle and rider.start_of_turn_damage is not None else 6
+                ),
+                start_of_turn_damage_type=(
+                    rider.start_of_turn_damage.damage_type
+                    if owns_lifecycle and rider.start_of_turn_damage is not None else None
+                ),
             )
             if result is not None:
                 applied.append(result)
