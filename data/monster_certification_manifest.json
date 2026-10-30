@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 216,
-    "blocked": 114
+    "public_ready": 218,
+    "blocked": 112
   },
   "monsters": [
     {
@@ -3204,22 +3204,15 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "multiattack"
-      ],
-      "unsupported_mechanics": [
+        "multiattack",
         "trait"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "trait",
-        "trait-unmodeled-clause:fire-aura",
-        "uncertified-trait:fire-aura",
-        "uncertified-trait:fire-form",
-        "uncertified-trait:water-susceptibility"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-fire-giant",
@@ -3891,24 +3884,17 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "trait"
-      ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "limited-use",
-        "reaction"
-      ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
         "condition-or-control",
         "limited-use",
         "reaction",
-        "uncertified-limited-use:reactions-ink-cloud-1-day",
-        "uncertified-reaction:ink-cloud-1-day"
-      ]
+        "trait"
+      ],
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-giant-owl",
@@ -6267,11 +6253,11 @@
         "trait"
       ],
       "supported_mechanics": [
-        "attack-roll"
+        "attack-roll",
+        "reaction"
       ],
       "unsupported_mechanics": [
         "limited-use",
-        "reaction",
         "trait"
       ],
       "python_certification_status": "blocked",
@@ -6280,10 +6266,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "limited-use",
-        "reaction",
         "trait",
-        "uncertified-limited-use:reactions-ink-cloud-1-day",
-        "uncertified-reaction:ink-cloud-1-day",
         "uncertified-trait:compression"
       ]
     },
