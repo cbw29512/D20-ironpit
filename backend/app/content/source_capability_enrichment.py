@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 
+from app.content.source_attack_effect_enrichment import merge_attack_effects as _merge_attack_effects
 from app.content.source_support_action_enrichment import merge_support_actions
 from app.domain.capabilities import CombatantDefinition
 from app.domain.traits import CombatTrait
@@ -14,21 +15,6 @@ _DAMAGE_HEADING = re.compile(
 
 def _normalized_name(value: str) -> str:
     return re.sub(r"\s+", " ", value).strip().lower()
-
-
-def _merge_attack_effects(existing: list, source: list, *, charge_profile: object | None = None) -> list:
-    """Preserve canonical effects and add only source effect families not already represented."""
-    known_kinds = {effect.kind for effect in existing}
-    charge_owns_prone = bool(
-        charge_profile is not None
-        and getattr(charge_profile, "prone_max_target_size", None) is not None
-    )
-    additions = [
-        effect for effect in source
-        if effect.kind not in known_kinds
-        and not (effect.kind == "prone" and charge_owns_prone)
-    ]
-    return [*existing, *additions]
 
 
 def _merge_attacks(existing: CombatantDefinition, source: CombatantDefinition, resource_rebinds: dict[str, str]):
