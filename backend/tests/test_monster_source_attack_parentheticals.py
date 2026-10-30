@@ -36,3 +36,18 @@ def test_recharge_parenthetical_still_creates_a_resource() -> None:
     except Exception:
         logger.exception("Recharge source attack parenthetical regression failed.")
         raise
+
+
+def test_werebear_combined_attack_without_reach_period_is_parsed() -> None:
+    try:
+        candidates = source_candidate_definitions(set())
+        werebear = candidates["srd-werebear"]
+        names = {attack.name for attack in werebear.attacks}
+
+        assert {"Bite", "Handaxe", "Rend"} <= names
+        handaxe = next(attack for attack in werebear.attacks if attack.name == "Handaxe")
+        assert handaxe.normal_range_ft == 20
+        assert handaxe.long_range_ft == 60
+    except Exception:
+        logger.exception("Werebear combined-range source regression failed.")
+        raise
