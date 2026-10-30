@@ -16,7 +16,7 @@ def build_attack_event(
     critical: bool, natural_1_ends_turn: bool, hp_before: int, max_hp_before: int | None,
     max_hp_after: int | None, temporary_hp_before: int, death_success_before: int,
     death_failure_before: int, feature_id: str | None, resource_remaining: int | None,
-    concentration_before: str | None, description: str,
+    defensive_reaction_id: str | None, concentration_before: str | None, description: str,
 ) -> BattleEvent:
     try:
         if hit_save.save_ability is not None:
@@ -54,7 +54,7 @@ def build_attack_event(
             death_save_failures=actual_defender.death_save_failures,
             is_stable=actual_defender.is_stable, is_dead=actual_defender.is_dead,
             weapon_id=weapon.id, projectile=weapon.projectile, feature_id=feature_id,
-            resource_remaining=resource_remaining,
+            defensive_reaction_id=defensive_reaction_id, resource_remaining=resource_remaining,
             concentration_ended_effect_id=(
                 concentration_before
                 if concentration_before and actual_defender.concentration is None else None
