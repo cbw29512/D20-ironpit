@@ -6,6 +6,7 @@ from typing import Any
 from app.domain.models import CombatantTemplate
 from browser_template_action_fields_serializer import extend_action_rows
 from browser_template_common_serializer import legendary_action_row
+from browser_template_damage_rule_serializer import damage_taken_disadvantage_rows
 from browser_template_effect_serializer import (
     aura_row,
     death_trigger_row,
@@ -61,16 +62,7 @@ def extend_optional_rows(row: dict[str, Any], template: CombatantTemplate) -> No
                 death_trigger_row(effect) for effect in template.death_trigger_effects
             ]
         if template.damage_taken_disadvantage_rules:
-            row["damage_taken_disadvantage_rules"] = [
-                {
-                    "id": rule.id,
-                    "name": rule.name,
-                    "damageType": rule.damage_type.value,
-                    "attackRollDisadvantage": rule.attack_roll_disadvantage,
-                    "abilityCheckDisadvantage": rule.ability_check_disadvantage,
-                }
-                for rule in template.damage_taken_disadvantage_rules
-            ]
+            row["damage_taken_disadvantage_rules"] = damage_taken_disadvantage_rows(template)
         _extend_auras(row, template)
         _extend_triggered_actions(row, template)
         _extend_source_fingerprints(row, template)
