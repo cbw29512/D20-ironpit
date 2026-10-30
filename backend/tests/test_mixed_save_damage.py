@@ -62,7 +62,10 @@ def test_mixed_save_damage_applies_typed_defenses_before_total_hp_loss() -> None
     try:
         salamander_template = build_combatant_from_capabilities("srd-salamander")
         hero_template = build_karnok_stoneward().model_copy(
-            update={"damage_resistances": [DamageType.FIRE]}
+            update={
+                "max_hp": 30,
+                "damage_resistances": [DamageType.FIRE],
+            }
         )
         salamander = _member(salamander_template, "salamander", "monsters", 10)
         hero = _member(hero_template, "hero", "heroes", 0)
