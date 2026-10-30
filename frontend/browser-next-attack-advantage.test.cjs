@@ -89,6 +89,33 @@ const nextAttack = (expires = 2) => ({
   assert.equal(target.state.active_modifiers.length, 0);
 }
 
+{
+  const pirate = member("pirate", "heroes", 0), target = member("target", "monsters", 5);
+  const attack = pirate.state.template.attacks.find((item) => item.id === pirate.state.template.primary_attack_id);
+  M.applySelfHitEffects(pirate.state, "pirate", {
+    id: "pirate-rapier",
+    onHitSelfModifiers: [{
+      kind: "next-attack-advantage",
+      expiresAtEndOfSourceTurn: true,
+    }],
+  }, 1);
+  assert.equal(M.nextAttackAdvantage(pirate.state), 1);
+  dice([2, 18]);
+  const event = A.resolveAttack(4, 1, pirate, target, attack, 5, { spendAction: false });
+  assert.equal(event.attack_roll.mode, "advantage");
+  assert.equal(M.nextAttackAdvantage(pirate.state), 0);
+
+  M.applySelfHitEffects(pirate.state, "pirate", {
+    id: "pirate-rapier",
+    onHitSelfModifiers: [{
+      kind: "next-attack-advantage",
+      expiresAtEndOfSourceTurn: true,
+    }],
+  }, 1);
+  assert.equal(M.expireSourceTurn([pirate.state], "pirate", 1), 1);
+  assert.equal(M.nextAttackAdvantage(pirate.state), 0);
+}
+
 assert.throws(() => M.validate({
   id: "bad", source_id: "caster", source_effect_id: "bad", kind: "speed",
   flat_bonus: 5, dice_count: 0, dice_size: 0, damage_type: null,
