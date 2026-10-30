@@ -26,7 +26,7 @@ def resolve_swallow_action(
         for rule in attacker.state.template.swallow_actions:
             if rule.delivery_mode != "action_attack":
                 continue
-            if len(attacker.state.swallowed_target_ids) >= rule.max_swallowed:
+            if rule.max_swallowed is not None and len(attacker.state.swallowed_target_ids) >= rule.max_swallowed:
                 continue
             attacks = ([attacker.state.template.weapon_attack]
                        if attacker.state.template.weapon_attack else [])
