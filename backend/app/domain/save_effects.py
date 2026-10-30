@@ -15,22 +15,23 @@ class ProneEffectDefinition(BaseModel):
     max_target_size: CreatureSize | None = None
 
 
-class GrappleEffectDefinition(BaseModel):
-    kind: Literal["grapple"] = "grapple"
-    escape_dc: int = Field(ge=1, le=40)
-    max_target_size: CreatureSize | None = None
-    restrains: bool = False
-    linked_conditions: list[ConditionName] = Field(default_factory=list)
-
-
 class PeriodicDamageEffectDefinition(BaseModel):
-    """Damage that repeats while its owning timed condition remains active."""
+    """Damage that repeats while its owning condition or grapple remains active."""
 
     timing: Literal["target_turn_start", "target_turn_end"]
     dice_count: int = Field(ge=1, le=40)
     dice_size: int = Field(ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageTypeName
+
+
+class GrappleEffectDefinition(BaseModel):
+    kind: Literal["grapple"] = "grapple"
+    escape_dc: int = Field(ge=1, le=40)
+    max_target_size: CreatureSize | None = None
+    restrains: bool = False
+    linked_conditions: list[ConditionName] = Field(default_factory=list)
+    periodic_damage: PeriodicDamageEffectDefinition | None = None
 
 
 class ConditionEffectDefinition(BaseModel):
