@@ -6,7 +6,7 @@ import re
 from app.content.monster_source_2014 import SourceMonster2014
 
 logger = logging.getLogger(__name__)
-_LIMITED_SUFFIX = re.compile(r"\\s*\\((?:Recharge\\s+\\d(?:\\s*[-–]\\s*\\d)?|\\d+\\s*/\\s*Day)\\)\\s*$", re.IGNORECASE)
+_LIMITED_SUFFIX = re.compile(r"\s*\((?:Recharge\s+\d(?:\s*[-–]\s*\d)?|\d+\s*/\s*Day)\)\s*$", re.IGNORECASE)
 
 # Combat cannot use these actions. Printed abilities remain unchanged on the source card.
 # Excluded actions do not acquire resources, recharge rolls, or subordinate attacks.
