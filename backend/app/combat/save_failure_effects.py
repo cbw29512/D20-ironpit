@@ -1,13 +1,12 @@
 from __future__ import annotations
-
 import logging
-
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.grapple import apply_grapple
 from app.combat.hit_modifiers import apply_modifier_effect
 from app.combat.ongoing_hp_loss import apply_ongoing_hp_loss
 from app.combat.timed_conditions import apply_timed_condition
 from app.combat.timed_penalties import apply_timed_penalty
+from app.combat.zero_hp_replacement import apply_zero_hp_replacement_effect
 from app.domain.hit_modifiers import CombatModifierEffect
 from app.domain.ongoing_hp_loss import OngoingHpLossEffectDefinition
 from app.domain.runtime import CombatantState, TimedEffect
@@ -19,17 +18,13 @@ from app.domain.save_effects import (
     TimedPenaltyEffectDefinition,
     TurnRestrictionEffectDefinition,
 )
+from app.domain.zero_hp_replacement import ZeroHpReplacementEffectDefinition
 from app.domain.size import size_at_most
-
 logger = logging.getLogger(__name__)
 PRONE_EFFECT_ID = "prone"
 TURN_RESTRICTION_EFFECT_ID = "turn-restriction"
-
-
 def _size_allowed(state: CombatantState, maximum) -> bool:
     return maximum is None or size_at_most(state.template.size, maximum)
-
-
 def _apply_turn_restriction(
     target: CombatantState, source_id: str, source_effect_id: str,
     effect: TurnRestrictionEffectDefinition, round_number: int,
@@ -139,6 +134,10 @@ def apply_save_failure_effects(
                 )
                 if applied_id is not None:
                     applied.append(applied_id)
+            elif isinstance(effect, ZeroHpReplacementEffectDefinition):
+                applied.append(apply_zero_hp_replacement_effect(
+                    target, source_id, source_effect_id, effect,
+                ))
             else:
                 raise ValueError(f"Unsupported failed-save effect: {effect!r}")
         return list(dict.fromkeys(applied))
