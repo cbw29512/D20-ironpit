@@ -13,6 +13,7 @@ from app.content.monster_source_charge_riders import parse_charge_replacement
 from app.content.monster_source_fixed_attack_candidates import source_fixed_attack_candidates
 from app.content.monster_source_limited_resources import source_limited_resource
 from app.content.monster_source_save_candidates import source_save_candidates
+from app.content.monster_support_action_source import source_support_actions
 from app.content.movement_modes import source_movement_modes, standard_arena_closing_speed
 from app.content.unarmed_opportunity_profiles import monster_unarmed_profile
 from app.domain.capabilities import CombatantDefinition
@@ -109,7 +110,13 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
             if not attacks:
                 attacks = [general_unarmed_attack(row, definition_id)]
             save_actions, save_resources = source_save_candidates(row)
-            resources = {resource.id: resource for resource in [*attack_resources, *save_resources]}
+            support_actions, support_resources = source_support_actions(
+                str(row["name"]), str(row.get("bonusActions", "")), "bonus_action"
+            )
+            resources = {
+                resource.id: resource
+                for resource in [*attack_resources, *save_resources, *support_resources]
+            }
             defenses = parse_defense_profile(row)
             initiative = re.search(r"\bInitiative\s+([+-]?\d+)", str(row.get("rawText", "")), re.I)
             if initiative is None:
@@ -121,7 +128,8 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
                 armor_class=int(re.search(r"\d+", str(row["armorClass"])).group()), max_hp=int(re.search(r"\d+", str(row["hitPoints"])).group()),
                 speed_ft=standard_arena_closing_speed(row["speed"]), movement_modes=source_movement_modes(str(row["name"])),
                 initiative_bonus=int(initiative.group(1)), attacks=attacks, primary_attack_id=attacks[0].id,
-                attack_action=_multiattack(row, attacks), save_actions=save_actions, resources=list(resources.values()),
+                attack_action=_multiattack(row, attacks), save_actions=save_actions,
+                support_actions=support_actions, resources=list(resources.values()),
                 combat_traits=[CombatTrait.CHARGE] if any(item.charge_profile for item in attacks) else [],
                 unarmed_opportunity_attack=monster_unarmed_profile(row),
                 damage_vulnerabilities=sorted(defenses["damage_vulnerabilities"]), damage_resistances=sorted(defenses["damage_resistances"]),
