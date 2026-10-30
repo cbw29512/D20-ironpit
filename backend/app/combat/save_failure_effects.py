@@ -5,9 +5,11 @@ import logging
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.grapple import apply_grapple
 from app.combat.hit_modifiers import apply_modifier_effect
+from app.combat.ongoing_hp_loss import apply_ongoing_hp_loss
 from app.combat.timed_conditions import apply_timed_condition
 from app.combat.timed_penalties import apply_timed_penalty
 from app.domain.hit_modifiers import CombatModifierEffect
+from app.domain.ongoing_hp_loss import OngoingHpLossEffectDefinition
 from app.domain.runtime import CombatantState, TimedEffect
 from app.domain.save_effects import (
     ConditionEffectDefinition,
@@ -126,6 +128,12 @@ def apply_save_failure_effects(
                     target, source_id, source_effect_id, effect, index,
                     trigger="failed-save", round_number=round_number,
                 )
+            elif isinstance(effect, OngoingHpLossEffectDefinition):
+                applied_id = apply_ongoing_hp_loss(
+                    target, source_id, source_effect_id, effect, round_number,
+                )
+                if applied_id is not None:
+                    applied.append(applied_id)
             else:
                 raise ValueError(f"Unsupported failed-save effect: {effect!r}")
         return list(dict.fromkeys(applied))
