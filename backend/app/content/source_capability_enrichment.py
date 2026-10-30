@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 
+from app.content.source_support_action_enrichment import merge_support_actions
 from app.domain.capabilities import CombatantDefinition
 from app.domain.traits import CombatTrait
 
@@ -55,24 +56,6 @@ def _merge_attacks(existing: CombatantDefinition, source: CombatantDefinition, r
             updates["effects"] = effects
         merged.append(attack.model_copy(update=updates) if updates else attack)
     return merged
-
-
-def _merge_support_actions(existing: list, source: list, resource_rebinds: dict[str, str]) -> list:
-    try:
-        known = {(_normalized_name(action.name), action.action_cost) for action in existing}
-        additions = []
-        for action in source:
-            if (_normalized_name(action.name), action.action_cost) in known:
-                continue
-            resource_id = action.resource_id
-            if resource_id is not None:
-                resource_id = resource_rebinds.get(resource_id, resource_id)
-            additions.append(action.model_copy(update={"resource_id": resource_id}))
-        return [*existing, *additions]
-    except Exception:
-        import logging
-        logging.getLogger(__name__).exception("Failed to merge support actions.")
-        raise
 
 
 def _resource_rebinds(existing: list, source: list) -> dict[str, str]:
@@ -137,7 +120,7 @@ def enrich_definition(existing: CombatantDefinition, source: CombatantDefinition
     resource_rebinds = _resource_rebinds(existing.resources, source.resources)
     attacks = _merge_attacks(existing, source, resource_rebinds)
     save_actions = _merge_save_actions(existing.save_actions, source.save_actions, resource_rebinds)
-    support_actions = _merge_support_actions(
+    support_actions = merge_support_actions(
         existing.support_actions, source.support_actions, resource_rebinds,
     )
     resources = _merge_resources(existing.resources, source.resources)
