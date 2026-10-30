@@ -32,9 +32,9 @@ def _self_next_attack_advantage_matches(effect, actions: str) -> bool:
             return False
         if effect.flat_bonus or effect.consume_on_attack_against:
             return False
-        if not effect.expires_at_end_of_source_turn:
+        if not effect.expires_at_end_of_current_turn:
             return False
-        if effect.expires_at_start_of_source_turn or effect.expires_at_end_of_target_turn:
+        if effect.expires_at_start_of_source_turn or effect.expires_at_end_of_source_turn or effect.expires_at_end_of_target_turn:
             return False
         pattern = (
             r"the\s+[^.]+\s+has\s+advantage\s+on\s+the\s+next\s+attack\s+roll\s+"
