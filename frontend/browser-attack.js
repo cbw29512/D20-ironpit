@@ -41,7 +41,7 @@
     return enemies.some((enemy) => enemy.state.is_alive && !enemy.state.is_dead && enemy.state.current_hp > 0 && !Q().incapacitated(enemy.state) && S().distance(attacker, enemy) <= 5);
   }
   function adjustedDamage(target, amount, type, allowVulnerability = true) {
-    if (target.template.damage_immunities?.includes(type)) return 0;
+    if (target.template.damage_absorption_types?.includes(type) || target.template.damage_immunities?.includes(type)) return 0;
     let value = amount;
     if (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type) || Q().has(target, "petrified")) value = Math.floor(value / 2);
     if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2;
@@ -83,7 +83,7 @@
     if (hit) {
       const damage = R().weaponDamage(attacker.state, attack, critical, mode, extra.turnKey || `${round}:${attacker.combatant_id}`,
         extra.bonusDamage || null, actualTarget.state, window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false);
-      damageComponents = damage.components.map((part) => ({ ...part, applied_total: adjustedDamage(actualTarget.state, part.total, part.damage_type) }));
+      damageComponents = damage.components.map((part) => { const adjusted = adjustedDamage(actualTarget.state, part.total, part.damage_type); const resolved = window.IRON_PIT_BROWSER_DAMAGE_ABSORPTION?.resolve(actualTarget.state, part.total, part.damage_type, adjusted); return { ...part, applied_total: resolved?.applied ?? adjusted }; });
       damageRoll = { ...damage.roll, total: damageComponents.reduce((sum, part) => sum + part.applied_total, 0) };
       const appliedTypes = [...new Set(damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type))], affectedStates = states(extra.setup);
       damageOutcome = applyDamage(actualTarget.state, damageRoll.total, critical, appliedTypes, affectedStates);
@@ -107,7 +107,7 @@
     } else {
       const rawGraze = GRZ().rawDamage(attacker.state, attack);
       if (rawGraze !== null) {
-        const appliedTotal = adjustedDamage(actualTarget.state, rawGraze, attack.damageType, false);
+        const adjustedTotal = adjustedDamage(actualTarget.state, rawGraze, attack.damageType, false), appliedTotal = window.IRON_PIT_BROWSER_DAMAGE_ABSORPTION?.resolve(actualTarget.state, rawGraze, attack.damageType, adjustedTotal)?.applied ?? adjustedTotal;
         damageComponents = [{ source: `${attack.name} (Graze)`, notation: String(rawGraze), rolls: [], modifier: 0,
           damage_type: attack.damageType, total: rawGraze, applied_total: appliedTotal }];
         damageRoll = { notation: String(rawGraze), rolls: [], modifier: 0, selected_roll: null, mode: "normal", total: appliedTotal };
