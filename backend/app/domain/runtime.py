@@ -62,6 +62,7 @@ class CombatantState(BaseModel):
     active_modifiers: list[CombatModifier] = Field(default_factory=list)
     concentration: ConcentrationState | None = None
     feature_last_turn_keys: dict[str, str] = Field(default_factory=dict)
+    active_berserk_rule_id: str | None = None
     spell_slot_expended_turn_key: str | None = None
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
     rage_expires_round: int | None = Field(default=None, ge=1)
