@@ -19,6 +19,7 @@ from app.content.monster_reaction_source_audit import (
     parse_parry_ac_bonus,
     parse_reaction_names,
     parse_redirect_attack_range,
+    reaction_issues,
 )
 from app.content.monster_spellcasting_source_audit import arena_neutral_spellcasting, spellcasting_fingerprint
 from app.content.monster_trait_policy import ARENA_NEUTRAL_TRAITS
@@ -114,7 +115,11 @@ def _source_blockers(
         blockers.append("trait-parse")
     try:
         reactions = parse_reaction_names(row.get("reactions", ""))
-        if not _reaction_is_modeled(row, reactions):
+        runtime_reaction_supported = (
+            runtime_template is not None
+            and not reaction_issues(runtime_template, row)
+        )
+        if not runtime_reaction_supported and not _reaction_is_modeled(row, reactions):
             blockers.append("reaction")
     except ValueError:
         blockers.append("reaction-parse")
