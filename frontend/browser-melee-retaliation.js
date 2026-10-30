@@ -40,7 +40,10 @@
           const states = options.setup
             ? [...options.setup.heroes, ...options.setup.monsters].map((member) => member.state)
             : options.affectedStates || [];
-          window.IRON_PIT_BROWSER_ATTACK.applyDamage(attacker.state, applied, false, [rule.damageType], states, options.setup || null);
+          window.IRON_PIT_BROWSER_ATTACK.applyDamage(
+            attacker.state, applied, false, [rule.damageType], states, options.setup || null, [],
+            defender.combatant_id,
+          );
         }
         total += applied;
       }
