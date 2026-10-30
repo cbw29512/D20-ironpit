@@ -10,6 +10,7 @@ from app.content.monster_ability_scores import complete_monster_ability_scores
 from app.content.monster_aura_source import complete_monster_end_turn_damage_auras
 from app.content.monster_bonus_action_source_audit import complete_monster_bonus_action_fingerprints
 from app.content.monster_creature_types import complete_monster_creature_types
+from app.content.monster_damage_absorption_source import complete_monster_damage_absorption
 from app.content.monster_grapple_contact_source import complete_monster_grapple_contact_damage
 from app.content.monster_legendary_resistance_source import complete_monster_legendary_resistance
 from app.content.monster_movement_save_enrichment import enrich_movement_save_definitions
@@ -101,6 +102,7 @@ def get_capability_definition(combatant_id: str) -> CombatantDefinition:
 def _complete_monster_batch(monsters: list[CombatantTemplate]) -> list[CombatantTemplate]:
     monsters = reconcile_monster_save_actions(monsters)
     monsters = complete_monster_creature_types(monsters)
+    monsters = complete_monster_damage_absorption(monsters)
     monsters = complete_monster_ability_scores(monsters)
     monsters = complete_monster_saving_throws(monsters)
     monsters = complete_monster_end_turn_damage_auras(monsters)
