@@ -1,12 +1,9 @@
 from __future__ import annotations
-
 from collections.abc import Iterable
-
 from app.combat.dice import DiceProvider
 from app.domain.events import DiceRoll
 from app.domain.modifiers import CombatModifier, ModifierKind
 from app.domain.runtime import CombatantState
-
 
 def add_modifier(state: CombatantState, modifier: CombatModifier) -> None:
     existing = next((item for item in state.active_modifiers if item.id == modifier.id), None)
