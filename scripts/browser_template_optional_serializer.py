@@ -37,6 +37,25 @@ def extend_optional_rows(row: dict[str, Any], template: CombatantTemplate) -> No
             ]
         if template.swallow_actions:
             row["swallow_actions"] = [swallow_row(action) for action in template.swallow_actions]
+        if template.support_actions:
+            row["support_actions"] = [
+                {
+                    "id": action.id,
+                    "name": action.name,
+                    "actionCost": action.action_cost,
+                    "range": action.range_ft,
+                    "targetMode": action.target_mode,
+                    "temporaryHpDiceCount": action.temporary_hp_dice_count,
+                    "temporaryHpDiceSize": action.temporary_hp_dice_size,
+                    "temporaryHpBonus": action.temporary_hp_bonus,
+                    "attackRollAdvantageUntilSourceTurnStart":
+                        action.attack_roll_advantage_until_source_turn_start,
+                    "resourceId": action.resource_id,
+                    "resourceCost": action.resource_cost,
+                    "animation": action.animation,
+                }
+                for action in template.support_actions
+            ]
         if template.death_trigger_effects:
             row["death_trigger_effects"] = [
                 death_trigger_row(effect) for effect in template.death_trigger_effects
