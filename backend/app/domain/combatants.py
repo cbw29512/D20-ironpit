@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
 from app.domain.auras import EndTurnDamageAura, RollAdvantageAura, StartTurnGrappleContactDamage, StartTurnSaveConditionAura
+from app.domain.behavior_rules import BloodiedBerserkRule
 from app.domain.character_builds import AbilityScores
 from app.domain.death_triggers import DeathTriggeredSaveEffect
 from app.domain.damage_taken_rules import DamageTakenDisadvantageRule
@@ -85,6 +86,7 @@ class CombatantTemplate(BaseModel):
     start_turn_save_condition_auras: list[StartTurnSaveConditionAura] = Field(default_factory=list)
     roll_advantage_auras: list[RollAdvantageAura] = Field(default_factory=list)
     triggered_bonus_attacks: list[TriggeredBonusAttack] = Field(default_factory=list)
+    bloodied_berserk_rule: BloodiedBerserkRule | None = None
     regeneration: RegenerationRule | None = None
     legendary_actions: LegendaryActionPool | None = None
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
