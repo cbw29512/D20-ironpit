@@ -5,7 +5,7 @@ import logging
 from app.combat.grid_pathing_support import movement_step_cost_ft
 from app.combat.grid_reaction_movement_support import approaches_fear_source, distance_to_position
 from app.combat.grapple import speed_is_zero
-from app.combat.opportunity_attacks import MovementSource, resolve_opportunity_attack
+from app.combat.opportunity_attacks import MovementSource, resolve_opportunity_attack_chain
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
 from app.domain.models import BattleEvent
@@ -45,7 +45,7 @@ def execute_grid_path(
             for reactor in reactors:
                 if reactor.state.position is None:
                     continue
-                reaction = resolve_opportunity_attack(
+                chain, sequence = resolve_opportunity_attack_chain(
                     sequence,
                     round_number,
                     reactor,
@@ -58,10 +58,9 @@ def execute_grid_path(
                     disengaged=disengaged,
                     turn_key=turn_key,
                 )
-                if reaction is None:
+                if not chain:
                     continue
-                events.append(reaction)
-                sequence += 1
+                events.extend(chain)
                 newly_prone = not was_prone and "prone" in mover.state.active_effect_ids
                 if mover.state.is_dead or mover.state.is_unconscious or speed_is_zero(mover.state) or newly_prone:
                     return events, sequence, last_movement
