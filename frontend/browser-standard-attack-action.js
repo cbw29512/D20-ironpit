@@ -2,6 +2,7 @@
   "use strict";
 
   const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const RC = () => window.IRON_PIT_BROWSER_ATTACK_REACTION_CHAIN;
   const AU = () => window.IRON_PIT_BROWSER_AURAS || { attackAdvantageSources: () => 0 };
   const AT = () => window.IRON_PIT_BROWSER_ATTACHMENTS;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
@@ -63,11 +64,11 @@
   }
   function resolve(sequence, round, member, target, attack, distance, setup, turnKey, options = {}) {
     const auraAdvantage = AU().attackAdvantageSources(member, setup);
-    const event = A().resolveAttack(sequence++, round, member, target, attack, distance, {
-      advantage: (options.advantage || 0) + auraAdvantage, featureId: options.featureId || null, setup,
+    const chain = RC().resolve(sequence, round, member, target, attack, distance, setup, {
+      advantage: (options.advantage || 0) + auraAdvantage, featureId: options.featureId || null,
       allowReckless: options.allowReckless !== false, turnKey,
     });
-    const events = [event];
+    const events = chain.events, event = events[0]; sequence = chain.sequence;
     if (member.state.turn_terminated) return { events, sequence };
     const cleave = W().resolveCleave(sequence, round, member, event, attack, setup, turnKey);
     events.push(...cleave.events); sequence = cleave.sequence;
