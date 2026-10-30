@@ -95,6 +95,8 @@ def _save_optional_fields(row: dict[str, Any], action: Any) -> None:
                 "damageBonus": periodic.damage_bonus,
                 "damageType": value(periodic.damage_type),
             }
+        if action.max_active_grapple_targets is not None:
+            row["maxActiveGrappleTargets"] = action.max_active_grapple_targets
     except Exception:
         logger.exception("Failed to serialize optional save action fields.")
         raise
