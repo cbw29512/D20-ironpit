@@ -157,6 +157,7 @@ def source_turn_swallowed_damage(
         apply_damage(
             target.state, applied, damage_types={damage_type}, dice=dice,
             affected_states=affected, setup=setup, damage_components=adjusted,
+            source_id=owner.combatant_id,
         )
         events.append(BattleEvent(
             sequence=sequence, round_number=round_number, event_type="feature",
