@@ -3259,7 +3259,6 @@
       "public_ready_status": "blocked",
       "blockers": [
         "trait",
-        "uncertified-trait:aversion-to-fire",
         "uncertified-trait:berserk"
       ]
     },
