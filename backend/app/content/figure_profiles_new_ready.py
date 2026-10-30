@@ -34,6 +34,7 @@ NEW_READY_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Otyugh": _p("brute", "otyugh"),
     "Pirate": _p("humanoid", "pirate"),
     "Pseudodragon": _p("reptile", "pseudodragon"),
+    "Salamander": _p("snake", "salamander"),
     "Seahorse": _p("fish", "seahorse"),
     "Shrieker Fungus": _p("plant", "shrieker-fungus"),
     "Swarm of Ravens": _p("swarm", "ravens"),
