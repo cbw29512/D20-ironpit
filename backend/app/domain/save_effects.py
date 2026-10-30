@@ -8,6 +8,7 @@ from app.domain.hit_modifiers import CombatModifierEffect
 from app.domain.ongoing_hp_loss import OngoingHpLossEffectDefinition
 from app.domain.rule_types import AbilityName, ConditionName, ConditionTiming, DamageTypeName
 from app.domain.size import CreatureSize
+from app.domain.zero_hp_replacement import ZeroHpReplacementEffectDefinition
 
 
 class ProneEffectDefinition(BaseModel):
@@ -127,6 +128,7 @@ SaveFailureEffectDefinition = Annotated[
     | TurnRestrictionEffectDefinition
     | TimedPenaltyEffectDefinition
     | CombatModifierEffect
-    | OngoingHpLossEffectDefinition,
+    | OngoingHpLossEffectDefinition
+    | ZeroHpReplacementEffectDefinition,
     Field(discriminator="kind"),
 ]
