@@ -2,11 +2,8 @@ from __future__ import annotations
 
 import logging
 import re
-from functools import lru_cache
-
 from app.content.monster_bonus_support_binding import runtime_bonus_support
-from app.content.monster_catalog import load_monster_rows
-from app.content.monster_trait_source_audit import parse_trait_names
+from app.content.monster_bonus_action_source_names import parse_bonus_action_names, source_bonus_action_names
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
@@ -42,25 +39,6 @@ def _base_name(name: str) -> str:
 
 def _slug(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", _base_name(name).lower()).strip("-")
-
-
-def parse_bonus_action_names(source_bonus_actions: object) -> list[str]:
-    """Preserve printed limited-use markers while reusing the proven heading parser."""
-    text = str(source_bonus_actions or "").strip()
-    if not text:
-        return []
-    base_names = parse_trait_names(text)
-    names: list[str] = []
-    cursor = 0
-    for base_name in base_names:
-        pattern = re.compile(rf"{re.escape(base_name)}(?P<marker>\s*\([^)]*\))?\.")
-        match = pattern.search(text, cursor)
-        if match is None:
-            raise ValueError(f"SRD bonus-action heading {base_name!r} could not be recovered from: {text!r}")
-        marker = match.group("marker") or ""
-        names.append(f"{base_name}{marker}")
-        cursor = match.end()
-    return names
 
 
 def _runtime_bonus_save(template: CombatantTemplate, name: str) -> bool:
@@ -127,18 +105,6 @@ def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> 
     except Exception as exc:
         logger.exception("Failed to audit Bonus Actions for %s.", template.id)
         raise RuntimeError("Monster Bonus Action audit could not be evaluated.") from exc
-@lru_cache(maxsize=1)
-def _rows_by_name() -> dict[str, dict[str, object]]:
-    return {str(row["name"]): row for row in load_monster_rows()}
-
-
-def source_bonus_action_names(name: str) -> list[str]:
-    row = _rows_by_name().get(name)
-    if row is None:
-        raise ValueError(f"No SRD 5.2.1 source row for monster {name!r}.")
-    return parse_bonus_action_names(row.get("bonusActions", ""))
-
-
 def complete_monster_bonus_action_fingerprints(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
     try:
         return [
