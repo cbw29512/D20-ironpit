@@ -15,7 +15,6 @@ from app.content.monster_trait_aura_audit import aura_trait_issues
 from app.content.monster_trait_policy import ARENA_NEUTRAL_TRAITS, source_environment_neutral_traits
 from app.domain.models import CombatantTemplate
 from app.domain.traits import CombatTrait
-
 logger = logging.getLogger(__name__)
 _CONNECTORS = frozenset({"a", "an", "and", "of", "or", "the", "to"})
 _MODELED_TRAITS = {
@@ -27,7 +26,6 @@ _MODELED_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _DECLARATIVE_ATTACK_TRAITS = frozenset({"Blood Frenzy"})
-
 def _heading_name(value: str) -> str:
     return re.sub(r"\s*\([^)]*\)$", "", value).strip()
 
