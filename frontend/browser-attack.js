@@ -45,6 +45,7 @@
     let value = amount;
     if (target.template.damage_resistances?.includes(type) || target.temporary_damage_resistances?.includes(type) || Q().has(target, "petrified")) value = Math.floor(value / 2);
     if (allowVulnerability && target.template.damage_vulnerabilities?.includes(type)) value *= 2;
+    window.IRON_PIT_BROWSER_DAMAGE_TAKEN_DISADVANTAGE?.apply(target, type, value);
     return value;
   }
   function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = []) {
