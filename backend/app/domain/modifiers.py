@@ -18,6 +18,7 @@ class ModifierKind(StrEnum):
     NEXT_ATTACK_DISADVANTAGE = "next-attack-disadvantage"
     BONUS_DAMAGE = "bonus-damage"
     SPEED = "speed"
+    HEALING_PREVENTED = "healing-prevented"
 
 
 class CombatModifier(BaseModel):
