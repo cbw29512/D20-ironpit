@@ -36,9 +36,15 @@ def test_multiattack_settles_lethal_event_before_next_slot(monkeypatch) -> None:
     monkeypatch.setattr(attack_actions, "pack_tactics_active", lambda *_args: False)
     monkeypatch.setattr(attack_actions, "close_ranged_threat_exists", lambda *_args: False)
 
-    def resolve_attack(sequence, *_args, **_kwargs):
+    def resolve_attack_chain(sequence, *_args, **_kwargs):
         calls["attacks"] += 1
-        return SimpleNamespace(sequence=sequence, event_type="attack", target_id="target", is_dead=True)
+        event = SimpleNamespace(
+            sequence=sequence,
+            event_type="attack",
+            target_id="target",
+            is_dead=True,
+        )
+        return [event], sequence + 1
 
     def append_death(output, sequence, _round, event, *_args):
         calls["death"] += 1
@@ -47,7 +53,7 @@ def test_multiattack_settles_lethal_event_before_next_slot(monkeypatch) -> None:
         attacker_state.is_dead = True
         return sequence + 1
 
-    monkeypatch.setattr(attack_actions, "resolve_encounter_attack", resolve_attack)
+    monkeypatch.setattr(attack_actions, "resolve_attack_event_chain", resolve_attack_chain)
     monkeypatch.setattr(attack_actions, "append_after_event", append_death)
     monkeypatch.setattr(
         attack_actions,
