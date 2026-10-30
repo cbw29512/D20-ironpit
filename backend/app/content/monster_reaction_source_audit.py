@@ -75,6 +75,21 @@ def _redirect_matches(template: CombatantTemplate, source: object) -> bool:
                 and reaction.ally_max_size.value == "medium")
 
 
+def arena_neutral_reaction(name: str, source_reactions: object) -> bool:
+    """Accept a reaction only when its printed trigger cannot occur on the standard Pit board."""
+    try:
+        text = str(source_reactions or "").strip()
+        names = parse_reaction_names(text)
+        return (
+            names == [name]
+            and "Trigger:" in text
+            and "while underwater" in text.lower()
+        )
+    except Exception as exc:
+        logger.exception("Failed to classify arena-neutral reaction %r.", name)
+        raise RuntimeError("Reaction arena-neutral policy could not be evaluated.") from exc
+
+
 def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     source = row.get("reactions", "")
     expected = parse_reaction_names(source)
@@ -86,7 +101,7 @@ def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list
     if template.redirect_attack_reaction is not None and "Redirect Attack" not in expected:
         issues.append("unexpected-redirect-attack-reaction")
     for name in expected:
-        if name in _ARENA_NEUTRAL_REACTIONS:
+        if name in _ARENA_NEUTRAL_REACTIONS or arena_neutral_reaction(name, source):
             continue
         if name == "Parry" and _parry_matches(template, source):
             continue
