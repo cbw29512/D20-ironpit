@@ -3487,8 +3487,7 @@
         "spellcasting",
         "trait",
         "uncertified-limited-use:actions-possession-recharge-6",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:ethereal-sight"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
@@ -6464,12 +6463,12 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "multiattack"
+        "multiattack",
+        "trait"
       ],
       "unsupported_mechanics": [
         "bonus-action",
-        "condition-or-control",
-        "trait"
+        "condition-or-control"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -6478,9 +6477,7 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "trait",
-        "uncertified-bonus-action:ethereal-jaunt",
-        "uncertified-trait:ethereal-sight"
+        "uncertified-bonus-action:ethereal-jaunt"
       ]
     },
     {
