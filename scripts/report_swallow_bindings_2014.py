@@ -19,7 +19,6 @@ from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_sections_2014 import source_sections_2014
 from app.domain.swallow_actions import swallow_action_from_source
 from browser_template_serializer import template_row
-
 OUTPUT = ROOT / "docs/generated/SWALLOW_BINDINGS_2014.json"
 _SEMANTIC = re.compile(r"\b(?:swallow(?:s|ed)?|engulf(?:s|ed)?)\b", re.I)
 
