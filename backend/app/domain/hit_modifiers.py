@@ -8,7 +8,7 @@ from pydantic import BaseModel, model_validator
 class CombatModifierEffect(BaseModel):
     """Source-neutral modifier effect applied by an attack, save, spell, or feature."""
 
-    kind: Literal["attacks-against-advantage", "next-attack-advantage", "next-attack-disadvantage", "speed"]
+    kind: Literal["attacks-against-advantage", "next-attack-advantage", "next-attack-disadvantage", "speed", "healing-prevented"]
     flat_bonus: int = 0
     recipient: Literal["target", "source"] = "target"
     consume_on_attack_against: bool = False
