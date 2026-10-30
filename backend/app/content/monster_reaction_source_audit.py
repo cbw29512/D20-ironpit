@@ -5,6 +5,7 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_reaction_aura_source import reaction_start_turn_aura_matches
 from app.content.monster_riposte_source import riposte_matches
 from app.domain.models import CombatantTemplate
 from app.domain.reactions import ParryReaction
@@ -108,6 +109,8 @@ def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list
         if name == "Redirect Attack" and _redirect_matches(template, source):
             continue
         if name == "Riposte" and riposte_matches(template, source):
+            continue
+        if reaction_start_turn_aura_matches(template, name, source):
             continue
         if name == "Parry":
             issues.append("parry-source-mismatch")
