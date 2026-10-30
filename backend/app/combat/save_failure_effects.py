@@ -66,7 +66,7 @@ def _apply_condition(
         automatic_success_after_rounds=effect.automatic_success_after_rounds,
         allowed_removal_action_ids=effect.allowed_removal_action_ids,
         periodic_damage=effect.periodic_damage, affected_states=affected_states,
-        ends_on_damage=effect.ends_on_damage,
+        turn_behavior=effect.turn_behavior, ends_on_damage=effect.ends_on_damage,
     )
     if condition is None:
         return []
