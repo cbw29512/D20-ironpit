@@ -23,6 +23,7 @@ def compile_action(effect: DeathTriggeredSaveEffect) -> SavingThrowAction:
             damage_dice_size=effect.damage_dice_size,
             damage_bonus=effect.damage_bonus,
             damage_type=effect.damage_type.value,
+            additional_damage_components=list(effect.additional_damage_components),
             success_damage="half" if effect.half_damage_on_success else "none",
             animation="death-trigger",
         )
