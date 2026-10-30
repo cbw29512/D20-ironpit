@@ -36,6 +36,7 @@ def resolve_threshold_target(sequence, round_number, actor, target, action, setu
                 apply_damage(
                     target.state, applied_total, damage_types={damage_type}, dice=dice,
                     affected_states=affected_states,
+                    source_id=actor.combatant_id,
                 )
             damage_roll = DiceRoll(
                 notation=raw.notation, rolls=rolls, modifier=action.fallback_damage_bonus,
