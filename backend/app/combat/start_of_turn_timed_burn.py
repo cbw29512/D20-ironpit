@@ -16,10 +16,10 @@ def start_of_turn_timed_burns(
     member: EncounterCombatant,
     setup: EncounterSetup,
     dice,
-) -> list[tuple[str, int, str]]:
+) -> list[tuple[str, int, str, str | None]]:
     """Apply printed start-of-turn burn dice, then end the effect on a successful save."""
     try:
-        packets: list[tuple[str, int, str]] = []
+        packets: list[tuple[str, int, str, str | None]] = []
         affected = [item.state for item in [*setup.heroes, *setup.monsters]]
         for effect in list(member.state.timed_effects):
             if effect.start_of_turn_dice_count <= 0 or effect.start_of_turn_damage_type is None:
@@ -29,6 +29,7 @@ def start_of_turn_timed_burns(
                 effect.source_effect_id or effect.effect_id,
                 total,
                 str(effect.start_of_turn_damage_type),
+                effect.source_id,
             ))
             if not (
                 effect.start_of_turn_save_ends
