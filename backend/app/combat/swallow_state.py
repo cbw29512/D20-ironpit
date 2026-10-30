@@ -31,7 +31,7 @@ def swallow_after_bite(
         return False
     if not size_at_most(target.template.size, action.max_target_size):
         return False
-    if len(owner.swallowed_target_ids) >= action.max_swallowed:
+    if action.max_swallowed is not None and len(owner.swallowed_target_ids) >= action.max_swallowed:
         return False
     if (action.requires_existing_grapple and not any(
         held.source_id == owner_id for held in target.grapple_sources
