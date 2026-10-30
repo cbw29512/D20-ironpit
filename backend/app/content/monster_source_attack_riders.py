@@ -38,6 +38,10 @@ _NEXT_ATTACK_DISADVANTAGE = re.compile(
     r"target has Disadvantage on the next attack roll it makes before the end of its next turn",
     re.I,
 )
+_SELF_NEXT_ATTACK_ADVANTAGE = re.compile(
+    r"the [^.]+ has Advantage on the next attack roll it makes before the end of this turn",
+    re.I,
+)
 
 
 def parse_attack_riders(text: str) -> list[object]:
@@ -95,6 +99,13 @@ def parse_attack_riders(text: str) -> list[object]:
         effects.append(CombatModifierEffect(
             kind="next-attack-disadvantage",
             expires_at_end_of_target_turn=True,
+        ))
+
+    if _SELF_NEXT_ATTACK_ADVANTAGE.search(text):
+        effects.append(CombatModifierEffect(
+            kind="next-attack-advantage",
+            recipient="source",
+            expires_at_end_of_source_turn=True,
         ))
 
     typed = _MAX_HP_TYPED.search(text)
