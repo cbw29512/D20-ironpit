@@ -87,3 +87,29 @@ def test_runtime_backed_bonus_action_is_not_reported_as_unimplemented() -> None:
         assert "bonus-action" not in report._source_blockers(row, names, runtime)
     except Exception:
         raise
+
+
+def test_modeled_self_next_attack_advantage_is_not_reported_as_hidden_rider() -> None:
+    try:
+        report = _load_report_module()
+        actions = (
+            "Rapier. Melee Attack Roll: +7, reach 5 ft. "
+            "Hit: 13 (2d8 + 4) Piercing damage, and the pirate has Advantage "
+            "on the next attack roll it makes before the end of this turn."
+        )
+        assert report._unmodeled_action_rider(actions) is False
+    except Exception:
+        raise
+
+
+def test_other_next_attack_roll_rider_still_fails_closed() -> None:
+    try:
+        report = _load_report_module()
+        actions = (
+            "Claw. Melee Attack Roll: +5, reach 5 ft. "
+            "Hit: 8 Slashing damage, and the next attack roll against the target "
+            "before the end of combat gains a +5 bonus."
+        )
+        assert report._unmodeled_action_rider(actions) is True
+    except Exception:
+        raise
