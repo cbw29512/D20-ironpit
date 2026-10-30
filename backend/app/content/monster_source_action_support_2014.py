@@ -48,8 +48,13 @@ def unsupported_source_actions_2014(
         allowed.update(
             item.name.casefold() for item in source_proven_recharge_area_conditions_2014(monster)
         )
+        limited_audible = source_proven_limited_audible_conditions_2014(monster)
+        allowed.update(item.name.casefold() for item in limited_audible)
+        limited_labels = {item.name.casefold() for item in limited_audible}
         allowed.update(
-            item.name.casefold() for item in source_proven_limited_audible_conditions_2014(monster)
+            action_label_2014(name)
+            for name in monster.action_names
+            if action_label_2014(name).split(" (", 1)[0] in limited_labels
         )
         if (
             monster.multiattack_slots
