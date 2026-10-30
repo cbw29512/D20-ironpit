@@ -3,6 +3,7 @@ from __future__ import annotations
 from pydantic import BaseModel, Field
 
 from app.domain.rule_types import AbilityName
+from app.domain.save_damage import SaveDamageComponent
 from app.domain.weapons import DamageType
 
 
@@ -18,4 +19,5 @@ class DeathTriggeredSaveEffect(BaseModel):
     damage_dice_size: int = Field(ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageType
+    additional_damage_components: list[SaveDamageComponent] = Field(default_factory=list)
     half_damage_on_success: bool = True
