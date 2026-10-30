@@ -172,12 +172,17 @@ def build_monster_manifest() -> dict[str, Any]:
     cards = {card.name: card for card in build_monster_catalog()}
     runtime = {template.id: template for template in build_arena_roster().monsters}
     monster_names = {str(row["name"]) for row in rows}
+    runtime_by_name = {
+        template.name: template for template in build_arena_roster().monsters
+    }
     monsters: list[dict[str, Any]] = []
     for row in rows:
         name = str(row["name"])
         card = cards[name]
         ready = card.coverage_status is CoverageStatus.RAW_READY
-        source_blockers = _source_blockers(row, monster_names)
+        source_blockers = _source_blockers(
+            row, monster_names, runtime_by_name.get(name)
+        )
         blockers = [] if ready else sorted(set([*card.blockers, *source_blockers]))
         detected = _detected_monster_mechanics(row, source_blockers)
         unsupported = [] if ready else sorted(set(source_blockers or card.blockers))
