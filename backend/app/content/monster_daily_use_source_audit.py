@@ -36,6 +36,8 @@ def _resource_action_bindings(template: CombatantTemplate) -> list[tuple[str, in
                 section = _ACTION_COST_SECTION.get(action.action_cost)
                 if section is not None:
                     rows.append((action.resource_id, action.resource_cost, action.name, section))
+        for feature in template.triggered_bonus_attacks:
+            rows.append((feature.resource_id, feature.resource_cost, feature.name, "bonusactions"))
         for action in [
             *template.spell_attack_actions,
             *template.spell_save_actions,
