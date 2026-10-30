@@ -46,7 +46,7 @@
       if (applied) {
         window.IRON_PIT_BROWSER_ATTACK.applyDamage(
           target.state, applied, false, [emanation.damage_type],
-          [...setup.heroes, ...setup.monsters].map((member) => member.state), setup,
+          [...setup.heroes, ...setup.monsters].map((member) => member.state), setup, [], source.combatant_id,
         );
       }
       return {
