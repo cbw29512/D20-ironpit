@@ -16,7 +16,7 @@
       is_unconscious: false, is_stable: false, is_dead: false,
       death_save_successes: 0, death_save_failures: 0,
       action_available: true, bonus_action_available: true, reaction_available: true,
-      turn_terminated: false, turn_termination_reason: null,
+      turn_terminated: false, turn_termination_reason: null, turn_serial: 0,
       movement_remaining_ft: 0, resources: { ...(template.resources || {}) }, heroic_inspiration: false,
       legendary_action_uses_remaining: 0, legendary_action_locked_option_ids: [],
       active_effect_ids: [], active_buff_effect_ids: [], source_effect_immunities: [], opening_buff_spell_id: null,
@@ -49,6 +49,7 @@
   }
 
   function beginTurn(state) {
+    state.turn_serial = (state.turn_serial || 0) + 1;
     state.turn_terminated = false; state.turn_termination_reason = null;
     const incapacitated = Q().incapacitated(state);
     state.action_available = !incapacitated;
