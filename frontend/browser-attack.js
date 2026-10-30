@@ -2,8 +2,7 @@
   "use strict";
   const S = () => window.IRON_PIT_BROWSER_STATE, R = () => window.IRON_PIT_BROWSER_ROLLS, A = () => window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE || { sources: () => 0 };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, TD = (state, ability) => window.IRON_PIT_BROWSER_TIMED?.d20Disadvantage(state, ability) || 0, Z = () => window.IRON_PIT_BROWSER_ZERO_HP, H = () => window.IRON_PIT_BROWSER_MAX_HP_REDUCTION;
-  const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 };
-  const TM = () => window.IRON_PIT_BROWSER_TACTICAL_MASTER || { apply: () => false };
+  const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 }, TM = () => window.IRON_PIT_BROWSER_TACTICAL_MASTER || { apply: () => false };
   const GRZ = () => window.IRON_PIT_BROWSER_GRAZE || { rawDamage: () => null };
   const TOP = () => window.IRON_PIT_BROWSER_TOPPLE || { resolve: () => ({ saveRoll: null, saveDc: null, saveSucceeded: null, applied: false }) };
   const STUDY = () => window.IRON_PIT_BROWSER_STUDIED_ATTACKS || { apply: () => false }, PA = () => window.IRON_PIT_BROWSER_PEERLESS_AIM || { resolve: (_state, hit) => ({ hit, used: false }) };
