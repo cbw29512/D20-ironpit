@@ -62,6 +62,33 @@
     return { events, sequence };
   }
 
+  function grappleTurnStart(sequence, round, source, setup) {
+    try {
+      const events = [], profile = source.state.template.start_turn_grapple_contact_damage;
+      if (!profile || source.state.is_dead || !source.state.is_alive) return { events, sequence };
+      const all = members(setup), byId = new Map(all.map((member) => [member.combatant_id, member]));
+      const ids = new Set((source.state.grapple_sources || []).map((item) => item.source_id).filter((id) => byId.has(id)));
+      for (const member of all) {
+        if (member.combatant_id === source.combatant_id) continue;
+        if ((member.state.grapple_sources || []).some((item) => item.source_id === source.combatant_id)) ids.add(member.combatant_id);
+      }
+      for (const id of [...ids].sort()) {
+        const target = byId.get(id);
+        if (!target || target.state.is_dead || !target.state.is_alive) continue;
+        events.push(O().resolve(sequence++, round, source, target, setup, {
+          featureId: profile.id, featureName: profile.name,
+          diceCount: profile.damage_dice_count, diceSize: profile.damage_dice_size,
+          damageBonus: profile.damage_bonus || 0, damageType: profile.damage_type,
+          animation: "grapple-contact-damage",
+        }));
+      }
+      return { events, sequence };
+    } catch (error) {
+      console.error("Failed browser grapple-contact damage resolution.", { source: source?.combatant_id, error });
+      throw error;
+    }
+  }
+
   function turnEnd(sequence, round, source, setup) {
     const events = [];
     if (source.state.is_dead || !source.state.is_alive) return { events, sequence };
@@ -81,5 +108,5 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_AURAS = { attackAdvantageSources, savingThrowAdvantageSources, turnEnd, turnStart };
+  window.IRON_PIT_BROWSER_AURAS = { attackAdvantageSources, grappleTurnStart, savingThrowAdvantageSources, turnEnd, turnStart };
 })();
