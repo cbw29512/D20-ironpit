@@ -7,6 +7,7 @@ from app.content.monster_catalog import load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_general_action_fallback import general_unarmed_attack
 from app.content.monster_source_attack_advantage import parse_attack_header_advantage
+from app.content.monster_source_attack_rider_text import attack_rider_text
 from app.content.monster_source_attack_riders import parse_attack_riders
 from app.content.monster_source_charge_riders import parse_charge_replacement
 from app.content.monster_source_fixed_attack_candidates import source_fixed_attack_candidates
@@ -35,13 +36,6 @@ _ATTACK = re.compile(
     r"(?P<tail>[^.]*)\.", re.I,
 )
 _EXTRA = re.compile(r"plus\s+\d+\s*\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s+([A-Za-z]+)\s+damage", re.I)
-_ON_HIT_SAVE_BLOCK = re.compile(
-    r"(?:(?:If|The target)[^.]*following effect\.\s*)?"
-    r"(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s*DC\s*\d+[^.]*\.\s*"
-    r"(?:(?:First )?Failure):\s*[^.]+\."
-    r"(?:\s*[^.]*repeats the save[^.]*\.)?(?:\s*Second Failure:\s*[^.]+\.)?"
-    r"(?:\s*Failure by \d+ or More:\s*[^.]+\.\s*While [^.]+\.)?", re.I,
-)
 _MULTI_COUNT = re.compile(r"Multiattack\.\s+The\s+[^.]+?\s+makes\s+(one|two|three|four|five|six)\s+([A-Za-z’' -]+?)\s+attacks?\.", re.I)
 _MULTI_GENERIC = re.compile(r"Multiattack\.\s+The\s+[^.]+?\s+makes\s+(one|two|three|four|five|six)\s+attacks?,\s+using\s+([^.]+?)\s+in any combination\.", re.I)
 _WORD_COUNT = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6}
@@ -60,20 +54,10 @@ def _ranges(text: str) -> tuple[int, int | None, int | None]:
     long = int(ranged.group(2) or ranged.group(1)) if ranged else None
     return int(reach.group(1)) if reach else 5, normal, long
 
-def _rider_text(actions: str, match: re.Match[str]) -> str:
-    text = match.group("tail") or ""
-    following = actions[match.end():].lstrip()
-    save_block = _ON_HIT_SAVE_BLOCK.match(following)
-    if save_block:
-        return text + ". " + save_block.group(0)
-    if re.match(r"(?:If|Until|The target|Whenever|While)\b", following, re.I):
-        text += ". " + following.split(".", 1)[0]
-    return text
-
 def _attack(row: dict[str, object], actions: str, match: re.Match[str]) -> tuple[AttackCapabilityDefinition, ResourceDefinition | None]:
     name = match.group("name").strip()
     reach, normal, long = _ranges(match.group("range"))
-    rider_text = _rider_text(actions, match)
+    rider_text = attack_rider_text(actions, match)
     effects = parse_attack_riders(rider_text)
     extra = _EXTRA.search(match.group("extra") or "")
     if extra:
