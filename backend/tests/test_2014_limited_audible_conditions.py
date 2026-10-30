@@ -32,6 +32,7 @@ def test_vrock_stunning_screech_uses_generic_limited_audible_control() -> None:
         assert action.save_ability == "constitution"
         assert action.dc == 14
         assert action.range_ft == 20
+        assert action.target_scope == "all-other-creatures"
         assert action.requires_target_hearing is True
         assert action.excluded_target_creature_types == ["demon"]
         assert action.resource_id == "stunning-screech"
