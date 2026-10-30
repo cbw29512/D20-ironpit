@@ -1,8 +1,8 @@
 (() => {
   "use strict";
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "ability-check-bonus-die", "bonus-damage"]);
-  const KINDS = new Set(["armor-class", ...DIE_KINDS, "attacks-against-advantage", "next-attack-advantage", "next-attack-against-advantage", "next-attack-disadvantage", "speed"]);
-  const EFFECT_KINDS = new Set(["attacks-against-advantage", "next-attack-advantage", "next-attack-disadvantage", "speed"]);
+  const KINDS = new Set(["armor-class", ...DIE_KINDS, "attacks-against-advantage", "next-attack-advantage", "next-attack-against-advantage", "next-attack-disadvantage", "speed", "healing-prevented"]);
+  const EFFECT_KINDS = new Set(["attacks-against-advantage", "next-attack-advantage", "next-attack-disadvantage", "speed", "healing-prevented"]);
   const D = () => window.IRON_PIT_DICE;
   function validate(item) {
     if (!item?.id || !item.source_id || !item.source_effect_id || !KINDS.has(item.kind)) throw new Error("Invalid combat modifier.");
