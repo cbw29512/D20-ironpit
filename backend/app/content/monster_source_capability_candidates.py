@@ -16,6 +16,7 @@ from app.content.monster_source_limited_resources import source_limited_resource
 from app.content.monster_source_multiattack_candidates import source_multiattack
 from app.content.monster_source_save_candidates import source_save_candidates
 from app.content.monster_support_action_source import source_support_actions
+from app.content.monster_source_timed_self_buffs import source_timed_self_buffs
 from app.content.movement_modes import source_movement_modes, standard_arena_closing_speed
 from app.content.unarmed_opportunity_profiles import monster_unarmed_profile
 from app.domain.capabilities import CombatantDefinition
@@ -100,6 +101,9 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
             support_actions, support_resources = source_support_actions(
                 str(row["name"]), str(row.get("bonusActions", "")), "bonus_action"
             )
+            timed_self_buffs = source_timed_self_buffs(
+                str(row["name"]), row.get("actions", ""), row.get("bonusActions", ""),
+            )
             resources = {
                 resource.id: resource
                 for resource in [*attack_resources, *save_resources, *support_resources]
@@ -117,7 +121,8 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
                 initiative_bonus=int(initiative.group(1)), attacks=attacks, primary_attack_id=attacks[0].id,
                 attack_action=source_multiattack(row, attacks, save_actions), save_actions=save_actions,
                 legendary_actions=legendary_actions,
-                support_actions=support_actions, resources=list(resources.values()),
+                support_actions=support_actions, timed_self_buff_actions=timed_self_buffs,
+                resources=list(resources.values()),
                 combat_traits=[CombatTrait.CHARGE] if any(item.charge_profile for item in attacks) else [],
                 unarmed_opportunity_attack=monster_unarmed_profile(row),
                 damage_vulnerabilities=sorted(defenses["damage_vulnerabilities"]), damage_resistances=sorted(defenses["damage_resistances"]),
