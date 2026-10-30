@@ -61,6 +61,7 @@ def build_report() -> dict[str, object]:
         if profile is not None:
             parameters = {
                 "attack_id": profile.attack_id,
+                "delivery_mode": profile.delivery_mode,
                 "max_target_size": profile.max_target_size.value,
                 "damage_dice": f"{profile.damage_dice_count}d{profile.damage_dice_size}",
                 "damage_type": profile.damage_type,
@@ -95,6 +96,8 @@ def build_report() -> dict[str, object]:
                 "grantsTotalExternalCover": True,
                 "blindsAndRestrains": True,
             }
+            if profile.delivery_mode != "action_attack":
+                expected["deliveryMode"] = profile.delivery_mode
             if profile.regurgitation_damage_threshold is not None:
                 expected.update({
                     "regurgitationDamageThreshold": profile.regurgitation_damage_threshold,
