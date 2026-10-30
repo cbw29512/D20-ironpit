@@ -57,6 +57,7 @@ def apply_spell_attack_damage_outcome(
             dice=dice,
             affected_states=affected_states,
             damage_components=damage_components,
+            source_id=caster.combatant_id,
         )
         applied_conditions: list[str] = []
         if hit and target.state.is_alive and not target.state.is_dead:
