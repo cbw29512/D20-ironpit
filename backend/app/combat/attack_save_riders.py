@@ -53,6 +53,11 @@ def resolve_attack_save_rider(
         if rider is None or defender.is_dead or not defender.is_alive:
             return AttackSaveRiderOutcome()
         eligible = rider.target_filter.allows(defender.template.creature_type, defender.template.creature_tags)
+        if rider.forbid_target_ongoing_hp_loss_id is not None:
+            eligible = eligible and not any(
+                effect.effect_id == rider.forbid_target_ongoing_hp_loss_id
+                for effect in defender.ongoing_hp_loss_effects
+            )
         if not eligible:
             return AttackSaveRiderOutcome(
                 save_ability=rider.save_ability, save_dc=rider.dc, target_eligible=False,
