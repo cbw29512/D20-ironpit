@@ -40,9 +40,11 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             rider = attack.on_hit_saving_throw
             save_row = {
                 "saveAbility": rider.save_ability, "dc": rider.dc, "magicalEffect": rider.magical_effect,
-                "targetFilter": {"excludedCreatureTypes": list(rider.target_filter.excluded_creature_types), "excludedTags": list(rider.target_filter.excluded_tags)},
+                "targetFilter": {"requiredCreatureTypes": list(rider.target_filter.required_creature_types), "excludedCreatureTypes": list(rider.target_filter.excluded_creature_types), "excludedTags": list(rider.target_filter.excluded_tags)},
                 "failureEffects": [failure_effect_row(effect) for effect in rider.failure_effects],
             }
+            if rider.source_effect_immunity_on_success:
+                save_row["sourceEffectImmunityOnSuccess"] = True
             if rider.forbid_target_ongoing_hp_loss_id is not None:
                 save_row["forbidTargetOngoingHpLossId"] = rider.forbid_target_ongoing_hp_loss_id
             if rider.severe_failure_margin is not None:
