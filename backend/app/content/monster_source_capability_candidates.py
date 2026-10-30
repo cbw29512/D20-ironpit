@@ -28,7 +28,7 @@ from app.domain.weapons import DamageType, WeaponAttackKind
 logger = logging.getLogger(__name__)
 _LIMIT = r"Recharge\s+\d(?:\s*[-–]\s*\d)?|\d+\s*/\s*Day"
 _ATTACK = re.compile(
-    rf"(?P<name>[A-Z][A-Za-z0-9’' -]*?)(?:\s+\((?P<limit>{_LIMIT})\))?\.\s+"
+    rf"(?P<name>[A-Z][A-Za-z0-9’' -]*?)(?:\s+\((?P<parenthetical>[^)]*)\))?\.\s+"
     r"(?P<kind>Melee|Ranged|Melee or Ranged) Attack Roll:\s*"
     r"(?P<bonus>[+-]?\d+)(?P<header_advantage>\s*\(\s*with\s+Advantage\s+if\s+the\s+target\s+is\s+Grappled\s+by\s+the\s+[^)]+\))?,\s*"
     r"(?P<range>reach\s+\d+\s*ft\.|range\s+\d+(?:/\d+)?\s*ft\."
@@ -64,7 +64,9 @@ def _attack(row: dict[str, object], actions: str, match: re.Match[str]) -> tuple
             count=int(extra.group(1)), size=int(extra.group(2)), bonus=mod,
         ), damage_type=DamageType(extra.group(5).lower())))
     attack_id = f"srd-{_slug(str(row['name']))}-{_slug(name)}"
-    resource = source_limited_resource(attack_id, name, match.group("limit"))
+    parenthetical = (match.group("parenthetical") or "").strip()
+    limit = parenthetical if re.fullmatch(_LIMIT, parenthetical, re.IGNORECASE) else None
+    resource = source_limited_resource(attack_id, name, limit)
     base_bonus = _bonus(match)
     return AttackCapabilityDefinition(
         id=attack_id, name=name, weapon_id=f"{attack_id}-weapon",
