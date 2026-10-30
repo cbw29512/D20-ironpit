@@ -19,7 +19,10 @@ from app.content.monster_source_opening_area_saves_2014 import source_proven_ope
 from app.content.monster_recharge_self_buffs_2014 import recharge_self_buff_bindings_2014
 from app.content.monster_source_recharge_line_damage_2014 import source_proven_recharge_line_damage_2014
 from app.content.monster_source_recharge_area_conditions_2014 import source_proven_recharge_area_conditions_2014
-from app.content.monster_source_limited_audible_conditions_2014 import source_proven_limited_audible_conditions_2014
+from app.content.monster_source_limited_audible_conditions_2014 import (
+    limited_audible_resource_uses_2014,
+    source_proven_limited_audible_conditions_2014,
+)
 from app.content.monster_audible_maintained_control_2014 import source_proven_audible_maintained_controls_2014
 from app.domain.capability_attacks import SaveCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
@@ -107,15 +110,16 @@ def save_resources_2014(monster: SourceMonster2014) -> list[ResourceDefinition]:
         ResourceDefinition(id=resource_id, name=resource_id.replace("-", " ").title(), max_uses=1)
         for resource_id in sorted(ids)
     ]
+    limited_uses = limited_audible_resource_uses_2014(monster)
     limited_ids = {
         action.resource_id for action in capabilities
-        if action.resource_id is not None and action.resource_id in monster.limited_action_uses
+        if action.resource_id is not None and action.resource_id in limited_uses
     }
     resources.extend(
         ResourceDefinition(
             id=resource_id,
             name=resource_id.replace("-", " ").title(),
-            max_uses=int(monster.limited_action_uses[resource_id]),
+            max_uses=int(limited_uses[resource_id]),
         )
         for resource_id in sorted(limited_ids - ids)
     )
