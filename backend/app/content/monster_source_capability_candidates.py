@@ -39,6 +39,11 @@ _ATTACK = re.compile(
 _EXTRA = re.compile(r"plus\s+\d+\s*\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s+([A-Za-z]+)\s+damage", re.I)
 _MULTI_COUNT = re.compile(r"Multiattack\.\s+The\s+[^.]+?\s+makes\s+(one|two|three|four|five|six)\s+([A-Za-z’' -]+?)\s+attacks?\.", re.I)
 _MULTI_GENERIC = re.compile(r"Multiattack\.\s+The\s+[^.]+?\s+makes\s+(one|two|three|four|five|six)\s+attacks?,\s+using\s+([^.]+?)\s+in any combination\.", re.I)
+_MULTI_REPLACE_ONE = re.compile(
+    r"Multiattack\.\s+The\s+[^.]+?\s+makes\s+(one|two|three|four|five|six)\s+([A-Za-z’' -]+?)\s+attacks?\.\s+"
+    r"It can replace one attack with a use of ([A-Za-z’' -]+)\.",
+    re.I,
+)
 _WORD_COUNT = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6}
 
 def _slug(value: str) -> str:
@@ -80,8 +85,36 @@ def _attack(row: dict[str, object], actions: str, match: re.Match[str]) -> tuple
             base_dice_size=int(match.group("size")), base_damage_bonus=base_bonus, base_damage_type=match.group("dtype")),
     ), resource
 
-def _multiattack(row: dict[str, object], attacks: list[AttackCapabilityDefinition]) -> MultiattackCapabilityDefinition | None:
+def _multiattack(
+    row: dict[str, object],
+    attacks: list[AttackCapabilityDefinition],
+    save_actions: list[SaveCapabilityDefinition],
+) -> MultiattackCapabilityDefinition | None:
     text = str(row.get("actions", ""))
+    replace = _MULTI_REPLACE_ONE.search(text)
+    if replace:
+        wanted = replace.group(2).strip().lower().rstrip("s")
+        attack_ids = [
+            item.id for item in attacks
+            if item.name.lower().rstrip("s") == wanted
+        ]
+        save_name = replace.group(3).strip().lower()
+        save_ids = [
+            item.id for item in save_actions
+            if item.name.lower() == save_name
+        ]
+        count = _WORD_COUNT[replace.group(1).lower()]
+        if attack_ids and len(save_ids) == 1:
+            return MultiattackCapabilityDefinition(
+                id=f"srd-{_slug(str(row['name']))}-multiattack",
+                slots=[
+                    CapabilityActionSlot(
+                        attack_ids=attack_ids,
+                        save_action_ids=save_ids if index == 0 else [],
+                    )
+                    for index in range(count)
+                ],
+            )
     match = _MULTI_COUNT.search(text)
     if match:
         wanted = match.group(2).strip().lower().rstrip("s")
@@ -128,7 +161,7 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
                 armor_class=int(re.search(r"\d+", str(row["armorClass"])).group()), max_hp=int(re.search(r"\d+", str(row["hitPoints"])).group()),
                 speed_ft=standard_arena_closing_speed(row["speed"]), movement_modes=source_movement_modes(str(row["name"])),
                 initiative_bonus=int(initiative.group(1)), attacks=attacks, primary_attack_id=attacks[0].id,
-                attack_action=_multiattack(row, attacks), save_actions=save_actions,
+                attack_action=_multiattack(row, attacks, save_actions), save_actions=save_actions,
                 support_actions=support_actions, resources=list(resources.values()),
                 combat_traits=[CombatTrait.CHARGE] if any(item.charge_profile for item in attacks) else [],
                 unarmed_opportunity_attack=monster_unarmed_profile(row),
