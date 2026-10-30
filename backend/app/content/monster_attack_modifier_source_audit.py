@@ -57,6 +57,25 @@ def _speed_modifier_matches(effect, actions: str) -> bool:
     return bool(re.search(pattern, actions, re.IGNORECASE))
 
 
+def _healing_prevented_matches(effect, actions: str) -> bool:
+    try:
+        if effect.flat_bonus or effect.consume_on_attack_against:
+            return False
+        if effect.expires_at_start_of_source_turn is not True:
+            return False
+        if effect.expires_at_end_of_source_turn or effect.expires_at_end_of_target_turn:
+            return False
+        return bool(re.search(
+            r"(?:can[’']t|cannot)\s+regain\s+Hit\s+Points",
+            actions,
+            re.IGNORECASE,
+        ))
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Failed healing-prevention modifier source audit.")
+        raise
+
+
 def hit_modifier_issues(attack: WeaponAttack, actions: str) -> list[str]:
     issues: list[str] = []
     for effect in attack.on_hit_modifier_effects:
@@ -66,6 +85,8 @@ def hit_modifier_issues(attack: WeaponAttack, actions: str) -> list[str]:
             matched = _next_attack_disadvantage_matches(effect, actions)
         elif effect.kind == "speed":
             matched = _speed_modifier_matches(effect, actions)
+        elif effect.kind == "healing-prevented":
+            matched = _healing_prevented_matches(effect, actions)
         else:
             issues.append(f"unsupported-hit-modifier:{attack.id}:{effect.kind}")
             continue
