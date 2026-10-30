@@ -12,7 +12,7 @@ from app.domain.triggered_bonus_attacks import TriggeredBonusAttack
 logger = logging.getLogger(__name__)
 _RAMPAGE = re.compile(
     r"Rampage\s*\((?P<limit>\d+\s*/\s*Day)\)\.\s+Immediately after dealing damage "
-    r"to a creature that (?:was|is) already Bloodied, the [^.]+(?:can )?move up to half its Speed, "
+    r"to a creature that (?:was|is) already Bloodied, the [^.]+(?:can move|moves) up to half its Speed, "
     r"and it makes one (?P<attack>[A-Z][A-Za-z0-9’' -]+) attack\.",
     re.IGNORECASE,
 )
