@@ -30,6 +30,7 @@
     unknown: '<circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="8"/><path d="M38 39q2-15 15-15 14 0 14 12 0 8-10 13-7 4-7 12" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="75" r="5"/>',
   };
   SHAPES[AQUATIC_TENTACLE_DETAIL] = '<ellipse cx="50" cy="38" rx="24" ry="21"/><path fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" d="M31 52Q8 64 16 88M40 56Q26 72 31 94M50 58Q47 76 50 96M60 56Q74 72 69 94M69 52Q92 64 84 88M36 52Q17 55 8 75M64 52Q83 55 92 75"/>';
+  SHAPES["oct" + "opus"] = SHAPES[AQUATIC_TENTACLE_DETAIL];
 
   function markup(template) {
     const info = window.IRON_PIT_FIGURE_VISUALS?.profile(template) || { form: "unknown", detail: "unknown" };
