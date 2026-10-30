@@ -3,11 +3,13 @@ import logging
 import pytest
 
 from app.content.movement_modes import (
+    movement_mode_issues,
     movement_source_issues,
     parse_movement_modes,
     parse_movement_profile,
     standard_arena_closing_speed,
 )
+from app.domain.movement import MovementModes
 
 logger = logging.getLogger(__name__)
 
@@ -116,4 +118,36 @@ def test_hover_without_flight_fails_closed() -> None:
             parse_movement_profile("30 ft. (Hover)")
     except Exception:
         logger.exception("Hover-without-flight fail-closed regression failed.")
+        raise
+
+
+class _Template:
+    def __init__(self, movement_modes: MovementModes) -> None:
+        self.id = "test-movement-choice"
+        self.movement_modes = movement_modes
+
+
+def test_gm_choice_audit_accepts_exactly_one_immutable_printed_option() -> None:
+    try:
+        row = {"speed": "20 ft., Climb or Fly 20 ft. (GM’s choice)"}
+        template = _Template(MovementModes(walk_ft=20, fly_ft=20))
+
+        assert movement_mode_issues(template, row) == []
+    except Exception:
+        logger.exception("GM-choice immutable selection regression failed.")
+        raise
+
+
+def test_gm_choice_audit_rejects_selecting_both_printed_options() -> None:
+    try:
+        row = {"speed": "20 ft., Climb or Fly 20 ft. (GM’s choice)"}
+        template = _Template(MovementModes(walk_ft=20, fly_ft=20, climb_ft=20))
+
+        issues = movement_mode_issues(template, row)
+
+        assert "movement-choice-source-unmodeled" in issues
+        assert "movement-fly-mismatch" in issues
+        assert "movement-climb-mismatch" in issues
+    except Exception:
+        logger.exception("GM-choice multi-selection fail-closed regression failed.")
         raise
