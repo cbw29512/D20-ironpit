@@ -74,7 +74,10 @@
   }
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
-    const events = []; H().cleanup(setup); S().beginTurn(member.state); PR().startTurnHealing(member.state);
+    const events = []; H().cleanup(setup); S().beginTurn(member.state);
+    const grappleContact = AU()?.grappleTurnStart(sequence, round, member, setup);
+    if (grappleContact) { events.push(...grappleContact.events); sequence = grappleContact.sequence; }
+    PR().startTurnHealing(member.state);
     const recharge = RC()?.resolveStartTurn(sequence, round, member);
     if (recharge) { events.push(...recharge.events); sequence = recharge.sequence; }
     const turnKey = `${round}:${member.combatant_id}`;
