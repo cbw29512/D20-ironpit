@@ -70,6 +70,9 @@ def _save_optional_fields(row: dict[str, Any], action: Any) -> None:
             row["resourceId"], row["resourceCost"] = action.resource_id, action.resource_cost
         if action.magical_effect:
             row["magicalEffect"] = True
+        if action.starts_concentration:
+            row["startsConcentration"] = True
+            row["concentrationDurationRounds"] = action.concentration_duration_rounds
         if action.target_max_size:
             row["targetMaxSize"] = value(action.target_max_size)
         if action.required_target_condition:
