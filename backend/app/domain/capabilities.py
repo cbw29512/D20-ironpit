@@ -22,6 +22,7 @@ from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellSaveAction
 from app.domain.swallow import SwallowAction
 from app.domain.support_actions import CombatSupportAction
+from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
 from app.domain.weapons import DamageType
