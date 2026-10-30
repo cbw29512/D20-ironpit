@@ -103,14 +103,17 @@ def regeneration_row(rule: Any) -> dict[str, Any]:
 
 def death_trigger_row(effect: Any) -> dict[str, Any]:
     try:
-        return {
+        row = {
             "id": effect.id, "name": effect.name, "radius_ft": effect.radius_ft,
             "save_ability": effect.save_ability, "dc": effect.dc,
             "damage_dice_count": effect.damage_dice_count,
             "damage_dice_size": effect.damage_dice_size,
             "damage_bonus": effect.damage_bonus,
             "damage_type": effect.damage_type.value,
-            "additional_damage_components": [
+            "half_damage_on_success": effect.half_damage_on_success,
+        }
+        if effect.additional_damage_components:
+            row["additional_damage_components"] = [
                 {
                     "dice_count": part.dice_count,
                     "dice_size": part.dice_size,
@@ -118,9 +121,8 @@ def death_trigger_row(effect: Any) -> dict[str, Any]:
                     "damage_type": part.damage_type.value,
                 }
                 for part in effect.additional_damage_components
-            ],
-            "half_damage_on_success": effect.half_damage_on_success,
-        }
+            ]
+        return row
     except Exception:
         logger.exception("Failed to serialize death-trigger effect %s.", getattr(effect, "id", "<unknown>"))
         raise
