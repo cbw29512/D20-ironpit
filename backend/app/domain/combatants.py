@@ -5,7 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AttackActionDefinition, ConditionName, ConditionRemovalAction, HealingAction, SavingThrowAction
-from app.domain.auras import EndTurnDamageAura, RollAdvantageAura, StartTurnSaveConditionAura
+from app.domain.auras import EndTurnDamageAura, RollAdvantageAura, StartTurnGrappleContactDamage, StartTurnSaveConditionAura
 from app.domain.character_builds import AbilityScores
 from app.domain.death_triggers import DeathTriggeredSaveEffect
 from app.domain.forced_movement_actions import ForcedMovementAction
@@ -76,6 +76,7 @@ class CombatantTemplate(BaseModel):
     swallow_actions: list[SwallowAction] = Field(default_factory=list)
     death_trigger_effects: list[DeathTriggeredSaveEffect] = Field(default_factory=list)
     end_turn_damage_auras: list[EndTurnDamageAura] = Field(default_factory=list)
+    start_turn_grapple_contact_damage: StartTurnGrappleContactDamage | None = None
     start_turn_save_condition_auras: list[StartTurnSaveConditionAura] = Field(default_factory=list)
     roll_advantage_auras: list[RollAdvantageAura] = Field(default_factory=list)
     regeneration: RegenerationRule | None = None
