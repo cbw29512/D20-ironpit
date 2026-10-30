@@ -13,6 +13,7 @@ class ModifierKind(StrEnum):
     SAVING_THROW_BONUS_DIE = "saving-throw-bonus-die"
     ABILITY_CHECK_BONUS_DIE = "ability-check-bonus-die"
     ATTACKS_AGAINST_ADVANTAGE = "attacks-against-advantage"
+    ATTACK_ROLL_ADVANTAGE = "attack-roll-advantage"
     NEXT_ATTACK_ADVANTAGE = "next-attack-advantage"
     NEXT_ATTACK_AGAINST_ADVANTAGE = "next-attack-against-advantage"
     NEXT_ATTACK_DISADVANTAGE = "next-attack-disadvantage"
@@ -57,6 +58,7 @@ class CombatModifier(BaseModel):
             raise ValueError(f"{self.kind.value} does not accept a damage type.")
         roll_mode_kinds = {
             ModifierKind.ATTACKS_AGAINST_ADVANTAGE,
+            ModifierKind.ATTACK_ROLL_ADVANTAGE,
             ModifierKind.NEXT_ATTACK_ADVANTAGE,
             ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE,
             ModifierKind.NEXT_ATTACK_DISADVANTAGE,
