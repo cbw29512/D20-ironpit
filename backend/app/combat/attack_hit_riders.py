@@ -15,6 +15,7 @@ from app.combat.on_hit_maximum_hp_save import resolve_on_hit_maximum_hp_save
 from app.combat.post_hit_spell_riders import resolve_paid_post_hit_spell_riders
 from app.combat.sap import apply_weapon_sap
 from app.combat.slow import apply_weapon_slow
+from app.combat.swallow_hit_rider import apply_attack_hit_swallow
 from app.combat.tactical_master import apply_tactical_master_sap
 from app.combat.topple import resolve_topple_hit
 from app.combat.vex import apply_vex_mastery
@@ -35,6 +36,9 @@ def resolve_attack_hit_riders(
     affected_states,
     setup,
 ) -> None:
+    pre_hit_grappled_by_attacker = any(
+        held.source_id == attacker_event_id for held in defender.grapple_sources
+    )
     if result.cunning_strike.applied:
         result.applied_conditions.append("prone")
     if result.cunning_strike_obscure.applied:
@@ -50,6 +54,17 @@ def resolve_attack_hit_riders(
             setup,
         )
     )
+    if apply_attack_hit_swallow(
+        attacker,
+        defender,
+        attack,
+        attacker_id=attacker_event_id,
+        defender_id=actual_event_id,
+        pre_hit_grappled_by_attacker=pre_hit_grappled_by_attacker,
+    ):
+        for condition_id in ("blinded", "restrained"):
+            if condition_id not in result.applied_conditions:
+                result.applied_conditions.append(condition_id)
     result.on_hit_save = resolve_on_hit_condition_save(
         defender,
         attack,
