@@ -55,3 +55,15 @@ def test_actual_boar_source_enrichment_keeps_prone_charge_gated() -> None:
     assert gore.charge_profile.minimum_move_ft == 20
     assert gore.charge_profile.prone_max_target_size == CreatureSize.MEDIUM
     assert not any(effect.kind == "prone" for effect in gore.effects)
+
+
+def test_actual_mimic_source_enrichment_preserves_grapple_escape_disadvantage() -> None:
+    try:
+        definition = get_capability_definition("srd-mimic")
+        pseudopod = next(attack for attack in definition.attacks if attack.name == "Pseudopod")
+        grapple = next(effect for effect in pseudopod.effects if effect.kind == "grapple")
+
+        assert grapple.escape_dc == 13
+        assert grapple.escape_check_disadvantage is True
+    except Exception:
+        raise
