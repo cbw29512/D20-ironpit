@@ -18,6 +18,7 @@ from app.content.monster_source_dreadful_glare_2014 import source_proven_dreadfu
 from app.content.monster_source_opening_area_saves_2014 import source_proven_opening_area_saves_2014
 from app.content.monster_recharge_self_buffs_2014 import recharge_self_buff_bindings_2014
 from app.content.monster_source_recharge_line_damage_2014 import source_proven_recharge_line_damage_2014
+from app.content.monster_source_recharge_area_conditions_2014 import source_proven_recharge_area_conditions_2014
 from app.content.monster_audible_maintained_control_2014 import source_proven_audible_maintained_controls_2014
 from app.domain.capability_attacks import SaveCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
@@ -82,6 +83,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
         result.extend(source_proven_dreadful_glare_2014(monster))
         result.extend(source_proven_opening_area_saves_2014(monster))
         result.extend(source_proven_audible_maintained_controls_2014(monster))
+        result.extend(source_proven_recharge_area_conditions_2014(monster))
         existing_ids = {item.id for item in result}
         result.extend(
             item for item in source_proven_recharge_line_damage_2014(monster)
