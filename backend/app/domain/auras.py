@@ -21,6 +21,17 @@ class EndTurnDamageAura(BaseModel):
     disabled_while_incapacitated: bool = False
 
 
+class StartTurnGrappleContactDamage(BaseModel):
+    """Damage dealt at the owner's turn start to creatures in active grapple contact."""
+
+    id: str
+    name: str
+    damage_dice_count: int = Field(ge=0)
+    damage_dice_size: int = Field(ge=1)
+    damage_bonus: int = 0
+    damage_type: DamageType
+
+
 class StartTurnSaveConditionAura(BaseModel):
     """Source-neutral emanation that forces a save when another creature starts its turn nearby."""
 
