@@ -27,3 +27,17 @@ def test_giant_octopus_underwater_only_reaction_is_arena_neutral() -> None:
     except Exception:
         logger.exception("Giant Octopus underwater-only reaction regression failed.")
         raise
+
+
+def test_small_aquatic_compression_and_reaction_are_arena_neutral() -> None:
+    try:
+        name = "Octopus"
+        row = next(row for row in load_monster_rows() if row["name"] == name)
+        monster = next(item for item in build_arena_roster().monsters if item.name == name)
+
+        assert reaction_issues(monster, row) == []
+        assert limited_use_issues(monster, row) == []
+        assert audit_monster_source(monster, row) == []
+    except Exception:
+        logger.exception("Aquatic compression/reaction regression failed.")
+        raise
