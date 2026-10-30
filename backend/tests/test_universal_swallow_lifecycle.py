@@ -2,11 +2,8 @@
 from __future__ import annotations
 
 from app.combat.grapple import apply_grapple
-from app.combat.swallow_lifecycle import (
-    release_invalid_swallowed,
-    resolve_end_turn_swallow_regurgitation,
-    source_turn_swallowed_damage,
-)
+from app.combat.swallow_lifecycle import release_invalid_swallowed, source_turn_swallowed_damage
+from app.combat.swallow_regurgitation import resolve_end_turn_swallow_regurgitation
 from app.combat.swallow_state import swallow_after_bite
 from app.combat.state import build_combatant_state
 from app.combat.dice import FixedDiceProvider
