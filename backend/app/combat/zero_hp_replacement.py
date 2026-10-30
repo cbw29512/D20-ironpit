@@ -31,6 +31,8 @@ def apply_zero_hp_replacement_effect(
         )
         if effect.effect_id not in target.active_effect_ids:
             target.active_effect_ids.append(effect.effect_id)
+        if target.current_hp == 0:
+            activate_zero_hp_replacement(target)
         return effect.effect_id
     except Exception as exc:
         logger.exception("Failed to apply zero-HP replacement effect %s.", effect.effect_id)
