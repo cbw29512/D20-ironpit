@@ -7,6 +7,7 @@
   const T = () => window.IRON_PIT_BROWSER_TACTICAL_MIND;
   const F = () => window.IRON_PIT_BROWSER_FRIGHTENED;
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
+  const O = () => window.IRON_PIT_BROWSER_ONGOING_DAMAGE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || {
     available: (state, cost) => cost === "action" && state.action_available,
     spend: (state) => { state.action_available = false; },
@@ -31,13 +32,13 @@
     }
   }
 
-  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, linkedConditions = []) {
+  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, linkedConditions = [], sourceEffectId = null) {
     if (I().immune(state, "grappled")) return [];
     const replaced = state.grapple_sources.filter((source) => source.source_id === sourceId);
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
     const effectiveRestrains = restrains && !I().immune(state, "restrained");
     const linked = linkedConditions.filter((condition) => !I().immune(state, condition));
-    state.grapple_sources.push({ source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains, linked_conditions: linked });
+    state.grapple_sources.push({ source_id: sourceId, source_effect_id: sourceEffectId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains, linked_conditions: linked });
     dropOrphanedLinked(state, new Set(replaced.flatMap((source) => source.linked_conditions || [])));
     sync(state);
     return ["grappled", ...(effectiveRestrains ? ["restrained"] : []), ...linked];
@@ -108,5 +109,32 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_GRAPPLE = { apply, attackDisadvantage, cleanup, escape, release, shouldEscape, speedIsZero };
+  function periodicTurnStart(sequence, round, target, setup) {
+    try {
+      const events = [], members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
+      for (const grapple of target.state.grapple_sources || []) {
+        if (!grapple.source_effect_id) continue;
+        const source = members.get(grapple.source_id);
+        if (!source || source.state.is_dead || !source.state.is_alive) continue;
+        const action = (source.state.template.saving_throw_actions || []).find((item) => item.id === grapple.source_effect_id);
+        const periodic = action?.grapplePeriodicDamage;
+        if (!periodic || periodic.timing !== "target_turn_start") continue;
+        events.push(O().resolve(sequence++, round, source, target, setup, {
+          featureId: action.id,
+          featureName: action.name,
+          diceCount: periodic.diceCount,
+          diceSize: periodic.diceSize,
+          damageBonus: periodic.damageBonus || 0,
+          damageType: periodic.damageType,
+          animation: "grapple-periodic-damage",
+        }));
+      }
+      return { events, sequence };
+    } catch (error) {
+      console.error("Browser grapple periodic damage failed.", { target: target?.combatant_id, error });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_GRAPPLE = { apply, attackDisadvantage, cleanup, escape, periodicTurnStart, release, shouldEscape, speedIsZero };
 })();
