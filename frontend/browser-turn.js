@@ -65,6 +65,8 @@
   function finalize(events, sequence, round, member, setup, turnKey, allowSurge = true) {
     const triggered = TB()?.resolve(sequence, round, member, setup, events, turnKey);
     if (triggered) { events.push(...triggered.events); sequence = triggered.sequence; }
+    const supportAction = P()?.combatSupport(sequence, round, member);
+    if (supportAction) { events.push(supportAction); sequence += 1; }
     const bonus = saveChoice(member, setup, "bonus_action");
     if (bonus) events.push(V().resolveAction(sequence++, round, member, bonus.target, bonus.action, bonus.distance, { setup }));
     const surge = allowSurge ? J()?.resolveAttack(sequence, round, member, setup, turnKey) : null;
