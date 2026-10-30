@@ -19,7 +19,16 @@ _ARENA_NEUTRAL_BONUS_ACTIONS = frozenset({
     "Leap",
     "Nimble Escape",
     "Shadow Stealth",
+    "Teleport",
 })
+
+
+def arena_neutral_bonus_action(name: str) -> bool:
+    try:
+        return _base_name(name) in _ARENA_NEUTRAL_BONUS_ACTIONS
+    except Exception as exc:
+        logger.exception("Failed to classify arena-neutral Bonus Action %r.", name)
+        raise RuntimeError("Bonus Action arena-neutral policy could not be evaluated.") from exc
 
 
 def _base_name(name: str) -> str:
@@ -82,7 +91,7 @@ def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> 
             issues.append("source-bonus-action-fingerprint-mismatch")
         for name in expected:
             if (
-                _base_name(name) in _ARENA_NEUTRAL_BONUS_ACTIONS
+                arena_neutral_bonus_action(name)
                 or _runtime_bonus_save(template, name)
                 or _runtime_bonus_swallow(template, name)
             ):
