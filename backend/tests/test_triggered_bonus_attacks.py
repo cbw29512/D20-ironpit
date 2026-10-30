@@ -124,7 +124,7 @@ def test_rampage_does_not_trigger_when_target_was_not_already_bloodied() -> None
             1,
             hyena,
             setup,
-            FixedDiceProvider([]),
+            FixedDiceProvider([1]),
             [_trigger_event("hyena", "hero", 3)],
             "1:hyena",
         )
