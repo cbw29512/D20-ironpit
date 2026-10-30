@@ -4,6 +4,7 @@ import logging
 import re
 from app.content.monster_bonus_support_binding import runtime_bonus_support
 from app.content.monster_bonus_action_source_names import parse_bonus_action_names, source_bonus_action_names
+from app.content.monster_timed_self_buff_binding import runtime_timed_self_buff
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
@@ -114,6 +115,7 @@ def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> 
                 or _runtime_bonus_save(template, name)
                 or _runtime_bonus_swallow(template, name)
                 or runtime_bonus_support(template, _base_name(name))
+                or runtime_timed_self_buff(template, _base_name(name), "bonus_action")
                 or _runtime_triggered_bonus_attack(template, name)
                 or _source_no_hide_movement_bonus(name, row.get("bonusActions", ""))
             ):
