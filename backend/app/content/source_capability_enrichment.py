@@ -4,6 +4,7 @@ import re
 
 from app.content.source_attack_effect_enrichment import merge_attack_effects as _merge_attack_effects
 from app.content.source_support_action_enrichment import merge_support_actions
+from app.content.source_timed_self_buff_enrichment import merge_timed_self_buffs
 from app.domain.capabilities import CombatantDefinition
 from app.domain.traits import CombatTrait
 
@@ -109,6 +110,9 @@ def enrich_definition(existing: CombatantDefinition, source: CombatantDefinition
     support_actions = merge_support_actions(
         existing.support_actions, source.support_actions, resource_rebinds,
     )
+    timed_self_buffs = merge_timed_self_buffs(
+        existing.timed_self_buff_actions, source.timed_self_buff_actions,
+    )
     resources = _merge_resources(existing.resources, source.resources)
     traits = list(dict.fromkeys([*existing.combat_traits, *source.combat_traits]))
     if any(attack.charge_profile is not None for attack in attacks) and CombatTrait.CHARGE not in traits:
@@ -117,6 +121,7 @@ def enrich_definition(existing: CombatantDefinition, source: CombatantDefinition
         "attacks": attacks,
         "save_actions": save_actions,
         "support_actions": support_actions,
+        "timed_self_buff_actions": timed_self_buffs,
         "legendary_actions": existing.legendary_actions or source.legendary_actions,
         "resources": resources,
         "combat_traits": traits,
