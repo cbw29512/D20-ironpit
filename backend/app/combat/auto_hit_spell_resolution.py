@@ -99,6 +99,7 @@ def resolve_auto_hit_spell(
             dice=dice,
             affected_states=affected_states,
             damage_components=applied_components,
+            source_id=caster.combatant_id,
         )
         if resource is not None:
             mark_slot_spell_cast(caster.state, turn_key)
