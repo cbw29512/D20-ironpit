@@ -7,12 +7,14 @@ import re
 from app.content.monster_bonus_action_source_audit import (
     _ARENA_NEUTRAL_BONUS_ACTIONS,
     _base_name,
+    bonus_action_issues,
     parse_bonus_action_names,
 )
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_source_charge_riders import parse_charge_replacement
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
+from app.content.roster import build_arena_roster
 from app.content.monster_reaction_source_audit import (
     parse_parry_ac_bonus,
     parse_reaction_names,
@@ -92,7 +94,11 @@ def _unmodeled_action_rider(actions: str) -> bool:
         raise
 
 
-def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[str]:
+def _source_blockers(
+    row: dict[str, object],
+    monster_names: set[str],
+    runtime_template: object | None = None,
+) -> list[str]:
     blockers: list[str] = []
     try:
         traits = parse_trait_names(row.get("traits", ""))
@@ -108,7 +114,14 @@ def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[st
         blockers.append("reaction-parse")
     try:
         bonus = parse_bonus_action_names(row.get("bonusActions", ""))
-        if any(_base_name(name) not in _ARENA_NEUTRAL_BONUS_ACTIONS for name in bonus):
+        runtime_bonus_supported = (
+            runtime_template is not None
+            and not bonus_action_issues(runtime_template, row)
+        )
+        if (
+            not runtime_bonus_supported
+            and any(_base_name(name) not in _ARENA_NEUTRAL_BONUS_ACTIONS for name in bonus)
+        ):
             blockers.append("bonus-action")
     except ValueError:
         blockers.append("bonus-action-parse")
@@ -148,6 +161,9 @@ def main() -> None:
             for card in build_monster_catalog()
             if card.coverage_status is CoverageStatus.RAW_READY
         }
+        runtime_by_name = {
+            template.name: template for template in build_arena_roster().monsters
+        }
         safe: list[dict[str, object]] = []
         already_ready: list[str] = []
         blocker_counts: dict[str, int] = {}
@@ -156,7 +172,9 @@ def main() -> None:
         rider_details: list[dict[str, object]] = []
         for row in rows:
             name = str(row["name"])
-            blockers = _source_blockers(row, monster_names)
+            blockers = _source_blockers(
+                row, monster_names, runtime_by_name.get(name)
+            )
             for blocker in set(blockers):
                 blocker_counts[blocker] = blocker_counts.get(blocker, 0) + 1
                 blocker_names.setdefault(blocker, []).append(name)
