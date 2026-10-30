@@ -102,7 +102,7 @@
         if (!(save.succeeded && (action.successDamage === "none" || evasion))) {
           let total = rolls.reduce((sum, roll) => sum + roll, 0) + (action.damageBonus || 0);
           if ((save.succeeded && action.successDamage === "half") || (evasion && !save.succeeded)) total = Math.floor(total / 2);
-          const applied = A().adjustedDamage(target.state, Math.max(0, total), action.damageType);
+          const estimated = A().adjustedDamage(target.state, Math.max(0, total), action.damageType), outcome = window.IRON_PIT_BROWSER_DAMAGE_ABSORPTION?.resolve(target.state, Math.max(0, total), action.damageType, estimated), applied = outcome?.applied ?? estimated;
           damageComponents = [{ source: action.name, notation: `${count}d${action.damageDiceSize}+${action.damageBonus || 0}`,
             rolls, modifier: action.damageBonus || 0, damage_type: action.damageType, total: Math.max(0, total), applied_total: applied }];
           damageRoll = { notation: damageComponents[0].notation, rolls, modifier: action.damageBonus || 0, total: applied };
