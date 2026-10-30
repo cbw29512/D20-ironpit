@@ -8,6 +8,7 @@ from app.domain.hit_modifiers import CombatModifierEffect
 from app.domain.ongoing_hp_loss import OngoingHpLossEffectDefinition
 from app.domain.rule_types import AbilityName, ConditionName, ConditionTiming, DamageTypeName
 from app.domain.size import CreatureSize
+from app.domain.timed_effects import TimedTurnBehavior
 from app.domain.zero_hp_replacement import ZeroHpReplacementEffectDefinition
 
 
@@ -57,6 +58,7 @@ class ConditionEffectDefinition(BaseModel):
     automatic_success_after_rounds: int | None = Field(default=None, ge=1, le=100)
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     periodic_damage: PeriodicDamageEffectDefinition | None = None
+    turn_behavior: TimedTurnBehavior = "normal"
 
     @model_validator(mode="after")
     def validate_lifecycle(self) -> "ConditionEffectDefinition":
