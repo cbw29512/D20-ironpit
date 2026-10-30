@@ -14,6 +14,8 @@ _ON_HIT_SAVE_BLOCK = re.compile(
     r"(?:(?:If|The target)[^.]*following effect\.\s*)?"
     r"(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:\s*DC\s*\d+[^.]*\.\s*"
     r"(?:(?:First )?Failure):\s*[^.]+\."
+    r"(?:\s*If the cursed target drops to 0 Hit Points,[^.]+\.)?"
+    r"(?:\s*Success:\s*The target is immune to this [^.]+ curse for 24 hours\.)?"
     r"(?:\s*[^.]*repeats the save[^.]*\.)?"
     r"(?:\s*Second Failure:\s*[^.]+\.)?"
     r"(?:\s*Failure by \d+ or More:\s*[^.]+\.\s*While [^.]+\.)?"
