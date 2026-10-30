@@ -38,9 +38,15 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row["maxHpReductionOnHit"] = {"damageType": attack.max_hp_reduction_on_hit.damage_type.value if attack.max_hp_reduction_on_hit.damage_type is not None else None}
         if attack.on_hit_saving_throw is not None:
             rider = attack.on_hit_saving_throw
+            target_filter = {
+                "excludedCreatureTypes": list(rider.target_filter.excluded_creature_types),
+                "excludedTags": list(rider.target_filter.excluded_tags),
+            }
+            if rider.target_filter.required_creature_types:
+                target_filter["requiredCreatureTypes"] = list(rider.target_filter.required_creature_types)
             save_row = {
                 "saveAbility": rider.save_ability, "dc": rider.dc, "magicalEffect": rider.magical_effect,
-                "targetFilter": {"requiredCreatureTypes": list(rider.target_filter.required_creature_types), "excludedCreatureTypes": list(rider.target_filter.excluded_creature_types), "excludedTags": list(rider.target_filter.excluded_tags)},
+                "targetFilter": target_filter,
                 "failureEffects": [failure_effect_row(effect) for effect in rider.failure_effects],
             }
             if rider.source_effect_immunity_on_success:
