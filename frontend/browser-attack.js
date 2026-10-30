@@ -142,7 +142,7 @@
       death_save_successes_before: deathSuccessBefore, death_save_failures_before: deathFailureBefore,
       death_save_successes: actualTarget.state.death_save_successes, death_save_failures: actualTarget.state.death_save_failures,
       is_stable: actualTarget.state.is_stable, is_dead: actualTarget.state.is_dead, weapon_id: attack.id, projectile: attack.projectile || null,
-      feature_id: extra.featureId || (recklessStarted ? "reckless-attack" : null), resource_remaining: resourceRemaining, concentration_ended_effect_id: concentrationBefore && !actualTarget.state.concentration ? concentrationBefore : null,
+      feature_id: extra.featureId || (recklessStarted ? "reckless-attack" : null), defensive_reaction_id: parry.used ? (parry.reactionId || "parry") : null, resource_remaining: resourceRemaining, concentration_ended_effect_id: concentrationBefore && !actualTarget.state.concentration ? concentrationBefore : null,
       animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description };
     return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;
   }
