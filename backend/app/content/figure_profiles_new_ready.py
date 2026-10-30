@@ -65,6 +65,7 @@ NEW_READY_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Wight": _p("humanoid", "wight"),
     "Wereboar": _p("humanoid", "wereboar"),
     "Wererat": _p("humanoid", "wererat"),
+    "Weretiger": _p("humanoid", "weretiger"),
     "Werewolf": _p("humanoid", "werewolf"),
     "Winter Wolf": _p("quadruped", "canine"),
     "Wolf": _p("quadruped", "canine"),
