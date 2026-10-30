@@ -19,6 +19,7 @@ class EndTurnDamageAura(BaseModel):
     damage_bonus: int = 0
     damage_type: DamageType
     disabled_while_incapacitated: bool = False
+    applies_burning: bool = False
 
 
 class StartTurnGrappleContactDamage(BaseModel):
