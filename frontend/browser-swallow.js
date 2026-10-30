@@ -160,7 +160,7 @@
           source: record.source_name, damage_type: record.damage_type,
           notation: `${record.damage_dice_count}d${record.damage_dice_size}`,
           rolls, modifier: 0, total, applied_total: resolved.applied,
-        }]);
+        }], owner.combatant_id);
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
           actor_id: owner.combatant_id, actor_name: ownerState.template.name,
