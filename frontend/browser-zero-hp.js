@@ -50,6 +50,25 @@
     return outcome;
   }
 
+  function loseHitPoints(state, amount, affectedStates = []) {
+    try {
+      if (!Number.isInteger(amount) || amount < 0) throw new Error("Hit Point loss must be a nonnegative integer.");
+      if (!amount || state.is_dead || state.current_hp === 0) return 0;
+      const before = state.current_hp;
+      state.current_hp = Math.max(0, before - amount);
+      const lost = before - state.current_hp;
+      if (state.current_hp > 0) return lost;
+      if (useRelentless(state, 0)) return lost;
+      if (state.template.kind === "monster") markDead(state);
+      else markUnconscious(state);
+      C()?.endIfIncapacitated(state, affectedStates);
+      return lost;
+    } catch (error) {
+      console.error("Failed browser direct Hit Point loss.", { name: state?.template?.name, error });
+      throw error;
+    }
+  }
+
   function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = []) {
     const incoming = amount;
     if (!incoming || state.is_dead) return "damaged";
@@ -78,5 +97,5 @@
     return finish(state, "unconscious", incoming, affectedStates);
   }
 
-  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage };
+  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, loseHitPoints };
 })();
