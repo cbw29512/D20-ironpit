@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_movement_choice_source import selected_movement_choice
+from app.content.monster_movement_form_policy import form_only_movement_is_arena_neutral
 from app.content.movement_modes import movement_source_issues, parse_movement_profile
 from app.domain.models import CombatantTemplate
 
@@ -37,6 +38,11 @@ def movement_mode_issues(
             issues.append("movement-hover-mismatch")
 
         source_issues = movement_source_issues(row["speed"])
+        if form_only_movement_is_arena_neutral(row):
+            source_issues = [
+                issue for issue in source_issues
+                if issue != "movement-form-source-unmodeled"
+            ]
         if not choice_issues:
             source_issues = [
                 issue
