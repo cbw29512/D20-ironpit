@@ -113,6 +113,8 @@ def _extend_reactions(row: dict[str, Any], template: CombatantTemplate) -> None:
                 "counterattack_attack_id": parry.counterattack_attack_id,
                 "counterattack_range_ft": parry.counterattack_range_ft,
             }
+        if template.reaction_refresh_each_turn:
+            row["reaction_refresh_each_turn"] = True
         if template.redirect_attack_reaction:
             row["redirect_attack_reaction"] = {
                 "ally_range_ft": template.redirect_attack_reaction.ally_range_ft,
