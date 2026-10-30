@@ -35,6 +35,8 @@ def apply_timed_condition(
     affected_states: list[CombatantState] | None = None,
     turn_behavior: TimedTurnBehavior = "normal",
     ends_on_damage: bool = False,
+    ends_on_owner_attack: bool = False,
+    ends_on_owner_spell_cast: bool = False,
     ends_if_source_incapacitated: bool = False,
     ends_if_source_dead: bool = False,
 ) -> str | None:
@@ -94,6 +96,8 @@ def apply_timed_condition(
         periodic_damage_type=periodic.damage_type if periodic else None,
         turn_behavior=turn_behavior,
         ends_on_damage=ends_on_damage,
+        ends_on_owner_attack=ends_on_owner_attack,
+        ends_on_owner_spell_cast=ends_on_owner_spell_cast,
         ends_if_source_incapacitated=ends_if_source_incapacitated,
         ends_if_source_dead=ends_if_source_dead,
     ))
