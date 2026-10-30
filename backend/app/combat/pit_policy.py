@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.attack_legality import attack_allowed_against, attack_available_for_source
+from app.combat.bloodied_berserk import berserk_target_order
 from app.combat.encounter_targeting import combatant_distance, living_opponents
 from app.combat.formation import uses_backline
 from app.combat.range import resolve_attack_roll_mode
@@ -25,6 +26,9 @@ def target_order(
     prefer_backline: bool = False,
 ) -> list[EncounterCombatant]:
     """Return active Pit targets by formation role without using movement distance as priority."""
+    berserk = berserk_target_order(attacker, setup)
+    if berserk is not None:
+        return berserk
     opponents = living_opponents(attacker, setup)
     front = [target for target in opponents if not is_backline(target)]
     back = [target for target in opponents if is_backline(target)]
