@@ -49,6 +49,7 @@
     return { events: [...target.events, ...source.events], sequence: source.sequence };
   }
   function runEncounter(selection) {
+    try {
     if (!selection.hero_ids?.length || !selection.monster_ids?.length || selection.hero_ids.length > 6 || selection.monster_ids.length > 6) throw new Error("Iron Pit requires 1-6 cards per side.");
     const setup = buildSetup(selection), prep = P()?.prepare(setup, 1) || { events: [], sequence: 1 }, init = I().resolve(setup);
     const members = [...setup.heroes, ...setup.monsters], states = members.map((member) => member.state), byId = new Map(members.map((member) => [member.combatant_id, member]));
@@ -57,7 +58,8 @@
       resolvedRound = round;
       for (const id of init.turn_order) {
         const current = outcome(setup); if (current !== "active") return finish(setup, init, events, current, round, sequence);
-        const member = byId.get(id); B()?.cleanupDisabledSources(setup); window.IRON_PIT_BROWSER_MODIFIERS?.expireSourceTurnStart(states, member.combatant_id);
+        const member = byId.get(id); for (const entry of members) if (entry.state.template.reaction_refresh_each_turn) entry.state.reaction_available = true;
+        B()?.cleanupDisabledSources(setup); window.IRON_PIT_BROWSER_MODIFIERS?.expireSourceTurnStart(states, member.combatant_id);
         S().refreshStartOfTurn(member.state); R()?.startTurn(member.state); C()?.endIfExpired(member.state, round, states);
         const attachment = AT()?.startTurn(sequence, round, member, setup) || { events: [], sequence };
         events.push(...attachment.events); sequence = attachment.sequence;
@@ -70,6 +72,10 @@
       const current = outcome(setup); if (current !== "active") return finish(setup, init, events, current, round, sequence);
     }
     return finish(setup, init, events, "draw", resolvedRound, sequence);
+    } catch (error) {
+      console.error("Browser encounter execution failed.", { error });
+      throw error;
+    }
   }
   function finish(setup, init, events, result, round, sequence) {
     events.push({ sequence, round_number: round, event_type: result === "draw" ? "draw" : "victory", actor_id: "arena", actor_name: "Iron Pit", animation: "victory", description: result === "heroes_win" ? "Heroes win the deathmatch." : result === "monsters_win" ? "Monsters win the deathmatch." : "The fight reaches the arena round limit and ends in a draw." });
