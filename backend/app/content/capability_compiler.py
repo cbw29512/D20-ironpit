@@ -30,6 +30,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
             damage_dice_size=damage.size if damage else 6,
             damage_bonus=damage.bonus if damage else 0,
             damage_type=definition.damage_type.value if definition.damage_type else None,
+            additional_damage_components=list(definition.additional_damage_components),
             success_damage=definition.success_damage,
             failure_effects=list(definition.failure_effects),
             forbid_target_affected_by_action=definition.forbid_target_affected_by_action,
