@@ -120,7 +120,10 @@
     const type = A().adjustedDamage(target.state, 2, "radiant") >= A().adjustedDamage(target.state, 2, "necrotic") ? "radiant" : "necrotic";
     const raw = save.succeeded ? Math.floor(total / 2) : total, before = target.state.current_hp;
     const resolvedDamage = DD().resolveDamage(target.state, raw, type), applied = resolvedDamage.applied;
-    if (applied) A().applyDamage(target.state, applied, false, [type], [...setup.heroes, ...setup.monsters].map((m) => m.state));
+    if (applied) A().applyDamage(
+      target.state, applied, false, [type], [...setup.heroes, ...setup.monsters].map((m) => m.state),
+      setup, [], cleric.combatant_id,
+    );
     const event = { sequence, round_number: round, event_type: "saving_throw", actor_id: cleric.combatant_id, actor_name: cleric.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name, saving_throw_roll: save.roll, save_ability: "constitution", save_dc: dc,
       save_succeeded: save.succeeded, damage_roll: { notation, rolls: [die], modifier: mod, total: applied },
