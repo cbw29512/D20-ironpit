@@ -11,7 +11,7 @@ for (const file of [
   "browser-heroes.js", "browser-monsters-generated.js",
   "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
   "browser-weapon-mastery.js", "browser-attack.js", "browser-charge.js",
-  "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
+  "browser-light-weapons.js", "browser-light-attack.js", "browser-attack-reaction-chain.js", "browser-standard-attack-action.js",
   "browser-formation.js", "browser-multiattack.js", "browser-turn.js", "browser-engine.js",
 ]) load(file);
 
