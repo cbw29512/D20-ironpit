@@ -10,7 +10,7 @@
   const D = () => window.IRON_PIT_DICE;
   const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
 
-  function typedDamage(targetState, rule, diceCount, diceSize, damageType, multiplier, affectedStates) {
+  function typedDamage(targetState, rule, diceCount, diceSize, damageType, multiplier, affectedStates, sourceId = null) {
     try {
       const rolls = Array.from({ length: diceCount }, () => D().roll(diceSize));
       const rolledTotal = rolls.reduce((sum, value) => sum + value, 0);
@@ -28,7 +28,7 @@
         absorbed_healing: resolved.healed || 0,
         absorption_source_name: resolved.sourceName || null,
       };
-      A().applyDamage(targetState, applied, false, [damageType], affectedStates);
+      A().applyDamage(targetState, applied, false, [damageType], affectedStates, null, [], sourceId);
       return {
         damageRoll: { notation: component.notation, rolls, modifier: 0, total: applied },
         damageComponents: [component],
@@ -39,7 +39,7 @@
     }
   }
 
-  function resolve(targetState, rule, saveSucceeded, affectedStates) {
+  function resolve(targetState, rule, saveSucceeded, affectedStates, sourceId = null) {
     try {
       if ((rule.failure_damage_dice_count || 0) > 0) {
         if (!rule.failure_damage_type) {
@@ -56,6 +56,7 @@
           rule.failure_damage_type,
           saveSucceeded && rule.success_damage_from_failure === "half" ? 0.5 : 1,
           affectedStates,
+          sourceId,
         );
       }
       if (saveSucceeded && (rule.success_damage_dice_count || 0) > 0) {
@@ -70,6 +71,7 @@
           rule.success_damage_type,
           1,
           affectedStates,
+          sourceId,
         );
       }
       if (!saveSucceeded && rule.failure_sets_zero_hp) {
