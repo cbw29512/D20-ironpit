@@ -16,6 +16,12 @@
         damageDiceSize: effect.damage_dice_size,
         damageBonus: effect.damage_bonus || 0,
         damageType: effect.damage_type,
+        additionalDamageComponents: (effect.additional_damage_components || []).map((part) => ({
+          diceCount: part.dice_count,
+          diceSize: part.dice_size,
+          damageBonus: part.damage_bonus || 0,
+          damageType: part.damage_type,
+        })),
         successDamage: effect.half_damage_on_success ? "half" : "none",
         animation: "death-trigger",
       };
