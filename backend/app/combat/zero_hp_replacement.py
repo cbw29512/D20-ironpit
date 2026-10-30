@@ -4,6 +4,7 @@ import logging
 
 from app.combat.state import build_combatant_state
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.events import BattleEvent
 from app.domain.runtime import CombatantState
 from app.domain.zero_hp_replacement import (
     ZeroHpReplacementEffectDefinition,
@@ -97,8 +98,41 @@ def settle_zero_hp_replacement(target: EncounterCombatant, setup: EncounterSetup
         raise RuntimeError("Zero-HP replacement settlement failed.") from exc
 
 
+def settle_event_zero_hp_replacement(event: BattleEvent, setup: EncounterSetup) -> bool:
+    """Settle a pending replacement on the event target before death-trigger processing."""
+    try:
+        if event.target_id is None:
+            return False
+        target = next((member for member in _members(setup) if member.combatant_id == event.target_id), None)
+        if target is None or target.state.zero_hp_replacement is None:
+            return False
+        rule = target.state.zero_hp_replacement
+        if not rule.triggered:
+            return False
+        replacement_name = next(
+            member.state.template.name
+            for member in _members(setup)
+            if member.combatant_id == rule.source_id
+        )
+        if not settle_zero_hp_replacement(target, setup):
+            return False
+        event.hp_after = target.state.current_hp
+        event.description += (
+            f" {event.target_name} becomes {replacement_name} at "
+            f"{target.state.current_hp} HP under the source side's control."
+        )
+        return True
+    except StopIteration as exc:
+        logger.exception("Replacement source disappeared before event settlement.")
+        raise RuntimeError("Zero-HP replacement source is unavailable.") from exc
+    except Exception as exc:
+        logger.exception("Failed event-level zero-HP replacement settlement.")
+        raise RuntimeError("Event zero-HP replacement could not be settled.") from exc
+
+
 __all__ = [
     "activate_zero_hp_replacement",
     "apply_zero_hp_replacement_effect",
     "settle_zero_hp_replacement",
+    "settle_event_zero_hp_replacement",
 ]
