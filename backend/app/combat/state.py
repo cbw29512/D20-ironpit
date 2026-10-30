@@ -55,6 +55,7 @@ def terminate_turn(state: CombatantState, reason: str) -> None:
 
 def begin_turn(state: CombatantState) -> None:
     try:
+        state.turn_serial += 1
         state.turn_terminated = False
         state.turn_termination_reason = None
         incapacitated = is_incapacitated(state)
