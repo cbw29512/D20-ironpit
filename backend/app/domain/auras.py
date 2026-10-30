@@ -46,6 +46,7 @@ class StartTurnSaveConditionAura(BaseModel):
     magical_effect: bool = False
     disabled_while_incapacitated: bool = False
     success_grants_source_immunity: bool = False
+    requires_source_reaction: bool = False
 
 
 class RollAdvantageAura(BaseModel):
