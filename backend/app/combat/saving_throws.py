@@ -111,6 +111,7 @@ def resolve_save_action(
             shared_damage_rolls=shared_damage_rolls,
             affected_states=affected_states,
             setup=setup,
+            source_id=actor.combatant_id,
         )
         effects = apply_save_effects(
             actor,
