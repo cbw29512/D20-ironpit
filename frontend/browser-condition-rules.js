@@ -16,6 +16,9 @@
   const attackAdvantage = (state) => state.is_unconscious || has(state, "blinded") || has(state, "paralyzed") || has(state, "petrified") || has(state, "stunned");
   const autoCritical = (state) => state.is_unconscious || has(state, "paralyzed");
   const speedZero = (state) => state.is_unconscious || has(state, "paralyzed") || has(state, "petrified") || has(state, "restrained");
+  const defensiveAttackDisadvantage = (state) =>
+    (state.template.traits || []).includes("attacks-against-disadvantage-unless-incapacitated")
+    && !incapacitated(state);
 
-  window.IRON_PIT_BROWSER_CONDITION_RULES = { attackAdvantage, autoCritical, autoFailStrDex, has, incapacitated, speedZero };
+  window.IRON_PIT_BROWSER_CONDITION_RULES = { attackAdvantage, autoCritical, autoFailStrDex, defensiveAttackDisadvantage, has, incapacitated, speedZero };
 })();
