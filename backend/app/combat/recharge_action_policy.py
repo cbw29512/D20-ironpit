@@ -61,7 +61,35 @@ def recharge_area_save_choice(attacker: EncounterCombatant, setup: EncounterSetu
         raise RuntimeError("Recharge area-save choice could not be evaluated.") from exc
 
 
+def _choice_resource_id(kind: str, payload) -> str | None:
+    try:
+        if kind == "attack":
+            return payload[1].resource_id
+        if kind == "save":
+            return payload[1].resource_id
+        if kind == "area-save":
+            return payload[0].resource_id
+        raise ValueError(f"Unsupported Recharge action family: {kind!r}.")
+    except Exception as exc:
+        logger.exception("Failed to identify Recharge resource for %s.", kind)
+        raise RuntimeError("Recharge action resource could not be identified.") from exc
+
+
+def _resource_rank(attacker: EncounterCombatant, resource_id: str | None) -> int:
+    try:
+        if resource_id is None:
+            raise ValueError("Recharge action is missing its resource id.")
+        for index, definition in enumerate(attacker.state.template.resources):
+            if definition.id == resource_id:
+                return index
+        raise ValueError(f"Recharge resource {resource_id!r} is not declared on the combatant.")
+    except Exception as exc:
+        logger.exception("Failed to rank Recharge resource %s for %s.", resource_id, attacker.combatant_id)
+        raise RuntimeError("Recharge source priority could not be evaluated.") from exc
+
+
 def recharge_action_choice(attacker: EncounterCombatant, setup: EncounterSetup):
+    """Choose the first legal Recharge resource in immutable source declaration order."""
     try:
         choices = [
             ("attack", recharge_attack_choice(attacker, setup)),
@@ -69,9 +97,12 @@ def recharge_action_choice(attacker: EncounterCombatant, setup: EncounterSetup):
             ("area-save", recharge_area_save_choice(attacker, setup)),
         ]
         legal = [(kind, payload) for kind, payload in choices if payload is not None]
-        if len(legal) > 1:
-            raise ValueError("Multiple legal Recharge action families require explicit source-priority metadata.")
-        return legal[0] if legal else None
+        if not legal:
+            return None
+        return min(
+            legal,
+            key=lambda choice: _resource_rank(attacker, _choice_resource_id(choice[0], choice[1])),
+        )
     except Exception as exc:
         logger.exception("Failed universal Recharge action priority for %s.", attacker.combatant_id)
         raise RuntimeError("Recharge action priority could not be evaluated.") from exc
