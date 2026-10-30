@@ -35,6 +35,7 @@ def resolve_encounter_attack(
     close_enemy_active: bool | None = None,
     allow_reckless: bool = False,
     off_turn: bool = False,
+    turn_owner_id: str | None = None,
 ) -> BattleEvent:
     reckless_started = allow_reckless and activate_reckless_attack(
         attacker.state, attack, attacker.combatant_id, round_number,
@@ -61,6 +62,7 @@ def resolve_encounter_attack(
         redirect_target_event_id=redirect.combatant_id if redirect is not None else None,
         affected_states=affected_states, sneak_attack_ally_available=sneak_ally,
         off_turn=off_turn, saving_throw_advantage_sources=save_aura_advantage,
+        turn_owner_id=turn_owner_id or (None if off_turn else attacker.combatant_id),
     )
     if reckless_started:
         event.description += f" {attacker.state.template.name} uses Reckless Attack."
