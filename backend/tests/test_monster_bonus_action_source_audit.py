@@ -3,6 +3,8 @@ from __future__ import annotations
 from app.content.monster_bonus_action_source_audit import bonus_action_issues, parse_bonus_action_names
 from app.content.monster_catalog import load_monster_rows
 from app.content.roster import build_arena_roster
+from app.domain.size import CreatureSize
+from app.domain.swallow import SwallowAction
 
 
 def _row(name: str) -> dict[str, object]:
@@ -38,3 +40,44 @@ def test_outcome_changing_unimplemented_bonus_action_fails_closed() -> None:
 def test_bonus_action_fingerprint_drift_is_detected() -> None:
     wolf = _monster("Wolf").model_copy(update={"source_bonus_action_names": ["Nimble Escape"]})
     assert "source-bonus-action-fingerprint-mismatch" in bonus_action_issues(wolf, _row("Wolf"))
+
+
+def _bonus_swallow_template(action_cost: str):
+    try:
+        wolf = _monster("Wolf")
+        action = SwallowAction(
+            id="test-swallow",
+            name="Swallow",
+            max_target_size=CreatureSize.MEDIUM,
+            action_cost=action_cost,
+            damage_dice_count=1,
+            damage_dice_size=6,
+        )
+        return wolf.model_copy(update={
+            "source_bonus_action_names": ["Swallow"],
+            "swallow_actions": [action],
+        })
+    except Exception:
+        raise
+
+
+def test_bonus_action_swallow_is_supported_by_existing_universal_action_cost() -> None:
+    try:
+        row = dict(_row("Wolf"))
+        row["bonusActions"] = "Swallow. The wolf swallows an eligible creature."
+        template = _bonus_swallow_template("bonus_action")
+
+        assert bonus_action_issues(template, row) == []
+    except Exception:
+        raise
+
+
+def test_action_cost_swallow_does_not_satisfy_bonus_action_source() -> None:
+    try:
+        row = dict(_row("Wolf"))
+        row["bonusActions"] = "Swallow. The wolf swallows an eligible creature."
+        template = _bonus_swallow_template("action")
+
+        assert "uncertified-bonus-action:swallow" in bonus_action_issues(template, row)
+    except Exception:
+        raise
