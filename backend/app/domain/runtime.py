@@ -11,6 +11,7 @@ from app.domain.ongoing_hp_loss import OngoingHpLossState
 from app.domain.resource_state import ResourceState
 from app.domain.timed_effects import TimedEffect, TimedTurnBehavior
 from app.domain.swallow import SwallowedState
+from app.domain.zero_hp_replacement import ZeroHpReplacementState
 
 class DemoRoster(BaseModel):
     fighter: CombatantTemplate
@@ -56,6 +57,7 @@ class CombatantState(BaseModel):
     opening_buff_spell_id: str | None = None
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
     swallowed: SwallowedState | None = None
+    zero_hp_replacement: ZeroHpReplacementState | None = None
     attachment: AttachmentState | None = None
     timed_effects: list[TimedEffect] = Field(default_factory=list)
     ongoing_hp_loss_effects: list[OngoingHpLossState] = Field(default_factory=list)
