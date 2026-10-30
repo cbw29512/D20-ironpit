@@ -71,7 +71,7 @@ def resolve_defensive_spell(
                 condition_id,
                 member.combatant_id,
                 source_effect_id=spell.id,
-                applied_round=0,
+                applied_round=None,
                 expires_round=(spell.duration_minutes * 10) + 1,
                 affected_states=list(affected_states or []),
             )
