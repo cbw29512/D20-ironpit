@@ -31,7 +31,6 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 logger = logging.getLogger(__name__)
 
-
 def resolve_combat_turn(
     sequence: int, round_number: int, attacker: EncounterCombatant, target: EncounterCombatant,
     setup: EncounterSetup, dice: DiceProvider,
