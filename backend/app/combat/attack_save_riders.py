@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from app.combat.dice import DiceProvider
 from app.combat.save_failure_effects import apply_save_failure_effects
 from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.combat.source_effect_immunity import grant_source_effect_immunity, has_source_effect_immunity
 from app.domain.models import CombatantState, DiceRoll, WeaponAttack
 
 logger = logging.getLogger(__name__)
@@ -53,6 +54,10 @@ def resolve_attack_save_rider(
         if rider is None or defender.is_dead or not defender.is_alive:
             return AttackSaveRiderOutcome()
         eligible = rider.target_filter.allows(defender.template.creature_type, defender.template.creature_tags)
+        if rider.source_effect_immunity_on_success and has_source_effect_immunity(
+            defender, attacker_event_id, attack.id,
+        ):
+            eligible = False
         if rider.forbid_target_ongoing_hp_loss_id is not None:
             eligible = eligible and not any(
                 effect.effect_id == rider.forbid_target_ongoing_hp_loss_id
@@ -72,6 +77,8 @@ def resolve_attack_save_rider(
         )
         severe = _severe_failure(rider, roll, succeeded)
         applied: list[str] = []
+        if succeeded and rider.source_effect_immunity_on_success:
+            grant_source_effect_immunity(defender, attacker_event_id, attack.id)
         if not succeeded:
             effects = rider.severe_failure_effects if severe else rider.failure_effects
             applied = apply_save_failure_effects(
