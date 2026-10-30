@@ -24,3 +24,19 @@ def damage_taken_disadvantage_rows(template: Any) -> list[dict[str, Any]]:
             getattr(template, "id", "<unknown>"),
         )
         raise
+
+
+def bloodied_berserk_row(rule: Any) -> dict[str, Any]:
+    try:
+        return {
+            "id": rule.id,
+            "name": rule.name,
+            "dieSize": rule.die_size,
+            "triggerMinimum": rule.trigger_minimum,
+            "targetMode": rule.target_mode,
+            "remainsWhileBloodied": rule.remains_while_bloodied,
+            "creatorCalmingOutsideArena": rule.creator_calming_outside_arena,
+        }
+    except Exception:
+        logger.exception("Failed Bloodied Berserk serialization for %s.", getattr(rule, "id", "<unknown>"))
+        raise
