@@ -5,6 +5,7 @@ from functools import lru_cache
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_death_trigger_source import death_trigger_trait_issues, parse_death_trigger_effects
 from app.content.monster_damage_absorption_source import damage_absorption_trait_issues
+from app.content.monster_damage_taken_disadvantage_source import damage_taken_disadvantage_trait_issues
 from app.content.monster_grapple_contact_source import grapple_contact_trait_issues
 from app.content.monster_legendary_resistance_source import legendary_resistance_trait_issues
 from app.content.monster_regeneration_source import regeneration_trait_issues
@@ -86,6 +87,8 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
     issues.extend(_magic_resistance_issues(template, expected))
     typed_issues, typed_certified = damage_absorption_trait_issues(template, row)
     issues.extend(typed_issues)
+    damage_disadvantage_issues, damage_disadvantage_certified = damage_taken_disadvantage_trait_issues(template, row)
+    issues.extend(damage_disadvantage_issues)
     death_issues, death_certified = death_trigger_trait_issues(template, row)
     issues.extend(death_issues)
     grapple_issues, grapple_certified = grapple_contact_trait_issues(template, row)
@@ -97,7 +100,7 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
     issues.extend(legendary_issues)
     aura_issues, aura_certified = aura_trait_issues(template, row, expected)
     issues.extend(aura_issues)
-    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement", "Magic Resistance", "Regeneration"} | aura_certified | death_certified | typed_certified | source_environment_neutral_traits(row, expected)
+    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement", "Magic Resistance", "Regeneration"} | aura_certified | death_certified | typed_certified | damage_disadvantage_certified | source_environment_neutral_traits(row, expected)
     if legendary_certified:
         certified.add("Legendary Resistance")
     if grapple_certified and "Barbed Hide" in expected:
