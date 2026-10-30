@@ -81,3 +81,12 @@ def test_action_cost_swallow_does_not_satisfy_bonus_action_source() -> None:
         assert "uncertified-bonus-action:swallow" in bonus_action_issues(template, row)
     except Exception:
         raise
+
+
+def test_ignited_illumination_is_arena_neutral_bonus_action() -> None:
+    try:
+        magmin = _monster("Magmin")
+        assert magmin.source_bonus_action_names == ["Ignited Illumination"]
+        assert bonus_action_issues(magmin, _row("Magmin")) == []
+    except Exception:
+        raise
