@@ -34,6 +34,8 @@ def resolve_start_turn_regeneration(state: CombatantState) -> tuple[int, bool]:
                 state.is_dead = True
                 return 0, True
             return 0, False
+        if state.current_hp < rule.minimum_current_hp:
+            return 0, False
         before = state.current_hp
         state.current_hp = min(effective_max_hp(state), state.current_hp + rule.hit_points)
         if state.current_hp > 0:

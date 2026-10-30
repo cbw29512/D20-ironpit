@@ -95,6 +95,7 @@ def regeneration_row(rule: Any) -> dict[str, Any]:
     try:
         return {
             "hitPoints": rule.hit_points,
+            "minimumCurrentHp": rule.minimum_current_hp,
             "suppressedByDamageTypes": [item.value for item in rule.suppressed_by_damage_types],
             "diesAtStartTurnIfZeroAndSuppressed": rule.dies_at_start_turn_if_zero_and_suppressed,
         }

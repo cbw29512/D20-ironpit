@@ -8,8 +8,7 @@ from app.domain.models import CombatantTemplate, DamageType
 from app.domain.regeneration import RegenerationRule
 
 _REGEN_HEADING = re.compile(r"(?:^|\s)Regeneration\.", re.I)
-_REGEN = re.compile(r"Regeneration\.\s+The\s+[^.]+?\s+regains\s+(\d+)\s+Hit Points at the start of each of its turns\.", re.I)
-_SUPPRESS = re.compile(r"If the [^.]+ takes ([A-Za-z]+)(?: or ([A-Za-z]+))? damage, this trait doesn[’']t function on the [^.]+ next turn", re.I)
+_REGEN = re.compile(\n    r"Regeneration\\.\\s+The\\s+[^.]+?\\s+regains\\s+(?P<hp>\\d+)\\s+Hit Points at the start of each of its turns"\n    r"(?: if it has at least (?P<minimum_hp>\\d+) Hit Points?)?\\.",\n    re.I,\n)\n_SUPPRESS = re.compile(r"If the [^.]+ takes ([A-Za-z]+)(?: or ([A-Za-z]+))? damage, this trait doesn[’']t function on the [^.]+ next turn", re.I)
 _DEFERRED_DEATH = re.compile(r"dies only if it starts its turn with 0 Hit Points and doesn[’']t regenerate", re.I)
 
 
@@ -25,7 +24,8 @@ def _parse_regeneration(text: str) -> RegenerationRule | None:
     suppression = _SUPPRESS.search(text)
     types = [DamageType(raw.lower()) for raw in suppression.groups() if raw] if suppression else []
     return RegenerationRule(
-        hit_points=int(match.group(1)),
+        hit_points=int(match.group("hp")),
+        minimum_current_hp=int(match.group("minimum_hp") or 0),
         suppressed_by_damage_types=types,
         dies_at_start_turn_if_zero_and_suppressed=bool(_DEFERRED_DEATH.search(text)),
     )

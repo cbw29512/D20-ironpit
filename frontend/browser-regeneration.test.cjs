@@ -48,4 +48,16 @@ const template = {
   assert.equal(state.current_hp, 14);
 }
 
+{
+  const positiveOnly = structuredClone(template);
+  positiveOnly.regeneration = {
+    hitPoints: 10, minimumCurrentHp: 1, suppressedByDamageTypes: [],
+    diesAtStartTurnIfZeroAndSuppressed: false,
+  };
+  const state = S.buildState(positiveOnly);
+  state.current_hp = 0; state.is_alive = true; state.is_dead = false;
+  assert.deepEqual(R.startTurn(state), { healed: 0, died: false });
+  assert.equal(state.current_hp, 0);
+}
+
 console.log("Browser regeneration regressions passed.");

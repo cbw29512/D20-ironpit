@@ -28,6 +28,7 @@
       }
       return { healed: 0, died: false };
     }
+    if (state.current_hp < (rule.minimumCurrentHp || 0)) return { healed: 0, died: false };
     const before = state.current_hp;
     state.current_hp = Math.min(state.template.max_hp + (state.max_hp_bonus || 0), before + rule.hitPoints);
     if (state.current_hp > 0) { state.is_alive = true; state.is_dead = false; }

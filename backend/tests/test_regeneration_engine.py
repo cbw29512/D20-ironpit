@@ -44,3 +44,19 @@ def test_nonlethal_fire_suppresses_one_regeneration_turn_only() -> None:
     assert (healed, died, state.current_hp) == (0, False, 10)
     healed, died = resolve_start_turn_regeneration(state)
     assert (healed, died, state.current_hp) == (4, False, 14)
+
+
+def test_positive_hp_regeneration_is_source_derived_and_does_not_revive_zero_hp() -> None:
+    oni = build_combatant_from_capabilities("srd-oni")
+    guardian = build_combatant_from_capabilities("srd-shield-guardian")
+    assert oni.regeneration is not None and oni.regeneration.minimum_current_hp == 1
+    assert guardian.regeneration is not None and guardian.regeneration.minimum_current_hp == 1
+    assert "trait-source-unsupported:regeneration" not in audit_monster_source(oni, _row("Oni"))
+    assert "trait-source-unsupported:regeneration" not in audit_monster_source(guardian, _row("Shield Guardian"))
+
+    state = build_combatant_state(oni)
+    state.current_hp = 0
+    state.is_alive = True
+    state.is_dead = False
+    healed, died = resolve_start_turn_regeneration(state)
+    assert (healed, died, state.current_hp) == (0, False, 0)
