@@ -23,6 +23,7 @@ window.IRON_PIT_BROWSER_TIMED = {
   },
 };
 window.IRON_PIT_BROWSER_ONGOING_DAMAGE = {};
+load("browser-action-economy.js");
 load("browser-auras.js");
 
 const hezrou = {
