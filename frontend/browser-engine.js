@@ -210,7 +210,7 @@
           sequence, round, member, setup, `${round}:${member.combatant_id}`, "end_turn",
         );
         if (endZones) { events.push(...endZones.events); sequence = endZones.sequence; }
-        const regurgitation = window.IRON_PIT_BROWSER_SWALLOW?.resolveEndTurnRegurgitation(
+        const regurgitation = window.IRON_PIT_BROWSER_SWALLOW_REGURGITATION?.resolveEndTurn(
           sequence, round, member, setup,
         );
         if (regurgitation) { events.push(...regurgitation.events); sequence = regurgitation.sequence; }
