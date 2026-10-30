@@ -16,6 +16,7 @@ from app.combat.saving_throws import legal_save_action, resolve_save_action
 from app.combat.swallow import resolve_swallow_turn_end
 from app.combat.support_actions import choose_support_action, resolve_support_action
 from app.combat.triggered_bonus_attacks import resolve_triggered_bonus_attack
+from app.combat.timed_self_buffs import choose_timed_self_buff, resolve_timed_self_buff
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -33,6 +34,13 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
             support_action, support_target = support_choice
             events.append(resolve_support_action(
                 sequence, round_number, attacker, support_target, support_action, dice,
+            ))
+            sequence += 1
+        bonus_buff = choose_timed_self_buff(attacker, "bonus_action")
+        if bonus_buff is not None:
+            affected = [member.state for member in [*setup.heroes, *setup.monsters]]
+            events.append(resolve_timed_self_buff(
+                sequence, round_number, attacker, bonus_buff, affected,
             ))
             sequence += 1
         bonus_choice = save_choice(attacker, setup, "bonus_action")
