@@ -27,7 +27,7 @@
     if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1;
     if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1;
     if (setup && Q().has(attacker, "frightened")) { if (!F()) throw new Error("Browser Frightened runtime is not loaded."); disadvantage += F().d20Disadvantage(attacker, setup); }
-    disadvantage += G()?.attackDisadvantage(attacker, targetId) || 0;
+    disadvantage += G()?.attackDisadvantage?.(attacker, targetId) || 0;
     if (defender.active_effect_ids.includes("dodge") && !Q().incapacitated(defender) && M().effectiveSpeed(defender) > 0 && !G()?.speedIsZero(defender)) disadvantage += 1;
     if (Q().attackAdvantage(defender)) advantage += 1;
     if (defender.active_effect_ids.includes("restrained")) advantage += 1;
