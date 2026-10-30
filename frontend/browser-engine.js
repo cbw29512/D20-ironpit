@@ -210,6 +210,10 @@
           sequence, round, member, setup, `${round}:${member.combatant_id}`, "end_turn",
         );
         if (endZones) { events.push(...endZones.events); sequence = endZones.sequence; }
+        const regurgitation = window.IRON_PIT_BROWSER_SWALLOW?.resolveEndTurnRegurgitation(
+          sequence, round, member, setup,
+        );
+        if (regurgitation) { events.push(...regurgitation.events); sequence = regurgitation.sequence; }
         const triggered = window.IRON_PIT_BROWSER_TRIGGERED_EXTRA_ATTACKS?.resolveAfterTurn(sequence, round, member, setup);
         if (triggered) { events.push(...triggered.events); sequence = triggered.sequence; }
         const legend = window.IRON_PIT_BROWSER_LEGENDARY_ACTIONS?.resolveAfterTurn(sequence, round, member, setup);
