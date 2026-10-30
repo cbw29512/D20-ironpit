@@ -81,7 +81,13 @@ def resolve_attack(
         expanded_critical = natural >= attacker.template.progression_features.critical_hit_minimum
         target_ac = effective_armor_class(actual_defender); hit = not natural_1 and (natural_20 or attack_roll.total >= target_ac)
         hit, parry_used = resolve_parry_hit(actual_defender, attack, attack_roll.total, natural, hit)
-        if parry_used: target_ac += actual_defender.template.parry_reaction.ac_bonus
+        defensive_reaction_id = None
+        if parry_used:
+            parry = actual_defender.template.parry_reaction
+            if parry is None:
+                raise RuntimeError("Parry reaction disappeared after resolution.")
+            target_ac += parry.ac_bonus
+            defensive_reaction_id = parry.source_feature
         hit, peerless_aim_used = resolve_peerless_aim_miss(attacker, hit)
         critical = bool(hit and (expanded_critical or (close_hit_is_automatic_critical(actual_defender) and distance_ft <= 5)))
         hp_before = actual_defender.current_hp; temporary_hp_before = actual_defender.temporary_hp
@@ -124,6 +130,7 @@ def resolve_attack(
             max_hp_before=max_hp_before, max_hp_after=max_hp_after, temporary_hp_before=temporary_hp_before,
             death_success_before=death_success_before, death_failure_before=death_failure_before,
             feature_id=feature_id, resource_remaining=resource_remaining,
+            defensive_reaction_id=defensive_reaction_id,
             concentration_before=concentration_before, description=description,
         )
     except Exception as exc:
