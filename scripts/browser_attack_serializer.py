@@ -43,6 +43,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                 "targetFilter": {"excludedCreatureTypes": list(rider.target_filter.excluded_creature_types), "excludedTags": list(rider.target_filter.excluded_tags)},
                 "failureEffects": [failure_effect_row(effect) for effect in rider.failure_effects],
             }
+            if rider.forbid_target_ongoing_hp_loss_id is not None:
+                save_row["forbidTargetOngoingHpLossId"] = rider.forbid_target_ongoing_hp_loss_id
             if rider.severe_failure_margin is not None:
                 save_row["severeFailureMargin"] = rider.severe_failure_margin
                 save_row["severeFailureEffects"] = [failure_effect_row(effect) for effect in rider.severe_failure_effects]
