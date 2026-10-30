@@ -59,3 +59,44 @@ def test_start_turn_aura_does_not_reach_beyond_emanation() -> None:
     )
     assert events == [] and sequence == 1
     assert "poisoned" not in wolf.state.active_effect_ids
+
+
+def test_chain_devil_unnerving_gaze_spends_reaction_and_grants_source_immunity() -> None:
+    try:
+        chain_template = build_combatant_from_capabilities("srd-chain-devil")
+        wolf_template = build_combatant_from_capabilities("srd-wolf")
+        gaze = next(
+            aura for aura in chain_template.start_turn_save_condition_auras
+            if aura.name == "Unnerving Gaze"
+        )
+        assert gaze.requires_source_reaction is True
+        assert gaze.expiry_timing == "target_turn_end"
+        assert gaze.success_grants_source_immunity is True
+
+        chain = _member(chain_template, "chain", "monsters", 0)
+        wolf = _member(wolf_template, "wolf", "heroes", 30)
+        chain.state.reaction_available = True
+        setup = EncounterSetup(
+            heroes=[wolf], monsters=[chain], hero_total_levels=1, monster_total_cr="8",
+        )
+
+        events, sequence = resolve_start_turn_save_condition_auras(
+            1, 1, wolf, setup, FixedDiceProvider([20]),
+        )
+        assert sequence == 2 and len(events) == 1
+        assert events[0].feature_id == "unnerving-gaze"
+        assert events[0].save_succeeded is True
+        assert chain.state.reaction_available is False
+        assert "chain:unnerving-gaze" in wolf.state.source_effect_immunities
+
+        chain.state.reaction_available = True
+        again, next_sequence = resolve_start_turn_save_condition_auras(
+            sequence, 2, wolf, setup, FixedDiceProvider([1]),
+        )
+        assert again == []
+        assert next_sequence == sequence
+        assert chain.state.reaction_available is True
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Chain Devil Unnerving Gaze regression failed.")
+        raise
