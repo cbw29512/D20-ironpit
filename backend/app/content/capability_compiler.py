@@ -44,6 +44,8 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
             resource_id=definition.resource_id,
             resource_cost=definition.resource_cost,
             magical_effect=definition.magical_effect,
+            starts_concentration=definition.starts_concentration,
+            concentration_duration_rounds=definition.concentration_duration_rounds,
             animation=definition.animation,
         )
     except Exception as exc:
