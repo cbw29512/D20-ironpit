@@ -73,7 +73,7 @@ window.IRON_PIT_BROWSER_DEATH_TRIGGERS = {
   },
 };
 
-load("browser-multiattack.js");
+load("browser-attack-reaction-chain.js", "browser-multiattack.js");
 const result = window.IRON_PIT_BROWSER_MULTIATTACK.resolveAttackAction(1, 1, attacker, setup);
 
 assert.deepEqual(result.events.map((event) => event.event_type), ["attack", "saving_throw"]);
