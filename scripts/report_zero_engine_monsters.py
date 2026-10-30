@@ -10,6 +10,7 @@ from app.content.monster_bonus_action_source_audit import (
     parse_bonus_action_names,
 )
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
+from app.content.monster_source_charge_riders import parse_charge_replacement
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_limited_use_source_audit import parse_limited_use_names
 from app.content.monster_reaction_source_audit import (
@@ -68,8 +69,27 @@ def _reaction_is_modeled(row: dict[str, object], reactions: list[str]) -> bool:
 
 
 def _unmodeled_action_rider(actions: str) -> bool:
-    sanitized = _SUPPORTED_BLOODIED_REPLACEMENT.sub("damage", actions)
-    return bool(_HIDDEN_RIDER.search(sanitized))
+    try:
+        sanitized = _SUPPORTED_BLOODIED_REPLACEMENT.sub("damage", actions)
+        charge = parse_charge_replacement(actions)
+        if charge is not None and charge.replacement_damage is not None:
+            replacement = charge.replacement_damage
+            dice = rf"{replacement.dice_count}\\s*d\\s*{replacement.dice_size}"
+            if replacement.damage_bonus:
+                sign = r"\\+" if replacement.damage_bonus > 0 else "-"
+                dice += rf"\\s*{sign}\\s*{abs(replacement.damage_bonus)}"
+            charge_clause = re.compile(
+                rf"\\bdamage,?\\s+or\\s+\\d+\\s*\\(\\s*{dice}\\s*\\)\\s+"
+                rf"{re.escape(replacement.damage_type)}\\s+damage\\s+if\\s+the\\s+[^.]+?\\s+moved\\s+"
+                rf"{charge.minimum_move_ft}\\+\\s*feet\\s+straight\\s+toward\\s+the\\s+target\\s+"
+                r"immediately\\s+before\\s+the\\s+hit",
+                re.IGNORECASE,
+            )
+            sanitized = charge_clause.sub("damage", sanitized)
+        return bool(_HIDDEN_RIDER.search(sanitized))
+    except Exception:
+        logger.exception("Failed to evaluate source action-rider coverage.")
+        raise
 
 
 def _source_blockers(row: dict[str, object], monster_names: set[str]) -> list[str]:
