@@ -5,7 +5,7 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
-from app.content.monster_reaction_arena_policy import arena_unavailable_reaction
+from app.content.monster_reaction_arena_policy import arena_neutral_reaction, arena_unavailable_reaction
 from app.content.monster_reaction_aura_source import reaction_start_turn_aura_matches
 from app.content.monster_riposte_source import riposte_matches
 from app.domain.models import CombatantTemplate
@@ -29,7 +29,6 @@ _REDIRECT_ATTACK = re.compile(
     r"The goblin and that ally swap places, and the ally becomes the target of the attack instead\.",
     re.IGNORECASE,
 )
-_ARENA_NEUTRAL_REACTIONS = frozenset({"Shriek"})
 
 def _slug(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
@@ -75,21 +74,6 @@ def _redirect_matches(template: CombatantTemplate, source: object) -> bool:
                 and reaction.ally_max_size.value == "medium")
 
 
-def arena_neutral_reaction(name: str, source_reactions: object) -> bool:
-    """Accept a reaction only when its printed trigger cannot occur on the standard Pit board."""
-    try:
-        text = str(source_reactions or "").strip()
-        names = parse_reaction_names(text)
-        return (
-            names == [name]
-            and "Trigger:" in text
-            and "while underwater" in text.lower()
-        )
-    except Exception as exc:
-        logger.exception("Failed to classify arena-neutral reaction %r.", name)
-        raise RuntimeError("Reaction arena-neutral policy could not be evaluated.") from exc
-
-
 def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     source = row.get("reactions", "")
     expected = parse_reaction_names(source)
@@ -102,8 +86,7 @@ def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list
         issues.append("unexpected-redirect-attack-reaction")
     for name in expected:
         if (
-            name in _ARENA_NEUTRAL_REACTIONS
-            or arena_neutral_reaction(name, source)
+            arena_neutral_reaction(name, source, expected)
             or arena_unavailable_reaction(name, source)
         ):
             continue
