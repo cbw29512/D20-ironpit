@@ -1416,6 +1416,11 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                     "damageType": action.damage_type,
                     "maxSwallowed": action.max_swallowed,
                     "exitMovementFt": action.exit_movement_ft,
+                    "regurgitationDamageThreshold": action.regurgitation_damage_threshold,
+                    "regurgitationSaveAbility": action.regurgitation_save_ability,
+                    "regurgitationSaveDc": action.regurgitation_save_dc,
+                    "regurgitationRangeFt": action.regurgitation_range_ft,
+                    "regurgitationAllSwallowed": action.regurgitation_all_swallowed,
                     "blindsAndRestrains": action.blinds_and_restrains,
                     "grantsTotalExternalCover": action.grants_total_external_cover,
                 }
