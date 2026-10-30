@@ -72,6 +72,18 @@ def _runtime_bonus_save(template: CombatantTemplate, name: str) -> bool:
         raise RuntimeError("Bonus Action save binding could not be evaluated.") from exc
 
 
+def _runtime_bonus_support(template: CombatantTemplate, name: str) -> bool:
+    try:
+        base = _base_name(name)
+        return any(
+            action.name == base and action.action_cost == "bonus_action"
+            for action in template.support_actions
+        )
+    except Exception as exc:
+        logger.exception("Failed to inspect support Bonus Action binding for %s.", template.id)
+        raise RuntimeError("Support Bonus Action binding could not be evaluated.") from exc
+
+
 def _runtime_triggered_bonus_attack(template: CombatantTemplate, name: str) -> bool:
     try:
         base = _base_name(name)
@@ -115,6 +127,7 @@ def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> 
                 arena_neutral_bonus_action(name)
                 or _runtime_bonus_save(template, name)
                 or _runtime_bonus_swallow(template, name)
+                or _runtime_bonus_support(template, name)
                 or _runtime_triggered_bonus_attack(template, name)
             ):
                 continue
