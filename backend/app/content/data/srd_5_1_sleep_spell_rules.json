@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "ruleset": "2014",
+  "spell_id": "sleep",
+  "spell_level": 1,
+  "casting_action": "action",
+  "range_ft": 90,
+  "area_shape": "radius",
+  "area_radius_ft": 20,
+  "pool_dice_count": 5,
+  "pool_dice_size": 8,
+  "pool_extra_dice_per_upcast_level": 2,
+  "duration_rounds": 10,
+  "concentration": false,
+  "target_order": "ascending_current_hp",
+  "skip_unconscious": true,
+  "requires_full_current_hp_coverage": true,
+  "ends_on_damage": true,
+  "allowed_removal_action_ids": [
+    "wake-sleeper"
+  ],
+  "excluded_creature_types": [
+    "undead"
+  ],
+  "excluded_condition_immunities": [
+    "charmed"
+  ],
+  "condition_id": "unconscious",
+  "source_url": "https://www.dndbeyond.com/sources/dnd/basic-rules-2014/spells",
+  "source_version": "2014 Basic Rules"
+}
