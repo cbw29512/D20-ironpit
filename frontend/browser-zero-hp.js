@@ -148,12 +148,13 @@
     }
   }
 
-  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null, damageComponents = []) {
+  function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null, damageComponents = [], sourceId = null) {
     const incoming = amount;
     if (!incoming || state.is_dead) return "damaged";
     noteRegenTypes(state, damageTypes);
     const damageBefore = { ...(state.damage_taken_this_turn_by_type || {}) };
     noteTurnDamage(state, incoming, damageTypes, damageComponents);
+    window.IRON_PIT_BROWSER_TURN_DAMAGE_SOURCE?.note(state, incoming, sourceId);
     const damageEffects = state.template.damage_taken_timed_effects || [];
     if (damageEffects.length && !window.IRON_PIT_BROWSER_DAMAGE_TAKEN_EFFECTS) throw new Error("Declared damage-triggered timed effects require browser-damage-taken-effects.js.");
     window.IRON_PIT_BROWSER_DAMAGE_TAKEN_EFFECTS?.apply(state, damageBefore);

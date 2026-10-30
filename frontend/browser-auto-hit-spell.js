@@ -58,7 +58,7 @@
     }
 
     const states = [...setup.heroes, ...setup.monsters].map((entry) => entry.state);
-    A().applyDamage(target.state, total, false, total > 0 ? [action.damageType] : [], states, setup, components);
+    A().applyDamage(target.state, total, false, total > 0 ? [action.damageType] : [], states, setup, components, caster.combatant_id);
     if (alternate?.resource_id) caster.state.resources[resourceId] -= (alternate.resource_cost || 1);
     else if (!alternate) {
       C().markSlotSpellCast(caster.state, turnKey);

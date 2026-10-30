@@ -90,6 +90,7 @@ def resolve_persistent_hazard_entries(
                     damage_types={DamageType(hazard.damage_type)},
                     dice=dice,
                     affected_states=affected_states,
+                    source_id=hazard.source_id,
                 )
             hazard.remaining_damage_capacity = max(
                 0, hazard.remaining_damage_capacity - applied_total,

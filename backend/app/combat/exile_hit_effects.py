@@ -74,6 +74,7 @@ def apply_exile_hit_riders(
                     damage_types={rule.hit_damage_type},
                     dice=dice,
                     affected_states=affected_states,
+                    source_id=attacker_id,
                 )
         for condition_id in rule.apply_condition_ids:
             apply_timed_condition(

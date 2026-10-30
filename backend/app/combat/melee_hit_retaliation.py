@@ -79,6 +79,7 @@ def apply_melee_hit_retaliation(
                     damage_types={DamageType(rule.damage_type)},
                     dice=dice,
                     affected_states=affected_states,
+                    source_id=defender.combatant_id,
                 )
             total += applied
         return total

@@ -88,7 +88,9 @@ def resolve_attack_effects(
     try:
         result = AttackEffectResolution()
         if not hit:
-            graze = resolve_graze_miss(attacker, defender, attack, dice, affected_states)
+            graze = resolve_graze_miss(
+                attacker, defender, attack, dice, affected_states, attacker_event_id,
+            )
             if graze is not None:
                 result.damage_roll, result.damage_components, result.damage_outcome = graze
                 end_rage_if_incapacitated(defender)

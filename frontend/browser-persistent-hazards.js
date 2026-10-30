@@ -117,7 +117,9 @@
       const before = mover.state.current_hp;
       const resolved = DD().resolveDamage(mover.state, raw, item.damageType);
       const applied = resolved.applied;
-      if (applied > 0) A().applyDamage(mover.state, applied, false, [item.damageType], states);
+      if (applied > 0) A().applyDamage(
+        mover.state, applied, false, [item.damageType], states, setup, [], item.sourceId,
+      );
       item.remainingDamageCapacity = Math.max(0, item.remainingDamageCapacity - applied);
       const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(mover.state) || "";
       events.push({

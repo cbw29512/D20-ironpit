@@ -46,7 +46,10 @@
     };
     const states = ctx.setup ? [...ctx.setup.heroes, ...ctx.setup.monsters].map((member) => member.state) : [];
     const appliedTypes = appliedTotal > 0 ? [ctx.attack.damageType] : [];
-    outcome.damageOutcome = A().applyDamage(target, appliedTotal, false, appliedTypes, states);
+    outcome.damageOutcome = A().applyDamage(
+      target, appliedTotal, false, appliedTypes, states, ctx.setup || null, [],
+      ctx.member.combatant_id,
+    );
     return O().noEventResult(ctx.sequence);
   }
 

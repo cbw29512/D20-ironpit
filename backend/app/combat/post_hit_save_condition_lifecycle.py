@@ -40,13 +40,13 @@ def start_of_turn_save_condition_damage(
     member: EncounterCombatant,
     setup: EncounterSetup,
     dice,
-) -> list[tuple[str, int, str]]:
+) -> list[tuple[str, int, str, str]]:
     """Apply printed start-of-turn damage while the save-condition remains active."""
     try:
         match = _linked_action(member, setup)
         if match is None:
             return []
-        _source, action, concentration = match
+        source, action, concentration = match
         if action.start_of_turn_dice_count <= 0:
             return []
         if action.failed_condition_id not in member.state.active_effect_ids:
@@ -56,7 +56,7 @@ def start_of_turn_save_condition_damage(
             0, slot - action.level
         )
         total = roll_dice(dice, count, action.start_of_turn_dice_size)
-        return [(action.name, total, action.start_of_turn_damage_type)]
+        return [(action.name, total, action.start_of_turn_damage_type, source.combatant_id)]
     except Exception:
         logger.exception("Start-of-turn save-condition damage failed for %s.", member.combatant_id)
         raise

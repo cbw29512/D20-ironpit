@@ -28,7 +28,10 @@
           const total = rolls.reduce((sum, roll) => sum + roll, 0);
           const hpBefore = target.state.current_hp;
           const result = DD().resolveDamage(target.state, total, rule.damage_type);
-          A().applyDamage(target.state, result.applied, false, [rule.damage_type], affected, setup);
+          A().applyDamage(
+            target.state, result.applied, false, [rule.damage_type], affected, setup, [],
+            member.combatant_id,
+          );
           events.push({
             sequence: sequence++, round_number: round, event_type: "feature",
             actor_id: member.combatant_id, actor_name: state.template.name,

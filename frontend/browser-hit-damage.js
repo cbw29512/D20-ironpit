@@ -186,6 +186,7 @@
     )];
     let damageOutcome = A().applyDamage(
       defender, appliedTotal, critical, appliedTypes, options.affectedStates || [], options.setup || null, damageComponents,
+      sourceMember?.combatant_id || null,
     );
     window.IRON_PIT_BROWSER_HUNTERS_MARK_SPLASH?.resolve(
       attacker, null, options.targetId, damageComponents, turnKey, options.setup,

@@ -72,7 +72,10 @@ def resolve_divine_spark(
     })]
     if applied_total:
         states = [member.state for member in [*setup.heroes, *setup.monsters]]
-        apply_damage(target.state, applied_total, damage_types={damage_type}, dice=dice, affected_states=states)
+        apply_damage(
+            target.state, applied_total, damage_types={damage_type}, dice=dice,
+            affected_states=states, source_id=cleric.combatant_id,
+        )
     return BattleEvent(
         sequence=sequence, round_number=round_number, event_type="saving_throw",
         actor_id=cleric.combatant_id, actor_name=cleric.state.template.name,

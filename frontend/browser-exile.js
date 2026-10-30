@@ -53,7 +53,8 @@
         const affected = [...(ctx.setup?.heroes || []), ...(ctx.setup?.monsters || [])]
           .map((item) => item.state);
         window.IRON_PIT_BROWSER_ZERO_HP.applyDamage(
-          target.state, applied, false, [rule.hit_damage_type], affected, ctx.setup,
+          target.state, applied, false, [rule.hit_damage_type], affected, ctx.setup, [],
+          member.combatant_id,
         );
       }
     }
@@ -129,7 +130,8 @@
             rolls, modifier: effect.return_damage_bonus || 0, total: applied,
           };
           if (applied) window.IRON_PIT_BROWSER_ZERO_HP.applyDamage(
-            target.state, applied, false, [effect.return_damage_type], states,
+            target.state, applied, false, [effect.return_damage_type], states, ctx.setup, [],
+            ctx.member.combatant_id,
           );
         }
         events.push({

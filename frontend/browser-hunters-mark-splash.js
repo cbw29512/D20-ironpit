@@ -49,7 +49,7 @@
       ).applied;
       window.IRON_PIT_BROWSER_ATTACK.applyDamage(
         splashTarget.state, applied, false, [mark.damage_type],
-        members(setup).map((item) => item.state), setup,
+        members(setup).map((item) => item.state), setup, [], source.combatant_id,
       );
       return { targetId: splashTarget.combatant_id, applied };
     } catch (error) {

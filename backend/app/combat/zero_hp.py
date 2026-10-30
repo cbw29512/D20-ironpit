@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Literal
 from app.combat.turn_damage import note_turn_damage_and_trigger
+from app.combat.turn_damage_source import note_damage_source
 from app.combat.self_buff_lifecycle import sync_hp_ended_self_buffs
 from app.combat.concentration import resolve_concentration_damage
 from app.combat.condition_immunity import condition_is_immune
@@ -141,6 +142,7 @@ def apply_damage(
     affected_states: list[CombatantState] | None = None,
     setup=None,
     damage_components: list[DamageRollComponent] | None = None,
+    source_id: str | None = None,
 ) -> ZeroHpOutcome:
     """Apply Temporary HP, Concentration, and SRD 5.2.1 zero-HP lifecycle rules."""
     try:
@@ -155,6 +157,7 @@ def apply_damage(
         lost_last_head = note_turn_damage_and_trigger(
             state, incoming, types, damage_components,
         )
+        note_damage_source(state, incoming, source_id)
         if lost_last_head:
             return _finish_damage(
                 state, _mark_dead(state), incoming, dice, affected_states,

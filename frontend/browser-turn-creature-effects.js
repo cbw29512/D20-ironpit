@@ -104,7 +104,10 @@
         const raw = sharedRolls.reduce((sum, value) => sum + value, 0);
         const resolvedDamage = DD().resolveDamage(target.state, raw, rider.damage_type);
         const appliedDamage = resolvedDamage.applied;
-        if (appliedDamage) A().applyDamage(target.state, appliedDamage, false, [rider.damage_type], affectedStates);
+        if (appliedDamage) A().applyDamage(
+          target.state, appliedDamage, false, [rider.damage_type], affectedStates, setup, [],
+          source.combatant_id,
+        );
         damageRoll = { notation: `${sharedRolls.length}d${rider.dice_size}`, rolls: [...sharedRolls], modifier: 0, total: appliedDamage };
         damageComponents = [{
           source: rider.source_id, notation: damageRoll.notation, rolls: [...sharedRolls], modifier: 0,

@@ -90,6 +90,7 @@ def resolve_turning_saves(
                         damage_types={damage_type},
                         dice=dice,
                         affected_states=affected_states,
+                        source_id=source.combatant_id,
                     )
                 damage_roll = DiceRoll(
                     notation=raw.notation,

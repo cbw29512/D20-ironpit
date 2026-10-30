@@ -20,6 +20,7 @@ def _apply_typed_damage(
     multiplier: float,
     dice,
     affected_states: list[CombatantState],
+    source_id: str | None,
 ) -> tuple[DiceRoll, list[DamageRollComponent]]:
     """Roll one deferred damage packet, apply save scaling, then shared defenses."""
     try:
@@ -42,6 +43,7 @@ def _apply_typed_damage(
             damage_types={damage_type},
             dice=dice,
             affected_states=affected_states,
+            source_id=source_id,
         )
         return (
             DiceRoll(
@@ -63,6 +65,7 @@ def resolve_deferred_effect_outcome(
     succeeded: bool,
     dice,
     affected_states: list[CombatantState],
+    source_id: str | None = None,
 ) -> tuple[DiceRoll | None, list[DamageRollComponent]]:
     """Apply one configured deferred save outcome through shared damage/zero-HP rules."""
     try:
@@ -83,6 +86,7 @@ def resolve_deferred_effect_outcome(
                 multiplier=multiplier,
                 dice=dice,
                 affected_states=affected_states,
+                source_id=source_id,
             )
 
         if succeeded and rule.success_damage_dice_count:
@@ -99,6 +103,7 @@ def resolve_deferred_effect_outcome(
                 multiplier=1.0,
                 dice=dice,
                 affected_states=affected_states,
+                source_id=source_id,
             )
 
         if not succeeded and rule.failure_sets_zero_hp:

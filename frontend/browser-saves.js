@@ -85,6 +85,7 @@
         {
           sharedDamageRolls: options.sharedDamageRolls,
           setup: options.setup || null,
+          sourceId: actor.combatant_id,
         },
       );
       const effectResult = effects.apply(

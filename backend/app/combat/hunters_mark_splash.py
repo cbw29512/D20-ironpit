@@ -68,6 +68,7 @@ def resolve_hunters_mark_splash(
             splash_target.state, applied, critical=False,
             damage_types={splash.damage_type}, dice=dice,
             affected_states=affected_states, setup=setup,
+            source_id=attacker_id,
         )
         return adjusted[0] if adjusted else splash.model_copy(update={"applied_total": applied})
     except Exception:

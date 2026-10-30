@@ -71,6 +71,7 @@ def resolve_emanation_hit(
                 dice=dice,
                 affected_states=[member.state for member in [*setup.heroes, *setup.monsters]],
                 setup=setup,
+                source_id=source.combatant_id,
             )
         distance = combatant_distance(source, target)
         event = BattleEvent(
