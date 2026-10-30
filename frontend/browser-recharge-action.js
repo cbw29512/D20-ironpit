@@ -21,6 +21,19 @@
       && RES().available(member.state, action.resourceId, action.resourceCost || 1));
   }
 
+  function resourceRank(member, resourceId) {
+    try {
+      if (!resourceId) throw new Error("Recharge action is missing its resource id.");
+      const ids = Object.keys(rechargeDefinitions(member));
+      const index = ids.indexOf(resourceId);
+      if (index < 0) throw new Error(`Recharge resource ${resourceId} is not declared on the combatant.`);
+      return index;
+    } catch (error) {
+      console.error("Failed browser Recharge source-priority probe", { member: member.combatant_id, resourceId, error });
+      throw error;
+    }
+  }
+
   function rechargeSaveChoice(member, setup) {
     try {
       for (const target of F().targetOrder(member, setup)) {
@@ -59,31 +72,49 @@
     }
   }
 
+  function choiceResourceId(kind, payload) {
+    if (kind === "attack") return payload.attack.resourceId;
+    if (kind === "save") return payload.action.resourceId;
+    if (kind === "area-save") return payload.action.resourceId;
+    throw new Error(`Unsupported Recharge action family: ${kind}`);
+  }
+
   function resolve(sequence, round, member, setup, turnKey) {
     try {
       const save = rechargeSaveChoice(member, setup);
       const areaSave = rechargeAreaSaveChoice(member, setup);
       const attack = F().chooseRechargeAttack(member, setup);
-      const legal = [save && "save", areaSave && "area-save", attack && "attack"].filter(Boolean);
-      if (legal.length > 1) throw new Error("Multiple legal Recharge action families require source-priority metadata.");
-      if (save) {
-        const event = V().resolveAction(sequence, round, member, save.target, save.action, save.distance);
+      const legal = [
+        save && { kind: "save", payload: save },
+        areaSave && { kind: "area-save", payload: areaSave },
+        attack && { kind: "attack", payload: attack },
+      ].filter(Boolean);
+      legal.sort((first, second) => resourceRank(member, choiceResourceId(first.kind, first.payload))
+        - resourceRank(member, choiceResourceId(second.kind, second.payload)));
+      const chosen = legal[0] || null;
+      if (!chosen) return { events: [], sequence, handled: false };
+
+      if (chosen.kind === "save") {
+        const { target, action, distance } = chosen.payload;
+        const event = V().resolveAction(sequence, round, member, target, action, distance);
         return { events: [event], sequence: sequence + 1, handled: true };
       }
-      if (areaSave) {
-        const result = T().resolveArea(sequence, round, member, setup, areaSave.action, { placement: areaSave.placement });
+      if (chosen.kind === "area-save") {
+        const { action, placement } = chosen.payload;
+        const result = T().resolveArea(sequence, round, member, setup, action, { placement });
         return { events: result.events, sequence: result.sequence, handled: true };
       }
-      if (attack) {
-        const pack = S().packTactics(member, attack.target, setup);
+      if (chosen.kind === "attack") {
+        const { target, attack, distance } = chosen.payload;
+        const pack = S().packTactics(member, target, setup);
         const opener = C()?.openingFeature?.(round, member, setup) || null;
-        const result = U().resolve(sequence, round, member, attack.target, attack.attack, attack.distance, setup, turnKey, {
+        const result = U().resolve(sequence, round, member, target, attack, distance, setup, turnKey, {
           advantage: pack ? 1 : 0,
           featureId: opener || (pack ? "pack-tactics" : null),
         });
         return { events: result.events, sequence: result.sequence, handled: true };
       }
-      return { events: [], sequence, handled: false };
+      throw new Error(`Unsupported Recharge action family: ${chosen.kind}`);
     } catch (error) {
       console.error("Failed browser Recharge action resolution", { member: member.combatant_id, error });
       throw error;
