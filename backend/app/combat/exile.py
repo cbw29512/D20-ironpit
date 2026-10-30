@@ -139,6 +139,7 @@ def resolve_source_exile_returns(
                         damage_types={effect.return_damage_type},
                         dice=dice,
                         affected_states=states,
+                        source_id=source.combatant_id,
                     )
             events.append(BattleEvent(
                 sequence=sequence,
