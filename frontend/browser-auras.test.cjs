@@ -47,4 +47,42 @@ const blocked = window.IRON_PIT_BROWSER_AURAS.turnEnd(2, 2, source, setup);
 assert.equal(blocked.events.length, 0);
 assert.equal(target.state.current_hp, 13);
 
-console.log("Browser end-turn damage aura uses the shared ongoing-damage pipeline and honors Incapacitated suppression.");
+
+const barbed = {
+  combatant_id: "barbed", side: "monsters", position_ft: 5,
+  state: {
+    current_hp: 40, is_alive: true, is_dead: false, grapple_sources: [],
+    template: {
+      name: "Barbed Devil", damage_resistances: [], damage_vulnerabilities: [], damage_immunities: [],
+      start_turn_grapple_contact_damage: {
+        id: "barbed-hide", name: "Barbed Hide",
+        damage_dice_count: 1, damage_dice_size: 10, damage_bonus: 0, damage_type: "piercing",
+      },
+    },
+  },
+};
+const contactTarget = {
+  combatant_id: "contact-hero", side: "heroes", position_ft: 5,
+  state: {
+    current_hp: 20, is_alive: true, is_dead: false,
+    grapple_sources: [{ source_id: "barbed", escape_dc: 13, range_ft: 5 }],
+    template: { name: "Contact Hero", damage_resistances: [], damage_vulnerabilities: [], damage_immunities: [] },
+  },
+};
+const contactSetup = { heroes: [contactTarget], monsters: [barbed] };
+const ownerContact = window.IRON_PIT_BROWSER_AURAS.grappleTurnStart(3, 3, barbed, contactSetup);
+assert.equal(ownerContact.sequence, 4);
+assert.equal(ownerContact.events.length, 1);
+assert.equal(ownerContact.events[0].feature_id, "barbed-hide");
+assert.equal(contactTarget.state.current_hp, 13);
+
+contactTarget.state.current_hp = 20;
+contactTarget.state.grapple_sources = [];
+barbed.state.grapple_sources = [{ source_id: "contact-hero", escape_dc: 13, range_ft: 5 }];
+const reverseContact = window.IRON_PIT_BROWSER_AURAS.grappleTurnStart(4, 4, barbed, contactSetup);
+assert.equal(reverseContact.sequence, 5);
+assert.equal(reverseContact.events.length, 1);
+assert.equal(reverseContact.events[0].feature_id, "barbed-hide");
+assert.equal(contactTarget.state.current_hp, 13);
+
+console.log("Browser damage auras include grapple-contact start-turn parity.");
