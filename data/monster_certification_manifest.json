@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 207,
-    "blocked": 123
+    "public_ready": 208,
+    "blocked": 122
   },
   "monsters": [
     {
@@ -4340,22 +4340,16 @@
         "limited-use"
       ],
       "supported_mechanics": [
-        "attack-roll"
-      ],
-      "unsupported_mechanics": [
+        "attack-roll",
         "bonus-action",
         "limited-use"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "bonus-action",
-        "limited-use",
-        "uncertified-bonus-action:rampage",
-        "uncertified-limited-use:bonusactions-rampage-1-day"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-goat",
