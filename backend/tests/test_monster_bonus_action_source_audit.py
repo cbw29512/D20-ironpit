@@ -90,3 +90,12 @@ def test_ignited_illumination_is_arena_neutral_bonus_action() -> None:
         assert bonus_action_issues(magmin, _row("Magmin")) == []
     except Exception:
         raise
+
+
+def test_blink_dog_teleport_is_arena_neutral_bonus_action() -> None:
+    try:
+        blink = _monster("Blink Dog")
+        assert blink.source_bonus_action_names == ["Teleport (Recharge 4-6)"]
+        assert bonus_action_issues(blink, _row("Blink Dog")) == []
+    except Exception:
+        raise
