@@ -20,6 +20,7 @@ from app.domain.reactions import ParryReaction, RedirectAttackReaction
 from app.domain.size import CreatureSize
 from app.domain.spells import DefensiveSpellAction, SpellSaveAction
 from app.domain.swallow import SwallowAction
+from app.domain.support_actions import CombatSupportAction
 from app.domain.traits import CombatTrait
 from app.domain.unarmed import UnarmedStrikeDamage
 from app.domain.weapons import DamageType
@@ -50,6 +51,7 @@ class CombatantDefinition(BaseModel):
     save_actions: list[SaveCapabilityDefinition] = Field(default_factory=list)
     forced_movement_actions: list[ForcedMovementAction] = Field(default_factory=list)
     swallow_actions: list[SwallowAction] = Field(default_factory=list)
+    support_actions: list[CombatSupportAction] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
