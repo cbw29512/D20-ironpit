@@ -34,7 +34,7 @@ window.IRON_PIT_DICE = { rollMany: () => [1, 2] };
 
 load("browser-area-shapes.js");
 load("browser-area-targeting.js");
-load("browser-area-save-actions.js");
+load("browser-area-save-choice.js", "browser-area-save-actions.js");
 
 function member(id, side, x, y) {
   return {
