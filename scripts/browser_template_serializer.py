@@ -221,6 +221,18 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["start_turn_save_condition_auras"] = [_start_turn_aura_row(aura) for aura in template.start_turn_save_condition_auras]
         if template.roll_advantage_auras:
             row["roll_advantage_auras"] = [_roll_advantage_aura_row(aura) for aura in template.roll_advantage_auras]
+        if template.triggered_bonus_attacks:
+            row["triggered_bonus_attacks"] = [
+                {
+                    "id": feature.id,
+                    "name": feature.name,
+                    "trigger": feature.trigger,
+                    "attackId": feature.attack_id,
+                    "resourceId": feature.resource_id,
+                    "resourceCost": feature.resource_cost,
+                }
+                for feature in template.triggered_bonus_attacks
+            ]
         if template.kind == "monster":
             row["source_trait_names"] = list(template.source_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
