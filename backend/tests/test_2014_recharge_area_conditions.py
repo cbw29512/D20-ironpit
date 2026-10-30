@@ -114,3 +114,36 @@ def test_vrock_shared_bindings_clear_recharge_and_extra_action_blockers() -> Non
     except Exception:
         logger.exception("Vrock blocker regression failed.")
         raise
+
+
+def test_recharge_area_control_dc_comes_from_source_not_monster_identity() -> None:
+    """Source edits should change the universal save DC rather than use a monster constant."""
+    try:
+        import re
+
+        for monster_name, action_id, current_dc in (
+            ("Dust Mephit", "blinding-breath", 10),
+            ("Vrock", "spores", 14),
+        ):
+            monster = _monster(monster_name)
+            baseline = {
+                action.id: action
+                for action in source_proven_recharge_area_conditions_2014(monster)
+            }
+            assert action_id in baseline
+            assert baseline[action_id].dc == current_dc
+            printed = monster.source_actions or ""
+            assert f"DC {current_dc}" in printed
+            changed = re.sub(
+                rf"DC {current_dc}(?!\\d)", f"DC {current_dc + 1}", printed, count=1
+            )
+            altered = monster.model_copy(update={"source_actions": changed})
+            rebound = {
+                action.id: action
+                for action in source_proven_recharge_area_conditions_2014(altered)
+            }
+            assert action_id in rebound
+            assert rebound[action_id].dc == current_dc + 1
+    except Exception:
+        logger.exception("Recharge area control source DC regression failed.")
+        raise
