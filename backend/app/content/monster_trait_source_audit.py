@@ -112,7 +112,6 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
             issues.append(f"uncertified-trait:{slug}")
     return issues
-
 @lru_cache(maxsize=1)
 def _rows_by_name() -> dict[str, dict[str, object]]:
     return {str(row["name"]): row for row in load_monster_rows()}
