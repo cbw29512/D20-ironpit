@@ -10,7 +10,7 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 for (const file of [
   "browser-heroes.js", "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
-  "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-attack.js",
+  "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-self-hit-modifiers.js", "browser-attack.js",
 ]) load(file);
 
 const M = window.IRON_PIT_BROWSER_MODIFIERS;
@@ -92,7 +92,7 @@ const nextAttack = (expires = 2) => ({
 {
   const pirate = member("pirate", "heroes", 0), target = member("target", "monsters", 5);
   const attack = pirate.state.template.attacks.find((item) => item.id === pirate.state.template.primary_attack_id);
-  M.applySelfHitEffects(pirate.state, "pirate", {
+  window.IRON_PIT_BROWSER_SELF_HIT_MODIFIERS.apply(pirate.state, "pirate", {
     id: "pirate-rapier",
     onHitSelfModifiers: [{
       kind: "next-attack-advantage",
