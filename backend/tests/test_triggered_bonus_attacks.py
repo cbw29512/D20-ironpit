@@ -67,6 +67,7 @@ def test_rampage_source_binds_real_attack_and_daily_resource() -> None:
             assert attack.weapon.name == attack_name
             assert resource.max_uses == 1
             assert resource.recharge is None
+            assert feature.resource_id == resource.id
     except Exception:
         logger.exception("Rampage source binding regression failed.")
         raise
