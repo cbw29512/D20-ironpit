@@ -35,6 +35,8 @@ class CombatModifier(BaseModel):
     expires_at_start_of_source_turn: bool = False
     expires_at_end_of_target_turn: bool = False
     expires_source_turn_end_round: int | None = Field(default=None, ge=1)
+    expires_current_turn_end_owner_id: str | None = None
+    expires_current_turn_end_round: int | None = Field(default=None, ge=1)
 
     @model_validator(mode="after")
     def validate_payload(self) -> "CombatModifier":
@@ -66,6 +68,8 @@ class CombatModifier(BaseModel):
             raise ValueError("Target-scoped attack Advantage requires a target id.")
         if self.consume_on_attack_against and self.kind is not ModifierKind.ATTACKS_AGAINST_ADVANTAGE:
             raise ValueError("Only attack-advantage defender modifiers can use consume_on_attack_against.")
+        if (self.expires_current_turn_end_owner_id is None) != (self.expires_current_turn_end_round is None):
+            raise ValueError("Current-turn modifier expiry requires both owner id and round.")
         return self
 
 
