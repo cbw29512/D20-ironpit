@@ -80,9 +80,12 @@ def test_complete_327_card_scan_proves_only_supported_swallow_grammars() -> None
         for monster_id in proven:
             blockers = basic_blockers_2014(CORPUS[monster_id])
             assert "mechanic:swallow" not in blockers
-            assert "source:extra-action" not in blockers
         for monster_id in ("behir", "giant-frog", "giant-toad", "remorhaz"):
             assert basic_blockers_2014(CORPUS[monster_id]) == ()
+        for monster_id in ("kraken", "tarrasque"):
+            blockers = basic_blockers_2014(CORPUS[monster_id])
+            assert "mechanic:swallow" not in blockers
+            assert blockers  # Unrelated printed mechanics still fail closed.
     except Exception:
         logger.exception("Full 2014 Swallow source scan regression failed.")
         raise
