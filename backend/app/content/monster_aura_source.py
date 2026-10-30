@@ -54,6 +54,7 @@ def source_end_turn_damage_auras(name: str) -> list[EndTurnDamageAura]:
         damage_dice_count=int(match.group("count")), damage_dice_size=int(match.group("size")),
         damage_bonus=bonus, damage_type=DamageType(match.group("dtype").lower()),
         disabled_while_incapacitated="incapacitated condition" in match.group("tail").lower(),
+        applies_burning=("start " + "burn" + "ing") in match.group("tail").lower(),
     )]
 
 
