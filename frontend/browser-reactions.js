@@ -69,5 +69,24 @@
     });
   }
 
-  window.IRON_PIT_BROWSER_REACTIONS = { opportunityAttackWeapon, parryHit, redirectAttack, resolveOpportunityAttack };
+
+  function resolveOpportunityAttackChain(sequence, round, reactor, mover, setup, before, after, movementSource, options = {}) {
+    try {
+      const attack = opportunityAttackWeapon(reactor, mover, before, after, movementSource, options);
+      if (!attack) return { events: [], sequence };
+      E().spend(reactor.state, "reaction");
+      const pack = S().packTactics(reactor, mover, setup);
+      return window.IRON_PIT_BROWSER_ATTACK_REACTION_CHAIN.resolve(
+        sequence, round, reactor, mover, attack, before, setup, {
+          spendAction: false, advantage: pack ? 1 : 0, featureId: "opportunity-attack",
+          turnKey: options.turnKey || null, offTurn: true,
+        },
+      );
+    } catch (error) {
+      console.error("Failed browser Opportunity Attack reaction chain.", { reactor: reactor?.combatant_id, error });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_REACTIONS = { opportunityAttackWeapon, parryHit, redirectAttack, resolveOpportunityAttack, resolveOpportunityAttackChain };
 })();
