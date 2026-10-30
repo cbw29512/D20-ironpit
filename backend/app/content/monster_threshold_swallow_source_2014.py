@@ -20,7 +20,7 @@ class ThresholdSwallowProof2014:
     damage_dice_count: int
     damage_dice_size: int
     damage_type: str
-    max_swallowed: int
+    max_swallowed: int | None
     exit_movement_ft: int
     damage_threshold: int
     save_dc: int
@@ -84,7 +84,11 @@ def threshold_swallow_source_2014(
         )
         if attack is None:
             return None
-        max_swallowed = int(data.get("max_swallowed", 1) or 1) if isinstance(data, dict) else 1
+        one_creature_cap = (
+            "can have only one creature swallowed at a time" in text.casefold()
+            or "can have only one target swallowed at a time" in text.casefold()
+        )
+        max_swallowed = 1 if one_creature_cap else None
 
         if isinstance(data, dict):
             expected = {
@@ -104,9 +108,6 @@ def threshold_swallow_source_2014(
             }
             if any(data.get(key) != value for key, value in expected.items()):
                 return None
-        elif "can have only one creature swallowed at a time" not in text.casefold():
-            return None
-
         standalone = any(
             name.split(" (", 1)[0].casefold() == "swallow"
             for name in monster.action_names
