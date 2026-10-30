@@ -40,6 +40,7 @@ def aura_row(aura: Any) -> dict[str, Any]:
             "damage_bonus": aura.damage_bonus,
             "damage_type": aura.damage_type.value,
             "disabled_while_incapacitated": aura.disabled_while_incapacitated,
+            "applies_burning": aura.applies_burning,
         }
     except Exception:
         logger.exception("Failed to serialize damage aura %s.", getattr(aura, "id", "<unknown>"))
