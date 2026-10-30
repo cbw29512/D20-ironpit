@@ -126,7 +126,6 @@ def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> 
         logger.exception("Failed to audit Bonus Actions for %s.", template.id)
         raise RuntimeError("Monster Bonus Action audit could not be evaluated.") from exc
 
-
 @lru_cache(maxsize=1)
 def _rows_by_name() -> dict[str, dict[str, object]]:
     return {str(row["name"]): row for row in load_monster_rows()}
