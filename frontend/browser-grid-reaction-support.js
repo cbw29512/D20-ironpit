@@ -56,14 +56,14 @@
         const wasProne = mover.state.active_effect_ids.includes("prone");
         for (const reactor of reactors) {
           if (!reactor.state.position) continue;
-          const event = reactions()?.resolveOpportunityAttack(
+          const chain = reactions()?.resolveOpportunityAttackChain(
             sequence, round, reactor, mover, setup,
             distanceToPosition(reactor, mover, beforePosition),
             distanceToPosition(reactor, mover, destination),
             movementSource, options,
           );
-          if (!event) continue;
-          events.push(event); sequence += 1;
+          if (!chain?.events.length) continue;
+          events.push(...chain.events); sequence = chain.sequence;
           const newlyProne = !wasProne && mover.state.active_effect_ids.includes("prone");
           if (mover.state.is_dead || mover.state.is_unconscious || grapple()?.speedIsZero(mover.state) || newlyProne) {
             return { events, sequence, movement: lastMovement };
