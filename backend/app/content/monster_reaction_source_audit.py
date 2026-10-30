@@ -30,10 +30,8 @@ _REDIRECT_ATTACK = re.compile(
 )
 _ARENA_NEUTRAL_REACTIONS = frozenset({"Shriek"})
 
-
 def _slug(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
-
 
 def _reaction_heading_matches(text: str) -> list[tuple[int, str]]:
     matches = [
