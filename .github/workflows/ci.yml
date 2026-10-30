@@ -542,6 +542,7 @@ jobs:
           node frontend/browser-attack-damage-reduction.test.cjs
           node frontend/browser-weapon-corrosion.test.cjs
           node frontend/browser-swallow-state.test.cjs
+          node frontend/browser-swallow-advanced.test.cjs
           node frontend/browser-corrosion-roll-integration.test.cjs
           node frontend/browser-armor-corrosion.test.cjs
           node frontend/browser-attack-damage-redirect.test.cjs
