@@ -19,7 +19,8 @@ from app.content.monster_source_save_count import source_action_save_count
 from app.content.monster_spellcasting_source_audit import spellcasting_issues
 from app.content.monster_swallow_source_audit import swallow_action_issues
 from app.content.monster_trait_source_audit import trait_issues
-from app.content.movement_modes import movement_mode_issues, standard_arena_closing_speed
+from app.content.monster_movement_source_audit import movement_mode_issues
+from app.content.movement_modes import standard_arena_closing_speed
 from app.domain.models import CombatantTemplate, WeaponAttackKind
 from app.domain.traits import CombatTrait
 
