@@ -120,7 +120,15 @@
           appliedConditions.push(...F().apply(target, actor.combatant_id, action.id, action.failureEffects, { round, range: action.range }));
         }
         movementFt = pushAway(actor, target, action);
-        if (action.grappleEscapeDc) appliedConditions.push(...G().apply(target.state, actor.combatant_id, action.grappleEscapeDc, action.range, Boolean(action.restrainsWhileGrappled)));
+        if (action.grappleEscapeDc) appliedConditions.push(...G().apply(
+          target.state,
+          actor.combatant_id,
+          action.grappleEscapeDc,
+          action.range,
+          Boolean(action.restrainsWhileGrappled),
+          action.grappleLinkedConditions || [],
+          action.id,
+        ));
         const affectedStates = states(options.setup);
         window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
       }
