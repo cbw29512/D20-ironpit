@@ -83,15 +83,15 @@ def _unmodeled_action_rider(actions: str) -> bool:
         charge = parse_charge_replacement(actions)
         if charge is not None and charge.replacement_damage is not None:
             replacement = charge.replacement_damage
-            dice = rf"{replacement.dice_count}\\s*d\\s*{replacement.dice_size}"
+            dice = rf"{replacement.dice_count}\s*d\s*{replacement.dice_size}"
             if replacement.damage_bonus:
-                sign = r"\\+" if replacement.damage_bonus > 0 else "-"
-                dice += rf"\\s*{sign}\\s*{abs(replacement.damage_bonus)}"
+                sign = r"\+" if replacement.damage_bonus > 0 else "-"
+                dice += rf"\s*{sign}\s*{abs(replacement.damage_bonus)}"
             charge_clause = re.compile(
-                rf"\\bdamage,?\\s+or\\s+\\d+\\s*\\(\\s*{dice}\\s*\\)\\s+"
-                rf"{re.escape(replacement.damage_type)}\\s+damage\\s+if\\s+the\\s+[^.]+?\\s+moved\\s+"
-                rf"{charge.minimum_move_ft}\\+\\s*feet\\s+straight\\s+toward\\s+the\\s+target\\s+"
-                r"immediately\\s+before\\s+the\\s+hit",
+                rf"\bdamage,?\s+or\s+\d+\s*\(\s*{dice}\s*\)\s+"
+                rf"{re.escape(replacement.damage_type)}\s+damage\s+if\s+the\s+[^.]+?\s+moved\s+"
+                rf"{charge.minimum_move_ft}\+\s*feet\s+straight\s+toward\s+the\s+target\s+"
+                r"immediately\s+before\s+the\s+hit",
                 re.IGNORECASE,
             )
             sanitized = charge_clause.sub("damage", sanitized)
