@@ -54,3 +54,18 @@ def test_in_combat_staged_save_does_not_use_out_of_match_fallback() -> None:
     condition = save.failure_effects[0]
     assert condition.repeat_save_timing == "target_turn_end"
     assert condition.repeat_save_failure_condition == "stunned"
+
+def test_self_next_attack_advantage_compiles_with_source_turn_end_expiry() -> None:
+    try:
+        effects = parse_attack_riders(
+            "Hit: 13 (2d8 + 4) Piercing damage, and the pirate has Advantage "
+            "on the next attack roll it makes before the end of this turn."
+        )
+
+        modifier = next(effect for effect in effects if effect.kind == "next-attack-advantage")
+        assert modifier.recipient == "source"
+        assert modifier.expires_at_end_of_source_turn is True
+        assert modifier.expires_at_start_of_source_turn is False
+        assert modifier.expires_at_end_of_target_turn is False
+    except Exception:
+        raise
