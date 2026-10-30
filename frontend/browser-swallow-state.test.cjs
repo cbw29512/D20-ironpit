@@ -111,4 +111,44 @@ for(const [file,needle] of [
   ["browser-formation.js","target.state.swallowed == null"],
   ["browser-spell-offense.js","candidate.state.swallowed == null"],
 ]) assert.ok(fs.readFileSync(path.join(__dirname,file),"utf8").includes(needle),`${file} must enforce total external cover`);
+
+// Threshold regurgitation uses only damage attributed to the swallowed creature.
+const regurgOwner={is_alive:true,is_dead:false,current_hp:150,template:{name:"Container",size:"huge",attacks:[{id:"bite"}]},
+  swallowed_target_ids:[],damage_taken_this_turn_by_source:{}};
+const regurgA={is_alive:true,is_dead:false,current_hp:40,template:{name:"Inside A",size:"medium"},
+  active_effect_ids:[],grapple_sources:[],timed_effects:[],swallowed:null};
+const regurgB={is_alive:true,is_dead:false,current_hp:40,template:{name:"Inside B",size:"medium"},
+  active_effect_ids:[],grapple_sources:[],timed_effects:[],swallowed:null};
+const regurgAction={sourceName:"Swallow",attackId:"bite",requiresExistingGrapple:true,maxTargetSize:"medium",
+  damageDiceCount:6,damageDiceSize:6,damageType:"acid",maxSwallowed:2,exitMovementFt:15,
+  regurgitationDamageThreshold:30,regurgitationSaveAbility:"constitution",regurgitationSaveDc:15,
+  regurgitationRangeFt:10,regurgitationAllSwallowed:true};
+window.IRON_PIT_BROWSER_GRAPPLE.apply(regurgA,"container",15,5,true);
+window.IRON_PIT_BROWSER_GRAPPLE.apply(regurgB,"container",15,5,true);
+assert.equal(swallow.swallowAfterBite("container",regurgOwner,"inside-a",regurgA,regurgAction,true),true);
+assert.equal(swallow.swallowAfterBite("container",regurgOwner,"inside-b",regurgB,regurgAction,true),true);
+const regurgSetup={heroes:[
+  {combatant_id:"inside-a",state:regurgA},
+  {combatant_id:"inside-b",state:regurgB},
+],monsters:[{combatant_id:"container",state:regurgOwner}]};
+let saveArgs=null;
+window.IRON_PIT_BROWSER_SAVING_THROWS={resolveSavingThrow:(state,ability,dc)=>{
+  saveArgs={state,ability,dc}; return {roll:{total:1},succeeded:false};
+}};
+regurgOwner.damage_taken_this_turn_by_source={"other":100,"inside-a":29};
+let regurg=swallow.resolveEndTurnRegurgitation(10,3,regurgSetup.heroes[0],regurgSetup);
+assert.equal(regurg.events.length,0);
+assert.ok(regurgA.swallowed && regurgB.swallowed);
+regurgOwner.damage_taken_this_turn_by_source["inside-a"]=30;
+regurg=swallow.resolveEndTurnRegurgitation(10,3,regurgSetup.heroes[0],regurgSetup);
+assert.equal(regurg.sequence,11);
+assert.equal(regurg.events[0].save_succeeded,false);
+assert.equal(saveArgs.state,regurgOwner);
+assert.equal(saveArgs.ability,"constitution");
+assert.equal(saveArgs.dc,15);
+assert.equal(regurgA.swallowed,null);
+assert.equal(regurgB.swallowed,null);
+assert.ok(regurgA.active_effect_ids.includes("prone"));
+assert.ok(regurgB.active_effect_ids.includes("prone"));
+
 console.log("Browser Swallow state parity and source-owned size/capacity checks pass.");
