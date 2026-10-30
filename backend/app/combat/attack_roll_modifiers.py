@@ -4,6 +4,19 @@ from app.domain.modifiers import ModifierKind
 from app.domain.runtime import CombatantState
 
 
+def attack_roll_advantage_sources(state: CombatantState) -> int:
+    """Count persistent source-neutral attack-roll Advantage modifiers."""
+    try:
+        return sum(
+            1 for item in state.active_modifiers
+            if item.kind is ModifierKind.ATTACK_ROLL_ADVANTAGE
+        )
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Failed to count attack-roll Advantage modifiers.")
+        raise
+
+
 def next_attack_advantage_sources(state: CombatantState) -> int:
     """Count source-neutral modifiers that grant Advantage on this creature's next attack."""
     return sum(1 for item in state.active_modifiers if item.kind is ModifierKind.NEXT_ATTACK_ADVANTAGE)
