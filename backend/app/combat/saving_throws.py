@@ -87,6 +87,8 @@ def resolve_save_action(
                 applied_conditions.extend(apply_grapple(
                     target.state, actor.combatant_id, action.grapple_escape_dc, action.range_ft,
                     restrains=action.restrains_while_grappled,
+                    linked_conditions=action.grapple_linked_conditions,
+                    source_effect_id=action.id,
                 ))
         applied_conditions = list(dict.fromkeys(applied_conditions))
         distance_after = abs(target.position_ft - actor.position_ft) if tracks_push else None
