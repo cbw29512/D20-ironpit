@@ -38,12 +38,13 @@
   function resolve(sequence, round, attacker, target, attack, distance, setup, extra = {}, depth = 0) {
     try {
       if (depth > MAX_DEPTH) throw new Error("Maximum browser immediate reaction depth exceeded.");
-      const event = A().resolveAttack(sequence++, round, attacker, target, attack, distance, { ...extra, setup });
+      const turnOwnerId = extra.turnOwnerId || (extra.offTurn ? null : attacker.combatant_id);
+      const event = A().resolveAttack(sequence++, round, attacker, target, attack, distance, { ...extra, setup, turnOwnerId });
       const events = [event], counter = plan(event, attacker, setup);
       if (!counter) return { events, sequence };
       const more = resolve(sequence, round, counter.reactor, attacker, counter.attack, counter.distance, setup, {
         spendAction: false, featureId: counter.rule.source_feature || "parry", turnKey: extra.turnKey || null,
-        ignoreCloseThreat: false, allowReckless: false, offTurn: true,
+        ignoreCloseThreat: false, allowReckless: false, offTurn: true, turnOwnerId,
       }, depth + 1);
       events.push(...more.events);
       return { events, sequence: more.sequence };
