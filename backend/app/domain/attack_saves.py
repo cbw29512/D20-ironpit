@@ -12,6 +12,7 @@ class OnHitSavingThrow(BaseModel):
     dc: int = Field(ge=1, le=40)
     magical_effect: bool = False
     target_filter: TargetFilter = Field(default_factory=TargetFilter)
+    forbid_target_ongoing_hp_loss_id: str | None = None
     failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
     severe_failure_margin: int | None = Field(default=None, ge=1, le=20)
     severe_failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
