@@ -1,5 +1,6 @@
 import pytest
 
+from app.combat.concentration import end_concentration
 from app.combat.dice import FixedDiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.modifier_stack import effective_armor_class
@@ -105,3 +106,41 @@ def test_shield_of_faith_uses_real_modifier_attack_and_concentration_paths() -> 
     assert caster.state.concentration is None
     assert caster.state.active_modifiers == []
     assert effective_armor_class(caster.state) == caster.state.template.armor_class
+
+
+def test_condition_buff_uses_generic_timed_condition_and_explicit_resource() -> None:
+    try:
+        spell = DefensiveSpellAction(
+            id="condition-buff",
+            name="Condition Buff",
+            level=2,
+            action_cost="bonus_action",
+            resource_id="innate-buff",
+            duration_minutes=60,
+            condition_ids=["invisible"],
+            concentration=True,
+            priority=50,
+        )
+        base = build_karnok_stoneward()
+        template = base.model_copy(update={
+            "defensive_spell_actions": [spell],
+            "resources": [ResourceDefinition(id="innate-buff", name="Innate Buff", max_uses=2)],
+        })
+        caster = EncounterCombatant(
+            combatant_id="caster", side="heroes", position_ft=0,
+            state=build_combatant_state(template),
+        )
+        setup = _setup(caster)
+
+        events, _ = prepare_defenses(setup)
+
+        assert events[0].feature_id == "condition-buff"
+        assert "invisible" in caster.state.active_effect_ids
+        assert any(effect.source_effect_id == "condition-buff" for effect in caster.state.timed_effects)
+        assert caster.state.concentration is not None
+        assert next(item for item in caster.state.resources if item.id == "innate-buff").current_uses == 1
+
+        end_concentration(caster.state, [caster.state, setup.monsters[0].state])
+        assert "invisible" not in caster.state.active_effect_ids
+    except Exception:
+        raise
