@@ -6,6 +6,7 @@ from typing import Any
 from app.domain.models import CombatantTemplate
 from browser_action_serializer import defense_row, healing_row, removal_row, spell_attack_row, spell_save_row
 from browser_template_common_serializer import automatic_spell_row
+from browser_timed_self_buff_serializer import timed_self_buff_row
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +23,10 @@ def extend_action_rows(row: dict[str, Any], template: CombatantTemplate) -> None
             ]
         if template.defensive_spell_actions:
             row["defensive_spell_actions"] = [defense_row(item) for item in template.defensive_spell_actions]
+        if template.timed_self_buff_actions:
+            row["timed_self_buff_actions"] = [
+                timed_self_buff_row(item) for item in template.timed_self_buff_actions
+            ]
         if template.healing_actions:
             row["healingActions"] = [healing_row(item) for item in template.healing_actions]
         if template.condition_removal_actions:
