@@ -29,9 +29,12 @@ def resolve_attack_event_chain(
     try:
         if reaction_depth > _MAX_REACTION_DEPTH:
             raise RuntimeError("Maximum immediate reaction depth exceeded.")
+        turn_owner_id = attack_options.get("turn_owner_id")
+        if turn_owner_id is None and not attack_options.get("off_turn", False):
+            turn_owner_id = attacker.combatant_id
         event = resolve_encounter_attack(
             sequence, round_number, attacker, target, attack, distance_ft,
-            dice, setup, **attack_options,
+            dice, setup, **{**attack_options, "turn_owner_id": turn_owner_id},
         )
         events = [event]
         sequence += 1
@@ -53,6 +56,7 @@ def resolve_attack_event_chain(
             close_enemy_active=True,
             allow_reckless=False,
             off_turn=True,
+            turn_owner_id=turn_owner_id,
         )
         events.extend(more)
         return events, sequence
