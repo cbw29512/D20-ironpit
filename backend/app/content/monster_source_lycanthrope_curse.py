@@ -23,7 +23,8 @@ _CURSE_REPLACEMENT = re.compile(
 def lycanthrope_curse_hit_save(text: str) -> HitSavingThrowEffectDefinition | None:
     """Compile the shared curse/replacement lifecycle from printed source text."""
     try:
-        match = _CURSE_REPLACEMENT.search(text)
+        normalized = " ".join(str(text).split())
+        match = _CURSE_REPLACEMENT.search(normalized)
         if match is None:
             return None
         return HitSavingThrowEffectDefinition(
