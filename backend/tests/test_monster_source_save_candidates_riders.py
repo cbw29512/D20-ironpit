@@ -170,3 +170,42 @@ def test_trampling_charge_compiles_as_recharge_bonus_save_with_prone() -> None:
     except Exception:
         logger.exception("Trampling Charge source compilation regression failed.")
         raise
+
+
+def test_engulf_compiles_grapple_lifecycle_and_capacity() -> None:
+    try:
+        row = {
+            "name": "Test Mound",
+            "actions": (
+                "Engulf. Strength Saving Throw: DC 15, one Medium or smaller creature within 5 feet. "
+                "Failure: The target is pulled into the shambling mound’s space and has the Grappled condition "
+                "(escape DC 14). Until the grapple ends, the target has the Blinded and Restrained conditions, "
+                "and it takes 10 (3d6) Lightning damage at the start of each of its turns. "
+                "When the shambling mound moves, the Grappled target moves with it, costing it no extra movement. "
+                "The shambling mound can have only one creature Grappled by this action at a time."
+            ),
+        }
+
+        actions, resources = source_save_candidates(row)
+
+        assert resources == []
+        assert len(actions) == 1
+        action = actions[0]
+        assert action.name == "Engulf"
+        assert action.save_ability == "strength"
+        assert action.dc == 15
+        assert action.range_ft == 5
+        assert action.target_max_size is CreatureSize.MEDIUM
+        assert action.max_active_grapple_targets == 1
+        assert action.grapple is not None
+        assert action.grapple.escape_dc == 14
+        assert action.grapple.restrains is True
+        assert action.grapple.linked_conditions == ["blinded"]
+        assert action.grapple.periodic_damage is not None
+        periodic = action.grapple.periodic_damage
+        assert periodic.timing == "target_turn_start"
+        assert (periodic.dice_count, periodic.dice_size, periodic.damage_bonus) == (3, 6, 0)
+        assert periodic.damage_type == "lightning"
+    except Exception:
+        logger.exception("Engulf grapple lifecycle source regression failed.")
+        raise
