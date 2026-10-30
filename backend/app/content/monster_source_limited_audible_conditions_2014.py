@@ -61,7 +61,7 @@ def source_proven_limited_audible_conditions_2014(
                 dc=int(match["dc"]),
                 range_ft=int(match["radius"]),
                 max_targets=20,
-                target_scope="all-other-creatures",
+                target_scope="enemies",
                 area=AreaTargeting(
                     shape="emanation", origin="self", radius_ft=int(match["radius"]),
                 ),
