@@ -4,6 +4,7 @@ import logging
 import re
 from functools import lru_cache
 
+from app.content.monster_bonus_action_source_audit import arena_neutral_bonus_action
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_daily_use_source_audit import daily_fingerprint_implemented
 from app.content.monster_recharge_source_audit import recharge_fingerprint_implemented
@@ -50,6 +51,16 @@ def parse_limited_use_names(row: dict[str, object]) -> list[str]:
     return names
 
 
+def _arena_neutral_limited_use(fingerprint: str) -> bool:
+    try:
+        if not fingerprint.startswith("bonusActions:"):
+            return False
+        return arena_neutral_bonus_action(fingerprint.split(":", 1)[1])
+    except Exception as exc:
+        logger.exception("Failed to classify arena-neutral limited use %r.", fingerprint)
+        raise RuntimeError("Limited-use arena-neutral policy could not be evaluated.") from exc
+
+
 def _legendary_resistance_implemented(template: CombatantTemplate, fingerprint: str) -> bool:
     match = _LEGENDARY_RESISTANCE.fullmatch(fingerprint.strip())
     if match is None:
@@ -71,6 +82,7 @@ def limited_use_issues(template: CombatantTemplate, row: dict[str, object]) -> l
             recharge_fingerprint_implemented(template, name)
             or daily_fingerprint_implemented(template, name)
             or _legendary_resistance_implemented(template, name)
+            or _arena_neutral_limited_use(name)
         ):
             continue
         slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
