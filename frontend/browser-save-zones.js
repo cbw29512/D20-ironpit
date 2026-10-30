@@ -90,7 +90,9 @@
       damageRoll = { notation: damageComponents[0].notation, rolls, modifier: 0, total: applied };
       if (applied) {
         const states = [...setup.heroes, ...setup.monsters].map((member) => member.state);
-        window.IRON_PIT_BROWSER_ATTACK.applyDamage(target.state, applied, false, [zone.damageType], states, setup);
+        window.IRON_PIT_BROWSER_ATTACK.applyDamage(
+          target.state, applied, false, [zone.damageType], states, setup, [], zone.source_id,
+        );
       }
     }
     const appliedConditions = [];
