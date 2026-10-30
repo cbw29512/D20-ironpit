@@ -13,7 +13,7 @@ def grapple_turn_start_damage(
     member: EncounterCombatant,
     setup: EncounterSetup,
     dice,
-) -> list[tuple[str, int, str]]:
+) -> list[tuple[str, int, str, str]]:
     """Evaluate only active grapple sources on this victim at their turn start."""
     try:
         members = {item.combatant_id: item for item in [*setup.heroes, *setup.monsters]}
@@ -32,7 +32,7 @@ def grapple_turn_start_damage(
             if not member.state.is_alive or member.state.is_dead:
                 break
             total = roll_dice(dice, spec.dice_count, spec.dice_size)
-            packets.append((spec.source_name, total, spec.damage_type))
+            packets.append((spec.source_name, total, spec.damage_type, source.source_id))
         return packets
     except Exception:
         logger.exception("Failed to resolve grapple-linked start-of-turn damage for %s.", member.combatant_id)
