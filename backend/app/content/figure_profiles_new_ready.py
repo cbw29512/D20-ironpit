@@ -18,6 +18,7 @@ NEW_READY_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Copper Dragon Wyrmling": _p("reptile", "copper-dragon"),
     "Death Dog": _p("quadruped", "canine"),
     "Elephant": _p("quadruped", "elephant"),
+    "Fire Elemental": _p("humanoid", "fire-elemental"),
     "Ghast": _p("humanoid", "ghast"),
     "Ghoul": _p("humanoid", "ghoul"),
     "Giant Hyena": _p("quadruped", "hyena"),
