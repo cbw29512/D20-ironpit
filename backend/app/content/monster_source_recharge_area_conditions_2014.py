@@ -72,7 +72,7 @@ def source_proven_recharge_area_conditions_2014(
                     dc=int(cone["dc"]),
                     range_ft=int(cone["area"]),
                     max_targets=20,
-                    target_scope="all-other-creatures",
+                    target_scope="enemies",
                     area=AreaTargeting(
                         shape="cone", origin="self", length_ft=int(cone["area"]),
                     ),
@@ -100,7 +100,7 @@ def source_proven_recharge_area_conditions_2014(
                     dc=int(dot["dc"]),
                     range_ft=int(dot["area"]),
                     max_targets=20,
-                    target_scope="all-other-creatures",
+                    target_scope="enemies",
                     area=AreaTargeting(
                         shape="emanation", origin="self", radius_ft=int(dot["area"]),
                     ),
