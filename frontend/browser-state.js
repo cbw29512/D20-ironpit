@@ -22,6 +22,7 @@
       active_effect_ids: [], active_buff_effect_ids: [], source_effect_immunities: [], opening_buff_spell_id: null,
       grapple_sources: [], swallowed: null, attachment: null, timed_effects: [], active_modifiers: [], concentration: null,
       feature_last_turn_keys: {}, spell_slot_expended_turn_key: null,
+      active_berserk_rule_id: null,
       temporary_damage_resistances: [], damage_types_since_last_turn: [], rage_expires_round: null, rage_max_round: null,
     };
     LEGENDARY()?.initialize(state);
