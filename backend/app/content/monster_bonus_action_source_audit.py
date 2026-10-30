@@ -4,6 +4,7 @@ import logging
 import re
 from functools import lru_cache
 
+from app.content.monster_bonus_support_binding import runtime_bonus_support
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_trait_source_audit import parse_trait_names
 from app.domain.models import CombatantTemplate
@@ -72,18 +73,6 @@ def _runtime_bonus_save(template: CombatantTemplate, name: str) -> bool:
         raise RuntimeError("Bonus Action save binding could not be evaluated.") from exc
 
 
-def _runtime_bonus_support(template: CombatantTemplate, name: str) -> bool:
-    try:
-        base = _base_name(name)
-        return any(
-            action.name == base and action.action_cost == "bonus_action"
-            for action in template.support_actions
-        )
-    except Exception as exc:
-        logger.exception("Failed to inspect support Bonus Action binding for %s.", template.id)
-        raise RuntimeError("Support Bonus Action binding could not be evaluated.") from exc
-
-
 def _runtime_triggered_bonus_attack(template: CombatantTemplate, name: str) -> bool:
     try:
         base = _base_name(name)
@@ -127,7 +116,7 @@ def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> 
                 arena_neutral_bonus_action(name)
                 or _runtime_bonus_save(template, name)
                 or _runtime_bonus_swallow(template, name)
-                or _runtime_bonus_support(template, name)
+                or runtime_bonus_support(template, _base_name(name))
                 or _runtime_triggered_bonus_attack(template, name)
             ):
                 continue
