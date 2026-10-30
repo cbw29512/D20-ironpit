@@ -57,6 +57,7 @@ def clear_turn_damage(setup: EncounterSetup) -> None:
     try:
         for member in [*setup.heroes, *setup.monsters]:
             member.state.damage_taken_this_turn_by_type = {}
+            member.state.damage_taken_this_turn_by_source = {}
     except Exception:
         logger.exception("Failed to clear per-turn typed damage state.")
         raise
