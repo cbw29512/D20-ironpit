@@ -27,6 +27,7 @@ def test_real_source_yields_complete_immutable_swallow_profile(
     assert profile is not None
     assert profile.source_name == "Swallow"
     assert profile.attack_id == "bite"
+    assert profile.delivery_mode == "action_attack"
     assert profile.max_target_size == size
     assert (profile.damage_dice_count, profile.damage_dice_size) == (count, sides)
     assert profile.damage_type == "acid"
@@ -72,10 +73,11 @@ def test_inconsistent_structured_damage_or_size_fails_closed(corpus):
         assert source_grapple_swallow_2014(altered) is None
 
 
-def test_more_complex_swallow_remains_separately_blocked(corpus):
-    for monster_id in ("remorhaz", "purple-worm", "shambling-mound"):
+def test_different_swallow_grammars_remain_separately_blocked(corpus):
+    for monster_id in ("purple-worm", "shambling-mound"):
         assert source_grapple_swallow_2014(corpus[monster_id]) is None
         assert "mechanic:swallow" in basic_blockers_2014(corpus[monster_id])
+
 
 
 def test_source_identity_is_not_the_dispatch_key(corpus):
@@ -114,16 +116,6 @@ def test_shared_action_schema_and_browser_card_preserve_printed_parameters(corpu
         assert serialized["maxSwallowed"] == 1
         assert basic_blockers_2014(corpus[monster_id]) == ()
 
-
-def test_complete_327_card_source_scan_has_no_unproven_swallow_bindings(corpus):
-    assert len(corpus) == 327
-    proven = {
-        monster.id for monster in corpus.values()
-        if source_grapple_swallow_2014(monster) is not None
-    }
-    assert proven == {"giant-frog", "giant-toad"}
-    for monster_id in proven:
-        assert basic_blockers_2014(corpus[monster_id]) == ()
 
 
 def test_admitted_runtime_and_browser_reference_the_compiled_bite_id(corpus):

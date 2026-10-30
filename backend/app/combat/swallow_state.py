@@ -31,7 +31,7 @@ def swallow_after_bite(
         return False
     if not size_at_most(target.template.size, action.max_target_size):
         return False
-    if len(owner.swallowed_target_ids) >= action.max_swallowed:
+    if action.max_swallowed is not None and len(owner.swallowed_target_ids) >= action.max_swallowed:
         return False
     if (action.requires_existing_grapple and not any(
         held.source_id == owner_id for held in target.grapple_sources
@@ -50,6 +50,11 @@ def swallow_after_bite(
         damage_dice_size=action.damage_dice_size,
         damage_type=action.damage_type,
         exit_movement_ft=action.exit_movement_ft,
+        regurgitation_damage_threshold=action.regurgitation_damage_threshold,
+        regurgitation_save_ability=action.regurgitation_save_ability,
+        regurgitation_save_dc=action.regurgitation_save_dc,
+        regurgitation_range_ft=action.regurgitation_range_ft,
+        regurgitation_all_swallowed=action.regurgitation_all_swallowed,
         target_size=action.max_target_size,
     )
     owner.swallowed_target_ids.append(target_id)

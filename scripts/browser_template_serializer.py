@@ -1409,6 +1409,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["swallowActions"] = [
                 {
                     "sourceName": action.source_name, "attackId": action.attack_id,
+                    **({"deliveryMode": action.delivery_mode}
+                       if action.delivery_mode != "action_attack" else {}),
                     "maxTargetSize": action.max_target_size.value,
                     "requiresExistingGrapple": action.requires_existing_grapple,
                     "damageDiceCount": action.damage_dice_count,
@@ -1416,6 +1418,13 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                     "damageType": action.damage_type,
                     "maxSwallowed": action.max_swallowed,
                     "exitMovementFt": action.exit_movement_ft,
+                    **({
+                        "regurgitationDamageThreshold": action.regurgitation_damage_threshold,
+                        "regurgitationSaveAbility": action.regurgitation_save_ability,
+                        "regurgitationSaveDc": action.regurgitation_save_dc,
+                        "regurgitationRangeFt": action.regurgitation_range_ft,
+                        "regurgitationAllSwallowed": action.regurgitation_all_swallowed,
+                    } if action.regurgitation_damage_threshold is not None else {}),
                     "blindsAndRestrains": action.blinds_and_restrains,
                     "grantsTotalExternalCover": action.grants_total_external_cover,
                 }

@@ -9,7 +9,8 @@
   function swallowAfterBite(ownerId, owner, targetId, target, action, hit) {
     if (!hit || !owner.is_alive || owner.is_dead || owner.current_hp <= 0
       || !target.is_alive || target.is_dead || target.current_hp <= 0
-      || target.swallowed || (owner.swallowed_target_ids || []).length >= action.maxSwallowed)
+      || target.swallowed
+      || (action.maxSwallowed != null && (owner.swallowed_target_ids || []).length >= action.maxSwallowed))
       return false;
     if (SIZES.indexOf(target.template.size) < 0 || SIZES.indexOf(action.maxTargetSize) < 0)
       throw new Error("Swallow target or limit must have a certified size.");
@@ -25,6 +26,11 @@
       damage_dice_count: action.damageDiceCount,
       damage_dice_size: action.damageDiceSize, damage_type: action.damageType,
       exit_movement_ft: action.exitMovementFt,
+      regurgitation_damage_threshold: action.regurgitationDamageThreshold || null,
+      regurgitation_save_ability: action.regurgitationSaveAbility || null,
+      regurgitation_save_dc: action.regurgitationSaveDc || null,
+      regurgitation_range_ft: action.regurgitationRangeFt ?? null,
+      regurgitation_all_swallowed: Boolean(action.regurgitationAllSwallowed),
     };
     (owner.swallowed_target_ids ||= []).push(targetId);
     target.active_effect_ids = (target.active_effect_ids || []).filter(c => c !== "dodge");
@@ -115,55 +121,7 @@
       throw error;
     }
   }
-  function choose(member, setup) {
-    try {
-      if (!window.IRON_PIT_ACTION_ECONOMY?.available(member.state, "action")) return null;
-      for (const action of member.state.template.swallowActions || []) {
-        if ((member.state.swallowed_target_ids || []).length >= action.maxSwallowed) continue;
-        const attack = (member.state.template.attacks || []).find(a => a.id === action.attackId);
-        if (!attack || attack.kind !== "melee") throw new Error("Swallow must reference a certified melee Bite.");
-        const maxSize = SIZES.indexOf(action.maxTargetSize);
-        if (maxSize < 0) throw new Error("Swallow has an uncertified target size.");
-        const opponents = member.side === "heroes" ? setup.monsters : setup.heroes;
-        for (const target of opponents) {
-          const state = target.state;
-          if (!state.is_alive || state.is_dead || state.current_hp <= 0 || state.swallowed) continue;
-          if (SIZES.indexOf(state.template.size) < 0) throw new Error("Swallow target size is uncertified.");
-          if (SIZES.indexOf(state.template.size) > maxSize) continue;
-          if (action.requiresExistingGrapple && !(state.grapple_sources || []).some(g => g.source_id === member.combatant_id)) continue;
-          const distance = window.IRON_PIT_BROWSER_STATE.distance(member, target);
-          if (distance > (attack.reach || 5)) continue;
-          return { action, attack, target, distance };
-        }
-      }
-      return null;
-    } catch (error) {
-      console.error("Browser Swallow action discovery failed.", {combatant: member?.combatant_id, error});
-      throw error;
-    }
-  }
-  function resolve(sequence, round, member, setup, turnKey, targetId, attackId) {
-    try {
-      const chosen = choose(member, setup);
-      if (!chosen || chosen.target.combatant_id !== targetId || chosen.action.attackId !== attackId)
-        throw new Error("Swallow candidate is no longer legal.");
-      const bite = {...chosen.attack, controlEffect: null, grappleTargetPolicy: "normal"};
-      const event = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(
-        sequence, round, member, chosen.target, bite, chosen.distance,
-        {spendAction: true, setup, turnKey, featureId: "swallow"},
-      );
-      if (event.hit && swallowAfterBite(member.combatant_id, member.state, targetId,
-        chosen.target.state, chosen.action, true)) {
-        event.description += ` ${chosen.target.state.template.name} is swallowed: Blinded, Restrained, and protected by total external cover.`;
-        event.applied_condition_ids = [...new Set([...(event.applied_condition_ids || []), "blinded", "restrained"])];
-      }
-      return {events: [event], sequence: sequence + 1};
-    } catch (error) {
-      console.error("Browser Swallow action resolution failed.", {combatant: member?.combatant_id, error});
-      throw error;
-    }
-  }
   window.IRON_PIT_BROWSER_SWALLOW = {
-    swallowAfterBite, release, cleanup, sourceTurnDamage, choose, resolve,
+    swallowAfterBite, release, cleanup, sourceTurnDamage,
   };
 })();

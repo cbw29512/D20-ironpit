@@ -59,7 +59,7 @@
       id: "swallow", category: C().SWALLOW, rulesets: ["2014"],
       discover: ({member, setup}) => {
         if (!(member.state.template.swallowActions || []).length) return null;
-        const runtime = window.IRON_PIT_BROWSER_SWALLOW;
+        const runtime = window.IRON_PIT_BROWSER_SWALLOW_ACTION;
         if (!runtime?.choose) throw new Error("Swallow action resolver is not loaded.");
         const selected = runtime.choose(member, setup);
         return selected ? {payload: {
@@ -68,7 +68,7 @@
         }} : null;
       },
       resolve: ({sequence, round, member, setup, turnKey}, candidate) => {
-        const runtime = window.IRON_PIT_BROWSER_SWALLOW;
+        const runtime = window.IRON_PIT_BROWSER_SWALLOW_ACTION;
         if (!runtime?.resolve) throw new Error("Swallow action resolver is not loaded.");
         return runtime.resolve(sequence, round, member, setup, turnKey,
           candidate.payload.targetId, candidate.payload.attackId);

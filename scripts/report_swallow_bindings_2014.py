@@ -13,23 +13,20 @@ BACKEND = ROOT / "backend"
 if str(BACKEND) not in sys.path:
     sys.path.insert(0, str(BACKEND))
 
-from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
-from app.content.capability_compiler import compile_combatant
+from app.content.demo import build_demo_fighter
 from app.content.monster_grapple_swallow_source_2014 import source_grapple_swallow_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_sections_2014 import source_sections_2014
+from app.domain.swallow_actions import swallow_action_from_source
 from browser_template_serializer import template_row
-
 OUTPUT = ROOT / "docs/generated/SWALLOW_BINDINGS_2014.json"
 _SEMANTIC = re.compile(r"\b(?:swallow(?:s|ed)?|engulf(?:s|ed)?)\b", re.I)
-
 
 def _source_text(monster) -> str:
     sections = source_sections_2014(monster.source_actions, include_continuations=True)
     selected = [text for heading, text in sections.items()
                 if _SEMANTIC.search(heading) or _SEMANTIC.search(text)]
     return " ".join(" ".join(text.split()) for text in selected)
-
 
 def _incompatibility(monster) -> str:
     if not monster.swallow_actions:
@@ -42,7 +39,6 @@ def _incompatibility(monster) -> str:
     if data.get("regurgitation_damage_threshold") is not None:
         return "damage_threshold_regurgitation_profile_not_supported"
     return "source_profile_not_supported"
-
 
 def build_report() -> dict[str, object]:
     monsters = load_monster_source_2014()
@@ -62,6 +58,7 @@ def build_report() -> dict[str, object]:
         if profile is not None:
             parameters = {
                 "attack_id": profile.attack_id,
+                "delivery_mode": profile.delivery_mode,
                 "max_target_size": profile.max_target_size.value,
                 "damage_dice": f"{profile.damage_dice_count}d{profile.damage_dice_size}",
                 "damage_type": profile.damage_type,
@@ -69,10 +66,21 @@ def build_report() -> dict[str, object]:
                 "exit_movement_ft": profile.exit_movement_ft,
                 "requires_existing_grapple": True,
             }
+            if profile.regurgitation_damage_threshold is not None:
+                parameters.update({
+                    "regurgitation_damage_threshold": profile.regurgitation_damage_threshold,
+                    "regurgitation_save_ability": profile.regurgitation_save_ability,
+                    "regurgitation_save_dc": profile.regurgitation_save_dc,
+                    "regurgitation_range_ft": profile.regurgitation_range_ft,
+                    "regurgitation_all_swallowed": profile.regurgitation_all_swallowed,
+                })
+            action = swallow_action_from_source(profile).model_copy(update={
+                "attack_id": f"2014-{monster.id}-{profile.attack_id}",
+            })
             serialized = template_row(
-                compile_combatant(adapt_monster_mechanics_2014(monster))
+                build_demo_fighter().model_copy(update={"swallow_actions": [action]})
             ).get("swallowActions", [])
-            browser_wired = len(serialized) == 1 and serialized[0] == {
+            expected = {
                 "sourceName": profile.source_name,
                 "attackId": f"2014-{monster.id}-{profile.attack_id}",
                 "requiresExistingGrapple": True,
@@ -85,6 +93,17 @@ def build_report() -> dict[str, object]:
                 "grantsTotalExternalCover": True,
                 "blindsAndRestrains": True,
             }
+            if profile.delivery_mode != "action_attack":
+                expected["deliveryMode"] = profile.delivery_mode
+            if profile.regurgitation_damage_threshold is not None:
+                expected.update({
+                    "regurgitationDamageThreshold": profile.regurgitation_damage_threshold,
+                    "regurgitationSaveAbility": profile.regurgitation_save_ability,
+                    "regurgitationSaveDc": profile.regurgitation_save_dc,
+                    "regurgitationRangeFt": profile.regurgitation_range_ft,
+                    "regurgitationAllSwallowed": profile.regurgitation_all_swallowed,
+                })
+            browser_wired = len(serialized) == 1 and serialized[0] == expected
         if not (python_wired and browser_wired):
             exceptions.append({"card_id": monster.id, "reason": _incompatibility(monster)})
         rows.append({
@@ -109,10 +128,8 @@ def build_report() -> dict[str, object]:
         "status": "partial" if len(wired) != len(rows) else "complete",
     }
 
-
 def render() -> str:
     return json.dumps(build_report(), indent=2, sort_keys=True) + "\n"
-
 
 def main() -> int:
     parser = argparse.ArgumentParser()

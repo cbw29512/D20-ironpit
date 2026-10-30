@@ -8,7 +8,6 @@ from app.combat.swallow_state import release_swallowed
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent, DamageType
 
-
 def release_invalid_swallowed(setup: EncounterSetup) -> list[str]:
     """Clear swallowed ownership after death; never change immutable cards."""
     members = {m.combatant_id: m for m in [*setup.heroes, *setup.monsters]}

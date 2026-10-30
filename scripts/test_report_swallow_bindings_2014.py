@@ -13,12 +13,14 @@ def test_swallow_inventory_covers_all_semantic_source_cards():
         "remorhaz", "shambling-mound", "tarrasque",
     ]
     assert data["applicable_card_count"] == 8
-    assert data["wired_python_card_count"] == 2
-    assert data["wired_browser_card_count"] == 2
-    assert data["wired_cards"] == ["giant-frog", "giant-toad"]
-    assert data["remaining_card_count"] == 6
+    assert data["wired_python_card_count"] == 6
+    assert data["wired_browser_card_count"] == 6
+    assert data["wired_cards"] == [
+        "behir", "giant-frog", "giant-toad", "kraken", "remorhaz", "tarrasque",
+    ]
+    assert data["remaining_card_count"] == 2
     assert {item["card_id"] for item in data["exceptions"]} == {
-        "behir", "kraken", "purple-worm", "remorhaz", "shambling-mound", "tarrasque",
+        "purple-worm", "shambling-mound",
     }
     assert data["status"] == "partial"
 

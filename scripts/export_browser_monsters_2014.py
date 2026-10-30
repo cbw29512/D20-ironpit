@@ -11,8 +11,7 @@ from browser_template_serializer import template_row
 logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parents[1]
 DESTINATION = ROOT / "frontend" / "browser-monsters-2014.js"
-# Lock the isolated 2014 browser export to the currently certified basic roster size.
-_EXPECTED_COUNT = 251
+_EXPECTED_COUNT = 253
 
 
 def _add_charge_follow_up_metadata(template, row: dict[str, object]) -> None:
