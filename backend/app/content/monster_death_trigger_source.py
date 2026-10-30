@@ -66,3 +66,19 @@ def parse_death_trigger_effects(source_traits: object) -> list[DeathTriggeredSav
     except Exception as exc:
         logger.exception("Failed to parse source death-trigger effects.")
         raise RuntimeError("Source death-trigger effects could not be parsed.") from exc
+
+
+def death_trigger_trait_issues(
+    template: object,
+    row: dict[str, object],
+) -> tuple[list[str], set[str]]:
+    """Audit source/runtime death-trigger parity and return certified source headings."""
+    try:
+        expected = parse_death_trigger_effects(row.get("traits", ""))
+        runtime = getattr(template, "death_trigger_effects", [])
+        if runtime != expected:
+            return ["death-trigger-source-data-mismatch"], set()
+        return [], {effect.name for effect in expected}
+    except Exception as exc:
+        logger.exception("Failed death-trigger trait audit for %s.", getattr(template, "id", "<unknown>"))
+        raise RuntimeError("Death-trigger trait audit failed.") from exc
