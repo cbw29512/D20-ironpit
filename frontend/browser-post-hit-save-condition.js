@@ -105,7 +105,7 @@
         const applied = resolvedDamage.applied;
         A().applyDamage(
           member.state, applied, false, [action.start_of_turn_damage_type],
-          members(setup).map((item) => item.state), setup,
+          members(setup).map((item) => item.state), setup, [], source.combatant_id,
         );
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
