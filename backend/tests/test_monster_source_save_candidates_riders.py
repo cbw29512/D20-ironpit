@@ -104,3 +104,33 @@ def test_pure_damage_save_remains_rider_free() -> None:
     except Exception:
         logger.exception("Pure-damage save regression failed.")
         raise
+
+
+def test_bonus_action_grapple_save_compiles_with_size_range_and_escape_dc() -> None:
+    try:
+        row = {
+            "name": "Test Stalker",
+            "actions": "",
+            "bonusActions": (
+                "Quick Grapple. Dexterity Saving Throw: DC 13, "
+                "one Medium or smaller creature the stalker can see within 10 feet. "
+                "Failure: The target has the Grappled condition (escape DC 13)."
+            ),
+        }
+        actions, resources = source_save_candidates(row)
+
+        assert resources == []
+        assert len(actions) == 1
+        action = actions[0]
+        assert action.name == "Quick Grapple"
+        assert action.action_cost == "bonus_action"
+        assert action.save_ability == "dexterity"
+        assert action.dc == 13
+        assert action.range_ft == 10
+        assert action.target_max_size is CreatureSize.MEDIUM
+        assert action.grapple is not None
+        assert action.grapple.escape_dc == 13
+        assert action.grapple.max_target_size is CreatureSize.MEDIUM
+    except Exception:
+        logger.exception("Bonus Action grapple-save candidate regression failed.")
+        raise
