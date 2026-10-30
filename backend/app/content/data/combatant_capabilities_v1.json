@@ -4387,6 +4387,7 @@
             "consume_on_attack_against": false,
             "expires_at_start_of_source_turn": false,
             "expires_at_end_of_source_turn": false,
+            "expires_at_end_of_current_turn": false,
             "expires_at_end_of_target_turn": true
           }
         ],
@@ -4436,6 +4437,7 @@
             "consume_on_attack_against": false,
             "expires_at_start_of_source_turn": false,
             "expires_at_end_of_source_turn": false,
+            "expires_at_end_of_current_turn": false,
             "expires_at_end_of_target_turn": true
           }
         ],
@@ -15564,6 +15566,7 @@
             "consume_on_attack_against": true,
             "expires_at_start_of_source_turn": true,
             "expires_at_end_of_source_turn": false,
+            "expires_at_end_of_current_turn": false,
             "expires_at_end_of_target_turn": false
           }
         ],
@@ -16226,7 +16229,9 @@
     "source_limited_use_names": [],
     "source_legendary_action_names": [],
     "parry_reaction": {
-      "ac_bonus": 2
+      "ac_bonus": 2,
+      "source_feature": "parry",
+      "counterattack_range_ft": 5
     },
     "fighting_styles": [],
     "weapon_masteries": [],
@@ -16427,7 +16432,9 @@
     "source_limited_use_names": [],
     "source_legendary_action_names": [],
     "parry_reaction": {
-      "ac_bonus": 2
+      "ac_bonus": 2,
+      "source_feature": "parry",
+      "counterattack_range_ft": 5
     },
     "fighting_styles": [],
     "weapon_masteries": [],
@@ -16551,7 +16558,9 @@
     "source_limited_use_names": [],
     "source_legendary_action_names": [],
     "parry_reaction": {
-      "ac_bonus": 2
+      "ac_bonus": 2,
+      "source_feature": "parry",
+      "counterattack_range_ft": 5
     },
     "fighting_styles": [],
     "weapon_masteries": [],
@@ -16726,7 +16735,9 @@
     "source_limited_use_names": [],
     "source_legendary_action_names": [],
     "parry_reaction": {
-      "ac_bonus": 2
+      "ac_bonus": 2,
+      "source_feature": "parry",
+      "counterattack_range_ft": 5
     },
     "fighting_styles": [],
     "weapon_masteries": [],
