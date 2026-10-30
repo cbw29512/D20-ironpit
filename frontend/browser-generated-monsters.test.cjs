@@ -114,7 +114,7 @@ for (const file of [
   "browser-action-economy.js", "browser-grapple.js", "browser-modifiers.js", "browser-state.js",
   "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js", "browser-zero-hp.js",
   "browser-attack.js", "browser-charge.js", "browser-saves.js", "browser-condition-lifecycle.js",
-  "browser-formation.js", "browser-multiattack.js",
+  "browser-formation.js", "browser-attack-reaction-chain.js", "browser-multiattack.js",
 ]) load(file);
 
 window.IRON_PIT_DICE = {
