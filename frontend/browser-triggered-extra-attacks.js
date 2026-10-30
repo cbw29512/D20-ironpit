@@ -93,6 +93,7 @@
     try {
       for (const member of [...(setup.heroes || []), ...(setup.monsters || [])]) {
         member.state.damage_taken_this_turn_by_type = {};
+        window.IRON_PIT_BROWSER_TURN_DAMAGE_SOURCE?.clear(member.state);
       }
     } catch (error) {
       console.error("Failed to clear browser per-turn typed damage state.", { error });
