@@ -17,6 +17,7 @@ _ARENA_NEUTRAL_BONUS_ACTIONS = frozenset({
     "Bubble Dash",
     "Charge",
     "Cunning Action",
+    "Ethereal Jaunt",
     "Ignited Illumination",
     "Leap",
     "Nimble Escape",
