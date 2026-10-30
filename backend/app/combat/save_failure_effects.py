@@ -122,7 +122,10 @@ def apply_save_failure_effects(
                     automatic_success_after_rounds=effect.automatic_success_after_rounds,
                 ))
             elif isinstance(effect, CombatModifierEffect):
-                apply_modifier_effect(target, source_id, source_effect_id, effect, index, trigger="failed-save")
+                apply_modifier_effect(
+                    target, source_id, source_effect_id, effect, index,
+                    trigger="failed-save", round_number=round_number,
+                )
             else:
                 raise ValueError(f"Unsupported failed-save effect: {effect!r}")
         return list(dict.fromkeys(applied))
