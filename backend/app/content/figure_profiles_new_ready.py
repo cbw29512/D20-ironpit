@@ -63,6 +63,7 @@ NEW_READY_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Steam Mephit": _p("winged", "steam-mephit"),
     "Swarm of Ravens": _p("swarm", "ravens"),
     "Wight": _p("humanoid", "wight"),
+    "Wererat": _p("humanoid", "wererat"),
     "Winter Wolf": _p("quadruped", "canine"),
     "Wolf": _p("quadruped", "canine"),
     "Worg": _p("quadruped", "canine"),
