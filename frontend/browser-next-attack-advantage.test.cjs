@@ -105,7 +105,7 @@ const nextAttack = (expires = 2) => ({
   assert.equal(event.attack_roll.mode, "advantage");
   assert.equal(M.nextAttackAdvantage(pirate.state), 0);
 
-  M.applySelfHitEffects(pirate.state, "pirate", {
+  window.IRON_PIT_BROWSER_SELF_HIT_MODIFIERS.apply(pirate.state, "pirate", {
     id: "pirate-rapier",
     onHitSelfModifiers: [{
       kind: "next-attack-advantage",
