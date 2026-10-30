@@ -99,3 +99,12 @@ def test_blink_dog_teleport_is_arena_neutral_bonus_action() -> None:
         assert bonus_action_issues(blink, _row("Blink Dog")) == []
     except Exception:
         raise
+
+
+def test_giant_seahorse_bubble_dash_is_arena_neutral_bonus_action() -> None:
+    try:
+        seahorse = _monster("Giant Seahorse")
+        assert seahorse.source_bonus_action_names == ["Bubble Dash"]
+        assert bonus_action_issues(seahorse, _row("Giant Seahorse")) == []
+    except Exception:
+        raise
