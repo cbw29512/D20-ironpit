@@ -3,7 +3,7 @@ import logging
 import re
 from functools import lru_cache
 from app.content.monster_catalog import load_monster_rows
-from app.content.monster_death_trigger_source import parse_death_trigger_effects
+from app.content.monster_death_trigger_source import death_trigger_trait_issues, parse_death_trigger_effects
 from app.content.monster_grapple_contact_source import grapple_contact_trait_issues
 from app.content.monster_legendary_resistance_source import legendary_resistance_trait_issues
 from app.content.monster_regeneration_source import regeneration_trait_issues
@@ -68,12 +68,6 @@ def _magic_resistance_issues(template: CombatantTemplate, expected: list[str]) -
         return ["trait-source-missing:magic-resistance"]
     return []
 
-def _death_trigger_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    expected = parse_death_trigger_effects(row.get("traits", ""))
-    if template.death_trigger_effects != expected:
-        return ["death-trigger-source-data-mismatch"]
-    return []
-
 def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     expected = parse_trait_names(row.get("traits", ""))
     issues: list[str] = []
@@ -88,7 +82,8 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             issues.append(f"trait-source-missing:{runtime_trait.value}")
     issues.extend(_movement_trait_issues(template, expected))
     issues.extend(_magic_resistance_issues(template, expected))
-    issues.extend(_death_trigger_issues(template, row))
+    death_issues, death_certified = death_trigger_trait_issues(template, row)
+    issues.extend(death_issues)
     grapple_issues, grapple_certified = grapple_contact_trait_issues(template, row)
     issues.extend(grapple_issues)
     issues.extend(regeneration_trait_issues(template, row))
@@ -96,11 +91,9 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
     issues.extend(legendary_issues)
     aura_issues, aura_certified = aura_trait_issues(template, row, expected)
     issues.extend(aura_issues)
-    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement", "Magic Resistance", "Regeneration"} | aura_certified
+    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement", "Magic Resistance", "Regeneration"} | aura_certified | death_certified
     if legendary_certified:
         certified.add("Legendary Resistance")
-    if template.death_trigger_effects and "Death Burst" in expected:
-        certified.add("Death Burst")
     if grapple_certified and "Barbed Hide" in expected:
         certified.add("Barbed Hide")
     for name in expected:
