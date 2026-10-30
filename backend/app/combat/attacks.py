@@ -21,6 +21,7 @@ from app.combat.graze import resolve_graze_miss
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
 from app.combat.hit_modifiers import apply_self_hit_modifier_effects
 from app.combat.modifier_stack import apply_d20_bonus_dice, attack_roll_disadvantage_sources, attacks_against_advantage_sources, consume_attacks_against_advantage, consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources
+from app.combat.owner_action_expiry import expire_on_owner_event
 from app.combat.parry import resolve_parry_hit
 from app.combat.peerless_aim import resolve_peerless_aim_miss
 from app.combat.range import resolve_attack_roll_mode
@@ -71,6 +72,7 @@ def resolve_attack(
         base_roll = roll_d20(dice, effective_attack_bonus(attacker, attack), mode)
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(attacker, base_roll, effective_armor_class(defender), dice)
         attack_roll = apply_d20_bonus_dice(attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
+        expire_on_owner_event(attacker, "attack", affected_states)
         consume_next_attack_against_advantage(attacker, defender_event_id); consume_next_attack_advantage(attacker); consume_next_attack_disadvantage(attacker); consume_sap(attacker)
         consume_attacks_against_advantage(defender); extend_rage_from_attack(attacker, round_number)
         if spend_action: spend(attacker, "action")
