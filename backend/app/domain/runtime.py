@@ -44,6 +44,7 @@ class CombatantState(BaseModel):
     reaction_available: bool = True
     turn_terminated: bool = False
     turn_termination_reason: str | None = None
+    turn_serial: int = Field(default=0, ge=0)
     heroic_inspiration: bool = False
     movement_remaining_ft: int = Field(default=0, ge=0)
     resources: list[ResourceState] = Field(default_factory=list)
