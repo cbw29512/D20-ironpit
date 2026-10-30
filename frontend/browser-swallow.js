@@ -9,7 +9,8 @@
   function swallowAfterBite(ownerId, owner, targetId, target, action, hit) {
     if (!hit || !owner.is_alive || owner.is_dead || owner.current_hp <= 0
       || !target.is_alive || target.is_dead || target.current_hp <= 0
-      || target.swallowed || (owner.swallowed_target_ids || []).length >= action.maxSwallowed)
+      || target.swallowed
+      || (action.maxSwallowed != null && (owner.swallowed_target_ids || []).length >= action.maxSwallowed))
       return false;
     if (SIZES.indexOf(target.template.size) < 0 || SIZES.indexOf(action.maxTargetSize) < 0)
       throw new Error("Swallow target or limit must have a certified size.");
