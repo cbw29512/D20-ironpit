@@ -4,7 +4,11 @@ import logging
 
 from app.combat.attack_reaction_chain import resolve_attack_event_chain
 from app.combat.dice import FixedDiceProvider
-from app.combat.modifier_stack import effective_armor_class
+from app.combat.modifier_stack import (
+    effective_armor_class,
+    expire_source_turn_modifiers,
+    next_attack_advantage_sources,
+)
 from app.combat.state import begin_turn, build_combatant_state
 from app.content.capability_registry import build_combatant_from_capabilities
 from app.content.monster_catalog import load_monster_rows
@@ -91,6 +95,9 @@ def test_riposte_converts_hit_and_makes_independent_counterattack() -> None:
         assert counter.attack_name == "Rapier"
         assert counter.attack_roll is not None
         assert counter.attack_roll.rolls != trigger.attack_roll.rolls
+        assert next_attack_advantage_sources(pirate.state) == 1
+        assert expire_source_turn_modifiers([pirate.state], "attacker", 1) == 1
+        assert next_attack_advantage_sources(pirate.state) == 0
     except Exception:
         logger.exception("Pirate Riposte independent counterattack regression failed.")
         raise
