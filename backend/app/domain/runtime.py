@@ -8,6 +8,7 @@ from app.domain.combatants import CombatantTemplate, DamageType
 from app.domain.grid import BattleMapDefinition, GridPosition
 from app.domain.modifiers import CombatModifier, ConcentrationState
 from app.domain.ongoing_hp_loss import OngoingHpLossState
+from app.domain.resource_state import ResourceState
 from app.domain.timed_effects import TimedEffect
 from app.domain.swallow import SwallowedState
 
