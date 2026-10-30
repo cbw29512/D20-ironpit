@@ -125,3 +125,13 @@ def test_daily_resource_in_wrong_action_economy_section_fails_closed() -> None:
     except Exception:
         logger.exception("Daily resource action-economy mismatch regression failed.")
         raise
+
+
+def test_arena_neutral_bonus_action_recharge_does_not_require_runtime_resource() -> None:
+    try:
+        blink = _monster("Blink Dog")
+        assert blink.source_limited_use_names == ["bonusActions:Teleport (Recharge 4-6)"]
+        assert limited_use_issues(blink, _row("Blink Dog")) == []
+    except Exception:
+        logger.exception("Arena-neutral limited-use Bonus Action regression failed.")
+        raise
