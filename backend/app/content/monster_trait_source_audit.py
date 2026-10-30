@@ -84,6 +84,8 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
             issues.append(f"trait-source-missing:{runtime_trait.value}")
     issues.extend(_movement_trait_issues(template, expected))
     issues.extend(_magic_resistance_issues(template, expected))
+    typed_issues, typed_certified = damage_absorption_trait_issues(template, row)
+    issues.extend(typed_issues)
     death_issues, death_certified = death_trigger_trait_issues(template, row)
     issues.extend(death_issues)
     grapple_issues, grapple_certified = grapple_contact_trait_issues(template, row)
