@@ -33,7 +33,7 @@
     if (!E().available(defender, "reaction")) return { hit, used: false };
     if (attackRoll.total >= effectiveAc + parry.ac_bonus) return { hit, used: false };
     E().spend(defender, "reaction");
-    return { hit: false, used: true };
+    return { hit: false, used: true, reactionId: parry.source_feature || "parry" };
   }
 
   function swapWouldProvoke(defender, ally, setup) {
