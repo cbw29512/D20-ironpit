@@ -1,11 +1,9 @@
 (() => {
   "use strict";
-
   const DIE_KINDS = new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "ability-check-bonus-die", "bonus-damage"]);
   const KINDS = new Set(["armor-class", ...DIE_KINDS, "attacks-against-advantage", "next-attack-advantage", "next-attack-against-advantage", "next-attack-disadvantage", "speed"]);
   const EFFECT_KINDS = new Set(["attacks-against-advantage", "next-attack-advantage", "next-attack-disadvantage", "speed"]);
   const D = () => window.IRON_PIT_DICE;
-
   function validate(item) {
     if (!item?.id || !item.source_id || !item.source_effect_id || !KINDS.has(item.kind)) throw new Error("Invalid combat modifier.");
     const count = item.dice_count || 0, sides = item.dice_size || 0;
@@ -19,7 +17,6 @@
     if ((item.expires_current_turn_end_owner_id == null) !== (item.expires_current_turn_end_round == null)) throw new Error("Current-turn modifier expiry requires owner and round.");
     return item;
   }
-
   function add(state, modifier) {
     validate(modifier);
     const existing = (state.active_modifiers || []).find((item) => item.id === modifier.id);
@@ -29,7 +26,6 @@
     }
     state.active_modifiers.push({ ...modifier });
   }
-
   function removeSource(states, sourceId, effectId, concentrationOnly = false) {
     let removed = 0;
     for (const state of states || []) {
@@ -40,7 +36,6 @@
     }
     return removed;
   }
-
   function expireSourceTurnStart(states, sourceId) {
     let removed = 0;
     for (const state of states || []) {
