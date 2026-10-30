@@ -4,6 +4,7 @@ import logging
 import re
 
 from app.content.monster_source_attack_rider_parsing import hit_save, maximum_target_size
+from app.content.monster_source_ongoing_hp_loss import ongoing_hp_loss_hit_save
 from app.content.monster_source_charge_riders import parse_charge_replacement
 from app.content.monster_source_attack_timed_riders import timed_attack_riders
 from app.domain.capability_effects import (
@@ -49,11 +50,12 @@ def parse_attack_riders(text: str) -> list[object]:
     try:
         effects: list[object] = []
         maximum = maximum_target_size(text)
-        parsed_hit_save = hit_save(text, maximum)
+        parsed_hit_save = ongoing_hp_loss_hit_save(text) or hit_save(text, maximum)
         failed_condition = None
         if parsed_hit_save is not None:
             effects.append(parsed_hit_save)
-            failed_condition = parsed_hit_save.failure_effects[0].condition
+            if parsed_hit_save.failure_effects:
+                failed_condition = getattr(parsed_hit_save.failure_effects[0], "condition", None)
 
         for extra in _FLAT_EXTRA_DAMAGE.finditer(text):
             effects.append(DamageEffectDefinition(
