@@ -2,7 +2,7 @@
 const assert=require("node:assert/strict"),fs=require("node:fs"),path=require("node:path"),vm=require("node:vm");
 global.window=globalThis;
 const load=(file)=>vm.runInThisContext(fs.readFileSync(path.join(__dirname,file),"utf8"),{filename:file});
-load("browser-grapple.js");load("browser-swallow.js");
+load("browser-grapple.js");load("browser-swallow.js");load("browser-swallow-regurgitation.js");
 const swallow=window.IRON_PIT_BROWSER_SWALLOW;
 const frog={is_alive:true,is_dead:false,current_hp:20,template:{
   size:"medium",attacks:[{id:"bite"}]},swallowed_target_ids:[]};
@@ -136,11 +136,11 @@ window.IRON_PIT_BROWSER_SAVING_THROWS={resolveSavingThrow:(state,ability,dc)=>{
   saveArgs={state,ability,dc}; return {roll:{total:1},succeeded:false};
 }};
 regurgOwner.damage_taken_this_turn_by_source={"other":100,"inside-a":29};
-let regurg=swallow.resolveEndTurnRegurgitation(10,3,regurgSetup.heroes[0],regurgSetup);
+let regurg=window.IRON_PIT_BROWSER_SWALLOW_REGURGITATION.resolveEndTurn(10,3,regurgSetup.heroes[0],regurgSetup);
 assert.equal(regurg.events.length,0);
 assert.ok(regurgA.swallowed && regurgB.swallowed);
 regurgOwner.damage_taken_this_turn_by_source["inside-a"]=30;
-regurg=swallow.resolveEndTurnRegurgitation(10,3,regurgSetup.heroes[0],regurgSetup);
+regurg=window.IRON_PIT_BROWSER_SWALLOW_REGURGITATION.resolveEndTurn(10,3,regurgSetup.heroes[0],regurgSetup);
 assert.equal(regurg.sequence,11);
 assert.equal(regurg.events[0].save_succeeded,false);
 assert.equal(saveArgs.state,regurgOwner);
