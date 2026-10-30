@@ -56,6 +56,7 @@ def resolve_emanation_hit(
                 round_number=round_number,
                 encounter_roller=target,
                 setup=setup,
+                source_id=source.combatant_id,
             )
             if succeeded and emanation.success_damage == "none":
                 raw = 0
