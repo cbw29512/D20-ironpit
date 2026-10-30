@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.death_triggers import resolve_event_death_triggers
+from app.combat.zero_hp_replacement import settle_event_zero_hp_replacement
 from app.combat.dice import DiceProvider
 from app.domain.encounters import EncounterSetup
 from app.domain.events import BattleEvent
@@ -22,6 +23,7 @@ def append_after_event(
     """Append one causal event and settle its immediate on-death lifecycle."""
     try:
         output.append(event)
+        settle_event_zero_hp_replacement(event, setup)
         triggered, sequence = resolve_event_death_triggers(
             sequence,
             round_number,
