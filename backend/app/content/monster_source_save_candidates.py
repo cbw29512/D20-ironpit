@@ -68,7 +68,7 @@ def _area(target: str) -> tuple[int, AreaTargeting | None]:
     within = re.search(r"within\s+(\d+)\s+feet", target, re.I)
     if radius and within:
         return int(within.group(1)), AreaTargeting(shape="radius", origin="point", radius_ft=int(radius.group(1)))
-    return int(within.group(1)) if within else 0, None
+    return int(within.group(1)) if within else (5 if re.search(r"in the [^.]+[’\']s space", target, re.I) else 0), None
 
 
 def _required_condition(target: str) -> ConditionName | None:
