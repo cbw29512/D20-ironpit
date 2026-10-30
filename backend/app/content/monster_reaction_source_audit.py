@@ -81,7 +81,7 @@ def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list
     issues: list[str] = []
     if template.source_reaction_names != expected:
         issues.append("source-reaction-fingerprint-mismatch")
-    if template.parry_reaction is not None and "Parry" not in expected:
+    if template.parry_reaction is not None and not ({"Parry", "Riposte"} & set(expected)):
         issues.append("unexpected-parry-reaction")
     if template.redirect_attack_reaction is not None and "Redirect Attack" not in expected:
         issues.append("unexpected-redirect-attack-reaction")
