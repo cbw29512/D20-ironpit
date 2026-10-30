@@ -42,3 +42,20 @@ def defensive_disadvantage_trait_issues(
     except Exception as exc:
         logger.exception("Failed defensive attack-Disadvantage audit for %s.", template.id)
         raise RuntimeError("Defensive attack-Disadvantage audit failed.") from exc
+
+
+def complete_defensive_disadvantage_trait(
+    template: CombatantTemplate,
+    row: dict[str, object],
+) -> CombatantTemplate:
+    """Add the generic runtime trait when source text declares that behavior."""
+    try:
+        name = defensive_disadvantage_trait_name(row.get("traits", ""))
+        if name is None or _TRAIT in template.combat_traits:
+            return template
+        return template.model_copy(update={
+            "combat_traits": [*template.combat_traits, _TRAIT],
+        })
+    except Exception as exc:
+        logger.exception("Failed defensive attack-Disadvantage completion for %s.", template.id)
+        raise RuntimeError("Defensive attack-Disadvantage completion failed.") from exc
