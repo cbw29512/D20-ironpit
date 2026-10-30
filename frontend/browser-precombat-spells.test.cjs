@@ -19,7 +19,7 @@ const base = H["karnok-stoneward-l1"];
 const defense = (id, level, priority = 0) => ({
   id, name: id, level, actionCost: "action", range: 0, durationMinutes: 60,
   targetPolicy: "self", targetCount: 1,
-  temporaryHp: 5, temporaryHpPerSlotAbove: 5, damageResistances: [], modifierEffects: [],
+  temporaryHp: 5, temporaryHpPerSlotAbove: 5, damageResistances: [], conditionIds: [], modifierEffects: [],
   concentration: false, priority, animation: "precombat-defense",
 });
 function caster(spells, slots) {
@@ -87,6 +87,34 @@ const enemy = () => ({ combatant_id: "enemy", side: "monsters", position_ft: 30,
   const second = P.prepare(setup, 99);
   assert.equal(second.events.length, 0);
   assert.equal(c.state.resources["spell-slot-1"], 1);
+}
+
+{
+  const spell = {
+    ...defense("explicit-resource-condition-buff", 2, 50),
+    temporaryHp: 0,
+    temporaryHpPerSlotAbove: 0,
+    actionCost: "bonus_action",
+    resourceId: "innate-buff",
+    resourceCost: 1,
+    conditionIds: ["invisible"],
+    concentration: true,
+  };
+  const c = caster([spell], {});
+  c.state.resources["innate-buff"] = 2;
+  const setup = { heroes: [c], monsters: [enemy()] };
+  const states = [c.state, setup.monsters[0].state];
+
+  const result = P.prepare(setup);
+
+  assert.equal(result.events[0].feature_id, "explicit-resource-condition-buff");
+  assert.equal(c.state.resources["innate-buff"], 1);
+  assert.ok(c.state.active_effect_ids.includes("invisible"));
+  assert.ok(c.state.timed_effects.some((effect) => effect.source_effect_id === spell.id));
+  assert.equal(c.state.concentration.effect_id, spell.id);
+
+  C.end(c.state, states);
+  assert.ok(!c.state.active_effect_ids.includes("invisible"));
 }
 
 console.log("Browser precombat defensive spell regressions passed.");
