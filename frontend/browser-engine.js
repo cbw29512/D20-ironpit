@@ -42,6 +42,16 @@
   function totalCr(values) { const quarters = Math.round(values.reduce((sum, value) => sum + crNumber(value), 0) * 4); if (quarters % 4 === 0) return String(quarters / 4); const divisor = quarters % 2 === 0 ? 2 : 4; return `${quarters / (4 / divisor)}/${divisor}`; }
   function defeatedMember(member) { const state = member.state; if (state.template.kind === "character") return state.is_dead || !state.is_alive; if (R()?.defersDeath(state) && state.current_hp <= 0 && !state.is_dead) return false; return state.current_hp <= 0 || state.is_dead || !state.is_alive; }
   function outcome(setup) { const defeated = (side) => side.every(defeatedMember), heroesDead = defeated(setup.heroes), monstersDead = defeated(setup.monsters); if (heroesDead && monstersDead) return "draw"; if (monstersDead) return "heroes_win"; if (heroesDead) return "monsters_win"; return "active"; }
+  function refreshPerTurnReactions(members) {
+    try {
+      for (const entry of members) {
+        if (entry.state.template.reaction_refresh_each_turn) entry.state.reaction_available = true;
+      }
+    } catch (error) {
+      console.error("Browser per-turn Reaction refresh failed.", { error });
+      throw error;
+    }
+  }
   function lifecycle(sequence, round, member, setup, targetTiming, sourceTiming) {
     const target = L().resolveTargetTiming(sequence, round, member, targetTiming);
     const source = L().resolveSourceTiming(target.sequence, round, member, setup, sourceTiming);
@@ -58,7 +68,7 @@
       resolvedRound = round;
       for (const id of init.turn_order) {
         const current = outcome(setup); if (current !== "active") return finish(setup, init, events, current, round, sequence);
-        const member = byId.get(id); for (const entry of members) if (entry.state.template.reaction_refresh_each_turn) entry.state.reaction_available = true;
+        const member = byId.get(id); refreshPerTurnReactions(members);
         B()?.cleanupDisabledSources(setup); window.IRON_PIT_BROWSER_MODIFIERS?.expireSourceTurnStart(states, member.combatant_id);
         S().refreshStartOfTurn(member.state); R()?.startTurn(member.state); C()?.endIfExpired(member.state, round, states);
         const attachment = AT()?.startTurn(sequence, round, member, setup) || { events: [], sequence };
@@ -81,5 +91,5 @@
     events.push({ sequence, round_number: round, event_type: result === "draw" ? "draw" : "victory", actor_id: "arena", actor_name: "Iron Pit", animation: "victory", description: result === "heroes_win" ? "Heroes win the deathmatch." : result === "monsters_win" ? "Monsters win the deathmatch." : "The fight reaches the arena round limit and ends in a draw." });
     return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: "SRD 5.2.1 Iron Pit grid deathmatch subset" };
   }
-  window.IRON_PIT_BROWSER_ENGINE = { runEncounter };
+  window.IRON_PIT_BROWSER_ENGINE = { refreshPerTurnReactions, runEncounter };
 })();
