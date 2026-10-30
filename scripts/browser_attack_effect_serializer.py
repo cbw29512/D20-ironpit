@@ -56,6 +56,8 @@ def hit_modifier_row(effect: Any) -> dict[str, Any]:
             row["consumeOnAttackAgainst"] = True
         if effect.expires_at_start_of_source_turn:
             row["expiresAtStartOfSourceTurn"] = True
+        if effect.expires_at_end_of_source_turn:
+            row["expiresAtEndOfSourceTurn"] = True
         if effect.expires_at_end_of_target_turn:
             row["expiresAtEndOfTargetTurn"] = True
         return row
