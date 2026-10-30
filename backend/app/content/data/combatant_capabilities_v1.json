@@ -9336,6 +9336,7 @@
           "bonus": 0
         },
         "damage_type": "bludgeoning",
+        "additional_damage_components": [],
         "success_damage": "none",
         "failure_effects": [],
         "forbid_target_affected_by_action": false,
@@ -11668,6 +11669,7 @@
           "bonus": 4
         },
         "damage_type": "bludgeoning",
+        "additional_damage_components": [],
         "success_damage": "none",
         "failure_effects": [],
         "forbid_target_affected_by_action": false,
