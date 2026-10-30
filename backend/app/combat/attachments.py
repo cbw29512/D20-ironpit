@@ -79,3 +79,61 @@ def record_attachment_damage(
     except Exception:
         logger.exception("Attachment damage ledger failed for %s / %s.", source_id, effect_id)
         raise
+
+
+@dataclass(frozen=True)
+class LinkedEffect:
+    """One visible side of an attachment relationship; source ownership is explicit."""
+    owner_id: str
+    counterpart_id: str
+    effect_id: str
+    kind: str
+
+
+def linked_attachment_effects(
+    existing: tuple[Attachment, ...],
+) -> tuple[LinkedEffect, ...]:
+    """Project each relationship into a victim debuff and source buff.
+
+    The attachment ledger remains authoritative: detaching removes both
+    projections without leaving independent orphaned timed effects.
+    """
+    try:
+        effects: list[LinkedEffect] = []
+        for row in existing:
+            effects.extend((
+                LinkedEffect(
+                    owner_id=row.target_id,
+                    counterpart_id=row.source_id,
+                    effect_id="attached",
+                    kind="debuff",
+                ),
+                LinkedEffect(
+                    owner_id=row.source_id,
+                    counterpart_id=row.target_id,
+                    effect_id=row.effect_id,
+                    kind="buff",
+                ),
+            ))
+        return tuple(effects)
+    except Exception:
+        logger.exception("Failed to project linked attachment buffs and debuffs.")
+        raise
+
+
+def active_attachment_target(
+    existing: tuple[Attachment, ...],
+    source_id: str, effect_id: str,
+) -> str | None:
+    """Resolve the current target of an attachment-owned automatic effect."""
+    try:
+        matches = [
+            row.target_id for row in existing
+            if row.source_id == source_id and row.effect_id == effect_id
+        ]
+        if len(matches) > 1:
+            raise ValueError("Attachment owner has multiple targets for one effect.")
+        return matches[0] if matches else None
+    except Exception:
+        logger.exception("Failed to resolve attachment target for %s.", source_id)
+        raise
