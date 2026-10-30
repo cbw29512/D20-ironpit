@@ -10,6 +10,9 @@ def _filter_issues(attack: WeaponAttack, actions: str) -> list[str]:
     if rider is None:
         return []
     issues: list[str] = []
+    for creature_type in rider.target_filter.required_creature_types:
+        if not re.search(rf"\bIf the target is an?\s+{re.escape(creature_type)}\b", actions, re.I):
+            issues.append(f"on-hit-save-target-filter-mismatch:{attack.id}:required-type:{creature_type}")
     for creature_type in rider.target_filter.excluded_creature_types:
         patterns = (
             rf"\bnon-{re.escape(creature_type)}\s+creature\b",
@@ -79,6 +82,25 @@ def _ongoing_hp_loss_issues(attack: WeaponAttack, effect, actions: str) -> list[
         raise
 
 
+def _zero_hp_replacement_issues(attack: WeaponAttack, effect, actions: str) -> list[str]:
+    try:
+        issues: list[str] = []
+        if not re.search(r"Failure:\s*The target is cursed\.", actions, re.I):
+            issues.append(f"on-hit-save-replacement-debuff-mismatch:{attack.id}")
+        if not re.search(
+            rf"If the cursed target drops to 0 Hit Points, it instead becomes an? [^.]+ "
+            rf"under the GM[’']s control and has {effect.replacement_hp} Hit Points\.",
+            actions,
+            re.I,
+        ):
+            issues.append(f"on-hit-save-replacement-mismatch:{attack.id}")
+        return issues
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Failed zero-HP replacement source audit for %s.", attack.id)
+        raise
+
+
 def on_hit_save_issues(attack: WeaponAttack, actions: str) -> list[str]:
     rider = attack.on_hit_saving_throw
     if rider is None:
@@ -94,6 +116,12 @@ def on_hit_save_issues(attack: WeaponAttack, actions: str) -> list[str]:
             issues.extend(_ongoing_hp_loss_issues(attack, effect, actions))
             if rider.forbid_target_ongoing_hp_loss_id != effect.effect_id:
                 issues.append(f"on-hit-save-hp-loss-reapply-gate-mismatch:{attack.id}:{effect.effect_id}")
+        elif effect.kind == "zero-hp-replacement":
+            issues.extend(_zero_hp_replacement_issues(attack, effect, actions))
+    if rider.source_effect_immunity_on_success and not re.search(
+        r"Success:\s*The target is immune to this [^.]+ curse for 24 hours\.", actions, re.I,
+    ):
+        issues.append(f"on-hit-save-source-immunity-mismatch:{attack.id}")
     return issues
 
 
