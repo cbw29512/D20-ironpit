@@ -63,6 +63,7 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
         if attack.on_hit_damage:
             row["onHitDamage"] = [{"source": part.source, "diceCount": part.dice_count, "diceSize": part.dice_size, "damageBonus": part.damage_bonus, "damageType": part.damage_type.value} for part in attack.on_hit_damage]
         if attack.on_hit_modifier_effects: row["onHitModifiers"] = [hit_modifier_row(effect) for effect in attack.on_hit_modifier_effects]
+        if attack.on_hit_self_modifier_effects: row["onHitSelfModifiers"] = [hit_modifier_row(effect) for effect in attack.on_hit_self_modifier_effects]
         if attack.conditional_damage:
             if len(attack.conditional_damage) != 1: raise ValueError(f"Browser supports one conditional damage rider on {attack.id}.")
             conditional = attack.conditional_damage[0]
