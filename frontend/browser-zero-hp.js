@@ -35,6 +35,44 @@
     if (!I().immune(state, PRONE) && !state.active_effect_ids.includes(PRONE)) state.active_effect_ids.push(PRONE);
   }
 
+  function activateReplacement(state) {
+    const rule = state.zero_hp_replacement;
+    if (!rule || rule.triggered) return false;
+    if (!rule.target_member || !rule.setup || !rule.source_template || !rule.source_side) {
+      throw new Error("Zero-HP replacement is missing source/encounter context.");
+    }
+    rule.triggered = true;
+    const target = rule.target_member, setup = rule.setup, previous = target.state;
+    const replacement = S().buildState(rule.source_template);
+    replacement.current_hp = Math.min(rule.replacement_hp, replacement.template.max_hp);
+    replacement.position = previous.position;
+    replacement.initiative_roll = previous.initiative_roll;
+    replacement.initiative_total = previous.initiative_total;
+    replacement.turn_serial = previous.turn_serial;
+    target.state = replacement;
+    if (target.side !== rule.source_side) {
+      const oldGroup = target.side === "heroes" ? setup.heroes : setup.monsters;
+      const newGroup = rule.source_side === "heroes" ? setup.heroes : setup.monsters;
+      const index = oldGroup.findIndex((member) => member.combatant_id === target.combatant_id);
+      if (index >= 0) oldGroup.splice(index, 1);
+      if (!newGroup.some((member) => member.combatant_id === target.combatant_id)) newGroup.push(target);
+      target.side = rule.source_side;
+    }
+    return true;
+  }
+
+  function applyReplacementEffect(target, source, sourceEffectId, effect, setup) {
+    if (!target || !source || !setup) throw new Error("Zero-HP replacement requires target, source, and setup.");
+    target.state.zero_hp_replacement = {
+      effect_id: effect.effectId, source_id: source.combatant_id, source_effect_id: sourceEffectId,
+      replacement_mode: effect.replacementMode, control_mode: effect.controlMode,
+      replacement_hp: effect.replacementHp, triggered: false, source_template: source.state.template,
+      source_side: source.side, target_member: target, setup,
+    };
+    if (!target.state.active_effect_ids.includes(effect.effectId)) target.state.active_effect_ids.push(effect.effectId);
+    return effect.effectId;
+  }
+
   function markDead(state) {
     state.current_hp = 0;
     if (R()?.defersDeath(state)) { state.is_alive = true; state.is_dead = false; return false; }
@@ -58,6 +96,7 @@
       state.current_hp = Math.max(0, before - amount);
       const lost = before - state.current_hp;
       if (state.current_hp > 0) return lost;
+      if (activateReplacement(state)) return lost;
       if (useRelentless(state, 0)) return lost;
       if (state.template.kind === "monster") markDead(state);
       else markUnconscious(state);
@@ -88,6 +127,7 @@
     const before = state.current_hp;
     state.current_hp = Math.max(0, before - amount);
     if (state.current_hp > 0) return finish(state, "damaged", incoming, affectedStates);
+    if (activateReplacement(state)) return "zero_hp_replacement";
     if (useUndeadFortitude(state, incoming, damageTypes, critical)) return finish(state, "undead_fortitude", incoming, affectedStates);
     if (state.template.kind === "monster") return finish(state, markDead(state) ? "dead" : "damaged", incoming, affectedStates);
     const remaining = Math.max(0, amount - before);
@@ -97,5 +137,5 @@
     return finish(state, "unconscious", incoming, affectedStates);
   }
 
-  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, loseHitPoints };
+  window.IRON_PIT_BROWSER_ZERO_HP = { applyDamage, applyReplacementEffect, loseHitPoints };
 })();
