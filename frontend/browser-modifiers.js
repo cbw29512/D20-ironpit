@@ -61,10 +61,8 @@
 
   function expireTargetTurn(state) {
     const before = state.active_modifiers.length;
-    state.active_modifiers = state.active_modifiers.filter((item) => !(
-      item.expires_at_end_of_target_turn
-      || (item.expires_target_turn_serial != null && item.expires_target_turn_serial <= (state.turn_serial || 0))
-    ));
+    state.active_modifiers = state.active_modifiers.filter((item) => !(item.expires_at_end_of_target_turn
+      || (item.expires_target_turn_serial != null && item.expires_target_turn_serial <= (state.turn_serial || 0))));
     return before - state.active_modifiers.length;
   }
   function applyEffect(state, sourceId, sourceEffectId, effect, index, trigger, round = null, turnOwnerId = null) {
@@ -106,8 +104,7 @@
     .map((effect) => effect.speed_multiplier));
   const effectiveSpeed = (state) => Math.max(0, Math.trunc((state.template.speed_ft + flat(state, "speed")) * speedMultiplier(state)));
   const attackRollAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attack-roll-advantage").length;
-  const attackRollDisadvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attack-roll-disadvantage").length;
-  const abilityCheckDisadvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "ability-check-disadvantage").length;
+  const attackRollDisadvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attack-roll-disadvantage").length, abilityCheckDisadvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "ability-check-disadvantage").length;
   const attacksAgainstAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "attacks-against-advantage").length;
   const nextAttackAdvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "next-attack-advantage").length;
   const nextAttackAgainstAdvantage = (state, targetId) => (state.active_modifiers || [])
