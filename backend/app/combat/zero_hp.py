@@ -7,12 +7,12 @@ from app.combat.concentration import resolve_concentration_damage
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.hit_points import effective_max_hp
+from app.combat.healing_restore import restore_hit_points
 from app.combat.orc import use_relentless_endurance
 from app.combat.regeneration import note_damage_types, regeneration_defers_death
 from app.combat.source_bound_effects import end_damage_sensitive_effects
 from app.combat.undead_fortitude import resolve_undead_fortitude
 from app.domain.models import CombatantState, DamageType
-from app.domain.traits import CombatTrait
 
 logger = logging.getLogger(__name__)
 ZeroHpOutcome = Literal[
@@ -72,23 +72,6 @@ def _finish_damage(
         raise ValueError("A dice provider is required to resolve Concentration damage.")
     resolve_concentration_damage(state, damage_taken, dice, affected_states)
     return outcome
-
-
-def restore_hit_points(state: CombatantState, amount: int) -> int:
-    """Restore true HP; ordinary healing cannot restore a dead creature or a Swarm."""
-    if amount < 0:
-        raise ValueError("Healing cannot be negative.")
-    if state.is_dead or amount == 0 or CombatTrait.SWARM in state.template.combat_traits:
-        return 0
-    before = state.current_hp
-    state.current_hp = min(effective_max_hp(state), before + amount)
-    healed = state.current_hp - before
-    if healed > 0:
-        state.is_alive = True
-        state.is_unconscious = False
-        state.is_stable = False
-        reset_death_saves(state)
-    return healed
 
 
 def _damage_at_zero(state: CombatantState, incoming: int, *, critical: bool) -> ZeroHpOutcome:
