@@ -52,7 +52,15 @@
         }
       } else if (effect.kind === "grapple") {
         if (sizeAllowed(target, effect.maxTargetSize)) {
-          applied.push(...G().apply(target.state, sourceId, effect.escapeDc, options.range || 0, Boolean(effect.restrains)));
+          applied.push(...G().apply(
+            target.state,
+            sourceId,
+            effect.escapeDc,
+            options.range || 0,
+            Boolean(effect.restrains),
+            effect.linkedConditions || [],
+            sourceEffectId,
+          ));
         }
       } else if (effect.kind === "condition") {
         if (!sizeAllowed(target, effect.maxTargetSize)) continue;
