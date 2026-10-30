@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.state import build_combatant_state
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent
 from app.domain.runtime import CombatantState
@@ -73,6 +72,8 @@ def settle_zero_hp_replacement(target: EncounterCombatant, setup: EncounterSetup
             raise ValueError(f"Replacement source {rule.source_id!r} is not present in the encounter.")
         if rule.replacement_mode != "source-template" or rule.control_mode != "source-side":
             raise ValueError("Unsupported zero-HP replacement mode.")
+
+        from app.combat.state import build_combatant_state
 
         previous = target.state
         replacement = build_combatant_state(source.state.template)
