@@ -20,6 +20,9 @@ from app.content.monster_source_recharge_line_damage_2014 import source_proven_r
 from app.content.monster_source_recharge_timed_controls_2014 import (
     source_proven_recharge_timed_controls_2014,
 )
+from app.content.monster_source_limited_audible_conditions_2014 import (
+    source_proven_limited_audible_conditions_2014,
+)
 from app.content.monster_source_visual_save_bindings_2014 import source_proven_visual_saves_2014
 
 logger = logging.getLogger(__name__)
@@ -57,6 +60,9 @@ def unsupported_source_actions_2014(
         allowed.update(item.name.casefold() for item in source_proven_recharge_line_damage_2014(monster))
         allowed.update(
             item.name.casefold() for item in source_proven_recharge_timed_controls_2014(monster)
+        )
+        allowed.update(
+            item.name.casefold() for item in source_proven_limited_audible_conditions_2014(monster)
         )
         if (
             monster.multiattack_slots
