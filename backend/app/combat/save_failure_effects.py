@@ -104,7 +104,12 @@ def apply_save_failure_effects(
                     applied.append(PRONE_EFFECT_ID)
             elif isinstance(effect, GrappleEffectDefinition):
                 if _size_allowed(target, effect.max_target_size):
-                    applied.extend(apply_grapple(target, source_id, effect.escape_dc, range_ft, restrains=effect.restrains))
+                    applied.extend(apply_grapple(
+                        target, source_id, effect.escape_dc, range_ft,
+                        restrains=effect.restrains,
+                        linked_conditions=list(effect.linked_conditions),
+                        source_effect_id=source_effect_id,
+                    ))
             elif isinstance(effect, ConditionEffectDefinition):
                 if _size_allowed(target, effect.max_target_size):
                     applied.extend(_apply_condition(target, source_id, source_effect_id, effect, round_number, affected_states))
