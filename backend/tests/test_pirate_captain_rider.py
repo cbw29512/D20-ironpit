@@ -45,7 +45,8 @@ def test_pirate_rapier_grants_and_consumes_next_attack_advantage() -> None:
         effect = rapier.on_hit_self_modifier_effects[0]
         assert effect.kind == "next-attack-advantage"
         assert effect.recipient == "source"
-        assert effect.expires_at_end_of_source_turn is True
+        assert effect.expires_at_end_of_current_turn is True
+        assert effect.expires_at_end_of_source_turn is False
 
         begin_turn(pirate.state)
         first = resolve_encounter_attack(
