@@ -7,6 +7,7 @@
     try {
       if (!window.IRON_PIT_ACTION_ECONOMY?.available(member.state, "action")) return null;
       for (const action of member.state.template.swallowActions || []) {
+        if ((action.deliveryMode || "action_attack") !== "action_attack") continue;
         if ((member.state.swallowed_target_ids || []).length >= action.maxSwallowed) continue;
         const attack = (member.state.template.attacks || []).find(item => item.id === action.attackId);
         if (!attack || attack.kind !== "melee") {
