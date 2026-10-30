@@ -10,9 +10,11 @@ from app.domain.traits import CombatTrait
 try:
     from scripts.browser_recharge_serializer import recharge_rows
     from scripts.browser_attack_action_slots import attack_slot_row
+    from scripts.browser_failed_save_timed_serializer import failed_save_timed_effect_row
 except ModuleNotFoundError:
     from browser_recharge_serializer import recharge_rows
     from browser_attack_action_slots import attack_slot_row
+    from browser_failed_save_timed_serializer import failed_save_timed_effect_row
 
 logger = logging.getLogger(__name__)
 
@@ -411,47 +413,11 @@ def _spell(action: Any) -> dict[str, Any]:
 
 
 def _failed_save_timed_effect(rider: Any) -> dict[str, Any]:
-    row = {
-        "effectId": rider.effect_id,
-        "durationRounds": rider.duration_rounds,
-        "expiryTiming": rider.expiry_timing,
-        "repeatSaveAbility": rider.repeat_save_ability,
-        "repeatSaveDc": rider.repeat_save_dc,
-        "repeatSaveTiming": rider.repeat_save_timing,
-        "turnBehavior": rider.turn_behavior,
-        "endsOnDamage": rider.ends_on_damage,
-        "endsIfSourceIncapacitated": rider.ends_if_source_incapacitated,
-        "endsIfSourceDead": rider.ends_if_source_dead,
-        "nextAttackDisadvantage": rider.next_attack_disadvantage,
-        "repeatSaveFailuresToLock": rider.repeat_save_failures_to_lock,
-    }
-    if rider.additional_effect_ids:
-        row["additionalEffectIds"] = list(rider.additional_effect_ids)
-    if rider.failure_margin_escalation is not None:
-        escalation = rider.failure_margin_escalation
-        row["failureMarginEscalation"] = {
-            "margin": escalation.margin,
-            "additionalConditionIds": list(escalation.additional_condition_ids),
-        }
-    if rider.damage_repeat_save_trigger != "none":
-        row["damageRepeatSaveTrigger"] = rider.damage_repeat_save_trigger
-    if rider.repeat_save_before_damaging_terrain:
-        row["repeatSaveBeforeDamagingTerrain"] = True
-    if rider.source_maintenance_action_cost != "none":
-        row["sourceMaintenanceActionCost"] = rider.source_maintenance_action_cost
-    if rider.repeat_save_failure_condition_id:
-        row["repeatSaveFailureConditionId"] = rider.repeat_save_failure_condition_id
-    if rider.allowed_removal_action_ids:
-        row["allowedRemovalActionIds"] = list(rider.allowed_removal_action_ids)
-    if rider.escape_check_ability:
-        row["escapeCheckAbility"] = rider.escape_check_ability
-        row["escapeCheckDc"] = rider.escape_check_dc
-    if rider.source_effect_immunity_on_end:
-        row["sourceEffectImmunityOnEnd"] = True
-    if rider.repeat_save_disadvantage_while_source_visible:
-        row["repeatSaveDisadvantageWhileSourceVisible"] = True
-    return row
-
+    try:
+        return failed_save_timed_effect_row(rider)
+    except Exception:
+        logger.exception("Failed to serialize failed-save timed effect.")
+        raise
 
 def _modifier_effect(effect: Any) -> dict[str, Any]:
     row = {
