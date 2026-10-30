@@ -6,6 +6,7 @@ NEW_READY_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Animated Rug of Smothering": _p("weapon", "animated-rug"),
     "Assassin": _p("humanoid", "assassin"),
     "Basilisk": _p("reptile", "basilisk"),
+    "Bugbear Stalker": _p("humanoid", "bugbear"),
     "Bone Devil": _p("humanoid", "bone-devil"),
     "Bulette": _p("quadruped", "bulette"),
     "Chimera": _p("quadruped", "chimera"),
