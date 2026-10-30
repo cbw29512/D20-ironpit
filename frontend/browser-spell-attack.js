@@ -176,7 +176,7 @@
       const appliedTypes = [...new Set(
         damageComponents.filter((part) => part.applied_total > 0).map((part) => part.damage_type),
       )];
-      A().applyDamage(target.state, applied, critical, appliedTypes, states, setup, damageComponents);
+      A().applyDamage(target.state, applied, critical, appliedTypes, states, setup, damageComponents, caster.combatant_id);
       if (hit && target.state.is_alive && !target.state.is_dead) {
         (spell.onHitModifierEffects || []).forEach((effect, index) => {
           M().add(target.state, SM().build(caster.combatant_id, target.combatant_id, spell, effect, index, round));
