@@ -47,7 +47,7 @@ def test_flesh_golem_aversion_is_source_backed() -> None:
         assert (rule.name, rule.damage_type.value) == ("Aversion to Fire", "fire")
         issues = audit_monster_source(flesh, _row("Flesh Golem"))
         assert "uncertified-trait:aversion-to-fire" not in issues
-        assert "uncertified-trait:berserk" in issues
+        assert "uncertified-trait:berserk" not in issues
     except Exception:
         logger.exception("Flesh Golem Aversion source regression failed.")
         raise

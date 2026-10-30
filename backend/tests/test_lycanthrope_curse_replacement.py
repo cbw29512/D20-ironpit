@@ -79,7 +79,7 @@ def test_all_five_lycanthropes_bind_the_shared_curse_replacement() -> None:
 def test_zero_hp_curse_replacement_uses_source_template_and_side() -> None:
     try:
         source_template = compile_combatant(get_capability_definition("srd-werewolf"))
-        target_template = compile_combatant(get_capability_definition("srd-goblin"))
+        target_template = compile_combatant(get_capability_definition("srd-goblin-warrior"))
         attack, _rider, effect = _replacement_effect("srd-werewolf")
         source = EncounterCombatant(
             combatant_id="source-werewolf",
@@ -120,7 +120,7 @@ def test_zero_hp_curse_replacement_uses_source_template_and_side() -> None:
 def test_curse_applied_after_same_hit_zero_hp_triggers_replacement_immediately() -> None:
     try:
         source_template = compile_combatant(get_capability_definition("srd-werewolf"))
-        target_template = compile_combatant(get_capability_definition("srd-goblin"))
+        target_template = compile_combatant(get_capability_definition("srd-goblin-warrior"))
         attack, _rider, effect = _replacement_effect("srd-werewolf")
         target = build_combatant_state(target_template)
         target.current_hp = 0

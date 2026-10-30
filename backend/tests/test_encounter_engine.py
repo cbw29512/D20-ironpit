@@ -1,6 +1,7 @@
 from unittest.mock import patch
 
 import app.combat.encounter_engine as encounter_engine
+import app.combat.encounter_start_turn as encounter_start_turn
 from app.combat.encounter_engine import run_encounter
 from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
@@ -125,14 +126,14 @@ def test_downed_test_fixture_makes_death_save_while_an_ally_is_still_fighting() 
 
 def test_downed_turn_refreshes_reaction_before_death_save(monkeypatch) -> None:
     refreshed_at_zero: list[bool] = []
-    original = encounter_engine.refresh_start_of_turn
+    original = encounter_start_turn.refresh_start_of_turn
 
     def spy(state) -> None:
         original(state)
         if state.current_hp == 0 and not state.is_dead and state.reaction_available:
             refreshed_at_zero.append(True)
 
-    monkeypatch.setattr(encounter_engine, "refresh_start_of_turn", spy)
+    monkeypatch.setattr(encounter_start_turn, "refresh_start_of_turn", spy)
     _downed_hero_result()
     assert refreshed_at_zero, "a 0-HP turn must still refresh the creature's Reaction"
 

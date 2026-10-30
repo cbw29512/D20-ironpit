@@ -19,8 +19,12 @@ def test_multiattack_save_choice_passes_actor_to_legality(monkeypatch) -> None:
     monkeypatch.setattr(
         attack_action_choices,
         "legal_save_action",
-        lambda candidate, chosen_target, distance, actor: (
-            candidate is action and chosen_target is target and distance == 5 and actor is attacker
+        lambda candidate, chosen_target, distance, actor, encounter: (
+            candidate is action
+            and chosen_target is target
+            and distance == 5
+            and actor is attacker
+            and encounter is setup
         ),
     )
 

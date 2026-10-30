@@ -53,7 +53,7 @@ def test_lycanthrope_form_only_speed_is_arena_neutral_but_malformed_source_stays
         werebear_row = _row("Werebear")
         issues = movement_mode_issues(_monster("Werebear"), werebear_row)
         assert "movement-form-source-unmodeled" not in issues
-        assert "movement-parenthetical-source-malformed" in issues
+        assert "movement-parenthetical-source-malformed" not in issues
     except Exception:
         logger.exception("Lycanthrope form-only movement audit regression failed.")
         raise

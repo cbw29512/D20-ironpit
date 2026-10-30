@@ -24,13 +24,14 @@ def resolve_ongoing_damage(
 ) -> BattleEvent:
     """Resolve non-attack typed damage through the shared defense and zero-HP pipelines."""
     try:
+        resolved_damage_type = DamageType(damage_type)
         component = roll_damage_component(
-            dice, feature_name, dice_count, dice_size, damage_bonus, damage_type, False,
+            dice, feature_name, dice_count, dice_size, damage_bonus, resolved_damage_type, False,
         )
         total, components = apply_damage_defenses(target.state, [component])
         hp_before = target.state.current_hp
         apply_damage(
-            target.state, total, damage_types={damage_type} if total > 0 else set(), dice=dice,
+            target.state, total, damage_types={resolved_damage_type} if total > 0 else set(), dice=dice,
             affected_states=[member.state for member in encounter_members(setup)],
         )
         damage_roll = aggregate_damage_components(components)
@@ -42,7 +43,7 @@ def resolve_ongoing_damage(
             feature_id=feature_id, damage_roll=damage_roll, damage_components=components,
             hp_before=hp_before, hp_after=target.state.current_hp, animation=animation,
             description=(f"{source.state.template.name}'s {feature_name} deals {total} "
-                         f"{damage_type.value} damage to {target.state.template.name}."),
+                         f"{resolved_damage_type.value} damage to {target.state.template.name}."),
         )
     except Exception as exc:
         logger.exception("Failed ongoing damage %s -> %s.", source.combatant_id, target.combatant_id)

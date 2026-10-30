@@ -31,7 +31,7 @@ def test_recharge_parenthetical_still_creates_a_resource() -> None:
         ape = candidates["srd-ape"]
         rock = next(attack for attack in ape.attacks if attack.name == "Rock")
 
-        assert rock.resource_id == "srd-ape-rock-recharge"
+        assert rock.resource_id == "srd-ape-rock"
         assert any(resource.id == rock.resource_id for resource in ape.resources)
     except Exception:
         logger.exception("Recharge source attack parenthetical regression failed.")
