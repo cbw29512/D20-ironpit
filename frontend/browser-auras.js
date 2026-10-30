@@ -98,11 +98,24 @@
         member.side !== source.side && member.state.is_alive && !member.state.is_dead && S().distance(source, member) <= aura.radius_ft
       );
       for (const target of targets) {
-        events.push(O().resolve(sequence++, round, source, target, setup, {
+        const event = O().resolve(sequence++, round, source, target, setup, {
           featureId: aura.id, featureName: aura.name, diceCount: aura.damage_dice_count,
           diceSize: aura.damage_dice_size, damageBonus: aura.damage_bonus || 0,
           damageType: aura.damage_type, animation: "aura-damage",
-        }));
+        });
+        if (aura.applies_burning && target.state.is_alive && !target.state.is_dead) {
+          const effectId = "burn" + "ing";
+          const exists = (target.state.timed_effects || []).some((effect) => effect.effect_id === effectId);
+          const applied = exists ? effectId : T().apply(target.state, effectId, source.combatant_id, {
+            sourceEffectId: aura.id, appliedRound: round,
+            periodicDamage: { timing: "target_turn_end", diceCount: 1, diceSize: 6, damageBonus: 0, damageType: "fire" },
+          });
+          if (applied && !(event.applied_condition_ids || []).includes(applied)) {
+            event.applied_condition_ids ||= [];
+            event.applied_condition_ids.push(applied);
+          }
+        }
+        events.push(event);
       }
     }
     return { events, sequence };
