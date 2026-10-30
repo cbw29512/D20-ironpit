@@ -7,7 +7,7 @@ global.window = globalThis;
 window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION = {
   CATEGORIES: () => ({}), registerProvider: () => {},
 };
-vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-main-action-providers.js"), "utf8"));
+vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-recharge-action-priority.js", "browser-main-action-core-providers.js", "browser-main-action-offense-providers.js", "browser-main-action-providers.js"), "utf8"));
 const impact = window.IRON_PIT_BROWSER_MAIN_ACTION_PROVIDERS.printedSave;
 assert.equal(impact({ id: "any-source", failureSetsZeroHp: true }, { state: { current_hp: 52 } }), 52);
 assert.equal(impact({ id: "other-name", failureSetsZeroHp: true }, { state: { current_hp: 3 } }), 3);
