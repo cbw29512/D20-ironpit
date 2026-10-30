@@ -117,6 +117,7 @@ def enrich_definition(existing: CombatantDefinition, source: CombatantDefinition
         "attacks": attacks,
         "save_actions": save_actions,
         "support_actions": support_actions,
+        "legendary_actions": existing.legendary_actions or source.legendary_actions,
         "resources": resources,
         "combat_traits": traits,
     })
