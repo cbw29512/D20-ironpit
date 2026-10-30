@@ -4,6 +4,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
+  const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const members = (setup) => [...setup.heroes, ...setup.monsters];
   const incapacitated = (state) => state.active_effect_ids?.includes("incapacitated") || state.is_unconscious || state.is_dead;
   const immunityKey = (source, aura) => `${source.combatant_id}:${aura.id}`;
@@ -37,6 +38,10 @@
         const immunity = immunityKey(source, aura);
         if ((target.state.source_effect_immunities || []).includes(immunity)) continue;
         if (S().distance(source, target) > aura.radius_ft) continue;
+        if (aura.requires_source_reaction) {
+          if (!E()?.available(source.state, "reaction")) continue;
+          E().spend(source.state, "reaction");
+        }
         const save = V().resolveSavingThrow(
           target.state, aura.save_ability, aura.dc, Boolean(aura.magical_effect), savingThrowAdvantageSources(target, setup),
         );
