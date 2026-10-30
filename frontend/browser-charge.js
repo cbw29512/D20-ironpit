@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const RC = () => window.IRON_PIT_BROWSER_ATTACK_REACTION_CHAIN;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s) => s.action_available };
 
   function openingEligible(round, member, setup) {
@@ -23,9 +23,9 @@
     if (!actualTarget.state.is_alive || actualTarget.state.is_dead || actualTarget.state.current_hp <= 0) return { events: [], sequence };
     const attack = member.state.template.attacks.find((item) => item.id === profile.followUpAttackId);
     if (!attack) throw new Error(`Charge follow-up attack ${profile.followUpAttackId} is missing from ${member.state.template.id}.`);
-    return { events: [A().resolveAttack(sequence++, round, member, actualTarget, attack, attack.reach || 5, {
-      spendAction: false, featureId: "charge-follow-up", setup, ignoreCloseThreat: true,
-    })], sequence };
+    return RC().resolve(sequence, round, member, actualTarget, attack, attack.reach || 5, setup, {
+      spendAction: false, featureId: "charge-follow-up", ignoreCloseThreat: true,
+    });
   }
   function targetSizeAllowed(target, profile) {
     const maximum = profile.targetMaxSize || profile.proneMaxSize;
@@ -52,8 +52,8 @@
       options.bonusDamage = { source: "Charge", diceCount: profile.diceCount,
         diceSize: profile.diceSize, damageType: profile.damageType };
     }
-    const firstEvent = A().resolveAttack(sequence++, round, member, target, chargedAttack(attack, profile), attack.reach || 5, options);
-    const events = [firstEvent];
+    const first = RC().resolve(sequence, round, member, target, chargedAttack(attack, profile), attack.reach || 5, setup, options);
+    const events = [...first.events], firstEvent = events[0]; sequence = first.sequence;
     const followed = followUp(sequence, round, member, target, profile, firstEvent, setup);
     events.push(...followed.events);
     return { events, sequence: followed.sequence, handled: true };
