@@ -53,6 +53,7 @@ class CombatantDefinition(BaseModel):
     forced_movement_actions: list[ForcedMovementAction] = Field(default_factory=list)
     swallow_actions: list[SwallowAction] = Field(default_factory=list)
     support_actions: list[CombatSupportAction] = Field(default_factory=list)
+    timed_self_buff_actions: list[TimedSelfBuffAction] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
