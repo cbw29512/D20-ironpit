@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_reaction_arena_policy import arena_unavailable_reaction
 from app.content.monster_reaction_source_audit import (
     parse_parry_ac_bonus,
     parse_reaction_names,
@@ -119,5 +120,19 @@ def test_ochre_jelly_split_is_arena_unavailable_but_immunities_remain() -> None:
         assert reaction_issues(jelly, row) == []
         assert "lightning" in jelly.damage_immunities
         assert "slashing" in jelly.damage_immunities
+    except Exception:
+        raise
+
+
+def test_extra_combatant_reaction_policy_is_source_name_neutral() -> None:
+    try:
+        source = (
+            "Fission. Trigger: The creature is hit. "
+            "Response: The creature splits into two new copies. "
+            "Each new copy is one size smaller than the original creature and acts on its Initiative. "
+            "The original creature’s Hit Points are divided evenly between the new copies (round down)."
+        )
+
+        assert arena_unavailable_reaction("Fission", source) is True
     except Exception:
         raise
