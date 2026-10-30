@@ -99,7 +99,7 @@
           repeatSaveTiming: control.repeatSaveTiming || null, repeatSaveDelayRounds: control.repeatSaveDelayRounds || 0, allowedRemovalActionIds: control.allowedRemovalActionIds || [] });
         if (timed) applied.push(timed);
       }
-      if (living) M().applyHitEffects?.(actualTarget.state, attacker.combatant_id, attack, round); window.IRON_PIT_BROWSER_SELF_HIT_MODIFIERS?.apply(attacker.state, attacker.combatant_id, attack, round);
+      if (living) M().applyHitEffects?.(actualTarget.state, attacker.combatant_id, attack, round); if ((attack.onHitSelfModifiers || []).length) { if (!window.IRON_PIT_BROWSER_SELF_HIT_MODIFIERS) throw new Error("Browser self-hit modifier runtime is not loaded."); window.IRON_PIT_BROWSER_SELF_HIT_MODIFIERS.apply(attacker.state, attacker.combatant_id, attack, round); }
       topple = TOP().resolve(attacker, actualTarget, attack); if (topple.applied && !applied.includes("prone")) applied.push("prone");
       if (living) sapApplied = SAP().applyWeapon(attacker, actualTarget, attack, round) ? "weapon" : TM().apply(attacker, actualTarget, attack, round) ? "tactical" : "";
       vexApplied = window.IRON_PIT_BROWSER_VEX?.apply(attacker.state, attacker.combatant_id, actualTarget.combatant_id, attack, round, damageRoll.total) || false;
