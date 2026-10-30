@@ -82,7 +82,10 @@
       const deathSuccessBefore = target.state.death_save_successes;
       const deathFailureBefore = target.state.death_save_failures;
       const save = V().resolveSavingThrow(target.state, rule.save_ability, rule.save_dc);
-      const outcome = OUT().resolve(target.state, rule, save.succeeded, members(setup).map((item) => item.state));
+      const outcome = OUT().resolve(
+        target.state, rule, save.succeeded, members(setup).map((item) => item.state),
+        actor.combatant_id,
+      );
       if (spendAction) E().spend(actor.state, "action");
       actor.state.deferred_effects = actor.state.deferred_effects.filter(
         (item) => !(item.source_id === rule.source_id && item.target_id === target.combatant_id),
