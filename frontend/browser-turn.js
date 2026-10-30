@@ -10,6 +10,7 @@
   const RES = () => window.IRON_PIT_BROWSER_RESOURCES, RC = () => window.IRON_PIT_BROWSER_RECHARGE, RA = () => window.IRON_PIT_BROWSER_RECHARGE_ACTION;
   const SW = () => window.IRON_PIT_BROWSER_SWALLOW, AU = () => window.IRON_PIT_BROWSER_AURAS, D = () => window.IRON_PIT_DICE;
   const PR = () => window.IRON_PIT_BROWSER_PROGRESSION_RECOVERY;
+  const TB = () => window.IRON_PIT_BROWSER_TRIGGERED_BONUS_ATTACKS;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
   const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false };
   const H = () => window.IRON_PIT_BROWSER_GRAPPLE || NO_CONTROL;
@@ -62,6 +63,8 @@
     return null;
   }
   function finalize(events, sequence, round, member, setup, turnKey, allowSurge = true) {
+    const triggered = TB()?.resolve(sequence, round, member, setup, events, turnKey);
+    if (triggered) { events.push(...triggered.events); sequence = triggered.sequence; }
     const bonus = saveChoice(member, setup, "bonus_action");
     if (bonus) events.push(V().resolveAction(sequence++, round, member, bonus.target, bonus.action, bonus.distance, { setup }));
     const surge = allowSurge ? J()?.resolveAttack(sequence, round, member, setup, turnKey) : null;
