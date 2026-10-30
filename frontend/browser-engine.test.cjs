@@ -15,7 +15,7 @@ for (const file of [
   "browser-weapon-mastery.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js",
   "browser-graze.js", "browser-vex.js", "browser-attack.js", "browser-reactions.js",
   "browser-dodge.js", "browser-saves.js", "browser-condition-lifecycle.js", "browser-charge.js",
-  "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
+  "browser-light-weapons.js", "browser-light-attack.js", "browser-attack-reaction-chain.js", "browser-standard-attack-action.js",
   "browser-multiattack.js", "browser-healing.js", "browser-spellcasting.js", "browser-condition-removal.js",
   "browser-support.js", "browser-formation.js", "browser-recharge-action.js", "browser-arena-map.js",
   "browser-grid-geometry.js", "browser-grid-movement-support.js", "browser-grid-path-search-support.js",
