@@ -100,13 +100,11 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
     issues.extend(legendary_issues)
     aura_issues, aura_certified = aura_trait_issues(template, row, expected)
     issues.extend(aura_issues)
-    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement", "Magic Resistance", "Regeneration"} | aura_certified | death_certified | typed_certified | damage_disadvantage_certified | source_environment_neutral_traits(row, expected)
+    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement", "Magic Resistance", "Regeneration"} | aura_certified | death_certified | typed_certified | damage_disadvantage_certified | reactive_certified | source_environment_neutral_traits(row, expected)
     if legendary_certified:
         certified.add("Legendary Resistance")
     if grapple_certified and "Barbed Hide" in expected:
         certified.add("Barbed Hide")
-    if reactive_certified and "Reactive" in expected:
-        certified.add("Reactive")
     for name in expected:
         if name not in certified:
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
