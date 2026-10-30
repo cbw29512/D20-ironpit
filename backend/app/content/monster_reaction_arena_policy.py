@@ -38,8 +38,6 @@ def arena_unavailable_reaction(name: str, source_reactions: object) -> bool:
         text = str(source_reactions or "").strip()
         if not text:
             return False
-        if name.strip().lower() != "split":
-            return False
         return _SPLIT_EXTRA_COMBATANTS.search(text) is not None
     except Exception as exc:
         logger.exception("Failed to classify arena-unavailable reaction %r.", name)
