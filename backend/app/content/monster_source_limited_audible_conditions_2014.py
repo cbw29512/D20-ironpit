@@ -20,25 +20,36 @@ _PATTERN = re.compile(
 )
 
 
+def limited_audible_resource_uses_2014(monster: SourceMonster2014) -> dict[str, int]:
+    try:
+        result: dict[str, int] = {}
+        for name, body in source_sections_2014(monster.source_actions).items():
+            marker = re.search(r"\((\d+)\s*/\s*Day\)$", name, re.IGNORECASE)
+            if marker is None or _PATTERN.fullmatch(" ".join(body.split())) is None:
+                continue
+            action_id = re.sub(
+                r"[^a-z0-9]+", "-", name.split(" (", 1)[0].casefold()
+            ).strip("-")
+            result[action_id] = int(marker.group(1))
+        return result
+    except Exception:
+        logger.exception("Failed to derive limited audible resources for %s.", monster.id)
+        raise
+
+
 def source_proven_limited_audible_conditions_2014(
     monster: SourceMonster2014,
 ) -> list[SaveCapabilityDefinition]:
     try:
         sections = source_sections_2014(monster.source_actions)
+        resource_uses = limited_audible_resource_uses_2014(monster)
         result: list[SaveCapabilityDefinition] = []
-        for action_id, uses in monster.limited_action_uses.items():
-            headings = [
-                (name, body)
-                for name, body in sections.items()
-                if re.sub(
-                    r"[^a-z0-9]+", "-", name.split(" (", 1)[0].casefold()
-                ).strip("-") == action_id
-            ]
-            if len(headings) != 1:
-                continue
-            name, body = headings[0]
-            marker = re.search(r"\((\d+)\s*/\s*Day\)$", name, re.IGNORECASE)
-            if marker is None or int(marker.group(1)) != uses:
+        for name, body in sections.items():
+            action_id = re.sub(
+                r"[^a-z0-9]+", "-", name.split(" (", 1)[0].casefold()
+            ).strip("-")
+            uses = resource_uses.get(action_id)
+            if uses is None:
                 continue
             match = _PATTERN.fullmatch(" ".join(body.split()))
             if match is None:
