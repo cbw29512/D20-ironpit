@@ -29,7 +29,7 @@ def _member(template_id: str, combatant_id: str, side: str) -> EncounterCombatan
 def test_pirate_rapier_grants_and_consumes_next_attack_advantage() -> None:
     try:
         pirate = _member("srd-pirate-captain", "pirate", "monsters")
-        hero = _member("srd-commoner", "hero", "heroes")
+        hero = _member("srd-giant-hyena", "hero", "heroes")
         setup = EncounterSetup(
             heroes=[hero],
             monsters=[pirate],
