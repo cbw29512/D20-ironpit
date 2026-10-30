@@ -3,6 +3,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 from app.domain.rule_types import AbilityName, ConditionName, ConditionTiming
 from app.domain.save_effects import SaveFailureEffectDefinition
+from app.domain.save_damage import SaveDamageComponent
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
 
@@ -111,6 +112,7 @@ class SavingThrowAction(BaseModel):
     damage_dice_size: int = Field(default=6, ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageTypeName | None = None
+    additional_damage_components: list[SaveDamageComponent] = Field(default_factory=list)
     success_damage: Literal["none", "half"] = "none"
     failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
     forbid_target_affected_by_action: bool = False
