@@ -44,21 +44,48 @@ def parse_bonus_action_names(source_bonus_actions: object) -> list[str]:
 
 
 def _runtime_bonus_save(template: CombatantTemplate, name: str) -> bool:
-    base = _base_name(name)
-    return any(action.name == base and action.action_cost == "bonus_action" for action in template.saving_throw_actions)
+    try:
+        base = _base_name(name)
+        return any(
+            action.name == base and action.action_cost == "bonus_action"
+            for action in template.saving_throw_actions
+        )
+    except Exception as exc:
+        logger.exception("Failed to inspect Bonus Action save binding for %s.", template.id)
+        raise RuntimeError("Bonus Action save binding could not be evaluated.") from exc
+
+
+def _runtime_bonus_swallow(template: CombatantTemplate, name: str) -> bool:
+    try:
+        base = _base_name(name)
+        return any(
+            action.name == base and action.action_cost == "bonus_action"
+            for action in template.swallow_actions
+        )
+    except Exception as exc:
+        logger.exception("Failed to inspect Bonus Action Swallow binding for %s.", template.id)
+        raise RuntimeError("Bonus Action Swallow binding could not be evaluated.") from exc
 
 
 def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     """Fail closed when a printed outcome-changing bonus action lacks runtime semantics."""
-    expected = parse_bonus_action_names(row.get("bonusActions", ""))
-    issues: list[str] = []
-    if template.source_bonus_action_names != expected:
-        issues.append("source-bonus-action-fingerprint-mismatch")
-    for name in expected:
-        if _base_name(name) in _ARENA_NEUTRAL_BONUS_ACTIONS or _runtime_bonus_save(template, name):
-            continue
-        issues.append(f"uncertified-bonus-action:{_slug(name)}")
-    return issues
+    try:
+        expected = parse_bonus_action_names(row.get("bonusActions", ""))
+        issues: list[str] = []
+        if template.source_bonus_action_names != expected:
+            issues.append("source-bonus-action-fingerprint-mismatch")
+        for name in expected:
+            if (
+                _base_name(name) in _ARENA_NEUTRAL_BONUS_ACTIONS
+                or _runtime_bonus_save(template, name)
+                or _runtime_bonus_swallow(template, name)
+            ):
+                continue
+            issues.append(f"uncertified-bonus-action:{_slug(name)}")
+        return issues
+    except Exception as exc:
+        logger.exception("Failed to audit Bonus Actions for %s.", template.id)
+        raise RuntimeError("Monster Bonus Action audit could not be evaluated.") from exc
 
 
 @lru_cache(maxsize=1)
