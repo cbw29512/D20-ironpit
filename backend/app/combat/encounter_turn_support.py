@@ -14,6 +14,7 @@ from app.combat.pit_policy import save_distance, target_order
 from app.combat.resources import resource_available
 from app.combat.saving_throws import legal_save_action, resolve_save_action
 from app.combat.swallow import resolve_swallow_turn_end
+from app.combat.triggered_bonus_attacks import resolve_triggered_bonus_attack
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -22,6 +23,10 @@ logger = logging.getLogger(__name__)
 
 def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key, allow_surge=True):
     try:
+        triggered_events, sequence = resolve_triggered_bonus_attack(
+            sequence, round_number, attacker, setup, dice, events, turn_key,
+        )
+        events.extend(triggered_events)
         bonus_choice = save_choice(attacker, setup, "bonus_action")
         if bonus_choice is not None and is_available(attacker.state, "bonus_action"):
             target, action, distance = bonus_choice
