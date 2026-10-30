@@ -6604,8 +6604,7 @@
         "attack-roll",
         "bonus-action",
         "multiattack",
-        "reaction",
-        "unsupported-action-rider"
+        "reaction"
       ],
       "supported_mechanics": [
         "attack-roll",
@@ -6613,8 +6612,7 @@
         "multiattack"
       ],
       "unsupported_mechanics": [
-        "reaction",
-        "unsupported-action-rider"
+        "reaction"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -6622,8 +6620,7 @@
       "public_ready_status": "blocked",
       "blockers": [
         "reaction",
-        "uncertified-reaction:riposte",
-        "unsupported-action-rider"
+        "uncertified-reaction:riposte"
       ]
     },
     {
