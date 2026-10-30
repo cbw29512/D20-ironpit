@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.action_economy import is_available, spend
 from app.combat.condition_rules import is_incapacitated
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.saving_throw_rolls import resolve_saving_throw
@@ -36,6 +37,10 @@ def resolve_start_turn_save_condition_auras(
                     continue
                 if combatant_distance(source, target) > aura.radius_ft:
                     continue
+                if aura.requires_source_reaction:
+                    if not is_available(source.state, "reaction"):
+                        continue
+                    spend(source.state, "reaction")
                 roll, succeeded = resolve_saving_throw(
                     target.state, aura.save_ability, aura.dc, dice,
                     magical_effect=aura.magical_effect,
