@@ -50,6 +50,11 @@ def swallow_after_bite(
         damage_dice_size=action.damage_dice_size,
         damage_type=action.damage_type,
         exit_movement_ft=action.exit_movement_ft,
+        regurgitation_damage_threshold=action.regurgitation_damage_threshold,
+        regurgitation_save_ability=action.regurgitation_save_ability,
+        regurgitation_save_dc=action.regurgitation_save_dc,
+        regurgitation_range_ft=action.regurgitation_range_ft,
+        regurgitation_all_swallowed=action.regurgitation_all_swallowed,
         target_size=action.max_target_size,
     )
     owner.swallowed_target_ids.append(target_id)
