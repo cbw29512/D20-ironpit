@@ -158,15 +158,16 @@ def resolve_attack_hit_damage(
     )
     damage_roll.total = applied_total
     applied_types = {part.damage_type for part in components if part.applied_total > 0}
+    source = next(
+        (item for item in [*setup.heroes, *setup.monsters] if item.state is attacker),
+        None,
+    ) if setup is not None else None
     outcome = apply_damage(
         defender, applied_total, critical=critical, damage_types=applied_types,
         dice=dice, affected_states=affected_states, setup=setup, damage_components=components,
+        source_id=source.combatant_id if source is not None else None,
     )
     if setup is not None and target_event_id:
-        source = next(
-            (item for item in [*setup.heroes, *setup.monsters] if item.state is attacker),
-            None,
-        )
         if source is not None:
             resolve_hunters_mark_splash(
                 attacker, source.combatant_id, target_event_id, components,
