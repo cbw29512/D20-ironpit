@@ -19,6 +19,7 @@ from app.content.monster_source_opening_area_saves_2014 import source_proven_ope
 from app.content.monster_recharge_self_buffs_2014 import recharge_self_buff_bindings_2014
 from app.content.monster_source_recharge_line_damage_2014 import source_proven_recharge_line_damage_2014
 from app.content.monster_source_recharge_area_conditions_2014 import source_proven_recharge_area_conditions_2014
+from app.content.monster_source_limited_audible_conditions_2014 import source_proven_limited_audible_conditions_2014
 from app.content.monster_audible_maintained_control_2014 import source_proven_audible_maintained_controls_2014
 from app.domain.capability_attacks import SaveCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
@@ -84,6 +85,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
         result.extend(source_proven_opening_area_saves_2014(monster))
         result.extend(source_proven_audible_maintained_controls_2014(monster))
         result.extend(source_proven_recharge_area_conditions_2014(monster))
+        result.extend(source_proven_limited_audible_conditions_2014(monster))
         existing_ids = {item.id for item in result}
         result.extend(
             item for item in source_proven_recharge_line_damage_2014(monster)
@@ -96,14 +98,27 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
 
 
 def save_resources_2014(monster: SourceMonster2014) -> list[ResourceDefinition]:
+    capabilities = save_capabilities_2014(monster)
     ids = {
-        action.resource_id for action in save_capabilities_2014(monster)
+        action.resource_id for action in capabilities
         if action.resource_id is not None and action.resource_id in monster.action_recharges
     }
     resources = [
         ResourceDefinition(id=resource_id, name=resource_id.replace("-", " ").title(), max_uses=1)
         for resource_id in sorted(ids)
     ]
+    limited_ids = {
+        action.resource_id for action in capabilities
+        if action.resource_id is not None and action.resource_id in monster.limited_action_uses
+    }
+    resources.extend(
+        ResourceDefinition(
+            id=resource_id,
+            name=resource_id.replace("-", " ").title(),
+            max_uses=int(monster.limited_action_uses[resource_id]),
+        )
+        for resource_id in sorted(limited_ids - ids)
+    )
     for action in source_proven_asymmetric_saves_2014(monster):
         if action.resource_id and action.resource_id not in ids:
             resources.append(ResourceDefinition(
