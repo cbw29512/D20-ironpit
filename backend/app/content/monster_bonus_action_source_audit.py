@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 # documented flat, no-Hide, no-kiting, initiative-opener arena abstraction.
 _ARENA_NEUTRAL_BONUS_ACTIONS = frozenset({
     "Aquatic Charge",
+    "Bubble Dash",
     "Charge",
     "Cunning Action",
     "Ignited Illumination",
