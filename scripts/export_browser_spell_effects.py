@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 
 from app.content.spell_effects import BLESS, SHIELD_OF_FAITH
-from browser_template_serializer import defense_row
+from browser_action_serializer import defense_row
 
 logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parents[1]
