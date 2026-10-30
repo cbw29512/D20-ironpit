@@ -43,3 +43,18 @@ def test_turn_damage_clear_resets_type_and_source_ledgers() -> None:
     except Exception:
         logger.exception("Turn damage source ledger reset regression failed.")
         raise
+
+
+def test_damage_source_ledger_counts_damage_absorbed_by_temporary_hp() -> None:
+    try:
+        state = build_combatant_state(build_commoner().model_copy(update={"max_hp": 100}))
+        state.temporary_hp = 20
+
+        apply_damage(state, 12, source_id="swallowed-creature")
+
+        assert state.current_hp == 100
+        assert state.temporary_hp == 8
+        assert state.damage_taken_this_turn_by_source == {"swallowed-creature": 12}
+    except Exception:
+        logger.exception("Temporary-HP damage attribution regression failed.")
+        raise
