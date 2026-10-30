@@ -56,7 +56,6 @@ def resolve_emanation_hit(
                 round_number=round_number,
                 encounter_roller=target,
                 setup=setup,
-                source_id=source.combatant_id,
             )
             if succeeded and emanation.success_damage == "none":
                 raw = 0
@@ -72,6 +71,7 @@ def resolve_emanation_hit(
                 dice=dice,
                 affected_states=[member.state for member in [*setup.heroes, *setup.monsters]],
                 setup=setup,
+                source_id=source.combatant_id,
             )
         distance = combatant_distance(source, target)
         event = BattleEvent(
