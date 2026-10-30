@@ -1,5 +1,5 @@
 (() => { "use strict";
-  const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const A = () => window.IRON_PIT_BROWSER_ATTACK, RC = () => window.IRON_PIT_BROWSER_ATTACK_REACTION_CHAIN;
   const AU = () => window.IRON_PIT_BROWSER_AURAS || { attackAdvantageSources: () => 0 };
   const C = () => window.IRON_PIT_BROWSER_CHARGE;
   const D = () => window.IRON_PIT_DICE;
@@ -121,10 +121,9 @@
         const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
         const advantage = (pack ? 1 : 0) + AU().attackAdvantageSources(member, setup);
         const featureId = openingFeature || (pack ? "pack-tactics" : definition.id);
-        const event = A().resolveAttack(sequence++, round, member, choice.target, choice.attack, choice.distance, { spendAction: false, advantage, setup, featureId, turnKey, allowReckless: true, ignoreCloseThreat: true });
-        events.push(event);
-        const death = settleDeathEvent(sequence, round, event, setup, resolvedDeathTriggers);
-        events.push(...death.events); sequence = death.sequence;
+        const chain = RC().resolve(sequence, round, member, choice.target, choice.attack, choice.distance, setup, { spendAction: false, advantage, featureId, turnKey, allowReckless: true, ignoreCloseThreat: true });
+        sequence = chain.sequence; const event = chain.events[0]; events.push(...chain.events);
+        for (const chainEvent of chain.events) { const death = settleDeathEvent(sequence, round, chainEvent, setup, resolvedDeathTriggers); events.push(...death.events); sequence = death.sequence; }
         if (member.state.is_dead || member.state.is_unconscious || member.state.turn_terminated) break;
         const cleave = WM().resolveCleave(sequence, round, member, event, choice.attack, setup, turnKey);
         events.push(...cleave.events); sequence = cleave.sequence;
