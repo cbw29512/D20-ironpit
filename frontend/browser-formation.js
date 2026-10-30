@@ -16,7 +16,7 @@
   function startingPosition(template, side) { const back = usesBackline(template); if (side === "heroes") return back ? HERO_BACK : HERO_FRONT; if (side === "monsters") return back ? MONSTER_BACK : MONSTER_FRONT; throw new Error(`Unknown encounter side: ${side}`); }
   function enemies(member, setup) { return member.side === "heroes" ? setup.monsters : setup.heroes; }
   function livingTargets(member, setup) { const pool = enemies(member, setup), active = pool.filter(alive); if (active.length) return active; return pool.filter((target) => target.state.template.kind === "character" && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0); }
-  function targetOrder(member, setup, preferBackline = false) { const targets = livingTargets(member, setup), front = targets.filter((target) => !isBackline(target)), back = targets.filter(isBackline); return preferBackline ? [...back, ...front] : [...front, ...back]; }
+  function targetOrder(member, setup, preferBackline = false) { const berserk = window.IRON_PIT_BROWSER_BLOODIED_BERSERK?.targetOrder(member, setup); if (berserk) return berserk; const targets = livingTargets(member, setup), front = targets.filter((target) => !isBackline(target)), back = targets.filter(isBackline); return preferBackline ? [...back, ...front] : [...front, ...back]; }
   function hasFrontlineTarget(member, setup) { return livingTargets(member, setup).some((target) => !isBackline(target)); }
   function hasBacklineTarget(member, setup) { return livingTargets(member, setup).some(isBackline); }
   function alliedFrontlineActive(member, setup) { const allies = member.side === "heroes" ? setup.heroes : setup.monsters; return allies.some((ally) => ally !== member && alive(ally) && !isBackline(ally)); }
