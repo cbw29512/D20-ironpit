@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 225,
-    "blocked": 105
+    "public_ready": 226,
+    "blocked": 104
   },
   "monsters": [
     {
@@ -3248,19 +3248,15 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "multiattack"
-      ],
-      "unsupported_mechanics": [
+        "multiattack",
         "trait"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "trait",
-        "uncertified-trait:berserk"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-flying-snake",
@@ -3953,14 +3949,12 @@
       "detected_combat_mechanics": [
         "attack-roll",
         "bonus-action",
-        "trait",
-        "unsupported-action-rider"
+        "trait"
       ],
       "supported_mechanics": [
         "attack-roll",
         "bonus-action",
-        "trait",
-        "unsupported-action-rider"
+        "trait"
       ],
       "unsupported_mechanics": [],
       "python_certification_status": "certified",
@@ -4295,12 +4289,10 @@
       "srd_source_reference": "SRD 5.2.1 p. 355",
       "runtime_template_id": "srd-goat",
       "detected_combat_mechanics": [
-        "attack-roll",
-        "unsupported-action-rider"
+        "attack-roll"
       ],
       "supported_mechanics": [
-        "attack-roll",
-        "unsupported-action-rider"
+        "attack-roll"
       ],
       "unsupported_mechanics": [],
       "python_certification_status": "certified",
