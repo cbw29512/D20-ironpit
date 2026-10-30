@@ -23,6 +23,7 @@ POISONED_EFFECT_ID = "poisoned"
 def apply_grapple(
     state: CombatantState, source_id: str, escape_dc: int, range_ft: int, *,
     restrains: bool = False, linked_conditions: list[str] | None = None,
+    source_effect_id: str | None = None,
 ) -> list[str]:
     if condition_is_immune(state, GRAPPLED_EFFECT_ID):
         return []
@@ -31,7 +32,8 @@ def apply_grapple(
     restrains = restrains and not condition_is_immune(state, RESTRAINED_EFFECT_ID)
     linked = [condition for condition in (linked_conditions or []) if not condition_is_immune(state, condition)]
     state.grapple_sources.append(GrappleSource(
-        source_id=source_id, escape_dc=escape_dc, range_ft=range_ft,
+        source_id=source_id, source_effect_id=source_effect_id,
+        escape_dc=escape_dc, range_ft=range_ft,
         restrains=restrains, linked_conditions=linked,
     ))
     drop_orphaned_linked_conditions(state, {item for source in replaced for item in source.linked_conditions})
