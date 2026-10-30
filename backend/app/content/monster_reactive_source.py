@@ -14,10 +14,10 @@ _REACTIVE = re.compile(
     re.IGNORECASE,
 )
 _BERSERK = re.compile(
-    r"(?P<name>Berserk)\.\s+Whenever the [^.]+ starts its turn while Bloodied, roll 1d(?P<die>\d+)\.\s+"
+    r"(?P<name>Berserk)\.\s+Whenever the [^.]+ starts its turn (?:while )?Bloodied, roll 1d(?P<die>\d+)\.\s+"
     r"On a (?P<trigger>\d+), the [^.]+ goes berserk\.\s+On each of its turns while berserk, "
     r"the [^.]+ attacks the nearest creature it can see\..*?"
-    r"Once the [^.]+ goes berserk, it remains berserk until it is destroyed or it is no longer Bloodied\.",
+    r"Once the [^.]+ goes berserk, it remains (?:berserk|so) until it is destroyed or it is no longer Bloodied\.",
     re.IGNORECASE,
 )
 
