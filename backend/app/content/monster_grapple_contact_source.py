@@ -76,3 +76,24 @@ def complete_monster_grapple_contact_damage(
     except Exception as exc:
         logger.exception("Failed to complete monster grapple-contact damage profiles.")
         raise RuntimeError("Monster grapple-contact damage completion failed.") from exc
+
+
+def grapple_contact_trait_issues(
+    template: CombatantTemplate,
+    row: dict[str, object],
+) -> tuple[list[str], bool]:
+    try:
+        expected = parse_grapple_contact_damage(row.get("traits", ""))
+        issues = (
+            []
+            if template.start_turn_grapple_contact_damage == expected
+            else ["grapple-contact-source-data-mismatch"]
+        )
+        certified = (
+            expected is not None
+            and template.start_turn_grapple_contact_damage is not None
+        )
+        return issues, certified
+    except Exception as exc:
+        logger.exception("Failed to audit grapple-contact trait for %s.", template.id)
+        raise RuntimeError("Grapple-contact trait audit failed.") from exc
