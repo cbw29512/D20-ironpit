@@ -3,6 +3,14 @@ from __future__ import annotations
 from app.content.figure_profile_schema import FigureProfile, figure_profile as _p
 
 NEW_READY_FIGURE_PROFILES: dict[str, FigureProfile] = {
+    "Pirate Captain": _p("humanoid", "pirate-captain"),
+    "Magmin": _p("humanoid", "magmin"),
+    "Iron Golem": _p("humanoid", "iron-golem"),
+    "Chain Devil": _p("humanoid", "chain-devil"),
+    "Centaur Trooper": _p("hoofed", "centaur"),
+    "Bugbear Warrior": _p("humanoid", "bugbear"),
+    "Barbed Devil": _p("humanoid", "barbed-devil"),
+    "Air Elemental": _p("humanoid", "air-elemental"),
     "Animated Rug of Smothering": _p("weapon", "animated-rug"),
     "Assassin": _p("humanoid", "assassin"),
     "Basilisk": _p("reptile", "basilisk"),
