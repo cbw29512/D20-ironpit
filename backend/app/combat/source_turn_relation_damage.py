@@ -50,6 +50,7 @@ def resolve_source_turn_relation_damage(
                     target.state, applied, damage_types={rule.damage_type},
                     dice=dice, affected_states=affected, setup=setup,
                     damage_components=adjusted,
+                    source_id=member.combatant_id,
                 )
                 events.append(BattleEvent(
                     sequence=sequence, round_number=round_number,
