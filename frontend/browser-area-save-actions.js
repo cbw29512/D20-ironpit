@@ -18,7 +18,6 @@
       throw error;
     }
   }
-
   function resolveHealing(sequence, round, member, target, action, remaining) {
     try {
       const rider = action.areaHealingRider;
