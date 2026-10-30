@@ -74,6 +74,23 @@ def _runtime_bonus_swallow(template: CombatantTemplate, name: str) -> bool:
         raise RuntimeError("Bonus Action Swallow binding could not be evaluated.") from exc
 
 
+def _source_no_hide_movement_bonus(name: str, source_bonus_actions: object) -> bool:
+    """Arena-neutral when the printed result is only no-OA movement plus optional Hide."""
+    try:
+        base = re.escape(_base_name(name))
+        text = str(source_bonus_actions or "")
+        pattern = re.compile(
+            rf"{base}(?:\s*\([^)]*\))?\.\s+The [^.]+ moves up to its Speed "
+            r"without provoking Opportunity Attacks\.\s+At the end of this movement, "
+            r"the [^.]+ can take the Hide action\.",
+            re.IGNORECASE,
+        )
+        return pattern.search(text) is not None
+    except Exception as exc:
+        logger.exception("Failed to classify no-Hide movement Bonus Action %r.", name)
+        raise RuntimeError("No-Hide movement Bonus Action policy could not be evaluated.") from exc
+
+
 def _source_planar_neutral_bonus(name: str, source_bonus_actions: object) -> bool:
     try:
         text = str(source_bonus_actions or "")
@@ -98,6 +115,7 @@ def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> 
                 or _runtime_bonus_swallow(template, name)
                 or runtime_bonus_support(template, _base_name(name))
                 or _runtime_triggered_bonus_attack(template, name)
+                or _source_no_hide_movement_bonus(name, row.get("bonusActions", ""))
             ):
                 continue
             issues.append(f"uncertified-bonus-action:{_slug(name)}")
