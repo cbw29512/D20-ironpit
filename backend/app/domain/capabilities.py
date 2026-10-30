@@ -14,6 +14,7 @@ from app.domain.capability_attacks import (
 from app.domain.character_builds import AbilityScores
 from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.forced_movement_actions import ForcedMovementAction
+from app.domain.legendary_actions import LegendaryActionPool
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reactions import ParryReaction, RedirectAttackReaction
@@ -56,6 +57,7 @@ class CombatantDefinition(BaseModel):
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     condition_removal_actions: list[ConditionRemovalAction] = Field(default_factory=list)
+    legendary_actions: LegendaryActionPool | None = None
     saving_throw_bonuses: dict[str, int] = Field(default_factory=dict)
     skill_bonuses: dict[str, int] = Field(default_factory=dict)
     combat_traits: list[CombatTrait] = Field(default_factory=list)
