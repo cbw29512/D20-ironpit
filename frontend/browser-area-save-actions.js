@@ -4,35 +4,17 @@
   const DMR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const H = () => window.IRON_PIT_BROWSER_HEALING;
-  const S = () => window.IRON_PIT_BROWSER_STATE;
   const V = () => window.IRON_PIT_BROWSER_SAVES;
   const T = () => window.IRON_PIT_BROWSER_AREA_TARGETING;
   const D = () => window.IRON_PIT_DICE;
+  const C = () => window.IRON_PIT_BROWSER_AREA_SAVE_CHOICE;
 
   function memberById(setup, id) {
-    return [...setup.heroes, ...setup.monsters].find((member) => member.combatant_id === id) || null;
-  }
-
-  function resourceAvailable(state, action) {
-    return !action.resourceId
-      || (state.resources[action.resourceId] || 0) >= (action.resourceCost || 1);
-  }
-
-  function healingTarget(member, setup, action, placement, requireWounded = false) {
     try {
-      if (!action.areaHealingRider) return null;
-      const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
-      const legal = allies.filter((target) => target.state.is_alive && !target.state.is_dead
-        && T().memberInPlacement(member, target, action.area, placement)
-        && (!requireWounded || target.state.current_hp < S().effectiveMaxHp(target.state)));
-      legal.sort((left, right) =>
-        Number(left.state.current_hp > 0) - Number(right.state.current_hp > 0)
-        || left.state.current_hp / Math.max(1, S().effectiveMaxHp(left.state))
-          - right.state.current_hp / Math.max(1, S().effectiveMaxHp(right.state))
-        || left.combatant_id.localeCompare(right.combatant_id));
-      return legal[0] || null;
+      return [...setup.heroes, ...setup.monsters]
+        .find((member) => member.combatant_id === id) || null;
     } catch (error) {
-      console.error("Failed browser area-healing target choice", { member: member.combatant_id, action: action.id, error });
+      console.error("Failed browser area-save member lookup", { id, error });
       throw error;
     }
   }
@@ -42,13 +24,16 @@
       const rider = action.areaHealingRider;
       if (!rider || !H()) throw new Error(`${action.name} area-healing runtime is unavailable.`);
       const rolls = D().rollMany(rider.diceCount, rider.diceSize);
-      const total = rolls.reduce((sum, value) => sum + value, 0) + (rider.healingBonus || 0);
+      const total = rolls.reduce((sum, value) => sum + value, 0)
+        + (rider.healingBonus || 0);
       const before = target.state.current_hp;
       const healed = H().restore(target.state, total);
       const timed = window.IRON_PIT_BROWSER_TIMED;
       const needsCleanup = action.magicalEffect
         && (target.state.timed_effects || []).some((effect) => effect.ends_on_magical_healing);
-      if (needsCleanup && !timed?.removeOnMagicalHealing) throw new Error("Area magical healing requires timed-effect cleanup.");
+      if (needsCleanup && !timed?.removeOnMagicalHealing) {
+        throw new Error("Area magical healing requires timed-effect cleanup.");
+      }
       const removed = needsCleanup ? timed.removeOnMagicalHealing(target.state) : [];
       return {
         sequence, round_number: round, event_type: "healing",
@@ -63,98 +48,13 @@
         death_save_failures: target.state.death_save_failures,
         is_stable: target.state.is_stable, is_dead: target.state.is_dead,
         feature_id: action.id, resource_remaining: remaining,
-        removed_condition_ids: removed,
-        animation: action.animation,
+        removed_condition_ids: removed, animation: action.animation,
         description: `${member.state.template.name}'s ${action.name} restores ${healed} HP to ${target.state.template.name}.`,
       };
     } catch (error) {
-      console.error("Failed browser area-healing resolution", { member: member.combatant_id, action: action.id, error });
-      throw error;
-    }
-  }
-
-  function prohibitedContext(member, setup, action) {
-    try {
-      if (!action.prohibitedEnvironmentContextId) return false;
-      const runtime = window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS;
-      if (!runtime?.inside) throw new Error("Context-gated Action requires shared environment context resolver.");
-      return runtime.inside(member, setup, action.prohibitedEnvironmentContextId);
-    } catch (error) {
-      console.error("Failed Action environment eligibility.", { source: member?.combatant_id, effect: action?.id, error });
-      throw error;
-    }
-  }
-
-  // Recompute eligibility from the geometric placement before execution.
-  function eligiblePlacement(member, setup, action, placement) {
-    try {
-      const candidates = action.targetScope === "all-other-creatures"
-        ? [...placement.targetIds, ...placement.friendlyIds] : placement.targetIds;
-      const targetIds = candidates.filter((id) => {
-        const target = memberById(setup, id);
-        return target && target.combatant_id !== member.combatant_id
-          && (action.targetScope === "all-other-creatures" || target.side !== member.side)
-          && V().legalAction(action, target, 0, member.combatant_id, member);
+      console.error("Failed browser area-healing resolution", {
+        member: member.combatant_id, action: action.id, error,
       });
-      return { ...placement, targetIds, target_ids: targetIds };
-    } catch (error) {
-      console.error("Failed browser area-save eligibility", { member: member.combatant_id, action: action.id, error });
-      throw error;
-    }
-  }
-
-  // One shared printed-damage score across all source-defined typed components.
-  function expectedSaveDamage(action) {
-    try {
-      const components = action.damageComponents?.length
-        ? action.damageComponents
-        : (action.damageDiceCount ? [action] : []);
-      return components.reduce((sum, part) => {
-        const count = part.diceCount ?? part.damageDiceCount ?? 0;
-        const size = part.diceSize ?? part.damageDiceSize ?? 0;
-        return sum + (count > 0 ? count * (size + 1) / 2 + (part.damageBonus ?? 0) : 0);
-      }, 0);
-    } catch (error) {
-      console.error("Failed area-save expected damage calculation", { action: action?.id, error });
-      throw error;
-    }
-  }
-
-  function choose(member, setup, actionCost = null, openingOnly = false) {
-    try {
-      const candidates = [];
-      for (const action of member.state.template.saving_throw_actions || []) {
-        if (Boolean(action.openingInitiativeOnly) !== openingOnly) continue;
-        if (openingOnly && !window.IRON_PIT_BROWSER_CHARGE?.openingEligible(member.state.current_round, member, setup)) continue;
-        if (actionCost && (action.actionCost || "action") !== actionCost) continue;
-        if (!action.area || !resourceAvailable(member.state, action)
-          || prohibitedContext(member, setup, action)) continue;
-        if (action.requiresNoActiveGrapple) {
-          const holding = [...setup.heroes, ...setup.monsters].some((target) =>
-            target.combatant_id !== member.combatant_id && !target.state.is_dead
-            && target.state.grapple_sources.some((source) => source.source_id === member.combatant_id));
-          if (holding) continue;
-        }
-        const placements = T().legalPlacements(
-          member, setup, action.area, action.range,
-          Boolean(action.areaHealingRider) || action.targetScope === "all-other-creatures",
-        );
-        for (const placement of placements) {
-          const legal = eligiblePlacement(member, setup, action, placement);
-          if (!legal.targetIds.length && !action.areaHealingRider) continue;
-          const healTarget = healingTarget(member, setup, action, legal, !legal.targetIds.length);
-          if (action.areaHealingRider && !healTarget) continue;
-          candidates.push({ action, placement: legal, healTarget });
-        }
-      }
-      candidates.sort((a, b) =>
-        b.placement.targetIds.length - a.placement.targetIds.length
-        || expectedSaveDamage(b.action) - expectedSaveDamage(a.action)
-        || Number(Boolean(b.healTarget)) - Number(Boolean(a.healTarget))
-        || a.action.id.localeCompare(b.action.id));
-      return candidates[0] || null;
-    } catch (error) {
-      console.error("Failed browser area-save choice", { member: member.combatant_id, error });
       throw error;
     }
   }
@@ -162,18 +62,25 @@
   function resolve(sequence, round, member, setup, selected) {
     try {
       if (!selected) return null;
+      const choice = C();
+      if (!choice) throw new Error("Area-save choice runtime is not loaded.");
       const { action, placement } = selected;
-      if (action.openingInitiativeOnly && !window.IRON_PIT_BROWSER_CHARGE?.openingEligible(round, member, setup)) {
+      if (action.openingInitiativeOnly
+        && !window.IRON_PIT_BROWSER_CHARGE?.openingEligible(round, member, setup)) {
         throw new Error(`${action.name} requires winning initiative on the opening round.`);
       }
-      if (prohibitedContext(member, setup, action)) throw new Error(`${action.name} is prohibited by the live environment context.`);
+      if (choice.prohibitedContext(member, setup, action)) {
+        throw new Error(`${action.name} is prohibited by the live environment context.`);
+      }
       const actionCost = action.actionCost || "action";
       if (!E().available(member.state, actionCost)) return null;
-      if (!resourceAvailable(member.state, action)) throw new Error(`${action.name} resource is unavailable.`);
+      if (!choice.resourceAvailable(member.state, action)) {
+        throw new Error(`${action.name} resource is unavailable.`);
+      }
       const legalPlacements = T().legalPlacements(
         member, setup, action.area, action.range,
         Boolean(action.areaHealingRider) || action.targetScope === "all-other-creatures",
-      ).map((row) => eligiblePlacement(member, setup, action, row))
+      ).map((row) => choice.eligiblePlacement(member, setup, action, row))
         .filter((row) => row.targetIds.length || action.areaHealingRider);
       if (!legalPlacements.some((row) =>
         JSON.stringify(row.origin) === JSON.stringify(placement.origin)
@@ -181,8 +88,12 @@
         && JSON.stringify(row.targetIds) === JSON.stringify(placement.targetIds))) {
         throw new Error(`${action.name} has a stale or illegal area placement.`);
       }
-      const healTarget = healingTarget(member, setup, action, placement, !placement.targetIds.length);
-      if (action.areaHealingRider && !healTarget) throw new Error(`${action.name} has no legal healing target in its area.`);
+      const healTarget = choice.healingTarget(
+        member, setup, action, placement, !placement.targetIds.length,
+      );
+      if (action.areaHealingRider && !healTarget) {
+        throw new Error(`${action.name} has no legal healing target in its area.`);
+      }
 
       let remaining = null;
       if (action.resourceId) {
@@ -192,7 +103,8 @@
       E().spend(member.state, actionCost);
       const shared = action.damageComponents?.length
         ? action.damageComponents.map((spec) => D().rollMany(spec.diceCount, spec.diceSize))
-        : action.damageDiceCount ? D().rollMany(action.damageDiceCount, action.damageDiceSize) : null;
+        : action.damageDiceCount
+          ? D().rollMany(action.damageDiceCount, action.damageDiceSize) : null;
       const events = [];
       for (const id of placement.targetIds) {
         const target = memberById(setup, id);
@@ -204,7 +116,8 @@
         sequence += 1;
         const chain = DMR()?.chain(sequence, round, member, event, setup)
           || { events: [event], sequence };
-        events.push(...chain.events); sequence = chain.sequence;
+        events.push(...chain.events);
+        sequence = chain.sequence;
       }
       if (healTarget) {
         events.push(resolveHealing(sequence, round, member, healTarget, action, remaining));
@@ -212,10 +125,26 @@
       }
       return { events, sequence, placement };
     } catch (error) {
-      console.error("Failed browser area-save resolution", { member: member.combatant_id, error });
+      console.error("Failed browser area-save resolution", {
+        member: member.combatant_id, error,
+      });
       throw error;
     }
   }
 
-  window.IRON_PIT_BROWSER_AREA_SAVES = { choose, resolve, expectedSaveDamage };
+  function choose(member, setup, actionCost = null, openingOnly = false, predicate = null) {
+    try {
+      if (!C()) throw new Error("Area-save choice runtime is not loaded.");
+      return C().choose(member, setup, actionCost, openingOnly, predicate);
+    } catch (error) {
+      console.error("Failed browser area-save choice delegation", {
+        member: member.combatant_id, error,
+      });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_AREA_SAVES = {
+    choose, resolve, expectedSaveDamage: (action) => C().expectedSaveDamage(action),
+  };
 })();
