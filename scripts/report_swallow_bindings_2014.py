@@ -22,13 +22,11 @@ from browser_template_serializer import template_row
 OUTPUT = ROOT / "docs/generated/SWALLOW_BINDINGS_2014.json"
 _SEMANTIC = re.compile(r"\b(?:swallow(?:s|ed)?|engulf(?:s|ed)?)\b", re.I)
 
-
 def _source_text(monster) -> str:
     sections = source_sections_2014(monster.source_actions, include_continuations=True)
     selected = [text for heading, text in sections.items()
                 if _SEMANTIC.search(heading) or _SEMANTIC.search(text)]
     return " ".join(" ".join(text.split()) for text in selected)
-
 
 def _incompatibility(monster) -> str:
     if not monster.swallow_actions:
@@ -41,7 +39,6 @@ def _incompatibility(monster) -> str:
     if data.get("regurgitation_damage_threshold") is not None:
         return "damage_threshold_regurgitation_profile_not_supported"
     return "source_profile_not_supported"
-
 
 def build_report() -> dict[str, object]:
     monsters = load_monster_source_2014()
@@ -131,10 +128,8 @@ def build_report() -> dict[str, object]:
         "status": "partial" if len(wired) != len(rows) else "complete",
     }
 
-
 def render() -> str:
     return json.dumps(build_report(), indent=2, sort_keys=True) + "\n"
-
 
 def main() -> int:
     parser = argparse.ArgumentParser()
