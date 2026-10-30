@@ -135,3 +135,15 @@ def test_arena_neutral_bonus_action_recharge_does_not_require_runtime_resource()
     except Exception:
         logger.exception("Arena-neutral limited-use Bonus Action regression failed.")
         raise
+
+
+def test_animate_trees_is_unavailable_without_default_arena_trees() -> None:
+    try:
+        treant = _monster("Treant")
+        row = _row("Treant")
+        assert treant.source_limited_use_names == ["actions:Animate Trees (1/Day)"]
+        assert limited_use_issues(treant, row) == []
+        assert audit_monster_source(treant, row) == []
+    except Exception:
+        logger.exception("Treant ambient-tree arena policy regression failed.")
+        raise
