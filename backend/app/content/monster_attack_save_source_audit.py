@@ -47,6 +47,38 @@ def _condition_issues(attack: WeaponAttack, effect, actions: str) -> list[str]:
     return issues
 
 
+def _ongoing_hp_loss_issues(attack: WeaponAttack, effect, actions: str) -> list[str]:
+    try:
+        issues: list[str] = []
+        dice = rf"\({effect.dice_count}d{effect.dice_size}\)\s+Hit Points"
+        if not re.search(dice, actions, re.I):
+            issues.append(f"on-hit-save-hp-loss-dice-mismatch:{attack.id}:{effect.effect_id}")
+        if not re.search(r"at the start of each of its turns", actions, re.I):
+            issues.append(f"on-hit-save-hp-loss-timing-mismatch:{attack.id}:{effect.effect_id}")
+        minutes = effect.duration_rounds // 10
+        if effect.duration_rounds % 10 or not re.search(
+            rf"wound closes after {minutes} minute(?:s)?\b", actions, re.I,
+        ):
+            issues.append(f"on-hit-save-hp-loss-duration-mismatch:{attack.id}:{effect.effect_id}")
+        if effect.ends_on_spell_healing and not re.search(
+            r"after a spell restores Hit Points to the target", actions, re.I,
+        ):
+            issues.append(f"on-hit-save-hp-loss-healing-exit-mismatch:{attack.id}:{effect.effect_id}")
+        if effect.removal_ability and effect.removal_skill and effect.removal_dc:
+            removal = (
+                rf"within {effect.removal_range_ft} feet[^.]*takes an action[^.]*"
+                rf"DC {effect.removal_dc} {effect.removal_ability} "
+                rf"\({re.escape(effect.removal_skill)}\) check"
+            )
+            if not re.search(removal, actions, re.I):
+                issues.append(f"on-hit-save-hp-loss-removal-mismatch:{attack.id}:{effect.effect_id}")
+        return issues
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Failed ongoing HP-loss source audit for %s.", attack.id)
+        raise
+
+
 def on_hit_save_issues(attack: WeaponAttack, actions: str) -> list[str]:
     rider = attack.on_hit_saving_throw
     if rider is None:
@@ -58,6 +90,10 @@ def on_hit_save_issues(attack: WeaponAttack, actions: str) -> list[str]:
     for effect in rider.failure_effects:
         if effect.kind == "condition":
             issues.extend(_condition_issues(attack, effect, actions))
+        elif effect.kind == "ongoing-hp-loss":
+            issues.extend(_ongoing_hp_loss_issues(attack, effect, actions))
+            if rider.forbid_target_ongoing_hp_loss_id != effect.effect_id:
+                issues.append(f"on-hit-save-hp-loss-reapply-gate-mismatch:{attack.id}:{effect.effect_id}")
     return issues
 
 
