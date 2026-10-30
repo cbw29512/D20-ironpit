@@ -21,6 +21,7 @@ from app.content.monster_saving_throws import complete_monster_saving_throws
 from app.content.monster_source_capability_candidates import source_candidate_definitions
 from app.content.monster_spellcasting_source_audit import complete_monster_spellcasting_fingerprints
 from app.content.monster_trait_source_audit import complete_monster_trait_fingerprints
+from app.content.monster_triggered_bonus_attack_source import complete_monster_triggered_bonus_attacks
 from app.content.source_capability_enrichment import enrich_registry
 from app.domain.capabilities import CombatantDefinition
 from app.domain.models import CombatantTemplate
@@ -104,6 +105,7 @@ def _complete_monster_batch(monsters: list[CombatantTemplate]) -> list[Combatant
     monsters = complete_monster_legendary_resistance(monsters)
     monsters = complete_monster_trait_fingerprints(monsters)
     monsters = complete_monster_reaction_fingerprints(monsters)
+    monsters = complete_monster_triggered_bonus_attacks(monsters)
     monsters = complete_monster_bonus_action_fingerprints(monsters)
     monsters = complete_monster_limited_use_fingerprints(monsters)
     monsters = complete_monster_legendary_fingerprints(monsters)
