@@ -120,6 +120,7 @@ class CombatantState(BaseModel):
     rage_max_round: int | None = Field(default=None, ge=1)
     damage_types_taken_since_regen: list[str] = Field(default_factory=list)
     damage_taken_this_turn_by_type: dict[str, int] = Field(default_factory=dict)
+    damage_taken_this_turn_by_source: dict[str, int] = Field(default_factory=dict)
     current_heads: int | None = Field(default=None, ge=0)
     heads_lost_since_owner_turn: int = Field(default=0, ge=0)
     head_regrowth_blocked: bool = False
