@@ -9,6 +9,7 @@ from app.domain.action_types import ConditionName
 from app.domain.character_builds import AbilityName
 from app.domain.failure_margin import FailureMarginEscalation, require_escalation_duration
 from app.domain.timed_control_limits import TimedControlLimits, TimedSaveFlatBonus, compiled_control_limits
+from app.domain.timed_damage import TimedDamageEffect
 
 logger = logging.getLogger(__name__)
 
@@ -56,6 +57,7 @@ class FailedSaveTimedEffect(BaseModel):
     disadvantage_strength_d20_tests: bool = False
     armor_class_bonus: int = 0
     saving_throw_flat_bonuses: list[TimedSaveFlatBonus] = Field(default_factory=list)
+    start_of_turn_damage: TimedDamageEffect | None = None
 
     @model_serializer(mode="wrap")
     def serialize_without_default_control_limits(self, handler):
