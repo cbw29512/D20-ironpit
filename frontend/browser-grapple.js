@@ -32,13 +32,13 @@
     }
   }
 
-  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, linkedConditions = [], sourceEffectId = null) {
+  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, linkedConditions = [], sourceEffectId = null, escapeCheckDisadvantage = false) {
     if (I().immune(state, "grappled")) return [];
     const replaced = state.grapple_sources.filter((source) => source.source_id === sourceId);
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
     const effectiveRestrains = restrains && !I().immune(state, "restrained");
     const linked = linkedConditions.filter((condition) => !I().immune(state, condition));
-    state.grapple_sources.push({ source_id: sourceId, source_effect_id: sourceEffectId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains, linked_conditions: linked });
+    state.grapple_sources.push({ source_id: sourceId, source_effect_id: sourceEffectId, escape_dc: escapeDc, range_ft: rangeFt, restrains: effectiveRestrains, escape_check_disadvantage: Boolean(escapeCheckDisadvantage), linked_conditions: linked });
     dropOrphanedLinked(state, new Set(replaced.flatMap((source) => source.linked_conditions || [])));
     sync(state);
     return ["grappled", ...(effectiveRestrains ? ["restrained"] : []), ...linked];
@@ -84,7 +84,9 @@
     const useAthletics = athletics != null && (acrobatics == null || athletics >= acrobatics);
     const bonus = useAthletics ? athletics : acrobatics;
     const advantage = useAthletics && (state.active_effect_ids.includes("rage") || state.template.athletics_advantage) ? 1 : 0;
-    let disadvantage = (state.active_effect_ids.includes("poisoned") ? 1 : 0) + (M()?.abilityCheckDisadvantage?.(state) || 0);
+    let disadvantage = (state.active_effect_ids.includes("poisoned") ? 1 : 0)
+      + (source.escape_check_disadvantage ? 1 : 0)
+      + (M()?.abilityCheckDisadvantage?.(state) || 0);
     if (state.active_effect_ids.includes("frightened")) { if (!setup || !F()) throw new Error("Frightened grapple check requires encounter context."); disadvantage += F().d20Disadvantage(state, setup); }
     let roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
     if (M()) roll = M().applyD20Bonus(state, "ability-check-bonus-die", roll);
