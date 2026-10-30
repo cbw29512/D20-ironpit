@@ -4,6 +4,7 @@ import re
 from functools import lru_cache
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_death_trigger_source import death_trigger_trait_issues, parse_death_trigger_effects
+from app.content.monster_damage_absorption_source import damage_absorption_trait_issues
 from app.content.monster_grapple_contact_source import grapple_contact_trait_issues
 from app.content.monster_legendary_resistance_source import legendary_resistance_trait_issues
 from app.content.monster_regeneration_source import regeneration_trait_issues
