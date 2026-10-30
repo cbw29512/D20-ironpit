@@ -81,3 +81,16 @@ def test_air_elemental_whirlwind_uses_contact_save_recharge_and_prone() -> None:
     except Exception:
         logger.exception("Air Elemental Whirlwind regression failed.")
         raise
+
+
+def test_roc_swoop_is_arena_neutral_without_vertical_fall_simulation() -> None:
+    try:
+        issues = audit_monster_source(_monster("Roc"), _row("Roc"))
+        assert "uncertified-bonus-action:swoop" not in issues
+        assert not any(
+            issue.startswith("uncertified-limited-use:bonusactions-swoop")
+            for issue in issues
+        )
+    except Exception:
+        logger.exception("Roc Swoop arena-neutral regression failed.")
+        raise
