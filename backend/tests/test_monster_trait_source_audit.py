@@ -179,3 +179,15 @@ def test_catalog_blocks_missing_runtime_pack_tactics(monkeypatch) -> None:
     except Exception:
         logger.exception("Missing runtime Pack Tactics fail-closed regression failed.")
         raise
+
+
+def test_abduct_is_arena_neutral_when_drag_movement_is_not_simulated() -> None:
+    try:
+        for monster_name in ("Bugbear Warrior", "Bugbear Stalker"):
+            monster = _monster(monster_name)
+            assert "Abduct" in monster.source_trait_names
+            issues = trait_issues(monster, _row(monster_name))
+            assert "uncertified-trait:abduct" not in issues
+    except Exception:
+        logger.exception("Abduct arena-neutral trait regression failed.")
+        raise
