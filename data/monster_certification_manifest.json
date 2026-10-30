@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 220,
-    "blocked": 110
+    "public_ready": 221,
+    "blocked": 109
   },
   "monsters": [
     {
@@ -3267,8 +3267,7 @@
       "blockers": [
         "trait",
         "uncertified-trait:aversion-to-fire",
-        "uncertified-trait:berserk",
-        "uncertified-trait:lightning-absorption"
+        "uncertified-trait:berserk"
       ]
     },
     {
@@ -5301,24 +5300,18 @@
       "supported_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
-        "multiattack",
-        "saving-throw-action"
-      ],
-      "unsupported_mechanics": [
         "limited-use",
+        "multiattack",
         "save-or-complex-action",
+        "saving-throw-action",
         "trait"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "save-or-complex-action",
-        "trait",
-        "uncertified-trait:fire-absorption"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-jackal",
@@ -7493,8 +7486,7 @@
         "condition-or-control",
         "save-or-complex-action",
         "source-save-action-count-mismatch",
-        "trait",
-        "uncertified-trait:lightning-absorption"
+        "trait"
       ]
     },
     {
