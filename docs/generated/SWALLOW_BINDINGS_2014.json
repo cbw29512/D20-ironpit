@@ -12,11 +12,25 @@
   ],
   "bindings": [
     {
-      "browser_wired": false,
+      "browser_wired": true,
       "card_id": "behir",
       "card_name": "Behir",
-      "parameters": null,
-      "python_wired": false,
+      "parameters": {
+        "attack_id": "bite",
+        "damage_dice": "6d6",
+        "damage_type": "acid",
+        "delivery_mode": "action_attack",
+        "exit_movement_ft": 15,
+        "max_swallowed": 1,
+        "max_target_size": "medium",
+        "regurgitation_all_swallowed": false,
+        "regurgitation_damage_threshold": 30,
+        "regurgitation_range_ft": 10,
+        "regurgitation_save_ability": "constitution",
+        "regurgitation_save_dc": 14,
+        "requires_existing_grapple": true
+      },
+      "python_wired": true,
       "source_text": "The behir makes one bite attack against a Medium or smaller target it is grappling. If the attack hits, the target is also swallowed, and the grapple ends. While swallowed, the target is blinded and restrained, it has total cover against attacks and other effects outside the behir, and it takes 21 (6d6) acid damage at the start of each of the behir's turns. A behir can have only one creature swallowed at a time. If the behir takes 30 damage or more on a single turn from the swallowed creature, the behir must succeed on a DC 14 Constitution saving throw at the end of that turn or regurgitate the creature, which falls prone in a space within 10 feet of the behir. If the behir dies, a swallowed creature is no longer restrained by it and can escape from the corpse by using 15 feet of movement, exiting prone."
     },
     {
@@ -27,6 +41,7 @@
         "attack_id": "bite",
         "damage_dice": "2d4",
         "damage_type": "acid",
+        "delivery_mode": "action_attack",
         "exit_movement_ft": 5,
         "max_swallowed": 1,
         "max_target_size": "small",
@@ -43,6 +58,7 @@
         "attack_id": "bite",
         "damage_dice": "3d6",
         "damage_type": "acid",
+        "delivery_mode": "action_attack",
         "exit_movement_ft": 5,
         "max_swallowed": 1,
         "max_target_size": "medium",
@@ -52,11 +68,25 @@
       "source_text": "The toad makes one bite attack against a Medium or smaller target it is grappling. If the attack hits, the target is swallowed, and the grapple ends. The swallowed target is blinded and restrained, it has total cover against attacks and other effects outside the toad, and it takes 10 (3d6) acid damage at the start of each of the toad's turns. The toad can have only one target swallowed at a time. If the toad dies, a swallowed creature is no longer restrained by it and can escape from the corpse using 5 feet of movement, exiting prone."
     },
     {
-      "browser_wired": false,
+      "browser_wired": true,
       "card_id": "kraken",
       "card_name": "Kraken",
-      "parameters": null,
-      "python_wired": false,
+      "parameters": {
+        "attack_id": "bite",
+        "damage_dice": "12d6",
+        "damage_type": "acid",
+        "delivery_mode": "attack_hit",
+        "exit_movement_ft": 15,
+        "max_swallowed": 1,
+        "max_target_size": "large",
+        "regurgitation_all_swallowed": true,
+        "regurgitation_damage_threshold": 50,
+        "regurgitation_range_ft": 10,
+        "regurgitation_save_ability": "constitution",
+        "regurgitation_save_dc": 25,
+        "requires_existing_grapple": true
+      },
+      "python_wired": true,
       "source_text": "Melee Weapon Attack: +17 to hit, reach 5 ft., one target. Hit: 23 (3d8 + 10) piercing damage. If the target is a Large or smaller creature grappled by the kraken, that creature is swallowed, and the grapple ends. While swallowed, the creature is blinded and restrained, it has total cover against attacks and other effects outside the kraken, and it takes 42 (12d6) acid damage at the start of each of the kraken's turns. If the kraken takes 50 damage or more on a single turn from a creature inside it, the kraken must succeed on a DC 25 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, which fall prone in a space within 10 feet of the kraken. If the kraken dies, a swallowed creature is no longer restrained by it and can escape from the corpse using 15 feet of movement, exiting prone."
     },
     {
@@ -68,11 +98,25 @@
       "source_text": "Melee Weapon Attack: +9 to hit, reach 10 ft., one target. Hit: 22 (3d8 + 9) piercing damage. If the target is a Large or smaller creature, it must succeed on a DC 19 Dexterity saving throw or be swallowed by the worm. A swallowed creature is blinded and restrained, it has total cover against attacks and other effects outside the worm, and it takes 21 (6d6) acid damage at the start of each of the worm's turns. If the worm takes 30 damage or more on a single turn from a creature inside it, the worm must succeed on a DC 21 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, which fall prone in a space within 10 feet of the worm. If the worm dies, a swallowed creature is no longer restrained by it and can escape from the corpse by using 20 feet of movement, exiting prone."
     },
     {
-      "browser_wired": false,
+      "browser_wired": true,
       "card_id": "remorhaz",
       "card_name": "Remorhaz",
-      "parameters": null,
-      "python_wired": false,
+      "parameters": {
+        "attack_id": "bite",
+        "damage_dice": "6d6",
+        "damage_type": "acid",
+        "delivery_mode": "action_attack",
+        "exit_movement_ft": 15,
+        "max_swallowed": 1,
+        "max_target_size": "medium",
+        "regurgitation_all_swallowed": true,
+        "regurgitation_damage_threshold": 30,
+        "regurgitation_range_ft": 10,
+        "regurgitation_save_ability": "constitution",
+        "regurgitation_save_dc": 15,
+        "requires_existing_grapple": true
+      },
+      "python_wired": true,
       "source_text": "The remorhaz makes one bite attack against a Medium or smaller creature it is grappling. If the attack hits, that creature takes the bite's damage and is swallowed, and the grapple ends. While swallowed, the creature is blinded and restrained, it has total cover against attacks and other effects outside the remorhaz, and it takes 21 (6d6) acid damage at the start of each of the remorhaz's turns. If the remorhaz takes 30 damage or more on a single turn from a creature inside it, the remorhaz must succeed on a DC 15 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, which fall prone in a space within 10 feet of the remorhaz. If the remorhaz dies, a swallowed creature is no longer restrained by it and can escape from the corpse using 15 feet of movement, exiting prone."
     },
     {
@@ -84,47 +128,49 @@
       "source_text": "The shambling mound makes two slam attacks. If both attacks hit a Medium or smaller target, the target is grappled (escape DC 14), and the shambling mound uses its Engulf on it. The shambling mound engulfs a Medium or smaller creature grappled by it. The engulfed target is blinded, restrained, and unable to breathe, and it must succeed on a DC 14 Constitution saving throw at the start of each of the mound's turns or take 13 (2d8 + 4) bludgeoning damage. If the mound moves, the engulfed target moves with it. The mound can have only one creature engulfed at a time."
     },
     {
-      "browser_wired": false,
+      "browser_wired": true,
       "card_id": "tarrasque",
       "card_name": "Tarrasque",
-      "parameters": null,
-      "python_wired": false,
+      "parameters": {
+        "attack_id": "bite",
+        "damage_dice": "16d6",
+        "damage_type": "acid",
+        "delivery_mode": "action_attack",
+        "exit_movement_ft": 30,
+        "max_swallowed": 1,
+        "max_target_size": "large",
+        "regurgitation_all_swallowed": true,
+        "regurgitation_damage_threshold": 60,
+        "regurgitation_range_ft": 10,
+        "regurgitation_save_ability": "constitution",
+        "regurgitation_save_dc": 20,
+        "requires_existing_grapple": true
+      },
+      "python_wired": true,
       "source_text": "The tarrasque can use its Frightful Presence. It then makes five attacks: one with its bite, two with its claws, one with its horns, and one with its tail. It can use its Swallow instead of its bite. The tarrasque makes one bite attack against a Large or smaller creature it is grappling. If the attack hits, the target takes the bite's damage, the target is swallowed, and the grapple ends. While swallowed, the creature is blinded and restrained, it has total cover against attacks and other effects outside the tarrasque, and it takes 56 (16d6) acid damage at the start of each of the tarrasque's turns. If the tarrasque takes 60 damage or more on a single turn from a creature inside it, the tarrasque must succeed on a DC 20 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, which fall prone in a space within 10 feet of the tarrasque. If the tarrasque dies, a swallowed creature is no longer restrained by it and can escape from the corpse by using 30 feet of movement, exiting prone."
     }
   ],
   "exceptions": [
     {
-      "card_id": "behir",
-      "reason": "missing_structured_source_parameters"
-    },
-    {
-      "card_id": "kraken",
-      "reason": "damage_threshold_regurgitation_profile_not_supported"
-    },
-    {
       "card_id": "purple-worm",
       "reason": "failed_save_on_bite_profile_not_supported"
     },
     {
-      "card_id": "remorhaz",
-      "reason": "damage_threshold_regurgitation_profile_not_supported"
-    },
-    {
       "card_id": "shambling-mound",
       "reason": "engulf_start_turn_save_profile_not_supported"
-    },
-    {
-      "card_id": "tarrasque",
-      "reason": "damage_threshold_regurgitation_profile_not_supported"
     }
   ],
-  "remaining_card_count": 6,
+  "remaining_card_count": 2,
   "source_cards_scanned": 327,
   "status": "partial",
-  "wired_browser_card_count": 2,
+  "wired_browser_card_count": 6,
   "wired_cards": [
+    "behir",
     "giant-frog",
-    "giant-toad"
+    "giant-toad",
+    "kraken",
+    "remorhaz",
+    "tarrasque"
   ],
-  "wired_python_card_count": 2
+  "wired_python_card_count": 6
 }
