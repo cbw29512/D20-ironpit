@@ -20,6 +20,7 @@ _ARENA_NEUTRAL_BONUS_ACTIONS = frozenset({
     "Leap",
     "Nimble Escape",
     "Shadow Stealth",
+    "Swoop",
     "Teleport",
 })
 
