@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 
 from app.content.monster_movement_led_save_candidates import movement_led_save_candidates
+from app.content.monster_source_grapple_lifecycle_candidates import grapple_lifecycle_save_candidates
 from app.content.monster_source_grapple_save_candidates import grapple_save_candidates
 from app.content.monster_source_limited_resources import source_limited_resource
 from app.content.monster_source_repeat_save_candidates import repeat_condition_save_candidates
@@ -143,6 +144,7 @@ def source_save_candidates(row: dict[str, object]) -> tuple[list[SaveCapabilityD
         actions.extend(staged); resources.extend(staged_resources)
         actions.extend(repeat_condition_save_candidates(monster, text, cost))
         actions.extend(grapple_save_candidates(monster, text, cost))
+        actions.extend(grapple_lifecycle_save_candidates(monster, text, cost))
         speed_parts = str(row.get("speed", "")).split(); moved, moved_resources = movement_led_save_candidates(monster, text, cost, abstract_range_ft=int(speed_parts[0]) if speed_parts and speed_parts[0].isdigit() else 0); actions.extend(moved); resources.extend(moved_resources)
     unique_actions = {action.id: action for action in actions}
     unique_resources = {resource.id: resource for resource in resources}
