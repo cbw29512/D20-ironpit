@@ -66,7 +66,7 @@ def apply_hit_conditions(
     """Apply certified automatic conditions and modifiers from a successful weapon hit."""
     if defender.is_dead or not defender.is_alive:
         return []
-    apply_hit_modifier_effects(defender, source_id, attack)
+    apply_hit_modifier_effects(defender, source_id, attack, round_number)
     applied: list[str] = []
     if attack.attachment_on_hit is not None:
         if source_state is None or target_id is None or round_number is None:
