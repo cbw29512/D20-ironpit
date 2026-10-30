@@ -1409,6 +1409,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["swallowActions"] = [
                 {
                     "sourceName": action.source_name, "attackId": action.attack_id,
+                    **({"deliveryMode": action.delivery_mode}
+                       if action.delivery_mode != "action_attack" else {}),
                     "maxTargetSize": action.max_target_size.value,
                     "requiresExistingGrapple": action.requires_existing_grapple,
                     "damageDiceCount": action.damage_dice_count,
