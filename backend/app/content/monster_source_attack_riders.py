@@ -78,6 +78,11 @@ def parse_attack_riders(text: str) -> list[object]:
             effects.append(GrappleEffectDefinition(
                 escape_dc=int(grapple.group(1)),
                 max_target_size=maximum,
+                escape_check_disadvantage=bool(re.search(
+                    r"Ability checks made to escape this grapple have Disadvantage",
+                    text,
+                    re.IGNORECASE,
+                )),
             ))
 
         effects.extend(timed_attack_riders(
