@@ -32,7 +32,7 @@ def resolve_save_action(
     try:
         if spend_action and not is_available(actor.state, action.action_cost):
             raise ValueError(f"{action.action_cost.replace('_', ' ').title()} is not available for a saving throw action.")
-        if not legal_save_action(action, target, distance_ft, actor):
+        if not legal_save_action(action, target, distance_ft, actor, setup):
             raise ValueError(f"{action.name} has no legal target at {distance_ft} feet.")
         if spend_resource_cost and not resource_available(actor.state, action.resource_id, action.resource_cost):
             raise ValueError(f"{action.name} does not have its required resource available.")
