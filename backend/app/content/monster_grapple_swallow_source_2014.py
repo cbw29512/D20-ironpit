@@ -37,7 +37,7 @@ class GrappleSwallowSource2014:
     damage_dice_count: int
     damage_dice_size: int
     damage_type: str
-    max_swallowed: int
+    max_swallowed: int | None
     exit_movement_ft: int
     regurgitation_damage_threshold: int | None = None
     regurgitation_save_ability: str | None = None
