@@ -7,21 +7,16 @@
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 }, DG = () => window.IRON_PIT_BROWSER_DODGE || { dexSaveAdvantageSources: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll }, C = () => window.IRON_PIT_BROWSER_CONCENTRATION, D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious, incapacitated: (state) => state.is_unconscious, has: () => false }, L = () => window.IRON_PIT_BROWSER_SAVE_LEGALITY;
-  const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious, incapacitated: (state) => state.is_unconscious, has: () => false }, L = () => window.IRON_PIT_BROWSER_SAVE_LEGALITY, states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function saveMode(state, ability, magicalEffect = false, advantageSources = 0) {
-    const advantage = advantageSources + (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
-      + B2().dangerSenseAdvantage(state, ability) + DG().dexSaveAdvantageSources(state, ability)
-      + R().bloodiedSaveAdvantage(state) + (magicalEffect && state.template.magic_resistance ? 1 : 0);
-    const disadvantage = (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0)
-      + (T()?.d20Disadvantage(state, ability) || 0);
+    const advantage = advantageSources + (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0) + B2().dangerSenseAdvantage(state, ability) + DG().dexSaveAdvantageSources(state, ability) + R().bloodiedSaveAdvantage(state) + (magicalEffect && state.template.magic_resistance ? 1 : 0);
+    const disadvantage = (ability === "dexterity" && state.active_effect_ids.includes("restrained") ? 1 : 0) + (T()?.d20Disadvantage(state, ability) || 0);
     return R().modeFromSources(advantage, disadvantage);
   }
   function indomitableRevision(original, replacement) {
     return {
-      source_effect_id: "indomitable", kind: "full_reroll", original_rolls: [...original.rolls],
-      replacement_rolls: [...replacement.rolls], original_modifier: original.modifier || 0,
-      replacement_modifier: replacement.modifier || 0, original_selected: original.selected_roll,
+      source_effect_id: "indomitable", kind: "full_reroll", original_rolls: [...original.rolls], replacement_rolls: [...replacement.rolls],
+      original_modifier: original.modifier || 0, replacement_modifier: replacement.modifier || 0, original_selected: original.selected_roll,
       replacement_selected: replacement.selected_roll, original_total: original.total,
       replacement_total: replacement.total, accepted: "replacement", replaced_die_index: null,
     };
