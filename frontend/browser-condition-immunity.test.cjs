@@ -113,8 +113,9 @@ const member = (id, template, position = 0) => ({ combatant_id: id, side: "heroe
   assert.equal(event.attack_roll.selected_roll, 4);
 
   target.state.active_effect_ids.push("incapacitated");
+  const freshAttacker = member("blur-attacker-2", heroTemplate, 5);
   window.IRON_PIT_DICE = queuedDice([13, 1, 1, 1]);
-  event = A.resolveAttack(2, 1, attacker, target, attacker.state.template.attacks[0], 5);
+  event = A.resolveAttack(2, 1, freshAttacker, target, freshAttacker.state.template.attacks[0], 5);
   assert.equal(event.attack_roll.mode, "normal");
   assert.equal(event.attack_roll.selected_roll, 13);
 }
