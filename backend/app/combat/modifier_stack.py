@@ -58,10 +58,26 @@ def expire_source_turn_modifiers(
 
 
 def expire_target_turn_modifiers(state: CombatantState) -> int:
-    """Expire modifiers whose duration ends at the end of the affected creature's turn."""
-    before = len(state.active_modifiers)
-    state.active_modifiers = [item for item in state.active_modifiers if not item.expires_at_end_of_target_turn]
-    return before - len(state.active_modifiers)
+    """Expire modifiers due at the end of this affected creature turn."""
+    try:
+        before = len(state.active_modifiers)
+        state.active_modifiers = [
+            item for item in state.active_modifiers
+            if not (
+                item.expires_at_end_of_target_turn
+                or (
+                    item.expires_target_turn_serial is not None
+                    and item.expires_target_turn_serial <= state.turn_serial
+                )
+            )
+        ]
+        return before - len(state.active_modifiers)
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception(
+            "Failed target-turn modifier expiry for %s.", state.template.id
+        )
+        raise
 
 
 def effective_armor_class(state: CombatantState) -> int:
@@ -85,6 +101,30 @@ def effective_speed(state: CombatantState) -> int:
         item.flat_bonus for item in state.active_modifiers if item.kind is ModifierKind.SPEED
     )
     return max(0, int(base * _active_speed_multiplier(state)))
+
+
+def attack_roll_disadvantage_sources(state: CombatantState) -> int:
+    try:
+        return sum(
+            1 for item in state.active_modifiers
+            if item.kind is ModifierKind.ATTACK_ROLL_DISADVANTAGE
+        )
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Failed attack-roll Disadvantage lookup.")
+        raise
+
+
+def ability_check_disadvantage_sources(state: CombatantState) -> int:
+    try:
+        return sum(
+            1 for item in state.active_modifiers
+            if item.kind is ModifierKind.ABILITY_CHECK_DISADVANTAGE
+        )
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Failed ability-check Disadvantage lookup.")
+        raise
 
 
 def attacks_against_advantage_sources(state: CombatantState) -> int:
