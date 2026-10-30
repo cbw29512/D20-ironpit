@@ -16,6 +16,7 @@ class LegendaryActionOption(BaseModel):
     action_id: str
     cost: int = Field(default=1, ge=1, le=10)
     once_until_owner_turn: bool = False
+    movement_before_action: Literal["half-speed", "full-speed"] | None = None
 
 
 class LegendaryActionPool(BaseModel):
