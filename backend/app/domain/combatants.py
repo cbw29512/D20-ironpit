@@ -18,6 +18,7 @@ from app.domain.size import CreatureSize
 from app.domain.spells import AutomaticSpellAction, DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.swallow import SwallowAction
 from app.domain.traits import CombatTrait
+from app.domain.triggered_bonus_attacks import TriggeredBonusAttack
 from app.domain.unarmed import UnarmedStrikeDamage
 from app.domain.weapons import (
     ConditionalAttackAdvantage,
@@ -79,6 +80,7 @@ class CombatantTemplate(BaseModel):
     start_turn_grapple_contact_damage: StartTurnGrappleContactDamage | None = None
     start_turn_save_condition_auras: list[StartTurnSaveConditionAura] = Field(default_factory=list)
     roll_advantage_auras: list[RollAdvantageAura] = Field(default_factory=list)
+    triggered_bonus_attacks: list[TriggeredBonusAttack] = Field(default_factory=list)
     regeneration: RegenerationRule | None = None
     legendary_actions: LegendaryActionPool | None = None
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
