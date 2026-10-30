@@ -16,6 +16,7 @@
     if (item.kind === "next-attack-against-advantage" && !item.target_id) throw new Error("Target-scoped attack Advantage requires a target id.");
     if (item.consume_on_attack_against && item.kind !== "attacks-against-advantage") throw new Error("Only defender-wide attack Advantage can use consume_on_attack_against.");
     if (item.expires_source_turn_end_round != null && item.expires_source_turn_end_round < 1) throw new Error("Modifier expiry round must be positive.");
+    if ((item.expires_current_turn_end_owner_id == null) !== (item.expires_current_turn_end_round == null)) throw new Error("Current-turn modifier expiry requires owner and round.");
     return item;
   }
 
@@ -54,8 +55,10 @@
     let removed = 0;
     for (const state of states || []) {
       const before = state.active_modifiers.length;
-      state.active_modifiers = state.active_modifiers.filter((item) => !(item.source_id === sourceId
-        && item.expires_source_turn_end_round != null && item.expires_source_turn_end_round <= round));
+      state.active_modifiers = state.active_modifiers.filter((item) => !(
+        (item.source_id === sourceId && item.expires_source_turn_end_round != null && item.expires_source_turn_end_round <= round)
+        || (item.expires_current_turn_end_owner_id === sourceId && item.expires_current_turn_end_round != null && item.expires_current_turn_end_round <= round)
+      ));
       removed += before - state.active_modifiers.length;
     }
     return removed;
@@ -66,10 +69,11 @@
     state.active_modifiers = state.active_modifiers.filter((item) => !item.expires_at_end_of_target_turn);
     return before - state.active_modifiers.length;
   }
-  function applyEffect(state, sourceId, sourceEffectId, effect, index, trigger, round = null) {
+  function applyEffect(state, sourceId, sourceEffectId, effect, index, trigger, round = null, turnOwnerId = null) {
     try {
       if (!EFFECT_KINDS.has(effect.kind)) throw new Error(`Unsupported combat modifier effect kind: ${effect.kind}.`);
       if (effect.expiresAtEndOfSourceTurn && round == null) throw new Error("End-of-source-turn modifier requires the current round.");
+      if (effect.expiresAtEndOfCurrentTurn && (round == null || !turnOwnerId)) throw new Error("End-of-current-turn modifier requires round and turn owner.");
       add(state, {
         id: `${sourceId}:${sourceEffectId}:${trigger}-modifier:${index}`, source_id: sourceId, source_effect_id: sourceEffectId,
         kind: effect.kind, flat_bonus: effect.flatBonus || 0,
@@ -77,6 +81,8 @@
         expires_at_start_of_source_turn: Boolean(effect.expiresAtStartOfSourceTurn),
         expires_at_end_of_target_turn: Boolean(effect.expiresAtEndOfTargetTurn),
         expires_source_turn_end_round: effect.expiresAtEndOfSourceTurn ? round : null,
+        expires_current_turn_end_owner_id: effect.expiresAtEndOfCurrentTurn ? turnOwnerId : null,
+        expires_current_turn_end_round: effect.expiresAtEndOfCurrentTurn ? round : null,
       });
     } catch (error) {
       console.error("Failed browser combat modifier application.", { sourceEffectId, error });
