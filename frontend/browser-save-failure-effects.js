@@ -26,7 +26,7 @@
       automaticSuccessAfterRounds: effect.automaticSuccessAfterRounds ?? null,
       allowedRemovalActionIds: effect.allowedRemovalActionIds || [],
       periodicDamage: effect.periodicDamage || null,
-      endsOnDamage: Boolean(effect.endsOnDamage),
+      turnBehavior: effect.turnBehavior || "normal", endsOnDamage: Boolean(effect.endsOnDamage),
     });
     if (!condition) return [];
     const applied = [condition];
