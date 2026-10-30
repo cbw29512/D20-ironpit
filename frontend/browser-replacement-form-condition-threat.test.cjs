@@ -174,7 +174,7 @@ console.log("Area disabling-save threat parity passed.");
   let chosen = [{ targetIds: [defender.combatant_id, group[1].combatant_id],
     friendlyIds: [], enemyIds: [defender.combatant_id, group[1].combatant_id] }];
   window.IRON_PIT_BROWSER_AREA_TARGETING = { legalPlacements: () => chosen };
-  load("browser-area-save-actions.js");
+  load("browser-area-save-choice.js", "browser-area-save-actions.js");
   enemy.state.template.spell_save_actions = [];
   enemy.state.template.saving_throw_actions = [action];
   assert.equal(policy.formMitigates(defender, setup, form), true,
