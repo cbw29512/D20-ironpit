@@ -55,6 +55,7 @@ def merge_controls(controls: list[HitControlEffect]) -> HitControlEffect | None:
             max_target_size=size_limits[0] if size_limits else None,
             grapple_escape_dc=grapple.grapple_escape_dc,
             restrains_while_grappled=grapple.restrains_while_grappled,
+            grapple_escape_check_disadvantage=grapple.grapple_escape_check_disadvantage,
             conditions_while_grappled=grapple.conditions_while_grappled,
             condition_id=condition.condition_id,
             expires_at_start_of_source_turn=condition.expires_at_start_of_source_turn,
