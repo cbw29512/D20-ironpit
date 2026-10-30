@@ -138,7 +138,7 @@
 
 
 /* Reviewed tentacled aquatic silhouette. */
-.stick-figure[data-detail^="giant-oct"] .head{width:32px;height:27px;left:14px;top:29px;border-width:5px;border-radius:50%}
-.stick-figure[data-detail^="giant-oct"] .body{width:18px;height:20px;left:21px;top:52px;border-radius:50%}
-.stick-figure[data-detail^="giant-oct"] .arms{display:block;width:58px;height:5px;left:1px;top:68px;box-shadow:0 10px 0 currentColor;transform:none}
-.stick-figure[data-detail^="giant-oct"] .legs{display:block;width:5px;height:31px;left:18px;top:66px;transform:rotate(22deg);box-shadow:19px 0 0 currentColor,36px -2px 0 currentColor}
+.stick-figure[data-detail$="octopus"] .head{width:32px;height:27px;left:14px;top:29px;border-width:5px;border-radius:50%}
+.stick-figure[data-detail$="octopus"] .body{width:18px;height:20px;left:21px;top:52px;border-radius:50%}
+.stick-figure[data-detail$="octopus"] .arms{display:block;width:58px;height:5px;left:1px;top:68px;box-shadow:0 10px 0 currentColor;transform:none}
+.stick-figure[data-detail$="octopus"] .legs{display:block;width:5px;height:31px;left:18px;top:66px;transform:rotate(22deg);box-shadow:19px 0 0 currentColor,36px -2px 0 currentColor}
