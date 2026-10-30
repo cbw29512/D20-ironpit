@@ -40,8 +40,11 @@ def test_steam_mephit_blurred_form_uses_generic_defensive_disadvantage() -> None
         assert event.attack_roll.selected_roll == 3
 
         defender.active_effect_ids.append("incapacitated")
+        fresh_attacker = build_combatant_state(
+            build_combatant_from_capabilities("srd-wolf")
+        )
         event = resolve_attack(
-            2, 1, attacker, defender, attacker.template.weapon_attack, 5,
+            2, 1, fresh_attacker, defender, fresh_attacker.template.weapon_attack, 5,
             FixedDiceProvider([12, 1, 1, 1]),
         )
         assert event.attack_roll is not None
