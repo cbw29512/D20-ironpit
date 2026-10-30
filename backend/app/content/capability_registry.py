@@ -15,6 +15,7 @@ from app.content.monster_legendary_resistance_source import complete_monster_leg
 from app.content.monster_legendary_source_audit import complete_monster_legendary_fingerprints
 from app.content.monster_limited_use_source_audit import complete_monster_limited_use_fingerprints
 from app.content.monster_reaction_source_audit import complete_monster_reaction_fingerprints
+from app.content.monster_riposte_source import complete_monster_riposte_reactions
 from app.content.monster_regeneration_source import complete_monster_regeneration
 from app.content.monster_save_action_reconciliation import reconcile_monster_save_actions
 from app.content.monster_saving_throws import complete_monster_saving_throws
@@ -104,6 +105,7 @@ def _complete_monster_batch(monsters: list[CombatantTemplate]) -> list[Combatant
     monsters = complete_monster_regeneration(monsters)
     monsters = complete_monster_legendary_resistance(monsters)
     monsters = complete_monster_trait_fingerprints(monsters)
+    monsters = complete_monster_riposte_reactions(monsters)
     monsters = complete_monster_reaction_fingerprints(monsters)
     monsters = complete_monster_triggered_bonus_attacks(monsters)
     monsters = complete_monster_bonus_action_fingerprints(monsters)
