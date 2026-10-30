@@ -37,11 +37,21 @@
     }
     return { roll, succeeded: roll.total >= dc || legendaryOverride(state) };
   }
-  function legalAction(action, target, distance, actor = null) {
+  function legalAction(action, target, distance, actor = null, setup = null) {
     if (distance > action.range) return false;
     if (action.requiredTargetCondition && !Q().has(target.state, action.requiredTargetCondition)) return false;
     if (action.requiredTargetGrappledBySelf) {
       if (!actor || !(target.state.grapple_sources || []).some((source) => source.source_id === actor.combatant_id)) return false;
+    }
+    if (action.maxActiveGrappleTargets != null) {
+      if (!actor || !setup) return false;
+      const active = [...setup.heroes, ...setup.monsters].filter((member) =>
+        (member.state.grapple_sources || []).some((source) =>
+          source.source_id === actor.combatant_id && source.source_effect_id === action.id
+        )
+      );
+      const already = active.some((member) => member.combatant_id === target.combatant_id);
+      if (!already && active.length >= action.maxActiveGrappleTargets) return false;
     }
     if (action.forbidTargetAffectedByAction && T()?.affectedByAction(target.state, action.id)) return false;
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
@@ -71,7 +81,7 @@
       const actionCost = action.actionCost || "action";
       if (resourceBacked && spendResourceCost && !resources) throw new Error("Browser resource API is not loaded.");
       if (spendAction && !E().available(actor.state, actionCost)) throw new Error(`${actionCost.replace("_", " ")} is unavailable for saving throw action.`);
-      if (!legalAction(action, target, distance, actor)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
+      if (!legalAction(action, target, distance, actor, options.setup || null)) throw new Error(`${action.name} has no legal target at ${distance} feet.`);
       if (resourceBacked && spendResourceCost && !resources.available(actor.state, action.resourceId, action.resourceCost || 1)) throw new Error(`${action.name} lacks its required resource.`);
       const save = resolveSavingThrow(
         target.state, action.saveAbility, action.dc, Boolean(action.magicalEffect), AU().savingThrowAdvantageSources(target, options.setup),
