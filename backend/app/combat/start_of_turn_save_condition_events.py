@@ -41,7 +41,7 @@ def resolve_start_of_turn_save_condition_damage_events(
             *start_of_turn_timed_burns(member, setup, dice),
             *grapple_turn_start_damage(member, setup, dice),
         ]
-        for name, total, damage_type in packets:
+        for name, total, damage_type, source_id in packets:
             component = DamageRollComponent(
                 source=name,
                 notation=str(total),
@@ -56,6 +56,7 @@ def resolve_start_of_turn_save_condition_damage_events(
                 member.state, applied, critical=False,
                 damage_types={component.damage_type}, dice=dice,
                 affected_states=affected, setup=setup,
+                source_id=source_id,
             )
             events.append(BattleEvent(
                 sequence=sequence,
