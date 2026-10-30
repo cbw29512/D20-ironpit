@@ -13,11 +13,11 @@ BACKEND = ROOT / "backend"
 if str(BACKEND) not in sys.path:
     sys.path.insert(0, str(BACKEND))
 
-from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
-from app.content.capability_compiler import compile_combatant
+from app.content.demo import build_demo_fighter
 from app.content.monster_grapple_swallow_source_2014 import source_grapple_swallow_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_sections_2014 import source_sections_2014
+from app.domain.swallow_actions import swallow_action_from_source
 from browser_template_serializer import template_row
 
 OUTPUT = ROOT / "docs/generated/SWALLOW_BINDINGS_2014.json"
@@ -77,8 +77,11 @@ def build_report() -> dict[str, object]:
                     "regurgitation_range_ft": profile.regurgitation_range_ft,
                     "regurgitation_all_swallowed": profile.regurgitation_all_swallowed,
                 })
+            action = swallow_action_from_source(profile).model_copy(update={
+                "attack_id": f"2014-{monster.id}-{profile.attack_id}",
+            })
             serialized = template_row(
-                compile_combatant(adapt_monster_mechanics_2014(monster))
+                build_demo_fighter().model_copy(update={"swallow_actions": [action]})
             ).get("swallowActions", [])
             expected = {
                 "sourceName": profile.source_name,
