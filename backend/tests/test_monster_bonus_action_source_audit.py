@@ -108,3 +108,26 @@ def test_giant_seahorse_bubble_dash_is_arena_neutral_bonus_action() -> None:
         assert bonus_action_issues(seahorse, _row("Giant Seahorse")) == []
     except Exception:
         raise
+
+
+def test_no_hide_movement_bonus_is_source_semantic_not_name_dispatched() -> None:
+    try:
+        wolf = _monster("Wolf")
+        row = dict(_row("Wolf"))
+        row["bonusActions"] = (
+            "Moonstep. The wolf moves up to its Speed without provoking Opportunity Attacks. "
+            "At the end of this movement, the wolf can take the Hide action."
+        )
+        drifted = wolf.model_copy(update={"source_bonus_action_names": ["Moonstep"]})
+        assert bonus_action_issues(drifted, row) == []
+    except Exception:
+        raise
+
+
+def test_weretiger_prowl_is_arena_neutral_under_no_hide_movement_policy() -> None:
+    try:
+        tiger = _monster("Weretiger")
+        assert "Prowl (Tiger or Hybrid Form Only)" in tiger.source_bonus_action_names
+        assert bonus_action_issues(tiger, _row("Weretiger")) == []
+    except Exception:
+        raise
