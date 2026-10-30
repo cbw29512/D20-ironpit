@@ -12,4 +12,5 @@ class CombatTrait(StrEnum):
     SWARM = "swarm"
     UNDEAD_FORTITUDE = "undead-fortitude"
     EVASION = "evasion"
+    ATTACKS_AGAINST_DISADVANTAGE_UNLESS_INCAPACITATED = "attacks-against-disadvantage-unless-incapacitated"
     LIFE_DOMAIN = "life-domain"
