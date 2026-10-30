@@ -134,10 +134,13 @@ def test_threshold_regurgitation_counts_only_damage_from_swallowed_creature():
     assert target.swallowed is not None
 
     owner.damage_taken_this_turn_by_source["victim"] = 30
+    original_position = meal.position_ft
     events, sequence = resolve_end_turn_swallow_regurgitation(
         1, 2, meal, setup, FixedDiceProvider([1]),
     )
     assert sequence == 2
+    assert meal.position_ft == original_position
+    assert abs(meal.position_ft - eater.position_ft) <= 10
     assert len(events) == 1
     assert events[0].save_dc == 14
     assert events[0].save_succeeded is False
