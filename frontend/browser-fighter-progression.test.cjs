@@ -147,7 +147,7 @@ for (const file of [
 load("browser-ability-hooks.js");
 load("browser-main-action-profiles.js");
 load("browser-main-action-selection.js");
-load("browser-main-action-providers.js");
+load("browser-recharge-action-priority.js", "browser-main-action-core-providers.js", "browser-main-action-offense-providers.js", "browser-main-action-providers.js");
 load("browser-spell-offense.js");
 load("browser-turn.js");
 {
