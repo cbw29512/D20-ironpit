@@ -87,4 +87,23 @@ assert.equal(target.state.resources["old-resource"], undefined);
 assert.equal(setup.heroes.some((member) => member.combatant_id === target.combatant_id), false);
 assert.equal(setup.monsters.some((member) => member.combatant_id === target.combatant_id), true);
 
+
+const immediate = {
+  combatant_id: "immediate-target",
+  side: "heroes",
+  position_ft: 5,
+  state: window.IRON_PIT_BROWSER_STATE.buildState(targetTemplate),
+};
+const immediateSetup = { heroes: [immediate], monsters: [source] };
+immediate.state.current_hp = 0;
+immediate.state.is_alive = true;
+immediate.state.is_unconscious = true;
+window.IRON_PIT_BROWSER_ZERO_HP.applyReplacementEffect(
+  immediate, source, "srd-werewolf-bite", effect, immediateSetup,
+);
+assert.equal(immediate.side, "monsters");
+assert.equal(immediate.state.template.id, sourceTemplate.id);
+assert.equal(immediate.state.current_hp, 10);
+assert.equal(immediate.state.is_unconscious, false);
+
 console.log("Browser zero-HP source-template replacement regression passed.");
