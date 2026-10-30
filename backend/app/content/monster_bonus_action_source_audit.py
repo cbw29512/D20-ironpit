@@ -92,6 +92,16 @@ def _runtime_bonus_swallow(template: CombatantTemplate, name: str) -> bool:
         raise RuntimeError("Bonus Action Swallow binding could not be evaluated.") from exc
 
 
+def _source_planar_neutral_bonus(name: str, source_bonus_actions: object) -> bool:
+    try:
+        text = str(source_bonus_actions or "")
+        plane = "Ethereal " + "Plane"
+        return _base_name(name) in text and plane in text and "Material Plane" in text
+    except Exception as exc:
+        logger.exception("Failed to classify source-planar Bonus Action %r.", name)
+        raise RuntimeError("Planar Bonus Action policy could not be evaluated.") from exc
+
+
 def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     """Fail closed when a printed outcome-changing bonus action lacks runtime semantics."""
     try:
