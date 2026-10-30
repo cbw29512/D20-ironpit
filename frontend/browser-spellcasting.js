@@ -2,6 +2,7 @@
   "use strict";
 
   const RES = () => window.IRON_PIT_BROWSER_RESOURCES;
+  const OE = () => window.IRON_PIT_BROWSER_OWNER_ACTION_EXPIRY;
 
   function slotSpellAvailable(state, turnKey) {
     if (!turnKey) throw new Error("Spell-slot legality requires an active turn key.");
@@ -22,6 +23,7 @@
     if (!slotSpellAvailable(state, turnKey)) {
       throw new Error("A spell slot has already been expended to cast a spell on this turn.");
     }
+    OE()?.expire(state, "spell_cast");
     state.spell_slot_expended_turn_key = turnKey;
   }
 
