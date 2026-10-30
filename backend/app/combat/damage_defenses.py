@@ -4,6 +4,7 @@ import logging
 
 from app.combat.condition_rules import has_condition
 from app.combat.damage_absorption import absorb_typed_damage
+from app.combat.damage_taken_disadvantage import apply_damage_taken_disadvantage
 from app.domain.models import CombatantState, DamageRollComponent, DamageType
 
 logger = logging.getLogger(__name__)
@@ -81,6 +82,7 @@ def apply_damage_defenses(
                 target,
             )
             adjusted_components.append(component.model_copy(update={"applied_total": applied}))
+            apply_damage_taken_disadvantage(target, component.damage_type, applied)
             applied_total += applied
         return applied_total, adjusted_components
     except Exception as exc:
