@@ -96,17 +96,6 @@
     }
   }
 
-  function applySelfHitEffects(state, sourceId, attack, round) {
-    try {
-      for (const [index, effect] of (attack.onHitSelfModifiers || []).entries()) {
-        applyEffect(state, sourceId, attack.id, effect, index, "self-hit", round);
-      }
-    } catch (error) {
-      console.error("Failed browser source hit modifiers.", { attack: attack?.id, error });
-      throw error;
-    }
-  }
-
   const flat = (state, kind) => (state.active_modifiers || []).filter((item) => item.kind === kind)
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
   const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"));
@@ -154,7 +143,7 @@
     && (!item.target_id || item.target_id === targetId));
 
   window.IRON_PIT_BROWSER_MODIFIERS = {
-    add, applyD20Bonus, applyEffect, applyHitEffects, applySelfHitEffects, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
+    add, applyD20Bonus, applyEffect, applyHitEffects, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
     consumeNextAttackAdvantage, consumeNextAttackAgainstAdvantage, consumeNextAttackDisadvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
     expireTargetTurn, nextAttackAdvantage, nextAttackAgainstAdvantage, nextAttackDisadvantage, removeSource, validate,
   };
