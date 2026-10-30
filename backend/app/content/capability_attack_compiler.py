@@ -37,6 +37,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
         )
         on_hit: list[OnHitDamage] = []
         on_hit_modifiers: list[HitModifierEffect] = []
+        on_hit_self_modifiers: list[HitModifierEffect] = []
         conditional: list[ConditionalDamage] = []
         max_hp_reduction: MaxHpReductionOnHit | None = None
         ability_reduction: AbilityScoreReductionOnHit | None = None
@@ -59,7 +60,10 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             elif isinstance(effect, ProneEffectDefinition):
                 prone_size = effect.max_target_size
             elif isinstance(effect, HitModifierEffect):
-                on_hit_modifiers.append(effect)
+                if effect.recipient == "source":
+                    on_hit_self_modifiers.append(effect)
+                else:
+                    on_hit_modifiers.append(effect)
             elif isinstance(effect, HitSavingThrowEffectDefinition):
                 if hit_save is not None:
                     raise UnsupportedCapabilityError("An attack supports at most one on-hit saving throw.")
@@ -96,7 +100,8 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             resource_cost=definition.resource_cost, rage_eligible=definition.rage_eligible,
             fixed_damage=definition.fixed_damage, conditional_damage=conditional,
             conditional_attack_advantage=definition.conditional_attack_advantage,
-            on_hit_damage=on_hit, on_hit_modifier_effects=on_hit_modifiers, on_hit_saving_throw=hit_save,
+            on_hit_damage=on_hit, on_hit_modifier_effects=on_hit_modifiers,
+            on_hit_self_modifier_effects=on_hit_self_modifiers, on_hit_saving_throw=hit_save,
             max_hp_reduction_on_hit=max_hp_reduction, ability_score_reduction_on_hit=ability_reduction,
             attachment_on_hit=attachment, knocks_prone_max_size=prone_size,
             control_effect=merge_controls(controls), charge_profile=definition.charge_profile,
