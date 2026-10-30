@@ -8,7 +8,7 @@ from app.content.monster_grapple_contact_source import grapple_contact_trait_iss
 from app.content.monster_legendary_resistance_source import legendary_resistance_trait_issues
 from app.content.monster_regeneration_source import regeneration_trait_issues
 from app.content.monster_trait_aura_audit import aura_trait_issues
-from app.content.monster_trait_policy import ARENA_NEUTRAL_TRAITS
+from app.content.monster_trait_policy import ARENA_NEUTRAL_TRAITS, source_environment_neutral_traits
 from app.domain.models import CombatantTemplate
 from app.domain.traits import CombatTrait
 
@@ -68,20 +68,6 @@ def _magic_resistance_issues(template: CombatantTemplate, expected: list[str]) -
         return ["trait-source-missing:magic-resistance"]
     return []
 
-def _source_environment_neutral_traits(
-    row: dict[str, object], expected: list[str],
-) -> set[str]:
-    try:
-        text = str(row.get("traits", "")).lower()
-        certified: set[str] = set()
-        if "moves in water" in text and "gallon of water" in text:
-            certified.update(name for name in expected if name.lower().startswith("water "))
-        return certified
-    except Exception as exc:
-        logger.exception("Failed environment-only trait classification for %r.", row.get("name"))
-        raise RuntimeError("Environment-only trait classification failed.") from exc
-
-
 def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     expected = parse_trait_names(row.get("traits", ""))
     issues: list[str] = []
@@ -105,7 +91,7 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
     issues.extend(legendary_issues)
     aura_issues, aura_certified = aura_trait_issues(template, row, expected)
     issues.extend(aura_issues)
-    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement", "Magic Resistance", "Regeneration"} | aura_certified | death_certified | _source_environment_neutral_traits(row, expected)
+    certified = set(_MODELED_TRAITS) | set(_DECLARATIVE_ATTACK_TRAITS) | set(ARENA_NEUTRAL_TRAITS) | {"Incorporeal Movement", "Magic Resistance", "Regeneration"} | aura_certified | death_certified | source_environment_neutral_traits(row, expected)
     if legendary_certified:
         certified.add("Legendary Resistance")
     if grapple_certified and "Barbed Hide" in expected:
