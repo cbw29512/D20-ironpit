@@ -12,6 +12,10 @@ from app.content.monster_source_dreadful_glare_2014 import source_proven_dreadfu
 from app.content.monster_source_opening_area_saves_2014 import source_proven_opening_area_saves_2014
 from app.content.monster_source_recharge_line_damage_2014 import source_proven_recharge_line_damage_2014
 from app.content.monster_source_recharge_timed_controls_2014 import source_proven_recharge_timed_controls_2014
+from app.content.monster_source_limited_audible_conditions_2014 import (
+    limited_audible_resource_uses_2014,
+    source_proven_limited_audible_conditions_2014,
+)
 from app.content.monster_save_capability_support_2014 import supports_recharge_rules_2014, supports_save_action_2014
 from app.content.monster_save_source_audit_2014 import unsupported_save_actions_2014, unsupported_source_actions_2014
 from app.content.monster_audible_maintained_control_2014 import source_proven_audible_maintained_controls_2014
@@ -78,6 +82,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
         result.extend(source_proven_dreadful_glare_2014(monster))
         result.extend(source_proven_opening_area_saves_2014(monster))
         result.extend(source_proven_audible_maintained_controls_2014(monster))
+        result.extend(source_proven_limited_audible_conditions_2014(monster))
         existing_ids = {item.id for item in result}
         for source_action in [
             *source_proven_recharge_line_damage_2014(monster),
@@ -102,9 +107,19 @@ def save_resources_2014(monster: SourceMonster2014) -> list[ResourceDefinition]:
             ResourceDefinition(id=resource_id, name=resource_id.replace("-", " ").title(), max_uses=1)
             for resource_id in sorted(ids)
         ]
+        resource_ids = {item.id for item in resources}
         for action in source_proven_asymmetric_saves_2014(monster):
-            if action.resource_id and action.resource_id not in ids:
+            if action.resource_id and action.resource_id not in resource_ids:
                 resources.append(ResourceDefinition(id=action.resource_id, name=action.name, max_uses=1))
+                resource_ids.add(action.resource_id)
+        for resource_id, max_uses in sorted(limited_audible_resource_uses_2014(monster).items()):
+            if resource_id not in resource_ids:
+                resources.append(ResourceDefinition(
+                    id=resource_id,
+                    name=resource_id.replace("-", " ").title(),
+                    max_uses=max_uses,
+                ))
+                resource_ids.add(resource_id)
         return resources
     except Exception:
         logger.exception("Failed to adapt 2014 save resources for %s.", monster.name)
