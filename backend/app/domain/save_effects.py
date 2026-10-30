@@ -5,6 +5,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.hit_modifiers import CombatModifierEffect
+from app.domain.ongoing_hp_loss import OngoingHpLossEffectDefinition
 from app.domain.rule_types import AbilityName, ConditionName, ConditionTiming, DamageTypeName
 from app.domain.size import CreatureSize
 
@@ -123,6 +124,7 @@ SaveFailureEffectDefinition = Annotated[
     | ConditionEffectDefinition
     | TurnRestrictionEffectDefinition
     | TimedPenaltyEffectDefinition
-    | CombatModifierEffect,
+    | CombatModifierEffect
+    | OngoingHpLossEffectDefinition,
     Field(discriminator="kind"),
 ]
