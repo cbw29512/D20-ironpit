@@ -84,6 +84,17 @@ def _save_optional_fields(row: dict[str, Any], action: Any) -> None:
             row["grappleEscapeDc"] = action.grapple_escape_dc
         if action.restrains_while_grappled:
             row["restrainsWhileGrappled"] = True
+        if action.grapple_linked_conditions:
+            row["grappleLinkedConditions"] = list(action.grapple_linked_conditions)
+        if action.grapple_periodic_damage is not None:
+            periodic = action.grapple_periodic_damage
+            row["grapplePeriodicDamage"] = {
+                "timing": periodic.timing,
+                "diceCount": periodic.dice_count,
+                "diceSize": periodic.dice_size,
+                "damageBonus": periodic.damage_bonus,
+                "damageType": value(periodic.damage_type),
+            }
     except Exception:
         logger.exception("Failed to serialize optional save action fields.")
         raise
