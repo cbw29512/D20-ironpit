@@ -11,7 +11,7 @@ from app.combat.grapple_conditions import (
     drop_orphaned_linked_conditions,
     sync_grapple_effect_ids,
 )
-from app.combat.modifier_stack import apply_d20_bonus_dice
+from app.combat.modifier_stack import ability_check_disadvantage_sources, apply_d20_bonus_dice
 from app.combat.rolls import roll_d20
 from app.combat.tactical_mind import apply_tactical_mind
 from app.domain.models import BattleEvent, CombatantState, EncounterSetup, GrappleSource, RollMode
@@ -85,7 +85,7 @@ def _check_mode(state: CombatantState, strength_check: bool, other_disadvantage_
     advantage = strength_check and (
         rage_active(state) or state.template.progression_features.athletics_advantage
     )
-    disadvantage = has_condition(state, POISONED_EFFECT_ID) or other_disadvantage_sources > 0
+    disadvantage = has_condition(state, POISONED_EFFECT_ID) or other_disadvantage_sources > 0 or ability_check_disadvantage_sources(state) > 0
     if advantage == disadvantage:
         return RollMode.NORMAL
     return RollMode.ADVANTAGE if advantage else RollMode.DISADVANTAGE
