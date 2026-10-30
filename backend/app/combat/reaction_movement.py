@@ -6,7 +6,7 @@ from app.combat.dice import DiceProvider
 from app.combat.encounter_movement import move_toward_combatant
 from app.combat.grid_reaction_movement import move_toward_on_grid
 from app.combat.grapple import speed_is_zero
-from app.combat.opportunity_attacks import MovementSource, resolve_opportunity_attack
+from app.combat.opportunity_attacks import MovementSource, resolve_opportunity_attack_chain
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 
@@ -116,14 +116,13 @@ def move_toward_with_reactions(
             for reactor in reactors:
                 before = abs(reactor.position_ft - mover.position_ft)
                 after = abs(reactor.position_ft - proposed_position)
-                event = resolve_opportunity_attack(
+                chain, sequence = resolve_opportunity_attack_chain(
                     sequence, round_number, reactor, mover, setup, before, after,
                     movement_source, dice, disengaged=disengaged, turn_key=turn_key,
                 )
-                if event is None:
+                if not chain:
                     continue
-                events.append(event)
-                sequence += 1
+                events.extend(chain)
                 newly_prone = not was_prone and "prone" in mover.state.active_effect_ids
                 if mover.state.is_dead or mover.state.is_unconscious or speed_is_zero(mover.state) or newly_prone:
                     return events, sequence, None
