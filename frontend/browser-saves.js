@@ -1,23 +1,13 @@
 (() => {
   "use strict";
-  const R = () => window.IRON_PIT_BROWSER_ROLLS;
-  const A = () => window.IRON_PIT_BROWSER_ATTACK;
+  const R = () => window.IRON_PIT_BROWSER_ROLLS, A = () => window.IRON_PIT_BROWSER_ATTACK;
   const AU = () => window.IRON_PIT_BROWSER_AURAS || { savingThrowAdvantageSources: () => 0 };
-  const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
-  const F = () => window.IRON_PIT_BROWSER_SAVE_FAILURE_EFFECTS;
-  const S = () => window.IRON_PIT_BROWSER_STATE;
-  const T = () => window.IRON_PIT_BROWSER_TIMED;
-  const RES = () => window.IRON_PIT_BROWSER_RESOURCES;
-  const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 };
-  const DG = () => window.IRON_PIT_BROWSER_DODGE || { dexSaveAdvantageSources: () => 0 };
-  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll };
-  const C = () => window.IRON_PIT_BROWSER_CONCENTRATION;
-  const D = () => window.IRON_PIT_DICE;
-  const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available,
-    spend: (state) => { state.action_available = false; } };
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious, incapacitated: (state) => state.is_unconscious, has: () => false };
-  const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
-
+  const G = () => window.IRON_PIT_BROWSER_GRAPPLE, F = () => window.IRON_PIT_BROWSER_SAVE_FAILURE_EFFECTS;
+  const S = () => window.IRON_PIT_BROWSER_STATE, T = () => window.IRON_PIT_BROWSER_TIMED, RES = () => window.IRON_PIT_BROWSER_RESOURCES;
+  const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 }, DG = () => window.IRON_PIT_BROWSER_DODGE || { dexSaveAdvantageSources: () => 0 };
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll }, C = () => window.IRON_PIT_BROWSER_CONCENTRATION, D = () => window.IRON_PIT_DICE;
+  const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious, incapacitated: (state) => state.is_unconscious, has: () => false }, states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function saveMode(state, ability, magicalEffect = false, advantageSources = 0) {
     const advantage = advantageSources + (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
       + B2().dangerSenseAdvantage(state, ability) + DG().dexSaveAdvantageSources(state, ability)
@@ -94,8 +84,18 @@
       const tracksPush = Boolean(action.pushTargetAwayFt), distanceBefore = tracksPush ? Math.abs(target.position_ft - actor.position_ft) : null;
       let damageRoll = null, damageComponents = [], damageOutcome = null;
       const count = action.damageDiceCount || 0, capture = options.captureSharedDamageRolls, establishShared = Array.isArray(capture);
-      const evasion = evasionApplies(action, target);
-      if (count && (!(save.succeeded && (action.successDamage === "none" || evasion)) || establishShared)) {
+      const evasion = evasionApplies(action, target), mixedComponents = action.additionalDamageComponents || [];
+      if (mixedComponents.length) {
+        const mixedApi = window.IRON_PIT_BROWSER_MIXED_SAVE_DAMAGE;
+        if (!mixedApi) throw new Error("Browser mixed-save damage API is not loaded.");
+        const mixed = mixedApi.build(action, target, save.succeeded, evasion, { sharedDamageRolls: options.sharedDamageRolls, captureSharedDamageRolls: capture });
+        damageRoll = mixed.damageRoll; damageComponents = mixed.damageComponents;
+        if (mixed.appliedTotal) {
+          const affectedStates = states(options.setup);
+          damageOutcome = A().applyDamage(target.state, mixed.appliedTotal, false, mixed.damageTypes, affectedStates);
+          window.IRON_PIT_BROWSER_RAGE?.endIfIncapacitated(target.state); C()?.endIfIncapacitated(target.state, affectedStates);
+        }
+      } else if (count && (!(save.succeeded && (action.successDamage === "none" || evasion)) || establishShared)) {
         if (!action.damageType) throw new Error(`${action.name} has damage dice but no damage type.`);
         const rolls = damageRolls(action, count, options.sharedDamageRolls);
         if (establishShared) capture.splice(0, capture.length, ...rolls);
