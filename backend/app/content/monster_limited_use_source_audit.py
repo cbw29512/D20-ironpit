@@ -57,6 +57,17 @@ def _arena_neutral_limited_use(
 ) -> bool:
     try:
         field, name = fingerprint.split(":", 1)
+        if field == "actions":
+            base = re.sub(r"\s*\([^)]*\)$", "", name).strip()
+            source = str(row.get("actions", ""))
+            requires_ambient_trees = re.search(
+                rf"{re.escape(base)}(?:\s*\([^)]*\))?\.\s+"
+                r"The [^.]+? (?:magically )?animates up to [^.]+? trees it can see within \d+ feet",
+                source,
+                re.IGNORECASE,
+            )
+            if requires_ambient_trees:
+                return True
         if field == "bonusActions":
             return arena_neutral_bonus_action(name)
         if field == "reactions":
