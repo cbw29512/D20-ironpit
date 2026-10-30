@@ -21,7 +21,7 @@ def _source_and_runtime_counts(name: str) -> tuple[dict[str, object], object, in
 
 @pytest.mark.parametrize(
     "name",
-    ["Bearded Devil", "Harpy", "Salamander"],
+    ["Harpy"],
 )
 def test_source_save_count_drift_remains_an_explicit_blocker(name: str) -> None:
     row, template, source_count, runtime_count = _source_and_runtime_counts(name)
@@ -34,7 +34,14 @@ def test_source_save_count_drift_remains_an_explicit_blocker(name: str) -> None:
 
 @pytest.mark.parametrize(
     "name",
-    ["Brass Dragon Wyrmling", "Death Dog", "Homunculus", "Young Brass Dragon"],
+    [
+        "Bearded Devil",
+        "Brass Dragon Wyrmling",
+        "Death Dog",
+        "Homunculus",
+        "Salamander",
+        "Young Brass Dragon",
+    ],
 )
 def test_repaired_source_save_counts_reconcile_end_to_end(name: str) -> None:
     row, template, source_count, runtime_count = _source_and_runtime_counts(name)
