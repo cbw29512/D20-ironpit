@@ -6,6 +6,7 @@ from collections import Counter, defaultdict
 from app.content.blocker_yield import build_blocker_signatures, single_family_yields
 from app.content.monster_catalog import build_monster_catalog, load_monster_rows
 from app.content.monster_trait_source_audit import parse_trait_names
+from app.content.roster import build_arena_roster
 from app.domain.catalog import CoverageStatus
 from report_zero_engine_monsters import _ALLOWED_TRAITS, _source_blockers
 
@@ -110,12 +111,17 @@ def main() -> None:
     monster_names = set(rows_by_name)
     cards = build_monster_catalog()
     ready_names = {card.name for card in cards if card.coverage_status is CoverageStatus.RAW_READY}
+    runtime_by_name = {
+        template.name: template for template in build_arena_roster().monsters
+    }
     blockers_by_name: dict[str, list[str]] = {}
     for row in rows:
         name = str(row["name"])
         if name in ready_names:
             continue
-        blockers = _source_blockers(row, monster_names)
+        blockers = _source_blockers(
+            row, monster_names, runtime_by_name.get(name)
+        )
         blockers_by_name[name] = blockers or ["unclassified-source-audit-gap"]
 
     signatures = build_blocker_signatures(blockers_by_name)
