@@ -35,11 +35,8 @@ from app.combat.legendary_actions import resolve_legendary_actions_after_turn
 from app.combat.triggered_extra_attacks import resolve_triggered_extra_attacks_after_turn
 from app.combat.turn_damage import clear_turn_damage
 from app.combat.variable_heads import end_owner_turn
-from app.combat.swallow_lifecycle import (
-    release_invalid_swallowed,
-    resolve_end_turn_swallow_regurgitation,
-    source_turn_swallowed_damage,
-)
+from app.combat.swallow_lifecycle import release_invalid_swallowed, source_turn_swallowed_damage
+from app.combat.swallow_regurgitation import resolve_end_turn_swallow_regurgitation
 from app.combat.timed_emanations import resolve_target_turn_start_emanations
 from app.combat.turn_start_save_condition_reaction import resolve_turn_start_save_condition_reactions
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
