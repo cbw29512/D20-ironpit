@@ -33,7 +33,7 @@ window.IRON_PIT_BROWSER_SAVES = {
 window.IRON_PIT_DICE = { rollMany: () => Array(12).fill(5), roll: () => 5 };
 load("browser-area-shapes.js");
 load("browser-area-targeting.js");
-load("browser-area-save-choice.js", "browser-area-save-actions.js");
+load("browser-area-save-choice.js");\nload("browser-area-save-actions.js");
 load("browser-recharge.js");
 
 const member = (id, side, x, y) => ({
