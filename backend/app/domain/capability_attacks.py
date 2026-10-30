@@ -99,6 +99,7 @@ class SaveCapabilityDefinition(BaseModel):
     push_target_away_ft: int = Field(default=0, ge=0, le=200)
     push_target_max_size: CreatureSize | None = None
     grapple: GrappleEffectDefinition | None = None
+    max_active_grapple_targets: int | None = Field(default=None, ge=1, le=20)
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     magical_effect: bool = False
