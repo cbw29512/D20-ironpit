@@ -44,9 +44,16 @@ def expire_source_turn_modifiers(
         state.active_modifiers = [
             item for item in state.active_modifiers
             if not (
-                item.source_id == source_id
-                and item.expires_source_turn_end_round is not None
-                and item.expires_source_turn_end_round <= round_number
+                (
+                    item.source_id == source_id
+                    and item.expires_source_turn_end_round is not None
+                    and item.expires_source_turn_end_round <= round_number
+                )
+                or (
+                    item.expires_current_turn_end_owner_id == source_id
+                    and item.expires_current_turn_end_round is not None
+                    and item.expires_current_turn_end_round <= round_number
+                )
             )
         ]
         removed += before - len(state.active_modifiers)
