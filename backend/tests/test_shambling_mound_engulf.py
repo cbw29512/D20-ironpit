@@ -77,7 +77,7 @@ def test_engulf_applies_linked_conditions_periodic_damage_and_capacity() -> None
         assert events[0].feature_id == engulf.id
         assert events[0].damage_roll is not None
         assert events[0].damage_roll.total == 9
-        assert first.state.current_hp == hp_before - 9
+        assert first.state.current_hp == max(0, hp_before - 9)
 
         release_grapple(first.state, mound.combatant_id)
         assert "blinded" not in first.state.active_effect_ids

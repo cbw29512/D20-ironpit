@@ -4,6 +4,7 @@ from app.content.arena_eligibility import filter_standard_arena_eligible
 from app.content.demo import build_goblin_warrior
 from app.content.legacy_charge_profiles import apply_legacy_charge_profiles
 from app.content.monster_ability_scores import complete_monster_ability_scores
+from app.content.grapple_escape_skill_bonuses import complete_template_grapple_escape_skills
 from app.content.monster_blood_hawk import build_blood_hawk
 from app.content.monster_bonus_action_source_audit import complete_monster_bonus_action_fingerprints
 from app.content.monster_giant_crocodile import build_giant_crocodile
@@ -64,6 +65,7 @@ def build_legacy_monster_templates() -> list[CombatantTemplate]:
     # Migration parity must compare equally source-completed templates. Ability
     # scores are immutable SRD data used by universal save/math primitives.
     monsters = complete_monster_ability_scores(monsters)
+    monsters = [complete_template_grapple_escape_skills(monster) for monster in monsters]
     monsters = complete_monster_trait_fingerprints(monsters)
     monsters = complete_monster_reaction_fingerprints(monsters)
     monsters = complete_monster_bonus_action_fingerprints(monsters)
