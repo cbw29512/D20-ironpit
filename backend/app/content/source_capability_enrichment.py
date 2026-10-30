@@ -57,6 +57,24 @@ def _merge_attacks(existing: CombatantDefinition, source: CombatantDefinition, r
     return merged
 
 
+def _merge_support_actions(existing: list, source: list, resource_rebinds: dict[str, str]) -> list:
+    try:
+        known = {(_normalized_name(action.name), action.action_cost) for action in existing}
+        additions = []
+        for action in source:
+            if (_normalized_name(action.name), action.action_cost) in known:
+                continue
+            resource_id = action.resource_id
+            if resource_id is not None:
+                resource_id = resource_rebinds.get(resource_id, resource_id)
+            additions.append(action.model_copy(update={"resource_id": resource_id}))
+        return [*existing, *additions]
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Failed to merge support actions.")
+        raise
+
+
 def _resource_rebinds(existing: list, source: list) -> dict[str, str]:
     by_id = {item.id: item for item in existing}
     by_name = {_normalized_name(item.name): item for item in existing}
@@ -119,6 +137,9 @@ def enrich_definition(existing: CombatantDefinition, source: CombatantDefinition
     resource_rebinds = _resource_rebinds(existing.resources, source.resources)
     attacks = _merge_attacks(existing, source, resource_rebinds)
     save_actions = _merge_save_actions(existing.save_actions, source.save_actions, resource_rebinds)
+    support_actions = _merge_support_actions(
+        existing.support_actions, source.support_actions, resource_rebinds,
+    )
     resources = _merge_resources(existing.resources, source.resources)
     traits = list(dict.fromkeys([*existing.combat_traits, *source.combat_traits]))
     if any(attack.charge_profile is not None for attack in attacks) and CombatTrait.CHARGE not in traits:
@@ -126,6 +147,7 @@ def enrich_definition(existing: CombatantDefinition, source: CombatantDefinition
     return existing.model_copy(update={
         "attacks": attacks,
         "save_actions": save_actions,
+        "support_actions": support_actions,
         "resources": resources,
         "combat_traits": traits,
     })
