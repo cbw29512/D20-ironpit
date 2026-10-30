@@ -9,7 +9,7 @@
   const DG = () => window.IRON_PIT_BROWSER_DODGE, OM = () => window.IRON_PIT_BROWSER_OFFENSIVE_MOVEMENT;
   const RES = () => window.IRON_PIT_BROWSER_RESOURCES, RC = () => window.IRON_PIT_BROWSER_RECHARGE, RA = () => window.IRON_PIT_BROWSER_RECHARGE_ACTION;
   const SW = () => window.IRON_PIT_BROWSER_SWALLOW, AU = () => window.IRON_PIT_BROWSER_AURAS, D = () => window.IRON_PIT_DICE;
-  const PR = () => window.IRON_PIT_BROWSER_PROGRESSION_RECOVERY;
+  const PR = () => window.IRON_PIT_BROWSER_PROGRESSION_RECOVERY, BB = () => window.IRON_PIT_BROWSER_BLOODIED_BERSERK;
   const TB = () => window.IRON_PIT_BROWSER_TRIGGERED_BONUS_ATTACKS;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
   const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false };
@@ -80,6 +80,7 @@
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
     const events = []; H().cleanup(setup); S().beginTurn(member.state);
+    const berserk = BB()?.startTurn(sequence, round, member); if (berserk?.event) { events.push(berserk.event); sequence = berserk.sequence; }
     const grappleContact = AU()?.grappleTurnStart(sequence, round, member, setup);
     if (grappleContact) { events.push(...grappleContact.events); sequence = grappleContact.sequence; }
     PR().startTurnHealing(member.state);
