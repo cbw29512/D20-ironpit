@@ -65,7 +65,7 @@
     const pack = S().packTactics(reactor, mover, setup);
     return A().resolveAttack(sequence, round, reactor, mover, attack, before, {
       spendAction: false, advantage: pack ? 1 : 0, featureId: "opportunity-attack", setup,
-      turnKey: options.turnKey || null, offTurn: true,
+      turnKey: options.turnKey || null, offTurn: true, turnOwnerId: mover.combatant_id,
     });
   }
 
@@ -79,7 +79,7 @@
       return window.IRON_PIT_BROWSER_ATTACK_REACTION_CHAIN.resolve(
         sequence, round, reactor, mover, attack, before, setup, {
           spendAction: false, advantage: pack ? 1 : 0, featureId: "opportunity-attack",
-          turnKey: options.turnKey || null, offTurn: true,
+          turnKey: options.turnKey || null, offTurn: true, turnOwnerId: mover.combatant_id,
         },
       );
     } catch (error) {
