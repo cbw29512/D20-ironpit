@@ -2,15 +2,12 @@ from __future__ import annotations
 
 import re
 
+from app.content.monster_source_attack_target_filter import source_target_filter
+from app.content.monster_source_lycanthrope_curse import lycanthrope_curse_hit_save
 from app.domain.capability_effects import ConditionEffectDefinition, HitSavingThrowEffectDefinition
 from app.domain.size import CreatureSize
-from app.domain.target_filters import TargetFilter
 
 _CONDITIONS = "Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Petrified|Poisoned|Prone|Restrained|Stunned|Unconscious"
-_CREATURE_TYPES = {
-    "aberration", "beast", "celestial", "construct", "dragon", "elemental", "fey",
-    "fiend", "giant", "humanoid", "monstrosity", "ooze", "plant", "undead",
-}
 SIZE_PATTERN = re.compile(r"\b(Tiny|Small|Medium|Large|Huge|Gargantuan)\s+or\s+smaller\b", re.I)
 SAVE_CONDITION_PATTERN = re.compile(
     rf"(?:the\s+)?target[^.]{{0,240}}?must succeed on a DC\s*(?P<dc>\d+)\s*"
@@ -49,21 +46,6 @@ def maximum_target_size(text: str) -> CreatureSize | None:
     return CreatureSize(match.group(1).lower()) if match else None
 
 
-def target_filter(text: str) -> TargetFilter:
-    excluded_types: set[str] = set()
-    excluded_tags: set[str] = set()
-    for match in re.finditer(r"\bnon-([A-Za-z]+)\s+creature\b", text, re.I):
-        excluded_types.add(match.group(1).lower())
-    match = re.search(r"\bisn[’']t\s+an?\s+([A-Za-z]+)(?:\s+or\s+([A-Za-z]+))?", text, re.I)
-    if match:
-        for value in (match.group(1), match.group(2)):
-            if not value:
-                continue
-            normalized = value.lower()
-            (excluded_types if normalized in _CREATURE_TYPES else excluded_tags).add(normalized)
-    return TargetFilter(excluded_creature_types=sorted(excluded_types), excluded_tags=sorted(excluded_tags))
-
-
 def _timing(owner: str, edge: str) -> str:
     actor = "target" if owner.lower() == "its" else "source"
     return f"{actor}_turn_{edge.lower()}"
@@ -83,7 +65,7 @@ def _staged_save(text: str, maximum: CreatureSize | None) -> HitSavingThrowEffec
     )
     return HitSavingThrowEffectDefinition(
         save_ability=match.group("ability").lower(), dc=int(match.group("dc")),
-        target_filter=target_filter(text), failure_effects=[failure],
+        target_filter=source_target_filter(text), failure_effects=[failure],
     )
 
 
@@ -97,7 +79,7 @@ def _out_of_match_staged_save(text: str, maximum: CreatureSize | None) -> HitSav
     )
     return HitSavingThrowEffectDefinition(
         save_ability=match.group("ability").lower(), dc=int(match.group("dc")),
-        target_filter=target_filter(text), failure_effects=[failure],
+        target_filter=source_target_filter(text), failure_effects=[failure],
     )
 
 
@@ -119,6 +101,9 @@ def _severe_failure(text: str, maximum: CreatureSize | None) -> tuple[int, list[
 
 
 def hit_save(text: str, maximum: CreatureSize | None) -> HitSavingThrowEffectDefinition | None:
+    curse = lycanthrope_curse_hit_save(text)
+    if curse is not None:
+        return curse
     staged = _staged_save(text, maximum)
     if staged is not None:
         return staged
@@ -135,7 +120,7 @@ def hit_save(text: str, maximum: CreatureSize | None) -> HitSavingThrowEffectDef
     severe = _severe_failure(text, maximum)
     return HitSavingThrowEffectDefinition(
         save_ability=match.group("ability").lower(), dc=int(match.group("dc")),
-        target_filter=target_filter(text), failure_effects=[failure],
+        target_filter=source_target_filter(text), failure_effects=[failure],
         severe_failure_margin=severe[0] if severe else None,
         severe_failure_effects=severe[1] if severe else [],
     )
