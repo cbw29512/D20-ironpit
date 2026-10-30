@@ -108,3 +108,16 @@ def test_spell_trigger_reaction_remains_uncertified_until_runtime_semantics_exis
 def test_reaction_fingerprint_drift_is_detected() -> None:
     wolf = _monster("Wolf").model_copy(update={"source_reaction_names": ["Parry"]})
     assert "source-reaction-fingerprint-mismatch" in reaction_issues(wolf, _row("Wolf"))
+
+
+def test_ochre_jelly_split_is_arena_unavailable_but_immunities_remain() -> None:
+    try:
+        jelly = _monster("Ochre Jelly")
+        row = _row("Ochre Jelly")
+
+        assert jelly.source_reaction_names == ["Split"]
+        assert reaction_issues(jelly, row) == []
+        assert "lightning" in jelly.damage_immunities
+        assert "slashing" in jelly.damage_immunities
+    except Exception:
+        raise
