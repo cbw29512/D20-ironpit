@@ -4,7 +4,7 @@ import logging
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.combatants import DamageType
+from app.domain.weapons_base import DamageType
 
 logger = logging.getLogger(__name__)
 
