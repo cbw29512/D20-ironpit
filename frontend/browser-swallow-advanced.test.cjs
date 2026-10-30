@@ -61,6 +61,11 @@ const threshold={sourceName:"Swallow",attackId:"bite",deliveryMode:"attack_hit",
   damageType:"acid",maxSwallowed:2,exitMovementFt:15,regurgitationDamageThreshold:50,
   regurgitationSaveAbility:"constitution",regurgitationSaveDc:25,regurgitationRangeFt:10,
   regurgitationAllSwallowed:true};
+// Re-enter through the threshold-capable action so the acting swallowed creature
+// carries the same declarative regurgitation contract as the real source card.
+assert.equal(swallow.release("owner",owner,"victim",victim,false),true);
+window.IRON_PIT_BROWSER_GRAPPLE.apply(victim,"owner",18,10,true);
+assert.equal(swallow.swallowAfterBite("owner",owner,"victim",victim,threshold,true),true);
 window.IRON_PIT_BROWSER_GRAPPLE.apply(second,"owner",18,10,true);
 assert.equal(swallow.swallowAfterBite("owner",owner,"second",second,threshold,true),true);
 const setup={heroes:[
