@@ -7,7 +7,7 @@ from app.combat.attack_ability_effects import effective_attack_bonus, resolve_at
 from app.combat.attack_description import build_attack_description
 from app.combat.attack_event import build_attack_event
 from app.combat.attack_max_hp_reduction import resolve_attack_max_hp_reduction
-from app.combat.attack_roll_modifiers import consume_next_attack_advantage, consume_next_attack_disadvantage, next_attack_advantage_sources, next_attack_disadvantage_sources
+from app.combat.attack_roll_modifiers import attack_roll_advantage_sources, consume_next_attack_advantage, consume_next_attack_disadvantage, next_attack_advantage_sources, next_attack_disadvantage_sources
 from app.combat.attack_save_riders import AttackSaveRiderOutcome, resolve_attack_save_rider
 from app.combat.barbarian import end_rage_if_incapacitated, extend_rage_from_attack
 from app.combat.bloodied import bloodied_fury_advantage
@@ -62,7 +62,7 @@ def resolve_attack(
         mode = resolve_attack_roll_mode(
             weapon, distance_ft,
             advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack) + attacks_against_advantage_sources(defender)
-                               + attacks_against_reckless_advantage(defender) + reckless_attack_advantage(attacker, attack) + next_attack_advantage_sources(attacker)
+                               + attacks_against_reckless_advantage(defender) + reckless_attack_advantage(attacker, attack) + attack_roll_advantage_sources(attacker) + next_attack_advantage_sources(attacker)
                                + conditional_attack_advantage_sources(attack, defender, attacker_event_id) + next_attack_against_advantage_sources(attacker, defender_event_id)),
             other_disadvantage_sources=(other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker) + strength_penalty + next_attack_disadvantage_sources(attacker)),
             close_enemy_active=close_enemy_active,
