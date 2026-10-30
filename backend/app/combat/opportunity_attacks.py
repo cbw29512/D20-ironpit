@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.action_economy import spend
+from app.combat.attack_reaction_chain import resolve_attack_event_chain
 from app.combat.ally_context import pack_tactics_active
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
@@ -50,3 +51,40 @@ def resolve_opportunity_attack(
         feature_id="opportunity-attack", close_enemy_active=True, turn_key=turn_key,
         off_turn=True,
     )
+
+
+def resolve_opportunity_attack_chain(
+    sequence: int, round_number: int, reactor: EncounterCombatant, mover: EncounterCombatant,
+    setup: EncounterSetup, distance_before_ft: int, distance_after_ft: int,
+    movement_source: MovementSource, dice: DiceProvider, *,
+    disengaged: bool = False, can_see: bool = True, turn_key: str | None = None,
+) -> tuple[list[BattleEvent], int]:
+    """Resolve an Opportunity Attack plus any immediate defensive counterattack chain."""
+    try:
+        attack = opportunity_attack_weapon(
+            reactor, mover, distance_before_ft, distance_after_ft, movement_source,
+            disengaged=disengaged, can_see=can_see,
+        )
+        if attack is None and unarmed_opportunity_available(
+            reactor, mover, distance_before_ft, distance_after_ft, movement_source,
+            disengaged=disengaged, can_see=can_see,
+        ):
+            attack = _unarmed_damage_attack(reactor)
+        if attack is None:
+            return [], sequence
+        spend(reactor.state, "reaction")
+        pack = pack_tactics_active(reactor, mover, setup)
+        return resolve_attack_event_chain(
+            sequence, round_number, reactor, mover, attack, distance_before_ft, dice, setup,
+            spend_action=False, advantage_sources=1 if pack else 0,
+            feature_id="opportunity-attack", close_enemy_active=True,
+            turn_key=turn_key, off_turn=True,
+        )
+    except ValueError:
+        raise
+    except Exception as exc:
+        import logging
+        logging.getLogger(__name__).exception(
+            "Opportunity Attack reaction chain failed for %s.", reactor.combatant_id,
+        )
+        raise RuntimeError("Opportunity Attack reaction chain failed.") from exc
