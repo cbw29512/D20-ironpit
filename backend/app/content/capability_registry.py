@@ -10,6 +10,7 @@ from app.content.monster_ability_scores import complete_monster_ability_scores
 from app.content.monster_aura_source import complete_monster_end_turn_damage_auras
 from app.content.monster_bonus_action_source_audit import complete_monster_bonus_action_fingerprints
 from app.content.monster_creature_types import complete_monster_creature_types
+from app.content.monster_grapple_contact_source import complete_monster_grapple_contact_damage
 from app.content.monster_legendary_resistance_source import complete_monster_legendary_resistance
 from app.content.monster_legendary_source_audit import complete_monster_legendary_fingerprints
 from app.content.monster_limited_use_source_audit import complete_monster_limited_use_fingerprints
@@ -98,6 +99,7 @@ def _complete_monster_batch(monsters: list[CombatantTemplate]) -> list[Combatant
     monsters = complete_monster_ability_scores(monsters)
     monsters = complete_monster_saving_throws(monsters)
     monsters = complete_monster_end_turn_damage_auras(monsters)
+    monsters = complete_monster_grapple_contact_damage(monsters)
     monsters = complete_monster_regeneration(monsters)
     monsters = complete_monster_legendary_resistance(monsters)
     monsters = complete_monster_trait_fingerprints(monsters)
