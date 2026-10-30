@@ -16,16 +16,16 @@ CORPUS = {monster.id: monster for monster in load_monster_source_2014()}
 
 
 @pytest.mark.parametrize(
-    "monster_id,threshold,dc,range_ft,all_swallowed,delivery_mode",
+    "monster_id,threshold,dc,range_ft,all_swallowed,delivery_mode,max_swallowed",
     [
-        ("behir", 30, 14, 10, False, "action_attack"),
-        ("remorhaz", 30, 15, 10, True, "action_attack"),
-        ("kraken", 50, 25, 10, True, "attack_hit"),
-        ("tarrasque", 60, 20, 10, True, "action_attack"),
+        ("behir", 30, 14, 10, False, "action_attack", 1),
+        ("remorhaz", 30, 15, 10, True, "action_attack", None),
+        ("kraken", 50, 25, 10, True, "attack_hit", None),
+        ("tarrasque", 60, 20, 10, True, "action_attack", None),
     ],
 )
 def test_threshold_regurgitation_profiles_are_source_proven(
-    monster_id, threshold, dc, range_ft, all_swallowed, delivery_mode,
+    monster_id, threshold, dc, range_ft, all_swallowed, delivery_mode, max_swallowed,
 ) -> None:
     try:
         monster = CORPUS[monster_id]
@@ -36,6 +36,7 @@ def test_threshold_regurgitation_profiles_are_source_proven(
         assert profile.source_name == "Swallow"
         assert profile.attack_id == "bite"
         assert profile.delivery_mode == delivery_mode
+        assert profile.max_swallowed == max_swallowed
         assert profile.regurgitation_damage_threshold == threshold
         assert profile.regurgitation_save_ability == "constitution"
         assert profile.regurgitation_save_dc == dc
@@ -59,6 +60,7 @@ def test_kraken_browser_card_uses_attack_hit_delivery() -> None:
         )
         serialized = row["swallowActions"][0]
         assert serialized["deliveryMode"] == "attack_hit"
+        assert serialized["maxSwallowed"] is None
     except Exception:
         logger.exception("Kraken attack-hit Swallow serialization regression failed.")
         raise
