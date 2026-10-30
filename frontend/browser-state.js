@@ -35,6 +35,7 @@
       hit_point_maximum_reduction: 0, ability_score_reductions: {}, active_curses: [],
       damage_share_source_id: null, damage_share_range_ft: 0, damage_share_effect_id: null, emanation_triggers_this_turn: {},
       rage_expires_round: null, rage_max_round: null,
+      damage_taken_this_turn_by_source: {},
       current_heads: null, heads_lost_since_owner_turn: 0, head_regrowth_blocked: false,
       weapon_corrosion_penalties: {},
       armor_corrosion_penalties: {}, destroyed_armor_ids: [],
