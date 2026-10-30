@@ -10,6 +10,6 @@ DamageTypeName = Literal[
 ]
 ConditionName = Literal[
     "blinded", "charmed", "deafened", "exhaustion", "frightened", "grappled",
-    "incapacitated", "invisible", "paralyzed", "petrified", "poisoned", "prone",
+    "cursed", "incapacitated", "invisible", "paralyzed", "petrified", "poisoned", "prone",
     "restrained", "stunned", "unconscious",
 ]
