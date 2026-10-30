@@ -67,20 +67,43 @@
     return before - state.active_modifiers.length;
   }
 
-  function applyEffect(state, sourceId, sourceEffectId, effect, index, trigger) {
-    if (!EFFECT_KINDS.has(effect.kind)) throw new Error(`Unsupported combat modifier effect kind: ${effect.kind}.`);
-    add(state, {
-      id: `${sourceId}:${sourceEffectId}:${trigger}-modifier:${index}`, source_id: sourceId, source_effect_id: sourceEffectId,
-      kind: effect.kind, flat_bonus: effect.flatBonus || 0,
-      consume_on_attack_against: Boolean(effect.consumeOnAttackAgainst),
-      expires_at_start_of_source_turn: Boolean(effect.expiresAtStartOfSourceTurn),
-      expires_at_end_of_target_turn: Boolean(effect.expiresAtEndOfTargetTurn),
-    });
+  function applyEffect(state, sourceId, sourceEffectId, effect, index, trigger, round = null) {
+    try {
+      if (!EFFECT_KINDS.has(effect.kind)) throw new Error(`Unsupported combat modifier effect kind: ${effect.kind}.`);
+      if (effect.expiresAtEndOfSourceTurn && round == null) throw new Error("End-of-source-turn modifier requires the current round.");
+      add(state, {
+        id: `${sourceId}:${sourceEffectId}:${trigger}-modifier:${index}`, source_id: sourceId, source_effect_id: sourceEffectId,
+        kind: effect.kind, flat_bonus: effect.flatBonus || 0,
+        consume_on_attack_against: Boolean(effect.consumeOnAttackAgainst),
+        expires_at_start_of_source_turn: Boolean(effect.expiresAtStartOfSourceTurn),
+        expires_at_end_of_target_turn: Boolean(effect.expiresAtEndOfTargetTurn),
+        expires_source_turn_end_round: effect.expiresAtEndOfSourceTurn ? round : null,
+      });
+    } catch (error) {
+      console.error("Failed browser combat modifier application.", { sourceEffectId, error });
+      throw error;
+    }
   }
 
-  function applyHitEffects(state, sourceId, attack) {
-    for (const [index, effect] of (attack.onHitModifiers || []).entries()) {
-      applyEffect(state, sourceId, attack.id, effect, index, "hit");
+  function applyHitEffects(state, sourceId, attack, round = null) {
+    try {
+      for (const [index, effect] of (attack.onHitModifiers || []).entries()) {
+        applyEffect(state, sourceId, attack.id, effect, index, "hit", round);
+      }
+    } catch (error) {
+      console.error("Failed browser target hit modifiers.", { attack: attack?.id, error });
+      throw error;
+    }
+  }
+
+  function applySelfHitEffects(state, sourceId, attack, round) {
+    try {
+      for (const [index, effect] of (attack.onHitSelfModifiers || []).entries()) {
+        applyEffect(state, sourceId, attack.id, effect, index, "self-hit", round);
+      }
+    } catch (error) {
+      console.error("Failed browser source hit modifiers.", { attack: attack?.id, error });
+      throw error;
     }
   }
 
@@ -131,7 +154,7 @@
     && (!item.target_id || item.target_id === targetId));
 
   window.IRON_PIT_BROWSER_MODIFIERS = {
-    add, applyD20Bonus, applyEffect, applyHitEffects, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
+    add, applyD20Bonus, applyEffect, applyHitEffects, applySelfHitEffects, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage,
     consumeNextAttackAdvantage, consumeNextAttackAgainstAdvantage, consumeNextAttackDisadvantage, effectiveArmorClass, effectiveSpeed, expireSourceTurn, expireSourceTurnStart,
     expireTargetTurn, nextAttackAdvantage, nextAttackAgainstAdvantage, nextAttackDisadvantage, removeSource, validate,
   };
