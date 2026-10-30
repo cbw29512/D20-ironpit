@@ -14,6 +14,7 @@ from app.content.monster_source_dreadful_glare_2014 import source_proven_dreadfu
 from app.content.monster_source_opening_area_saves_2014 import source_proven_opening_area_saves_2014
 from app.content.monster_source_recharge_line_damage_2014 import source_proven_recharge_line_damage_2014
 from app.content.monster_source_recharge_area_conditions_2014 import source_proven_recharge_area_conditions_2014
+from app.content.monster_source_limited_audible_conditions_2014 import source_proven_limited_audible_conditions_2014
 from app.content.monster_source_save_outcome_bindings_2014 import source_proven_asymmetric_saves_2014
 from app.content.monster_source_visual_save_bindings_2014 import source_proven_visual_saves_2014
 
@@ -46,6 +47,9 @@ def unsupported_source_actions_2014(
         )
         allowed.update(
             item.name.casefold() for item in source_proven_recharge_area_conditions_2014(monster)
+        )
+        allowed.update(
+            item.name.casefold() for item in source_proven_limited_audible_conditions_2014(monster)
         )
         if (
             monster.multiattack_slots
