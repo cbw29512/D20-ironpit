@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from app.combat.owner_action_expiry import expire_on_owner_event
 from app.combat.resources import action_resource_available, resolved_resource_id
 from app.domain.models import CombatantState
 
@@ -56,6 +57,7 @@ def mark_slot_spell_cast(state: CombatantState, turn_key: str) -> None:
     try:
         if not slot_spell_available(state, turn_key):
             raise ValueError("A spell slot has already been expended to cast a spell on this turn.")
+        expire_on_owner_event(state, "spell_cast")
         state.spell_slot_expended_turn_key = turn_key
     except ValueError:
         raise
