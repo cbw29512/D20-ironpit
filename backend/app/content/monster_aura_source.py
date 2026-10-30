@@ -49,12 +49,15 @@ def source_end_turn_damage_auras(name: str) -> list[EndTurnDamageAura]:
     bonus = int(match.group("bonus") or 0)
     if match.group("sign") == "-":
         bonus = -bonus
+    following = text[match.end():].lstrip()
+    next_sentence = following.split(".", 1)[0].lower()
+    ignition = ("start " + "burn" + "ing") in next_sentence
     return [EndTurnDamageAura(
         id="fire-aura", name="Fire Aura", radius_ft=int(match.group("radius")),
         damage_dice_count=int(match.group("count")), damage_dice_size=int(match.group("size")),
         damage_bonus=bonus, damage_type=DamageType(match.group("dtype").lower()),
         disabled_while_incapacitated="incapacitated condition" in match.group("tail").lower(),
-        applies_burning=("start " + "burn" + "ing") in match.group("tail").lower(),
+        applies_burning=ignition,
     )]
 
 
