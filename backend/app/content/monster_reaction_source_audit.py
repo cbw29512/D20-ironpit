@@ -5,6 +5,7 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_reaction_arena_policy import arena_unavailable_reaction
 from app.content.monster_reaction_aura_source import reaction_start_turn_aura_matches
 from app.content.monster_riposte_source import riposte_matches
 from app.domain.models import CombatantTemplate
@@ -100,7 +101,11 @@ def reaction_issues(template: CombatantTemplate, row: dict[str, object]) -> list
     if template.redirect_attack_reaction is not None and "Redirect Attack" not in expected:
         issues.append("unexpected-redirect-attack-reaction")
     for name in expected:
-        if name in _ARENA_NEUTRAL_REACTIONS or arena_neutral_reaction(name, source):
+        if (
+            name in _ARENA_NEUTRAL_REACTIONS
+            or arena_neutral_reaction(name, source)
+            or arena_unavailable_reaction(name, source)
+        ):
             continue
         if name == "Parry" and _parry_matches(template, source):
             continue
