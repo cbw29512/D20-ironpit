@@ -35,3 +35,31 @@ def test_unmodeled_attach_rider_still_fails_closed() -> None:
     )
 
     assert report._unmodeled_action_rider(actions) is True
+
+
+def test_modeled_charge_replacement_damage_is_not_reported_as_unsupported_rider() -> None:
+    try:
+        report = _load_report_module()
+        actions = (
+            "Ram. Melee Attack Roll: +4, reach 5 ft. "
+            "Hit: 9 (2d6 + 2) Bludgeoning damage, or 11 (2d8 + 2) Bludgeoning damage "
+            "if the seahorse moved 20+ feet straight toward the target immediately before the hit."
+        )
+
+        assert report._unmodeled_action_rider(actions) is False
+    except Exception:
+        raise
+
+
+def test_other_conditional_replacement_damage_still_fails_closed() -> None:
+    try:
+        report = _load_report_module()
+        actions = (
+            "Claw. Melee Attack Roll: +4, reach 5 ft. "
+            "Hit: 7 (1d8 + 3) Slashing damage, or 12 (2d8 + 3) Slashing damage "
+            "if the target is wearing armor."
+        )
+
+        assert report._unmodeled_action_rider(actions) is True
+    except Exception:
+        raise
