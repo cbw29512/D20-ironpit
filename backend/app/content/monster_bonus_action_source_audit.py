@@ -70,6 +70,15 @@ def _runtime_bonus_save(template: CombatantTemplate, name: str) -> bool:
         raise RuntimeError("Bonus Action save binding could not be evaluated.") from exc
 
 
+def _runtime_triggered_bonus_attack(template: CombatantTemplate, name: str) -> bool:
+    try:
+        base = _base_name(name)
+        return any(feature.name == base for feature in template.triggered_bonus_attacks)
+    except Exception as exc:
+        logger.exception("Failed to inspect triggered Bonus Action binding for %s.", template.id)
+        raise RuntimeError("Triggered Bonus Action binding could not be evaluated.") from exc
+
+
 def _runtime_bonus_swallow(template: CombatantTemplate, name: str) -> bool:
     try:
         base = _base_name(name)
@@ -94,6 +103,7 @@ def bonus_action_issues(template: CombatantTemplate, row: dict[str, object]) -> 
                 arena_neutral_bonus_action(name)
                 or _runtime_bonus_save(template, name)
                 or _runtime_bonus_swallow(template, name)
+                or _runtime_triggered_bonus_attack(template, name)
             ):
                 continue
             issues.append(f"uncertified-bonus-action:{_slug(name)}")
