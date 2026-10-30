@@ -70,6 +70,7 @@
       source_side: source.side, target_member: target, setup,
     };
     if (!target.state.active_effect_ids.includes(effect.effectId)) target.state.active_effect_ids.push(effect.effectId);
+    if (target.state.current_hp === 0) activateReplacement(target.state);
     return effect.effectId;
   }
 
