@@ -70,6 +70,7 @@ def start_turn_aura_row(aura: Any) -> dict[str, Any]:
             "magical_effect": aura.magical_effect,
             "disabled_while_incapacitated": aura.disabled_while_incapacitated,
             "success_grants_source_immunity": aura.success_grants_source_immunity,
+            "requires_source_reaction": aura.requires_source_reaction,
         }
     except Exception:
         logger.exception("Failed to serialize start-turn aura %s.", getattr(aura, "id", "<unknown>"))
