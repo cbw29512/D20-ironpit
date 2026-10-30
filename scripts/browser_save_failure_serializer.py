@@ -52,6 +52,9 @@ def failure_effect_row(effect: Any) -> dict[str, Any]:
             )
             if effect.automatic_success_after_rounds is not None:
                 row["automaticSuccessAfterRounds"] = effect.automatic_success_after_rounds
+        elif effect.kind == "zero-hp-replacement":
+            row.update(effectId=effect.effect_id, replacementMode=effect.replacement_mode,
+                       controlMode=effect.control_mode, replacementHp=effect.replacement_hp)
         elif effect.kind in {"attacks-against-advantage", "speed"}:
             row["flatBonus"] = effect.flat_bonus
             if effect.consume_on_attack_against:
