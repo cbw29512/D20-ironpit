@@ -69,10 +69,18 @@ def build_report() -> dict[str, object]:
                 "exit_movement_ft": profile.exit_movement_ft,
                 "requires_existing_grapple": True,
             }
+            if profile.regurgitation_damage_threshold is not None:
+                parameters.update({
+                    "regurgitation_damage_threshold": profile.regurgitation_damage_threshold,
+                    "regurgitation_save_ability": profile.regurgitation_save_ability,
+                    "regurgitation_save_dc": profile.regurgitation_save_dc,
+                    "regurgitation_range_ft": profile.regurgitation_range_ft,
+                    "regurgitation_all_swallowed": profile.regurgitation_all_swallowed,
+                })
             serialized = template_row(
                 compile_combatant(adapt_monster_mechanics_2014(monster))
             ).get("swallowActions", [])
-            browser_wired = len(serialized) == 1 and serialized[0] == {
+            expected = {
                 "sourceName": profile.source_name,
                 "attackId": f"2014-{monster.id}-{profile.attack_id}",
                 "requiresExistingGrapple": True,
@@ -85,6 +93,15 @@ def build_report() -> dict[str, object]:
                 "grantsTotalExternalCover": True,
                 "blindsAndRestrains": True,
             }
+            if profile.regurgitation_damage_threshold is not None:
+                expected.update({
+                    "regurgitationDamageThreshold": profile.regurgitation_damage_threshold,
+                    "regurgitationSaveAbility": profile.regurgitation_save_ability,
+                    "regurgitationSaveDc": profile.regurgitation_save_dc,
+                    "regurgitationRangeFt": profile.regurgitation_range_ft,
+                    "regurgitationAllSwallowed": profile.regurgitation_all_swallowed,
+                })
+            browser_wired = len(serialized) == 1 and serialized[0] == expected
         if not (python_wired and browser_wired):
             exceptions.append({"card_id": monster.id, "reason": _incompatibility(monster)})
         rows.append({
