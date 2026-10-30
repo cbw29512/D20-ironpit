@@ -3,8 +3,7 @@
   const S = () => window.IRON_PIT_BROWSER_STATE, R = () => window.IRON_PIT_BROWSER_ROLLS, A = () => window.IRON_PIT_BROWSER_ATTACK_ADVANTAGE || { sources: () => 0 };
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE, T = () => window.IRON_PIT_BROWSER_TIMED, TD = (state, ability) => window.IRON_PIT_BROWSER_TIMED?.d20Disadvantage(state, ability) || 0, Z = () => window.IRON_PIT_BROWSER_ZERO_HP, H = () => window.IRON_PIT_BROWSER_MAX_HP_REDUCTION;
   const SAP = () => window.IRON_PIT_BROWSER_SAP || { applyWeapon: () => false, consume: () => 0, disadvantage: () => 0 }, TM = () => window.IRON_PIT_BROWSER_TACTICAL_MASTER || { apply: () => false };
-  const GRZ = () => window.IRON_PIT_BROWSER_GRAZE || { rawDamage: () => null };
-  const TOP = () => window.IRON_PIT_BROWSER_TOPPLE || { resolve: () => ({ saveRoll: null, saveDc: null, saveSucceeded: null, applied: false }) };
+  const GRZ = () => window.IRON_PIT_BROWSER_GRAZE || { rawDamage: () => null }, TOP = () => window.IRON_PIT_BROWSER_TOPPLE || { resolve: () => ({ saveRoll: null, saveDc: null, saveSucceeded: null, applied: false }) };
   const STUDY = () => window.IRON_PIT_BROWSER_STUDIED_ATTACKS || { apply: () => false }, PA = () => window.IRON_PIT_BROWSER_PEERLESS_AIM || { resolve: (_state, hit) => ({ hit, used: false }) };
   const HI = () => window.IRON_PIT_BROWSER_HEROIC_INSPIRATION || { rerollFailedAttack: (_state, roll) => ({ roll, used: false }) };
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { activate: () => false, attackAdvantage: () => 0, attacksAgainstAdvantage: () => 0 };
@@ -28,7 +27,7 @@
     if (setup && Q().has(attacker, "frightened")) { if (!F()) throw new Error("Browser Frightened runtime is not loaded."); disadvantage += F().d20Disadvantage(attacker, setup); }
     disadvantage += G()?.attackDisadvantage?.(attacker, targetId) || 0;
     if (defender.active_effect_ids.includes("dodge") && !Q().incapacitated(defender) && M().effectiveSpeed(defender) > 0 && !G()?.speedIsZero(defender)) disadvantage += 1;
-    if ((defender.template.traits || []).includes("attacks-against-disadvantage-unless-incapacitated") && !Q().incapacitated(defender)) disadvantage += 1;
+    disadvantage += Q().defensiveAttackDisadvantage?.(defender) || 0;
     if (Q().attackAdvantage(defender)) advantage += 1;
     if (defender.active_effect_ids.includes("restrained")) advantage += 1;
     if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
