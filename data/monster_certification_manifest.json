@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 202,
-    "blocked": 128
+    "public_ready": 203,
+    "blocked": 127
   },
   "monsters": [
     {
@@ -1963,12 +1963,12 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "multiattack"
+        "multiattack",
+        "trait"
       ],
       "unsupported_mechanics": [
         "bonus-action",
-        "condition-or-control",
-        "trait"
+        "condition-or-control"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
@@ -1977,9 +1977,7 @@
       "blockers": [
         "bonus-action",
         "condition-or-control",
-        "trait",
-        "uncertified-bonus-action:quick-grapple",
-        "uncertified-trait:abduct"
+        "uncertified-bonus-action:quick-grapple"
       ]
     },
     {
@@ -1994,21 +1992,16 @@
         "trait"
       ],
       "supported_mechanics": [
-        "attack-roll"
-      ],
-      "unsupported_mechanics": [
+        "attack-roll",
         "condition-or-control",
         "trait"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "trait",
-        "uncertified-trait:abduct"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-bulette",
