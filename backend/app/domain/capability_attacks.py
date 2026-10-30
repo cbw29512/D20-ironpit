@@ -12,6 +12,7 @@ from app.domain.capability_effects import (
     SaveFailureEffectDefinition,
 )
 from app.domain.charge import ChargeProfile
+from app.domain.save_damage import SaveDamageComponent
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
 from app.domain.weapons import ConditionalAttackAdvantage, DamageType, WeaponAttackKind
@@ -91,6 +92,7 @@ class SaveCapabilityDefinition(BaseModel):
     area: AreaTargeting | None = None
     damage: DiceSpec | None = None
     damage_type: DamageType | None = None
+    additional_damage_components: list[SaveDamageComponent] = Field(default_factory=list)
     success_damage: Literal["none", "half"] = "none"
     failure_effects: list[SaveFailureEffectDefinition] = Field(default_factory=list)
     forbid_target_affected_by_action: bool = False
