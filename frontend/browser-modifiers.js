@@ -66,7 +66,6 @@
     state.active_modifiers = state.active_modifiers.filter((item) => !item.expires_at_end_of_target_turn);
     return before - state.active_modifiers.length;
   }
-
   function applyEffect(state, sourceId, sourceEffectId, effect, index, trigger, round = null) {
     try {
       if (!EFFECT_KINDS.has(effect.kind)) throw new Error(`Unsupported combat modifier effect kind: ${effect.kind}.`);
@@ -95,7 +94,6 @@
       throw error;
     }
   }
-
   const flat = (state, kind) => (state.active_modifiers || []).filter((item) => item.kind === kind)
     .reduce((sum, item) => sum + (item.flat_bonus || 0), 0);
   const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class"));
