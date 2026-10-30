@@ -4,7 +4,7 @@ import re
 from functools import lru_cache
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_death_trigger_source import death_trigger_trait_issues, parse_death_trigger_effects
-from app.content.monster_defensive_blur_source import defensive_disadvantage_trait_issues, defensive_disadvantage_trait_name
+from app.content.monster_defensive_blur_source import complete_defensive_disadvantage_trait, defensive_disadvantage_trait_issues
 from app.content.monster_damage_absorption_source import damage_absorption_trait_issues
 from app.content.monster_damage_taken_disadvantage_source import damage_taken_disadvantage_trait_issues
 from app.content.monster_grapple_contact_source import grapple_contact_trait_issues
@@ -138,16 +138,13 @@ def complete_monster_trait_fingerprints(templates: list[CombatantTemplate]) -> l
             for source_name, runtime_trait in _MODELED_TRAITS.items():
                 if source_name in names and runtime_trait not in traits:
                     traits.append(runtime_trait)
-            defensive_name = defensive_disadvantage_trait_name(row.get("traits", ""))
-            defensive_trait = CombatTrait.ATTACKS_AGAINST_DISADVANTAGE_UNLESS_INCAPACITATED
-            if defensive_name is not None and defensive_trait not in traits:
-                traits.append(defensive_trait)
-            completed.append(template.model_copy(update={
+            updated = template.model_copy(update={
                 "source_trait_names": names,
                 "combat_traits": traits,
                 "magic_resistance": "Magic Resistance" in names,
                 "death_trigger_effects": parse_death_trigger_effects(row.get("traits", "")),
-            }))
+            })
+            completed.append(complete_defensive_disadvantage_trait(updated, row))
         return completed
     except Exception as exc:
         logger.exception("Failed to derive canonical monster trait fingerprints from SRD source.")
