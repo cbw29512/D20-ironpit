@@ -83,7 +83,7 @@
     const useAthletics = athletics != null && (acrobatics == null || athletics >= acrobatics);
     const bonus = useAthletics ? athletics : acrobatics;
     const advantage = useAthletics && (state.active_effect_ids.includes("rage") || state.template.athletics_advantage) ? 1 : 0;
-    let disadvantage = state.active_effect_ids.includes("poisoned") ? 1 : 0;
+    let disadvantage = (state.active_effect_ids.includes("poisoned") ? 1 : 0) + (M()?.abilityCheckDisadvantage?.(state) || 0);
     if (state.active_effect_ids.includes("frightened")) { if (!setup || !F()) throw new Error("Frightened grapple check requires encounter context."); disadvantage += F().d20Disadvantage(state, setup); }
     let roll = R().d20(bonus, R().modeFromSources(advantage, disadvantage));
     if (M()) roll = M().applyD20Bonus(state, "ability-check-bonus-die", roll);
