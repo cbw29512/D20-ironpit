@@ -36,6 +36,7 @@ from app.combat.triggered_extra_attacks import resolve_triggered_extra_attacks_a
 from app.combat.turn_damage import clear_turn_damage
 from app.combat.variable_heads import end_owner_turn
 from app.combat.swallow_lifecycle import release_invalid_swallowed, source_turn_swallowed_damage
+from app.combat.swallow_regurgitation import resolve_end_turn_swallow_regurgitation
 from app.combat.timed_emanations import resolve_target_turn_start_emanations
 from app.combat.turn_start_save_condition_reaction import resolve_turn_start_save_condition_reactions
 from app.domain.encounters import EncounterBattleResult, EncounterCombatant, EncounterSelection
@@ -94,6 +95,10 @@ def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
     from app.combat.temporary_terrain import expire_source_terrain
     expire_source_terrain(setup, member.combatant_id, round_number)
     expire_current_turn_type_resistances(setup)
+    regurgitation, sequence = resolve_end_turn_swallow_regurgitation(
+        sequence, round_number, member, setup, dice,
+    )
+    events.extend(regurgitation)
     triggered, sequence = resolve_triggered_extra_attacks_after_turn(
         sequence, round_number, member, setup, dice,
     )
