@@ -4,10 +4,17 @@ const path = require("path");
 const vm = require("vm");
 
 global.window = {};
-const load = (name) => vm.runInThisContext(
-  fs.readFileSync(path.join(__dirname, name), "utf8"),
-  { filename: name },
-);
+function load(name) {
+  try {
+    return vm.runInThisContext(
+      fs.readFileSync(path.join(__dirname, name), "utf8"),
+      { filename: name },
+    );
+  } catch (error) {
+    console.error("Failed to load browser damage source test dependency.", { name, error });
+    throw error;
+  }
+}
 
 window.IRON_PIT_BROWSER_STATE = {
   effectiveMaxHp: (state) => state.template.max_hp,
