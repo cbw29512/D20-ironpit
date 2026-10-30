@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.condition_rules import has_condition
-from app.domain.models import EncounterCombatant, SavingThrowAction
+from app.domain.models import EncounterCombatant, EncounterSetup, SavingThrowAction
 from app.domain.size import size_at_most
 
 logger = logging.getLogger(__name__)
@@ -20,6 +20,7 @@ def save_action_target_eligible(
     action: SavingThrowAction,
     target: EncounterCombatant,
     actor: EncounterCombatant | None = None,
+    setup: EncounterSetup | None = None,
 ) -> bool:
     """Return whether target-state restrictions permit this save action, ignoring range."""
     try:
@@ -29,6 +30,27 @@ def save_action_target_eligible(
             if actor is None or not any(
                 source.source_id == actor.combatant_id
                 for source in target.state.grapple_sources
+            ):
+                return False
+        if action.max_active_grapple_targets is not None:
+            if actor is None or setup is None:
+                return False
+            members = [*setup.heroes, *setup.monsters]
+            active_targets = [
+                member
+                for member in members
+                if any(
+                    source.source_id == actor.combatant_id
+                    and source.source_effect_id == action.id
+                    for source in member.state.grapple_sources
+                )
+            ]
+            target_already_active = any(
+                member.combatant_id == target.combatant_id for member in active_targets
+            )
+            if (
+                not target_already_active
+                and len(active_targets) >= action.max_active_grapple_targets
             ):
                 return False
         if action.forbid_target_affected_by_action:
@@ -55,12 +77,13 @@ def legal_save_action(
     target: EncounterCombatant,
     distance_ft: int,
     actor: EncounterCombatant | None = None,
+    setup: EncounterSetup | None = None,
 ) -> bool:
     """Resolve reusable save-action target restrictions, including grapple ownership."""
     try:
         if distance_ft > action.range_ft:
             return False
-        return save_action_target_eligible(action, target, actor)
+        return save_action_target_eligible(action, target, actor, setup)
     except Exception:
         logger.exception("Failed save-action legality check for %s.", action.id)
         raise
