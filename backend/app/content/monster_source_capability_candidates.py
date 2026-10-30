@@ -6,6 +6,7 @@ import re
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_defense_source_audit import parse_defense_profile
 from app.content.monster_general_action_fallback import general_unarmed_attack
+from app.content.monster_legendary_source_binding import source_legendary_binding
 from app.content.monster_source_attack_advantage import parse_attack_header_advantage
 from app.content.monster_source_attack_rider_text import attack_rider_text
 from app.content.monster_source_attack_riders import parse_attack_riders
@@ -94,6 +95,8 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
             if not attacks:
                 attacks = [general_unarmed_attack(row, definition_id)]
             save_actions, save_resources = source_save_candidates(row)
+            legendary_actions, legendary_save_actions = source_legendary_binding(row, attacks)
+            save_actions.extend(legendary_save_actions)
             support_actions, support_resources = source_support_actions(
                 str(row["name"]), str(row.get("bonusActions", "")), "bonus_action"
             )
@@ -113,6 +116,7 @@ def source_candidate_definitions(excluded_ids: set[str]) -> dict[str, CombatantD
                 speed_ft=standard_arena_closing_speed(row["speed"]), movement_modes=source_movement_modes(str(row["name"])),
                 initiative_bonus=int(initiative.group(1)), attacks=attacks, primary_attack_id=attacks[0].id,
                 attack_action=source_multiattack(row, attacks, save_actions), save_actions=save_actions,
+                legendary_actions=legendary_actions,
                 support_actions=support_actions, resources=list(resources.values()),
                 combat_traits=[CombatTrait.CHARGE] if any(item.charge_profile for item in attacks) else [],
                 unarmed_opportunity_attack=monster_unarmed_profile(row),
