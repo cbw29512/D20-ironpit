@@ -28,6 +28,7 @@ class HitControlEffect(BaseModel):
     max_target_size: CreatureSize | None = None
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
+    grapple_escape_check_disadvantage: bool = False
     conditions_while_grappled: list[ConditionName] = Field(default_factory=list)
     condition_id: ConditionName | None = None
     expires_at_start_of_source_turn: bool = False
