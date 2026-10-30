@@ -463,7 +463,6 @@ Blocked monsters: **77**. These are grouped by printed ability name so the roste
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
 | Telepathic Bond | Succubus/Incubus | 1 |
 | Transparent | Gelatinous Cube | 1 |
-| Vampire Weaknesses | Vampire, Vampire Spawn | 2 |
 | Variable Illumination | Will-o'-Wisp | 1 |
 | Water Form | Water Elemental | 1 |
 | Water Susceptibility | Fire Elemental | 1 |
@@ -472,7 +471,7 @@ Blocked monsters: **77**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 61 |
+| `source:trait` | 60 |
 | `source:extra-action` | 43 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 17 |
