@@ -4,11 +4,8 @@ import logging
 
 from app.combat.attack_reaction_chain import resolve_attack_event_chain
 from app.combat.dice import FixedDiceProvider
-from app.combat.modifier_stack import (
-    effective_armor_class,
-    expire_source_turn_modifiers,
-    next_attack_advantage_sources,
-)
+from app.combat.attack_roll_modifiers import next_attack_advantage_sources
+from app.combat.modifier_stack import effective_armor_class, expire_source_turn_modifiers
 from app.combat.state import begin_turn, build_combatant_state
 from app.content.capability_registry import build_combatant_from_capabilities
 from app.content.monster_catalog import load_monster_rows
