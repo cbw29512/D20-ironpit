@@ -11,7 +11,7 @@
     attacksAgainstAdvantage: () => 0, consumeAttacksAgainstAdvantage: () => 0, nextAttackAdvantage: () => 0, consumeNextAttackAdvantage: () => 0, nextAttackAgainstAdvantage: () => 0,
     consumeNextAttackAgainstAdvantage: () => 0, nextAttackDisadvantage: () => 0, consumeNextAttackDisadvantage: () => 0, effectiveArmorClass: (state) => state.template.armor_class,
     effectiveSpeed: (state) => state.template.speed_ft, applyD20Bonus: (_state, _kind, roll) => roll,
-  }; const MAA = (state) => M().nextAttackAdvantage?.(state) || 0, CMA = (state) => M().consumeNextAttackAdvantage?.(state) || 0, MAD = (state) => M().nextAttackDisadvantage?.(state) || 0, CMD = (state) => M().consumeNextAttackDisadvantage?.(state) || 0, C = () => window.IRON_PIT_BROWSER_CONCENTRATION, I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false }, F = () => window.IRON_PIT_BROWSER_FRIGHTENED;
+  }; const MAA = (state) => M().nextAttackAdvantage?.(state) || 0, CMA = (state) => M().consumeNextAttackAdvantage?.(state) || 0, MAD = (state) => M().nextAttackDisadvantage?.(state) || 0, CMD = (state) => M().consumeNextAttackDisadvantage?.(state) || 0, C = () => window.IRON_PIT_BROWSER_CONCENTRATION, OE = () => window.IRON_PIT_BROWSER_OWNER_ACTION_EXPIRY, I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false }, F = () => window.IRON_PIT_BROWSER_FRIGHTENED;
   const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || {
     attackAdvantage: (state) => state.is_unconscious, autoCritical: (state) => state.is_unconscious,
     has: (state, id) => state.active_effect_ids.includes(id), incapacitated: (state) => state.is_unconscious,
@@ -62,7 +62,7 @@
     const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
     const mode = R().attackMode(attack, distance, advantage, conditions.disadvantage + (M().attackRollDisadvantage?.(attacker.state) || 0) + SAP().disadvantage(attacker.state) + MAD(attacker.state) + (attack.attackAbility ? TD(attacker.state, attack.attackAbility) : 0), closeThreat);
     const resourceRemaining = attack.resourceId ? RES().spend(attacker.state, attack.resourceId, attack.resourceCost || 1) : null; const heroic = HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus, mode), M().effectiveArmorClass(target.state));
-    const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll);
+    const attackRoll = M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll); OE()?.expire(attacker.state, "attack", states(extra.setup));
     M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); CMA(attacker.state); CMD(attacker.state); SAP().consume(attacker.state);
     M().consumeAttacksAgainstAdvantage(target.state); window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
