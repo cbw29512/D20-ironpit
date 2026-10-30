@@ -60,6 +60,17 @@ def extend_optional_rows(row: dict[str, Any], template: CombatantTemplate) -> No
             row["death_trigger_effects"] = [
                 death_trigger_row(effect) for effect in template.death_trigger_effects
             ]
+        if template.damage_taken_disadvantage_rules:
+            row["damage_taken_disadvantage_rules"] = [
+                {
+                    "id": rule.id,
+                    "name": rule.name,
+                    "damageType": rule.damage_type.value,
+                    "attackRollDisadvantage": rule.attack_roll_disadvantage,
+                    "abilityCheckDisadvantage": rule.ability_check_disadvantage,
+                }
+                for rule in template.damage_taken_disadvantage_rules
+            ]
         _extend_auras(row, template)
         _extend_triggered_actions(row, template)
         _extend_source_fingerprints(row, template)
