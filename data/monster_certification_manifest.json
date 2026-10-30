@@ -4,8 +4,8 @@
   "generation_policy": "Derived from canonical SRD rows, runtime/source audit readiness, blocker analysis, and generated browser parity.",
   "summary": {
     "catalog_monsters": 330,
-    "public_ready": 218,
-    "blocked": 112
+    "public_ready": 220,
+    "blocked": 110
   },
   "monsters": [
     {
@@ -2200,7 +2200,6 @@
         "uncertified-limited-use:bonusactions-hasten-recharge-5-6",
         "uncertified-trait:acid-absorption",
         "uncertified-trait:berserk",
-        "uncertified-trait:immutable-form",
         "unsupported-action-rider"
       ]
     },
@@ -3269,7 +3268,6 @@
         "trait",
         "uncertified-trait:aversion-to-fire",
         "uncertified-trait:berserk",
-        "uncertified-trait:immutable-form",
         "uncertified-trait:lightning-absorption"
       ]
     },
@@ -5320,8 +5318,7 @@
         "limited-use",
         "save-or-complex-action",
         "trait",
-        "uncertified-trait:fire-absorption",
-        "uncertified-trait:immutable-form"
+        "uncertified-trait:fire-absorption"
       ]
     },
     {
@@ -5774,28 +5771,21 @@
       "supported_mechanics": [
         "attack-roll",
         "bonus-action",
+        "condition-or-control",
         "damage-or-condition-defense",
+        "limited-use",
         "multiattack",
         "reaction",
-        "saving-throw-action"
-      ],
-      "unsupported_mechanics": [
-        "condition-or-control",
-        "limited-use",
         "save-or-complex-action",
+        "saving-throw-action",
         "trait"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "condition-or-control",
-        "limited-use",
-        "save-or-complex-action",
-        "trait",
-        "uncertified-trait:reactive"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-mastiff",
@@ -6254,21 +6244,16 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "reaction"
-      ],
-      "unsupported_mechanics": [
         "limited-use",
+        "reaction",
         "trait"
       ],
-      "python_certification_status": "blocked",
-      "browser_certification_status": "blocked",
-      "generated_static_status": "catalog-only",
-      "public_ready_status": "blocked",
-      "blockers": [
-        "limited-use",
-        "trait",
-        "uncertified-trait:compression"
-      ]
+      "unsupported_mechanics": [],
+      "python_certification_status": "certified",
+      "browser_certification_status": "certified",
+      "generated_static_status": "current",
+      "public_ready_status": "ready",
+      "blockers": []
     },
     {
       "monster_id": "srd-5.2.1-2024-monster-ogre",
@@ -8082,8 +8067,7 @@
         "trait",
         "uncertified-bonus-action:slow",
         "uncertified-limited-use:bonusactions-slow-recharge-5-6",
-        "uncertified-monster-spellcasting",
-        "uncertified-trait:immutable-form"
+        "uncertified-monster-spellcasting"
       ]
     },
     {
