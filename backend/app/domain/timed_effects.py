@@ -44,6 +44,8 @@ class TimedEffect(BaseModel):
     automatic_success_round: int | None = Field(default=None, ge=1)
     requires_active_effect_id: str | None = None
     ends_on_damage: bool = False
+    ends_on_owner_attack: bool = False
+    ends_on_owner_spell_cast: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
 
