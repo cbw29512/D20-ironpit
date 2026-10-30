@@ -96,9 +96,9 @@ const nextAttack = (expires = 2) => ({
     id: "pirate-rapier",
     onHitSelfModifiers: [{
       kind: "next-attack-advantage",
-      expiresAtEndOfSourceTurn: true,
+      expiresAtEndOfCurrentTurn: true,
     }],
-  }, 1);
+  }, 1, "pirate");
   assert.equal(M.nextAttackAdvantage(pirate.state), 1);
   dice([2, 18]);
   const event = A.resolveAttack(4, 1, pirate, target, attack, 5, { spendAction: false });
@@ -109,9 +109,9 @@ const nextAttack = (expires = 2) => ({
     id: "pirate-rapier",
     onHitSelfModifiers: [{
       kind: "next-attack-advantage",
-      expiresAtEndOfSourceTurn: true,
+      expiresAtEndOfCurrentTurn: true,
     }],
-  }, 1);
+  }, 1, "pirate");
   assert.equal(M.expireSourceTurn([pirate.state], "pirate", 1), 1);
   assert.equal(M.nextAttackAdvantage(pirate.state), 0);
 }
