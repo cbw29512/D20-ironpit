@@ -106,6 +106,8 @@ def _condition_fields(row: dict[str, Any], effect: Any) -> None:
             row["automaticSuccessAfterRounds"] = effect.automatic_success_after_rounds
         if effect.allowed_removal_action_ids:
             row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
+        if effect.turn_behavior != "normal":
+            row["turnBehavior"] = effect.turn_behavior
         if effect.periodic_damage:
             periodic = effect.periodic_damage
             row["periodicDamage"] = {
