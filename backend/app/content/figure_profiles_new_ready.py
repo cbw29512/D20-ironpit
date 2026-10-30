@@ -7,6 +7,7 @@ NEW_READY_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Assassin": _p("humanoid", "assassin"),
     "Basilisk": _p("reptile", "basilisk"),
     "Balor": _p("humanoid", "balor"),
+    "Bearded Devil": _p("humanoid", "bearded-devil"),
     "Blink Dog": _p("quadruped", "canine"),
     "Bugbear Stalker": _p("humanoid", "bugbear"),
     "Bone Devil": _p("humanoid", "bone-devil"),
