@@ -79,13 +79,13 @@ window.IRON_PIT_BROWSER_SAVING_THROWS={resolveSavingThrow:(state,ability,dc)=>{
 }};
 owner.damage_taken_this_turn_by_source={other:100,victim:49};
 let regurg=window.IRON_PIT_BROWSER_SWALLOW_REGURGITATION.resolveEndTurn(
-  10,3,setup.heroes[0],setup,
+  10,3,setup.monsters[0],setup,
 );
 assert.equal(regurg.events.length,0);
 assert.ok(victim.swallowed && second.swallowed);
 owner.damage_taken_this_turn_by_source.victim=50;
 regurg=window.IRON_PIT_BROWSER_SWALLOW_REGURGITATION.resolveEndTurn(
-  10,3,setup.heroes[0],setup,
+  10,3,setup.monsters[0],setup,
 );
 assert.equal(regurg.sequence,11);
 assert.equal(regurg.events[0].save_succeeded,false);
