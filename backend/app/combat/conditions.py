@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from app.combat.attachments import apply_attachment
 from app.combat.condition_immunity import condition_is_immune
-from app.combat.condition_rules import attacks_have_advantage_against, has_condition
+from app.combat.condition_rules import attacks_have_advantage_against, has_condition, is_incapacitated
 from app.combat.dodge import DODGE_EFFECT_ID, dodge_benefits_active
 from app.combat.grapple import (
     RESTRAINED_EFFECT_ID,
@@ -45,8 +45,7 @@ def attack_roll_condition_sources(
         disadvantage += 1
     if (
         CombatTrait.ATTACKS_AGAINST_DISADVANTAGE_UNLESS_INCAPACITATED in defender.template.combat_traits
-        and not has_condition(defender, "incapacitated")
-        and not defender.is_unconscious
+        and not is_incapacitated(defender)
     ):
         disadvantage += 1
     if attacks_have_advantage_against(defender):
