@@ -16,6 +16,7 @@ from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.encounter_targeting import select_nearest_target
 from app.combat.grapple import cleanup_grapples
+from app.combat.grapple_periodic_damage import resolve_grapple_periodic_damage
 from app.combat.hit_modifiers import expire_source_turn_start_modifiers
 from app.combat.modifier_stack import expire_source_turn_modifiers
 from app.combat.precombat_spells import prepare_defenses
@@ -99,6 +100,10 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 berserk_event, sequence = resolve_start_turn_berserk(sequence, round_number, member, dice)
                 if berserk_event is not None: events.append(berserk_event)
                 cleanup_grapples(setup)
+                grapple_damage_events, sequence = resolve_grapple_periodic_damage(
+                    sequence, round_number, member, setup, dice,
+                )
+                events.extend(grapple_damage_events)
                 grapple_events, sequence = resolve_start_turn_grapple_contact_damage(
                     sequence, round_number, member, setup, dice,
                 )
