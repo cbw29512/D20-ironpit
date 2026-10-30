@@ -428,7 +428,7 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **77**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **74**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
@@ -473,7 +473,7 @@ Blocked monsters: **77**. These are grouped by printed ability name so the roste
 | Blocker | Monsters |
 |---|---:|
 | `source:trait` | 61 |
-| `source:extra-action` | 42 |
+| `source:extra-action` | 38 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 17 |
 | `multiattack:complex` | 10 |
@@ -481,8 +481,8 @@ Blocked monsters: **77**. These are grouped by printed ability name so the roste
 | `source:legendary` | 9 |
 | `mechanic:recharge` | 6 |
 | `attack:complex` | 5 |
-| `mechanic:swallow` | 5 |
 | `attack:damage-type` | 2 |
+| `mechanic:swallow` | 2 |
 | `source:reaction` | 2 |
 | `arena:neutral` | 1 |
 | `arena:removed` | 1 |
