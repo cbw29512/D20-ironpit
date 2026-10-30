@@ -7,7 +7,8 @@
   const B2 = () => window.IRON_PIT_BROWSER_BARBARIAN2 || { dangerSenseAdvantage: () => 0 }, DG = () => window.IRON_PIT_BROWSER_DODGE || { dexSaveAdvantageSources: () => 0 };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS || { applyD20Bonus: (_state, _kind, roll) => roll }, C = () => window.IRON_PIT_BROWSER_CONCENTRATION, D = () => window.IRON_PIT_DICE;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (state, cost) => cost === "action" && state.action_available, spend: (state) => { state.action_available = false; } };
-  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious, incapacitated: (state) => state.is_unconscious, has: () => false }, states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
+  const Q = () => window.IRON_PIT_BROWSER_CONDITION_RULES || { autoFailStrDex: (state) => state.is_unconscious, incapacitated: (state) => state.is_unconscious, has: () => false }, L = () => window.IRON_PIT_BROWSER_SAVE_LEGALITY;
+  const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function saveMode(state, ability, magicalEffect = false, advantageSources = 0) {
     const advantage = advantageSources + (ability === "strength" && state.active_effect_ids.includes("rage") ? 1 : 0)
       + B2().dangerSenseAdvantage(state, ability) + DG().dexSaveAdvantageSources(state, ability)
@@ -38,30 +39,18 @@
     return { roll, succeeded: roll.total >= dc || legendaryOverride(state) };
   }
   function legalAction(action, target, distance, actor = null, setup = null) {
-    if (distance > action.range) return false;
+    if (L()) return L().legalAction(action, target, distance, actor, setup);
+    if (action.maxActiveGrappleTargets != null || distance > action.range) return false;
     if (action.requiredTargetCondition && !Q().has(target.state, action.requiredTargetCondition)) return false;
-    if (action.requiredTargetGrappledBySelf) {
-      if (!actor || !(target.state.grapple_sources || []).some((source) => source.source_id === actor.combatant_id)) return false;
-    }
-    if (action.maxActiveGrappleTargets != null) {
-      if (!actor || !setup) return false;
-      const active = [...setup.heroes, ...setup.monsters].filter((member) =>
-        (member.state.grapple_sources || []).some((source) =>
-          source.source_id === actor.combatant_id && source.source_effect_id === action.id
-        )
-      );
-      const already = active.some((member) => member.combatant_id === target.combatant_id);
-      if (!already && active.length >= action.maxActiveGrappleTargets) return false;
-    }
+    if (action.requiredTargetGrappledBySelf && (!actor || !(target.state.grapple_sources || []).some((source) => source.source_id === actor.combatant_id))) return false;
     if (action.forbidTargetAffectedByAction && T()?.affectedByAction(target.state, action.id)) return false;
     return !action.targetMaxSize || S().sizeAtMost(target, action.targetMaxSize);
   }
   function pushAway(actor, target, action) {
+    if (L()) return L().pushAway(actor, target, action);
     const distance = action.pushTargetAwayFt || 0;
-    if (!distance || !target.state.is_alive || target.state.is_dead) return 0;
-    if (action.pushTargetMaxSize && !S().sizeAtMost(target, action.pushTargetMaxSize)) return 0;
-    const start = target.position_ft, direction = start >= actor.position_ft ? 1 : -1;
-    target.position_ft = Math.max(0, start + direction * distance);
+    if (!distance || !target.state.is_alive || target.state.is_dead || (action.pushTargetMaxSize && !S().sizeAtMost(target, action.pushTargetMaxSize))) return 0;
+    const start = target.position_ft; target.position_ft = Math.max(0, start + (start >= actor.position_ft ? 1 : -1) * distance);
     return Math.abs(target.position_ft - start);
   }
   function damageRolls(action, count, shared) {
