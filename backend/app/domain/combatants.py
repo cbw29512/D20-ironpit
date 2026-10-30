@@ -19,6 +19,7 @@ from app.domain.regeneration import RegenerationRule
 from app.domain.size import CreatureSize
 from app.domain.spells import AutomaticSpellAction, DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.swallow import SwallowAction
+from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.support_actions import CombatSupportAction
 from app.domain.traits import CombatTrait
 from app.domain.triggered_bonus_attacks import TriggeredBonusAttack
@@ -79,6 +80,7 @@ class CombatantTemplate(BaseModel):
     forced_movement_actions: list[ForcedMovementAction] = Field(default_factory=list)
     swallow_actions: list[SwallowAction] = Field(default_factory=list)
     support_actions: list[CombatSupportAction] = Field(default_factory=list)
+    timed_self_buff_actions: list[TimedSelfBuffAction] = Field(default_factory=list)
     death_trigger_effects: list[DeathTriggeredSaveEffect] = Field(default_factory=list)
     damage_taken_disadvantage_rules: list[DamageTakenDisadvantageRule] = Field(default_factory=list)
     end_turn_damage_auras: list[EndTurnDamageAura] = Field(default_factory=list)
