@@ -73,6 +73,7 @@ def resolve_deferred_save_effect(
             succeeded,
             dice,
             affected,
+            source_id=actor.combatant_id,
         )
 
         if spend_action:
