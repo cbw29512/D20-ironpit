@@ -35,7 +35,7 @@ the underlying ability is already implemented or trivial.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
-| `source:extra-action` | Behir, Vrock | 2 |
+| `source:extra-action` | Banshee, Behir | 2 |
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
 
@@ -49,6 +49,7 @@ the underlying ability is already implemented or trivial.
 | Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Spellcasting |
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
 | Balor | attack:incomplete, source:trait | Fire Aura |
+| Banshee | source:extra-action | — |
 | Behir | source:extra-action | — |
 | Chuul | attack:incomplete, multiattack:complex, source:extra-action | — |
 | Cloaker | attack:incomplete, source:extra-action, source:trait | Damage Transfer, Light Sensitivity |
@@ -112,7 +113,6 @@ the underlying ability is already implemented or trivial.
 | Tarrasque | mechanic:legendary, mechanic:swallow, source:extra-action, source:legendary, source:trait | Reflective Carapace |
 | Vampire | attack:incomplete, mechanic:legendary, multiattack:complex, source:extra-action, source:legendary, source:trait | Shapechanger, Misty Escape, Vampire Weaknesses |
 | Vampire Spawn | attack:incomplete, multiattack:complex, source:trait | Vampire Weaknesses |
-| Vrock | source:extra-action | — |
 | Water Elemental | mechanic:recharge, source:extra-action, source:trait | Water Form, Freeze |
 | Werebear | multiattack:complex, source:trait | Shapechanger |
 | Wereboar | multiattack:complex, source:extra-action, source:trait | Shapechanger |
