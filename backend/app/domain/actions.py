@@ -27,8 +27,6 @@ class HitControlEffect(BaseModel):
     max_target_size: CreatureSize | None = None
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
-    grapple_linked_conditions: list[ConditionName] = Field(default_factory=list)
-    grapple_periodic_damage: PeriodicDamageEffectDefinition | None = None
     conditions_while_grappled: list[ConditionName] = Field(default_factory=list)
     condition_id: ConditionName | None = None
     expires_at_start_of_source_turn: bool = False
@@ -123,6 +121,9 @@ class SavingThrowAction(BaseModel):
     push_target_max_size: CreatureSize | None = None
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
+    grapple_linked_conditions: list[ConditionName] = Field(default_factory=list)
+    grapple_periodic_damage: PeriodicDamageEffectDefinition | None = None
+    max_active_grapple_targets: int | None = Field(default=None, ge=1, le=20)
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     magical_effect: bool = False
