@@ -13,6 +13,7 @@ _SUPPORTED_EFFECT_MODIFIERS = {
     ModifierKind.NEXT_ATTACK_ADVANTAGE,
     ModifierKind.NEXT_ATTACK_DISADVANTAGE,
     ModifierKind.SPEED,
+    ModifierKind.HEALING_PREVENTED,
 }
 
 
