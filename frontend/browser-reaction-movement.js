@@ -53,12 +53,12 @@
         for (const reactor of reactors) {
           const before = Math.abs(reactor.position_ft - mover.position_ft);
           const after = Math.abs(reactor.position_ft - proposal.position);
-          const event = X().resolveOpportunityAttack(
+          const chain = X().resolveOpportunityAttackChain(
             sequence, round, reactor, mover, setup,
             before, after, movementSource, options,
           );
-          if (!event) continue;
-          events.push(event); sequence += 1;
+          if (!chain.events.length) continue;
+          events.push(...chain.events); sequence = chain.sequence;
           const newlyProne = !wasProne && mover.state.active_effect_ids.includes("prone");
           if (mover.state.is_dead || mover.state.is_unconscious || G()?.speedIsZero(mover.state) || newlyProne) {
             return { events, sequence, movement: null };
