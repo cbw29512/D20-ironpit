@@ -84,6 +84,7 @@ def resolve_save_zone_trigger(
                     dice=dice,
                     affected_states=[member.state for member in [*setup.heroes, *setup.monsters]],
                     setup=setup,
+                    source_id=zone.source_id,
                 )
         applied_conditions = []
         if not succeeded and zone.failed_save_condition_id and target.state.is_alive:
