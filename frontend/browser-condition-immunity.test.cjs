@@ -102,4 +102,21 @@ const member = (id, template, position = 0) => ({ combatant_id: id, side: "heroe
   assert.equal(event.attack_roll.selected_roll, 12);
 }
 
+
+{
+  const attacker = member("blur-attacker", heroTemplate, 5);
+  const target = member("blur-target", heroTemplate, 0);
+  target.state.template.traits = ["attacks-against-disadvantage-unless-incapacitated"];
+  window.IRON_PIT_DICE = queuedDice([18, 4, 1, 1, 1]);
+  let event = A.resolveAttack(1, 1, attacker, target, attacker.state.template.attacks[0], 5);
+  assert.equal(event.attack_roll.mode, "disadvantage");
+  assert.equal(event.attack_roll.selected_roll, 4);
+
+  target.state.active_effect_ids.push("incapacitated");
+  window.IRON_PIT_DICE = queuedDice([13, 1, 1, 1]);
+  event = A.resolveAttack(2, 1, attacker, target, attacker.state.template.attacks[0], 5);
+  assert.equal(event.attack_roll.mode, "normal");
+  assert.equal(event.attack_roll.selected_roll, 13);
+}
+
 console.log("Browser condition immunity and Blinded attack regressions passed.");
