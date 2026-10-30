@@ -40,6 +40,11 @@ _SUPPORTED_BLOODIED_REPLACEMENT = re.compile(
     rf"(?:{_DAMAGE_TYPES})\s+damage\s+if\s+the\s+[a-z][a-z -]*\s+is\s+Bloodied\b",
     re.I,
 )
+_SUPPORTED_SELF_NEXT_ATTACK_ADVANTAGE = re.compile(
+    r"the\s+[^.]+\s+has\s+Advantage\s+on\s+the\s+next\s+attack\s+roll\s+"
+    r"it\s+makes\s+before\s+the\s+end\s+of\s+this\s+turn",
+    re.I,
+)
 # Keep this list limited to source riders that are not represented by the
 # production attack-rider parser. Flat ``plus N <type> damage`` riders are
 # intentionally absent: monster_source_attack_riders.py models them as an
@@ -73,6 +78,7 @@ def _reaction_is_modeled(row: dict[str, object], reactions: list[str]) -> bool:
 def _unmodeled_action_rider(actions: str) -> bool:
     try:
         sanitized = _SUPPORTED_BLOODIED_REPLACEMENT.sub("damage", actions)
+        sanitized = _SUPPORTED_SELF_NEXT_ATTACK_ADVANTAGE.sub("modeled-modifier", sanitized)
         charge = parse_charge_replacement(actions)
         if charge is not None and charge.replacement_damage is not None:
             replacement = charge.replacement_damage
