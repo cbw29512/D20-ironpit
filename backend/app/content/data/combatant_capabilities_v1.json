@@ -9423,6 +9423,7 @@
         },
         "resource_cost": 1,
         "magical_effect": false,
+        "starts_concentration": false,
         "animation": "constrict"
       }
     ],
@@ -10076,7 +10077,8 @@
             "repeat_save_failure_continues": true,
             "repeat_save_failure_ends_on_damage": false,
             "repeat_save_failure_allowed_removal_action_ids": [],
-            "allowed_removal_action_ids": []
+            "allowed_removal_action_ids": [],
+            "turn_behavior": "normal"
           }
         ],
         "push_target_away_ft": 0,
@@ -10211,7 +10213,8 @@
             "repeat_save_failure_continues": true,
             "repeat_save_failure_ends_on_damage": false,
             "repeat_save_failure_allowed_removal_action_ids": [],
-            "allowed_removal_action_ids": []
+            "allowed_removal_action_ids": [],
+            "turn_behavior": "normal"
           }
         ],
         "push_target_away_ft": 0,
@@ -10390,7 +10393,8 @@
             "repeat_save_failure_continues": true,
             "repeat_save_failure_ends_on_damage": false,
             "repeat_save_failure_allowed_removal_action_ids": [],
-            "allowed_removal_action_ids": []
+            "allowed_removal_action_ids": [],
+            "turn_behavior": "normal"
           }
         ],
         "push_target_away_ft": 0,
@@ -11776,6 +11780,7 @@
         },
         "resource_cost": 1,
         "magical_effect": false,
+        "starts_concentration": false,
         "animation": "save-effect"
       }
     ],

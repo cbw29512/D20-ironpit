@@ -473,7 +473,7 @@
       "monster_name": "Adult White Dragon",
       "srd_source_page": 340,
       "srd_source_reference": "SRD 5.2.1 p. 340",
-      "runtime_template_id": "srd-adult-white-dragon",
+      "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -503,9 +503,9 @@
       "blockers": [
         "legendary",
         "limited-use",
+        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait",
-        "uncertified-legendary-action-economy"
+        "trait"
       ]
     },
     {
@@ -984,7 +984,7 @@
       "monster_name": "Ancient White Dragon",
       "srd_source_page": 341,
       "srd_source_reference": "SRD 5.2.1 p. 341",
-      "runtime_template_id": "srd-ancient-white-dragon",
+      "runtime_template_id": null,
       "detected_combat_mechanics": [
         "attack-roll",
         "damage-or-condition-defense",
@@ -1014,9 +1014,9 @@
       "blockers": [
         "legendary",
         "limited-use",
+        "monster-combat-mechanics-not-certified",
         "save-or-complex-action",
-        "trait",
-        "uncertified-legendary-action-economy"
+        "trait"
       ]
     },
     {
