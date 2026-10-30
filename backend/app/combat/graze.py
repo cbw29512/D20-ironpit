@@ -22,6 +22,7 @@ def resolve_graze_miss(
     attack: WeaponAttack,
     dice: DiceProvider,
     affected_states: list[CombatantState] | None = None,
+    source_id: str | None = None,
 ) -> GrazeResolution | None:
     """Resolve strict RAW Graze fixed damage after a mastered weapon misses."""
     try:
@@ -61,6 +62,7 @@ def resolve_graze_miss(
             damage_types=damage_types,
             dice=dice,
             affected_states=affected_states,
+            source_id=source_id,
         )
         return roll, [applied_component], outcome
     except ValueError:
