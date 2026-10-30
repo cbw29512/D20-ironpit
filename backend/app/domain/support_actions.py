@@ -15,7 +15,7 @@ class CombatSupportAction(BaseModel):
     id: str
     name: str
     action_cost: ActionCost
-    range_ft: int = Field(default=0, ge=0)
+    range_ft: int | None = Field(default=None, ge=0)
     target_mode: SupportTargetMode = "self_or_ally"
     temporary_hp_dice_count: int = Field(default=0, ge=0, le=20)
     temporary_hp_dice_size: int = Field(default=6, ge=2, le=100)
