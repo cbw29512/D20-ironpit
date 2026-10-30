@@ -19,6 +19,10 @@ def adjusted_damage_amount(
     try:
         if amount < 0:
             raise ValueError("Damage cannot be negative.")
+        if damage_type in target.template.damage_absorption_types:
+            from app.combat.damage_absorption import absorb_typed_damage
+            absorb_typed_damage(target, amount, damage_type)
+            return 0
         template = target.template
         if damage_type in template.damage_immunities:
             return 0
