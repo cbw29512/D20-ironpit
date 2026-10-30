@@ -32,6 +32,11 @@ def _resource_bound_actions(template: CombatantTemplate) -> list[tuple[str, int,
             section = _ACTION_COST_SECTION.get(action.action_cost)
             if section is not None:
                 bindings.append((action.resource_id, action.resource_cost, action.name, section))
+    for action in template.support_actions:
+        if action.resource_id:
+            section = _ACTION_COST_SECTION.get(action.action_cost)
+            if section is not None:
+                bindings.append((action.resource_id, action.resource_cost, action.name, section))
     for action in [
         *template.spell_attack_actions,
         *template.spell_save_actions,
