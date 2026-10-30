@@ -103,6 +103,8 @@ class SaveCapabilityDefinition(BaseModel):
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     magical_effect: bool = False
+    starts_concentration: bool = False
+    concentration_duration_rounds: int | None = Field(default=None, ge=1, le=100)
     animation: str = "save-effect"
 
     @model_validator(mode="after")
