@@ -14,6 +14,7 @@ class CombatModifierEffect(BaseModel):
     consume_on_attack_against: bool = False
     expires_at_start_of_source_turn: bool = False
     expires_at_end_of_source_turn: bool = False
+    expires_at_end_of_current_turn: bool = False
     expires_at_end_of_target_turn: bool = False
 
     @model_validator(mode="after")
@@ -27,6 +28,7 @@ class CombatModifierEffect(BaseModel):
         expiry_flags = (
             self.expires_at_start_of_source_turn,
             self.expires_at_end_of_source_turn,
+            self.expires_at_end_of_current_turn,
             self.expires_at_end_of_target_turn,
         )
         if sum(bool(flag) for flag in expiry_flags) > 1:
