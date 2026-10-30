@@ -26,6 +26,27 @@ def _next_attack_disadvantage_matches(effect, actions: str) -> bool:
     return bool(re.search(pattern, actions, re.IGNORECASE))
 
 
+def _self_next_attack_advantage_matches(effect, actions: str) -> bool:
+    try:
+        if effect.kind != "next-attack-advantage" or effect.recipient != "source":
+            return False
+        if effect.flat_bonus or effect.consume_on_attack_against:
+            return False
+        if not effect.expires_at_end_of_source_turn:
+            return False
+        if effect.expires_at_start_of_source_turn or effect.expires_at_end_of_target_turn:
+            return False
+        pattern = (
+            r"the\s+[^.]+\s+has\s+advantage\s+on\s+the\s+next\s+attack\s+roll\s+"
+            r"it\s+makes\s+before\s+the\s+end\s+of\s+this\s+turn"
+        )
+        return bool(re.search(pattern, actions, re.IGNORECASE))
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Failed self-hit modifier source audit.")
+        raise
+
+
 def _speed_modifier_matches(effect, actions: str) -> bool:
     if effect.flat_bonus >= 0 or effect.consume_on_attack_against or effect.expires_at_start_of_source_turn:
         return False
@@ -50,4 +71,7 @@ def hit_modifier_issues(attack: WeaponAttack, actions: str) -> list[str]:
             continue
         if not matched:
             issues.append(f"hit-modifier-mismatch:{attack.id}:{effect.kind}")
+    for effect in attack.on_hit_self_modifier_effects:
+        if not _self_next_attack_advantage_matches(effect, actions):
+            issues.append(f"self-hit-modifier-mismatch:{attack.id}:{effect.kind}")
     return issues
