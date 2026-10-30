@@ -7,7 +7,7 @@ from functools import lru_cache
 from app.content.monster_bonus_action_source_audit import arena_neutral_bonus_action
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_daily_use_source_audit import daily_fingerprint_implemented
-from app.content.monster_reaction_source_audit import arena_neutral_reaction
+from app.content.monster_reaction_source_audit import arena_neutral_reaction, parse_reaction_names
 from app.content.monster_recharge_source_audit import recharge_fingerprint_implemented
 from app.domain.models import CombatantTemplate
 
@@ -71,7 +71,8 @@ def _arena_neutral_limited_use(
         if field == "bonusActions":
             return arena_neutral_bonus_action(name)
         if field == "reactions":
-            return arena_neutral_reaction(name, row.get("reactions", ""))
+            source = row.get("reactions", "")
+            return arena_neutral_reaction(name, source, parse_reaction_names(source))
         return False
     except Exception as exc:
         logger.exception("Failed to classify arena-neutral limited use %r.", fingerprint)
