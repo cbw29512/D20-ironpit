@@ -72,10 +72,38 @@ def test_inconsistent_structured_damage_or_size_fails_closed(corpus):
         assert source_grapple_swallow_2014(altered) is None
 
 
-def test_more_complex_swallow_remains_separately_blocked(corpus):
-    for monster_id in ("remorhaz", "purple-worm", "shambling-mound"):
+def test_different_swallow_grammars_remain_separately_blocked(corpus):
+    for monster_id in ("purple-worm", "shambling-mound"):
         assert source_grapple_swallow_2014(corpus[monster_id]) is None
         assert "mechanic:swallow" in basic_blockers_2014(corpus[monster_id])
+
+
+
+@pytest.mark.parametrize(
+    "monster_id,threshold,dc,range_ft,all_swallowed",
+    [
+        ("behir", 30, 14, 10, False),
+        ("remorhaz", 30, 15, 10, True),
+        ("kraken", 50, 25, 10, True),
+        ("tarrasque", 60, 20, 10, True),
+    ],
+)
+def test_threshold_regurgitation_profiles_are_source_proven(
+    corpus, monster_id, threshold, dc, range_ft, all_swallowed,
+):
+    monster = corpus[monster_id]
+    original = monster.model_dump_json()
+    profile = source_grapple_swallow_2014(monster)
+
+    assert profile is not None
+    assert profile.source_name == "Swallow"
+    assert profile.attack_id == "bite"
+    assert profile.regurgitation_damage_threshold == threshold
+    assert profile.regurgitation_save_ability == "constitution"
+    assert profile.regurgitation_save_dc == dc
+    assert profile.regurgitation_range_ft == range_ft
+    assert profile.regurgitation_all_swallowed is all_swallowed
+    assert monster.model_dump_json() == original
 
 
 def test_source_identity_is_not_the_dispatch_key(corpus):
@@ -121,7 +149,7 @@ def test_complete_327_card_source_scan_has_no_unproven_swallow_bindings(corpus):
         monster.id for monster in corpus.values()
         if source_grapple_swallow_2014(monster) is not None
     }
-    assert proven == {"giant-frog", "giant-toad"}
+    assert proven == {"behir", "giant-frog", "giant-toad", "kraken", "remorhaz", "tarrasque"}
     for monster_id in proven:
         assert basic_blockers_2014(corpus[monster_id]) == ()
 
