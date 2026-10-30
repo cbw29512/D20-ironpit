@@ -241,7 +241,13 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["source_legendary_action_names"] = list(template.source_legendary_action_names)
             row["source_spellcasting_fingerprint"] = template.source_spellcasting_fingerprint
         if template.parry_reaction:
-            row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}
+            parry = template.parry_reaction
+            row["parry_reaction"] = {
+                "ac_bonus": parry.ac_bonus,
+                "source_feature": parry.source_feature,
+                "counterattack_attack_id": parry.counterattack_attack_id,
+                "counterattack_range_ft": parry.counterattack_range_ft,
+            }
         if template.redirect_attack_reaction:
             row["redirect_attack_reaction"] = {
                 "ally_range_ft": template.redirect_attack_reaction.ally_range_ft,
