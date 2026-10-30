@@ -21,6 +21,15 @@ _CONDITION = re.compile(
     r"target has the (Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Petrified|Poisoned|Prone|Restrained|Stunned|Unconscious) condition",
     re.I,
 )
+_SOURCE_TURN_CONDITION = re.compile(
+    r"target has the (?P<condition>Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Petrified|Poisoned|Prone|Restrained|Stunned|Unconscious) condition "
+    r"until the (?P<edge>start|end) of the [^.]+?[’']s next turn",
+    re.I,
+)
+_HEALING_PREVENTED = re.compile(
+    r"(?:can[’']t|cannot) regain Hit Points",
+    re.I,
+)
 _FLAT_EXTRA_DAMAGE = re.compile(
     r"\bplus\s+(?P<amount>\d+)\s+(?P<type>Acid|Cold|Fire|Force|Lightning|Necrotic|Poison|Psychic|Radiant|Thunder|Bludgeoning|Piercing|Slashing) damage\b",
     re.I,
@@ -82,10 +91,23 @@ def parse_attack_riders(text: str) -> list[object]:
 
     condition = _CONDITION.search(text)
     if condition and condition.group(1).lower() not in {"prone", failed_condition} and not grapple:
+        timed = _SOURCE_TURN_CONDITION.search(text)
+        expiry = (
+            f"source_turn_{timed.group('edge').lower()}"
+            if timed and timed.group("condition").lower() == condition.group(1).lower()
+            else None
+        )
         effects.append(ConditionEffectDefinition(
             condition=condition.group(1).lower(),
             max_target_size=maximum,
+            expiry_timing=expiry,
         ))
+        if _HEALING_PREVENTED.search(text):
+            effects.append(CombatModifierEffect(
+                kind="healing-prevented",
+                expires_at_start_of_source_turn=expiry == "source_turn_start",
+                expires_at_end_of_source_turn=expiry == "source_turn_end",
+            ))
 
     speed = _SPEED.search(text)
     if speed:
