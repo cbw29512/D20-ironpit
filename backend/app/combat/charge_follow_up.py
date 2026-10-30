@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.dice import DiceProvider
+from app.combat.attack_reaction_chain import resolve_attack_event_chain
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import combatant_distance
 from app.domain.charge import ChargeProfile
@@ -49,12 +50,17 @@ def resolve_charge_follow_up(
             raise ValueError(
                 f"Charge follow-up attack {profile.follow_up_attack_id!r} is missing from {attacker.state.template.id}."
             )
-        event = resolve_encounter_attack(
+        distance = combatant_distance(attacker, actual_target)
+        if setup is None:
+            event = resolve_encounter_attack(
+                sequence, round_number, attacker, actual_target, attack,
+                distance, dice, setup, spend_action=False, feature_id="charge-follow-up",
+            )
+            return [event], sequence + 1
+        return resolve_attack_event_chain(
             sequence, round_number, attacker, actual_target, attack,
-            combatant_distance(attacker, actual_target), dice, setup,
-            spend_action=False, feature_id="charge-follow-up",
+            distance, dice, setup, spend_action=False, feature_id="charge-follow-up",
         )
-        return [event], sequence + 1
     except Exception:
         logger.exception("Charge follow-up resolution failed for %s.", attacker.state.template.id)
         raise
