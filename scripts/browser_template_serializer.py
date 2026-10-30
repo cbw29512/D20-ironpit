@@ -122,6 +122,21 @@ def _aura_row(aura: Any) -> dict[str, Any]:
     }
 
 
+def _grapple_contact_row(effect: Any) -> dict[str, Any]:
+    try:
+        return {
+            "id": effect.id,
+            "name": effect.name,
+            "damage_dice_count": effect.damage_dice_count,
+            "damage_dice_size": effect.damage_dice_size,
+            "damage_bonus": effect.damage_bonus,
+            "damage_type": effect.damage_type.value,
+        }
+    except Exception:
+        logger.exception("Failed to serialize grapple-contact damage %s.", getattr(effect, "id", "<unknown>"))
+        raise
+
+
 def _start_turn_aura_row(aura: Any) -> dict[str, Any]:
     return {
         "id": aura.id, "name": aura.name, "radius_ft": aura.radius_ft,
@@ -200,6 +215,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["death_trigger_effects"] = [_death_trigger_row(effect) for effect in template.death_trigger_effects]
         if template.end_turn_damage_auras:
             row["end_turn_damage_auras"] = [_aura_row(aura) for aura in template.end_turn_damage_auras]
+        if template.start_turn_grapple_contact_damage is not None:
+            row["start_turn_grapple_contact_damage"] = _grapple_contact_row(template.start_turn_grapple_contact_damage)
         if template.start_turn_save_condition_auras:
             row["start_turn_save_condition_auras"] = [_start_turn_aura_row(aura) for aura in template.start_turn_save_condition_auras]
         if template.roll_advantage_auras:
