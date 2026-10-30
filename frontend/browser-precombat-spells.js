@@ -3,17 +3,23 @@
 
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const SM = () => window.IRON_PIT_BROWSER_SPELL_MODIFIERS;
+  const T = () => window.IRON_PIT_BROWSER_TIMED;
+
+  function resourceId(spell) {
+    return spell.resourceId || `spell-slot-${spell.level}`;
+  }
 
   function slotChoice(member, spell) {
-    const resourceId = `spell-slot-${spell.level}`;
-    return (member.state.resources?.[resourceId] || 0) > 0 ? spell.level : null;
+    const id = resourceId(spell);
+    return (member.state.resources?.[id] || 0) >= (spell.resourceCost || 1) ? spell.level : null;
   }
 
   function active(member, setup, spell) {
     if (member.state.concentration?.effect_id === spell.id) return true;
     const side = member.side === "heroes" ? setup.heroes : setup.monsters;
     return side.some((target) => target.state.active_buff_effect_ids?.includes(spell.id)
-      || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id));
+      || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id)
+      || target.state.timed_effects?.some((effect) => effect.source_effect_id === spell.id));
   }
 
   function choose(member, setup = null) {
@@ -86,10 +92,11 @@
       || target.state.active_modifiers?.some((modifier) => modifier.source_effect_id === spell.id))) {
       throw new Error(`${spell.name} is already active on a selected target.`);
     }
-    const resourceId = `spell-slot-${slotLevel}`;
-    if (!(member.state.resources?.[resourceId] > 0)) throw new Error(`No level ${slotLevel} spell slot remains for ${spell.name}.`);
+    const id = resourceId(spell);
+    const cost = spell.resourceCost || 1;
+    if ((member.state.resources?.[id] || 0) < cost) throw new Error(`Resource ${id} is unavailable for ${spell.name}.`);
     member.state.opening_buff_spell_id = spell.id;
-    member.state.resources[resourceId] -= 1;
+    member.state.resources[id] -= cost;
     const tempHpDetails = [];
     for (const target of targets) {
       const before = target.state.temporary_hp;
@@ -99,6 +106,14 @@
       target.state.current_hp += spell.currentHpIncrease || 0;
       for (const type of spell.damageResistances || []) if (!target.state.temporary_damage_resistances.includes(type)) target.state.temporary_damage_resistances.push(type);
       if (!spell.concentration && !target.state.active_buff_effect_ids.includes(spell.id)) target.state.active_buff_effect_ids.push(spell.id);
+      for (const conditionId of spell.conditionIds || []) {
+        if (!T()) throw new Error("Browser timed-condition runtime is not loaded.");
+        T().apply(target.state, conditionId, member.combatant_id, {
+          sourceEffectId: spell.id,
+          appliedRound: 0,
+          expiresRound: (spell.durationMinutes * 10) + 1,
+        });
+      }
     }
     if (spell.concentration || spell.modifierEffects?.length) {
       if (!SM()) throw new Error("Browser spell-modifier runtime is not loaded.");
@@ -108,14 +123,15 @@
     if (spell.maxHpIncrease) details.push(`+${spell.maxHpIncrease} Hit Point maximum`);
     if (spell.currentHpIncrease) details.push(`+${spell.currentHpIncrease} current Hit Points`);
     if (spell.damageResistances?.length) details.push(`resistance to ${spell.damageResistances.join(", ")}`);
+    if (spell.conditionIds?.length) details.push(`conditions ${spell.conditionIds.join(", ")}`);
     details.push(...(spell.modifierEffects || []).map(modifierDetail));
     if (spell.concentration) details.push("Concentration");
     const single = targets.length === 1 ? targets[0] : null;
     return { sequence, round_number: 0, event_type: "feature", actor_id: member.combatant_id, actor_name: member.state.template.name,
       target_id: single?.combatant_id || null, target_name: single?.state.template.name || null,
       feature_id: spell.id, concentration_started_effect_id: spell.concentration ? spell.id : null,
-      resource_remaining: member.state.resources[resourceId], animation: spell.animation || "precombat-defense",
-      description: `Precombat preparation: ${member.state.template.name} casts ${spell.name} with a level ${slotLevel} slot on ${targets.map((target) => target.state.template.name).join(", ")} (${details.join("; ")}).` };
+      resource_remaining: member.state.resources[id], animation: spell.animation || "precombat-defense",
+      description: `Precombat preparation: ${member.state.template.name} casts ${spell.name} using ${id} on ${targets.map((target) => target.state.template.name).join(", ")} (${details.join("; ")}).` };
   }
 
   function prepare(setup, sequence = 1) {
