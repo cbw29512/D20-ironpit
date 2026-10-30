@@ -1,0 +1,82 @@
+from __future__ import annotations
+
+import logging
+import re
+from functools import lru_cache
+
+from app.content.monster_catalog import load_monster_rows
+from app.domain.models import CombatantTemplate
+from app.domain.reactions import ParryReaction
+
+logger = logging.getLogger(__name__)
+_RIPOSTE = re.compile(
+    r"Riposte\.\s+Trigger:\s+A creature hits the [^.]+ with a melee attack roll while the [^.]+ is holding a weapon\.\s+"
+    r"Response:\s+The [^.]+ adds (?P<bonus>\d+) to its AC against that attack, possibly causing it to miss\.\s+"
+    r"On a miss, the [^.]+ makes one (?P<attack>[A-Z][A-Za-z0-9’' -]+) attack against the triggering creature "
+    r"if the creature is within (?P<range>\d+) feet\.",
+    re.IGNORECASE,
+)
+
+
+def parse_riposte(
+    source_reactions: object,
+    attacks_by_name: dict[str, str],
+) -> ParryReaction | None:
+    try:
+        text = str(source_reactions or "")
+        if "Riposte." not in text:
+            return None
+        match = _RIPOSTE.search(text)
+        if match is None:
+            raise ValueError("Riposte source text is present but unsupported.")
+        attack_name = match.group("attack").strip().lower()
+        attack_id = attacks_by_name.get(attack_name)
+        if attack_id is None:
+            raise ValueError(f"Riposte references unknown attack {match.group('attack')!r}.")
+        return ParryReaction(
+            ac_bonus=int(match.group("bonus")),
+            source_feature="riposte",
+            counterattack_attack_id=attack_id,
+            counterattack_range_ft=int(match.group("range")),
+        )
+    except (TypeError, ValueError):
+        logger.exception("Invalid Riposte source data.")
+        raise
+    except Exception as exc:
+        logger.exception("Riposte source parsing failed.")
+        raise RuntimeError("Riposte source could not be parsed.") from exc
+
+
+@lru_cache(maxsize=1)
+def _rows_by_name() -> dict[str, dict[str, object]]:
+    try:
+        return {str(row["name"]): row for row in load_monster_rows()}
+    except Exception:
+        logger.exception("Failed to index monster rows for Riposte.")
+        raise
+
+
+def complete_monster_riposte_reactions(
+    templates: list[CombatantTemplate],
+) -> list[CombatantTemplate]:
+    try:
+        rows = _rows_by_name()
+        completed: list[CombatantTemplate] = []
+        for template in templates:
+            if template.kind != "monster":
+                completed.append(template)
+                continue
+            row = rows.get(template.name)
+            if row is None:
+                raise ValueError(f"No SRD source row for monster {template.name!r}.")
+            attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+            by_name = {attack.weapon.name.lower(): attack.id for attack in attacks}
+            riposte = parse_riposte(row.get("reactions", ""), by_name)
+            completed.append(
+                template.model_copy(update={"parry_reaction": riposte})
+                if riposte is not None else template
+            )
+        return completed
+    except Exception as exc:
+        logger.exception("Failed to complete monster Riposte reactions.")
+        raise RuntimeError("Monster Riposte completion failed.") from exc
