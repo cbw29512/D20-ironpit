@@ -151,7 +151,10 @@
       "wisdom": -1,
       "charisma": -1
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -1,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -303,7 +306,10 @@
       "wisdom": -1,
       "charisma": -1
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -1,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -467,7 +473,10 @@
       "wisdom": 0,
       "charisma": -1
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 1,
+      "acrobatics": 1
+    },
     "combat_traits": [
       "pack-tactics"
     ],
@@ -620,7 +629,10 @@
       "wisdom": -2,
       "charisma": -1
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -2,
+      "acrobatics": 2
+    },
     "combat_traits": [
       "pack-tactics"
     ],
@@ -825,7 +837,10 @@
       "wisdom": -1,
       "charisma": 0
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 0,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -984,7 +999,10 @@
       "wisdom": 0,
       "charisma": 0
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 0,
+      "acrobatics": 1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -1103,7 +1121,10 @@
       "wisdom": 0,
       "charisma": 0
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 0,
+      "acrobatics": 0
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -1254,7 +1275,10 @@
       "wisdom": 0,
       "charisma": 0
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 1,
+      "acrobatics": 1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -1373,7 +1397,10 @@
       "wisdom": 0,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -2,
+      "acrobatics": 3
+    },
     "combat_traits": [
       "pack-tactics"
     ],
@@ -1496,7 +1523,10 @@
       "wisdom": 1,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 0,
+      "acrobatics": 3
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -1628,7 +1658,10 @@
       "wisdom": 2,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -2,
+      "acrobatics": 2
+    },
     "combat_traits": [
       "pack-tactics"
     ],
@@ -1751,7 +1784,10 @@
       "wisdom": 0,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 2,
+      "acrobatics": 1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -1870,7 +1906,10 @@
       "wisdom": 0,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 2,
+      "acrobatics": 1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -2310,7 +2349,10 @@
       "wisdom": 1,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 2,
+      "acrobatics": 1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -2482,7 +2524,10 @@
       "wisdom": 1,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 3,
+      "acrobatics": 1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -2601,7 +2646,10 @@
       "wisdom": 1,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -1,
+      "acrobatics": 2
+    },
     "combat_traits": [
       "pack-tactics"
     ],
@@ -2724,7 +2772,10 @@
       "wisdom": 0,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 2,
+      "acrobatics": -1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -2843,7 +2894,10 @@
       "wisdom": 2,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 0,
+      "acrobatics": 3
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -2964,7 +3018,10 @@
       "wisdom": 0,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 4,
+      "acrobatics": 0
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -3083,7 +3140,10 @@
       "wisdom": 1,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 1,
+      "acrobatics": 0
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -3204,7 +3264,10 @@
       "wisdom": 1,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -1,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -3334,7 +3397,10 @@
       "wisdom": -1,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 1,
+      "acrobatics": 0
+    },
     "combat_traits": [
       "charge",
       "bloodied-fury"
@@ -3469,7 +3535,10 @@
       "wisdom": 0,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 3,
+      "acrobatics": 0
+    },
     "combat_traits": [
       "charge"
     ],
@@ -3601,7 +3670,10 @@
       "wisdom": -2,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 3,
+      "acrobatics": 0
+    },
     "combat_traits": [
       "charge",
       "bloodied-fury"
@@ -3763,7 +3835,10 @@
       "wisdom": -1,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 4,
+      "acrobatics": 0
+    },
     "combat_traits": [
       "charge"
     ],
@@ -3923,7 +3998,10 @@
       "wisdom": 0,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 6,
+      "acrobatics": -1
+    },
     "combat_traits": [
       "charge"
     ],
@@ -4049,7 +4127,10 @@
       "wisdom": -1,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 4,
+      "acrobatics": 1
+    },
     "combat_traits": [
       "charge"
     ],
@@ -4211,7 +4292,9 @@
       "charisma": -3
     },
     "skill_bonuses": {
-      "perception": 5
+      "perception": 5,
+      "athletics": 4,
+      "acrobatics": 1
     },
     "combat_traits": [
       "charge"
@@ -4338,7 +4421,10 @@
       "wisdom": 0,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 0,
+      "acrobatics": 0
+    },
     "combat_traits": [
       "charge"
     ],
@@ -4536,7 +4622,10 @@
       "wisdom": 2,
       "charisma": 1
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 0,
+      "acrobatics": 1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -4678,7 +4767,10 @@
       "wisdom": 1,
       "charisma": -1
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 3,
+      "acrobatics": 1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -4795,7 +4887,10 @@
       "wisdom": 0,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -4,
+      "acrobatics": -1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -4914,7 +5009,10 @@
       "wisdom": 1,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 0,
+      "acrobatics": 0
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -5031,7 +5129,10 @@
       "wisdom": 1,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -4,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -5146,7 +5247,10 @@
       "wisdom": 1,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -4,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -5263,7 +5367,10 @@
       "wisdom": -1,
       "charisma": -4
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -2,
+      "acrobatics": 0
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -5380,7 +5487,10 @@
       "wisdom": -1,
       "charisma": -4
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -5,
+      "acrobatics": 1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -5498,7 +5608,10 @@
       "wisdom": 2,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -3,
+      "acrobatics": 3
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -5613,7 +5726,10 @@
       "wisdom": -1,
       "charisma": -4
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -4,
+      "acrobatics": 0
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -5730,7 +5846,10 @@
       "wisdom": 1,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -4,
+      "acrobatics": 1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -5847,7 +5966,10 @@
       "wisdom": 0,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -4,
+      "acrobatics": 0
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -5964,7 +6086,10 @@
       "wisdom": 1,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -4,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -6081,7 +6206,10 @@
       "wisdom": 1,
       "charisma": -4
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -4,
+      "acrobatics": 3
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -6200,7 +6328,10 @@
       "wisdom": 2,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -2,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -6319,7 +6450,10 @@
       "wisdom": 2,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 2,
+      "acrobatics": 3
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -6440,7 +6574,10 @@
       "wisdom": 1,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 4,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -6582,7 +6719,10 @@
       "wisdom": 1,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 5,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -6703,7 +6843,10 @@
       "wisdom": 0,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 2,
+      "acrobatics": 0
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -6822,7 +6965,10 @@
       "wisdom": -1,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 1,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -6943,7 +7089,10 @@
       "wisdom": 0,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 3,
+      "acrobatics": 1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -7067,7 +7216,10 @@
       "wisdom": 1,
       "charisma": -1
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 3,
+      "acrobatics": 3
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -7188,7 +7340,10 @@
       "wisdom": 1,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -2,
+      "acrobatics": 0
+    },
     "combat_traits": [
       "pack-tactics"
     ],
@@ -7307,7 +7462,10 @@
       "wisdom": -2,
       "charisma": -4
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -1,
+      "acrobatics": 0
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -7441,7 +7599,10 @@
       "wisdom": 1,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 3,
+      "acrobatics": 1
+    },
     "combat_traits": [
       "charge"
     ],
@@ -7562,7 +7723,10 @@
       "wisdom": 4,
       "charisma": 0
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 1,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -7687,7 +7851,10 @@
       "wisdom": 1,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 0,
+      "acrobatics": 1
+    },
     "combat_traits": [
       "pack-tactics"
     ],
@@ -7810,7 +7977,10 @@
       "wisdom": 1,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 2,
+      "acrobatics": 3
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -7934,7 +8104,10 @@
       "wisdom": 3,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 1,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -8053,7 +8226,10 @@
       "wisdom": 0,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 2,
+      "acrobatics": 0
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -8185,7 +8361,10 @@
       "wisdom": 1,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 5,
+      "acrobatics": -1
+    },
     "combat_traits": [
       "charge"
     ],
@@ -8317,7 +8496,10 @@
       "wisdom": 3,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 4,
+      "acrobatics": 1
+    },
     "combat_traits": [
       "charge"
     ],
@@ -8494,7 +8676,10 @@
       "wisdom": -2,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 4,
+      "acrobatics": -1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -8634,7 +8819,10 @@
       "wisdom": 1,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 5,
+      "acrobatics": 1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -8774,7 +8962,10 @@
       "wisdom": 1,
       "charisma": -1
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 4,
+      "acrobatics": 3
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -8949,7 +9140,10 @@
       "wisdom": 1,
       "charisma": 0
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 0,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -9097,7 +9291,10 @@
       "wisdom": 0,
       "charisma": -1
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 1,
+      "acrobatics": 0
+    },
     "combat_traits": [
       "pack-tactics"
     ],
@@ -10326,7 +10523,9 @@
       "charisma": -2
     },
     "skill_bonuses": {
-      "perception": 3
+      "perception": 3,
+      "athletics": 2,
+      "acrobatics": 0
     },
     "combat_traits": [
       "pack-tactics"
@@ -10528,7 +10727,9 @@
       "charisma": -2
     },
     "skill_bonuses": {
-      "perception": 4
+      "perception": 4,
+      "athletics": 4,
+      "acrobatics": 0
     },
     "combat_traits": [],
     "magic_resistance": false,
@@ -11081,7 +11282,10 @@
       "wisdom": 2,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 4,
+      "acrobatics": 3
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -11228,7 +11432,10 @@
       "wisdom": 1,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 4,
+      "acrobatics": 0
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -11381,7 +11588,10 @@
       "wisdom": 2,
       "charisma": 0
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 3,
+      "acrobatics": 3
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -11527,7 +11737,10 @@
       "wisdom": 2,
       "charisma": 0
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 4,
+      "acrobatics": 4
+    },
     "combat_traits": [
       "charge"
     ],
@@ -11714,7 +11927,9 @@
       "charisma": -2
     },
     "skill_bonuses": {
-      "stealth": 5
+      "stealth": 5,
+      "athletics": 5,
+      "acrobatics": -1
     },
     "combat_traits": [],
     "magic_resistance": false,
@@ -12094,7 +12309,9 @@
       "charisma": -1
     },
     "skill_bonuses": {
-      "perception": 4
+      "perception": 4,
+      "athletics": 7,
+      "acrobatics": 0
     },
     "combat_traits": [],
     "magic_resistance": false,
@@ -12235,7 +12452,10 @@
       "wisdom": -4,
       "charisma": -5
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 2,
+      "acrobatics": 0
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -12365,7 +12585,10 @@
       "wisdom": -3,
       "charisma": -5
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 1,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -12495,7 +12718,10 @@
       "wisdom": 0,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 4,
+      "acrobatics": -2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -12632,7 +12858,10 @@
       "wisdom": 2,
       "charisma": 0
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 0,
+      "acrobatics": 1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -12760,7 +12989,10 @@
       "wisdom": 1,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -3,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -12902,7 +13134,10 @@
       "wisdom": 0,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 2,
+      "acrobatics": 0
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -13042,7 +13277,10 @@
       "wisdom": -1,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 3,
+      "acrobatics": 1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -13242,7 +13480,10 @@
       "wisdom": 2,
       "charisma": 1
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 4,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -13382,7 +13623,10 @@
       "wisdom": 1,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 5,
+      "acrobatics": -2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -13503,7 +13747,10 @@
       "wisdom": 1,
       "charisma": -2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 4,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -13624,7 +13871,10 @@
       "wisdom": 0,
       "charisma": -4
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 0,
+      "acrobatics": -3
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -13814,7 +14064,10 @@
       "wisdom": 1,
       "charisma": -1
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 3,
+      "acrobatics": 3
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -13933,7 +14186,10 @@
       "wisdom": 0,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 4,
+      "acrobatics": -2
+    },
     "combat_traits": [
       "undead-fortitude"
     ],
@@ -14074,7 +14330,10 @@
       "wisdom": 4,
       "charisma": 3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 4,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -14202,7 +14461,10 @@
       "wisdom": -1,
       "charisma": -4
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -4,
+      "acrobatics": 0
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -14350,7 +14612,10 @@
       "wisdom": -1,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 0,
+      "acrobatics": 3
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -14485,7 +14750,10 @@
       "wisdom": 0,
       "charisma": -4
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -4,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -14636,7 +14904,10 @@
       "wisdom": 0,
       "charisma": 0
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 2,
+      "acrobatics": 1
+    },
     "combat_traits": [
       "pack-tactics"
     ],
@@ -14772,7 +15043,10 @@
       "wisdom": 0,
       "charisma": -4
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -4,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -14912,7 +15186,10 @@
       "wisdom": -4,
       "charisma": -5
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -4,
+      "acrobatics": -5
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -15036,7 +15313,10 @@
       "wisdom": 0,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 1,
+      "acrobatics": -2
+    },
     "combat_traits": [
       "undead-fortitude"
     ],
@@ -15189,7 +15469,10 @@
       "wisdom": 0,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 6,
+      "acrobatics": 0
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -15314,7 +15597,10 @@
       "wisdom": 0,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 4,
+      "acrobatics": 2
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -15435,7 +15721,10 @@
       "wisdom": -2,
       "charisma": -4
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -4,
+      "acrobatics": 3
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [
@@ -15556,7 +15845,10 @@
       "wisdom": 0,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 2,
+      "acrobatics": 2
+    },
     "combat_traits": [
       "pack-tactics"
     ],
@@ -15697,7 +15989,10 @@
       "wisdom": -2,
       "charisma": -4
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 1,
+      "acrobatics": 3
+    },
     "combat_traits": [
       "swarm"
     ],
@@ -15846,7 +16141,9 @@
       "charisma": -1
     },
     "skill_bonuses": {
-      "perception": 4
+      "perception": 4,
+      "athletics": 3,
+      "acrobatics": 1
     },
     "combat_traits": [],
     "magic_resistance": false,
@@ -15979,7 +16276,10 @@
       "wisdom": 1,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -3,
+      "acrobatics": 2
+    },
     "combat_traits": [
       "swarm"
     ],
@@ -16128,7 +16428,10 @@
       "wisdom": 0,
       "charisma": -4
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": -1,
+      "acrobatics": 0
+    },
     "combat_traits": [
       "swarm"
     ],
@@ -16281,7 +16584,10 @@
       "wisdom": 0,
       "charisma": -3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 2,
+      "acrobatics": 2
+    },
     "combat_traits": [
       "swarm"
     ],
@@ -16476,7 +16782,10 @@
       "wisdom": 2,
       "charisma": 2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 2,
+      "acrobatics": 3
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -16681,7 +16990,10 @@
       "wisdom": 2,
       "charisma": 2
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 3,
+      "acrobatics": 0
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -16809,7 +17121,10 @@
       "wisdom": 2,
       "charisma": 3
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 0,
+      "acrobatics": 1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
@@ -16988,7 +17303,10 @@
       "wisdom": 0,
       "charisma": 0
     },
-    "skill_bonuses": {},
+    "skill_bonuses": {
+      "athletics": 3,
+      "acrobatics": 1
+    },
     "combat_traits": [],
     "magic_resistance": false,
     "source_trait_names": [],
