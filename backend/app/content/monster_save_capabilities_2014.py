@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 
-from app.content.monster_arena_action_policy_2014 import arena_unavailable_recharge_ids_2014
+from app.content.monster_arena_action_policy_2014 import action_label_2014, arena_unavailable_recharge_ids_2014
 from app.content.monster_save_control_2014 import compile_failed_save_control_2014
 from app.content.monster_save_capability_support_2014 import (
     supports_recharge_rules_2014,
