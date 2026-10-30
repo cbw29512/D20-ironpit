@@ -117,6 +117,7 @@
           groundContact,
           endsOnTeleport: ownsLifecycle && Boolean(rider.endsOnTeleport || groundContact),
           sourceEffectImmunityOnEnd: ownsLifecycle && Boolean(rider.sourceEffectImmunityOnEnd),
+          startOfTurnDamage: ownsLifecycle ? (rider.startOfTurnDamage || null) : null,
         });
         if (result) applied.push(result);
       }

@@ -61,7 +61,7 @@ window.IRON_PIT_BROWSER_AREA_TARGETING = {
     direction: null,
   }],
 };
-load("browser-area-save-actions.js");
+load("browser-area-save-choice.js", "browser-area-save-actions.js");
 load("browser-bonus-save-actions.js");
 load("browser-condition-lifecycle.js");
 

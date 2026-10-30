@@ -14,7 +14,7 @@ for (const file of [
   "browser-grapple.js", "browser-modifier-validation.js", "browser-modifiers.js", "browser-state.js", "browser-rage.js", "browser-rolls.js",
   "browser-undead-fortitude.js", "browser-zero-hp.js", "browser-attack-outcome.js", "browser-attack.js", "browser-saving-throws.js", "browser-save-immunity.js", "browser-save-action-support.js", "browser-save-action-attempt.js", "browser-save-damage.js", "browser-save-damage-legacy.js", "browser-save-damage-apply.js", "browser-save-action-effects.js", "browser-save-event.js", "browser-saves.js",
   "browser-offense-value.js", "browser-spellcasting.js", "browser-spell-modifiers.js",
-  "browser-spell-attack-policy.js", "browser-spell-attack.js", "browser-spell-offense.js", "browser-ability-hooks.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-spell-offense.js", "browser-turn.js",
+  "browser-spell-attack-policy.js", "browser-spell-attack.js", "browser-spell-offense.js", "browser-ability-hooks.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-recharge-action-priority.js", "browser-main-action-core-providers.js", "browser-main-action-offense-providers.js", "browser-main-action-providers.js", "browser-spell-offense.js", "browser-turn.js",
 ]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE;

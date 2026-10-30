@@ -4,6 +4,7 @@ import logging
 from app.combat.action_economy import is_available
 from app.combat.ally_context import pack_tactics_active
 from app.combat.area_weapon_attacks import resolve_area_weapon_attack
+from app.combat.area_save_actions import resolve_area_save
 from app.combat.attack_actions import resolve_attack_action
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.dodge import resolve_dodge_action
@@ -79,6 +80,13 @@ def resolve_post_move_action(events, sequence, round_number, attacker, target, s
             events.extend(action_events)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         if pick.family == "area-save":
+            if pick.payload is not None:
+                area_action, placement = pick.payload
+                area_events, sequence = resolve_area_save(
+                    sequence, round_number, attacker, setup, area_action, placement, dice,
+                )
+                events.extend(area_events)
+                return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
             area_result = resolve_area_save_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
             if area_result is not None:
                 return area_result

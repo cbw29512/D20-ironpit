@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import logging
+
 from app.content.monster_source_2014 import SourceMonster2014
+
+logger = logging.getLogger(__name__)
 
 # Combat cannot use these actions. Printed abilities remain unchanged on the source card.
 # Excluded actions do not acquire resources, recharge rolls, or subordinate attacks.
@@ -8,7 +12,11 @@ PIT_BANNED_ACTION_LABELS_2014 = frozenset({"teleport", "plane shift"})
 
 
 def action_label_2014(name: str) -> str:
-    return name.split(" (Recharge", 1)[0].strip().casefold()
+    try:
+        return name.split(" (Recharge", 1)[0].strip().casefold()
+    except Exception:
+        logger.exception("Failed to normalize 2014 action label %r.", name)
+        raise
 
 
 def arena_unavailable_recharge_ids_2014(monster: SourceMonster2014) -> frozenset[str]:

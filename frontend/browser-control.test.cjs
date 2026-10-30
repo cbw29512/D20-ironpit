@@ -11,7 +11,7 @@ for (const file of [
   "browser-heroes.js", "browser-monsters.js", "browser-monsters-fixed.js", "browser-monsters-beast2.js",
   "browser-monsters-batch3.js", "browser-monsters-control.js", "browser-grapple.js", "browser-state.js",
   "browser-rage.js", "browser-rolls.js", "browser-zero-hp.js", "browser-attack-outcome.js", "browser-attack.js", "browser-damage-defense-rules.js", "browser-saving-throws.js", "browser-save-immunity.js", "browser-save-action-support.js", "browser-save-action-attempt.js", "browser-save-damage.js", "browser-save-damage-legacy.js", "browser-save-damage-apply.js", "browser-save-action-effects.js", "browser-save-event.js", "browser-saves.js", "browser-charge.js",
-  "browser-formation.js", "browser-multiattack-choices.js", "browser-multiattack.js", "browser-ability-hooks.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-spell-offense.js", "browser-turn.js", "browser-engine.js",
+  "browser-formation.js", "browser-multiattack-choices.js", "browser-multiattack.js", "browser-ability-hooks.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-recharge-action-priority.js", "browser-main-action-core-providers.js", "browser-main-action-offense-providers.js", "browser-main-action-providers.js", "browser-spell-offense.js", "browser-turn.js", "browser-engine.js",
 ]) load(file);
 
 const queuedDice = (values, fallback = 10) => {

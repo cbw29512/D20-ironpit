@@ -47,7 +47,7 @@ window.IRON_PIT_BROWSER_CHARGE = { openingFeature: () => null };
 
 load("browser-main-action-profiles.js");
 load("browser-main-action-selection.js");
-load("browser-main-action-providers.js");
+load("browser-recharge-action-priority.js");\nload("browser-main-action-core-providers.js");\nload("browser-main-action-offense-providers.js");\nload("browser-main-action-providers.js");
 load("browser-deferred-main-action-provider.js");
 
 const selector = window.IRON_PIT_BROWSER_MAIN_ACTION_SELECTION;

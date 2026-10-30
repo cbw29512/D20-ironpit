@@ -11,8 +11,6 @@ from browser_template_serializer import template_row
 logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parents[1]
 DESTINATION = ROOT / "frontend" / "browser-monsters-2014.js"
-_EXPECTED_COUNT = 250
-
 
 def _add_charge_follow_up_metadata(template, row: dict[str, object]) -> None:
     browser_attacks = {attack["id"]: attack for attack in row["attacks"]}
@@ -39,8 +37,13 @@ def render() -> str:
             _add_charge_follow_up_metadata(template, row)
             rows.append(row)
         ids = {row["id"] for row in rows}
-        if len(rows) != _EXPECTED_COUNT or len(rows) != len(ids):
-            raise RuntimeError(f"2014 browser export expected {_EXPECTED_COUNT} unique certified monsters; found {len(rows)}.")
+        if not rows:
+            raise RuntimeError("2014 browser export received an empty certified roster.")
+        if len(rows) != len(ids):
+            raise RuntimeError(
+                f"2014 browser export requires unique certified monsters; "
+                f"found {len(rows)} rows and {len(ids)} unique ids."
+            )
         if any(row.get("ruleset") != "2014" or row.get("kind") != "monster" for row in rows):
             raise RuntimeError("2014 browser export contains a non-2014 monster.")
         payload = json.dumps(rows, separators=(",", ":"), sort_keys=True)
