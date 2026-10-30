@@ -23,7 +23,17 @@ window.IRON_PIT_ACTION_ECONOMY = {
 };
 window.IRON_PIT_BROWSER_SPELLCASTING = { slotSpellAvailable: () => true };
 window.IRON_PIT_BROWSER_GRAPPLE = { speedIsZero: () => false };
-window.IRON_PIT_BROWSER_REACTIONS = { resolveOpportunityAttack: () => null };
+window.IRON_PIT_BROWSER_REACTIONS = {
+  resolveOpportunityAttack: () => null,
+  resolveOpportunityAttackChain: (sequence) => {
+    try {
+      return { events: [], sequence };
+    } catch (error) {
+      console.error("Failed no-op opportunity attack chain fixture.", { sequence, error });
+      throw error;
+    }
+  },
+};
 window.IRON_PIT_BROWSER_STATE = {
   distance: (a, b) => geometry.footprintDistanceFt(
     a.state.position, a.state.template.size, b.state.position, b.state.template.size,
