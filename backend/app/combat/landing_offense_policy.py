@@ -16,6 +16,7 @@ from app.combat.multi_target_save_actions import choose_multi_target_save_action
 from app.combat.pit_policy import choose_standard_attack, save_distance, target_order
 from app.combat.printed_damage import weapon_mean_damage, save_mean_damage as _save_mean_damage, save_action_impact
 from app.combat.resources import resource_available
+from app.combat.recharge_action_priority import choose_priority_recharge_action
 from app.combat.saving_throws import legal_save_action
 from app.combat.spell_attack_policy import choose_spell_attack
 from app.combat.save_zone_landing import choose_damaging_save_zone
@@ -64,6 +65,10 @@ def decide_post_move_offense(
     try:
         if not is_available(attacker.state, "action"):
             return OffensePick("dodge", 0.0)
+        recharge = choose_priority_recharge_action(attacker, setup)
+        if recharge is not None:
+            family, payload = recharge
+            return OffensePick(family, float("inf"), payload)
         melee_now = melee_can_land_now(attacker, setup)
         picks: list[OffensePick] = []
         if melee_now and attack_action_melee_legal(attacker, setup):
