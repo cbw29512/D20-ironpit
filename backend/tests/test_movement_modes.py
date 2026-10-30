@@ -3,12 +3,12 @@ import logging
 import pytest
 
 from app.content.movement_modes import (
-    movement_mode_issues,
     movement_source_issues,
     parse_movement_modes,
     parse_movement_profile,
     standard_arena_closing_speed,
 )
+from app.content.monster_movement_source_audit import movement_mode_issues
 from app.domain.movement import MovementModes
 
 logger = logging.getLogger(__name__)
