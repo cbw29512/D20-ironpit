@@ -16,6 +16,7 @@ from app.content.monster_source_conditioned_save_2014 import source_proven_condi
 from app.content.monster_source_dreadful_glare_2014 import source_proven_dreadful_glare_2014
 from app.content.monster_source_opening_area_saves_2014 import source_proven_opening_area_saves_2014
 from app.content.monster_source_recharge_line_damage_2014 import source_proven_recharge_line_damage_2014
+from app.content.monster_source_recharge_area_conditions_2014 import source_proven_recharge_area_conditions_2014
 from app.content.monster_source_save_outcome_bindings_2014 import source_proven_asymmetric_saves_2014
 from app.content.monster_source_visual_save_bindings_2014 import source_proven_visual_saves_2014
 from app.domain.save_damage import SaveDamageComponent
@@ -96,6 +97,11 @@ def supports_recharge_rules_2014(monster: SourceMonster2014) -> bool:
         supported_ids.update(item.id for item in line_damage)
         supported_resources.update(
             item.resource_id for item in line_damage if item.resource_id
+        )
+        area_conditions = source_proven_recharge_area_conditions_2014(monster)
+        supported_ids.update(item.id for item in area_conditions)
+        supported_resources.update(
+            item.resource_id for item in area_conditions if item.resource_id
         )
         excluded_ids = arena_unavailable_recharge_ids_2014(monster)
         return all(
