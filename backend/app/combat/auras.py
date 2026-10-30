@@ -42,3 +42,60 @@ def resolve_end_turn_damage_auras(
     except Exception as exc:
         logger.exception("Failed end-turn aura resolution for %s.", source.combatant_id)
         raise RuntimeError("End-turn aura resolution failed.") from exc
+
+
+def resolve_start_turn_grapple_contact_damage(
+    sequence: int,
+    round_number: int,
+    source: EncounterCombatant,
+    setup: EncounterSetup,
+    dice: DiceProvider,
+) -> tuple[list[BattleEvent], int]:
+    """Resolve owner-turn damage against every creature in an active grapple link."""
+    try:
+        profile = source.state.template.start_turn_grapple_contact_damage
+        if profile is None or source.state.is_dead or not source.state.is_alive:
+            return [], sequence
+
+        members = encounter_members(setup)
+        by_id = {member.combatant_id: member for member in members}
+        target_ids = {
+            grapple.source_id
+            for grapple in source.state.grapple_sources
+            if grapple.source_id in by_id
+        }
+        target_ids.update(
+            member.combatant_id
+            for member in members
+            if member.combatant_id != source.combatant_id
+            and any(
+                grapple.source_id == source.combatant_id
+                for grapple in member.state.grapple_sources
+            )
+        )
+
+        events: list[BattleEvent] = []
+        for target_id in sorted(target_ids):
+            target = by_id[target_id]
+            if target.state.is_dead or not target.state.is_alive:
+                continue
+            events.append(resolve_ongoing_damage(
+                sequence,
+                round_number,
+                source,
+                target,
+                setup,
+                dice,
+                feature_id=profile.id,
+                feature_name=profile.name,
+                dice_count=profile.damage_dice_count,
+                dice_size=profile.damage_dice_size,
+                damage_bonus=profile.damage_bonus,
+                damage_type=profile.damage_type,
+                animation="grapple-contact-damage",
+            ))
+            sequence += 1
+        return events, sequence
+    except Exception as exc:
+        logger.exception("Failed grapple-contact damage resolution for %s.", source.combatant_id)
+        raise RuntimeError("Grapple-contact damage resolution failed.") from exc
