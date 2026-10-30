@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from app.combat.action_economy import is_available
 from app.combat.charge_follow_up import resolve_charge_follow_up
+from app.combat.attack_reaction_chain import resolve_attack_event_chain
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.opening_burst import opening_burst_available
@@ -88,13 +89,23 @@ def resolve_charge_closing(
     if profile is None:
         return [], sequence, False
 
-    event = resolve_encounter_attack(
-        sequence, round_number, attacker, target, _charged_attack(attack, profile),
-        attack.weapon.reach_ft, dice, setup,
-        feature_id="charge", bonus_damage=_bonus_damage(profile),
-    )
-    sequence += 1
+    charged_attack = _charged_attack(attack, profile)
+    if setup is None:
+        event = resolve_encounter_attack(
+            sequence, round_number, attacker, target, charged_attack,
+            attack.weapon.reach_ft, dice, setup,
+            feature_id="charge", bonus_damage=_bonus_damage(profile),
+        )
+        events = [event]
+        sequence += 1
+    else:
+        events, sequence = resolve_attack_event_chain(
+            sequence, round_number, attacker, target, charged_attack,
+            attack.weapon.reach_ft, dice, setup,
+            feature_id="charge", bonus_damage=_bonus_damage(profile),
+        )
+        event = events[0]
     follow_events, sequence = resolve_charge_follow_up(
         sequence, round_number, attacker, target, profile, event, dice, setup,
     )
-    return [event, *follow_events], sequence, True
+    return [*events, *follow_events], sequence, True
