@@ -34,3 +34,26 @@ def test_medusa_petrifying_gaze_uses_bonus_action_source_section() -> None:
     except Exception:
         logger.exception("Medusa staged-save source-section audit regression failed.")
         raise
+
+
+def test_centaur_trampling_charge_uses_shared_bonus_save_and_recharge() -> None:
+    try:
+        centaur = _monster("Centaur Trooper")
+        action = next(item for item in centaur.saving_throw_actions if item.name == "Trampling Charge")
+        resource = next(item for item in centaur.resources if item.id == action.resource_id)
+
+        assert action.action_cost == "bonus_action"
+        assert action.save_ability == "strength"
+        assert action.dc == 14
+        assert action.range_ft == 50
+        assert (action.damage_dice_count, action.damage_dice_size, action.damage_bonus) == (1, 6, 4)
+        assert action.damage_type == "bludgeoning"
+        assert action.success_damage == "none"
+        assert any(effect.kind == "prone" for effect in action.failure_effects)
+        assert resource.max_uses == 1
+        assert resource.recharge is not None
+        assert resource.recharge.minimum_roll == 5
+        assert audit_monster_source(centaur, _row("Centaur Trooper")) == []
+    except Exception:
+        logger.exception("Centaur Trampling Charge regression failed.")
+        raise
