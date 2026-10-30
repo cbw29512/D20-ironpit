@@ -3,13 +3,13 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.attack_reaction_chain import resolve_attack_event_chain
 from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_action_choices import attack_choice, forced_movement_choice, save_choice, slot_has_legal_choice, use_ranged_split
 from app.combat.attack_action_rules import validate_attack_action_slots
 from app.combat.cleave import resolve_cleave_extra_attack
 from app.combat.death_lifecycle import append_after_event
 from app.combat.dice import DiceProvider
-from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.encounter_targeting import close_ranged_threat_exists
 from app.combat.forced_movement_actions import resolve_action as resolve_forced_movement_action
 from app.combat.light_attack_resolution import resolve_light_extra_attack
@@ -81,14 +81,18 @@ def resolve_attack_action(
                     ranged_split_used = True
                 pack = pack_tactics_active(attacker, target, setup)
                 feature_id = opening_feature or ("pack-tactics" if pack else definition.id)
-                event = resolve_encounter_attack(
+                chain, sequence = resolve_attack_event_chain(
                     sequence, round_number, attacker, target, attack, distance, dice, setup,
-                    spend_action=False, advantage_sources=1 if pack else 0, feature_id=feature_id,
-                    turn_key=turn_key, allow_reckless=True,
+                    spend_action=False, advantage_sources=1 if pack else 0,
+                    feature_id=feature_id, turn_key=turn_key, allow_reckless=True,
                     close_enemy_active=close_ranged_threat_exists(attacker, setup),
                 )
-                sequence += 1
-                sequence = append_after_event(events, sequence, round_number, event, setup, dice, resolved_deaths)
+                event = chain[0]
+                for chain_event in chain:
+                    sequence = append_after_event(
+                        events, sequence, round_number, chain_event,
+                        setup, dice, resolved_deaths,
+                    )
                 if attacker.state.is_dead or attacker.state.is_unconscious or attacker.state.turn_terminated:
                     break
                 cleave, sequence = resolve_cleave_extra_attack(
