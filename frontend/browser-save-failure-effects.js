@@ -1,15 +1,13 @@
 (() => {
   "use strict";
-
   const G = () => window.IRON_PIT_BROWSER_GRAPPLE;
   const I = () => window.IRON_PIT_BROWSER_CONDITION_IMMUNITY || { immune: () => false };
   const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
   const S = () => window.IRON_PIT_BROWSER_STATE;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
+  const Z = () => window.IRON_PIT_BROWSER_ZERO_HP;
   const MODIFIER_KINDS = new Set(["attacks-against-advantage", "speed"]);
-
   const sizeAllowed = (target, maximum) => !maximum || S().sizeAtMost(target, maximum);
-
   function applyCondition(target, sourceId, sourceEffectId, effect, options) {
     const condition = T().apply(target.state, effect.condition, sourceId, {
       sourceEffectId, appliedRound: options.round,
@@ -40,7 +38,6 @@
     }
     return applied;
   }
-
   function apply(target, sourceId, sourceEffectId, effects, options = {}) {
     if (target.state.is_dead || !target.state.is_alive) return [];
     const applied = [];
@@ -80,6 +77,8 @@
       } else if (effect.kind === "timed-penalty") {
         const penalty = T().applyPenalty(target.state, sourceId, sourceEffectId, options.round, effect);
         if (penalty) applied.push(penalty);
+      } else if (effect.kind === "zero-hp-replacement") {
+        applied.push(Z().applyReplacementEffect(target, options.source, sourceEffectId, effect, options.setup));
       } else if (MODIFIER_KINDS.has(effect.kind)) {
         M().applyEffect(target.state, sourceId, sourceEffectId, effect, index, "failed-save");
       } else {
@@ -88,25 +87,26 @@
     }
     return [...new Set(applied)];
   }
-
   function eligible(state, filter = {}) {
     const creatureType = String(state.template.creature_type || "").toLowerCase();
     const tags = new Set((state.template.creature_tags || []).map((item) => String(item).toLowerCase()));
+    const required = (filter.requiredCreatureTypes || []).map((item) => String(item).toLowerCase());
+    if (required.length && !required.includes(creatureType)) return false;
     if ((filter.excludedCreatureTypes || []).some((item) => String(item).toLowerCase() === creatureType)) return false;
     return !(filter.excludedTags || []).some((item) => tags.has(String(item).toLowerCase()));
   }
-
   function severeFailure(rider, result) {
     return Boolean(
       !result.succeeded && rider.severeFailureMargin != null && result.roll?.total != null
       && result.roll.total <= rider.dc - rider.severeFailureMargin
     );
   }
-
   function hitSave(attacker, target, attack, round, distance, setup = null) {
     const rider = attack.onHitSavingThrow;
     if (!rider || target.state.is_dead || !target.state.is_alive) return null;
     if (!eligible(target.state, rider.targetFilter)) return { eligible: false, applied: [] };
+    const immunity = `${attacker.combatant_id}:${attack.id}`;
+    if (rider.sourceEffectImmunityOnSuccess && target.state.source_effect_immunities.includes(immunity)) return { eligible: false, applied: [] };
     const saves = window.IRON_PIT_BROWSER_SAVES;
     if (!saves) throw new Error("Browser save resolver is not loaded.");
     const aura = window.IRON_PIT_BROWSER_AURAS || { savingThrowAdvantageSources: () => 0 };
@@ -115,13 +115,14 @@
     );
     const severe = severeFailure(rider, result);
     const effects = severe ? (rider.severeFailureEffects || []) : (rider.failureEffects || []);
+    if (result.succeeded && rider.sourceEffectImmunityOnSuccess && !target.state.source_effect_immunities.includes(immunity)) target.state.source_effect_immunities.push(immunity);
     const applied = result.succeeded ? [] : apply(
-      target, attacker.combatant_id, attack.id, effects, { round, range: attack.reach || distance },
+      target, attacker.combatant_id, attack.id, effects,
+      { round, range: attack.reach || distance, source: attacker, setup },
     );
     return { eligible: true, roll: result.roll, ability: rider.saveAbility, dc: rider.dc,
       succeeded: result.succeeded, severeFailure: severe, applied };
   }
-
   function installHitSaveBridge() {
     const attackApi = window.IRON_PIT_BROWSER_ATTACK;
     if (!attackApi || attackApi.__hitSaveBridgeInstalled) return;
