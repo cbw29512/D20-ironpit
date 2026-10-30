@@ -2,7 +2,7 @@ from __future__ import annotations
 
 
 ARENA_NEUTRAL_TRAITS = frozenset({
-    "Abduct", "Agile", "Air Form", "Amorphous", "Amphibious", "Beast of Burden", "Demonic Restoration", "Diabolical Restoration", "Divine Awareness",
+    "Abduct", "Agile", "Air Form", "Amorphous", "Confer Fire Resistance", "Amphibious", "Beast of Burden", "Demonic Restoration", "Diabolical Restoration", "Divine Awareness",
     "Earth Glide", "Eldritch Restoration", "Elemental Restoration", "Exalted Restoration", "False Appearance", "Flyby",
     "Hellish Restoration", "Hold Breath", "Ice Walk", "Illumination", "Inscrutable", "Jumper", "Keen Hearing",
     "Keen Hearing and Sight", "Keen Hearing and Smell", "Keen Sight", "Keen Smell", "Limited Amphibiousness",
