@@ -17,6 +17,7 @@ from app.content.monster_movement_save_enrichment import enrich_movement_save_de
 from app.content.monster_mixed_save_enrichment import enrich_mixed_save_definitions
 from app.content.monster_legendary_source_audit import complete_monster_legendary_fingerprints
 from app.content.monster_limited_use_source_audit import complete_monster_limited_use_fingerprints
+from app.content.monster_reaction_aura_source import complete_monster_reaction_start_turn_auras
 from app.content.monster_reaction_source_audit import complete_monster_reaction_fingerprints
 from app.content.monster_reactive_source import complete_monster_reaction_refresh
 from app.content.monster_riposte_source import complete_monster_riposte_reactions
@@ -106,6 +107,7 @@ def _complete_monster_batch(monsters: list[CombatantTemplate]) -> list[Combatant
     monsters = complete_monster_ability_scores(monsters)
     monsters = complete_monster_saving_throws(monsters)
     monsters = complete_monster_end_turn_damage_auras(monsters)
+    monsters = complete_monster_reaction_start_turn_auras(monsters)
     monsters = complete_monster_grapple_contact_damage(monsters)
     monsters = complete_monster_regeneration(monsters)
     monsters = complete_monster_legendary_resistance(monsters)
