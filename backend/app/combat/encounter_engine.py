@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.attachments import resolve_attachment_start_turn
+from app.combat.auras import resolve_start_turn_grapple_contact_damage
 from app.combat.concentration import end_concentration_if_expired
 from app.combat.condition_lifecycle import resolve_source_condition_timing, resolve_target_condition_timing
 from app.combat.death_saves import resolve_death_save
@@ -13,6 +14,7 @@ from app.combat.encounter_initiative import roll_encounter_initiative
 from app.combat.encounter_outcome import resolve_encounter_outcome
 from app.combat.encounter_setup import build_encounter_setup
 from app.combat.encounter_targeting import select_nearest_target
+from app.combat.grapple import cleanup_grapples
 from app.combat.hit_modifiers import expire_source_turn_start_modifiers
 from app.combat.modifier_stack import expire_source_turn_modifiers
 from app.combat.precombat_spells import prepare_defenses
@@ -82,6 +84,11 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 cleanup_disabled_source_effects(setup)
                 expire_source_turn_start_modifiers(affected_states, member.combatant_id)
                 refresh_start_of_turn(member.state)
+                cleanup_grapples(setup)
+                grapple_events, sequence = resolve_start_turn_grapple_contact_damage(
+                    sequence, round_number, member, setup, dice,
+                )
+                events.extend(grapple_events)
                 resolve_start_turn_regeneration(member.state)
                 resolve_bloodied_start_turn_healing(member.state)
                 end_concentration_if_expired(member.state, round_number, affected_states)
