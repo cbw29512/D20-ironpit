@@ -11,13 +11,13 @@ Blocker categories overlap: a monster may require several fixes.
 | Blocker | Monsters |
 |---|---:|
 | `source:trait` | 61 |
-| `source:extra-action` | 43 |
+| `source:extra-action` | 42 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 17 |
 | `multiattack:complex` | 10 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
-| `mechanic:recharge` | 8 |
+| `mechanic:recharge` | 6 |
 | `attack:complex` | 5 |
 | `mechanic:swallow` | 5 |
 | `attack:damage-type` | 2 |
@@ -31,13 +31,13 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**3** monsters have exactly one remaining blocker category.
+**4** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
+| `source:extra-action` | Behir, Vrock | 2 |
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
-| `source:extra-action` | Behir | 1 |
 
 ## Every blocked monster
 
@@ -64,7 +64,7 @@ the underlying ability is already implemented or trivial.
 | Druid | mechanic:spellcasting, source:trait | Spellcasting |
 | Dryad | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Duergar | attack:incomplete, source:extra-action, source:trait | Duergar Resilience |
-| Dust Mephit | mechanic:recharge, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
+| Dust Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Efreeti | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Ettercap | attack:complex, attack:damage-type, mechanic:recharge | — |
 | Fire Elemental | attack:complex, source:trait | Fire Form, Water Susceptibility |
@@ -112,7 +112,7 @@ the underlying ability is already implemented or trivial.
 | Tarrasque | mechanic:legendary, mechanic:swallow, source:extra-action, source:legendary, source:trait | Reflective Carapace |
 | Vampire | attack:incomplete, mechanic:legendary, multiattack:complex, source:extra-action, source:legendary, source:trait | Shapechanger, Misty Escape, Vampire Weaknesses |
 | Vampire Spawn | attack:incomplete, multiattack:complex, source:trait | Vampire Weaknesses |
-| Vrock | mechanic:recharge, source:extra-action | — |
+| Vrock | source:extra-action | — |
 | Water Elemental | mechanic:recharge, source:extra-action, source:trait | Water Form, Freeze |
 | Werebear | multiattack:complex, source:trait | Shapechanger |
 | Wereboar | multiattack:complex, source:extra-action, source:trait | Shapechanger |

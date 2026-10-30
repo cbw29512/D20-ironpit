@@ -75,4 +75,5 @@ window.IRON_PIT_DICE.rolls = [4, 20];
 window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN.resolve(2, 3, first, setup);
 assert.equal(first.state.current_hp, 10);
 assert.equal(first.state.timed_effects.length, 0);
+require("./browser-failed-save-periodic-damage.test.cjs");
 console.log("browser start-of-turn timed burn tests passed");

@@ -10,6 +10,7 @@
     return T().applyTerminalDeath(state, affectedStates) === "dead";
   }
   function apply(state, effectId, sourceId, options = {}) {
+    try {
     if (I().immune(state, effectId, options.sourceTemplate || null, {
       sourceIsMagical: options.sourceIsMagical === true,
       groundContact: options.groundContact === true,
@@ -61,6 +62,9 @@
       owned_debuff_counters: [...(options.ownedDebuffCounters || [])],
       owned_movement_mode_grants: [...(options.ownedMovementModeGrants || [])],
       removed_from_battlefield: Boolean(options.removedFromBattlefield),
+      start_of_turn_dice_count: options.startOfTurnDiceCount || 0,
+      start_of_turn_dice_size: options.startOfTurnDiceSize || 6,
+      start_of_turn_damage_type: options.startOfTurnDamageType || null,
       start_of_turn_hp_loss_dice_count: options.startOfTurnHpLossDiceCount || 0,
       start_of_turn_hp_loss_dice_size: options.startOfTurnHpLossDiceSize || 10,
       return_damage_dice_count: options.returnDamageDiceCount || 0,
@@ -85,7 +89,11 @@
     if (effectId === "unconscious" && !state.active_effect_ids.includes("prone") && !I().immune(state, "prone")) state.active_effect_ids.push("prone");
     applyTerminalOutcome(state, effectId, options.affectedStates || []);
     RF()?.revertIfIncapacitated(state);
-    return effectId;
+      return effectId;
+    } catch (error) {
+      console.error("Failed browser timed-effect application", { effectId, sourceId, error });
+      throw error;
+    }
   }
   const committedActivity = (state) => Boolean((state.delayed_resource_refills || []).length);
   const suppressesAction = (state) => committedActivity(state) || (state.timed_effects || []).some((e) => e.suppress_action);

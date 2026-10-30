@@ -1,24 +1,14 @@
 from __future__ import annotations
-
 import logging
 from typing import Literal
-
 from pydantic import BaseModel, Field, model_serializer, model_validator
-
 from app.domain.action_types import ConditionName
 from app.domain.character_builds import AbilityName
 from app.domain.failure_margin import FailureMarginEscalation, require_escalation_duration
 from app.domain.timed_control_limits import TimedControlLimits, TimedSaveFlatBonus, compiled_control_limits
-
+from app.domain.weapons_base import DamageType
 logger = logging.getLogger(__name__)
-
-SaveEffectTiming = Literal[
-    "source_turn_start",
-    "source_turn_end",
-    "target_turn_start",
-    "target_turn_end",
-]
-
+SaveEffectTiming = Literal["source_turn_start", "source_turn_end", "target_turn_start", "target_turn_end"]
 
 class FailedSaveTimedEffect(BaseModel):
     """Source-neutral timed rider applied only after a failed saving throw."""
@@ -27,7 +17,7 @@ class FailedSaveTimedEffect(BaseModel):
     additional_effect_ids: list[ConditionName] = Field(default_factory=list)
     failure_margin_escalation: FailureMarginEscalation | None = None
     duration_rounds: int | None = Field(default=None, ge=1, le=100800)
-    expiry_timing: SaveEffectTiming = "target_turn_end"
+    expiry_timing: SaveEffectTiming | None = "target_turn_end"
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: SaveEffectTiming | None = None
@@ -56,6 +46,9 @@ class FailedSaveTimedEffect(BaseModel):
     disadvantage_strength_d20_tests: bool = False
     armor_class_bonus: int = 0
     saving_throw_flat_bonuses: list[TimedSaveFlatBonus] = Field(default_factory=list)
+    start_of_turn_damage_dice_count: int = Field(default=0, ge=0, le=40)
+    start_of_turn_damage_dice_size: int = Field(default=6, ge=2, le=100)
+    start_of_turn_damage_type: DamageType | None = None
 
     @model_serializer(mode="wrap")
     def serialize_without_default_control_limits(self, handler):
@@ -71,8 +64,9 @@ class FailedSaveTimedEffect(BaseModel):
                 "disadvantage_strength_d20_tests": False,
                 "armor_class_bonus": 0,
                 "saving_throw_flat_bonuses": [],
-                "allowed_removal_action_ids": [],
-                "additional_effect_ids": [],
+                "allowed_removal_action_ids": [], "additional_effect_ids": [],
+                "start_of_turn_damage_dice_count": 0, "start_of_turn_damage_dice_size": 6,
+                "start_of_turn_damage_type": None,
                 "repeat_save_failure_condition_id": None,
                 "repeat_save_disadvantage_while_source_visible": False,
                 "damage_repeat_save_trigger": "none",
@@ -88,15 +82,18 @@ class FailedSaveTimedEffect(BaseModel):
             raise
 
     def compiled_limits(self) -> TimedControlLimits | None:
-        return compiled_control_limits(
-            speed_multiplier=self.speed_multiplier,
-            action_bonus_exclusive=self.action_bonus_exclusive,
-            max_attacks_per_turn=self.max_attacks_per_turn,
-            d20_disadvantage_abilities=list(self.d20_disadvantage_abilities),
-            disadvantage_strength_d20_tests=self.disadvantage_strength_d20_tests,
-            armor_class_bonus=self.armor_class_bonus,
-            saving_throw_flat_bonuses=list(self.saving_throw_flat_bonuses),
-        )
+        try:
+            return compiled_control_limits(
+                speed_multiplier=self.speed_multiplier, action_bonus_exclusive=self.action_bonus_exclusive,
+                max_attacks_per_turn=self.max_attacks_per_turn,
+                d20_disadvantage_abilities=list(self.d20_disadvantage_abilities),
+                disadvantage_strength_d20_tests=self.disadvantage_strength_d20_tests,
+                armor_class_bonus=self.armor_class_bonus,
+                saving_throw_flat_bonuses=list(self.saving_throw_flat_bonuses),
+            )
+        except Exception:
+            logger.exception("Failed to compile timed control limits for %s.", self.effect_id)
+            raise
 
     @model_validator(mode="after")
     def validate_repeat_save(self) -> "FailedSaveTimedEffect":
@@ -105,6 +102,8 @@ class FailedSaveTimedEffect(BaseModel):
             if len(grouped_ids) != len(set(grouped_ids)):
                 raise ValueError("Grouped failed-save condition ids must be distinct.")
             require_escalation_duration(self.failure_margin_escalation, self.duration_rounds)
+            if self.duration_rounds is not None and self.expiry_timing is None:
+                raise ValueError("Timed failed-save duration requires an expiry timing.")
             if self.failure_margin_escalation is not None:
                 escalation = self.failure_margin_escalation
                 if (
@@ -135,6 +134,9 @@ class FailedSaveTimedEffect(BaseModel):
                 )
             if (self.escape_check_ability is None) != (self.escape_check_dc is None):
                 raise ValueError("Escape-check riders require ability and DC together.")
+            has_start_damage = self.start_of_turn_damage_dice_count > 0
+            if has_start_damage != (self.start_of_turn_damage_type is not None):
+                raise ValueError("Start-of-turn rider damage requires both dice and damage type.")
             return self
         except Exception:
             logger.exception(

@@ -93,6 +93,9 @@ def apply_failed_save_timed_effect(
                 next_attack_disadvantage=(
                     rider.next_attack_disadvantage if owns_lifecycle else False
                 ),
+                start_of_turn_dice_count=(rider.start_of_turn_damage_dice_count if owns_lifecycle else 0),
+                start_of_turn_dice_size=rider.start_of_turn_damage_dice_size,
+                start_of_turn_damage_type=(rider.start_of_turn_damage_type if owns_lifecycle else None),
                 suppress_reactions=rider.blocks_reactions if owns_lifecycle else False,
                 control_limits=rider.compiled_limits() if owns_lifecycle else None,
                 affected_states=affected_states,

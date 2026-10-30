@@ -20,6 +20,7 @@ on:
       - "scripts/report_2014_attack_riders.py"
       - "scripts/report_monster_defenses_2014.py"
       - "scripts/report_monster_multiattack_2014.py"
+      - "scripts/report_monster_recharge_2014.py"
       - ".github/workflows/2014-basic-roster.yml"
   pull_request:
     paths:
@@ -37,6 +38,7 @@ on:
       - "backend/app/domain/weapons.py"
       - "scripts/report_2014_basic_candidates.py"
       - "scripts/report_2014_attack_riders.py"
+      - "scripts/report_monster_recharge_2014.py"
       - ".github/workflows/2014-basic-roster.yml"
 
 permissions:
@@ -61,3 +63,5 @@ jobs:
         run: python scripts/report_monster_defenses_2014.py
       - name: Report all 327 monster Multiattack bindings
         run: python scripts/report_monster_multiattack_2014.py
+      - name: Report all 2014 Recharge bindings
+        run: python scripts/report_monster_recharge_2014.py
