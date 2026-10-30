@@ -2,14 +2,10 @@ from __future__ import annotations
 
 import re
 
-from app.content.monster_movement_led_save_candidates import movement_led_save_candidates
-from app.content.monster_source_grapple_lifecycle_candidates import grapple_lifecycle_save_candidates
-from app.content.monster_source_grapple_save_candidates import grapple_save_candidates
 from app.content.monster_source_limited_resources import source_limited_resource
-from app.content.monster_source_repeat_save_candidates import repeat_condition_save_candidates
+from app.content.monster_source_save_extensions import extended_save_candidates
 from app.content.monster_source_save_heading import promoted_save_heading
 from app.content.monster_source_save_riders import common_failure_riders, slowing_breath_rider
-from app.content.monster_source_staged_save_candidates import staged_condition_save_candidates
 from app.domain.actions import ActionCost, ConditionName
 from app.domain.capability_attacks import SaveCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
@@ -139,13 +135,11 @@ def source_save_candidates(row: dict[str, object]) -> tuple[list[SaveCapabilityD
     for field, cost in (("actions", "action"), ("bonusActions", "bonus_action")):
         text = str(row.get(field, ""))
         parsed, parsed_resources = _parse_text(monster, text, cost)
-        staged, staged_resources = staged_condition_save_candidates(monster, text, cost)
+        extended, extended_resources = extended_save_candidates(
+            monster, text, cost, row.get("speed", ""),
+        )
         actions.extend(parsed); resources.extend(parsed_resources)
-        actions.extend(staged); resources.extend(staged_resources)
-        actions.extend(repeat_condition_save_candidates(monster, text, cost))
-        actions.extend(grapple_save_candidates(monster, text, cost))
-        actions.extend(grapple_lifecycle_save_candidates(monster, text, cost))
-        speed_parts = str(row.get("speed", "")).split(); moved, moved_resources = movement_led_save_candidates(monster, text, cost, abstract_range_ft=int(speed_parts[0]) if speed_parts and speed_parts[0].isdigit() else 0); actions.extend(moved); resources.extend(moved_resources)
+        actions.extend(extended); resources.extend(extended_resources)
     unique_actions = {action.id: action for action in actions}
     unique_resources = {resource.id: resource for resource in resources}
     return list(unique_actions.values()), list(unique_resources.values())
