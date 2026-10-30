@@ -32,6 +32,7 @@ _SIMPLE = re.compile(
 class GrappleSwallowSource2014:
     source_name: str
     attack_id: str
+    delivery_mode: str = "action_attack"
     max_target_size: CreatureSize
     damage_dice_count: int
     damage_dice_size: int
@@ -89,8 +90,10 @@ def _simple_profile(monster: SourceMonster2014) -> GrappleSwallowSource2014 | No
         ):
             return None
         return GrappleSwallowSource2014(
-            "Swallow", attack.id, size, count, sides, groups["type"].lower(),
-            1, int(groups["exit"]),
+            source_name="Swallow", attack_id=attack.id,
+            max_target_size=size, damage_dice_count=count, damage_dice_size=sides,
+            damage_type=groups["type"].lower(), max_swallowed=1,
+            exit_movement_ft=int(groups["exit"]),
         )
     except Exception:
         logger.exception("Failed simple Swallow source proof for %s.", monster.id)
@@ -111,6 +114,7 @@ def source_grapple_swallow_2014(
         return GrappleSwallowSource2014(
             source_name="Swallow",
             attack_id=threshold.attack_id,
+            delivery_mode=threshold.delivery_mode,
             max_target_size=threshold.max_target_size,
             damage_dice_count=threshold.damage_dice_count,
             damage_dice_size=threshold.damage_dice_size,
