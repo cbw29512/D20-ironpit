@@ -52,3 +52,41 @@ assert.equal(distant.events.length, 0);
 assert.equal(distant.sequence, 2);
 
 console.log("Browser start-turn save-condition aura parity is enforced.");
+
+
+const chain = {
+  combatant_id: "chain", side: "monsters", position_ft: 0,
+  state: {
+    is_alive: true, is_dead: false, is_unconscious: false, reaction_available: true,
+    active_effect_ids: [], source_effect_immunities: [], active_modifiers: [],
+    template: {
+      name: "Chain Devil", magic_resistance: false,
+      start_turn_save_condition_auras: [{
+        id: "unnerving-gaze", name: "Unnerving Gaze", radius_ft: 30,
+        save_ability: "wisdom", dc: 15, condition: "frightened",
+        expiry_timing: "target_turn_end", magical_effect: false,
+        disabled_while_incapacitated: false, success_grants_source_immunity: true,
+        requires_source_reaction: true,
+      }],
+    },
+  },
+};
+const gazeTarget = {
+  combatant_id: "gaze-target", side: "heroes", position_ft: 30,
+  state: {
+    is_alive: true, is_dead: false, is_unconscious: false,
+    active_effect_ids: [], source_effect_immunities: [], timed_effects: [],
+    template: { name: "Gaze Target", magic_resistance: false, saving_throw_bonuses: { wisdom: 20 } },
+  },
+};
+const gazeSetup = { heroes: [gazeTarget], monsters: [chain] };
+const gazeResult = window.IRON_PIT_BROWSER_AURAS.turnStart(10, 1, gazeTarget, gazeSetup);
+assert.equal(gazeResult.events.length, 1);
+assert.equal(gazeResult.events[0].feature_id, "unnerving-gaze");
+assert.equal(chain.state.reaction_available, false);
+assert.ok(gazeTarget.state.source_effect_immunities.includes("chain:unnerving-gaze"));
+
+chain.state.reaction_available = true;
+const immuneResult = window.IRON_PIT_BROWSER_AURAS.turnStart(11, 2, gazeTarget, gazeSetup);
+assert.equal(immuneResult.events.length, 0);
+assert.equal(chain.state.reaction_available, true);
