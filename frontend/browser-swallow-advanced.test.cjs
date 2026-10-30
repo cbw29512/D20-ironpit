@@ -58,7 +58,7 @@ const second={is_alive:true,is_dead:false,current_hp:40,template:{name:"Inside B
   active_effect_ids:[],grapple_sources:[],timed_effects:[],swallowed:null};
 const threshold={sourceName:"Swallow",attackId:"bite",deliveryMode:"attack_hit",
   requiresExistingGrapple:true,maxTargetSize:"large",damageDiceCount:12,damageDiceSize:6,
-  damageType:"acid",maxSwallowed:2,exitMovementFt:15,regurgitationDamageThreshold:50,
+  damageType:"acid",maxSwallowed:null,exitMovementFt:15,regurgitationDamageThreshold:50,
   regurgitationSaveAbility:"constitution",regurgitationSaveDc:25,regurgitationRangeFt:10,
   regurgitationAllSwallowed:true};
 // Re-enter through the threshold-capable action so the acting swallowed creature
