@@ -4,6 +4,7 @@ from collections.abc import Iterable
 
 from app.combat.spell_modifiers import apply_spell_modifiers
 from app.combat.temporary_hp import grant_temporary_hit_points
+from app.combat.timed_conditions import apply_timed_condition
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent, DamageType
 from app.domain.runtime import CombatantState
@@ -42,6 +43,7 @@ def resolve_defensive_spell(
     if any(
         spell.id in target.state.active_buff_effect_ids
         or any(modifier.source_effect_id == spell.id for modifier in target.state.active_modifiers)
+        or any(effect.source_effect_id == spell.id for effect in target.state.timed_effects)
         for target in targets
     ):
         raise ValueError(f"{spell.name} is already active on a selected target.")
@@ -63,6 +65,16 @@ def resolve_defensive_spell(
                 target.state.temporary_damage_resistances.append(typed)
         if not spell.concentration and spell.id not in target.state.active_buff_effect_ids:
             target.state.active_buff_effect_ids.append(spell.id)
+        for condition_id in spell.condition_ids:
+            apply_timed_condition(
+                target.state,
+                condition_id,
+                member.combatant_id,
+                source_effect_id=spell.id,
+                applied_round=0,
+                expires_round=(spell.duration_minutes * 10) + 1,
+                affected_states=list(affected_states or []),
+            )
     apply_spell_modifiers(
         member.state,
         [(target.combatant_id, target.state) for target in targets],
@@ -75,6 +87,8 @@ def resolve_defensive_spell(
         details.append(f"+{spell.current_hp_increase} current Hit Points")
     if spell.damage_resistances:
         details.append("resistance to " + ", ".join(spell.damage_resistances))
+    if spell.condition_ids:
+        details.append("conditions " + ", ".join(spell.condition_ids))
     details.extend(_modifier_detail(effect) for effect in spell.modifier_effects)
     if spell.concentration:
         details.append("Concentration")
