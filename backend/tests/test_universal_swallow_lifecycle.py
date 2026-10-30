@@ -2,7 +2,11 @@
 from __future__ import annotations
 
 from app.combat.grapple import apply_grapple
-from app.combat.swallow_lifecycle import source_turn_swallowed_damage, release_invalid_swallowed
+from app.combat.swallow_lifecycle import (
+    release_invalid_swallowed,
+    resolve_end_turn_swallow_regurgitation,
+    source_turn_swallowed_damage,
+)
 from app.combat.swallow_state import swallow_after_bite
 from app.combat.state import build_combatant_state
 from app.combat.dice import FixedDiceProvider
@@ -115,3 +119,77 @@ def test_real_admitted_frog_resolves_its_compiled_bite_then_swallows():
     assert victim_state.swallowed is not None
     assert victim_state.swallowed.source_id == "frog"
     assert frog_state.swallowed_target_ids == ["victim"]
+
+
+def test_threshold_regurgitation_counts_only_damage_from_swallowed_creature():
+    _, action, owner, target = _make("behir")
+    apply_grapple(target, "behir", 14, 5, restrains=True)
+    assert swallow_after_bite("behir", owner, "victim", target, action, bite_hit=True)
+    eater = EncounterCombatant(combatant_id="behir", side="monsters", position_ft=0, state=owner)
+    meal = EncounterCombatant(combatant_id="victim", side="heroes", position_ft=0, state=target)
+    setup = EncounterSetup(heroes=[meal], monsters=[eater], hero_total_levels=1, monster_total_cr="11")
+
+    owner.damage_taken_this_turn_by_source = {"other": 100, "victim": 29}
+    events, sequence = resolve_end_turn_swallow_regurgitation(
+        1, 2, meal, setup, FixedDiceProvider([1]),
+    )
+    assert events == [] and sequence == 1
+    assert target.swallowed is not None
+
+    owner.damage_taken_this_turn_by_source["victim"] = 30
+    events, sequence = resolve_end_turn_swallow_regurgitation(
+        1, 2, meal, setup, FixedDiceProvider([1]),
+    )
+    assert sequence == 2
+    assert len(events) == 1
+    assert events[0].save_dc == 14
+    assert events[0].save_succeeded is False
+    assert target.swallowed is None
+    assert "prone" in target.active_effect_ids
+
+
+def test_threshold_regurgitation_success_keeps_creature_swallowed():
+    _, action, owner, target = _make("behir")
+    apply_grapple(target, "behir", 14, 5, restrains=True)
+    assert swallow_after_bite("behir", owner, "victim", target, action, bite_hit=True)
+    eater = EncounterCombatant(combatant_id="behir", side="monsters", position_ft=0, state=owner)
+    meal = EncounterCombatant(combatant_id="victim", side="heroes", position_ft=0, state=target)
+    setup = EncounterSetup(heroes=[meal], monsters=[eater], hero_total_levels=1, monster_total_cr="11")
+    owner.damage_taken_this_turn_by_source = {"victim": 30}
+
+    events, _ = resolve_end_turn_swallow_regurgitation(
+        1, 2, meal, setup, FixedDiceProvider([20]),
+    )
+    assert events[0].save_succeeded is True
+    assert target.swallowed is not None
+    assert "prone" not in target.active_effect_ids
+
+
+def test_all_swallowed_regurgitation_releases_every_owned_target():
+    _, action, owner, first = _make("remorhaz")
+    action = action.model_copy(update={"max_swallowed": 2})
+    second = build_combatant_state(first.template)
+    for target, target_id in ((first, "first"), (second, "second")):
+        apply_grapple(target, "remorhaz", 15, 5, restrains=True)
+        assert swallow_after_bite(
+            "remorhaz", owner, target_id, target, action, bite_hit=True,
+        )
+
+    eater = EncounterCombatant(combatant_id="remorhaz", side="monsters", position_ft=0, state=owner)
+    first_member = EncounterCombatant(combatant_id="first", side="heroes", position_ft=0, state=first)
+    second_member = EncounterCombatant(combatant_id="second", side="heroes", position_ft=0, state=second)
+    setup = EncounterSetup(
+        heroes=[first_member, second_member],
+        monsters=[eater],
+        hero_total_levels=2,
+        monster_total_cr="11",
+    )
+    owner.damage_taken_this_turn_by_source = {"first": 30}
+
+    events, _ = resolve_end_turn_swallow_regurgitation(
+        1, 2, first_member, setup, FixedDiceProvider([1]),
+    )
+    assert events[0].save_succeeded is False
+    assert first.swallowed is None and second.swallowed is None
+    assert "prone" in first.active_effect_ids
+    assert "prone" in second.active_effect_ids
