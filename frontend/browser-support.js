@@ -8,6 +8,8 @@
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const D = () => window.IRON_PIT_DICE;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const R = () => window.IRON_PIT_BROWSER_RESOURCES;
+  const M = () => window.IRON_PIT_BROWSER_MODIFIERS;
 
   function resolve(sequence, round, member, setup, turnKey) {
     const events = [];
@@ -22,6 +24,60 @@
     const channel = K()?.resolve(sequence, round, member, setup);
     if (channel) { events.push(...channel.events); sequence = channel.sequence; }
     return { events, sequence };
+  }
+
+  function combatSupport(sequence, round, member) {
+    try {
+      const action = (member.state.template.support_actions || []).find((item) =>
+        E().available(member.state, item.actionCost || "action")
+        && R().available(member.state, item.resourceId, item.resourceCost || 1)
+      );
+      if (!action) return null;
+      const target = member, before = target.state.temporary_hp;
+      const rolls = Array.from(
+        { length: action.temporaryHpDiceCount || 0 },
+        () => D().roll(action.temporaryHpDiceSize || 6),
+      );
+      const amount = Math.max(
+        0,
+        rolls.reduce((sum, value) => sum + value, 0) + (action.temporaryHpBonus || 0),
+      );
+      S().grantTemporaryHp(target.state, amount);
+      if (action.attackRollAdvantageUntilSourceTurnStart) {
+        M().add(target.state, {
+          id: `${member.combatant_id}:${action.id}:${target.combatant_id}:attack-advantage`,
+          source_id: member.combatant_id,
+          source_effect_id: action.id,
+          kind: "attack-roll-advantage",
+          flat_bonus: 0,
+          dice_count: 0,
+          dice_size: 0,
+          damage_type: null,
+          target_id: target.combatant_id,
+          concentration_required: false,
+          consume_on_attack_against: false,
+          expires_at_start_of_source_turn: true,
+          expires_at_end_of_target_turn: false,
+          expires_source_turn_end_round: null,
+          expires_current_turn_end_owner_id: null,
+          expires_current_turn_end_round: null,
+        });
+      }
+      E().spend(member.state, action.actionCost || "action");
+      const remaining = R().spend(member.state, action.resourceId, action.resourceCost || 1);
+      return {
+        sequence, round_number: round, event_type: "feature",
+        actor_id: member.combatant_id, actor_name: member.state.template.name,
+        target_id: target.combatant_id, target_name: target.state.template.name,
+        temporary_hp_before: before, temporary_hp_after: target.state.temporary_hp,
+        feature_id: action.id, resource_remaining: remaining,
+        animation: action.animation || "support",
+        description: `${member.state.template.name} uses ${action.name}; ${target.state.template.name} has ${target.state.temporary_hp} Temporary HP and Advantage on attack rolls until the source's next turn.`,
+      };
+    } catch (error) {
+      console.error("Browser combat support action failed.", { member: member?.combatant_id, error });
+      throw error;
+    }
   }
 
   function secondWind(sequence, round, member) {
@@ -46,5 +102,5 @@
       animation: "dash", description: `${state.template.name} uses Adrenaline Rush; Dash movement is abstracted by fixed Pit formation.` };
   }
 
-  window.IRON_PIT_BROWSER_SUPPORT = { adrenaline, resolve, secondWind };
+  window.IRON_PIT_BROWSER_SUPPORT = { adrenaline, combatSupport, resolve, secondWind };
 })();
