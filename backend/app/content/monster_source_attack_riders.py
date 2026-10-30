@@ -105,7 +105,7 @@ def parse_attack_riders(text: str) -> list[object]:
         effects.append(CombatModifierEffect(
             kind="next-attack-advantage",
             recipient="source",
-            expires_at_end_of_source_turn=True,
+            expires_at_end_of_current_turn=True,
         ))
 
     typed = _MAX_HP_TYPED.search(text)
