@@ -1,3 +1,6 @@
+import re
+
+from app.content.monster_source_attack_rider_text import attack_rider_text
 from app.content.monster_source_attack_riders import parse_attack_riders
 
 
@@ -68,5 +71,29 @@ def test_self_next_attack_advantage_compiles_with_source_turn_end_expiry() -> No
         assert modifier.expires_at_end_of_source_turn is False
         assert modifier.expires_at_start_of_source_turn is False
         assert modifier.expires_at_end_of_target_turn is False
+    except Exception:
+        raise
+
+
+def test_grapple_escape_disadvantage_continuation_is_preserved() -> None:
+    try:
+        actions = (
+            "Pseudopod. Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Bludgeoning damage. "
+            "If the target is a Large or smaller creature, it has the Grappled condition (escape DC 13). "
+            "Ability checks made to escape this grapple have Disadvantage."
+        )
+        match = re.search(
+            r"Pseudopod\.\s+Melee Attack Roll:.*?Hit:\s*7\s*\(1d8 \+ 3\)\s*Bludgeoning damage(?P<tail>[^.]*)\.",
+            actions,
+            re.IGNORECASE,
+        )
+        assert match is not None
+
+        rider_text = attack_rider_text(actions, match)
+        effects = parse_attack_riders(rider_text)
+        grapple = next(effect for effect in effects if effect.kind == "grapple")
+
+        assert grapple.escape_dc == 13
+        assert grapple.escape_check_disadvantage is True
     except Exception:
         raise
