@@ -50,6 +50,7 @@ def resolve_attack(
     redirect_target: CombatantState | None = None, redirect_target_event_id: str | None = None,
     affected_states: list[CombatantState] | None = None, sneak_attack_ally_available: bool = False,
     off_turn: bool = False, saving_throw_advantage_sources: int = 0,
+    turn_owner_id: str | None = None,
 ) -> BattleEvent:
     try:
         if spend_action and not is_available(attacker, "action"): raise ValueError("Action is not available for an attack.")
@@ -111,7 +112,13 @@ def resolve_attack(
             weapon_sap_applied = apply_weapon_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
             if not weapon_sap_applied: tactical_sap_applied = apply_tactical_master_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
             vex_applied = apply_vex_mastery(attacker, attacker_event_id, actual_event_id, attack, round_number, applied_total)
-            apply_self_hit_modifier_effects(attacker, attacker_event_id, attack, round_number)
+            active_turn_owner = turn_owner_id or (None if off_turn else attacker_event_id)
+            if attack.on_hit_self_modifier_effects and active_turn_owner is None:
+                raise ValueError("Source-owned current-turn hit modifier requires a turn owner.")
+            apply_self_hit_modifier_effects(
+                attacker, attacker_event_id, attack, round_number,
+                active_turn_owner or attacker_event_id,
+            )
             end_rage_if_incapacitated(actual_defender)
         else:
             graze = resolve_graze_miss(attacker, actual_defender, attack, dice, affected_states)
