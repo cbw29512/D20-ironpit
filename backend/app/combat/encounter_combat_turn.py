@@ -25,6 +25,7 @@ from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.state import begin_turn
 from app.combat.swallow_action_resolution import resolve_priority_swallow_action
 from app.combat.tactical_shift import resolve_tactical_shift
+from app.combat.timed_self_buffs import choose_timed_self_buff, resolve_timed_self_buff
 from app.combat.fighter import use_second_wind
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
@@ -78,6 +79,14 @@ def resolve_combat_turn(
         )
         events.extend(recharge_action_events)
         if recharge_handled:
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+        action_buff = choose_timed_self_buff(attacker, "action")
+        if action_buff is not None:
+            affected = [member.state for member in [*setup.heroes, *setup.monsters]]
+            events.append(resolve_timed_self_buff(
+                sequence, round_number, attacker, action_buff, affected,
+            ))
+            sequence += 1
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         if not is_available(attacker.state, "action"):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
