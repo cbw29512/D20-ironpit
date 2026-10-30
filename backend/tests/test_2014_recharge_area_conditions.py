@@ -135,7 +135,7 @@ def test_recharge_area_control_dc_comes_from_source_not_monster_identity() -> No
             printed = monster.source_actions or ""
             assert f"DC {current_dc}" in printed
             changed = re.sub(
-                rf"DC {current_dc}(?!\\d)", f"DC {current_dc + 1}", printed, count=1
+                rf"DC {current_dc}(?!\d)", f"DC {current_dc + 1}", printed, count=1
             )
             altered = monster.model_copy(update={"source_actions": changed})
             rebound = {
