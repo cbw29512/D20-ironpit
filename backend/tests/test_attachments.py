@@ -29,3 +29,16 @@ def test_damage_accumulates_and_detaches_at_configured_threshold():
 def test_duplicate_source_attachment_fails_closed():
     with pytest.raises(ValueError):
         attach(attach((), _link()), _link())
+
+
+def test_attachment_projects_both_effects_from_one_authoritative_link():
+    from app.combat.attachments import linked_attachment_effects, active_attachment_target
+
+    linked = attach((), _link())
+    effects = linked_attachment_effects(linked)
+    assert [(e.owner_id, e.counterpart_id, e.effect_id, e.kind) for e in effects] == [
+        ("hero-1", "stirge-1", "attached", "debuff"),
+        ("stirge-1", "hero-1", "blood-drain", "buff"),
+    ]
+    assert active_attachment_target(linked, "stirge-1", "blood-drain") == "hero-1"
+    assert linked_attachment_effects(detach_for_combatant(linked, "stirge-1")) == ()
