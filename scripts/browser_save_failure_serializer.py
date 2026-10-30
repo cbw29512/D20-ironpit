@@ -18,6 +18,17 @@ def failure_effect_row(effect: Any) -> dict[str, Any]:
             row["escapeDc"] = effect.escape_dc
             if effect.restrains:
                 row["restrains"] = True
+            if effect.linked_conditions:
+                row["linkedConditions"] = list(effect.linked_conditions)
+            if effect.periodic_damage is not None:
+                periodic = effect.periodic_damage
+                row["periodicDamage"] = {
+                    "timing": periodic.timing,
+                    "diceCount": periodic.dice_count,
+                    "diceSize": periodic.dice_size,
+                    "damageBonus": periodic.damage_bonus,
+                    "damageType": value(periodic.damage_type),
+                }
         elif effect.kind == "condition":
             _condition_fields(row, effect)
         elif effect.kind == "turn-restriction":
