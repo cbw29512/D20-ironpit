@@ -8,8 +8,20 @@ from app.domain.models import CombatantTemplate, DamageType
 from app.domain.regeneration import RegenerationRule
 
 _REGEN_HEADING = re.compile(r"(?:^|\s)Regeneration\.", re.I)
-_REGEN = re.compile(\n    r"Regeneration\\.\\s+The\\s+[^.]+?\\s+regains\\s+(?P<hp>\\d+)\\s+Hit Points at the start of each of its turns"\n    r"(?: if it has at least (?P<minimum_hp>\\d+) Hit Points?)?\\.",\n    re.I,\n)\n_SUPPRESS = re.compile(r"If the [^.]+ takes ([A-Za-z]+)(?: or ([A-Za-z]+))? damage, this trait doesn[’']t function on the [^.]+ next turn", re.I)
-_DEFERRED_DEATH = re.compile(r"dies only if it starts its turn with 0 Hit Points and doesn[’']t regenerate", re.I)
+_REGEN = re.compile(
+    r"Regeneration\.\s+The\s+[^.]+?\s+regains\s+(?P<hp>\d+)\s+Hit Points at the start of each of its turns"
+    r"(?: if it has at least (?P<minimum_hp>\d+) Hit Points?)?\.",
+    re.I,
+)
+_SUPPRESS = re.compile(
+    r"If the [^.]+ takes ([A-Za-z]+)(?: or ([A-Za-z]+))? damage, "
+    r"this trait doesn[’']t function on the [^.]+ next turn",
+    re.I,
+)
+_DEFERRED_DEATH = re.compile(
+    r"dies only if it starts its turn with 0 Hit Points and doesn[’']t regenerate",
+    re.I,
+)
 
 
 @lru_cache(maxsize=1)
@@ -22,7 +34,11 @@ def _parse_regeneration(text: str) -> RegenerationRule | None:
     if match is None:
         return None
     suppression = _SUPPRESS.search(text)
-    types = [DamageType(raw.lower()) for raw in suppression.groups() if raw] if suppression else []
+    types = [
+        DamageType(raw.lower())
+        for raw in suppression.groups()
+        if raw
+    ] if suppression else []
     return RegenerationRule(
         hit_points=int(match.group("hp")),
         minimum_current_hp=int(match.group("minimum_hp") or 0),
@@ -38,7 +54,10 @@ def source_regeneration(name: str) -> RegenerationRule | None:
     return _parse_regeneration(str(row.get("traits", "")))
 
 
-def regeneration_trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
+def regeneration_trait_issues(
+    template: CombatantTemplate,
+    row: dict[str, object],
+) -> list[str]:
     text = str(row.get("traits", ""))
     source_has = bool(_REGEN_HEADING.search(text))
     expected = _parse_regeneration(text)
@@ -53,9 +72,12 @@ def regeneration_trait_issues(template: CombatantTemplate, row: dict[str, object
     return ["trait-runtime-mismatch:regeneration"]
 
 
-def complete_monster_regeneration(templates: list[CombatantTemplate]) -> list[CombatantTemplate]:
+def complete_monster_regeneration(
+    templates: list[CombatantTemplate],
+) -> list[CombatantTemplate]:
     return [
         template.model_copy(update={"regeneration": source_regeneration(template.name)})
-        if template.kind == "monster" else template
+        if template.kind == "monster"
+        else template
         for template in templates
     ]
