@@ -10,7 +10,7 @@
   const RES = () => window.IRON_PIT_BROWSER_RESOURCES, RC = () => window.IRON_PIT_BROWSER_RECHARGE, RA = () => window.IRON_PIT_BROWSER_RECHARGE_ACTION;
   const SW = () => window.IRON_PIT_BROWSER_SWALLOW, AU = () => window.IRON_PIT_BROWSER_AURAS, D = () => window.IRON_PIT_DICE;
   const PR = () => window.IRON_PIT_BROWSER_PROGRESSION_RECOVERY, BB = () => window.IRON_PIT_BROWSER_BLOODIED_BERSERK;
-  const TB = () => window.IRON_PIT_BROWSER_TRIGGERED_BONUS_ATTACKS;
+  const TB = () => window.IRON_PIT_BROWSER_TRIGGERED_BONUS_ATTACKS, TSB = () => window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS;
   const E = () => window.IRON_PIT_ACTION_ECONOMY || { available: (s, c) => c === "action" ? s.action_available : s.bonus_action_available };
   const NO_CONTROL = { cleanup: () => {}, shouldEscape: () => false };
   const H = () => window.IRON_PIT_BROWSER_GRAPPLE || NO_CONTROL;
@@ -65,6 +65,7 @@
   function finalize(events, sequence, round, member, setup, turnKey, allowSurge = true) {
     const triggered = TB()?.resolve(sequence, round, member, setup, events, turnKey);
     if (triggered) { events.push(...triggered.events); sequence = triggered.sequence; }
+    const bonusBuff = TSB()?.choose(member, "bonus_action"); if (bonusBuff) events.push(TSB().resolve(sequence++, round, member, bonusBuff, setup));
     const supportAction = P()?.combatSupport?.(sequence, round, member);
     if (supportAction) { events.push(supportAction); sequence += 1; }
     const bonus = saveChoice(member, setup, "bonus_action");
@@ -108,6 +109,7 @@
     const rush = P()?.adrenaline(sequence, round, member); if (rush) { events.push(rush); sequence += 1; }
     const readyRecharge = RA()?.resolve(sequence, round, member, setup, turnKey);
     if (readyRecharge?.handled) { events.push(...readyRecharge.events); return finalize(events, readyRecharge.sequence, round, member, setup, turnKey); }
+    const actionBuff = TSB()?.choose(member, "action"); if (actionBuff) { events.push(TSB().resolve(sequence++, round, member, actionBuff, setup)); return finalize(events, sequence, round, member, setup, turnKey); }
     if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
     const targets = F().targetOrder(member, setup);
     if (!targets.length) return finalize(events, sequence, round, member, setup, turnKey);
