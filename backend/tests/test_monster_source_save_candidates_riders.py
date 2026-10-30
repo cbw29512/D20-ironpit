@@ -134,3 +134,39 @@ def test_bonus_action_grapple_save_compiles_with_size_range_and_escape_dc() -> N
     except Exception:
         logger.exception("Bonus Action grapple-save candidate regression failed.")
         raise
+
+
+def test_trampling_charge_compiles_as_recharge_bonus_save_with_prone() -> None:
+    try:
+        row = {
+            "name": "Test Centaur",
+            "speed": "50 ft.",
+            "actions": "",
+            "bonusActions": (
+                "Trampling Charge (Recharge 5-6). The centaur moves up to its Speed without provoking "
+                "Opportunity Attacks and can move through the spaces of Medium or smaller creatures. "
+                "Each creature whose space the centaur enters is targeted once by the following effect. "
+                "Strength Saving Throw: DC 14. Failure: 7 (1d6 + 4) Bludgeoning damage, "
+                "and the target has the Prone condition."
+            ),
+        }
+        actions, resources = source_save_candidates(row)
+        assert len(actions) == 1
+        action = actions[0]
+        assert action.name == "Trampling Charge"
+        assert action.action_cost == "bonus_action"
+        assert action.save_ability == "strength"
+        assert action.dc == 14
+        assert action.range_ft == 50
+        assert action.damage is not None
+        assert (action.damage.count, action.damage.size, action.damage.bonus) == (1, 6, 4)
+        assert action.damage_type.value == "bludgeoning"
+        assert len(action.failure_effects) == 1
+        assert action.failure_effects[0].kind == "prone"
+        assert len(resources) == 1
+        assert resources[0].recharge is not None
+        assert resources[0].recharge.minimum_roll == 5
+        assert action.resource_id == resources[0].id
+    except Exception:
+        logger.exception("Trampling Charge source compilation regression failed.")
+        raise
