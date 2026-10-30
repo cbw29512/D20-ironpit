@@ -113,6 +113,7 @@ class WeaponAttack(BaseModel):
     conditional_attack_advantage: list[ConditionalAttackAdvantage] = Field(default_factory=list)
     on_hit_damage: list[OnHitDamage] = Field(default_factory=list)
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
+    on_hit_self_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)
     on_hit_saving_throw: OnHitSavingThrow | None = None
     max_hp_reduction_on_hit: MaxHpReductionOnHit | None = None
     ability_score_reduction_on_hit: AbilityScoreReductionOnHit | None = None
