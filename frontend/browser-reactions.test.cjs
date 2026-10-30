@@ -11,7 +11,7 @@ for (const file of [
   "browser-heroes.js", "browser-monsters-generated.js", "browser-unarmed-opportunity.js",
   "browser-condition-immunity.js", "browser-condition-rules.js", "browser-action-economy.js",
   "browser-grapple.js", "browser-state.js", "browser-rage.js", "browser-rolls.js", "browser-timed-conditions.js",
-  "browser-zero-hp.js", "browser-attack.js", "browser-reactions.js",
+  "browser-zero-hp.js", "browser-attack.js", "browser-reactions.js", "browser-attack-reaction-chain.js",
 ]) load(file);
 
 const S = window.IRON_PIT_BROWSER_STATE;
@@ -97,7 +97,7 @@ function setup(monsterId = "srd-goblin-warrior") {
 {
   const defender = S.buildState(heroTemplate()); defender.template.parry_reaction = { ac_bonus: 2 };
   const attack = monsterTemplate("srd-goblin-warrior").attacks[0]; const total = defender.template.armor_class + 1;
-  assert.deepEqual(X.parryHit(defender, attack, { selected_roll: 12, total }, true), { hit: false, used: true });
+  assert.deepEqual(X.parryHit(defender, attack, { selected_roll: 12, total }, true), { hit: false, used: true, reactionId: "parry" });
   assert.equal(defender.reaction_available, false);
 }
 {
@@ -109,6 +109,33 @@ function setup(monsterId = "srd-goblin-warrior") {
   assert.deepEqual(X.parryHit(defender, melee, { selected_roll: 20, total: 99 }, true), { hit: true, used: false });
   assert.equal(defender.reaction_available, true);
 }
+{
+  const attacker = member("attacker", "heroes", monsterTemplate("srd-goblin-warrior"), 5);
+  const defender = member("riposter", "monsters", heroTemplate(), 0);
+  const fight = { heroes: [attacker], monsters: [defender] };
+  const triggerAttack = attacker.state.template.attacks.find((attack) => attack.kind === "melee");
+  const counter = defender.state.template.attacks.find((attack) => attack.kind === "melee");
+  defender.state.template.parry_reaction = {
+    ac_bonus: 3, source_feature: "riposte",
+    counterattack_attack_id: counter.id, counterattack_range_ft: 5,
+  };
+  const triggerDie = defender.state.template.armor_class - triggerAttack.bonus;
+  assert.ok(triggerDie >= 2 && triggerDie <= 19);
+  fixedDice([triggerDie, 15, 4, 4, 4, 4]);
+  const result = window.IRON_PIT_BROWSER_ATTACK_REACTION_CHAIN.resolve(
+    1, 1, attacker, defender, triggerAttack, 5, fight, {},
+  );
+  assert.equal(result.sequence, 3);
+  assert.equal(result.events.length, 2);
+  assert.equal(result.events[0].hit, false);
+  assert.equal(result.events[0].defensive_reaction_id, "riposte");
+  assert.equal(result.events[1].actor_id, "riposter");
+  assert.equal(result.events[1].target_id, "attacker");
+  assert.equal(result.events[1].feature_id, "riposte");
+  assert.notDeepEqual(result.events[1].attack_roll.rolls, result.events[0].attack_roll.rolls);
+  assert.equal(defender.state.reaction_available, false);
+}
+
 {
   const attacker = member("archer-1", "heroes", monsterTemplate("srd-goblin-warrior"), 0);
   const boss = member("boss-1", "monsters", monsterTemplate("srd-goblin-boss"), 20);
