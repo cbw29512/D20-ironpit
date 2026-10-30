@@ -113,7 +113,7 @@ def test_chain_damage_ticks_on_victim_turn_only_while_owned_grapple_exists():
     attack, monster, target, other, setup = _combatants()
     apply_hit_conditions(attack, target.state, monster.combatant_id, setup=setup)
     assert grapple_turn_start_damage(target, setup, FixedDiceProvider([3, 4])) == [
-        ("Chain grapple", 7, "piercing"),
+        ("Chain grapple", 7, "piercing", "chain-devil"),
     ]
     before = target.state.current_hp
     events, sequence = resolve_start_of_turn_save_condition_damage_events(
