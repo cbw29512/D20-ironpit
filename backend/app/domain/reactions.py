@@ -6,9 +6,12 @@ from app.domain.size import CreatureSize
 
 
 class ParryReaction(BaseModel):
-    """Standard SRD Parry: add AC against one triggering melee hit while armed."""
+    """AC reaction that can optionally counterattack when it converts a hit to a miss."""
 
     ac_bonus: int = Field(ge=1, le=20)
+    source_feature: str = "parry"
+    counterattack_attack_id: str | None = None
+    counterattack_range_ft: int = Field(default=5, ge=1, le=30)
 
 
 class RedirectAttackReaction(BaseModel):
