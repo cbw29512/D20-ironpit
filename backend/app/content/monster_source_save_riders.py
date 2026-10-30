@@ -10,7 +10,8 @@ from app.domain.size import CreatureSize
 _SIZE = re.compile(r"\b(Tiny|Small|Medium|Large|Huge|Gargantuan)\s+or\s+smaller\b", re.I)
 _PUSH = re.compile(r"pushed\s+up\s+to\s+(\d+)\s+feet\s+straight\s+away", re.I)
 _GRAPPLE = re.compile(r"Grappled condition\s*\(escape DC\s*(\d+)\)", re.I)
-_SPEED = re.compile(r"target[’']s Speed decreases by (\d+) feet until the end of its next turn", re.I)
+_SPEED = re.compile(r"target[’\']s Speed decreases by (\d+) feet until the end of its next turn", re.I)
+_SPEED_ZERO = re.compile(r"target[’\']s Speed is 0 until the end of (?:the target[’\']s|its) next turn", re.I)
 _TIMED_CONDITION = re.compile(
     r"has the (Blinded|Charmed|Deafened|Frightened|Incapacitated|Paralyzed|Poisoned|Prone|Restrained|Stunned|Unconscious) condition "
     r"until the (start|end) of (?P<owner>its|the [^.]+?['’]s) next turn", re.I,
@@ -61,6 +62,10 @@ def common_failure_riders(target_text: str, failure_text: str) -> dict[str, obje
     if speed:
         effects.append(CombatModifierEffect(
             kind="speed", flat_bonus=-int(speed.group(1)), expires_at_end_of_target_turn=True,
+        ))
+    if _SPEED_ZERO.search(failure_text):
+        effects.append(CombatModifierEffect(
+            kind="speed", set_value=0, expires_at_end_of_target_turn=True,
         ))
     return result
 
