@@ -81,7 +81,7 @@
         const resolvedDamage = DD().resolveDamage(member.state, total, damageType);
         const applied = resolvedDamage.applied;
         A().applyDamage(
-          member.state, applied, false, [damageType], states, setup,
+          member.state, applied, false, [damageType], states, setup, [], effect.source_id || null,
         );
         const name = effect.source_effect_id || effect.effect_id;
         events.push({
@@ -127,7 +127,10 @@
         const total = D().rollMany(spec.dice_count, spec.dice_size).reduce((sum, roll) => sum + roll, 0);
         const hpBefore = member.state.current_hp;
         const resolved = DD().resolveDamage(member.state, total, spec.damage_type);
-        A().applyDamage(member.state, resolved.applied, false, [spec.damage_type], states, setup);
+        A().applyDamage(
+          member.state, resolved.applied, false, [spec.damage_type], states, setup, [],
+          grapple.source_id,
+        );
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
           actor_id: member.combatant_id, actor_name: member.state.template.name,
