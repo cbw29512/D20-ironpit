@@ -4,6 +4,7 @@ import re
 from functools import lru_cache
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_death_trigger_source import parse_death_trigger_effects
+from app.content.monster_grapple_contact_source import parse_grapple_contact_damage
 from app.content.monster_legendary_resistance_source import legendary_resistance_trait_issues
 from app.content.monster_regeneration_source import regeneration_trait_issues
 from app.content.monster_trait_aura_audit import aura_trait_issues
@@ -67,6 +68,13 @@ def _magic_resistance_issues(template: CombatantTemplate, expected: list[str]) -
         return ["trait-source-missing:magic-resistance"]
     return []
 
+def _grapple_contact_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
+    expected = parse_grapple_contact_damage(row.get("traits", ""))
+    if template.start_turn_grapple_contact_damage != expected:
+        return ["grapple-contact-source-data-mismatch"]
+    return []
+
+
 def _death_trigger_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     expected = parse_death_trigger_effects(row.get("traits", ""))
     if template.death_trigger_effects != expected:
@@ -88,6 +96,7 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
     issues.extend(_movement_trait_issues(template, expected))
     issues.extend(_magic_resistance_issues(template, expected))
     issues.extend(_death_trigger_issues(template, row))
+    issues.extend(_grapple_contact_issues(template, row))
     issues.extend(regeneration_trait_issues(template, row))
     legendary_issues, legendary_certified = legendary_resistance_trait_issues(template, expected)
     issues.extend(legendary_issues)
@@ -98,6 +107,8 @@ def trait_issues(template: CombatantTemplate, row: dict[str, object]) -> list[st
         certified.add("Legendary Resistance")
     if template.death_trigger_effects and "Death Burst" in expected:
         certified.add("Death Burst")
+    if template.start_turn_grapple_contact_damage is not None and "Barbed Hide" in expected:
+        certified.add("Barbed Hide")
     for name in expected:
         if name not in certified:
             slug = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
