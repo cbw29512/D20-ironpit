@@ -167,7 +167,7 @@ def test_threshold_regurgitation_success_keeps_creature_swallowed():
 
 def test_all_swallowed_regurgitation_releases_every_owned_target():
     _, action, owner, first = _make("remorhaz")
-    action = action.model_copy(update={"max_swallowed": 2})
+    assert action.max_swallowed is None
     second = build_combatant_state(first.template)
     for target, target_id in ((first, "first"), (second, "second")):
         apply_grapple(target, "remorhaz", 15, 5, restrains=True)
