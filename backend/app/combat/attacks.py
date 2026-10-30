@@ -19,6 +19,7 @@ from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
+from app.combat.hit_modifiers import apply_self_hit_modifier_effects
 from app.combat.modifier_stack import apply_d20_bonus_dice, attacks_against_advantage_sources, consume_attacks_against_advantage, consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources
 from app.combat.parry import resolve_parry_hit
 from app.combat.peerless_aim import resolve_peerless_aim_miss
@@ -103,7 +104,9 @@ def resolve_attack(
             if topple.applied and "prone" not in applied_conditions: applied_conditions.append("prone")
             weapon_sap_applied = apply_weapon_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
             if not weapon_sap_applied: tactical_sap_applied = apply_tactical_master_sap(attacker, attacker_event_id, actual_defender, attack, round_number)
-            vex_applied = apply_vex_mastery(attacker, attacker_event_id, actual_event_id, attack, round_number, applied_total); end_rage_if_incapacitated(actual_defender)
+            vex_applied = apply_vex_mastery(attacker, attacker_event_id, actual_event_id, attack, round_number, applied_total)
+            apply_self_hit_modifier_effects(attacker, attacker_event_id, attack, round_number)
+            end_rage_if_incapacitated(actual_defender)
         else:
             graze = resolve_graze_miss(attacker, actual_defender, attack, dice, affected_states)
             if graze is not None: damage_roll, damage_components, damage_outcome = graze; end_rage_if_incapacitated(actual_defender)
