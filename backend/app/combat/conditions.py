@@ -15,6 +15,7 @@ from app.combat.modifier_stack import effective_speed
 from app.combat.timed_conditions import apply_timed_condition
 from app.domain.models import CombatantState, WeaponAttack
 from app.domain.size import size_at_most
+from app.domain.traits import CombatTrait
 
 BLINDED_EFFECT_ID = "blinded"
 POISONED_EFFECT_ID = "poisoned"
@@ -41,6 +42,12 @@ def attack_roll_condition_sources(
     if target_id is not None:
         disadvantage += grapple_attack_disadvantage(attacker, target_id)
     if dodge_benefits_active(defender) and not attacks_have_advantage_against(defender):
+        disadvantage += 1
+    if (
+        CombatTrait.ATTACKS_AGAINST_DISADVANTAGE_UNLESS_INCAPACITATED in defender.template.combat_traits
+        and not has_condition(defender, "incapacitated")
+        and not defender.is_unconscious
+    ):
         disadvantage += 1
     if attacks_have_advantage_against(defender):
         advantage += 1
