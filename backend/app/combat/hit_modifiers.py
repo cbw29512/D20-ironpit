@@ -25,6 +25,7 @@ def apply_modifier_effect(
     *,
     trigger: str,
     round_number: int | None = None,
+    turn_owner_id: str | None = None,
 ) -> None:
     """Apply one source-neutral modifier effect with trigger-specific identity."""
     try:
@@ -33,6 +34,8 @@ def apply_modifier_effect(
             raise ValueError(f"Unsupported combat modifier effect kind: {effect.kind}.")
         if effect.expires_at_end_of_source_turn and round_number is None:
             raise ValueError("End-of-source-turn modifier requires the current round.")
+        if effect.expires_at_end_of_current_turn and (round_number is None or turn_owner_id is None):
+            raise ValueError("End-of-current-turn modifier requires round and turn owner.")
         add_modifier(state, CombatModifier(
             id=f"{source_id}:{source_effect_id}:{trigger}-modifier:{index}",
             source_id=source_id,
@@ -43,6 +46,8 @@ def apply_modifier_effect(
             expires_at_start_of_source_turn=effect.expires_at_start_of_source_turn,
             expires_at_end_of_target_turn=effect.expires_at_end_of_target_turn,
             expires_source_turn_end_round=round_number if effect.expires_at_end_of_source_turn else None,
+            expires_current_turn_end_owner_id=turn_owner_id if effect.expires_at_end_of_current_turn else None,
+            expires_current_turn_end_round=round_number if effect.expires_at_end_of_current_turn else None,
         ))
     except Exception:
         import logging
@@ -61,7 +66,7 @@ def apply_hit_modifier_effects(
         for index, effect in enumerate(attack.on_hit_modifier_effects):
             apply_modifier_effect(
                 state, source_id, attack.id, effect, index,
-                trigger="hit", round_number=round_number,
+                trigger="hit", round_number=round_number, turn_owner_id=source_id,
             )
     except Exception:
         import logging
@@ -74,13 +79,14 @@ def apply_self_hit_modifier_effects(
     source_id: str,
     attack: WeaponAttack,
     round_number: int,
+    turn_owner_id: str,
 ) -> None:
     """Apply source-owned modifier riders created by this creature's successful hit."""
     try:
         for index, effect in enumerate(attack.on_hit_self_modifier_effects):
             apply_modifier_effect(
                 state, source_id, attack.id, effect, index,
-                trigger="self-hit", round_number=round_number,
+                trigger="self-hit", round_number=round_number, turn_owner_id=turn_owner_id,
             )
     except Exception:
         import logging
