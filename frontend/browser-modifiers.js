@@ -45,7 +45,6 @@
     }
     return removed;
   }
-
   function expireSourceTurn(states, sourceId, round) {
     let removed = 0;
     for (const state of states || []) {
@@ -85,7 +84,6 @@
       throw error;
     }
   }
-
   function applyHitEffects(state, sourceId, attack, round = null) {
     try {
       for (const [index, effect] of (attack.onHitModifiers || []).entries()) {
@@ -110,7 +108,6 @@
   const nextAttackAgainstAdvantage = (state, targetId) => (state.active_modifiers || [])
     .filter((item) => item.kind === "next-attack-against-advantage" && item.target_id === targetId).length;
   const nextAttackDisadvantage = (state) => (state.active_modifiers || []).filter((item) => item.kind === "next-attack-disadvantage").length;
-
   function consumeAttacksAgainstAdvantage(state) {
     const before = state.active_modifiers.length;
     state.active_modifiers = state.active_modifiers.filter((item) => !(item.kind === "attacks-against-advantage" && item.consume_on_attack_against));
@@ -124,7 +121,6 @@
   }
   function consumeNextAttackAdvantage(state) { const before = state.active_modifiers.length; state.active_modifiers = state.active_modifiers.filter((item) => item.kind !== "next-attack-advantage"); return before - state.active_modifiers.length; }
   function consumeNextAttackDisadvantage(state) { const before = state.active_modifiers.length; state.active_modifiers = state.active_modifiers.filter((item) => item.kind !== "next-attack-disadvantage"); return before - state.active_modifiers.length; }
-
   function applyD20Bonus(state, kind, roll) {
     if (!new Set(["attack-roll-bonus-die", "saving-throw-bonus-die", "ability-check-bonus-die"]).has(kind)) throw new Error(`${kind} is not a D20 bonus modifier.`);
     const modifiers = (state.active_modifiers || []).filter((item) => item.kind === kind);
