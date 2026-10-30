@@ -57,7 +57,7 @@
         if ((action.actionCost || "action") !== actionCost) continue;
         if (!RES().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
         const distance = F().saveDistance(member, target, action.range);
-        if (V().legalAction(action, target, distance, member)) return { target, action, distance };
+        if (V().legalAction(action, target, distance, member, setup)) return { target, action, distance };
       }
     }
     return null;
@@ -80,6 +80,8 @@
   function resolveTurn(sequence, round, member, setup) {
     enablePitRangePolicy();
     const events = []; H().cleanup(setup); S().beginTurn(member.state);
+    const grapplePeriodic = H().periodicTurnStart?.(sequence, round, member, setup);
+    if (grapplePeriodic) { events.push(...grapplePeriodic.events); sequence = grapplePeriodic.sequence; }
     const berserk = BB()?.startTurn(sequence, round, member); if (berserk?.event) { events.push(berserk.event); sequence = berserk.sequence; }
     const grappleContact = AU()?.grappleTurnStart(sequence, round, member, setup);
     if (grappleContact) { events.push(...grappleContact.events); sequence = grappleContact.sequence; }
