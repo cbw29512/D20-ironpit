@@ -30,6 +30,7 @@ def resolve_save_damage(
     shared_damage_rolls: list[int] | list[list[int]] | None = None,
     affected_states: list[CombatantState] | None = None,
     setup: EncounterSetup | None = None,
+    source_id: str | None = None,
 ) -> SaveDamageResult:
     try:
         total, rolled, components = resolve_save_damage_components(
@@ -64,6 +65,7 @@ def resolve_save_damage(
                 affected_states=affected_states,
                 setup=setup,
                 damage_components=components,
+                source_id=source_id,
             )
             end_rage_if_incapacitated(target.state)
             if (
