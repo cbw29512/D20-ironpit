@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
-from app.domain.weapons import DamageType
+from app.domain.damage_types import DamageType
 
 
 class SaveDamageComponent(BaseModel):
