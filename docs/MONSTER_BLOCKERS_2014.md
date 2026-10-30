@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 61 |
+| `source:trait` | 60 |
 | `source:extra-action` | 43 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 17 |
@@ -110,8 +110,8 @@ the underlying ability is already implemented or trivial.
 | Storm Giant | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Succubus/Incubus | source:extra-action, source:trait | Telepathic Bond, Shapechanger |
 | Tarrasque | mechanic:legendary, mechanic:swallow, source:extra-action, source:legendary, source:trait | Reflective Carapace |
-| Vampire | attack:incomplete, mechanic:legendary, multiattack:complex, source:extra-action, source:legendary, source:trait | Shapechanger, Misty Escape, Vampire Weaknesses |
-| Vampire Spawn | attack:incomplete, multiattack:complex, source:trait | Vampire Weaknesses |
+| Vampire | attack:incomplete, mechanic:legendary, multiattack:complex, source:extra-action, source:legendary, source:trait | Shapechanger, Misty Escape |
+| Vampire Spawn | attack:incomplete, multiattack:complex | — |
 | Vrock | mechanic:recharge, source:extra-action | — |
 | Water Elemental | mechanic:recharge, source:extra-action, source:trait | Water Form, Freeze |
 | Werebear | multiattack:complex, source:trait | Shapechanger |

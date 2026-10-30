@@ -1,5 +1,5 @@
 from app.content.capability_compiler import compile_combatant
-from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014, unsupported_traits_2014
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.domain.traits import CombatTrait
@@ -40,3 +40,11 @@ def test_arena_neutral_trait_batch_remains_admitted():
         if not basic_blockers_2014(monster)
     }
     assert set(_ARENA_NEUTRAL_IDS) <= ready_ids
+
+
+def test_vampire_weaknesses_are_arena_neutral():
+    source = {monster.id: monster for monster in load_monster_source_2014()}
+    for monster_id in ("vampire", "vampire-spawn"):
+        monster = source[monster_id]
+        assert "Vampire Weaknesses" in monster.trait_names
+        assert "Vampire Weaknesses" not in unsupported_traits_2014(monster)

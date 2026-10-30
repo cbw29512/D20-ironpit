@@ -31,7 +31,7 @@ ARENA_NEUTRAL_TRAITS_2014 = frozenset({
     "Mimicry", "Earth Glide", "Running Leap", "Shark Telepathy", "Snow Camouflage", "Stone Camouflage",
     "Spider Climb", "Treasure Sense", "Tunneler", "Water Breathing", "Devil's Sight",
     "Underwater Camouflage", "Web Sense", "Web Walker", "Rejuvenation", "Hellish Rejuvenation",
-    "Wakeful", "Ethereal Jaunt", "Incorporeal Movement", "Immutable Form",
+    "Wakeful", "Ethereal Jaunt", "Incorporeal Movement", "Immutable Form", "Vampire Weaknesses",
 })
 
 def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str) -> bool:
@@ -97,6 +97,7 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
         # Pinned source must prove both the printed trait and its
         # arena-inert semantics. Other effects remain blocked independently.
         additional_inert_clauses = {
+            "Vampire Weaknesses": ("sunlight", "running water", "residence"),
             "Elemental Demise": ("dies", "disintegrates"),
             "Divine Awareness": ("hears", "lie"),
             "Speak with Beasts and Plants": ("communicate", "beasts", "plants"),
