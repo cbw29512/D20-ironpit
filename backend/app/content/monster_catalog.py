@@ -10,6 +10,7 @@ from app.content.arena_eligibility import deferred_environment_reason
 from app.content.monster_neighbor_bleed_corrections import apply_neighbor_bleed_corrections
 from app.content.monster_neighbor_bleed_normalizer import normalize_neighbor_name_bleed
 from app.content.monster_section_heading_corrections import apply_section_heading_corrections
+from app.content.monster_speed_source_normalizer import normalize_truncated_speed_parentheticals
 from app.domain.catalog import CoverageStatus, MonsterCatalogCard
 from app.domain.models import CombatantTemplate
 
@@ -40,6 +41,7 @@ def _canonical_monster_rows() -> tuple[dict[str, object], ...]:
         combined = apply_neighbor_bleed_corrections(combined)
         combined = normalize_neighbor_name_bleed(combined)
         combined = apply_section_heading_corrections(combined)
+        combined = normalize_truncated_speed_parentheticals(combined)
         ids = {str(row["id"]) for row in combined}
         names = {str(row["name"]) for row in combined}
         if len(combined) != 330 or len(ids) != 330 or len(names) != 330:
