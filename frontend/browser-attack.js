@@ -114,6 +114,8 @@
       if (cunningStrikeObscure?.applied && !applied.includes("blinded")) applied.push("blinded");
       const living = actualTarget.state.is_alive && !actualTarget.state.is_dead, proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(actualTarget, proneMax) && !I().immune(actualTarget.state, "prone")) { if (!actualTarget.state.active_effect_ids.includes("prone")) actualTarget.state.active_effect_ids.push("prone"); applied.push("prone"); }
+      const preHitGrappledByAttacker = (actualTarget.state.grapple_sources || [])
+        .some((grapple) => grapple.source_id === attacker.combatant_id);
       const control = attack.controlEffect;
       if (living && control?.grappleEscapeDc && (!control.maxTargetSize || S().sizeAtMost(actualTarget, control.maxTargetSize)) && (!control.grappleRequiresSourceFree || !G().sourceHasActiveGrapple(extra.setup, attacker.combatant_id))) applied.push(...G().apply(actualTarget.state, attacker.combatant_id, control.grappleEscapeDc, attack.reach || 5, Boolean(control.restrainsWhileGrappled), false, control.grapplePeriodicDamage || null));
       if (living && control?.conditionId) {
@@ -136,7 +138,8 @@
       Object.assign(outcome, { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, maximumHpSave, contestedMovement });
       const phase = H().runPhase(H().PHASES.ON_HIT, {
         sequence, round, member: attacker, target: actualTarget, originalTarget: target, attack,
-        setup: extra.setup, turnKey: extra.turnKey, attackOutcome: outcome, events: [],
+        setup: extra.setup, turnKey: extra.turnKey, attackOutcome: outcome,
+        preHitGrappledByAttacker, events: [],
       });
       if (phase.events.length) throw new Error("Attack outcome hooks must not emit standalone battle events.");
       ({ damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, topple, sapApplied, vexApplied, studiedApplied, deferredEffectArmed, exileApplied } = outcome); outcome.brutalStrikeEffects = BS()?.applyEffects?.(attacker, actualTarget, extra.setup, extra.turnKey, extra.brutalStrikeEffectIds) || []; window.IRON_PIT_BROWSER_MELEE_RETALIATION?.apply(attacker, actualTarget, { melee: (attack.kind || attack.attackKind) === "melee", setup: extra.setup }); window.IRON_PIT_BROWSER_MELEE_HIT_SAVE_RETALIATION?.apply(attacker, actualTarget, { melee: (attack.kind || attack.attackKind) === "melee", setup: extra.setup, round });
