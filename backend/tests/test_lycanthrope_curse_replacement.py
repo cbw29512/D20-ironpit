@@ -115,3 +115,26 @@ def test_zero_hp_curse_replacement_uses_source_template_and_side() -> None:
     except Exception:
         logger.exception("Zero-HP curse replacement runtime regression failed.")
         raise
+
+
+def test_curse_applied_after_same_hit_zero_hp_triggers_replacement_immediately() -> None:
+    try:
+        source_template = compile_combatant(get_capability_definition("srd-werewolf"))
+        target_template = compile_combatant(get_capability_definition("srd-goblin"))
+        attack, _rider, effect = _replacement_effect("srd-werewolf")
+        target = build_combatant_state(target_template)
+        target.current_hp = 0
+        target.is_alive = True
+        target.is_unconscious = True
+
+        apply_zero_hp_replacement_effect(target, "source-werewolf", attack.id, effect)
+
+        assert target.zero_hp_replacement is not None
+        assert target.zero_hp_replacement.triggered is True
+        assert target.current_hp == 10
+        assert target.is_alive is True
+        assert target.is_dead is False
+        assert target.is_unconscious is False
+    except Exception:
+        logger.exception("Same-hit zero-HP curse replacement regression failed.")
+        raise
