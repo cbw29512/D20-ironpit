@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import AbilityName, ActionCost, DamageTypeName
+from app.domain.actions import AbilityName, ActionCost, ConditionName, DamageTypeName
 from app.domain.automatic_spells import AutomaticSpellAction
 from app.domain.targeting import AreaTargeting
 
@@ -64,6 +64,7 @@ class DefensiveSpellAction(BaseModel):
     max_hp_increase: int = Field(default=0, ge=0)
     current_hp_increase: int = Field(default=0, ge=0)
     damage_resistances: list[DamageTypeName] = Field(default_factory=list)
+    condition_ids: list[ConditionName] = Field(default_factory=list)
     modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
     concentration: bool = False
     priority: int = 0
@@ -73,7 +74,7 @@ class DefensiveSpellAction(BaseModel):
     @model_validator(mode="after")
     def validate_defense(self) -> "DefensiveSpellAction":
         direct_hp = self.temporary_hp or self.max_hp_increase or self.current_hp_increase
-        if not direct_hp and not self.damage_resistances and not self.modifier_effects:
+        if not direct_hp and not self.damage_resistances and not self.condition_ids and not self.modifier_effects:
             raise ValueError("Certified defensive spell must define an implemented defensive effect.")
         if self.concentration and (direct_hp or self.damage_resistances):
             raise ValueError("Concentration defenses require source-owned modifier effects.")
