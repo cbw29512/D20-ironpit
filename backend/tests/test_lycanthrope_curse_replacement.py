@@ -38,7 +38,7 @@ def test_source_name_neutral_lycanthrope_curse_parser() -> None:
             "If the target is a Humanoid, it is subjected to the following effect. "
             "Constitution Saving Throw: DC 15. Failure: The target is cursed. "
             "If the cursed target drops to 0 Hit Points, it instead becomes a Moon Beast "
-            "under the GM's control and has 10 Hit Points. "
+            "under the GM's\n\ncontrol and has 10 Hit Points. "
             "Success: The target is immune to this creature's curse for 24 hours."
         )
         rider = lycanthrope_curse_hit_save(text)
