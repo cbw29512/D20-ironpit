@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 @dataclass(frozen=True)
 class ThresholdSwallowProof2014:
     attack_id: str
+    delivery_mode: str
     max_target_size: CreatureSize
     damage_dice_count: int
     damage_dice_size: int
@@ -106,8 +107,13 @@ def threshold_swallow_source_2014(
         elif "can have only one creature swallowed at a time" not in text.casefold():
             return None
 
+        standalone = any(
+            name.split(" (", 1)[0].casefold() == "swallow"
+            for name in monster.action_names
+        )
         return ThresholdSwallowProof2014(
-            attack.id, size, count, sides, periodic["type"].lower(),
+            attack.id, "action_attack" if standalone else "attack_hit",
+            size, count, sides, periodic["type"].lower(),
             max_swallowed, int(death["exit"]), int(threshold["threshold"]),
             int(threshold["dc"]), int(threshold["range"]),
             threshold["scope"].casefold().startswith("all "),
