@@ -10,8 +10,14 @@ const load = (name) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, 
 window.IRON_PIT_BROWSER_STATE = { distance: (a, b) => Math.abs(a.position_ft - b.position_ft) };
 window.IRON_PIT_BROWSER_SAVES = {
   resolveSavingThrow: (_state, ability, dc, magical) => {
-    assert.equal(ability, "constitution"); assert.equal(dc, 16); assert.equal(magical, false);
-    return { roll: { total: 5 }, succeeded: false };
+    assert.equal(magical, false);
+    if (ability === "constitution") {
+      assert.equal(dc, 16);
+      return { roll: { total: 5 }, succeeded: false };
+    }
+    assert.equal(ability, "wisdom");
+    assert.equal(dc, 15);
+    return { roll: { total: 20 }, succeeded: true };
   },
 };
 window.IRON_PIT_BROWSER_TIMED = {
