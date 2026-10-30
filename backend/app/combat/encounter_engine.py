@@ -31,6 +31,16 @@ logger = logging.getLogger(__name__)
 MAX_ENCOUNTER_ROUNDS = 100
 
 
+def _refresh_per_turn_reactions(setup) -> None:
+    try:
+        for entry in [*setup.heroes, *setup.monsters]:
+            if entry.state.template.reaction_refresh_each_turn:
+                entry.state.reaction_available = True
+    except Exception as exc:
+        logger.exception("Failed source-backed per-turn Reaction refresh.")
+        raise RuntimeError("Per-turn Reaction refresh failed.") from exc
+
+
 def _combatant_index(combatants: list[EncounterCombatant]) -> dict[str, EncounterCombatant]:
     return {member.combatant_id: member for member in combatants}
 
@@ -81,6 +91,7 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                     events.append(build_finish_event(sequence, round_number, outcome))
                     return build_encounter_result(setup, initiative, events, outcome, round_number)
                 member = by_id[combatant_id]
+                _refresh_per_turn_reactions(setup)
                 cleanup_disabled_source_effects(setup)
                 expire_source_turn_start_modifiers(affected_states, member.combatant_id)
                 refresh_start_of_turn(member.state)
