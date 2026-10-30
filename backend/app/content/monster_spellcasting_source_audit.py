@@ -6,6 +6,8 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
+from app.content.monster_source_timed_self_buffs import source_timed_self_buffs
+from app.content.monster_timed_self_buff_binding import runtime_timed_self_buff
 from app.domain.models import CombatantTemplate
 
 logger = logging.getLogger(__name__)
@@ -73,13 +75,35 @@ def arena_neutral_spellcasting(row: dict[str, object]) -> bool:
     return bool(spells) and spells <= _ARENA_NEUTRAL_SPELLS
 
 
+def _direct_casts_bound(template: CombatantTemplate, row: dict[str, object]) -> bool:
+    try:
+        text = spellcasting_source_text(row)
+        direct_count = len(_DIRECT_CAST.findall(text))
+        if direct_count == 0 or _printed_spell_names(row):
+            return False
+        actions = source_timed_self_buffs(
+            str(row["name"]), row.get("actions", ""), row.get("bonusActions", ""),
+        )
+        return direct_count == len(actions) and all(
+            runtime_timed_self_buff(template, action.name, action.action_cost)
+            for action in actions
+        )
+    except Exception as exc:
+        logger.exception("Failed direct-cast binding audit for %s.", template.id)
+        raise RuntimeError("Direct spell-action binding could not be evaluated.") from exc
+
+
 def spellcasting_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
     """Fail closed on combat casting while allowing explicitly certified noncombat spell lists."""
     expected = spellcasting_fingerprint(row)
     issues: list[str] = []
     if template.source_spellcasting_fingerprint != expected:
         issues.append("source-spellcasting-fingerprint-mismatch")
-    if expected is not None and not arena_neutral_spellcasting(row):
+    if (
+        expected is not None
+        and not arena_neutral_spellcasting(row)
+        and not _direct_casts_bound(template, row)
+    ):
         issues.extend(("uncertified-monster-spellcasting", "spell-concentration-source-not-vendored"))
     return issues
 
