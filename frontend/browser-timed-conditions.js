@@ -53,6 +53,8 @@
       speed_multiplier: options.speedMultiplier == null ? 1 : options.speedMultiplier,
       requires_active_effect_id: options.requiresActiveEffectId || null,
       ends_on_damage: Boolean(options.endsOnDamage),
+      ends_on_owner_attack: Boolean(options.endsOnOwnerAttack),
+      ends_on_owner_spell_cast: Boolean(options.endsOnOwnerSpellCast),
       ends_if_source_incapacitated: Boolean(options.endsIfSourceIncapacitated),
       ends_if_source_dead: Boolean(options.endsIfSourceDead),
       d20_disadvantage_ability: options.d20DisadvantageAbility || null,
