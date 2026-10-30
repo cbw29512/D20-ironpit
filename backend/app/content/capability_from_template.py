@@ -19,6 +19,7 @@ def _control_effect(control) -> dict[str, object]:
             "kind": "grapple", "escape_dc": control.grapple_escape_dc,
             "max_target_size": control.max_target_size,
             "restrains": control.restrains_while_grappled,
+            "escape_check_disadvantage": control.grapple_escape_check_disadvantage,
         }
     if has_condition:
         return {
