@@ -47,6 +47,19 @@ def parse_riposte(
         raise RuntimeError("Riposte source could not be parsed.") from exc
 
 
+def riposte_matches(template: CombatantTemplate, source_reactions: object) -> bool:
+    try:
+        attacks = [template.weapon_attack, *template.alternate_weapon_attacks]
+        expected = parse_riposte(
+            source_reactions,
+            {attack.weapon.name.lower(): attack.id for attack in attacks},
+        )
+        return expected is not None and template.parry_reaction == expected
+    except Exception as exc:
+        logger.exception("Failed to audit Riposte for %s.", template.id)
+        raise RuntimeError("Riposte source audit failed.") from exc
+
+
 @lru_cache(maxsize=1)
 def _rows_by_name() -> dict[str, dict[str, object]]:
     try:
