@@ -17,7 +17,12 @@ from app.content.monster_support_action_source import source_support_actions
 from app.content.movement_modes import source_movement_modes, standard_arena_closing_speed
 from app.content.unarmed_opportunity_profiles import monster_unarmed_profile
 from app.domain.capabilities import CombatantDefinition
-from app.domain.capability_attacks import AttackCapabilityDefinition, CapabilityActionSlot, MultiattackCapabilityDefinition
+from app.domain.capability_attacks import (
+    AttackCapabilityDefinition,
+    CapabilityActionSlot,
+    MultiattackCapabilityDefinition,
+    SaveCapabilityDefinition,
+)
 from app.domain.capability_effects import DamageEffectDefinition, DiceSpec
 from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.size import CreatureSize
