@@ -1,6 +1,8 @@
 """Source-driven Swallow capability shared by 2014 monsters."""
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.domain.size import CreatureSize
@@ -10,6 +12,7 @@ class GrappleSwallowAction(BaseModel):
     model_config = ConfigDict(frozen=True)
     source_name: str = Field(min_length=1)
     attack_id: str = Field(min_length=1)
+    delivery_mode: Literal["action_attack", "attack_hit"] = "action_attack"
     max_target_size: CreatureSize
     requires_existing_grapple: bool = True
     damage_dice_count: int = Field(ge=1)
@@ -32,6 +35,7 @@ def swallow_action_from_source(source) -> GrappleSwallowAction | None:
     return GrappleSwallowAction(
         source_name=source.source_name,
         attack_id=source.attack_id,
+        delivery_mode=source.delivery_mode,
         max_target_size=source.max_target_size,
         damage_dice_count=source.damage_dice_count,
         damage_dice_size=source.damage_dice_size,
