@@ -3,6 +3,9 @@ from __future__ import annotations
 import importlib.util
 from pathlib import Path
 
+from app.content.monster_catalog import load_monster_rows
+from app.content.roster import build_arena_roster
+
 
 ROOT = Path(__file__).resolve().parents[2]
 REPORT_PATH = ROOT / "scripts" / "report_zero_engine_monsters.py"
@@ -61,5 +64,26 @@ def test_other_conditional_replacement_damage_still_fails_closed() -> None:
         )
 
         assert report._unmodeled_action_rider(actions) is True
+    except Exception:
+        raise
+
+
+def test_runtime_backed_bonus_action_is_not_reported_as_unimplemented() -> None:
+    try:
+        report = _load_report_module()
+        rows = load_monster_rows()
+        row = next(item for item in rows if item["name"] == "Pirate Captain")
+        names = {str(item["name"]) for item in rows}
+        runtime = next(
+            monster
+            for monster in build_arena_roster().monsters
+            if monster.name == "Pirate Captain"
+        )
+
+        assert any(
+            action.name == "Captain’s Charm" and action.action_cost == "bonus_action"
+            for action in runtime.saving_throw_actions
+        )
+        assert "bonus-action" not in report._source_blockers(row, names, runtime)
     except Exception:
         raise
