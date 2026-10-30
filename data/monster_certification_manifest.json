@@ -2692,12 +2692,12 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "bonus-action",
         "damage-or-condition-defense",
         "multiattack",
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "bonus-action",
         "condition-or-control",
         "limited-use",
         "save-or-complex-action",
@@ -2708,7 +2708,6 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "bonus-action",
         "condition-or-control",
         "limited-use",
         "save-or-complex-action",
@@ -2716,7 +2715,6 @@
         "source-save-action-count-mismatch",
         "spell-concentration-source-not-vendored",
         "spellcasting",
-        "uncertified-bonus-action:shape-shift",
         "uncertified-limited-use:actions-unsettling-visage-recharge-6",
         "uncertified-monster-spellcasting"
       ]
@@ -5865,23 +5863,20 @@
       ],
       "supported_mechanics": [
         "attack-roll",
-        "damage-or-condition-defense"
+        "bonus-action",
+        "damage-or-condition-defense",
+        "trait"
       ],
       "unsupported_mechanics": [
-        "bonus-action",
-        "condition-or-control",
-        "trait"
+        "condition-or-control"
       ],
       "python_certification_status": "blocked",
       "browser_certification_status": "blocked",
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "bonus-action",
         "condition-or-control",
-        "trait",
-        "uncertified-bonus-action:shape-shift",
-        "uncertified-trait:adhesive"
+        "grapple-escape-disadvantage-mismatch:srd-mimic-pseudopod"
       ]
     },
     {
@@ -6096,11 +6091,11 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "bonus-action",
         "damage-or-condition-defense",
         "multiattack"
       ],
       "unsupported_mechanics": [
-        "bonus-action",
         "limited-use",
         "spellcasting",
         "trait",
@@ -6111,12 +6106,10 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "bonus-action",
         "limited-use",
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "uncertified-bonus-action:shape-shift",
         "uncertified-limited-use:actions-nightmare-haunting-1-day-requires-soul-bag",
         "uncertified-monster-spellcasting",
         "uncertified-trait:coven-magic",
@@ -8074,12 +8067,12 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "bonus-action",
         "damage-or-condition-defense",
         "multiattack",
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "bonus-action",
         "condition-or-control",
         "save-or-complex-action",
         "spellcasting",
@@ -8091,13 +8084,11 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "bonus-action",
         "condition-or-control",
         "save-or-complex-action",
         "spell-concentration-source-not-vendored",
         "spellcasting",
         "trait",
-        "uncertified-bonus-action:shape-shift",
         "uncertified-monster-spellcasting",
         "uncertified-trait:incubus-form",
         "unsupported-action-rider"
@@ -8614,7 +8605,6 @@
         "spellcasting",
         "trait",
         "uncertified-bonus-action:charm",
-        "uncertified-bonus-action:shape-shift",
         "uncertified-legendary-action-economy",
         "uncertified-limited-use:bonusactions-charm-recharge-5-6",
         "uncertified-monster-spellcasting",
@@ -8977,11 +8967,11 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "bonus-action",
         "multiattack",
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "bonus-action",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -8989,13 +8979,11 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "bonus-action",
         "movement-form-source-unmodeled",
         "movement-parenthetical-source-malformed",
         "save-or-complex-action",
         "source-attack-count-mismatch",
-        "source-save-action-count-mismatch",
-        "uncertified-bonus-action:shape-shift"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -9014,11 +9002,11 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "bonus-action",
         "multiattack",
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "bonus-action",
         "condition-or-control",
         "save-or-complex-action"
       ],
@@ -9027,13 +9015,11 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "bonus-action",
         "condition-or-control",
         "movement-form-source-unmodeled",
         "save-or-complex-action",
         "source-attack-count-mismatch",
-        "source-save-action-count-mismatch",
-        "uncertified-bonus-action:shape-shift"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -9051,11 +9037,11 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "bonus-action",
         "multiattack",
         "saving-throw-action"
       ],
       "unsupported_mechanics": [
-        "bonus-action",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -9063,11 +9049,9 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "bonus-action",
         "save-or-complex-action",
         "source-attack-count-mismatch",
-        "source-save-action-count-mismatch",
-        "uncertified-bonus-action:shape-shift"
+        "source-save-action-count-mismatch"
       ]
     },
     {
@@ -9102,8 +9086,7 @@
         "save-or-complex-action",
         "source-attack-count-mismatch",
         "source-save-action-count-mismatch",
-        "uncertified-bonus-action:prowl",
-        "uncertified-bonus-action:shape-shift"
+        "uncertified-bonus-action:prowl"
       ]
     },
     {
@@ -9122,12 +9105,12 @@
       ],
       "supported_mechanics": [
         "attack-roll",
+        "bonus-action",
         "multiattack",
         "saving-throw-action",
         "trait"
       ],
       "unsupported_mechanics": [
-        "bonus-action",
         "save-or-complex-action"
       ],
       "python_certification_status": "blocked",
@@ -9135,12 +9118,10 @@
       "generated_static_status": "catalog-only",
       "public_ready_status": "blocked",
       "blockers": [
-        "bonus-action",
         "movement-form-source-unmodeled",
         "save-or-complex-action",
         "source-attack-count-mismatch",
-        "source-save-action-count-mismatch",
-        "uncertified-bonus-action:shape-shift"
+        "source-save-action-count-mismatch"
       ]
     },
     {
