@@ -10,3 +10,20 @@ ARENA_NEUTRAL_TRAITS = frozenset({
     "Standing Leap", "Sunlight Sensitivity", "Sunlight Weakness", "Telepathic Bond", "Training", "Treasure Sense", "Troll Spawn",
     "Tunneler", "Water Breathing", "Web Walker",
 })
+
+
+def source_environment_neutral_traits(
+    row: dict[str, object], expected: list[str],
+) -> set[str]:
+    try:
+        text = str(row.get("traits", "")).lower()
+        certified: set[str] = set()
+        if "moves in water" in text and "gallon of water" in text:
+            certified.update(name for name in expected if name.lower().startswith("water "))
+        return certified
+    except Exception as exc:
+        import logging
+        logging.getLogger(__name__).exception(
+            "Failed environment-only trait classification for %r.", row.get("name"),
+        )
+        raise RuntimeError("Environment-only trait classification failed.") from exc
