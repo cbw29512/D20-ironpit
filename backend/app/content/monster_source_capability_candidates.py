@@ -32,7 +32,7 @@ _ATTACK = re.compile(
     r"(?P<kind>Melee|Ranged|Melee or Ranged) Attack Roll:\s*"
     r"(?P<bonus>[+-]?\d+)(?P<header_advantage>\s*\(\s*with\s+Advantage\s+if\s+the\s+target\s+is\s+Grappled\s+by\s+the\s+[^)]+\))?,\s*"
     r"(?P<range>reach\s+\d+\s*ft\.|range\s+\d+(?:/\d+)?\s*ft\."
-    r"|reach\s+\d+\s*ft\.\s+or\s+range\s+\d+(?:/\d+)?\s*ft\.)\s*Hit:\s*"
+    r"|reach\s+\d+\s*ft\.?\s+or\s+range\s+\d+(?:/\d+)?\s*ft\.)\s*Hit:\s*"
     r"(?P<average>\d+)\s*\((?P<count>\d+)d(?P<size>\d+)(?:\s*(?P<sign>[+-])\s*(?P<mod>\d+))?\)\s*"
     r"(?P<dtype>[A-Za-z]+) damage(?P<extra>\s+plus\s+\d+\s*\(\d+d\d+(?:\s*[+-]\s*\d+)?\)\s+[A-Za-z]+\s+damage)?"
     r"(?P<tail>[^.]*)\.", re.I,
