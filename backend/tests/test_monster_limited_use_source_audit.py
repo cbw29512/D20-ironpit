@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+import logging
+
 from app.content.monster_catalog import load_monster_rows
 from app.content.monster_limited_use_source_audit import limited_use_issues, parse_limited_use_names
 from app.content.monster_source_audit import audit_monster_source
 from app.content.roster import build_arena_roster
-from app.domain.combatants import RechargeRule
+from app.domain.combatants import RechargeRule, ResourceDefinition
+
+logger = logging.getLogger(__name__)
 
 
 def _row(name: str) -> dict[str, object]:
@@ -68,3 +72,56 @@ def test_recharge_threshold_mismatch_still_fails_closed() -> None:
 def test_limited_use_fingerprint_drift_is_detected() -> None:
     wolf = _monster("Wolf").model_copy(update={"source_limited_use_names": ["actions:Howl (Recharge 5-6)"]})
     assert "source-limited-use-fingerprint-mismatch" in limited_use_issues(wolf, _row("Wolf"))
+
+
+def _daily_gaze(section: str, action_cost: str):
+    try:
+        basilisk = _monster("Basilisk")
+        gaze = next(action for action in basilisk.saving_throw_actions if action.name == "Petrifying Gaze")
+        resource = ResourceDefinition(id="daily-gaze", name="Petrifying Gaze", max_uses=2)
+        action = gaze.model_copy(update={
+            "resource_id": resource.id,
+            "resource_cost": 1,
+            "action_cost": action_cost,
+        })
+        fingerprint = f"{section}:Petrifying Gaze (2/Day)"
+        template = basilisk.model_copy(update={
+            "saving_throw_actions": [action],
+            "resources": [resource],
+            "source_limited_use_names": [fingerprint],
+        })
+        row = {"traits": "", "actions": "", "bonusActions": "", "reactions": ""}
+        source_field = {"actions": "actions", "bonusActions": "bonusActions", "reactions": "reactions"}[section]
+        row[source_field] = "Petrifying Gaze (2/Day)."
+        return template, row
+    except Exception:
+        logger.exception("Failed to build synthetic daily-use audit fixture.")
+        raise
+
+
+def test_bonus_action_daily_resource_matches_source_action_economy() -> None:
+    try:
+        template, row = _daily_gaze("bonusActions", "bonus_action")
+        assert limited_use_issues(template, row) == []
+    except Exception:
+        logger.exception("Bonus-action daily resource audit regression failed.")
+        raise
+
+
+def test_reaction_daily_resource_matches_source_action_economy() -> None:
+    try:
+        template, row = _daily_gaze("reactions", "reaction")
+        assert limited_use_issues(template, row) == []
+    except Exception:
+        logger.exception("Reaction daily resource audit regression failed.")
+        raise
+
+
+def test_daily_resource_in_wrong_action_economy_section_fails_closed() -> None:
+    try:
+        template, row = _daily_gaze("bonusActions", "action")
+        issues = limited_use_issues(template, row)
+        assert "uncertified-limited-use:bonusactions-petrifying-gaze-2-day" in issues
+    except Exception:
+        logger.exception("Daily resource action-economy mismatch regression failed.")
+        raise
