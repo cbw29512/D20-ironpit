@@ -5,7 +5,6 @@ import re
 from functools import lru_cache
 
 from app.content.monster_catalog import load_monster_rows
-from app.content.monster_movement_choice_source import selected_movement_choice
 from app.domain.models import CombatantTemplate
 from app.domain.movement import MovementModes
 
@@ -98,36 +97,6 @@ def standard_arena_closing_speed(source_speed: object) -> int:
     if not legal:
         raise ValueError(f"No standard-arena movement mode available: {source_speed!r}")
     return max(legal)
-
-
-def movement_mode_issues(template: CombatantTemplate, row: dict[str, object]) -> list[str]:
-    """Return blockers for movement drift and unresolved printed movement alternatives."""
-    try:
-        expected = parse_movement_profile(row["speed"])
-        selected_modes, choice_issues = selected_movement_choice(
-            row["speed"],
-            template.movement_modes,
-        )
-        issues = [
-            f"movement-{mode}-mismatch"
-            for mode, field in _MODE_FIELDS.items()
-            if mode not in selected_modes
-            and getattr(template.movement_modes, field) != getattr(expected, field)
-        ]
-        if template.movement_modes.hover != expected.hover:
-            issues.append("movement-hover-mismatch")
-        source_issues = movement_source_issues(row["speed"])
-        if not choice_issues:
-            source_issues = [
-                issue for issue in source_issues
-                if issue != "movement-choice-source-unmodeled"
-            ]
-        issues.extend(source_issues)
-        issues.extend(choice_issues)
-        return issues
-    except Exception as exc:
-        logger.exception("Failed to audit movement modes for %s.", template.id)
-        raise RuntimeError("Monster movement modes could not be audited.") from exc
 
 
 @lru_cache(maxsize=1)
