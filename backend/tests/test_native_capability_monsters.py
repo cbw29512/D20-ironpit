@@ -24,11 +24,7 @@ NATIVE = {
 # Native capability definitions can exist before their complete source semantics are
 # certified. Keep this list limited to definitions whose full SRD audit is currently
 # clean; unresolved source choices must fail closed instead of being silently guessed.
-SOURCE_AUDIT_CLEAN = {
-    template_id: source_name
-    for template_id, source_name in NATIVE.items()
-    if template_id != "srd-swarm-of-insects"
-}
+SOURCE_AUDIT_CLEAN = dict(NATIVE)
 
 
 def test_native_monsters_are_not_legacy_builder_outputs() -> None:
@@ -57,12 +53,13 @@ def test_source_audit_clean_native_monsters_pass_full_srd_source_audit() -> None
         assert audit_monster_source(runtime[template_id], rows[source_name]) == []
 
 
-def test_swarm_of_insects_fails_closed_on_unresolved_gm_movement_choice() -> None:
+def test_swarm_of_insects_certifies_selected_printed_movement_choice() -> None:
     rows = {str(row["name"]): row for row in load_monster_rows()}
     runtime = {monster.id: monster for monster in build_arena_roster().monsters}
-    issues = audit_monster_source(runtime["srd-swarm-of-insects"], rows["Swarm of Insects"])
-    assert "movement-choice-source-unmodeled" in issues
-    assert "movement-fly-mismatch" in issues
+    swarm = runtime["srd-swarm-of-insects"]
+    assert audit_monster_source(swarm, rows["Swarm of Insects"]) == []
+    assert swarm.movement_modes.fly_ft == 20
+    assert swarm.movement_modes.climb_ft == 0
 
 
 def test_swarm_of_insects_uses_existing_swarm_and_bloodied_capabilities() -> None:
