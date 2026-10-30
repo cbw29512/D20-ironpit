@@ -47,11 +47,19 @@ def test_fire_aura_uses_shared_damage_pipeline_at_end_of_turn() -> None:
     assert hero.state.current_hp == hp_before - 7
 
 
-def test_fire_elemental_extra_fire_aura_clause_remains_fail_closed() -> None:
-    auras = source_end_turn_damage_auras("Fire Elemental")
-    assert len(auras) == 1
-    assert (auras[0].radius_ft, auras[0].damage_dice_count, auras[0].damage_dice_size) == (10, 1, 10)
-    assert fire_aura_source_is_fully_modeled(_row("Fire Elemental")) is False
+def test_fire_elemental_fire_aura_ignition_is_source_bound_and_certified() -> None:
+    try:
+        elemental = build_combatant_from_capabilities("srd-fire-elemental")
+        auras = source_end_turn_damage_auras("Fire Elemental")
+        assert len(auras) == 1
+        assert (auras[0].radius_ft, auras[0].damage_dice_count, auras[0].damage_dice_size) == (10, 1, 10)
+        assert auras[0].applies_burning is True
+        assert fire_aura_source_is_fully_modeled(_row("Fire Elemental")) is True
+        assert audit_monster_source(elemental, _row("Fire Elemental")) == []
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Fire Elemental source-bound aura regression failed.")
+        raise
 
 
 def test_barbed_hide_compiles_and_damages_both_grapple_directions() -> None:
