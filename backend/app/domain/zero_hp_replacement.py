@@ -27,6 +27,7 @@ class ZeroHpReplacementState(BaseModel):
     replacement_mode: Literal["source-template"] = "source-template"
     control_mode: Literal["source-side"] = "source-side"
     replacement_hp: int = Field(default=10, ge=1, le=999)
+    triggered: bool = False
 
 
 __all__ = ["ZeroHpReplacementEffectDefinition", "ZeroHpReplacementState"]
