@@ -57,6 +57,7 @@ NEW_READY_FIGURE_PROFILES: dict[str, FigureProfile] = {
     "Shambling Mound": _p("plant", "shambling-mound"),
     "Shrieker Fungus": _p("plant", "shrieker-fungus"),
     "Treant": _p("plant", "treant"),
+    "Steam Mephit": _p("winged", "steam-mephit"),
     "Swarm of Ravens": _p("swarm", "ravens"),
     "Wight": _p("humanoid", "wight"),
     "Winter Wolf": _p("quadruped", "canine"),
