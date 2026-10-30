@@ -21,6 +21,13 @@ def grapple_issues(attack: WeaponAttack, actions: str) -> list[str]:
         issues.append(f"grapple-size-mismatch:{attack.id}")
     if control.restrains_while_grappled and "restrained" not in actions:
         issues.append(f"restrained-rider-mismatch:{attack.id}")
+    source_escape_disadvantage = bool(re.search(
+        r"Ability checks made to escape this grapple have Disadvantage",
+        actions,
+        re.IGNORECASE,
+    ))
+    if control.grapple_escape_check_disadvantage != source_escape_disadvantage:
+        issues.append(f"grapple-escape-disadvantage-mismatch:{attack.id}")
     for condition in control.conditions_while_grappled:
         pattern = rf"\b{re.escape(condition)}\s+condition\s+until\s+the\s+grapple\s+ends\b"
         if not re.search(pattern, actions, re.IGNORECASE):
