@@ -128,7 +128,7 @@ def test_threshold_regurgitation_counts_only_damage_from_swallowed_creature():
 
     owner.damage_taken_this_turn_by_source = {"other": 100, "victim": 29}
     events, sequence = resolve_end_turn_swallow_regurgitation(
-        1, 2, meal, setup, FixedDiceProvider([1]),
+        1, 2, eater, setup, FixedDiceProvider([1]),
     )
     assert events == [] and sequence == 1
     assert target.swallowed is not None
@@ -136,7 +136,7 @@ def test_threshold_regurgitation_counts_only_damage_from_swallowed_creature():
     owner.damage_taken_this_turn_by_source["victim"] = 30
     original_position = meal.position_ft
     events, sequence = resolve_end_turn_swallow_regurgitation(
-        1, 2, meal, setup, FixedDiceProvider([1]),
+        1, 2, eater, setup, FixedDiceProvider([1]),
     )
     assert sequence == 2
     assert meal.position_ft == original_position
