@@ -20,7 +20,7 @@ from app.combat.dice import DiceProvider
 from app.combat.graze import resolve_graze_miss
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
 from app.combat.hit_modifiers import apply_self_hit_modifier_effects
-from app.combat.modifier_stack import apply_d20_bonus_dice, attacks_against_advantage_sources, consume_attacks_against_advantage, consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources
+from app.combat.modifier_stack import apply_d20_bonus_dice, attack_roll_disadvantage_sources, attacks_against_advantage_sources, consume_attacks_against_advantage, consume_next_attack_against_advantage, effective_armor_class, next_attack_against_advantage_sources
 from app.combat.parry import resolve_parry_hit
 from app.combat.peerless_aim import resolve_peerless_aim_miss
 from app.combat.range import resolve_attack_roll_mode
@@ -64,7 +64,7 @@ def resolve_attack(
             advantage_sources=(advantage_sources + condition_advantage + bloodied_fury_advantage(attacker, attack) + attacks_against_advantage_sources(defender)
                                + attacks_against_reckless_advantage(defender) + reckless_attack_advantage(attacker, attack) + attack_roll_advantage_sources(attacker) + next_attack_advantage_sources(attacker)
                                + conditional_attack_advantage_sources(attack, defender, attacker_event_id) + next_attack_against_advantage_sources(attacker, defender_event_id)),
-            other_disadvantage_sources=(other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker) + strength_penalty + next_attack_disadvantage_sources(attacker)),
+            other_disadvantage_sources=(other_disadvantage_sources + condition_disadvantage + sap_disadvantage(attacker) + strength_penalty + attack_roll_disadvantage_sources(attacker) + next_attack_disadvantage_sources(attacker)),
             close_enemy_active=close_enemy_active,
         )
         resource_remaining = spend_resource(attacker, attack.resource_id, attack.resource_cost)
