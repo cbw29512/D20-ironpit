@@ -129,7 +129,8 @@ window.IRON_PIT_BROWSER_ATTACK = {
   },
 };
 for (const file of [
-  "browser-weapon-mastery.js", "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
+  "browser-weapon-mastery.js", "browser-light-weapons.js", "browser-light-attack.js",
+  "browser-attack-reaction-chain.js", "browser-standard-attack-action.js",
 ]) load(file);
 load("browser-turn.js");
 {
