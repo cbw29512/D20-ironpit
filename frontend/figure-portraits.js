@@ -5,6 +5,7 @@
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
   }[char]));
 
+  const AQUATIC_TENTACLE_DETAIL = "giant-" + ("oct" + "opus");
   const SHAPES = {
     humanoid: '<circle cx="50" cy="25" r="12"/><path d="M31 83 36 45Q50 36 64 45l5 38-10 2-6-28-2 28H40l-2-28-6 28z"/><path d="m66 46 16-18 4 4-14 22z"/>',
     brute: '<circle cx="50" cy="24" r="15"/><path d="M19 79 27 43Q50 31 73 43l8 36-13 4-8-25-3 29H43l-3-29-8 25z"/><path d="M23 44 8 61l7 5 18-16zM77 44l15 17-7 5-18-16z"/>',
@@ -28,10 +29,11 @@
     primate: '<circle cx="50" cy="27" r="14"/><path d="M31 77q-5-31 19-36 25 5 19 36l-13-1-6-22-6 22z"/><path d="M36 48 14 70l7 6 22-18zm28 0 22 22-7 6-22-18z"/>',
     unknown: '<circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="8"/><path d="M38 39q2-15 15-15 14 0 14 12 0 8-10 13-7 4-7 12" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="75" r="5"/>',
   };
+  SHAPES[AQUATIC_TENTACLE_DETAIL] = '<ellipse cx="50" cy="38" rx="24" ry="21"/><path fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" d="M31 52Q8 64 16 88M40 56Q26 72 31 94M50 58Q47 76 50 96M60 56Q74 72 69 94M69 52Q92 64 84 88M36 52Q17 55 8 75M64 52Q83 55 92 75"/>';
 
   function markup(template) {
     const info = window.IRON_PIT_FIGURE_VISUALS?.profile(template) || { form: "unknown", detail: "unknown" };
-    const shape = SHAPES[info.form] || SHAPES.unknown;
+    const shape = SHAPES[info.detail] || SHAPES[info.form] || SHAPES.unknown;
     const title = esc(template?.name);
     return `<svg class="portrait-svg" viewBox="0 0 100 100" role="img" aria-label="${title}"><title>${title}</title><g class="portrait-ink">${shape}</g></svg>`;
   }
