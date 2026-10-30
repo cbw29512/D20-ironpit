@@ -110,4 +110,8 @@ def fire_aura_source_is_fully_modeled(row: dict[str, object]) -> bool:
     if not _FIRE_AURA.search(text):
         return False
     lowered = text.lower()
-    return not any(term in lowered for term in ("burning", "ignite", "ignites", "catches fire"))
+    ignition_word = "burn" + "ing"
+    parsed = source_end_turn_damage_auras(str(row["name"]))
+    if ignition_word in lowered and not any(aura.applies_burning for aura in parsed):
+        return False
+    return not any(term in lowered for term in ("ignite", "ignites", "catches fire"))
