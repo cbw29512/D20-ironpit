@@ -1,5 +1,6 @@
-from app.combat.auras import resolve_end_turn_damage_auras
+from app.combat.auras import resolve_end_turn_damage_auras, resolve_start_turn_grapple_contact_damage
 from app.combat.dice import FixedDiceProvider
+from app.combat.grapple import apply_grapple
 from app.combat.state import build_combatant_state
 from app.content.audited_fighter import build_karnok_stoneward
 from app.content.capability_registry import build_combatant_from_capabilities
@@ -51,3 +52,54 @@ def test_fire_elemental_extra_fire_aura_clause_remains_fail_closed() -> None:
     assert len(auras) == 1
     assert (auras[0].radius_ft, auras[0].damage_dice_count, auras[0].damage_dice_size) == (10, 1, 10)
     assert fire_aura_source_is_fully_modeled(_row("Fire Elemental")) is False
+
+
+def test_barbed_hide_compiles_and_damages_both_grapple_directions() -> None:
+    try:
+        barbed_template = build_combatant_from_capabilities("srd-barbed-devil")
+        profile = barbed_template.start_turn_grapple_contact_damage
+        assert profile is not None
+        assert (profile.name, profile.damage_dice_count, profile.damage_dice_size) == (
+            "Barbed Hide", 1, 10,
+        )
+        assert profile.damage_type.value == "piercing"
+
+        hero_template = build_karnok_stoneward()
+        for owner_grapples_target in (True, False):
+            barbed = EncounterCombatant(
+                combatant_id="barbed",
+                side="monsters",
+                position_ft=5,
+                state=build_combatant_state(barbed_template),
+            )
+            hero = EncounterCombatant(
+                combatant_id="hero",
+                side="heroes",
+                position_ft=0,
+                state=build_combatant_state(hero_template),
+            )
+            if owner_grapples_target:
+                apply_grapple(hero.state, "barbed", 13, 5)
+            else:
+                apply_grapple(barbed.state, "hero", 13, 5)
+            setup = EncounterSetup(
+                heroes=[hero],
+                monsters=[barbed],
+                hero_total_levels=1,
+                monster_total_cr="5",
+            )
+            hp_before = hero.state.current_hp
+            events, sequence = resolve_start_turn_grapple_contact_damage(
+                1, 1, barbed, setup, FixedDiceProvider([6]),
+            )
+
+            assert sequence == 2
+            assert len(events) == 1
+            assert events[0].feature_id == "barbed-hide"
+            assert events[0].damage_roll is not None
+            assert events[0].damage_roll.total == 6
+            assert hero.state.current_hp == hp_before - 6
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Barbed Hide grapple-contact regression failed.")
+        raise
