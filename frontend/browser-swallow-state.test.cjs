@@ -2,7 +2,7 @@
 const assert=require("node:assert/strict"),fs=require("node:fs"),path=require("node:path"),vm=require("node:vm");
 global.window=globalThis;
 const load=(file)=>vm.runInThisContext(fs.readFileSync(path.join(__dirname,file),"utf8"),{filename:file});
-load("browser-grapple.js");load("browser-swallow.js");load("browser-swallow-regurgitation.js");
+load("browser-grapple.js");load("browser-swallow.js");load("browser-swallow-action.js");load("browser-swallow-regurgitation.js");
 const swallow=window.IRON_PIT_BROWSER_SWALLOW;
 const frog={is_alive:true,is_dead:false,current_hp:20,template:{
   size:"medium",attacks:[{id:"bite"}]},swallowed_target_ids:[]};
@@ -88,10 +88,10 @@ const combatVictim={combatant_id:"target-combat",side:"heroes",position_ft:10,st
   grapple_sources:[],swallowed:null,active_effect_ids:[],timed_effects:[],
 }};
 const combatSetup={heroes:[combatVictim],monsters:[combatFrog]};
-assert.equal(swallow.choose(combatFrog,combatSetup),null);
+assert.equal(window.IRON_PIT_BROWSER_SWALLOW_ACTION.choose(combatFrog,combatSetup),null);
 window.IRON_PIT_BROWSER_GRAPPLE.apply(combatVictim.state,"frog-combat",11,5,true);
-assert.equal(swallow.choose(combatFrog,combatSetup).target,combatVictim);
-const attackResult=swallow.resolve(1,1,combatFrog,combatSetup,"1:frog-combat","target-combat","2014-giant-frog-bite");
+assert.equal(window.IRON_PIT_BROWSER_SWALLOW_ACTION.choose(combatFrog,combatSetup).target,combatVictim);
+const attackResult=window.IRON_PIT_BROWSER_SWALLOW_ACTION.resolve(1,1,combatFrog,combatSetup,"1:frog-combat","target-combat","2014-giant-frog-bite");
 assert.equal(attackResult.sequence,2);
 assert.equal(attackResult.events[0].feature_id,undefined);
 assert.equal(resolvedBite.attack.controlEffect,null);
@@ -99,7 +99,7 @@ assert.equal(resolvedBite.attack.grappleTargetPolicy,"normal");
 assert.equal(resolvedBite.options.featureId,"swallow");
 assert.equal(combatVictim.state.swallowed.source_id,"frog-combat");
 assert.equal(combatFrog.state.action_available,false);
-assert.equal(swallow.choose(combatFrog,combatSetup),null);
+assert.equal(window.IRON_PIT_BROWSER_SWALLOW_ACTION.choose(combatFrog,combatSetup),null);
 assert.ok(fs.readFileSync(path.join(__dirname,"browser-turn.js"),"utf8").includes("window.IRON_PIT_BROWSER_SWALLOW?.cleanup(setup)"));
 assert.ok(fs.readFileSync(path.join(__dirname,"browser-turn.js"),"utf8").includes("window.IRON_PIT_BROWSER_SWALLOW?.sourceTurnDamage"));
 for(const page of ["../index.html","index.html"]) {
