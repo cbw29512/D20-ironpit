@@ -64,7 +64,8 @@ def test_self_next_attack_advantage_compiles_with_source_turn_end_expiry() -> No
 
         modifier = next(effect for effect in effects if effect.kind == "next-attack-advantage")
         assert modifier.recipient == "source"
-        assert modifier.expires_at_end_of_source_turn is True
+        assert modifier.expires_at_end_of_current_turn is True
+        assert modifier.expires_at_end_of_source_turn is False
         assert modifier.expires_at_start_of_source_turn is False
         assert modifier.expires_at_end_of_target_turn is False
     except Exception:
