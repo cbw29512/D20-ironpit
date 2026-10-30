@@ -14,6 +14,8 @@ class ModifierKind(StrEnum):
     ABILITY_CHECK_BONUS_DIE = "ability-check-bonus-die"
     ATTACKS_AGAINST_ADVANTAGE = "attacks-against-advantage"
     ATTACK_ROLL_ADVANTAGE = "attack-roll-advantage"
+    ATTACK_ROLL_DISADVANTAGE = "attack-roll-disadvantage"
+    ABILITY_CHECK_DISADVANTAGE = "ability-check-disadvantage"
     NEXT_ATTACK_ADVANTAGE = "next-attack-advantage"
     NEXT_ATTACK_AGAINST_ADVANTAGE = "next-attack-against-advantage"
     NEXT_ATTACK_DISADVANTAGE = "next-attack-disadvantage"
@@ -36,6 +38,7 @@ class CombatModifier(BaseModel):
     consume_on_attack_against: bool = False
     expires_at_start_of_source_turn: bool = False
     expires_at_end_of_target_turn: bool = False
+    expires_target_turn_serial: int | None = Field(default=None, ge=1)
     expires_source_turn_end_round: int | None = Field(default=None, ge=1)
     expires_current_turn_end_owner_id: str | None = None
     expires_current_turn_end_round: int | None = Field(default=None, ge=1)
@@ -59,6 +62,8 @@ class CombatModifier(BaseModel):
         roll_mode_kinds = {
             ModifierKind.ATTACKS_AGAINST_ADVANTAGE,
             ModifierKind.ATTACK_ROLL_ADVANTAGE,
+            ModifierKind.ATTACK_ROLL_DISADVANTAGE,
+            ModifierKind.ABILITY_CHECK_DISADVANTAGE,
             ModifierKind.NEXT_ATTACK_ADVANTAGE,
             ModifierKind.NEXT_ATTACK_AGAINST_ADVANTAGE,
             ModifierKind.NEXT_ATTACK_DISADVANTAGE,
