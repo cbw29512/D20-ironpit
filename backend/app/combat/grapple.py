@@ -23,7 +23,7 @@ POISONED_EFFECT_ID = "poisoned"
 def apply_grapple(
     state: CombatantState, source_id: str, escape_dc: int, range_ft: int, *,
     restrains: bool = False, linked_conditions: list[str] | None = None,
-    source_effect_id: str | None = None,
+    source_effect_id: str | None = None, escape_check_disadvantage: bool = False,
 ) -> list[str]:
     if condition_is_immune(state, GRAPPLED_EFFECT_ID):
         return []
@@ -34,7 +34,8 @@ def apply_grapple(
     state.grapple_sources.append(GrappleSource(
         source_id=source_id, source_effect_id=source_effect_id,
         escape_dc=escape_dc, range_ft=range_ft,
-        restrains=restrains, linked_conditions=linked,
+        restrains=restrains, escape_check_disadvantage=escape_check_disadvantage,
+        linked_conditions=linked,
     ))
     drop_orphaned_linked_conditions(state, {item for source in replaced for item in source.linked_conditions})
     sync_grapple_effect_ids(state)
@@ -110,7 +111,10 @@ def resolve_escape_grapple(
     if not is_available(state, "action"):
         raise ValueError("Action is not available to escape a grapple.")
     source = next((item for item in state.grapple_sources if item.restrains), state.grapple_sources[0])
-    check_name, bonus, mode = _escape_choice(state, other_disadvantage_sources)
+    source_disadvantage = 1 if source.escape_check_disadvantage else 0
+    check_name, bonus, mode = _escape_choice(
+        state, other_disadvantage_sources + source_disadvantage,
+    )
     check = roll_d20(dice, bonus, mode)
     check = apply_d20_bonus_dice(state, ModifierKind.ABILITY_CHECK_BONUS_DIE, check, dice)
     success = check.total >= source.escape_dc
