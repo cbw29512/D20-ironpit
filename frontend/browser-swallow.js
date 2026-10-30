@@ -25,6 +25,11 @@
       damage_dice_count: action.damageDiceCount,
       damage_dice_size: action.damageDiceSize, damage_type: action.damageType,
       exit_movement_ft: action.exitMovementFt,
+      regurgitation_damage_threshold: action.regurgitationDamageThreshold || null,
+      regurgitation_save_ability: action.regurgitationSaveAbility || null,
+      regurgitation_save_dc: action.regurgitationSaveDc || null,
+      regurgitation_range_ft: action.regurgitationRangeFt ?? null,
+      regurgitation_all_swallowed: Boolean(action.regurgitationAllSwallowed),
     };
     (owner.swallowed_target_ids ||= []).push(targetId);
     target.active_effect_ids = (target.active_effect_ids || []).filter(c => c !== "dodge");
