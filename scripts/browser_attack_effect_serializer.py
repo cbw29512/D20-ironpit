@@ -58,6 +58,8 @@ def hit_modifier_row(effect: Any) -> dict[str, Any]:
             row["expiresAtStartOfSourceTurn"] = True
         if effect.expires_at_end_of_source_turn:
             row["expiresAtEndOfSourceTurn"] = True
+        if effect.expires_at_end_of_current_turn:
+            row["expiresAtEndOfCurrentTurn"] = True
         if effect.expires_at_end_of_target_turn:
             row["expiresAtEndOfTargetTurn"] = True
         return row
