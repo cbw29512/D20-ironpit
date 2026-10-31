@@ -53,6 +53,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             on_hit_save_damage=effects.on_hit_save_damage,
             on_hit_condition_save=effects.on_hit_save,
             on_hit_ongoing_hp_loss=effects.on_hit_hp_loss,
+            on_hit_attachment=effects.on_hit_attachment,
             on_hit_maximum_hp_save=effects.on_hit_maximum_hp_save,
             on_hit_ability_score_reduction=effects.on_hit_ability_score_reduction,
             on_hit_contested_movement=effects.on_hit_contested_movement,
