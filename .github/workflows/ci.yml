@@ -82,6 +82,7 @@ jobs:
           pytest -q backend/tests/test_2014_chain_devil_grapple_periodic.py
           pytest -q backend/tests/test_2014_source_grapple_capacity.py
           pytest -q backend/tests/test_2014_grapple_owner_save_source.py backend/tests/test_grapple_owned_save_targeting.py
+          PYTHONPATH=.:backend pytest -q backend/tests/test_2014_read_thoughts_source_policy.py
       - name: Reconcile canonical 2014 source-derived artifacts
         if: ${{ github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'feat/2014-') && github.event.pull_request.head.repo.full_name == github.repository }}
         run: |
