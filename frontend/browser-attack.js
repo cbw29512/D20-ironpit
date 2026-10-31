@@ -114,6 +114,11 @@
       if (cunningStrikeObscure?.applied && !applied.includes("blinded")) applied.push("blinded");
       const living = actualTarget.state.is_alive && !actualTarget.state.is_dead, proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(actualTarget, proneMax) && !I().immune(actualTarget.state, "prone")) { if (!actualTarget.state.active_effect_ids.includes("prone")) actualTarget.state.active_effect_ids.push("prone"); applied.push("prone"); }
+      if (living && attack.onHitAttachment) {
+        const runtime = window.IRON_PIT_BROWSER_ATTACHMENTS;
+        if (!runtime?.applyOnHit) throw new Error("Universal attachment hit runtime is unavailable.");
+        runtime.applyOnHit(extra.setup, attacker, actualTarget, attack);
+      }
       const preHitGrappledByAttacker = (actualTarget.state.grapple_sources || [])
         .some((grapple) => grapple.source_id === attacker.combatant_id);
       const control = attack.controlEffect;
