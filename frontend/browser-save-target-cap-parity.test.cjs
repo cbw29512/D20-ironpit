@@ -24,9 +24,9 @@ const window = {
 };
 vm.runInNewContext(source, { window });
 const provider = window.IRON_PIT_BROWSER_MULTI_SAVE_PROVIDER;
-const member = { state: {} };
+const member = { combatant_id: "source", side: "monsters", state: {} };
 const setup = { heroes: [], monsters: [] };
-const targets = [{ combatant_id: "one" }, { combatant_id: "two" }];
+const targets = [{ combatant_id: "one", side: "heroes" }, { combatant_id: "two", side: "heroes" }];
 const action = {
   id: "synthetic-save", name: "Renamed Homebrew Action", range: 30,
   maxTargets: 1, actionCost: "action",

@@ -5864,7 +5864,7 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 74,
+    "blocked_monster_count": 73,
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
@@ -5877,7 +5877,7 @@
       "mechanic:spellcasting": 33,
       "mechanic:swallow": 2,
       "multiattack:complex": 10,
-      "source:extra-action": 38,
+      "source:extra-action": 37,
       "source:legendary": 9,
       "source:reaction": 2,
       "source:trait": 61

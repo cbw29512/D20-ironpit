@@ -141,6 +141,7 @@ def _save(action) -> dict[str, object]:
         "id": action.id, "name": action.name, "action_cost": action.action_cost, "save_ability": action.save_ability,
         "dc": action.dc, "range_ft": action.range_ft, "max_targets": action.max_targets,
         "target_scope": action.target_scope, "target_max_size": action.target_max_size,
+        "requires_target_grappled_by_source": action.requires_target_grappled_by_source,
         "area": action.area.model_dump(mode="json") if action.area else None,
         "success_damage": action.success_damage, "resource_id": action.resource_id,
         "resource_cost": action.resource_cost, "requires_no_active_grapple": action.requires_no_active_grapple,

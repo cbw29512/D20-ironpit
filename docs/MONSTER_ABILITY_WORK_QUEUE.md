@@ -6,6 +6,13 @@
 - **Locked Pit policy:** entering the Ethereal Plane is unavailable; the printed actions remain on immutable cards, but create no fight-local planar state, saves, damage, buffs or resources. If a future card adds an in-combat rider, the proof fails closed; no invented magical effect.
 - **Obligations cleared:** three extra-action source obligations, not three fully admitted monsters. Their other printed combat effects remain blocked and no admission increase is claimed. Do not alter generated reports manually. Pending CI/exact-head verification and production stays locked.
 
+## Source-owned grapple target save — PR #1132 (2014)
+
+- **Single universal mechanic:** the existing save Action now supports a declarative `requires_target_grappled_by_source` filter. The generic Python/browser save engines inspect fight-local grapple ownership, not the ability or monster name. Live held friends as well as foes are eligible only when `target_scope: all-other-creatures`; source/other-grappler/unheld targets are rejected.
+- **327 pinned source cards scanned:** one complete source-matching Slam, Otyugh Tentacle Slam. Its two held creatures each independently make the printed DC 14 Constitution save. A failed save takes 2d6+3 Bludgeoning and Stunned until the source's next turn end; success takes half damage and no Stunned. The two-target cap and 10-ft grapple reach are sourced from the bound Tentacle attack rather than invented. One Action and one common damage roll feed the existing save resolver. Renames do not alter engine dispatch; unfamiliar source clauses fail closed.
+- **Committed evidence:** source classification and adapter, Python/browser serialization and reverse-template capability, immutable source mutation and rename tests, real Python and browser two-target combat regressions. Generated 2014 source classifier on branch: **254/327 admitted; 73 blocked**. Otyugh is source-admitted, **not yet declared finished** until exact-head required CI and an actual webpage fight. Production publishing remains locked.
+- **Collisions:** existing #1122 Vrock area-control compiler and #1130 Stirge attachment serializer are separate PRs; reconcile changed files before either later merge. Otyugh's 24-hour Bite disease progression is arena-outside the fight duration; ordinary Poisoned/remove-condition behavior is shared, not a separate Otyugh resolver.
+
 ## Shared simultaneous grapple capacity — PR #1131 (2014)
 
 - **State:** Source wiring implemented, exact-head CI and browser webpage fights pending; 2014 main baseline remains 253/327 source-admitted.

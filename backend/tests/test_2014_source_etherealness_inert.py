@@ -65,3 +65,27 @@ def test_unproven_action_heading_not_silently_accepted() -> None:
     card = next(x for x in load_monster_source_2014() if x.id == "ghost")
     assert not verified_unavailable_etherealness_2014(card, "Horrifying Visage")
     assert not verified_unavailable_etherealness_2014(card, "Not A Real Action")
+
+def test_prior_plane_shift_and_ethereal_stride_remain_excluded() -> None:
+    # Do not re-enable another plane travel mechanism while classifying this
+    # family; source identity is inspected only at the adapter boundary.
+    from app.content.monster_arena_action_policy_2014 import (
+        PIT_BANNED_ACTION_LABELS_2014, source_proven_ethereal_shift_action_2014,
+    )
+
+    assert "plane shift" in PIT_BANNED_ACTION_LABELS_2014
+    source = {card.id: card for card in load_monster_source_2014()}
+    nightmare = source["nightmare"]
+    assert source_proven_ethereal_shift_action_2014(
+        nightmare, "Ethereal Stride",
+    )
+    assert "ethereal stride" in source_supported_extra_action_labels_2014(nightmare)
+    altered = nightmare.model_copy(update={
+        "source_actions": nightmare.source_actions.replace(
+            "or vice versa.",
+            "or vice versa. All nearby creatures are stunned.",
+        ),
+    })
+    assert not source_proven_ethereal_shift_action_2014(
+        altered, "Ethereal Stride",
+    )
