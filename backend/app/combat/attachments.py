@@ -35,6 +35,19 @@ def detach_for_combatant(
         raise
 
 
+
+def detach_link(
+    existing: tuple[Attachment, ...], source_id: str, effect_id: str,
+) -> tuple[Attachment, ...]:
+    """Remove exactly one owned link after the caller validates Action/movement cost."""
+    try:
+        return tuple(row for row in existing
+                     if (row.source_id, row.effect_id) != (source_id, effect_id))
+    except Exception:
+        logger.exception("Failed to detach source %s effect %s.", source_id, effect_id)
+        raise
+
+
 def record_attachment_hp_loss(
     existing: tuple[Attachment, ...], source_id: str,
     effect_id: str, actual_hp_lost: int,
