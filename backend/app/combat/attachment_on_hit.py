@@ -5,6 +5,7 @@ import logging
 
 from app.combat.attachments import attach
 from app.domain.attachments import Attachment
+from app.domain.attachment_receipts import AttachmentChange
 
 logger = logging.getLogger(__name__)
 
@@ -41,4 +42,24 @@ def apply_attack_hit_attachment(attack, attacker_id, target_id, target_state, se
     except Exception:
         logger.exception("Failed to apply source-owned attachment %s to %s.",
                          attacker_id, target_id)
+        raise
+
+
+def attached_hit_receipts(attack, attacker_id, target_id, setup) -> list[AttachmentChange]:
+    """Report a successful link without projecting it as Grappled."""
+    try:
+        spec = attack.on_hit_attachment
+        if spec is None or setup is None:
+            return []
+        return [
+            AttachmentChange(
+                operation="attach", source_id=row.source_id, target_id=row.target_id,
+                effect_id=row.effect_id, source_name=row.source_name,
+            )
+            for row in setup.attachments
+            if row.source_id == attacker_id and row.target_id == target_id
+            and row.effect_id == spec.effect_id
+        ]
+    except Exception:
+        logger.exception("Failed to build hit attachment receipt for %s.", attacker_id)
         raise
