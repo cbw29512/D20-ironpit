@@ -45,6 +45,7 @@ class TimedEffect(BaseModel):
     ends_on_damage: bool = False
     ends_on_owner_attack: bool = False
     ends_on_owner_spell_cast: bool = False
+    ends_on_owner_action_ids: list[str] = Field(default_factory=list)
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
     source_is_magical: bool = False
