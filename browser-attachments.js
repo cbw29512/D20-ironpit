@@ -97,7 +97,31 @@
     } catch (err) { return error("active target lookup", err); }
   }
 
+  function applyOnHit(setup, attacker, target, attack) {
+    try {
+      const spec = attack.onHitAttachment;
+      if (!spec) return false;
+      if (!setup) throw Error("On-hit attachment needs encounter setup.");
+      if (!target.state.is_alive || target.state.is_dead || target.state.current_hp <= 0) return false;
+      if (!Array.isArray(setup.attachments)) setup.attachments = [];
+      const row = {
+        source_id: attacker.combatant_id, target_id: target.combatant_id,
+        effect_id: spec.effect_id, source_name: spec.source_name,
+        damage_dice_count: spec.dice_count, damage_dice_size: spec.dice_size,
+        damage_bonus: spec.damage_bonus, damage_type: spec.damage_type,
+        periodic_effect_kind: spec.periodic_effect_kind, damage_timing: spec.tick_timing,
+        detach_after_hp_lost: spec.auto_end_after_hp_loss,
+        blocks_source_attacks: spec.blocks_source_attacks,
+        action_removable: spec.action_removable,
+        action_removal_range_ft: spec.action_removal_range_ft,
+        source_detach_movement_ft: spec.source_detach_movement_ft,
+      };
+      setup.attachments = attach(setup.attachments, row);
+      return true;
+    } catch (err) { return error("attack hit", err); }
+  }
+
   window.IRON_PIT_BROWSER_ATTACHMENTS = {
-    validate, attach, detach, detachForCombatant, recordHpLoss, linkedEffects, activeTarget,
+    validate, attach, detach, detachForCombatant, recordHpLoss, linkedEffects, activeTarget, applyOnHit,
   };
 })();
