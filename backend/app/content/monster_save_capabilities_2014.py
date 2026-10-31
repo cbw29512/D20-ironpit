@@ -5,6 +5,7 @@ import logging
 from app.content.monster_arena_action_policy_2014 import action_label_2014, arena_unavailable_recharge_ids_2014
 from app.content.monster_save_control_2014 import compile_failed_save_control_2014
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_source_scare_2014 import source_scare_2014
 from app.content.monster_source_save_outcome_bindings_2014 import source_proven_asymmetric_saves_2014
 from app.content.monster_source_visual_save_bindings_2014 import source_proven_visual_saves_2014
 from app.content.monster_source_conditioned_save_2014 import source_proven_conditioned_saves_2014
@@ -77,6 +78,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                 failed_save_push_ft=int(action.get("failure_push_ft", 0) or 0),
                 animation=str(action.get("animation", "save-effect")),
             ))
+        result.extend(source_scare_2014(monster))
         result.extend(source_proven_asymmetric_saves_2014(monster))
         result.extend(source_proven_visual_saves_2014(monster))
         result.extend(source_proven_conditioned_saves_2014(monster))
@@ -122,6 +124,10 @@ def save_resources_2014(monster: SourceMonster2014) -> list[ResourceDefinition]:
                     max_uses=max_uses,
                 ))
                 resource_ids.add(resource_id)
+        for action in source_scare_2014(monster):
+            if action.resource_id and action.resource_id not in resource_ids:
+                resources.append(ResourceDefinition(id=action.resource_id, name=action.name, max_uses=1))
+                resource_ids.add(action.resource_id)
         return resources
     except Exception:
         logger.exception("Failed to adapt 2014 save resources for %s.", monster.name)
