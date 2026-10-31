@@ -18,6 +18,7 @@
     try {
       if (!["attack", "spell_cast", "action"].includes(event)) throw new Error(`Unknown owner expiry event: ${event}.`);
       const flag = event === "attack" ? "ends_on_owner_attack" : "ends_on_owner_spell_cast";
+      if (event === "action" && !actionId) throw new Error("Named action expiry requires action ID.");
       const removed = [];
       for (const effect of [...(state.timed_effects || [])]) {
         if (!(state.timed_effects || []).includes(effect) || !effect[flag]) continue;
