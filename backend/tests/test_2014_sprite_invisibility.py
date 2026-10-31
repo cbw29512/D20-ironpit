@@ -118,7 +118,8 @@ def test_mutating_printed_invisibility_does_not_get_source_admission() -> None:
     sprite = _sprite()
     mutated = sprite.model_copy(update={
         "source_actions": (sprite.source_actions or "").replace(
-            "until it attacks or casts a spell", "until it attacks"
+            "until it attacks or casts a spell",
+            "until it attacks and stunned targets take 3d6 damage",
         ),
     })
     assert mutated.source_actions != sprite.source_actions

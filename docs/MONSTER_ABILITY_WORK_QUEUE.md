@@ -1,5 +1,11 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Generic source-owned Invisible self-buff exits — 2014 family
+
+- **Implementation branch:** `feat/2014-source-invisibility-expiry-family` (ACTIVE). Same existing Invisible/concentration buff in Python/browser; printed source decides attack exit and optional spell-cast exit. No monster-name runtime decision or new condition.
+- **Full 327-card source scan:** two fully supported source clauses: Sprite (attack or spell cast) and Imp (attack only). Quasit (using Scare) and Will-o'-Wisp (using Consume Life) remain unbound pending an exact generic named-action exit primitive; their clauses must never be weakened to spell casting.
+- **Proof:** positive/negative source-mutating cases, renamed source, actual compiled Imp state and browser non-spell expiry regression; focused checks and exact-head CI pending. No new monster admission is claimed. Keep Netlify production locked.
+
 ## Source-owned grapple target save — PR #1132 (2014)
 
 - **Single universal mechanic:** the existing save Action now supports a declarative `requires_target_grappled_by_source` filter. The generic Python/browser save engines inspect fight-local grapple ownership, not the ability or monster name. Live held friends as well as foes are eligible only when `target_scope: all-other-creatures`; source/other-grappler/unheld targets are rejected.

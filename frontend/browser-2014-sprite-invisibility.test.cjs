@@ -83,6 +83,20 @@ assert.equal(second.state.concentration, null, "spell-cast expiry ends concentra
 assert.ok(!second.state.active_effect_ids.includes("invisible"));
 assert.equal(second.state.spell_slot_expended_turn_key, "1:second");
 
+// A source can omit the optional spell-cast exit. Spellcasting must then
+// leave the shared concentrating buff active, whereas an attack ends it.
+const attackOnly = { ...action, id: "vanishing-cloak", name: "Renamed Vanish",
+  endsOnOwnerSpellCast: false };
+const third = { combatant_id: "third", side: "heroes", state: state("Renamed Source", [attackOnly]) };
+const attackOnlySetup = { heroes: [third], monsters: [hero] };
+assert.equal(window.IRON_PIT_BROWSER_PRECOMBAT_BUFFS.prepare(attackOnlySetup).events.length, 1);
+window.IRON_PIT_BROWSER_SPELLCASTING.markSlotSpellCast(third.state, "1:third");
+assert.equal(third.state.concentration.effect_id, "vanishing-cloak");
+assert.ok(third.state.active_effect_ids.includes("invisible"));
+assert.deepEqual(window.IRON_PIT_BROWSER_TIMED.expireOnOwnerEvent(
+  third.state, "attack", [third.state]), ["invisible"]);
+assert.equal(third.state.concentration, null);
+
 const fresh = state("Sprite", [action]);
 assert.equal(fresh.concentration, undefined);
 assert.deepEqual(fresh.active_effect_ids, []);
