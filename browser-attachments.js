@@ -97,6 +97,13 @@
     } catch (err) { return error("active target lookup", err); }
   }
 
+  function sourceAttacksBlocked(setup, sourceId) {
+    try {
+      return Boolean(setup?.attachments?.some((row) =>
+        row.source_id === sourceId && row.blocks_source_attacks));
+    } catch (err) { return error("source attack restriction", err); }
+  }
+
   function applyOnHit(setup, attacker, target, attack) {
     try {
       const spec = attack.onHitAttachment;
@@ -122,6 +129,6 @@
   }
 
   window.IRON_PIT_BROWSER_ATTACHMENTS = {
-    validate, attach, detach, detachForCombatant, recordHpLoss, linkedEffects, activeTarget, applyOnHit,
+    validate, attach, detach, detachForCombatant, recordHpLoss, linkedEffects, activeTarget, applyOnHit, sourceAttacksBlocked,
   };
 })();
