@@ -38,7 +38,7 @@ class Attachment:
             raise ValueError("Periodic effect bonus must be an integer.")
         if self.damage_timing not in {"source_turn_start", "target_turn_start", "target_turn_end"}:
             raise ValueError("Unsupported attachment damage timing.")
-        if self.detach_after_hp_lost is not None and self.detach_damage_total <= 0:
+        if self.detach_after_hp_lost is not None and self.detach_after_hp_lost <= 0:
             raise ValueError("Detach threshold must be positive.")
 
 
@@ -83,7 +83,7 @@ def record_attachment_hp_loss(
                 result.append(row)
                 continue
             total = row.actual_hp_lost + actual_hp_lost
-            if row.detach_damage_total is None or total < row.detach_damage_total:
+            if row.detach_after_hp_lost is None or total < row.detach_after_hp_lost:
                 result.append(replace(row, actual_hp_lost=total))
         return tuple(result)
     except Exception:
