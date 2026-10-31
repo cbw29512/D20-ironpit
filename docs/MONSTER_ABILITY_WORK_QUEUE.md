@@ -1,11 +1,11 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Shared on-hit single-save damage + timed condition — Quasit poison family
+## Shared on-hit single-save damage + timed condition — Quasit poison family — WIRED 2026-10-31
 
 - **Verified source:** 2014 Quasit Claws (Bite in Beast Form): melee +4, 1d4+3 Piercing; one DC 10 Constitution saving throw after hit. Failed save applies **both** 2d4 Poison damage and Poisoned for ten rounds, with end-of-target-turn repeat saves; success negates both. The pinned typed row already contains these parameters.
-- **Precise engine gap:** Current `SaveDamageEffectDefinition` and `SaveConditionEffectDefinition` are distinct alternatives; the 2014 source validators correctly reject the combined row. The next universal primitive must roll one save and atomically apply the ordered failed-save damage and timed condition, using existing typed damage and timed-condition lifecycle in Python/browser; never roll a second save or apply unconditional poison damage. This applies to other source-equivalent monsters and homebrew.
-- **Regression:** `backend/tests/test_2014_quasit_composite_save_contract.py` locks the original source and fail-closed admission while wiring remains incomplete. This is blocker documentation/tests, **not** a completed combat resolver or monster admission.
-- **Remaining independent Quasit obligations:** Scare, Invisible ends on Scare, Shapechanger source classification from PR #1138, and generated artifacts. Do not mark it battle-ready before full Python/browser tests and webpage fight.
+- **Universal primitive:** `SaveDamageEffectDefinition.failed_save_condition` (and browser `onHitSaveDamage.failedSaveCondition`) nests the timed condition. Python `attack_hit_riders` and browser `browser-attack.js` share the single damage-save roll/result; the condition resolver applies only on failure using the existing timed-condition lifecycle. No second save, no unconditional poison damage, no monster-name dispatch. Source-equivalent homebrew uses the same path.
+- **Evidence:** compilation in `test_2014_quasit_composite_compilation.py`; source contract in `test_2014_quasit_composite_save_contract.py`; schema in `test_composite_on_hit_save_schema.py`. Runtime shared-save path is live in both engines. No admission delta: Quasit remains blocked on independent Shapechanger (`source:trait`).
+- **Remaining independent Quasit obligations:** Scare, Invisible ends on Scare, Shapechanger source classification (open PRs #1138/#1143), and generated artifacts. Do not mark it battle-ready before full webpage fight.
 
 ## Generic source-owned Invisible self-buff exits — 2014 family
 
