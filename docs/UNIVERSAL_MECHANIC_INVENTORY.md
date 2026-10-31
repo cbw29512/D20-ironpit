@@ -466,7 +466,6 @@ Blocked monsters: **73**. These are grouped by printed ability name so the roste
 | Vampire Weaknesses | Vampire, Vampire Spawn | 2 |
 | Variable Illumination | Will-o'-Wisp | 1 |
 | Water Form | Water Elemental | 1 |
-| Water Susceptibility | Fire Elemental | 1 |
 
 ## Monster blocker categories
 

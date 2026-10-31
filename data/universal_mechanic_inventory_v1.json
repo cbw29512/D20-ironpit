@@ -6163,13 +6163,6 @@
           "Water Elemental"
         ],
         "printed_name": "Water Form"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Fire Elemental"
-        ],
-        "printed_name": "Water Susceptibility"
       }
     ]
   },

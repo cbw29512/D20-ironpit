@@ -50,6 +50,16 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 and "While underwater" in source
                 and "transformative mucus" in source
             )
+        # Context-driven exclusion: Water Susceptibility only triggers on
+        # movement through water or water splash. The standard Iron Pit has
+        # no water terrain or splash mechanic, so the trait is arena-inert.
+        # Printed text is preserved; unknown wording fails closed.
+        if trait_name == "Water Susceptibility":
+            return (
+                "<strong>Water Susceptibility.</strong>" in source
+                and "moves in water" in source
+                and "gallon of water splashed" in source
+            )
         # Source-verified informational traits never grant combat coordinates,
         # actions, saves or targeting. Names validate provenance only.
         informational_clauses = {
