@@ -158,6 +158,7 @@ class SavingThrowAction(BaseModel):
     requires_target_hearing: bool = False
     requires_target_to_see_source: bool = Field(default=False, exclude_if=lambda value: not value)
     required_target_condition: ConditionName | None = Field(default=None, exclude_if=lambda value: value is None)
+    requires_target_grappled_by_source: bool = Field(default=False, exclude_if=lambda value: not value)
     prohibited_environment_context_id: EnvironmentContextId | None = Field(
         default=None, exclude_if=lambda value: value is None,
     )

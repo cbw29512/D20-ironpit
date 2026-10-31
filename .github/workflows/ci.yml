@@ -81,6 +81,7 @@ jobs:
         run: |
           pytest -q backend/tests/test_2014_chain_devil_grapple_periodic.py
           pytest -q backend/tests/test_2014_source_grapple_capacity.py
+          pytest -q backend/tests/test_2014_grapple_owner_save_source.py backend/tests/test_grapple_owned_save_targeting.py
       - name: Reconcile canonical 2014 source-derived artifacts
         if: ${{ github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'feat/2014-') && github.event.pull_request.head.repo.full_name == github.repository }}
         run: |
@@ -685,6 +686,7 @@ jobs:
           node frontend/browser-once-per-turn-hit-damage.test.cjs
           node frontend/browser-chain-grapple-periodic.test.cjs
           node frontend/browser-source-grapple-capacity.test.cjs
+          node frontend/browser-otyugh-grapple-slam.test.cjs
           node frontend/browser-opening-hit-damage.test.cjs
           node frontend/browser-post-hit-damage.test.cjs
           node frontend/browser-post-hit-spell-riders.test.cjs

@@ -39,6 +39,11 @@ def legal_save_action(
             and not has_condition(target.state, action.required_target_condition)
         ):
             return False
+        if action.requires_target_grappled_by_source:
+            if (actor is None or not source_id or source_id != actor.combatant_id
+                    or not target.state.is_alive or target.state.is_dead
+                    or not any(grapple.source_id == source_id for grapple in target.state.grapple_sources)):
+                return False
         if action.prohibited_target_source_effect_ids and any(
             effect.source_effect_id in action.prohibited_target_source_effect_ids
             for effect in target.state.timed_effects

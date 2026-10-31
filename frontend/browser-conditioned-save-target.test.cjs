@@ -70,4 +70,28 @@ assert.equal(event.save_succeeded, false);
 assert.equal(target.state.current_hp, 0);
 assert.equal(zeroHpCalls, 1);
 assert.match(event.description, /Renamed Conditioned Save/);
-console.log("Condition-gated save, bidirectional sight and zero-HP parity passed.");
+// A target must be grappled by THIS actor, not merely Grappled.
+const heldSave = { ...action, name: "Renamed Source Hold", requiredTargetCondition: null,
+  requiresTargetSight: false, requiresTargetToSeeSource: false, failureSetsZeroHp: false,
+  requiresTargetGrappledBySource: true, maxTargets: 2, targetScope: "all-other-creatures" };
+target.state.grapple_sources = [{ source_id: "different-source" }];
+target.state.active_effect_ids.push("grappled");
+assert.equal(S.legalAction(heldSave, target, 5, actor.combatant_id, actor), false);
+assert.equal(S.legalAction(heldSave, target, 5, "different-source", actor), false);
+target.state.grapple_sources = [{ source_id: actor.combatant_id }];
+assert.equal(S.legalAction(heldSave, target, 5, actor.combatant_id, actor), true);
+const other = { ...target, combatant_id: "other", state: { ...target.state,
+  grapple_sources: [{ source_id: "different-source" }] } };
+const ally = { ...target, combatant_id: "ally", side: actor.side, state: { ...target.state,
+  grapple_sources: [{ source_id: actor.combatant_id }] } };
+window.IRON_PIT_ACTION_ECONOMY = { available: () => true };
+window.IRON_PIT_BROWSER_RESOURCES = { available: () => true };
+window.IRON_PIT_BROWSER_FORMATION = { targetOrder: () => [target, other], saveDistance: () => 5 };
+actor.state.template.saving_throw_actions = [heldSave];
+load("browser-multi-save-provider.js");
+const selection = window.IRON_PIT_BROWSER_MULTI_SAVE_PROVIDER.choose(actor,
+  { heroes: [target, other], monsters: [actor, ally] });
+assert.deepEqual(selection.targets.map((item) => item.combatant_id), ["target", "ally"]);
+target.state.grapple_sources = [];
+assert.equal(S.legalAction(heldSave, target, 5, actor.combatant_id, actor), false);
+console.log("Condition-gated saves and source-owned grapple targeting passed.");

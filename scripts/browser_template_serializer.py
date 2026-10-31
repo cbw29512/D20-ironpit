@@ -327,6 +327,8 @@ def _save(action: Any) -> dict[str, Any]:
         row["requiresTargetToSeeSource"] = True
     if action.required_target_condition:
         row["requiredTargetCondition"] = action.required_target_condition
+    if action.requires_target_grappled_by_source:
+        row["requiresTargetGrappledBySource"] = True
     if action.required_target_creature_types:
         row["requiredTargetCreatureTypes"] = list(action.required_target_creature_types)
     if action.prohibited_target_source_effect_ids:

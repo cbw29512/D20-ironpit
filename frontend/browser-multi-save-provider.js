@@ -10,10 +10,14 @@
 
   function choose(member, setup) {
     if (!E().available(member.state, "action")) return null;
-    const orderedTargets = F().targetOrder(member, setup);
+    const enemyTargets = F().targetOrder(member, setup);
     for (const action of member.state.template.saving_throw_actions || []) {
       if ((action.actionCost || "action") !== "action" || action.area || (action.maxTargets || 1) <= 1) continue;
       if (action.resourceId && !R().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
+      const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
+      const orderedTargets = action.targetScope === "all-other-creatures"
+        ? [...enemyTargets, ...allies.filter((target) => target.combatant_id !== member.combatant_id
+          && target.state.is_alive && !target.state.is_dead)] : enemyTargets;
       const targets = orderedTargets.filter((target) => {
         const distance = F().saveDistance(member, target, action.range);
         return V().legalAction(action, target, distance, member.combatant_id, member)
@@ -41,6 +45,10 @@
       throw new Error(`${action.name} resource is unavailable.`);
     }
     for (const target of targets) {
+      if (target.combatant_id === member.combatant_id
+        || (action.targetScope !== "all-other-creatures" && target.side === member.side)) {
+        throw new Error(`${action.name} has a forbidden target scope.`);
+      }
       const distance = F().saveDistance(member, target, action.range);
       if (!V().legalAction(action, target, distance, member.combatant_id, member)
         || (action.requiresTargetSight
