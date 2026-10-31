@@ -35,6 +35,7 @@
           sourceIsMagical: Boolean(action.magicalEffect),
           endsOnOwnerAttack: Boolean(action.endsOnOwnerAttack),
           endsOnOwnerSpellCast: Boolean(action.endsOnOwnerSpellCast),
+          endsOnOwnerActionIds: [...(action.endsOnOwnerActionIds || [])],
           appliedRound: round,
           expiresRound,
           expiryTiming,
