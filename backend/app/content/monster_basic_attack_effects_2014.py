@@ -98,6 +98,7 @@ def basic_attack_effects_2014(
                 ),
                 restrains=bool(row.get("restrains_while_grappled", False)),
                 requires_source_free=supports_grapple_periodic_2014(attack),
+                max_active_grapples=row.get("max_active_grapples"),
                 periodic_damage=(
                     grapple_periodic_damage_2014(attack)
                     if supports_grapple_periodic_2014(attack) else None
