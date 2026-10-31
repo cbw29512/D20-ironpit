@@ -41,7 +41,8 @@ def source_invisibility_action_2014(monster: SourceMonster2014) -> list[TimedSel
             id="invisibility", name="Invisibility", action_cost="action",
             condition_ids=["invisible"], magical_effect=True,
             concentration=True, ends_on_owner_attack=True,
-            ends_on_owner_spell_cast=match.group("spell") is not None, priority=70,
+            ends_on_owner_spell_cast=match.group("spell") == " or casts a spell",
+            ends_on_owner_action_ids=([match.group("action").strip().casefold()] if match.group("action") else []), priority=70,
             duration_rounds=None, expiry_timing=None, animation="invisibility",
         )]
     except Exception:
