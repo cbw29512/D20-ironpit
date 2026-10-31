@@ -66,11 +66,18 @@
           }];
         } else throw Error("Unknown source-owned periodic attachment effect kind.");
         setup.attachments = A().recordHpLoss(setup.attachments, row.source_id, row.effect_id, lost);
+        const detached = !setup.attachments.some((item) =>
+          item.source_id === row.source_id && item.effect_id === row.effect_id);
+        const changes = detached ? [{
+          operation: "detach", source_id: row.source_id, target_id: row.target_id,
+          effect_id: row.effect_id, source_name: row.source_name,
+        }] : [];
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
           actor_id: owner.combatant_id, actor_name: owner.state.template.name,
           target_id: target.combatant_id, target_name: target.state.template.name,
           feature_id: row.source_name, damage_components: damageComponents,
+          ...(changes.length ? { attachment_changes: changes } : {}),
           hp_before: before, hp_after: target.state.current_hp,
           is_dead: target.state.is_dead, animation: "feature",
           description: `${owner.state.template.name}: ${row.source_name} ${effectText} at its turn start.`,
