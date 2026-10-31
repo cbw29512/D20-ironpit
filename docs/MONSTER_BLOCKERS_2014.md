@@ -11,7 +11,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Blocker | Monsters |
 |---|---:|
 | `source:trait` | 61 |
-| `source:extra-action` | 37 |
+| `source:extra-action` | 36 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 15 |
 | `multiattack:complex` | 10 |
@@ -31,12 +31,13 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**2** monsters have exactly one remaining blocker category.
+**3** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
+| `source:trait` | Imp | 1 |
 
 ## Every blocked monster
 
@@ -79,7 +80,7 @@ the underlying ability is already implemented or trivial.
 | Gynosphinx | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Ice Devil | mechanic:recharge, source:extra-action | — |
 | Ice Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
-| Imp | source:extra-action, source:trait | Shapechanger |
+| Imp | source:trait | Shapechanger |
 | Kraken | mechanic:legendary, multiattack:complex, source:extra-action, source:legendary, source:trait | Freedom of Movement |
 | Lamia | attack:incomplete, mechanic:spellcasting, multiattack:complex, source:extra-action, source:trait | Innate Spellcasting |
 | Lich | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
