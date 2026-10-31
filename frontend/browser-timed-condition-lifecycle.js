@@ -16,7 +16,7 @@
 
   function expireOnOwnerEvent(state, event, affectedStates = [], actionId = null) {
     try {
-      if (!["attack", "spell_cast"].includes(event)) throw new Error(`Unknown owner expiry event: ${event}.`);
+      if (!["attack", "spell_cast", "action"].includes(event)) throw new Error(`Unknown owner expiry event: ${event}.`);
       const flag = event === "attack" ? "ends_on_owner_attack" : "ends_on_owner_spell_cast";
       const removed = [];
       for (const effect of [...(state.timed_effects || [])]) {
