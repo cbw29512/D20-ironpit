@@ -14,10 +14,12 @@ class Attachment:
     effect_id: str
     damage_dice_count: int
     damage_dice_size: int
-    damage_type: str
+    damage_type: str | None
+    periodic_effect_kind: str
+    damage_bonus: int = 0
     damage_timing: str = "source_turn_start"
-    detach_damage_total: int | None = None
-    accumulated_damage: int = 0
+    detach_after_hp_lost: int | None = None
+    actual_hp_lost: int = 0
 
     def __post_init__(self) -> None:
         if not self.source_id or not self.target_id or not self.effect_id:
@@ -26,9 +28,17 @@ class Attachment:
             raise ValueError("Attachment source and target must differ.")
         if self.damage_dice_count <= 0 or self.damage_dice_size < 2:
             raise ValueError("Attachment requires valid damage dice.")
+        if self.periodic_effect_kind not in {"direct_hp_loss", "typed_damage"}:
+            raise ValueError("Unsupported attachment periodic effect kind.")
+        if self.periodic_effect_kind == "direct_hp_loss" and self.damage_type is not None:
+            raise ValueError("Direct HP loss must not be typed damage.")
+        if self.periodic_effect_kind == "typed_damage" and not self.damage_type:
+            raise ValueError("Typed attachment damage requires a damage type.")
+        if type(self.damage_bonus) is not int:
+            raise ValueError("Periodic effect bonus must be an integer.")
         if self.damage_timing not in {"source_turn_start", "target_turn_start", "target_turn_end"}:
             raise ValueError("Unsupported attachment damage timing.")
-        if self.detach_damage_total is not None and self.detach_damage_total <= 0:
+        if self.detach_after_hp_lost is not None and self.detach_damage_total <= 0:
             raise ValueError("Detach threshold must be positive.")
 
 
@@ -59,25 +69,25 @@ def detach_for_combatant(
         raise
 
 
-def record_attachment_damage(
+def record_attachment_hp_loss(
     existing: tuple[Attachment, ...], source_id: str,
-    effect_id: str, damage: int,
+    effect_id: str, actual_hp_lost: int,
 ) -> tuple[Attachment, ...]:
-    """Track actual damage for source-defined auto-detach thresholds."""
+    """Count actual periodic HP loss, not opening-hit damage or raw dice."""
     try:
-        if type(damage) is not int or damage < 0:
-            raise ValueError("Attachment damage must be a nonnegative integer.")
+        if type(actual_hp_lost) is not int or actual_hp_lost < 0:
+            raise ValueError("Actual HP lost must be a nonnegative integer.")
         result = []
         for row in existing:
             if row.source_id != source_id or row.effect_id != effect_id:
                 result.append(row)
                 continue
-            total = row.accumulated_damage + damage
+            total = row.actual_hp_lost + actual_hp_lost
             if row.detach_damage_total is None or total < row.detach_damage_total:
-                result.append(replace(row, accumulated_damage=total))
+                result.append(replace(row, actual_hp_lost=total))
         return tuple(result)
     except Exception:
-        logger.exception("Attachment damage ledger failed for %s / %s.", source_id, effect_id)
+        logger.exception("Attachment HP-loss ledger failed for %s / %s.", source_id, effect_id)
         raise
 
 
