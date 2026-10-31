@@ -1,5 +1,11 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Imp movement-only Shapechanger — approved 2014 source classification
+
+- **Approved Pit decision:** rat/raven/spider appearances and speed-only transformations are arena-neutral because the Pit abstracts movement. Preserve printed Shapechanger and the original Sting (Bite in Beast Form) attack on the immutable card; neither the transform nor its listed speeds creates a new combat effect or is selected by AI.
+- **Proof:** require the entire pinned Imp Shapechanger paragraph to match, including unchanged statistics, form speeds, equipment and death reversion. Modified statistics, damage, or form clauses fail closed. Do not extend this decision to Mimic, Doppelganger, Vampire, lycanthropes, or other combat-relevant forms.
+- **Implementation:** source-only verification in `monster_arena_neutral_traits_2014.py` and positive/negative mutation tests; generated source admission and exact-head CI remain to be verified. Production stays locked.
+
 ## Generic source-owned Invisible self-buff exits — 2014 family
 
 - **Implementation branch:** `feat/2014-source-invisibility-expiry-family` (ACTIVE). Same existing Invisible/concentration buff in Python/browser; printed source decides attack exit and optional spell-cast exit. No monster-name runtime decision or new condition.

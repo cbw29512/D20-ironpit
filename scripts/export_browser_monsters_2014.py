@@ -6,12 +6,13 @@ from pathlib import Path
 
 from app.combat.charge_profiles import charge_profile_for_attack
 from app.content.monster_roster_2014 import build_basic_2014_monsters
+from app.content.monster_source_2014 import load_monster_source_2014
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from browser_template_serializer import template_row
 
 logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parents[1]
 DESTINATION = ROOT / "frontend" / "browser-monsters-2014.js"
-_EXPECTED_COUNT = 254
 
 
 def _add_charge_follow_up_metadata(template, row: dict[str, object]) -> None:
@@ -39,8 +40,15 @@ def render() -> str:
             _add_charge_follow_up_metadata(template, row)
             rows.append(row)
         ids = {row["id"] for row in rows}
-        if len(rows) != _EXPECTED_COUNT or len(rows) != len(ids):
-            raise RuntimeError(f"2014 browser export expected {_EXPECTED_COUNT} unique certified monsters; found {len(rows)}.")
+        # Derive the expected count from the same immutable source classifier.
+        # A newly admitted monster must not require a manually maintained constant.
+        source_rows = load_monster_source_2014()
+        expected_ids = {item.id for item in source_rows if not basic_blockers_2014(item)}
+        if len(rows) != len(ids) or ids != expected_ids:
+            raise RuntimeError(
+                f"2014 browser roster mismatch: source admits {len(expected_ids)}, "
+                f"exported {len(rows)} rows and {len(ids)} unique ids."
+            )
         if any(row.get("ruleset") != "2014" or row.get("kind") != "monster" for row in rows):
             raise RuntimeError("2014 browser export contains a non-2014 monster.")
         payload = json.dumps(rows, separators=(",", ":"), sort_keys=True)
