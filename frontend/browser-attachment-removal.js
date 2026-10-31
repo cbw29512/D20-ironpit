@@ -17,7 +17,7 @@
       if (!link.action_removable || !E()?.available(actor.state, "action")) return false;
       const source = participants(setup).find((row) => row.combatant_id === sourceId);
       if (!source) throw Error("Attachment source is missing.");
-      if (S().distance(actor, source) > link.action_removal_range_ft) return false;
+      if (actor.combatant_id !== link.target_id && S().distance(actor, source) > link.action_removal_range_ft) return false;
       E().spend(actor.state, "action");
       setup.attachments = A().detach(setup.attachments, sourceId, effectId);
       return true;
