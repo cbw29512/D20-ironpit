@@ -31,7 +31,7 @@ ARENA_NEUTRAL_TRAITS_2014 = frozenset({
     "Mimicry", "Earth Glide", "Running Leap", "Shark Telepathy", "Snow Camouflage", "Stone Camouflage",
     "Spider Climb", "Treasure Sense", "Tunneler", "Water Breathing", "Devil's Sight",
     "Underwater Camouflage", "Web Sense", "Web Walker", "Rejuvenation", "Hellish Rejuvenation",
-    "Wakeful", "Ethereal Jaunt", "Incorporeal Movement", "Immutable Form",
+    "Wakeful", "Ethereal Jaunt", "Incorporeal Movement", "Immutable Form", "Ephemeral",
 })
 
 def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str) -> bool:
@@ -49,6 +49,12 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "<strong>Mucous Cloud.</strong>" in source
                 and "While underwater" in source
                 and "transformative mucus" in source
+            )
+        if trait_name == "Ephemeral":
+            # Equipment restriction has no combat effect in the standard Pit; no inventory or item mechanics apply.
+            return (
+                "<strong>Ephemeral.</strong>" in source
+                and "can't wear or carry anything" in source
             )
         # Source-verified informational traits never grant combat coordinates,
         # actions, saves or targeting. Names validate provenance only.

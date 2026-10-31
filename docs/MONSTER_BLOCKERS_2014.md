@@ -115,4 +115,4 @@ the underlying ability is already implemented or trivial.
 | Wererat | multiattack:complex, source:extra-action, source:trait | Shapechanger |
 | Weretiger | multiattack:complex, source:extra-action, source:trait | Shapechanger, Pounce (Tiger or Hybrid Form Only) |
 | Werewolf | source:extra-action, source:trait | Shapechanger |
-| Will-o'-Wisp | source:extra-action, source:trait | Consume Life, Ephemeral, Variable Illumination |
+| Will-o'-Wisp | source:extra-action, source:trait | Consume Life, Variable Illumination |
