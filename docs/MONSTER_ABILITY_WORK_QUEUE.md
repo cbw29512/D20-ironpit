@@ -4,7 +4,7 @@
 
 - **Owner:** ChatGPT, `feat/2014-source-ranged-save-only-hit`, ACTIVE; all 327 immutable source cards scanned. The complete printed Ranged Weapon Attack -> on-hit Constitution save -> typed failed/half damage currently matches Guardian Naga Spit Poison. The engine reuses the universal weapon hit-to-AC and on-hit save/typed damage composition; it does not invent direct hit damage.
 - **Source parameters:** +8 ranged attack 15/30 ft, DC15 Constitution, 10d8 Poison failed and half on success, all parsed from source Action. Other unknown rider/changed source stays blocked; names only label actions/logs. The Naga's separate prepared Spellcasting still blocks monster admission. No count increase claimed.
-- **Evidence gate:** new Python source/mutation, combat and browser serializer assertions. Regenerate and commit canonical artifacts, exact-head full CI, and webpage fight before marking it finished; production locked.
+- **Evidence gate:** Python source/mutation, combat and browser serializer checks are committed. The canonical generator confirms Guardian Naga now has only `mechanic:spellcasting` and `source:trait` (Spellcasting) blockers; source admission remains **254/327**, with **73** blocked. Exact-head full CI and a real webpage fight remain required; production locked.
 
 ## Source-only Etherealness movement — 2014 cross-roster family
 
