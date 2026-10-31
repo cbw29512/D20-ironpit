@@ -38,6 +38,7 @@ from app.content.monster_innate_spells_2014 import (
     innate_spell_save_actions_2014,
 )
 from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014
+from app.content.monster_source_ranged_save_only_hit_2014 import source_ranged_save_only_hit_attacks_2014
 from app.content.monster_innate_support_2014 import (
     innate_alternate_spell_casts_2014,
     innate_condition_removal_2014,
@@ -143,12 +144,22 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
     return adapt_monster_mechanics_2014(monster)
 
 
+def _attack_list_2014(monster: SourceMonster2014) -> list[AttackCapabilityDefinition]:
+    """Use existing compiled printed-attack values, without changing the card."""
+    try:
+        return [_attack(monster, attack) for attack in monster.attacks]
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Could not adapt %s original attacks.", monster.id)
+        raise
+
+
 def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinition:
     """Compile modeled mechanics without claiming full basic-roster admission."""
     core = monster_core_fields_2014(monster.id)
     scores = AbilityScores(**ability_values_2014(monster))
     movement = movement_modes_2014(monster)
-    attacks = [_attack(monster, attack) for attack in monster.attacks]
+    attacks = [*_attack_list_2014(monster), *source_ranged_save_only_hit_attacks_2014(monster)]
     blindsight_ft, truesight_ft = special_senses_2014(monster)
     bounded = bounded_blindsight_2014(monster)
     resources = [*save_resources_2014(monster), *fetid_cloud_resources_2014(monster), *leadership_resources_2014(monster)]
