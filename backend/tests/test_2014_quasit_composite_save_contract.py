@@ -8,7 +8,7 @@ from __future__ import annotations
 import logging
 import pytest
 
-from app.content.monster_attack_effect_validation_2014 import supported_save_damage_2014
+from app.content.monster_attack_effect_validation_2014 import supported_save_damage_2014, supported_composite_save_2014
 from app.content.monster_save_condition_validation_2014 import supported_save_condition_2014
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_source_2014 import load_monster_source_2014
@@ -41,7 +41,8 @@ def test_composite_failed_save_is_not_misclassified_as_single_effect():
         # Neither existing primitive alone represents the complete printed action.
         assert not supported_save_damage_2014(row)
         assert not supported_save_condition_2014(row)
-        assert "attack:complex" in basic_blockers_2014(monster)
+        assert supported_composite_save_2014(row)
+        assert "attack:complex" not in basic_blockers_2014(monster)
     except Exception:
         logger.exception("Composite poison source regression failed")
         raise
