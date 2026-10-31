@@ -19,15 +19,15 @@ logger = logging.getLogger(__name__)
 
 # Anchored to a whole printed action. The heading is never a runtime switch.
 _RANGED_SAVE_ONLY_HIT = re.compile(
-    r"Ranged Weapon Attack: \\+(?P<hit>\\d+) to hit, "
-    r"range (?P<short>\\d+)/(?P<long>\\d+) ft\\., one creature\\. "
-    r"Hit: The target must make a DC (?P<dc>\\d+) "
+    r"Ranged Weapon Attack: \+(?P<hit>\d+) to hit, "
+    r"range (?P<short>\d+)/(?P<long>\d+) ft\., one creature\. "
+    r"Hit: The target must make a DC (?P<dc>\d+) "
     r"(?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) "
-    r"saving throw, taking (?P<average>\\d+) "
-    r"\\((?P<count>\\d+)d(?P<size>\\d+)\\) "
+    r"saving throw, taking (?P<average>\d+) "
+    r"\((?P<count>\d+)d(?P<size>\d+)\) "
     r"(?P<damage_type>acid|bludgeoning|cold|fire|force|lightning|necrotic|"
     r"piercing|poison|psychic|radiant|slashing|thunder) damage "
-    r"on a failed save, or half as much damage on a successful one\\.",
+    r"on a failed save, or half as much damage on a successful one\.",
     re.IGNORECASE,
 )
 
