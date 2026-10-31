@@ -11,7 +11,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Blocker | Monsters |
 |---|---:|
 | `source:trait` | 61 |
-| `source:extra-action` | 37 |
+| `source:extra-action` | 36 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 15 |
 | `multiattack:complex` | 10 |
@@ -31,12 +31,13 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**2** monsters have exactly one remaining blocker category.
+**3** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
+| `source:trait` | Doppelganger | 1 |
 
 ## Every blocked monster
 
@@ -56,7 +57,7 @@ the underlying ability is already implemented or trivial.
 | Darkmantle | attack:incomplete, source:extra-action | — |
 | Deva | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Djinni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
-| Doppelganger | source:extra-action, source:trait | Shapechanger |
+| Doppelganger | source:trait | Shapechanger |
 | Drider | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Drow | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Druid | mechanic:spellcasting, source:trait | Spellcasting |

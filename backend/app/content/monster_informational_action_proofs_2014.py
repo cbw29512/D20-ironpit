@@ -25,6 +25,20 @@ _NONCOMBAT_ACTION_CLAUSES_2014 = {
         "sprite also knows the creature's alignment. Celestials, fiends, and "
         "undead automatically fail the saving throw."
     ),
+    # Combat has no Insight, Deception, Intimidation or Persuasion checks.
+    # The full printed clause is informational and changes none of the
+    # supported attack, save, targeting, condition or action mechanics.
+    "Read Thoughts": (
+        "The doppelganger magically reads the surface thoughts of one creature "
+        "within 60 feet of it. The effect can penetrate barriers, but 3 feet "
+        "of wood or dirt, 2 feet of stone, 2 inches of metal, or a thin sheet "
+        "of lead blocks it. While the target is in range, the doppelganger can "
+        "continue reading its thoughts, as long as the doppelganger's "
+        "concentration isn't broken (as if concentrating on a spell). While "
+        "reading the target's mind, the doppelganger has advantage on Wisdom "
+        "(Insight) and Charisma (Deception, Intimidation, and Persuasion) "
+        "checks against the target."
+    ),
 }
 
 
