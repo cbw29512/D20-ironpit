@@ -7,7 +7,7 @@
     || (() => { throw new Error("browser-creature-kind.js is required."); })();
   const L = () => window.IRON_PIT_BROWSER_ON_HIT_CONDITION_LIFECYCLE
     || (() => { throw new Error("browser-on-hit-condition-lifecycle.js is required."); })();
-  function resolve(target, attack, sourceTemplate = null, round = null, setup = null, attacker = null) {
+  function resolve(target, attack, sourceTemplate = null, round = null, setup = null, attacker = null, sharedSave = null) {
     try {
     const effect = attack.onHitConditionSave;
     if (!effect || target.state.is_dead || !target.state.is_alive) return null;
@@ -18,7 +18,7 @@
     const kinds = [...(effect.excludedCreatureTypes || []), ...(effect.excludedCreatureSubtypes || [])];
     if (kinds.some((kind) => K().matches(target.state.template, kind))) return null;
     if (effect.conditionId && I().immune(target.state, effect.conditionId, sourceTemplate, { actor: target, setup })) return null;
-    const save = window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow(target.state, effect.saveAbility, effect.dc, {
+    const save = sharedSave || window.IRON_PIT_BROWSER_SAVING_THROWS.resolveSavingThrow(target.state, effect.saveAbility, effect.dc, {
       conditionId: effect.conditionId,
       effectTags: effect.conditionId === "poisoned" ? ["poison"] : [],
       roundNumber: round,

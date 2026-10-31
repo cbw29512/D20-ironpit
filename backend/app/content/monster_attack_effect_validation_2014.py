@@ -58,6 +58,24 @@ def supported_control_2014(value: object) -> bool:
     )
 
 
+def supported_composite_save_2014(value: object) -> bool:
+    """Require a complete typed damage-and-condition payload on one save."""
+    try:
+        if not isinstance(value, dict):
+            return False
+        condition_keys = {"condition_id", "duration_rounds", "repeat_save_timing"}
+        if not condition_keys <= set(value):
+            return False
+        damage = {k: v for k, v in value.items() if k not in condition_keys}
+        condition = {k: v for k, v in value.items() if k not in _SAVE_DAMAGE_KEYS}
+        condition.update({"dc": value.get("dc"), "save_ability": value.get("save_ability")})
+        return supported_save_damage_2014(damage) and supported_save_condition_2014(condition)
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Composite save source validation failed")
+        raise
+
+
 def supported_save_damage_2014(value: object) -> bool:
     if not isinstance(value, dict) or not set(value) <= _SAVE_DAMAGE_KEYS:
         return False

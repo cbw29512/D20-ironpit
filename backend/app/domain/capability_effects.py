@@ -40,6 +40,7 @@ class SaveDamageEffectDefinition(BaseModel):
     damage_type: DamageType
     success_damage: Literal["none", "half"] = "half"
     zero_hp_rider: ZeroHpSaveDamageRider | None = None
+    failed_save_condition: SaveConditionEffectDefinition | None = None
 
 
 class AbilityScoreReductionEffectDefinition(BaseModel):

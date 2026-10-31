@@ -33,6 +33,7 @@ def resolve_on_hit_condition_save(
     affected_states: list[CombatantState] | None = None,
     setup=None,
     target_id: str | None = None,
+    shared_save: tuple[DiceRoll, bool] | None = None,
 ) -> OnHitConditionSaveResolution:
     try:
         effect = attack.on_hit_condition_save
@@ -47,8 +48,11 @@ def resolve_on_hit_condition_save(
             defender, effect.condition_id, source_template, actor=target_actor, setup=setup
         ):
             return OnHitConditionSaveResolution()
-        save_roll, succeeded = resolve_saving_throw(
-            defender,
+        if shared_save is not None:
+            save_roll, succeeded = shared_save
+        else:
+            save_roll, succeeded = resolve_saving_throw(
+                defender,
             effect.save_ability,
             effect.dc,
             dice,

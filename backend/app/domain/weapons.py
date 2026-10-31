@@ -54,6 +54,30 @@ class OnHitSaveDamage(BaseModel):
     damage_type: DamageType
     success_damage: Literal["none", "half"] = "half"
     zero_hp_rider: ZeroHpSaveDamageRider | None = None
+    # Optional condition resolved by the SAME attack-triggered saving throw.
+    # Runtime and browser must consume save_succeeded once, not roll twice.
+    failed_save_condition: "OnHitConditionSave | None" = None
+
+    @model_validator(mode="after")
+    def validate_combined_save(self) -> "OnHitSaveDamage":
+        try:
+            condition = self.failed_save_condition
+            if condition is not None and (
+                condition.save_ability != self.save_ability
+                or condition.dc != self.dc
+                or self.zero_hp_rider is not None
+            ):
+                raise ValueError(
+                    "Combined failed-save condition must share the damage save and DC "
+                    "and cannot combine an unrelated zero-HP rider."
+                )
+            return self
+        except ValueError:
+            raise
+        except Exception:
+            import logging
+            logging.getLogger(__name__).exception("Invalid composite save schema")
+            raise
 
 
 class OnHitAbilityScoreReduction(BaseModel):

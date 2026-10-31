@@ -4,6 +4,7 @@ import logging
 
 from app.content.monster_attack_effect_validation_2014 import (
     supported_save_condition_2014,
+    supported_composite_save_2014,
     supported_save_max_hp_reduction_2014,
 )
 from app.content.monster_hp_loss_effect_2014 import (
@@ -62,6 +63,20 @@ def save_effect_2014(attack: SourceAttack2014) -> AttackEffectDefinition:
                 minimum_removal_spell_level=int(row["minimum_removal_spell_level"]),
                 removal_action_exceptions=list(row["removal_action_exceptions"]),
                 delayed_transition=row["delayed_transition"],
+            )
+        if supported_composite_save_2014(row):
+            return SaveDamageEffectDefinition(
+                source=attack.name,
+                save_ability=str(row["save_ability"]).lower(), dc=int(row["dc"]),
+                dice=DiceSpec(count=int(row["damage_dice_count"]), size=int(row["damage_dice_size"]), bonus=int(row.get("damage_bonus", 0))),
+                damage_type=DamageType(str(row["damage_type"]).lower()),
+                success_damage=str(row["success_damage"]),
+                failed_save_condition=SaveConditionEffectDefinition(
+                    save_ability=str(row["save_ability"]).lower(), dc=int(row["dc"]),
+                    condition=str(row["condition_id"]).lower(),
+                    duration_rounds=int(row["duration_rounds"]),
+                    repeat_save_timing=str(row["repeat_save_timing"]).lower(),
+                ),
             )
         if supported_save_condition_2014(row):
             max_size = row.get("max_target_size")

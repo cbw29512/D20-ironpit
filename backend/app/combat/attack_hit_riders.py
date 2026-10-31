@@ -65,9 +65,22 @@ def resolve_attack_hit_riders(
         for condition_id in ("blinded", "restrained"):
             if condition_id not in result.applied_conditions:
                 result.applied_conditions.append(condition_id)
+    # A composite hit-save reuses the single poison-damage saving throw.
+    shared = attack.on_hit_save_damage
+    composite = shared.failed_save_condition if shared is not None else None
+    condition_attack = (
+        attack.model_copy(update={"on_hit_condition_save": composite})
+        if composite is not None else attack
+    )
+    save_result = result.save_damage
+    if composite is not None and (
+        save_result is None or save_result.save_roll is None
+        or save_result.save_succeeded is None
+    ):
+        raise ValueError("Composite on-hit condition requires a resolved shared damage save.")
     result.on_hit_save = resolve_on_hit_condition_save(
         defender,
-        attack,
+        condition_attack,
         dice,
         attacker.template,
         source_id=attacker_event_id,
@@ -75,6 +88,7 @@ def resolve_attack_hit_riders(
         affected_states=affected_states,
         setup=setup,
         target_id=actual_event_id,
+        shared_save=(save_result.save_roll, save_result.save_succeeded) if composite is not None else None,
     )
     if attack.on_hit_ongoing_hp_loss is not None:
         result.on_hit_save = resolve_on_hit_ongoing_hp_loss(

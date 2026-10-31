@@ -136,6 +136,15 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                     "conditionIds": [_value(item) for item in rider.condition_ids],
                     "durationRounds": rider.duration_rounds,
                 }
+            if effect.failed_save_condition is not None:
+                condition = effect.failed_save_condition
+                save_damage["failedSaveCondition"] = {
+                    "saveAbility": _value(condition.save_ability),
+                    "dc": condition.dc,
+                    "conditionId": _value(condition.condition_id),
+                    "durationRounds": condition.duration_rounds,
+                    "repeatSaveTiming": _value(condition.repeat_save_timing) if condition.repeat_save_timing else None,
+                }
             row["onHitSaveDamage"] = save_damage
         if attack.on_hit_contested_movement:
             effect = attack.on_hit_contested_movement

@@ -18,7 +18,7 @@ Blocker categories overlap: a monster may require several fixes.
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
 | `mechanic:recharge` | 6 |
-| `attack:complex` | 5 |
+| `attack:complex` | 4 |
 | `attack:damage-type` | 2 |
 | `mechanic:swallow` | 2 |
 | `source:reaction` | 2 |
@@ -94,7 +94,7 @@ the underlying ability is already implemented or trivial.
 | Planetar | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Priest | mechanic:spellcasting, source:trait | Divine Eminence, Spellcasting |
 | Purple Worm | attack:complex, mechanic:swallow | — |
-| Quasit | attack:complex, source:extra-action, source:trait | Shapechanger |
+| Quasit | source:extra-action, source:trait | Shapechanger |
 | Rakshasa | mechanic:spellcasting, source:trait | Limited Magic Immunity, Innate Spellcasting |
 | Roper | source:extra-action, source:trait | Grasping Tendrils |
 | Rug of Smothering | attack:none, source:extra-action, source:trait | Damage Transfer |
