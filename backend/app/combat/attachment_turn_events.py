@@ -11,6 +11,7 @@ from app.combat.hit_point_loss import lose_hit_points
 from app.combat.zero_hp import apply_damage
 from app.domain.encounters import EncounterSetup, EncounterCombatant
 from app.domain.events import BattleEvent
+from app.domain.attachment_receipts import AttachmentChange
 from app.domain.models import DamageType
 
 logger = logging.getLogger(__name__)
@@ -80,11 +81,20 @@ def resolve_attachment_turn_start_events(
             setup.attachments = list(record_attachment_hp_loss(
                 tuple(setup.attachments), row.source_id, row.effect_id, lost,
             ))
+            detached = not any(
+                item.source_id == row.source_id and item.effect_id == row.effect_id
+                for item in setup.attachments
+            )
+            change = [AttachmentChange(
+                operation="detach", source_id=row.source_id, target_id=row.target_id,
+                effect_id=row.effect_id, source_name=row.source_name,
+            )] if detached else []
             events.append(BattleEvent(
                 sequence=sequence, round_number=round_number, event_type="feature",
                 actor_id=owner.combatant_id, actor_name=owner.state.template.name,
                 target_id=target.combatant_id, target_name=target.state.template.name,
                 feature_id=row.source_name, damage_components=adjusted,
+                attachment_changes=change,
                 hp_before=before, hp_after=target.state.current_hp,
                 is_dead=target.state.is_dead, animation="feature",
                 description=f"{owner.state.template.name}: {row.source_name} {effect_text} at its turn start.",
