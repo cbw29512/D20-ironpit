@@ -687,6 +687,7 @@ jobs:
           node frontend/browser-attachment-removal.test.cjs
           node frontend/battlefield-attachment-status.test.cjs
           node frontend/browser-attachment-choice.test.cjs
+          node frontend/browser-attachment-source-fight-2014.test.cjs
           node frontend/browser-opening-hit-damage.test.cjs
           node frontend/browser-post-hit-damage.test.cjs
           node frontend/browser-post-hit-spell-riders.test.cjs
