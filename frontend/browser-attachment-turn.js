@@ -8,7 +8,8 @@
 
   function cleanup(setup) {
     try {
-      if (!Array.isArray(setup.attachments)) throw Error("Encounter attachment state is missing.");
+      if (setup.attachments == null) setup.attachments = [];
+      if (!Array.isArray(setup.attachments)) throw Error("Encounter attachment state is malformed.");
       const index = new Map(members(setup).map((member) => [member.combatant_id, member]));
       let links = setup.attachments;
       for (const row of [...links]) {
