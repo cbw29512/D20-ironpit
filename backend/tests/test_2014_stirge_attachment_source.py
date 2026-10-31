@@ -103,8 +103,9 @@ def test_renamed_id_still_compiles_source_neutral_effect():
         "ongoing_damage_effect": {**source.ongoing_damage_effect, "name": "Custom Needle"},
     })
     assert supports_source_attachment_2014(renamed)
-    compiled = compile_attack(_attack(card, renamed))
-    assert compiled.on_hit_attachment.source_name == "Custom Needle"
+    effects = basic_attack_effects_2014(renamed)
+    compiled = next(effect for effect in effects if effect.kind == "attachment")
+    assert compiled.source_name == "Custom Needle"
 
 
 def test_target_can_use_action_and_source_can_spend_movement_to_detach():
