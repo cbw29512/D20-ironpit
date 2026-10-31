@@ -53,6 +53,7 @@ class TimedSelfBuffAction(BaseModel):
     magical_effect: bool = False
     ends_on_owner_attack: bool = False
     ends_on_owner_spell_cast: bool = False
+    ends_on_owner_action_ids: list[str] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
     melee_hit_retaliation: MeleeHitRetaliation | None = None
     debuff_counters: list[DebuffCounter] = Field(default_factory=list)
