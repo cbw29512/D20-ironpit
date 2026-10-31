@@ -71,7 +71,6 @@ def resolve_save_action(
             raise ValueError(f"{action.name} requires the actor to see the target.")
         if check_resource and not action_resource_available(actor.state, action):
             raise ValueError(f"{action.name} resource is unavailable.")
-
         remaining = (
             spend_action_resource(actor.state, action)
             if spend_resource
@@ -79,7 +78,6 @@ def resolve_save_action(
         )
         if resource_remaining_override is not None:
             remaining = resource_remaining_override
-
         attempt = resolve_save_attempt(
             actor,
             target,
@@ -93,9 +91,7 @@ def resolve_save_action(
         )
         if spend_action:
             spend(actor.state, action.action_cost)
-        expire_on_owner_event(
-            actor.state, "action", affected_states, action_id=action.id,
-        )
+        expire_on_owner_event(actor.state, "action", affected_states, action_id=action.id)
         hp_before = target.state.current_hp
         temporary_hp_before = target.state.temporary_hp
         death_success_before = target.state.death_save_successes
@@ -105,7 +101,6 @@ def resolve_save_action(
             if target.state.concentration
             else None
         )
-
         damage = resolve_save_damage(
             target,
             attempt.action,
