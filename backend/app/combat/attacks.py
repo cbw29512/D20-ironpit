@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.owner_action_expiry import expire_on_owner_event
+from app.combat.attachment_attack_gate import source_attacks_blocked
 from app.combat.undead_fortitude import consume_survival_save_log
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 import logging
@@ -42,6 +43,8 @@ def resolve_attack(
             raise ValueError("An incapacitated or dead creature cannot attack.")
         if spend_action and not is_available(attacker, "action"):
             raise ValueError("Action is not available for an attack.")
+        if source_attacks_blocked(reaction_setup, actor_event_id or attacker.template.id):
+            raise ValueError("Source-declared attachment prevents another attack while linked.")
         weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id
         attacker_event_id = actor_event_id or attacker.template.id
         if not attack_allowed_against(attack, attacker_event_id, defender, affected_states):
