@@ -33,8 +33,11 @@
         if (!alive(target)) continue;
         const before = target.state.current_hp;
         let rolled = 0;
+        const rolls = [];
         for (let i = 0; i < row.damage_dice_count; i += 1) {
-          rolled += window.IRON_PIT_DICE.roll(row.damage_dice_size);
+          const die = window.IRON_PIT_DICE.roll(row.damage_dice_size);
+          rolls.push(die);
+          rolled += die;
         }
         const total = Math.max(0, rolled + row.damage_bonus);
         let lost, effectText, damageComponents = [];
@@ -57,7 +60,7 @@
           damageComponents = [{
             source: row.source_name,
             notation: `${row.damage_dice_count}d${row.damage_dice_size}+${row.damage_bonus}`,
-            rolls: [], modifier: row.damage_bonus,
+            rolls, modifier: row.damage_bonus,
             damage_type: row.damage_type, total: total,
           }];
         } else throw Error("Unknown source-owned periodic attachment effect kind.");
