@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 from app.combat.attachment_on_hit import apply_attack_hit_attachment
+from app.combat.attachment_attack_gate import source_attacks_blocked
+from app.combat.attachment_removal import remove_attachment_by_action, detach_attachment_with_movement
 from app.combat.attachment_turn_events import resolve_attachment_turn_start_events
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
@@ -103,3 +105,26 @@ def test_renamed_id_still_compiles_source_neutral_effect():
     assert supports_source_attachment_2014(renamed)
     compiled = compile_attack(_attack(card, renamed))
     assert compiled.on_hit_attachment.source_name == "Custom Needle"
+
+
+def test_target_can_use_action_and_source_can_spend_movement_to_detach():
+    _, attack, attacker, victim, setup = _combat()
+    assert apply_attack_hit_attachment(
+        attack, attacker.combatant_id, victim.combatant_id, victim.state, setup,
+    )
+    assert source_attacks_blocked(setup, attacker.combatant_id)
+    victim.position_ft = 5
+    attacker.position_ft = 0
+    assert remove_attachment_by_action(
+        setup, victim, attacker.combatant_id, "attached-blood-drain",
+    )
+    assert not victim.state.action_available
+    assert not source_attacks_blocked(setup, attacker.combatant_id)
+    setup.attachments.clear()
+    assert apply_attack_hit_attachment(
+        attack, attacker.combatant_id, victim.combatant_id, victim.state, setup,
+    )
+    attacker.state.movement_remaining_ft = 10
+    assert detach_attachment_with_movement(setup, attacker, "attached-blood-drain")
+    assert attacker.state.movement_remaining_ft == 5
+    assert setup.attachments == []
