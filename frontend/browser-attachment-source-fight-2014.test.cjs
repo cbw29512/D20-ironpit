@@ -70,9 +70,21 @@ try {
 }
 const changes = battle.events.flatMap(event => event.attachment_changes || []);
 assert.ok(changes.some(row => row.operation === "attach"), "Source hit must create a real link.");
-assert.ok(battle.events.some(event =>
-  event.feature_id === "Blood Drain" && /Hit Points \(not damage\)/.test(event.description)),
-"Owner turn must drain HP through the production scheduler.");
+const ownerDrains = battle.events.filter(event =>
+  event.feature_id === "Blood Drain" && /Hit Points \\(not damage\\)/.test(event.description));
+if (!ownerDrains.length) {
+  console.error("Attachment fight missing source-turn drain", {
+    outcome: battle.outcome, rounds: battle.rounds,
+    events: battle.events.filter(event => event.round_number > 0
+      && ["attack", "feature", "movement", "dodge", "victory"].includes(event.event_type))
+      .slice(0, 90).map(event => ({
+        round: event.round_number, actor: event.actor_id, type: event.event_type,
+        feature: event.feature_id, hit: event.hit, hp: event.hp_after,
+        changes: event.attachment_changes, description: event.description?.slice(0, 125),
+      })),
+  });
+}
+assert.ok(ownerDrains.length, "Owner turn must drain HP through the production scheduler.");
 assert.ok(changes.some(row => row.operation === "detach"), "Fight must include attachment expiry.");
 assert.ok(battle.events.some(event => event.event_type === "victory" || event.event_type === "draw"));
 assert.deepEqual(battle.setup.attachments, [], "No dead-source/target linked status survives fight.");
