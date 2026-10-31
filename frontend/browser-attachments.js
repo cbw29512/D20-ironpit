@@ -11,7 +11,7 @@
 
   function validate(row) {
     try {
-      if (!row || typeof row !== "object" || !["source_id", "target_id", "effect_id"]
+      if (!row || typeof row !== "object" || !["source_id", "target_id", "effect_id", "source_name"]
         .every((key) => typeof row[key] === "string" && row[key].length > 0)) {
         throw Error("Attachment requires source, target and effect identities.");
       }
