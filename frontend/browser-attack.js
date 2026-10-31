@@ -32,6 +32,8 @@
   const HD = () => window.IRON_PIT_BROWSER_HIT_DAMAGE || { resolve: legacyHitDamage };
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
     if (attack.unavailableReason != null) throw new Error(`${attack.id} unavailable: ${attack.unavailableReason}`); if (attacker.state.is_dead || Q().incapacitated(attacker.state)) throw new Error("An incapacitated or dead creature cannot attack.");
+    if (window.IRON_PIT_BROWSER_ATTACHMENTS?.sourceAttacksBlocked(extra.setup, attacker.combatant_id))
+      throw new Error("Source-declared attachment prevents another attack while linked.");
     if (target.state.is_dead || (target.state.template.kind === "monster" && target.state.current_hp <= 0)) throw new Error("Defeated monsters and dead combatants cannot be targeted.");
     if (extra.brutalStrikeEffectIds != null) BS()?.selectEffects?.(attacker.state, extra.brutalStrikeEffectIds); const spendAction = extra.spendAction !== false;
     if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
