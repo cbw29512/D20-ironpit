@@ -15,7 +15,10 @@ def test_quasit_invisibility_requires_generic_named_action_expiry():
         assert "or uses Scare" in quasit.source_actions
         # Until a named-action owner-event listener is implemented, the
         # source action must remain unbound instead of expiring incorrectly.
-        assert source_invisibility_action_2014(quasit) == []
+        action, = source_invisibility_action_2014(quasit)
+        assert action.ends_on_owner_action_ids == ["scare"]
+        assert action.ends_on_owner_attack
+        assert not action.ends_on_owner_spell_cast
     except Exception:
         logger.exception("Quasit Invisibility named-exit guard failed")
         raise
