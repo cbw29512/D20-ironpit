@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, HitControlEffect
+from app.domain.attachment_sources import OnHitAttachment
 from app.domain.charge import AttackChargeProfile, ChargeDamage
 from app.domain.damage_sources import DamageSourceQualifier
 from app.domain.hit_modifiers import HitModifierEffect
@@ -134,6 +135,7 @@ class WeaponAttack(BaseModel):
     on_hit_save_damage: OnHitSaveDamage | None = None
     on_hit_condition_save: OnHitConditionSave | None = None
     on_hit_ongoing_hp_loss: OnHitOngoingHpLoss | None = None
+    on_hit_attachment: OnHitAttachment | None = None
     on_hit_maximum_hp_save: OnHitMaximumHpSave | None = None
     on_hit_ability_score_reduction: OnHitAbilityScoreReduction | None = None
     on_hit_contested_movement: OnHitContestedMovement | None = None
