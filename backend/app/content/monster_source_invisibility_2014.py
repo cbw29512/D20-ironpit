@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 _PRINTED_INVISIBILITY = re.compile(
     r"^The (?P<owner>[a-z][a-z'-]*) magically turns invisible until it attacks"
     r"(?P<spell> or casts a spell)?(?: or until its concentration ends)"
-    r" \\(as if concentrating on a spell\\)\\. Any equipment the (?P=owner) wears"
-    r" or carries is invisible with it\\.$",
+    r" \(as if concentrating on a spell\)\. Any equipment the (?P=owner) wears"
+    r" or carries is invisible with it\.$",
     re.IGNORECASE,
 )
 
