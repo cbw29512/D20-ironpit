@@ -10,7 +10,7 @@ vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-attachments.js
 const A = window.IRON_PIT_BROWSER_ATTACHMENTS;
 
 const sample = (source = "source-a", target = "target-a", effect = "feed") => ({
-  source_id: source, target_id: target, effect_id: effect,
+  source_id: source, target_id: target, effect_id: effect, source_name: "Blood Drain",
   damage_dice_count: 1, damage_dice_size: 4, damage_bonus: 3,
   damage_type: null, periodic_effect_kind: "direct_hp_loss",
   damage_timing: "source_turn_start", detach_after_hp_lost: 10,
