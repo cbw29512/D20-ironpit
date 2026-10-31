@@ -71,7 +71,7 @@ try {
 const changes = battle.events.flatMap(event => event.attachment_changes || []);
 assert.ok(changes.some(row => row.operation === "attach"), "Source hit must create a real link.");
 const ownerDrains = battle.events.filter(event =>
-  event.feature_id === "Blood Drain" && /Hit Points \\(not damage\\)/.test(event.description));
+  event.feature_id === "Blood Drain" && /Hit Points \(not damage\)/.test(event.description));
 if (!ownerDrains.length) {
   console.error("Attachment fight missing source-turn drain", {
     outcome: battle.outcome, rounds: battle.rounds,
