@@ -69,6 +69,7 @@
         resourceRemaining = actor.state.resources[action.resourceId];
       }
       if (spendAction) economy.spend(actor.state, actionCost);
+      window.IRON_PIT_BROWSER_TIMED?.expireOnOwnerEvent?.(actor.state, "action", [], action.id);
 
       const snapshot = {
         hpBefore: target.state.current_hp,
