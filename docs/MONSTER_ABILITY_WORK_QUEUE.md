@@ -1,5 +1,14 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Non-Grappled source attachment (2014 Stirge) — authorized integration, not admitted
+
+- **Supersedes the prior Stirge arena-removal decision** on 2026-10-30. Approved engine policy is in `docs/IRON_PIT_RULES_CONTRACT.md`: normal +5 / 1d4+3 Piercing on hit, then owner-target link with 1d4+3 direct HP loss at source turn start; actual 10 HP drained ends link, target/source death cleans it. Printed Blood Drain remains the log label.
+- **Shared data/engine:** the source card supplies the recurring dice, timing, attack lock, Action reach, 5-ft self detach and threshold. The immutable source passes through the generic attachment capability into Python, browser and replay; status projections are target Attached and source Feeding, **not** Grappled or magical healing.
+- **Exact source audit:** 327 pinned 2014 records inspected; five attacks declare `ongoing_damage_effect`, and only Stirge currently has this particular non-Grappled attachment data shape. Other periodic families are not rewired by name.
+- **Implementation branch:** [PR #1130](https://github.com/cbw29512/D20-ironpit/pull/1130). It adds hit, periodic HP loss, removal operations/AI, event receipts, visible statuses and terminal cleanup, plus source-neutral/renamed and source-card regressions.
+- **Admission gate remains CLOSED:** no removal from `_PIT_REMOVED_MONSTER_IDS_2014`, no generated-manifest or roster-count change, no production deployment until exact-head Python/browser CI, generated source reconciliation, realistic production browser fight and card-coverage certification succeed. Once verified, rebuild the 2014 manifest and browser assets from the source; do not hand-edit count or generated fields.
+
+
 ## Surprise-opening attack modifiers — implementation 2026-10-29
 
 - The mandatory source-semantic scan covers all 327 immutable cards and finds two applicable cards: Bugbear and Doppelganger. It does not route on monster or trait name.
@@ -823,7 +832,7 @@ This is the **operational queue**, not a second monster source inventory. The au
 
 - [ ] **Sea Horse (2014), attack:none — IMPLEMENTED ON PR [#994](https://github.com/cbw29512/D20-ironpit/pull/994), AWAITING EXACT-HEAD CERTIFICATION:** The immutable source card compiles with no primary or alternate attacks and uses the existing RAW **Dodge Action** through the universal main-action fallback; no zero-damage attack or identity dispatch is fabricated. Optional-primary schema, compiler, Python targeting/formation/range helpers, browser serializer, immutable-card tests and the existing 100-round draw guard are integrated. Mandatory semantic scan covers all 327 cards: 4 attack-free cards / 1 wired (Sea Horse) / 3 explicit exceptions (Frog arena-neutral; Rug of Smothering and Shrieker retain independent printed-mechanic blockers). The owning generator advanced canonical source admission to **239/327** and blockers to **88** and regenerated the browser roster plus universal inventory. Production Netlify remains locked; merge only after exact final-head Python/browser/Hero/roster/paired-edition/generated-sync checks pass.
 
-- [ ] **Stirge (2014) — USER DECISION: REMOVED FOR NOW.** Keep original monster source and Blood Drain information intact, but Stirge is excluded from Iron Pit roster/combat. Do not implement attachment or ongoing Blood Drain mechanics at this stage. Track as explicitly excluded, **not** certified; revisit only on a later user decision.
+- [ ] **Stirge (2014) — SUPERSEDED 2026-10-30 / PR #1130 OPEN.** The user authorized universal non-Grappled attachment with Blood Drain as an ordinary on-hit attack plus source-turn recurring HP loss and linked Feeding/Attached statuses. The older deliberate-removal decision is no longer authoritative; the 2014 roster remains excluded pending passing exact-head certification and production browser fight. See the active integration section at the top of this queue.
 
 - [ ] **Stone Giant — Rock Catching (2014): USER-APPROVED ARENA SIMPLIFICATION / QUEUED.** On being hit by an eligible ranged attack, the Stone Giant may spend its **one Reaction per round** to make a **DC 10 Dexterity saving throw**. Success: negate that attack's damage; failure: resolve normal damage through universal damage defenses. User proposes all ranged attacks as eligible, broader than printed RAW ('rock or similar object hurled at it'); explicitly mark this as an Iron Pit house simplification, and verify whether ranged spells should be excluded before binding so no unintended cancellation of spell AoE. Reuse Reaction economy, saves and post-hit damage cancellation, with attack log recording save result. **Not yet implemented/certified.**
 
