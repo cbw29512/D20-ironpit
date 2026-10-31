@@ -4,7 +4,7 @@
 
 - **Source:** full 327-card scan; one printed Doppelganger Read Thoughts Action. Its entire effect is surface thoughts, blocked barriers, concentration on information, and Advantage exclusively on Insight, Deception, Intimidation, and Persuasion checks. None of these are contested combat skills in the standard Pit; the action stays visible on the source card but cannot affect a fight.
 - **Existing universal policy:** exact full-text nonactionable source proof, not new monster-specific combat dispatch. Mutation adding attack or other combat clauses fails closed. Doppelganger's independent Shapechanger remains blocked. Source-admitted monster count unchanged.
-- **Status:** implementation `feat/2014-noncombat-read-thoughts-source-proof` ACTIVE; 327-card regression and fail-closed tests, exact-head CI required, production locked.
+- **Status:** implementation `feat/2014-noncombat-read-thoughts-source-proof` ACTIVE. The canonical generator now reports Doppelganger only blocked by `source:trait` (Shapechanger); `source:extra-action` cleared. **254/327** source admitted, **73** blocked. Full exact-head CI required; production locked.
 
 ## Source-owned grapple target save — PR #1132 (2014)
 
