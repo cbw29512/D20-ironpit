@@ -52,7 +52,7 @@ def test_real_successful_attack_creates_link_and_blocks_second_attack():
     assert event.attachment_changes[0].source_name == "Blood Drain"
     with pytest.raises(ValueError, match="attachment prevents another attack"):
         resolve_attack(
-            2, 1, attacker.state, victim.state, attack, 5, FixedDiceProvider([]),
+            2, 1, attacker.state, victim.state, attack, 5, FixedDiceProvider([1]),
             actor_event_id=attacker.combatant_id, target_event_id=victim.combatant_id,
             spend_action=False, reaction_setup=setup,
         )
