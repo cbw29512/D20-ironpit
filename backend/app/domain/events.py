@@ -4,6 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.domain.attachment_receipts import AttachmentChange
 from app.domain.event_support import (
     AuditPhase,
     AuditStep,
@@ -46,6 +47,7 @@ class BattleEvent(BaseModel):
     damage_components: list[DamageRollComponent] = Field(default_factory=list)
     applied_condition_ids: list[str] = Field(default_factory=list)
     removed_condition_ids: list[str] = Field(default_factory=list)
+    attachment_changes: list[AttachmentChange] = Field(default_factory=list, exclude_if=lambda rows: not rows)
     healing_roll: DiceRoll | None = None
     hit: bool | None = None
     critical: bool = False
