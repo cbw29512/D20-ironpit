@@ -6,6 +6,12 @@
 - **Existing universal policy:** exact full-text nonactionable source proof, not new monster-specific combat dispatch. Mutation adding attack or other combat clauses fails closed. Doppelganger's independent Shapechanger remains blocked. Source-admitted monster count unchanged.
 - **Status:** implementation `feat/2014-noncombat-read-thoughts-source-proof` ACTIVE. The canonical generator now reports Doppelganger only blocked by `source:trait` (Shapechanger); `source:extra-action` cleared. **254/327** source admitted, **73** blocked. Full exact-head CI required; production locked.
 
+## Source-only Etherealness movement — 2014 cross-roster family
+
+- **Scope:** All 327 pinned cards scanned. Three complete printed `Etherealness` actions (Ghost, Night Hag, Succubus/Incubus) are verified as exclusively entering or leaving the Ethereal Plane, with source-specific visibility/heartstone restrictions. This is a general full-clause source proof, not monster-ID dispatch.
+- **Locked Pit policy:** entering the Ethereal Plane is unavailable; the printed actions remain on immutable cards, but create no fight-local planar state, saves, damage, buffs or resources. If a future card adds an in-combat rider, the proof fails closed; no invented magical effect.
+- **Obligations cleared:** three extra-action source obligations, not three fully admitted monsters. Their other printed combat effects remain blocked and no admission increase is claimed. Do not alter generated reports manually. Pending CI/exact-head verification and production stays locked.
+
 ## Source-owned grapple target save — PR #1132 (2014)
 
 - **Single universal mechanic:** the existing save Action now supports a declarative `requires_target_grappled_by_source` filter. The generic Python/browser save engines inspect fight-local grapple ownership, not the ability or monster name. Live held friends as well as foes are eligible only when `target_scope: all-other-creatures`; source/other-grappler/unheld targets are rejected.
