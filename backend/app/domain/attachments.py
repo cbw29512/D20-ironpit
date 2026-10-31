@@ -21,6 +21,10 @@ class Attachment:
     damage_timing: str = "source_turn_start"
     detach_after_hp_lost: int | None = None
     actual_hp_lost: int = 0
+    blocks_source_attacks: bool = False
+    action_removable: bool = False
+    action_removal_range_ft: int = 5
+    source_detach_movement_ft: int = 0
 
     def __post_init__(self) -> None:
         try:
@@ -52,6 +56,11 @@ class Attachment:
                 type(self.detach_after_hp_lost) is not int or self.detach_after_hp_lost <= 0
             ):
                 raise ValueError("Detach threshold must be a positive integer.")
+            if type(self.blocks_source_attacks) is not bool or type(self.action_removable) is not bool:
+                raise ValueError("Attachment source controls must be booleans.")
+            for cost in (self.action_removal_range_ft, self.source_detach_movement_ft):
+                if type(cost) is not int or cost < 0 or cost % 5:
+                    raise ValueError("Attachment removal range/cost must use nonnegative 5-ft steps.")
             if type(self.actual_hp_lost) is not int or self.actual_hp_lost < 0:
                 raise ValueError("Recorded actual HP loss must be nonnegative.")
         except Exception:
