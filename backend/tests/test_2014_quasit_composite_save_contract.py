@@ -1,7 +1,7 @@
 """Source-first regression for one failed save producing damage AND a condition.
 
-The current universal hit-save effect cannot yet compose these outcomes.
-This test ensures the source stays blocked instead of silently dropping one.
+The universal composite-save binder must preserve both printed effects and
+keep unrelated unsupported actions independently blocked.
 """
 from __future__ import annotations
 
@@ -43,6 +43,7 @@ def test_composite_failed_save_is_not_misclassified_as_single_effect():
         assert not supported_save_condition_2014(row)
         assert supported_composite_save_2014(row)
         assert "attack:complex" not in basic_blockers_2014(monster)
+        assert "source:extra-action" in basic_blockers_2014(monster)
     except Exception:
         logger.exception("Composite poison source regression failed")
         raise
