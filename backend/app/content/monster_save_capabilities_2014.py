@@ -78,6 +78,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                 failed_save_push_ft=int(action.get("failure_push_ft", 0) or 0),
                 animation=str(action.get("animation", "save-effect")),
             ))
+        result.extend(source_scare_2014(monster))
         result.extend(source_proven_asymmetric_saves_2014(monster))
         result.extend(source_proven_visual_saves_2014(monster))
         result.extend(source_proven_conditioned_saves_2014(monster))
