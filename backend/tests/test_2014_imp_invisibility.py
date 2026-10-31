@@ -43,9 +43,11 @@ def test_full_327_card_source_audit_is_parameter_driven(cards):
             assert action.concentration and action.magical_effect
             assert action.action_cost == "action"
             assert action.resource_id is None and action.duration_rounds is None
-        # Quasit uses Scare and Will-o'-Wisp uses Consume Life: distinct exits
-        # not represented by an arbitrary spell-cast event. Never weaken them.
-        assert not source_invisibility_action_2014(cards["quasit"])
+        # Scare is a named action, not a spell-cast exit. Both source effects
+        # preserve their original attack/concentration exit semantics.
+        quasit = matches["quasit"][0]
+        assert quasit.ends_on_owner_action_ids == ["scare"]
+        assert quasit.ends_on_owner_attack and not quasit.ends_on_owner_spell_cast
         assert not source_invisibility_action_2014(cards["will-o-wisp"])
     except Exception:
         logger.exception("2014 invisibility source scan failed.")
