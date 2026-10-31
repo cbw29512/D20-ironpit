@@ -4,10 +4,12 @@ from dataclasses import dataclass
 import logging
 
 from app.content.capability_errors import UnsupportedCapabilityError
+from app.domain.attachment_sources import OnHitAttachment
 from app.content.capability_attack_control_compiler import compile_attack_control
 from app.domain.capabilities import AttackCapabilityDefinition
 from app.domain.capability_effects import (
     AbilityScoreReductionEffectDefinition,
+    AttachmentEffectDefinition,
     ConditionEffectDefinition,
     ContestedMovementEffectDefinition,
     DamageEffectDefinition,
@@ -47,6 +49,7 @@ class CompiledAttackEffects:
     on_hit_maximum_hp_save: OnHitMaximumHpSave | None
     on_hit_ability_score_reduction: OnHitAbilityScoreReduction | None
     on_hit_contested_movement: OnHitContestedMovement | None
+    on_hit_attachment: OnHitAttachment | None = None
 
 
 
@@ -131,6 +134,8 @@ def compile_attack_effects(definition: AttackCapabilityDefinition) -> CompiledAt
                     stacks_on_reapply=effect.stacks_on_reapply,
                     ends_on_magical_healing=effect.ends_on_magical_healing,
                 )
+            elif isinstance(effect, AttachmentEffectDefinition):
+                result.on_hit_attachment = OnHitAttachment.model_validate(effect.model_dump(exclude={"kind"}))
             elif isinstance(effect, HitModifierEffect):
                 result.on_hit_modifiers.append(effect)
             elif isinstance(effect, (GrappleEffectDefinition, ConditionEffectDefinition)):
