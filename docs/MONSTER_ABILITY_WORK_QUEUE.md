@@ -1,5 +1,11 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Source-only Etherealness movement — 2014 cross-roster family
+
+- **Scope:** All 327 pinned cards scanned. Three complete printed `Etherealness` actions (Ghost, Night Hag, Succubus/Incubus) are verified as exclusively entering or leaving the Ethereal Plane, with source-specific visibility/heartstone restrictions. This is a general full-clause source proof, not monster-ID dispatch.
+- **Locked Pit policy:** entering the Ethereal Plane is unavailable; the printed actions remain on immutable cards, but create no fight-local planar state, saves, damage, buffs or resources. If a future card adds an in-combat rider, the proof fails closed; no invented magical effect.
+- **Obligations cleared:** three extra-action source obligations, not three fully admitted monsters. Their other printed combat effects remain blocked and no admission increase is claimed. Do not alter generated reports manually. Pending CI/exact-head verification and production stays locked.
+
 ## Shared simultaneous grapple capacity — PR #1131 (2014)
 
 - **State:** Source wiring implemented, exact-head CI and browser webpage fights pending; 2014 main baseline remains 253/327 source-admitted.
