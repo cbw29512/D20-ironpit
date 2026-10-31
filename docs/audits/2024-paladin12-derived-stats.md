@@ -42,7 +42,7 @@ No class-specific combat resolver or new universal primitive is introduced.
 
 ## Continuous debt pass
 
-Split later feature audits so touched production files stay at or below 150
+Split later feature audits so touched production files stay at or below 200
 lines. Correct the old Channel Divinity source note to show three uses from
 level 11. Preserve independent combat fingerprints and generated artifacts.
 Netlify publishing lock is unchanged. Exact-head CI remains the merge gate.
