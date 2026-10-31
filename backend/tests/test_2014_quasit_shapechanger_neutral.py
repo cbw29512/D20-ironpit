@@ -26,6 +26,9 @@ def test_shapechanger_neutral_but_remaining_combat_actions_block():
         assert verified_arena_inert_trait_2014(monster, "Shapechanger")
         assert "Shapechanger" not in unsupported_traits_2014(monster)
         blockers = basic_blockers_2014(monster)
+        # Shapechanger classification clears only the source trait blocker;
+        # attack/save and action obligations remain independently audited.
+        assert "source:trait" not in blockers
         assert "attack:complex" in blockers
         assert "source:extra-action" in blockers
         assert monster.model_dump_json() == original
