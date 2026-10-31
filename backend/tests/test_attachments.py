@@ -3,7 +3,7 @@ import pytest
 
 from app.combat.attachments import (
     Attachment, active_attachment_target, attach, detach_for_combatant,
-    linked_attachment_effects, record_attachment_hp_loss,
+    linked_attachment_effects, record_attachment_hp_loss, detach_link,
 )
 
 
@@ -97,3 +97,11 @@ def test_identity_relabeling_does_not_change_link_behavior():
     b = attach((), _link(source="homebrew", target="other", effect="needle"))
     assert record_attachment_hp_loss(a, "monster", "bite", 10) == ()
     assert record_attachment_hp_loss(b, "homebrew", "needle", 10) == ()
+
+def test_detach_link_only_removes_exact_owner_and_effect():
+    first = _link(source="one", target="a", effect="feed")
+    second = _link(source="two", target="b", effect="feed")
+    third = _link(source="one", target="c", effect="other")
+    linked = (first, second, third)
+    assert detach_link(linked, "one", "feed") == (second, third)
+    assert detach_link(linked, "absent", "feed") == linked
