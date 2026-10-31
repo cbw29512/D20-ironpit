@@ -12,6 +12,11 @@
       const shared = window.IRON_PIT_BROWSER_SAVE_IMMUNITY;
       if (action.requiredTargetCondition
         && !Q.has(target.state, action.requiredTargetCondition)) return false;
+      if (action.requiresTargetGrappledBySource) {
+        if (!actor || !sourceId || sourceId !== actor.combatant_id
+          || !target.state.is_alive || target.state.is_dead
+          || !(target.state.grapple_sources || []).some((grapple) => grapple.source_id === sourceId)) return false;
+      }
       if ((action.prohibitedTargetSourceEffectIds || []).length
         && (target.state.timed_effects || []).some(
           (effect) => action.prohibitedTargetSourceEffectIds.includes(effect.source_effect_id),

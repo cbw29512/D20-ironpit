@@ -30,7 +30,14 @@ def choose_multi_target_save_action(
             if not action_resource_available(actor.state, action):
                 continue
             legal_targets: list[EncounterCombatant] = []
-            for target in target_order(actor, setup):
+            ordered_targets = target_order(actor, setup)
+            if action.target_scope == "all-other-creatures":
+                allies = setup.heroes if actor.side == "heroes" else setup.monsters
+                ordered_targets = [*ordered_targets, *(
+                    member for member in allies if member.combatant_id != actor.combatant_id
+                    and member.state.is_alive and not member.state.is_dead
+                )]
+            for target in ordered_targets:
                 distance = combatant_distance(actor, target)
                 if not legal_save_action(action, target, distance, source_id=actor.combatant_id, actor=actor):
                     continue
@@ -71,6 +78,9 @@ def resolve_multi_target_save_action(
 
         # Validate every target before mutating action economy or resources.
         for target in targets:
+            if (target.combatant_id == actor.combatant_id
+                    or (action.target_scope == "enemies" and target.side == actor.side)):
+                raise ValueError(f"{action.name} has a forbidden target scope.")
             distance = combatant_distance(actor, target)
             if not legal_save_action(action, target, distance, source_id=actor.combatant_id, actor=actor):
                 raise ValueError(f"{action.name} has an illegal selected target.")

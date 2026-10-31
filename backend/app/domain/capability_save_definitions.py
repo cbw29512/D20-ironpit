@@ -41,6 +41,7 @@ class SaveCapabilityDefinition(BaseModel):
     requires_target_to_see_source: bool = Field(default=False, exclude_if=lambda value: not value)
     requires_target_sight: bool = Field(default=False, exclude_if=lambda value: not value)
     required_target_condition: ConditionName | None = Field(default=None, exclude_if=lambda value: value is None)
+    requires_target_grappled_by_source: bool = Field(default=False, exclude_if=lambda value: not value)
     required_target_creature_types: list[str] = Field(default_factory=list, exclude_if=lambda value: not value)
     prohibited_target_source_effect_ids: list[str] = Field(default_factory=list, exclude_if=lambda value: not value)
     excluded_target_creature_types: list[str] = Field(default_factory=list, exclude_if=lambda value: not value)
