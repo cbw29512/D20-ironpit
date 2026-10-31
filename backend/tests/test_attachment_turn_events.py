@@ -90,7 +90,9 @@ def test_typed_variant_uses_existing_damage_components():
     assert len(events[0].damage_components) == 1
     assert events[0].feature_id == "Synthetic Drain"
     assert "necrotic damage" in events[0].description
-    assert setup.attachments[0].actual_hp_lost == 0 or setup.attachments[0].actual_hp_lost == 5
+    assert hero.state.current_hp == 20
+    assert hero.state.temporary_hp == 4
+    assert setup.attachments[0].actual_hp_lost == 0
 
 
 def test_new_encounter_never_inherits_previous_links():
