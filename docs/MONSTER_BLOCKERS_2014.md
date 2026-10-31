@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 61 |
+| `source:trait` | 60 |
 | `source:extra-action` | 36 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 15 |
@@ -94,7 +94,7 @@ the underlying ability is already implemented or trivial.
 | Planetar | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Priest | mechanic:spellcasting, source:trait | Divine Eminence, Spellcasting |
 | Purple Worm | attack:complex, mechanic:swallow | — |
-| Quasit | attack:complex, source:extra-action, source:trait | Shapechanger |
+| Quasit | attack:complex, source:extra-action | — |
 | Rakshasa | mechanic:spellcasting, source:trait | Limited Magic Immunity, Innate Spellcasting |
 | Roper | source:extra-action, source:trait | Grasping Tendrils |
 | Rug of Smothering | attack:none, source:extra-action, source:trait | Damage Transfer |

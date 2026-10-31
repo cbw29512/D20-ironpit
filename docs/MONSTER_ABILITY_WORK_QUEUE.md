@@ -1,5 +1,11 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## 2014 Quasit Shapechanger — approved movement-only arena-neutral source proof
+
+- **Source scope:** Pinned Quasit Shapechanger has three appearance/movement forms, unchanged statistics, unchanged equipment and automatic death reversion. As with approved Imp movement-only forms, the Pit does not select a movement/appearance-only transformation.
+- **Source proof:** The complete Shapechanger paragraph must match exactly; mutation of any speed, combat statistic, equipment clause or death reversion fails closed. Do not apply this exception to Vampire, lycanthropes, Mimic or other combat-changing transformations.
+- **Independent obligations:** Quasit's printed Claws/Bite poisoned-save composition, Scare and Invisibility Action remain blocked independently; this is not full-monster certification. Generated reports and exact-head CI must be reconciled before merge.
+
 ## Generic source-owned Invisible self-buff exits — 2014 family
 
 - **Implementation branch:** `feat/2014-source-invisibility-expiry-family` (ACTIVE). Same existing Invisible/concentration buff in Python/browser; printed source decides attack exit and optional spell-cast exit. No monster-name runtime decision or new condition.

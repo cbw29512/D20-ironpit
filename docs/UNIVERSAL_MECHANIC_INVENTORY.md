@@ -458,7 +458,7 @@ Blocked monsters: **73**. These are grouped by printed ability name so the roste
 | Ooze Cube | Gelatinous Cube | 1 |
 | Pounce (Tiger or Hybrid Form Only) | Weretiger | 1 |
 | Reflective Carapace | Tarrasque | 1 |
-| Shapechanger | Doppelganger, Imp, Mimic, Quasit, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf | 11 |
+| Shapechanger | Doppelganger, Imp, Mimic, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf | 10 |
 | Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
 | Telepathic Bond | Succubus/Incubus | 1 |
@@ -472,7 +472,7 @@ Blocked monsters: **73**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 61 |
+| `source:trait` | 60 |
 | `source:extra-action` | 36 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 15 |
