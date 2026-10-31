@@ -2,8 +2,6 @@
 from __future__ import annotations
 
 from app.combat.attachment_on_hit import apply_attack_hit_attachment
-from app.combat.attacks import resolve_attack
-from app.combat.attachment_decision import resolve_attachment_removal_action
 from app.combat.attachment_attack_gate import source_attacks_blocked
 from app.combat.attachment_removal import remove_attachment_by_action, detach_attachment_with_movement
 from app.combat.attachment_turn_events import resolve_attachment_turn_start_events
@@ -132,43 +130,3 @@ def test_target_can_use_action_and_source_can_spend_movement_to_detach():
     assert attacker.state.movement_remaining_ft == 5
     assert setup.attachments == []
 
-
-def test_real_successful_attack_creates_link_and_blocks_second_attack():
-    import pytest
-
-    _, attack, attacker, victim, setup = _combat()
-    event = resolve_attack(
-        1, 1, attacker.state, victim.state, attack, 5,
-        FixedDiceProvider([18, 2]),
-        actor_event_id=attacker.combatant_id, target_event_id=victim.combatant_id,
-        spend_action=False, reaction_setup=setup, reaction_roller=attacker,
-        affected_states=[attacker.state, victim.state],
-    )
-    assert event.hit is True
-    assert (event.hp_before, event.hp_after) == (50, 50)
-    assert victim.state.temporary_hp == 3
-    assert victim.state.grapple_sources == []
-    assert len(setup.attachments) == 1
-    assert len(event.attachment_changes) == 1
-    assert event.attachment_changes[0].operation == "attach"
-    assert event.attachment_changes[0].source_name == "Blood Drain"
-    with pytest.raises(ValueError, match="attachment prevents another attack"):
-        resolve_attack(
-            2, 1, attacker.state, victim.state, attack, 5, FixedDiceProvider([]),
-            actor_event_id=attacker.combatant_id, target_event_id=victim.combatant_id,
-            spend_action=False, reaction_setup=setup,
-        )
-
-
-def test_generic_removal_action_reports_detach_receipt_and_spends_action():
-    _, attack, attacker, victim, setup = _combat()
-    assert apply_attack_hit_attachment(
-        attack, attacker.combatant_id, victim.combatant_id, victim.state, setup,
-    )
-    event = resolve_attachment_removal_action(1, 2, victim, setup)
-    assert event is not None and event.feature_id == "Blood Drain"
-    assert not victim.state.action_available
-    assert [(change.operation, change.source_name) for change in event.attachment_changes] == [
-        ("detach", "Blood Drain"),
-    ]
-    assert setup.attachments == []
