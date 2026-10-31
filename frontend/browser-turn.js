@@ -158,6 +158,9 @@
       if (support) {
         events.push(...support.events); sequence = support.sequence;
       }
+      if (window.IRON_PIT_BROWSER_ATTACHMENTS?.sourceAttacksBlocked(setup, member.combatant_id)) {
+        return finalize(events, sequence, round, member, setup, turnKey, false);
+      }
       // Signature actions resolve before optional Bonus Action spell setup.
       const signature = resolveMainActionOpportunity("signatureThreshold", sequence, round, member, setup, turnKey);
       events.push(...signature.events); sequence = signature.sequence;
