@@ -89,6 +89,7 @@
         monster_total_cr: totalCr(monsterMembers.map((item) => item.state.template.challenge_rating)),
         ruleset, map_definition: mapDefinition, persistent_hazards: [], persistent_barriers: [],
         persistent_beneficial_zones: [], suppression_zones: [], save_zones: [],
+        attachments: [],
       };
       window.IRON_PIT_BROWSER_OPENING_CONDITIONS?.apply(setup, selection);
       return setup;
