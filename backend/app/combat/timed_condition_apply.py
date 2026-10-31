@@ -100,6 +100,7 @@ def apply_timed_condition(
             owned_curse_ids=owned_curse_ids or [], turn_behavior=turn_behavior,
             ends_on_damage=ends_on_damage, ends_on_owner_attack=ends_on_owner_attack,
             ends_on_owner_spell_cast=ends_on_owner_spell_cast,
+            ends_on_owner_action_ids=ends_on_owner_action_ids or [],
             ends_if_source_incapacitated=ends_if_source_incapacitated,
             ends_if_source_dead=ends_if_source_dead, source_is_magical=source_is_magical,
             repeat_save_context=repeat_save_context, suppress_action=suppress_action,
