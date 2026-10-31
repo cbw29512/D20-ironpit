@@ -7,7 +7,12 @@ from app.content.monster_save_source_audit_2014 import unsupported_source_action
 from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
 from app.content.capability_compiler import compile_combatant
 from app.content.capability_from_template import definition_from_template
-from scripts.browser_template_serializer import _save
+# CI executes backend/tests with backend as the import root, not the repo root.
+# The generator serializer lives in the sibling scripts/ directory.
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
+from browser_template_serializer import _save
 from app.content.monster_source_grapple_owner_save_2014 import (
     source_proven_grapple_owner_saves_2014,
 )
