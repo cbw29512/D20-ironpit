@@ -98,6 +98,7 @@
     let maximumHpSave = null;
     let abilityReduction = null;
     let contestedMovement = null;
+    let attachedOnHit = false;
     let cunningStrikeTrip = null, cunningStrikeObscure = null;
     const applied = outcome.appliedConditions;
     if (hit) {
@@ -119,7 +120,7 @@
       if (living && attack.onHitAttachment) {
         const runtime = window.IRON_PIT_BROWSER_ATTACHMENTS;
         if (!runtime?.applyOnHit) throw new Error("Universal attachment hit runtime is unavailable.");
-        runtime.applyOnHit(extra.setup, attacker, actualTarget, attack);
+        attachedOnHit = runtime.applyOnHit(extra.setup, attacker, actualTarget, attack);
       }
       const preHitGrappledByAttacker = (actualTarget.state.grapple_sources || [])
         .some((grapple) => grapple.source_id === attacker.combatant_id);
@@ -231,6 +232,11 @@
       feature_id: d20Override.featureId || override.featureId || extra.featureId || (recklessStarted ? "reckless-attack" : null), concentration_ended_effect_id: concentrationBefore && !actualTarget.state.concentration ? concentrationBefore : null,
       resource_remaining: exileApplied?.resourceRemaining ?? deferredEffectArmed?.resourceRemaining ?? ammunitionRemaining,
       animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description: description + survivalLog + (window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT?.consumeLog(actualTarget.state) || "") };
+    if (attachedOnHit) event.attachment_changes = [{
+      operation: "attach", source_id: attacker.combatant_id,
+      target_id: actualTarget.combatant_id, effect_id: attack.onHitAttachment.effect_id,
+      source_name: attack.onHitAttachment.source_name,
+    }];
     if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, attacker.state.template.name);
     return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;
   }  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, conditionSources, rangedCloseThreat, resolveAttack }; })();
