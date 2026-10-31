@@ -9,6 +9,7 @@ from app.content.monster_attack_effect_validation_2014 import (
     supported_control_2014,
     supported_damage_row_2014,
     supported_save_condition_2014,
+    supported_composite_save_2014,
     supported_save_damage_2014,
     supported_save_max_hp_reduction_2014,
 )
@@ -69,6 +70,7 @@ def supports_basic_attack_effects_2014(attack: SourceAttack2014) -> bool:
             return False
         if attack.on_hit_save_effect is not None and not (
             supported_save_condition_2014(attack.on_hit_save_effect)
+            or supported_composite_save_2014(attack.on_hit_save_effect)
             or supported_save_damage_2014(attack.on_hit_save_effect)
             or supported_save_max_hp_reduction_2014(attack.on_hit_save_effect)
             or supported_save_persistent_2014(attack.on_hit_save_effect)
