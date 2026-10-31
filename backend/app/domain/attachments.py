@@ -16,6 +16,7 @@ class Attachment:
     damage_dice_size: int
     damage_type: str | None
     periodic_effect_kind: str
+    source_name: str
     damage_bonus: int = 0
     damage_timing: str = "source_turn_start"
     detach_after_hp_lost: int | None = None
@@ -27,6 +28,8 @@ class Attachment:
                 self.source_id, self.target_id, self.effect_id,
             )):
                 raise ValueError("Attachment requires source, target, and effect identities.")
+            if not isinstance(self.source_name, str) or not self.source_name:
+                raise ValueError("Attachment requires printed source ability name.")
             if self.source_id == self.target_id:
                 raise ValueError("Attachment source and target must differ.")
             if type(self.damage_dice_count) is not int or self.damage_dice_count <= 0:
