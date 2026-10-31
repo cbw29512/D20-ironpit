@@ -35,6 +35,8 @@ def _control(effect: Any) -> dict[str, Any] | None:
         row["restrainsWhileGrappled"] = True
     if effect.grapple_requires_source_free:
         row["grappleRequiresSourceFree"] = True
+    if effect.grapple_max_active_grapples is not None:
+        row["grappleMaxActiveGrapples"] = effect.grapple_max_active_grapples
     if effect.grapple_periodic_damage is not None:
         periodic = effect.grapple_periodic_damage
         row["grapplePeriodicDamage"] = {

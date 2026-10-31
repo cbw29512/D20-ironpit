@@ -20,6 +20,8 @@ def _control_effect(control) -> dict[str, object]:
             "max_target_size": control.max_target_size,
             "restrains": control.restrains_while_grappled,
             "requires_source_free": control.grapple_requires_source_free,
+            **({"max_active_grapples": control.grapple_max_active_grapples}
+               if control.grapple_max_active_grapples is not None else {}),
             "periodic_damage": control.grapple_periodic_damage.model_dump(mode="json") if control.grapple_periodic_damage else None,
         }
     if has_condition:

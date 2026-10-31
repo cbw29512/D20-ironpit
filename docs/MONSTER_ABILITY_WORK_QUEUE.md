@@ -1,5 +1,13 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Shared simultaneous grapple capacity — PR #1131 (2014)
+
+- **State:** Source wiring implemented, exact-head CI and browser webpage fights pending; 2014 main baseline remains 253/327 source-admitted.
+- **327 pinned 2014 source cards audited:** five matching full printed attack clauses: Giant Crab (2 Claws), Giant Scorpion (2 Claws), Glabrezu (2 Pincers), Kraken (10 Tentacles), Otyugh (2 Tentacles). Strict full-clause validation reads the printed attack/save DC, range, base and optional extra typed damage, size, Restrained rider and capacity; changed or unfamiliar source clauses stay blocked.
+- **One universal capacity rule:** existing Grapple and Restrained state count distinct live targets held by the source; a source-owned `max_active_grapples` limit allows another grapple only below capacity (or on an already held target). Full-capacity hits still resolve their normal weapon damage. Both Python and browser use the same semantics, and the browser serializer carries the optional source parameter. Names never dispatch combat logic.
+- **Generated classifier after source adapter:** Otyugh no longer has `attack:incomplete` and is now blocked only on `source:extra-action` (Tentacle Slam). Kraken's incomplete Tentacle is repaired but its independent legendary and other source abilities remain. **Neither is source-admitted by this PR.** Do not hand-edit generated artifacts or count the capability as a certified complete monster.
+- **Next separate family:** Tentacle Slam is a DC 14 CON save against each creature grappled by the source, printed 2d6+3 Bludgeoning (half on success), and Stunned through end of source next turn on failed save. Bind that as a source-declared grapple-targeted multi-save Action rather than a named special resolver. Otyugh's printed 24-hour disease recurrence is arena-outside the maximum fight duration; verify its Poisoned/removal provenance separately.
+
 ## Surprise-opening attack modifiers — implementation 2026-10-29
 
 - The mandatory source-semantic scan covers all 327 immutable cards and finds two applicable cards: Bugbear and Doppelganger. It does not route on monster or trait name.

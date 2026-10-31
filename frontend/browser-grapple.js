@@ -67,11 +67,15 @@
     return state.grapple_sources.some((source) => source.source_id === targetId) ? 0 : 1;
   }
 
+  function sourceGrappleCount(setup, sourceId) {
+    if (!setup) throw new Error("Source-limited grapple requires encounter setup.");
+    return [...setup.heroes, ...setup.monsters].filter((member) =>
+      member.combatant_id !== sourceId && member.state.is_alive && !member.state.is_dead
+      && (member.state.grapple_sources || []).some((grapple) => grapple.source_id === sourceId)).length;
+  }
+
   function sourceHasActiveGrapple(setup, sourceId) {
-    if (!setup) throw new Error("Source-gated grapple requires encounter setup.");
-    return [...setup.heroes, ...setup.monsters].some((member) =>
-      member.combatant_id !== sourceId && member.state.is_alive && !member.state.is_dead && !Q().incapacitated(member.state)
-      && (member.state.grapple_sources || []).some((grapple) => grapple.source_id === sourceId));
+    return sourceGrappleCount(setup, sourceId) > 0;
   }
 
   function cleanup(setup) {
@@ -141,5 +145,5 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_GRAPPLE = { apply, attackDisadvantage, cleanup, escape, release, resolveMovementCounters, shouldEscape, sourceHasActiveGrapple, speedIsZero };
+  window.IRON_PIT_BROWSER_GRAPPLE = { apply, attackDisadvantage, cleanup, escape, release, resolveMovementCounters, shouldEscape, sourceGrappleCount, sourceHasActiveGrapple, speedIsZero };
 })();

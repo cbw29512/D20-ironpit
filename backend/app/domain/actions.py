@@ -40,6 +40,7 @@ class HitControlEffect(BaseModel):
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
     grapple_requires_source_free: bool = False
+    grapple_max_active_grapples: int | None = Field(default=None, ge=1, le=20)
     grapple_periodic_damage: GrapplePeriodicDamage | None = None
     condition_id: ConditionName | None = None
     expires_at_start_of_source_turn: bool = False

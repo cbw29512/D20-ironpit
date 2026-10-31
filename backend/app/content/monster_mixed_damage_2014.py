@@ -18,6 +18,7 @@ from app.content.monster_source_start_turn_damage_condition_2014 import (
     source_completed_start_turn_damage_condition_2014,
 )
 from app.content.monster_source_staged_disease_2014 import source_bound_staged_disease_2014
+from app.content.monster_source_grapple_capacity_2014 import source_completed_limited_grapple_2014
 from app.domain.weapons_base import DamageType
 
 _PATTERN = re.compile(
@@ -36,6 +37,7 @@ def source_completed_mixed_attack_2014(
     monster: SourceMonster2014, attack: SourceAttack2014,
 ) -> SourceAttack2014:
     """Upgrade a parser-incomplete attack only when both source hit dice are proven."""
+    attack = source_completed_limited_grapple_2014(monster, attack)
     attack = source_completed_healing_block_2014(monster, attack)
     attack = source_completed_magic_cured_condition_2014(monster, attack)
     attack = source_completed_persistent_save_2014(monster, attack)

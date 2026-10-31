@@ -10,7 +10,7 @@ from app.domain.weapons import DamageType
 
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 _DAMAGE_KEYS = frozenset({"average", "bonus", "dice_count", "dice_size", "type"})
-_CONTROL_KEYS = frozenset({"grapple_escape_dc", "max_target_size", "restrains_while_grappled"})
+_CONTROL_KEYS = frozenset({"grapple_escape_dc", "max_target_size", "restrains_while_grappled", "max_active_grapples"})
 _SAVE_DAMAGE_KEYS = frozenset({
     "damage_bonus", "damage_dice_count", "damage_dice_size", "damage_type",
     "dc", "save_ability", "success_damage",
@@ -54,6 +54,7 @@ def supported_control_2014(value: object) -> bool:
         and int(value["grapple_escape_dc"]) > 0
         and isinstance(value.get("restrains_while_grappled", False), bool)
         and optional_size_2014(value.get("max_target_size"))
+        and (value.get("max_active_grapples") is None or (type(value["max_active_grapples"]) is int and 1 <= value["max_active_grapples"] <= 20))
     )
 
 

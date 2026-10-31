@@ -13,7 +13,7 @@ Blocker categories overlap: a monster may require several fixes.
 | `source:trait` | 61 |
 | `source:extra-action` | 38 |
 | `mechanic:spellcasting` | 33 |
-| `attack:incomplete` | 17 |
+| `attack:incomplete` | 15 |
 | `multiattack:complex` | 10 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
@@ -31,12 +31,13 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**2** monsters have exactly one remaining blocker category.
+**3** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
+| `source:extra-action` | Otyugh | 1 |
 
 ## Every blocked monster
 
@@ -80,7 +81,7 @@ the underlying ability is already implemented or trivial.
 | Ice Devil | mechanic:recharge, source:extra-action | — |
 | Ice Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Imp | source:extra-action, source:trait | Shapechanger |
-| Kraken | attack:incomplete, mechanic:legendary, multiattack:complex, source:extra-action, source:legendary, source:trait | Freedom of Movement |
+| Kraken | mechanic:legendary, multiattack:complex, source:extra-action, source:legendary, source:trait | Freedom of Movement |
 | Lamia | attack:incomplete, mechanic:spellcasting, multiattack:complex, source:extra-action, source:trait | Innate Spellcasting |
 | Lich | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Mage | mechanic:spellcasting, source:trait | Spellcasting |
@@ -90,7 +91,7 @@ the underlying ability is already implemented or trivial.
 | Mummy Lord | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Night Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Oni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
-| Otyugh | attack:incomplete, source:extra-action | — |
+| Otyugh | source:extra-action | — |
 | Planetar | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Priest | mechanic:spellcasting, source:trait | Divine Eminence, Spellcasting |
 | Purple Worm | attack:complex, mechanic:swallow | — |
