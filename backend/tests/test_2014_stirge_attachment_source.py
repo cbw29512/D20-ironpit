@@ -11,6 +11,8 @@ from app.content.capability_attack_compiler import compile_attack
 from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014
 from app.content.monster_definition_adapter_2014 import _attack
 from app.content.monster_source_2014 import load_monster_source_2014
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+from app.content.monster_roster_2014 import build_basic_2014_monsters
 from app.content.monster_source_attachment_2014 import supports_source_attachment_2014
 from app.content.monsters import build_commoner
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -130,3 +132,12 @@ def test_target_can_use_action_and_source_can_spend_movement_to_detach():
     assert attacker.state.movement_remaining_ft == 5
     assert setup.attachments == []
 
+
+
+def test_pinned_stirge_enters_generic_2014_roster_without_special_mechanics():
+    card = _card()
+    assert basic_blockers_2014(card) == ()
+    cards = [row for row in build_basic_2014_monsters() if row.id == "2014-stirge"]
+    assert len(cards) == 1
+    assert cards[0].max_hp == 2
+    assert cards[0].armor_class == 14
