@@ -45,7 +45,7 @@ def apply_timed_condition(
     owned_curse_ids: list[str] | None = None,
     affected_states: list[CombatantState] | None = None, turn_behavior: TimedTurnBehavior = "normal",
     ends_on_damage: bool = False, ends_on_owner_attack: bool = False,
-    ends_on_owner_spell_cast: bool = False, ends_if_source_incapacitated: bool = False,
+    ends_on_owner_spell_cast: bool = False, ends_on_owner_action_ids: list[str] | None = None, ends_if_source_incapacitated: bool = False,
     ends_if_source_dead: bool = False, owned_damage_resistances: list[DamageType] | None = None,
     owned_debuff_counters: list[DebuffCounter] | None = None,
     owned_movement_mode_grants: list[MovementModeGrant] | None = None,
