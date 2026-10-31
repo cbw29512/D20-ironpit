@@ -10,21 +10,27 @@ from app.domain.runtime import CombatantState
 
 logger = logging.getLogger(__name__)
 
-OwnerEvent = Literal["attack", "spell_cast"]
+OwnerEvent = Literal["attack", "spell_cast", "action"]
 
 
 def expire_on_owner_event(
     state: CombatantState, event: OwnerEvent,
     affected_states: list[CombatantState] | None = None,
+    *, action_id: str | None = None,
 ) -> list[str]:
     """End only effects whose source card declares this exact event trigger."""
     try:
-        if event not in ("attack", "spell_cast"):
+        if event not in ("attack", "spell_cast", "action"):
             raise ValueError(f"Unknown owner effect-expiry event: {event}.")
         flag = "ends_on_owner_attack" if event == "attack" else "ends_on_owner_spell_cast"
+        if event == "action" and not action_id:
+            raise ValueError("Named-action expiry needs an action ID.")
         removed: list[str] = []
         for effect in list(state.timed_effects):
-            if effect not in state.timed_effects or not getattr(effect, flag):
+            if effect not in state.timed_effects or not (
+                action_id.casefold() in effect.ends_on_owner_action_ids
+                if event == "action" else getattr(effect, flag)
+            ):
                 continue
             source = state.concentration
             if source and source.effect_id == effect.source_effect_id and source.source_id == effect.source_id:
