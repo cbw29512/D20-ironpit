@@ -6,6 +6,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.condition_rules import can_see
 from app.combat.dice import DiceProvider
 from app.combat.opening_burst import opening_burst_available
+from app.combat.owner_action_expiry import expire_on_owner_event
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throw_attempt import resolve_save_attempt
 from app.combat.saving_throw_damage import resolve_save_damage
@@ -92,8 +93,9 @@ def resolve_save_action(
         )
         if spend_action:
             spend(actor.state, action.action_cost)
-        from app.combat.owner_action_expiry import expire_on_owner_event
-        expire_on_owner_event(actor.state, "action", affected_states, action_id=action.id)
+        expire_on_owner_event(
+            actor.state, "action", affected_states, action_id=action.id,
+        )
 
         hp_before = target.state.current_hp
         temporary_hp_before = target.state.temporary_hp
