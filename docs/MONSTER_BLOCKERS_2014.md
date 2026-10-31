@@ -11,7 +11,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Blocker | Monsters |
 |---|---:|
 | `source:trait` | 61 |
-| `source:extra-action` | 36 |
+| `source:extra-action` | 35 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 15 |
 | `multiattack:complex` | 10 |
@@ -31,13 +31,13 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**3** monsters have exactly one remaining blocker category.
+**4** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
+| `source:trait` | Imp, Quasit | 2 |
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
-| `source:trait` | Imp | 1 |
 
 ## Every blocked monster
 
@@ -94,7 +94,7 @@ the underlying ability is already implemented or trivial.
 | Planetar | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Priest | mechanic:spellcasting, source:trait | Divine Eminence, Spellcasting |
 | Purple Worm | attack:complex, mechanic:swallow | — |
-| Quasit | source:extra-action, source:trait | Shapechanger |
+| Quasit | source:trait | Shapechanger |
 | Rakshasa | mechanic:spellcasting, source:trait | Limited Magic Immunity, Innate Spellcasting |
 | Roper | source:extra-action, source:trait | Grasping Tendrils |
 | Rug of Smothering | attack:none, source:extra-action, source:trait | Damage Transfer |
