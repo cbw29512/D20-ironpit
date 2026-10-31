@@ -39,13 +39,13 @@ assert.equal(printedAttack.onHitAttachment.periodic_effect_kind, "direct_hp_loss
 assert.equal(printedAttack.onHitAttachment.auto_end_after_hp_loss, 10);
 
 // The real source attack is installed on a durable generic monster shell
-// solely so fight-length is sufficient to witness recurrent owner-turn events.
+// solely so the source survives the opponent's first-round Action Surge and recurring owner-turn effects can execute.
 const shell = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-commoner"];
 assert.ok(shell, "Certified browser 2014 Commoner fixture is required.");
 const template = structuredClone(shell);
 template.id = "2014-attachment-live-fixture";
 template.name = "Source-Linked Attachment Fixture";
-template.max_hp = 100;
+template.max_hp = 250;
 template.armor_class = 14;
 template.attacks = [printedAttack];
 template.primary_attack_id = printedAttack.id;
