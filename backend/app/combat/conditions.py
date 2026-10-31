@@ -97,6 +97,12 @@ def apply_hit_conditions(
                 raise ValueError("Source-gated on-hit grapples require encounter setup.")
             from app.combat.grapple_queries import source_has_active_grapple
             free = not source_has_active_grapple(setup, source_id)
+        if control.grapple_max_active_grapples is not None:
+            if setup is None:
+                raise ValueError("A limited on-hit grapple requires encounter setup.")
+            from app.combat.grapple_queries import source_grapple_count
+            already_held = any(row.source_id == source_id for row in defender.grapple_sources)
+            free = free and (already_held or source_grapple_count(setup, source_id) < control.grapple_max_active_grapples)
         if free and (control.max_target_size is None or size_at_most(defender.template.size, control.max_target_size)):
             applied.extend(apply_grapple(
                 defender,
