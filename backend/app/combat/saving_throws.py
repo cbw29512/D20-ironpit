@@ -96,7 +96,6 @@ def resolve_save_action(
         expire_on_owner_event(
             actor.state, "action", affected_states, action_id=action.id,
         )
-
         hp_before = target.state.current_hp
         temporary_hp_before = target.state.temporary_hp
         death_success_before = target.state.death_save_successes
