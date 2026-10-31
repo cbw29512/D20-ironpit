@@ -11,7 +11,7 @@ def _link(source="source-1", target="target-1", effect="feeding"):
     # The attack's initial Piercing hit is resolved separately by the attack engine.
     return Attachment(
         source, target, effect, 1, 4, None,
-        periodic_effect_kind="direct_hp_loss", damage_bonus=3,
+        periodic_effect_kind="direct_hp_loss", source_name="Blood Drain", damage_bonus=3,
         detach_after_hp_lost=10,
     )
 
@@ -72,7 +72,7 @@ def test_attachment_projects_target_debuff_source_buff_without_healing():
 def test_typed_damage_variant_is_same_generic_link_not_a_new_resolver():
     row = Attachment(
         "another-source", "another-target", "drain", 2, 4, "necrotic",
-        periodic_effect_kind="typed_damage",
+        periodic_effect_kind="typed_damage", source_name="Synthetic Drain",
     )
     assert row.periodic_effect_kind == "typed_damage"
     assert row.damage_type == "necrotic"
@@ -83,13 +83,13 @@ def test_typed_damage_variant_is_same_generic_link_not_a_new_resolver():
 def test_malformed_periodic_effect_fails_closed():
     with pytest.raises(ValueError):
         Attachment("source", "target", "effect", 1, 4, "piercing",
-                   periodic_effect_kind="direct_hp_loss")
+                   periodic_effect_kind="direct_hp_loss", source_name="Invalid")
     with pytest.raises(ValueError):
         Attachment("source", "target", "effect", 1, 4, None,
-                   periodic_effect_kind="typed_damage")
+                   periodic_effect_kind="typed_damage", source_name="Invalid")
     with pytest.raises(ValueError):
         Attachment("source", "target", "effect", 1, 4, None,
-                   periodic_effect_kind="unknown")
+                   periodic_effect_kind="unknown", source_name="Invalid")
 
 
 def test_identity_relabeling_does_not_change_link_behavior():
