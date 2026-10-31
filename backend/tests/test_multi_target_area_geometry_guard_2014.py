@@ -72,10 +72,10 @@ def test_duplicate_target_ids_cannot_spend_or_resolve() -> None:
 
 def test_typed_damage_is_rolled_once_and_reused_for_direct_targets() -> None:
     """Both targets save separately against identical component dice."""
-    actor = SimpleNamespace(combatant_id="source", state=SimpleNamespace())
+    actor = SimpleNamespace(combatant_id="source", side="monsters", state=SimpleNamespace())
     targets = (
-        SimpleNamespace(combatant_id="one", state=SimpleNamespace()),
-        SimpleNamespace(combatant_id="two", state=SimpleNamespace()),
+        SimpleNamespace(combatant_id="one", side="heroes", state=SimpleNamespace()),
+        SimpleNamespace(combatant_id="two", side="heroes", state=SimpleNamespace()),
     )
     setup = SimpleNamespace(heroes=list(targets), monsters=[actor])
     action = SavingThrowAction(
