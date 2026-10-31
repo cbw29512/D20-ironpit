@@ -76,6 +76,15 @@ def compile_attack_effects(definition: AttackCapabilityDefinition) -> CompiledAt
                     dice_count=effect.dice.count, dice_size=effect.dice.size,
                     damage_bonus=effect.dice.bonus, damage_type=effect.damage_type,
                     success_damage=effect.success_damage, zero_hp_rider=effect.zero_hp_rider,
+                    failed_save_condition=(
+                        OnHitConditionSave(
+                            save_ability=effect.failed_save_condition.save_ability,
+                            dc=effect.failed_save_condition.dc,
+                            condition_id=effect.failed_save_condition.condition,
+                            duration_rounds=effect.failed_save_condition.duration_rounds,
+                            repeat_save_timing=effect.failed_save_condition.repeat_save_timing,
+                        ) if effect.failed_save_condition is not None else None
+                    ),
                 )
             elif isinstance(effect, AbilityScoreReductionEffectDefinition):
                 result.on_hit_ability_score_reduction = OnHitAbilityScoreReduction(
