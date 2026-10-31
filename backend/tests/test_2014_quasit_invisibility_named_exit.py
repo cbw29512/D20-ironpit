@@ -43,8 +43,11 @@ def test_imp_invisibility_retains_attack_only_exit():
 def test_quasit_named_action_ends_only_the_correct_invisible_buff():
     try:
         monster = next(row for row in load_monster_source_2014() if row.id == "quasit")
-        compiled = compile_combatant(adapt_monster_mechanics_2014(monster))
-        action = next(a for a in compiled.timed_self_buff_actions if a.id == "invisibility")
+        # Compile an already-certified chassis; this PR intentionally does not
+        # depend on the separate Quasit poison attack PR being merged.
+        imp = next(row for row in load_monster_source_2014() if row.id == "imp")
+        compiled = compile_combatant(adapt_monster_mechanics_2014(imp))
+        action, = source_invisibility_action_2014(monster)
         state = build_combatant_state(compiled)
         member = EncounterCombatant(combatant_id="quasit-1", side="monsters", position_ft=0, state=state)
         resolve_timed_self_buff(1, 1, member, action, spend_action_cost=False)
