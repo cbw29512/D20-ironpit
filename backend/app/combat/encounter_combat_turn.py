@@ -3,6 +3,7 @@ from collections.abc import Sequence
 
 import logging
 from app.combat.spell_offense import resolve_best_spell_offense
+from app.combat.attachment_attack_gate import source_attacks_blocked
 from app.combat.hp_threshold_turn import resolve_hp_threshold_turn
 from app.combat.encounter_main_action import resolve_post_move_action
 from app.combat.landing_offense_policy import melee_can_land_now
@@ -118,6 +119,10 @@ def resolve_combat_turn(
             if adrenaline_event is not None:
                 events.append(adrenaline_event)
                 sequence += 1
+        # Source-specific cards may forbid attacks while their link remains active.
+        if source_attacks_blocked(setup, attacker.combatant_id):
+            return finish_turn(events, sequence, round_number, attacker, setup, dice,
+                               turn_key, allow_surge=False)
         # Spend the strongest legal signature Action before optional damage setup.
         threshold_event, sequence = resolve_hp_threshold_turn(sequence, round_number, attacker, setup, dice)
         if threshold_event is not None:
