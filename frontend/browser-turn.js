@@ -103,6 +103,9 @@
       const swallowed = window.IRON_PIT_BROWSER_SWALLOW?.sourceTurnDamage(sequence, round, member, setup)
         || {events: [], sequence};
       events.push(...swallowed.events); sequence = swallowed.sequence;
+      const attachments = window.IRON_PIT_BROWSER_ATTACHMENT_TURN?.resolve(sequence, round, member, setup)
+        || { events: [], sequence };
+      events.push(...attachments.events); sequence = attachments.sequence;
       for (const item of countered) {
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
