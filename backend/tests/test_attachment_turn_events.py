@@ -75,7 +75,7 @@ def test_dead_source_cleans_link_and_cannot_drain():
     source.state.is_dead = True
     source.state.is_alive = False
     events, seq = resolve_attachment_turn_start_events(
-        1, 2, source, setup, FixedDiceProvider([]),
+        1, 2, source, setup, FixedDiceProvider([1]),
     )
     assert (events, seq, setup.attachments) == ([], 1, [])
 
