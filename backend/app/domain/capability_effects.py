@@ -92,6 +92,7 @@ class GrappleEffectDefinition(BaseModel):
     max_target_size: CreatureSize | None = None
     restrains: bool = False
     requires_source_free: bool = False
+    max_active_grapples: int | None = Field(default=None, ge=1, le=20)
     periodic_damage: GrapplePeriodicDamage | None = None
 
 
