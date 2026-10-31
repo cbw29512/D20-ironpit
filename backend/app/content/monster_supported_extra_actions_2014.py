@@ -50,6 +50,7 @@ def source_supported_extra_action_labels_2014(monster: SourceMonster2014) -> set
                 _label(action.name)
                 for action in source_proven_limited_audible_conditions_2014(monster)
             }
+            | {_label(action.name) for action in source_scare_2014(monster)}
             | PIT_BANNED_ACTION_LABELS_2014
             | {
                 _label(name) for name in monster.action_names
