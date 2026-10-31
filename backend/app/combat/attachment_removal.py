@@ -27,7 +27,8 @@ def remove_attachment_by_action(
                        if member.combatant_id == source_id), None)
         if source is None:
             raise ValueError("Cannot remove link for an absent source.")
-        if combatant_distance(actor, source) > row.action_removal_range_ft:
+        if (actor.combatant_id != row.target_id
+                and combatant_distance(actor, source) > row.action_removal_range_ft):
             return False
         spend(actor.state, "action")
         setup.attachments = list(detach_link(tuple(setup.attachments), source_id, effect_id))
