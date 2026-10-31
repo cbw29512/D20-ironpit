@@ -124,6 +124,10 @@ def save_resources_2014(monster: SourceMonster2014) -> list[ResourceDefinition]:
                     max_uses=max_uses,
                 ))
                 resource_ids.add(resource_id)
+        for action in source_scare_2014(monster):
+            if action.resource_id and action.resource_id not in resource_ids:
+                resources.append(ResourceDefinition(id=action.resource_id, name=action.name, max_uses=1))
+                resource_ids.add(action.resource_id)
         return resources
     except Exception:
         logger.exception("Failed to adapt 2014 save resources for %s.", monster.name)
