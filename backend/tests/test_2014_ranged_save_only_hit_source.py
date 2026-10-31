@@ -96,13 +96,23 @@ def test_unknown_rider_and_source_identity_changes_fail_closed() -> None:
         for before, after in [
             ("half as much damage on a successful one.", "no damage on success."),
             ("Ranged Weapon Attack", "Ranged Spell Attack"),
-            ("45 (10d8) poison", "45 (10d8) psychic"),
+            ("45 (10d8) poison", "45 (10d8) poison and blinded"),
         ]:
             changed = card.model_copy(update={
                 "source_actions": card.source_actions.replace(before, after),
             })
             assert changed.source_actions != card.source_actions
             assert source_ranged_save_only_hit_attacks_2014(changed) == []
+        # Changing valid source parameters changes the bound data, not runtime code.
+        changed_type = card.model_copy(update={"source_actions":
+            card.source_actions.replace(
+                "45 (10d8) poison damage on a failed save",
+                "45 (10d8) psychic damage on a failed save",
+            )
+        })
+        bound = source_ranged_save_only_hit_attacks_2014(changed_type)
+        assert len(bound) == 1
+        assert bound[0].effects[0].damage_type.value == "psychic"
         renamed = card.model_copy(update={"id": "homebrew-naga", "name": "Other"})
         assert source_ranged_save_only_hit_attacks_2014(renamed)
     except Exception:
