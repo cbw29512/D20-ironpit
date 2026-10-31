@@ -45,9 +45,14 @@ const newSetup = (distance = 5) => {
 }
 {
   const { setup, victim } = newSetup(10);
-  assert.equal(R.removeByAction(setup, victim, "source", "feed"), false);
-  assert.equal(victim.state.action_available, true);
+  const helper = member("helper", 10);
+  setup.heroes.push(helper);
+  assert.equal(R.removeByAction(setup, helper, "source", "feed"), false);
+  assert.equal(helper.state.action_available, true);
   assert.equal(setup.attachments.length, 1);
+  // The victim's own attachment remains reachable even if its stale grid token drifts.
+  assert.equal(R.removeByAction(setup, victim, "source", "feed"), true);
+  assert.equal(victim.state.action_available, false);
 }
 {
   const { setup, source } = newSetup();
