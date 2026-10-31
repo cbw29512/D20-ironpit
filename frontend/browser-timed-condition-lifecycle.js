@@ -21,7 +21,9 @@
       if (event === "action" && !actionId) throw new Error("Named action expiry requires action ID.");
       const removed = [];
       for (const effect of [...(state.timed_effects || [])]) {
-        if (!(state.timed_effects || []).includes(effect) || !effect[flag]) continue;
+        if (!(state.timed_effects || []).includes(effect) || !(event === "action"
+          ? (effect.ends_on_owner_action_ids || []).includes(String(actionId).toLowerCase())
+          : effect[flag])) continue;
         const concentration = state.concentration;
         let ids;
         if (concentration && concentration.effect_id === effect.source_effect_id
