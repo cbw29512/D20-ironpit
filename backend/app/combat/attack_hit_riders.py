@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from app.combat.ability_score_reduction import apply_ability_score_reduction
+from app.combat.attachment_on_hit import apply_attack_hit_attachment
 from app.combat.conditions import apply_hit_conditions
 from app.combat.deferred_save_effect import arm_deferred_save_effect
 from app.combat.exile import apply_on_hit_exile
@@ -65,6 +66,7 @@ def resolve_attack_hit_riders(
         for condition_id in ("blinded", "restrained"):
             if condition_id not in result.applied_conditions:
                 result.applied_conditions.append(condition_id)
+    apply_attack_hit_attachment(attack, attacker_event_id, actual_event_id, defender, setup)
     result.on_hit_save = resolve_on_hit_condition_save(
         defender,
         attack,

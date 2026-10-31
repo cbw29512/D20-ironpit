@@ -219,6 +219,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                 "stacksOnReapply": effect.stacks_on_reapply,
                 "endsOnMagicalHealing": effect.ends_on_magical_healing,
             }
+        if attack.on_hit_attachment is not None:
+            row["onHitAttachment"] = attack.on_hit_attachment.model_dump(mode="json")
         if attack.on_hit_modifier_effects:
             row["onHitModifiers"] = [_hit_modifier(effect) for effect in attack.on_hit_modifier_effects]
         if attack.conditional_damage:

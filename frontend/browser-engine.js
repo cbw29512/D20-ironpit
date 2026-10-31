@@ -89,6 +89,7 @@
         monster_total_cr: totalCr(monsterMembers.map((item) => item.state.template.challenge_rating)),
         ruleset, map_definition: mapDefinition, persistent_hazards: [], persistent_barriers: [],
         persistent_beneficial_zones: [], suppression_zones: [], save_zones: [],
+        attachments: [],
       };
       window.IRON_PIT_BROWSER_OPENING_CONDITIONS?.apply(setup, selection);
       return setup;
@@ -237,6 +238,12 @@
     return finish(setup, init, events, "draw", resolvedRound, sequence);
   }
   function finish(setup, init, events, result, round, sequence) {
+    // Terminal wins may skip the next turn-start cleanup; prevent orphaned links.
+    if (setup.attachments?.length) {
+      const lifecycle = window.IRON_PIT_BROWSER_ATTACHMENT_TURN;
+      if (!lifecycle?.cleanup) throw Error("Final attachment lifecycle is unavailable.");
+      lifecycle.cleanup(setup);
+    }
     events.push({ sequence, round_number: round, event_type: result === "draw" ? "draw" : "victory", actor_id: "arena", actor_name: "Iron Pit", animation: "victory", description: result === "heroes_win" ? "Heroes win the deathmatch." : result === "monsters_win" ? "Monsters win the deathmatch." : "The fight reaches the arena round limit and ends in a draw." });
     return { battle_id: crypto.randomUUID?.() || `battle-${Date.now()}`, outcome: result, rounds: round, setup, initiative: init, events, ruleset: setup.ruleset };
   }

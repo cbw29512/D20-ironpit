@@ -152,12 +152,12 @@ Standing instruction: park, record, continue. Revisit this list after the rest o
 | Adult / ancient metallic dragons | Change Shape | Extra Action that replaces the combatant | Slowing Breath and Weakening Breath now compile. Form-replace stays parked. | Polymorph / form-replace policy |
 | Gibbering Mouther | Blinding Spittle | Recharge + Blinded already compile | Leftover multiattack / extra-action / trait. | Multiattack-complex lane |
 
-**2014 swallow / attach / pull (from #604).** Do not fake these as Grappled. Another agent owns this family:
+**2014 swallow / attach / pull (from #604; Stirge reversal approved 2026-10-30).** Do not fake these as Grappled. Stirge attachment is an independent shared relationship family under [the detailed attachment rule](IRON_PIT_RULES_CONTRACT.md#source-linked-attachment-without-grappled-2014-stirge-decision-updated-2026-10-30); independent swallow/pull mechanics stay parked:
 
 | Card / item | Family | Blocker | Why parked | Needed to unpark |
 |---|---|---|---|---|
 | Giant Frog; Giant Toad; Purple Worm; Remorhaz; Behir; Kraken; Tarrasque | swallow | Swallowed state | Blinded + Restrained + total cover + start-turn acid + death/regurgitate exit. | New swallow machine |
-| Stirge | removed from Iron Pit roster | Product decision | Attachment/Blood Drain is not worth a dedicated subsystem for the automated arena. Keep the source record for audit provenance but never compile it into the runnable roster. | None; intentionally excluded |
+| Stirge | source-linked non-Grappled attachment + recurring direct HP loss | Reversal APPROVED; runtime incomplete | Keep the source card; on a successful ordinary Blood Drain hit add one linked Attached debuff / Feeding status, then source-turn-start 1d4+3 **direct HP loss** (not Piercing damage), cumulative **actual** 10 HP drained auto-detach; either death cleans up. Source can detach for 5 ft. movement; any creature can detach by an Action. No invented heal, Grappled condition or attack while attached. | Complete immutable source binding, universal Python/browser lifecycle, action/movement removal, renderer, logs, roster and exact-head certification before admission (PR #1130) |
 | Roper | Reel / pull | Tendril attach + pull | Forced-movement pull; only push exists. | Pull primitive |
 | Gelatinous Cube; Shambling Mound | Engulf | Swallow-shaped plus form extras | Same swallow machine, then extras. | Swallow machine first |
 | Blink Dog | Teleport + extra attack | Recharge Teleport also grants a Bite | `TeleportAction` has no extra-attack rider. In-place teleport (10.1) plus a parameterized extra-attack grant. Do not drop the Bite. | Extra-attack grant on teleport |

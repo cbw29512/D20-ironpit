@@ -13,6 +13,9 @@ from app.content.monster_grapple_periodic_2014 import (
     supports_grapple_periodic_2014,
 )
 from app.content.monster_source_2014 import SourceAttack2014
+from app.content.monster_source_attachment_2014 import (
+    source_attachment_effect_2014, supports_source_attachment_2014,
+)
 from app.domain.capability_effects import (
     AbilityScoreReductionEffectDefinition,
     AttackEffectDefinition,
@@ -103,6 +106,8 @@ def basic_attack_effects_2014(
                     if supports_grapple_periodic_2014(attack) else None
                 ),
             ))
+        if supports_source_attachment_2014(attack):
+            effects.append(source_attachment_effect_2014(attack))
         return effects
     except Exception:
         logger.exception("Failed to compile basic 2014 attack effects for %s.", attack.id)

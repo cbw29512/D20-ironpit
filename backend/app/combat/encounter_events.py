@@ -4,6 +4,7 @@ import logging
 import uuid
 
 from app.domain.encounters import EncounterBattleResult, EncounterInitiative, EncounterSetup, InitiativeGroup
+from app.combat.attachment_turn_events import cleanup_invalid_attachments
 from app.domain.models import BattleEvent
 
 logger = logging.getLogger(__name__)
@@ -106,6 +107,8 @@ def build_encounter_result(
     outcome: str,
     rounds: int,
 ) -> EncounterBattleResult:
+    # A final knockout can end combat before the next universal turn-start cleanup.
+    cleanup_invalid_attachments(setup)
     return EncounterBattleResult(
         battle_id=str(uuid.uuid4()),
         outcome=outcome,

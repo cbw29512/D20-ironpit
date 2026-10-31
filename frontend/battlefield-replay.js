@@ -3,6 +3,8 @@
 
   const el = (id) => document.getElementById(id);
   const nodes = new Map();
+  const L = () => window.IRON_PIT_BATTLEFIELD_ATTACHMENT_STATUS;
+  let activeAttachmentLinks = new Map();
   const SELF_BUFFS = new Set(["rage", "dodge"]);
   const DEBUFF_MODIFIERS = new Set(["attacks-against-advantage"]);
   const reduced = () => window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
@@ -37,6 +39,7 @@
 
   function bindBattle(battle, slotMap) {
     nodes.clear();
+    activeAttachmentLinks = new Map();
     const bindSide = (members, indexes, side) => members.forEach((member, i) => {
       const slot = indexes[i], node = document.querySelector(`.battle-card.${side}[data-slot-index="${slot}"]`);
       if (!node) return; node.dataset.combatantId = member.combatant_id; nodes.set(member.combatant_id, node);
@@ -161,6 +164,14 @@
     if (event.concentration_started_effect_id) concentration(actor, event.concentration_started_effect_id);
     if (event.concentration_ended_effect_id) concentration(target || actor, null);
     conditions(target, event.applied_condition_ids || [], event.removed_condition_ids || []);
+    const changes = event.attachment_changes || [];
+    if (changes.length && !L()) throw new Error("Linked attachment renderer is unavailable.");
+    if (changes.length) activeAttachmentLinks = L().applyChanges(activeAttachmentLinks, changes);
+    if (event.is_dead && L()) {
+      const deceased = event.event_type === "death_save" ? event.actor_id : event.target_id;
+      if (deceased) activeAttachmentLinks = L().removeCombatant(activeAttachmentLinks, deceased);
+    }
+    L()?.sync(nodes, activeAttachmentLinks);
     if (event.feature_id === "escape-grapple" && event.check_succeeded) conditions(actor, [], ["grappled", "restrained"]);
     if (target && event.is_dead) dead(target); if (actor && event.event_type === "death_save" && event.is_dead) dead(actor);
     await sleep(event.event_type === "initiative" ? 90 : 230);
@@ -174,6 +185,11 @@
       node.classList.toggle("battle-stable", Boolean(state.is_stable && state.current_hp === 0));
       concentration(node, state.concentration?.effect_id || null); renderStateLanes(node, state, permanentPassiveStates(member, battle.setup));
     });
+    if (battle.setup.attachments?.length && !L()) throw new Error("Linked attachment renderer is unavailable.");
+    if (L()) {
+      activeAttachmentLinks = L().fromSetup(battle.setup);
+      L().sync(nodes, activeAttachmentLinks);
+    }
   }
 
   async function play(battle, slotMap, options = {}) {

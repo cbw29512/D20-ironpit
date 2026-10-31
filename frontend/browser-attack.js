@@ -32,6 +32,8 @@
   const HD = () => window.IRON_PIT_BROWSER_HIT_DAMAGE || { resolve: legacyHitDamage };
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
     if (attack.unavailableReason != null) throw new Error(`${attack.id} unavailable: ${attack.unavailableReason}`); if (attacker.state.is_dead || Q().incapacitated(attacker.state)) throw new Error("An incapacitated or dead creature cannot attack.");
+    if (window.IRON_PIT_BROWSER_ATTACHMENTS?.sourceAttacksBlocked(extra.setup, attacker.combatant_id))
+      throw new Error("Source-declared attachment prevents another attack while linked.");
     if (target.state.is_dead || (target.state.template.kind === "monster" && target.state.current_hp <= 0)) throw new Error("Defeated monsters and dead combatants cannot be targeted.");
     if (extra.brutalStrikeEffectIds != null) BS()?.selectEffects?.(attacker.state, extra.brutalStrikeEffectIds); const spendAction = extra.spendAction !== false;
     if (spendAction && !E().available(attacker.state, "action")) throw new Error("Action is unavailable for attack.");
@@ -96,6 +98,7 @@
     let maximumHpSave = null;
     let abilityReduction = null;
     let contestedMovement = null;
+    let attachedOnHit = false;
     let cunningStrikeTrip = null, cunningStrikeObscure = null;
     const applied = outcome.appliedConditions;
     if (hit) {
@@ -114,6 +117,11 @@
       if (cunningStrikeObscure?.applied && !applied.includes("blinded")) applied.push("blinded");
       const living = actualTarget.state.is_alive && !actualTarget.state.is_dead, proneMax = extra.proneMaxSize || attack.proneMaxSize;
       if (living && S().canProne(actualTarget, proneMax) && !I().immune(actualTarget.state, "prone")) { if (!actualTarget.state.active_effect_ids.includes("prone")) actualTarget.state.active_effect_ids.push("prone"); applied.push("prone"); }
+      if (living && attack.onHitAttachment) {
+        const runtime = window.IRON_PIT_BROWSER_ATTACHMENTS;
+        if (!runtime?.applyOnHit) throw new Error("Universal attachment hit runtime is unavailable.");
+        attachedOnHit = runtime.applyOnHit(extra.setup, attacker, actualTarget, attack);
+      }
       const preHitGrappledByAttacker = (actualTarget.state.grapple_sources || [])
         .some((grapple) => grapple.source_id === attacker.combatant_id);
       const control = attack.controlEffect;
@@ -224,6 +232,11 @@
       feature_id: d20Override.featureId || override.featureId || extra.featureId || (recklessStarted ? "reckless-attack" : null), concentration_ended_effect_id: concentrationBefore && !actualTarget.state.concentration ? concentrationBefore : null,
       resource_remaining: exileApplied?.resourceRemaining ?? deferredEffectArmed?.resourceRemaining ?? ammunitionRemaining,
       animation: attack.animation || (attack.kind === "ranged" ? "projectile" : "slash"), description: description + survivalLog + (window.IRON_PIT_BROWSER_ZERO_HP_REPLACEMENT?.consumeLog(actualTarget.state) || "") };
+    if (attachedOnHit) event.attachment_changes = [{
+      operation: "attach", source_id: attacker.combatant_id,
+      target_id: actualTarget.combatant_id, effect_id: attack.onHitAttachment.effect_id,
+      source_name: attack.onHitAttachment.source_name,
+    }];
     if (ward) window.IRON_PIT_BROWSER_TARGETING_WARDS.annotate(event, ward, attacker.state.template.name);
     return window.IRON_PIT_BROWSER_CHAMPION?.criticalMove(attacker, extra.setup, event) || event;
   }  window.IRON_PIT_BROWSER_ATTACK = { adjustedDamage, applyDamage, conditionSources, rangedCloseThreat, resolveAttack }; })();

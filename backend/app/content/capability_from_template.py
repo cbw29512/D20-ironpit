@@ -68,6 +68,8 @@ def _attack(attack: WeaponAttack) -> dict[str, object]:
             "stacks_on_reapply": ongoing.stacks_on_reapply,
             "ends_on_magical_healing": ongoing.ends_on_magical_healing,
         })
+    if attack.on_hit_attachment is not None:
+        effects.append({"kind": "attachment", **attack.on_hit_attachment.model_dump(mode="json")})
     if attack.on_hit_condition_save is not None:
         save = attack.on_hit_condition_save
         row: dict[str, object] = {
