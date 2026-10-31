@@ -56,13 +56,13 @@
   }
 
   function resolveOnHitConditionSave(
-    target, attack, sourceTemplate = null, round = null, setup = null, attacker = null,
+    target, attack, sourceTemplate = null, round = null, setup = null, attacker = null, sharedSave = null,
   ) {
     try {
       const impl = window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE;
       if (impl?.resolve) {
         return impl.resolve(
-          target, attack, sourceTemplate, round, setup, attacker,
+          target, attack, sourceTemplate, round, setup, attacker, sharedSave,
         );
       }
       const effect = attack.onHitConditionSave;
