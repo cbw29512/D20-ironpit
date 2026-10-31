@@ -37,10 +37,6 @@ def source_invisibility_action_2014(monster: SourceMonster2014) -> list[TimedSel
         match = _PRINTED_INVISIBILITY.fullmatch(" ".join(printed.replace("’", "'").split()))
         if match is None:
             return []
-        if match.group("action") is not None:
-            # A named-action exit requires the shared runtime event listener;
-            # retain the source blocker until that generic capability exists.
-            return []
         return [TimedSelfBuffAction(
             id="invisibility", name="Invisibility", action_cost="action",
             condition_ids=["invisible"], magical_effect=True,
