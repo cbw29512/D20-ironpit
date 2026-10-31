@@ -15,6 +15,7 @@
     HP_THRESHOLD_INSTANT_DEATH: "hp-threshold-instant-death",
     HP_THRESHOLD_CONDITION: "hp-threshold-condition",
     STANDARD_ATTACK: "standard-attack",
+    ATTACHMENT_REMOVAL: "attachment-removal",
     DODGE: "dodge",
   });
 
@@ -34,6 +35,7 @@
       CATEGORIES.SAVE_ACTION,
       CATEGORIES.SAVE_ZONE,
       CATEGORIES.STANDARD_ATTACK,
+      CATEGORIES.ATTACHMENT_REMOVAL,
       CATEGORIES.DODGE,
     ]),
     actionSurgeAttack: Object.freeze([
