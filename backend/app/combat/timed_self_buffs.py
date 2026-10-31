@@ -72,6 +72,7 @@ def resolve_timed_self_buff(
                 source_is_magical=action.magical_effect,
                 ends_on_owner_attack=action.ends_on_owner_attack,
                 ends_on_owner_spell_cast=action.ends_on_owner_spell_cast,
+                ends_on_owner_action_ids=action.ends_on_owner_action_ids,
                 applied_round=round_number,
                 expires_round=expires_round,
                 expiry_timing=expiry_timing,

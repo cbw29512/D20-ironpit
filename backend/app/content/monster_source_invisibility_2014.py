@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 # Backreference confirms the equipment sentence names the same source.
 _PRINTED_INVISIBILITY = re.compile(
     r"^The (?P<owner>[a-z][a-z'-]*) magically turns invisible until it attacks"
-    r"(?P<spell> or casts a spell)?,? or until its concentration ends"
+    r"(?P<spell> or casts a spell| or uses (?P<action>[A-Z][a-zA-Z ]*))?,? or until its concentration ends"
     r" \(as if concentrating on a spell\)\. Any equipment the (?P=owner) wears"
     r" or carries is invisible with it\.$",
     re.IGNORECASE,
@@ -41,7 +41,8 @@ def source_invisibility_action_2014(monster: SourceMonster2014) -> list[TimedSel
             id="invisibility", name="Invisibility", action_cost="action",
             condition_ids=["invisible"], magical_effect=True,
             concentration=True, ends_on_owner_attack=True,
-            ends_on_owner_spell_cast=match.group("spell") is not None, priority=70,
+            ends_on_owner_spell_cast=match.group("spell") == " or casts a spell",
+            ends_on_owner_action_ids=([match.group("action").strip().casefold()] if match.group("action") else []), priority=70,
             duration_rounds=None, expiry_timing=None, animation="invisibility",
         )]
     except Exception:

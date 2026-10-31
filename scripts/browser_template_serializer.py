@@ -816,6 +816,7 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         "magicalEffect": action.magical_effect,
         "endsOnOwnerAttack": action.ends_on_owner_attack,
         "endsOnOwnerSpellCast": action.ends_on_owner_spell_cast,
+        "endsOnOwnerActionIds": list(action.ends_on_owner_action_ids),
         "damageResistances": [_value(item) for item in action.damage_resistances],
         "expiryTiming": action.expiry_timing, "priority": action.priority,
         "animation": action.animation,
