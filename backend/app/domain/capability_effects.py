@@ -5,6 +5,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ConditionName, ConditionTiming, GrapplePeriodicDamage
+from app.domain.attachment_sources import OnHitAttachment
 from app.domain.combatants import DamageType
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
@@ -107,9 +108,13 @@ class ConditionEffectDefinition(BaseModel):
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
 
 
+class AttachmentEffectDefinition(OnHitAttachment):
+    kind: Literal["attachment"] = "attachment"
+
+
 AttackEffectDefinition = Annotated[
     DamageEffectDefinition | SaveDamageEffectDefinition | AbilityScoreReductionEffectDefinition | SaveMaximumHpReductionEffectDefinition | ContestedMovementEffectDefinition | ProneEffectDefinition | SaveConditionEffectDefinition |
-    GrappleEffectDefinition | ConditionEffectDefinition | OngoingHpLossEffectDefinition |
+    GrappleEffectDefinition | ConditionEffectDefinition | AttachmentEffectDefinition | OngoingHpLossEffectDefinition |
     SavePersistentEffectDefinition | HitModifierEffect,
     Field(discriminator="kind"),
 ]
