@@ -116,7 +116,10 @@
     }
     const heroKeys = new Set(heroes.map((card) => `${card.class_id}:${card.level}`));
     if (heroKeys.size !== heroes.length) throw new Error("Certified 2014 hero registry contains duplicate class/level entries.");
-    if (monsters.length !== 254) throw new Error(`Expected 254 source-admitted 2014 monsters; found ${monsters.length}.`);
+    const exportedMonsterCount = Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014 || {}).length;
+    if (!exportedMonsterCount || monsters.length !== exportedMonsterCount) {
+      throw new Error(`2014 browser catalog mismatch: ${exportedMonsterCount} exported, ${monsters.length} ready.`);
+    }
     if (heroes.some((card) => card.ruleset !== "2014" || card.kind !== "character")) throw new Error("2014 hero catalog crossed the ruleset boundary.");
     if (monsters.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 monster catalog crossed the ruleset boundary.");
     return {
