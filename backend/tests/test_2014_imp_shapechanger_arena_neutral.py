@@ -1,4 +1,7 @@
-"""Imp 2014 movement-only Shapechanger source proof and fail-closed guard."""
+"""Imp 2014 movement-only Shapechanger source proof and fail-closed guard.
+
+The immutable card owns form details; the combat engine owns universal mechanics.
+"""
 from __future__ import annotations
 
 import logging
