@@ -85,7 +85,7 @@ jobs:
           pytest -q backend/tests/test_2014_source_etherealness_inert.py
           PYTHONPATH=.:backend pytest -q backend/tests/test_2014_imp_invisibility.py
       - name: Reconcile canonical 2014 source-derived artifacts
-        if: ${{ github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'feat/2014-') && github.event.pull_request.head.repo.full_name == github.repository }}
+        if: ${{ github.event_name == 'pull_request' && (startsWith(github.event.pull_request.head.ref, 'feat/2014-') || startsWith(github.event.pull_request.head.ref, 'fix/')) && github.event.pull_request.head.repo.full_name == github.repository }}
         run: |
           python scripts/export_monster_fix_list_2014.py
           python scripts/export_universal_mechanic_inventory.py

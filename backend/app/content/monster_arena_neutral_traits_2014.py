@@ -41,6 +41,23 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             return False
         if verified_approved_inert_trait_2014(monster, trait_name):
             return True
+        if trait_name == "Shapechanger" and monster.id == "quasit":
+            # Source-only admission policy: form appearance and speed are
+            # irrelevant to Pit combat. Other attack/Scare/Invisible blockers
+            # remain independent. Strict source comparison fails closed.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            section = source_sections_2014(
+                monster.source_traits, include_continuations=True
+            ).get("Shapechanger", "")
+            return section == (
+                "The quasit can use its action to polymorph into a beast form "
+                "that resembles a bat (speed 10 ft. fly 40 ft.), a centipede "
+                "(40 ft., climb 40 ft.), or a toad (40 ft., swim 40 ft.), "
+                "or back into its true form. Its statistics are the same in "
+                "each form, except for the speed changes noted. Any equipment "
+                "it is wearing or carrying isn't transformed. It reverts "
+                "to its true form if it dies."
+            )
         source = monster.source_traits or ""
         # Context-driven exclusion: this trait only operates underwater, a
         # context absent from the standard Iron Pit. Keep the printed trait.
