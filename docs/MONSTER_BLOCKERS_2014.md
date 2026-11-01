@@ -50,7 +50,7 @@ the underlying ability is already implemented or trivial.
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
 | Balor | attack:incomplete, source:trait | Fire Aura |
 | Chuul | attack:incomplete, multiattack:complex, source:extra-action | — |
-| Cloaker | attack:incomplete, source:extra-action, source:trait | Damage Transfer, Light Sensitivity |
+| Cloaker | attack:incomplete, source:extra-action, source:trait | Damage Transfer |
 | Cloud Giant | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Couatl | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Cult Fanatic | mechanic:spellcasting, source:trait | Spellcasting |
