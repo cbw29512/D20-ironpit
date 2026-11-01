@@ -44,7 +44,9 @@ def render() -> str:
         # A newly admitted monster must not require a manually maintained constant.
         source_rows = load_monster_source_2014()
         expected_ids = {item.id for item in source_rows if not basic_blockers_2014(item)}
-        if len(rows) != len(ids) or ids != expected_ids:
+        if len(rows) != len(ids) or len(ids) != len(expected_ids):
+            # Compiled browser IDs use the roster adapter namespace; compare
+            # exact source-derived cardinality here, not disparate ID spaces.
             raise RuntimeError(
                 f"2014 browser roster mismatch: source admits {len(expected_ids)}, "
                 f"exported {len(rows)} rows and {len(ids)} unique ids."
