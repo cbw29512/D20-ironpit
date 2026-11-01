@@ -5864,7 +5864,7 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 73,
+    "blocked_monster_count": 72,
     "blocker_categories": {
       "arena:neutral": 1,
       "arena:removed": 1,
@@ -5880,7 +5880,7 @@
       "source:extra-action": 35,
       "source:legendary": 9,
       "source:reaction": 2,
-      "source:trait": 61
+      "source:trait": 60
     },
     "unresolved_printed_abilities": [
       {
@@ -6086,10 +6086,9 @@
         "printed_name": "Reflective Carapace"
       },
       {
-        "demand_count": 11,
+        "demand_count": 10,
         "monsters": [
           "Doppelganger",
-          "Imp",
           "Mimic",
           "Quasit",
           "Succubus/Incubus",
