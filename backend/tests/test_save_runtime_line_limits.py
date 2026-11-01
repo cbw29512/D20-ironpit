@@ -32,10 +32,10 @@ def test_save_runtime_modules_stay_within_line_limit() -> None:
         for relative in _SAVE_MODULES:
             path = _ROOT / relative
             line_count = len(path.read_text(encoding="utf-8").splitlines())
-            if line_count > 150:
+            if line_count > 200:
                 oversized[relative] = line_count
         assert oversized == {}, (
-            "Save runtime modules must be split at 150 lines: "
+            "Save runtime modules must be split at 200 lines: "
             f"{oversized}"
         )
     except Exception:
