@@ -24,6 +24,13 @@ def test_2014_frog_is_arena_neutral_not_missing_engine_work() -> None:
     assert "2014-frog" not in {item.id for item in build_basic_2014_monsters()}
 
 
+def test_2014_frog_arena_neutral_fails_closed_on_source_mutation() -> None:
+    frog = _source("frog")
+    mutated = frog.model_copy(update={"source_traits": (frog.source_traits or "").replace("10 feet", "15 feet")})
+    assert is_arena_neutral_monster_2014(mutated) is False
+    assert "arena:neutral" not in basic_blockers_2014(mutated)
+
+
 def test_stirge_removal_remains_distinct_from_arena_neutral() -> None:
     stirge = _source("stirge")
 
