@@ -71,4 +71,31 @@ const sample = (source = "source-a", target = "target-a", effect = "feed") => ({
 // Homebrew/renamed source parameters must not alter the underlying engine behavior.
 const renamed = A.attach([], sample("homebrew", "target-two", "custom-label"));
 assert.deepEqual(A.recordHpLoss(renamed, "homebrew", "custom-label", 10), []);
+{
+  // A target reduced to zero HP by the hit can still be a living, unconscious
+  // hero. The printed attachment cannot be silently discarded at zero HP.
+  const source = { combatant_id: "source-a" };
+  const victim = { combatant_id: "target-a", state: {
+    current_hp: 0, is_alive: true, is_dead: false, is_unconscious: true,
+  } };
+  const setup = { heroes: [victim], monsters: [source], attachments: [] };
+  const effect = sample();
+  const attack = { onHitAttachment: {
+    effect_id: effect.effect_id, source_name: effect.source_name,
+    dice_count: effect.damage_dice_count, dice_size: effect.damage_dice_size,
+    damage_bonus: effect.damage_bonus, damage_type: effect.damage_type,
+    periodic_effect_kind: effect.periodic_effect_kind, tick_timing: effect.damage_timing,
+    auto_end_after_hp_loss: effect.detach_after_hp_lost,
+    blocks_source_attacks: true, action_removable: true,
+    action_removal_range_ft: 5, source_detach_movement_ft: 5,
+  } };
+  assert.equal(A.applyOnHit(setup, source, victim, attack), true);
+  assert.equal(setup.attachments.length, 1);
+  assert.equal(A.sourceAttacksBlocked(setup, source.combatant_id), true);
+  setup.attachments = [];
+  victim.state.is_dead = true;
+  victim.state.is_alive = false;
+  assert.equal(A.applyOnHit(setup, source, victim, attack), false);
+  assert.deepEqual(setup.attachments, []);
+}
 console.log("Universal browser attachment state and lifecycle tests passed.");
