@@ -18,7 +18,8 @@ def apply_attack_hit_attachment(attack, attacker_id, target_id, target_state, se
             return False
         if setup is None:
             raise ValueError("On-hit attachment requires a live encounter setup.")
-        if target_state.is_dead or not target_state.is_alive or target_state.current_hp <= 0:
+        # Zero-HP unconscious heroes remain living creatures and can be attached.
+        if target_state.is_dead or not target_state.is_alive:
             return False
         members = {item.combatant_id: item for item in [*setup.heroes, *setup.monsters]}
         if attacker_id not in members or target_id not in members:
