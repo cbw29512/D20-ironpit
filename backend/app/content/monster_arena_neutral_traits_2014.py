@@ -76,6 +76,15 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "it is wearing or carrying isn't transformed. It reverts "
                 "to its true form if it dies."
             )
+        if trait_name == "Ephemeral" and monster.id == "will-o-wisp":
+            # Source-only: cannot wear or carry anything. No combat effect in Pit
+            # (no equipment system for monsters). Other traits remain independent.
+            # Exact match fails closed on mutation.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            section = source_sections_2014(
+                monster.source_traits, include_continuations=True
+            ).get("Ephemeral", "")
+            return section == "The will-o'-wisp can't wear or carry anything."
         source = monster.source_traits or ""
         # Context-driven exclusion: this trait only operates underwater, a
         # context absent from the standard Iron Pit. Keep the printed trait.
