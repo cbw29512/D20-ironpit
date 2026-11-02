@@ -428,14 +428,13 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **71**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **70**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
 | Aberrant Ground | Gibbering Mouther | 1 |
 | Adhesive (Object Form Only) | Mimic | 1 |
 | Air Form | Air Elemental | 1 |
-| Bound | Shield Guardian | 1 |
 | Consume Life | Will-o'-Wisp | 1 |
 | Corrode Metal | Gray Ooze | 1 |
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
@@ -459,7 +458,6 @@ Blocked monsters: **71**. These are grouped by printed ability name so the roste
 | Pounce (Tiger or Hybrid Form Only) | Weretiger | 1 |
 | Reflective Carapace | Tarrasque | 1 |
 | Shapechanger | Doppelganger, Mimic, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf | 9 |
-| Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
 | Telepathic Bond | Succubus/Incubus | 1 |
 | Transparent | Gelatinous Cube | 1 |
@@ -472,7 +470,7 @@ Blocked monsters: **71**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 59 |
+| `source:trait` | 58 |
 | `source:extra-action` | 35 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 15 |
@@ -483,7 +481,7 @@ Blocked monsters: **71**. These are grouped by printed ability name so the roste
 | `attack:complex` | 4 |
 | `attack:damage-type` | 2 |
 | `mechanic:swallow` | 2 |
-| `source:reaction` | 2 |
 | `arena:neutral` | 1 |
 | `arena:removed` | 1 |
 | `attack:none` | 1 |
+| `source:reaction` | 1 |
