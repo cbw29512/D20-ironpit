@@ -41,6 +41,24 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             return False
         if verified_approved_inert_trait_2014(monster, trait_name):
             return True
+        if trait_name == "Shapechanger" and monster.id == "imp":
+            # Approved Pit policy: cosmetic forms and movement speeds have
+            # no additional combat effect. This is source classification,
+            # never an ability-name switch in the combat engine.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+
+            printed = source_sections_2014(
+                monster.source_traits, include_continuations=True
+            ).get("Shapechanger", "")
+            expected = (
+                "The imp can use its action to polymorph into a beast form "
+                "that resembles a rat (speed 20 ft.), a raven (20 ft., fly 60 ft.), "
+                "or a spider (20 ft., climb 20 ft.), or back into its true form. "
+                "Its statistics are the same in each form, except for the speed "
+                "changes noted. Any equipment it is wearing or carrying isn't "
+                "transformed. It reverts to its true form if it dies."
+            )
+            return printed == expected
         source = monster.source_traits or ""
         # Context-driven exclusion: this trait only operates underwater, a
         # context absent from the standard Iron Pit. Keep the printed trait.
