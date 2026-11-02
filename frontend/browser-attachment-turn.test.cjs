@@ -92,4 +92,21 @@ const link = (kind = "direct_hp_loss", type = null) => ({
   assert.deepEqual(Turn.resolve(1, 1, source, encounter).events, []);
   assert.deepEqual(encounter.attachments, []);
 }
+{
+  const { source, victim, encounter } = setup();
+  encounter.attachments = A.attach([], link());
+  victim.state.current_hp = 2;
+  window.IRON_PIT_DICE.rolls = [1];
+  const result = Turn.resolve(1, 2, source, encounter);
+  assert.equal(result.sequence, 2);
+  assert.equal(victim.state.current_hp, 0);
+  assert.equal(victim.state.temporary_hp, 9, "Direct HP loss bypasses temp HP.");
+  assert.deepEqual(encounter.attachments, [], "Zero HP clears the relationship below ten HP drained.");
+  assert.deepEqual(
+    result.events[0].attachment_changes.map(({ operation, source_name }) => [operation, source_name]),
+    [["detach", "Blood Drain"]],
+    "The same turn event must tell battlefield replay to clear Attached and Feeding.",
+  );
+  assert.equal(A.sourceAttacksBlocked(encounter, source.combatant_id), false);
+}
 console.log("Browser attachment turn integration tests passed.");
