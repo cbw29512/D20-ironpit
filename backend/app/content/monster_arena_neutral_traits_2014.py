@@ -76,6 +76,20 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "it is wearing or carrying isn't transformed. It reverts "
                 "to its true form if it dies."
             )
+        if trait_name == "Ignited Illumination" and monster.id == "magmin":
+            # Standard Pit has no darkness, sunlight-sensitivity trigger from
+            # non-sunlight, or other light-dependent combat effect. Toggle
+            # sheds only light; printed text preserved. Mutation fails closed.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(
+                monster.source_traits, include_continuations=True
+            ).get("Ignited Illumination", "")
+            expected = (
+                "As a bonus action, the magmin can set itself ablaze or "
+                "extinguish its flames. While ablaze, the magmin sheds bright "
+                "light in a 10-foot radius and dim light for an additional 10 feet."
+            )
+            return printed == expected
         source = monster.source_traits or ""
         # Context-driven exclusion: this trait only operates underwater, a
         # context absent from the standard Iron Pit. Keep the printed trait.
