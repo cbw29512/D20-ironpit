@@ -59,6 +59,7 @@ const link = (kind = "direct_hp_loss", type = null) => ({
   periodic_effect_kind: kind, damage_dice_count: 1, damage_dice_size: 4,
   damage_bonus: 3, damage_type: type, damage_timing: "source_turn_start",
   detach_after_hp_lost: kind === "direct_hp_loss" ? 10 : null,
+  blocks_source_attacks: true,
 });
 {
   const { source, victim, encounter } = setup();
@@ -125,6 +126,7 @@ const link = (kind = "direct_hp_loss", type = null) => ({
   assert.equal(victim.state.is_dead, false);
   assert.equal(encounter.attachments.length, 1, "Unconscious is not dead.");
   assert.deepEqual(result.events[0].attachment_changes || [], []);
-  assert.equal(A.sourceAttacksBlocked(encounter, source.combatant_id), false);
+  assert.equal(A.sourceAttacksBlocked(encounter, source.combatant_id), true,
+    "A living attached source remains unable to attack while the hero is unconscious.");
 }
 console.log("Browser attachment turn integration tests passed.");
