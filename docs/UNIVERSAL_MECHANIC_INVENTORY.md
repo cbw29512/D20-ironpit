@@ -441,7 +441,6 @@ Blocked monsters: **71**. These are grouped by printed ability name so the roste
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
 | Divine Eminence | Priest | 1 |
 | Duergar Resilience | Duergar | 1 |
-| Ephemeral | Will-o'-Wisp | 1 |
 | False Appearance (Object Form Only) | Mimic | 1 |
 | Fire Aura | Balor | 1 |
 | Fire Form | Fire Elemental | 1 |
