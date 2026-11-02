@@ -109,7 +109,8 @@
       const spec = attack.onHitAttachment;
       if (!spec) return false;
       if (!setup) throw Error("On-hit attachment needs encounter setup.");
-      if (!target.state.is_alive || target.state.is_dead || target.state.current_hp <= 0) return false;
+      // An unconscious hero at zero HP remains alive: the source can attach.
+      if (!target.state.is_alive || target.state.is_dead) return false;
       if (!Array.isArray(setup.attachments)) setup.attachments = [];
       const row = {
         source_id: attacker.combatant_id, target_id: target.combatant_id,
