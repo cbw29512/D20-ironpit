@@ -129,6 +129,16 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "detect magic",
                 "isn't itself magical",
             ))
+        if trait_name == "Light Sensitivity":
+            # Standard Pit has no bright-light context by default. Trait remains
+            # source-bound; any bright-light effect would fail this exact match.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(source).get("Light Sensitivity", "")
+            normalized = " ".join(printed.casefold().replace("’", "'").split())
+            return normalized == (
+                "while in bright light, the cloaker has disadvantage on attack "
+                "rolls and wisdom (perception) checks that rely on sight."
+            )
         # Pinned source must prove both the printed trait and its
         # arena-inert semantics. Other effects remain blocked independently.
         additional_inert_clauses = {
