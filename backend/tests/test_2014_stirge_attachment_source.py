@@ -141,3 +141,25 @@ def test_pinned_stirge_enters_generic_2014_roster_without_special_mechanics():
     assert len(cards) == 1
     assert cards[0].max_hp == 2
     assert cards[0].armor_class == 14
+
+
+def test_zero_hp_detaches_and_emits_receipt_before_drain_threshold():
+    # Two real HP remain: the first periodic tick ends the relationship even
+    # though the printed ten-HP drain threshold has not been reached.
+    _, attack, attacker, victim, setup = _combat()
+    victim.state.current_hp = 2
+    victim.state.temporary_hp = 0
+    assert apply_attack_hit_attachment(
+        attack, attacker.combatant_id, victim.combatant_id, victim.state, setup,
+    )
+    events, sequence = resolve_attachment_turn_start_events(
+        1, 2, attacker, setup, FixedDiceProvider([1]),
+    )
+    assert sequence == 2
+    assert len(events) == 1
+    assert victim.state.current_hp == 0
+    assert setup.attachments == []
+    assert [(change.operation, change.source_name) for change in events[0].attachment_changes] == [
+        ("detach", "Blood Drain"),
+    ]
+    assert not source_attacks_blocked(setup, attacker.combatant_id)
