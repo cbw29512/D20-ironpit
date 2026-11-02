@@ -76,6 +76,38 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "it is wearing or carrying isn't transformed. It reverts "
                 "to its true form if it dies."
             )
+
+        if trait_name in ("Bound", "Spell Storing"):
+            # No amulet system exists in the Pit. Printed amulet-dependent
+            # traits cannot change a combat outcome. Strict full-paragraph
+            # match; any mutation fails closed.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(
+                monster.source_traits, include_continuations=True
+            ).get(trait_name, "")
+            expected = {
+                "Bound": (
+                    "The shield guardian is magically bound to an amulet. As long as "
+                    "the guardian and its amulet are on the same plane of existence, "
+                    "the amulet's wearer can telepathically call the guardian to travel "
+                    "to it, and the guardian knows the distance and direction to the "
+                    "amulet. If the guardian is within 60 feet of the amulet's wearer, "
+                    "half of any damage the wearer takes (rounded up) is transferred "
+                    "to the guardian."
+                ),
+                "Spell Storing": (
+                    "A spellcaster who wears the shield guardian's amulet can cause "
+                    "the guardian to store one spell of 4th level or lower. To do so, "
+                    "the wearer must cast the spell on the guardian. The spell has no "
+                    "effect but is stored within the guardian. When commanded to do so "
+                    "by the wearer or when a situation arises that was predefined by "
+                    "the spellcaster, the guardian casts the stored spell with any "
+                    "parameters set by the original caster, requiring no components. "
+                    "When the spell is cast or a new spell is stored, any previously "
+                    "stored spell is lost."
+                ),
+            }
+            return printed == expected[trait_name]
         source = monster.source_traits or ""
         # Context-driven exclusion: this trait only operates underwater, a
         # context absent from the standard Iron Pit. Keep the printed trait.
