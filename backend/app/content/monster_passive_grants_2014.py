@@ -75,6 +75,19 @@ def saving_throw_advantage_grants_2014(monster: SourceMonster2014) -> list[Savin
             ))
         if _FEY_ANCESTRY in monster.trait_names:
             grants.extend(_condition_save_advantage("fey-ancestry", _FEY_ANCESTRY, ("charm",)))
+        if "Duergar Resilience" in monster.trait_names:
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            section = source_sections_2014(monster.source_traits or "", include_continuations=True).get("Duergar Resilience", "")
+            expected = "The duergar has advantage on saving throws against poison, spells, and illusions, as well as to resist being charmed or paralyzed."
+            if section.strip() != expected:
+                raise ValueError("Duergar Resilience source text mutated; fail closed")
+            grants.extend(_condition_save_advantage("duergar-resilience", "Duergar Resilience", ("poison", "charm", "paralyzed")))
+            grants.append(SavingThrowAdvantageGrant(
+                source_id="duergar-resilience-magical",
+                source_name="Duergar Resilience",
+                abilities=list(_ALL_SAVE_ABILITIES),
+                requires_magical_effect=True,
+            ))
         for trait_name in monster.trait_names:
             if trait_name not in _TWO_HEAD_TRAITS:
                 continue
