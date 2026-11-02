@@ -50,12 +50,15 @@ def test_real_successful_attack_creates_link_and_blocks_second_attack():
     assert len(event.attachment_changes) == 1
     assert event.attachment_changes[0].operation == "attach"
     assert event.attachment_changes[0].source_name == "Blood Drain"
-    with pytest.raises(ValueError, match="attachment prevents another attack"):
+    with pytest.raises(RuntimeError, match="Attack resolution failed") as failure:
         resolve_attack(
             2, 1, attacker.state, victim.state, attack, 5, FixedDiceProvider([1]),
             actor_event_id=attacker.combatant_id, target_event_id=victim.combatant_id,
             spend_action=False, reaction_setup=setup,
         )
+    assert isinstance(failure.value.__cause__, ValueError)
+    assert "attachment prevents another attack" in str(failure.value.__cause__)
+    assert len(setup.attachments) == 1
 
 
 def test_generic_removal_action_reports_detach_receipt_and_spends_action():
