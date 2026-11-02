@@ -24,7 +24,10 @@ window.IRON_PIT_BROWSER_START_OF_TURN_TIMED_BURN = {
   loseHitPoints(state, amount) {
     const actual = Math.min(state.current_hp, amount);
     state.current_hp -= actual;
-    if (state.current_hp <= 0) { state.is_alive = false; state.is_dead = true; }
+    if (state.current_hp <= 0) {
+      if (state.template.kind === "hero") state.is_unconscious = true;
+      else { state.is_alive = false; state.is_dead = true; }
+    }
     return actual;
   },
 };
@@ -40,7 +43,8 @@ window.IRON_PIT_BROWSER_ATTACK = {
 };
 const member = (id, side) => ({
   combatant_id: id, side, state: {
-    template: { name: id }, current_hp: 20, temporary_hp: 9,
+    template: { name: id, kind: side === "heroes" ? "hero" : "monster" },
+    current_hp: 20, temporary_hp: 9,
     is_alive: true, is_dead: false, active_effect_ids: [],
   },
 });
@@ -96,6 +100,7 @@ const link = (kind = "direct_hp_loss", type = null) => ({
   const { source, victim, encounter } = setup();
   encounter.attachments = A.attach([], link());
   victim.state.current_hp = 2;
+  victim.state.template.kind = "monster"; // Zero HP is actual death for this fixture.
   window.IRON_PIT_DICE.rolls = [1];
   const result = Turn.resolve(1, 2, source, encounter);
   assert.equal(result.sequence, 2);
@@ -107,6 +112,19 @@ const link = (kind = "direct_hp_loss", type = null) => ({
     [["detach", "Blood Drain"]],
     "The same turn event must tell battlefield replay to clear Attached and Feeding.",
   );
+  assert.equal(A.sourceAttacksBlocked(encounter, source.combatant_id), false);
+}
+{
+  const { source, victim, encounter } = setup();
+  encounter.attachments = A.attach([], link());
+  victim.state.current_hp = 2; // A real hero becomes unconscious, not dead, at zero.
+  window.IRON_PIT_DICE.rolls = [1];
+  const result = Turn.resolve(1, 2, source, encounter);
+  assert.equal(victim.state.current_hp, 0);
+  assert.equal(victim.state.is_unconscious, true);
+  assert.equal(victim.state.is_dead, false);
+  assert.equal(encounter.attachments.length, 1, "Unconscious is not dead.");
+  assert.deepEqual(result.events[0].attachment_changes || [], []);
   assert.equal(A.sourceAttacksBlocked(encounter, source.combatant_id), false);
 }
 console.log("Browser attachment turn integration tests passed.");
