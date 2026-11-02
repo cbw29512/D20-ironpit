@@ -22,18 +22,16 @@ def _quasit():
         raise
 
 
-def test_shapechanger_neutral_but_remaining_combat_actions_block():
+def test_shapechanger_neutral_and_all_other_quasit_mechanics_remain_audited():
     try:
         monster = _quasit()
         original = monster.model_dump_json()
         assert verified_arena_inert_trait_2014(monster, "Shapechanger")
         assert "Shapechanger" not in unsupported_traits_2014(monster)
         blockers = basic_blockers_2014(monster)
-        # Shapechanger classification clears only the source trait blocker;
-        # attack/save and action obligations remain independently audited.
-        assert "source:trait" not in blockers
-        assert "attack:complex" in blockers
-        assert "source:extra-action" in blockers
+        # The previously separate poison and Scare blockers are now wired.
+        # Classification must reflect all source mechanics, not historical failures.
+        assert blockers == ()
         assert monster.model_dump_json() == original
     except Exception:
         logger.exception("Quasit source proof failed")
