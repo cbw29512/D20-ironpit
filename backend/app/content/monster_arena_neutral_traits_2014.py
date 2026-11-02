@@ -32,6 +32,7 @@ ARENA_NEUTRAL_TRAITS_2014 = frozenset({
     "Spider Climb", "Treasure Sense", "Tunneler", "Water Breathing", "Devil's Sight",
     "Underwater Camouflage", "Web Sense", "Web Walker", "Rejuvenation", "Hellish Rejuvenation",
     "Wakeful", "Ethereal Jaunt", "Incorporeal Movement", "Immutable Form",
+    "Ephemeral",
 })
 
 def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str) -> bool:
