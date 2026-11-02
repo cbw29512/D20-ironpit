@@ -30,7 +30,6 @@ _MODELED_2014_TRAITS = {
 }
 _CHARGE_TRAIT_NAMES = frozenset({"Charge", "Pounce", "Trampling Charge"})
 _PIT_REMOVED_MONSTER_IDS_2014 = frozenset({"stirge"})
-_PIT_ARENA_NEUTRAL_MONSTER_IDS_2014 = frozenset({"frog"})
 def _supported_charge(monster: SourceMonster2014) -> bool:
     return any(
         attack.charge_profile is not None
@@ -103,7 +102,20 @@ def modeled_combat_traits_2014(monster: SourceMonster2014) -> list[CombatTrait]:
         traits.append(CombatTrait.REACTION_EACH_TURN)
     return traits
 def is_arena_neutral_monster_2014(monster: SourceMonster2014) -> bool:
-    return monster.id in _PIT_ARENA_NEUTRAL_MONSTER_IDS_2014
+    """Source-proven: no attacks, no actions, only arena-neutral traits.
+
+    Replaces prior ID dispatch for Frog. Sea Horse and Shrieker match the same
+    source criteria and are classified consistently. Mutation of source fails closed.
+    """
+    try:
+        if monster.attacks or monster.action_names:
+            return False
+        if unsupported_traits_2014(monster):
+            return False
+        return True
+    except Exception:
+        logger.exception("Failed arena-neutral classification for %s.", monster.name)
+        raise
 def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     if monster.id in _PIT_REMOVED_MONSTER_IDS_2014:
         return ("arena:removed",)
