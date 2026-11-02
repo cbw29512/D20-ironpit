@@ -81,6 +81,10 @@ def resolve_attachment_turn_start_events(
             setup.attachments = list(record_attachment_hp_loss(
                 tuple(setup.attachments), row.source_id, row.effect_id, lost,
             ))
+            # Death ends the link even when the drain threshold was not reached.
+            # Reconcile before the receipt so browser badges clear on this tick.
+            if target.state.is_dead or not target.state.is_alive:
+                cleanup_invalid_attachments(setup)
             detached = not any(
                 item.source_id == row.source_id and item.effect_id == row.effect_id
                 for item in setup.attachments
@@ -100,8 +104,6 @@ def resolve_attachment_turn_start_events(
                 description=f"{owner.state.template.name}: {row.source_name} {effect_text} at its turn start.",
             ))
             sequence += 1
-            if target.state.is_dead or not target.state.is_alive:
-                cleanup_invalid_attachments(setup)
         return events, sequence
     except Exception:
         logger.exception("Attachment start-turn resolution failed for %s.", owner.combatant_id)
