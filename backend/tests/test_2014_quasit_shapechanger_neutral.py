@@ -1,4 +1,7 @@
-"""Quasit movement-only Shapechanger source proof regression tests."""
+"""Quasit movement-only Shapechanger source proof regression tests.
+
+Source classification remains independent from the universal combat resolvers.
+"""
 from __future__ import annotations
 
 import logging
