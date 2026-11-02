@@ -163,3 +163,24 @@ def test_zero_hp_detaches_and_emits_receipt_before_drain_threshold():
         ("detach", "Blood Drain"),
     ]
     assert not source_attacks_blocked(setup, attacker.combatant_id)
+
+
+def test_on_hit_attaches_to_living_unconscious_zero_hp_target_only():
+    # On-hit eligibility is life/death, not positive HP. A living downed
+    # hero remains a creature and still receives the printed attachment.
+    _, attack, attacker, victim, setup = _combat()
+    victim.state.current_hp = 0
+    victim.state.is_unconscious = True
+    assert victim.state.is_alive and not victim.state.is_dead
+    assert apply_attack_hit_attachment(
+        attack, attacker.combatant_id, victim.combatant_id, victim.state, setup,
+    )
+    assert len(setup.attachments) == 1
+    assert source_attacks_blocked(setup, attacker.combatant_id)
+    setup.attachments.clear()
+    victim.state.is_dead = True
+    victim.state.is_alive = False
+    assert not apply_attack_hit_attachment(
+        attack, attacker.combatant_id, victim.combatant_id, victim.state, setup,
+    )
+    assert setup.attachments == []
