@@ -428,7 +428,7 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **72**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **71**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
@@ -458,7 +458,7 @@ Blocked monsters: **72**. These are grouped by printed ability name so the roste
 | Ooze Cube | Gelatinous Cube | 1 |
 | Pounce (Tiger or Hybrid Form Only) | Weretiger | 1 |
 | Reflective Carapace | Tarrasque | 1 |
-| Shapechanger | Doppelganger, Mimic, Quasit, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf | 10 |
+| Shapechanger | Doppelganger, Mimic, Succubus/Incubus, Vampire, Werebear, Wereboar, Wererat, Weretiger, Werewolf | 9 |
 | Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
 | Telepathic Bond | Succubus/Incubus | 1 |
@@ -472,7 +472,7 @@ Blocked monsters: **72**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 60 |
+| `source:trait` | 59 |
 | `source:extra-action` | 35 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 15 |
