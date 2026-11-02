@@ -47,9 +47,7 @@ def test_wired_swallow_and_parked_attach_or_pull_remain_explicit() -> None:
     for monster_id in ("giant-frog", "giant-toad"):
         assert "mechanic:swallow" not in basic_blockers_2014(_source(monster_id))
 
-    parked = {
-        "stirge": "arena:removed",
-        "roper": "source:extra-action",
-    }
+    parked = {"roper": "source:extra-action"}
+    assert basic_blockers_2014(_source("stirge")) == ()
     for monster_id, blocker in parked.items():
         assert blocker in basic_blockers_2014(_source(monster_id))
