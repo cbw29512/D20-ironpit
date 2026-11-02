@@ -24,6 +24,21 @@ def arena_unavailable_reaction_names_2014(monster: SourceMonster2014) -> frozens
                 name for name in monster.reaction_names
                 if name == "Split" and "<strong>Split.</strong>" in source
             )
+
+        # No amulet system exists in the Pit. Printed amulet-dependent
+        # Shield reaction cannot change a combat outcome.
+        if monster.id == "shield-guardian" and "Shield" in monster.reaction_names:
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(
+                monster.source_reactions, include_continuations=True
+            ).get("Shield", "")
+            expected = (
+                "When a creature makes an attack against the wearer of the "
+                "guardian's amulet, the guardian grants a +2 bonus to the "
+                "wearer's AC if the guardian is within 5 feet of the wearer."
+            )
+            if printed == expected:
+                inert.add("Shield")
         return frozenset(inert)
     except Exception:
         logger.exception("Failed arena reaction classification for %s.", monster.name)
