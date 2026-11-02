@@ -66,6 +66,9 @@
           }];
         } else throw Error("Unknown source-owned periodic attachment effect kind.");
         setup.attachments = A().recordHpLoss(setup.attachments, row.source_id, row.effect_id, lost);
+        // Match the Python reference: a defeated target ends the link before
+        // receipts are produced, even below the source's HP-drain threshold.
+        if (!alive(target)) cleanup(setup);
         const detached = !setup.attachments.some((item) =>
           item.source_id === row.source_id && item.effect_id === row.effect_id);
         const changes = detached ? [{
@@ -82,7 +85,6 @@
           is_dead: target.state.is_dead, animation: "feature",
           description: `${owner.state.template.name}: ${row.source_name} ${effectText} at its turn start.`,
         });
-        if (!alive(target)) cleanup(setup);
       }
       return { events, sequence };
     } catch (error) {
