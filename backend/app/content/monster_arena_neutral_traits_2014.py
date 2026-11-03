@@ -31,7 +31,7 @@ ARENA_NEUTRAL_TRAITS_2014 = frozenset({
     "Mimicry", "Earth Glide", "Running Leap", "Shark Telepathy", "Snow Camouflage", "Stone Camouflage",
     "Spider Climb", "Treasure Sense", "Tunneler", "Water Breathing", "Devil's Sight",
     "Underwater Camouflage", "Web Sense", "Web Walker", "Rejuvenation", "Hellish Rejuvenation",
-    "Wakeful", "Ethereal Jaunt", "Incorporeal Movement", "Immutable Form",
+    "Wakeful", "Ethereal Jaunt", "Incorporeal Movement", "Immutable Form", "Light Sensitivity",
 })
 
 def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str) -> bool:
@@ -129,6 +129,18 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "detect magic",
                 "isn't itself magical",
             ))
+
+        if trait_name == "Light Sensitivity":
+            # Requires bright light context. Standard Pit has no ambient bright light
+            # or light-producing combat effect that activates this. Printed text preserved.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(source).get("Light Sensitivity", "")
+            normalized = " ".join(printed.casefold().replace("’", "'").split())
+            return (
+                "while in bright light" in normalized
+                and "disadvantage on attack rolls" in normalized
+                and "wisdom (perception) checks that rely on sight" in normalized
+            )
         # Pinned source must prove both the printed trait and its
         # arena-inert semantics. Other effects remain blocked independently.
         additional_inert_clauses = {
