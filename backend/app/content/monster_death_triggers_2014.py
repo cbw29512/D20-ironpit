@@ -29,6 +29,30 @@ _CONDITION_DEATH_TRIGGER = re.compile(
     r"saving throw on each of its turns, ending the effect on itself on a success\.$",
     re.IGNORECASE,
 )
+
+_MEPHIT_DAMAGE_DEATH_TRIGGER = re.compile(
+    r"^When the .+? dies, it explodes in a burst of (?P<flavor>[a-z ]+)\. Each creature within "
+    r"(?P<range>\d+) feet of it must make a DC (?P<dc>\d+) (?P<ability>[A-Za-z]+) saving throw, "
+    r"taking (?P<average>\d+) \((?P<count>\d+)d(?P<size>\d+)\) "
+    r"(?P<damage_type>[a-z]+) damage on a failed save, or half as much damage "
+    r"on a successful one\.(?P<trailing>.*)$",
+    re.IGNORECASE,
+)
+_MEPHIT_FAIL_ONLY_DEATH_TRIGGER = re.compile(
+    r"^When the .+? dies, it explodes in a cloud of steam\. Each creature within "
+    r"(?P<range>\d+) feet of the mephit must succeed on a DC (?P<dc>\d+) "
+    r"(?P<ability>[A-Za-z]+) saving throw or take (?P<average>\d+) "
+    r"\((?P<count>\d+)d(?P<size>\d+)\) (?P<damage_type>[a-z]+) damage\.$",
+    re.IGNORECASE,
+)
+_MAGMIN_DAMAGE_DEATH_TRIGGER = re.compile(
+    r"^When the magmin dies, it explodes in a burst of fire and magma\. Each creature within "
+    r"(?P<range>\d+) feet of it must make a DC (?P<dc>\d+) (?P<ability>[A-Za-z]+) saving throw, "
+    r"taking (?P<average>\d+) \((?P<count>\d+)d(?P<size>\d+)\) "
+    r"(?P<damage_type>[a-z]+) damage on a failed save, or half as much damage "
+    r"on a successful one\. Flammable objects that aren't being worn or carried in that area are ignited\.$",
+    re.IGNORECASE,
+)
 _IGNORED_OBJECT_AFTERMATH = re.compile(
     r"^The explosion ignites flammable objects in that area that aren't being worn "
     r"or carried, and it destroys the .+?'s weapons\.$",
@@ -120,6 +144,71 @@ def _source_condition_action(name: str, body: str) -> SaveCapabilityDefinition |
     )
 
 
+
+def _source_mephit_damage_action(name: str, body: str) -> SaveCapabilityDefinition | None:
+    match = _MEPHIT_DAMAGE_DEATH_TRIGGER.fullmatch(body)
+    if match is None:
+        return None
+    # Trailing is empty or ignored object text; objects are arena-neutral.
+    trailing = match["trailing"].strip()
+    if trailing and not trailing.startswith("Flammable"):
+        return None
+    count, size, average = int(match["count"]), int(match["size"]), int(match["average"])
+    if count < 1 or size < 2 or average != count * (size + 1) // 2:
+        return None
+    radius = int(match["range"])
+    effect_id = re.sub(r"[^a-z0-9]+", "-", name.casefold()).strip("-")
+    return SaveCapabilityDefinition(
+        id=effect_id, name=name, save_ability=match["ability"].casefold(),
+        dc=int(match["dc"]), range_ft=radius, max_targets=20,
+        target_scope="all-other-creatures",
+        area={"shape": "emanation", "origin": "self", "radius_ft": radius},
+        damage=DiceSpec(count=count, size=size),
+        damage_type=match["damage_type"].casefold(), success_damage="half",
+        animation="death-trigger",
+    )
+
+
+def _source_mephit_fail_only_action(name: str, body: str) -> SaveCapabilityDefinition | None:
+    match = _MEPHIT_FAIL_ONLY_DEATH_TRIGGER.fullmatch(body)
+    if match is None:
+        return None
+    count, size, average = int(match["count"]), int(match["size"]), int(match["average"])
+    if count < 1 or size < 2 or average != count * (size + 1) // 2:
+        return None
+    radius = int(match["range"])
+    effect_id = re.sub(r"[^a-z0-9]+", "-", name.casefold()).strip("-")
+    return SaveCapabilityDefinition(
+        id=effect_id, name=name, save_ability=match["ability"].casefold(),
+        dc=int(match["dc"]), range_ft=radius, max_targets=20,
+        target_scope="all-other-creatures",
+        area={"shape": "emanation", "origin": "self", "radius_ft": radius},
+        damage=DiceSpec(count=count, size=size),
+        damage_type=match["damage_type"].casefold(), success_damage="none",
+        animation="death-trigger",
+    )
+
+
+def _source_magmin_damage_action(name: str, body: str) -> SaveCapabilityDefinition | None:
+    match = _MAGMIN_DAMAGE_DEATH_TRIGGER.fullmatch(body)
+    if match is None:
+        return None
+    count, size, average = int(match["count"]), int(match["size"]), int(match["average"])
+    if count < 1 or size < 2 or average != count * (size + 1) // 2:
+        return None
+    radius = int(match["range"])
+    effect_id = re.sub(r"[^a-z0-9]+", "-", name.casefold()).strip("-")
+    return SaveCapabilityDefinition(
+        id=effect_id, name=name, save_ability=match["ability"].casefold(),
+        dc=int(match["dc"]), range_ft=radius, max_targets=20,
+        target_scope="all-other-creatures",
+        area={"shape": "emanation", "origin": "self", "radius_ft": radius},
+        damage=DiceSpec(count=count, size=size),
+        damage_type=match["damage_type"].casefold(), success_damage="half",
+        animation="death-trigger",
+    )
+
+
 def death_trigger_actions_2014(
     monster: SourceMonster2014,
 ) -> list[SaveCapabilityDefinition]:
@@ -129,8 +218,13 @@ def death_trigger_actions_2014(
     sections = source_sections_2014(monster.source_traits)
     return [
         action for name in semantic_death_trigger_names_2014(monster)
-        if (action := _source_damage_action(name, sections[name])
-            or _source_condition_action(name, sections[name])) is not None
+        if (action := (
+            _source_damage_action(name, sections[name])
+            or _source_condition_action(name, sections[name])
+            or _source_mephit_damage_action(name, sections[name])
+            or _source_mephit_fail_only_action(name, sections[name])
+            or _source_magmin_damage_action(name, sections[name])
+        )) is not None
     ]
 
 
