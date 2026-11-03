@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 ARENA_NEUTRAL_TRAITS_2014 = frozenset({
     "Siege Monster", "Amorphous", "Standing Leap", "Amphibious", "Beast of Burden", "Echolocation", "False Appearance", "Flyby", "Hold Breath",
-    "Ice Walk", "Illumination", "Keen Hearing", "Keen Hearing and Smell", "Keen Hearing and Sight",
+    "Ice Walk", "Illumination", "Ignited Illumination", "Keen Hearing", "Keen Hearing and Smell", "Keen Hearing and Sight",
     "Keen Sight", "Keen Sight and Smell", "Keen Smell", "Labyrinthine Recall", "Limited Amphibiousness",
     "Mimicry", "Earth Glide", "Running Leap", "Shark Telepathy", "Snow Camouflage", "Stone Camouflage",
     "Spider Climb", "Treasure Sense", "Tunneler", "Water Breathing", "Devil's Sight",
@@ -129,6 +129,14 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "detect magic",
                 "isn't itself magical",
             ))
+
+        if trait_name == "Ignited Illumination":
+            # Light shedding only. Standard Pit has no darkness/dim-light combat context
+            # that this trait can alter. Printed Bonus Action remains on the card.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(source).get("Ignited Illumination", "")
+            normalized = " ".join(printed.casefold().replace("’", "'").split())
+            return "bonus action" in normalized and "sheds bright light" in normalized and "10-foot radius" in normalized
         # Pinned source must prove both the printed trait and its
         # arena-inert semantics. Other effects remain blocked independently.
         additional_inert_clauses = {
