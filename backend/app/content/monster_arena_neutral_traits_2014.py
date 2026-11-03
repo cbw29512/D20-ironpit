@@ -76,6 +76,15 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "it is wearing or carrying isn't transformed. It reverts "
                 "to its true form if it dies."
             )
+        if trait_name == "Telepathic Bond" and monster.id == "succubus-incubus":
+            # Source-only: ignores telepathy range for charmed creatures, including planar. Standard Pit has no planar travel and no combat-relevant telepathy targeting or communication mechanics that change outcomes. Strict match fails closed.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            section = source_sections_2014(
+                monster.source_traits, include_continuations=True
+            ).get("Telepathic Bond", "")
+            return section == (
+                "The fiend ignores the range restriction on its telepathy when communicating with a creature it has charmed. The two don't even need to be on the same plane of existence."
+            )
         source = monster.source_traits or ""
         # Context-driven exclusion: this trait only operates underwater, a
         # context absent from the standard Iron Pit. Keep the printed trait.
