@@ -151,6 +151,13 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             return all(token in clause for token in additional_inert_clauses[trait_name])
         if verified_nonactionable_information_2014(monster, trait_name):
             return True
+        if trait_name == "Amphibious":
+            # Standard Pit magic makes breathing always viable; no water context required.
+            # Exact source clause proves only air/water breathing.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(source).get("Amphibious", "")
+            normalized = " ".join(printed.casefold().replace("’", "'").split())
+            return "breathe air and water" in normalized and "can" in normalized
         if trait_name != "Faultless Tracker":
             return False
         clauses = (
