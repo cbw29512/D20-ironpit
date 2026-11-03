@@ -20,11 +20,14 @@ from app.content.shared_zone_spells_2014 import wall_of_fire_2014
 from app.content.sorcerer_draconic_2014_spells import (
     burning_hands_2014,
     cone_of_cold_2014,
+    fire_bolt_2014,
     fireball_2014,
     lightning_bolt_2014,
+    poison_spray_2014,
+    ray_of_frost_2014,
     shatter_2014,
 )
-from app.content.sorcerer_draconic_2014_spell_support import magic_missile_2014
+from app.content.sorcerer_draconic_2014_spell_support import magic_missile_2014, shocking_grasp_2014
 from app.content.bard_2014_vicious_mockery import vicious_mockery_action_2014
 from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.hit_effects import OnHitTimedEffect
@@ -36,6 +39,10 @@ from app.domain.spells import SpellAttackAction, SpellSaveAction
 from app.domain.targeting import AreaTargeting
 
 logger = logging.getLogger(__name__)
+
+# Conservative cantrip scaling for monsters (no character level on innate cards).
+# Level 1 matches printed base dice; higher CR scaling remains a later explicit policy.
+_MONSTER_CANTRIP_LEVEL = 1
 
 
 def innate_auto_hit_spell_actions_2014(monster: SourceMonster2014) -> list[AutoHitSpellAction]:
@@ -58,26 +65,32 @@ def innate_spell_attack_actions_2014(monster: SourceMonster2014) -> list[SpellAt
         dc = _dc(monster)
         actions: list[SpellAttackAction] = []
         for spell in _spells(monster):
-            if str(spell.get("id") or "") != "ray-of-enfeeblement":
-                continue
-            if attack_bonus is None or dc is None:
-                raise ValueError(f"{monster.name} Ray of Enfeeblement lacks attack bonus or save DC.")
-            actions.append(SpellAttackAction(
-                id="ray-of-enfeeblement", name="Ray of Enfeeblement", level=2,
-                range_ft=60, attack_bonus=int(attack_bonus),
-                on_hit_modifier_effects=[SpellModifierEffect(
-                    kind="weapon-attack-damage-multiplier", multiplier=0.5,
-                    required_attack_ability="strength",
-                )],
-                on_hit_timed_effects=[OnHitTimedEffect(
-                    effect_id="ray-of-enfeeblement", duration_rounds=10,
-                    expiry_timing="source_turn_start", repeat_save_ability="constitution",
-                    repeat_save_dc=dc, repeat_save_timing="target_turn_end",
-                )],
-                concentration=True, duration_minutes=1,
-                animation="ray-of-enfeeblement",
-                source="D&D Basic Rules 2014: Ray of Enfeeblement",
-            ))
+            spell_id = str(spell.get("id") or "")
+            if spell_id == "ray-of-enfeeblement":
+                if attack_bonus is None or dc is None:
+                    raise ValueError(f"{monster.name} Ray of Enfeeblement lacks attack bonus or save DC.")
+                actions.append(SpellAttackAction(
+                    id="ray-of-enfeeblement", name="Ray of Enfeeblement", level=2,
+                    range_ft=60, attack_bonus=int(attack_bonus),
+                    on_hit_modifier_effects=[SpellModifierEffect(
+                        kind="weapon-attack-damage-multiplier", multiplier=0.5,
+                        required_attack_ability="strength",
+                    )],
+                    on_hit_timed_effects=[OnHitTimedEffect(
+                        effect_id="ray-of-enfeeblement", duration_rounds=10,
+                        expiry_timing="source_turn_start", repeat_save_ability="constitution",
+                        repeat_save_dc=dc, repeat_save_timing="target_turn_end",
+                    )],
+                    concentration=True, duration_minutes=1,
+                    animation="ray-of-enfeeblement",
+                    source="D&D Basic Rules 2014: Ray of Enfeeblement",
+                ))
+            elif spell_id == "fire-bolt" and attack_bonus is not None:
+                actions.append(fire_bolt_2014(int(attack_bonus), _MONSTER_CANTRIP_LEVEL))
+            elif spell_id == "ray-of-frost" and attack_bonus is not None:
+                actions.append(ray_of_frost_2014(int(attack_bonus), _MONSTER_CANTRIP_LEVEL))
+            elif spell_id == "shocking-grasp" and attack_bonus is not None:
+                actions.append(shocking_grasp_2014(int(attack_bonus), _MONSTER_CANTRIP_LEVEL))
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 innate spell attacks for %s.", monster.name)
@@ -86,7 +99,7 @@ def innate_spell_attack_actions_2014(monster: SourceMonster2014) -> list[SpellAt
 def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSaveAction]:
     """Bind printed combat innate save spells. Arena-neutral spells stay source-only.
 
-    Highest-level damage spells first (locked AI selection order), then control.
+    Highest-level damage spells first (locked AI selection order), then control, then cantrips.
     """
     try:
         actions: list[SpellSaveAction] = []
@@ -110,6 +123,9 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
                 actions.append(shatter_2014(dc))
             elif spell_id == "burning-hands":
                 actions.append(burning_hands_2014(dc))
+            # Cantrips (after higher-level damage)
+            elif spell_id == "poison-spray":
+                actions.append(poison_spray_2014(dc, _MONSTER_CANTRIP_LEVEL))
             # Existing control / lower priority
             elif spell_id == "entangle":
                 actions.append(SpellSaveAction(
