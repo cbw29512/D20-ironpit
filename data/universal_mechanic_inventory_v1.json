@@ -6151,13 +6151,6 @@
       {
         "demand_count": 1,
         "monsters": [
-          "Will-o'-Wisp"
-        ],
-        "printed_name": "Variable Illumination"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
           "Water Elemental"
         ],
         "printed_name": "Water Form"

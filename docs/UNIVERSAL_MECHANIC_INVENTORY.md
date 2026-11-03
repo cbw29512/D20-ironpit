@@ -464,7 +464,6 @@ Blocked monsters: **71**. These are grouped by printed ability name so the roste
 | Telepathic Bond | Succubus/Incubus | 1 |
 | Transparent | Gelatinous Cube | 1 |
 | Vampire Weaknesses | Vampire, Vampire Spawn | 2 |
-| Variable Illumination | Will-o'-Wisp | 1 |
 | Water Form | Water Elemental | 1 |
 | Water Susceptibility | Fire Elemental | 1 |
 
