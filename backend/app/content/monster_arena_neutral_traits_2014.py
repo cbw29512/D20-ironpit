@@ -1,1 +1,167 @@
-PLACEHOLDER
+"""2014 traits that cannot change an Iron Pit combat outcome.
+
+Flyby stays listed: the pit forbids leaving an existing melee engagement, and Flyby
+does not grant a leave-reach opportunity-attack exemption. Sunlight Sensitivity is
+not listed; it binds to the shared sunlight environment-context reaction.
+Devil's Sight stays listed: the standard Pit has no Dim Light/Darkness state and no
+Darkness-producing combat effect, so magical-darkness sight cannot change a fight.
+Wakeful stays listed: Iron Pit fights do not start with a sleeper head, so a second
+awake head cannot change surprise or sleep. Two Heads save-Advantage is bound separately.
+Ethereal Jaunt and Incorporeal Movement stay listed because the Pit forbids entering
+an ethereal/incorporeal movement state; those movement-only benefits never activate.
+Earth Glide, Tunneler, and Treasure Sense stay listed: the Pit has no destructible
+earth/rock or hidden metal/treasure for those traits to act on.
+Immutable Form stays listed while the supported combat surface has no hostile form-alter
+effect. Existing replacement-form support changes only the acting combatant's own form.
+"""
+from __future__ import annotations
+
+import logging
+
+from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_informational_trait_proofs_2014 import verified_nonactionable_information_2014
+from app.content.monster_arena_inert_trait_proofs_2014 import verified_approved_inert_trait_2014
+
+logger = logging.getLogger(__name__)
+
+ARENA_NEUTRAL_TRAITS_2014 = frozenset({
+    "Siege Monster", "Amorphous", "Standing Leap", "Amphibious", "Beast of Burden", "Echolocation", "False Appearance", "Flyby", "Hold Breath",
+    "Ice Walk", "Illumination", "Keen Hearing", "Keen Hearing and Smell", "Keen Hearing and Sight",
+    "Keen Sight", "Keen Sight and Smell", "Keen Smell", "Labyrinthine Recall", "Limited Amphibiousness",
+    "Mimicry", "Earth Glide", "Running Leap", "Shark Telepathy", "Snow Camouflage", "Stone Camouflage",
+    "Spider Climb", "Treasure Sense", "Tunneler", "Water Breathing", "Devil's Sight",
+    "Underwater Camouflage", "Web Sense", "Web Walker", "Rejuvenation", "Hellish Rejuvenation",
+    "Wakeful", "Ethereal Jaunt", "Incorporeal Movement", "Immutable Form",
+})
+
+def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str) -> bool:
+    """Accept only the pinned noncombat summoner/quarry tracking semantics."""
+    try:
+        if trait_name not in monster.trait_names:
+            return False
+        if verified_approved_inert_trait_2014(monster, trait_name):
+            return True
+        if trait_name == "Shapechanger" and monster.id == "imp":
+            # Approved Pit policy: cosmetic forms and movement speeds have
+            # no additional combat effect. This is source classification,
+            # never an ability-name switch in the combat engine.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+
+            printed = source_sections_2014(
+                monster.source_traits, include_continuations=True
+            ).get("Shapechanger", "")
+            expected = (
+                "The imp can use its action to polymorph into a beast form "
+                "that resembles a rat (speed 20 ft.), a raven (20 ft., fly 60 ft.), "
+                "or a spider (20 ft., climb 20 ft.), or back into its true form. "
+                "Its statistics are the same in each form, except for the speed "
+                "changes noted. Any equipment it is wearing or carrying isn't "
+                "transformed. It reverts to its true form if it dies."
+            )
+            return printed == expected
+        if trait_name == "Shapechanger" and monster.id == "quasit":
+            # Source-only admission policy: form appearance and speed are
+            # irrelevant to Pit combat. Other attack/Scare/Invisible blockers
+            # remain independent. Strict source comparison fails closed.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            section = source_sections_2014(
+                monster.source_traits, include_continuations=True
+            ).get("Shapechanger", "")
+            return section == (
+                "The quasit can use its action to polymorph into a beast form "
+                "that resembles a bat (speed 10 ft. fly 40 ft.), a centipede "
+                "(40 ft., climb 40 ft.), or a toad (40 ft., swim 40 ft.), "
+                "or back into its true form. Its statistics are the same in "
+                "each form, except for the speed changes noted. Any equipment "
+                "it is wearing or carrying isn't transformed. It reverts "
+                "to its true form if it dies."
+            )
+        source = monster.source_traits or ""
+        # Context-driven exclusion: this trait only operates underwater, a
+        # context absent from the standard Iron Pit. Keep the printed trait.
+        if trait_name == "Mucous Cloud":
+            return (
+                "<strong>Mucous Cloud.</strong>" in source
+                and "While underwater" in source
+                and "transformative mucus" in source
+            )
+        # Source-verified informational traits never grant combat coordinates,
+        # actions, saves or targeting. Names validate provenance only.
+        informational_clauses = {
+            "Detect Life": (
+                "<strong>Detect Life.</strong>",
+                "general direction",
+                "exact locations",
+            ),
+            "Shielded Mind": (
+                "<strong>Shielded Mind.</strong>",
+                "immune to scrying",
+                "sense its emotions",
+                "read its thoughts",
+                "detect its location",
+            ),
+        }
+        if trait_name in informational_clauses:
+            folded = source.casefold()
+            return all(clause.casefold() in folded for clause in informational_clauses[trait_name])
+        if trait_name == "Confer Fire Resistance":
+            # Rider-only resistance has no eligible recipient on the
+            # standard Pit's no-mount board. Do not give it to the owner:
+            # its own printed Fire immunity is separate and remains active.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(source).get(trait_name, "")
+            normalized = " ".join(printed.casefold().replace("’", "'").split())
+            return normalized == (
+                "the nightmare can grant resistance to fire damage "
+                "to anyone riding it."
+            )
+        if trait_name == "Sense Magic":
+            # This only reports magic's presence. It never grants visibility,
+            # target location, Advantage, a save, or a combat action.
+            # Isolate the printed paragraph: no other trait may prove it.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+
+            printed = source_sections_2014(source).get("Sense Magic", "")
+            normalized = printed.casefold().replace("’", "'")
+            return all(clause in normalized for clause in (
+                "senses magic within 120 feet",
+                "at will",
+                "detect magic",
+                "isn't itself magical",
+            ))
+        # Pinned source must prove both the printed trait and its
+        # arena-inert semantics. Other effects remain blocked independently.
+        additional_inert_clauses = {
+            "Elemental Demise": ("dies", "disintegrates"),
+            "Divine Awareness": ("hears", "lie"),
+            "Speak with Beasts and Plants": ("communicate", "beasts", "plants"),
+            "Tree Stride": ("tree", "movement"),
+            "Ethereal Sight": ("ethereal plane",),
+            "Telepathic Bond": ("telepathically",),
+            "Limited Telepathy": ("telepathically",),
+            "Probing Telepathy": ("telepathically", "greatest desires", "can see the creature"),
+        }
+        if trait_name in additional_inert_clauses:
+            heading = f"<strong>{trait_name}.</strong>"
+            match_start = source.casefold().find(heading.casefold())
+            if match_start < 0:
+                return False
+            remainder = source[match_start + len(heading):]
+            next_heading = remainder.find("<strong>")
+            clause = (remainder[:next_heading] if next_heading >= 0 else remainder).casefold()
+            return all(token in clause for token in additional_inert_clauses[trait_name])
+        if verified_nonactionable_information_2014(monster, trait_name):
+            return True
+        if trait_name != "Faultless Tracker":
+            return False
+        clauses = (
+            "<strong>Faultless Tracker.</strong>",
+            "given a quarry by its summoner",
+            "knows the direction and distance to its quarry",
+            "same plane of existence",
+            "knows the location of its summoner",
+        )
+        return all(clause in source for clause in clauses)
+    except Exception:
+        logger.exception("2014 noncombat tracking classification failed for %s.", monster.name)
+        raise
