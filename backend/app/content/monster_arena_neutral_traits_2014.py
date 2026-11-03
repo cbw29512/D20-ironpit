@@ -76,6 +76,22 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "it is wearing or carrying isn't transformed. It reverts "
                 "to its true form if it dies."
             )
+        if trait_name == "Shapechanger" and monster.id == "succubus-incubus":
+            # Source-only: forms change size and flying speed only. Pit magic
+            # makes size occupancy uniform and preserves printed speeds. Strict
+            # full-paragraph match fails closed on any mutation. No name dispatch.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            section = source_sections_2014(
+                monster.source_traits, include_continuations=True
+            ).get("Shapechanger", "")
+            expected = (
+                "The fiend can use its action to polymorph into a Small or Medium humanoid, "
+                "or back into its true form. Without wings, the fiend loses its flying speed. "
+                "Other than its size and speed, its statistics are the same in each form. "
+                "Any equipment it is wearing or carrying isn't transformed. It reverts to its "
+                "true form if it dies."
+            )
+            return section == expected
         source = monster.source_traits or ""
         # Context-driven exclusion: this trait only operates underwater, a
         # context absent from the standard Iron Pit. Keep the printed trait.
@@ -110,7 +126,7 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             # its own printed Fire immunity is separate and remains active.
             from app.content.monster_source_sections_2014 import source_sections_2014
             printed = source_sections_2014(source).get(trait_name, "")
-            normalized = " ".join(printed.casefold().replace("’", "'").split())
+            normalized = " ".join(printed.casefold().replace(“’”, "'").split())
             return normalized == (
                 "the nightmare can grant resistance to fire damage "
                 "to anyone riding it."
@@ -122,7 +138,7 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             from app.content.monster_source_sections_2014 import source_sections_2014
 
             printed = source_sections_2014(source).get("Sense Magic", "")
-            normalized = printed.casefold().replace("’", "'")
+            normalized = printed.casefold().replace(“’”, "'")
             return all(clause in normalized for clause in (
                 "senses magic within 120 feet",
                 "at will",
