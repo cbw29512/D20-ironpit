@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 59 |
+| `source:trait` | 58 |
 | `source:extra-action` | 35 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 15 |
@@ -31,12 +31,13 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**2** monsters have exactly one remaining blocker category.
+**3** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
+| `attack:incomplete` | Magmin | 1 |
 
 ## Every blocked monster
 
@@ -84,7 +85,7 @@ the underlying ability is already implemented or trivial.
 | Lich | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Mage | mechanic:spellcasting, source:trait | Spellcasting |
 | Magma Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
-| Magmin | attack:incomplete, source:trait | Ignited Illumination |
+| Magmin | attack:incomplete | — |
 | Mimic | attack:incomplete, source:trait | Shapechanger, Adhesive (Object Form Only), False Appearance (Object Form Only), Grappler |
 | Mummy Lord | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Night Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |

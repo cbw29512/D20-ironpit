@@ -450,7 +450,6 @@ Blocked monsters: **71**. These are grouped by printed ability name so the roste
 | Gibbering | Gibbering Mouther | 1 |
 | Grappler | Mimic | 1 |
 | Grasping Tendrils | Roper | 1 |
-| Ignited Illumination | Magmin | 1 |
 | Innate Spellcasting | Cloud Giant, Couatl, Deva, Djinni, Drider, Drow, Dryad, Dust Mephit, Efreeti, Glabrezu, Green Hag, Ice Mephit, Lamia, Magma Mephit, Night Hag, Oni, Planetar, Rakshasa, Solar, Storm Giant | 20 |
 | Light Sensitivity | Cloaker | 1 |
 | Limited Magic Immunity | Rakshasa | 1 |
@@ -472,7 +471,7 @@ Blocked monsters: **71**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 59 |
+| `source:trait` | 58 |
 | `source:extra-action` | 35 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 15 |
