@@ -960,3 +960,8 @@ This audit removes campaign-time implementation debt without weakening any claus
 - `PARKED`: precisely stated semantic gap; move to next item.
 
 **Last edited 2026-10-08.** PR states above are snapshots; reconcile them from GitHub before each merge/queue promotion.
+
+## 2014 Priest Divine Eminence — slot-scaled Bonus Action on-hit radiant damage (draft)
+
+- Source-verified trait text parsed; one TimedSelfBuffAction per spell-slot level (3d6/4d6/5d6 radiant, Bonus Action, until source turn end) bound via existing universal primitives. Trait name bound. Spellcasting remains independent source:trait blocker. Python tests green. No admission claimed. Draft PR pending exact-head CI.
+
