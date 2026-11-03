@@ -76,6 +76,18 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "it is wearing or carrying isn't transformed. It reverts "
                 "to its true form if it dies."
             )
+        if trait_name == "Variable Illumination" and monster.id == "will-o-wisp":
+            # Source-only: light radius alteration has no combat outcome under
+            # locked Pit rules (no dynamic light affecting attacks/saves beyond
+            # existing sensitivity bindings). Strict full-paragraph match.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(
+                monster.source_traits, include_continuations=True
+            ).get("Variable Illumination", "")
+            expected = (
+                "The will-o'-wisp sheds bright light in a 5- to 20-foot radius and dim light for an additional number of feet equal to the chosen radius. The will-o'-wisp can alter the radius as a bonus action."
+            )
+            return printed == expected
         source = monster.source_traits or ""
         # Context-driven exclusion: this trait only operates underwater, a
         # context absent from the standard Iron Pit. Keep the printed trait.
@@ -110,7 +122,7 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             # its own printed Fire immunity is separate and remains active.
             from app.content.monster_source_sections_2014 import source_sections_2014
             printed = source_sections_2014(source).get(trait_name, "")
-            normalized = " ".join(printed.casefold().replace("’", "'").split())
+            normalized = " ".join(printed.casefold().replace(“’”, "'").split())
             return normalized == (
                 "the nightmare can grant resistance to fire damage "
                 "to anyone riding it."
@@ -122,7 +134,7 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             from app.content.monster_source_sections_2014 import source_sections_2014
 
             printed = source_sections_2014(source).get("Sense Magic", "")
-            normalized = printed.casefold().replace("’", "'")
+            normalized = printed.casefold().replace(“’”, "'")
             return all(clause in normalized for clause in (
                 "senses magic within 120 feet",
                 "at will",
