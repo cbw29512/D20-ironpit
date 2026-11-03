@@ -37,6 +37,12 @@ from app.content.monster_innate_spells_2014 import (
     innate_persistent_save_zone_actions_2014,
     innate_spell_save_actions_2014,
 )
+from app.content.monster_prepared_spells_2014 import (
+    prepared_auto_hit_spell_actions_2014,
+    prepared_persistent_save_zone_actions_2014,
+    prepared_spell_attack_actions_2014,
+    prepared_spell_save_actions_2014,
+)
 from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014
 from app.content.monster_innate_support_2014 import (
     innate_alternate_spell_casts_2014,
@@ -203,12 +209,22 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         death_trigger_effect_ids=[action.id for action in death_trigger_actions_2014(monster)],
         death_trigger_actions=death_trigger_actions_2014(monster),
         save_actions=save_capabilities_2014(monster),
-        spell_save_actions=innate_spell_save_actions_2014(monster),
-        spell_attack_actions=innate_spell_attack_actions_2014(monster),
-        auto_hit_spell_actions=innate_auto_hit_spell_actions_2014(monster),
+        spell_save_actions=[
+            *innate_spell_save_actions_2014(monster),
+            *prepared_spell_save_actions_2014(monster),
+        ],
+        spell_attack_actions=[
+            *innate_spell_attack_actions_2014(monster),
+            *prepared_spell_attack_actions_2014(monster),
+        ],
+        auto_hit_spell_actions=[
+            *innate_auto_hit_spell_actions_2014(monster),
+            *prepared_auto_hit_spell_actions_2014(monster),
+        ],
         persistent_save_zone_actions=[
             *[zone for zone in [fetid_cloud_zone_2014(monster)] if zone is not None],
             *innate_persistent_save_zone_actions_2014(monster),
+            *prepared_persistent_save_zone_actions_2014(monster),
         ],
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
             *source_invisibility_action_2014(monster),

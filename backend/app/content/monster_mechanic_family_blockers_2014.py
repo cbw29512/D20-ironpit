@@ -19,6 +19,7 @@ from app.domain.weapons import DamageType
 from app.content.monster_conditional_damage_defenses_2014 import remaining_unsupported_defense_text_2014
 from app.content.monster_healing_2014 import healing_actions_2014, supports_healing_2014
 from app.content.monster_innate_support_2014 import innate_spell_resources_2014, supports_innate_spellcasting_2014
+from app.content.monster_prepared_spells_2014 import supports_prepared_spellcasting_2014
 from app.content.monster_legendary_bindings_2014 import supports_legendary_actions_2014
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_save_capabilities_2014 import unsupported_save_actions_2014
@@ -40,6 +41,7 @@ def mechanic_family_blockers_2014(
         # Classify immutable card capabilities only once per source monster.
         healing_supported = supports_healing_2014(monster)
         innate_supported = supports_innate_spellcasting_2014(monster)
+        prepared_supported = supports_prepared_spellcasting_2014(monster)
         bound_limited = set(attack_ammunition_2014(monster))
         if healing_supported:
             # Reuse the source's existing healing resource binding
@@ -51,6 +53,10 @@ def mechanic_family_blockers_2014(
             key: value for key, value in monster.limited_action_uses.items()
             if key not in bound_limited
         }
+        spellcasting_cleared = (
+            (innate_supported or not monster.innate_spellcasting)
+            and (prepared_supported or not monster.spellcasting)
+        )
         families = {
             "defense": remaining_unsupported_defense_text_2014(monster),
             "save-action": unsupported_save_actions_2014(monster),
@@ -58,11 +64,7 @@ def mechanic_family_blockers_2014(
             "death-trigger": monster.death_trigger_actions if not supports_death_triggers_2014(monster) else None,
             "healing": monster.healing_actions if not healing_supported else None,
             "limited-use": unbound_limited,
-            "spellcasting": (
-                None if (
-                    innate_supported and not monster.spellcasting
-                ) else (monster.innate_spellcasting or monster.spellcasting)
-            ),
+            "spellcasting": None if spellcasting_cleared else (monster.innate_spellcasting or monster.spellcasting),
             "zero-hp": monster.zero_hp_prevention if not supports_zero_hp_prevention_2014(monster) else None,
             "regeneration": monster.regeneration if not supports_regeneration_2014(monster) else None,
             "legendary": (
