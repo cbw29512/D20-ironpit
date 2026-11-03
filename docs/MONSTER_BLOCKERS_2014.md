@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 59 |
+| `source:trait` | 55 |
 | `source:extra-action` | 35 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 15 |
@@ -31,12 +31,14 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**2** monsters have exactly one remaining blocker category.
+**4** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
+| `multiattack:complex` | Werebear | 1 |
+| `source:extra-action` | Werewolf | 1 |
 
 ## Every blocked monster
 
@@ -107,9 +109,9 @@ the underlying ability is already implemented or trivial.
 | Vampire | attack:incomplete, mechanic:legendary, multiattack:complex, source:extra-action, source:legendary, source:trait | Shapechanger, Misty Escape, Vampire Weaknesses |
 | Vampire Spawn | attack:incomplete, multiattack:complex, source:trait | Vampire Weaknesses |
 | Water Elemental | mechanic:recharge, source:extra-action, source:trait | Water Form, Freeze |
-| Werebear | multiattack:complex, source:trait | Shapechanger |
-| Wereboar | multiattack:complex, source:extra-action, source:trait | Shapechanger |
-| Wererat | multiattack:complex, source:extra-action, source:trait | Shapechanger |
-| Weretiger | multiattack:complex, source:extra-action, source:trait | Shapechanger, Pounce (Tiger or Hybrid Form Only) |
-| Werewolf | source:extra-action, source:trait | Shapechanger |
+| Werebear | multiattack:complex | — |
+| Wereboar | multiattack:complex, source:extra-action | — |
+| Wererat | multiattack:complex, source:extra-action | — |
+| Weretiger | multiattack:complex, source:extra-action, source:trait | Pounce (Tiger or Hybrid Form Only) |
+| Werewolf | source:extra-action | — |
 | Will-o'-Wisp | source:extra-action, source:trait | Consume Life, Ephemeral, Variable Illumination |
