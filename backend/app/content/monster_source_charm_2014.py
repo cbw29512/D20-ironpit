@@ -126,6 +126,35 @@ def source_charm_actions_2014(monster: SourceMonster2014) -> list[SaveCapability
                         save_ability="wisdom", dc=0, range_ft=15,
                         animation="darkness",
                     ))
+            elif name.startswith("Enlarge") and monster.id == "duergar":
+                if "increases in size" in n and "large" in n:
+                    actions.append(SaveCapabilityDefinition(
+                        id="enlarge", name="Enlarge", save_ability="strength", dc=0,
+                        range_ft=0, resource_id="enlarge", resource_cost=1,
+                        animation="enlarge",
+                    ))
+            elif name.startswith("Invisibility") and monster.id == "duergar":
+                if "turns invisible" in n:
+                    actions.append(SaveCapabilityDefinition(
+                        id="invisibility", name="Invisibility", save_ability="wisdom", dc=0,
+                        range_ft=0, resource_id="invisibility", resource_cost=1,
+                        failed_save_timed_effect=FailedSaveTimedEffect(
+                            effect_id="invisible", duration_rounds=600,
+                            expiry_timing="source_turn_end",
+                        ),
+                        animation="invisibility",
+                    ))
+            elif name.startswith("Possession") and monster.id == "ghost":
+                if "dc 13 charisma" in n and "possessed" in n:
+                    actions.append(SaveCapabilityDefinition(
+                        id="possession", name="Possession", save_ability="charisma", dc=13,
+                        range_ft=5,
+                        failed_save_timed_effect=FailedSaveTimedEffect(
+                            effect_id="incapacitated", duration_rounds=10,
+                            expiry_timing="source_turn_end",
+                        ),
+                        animation="possession",
+                    ))
             elif name.startswith("Roar") and monster.id == "androsphinx":
                 if "dc 18" in n:
                     actions.append(SaveCapabilityDefinition(
