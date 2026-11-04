@@ -42,6 +42,7 @@ def test_at_most_once_variants_preserve_both_orders_and_two_nonlimited_attacks(c
     limited = {f"2014-{card.id}-{item}" for item in card.multiattack_policy["at_most_once_attack_ids"]}
     assert len(variants) == 3
     assert all(variant.attack_kind is None for variant in variants)
+    assert all(len(variant.slots) == 2 for variant in variants)
     assert all(
         sum(bool(set(slot.attack_ids) & limited) for slot in variant.slots) <= 1
         for variant in variants
