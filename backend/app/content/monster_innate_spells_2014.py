@@ -237,6 +237,37 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
                     duration_minutes=480,
                     animation="spell-save",
                 ))
+            elif spell_id == "command":
+                actions.append(SpellSaveAction(
+                    id="command", name="Command", level=1, action_cost="action",
+                    range_ft=60, save_ability="wisdom", dc=dc,
+                    requires_target_sight=True,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="prone", duration_rounds=1,
+                        expiry_timing="target_turn_end",
+                    ),
+                    animation="command",
+                ))
+            elif spell_id == "sleep":
+                actions.append(SpellSaveAction(
+                    id="sleep", name="Sleep", level=1, action_cost="action",
+                    range_ft=90, save_ability="wisdom", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="unconscious", duration_rounds=10,
+                        expiry_timing="source_turn_end", ends_on_damage=True,
+                    ),
+                    animation="sleep",
+                ))
+            elif spell_id == "banishment":
+                actions.append(SpellSaveAction(
+                    id="banishment", name="Banishment", level=4, action_cost="action",
+                    range_ft=60, save_ability="charisma", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="banished", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    concentration=True, duration_minutes=1, animation="banishment",
+                ))
             elif spell_id == "dominate-person":
                 actions.append(SpellSaveAction(
                     id="dominate-person",

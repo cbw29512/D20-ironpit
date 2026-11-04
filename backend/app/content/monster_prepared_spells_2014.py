@@ -34,6 +34,7 @@ from app.content.bard_2014_vicious_mockery import vicious_mockery_action_2014
 from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.persistent_save_zones import PersistentSaveZoneAction
 from app.domain.spells import SpellAttackAction, SpellSaveAction
+from app.domain.save_effects import FailedSaveTimedEffect
 
 logger = logging.getLogger(__name__)
 
@@ -216,6 +217,58 @@ def prepared_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSa
                 actions.append(hold_monster_2014(dc))
             elif spell_id == "hold-person":
                 actions.append(hold_person_2014(dc))
+            elif spell_id == "charm-person":
+                actions.append(SpellSaveAction(
+                    id="charm-person", name="Charm Person", level=1, action_cost="action",
+                    range_ft=30, save_ability="wisdom", dc=dc,
+                    required_target_creature_types=["humanoid"],
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="charmed", duration_rounds=600,
+                        expiry_timing="source_turn_end", ends_on_damage=True,
+                    ),
+                    animation="charm-person",
+                ))
+            elif spell_id == "suggestion":
+                actions.append(SpellSaveAction(
+                    id="suggestion", name="Suggestion", level=2, action_cost="action",
+                    range_ft=30, save_ability="wisdom", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="charmed", duration_rounds=4800,
+                        expiry_timing="source_turn_end", ends_on_damage=True,
+                    ),
+                    concentration=True, duration_minutes=480, animation="suggestion",
+                ))
+            elif spell_id == "command":
+                actions.append(SpellSaveAction(
+                    id="command", name="Command", level=1, action_cost="action",
+                    range_ft=60, save_ability="wisdom", dc=dc,
+                    requires_target_sight=True,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="prone", duration_rounds=1,
+                        expiry_timing="target_turn_end",
+                    ),
+                    animation="command",
+                ))
+            elif spell_id == "sleep":
+                actions.append(SpellSaveAction(
+                    id="sleep", name="Sleep", level=1, action_cost="action",
+                    range_ft=90, save_ability="wisdom", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="unconscious", duration_rounds=10,
+                        expiry_timing="source_turn_end", ends_on_damage=True,
+                    ),
+                    animation="sleep",
+                ))
+            elif spell_id == "banishment":
+                actions.append(SpellSaveAction(
+                    id="banishment", name="Banishment", level=4, action_cost="action",
+                    range_ft=60, save_ability="charisma", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="banished", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    concentration=True, duration_minutes=1, animation="banishment",
+                ))
             elif spell_id == "blindness-deafness":
                 actions.append(blindness_deafness_2014(dc))
             elif spell_id == "vicious-mockery":
