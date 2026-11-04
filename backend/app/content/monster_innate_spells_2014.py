@@ -15,7 +15,10 @@ from app.content.shared_control_spells_2014 import (
     blindness_deafness_2014,
     hold_monster_2014,
 )
-from app.content.cleric_2014_level1_spells import guiding_bolt_2014, inflict_wounds_2014
+from app.content.cleric_2014_level1_spells import cure_wounds_2014, guiding_bolt_2014, inflict_wounds_2014
+from app.content.shared_spells_2014 import spiritual_weapon_2014
+from app.domain.healing_actions import HealingAction
+from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
 from app.content.shared_damage_spells_2014 import (
     blight_2014, cloudkill_2014, disintegrate_2014, finger_of_death_2014,
     flame_strike_2014, harm_2014, ice_storm_2014, sacred_flame_2014, thunderwave_2014,
@@ -89,11 +92,11 @@ def innate_spell_attack_actions_2014(monster: SourceMonster2014) -> list[SpellAt
                     animation="ray-of-enfeeblement",
                     source="D&D Basic Rules 2014: Ray of Enfeeblement",
                 ))
-            elif spell_id == "fire-bolt" and attack_bonus is not None:
+            elif spell_id == "guiding-bolt" and attack_bonus is not None:
                 actions.append(guiding_bolt_2014(int(attack_bonus)))
-            elif spell_id == "inflict-wounds":
+            elif spell_id == "inflict-wounds" and attack_bonus is not None:
                 actions.append(inflict_wounds_2014(int(attack_bonus)))
-            elif spell_id == "fire-bolt":
+            elif spell_id == "fire-bolt" and attack_bonus is not None:
                 actions.append(fire_bolt_2014(int(attack_bonus), _MONSTER_CANTRIP_LEVEL))
             elif spell_id == "ray-of-frost" and attack_bonus is not None:
                 actions.append(ray_of_frost_2014(int(attack_bonus), _MONSTER_CANTRIP_LEVEL))
@@ -279,4 +282,37 @@ def innate_persistent_save_zone_actions_2014(
         ]
     except Exception:
         logger.exception("Failed to compile 2014 innate save zones for %s.", monster.name)
+        raise
+
+
+def innate_healing_spell_actions_2014(monster: SourceMonster2014) -> list[HealingAction]:
+    """Bind printed innate healing spells. Ability modifier is 0 until a later explicit policy."""
+    try:
+        actions: list[HealingAction] = []
+        for spell in _spells(monster):
+            if str(spell.get("id") or "") == "cure-wounds":
+                actions.append(cure_wounds_2014(0, 0))
+        return actions
+    except Exception:
+        logger.exception("Failed to compile 2014 innate healing spells for %s.", monster.name)
+        raise
+
+
+def innate_persistent_spell_attack_actions_2014(monster: SourceMonster2014) -> list[PersistentSpellAttackAction]:
+    """Bind printed innate persistent spell attacks."""
+    try:
+        actions: list[PersistentSpellAttackAction] = []
+        attack_bonus = None
+        source = monster.innate_spellcasting
+        if isinstance(source, dict):
+            raw = source.get("attack_bonus")
+            attack_bonus = int(raw) if raw is not None else None
+        if attack_bonus is None:
+            return actions
+        for spell in _spells(monster):
+            if str(spell.get("id") or "") == "spiritual-weapon":
+                actions.append(spiritual_weapon_2014(int(attack_bonus), 0))
+        return actions
+    except Exception:
+        logger.exception("Failed to compile 2014 innate persistent spell attacks for %s.", monster.name)
         raise
