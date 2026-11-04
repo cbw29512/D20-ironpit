@@ -44,6 +44,7 @@ from app.content.monster_prepared_spells_2014 import (
     prepared_persistent_save_zone_actions_2014,
     prepared_healing_spell_actions_2014,
     prepared_persistent_spell_attack_actions_2014,
+    prepared_timed_self_buffs_2014,
     prepared_spell_attack_actions_2014,
     prepared_spell_save_actions_2014,
 )
@@ -231,6 +232,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *prepared_persistent_save_zone_actions_2014(monster),
         ],
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
+            *prepared_timed_self_buffs_2014(monster),
             *source_invisibility_action_2014(monster),
             *berserk_self_buffs_2014(monster),
             *heated_body_retaliation_2014(monster),

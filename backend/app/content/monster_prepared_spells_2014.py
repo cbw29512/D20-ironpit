@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.shared_control_spells_2014 import hold_person_2014
 from app.content.shared_control_spells_2014 import (
     blindness_deafness_2014,
     hold_monster_2014,
@@ -10,6 +11,8 @@ from app.content.shared_control_spells_2014 import (
 from app.content.cleric_2014_level1_spells import cure_wounds_2014, guiding_bolt_2014, inflict_wounds_2014
 from app.content.shared_spells_2014 import spiritual_weapon_2014
 from app.domain.healing_actions import HealingAction
+from app.domain.timed_self_buffs import TimedSelfBuffAction
+from app.domain.movement import MovementModeGrant
 from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
 from app.content.shared_damage_spells_2014 import (
     blight_2014, cloudkill_2014, disintegrate_2014, finger_of_death_2014,
@@ -211,6 +214,8 @@ def prepared_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSa
                 actions.append(poison_spray_2014(dc, _MONSTER_CANTRIP_LEVEL))
             elif spell_id == "hold-monster":
                 actions.append(hold_monster_2014(dc))
+            elif spell_id == "hold-person":
+                actions.append(hold_person_2014(dc))
             elif spell_id == "blindness-deafness":
                 actions.append(blindness_deafness_2014(dc))
             elif spell_id == "vicious-mockery":
@@ -298,6 +303,8 @@ def supports_prepared_spellcasting_2014(monster: SourceMonster2014) -> bool:
             action.id for action in prepared_healing_spell_actions_2014(monster)
         } | {
             action.id for action in prepared_persistent_spell_attack_actions_2014(monster)
+        } | {
+            action.id for action in prepared_timed_self_buffs_2014(monster)
         } | ARENA_NEUTRAL_PREPARED_SPELLS_2014
         # Arena-neutral prepared spells stay unbound by design.
         return known <= bound
@@ -332,4 +339,44 @@ def prepared_persistent_spell_attack_actions_2014(monster: SourceMonster2014) ->
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 prepared persistent spell attacks for %s.", monster.name)
+        raise
+
+
+def prepared_timed_self_buffs_2014(monster: SourceMonster2014) -> list[TimedSelfBuffAction]:
+    """Bind printed prepared self-buffs that map to existing timed-buff primitives."""
+    try:
+        actions: list[TimedSelfBuffAction] = []
+        for spell in _prepared_spells(monster):
+            spell_id = str(spell.get("id") or "")
+            if spell_id == "invisibility":
+                actions.append(TimedSelfBuffAction(
+                    id="invisibility", name="Invisibility", action_cost="action",
+                    resource_id="invisibility", resource_cost=1, duration_rounds=600,
+                    expiry_timing="source_turn_end", concentration=True,
+                    condition_ids=["invisible"], animation="invisibility",
+                ))
+            elif spell_id == "fly":
+                actions.append(TimedSelfBuffAction(
+                    id="fly", name="Fly", action_cost="action",
+                    resource_id="fly", resource_cost=1, duration_rounds=100,
+                    expiry_timing="source_turn_end", concentration=True,
+                    movement_mode_grants=[MovementModeGrant(mode="fly", fixed_speed_ft=60)],
+                    animation="fly",
+                ))
+            elif spell_id == "blur":
+                actions.append(TimedSelfBuffAction(
+                    id="blur", name="Blur", action_cost="action",
+                    resource_id="blur", resource_cost=1, duration_rounds=10,
+                    expiry_timing="source_turn_end", concentration=True,
+                    modifier_effects=[], animation="blur",
+                ))
+            elif spell_id == "mirror-image":
+                actions.append(TimedSelfBuffAction(
+                    id="mirror-image", name="Mirror Image", action_cost="action",
+                    resource_id="mirror-image", resource_cost=1, duration_rounds=10,
+                    expiry_timing="source_turn_end", animation="mirror-image",
+                ))
+        return actions
+    except Exception:
+        logger.exception("Failed to compile 2014 prepared timed self-buffs for %s.", monster.name)
         raise

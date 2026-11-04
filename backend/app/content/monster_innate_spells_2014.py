@@ -11,6 +11,7 @@ from app.content.monster_innate_source_2014 import (
     innate_spells_2014 as _spells,
     innate_spell_save_dc_2014 as _dc,
 )
+from app.content.shared_control_spells_2014 import hold_person_2014
 from app.content.shared_control_spells_2014 import (
     blindness_deafness_2014,
     hold_monster_2014,
@@ -257,6 +258,8 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
                 ))
             elif spell_id == "hold-monster":
                 actions.append(hold_monster_2014(dc))
+            elif spell_id == "hold-person":
+                actions.append(hold_person_2014(dc))
             elif spell_id == "blindness-deafness":
                 actions.append(blindness_deafness_2014(dc))
             elif spell_id == "vicious-mockery":
