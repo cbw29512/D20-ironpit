@@ -238,3 +238,78 @@ def freedom_of_movement_2014() -> DefensiveSpellAction:
     except Exception:
         logger.exception("Failed to build 2014 Freedom of Movement.")
         raise
+
+
+def counterspell_2014() -> "TimedSelfBuffAction":
+    """Build 2014 Counterspell as a reaction that removes a spell effect."""
+    from app.domain.timed_self_buffs import TimedSelfBuffAction
+    try:
+        return TimedSelfBuffAction(
+            id="counterspell", name="Counterspell", action_cost="reaction",
+            resource_id="counterspell", resource_cost=1, duration_rounds=1,
+            expiry_timing="source_turn_end", animation="counterspell",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Counterspell.")
+        raise
+
+
+def gaseous_form_2014() -> "TimedSelfBuffAction":
+    """Build 2014 Gaseous Form as a timed self-buff (form change, no combat stat change under locked Pit)."""
+    from app.domain.timed_self_buffs import TimedSelfBuffAction
+    try:
+        return TimedSelfBuffAction(
+            id="gaseous-form", name="Gaseous Form", action_cost="action",
+            resource_id="gaseous-form", resource_cost=1, duration_rounds=600,
+            expiry_timing="source_turn_end", concentration=True, animation="gaseous-form",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Gaseous Form.")
+        raise
+
+
+def globe_of_invulnerability_2014() -> "TimedSelfBuffAction":
+    """Build 2014 Globe of Invulnerability as a timed self-buff."""
+    from app.domain.timed_self_buffs import TimedSelfBuffAction
+    try:
+        return TimedSelfBuffAction(
+            id="globe-of-invulnerability", name="Globe of Invulnerability", level=6,
+            action_cost="action", resource_id="globe-of-invulnerability", resource_cost=1,
+            duration_rounds=10, expiry_timing="source_turn_end", concentration=True,
+            animation="globe-of-invulnerability",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Globe of Invulnerability.")
+        raise
+
+
+def fog_cloud_2014() -> "TimedSelfBuffAction":
+    """Build 2014 Fog Cloud as a timed zone buff."""
+    from app.domain.timed_self_buffs import TimedSelfBuffAction
+    try:
+        return TimedSelfBuffAction(
+            id="fog-cloud", name="Fog Cloud", level=1, action_cost="action",
+            resource_id="fog-cloud", resource_cost=1, duration_rounds=600,
+            expiry_timing="source_turn_end", concentration=True, animation="fog-cloud",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Fog Cloud.")
+        raise
+
+
+def calm_emotions_2014(save_dc: int) -> "SpellSaveAction":
+    """Build 2014 Calm Emotions: Wisdom save, suppress charm/frighten."""
+    from app.domain.spells import SpellSaveAction
+    from app.domain.save_effects import FailedSaveTimedEffect
+    try:
+        return SpellSaveAction(
+            id="calm-emotions", name="Calm Emotions", level=2, action_cost="action",
+            range_ft=60, save_ability="wisdom", dc=save_dc,
+            failed_save_timed_effect=FailedSaveTimedEffect(
+                effect_id="calmed", duration_rounds=10, expiry_timing="source_turn_end",
+            ),
+            concentration=True, duration_minutes=1, animation="calm-emotions",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Calm Emotions.")
+        raise

@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import logging
 
+from app.content.shared_spells_2014 import (
+    counterspell_2014, gaseous_form_2014, globe_of_invulnerability_2014, fog_cloud_2014,
+)
 from app.content.monster_innate_spells_2014 import (
     ARENA_NEUTRAL_INNATE_SPELLS_2014,
     _PIT_BANNED_INNATE_SPELLS_2014,
@@ -76,6 +79,14 @@ def innate_timed_self_buffs_2014(monster) -> list[TimedSelfBuffAction]:
                     movement_mode_grants=[MovementModeGrant(mode="fly", fixed_speed_ft=60)],
                     animation="fly",
                 ))
+            elif spell_id == "counterspell":
+                actions.append(counterspell_2014())
+            elif spell_id == "gaseous-form":
+                actions.append(gaseous_form_2014())
+            elif spell_id == "globe-of-invulnerability":
+                actions.append(globe_of_invulnerability_2014())
+            elif spell_id == "fog-cloud":
+                actions.append(fog_cloud_2014())
             elif spell_id == "blur":
                 actions.append(TimedSelfBuffAction(
                     id="blur",

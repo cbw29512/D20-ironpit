@@ -9,7 +9,11 @@ from app.content.shared_control_spells_2014 import (
     hold_monster_2014,
 )
 from app.content.cleric_2014_level1_spells import bless_2014, cure_wounds_2014, guiding_bolt_2014, inflict_wounds_2014, shield_of_faith_2014
-from app.content.shared_spells_2014 import sanctuary_2014, shield_2014, darkness_2014, mage_armor_2014, freedom_of_movement_2014, lesser_restoration_2014
+from app.content.shared_spells_2014 import (
+    sanctuary_2014, shield_2014, darkness_2014, mage_armor_2014, freedom_of_movement_2014,
+    lesser_restoration_2014, counterspell_2014, gaseous_form_2014, globe_of_invulnerability_2014,
+    fog_cloud_2014, calm_emotions_2014,
+)
 from app.content.shared_restoration_spells_2014 import greater_restoration_2014
 from app.content.druid_2014_level2_spells import barkskin_2014
 from app.domain.actions import ConditionRemovalAction
@@ -239,6 +243,10 @@ def prepared_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSa
                 actions.append(burning_hands_2014(dc))
             elif spell_id == "poison-spray":
                 actions.append(poison_spray_2014(dc, _MONSTER_CANTRIP_LEVEL))
+            elif spell_id == "calm-emotions":
+                dc = _save_dc(monster)
+                if dc is not None:
+                    actions.append(calm_emotions_2014(dc))
             elif spell_id == "hold-monster":
                 actions.append(hold_monster_2014(dc))
             elif spell_id == "hold-person":
@@ -512,6 +520,14 @@ def prepared_timed_self_buffs_2014(monster: SourceMonster2014) -> list[TimedSelf
                 ))
             elif spell_id == "darkness":
                 actions.append(darkness_2014())
+            elif spell_id == "counterspell":
+                actions.append(counterspell_2014())
+            elif spell_id == "gaseous-form":
+                actions.append(gaseous_form_2014())
+            elif spell_id == "globe-of-invulnerability":
+                actions.append(globe_of_invulnerability_2014())
+            elif spell_id == "fog-cloud":
+                actions.append(fog_cloud_2014())
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 prepared timed self-buffs for %s.", monster.name)
