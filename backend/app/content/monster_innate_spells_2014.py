@@ -11,11 +11,26 @@ from app.content.monster_innate_source_2014 import (
     innate_spells_2014 as _spells,
     innate_spell_save_dc_2014 as _dc,
 )
+from app.content.shared_control_spells_2014 import hold_person_2014
 from app.content.shared_control_spells_2014 import (
     blindness_deafness_2014,
     hold_monster_2014,
 )
-from app.content.shared_damage_spells_2014 import flame_strike_2014, harm_2014
+from app.content.cleric_2014_level1_spells import bless_2014, cure_wounds_2014, guiding_bolt_2014, inflict_wounds_2014, shield_of_faith_2014
+from app.content.shared_spells_2014 import insect_plague_2014, blade_barrier_2014, bestow_curse_2014, dominate_monster_2014, heat_metal_2014, contagion_2014
+from app.content.shared_spells_2014 import (
+    sanctuary_2014, shield_2014, mage_armor_2014, freedom_of_movement_2014,
+    counterspell_2014, gaseous_form_2014, globe_of_invulnerability_2014, fog_cloud_2014,
+)
+from app.content.druid_2014_level2_spells import barkskin_2014
+from app.domain.spells import DefensiveSpellAction
+from app.content.shared_spells_2014 import spiritual_weapon_2014
+from app.domain.healing_actions import HealingAction
+from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
+from app.content.shared_damage_spells_2014 import (
+    blight_2014, cloudkill_2014, disintegrate_2014, finger_of_death_2014,
+    flame_strike_2014, harm_2014, ice_storm_2014, sacred_flame_2014, thunderwave_2014,
+)
 from app.content.shared_zone_spells_2014 import wall_of_fire_2014
 from app.content.sorcerer_draconic_2014_spells import (
     burning_hands_2014,
@@ -85,6 +100,10 @@ def innate_spell_attack_actions_2014(monster: SourceMonster2014) -> list[SpellAt
                     animation="ray-of-enfeeblement",
                     source="D&D Basic Rules 2014: Ray of Enfeeblement",
                 ))
+            elif spell_id == "guiding-bolt" and attack_bonus is not None:
+                actions.append(guiding_bolt_2014(int(attack_bonus)))
+            elif spell_id == "inflict-wounds" and attack_bonus is not None:
+                actions.append(inflict_wounds_2014(int(attack_bonus)))
             elif spell_id == "fire-bolt" and attack_bonus is not None:
                 actions.append(fire_bolt_2014(int(attack_bonus), _MONSTER_CANTRIP_LEVEL))
             elif spell_id == "ray-of-frost" and attack_bonus is not None:
@@ -111,6 +130,20 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
             # Highest-level damage first
             if spell_id == "harm":
                 actions.append(harm_2014(dc))
+            elif spell_id == "finger-of-death":
+                actions.append(finger_of_death_2014(dc))
+            elif spell_id == "disintegrate":
+                actions.append(disintegrate_2014(dc))
+            elif spell_id == "cloudkill":
+                actions.append(cloudkill_2014(dc))
+            elif spell_id == "blight":
+                actions.append(blight_2014(dc))
+            elif spell_id == "ice-storm":
+                actions.append(ice_storm_2014(dc))
+            elif spell_id == "thunderwave":
+                actions.append(thunderwave_2014(dc))
+            elif spell_id == "sacred-flame":
+                actions.append(sacred_flame_2014(dc))
             elif spell_id == "cone-of-cold":
                 actions.append(cone_of_cold_2014(dc))
             elif spell_id == "flame-strike":
@@ -211,6 +244,112 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
                     duration_minutes=480,
                     animation="spell-save",
                 ))
+            elif spell_id == "command":
+                actions.append(SpellSaveAction(
+                    id="command", name="Command", level=1, action_cost="action",
+                    range_ft=60, save_ability="wisdom", dc=dc,
+                    requires_target_sight=True,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="prone", duration_rounds=1,
+                        expiry_timing="target_turn_end",
+                    ),
+                    animation="command",
+                ))
+            elif spell_id == "sleep":
+                actions.append(SpellSaveAction(
+                    id="sleep", name="Sleep", level=1, action_cost="action",
+                    range_ft=90, save_ability="wisdom", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="unconscious", duration_rounds=10,
+                        expiry_timing="source_turn_end", ends_on_damage=True,
+                    ),
+                    animation="sleep",
+                ))
+            elif spell_id == "banishment":
+                actions.append(SpellSaveAction(
+                    id="banishment", name="Banishment", level=4, action_cost="action",
+                    range_ft=60, save_ability="charisma", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="banished", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    concentration=True, duration_minutes=1, animation="banishment",
+                ))
+            elif spell_id == "entangle":
+                actions.append(SpellSaveAction(
+                    id="entangle", name="Entangle", level=1, action_cost="action",
+                    range_ft=90, save_ability="strength", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="restrained", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    concentration=True, duration_minutes=1, animation="entangle",
+                ))
+            elif spell_id == "faerie-fire":
+                actions.append(SpellSaveAction(
+                    id="faerie-fire", name="Faerie Fire", level=1, action_cost="action",
+                    range_ft=60, save_ability="dexterity", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="outlined", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    concentration=True, duration_minutes=1, animation="faerie-fire",
+                ))
+            elif spell_id == "power-word-stun":
+                actions.append(SpellSaveAction(
+                    id="power-word-stun", name="Power Word Stun", level=8, action_cost="action",
+                    range_ft=60, save_ability="constitution", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="stunned", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    animation="power-word-stun",
+                ))
+            elif spell_id == "insect-plague":
+                actions.append(insect_plague_2014(dc))
+            elif spell_id == "blade-barrier":
+                actions.append(blade_barrier_2014(dc))
+            elif spell_id == "bestow-curse":
+                actions.append(bestow_curse_2014(dc))
+            elif spell_id == "dominate-monster":
+                actions.append(dominate_monster_2014(dc))
+            elif spell_id == "heat-metal":
+                actions.append(heat_metal_2014(dc))
+            elif spell_id == "contagion":
+                actions.append(contagion_2014(dc))
+            elif spell_id == "dominate-person":
+                actions.append(SpellSaveAction(
+                    id="dominate-person", name="Dominate Person", level=5, action_cost="action",
+                    range_ft=60, save_ability="wisdom", dc=dc,
+                    required_target_creature_types=["humanoid"],
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="charmed", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    concentration=True, duration_minutes=1, animation="dominate-person",
+                ))
+            elif spell_id == "confusion":
+                actions.append(SpellSaveAction(
+                    id="confusion", name="Confusion", level=4, action_cost="action",
+                    range_ft=90, save_ability="wisdom", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="confused", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    concentration=True, duration_minutes=1, animation="confusion",
+                ))
+            elif spell_id == "insect-plague":
+                actions.append(insect_plague_2014(dc))
+            elif spell_id == "blade-barrier":
+                actions.append(blade_barrier_2014(dc))
+            elif spell_id == "bestow-curse":
+                actions.append(bestow_curse_2014(dc))
+            elif spell_id == "dominate-monster":
+                actions.append(dominate_monster_2014(dc))
+            elif spell_id == "heat-metal":
+                actions.append(heat_metal_2014(dc))
+            elif spell_id == "contagion":
+                actions.append(contagion_2014(dc))
             elif spell_id == "dominate-person":
                 actions.append(SpellSaveAction(
                     id="dominate-person",
@@ -232,6 +371,8 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
                 ))
             elif spell_id == "hold-monster":
                 actions.append(hold_monster_2014(dc))
+            elif spell_id == "hold-person":
+                actions.append(hold_person_2014(dc))
             elif spell_id == "blindness-deafness":
                 actions.append(blindness_deafness_2014(dc))
             elif spell_id == "vicious-mockery":
@@ -257,4 +398,64 @@ def innate_persistent_save_zone_actions_2014(
         ]
     except Exception:
         logger.exception("Failed to compile 2014 innate save zones for %s.", monster.name)
+        raise
+
+
+def innate_healing_spell_actions_2014(monster: SourceMonster2014) -> list[HealingAction]:
+    """Bind printed innate healing spells. Ability modifier is 0 until a later explicit policy."""
+    try:
+        actions: list[HealingAction] = []
+        for spell in _spells(monster):
+            if str(spell.get("id") or "") == "cure-wounds":
+                actions.append(cure_wounds_2014(0, 0))
+        return actions
+    except Exception:
+        logger.exception("Failed to compile 2014 innate healing spells for %s.", monster.name)
+        raise
+
+
+def innate_persistent_spell_attack_actions_2014(monster: SourceMonster2014) -> list[PersistentSpellAttackAction]:
+    """Bind printed innate persistent spell attacks."""
+    try:
+        actions: list[PersistentSpellAttackAction] = []
+        attack_bonus = None
+        source = monster.innate_spellcasting
+        if isinstance(source, dict):
+            raw = source.get("attack_bonus")
+            attack_bonus = int(raw) if raw is not None else None
+        if attack_bonus is None:
+            return actions
+        for spell in _spells(monster):
+            if str(spell.get("id") or "") == "spiritual-weapon":
+                actions.append(spiritual_weapon_2014(int(attack_bonus), 0))
+        return actions
+    except Exception:
+        logger.exception("Failed to compile 2014 innate persistent spell attacks for %s.", monster.name)
+        raise
+
+
+def innate_defensive_spell_actions_2014(monster: SourceMonster2014) -> list[DefensiveSpellAction]:
+    """Bind printed innate defensive spells to existing DefensiveSpellAction primitives."""
+    try:
+        actions: list[DefensiveSpellAction] = []
+        dc = _dc(monster)
+        for spell in _spells(monster):
+            spell_id = str(spell.get("id") or "")
+            if spell_id == "bless":
+                actions.append(bless_2014())
+            elif spell_id == "shield-of-faith":
+                actions.append(shield_of_faith_2014())
+            elif spell_id == "shield":
+                actions.append(shield_2014())
+            elif spell_id == "sanctuary" and dc is not None:
+                actions.append(sanctuary_2014(dc))
+            elif spell_id == "barkskin":
+                actions.append(barkskin_2014())
+            elif spell_id == "mage-armor":
+                actions.append(mage_armor_2014())
+            elif spell_id == "freedom-of-movement":
+                actions.append(freedom_of_movement_2014())
+        return actions
+    except Exception:
+        logger.exception("Failed to compile 2014 innate defensive spells for %s.", monster.name)
         raise

@@ -35,11 +35,19 @@ from app.content.monster_innate_spells_2014 import (
     innate_auto_hit_spell_actions_2014,
     innate_spell_attack_actions_2014,
     innate_persistent_save_zone_actions_2014,
+    innate_healing_spell_actions_2014,
+    innate_persistent_spell_attack_actions_2014,
+    innate_defensive_spell_actions_2014,
     innate_spell_save_actions_2014,
 )
 from app.content.monster_prepared_spells_2014 import (
     prepared_auto_hit_spell_actions_2014,
     prepared_persistent_save_zone_actions_2014,
+    prepared_healing_spell_actions_2014,
+    prepared_persistent_spell_attack_actions_2014,
+    prepared_timed_self_buffs_2014,
+    prepared_defensive_spell_actions_2014,
+    prepared_condition_removal_actions_2014,
     prepared_spell_attack_actions_2014,
     prepared_spell_save_actions_2014,
 )
@@ -227,6 +235,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *prepared_persistent_save_zone_actions_2014(monster),
         ],
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
+            *prepared_timed_self_buffs_2014(monster),
             *source_invisibility_action_2014(monster),
             *berserk_self_buffs_2014(monster),
             *heated_body_retaliation_2014(monster),
@@ -234,8 +243,23 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *condition_auras_from_source(monster.source_traits, "2014"),
             *contextual_save_defenses_2014(monster)[0], *leadership_actions_2014(monster),
             *recharge_self_buff_actions_2014(monster)],
-        healing_actions=healing_actions_2014(monster),
-        condition_removal_actions=list(core.condition_removal_actions),
+        defensive_spell_actions=[
+            *innate_defensive_spell_actions_2014(monster),
+            *prepared_defensive_spell_actions_2014(monster),
+        ],
+        healing_actions=[
+            *healing_actions_2014(monster),
+            *innate_healing_spell_actions_2014(monster),
+            *prepared_healing_spell_actions_2014(monster),
+        ],
+        persistent_spell_attack_actions=[
+            *innate_persistent_spell_attack_actions_2014(monster),
+            *prepared_persistent_spell_attack_actions_2014(monster),
+        ],
+        condition_removal_actions=[
+            *list(core.condition_removal_actions),
+            *prepared_condition_removal_actions_2014(monster),
+        ],
         terminal_effect_tags=terminal_effect_tags_2014(monster),
         effect_tag_condition_grants=effect_tag_condition_grants_2014(monster),
         legendary_actions=legendary_options,
