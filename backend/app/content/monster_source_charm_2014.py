@@ -126,6 +126,28 @@ def source_charm_actions_2014(monster: SourceMonster2014) -> list[SaveCapability
                         save_ability="wisdom", dc=0, range_ft=15,
                         animation="darkness",
                     ))
+            elif name.startswith("Roar") and monster.id == "androsphinx":
+                if "dc 18" in n:
+                    actions.append(SaveCapabilityDefinition(
+                        id="roar", name="Roar", save_ability="wisdom", dc=18,
+                        range_ft=0, resource_id="roar", resource_cost=1,
+                        failed_save_timed_effect=FailedSaveTimedEffect(
+                            effect_id="frightened", duration_rounds=10,
+                            expiry_timing="source_turn_end",
+                        ),
+                        animation="roar",
+                    ))
+            elif name == "Tentacles" and monster.id == "chuul":
+                if "dc 13 constitution" in n and "poisoned" in n:
+                    actions.append(SaveCapabilityDefinition(
+                        id="tentacles", name="Tentacles", save_ability="constitution", dc=13,
+                        range_ft=0,
+                        failed_save_timed_effect=FailedSaveTimedEffect(
+                            effect_id="poisoned", duration_rounds=10,
+                            expiry_timing="source_turn_end",
+                        ),
+                        animation="tentacles",
+                    ))
         return actions
     except Exception:
         logger.exception("Failed to bind 2014 charm/enslave/moan for %s.", monster.name)
