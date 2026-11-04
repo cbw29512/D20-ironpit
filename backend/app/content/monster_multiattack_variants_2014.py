@@ -20,7 +20,14 @@ _MODE_SOURCE = re.compile(
 def source_variants_2014(monster):
     try:
         policy = monster.multiattack_policy
-        text = source_sections_2014(monster.source_actions).get("Multiattack", "")
+        # Accept form-gated headings (e.g. "Multiattack (Humanoid or Hybrid Form Only)").
+        sections = source_sections_2014(monster.source_actions)
+        text = sections.get("Multiattack", "")
+        if not text:
+            for name in monster.action_names:
+                if name.casefold().startswith("multiattack"):
+                    text = sections.get(name, "")
+                    break
         attacks = {attack.id: attack for attack in monster.attacks}
         slots = monster.multiattack_slots
         if not isinstance(policy, dict) or not slots or any(
@@ -69,6 +76,27 @@ def source_variants_2014(monster):
                              for slot in choices for i in slot):
                         return []
                 branches.append((mode, choices))
+        # Lycanthrope slot rules: at most one of a named attack, or both slots the same.
+        if not branches and isinstance(policy, dict):
+            if "at_most_once_attack_ids" in policy:
+                limited = set(policy["at_most_once_attack_ids"])
+                # Two slots of the same alternatives; limit one slot to the restricted attack.
+                if len(slots) == 2 and slots[0] == slots[1]:
+                    choices = slots[0]
+                    # Variant: one limited + one other, or two non-limited.
+                    for limited_id in limited:
+                        others = [i for i in choices if i != limited_id]
+                        if others:
+                            branches.append(("melee", [[limited_id], others]))
+                            branches.append(("melee", [others, [limited_id]]))
+                    non_limited = [i for i in choices if i not in limited]
+                    if non_limited:
+                        branches.append(("melee", [non_limited, non_limited]))
+            elif "same_attack_as_previous_slots" in policy:
+                # Both slots must be the same attack.
+                if len(slots) == 2 and slots[0] == slots[1]:
+                    for attack_id in slots[0]:
+                        branches.append(("melee", [[attack_id], [attack_id]]))
         return [AttackActionVariant(
             id=f"2014-{monster.id}-multiattack-{mode}-{index}", attack_kind=mode,
             slots=[AttackActionSlot(attack_ids=[attack_id_2014(monster, i) for i in slot]) for slot in branch],
