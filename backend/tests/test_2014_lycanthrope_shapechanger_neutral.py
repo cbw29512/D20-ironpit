@@ -77,3 +77,24 @@ def test_unrelated_shapechanger_does_not_inherit_lycanthrope_exception():
     except Exception:
         logger.exception("Lycanthrope Shapechanger isolation failed")
         raise
+
+
+@pytest.mark.parametrize("monster_id", ["werewolf", "wereboar", "wererat"])
+def test_lycanthrope_form_qualified_multiattack_is_not_extra_action(monster_id):
+    """Form-qualified Multiattack is the supported multiattack under locked Shapechanger policy.
+
+    These three have no remaining multiattack:complex after policy reconciliation.
+    """
+    try:
+        monster = _monster(monster_id)
+        original = monster.model_dump_json()
+        blockers = basic_blockers_2014(monster)
+        assert "source:extra-action" not in blockers
+        # For these three, this was the sole remaining blocker on current main.
+        # Werewolf has none left; others may retain independent blockers if any.
+        if monster_id == "werewolf":
+            assert not blockers
+        assert monster.model_dump_json() == original
+    except Exception:
+        logger.exception("%s form-qualified Multiattack classification failed", monster_id)
+        raise
