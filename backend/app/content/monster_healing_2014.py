@@ -9,6 +9,34 @@ from app.domain.healing_actions import HealingAction
 logger = logging.getLogger(__name__)
 
 
+def _source_healing_touch_2014(monster: SourceMonster2014) -> list[HealingAction]:
+    """Bind printed Healing Touch as a real healing action."""
+    try:
+        actions: list[HealingAction] = []
+        for name in monster.action_names:
+            if name.casefold().startswith("healing touch"):
+                # Deva: 4d8+2; Unicorn: 2d8+2. Use printed dice when known.
+                if monster.id == "deva":
+                    actions.append(HealingAction(
+                        id="healing-touch", name="Healing Touch", action_cost="action",
+                        range_ft=5, dice_count=4, dice_size=8, healing_bonus=2,
+                        removable_conditions=["cursed", "poisoned", "blinded", "deafened"],
+                        resource_id="healing-touch", resource_cost=1, animation="healing",
+                    ))
+                elif monster.id == "unicorn":
+                    actions.append(HealingAction(
+                        id="healing-touch", name="Healing Touch", action_cost="action",
+                        range_ft=5, dice_count=2, dice_size=8, healing_bonus=2,
+                        removable_conditions=["poisoned"],
+                        resource_id="healing-touch", resource_cost=1, animation="healing",
+                    ))
+        actions.extend(_source_healing_touch_2014(monster))
+        return actions
+    except Exception:
+        logger.exception("Failed to bind 2014 Healing Touch for %s.", monster.name)
+        raise
+
+
 def healing_actions_2014(monster: SourceMonster2014) -> list[HealingAction]:
     try:
         actions: list[HealingAction] = []

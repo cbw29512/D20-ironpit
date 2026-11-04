@@ -43,14 +43,15 @@ def verified_nonactionable_action_2014(monster: SourceMonster2014, action_name: 
             return False
         if verified_arena_inert_equipment_action_2014(monster, action_name):
             return True
-        expected = _NONCOMBAT_ACTION_CLAUSES_2014.get(action_name)
-        if expected is None:
-            return False
         printed = source_sections_2014(monster.source_actions).get(action_name)
         if printed is None:
             return False
         normalize = lambda text: " ".join(text.casefold().replace("’", "'").split())
-        return normalize(printed) == normalize(expected)
+        printed_n = normalize(printed)
+        expected = _NONCOMBAT_ACTION_CLAUSES_2014.get(action_name)
+        if expected is None:
+            return False
+        return printed_n == normalize(expected)
     except Exception:
         logger.exception(
             "2014 noncombat action proof failed for %s / %s",

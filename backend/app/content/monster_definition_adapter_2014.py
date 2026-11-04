@@ -208,7 +208,10 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         primary_attack_id=attacks[0].id if attacks else None, attack_action=multiattack_2014(monster),
         death_trigger_effect_ids=[action.id for action in death_trigger_actions_2014(monster)],
         death_trigger_actions=death_trigger_actions_2014(monster),
-        save_actions=save_capabilities_2014(monster),
+        save_actions=[
+            *save_capabilities_2014(monster),
+            *source_charm_actions_2014(monster),
+        ],
         spell_save_actions=[
             *innate_spell_save_actions_2014(monster),
             *prepared_spell_save_actions_2014(monster),
