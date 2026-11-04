@@ -20,39 +20,44 @@ from app.content.monster_source_recharge_line_damage_2014 import source_proven_r
 from app.content.monster_source_recharge_timed_controls_2014 import (
     source_proven_recharge_timed_controls_2014,
 )
+from app.content.monster_source_grapple_owner_save_2014 import source_proven_grapple_owner_saves_2014
 from app.content.monster_source_limited_audible_conditions_2014 import (
     source_proven_limited_audible_conditions_2014,
 )
-from app.content.monster_source_grapple_owner_save_2014 import source_proven_grapple_owner_saves_2014
+from app.content.monster_source_visual_save_bindings_2014 import source_proven_visual_saves_2014
 
 logger = logging.getLogger(__name__)
 
 
-def unsupported_source_actions_2014(monster: SourceMonster2014) -> list[str]:
+def unsupported_save_actions_2014(monster: SourceMonster2014) -> list[object]:
     try:
-        allowed = {
-            binding.action_name.casefold()
-            for binding in source_proven_asymmetric_saves_2014(monster)
-        }
+        return [
+            action for action in monster.saving_throw_actions
+            if not supports_save_action_2014(action)
+        ]
+    except Exception:
+        logger.exception("Failed unsupported save-action audit for %s.", monster.name)
+        raise
+
+
+def unsupported_source_actions_2014(
+    monster: SourceMonster2014, *, recharge_supported: bool | None = None,
+) -> list[str]:
+    try:
+        allowed = {attack.name.casefold() for attack in monster.attacks}
         allowed.update(
-            binding.action_name.casefold()
-            for binding in source_proven_audible_maintained_controls_2014(monster)
+            str(action.get("name", "")).casefold()
+            for action in monster.saving_throw_actions if isinstance(action, dict)
         )
+        allowed.update(item.name.casefold() for item in source_proven_asymmetric_saves_2014(monster))
+        allowed.update(item.name.casefold() for item in source_proven_visual_saves_2014(monster))
+        allowed.update(item.name.casefold() for item in source_proven_conditioned_saves_2014(monster))
+        allowed.update(item.name.casefold() for item in source_proven_dreadful_glare_2014(monster))
+        allowed.update(item.name.casefold() for item in source_proven_opening_area_saves_2014(monster))
         allowed.update(
-            binding.action_name.casefold()
-            for binding in source_proven_conditioned_saves_2014(monster)
+            item.name.casefold() for item in source_proven_audible_maintained_controls_2014(monster)
         )
-        allowed.update(
-            binding.action_name.casefold()
-            for binding in source_proven_dreadful_glare_2014(monster)
-        )
-        allowed.update(
-            binding.action_name.casefold()
-            for binding in source_proven_opening_area_saves_2014(monster)
-        )
-        allowed.update(
-            item.action.name.casefold() for item in recharge_self_buff_bindings_2014(monster)
-        )
+        allowed.update(item.action.name.casefold() for item in recharge_self_buff_bindings_2014(monster))
         allowed.update(item.name.casefold() for item in source_proven_grapple_owner_saves_2014(monster))
         allowed.update(item.name.casefold() for item in source_proven_recharge_line_damage_2014(monster))
         allowed.update(
@@ -76,10 +81,6 @@ def unsupported_source_actions_2014(monster: SourceMonster2014) -> list[str]:
                     label = action_label_2014(name)
                     if label.startswith("multiattack"):
                         allowed.add(label)
-        if supports_save_action_2014(monster):
-            # existing save support paths remain
-            pass
-        recharge_supported = None
         if recharge_supported is None:
             recharge_supported = supports_recharge_rules_2014(monster)
         if recharge_supported:
