@@ -93,6 +93,6 @@ def test_wereboar_traits_clear_after_shapechanger_source_proof() -> None:
     assert _RELENTLESS not in unsupported
     assert "Shapechanger" not in unsupported
     assert unsupported == set()
-    # Its independent form-qualified Multiattack and extra-action obligations
-    # still fail closed; clearing traits does not admit the whole card.
-    assert basic_blockers_2014(monster)
+    # The roster-wide form-qualified Multiattack proof clears the card's last
+    # independent obligation; this trait test must not preserve a stale block.
+    assert basic_blockers_2014(monster) == ()
