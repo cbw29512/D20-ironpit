@@ -76,6 +76,55 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "it is wearing or carrying isn't transformed. It reverts "
                 "to its true form if it dies."
             )
+
+        if trait_name == "Shapechanger" and monster.id in (
+            "werewolf", "werebear", "wererat", "wereboar", "weretiger",
+        ):
+            # Lycanthrope Shapechanger: action to polymorph; statistics the same
+            # except AC or size. No form-gated combat options under locked Pit
+            # rules. Exact source match; mutation fails closed.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            section = source_sections_2014(
+                monster.source_traits, include_continuations=True
+            ).get("Shapechanger", "")
+            expected = {
+                "werewolf": (
+                    "The werewolf can use its action to polymorph into a wolf-humanoid "
+                    "hybrid or into a wolf, or back into its true form, which is humanoid. "
+                    "Its statistics, other than its AC, are the same in each form. "
+                    "Any equipment it is wearing or carrying isn't transformed. "
+                    "It reverts to its true form if it dies."
+                ),
+                "werebear": (
+                    "The werebear can use its action to polymorph into a Large bear-humanoid "
+                    "hybrid or into a Large bear, or back into its true form, which is humanoid. "
+                    "Its statistics, other than its size and AC, are the same in each form. "
+                    "Any equipment it is wearing or carrying isn't transformed. "
+                    "It reverts to its true form if it dies."
+                ),
+                "wererat": (
+                    "The wererat can use its action to polymorph into a rat-humanoid "
+                    "hybrid or into a giant rat, or back into its true form, which is humanoid. "
+                    "Its statistics, other than its size, are the same in each form. "
+                    "Any equipment it is wearing or carrying isn't transformed. "
+                    "It reverts to its true form if it dies."
+                ),
+                "wereboar": (
+                    "The wereboar can use its action to polymorph into a boar-humanoid "
+                    "hybrid or into a boar, or back into its true form, which is humanoid. "
+                    "Its statistics, other than its AC, are the same in each form. "
+                    "Any equipment it is wearing or carrying isn't transformed. "
+                    "It reverts to its true form if it dies."
+                ),
+                "weretiger": (
+                    "The weretiger can use its action to polymorph into a tiger-humanoid "
+                    "hybrid or into a tiger, or back into its true form, which is humanoid. "
+                    "Its statistics, other than its size, are the same in each form. "
+                    "Any equipment it is wearing or carrying isn't transformed. "
+                    "It reverts to its true form if it dies."
+                ),
+            }
+            return section == expected[monster.id]
         source = monster.source_traits or ""
         # Context-driven exclusion: this trait only operates underwater, a
         # context absent from the standard Iron Pit. Keep the printed trait.
