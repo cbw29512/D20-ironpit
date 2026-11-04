@@ -15,7 +15,10 @@ from app.content.shared_control_spells_2014 import (
     blindness_deafness_2014,
     hold_monster_2014,
 )
-from app.content.shared_damage_spells_2014 import flame_strike_2014, harm_2014
+from app.content.shared_damage_spells_2014 import (
+    blight_2014, cloudkill_2014, disintegrate_2014, finger_of_death_2014,
+    flame_strike_2014, harm_2014, ice_storm_2014, sacred_flame_2014, thunderwave_2014,
+)
 from app.content.shared_zone_spells_2014 import wall_of_fire_2014
 from app.content.sorcerer_draconic_2014_spells import (
     burning_hands_2014,
@@ -111,6 +114,20 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
             # Highest-level damage first
             if spell_id == "harm":
                 actions.append(harm_2014(dc))
+            elif spell_id == "finger-of-death":
+                actions.append(finger_of_death_2014(dc))
+            elif spell_id == "disintegrate":
+                actions.append(disintegrate_2014(dc))
+            elif spell_id == "cloudkill":
+                actions.append(cloudkill_2014(dc))
+            elif spell_id == "blight":
+                actions.append(blight_2014(dc))
+            elif spell_id == "ice-storm":
+                actions.append(ice_storm_2014(dc))
+            elif spell_id == "thunderwave":
+                actions.append(thunderwave_2014(dc))
+            elif spell_id == "sacred-flame":
+                actions.append(sacred_flame_2014(dc))
             elif spell_id == "cone-of-cold":
                 actions.append(cone_of_cold_2014(dc))
             elif spell_id == "flame-strike":
