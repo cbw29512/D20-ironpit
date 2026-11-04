@@ -4,6 +4,61 @@
     "bound": 141,
     "not_applicable": 181
   },
+  "form_qualified_heading_family": {
+    "applicable": 4,
+    "cards": [
+      {
+        "browser_wired": true,
+        "labels": [
+          "multiattack (humanoid or hybrid form only)"
+        ],
+        "monster": "wereboar",
+        "python_wired": true,
+        "reasons": [],
+        "source_classified": true,
+        "wired": true
+      },
+      {
+        "browser_wired": true,
+        "labels": [
+          "multiattack (humanoid or hybrid form only)"
+        ],
+        "monster": "wererat",
+        "python_wired": true,
+        "reasons": [],
+        "source_classified": true,
+        "wired": true
+      },
+      {
+        "browser_wired": true,
+        "labels": [
+          "multiattack (humanoid or hybrid form only)"
+        ],
+        "monster": "weretiger",
+        "python_wired": true,
+        "reasons": [],
+        "source_classified": true,
+        "wired": true
+      },
+      {
+        "browser_wired": true,
+        "labels": [
+          "multiattack. (humanoid or hybrid form only)"
+        ],
+        "monster": "werewolf",
+        "python_wired": true,
+        "reasons": [],
+        "source_classified": true,
+        "wired": true
+      }
+    ],
+    "exceptions": [],
+    "remaining": 0,
+    "source_classified": 4,
+    "wired": 4,
+    "wired_browser": 4,
+    "wired_python": 4
+  },
   "policy_family": {
     "applicable": 6,
     "cards": [
