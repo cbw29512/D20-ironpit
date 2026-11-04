@@ -397,6 +397,14 @@ def prepared_spell_attack_actions_2014(monster: SourceMonster2014) -> list[Spell
                 actions.append(inflict_wounds_2014(int(attack_bonus)))
             elif spell_id == "acid-arrow":
                 actions.append(acid_arrow_2014(int(attack_bonus)))
+            elif spell_id == "ray-of-enfeeblement":
+                actions.append(SpellAttackAction(
+                    id="ray-of-enfeeblement", name="Ray of Enfeeblement", level=2,
+                    action_cost="action", attack_kind="ranged", range_ft=60,
+                    attack_bonus=int(attack_bonus),
+                    damage_dice_count=0, damage_dice_size=6, damage_type="necrotic",
+                    animation="ray-of-enfeeblement",
+                ))
             elif spell_id == "fire-bolt":
                 actions.append(fire_bolt_2014(int(attack_bonus), _MONSTER_CANTRIP_LEVEL))
             elif spell_id == "ray-of-frost":
@@ -467,6 +475,8 @@ def supports_prepared_spellcasting_2014(monster: SourceMonster2014) -> bool:
             action.id for action in prepared_defensive_spell_actions_2014(monster)
         } | {
             action.id for action in prepared_condition_removal_actions_2014(monster)
+        } | {
+            action.id for action in prepared_effect_removal_actions_2014(monster)
         } | ARENA_NEUTRAL_PREPARED_SPELLS_2014
         # Arena-neutral prepared spells stay unbound by design.
         return known <= bound
@@ -602,4 +612,18 @@ def prepared_condition_removal_actions_2014(monster: SourceMonster2014) -> list[
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 prepared condition removal for %s.", monster.name)
+        raise
+
+
+def prepared_effect_removal_actions_2014(monster: SourceMonster2014) -> list:
+    """Bind printed prepared dispel effects."""
+    try:
+        from app.content.shared_effect_removal_spells_2014 import dispel_magic_2014
+        actions = []
+        for spell in _prepared_spells(monster):
+            if str(spell.get("id") or "") == "dispel-magic":
+                actions.append(dispel_magic_2014("intelligence"))
+        return actions
+    except Exception:
+        logger.exception("Failed to compile 2014 prepared effect removal for %s.", monster.name)
         raise
