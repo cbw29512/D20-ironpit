@@ -17,7 +17,10 @@ from app.content.shared_control_spells_2014 import (
     hold_monster_2014,
 )
 from app.content.cleric_2014_level1_spells import bless_2014, cure_wounds_2014, guiding_bolt_2014, inflict_wounds_2014, shield_of_faith_2014
-from app.content.shared_spells_2014 import sanctuary_2014, shield_2014, mage_armor_2014, freedom_of_movement_2014
+from app.content.shared_spells_2014 import (
+    sanctuary_2014, shield_2014, mage_armor_2014, freedom_of_movement_2014,
+    counterspell_2014, gaseous_form_2014, globe_of_invulnerability_2014, fog_cloud_2014,
+)
 from app.content.druid_2014_level2_spells import barkskin_2014
 from app.domain.spells import DefensiveSpellAction
 from app.content.shared_spells_2014 import spiritual_weapon_2014
