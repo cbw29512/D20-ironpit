@@ -77,3 +77,31 @@ def test_unrelated_shapechanger_does_not_inherit_lycanthrope_exception():
     except Exception:
         logger.exception("Lycanthrope Shapechanger isolation failed")
         raise
+
+
+def test_wereboar_form_qualified_multiattack_is_not_extra_action():
+    """Form-qualified Multiattack is the supported multiattack under locked Shapechanger policy."""
+    try:
+        monster = _monster("wereboar")
+        original = monster.model_dump_json()
+        blockers = basic_blockers_2014(monster)
+        assert "source:extra-action" not in blockers
+        assert not blockers
+        assert monster.model_dump_json() == original
+    except Exception:
+        logger.exception("Wereboar form-qualified Multiattack classification failed")
+        raise
+
+
+def test_wererat_form_qualified_multiattack_is_not_extra_action():
+    """Form-qualified Multiattack is the supported multiattack under locked Shapechanger policy."""
+    try:
+        monster = _monster("wererat")
+        original = monster.model_dump_json()
+        blockers = basic_blockers_2014(monster)
+        assert "source:extra-action" not in blockers
+        assert not blockers
+        assert monster.model_dump_json() == original
+    except Exception:
+        logger.exception("Wererat form-qualified Multiattack classification failed")
+        raise
