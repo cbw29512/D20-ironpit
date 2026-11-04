@@ -4,6 +4,7 @@ import logging
 
 from app.combat.barrier_line_of_effect import clear_line_between_members
 from app.combat.attack_legality import attack_allowed_against
+from app.combat.attachment_attack_gate import source_attacks_blocked
 from app.combat.encounter_targeting import active_target_policy, combatant_distance, living_opponents, living_targets
 from app.combat.formation_rows import member_is_backline
 from app.combat.printed_damage import weapon_mean_damage
@@ -98,6 +99,8 @@ def choose_attack(
 ) -> tuple[EncounterCombatant, WeaponAttack, int] | None:
     """Choose an actually legal attack at the combatants' current battlefield positions."""
     try:
+        if source_attacks_blocked(setup, attacker.combatant_id):
+            return None
         profiles = _attack_profiles(attacker, allowed_ids, kind)
         for target in target_order(attacker, setup, prefer_backline=prefer_backline):
             if target_id is not None and target.combatant_id != target_id:

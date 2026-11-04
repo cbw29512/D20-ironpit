@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.domain.events import BattleEvent, DiceRoll
+from app.domain.attachments import Attachment
 from app.domain.grid import BattleMapDefinition
 from app.domain.persistent_barriers import PersistentBarrierState
 from app.domain.persistent_beneficial_zones import PersistentBeneficialZoneState
@@ -62,6 +63,7 @@ class EncounterSetup(BaseModel):
     suppression_zones: list[PersistentSuppressionZoneState] = Field(default_factory=list)
     save_zones: list[PersistentSaveZoneState] = Field(default_factory=list)
     temporary_terrain_zones: list[TemporaryTerrainZone] = Field(default_factory=list)
+    attachments: list[Attachment] = Field(default_factory=list)
 
 
 class InitiativeGroup(BaseModel):

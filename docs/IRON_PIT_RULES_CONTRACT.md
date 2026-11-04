@@ -36,6 +36,41 @@ timing, terrain, visibility, Petrified, action-economy and arena overrides
 elsewhere in this contract continue unchanged. Implementation and parity
 gates are in [the universal card contract](UNIVERSAL_CARD_COMBAT_CONTRACT.md).
 
+## Source-linked attachment without Grappled (2014 Stirge; decision updated 2026-10-30)
+
+**Approved reversal of the former Stirge roster exclusion:** an attachment is a fight-local
+source-target relationship, **not** the Grappled or Restrained condition. Neither
+combatant receives a speed reduction, a movement penalty, or an invented
+Grappled escape DC solely from attachment. The target displays an Attached
+debuff; the source displays a linked Feeding buff/status. These are two
+projections of **one** authoritative relationship, never separate lasting effects.
+The Feeding status does not confer healing or an ability bonus absent a
+printed source clause. Both projections disappear on detachment, target
+death, source death, or normal fight-state reset.
+
+The 2014 Stirge's printed *Blood Drain* makes one ordinary +5 melee
+attack at 5 feet. A hit deals **1d4+3 Piercing damage**, then creates the
+relationship. While attached, that source cannot make another attack.
+At the **start of each of the source's turns**, its target loses **1d4+3
+hit points due to blood loss**. This recurrent effect is **direct HP loss,
+not typed Piercing damage**, does not roll a new attack, and must use the
+existing source-neutral HP-loss/zero-HP lifecycle. Keep a fight-local
+ledger of **actual HP drained**; at **10 HP drained**, detach automatically.
+The target's death also detaches automatically. The source may detach
+using **5 feet of its own movement**; the target or any other creature
+can detach it by spending **one Action**. Ordinary action/resource/movement
+gates decide eligibility; attachment is not a grapple.
+
+Source cards declare attack values, recurrent effect kind/dice/bonus,
+timing, detach threshold, removal costs, source label, and ruleset.
+The shared link lifecycle, damage/HP-loss primitives, scheduler and
+conditions renderer supply behavior; no Stirge/ability-name dispatch.
+The existing Grappled and swallow semantics remain unchanged.
+The 2024 Stirge must be source-verified independently: its recurrent
+typed damage is not interchangeable with the 2014 direct HP-loss
+effect. No roster admission or runtime certification follows merely
+from recording this decision or adding an attachment-state helper.
+
 ## Arena-entry buff casting
 
 When a canonical combatant can legally cast a non-Concentration buff before combat and that buff is selected as its deterministic opening preparation, Iron Pit may mark that specific opening cast as **free at arena entry**. A free opening cast still requires the spell to be legally prepared or known and the combatant to have access to a slot of the printed spell level, but it does not consume that spell slot. This is an explicit arena setup rule, not a change to the spell's RAW casting rules. Runtime data must opt into the rule declaratively; existing opening spells continue to consume slots unless so marked.

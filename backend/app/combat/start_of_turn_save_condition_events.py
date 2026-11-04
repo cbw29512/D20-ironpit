@@ -11,6 +11,7 @@ from app.combat.regeneration import resolve_start_of_turn_regeneration
 from app.combat.post_hit_save_condition_lifecycle import start_of_turn_save_condition_damage
 from app.combat.start_of_turn_timed_burn import start_of_turn_timed_burns
 from app.combat.grapple_periodic_damage import grapple_turn_start_damage
+from app.combat.attachment_turn_events import resolve_attachment_turn_start_events
 from app.combat.start_of_turn_hp_loss import resolve_start_of_turn_hp_loss_events
 from app.combat.zero_hp import apply_damage
 from app.combat.source_turn_relation_damage import resolve_source_turn_relation_damage
@@ -33,6 +34,10 @@ def resolve_start_of_turn_save_condition_damage_events(
         events: list[BattleEvent] = []
         regen_events, sequence = resolve_start_of_turn_regeneration(sequence, round_number, member)
         events.extend(regen_events)
+        attached, sequence = resolve_attachment_turn_start_events(
+            sequence, round_number, member, setup, dice,
+        )
+        events.extend(attached)
         resolve_zero_hp_ally_recovery(member, setup)
         resolve_source_turn_recovery_heals(member, setup, dice)
         affected = [item.state for item in [*setup.heroes, *setup.monsters]]

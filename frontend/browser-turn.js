@@ -103,6 +103,9 @@
       const swallowed = window.IRON_PIT_BROWSER_SWALLOW?.sourceTurnDamage(sequence, round, member, setup)
         || {events: [], sequence};
       events.push(...swallowed.events); sequence = swallowed.sequence;
+      const attachments = window.IRON_PIT_BROWSER_ATTACHMENT_TURN?.resolve(sequence, round, member, setup)
+        || { events: [], sequence };
+      events.push(...attachments.events); sequence = attachments.sequence;
       for (const item of countered) {
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
@@ -154,6 +157,12 @@
       const support = P()?.resolve(sequence, round, member, setup, turnKey);
       if (support) {
         events.push(...support.events); sequence = support.sequence;
+      }
+      if (window.IRON_PIT_BROWSER_ATTACHMENTS?.sourceAttacksBlocked(setup, member.combatant_id)) {
+        const detached = window.IRON_PIT_BROWSER_ATTACHMENT_REMOVAL
+          ?.resolveBlockedSource(sequence, round, setup, member);
+        if (!detached) return finalize(events, sequence, round, member, setup, turnKey, false);
+        events.push(detached); sequence++;
       }
       // Signature actions resolve before optional Bonus Action spell setup.
       const signature = resolveMainActionOpportunity("signatureThreshold", sequence, round, member, setup, turnKey);

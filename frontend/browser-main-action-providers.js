@@ -185,6 +185,20 @@
       },
     });
     register({
+      id: "attachment-removal", category: C().ATTACHMENT_REMOVAL, rulesets: BOTH,
+      discover: ({ member, setup, opportunityProfile }) => {
+        if (opportunityProfile !== "normalPostMove") return null;
+        const selected = window.IRON_PIT_BROWSER_ATTACHMENT_CHOICE?.choose(member, setup);
+        if (!selected) return null;
+        return { payload: { ...selected, delivery: "utility", expectedDamage: 0 } };
+      },
+      resolve: ({ sequence, round, member, setup }, candidate) => {
+        const choice = window.IRON_PIT_BROWSER_ATTACHMENT_CHOICE;
+        if (!choice?.resolve) throw Error("Attachment action resolution requires shared chooser.");
+        return choice.resolve(sequence, round, member, setup, candidate.payload);
+      },
+    });
+    register({
       id: "dodge", category: C().DODGE, rulesets: BOTH,
       discover: ({ member }) => E().available(member.state, "action") ? { payload: { delivery: "dodge", expectedDamage: 0 } } : null,
       resolve: ({ sequence, round, member }) => ({ events: [DG().take(sequence, round, member)], sequence: sequence + 1 }),

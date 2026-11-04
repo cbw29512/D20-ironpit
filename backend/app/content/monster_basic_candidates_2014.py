@@ -29,7 +29,7 @@ _MODELED_2014_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _CHARGE_TRAIT_NAMES = frozenset({"Charge", "Pounce", "Trampling Charge"})
-_PIT_REMOVED_MONSTER_IDS_2014 = frozenset({"stirge"})
+_PIT_REMOVED_MONSTER_IDS_2014 = frozenset()
 _PIT_ARENA_NEUTRAL_MONSTER_IDS_2014 = frozenset({"frog"})
 def _supported_charge(monster: SourceMonster2014) -> bool:
     return any(

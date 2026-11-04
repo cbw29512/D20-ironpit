@@ -2,6 +2,7 @@
 import logging
 
 from app.combat.action_economy import is_available
+from app.combat.attachment_decision import resolve_attachment_removal_action
 from app.combat.ally_context import pack_tactics_active
 from app.combat.area_weapon_attacks import resolve_area_weapon_attack
 from app.combat.attack_actions import resolve_attack_action
@@ -36,6 +37,13 @@ def resolve_post_move_action(events, sequence, round_number, attacker, target, s
             events.extend(more)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         pick = decide_post_move_offense(attacker, setup, turn_key)
+        if pick.family == "dodge":
+            removal = resolve_attachment_removal_action(sequence, round_number, attacker, setup)
+            if removal is not None:
+                events.append(removal)
+                sequence += 1
+                return finish_turn(events, sequence, round_number, attacker,
+                                   setup, dice, turn_key)
         if pick.family == "save-zone":
             action, center = pick.payload
             more, sequence = cast_save_zone(

@@ -24,8 +24,9 @@ def test_2014_frog_is_arena_neutral_not_missing_engine_work() -> None:
     assert "2014-frog" not in {item.id for item in build_basic_2014_monsters()}
 
 
-def test_stirge_removal_remains_distinct_from_arena_neutral() -> None:
+def test_stirge_attaches_instead_of_being_excluded_from_arena() -> None:
     stirge = _source("stirge")
 
     assert is_arena_neutral_monster_2014(stirge) is False
-    assert basic_blockers_2014(stirge) == ("arena:removed",)
+    assert basic_blockers_2014(stirge) == ()
+    assert "2014-stirge" in {item.id for item in build_basic_2014_monsters()}
