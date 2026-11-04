@@ -19,6 +19,9 @@ logger = logging.getLogger(__name__)
 # Whole, inspected printed clauses. Extra combat-effective riders must fail
 # closed instead of inheriting a permissive name-based exclusion.
 _NONCOMBAT_ACTION_CLAUSES_2014 = {
+    "Create Food and Water": (
+        "The spectator magically creates enough food and water to sustain itself for 24 hours."
+    ),
     "Heart Sight": (
         "The sprite touches a creature and magically knows the creature's current "
         "emotional state. If the target fails a DC 10 Charisma saving throw, the "
