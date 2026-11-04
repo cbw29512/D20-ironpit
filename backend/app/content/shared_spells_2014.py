@@ -173,3 +173,35 @@ def death_ward_2014() -> DefensiveSpellAction:
     except Exception:
         logger.exception("Failed to build 2014 Death Ward.")
         raise
+
+
+def shield_2014() -> "DefensiveSpellAction":
+    """Build 2014 Shield: reaction +5 AC until start of next turn."""
+    from app.domain.spells import DefensiveSpellAction
+    from app.domain.spell_modifiers import SpellModifierEffect
+    try:
+        return DefensiveSpellAction(
+            id="shield", name="Shield", level=1, action_cost="reaction",
+            range_ft=0, duration_rounds=1, target_policy="self",
+            modifier_effects=[SpellModifierEffect(kind="armor-class", flat_bonus=5)],
+            priority=40, animation="shield",
+            source="D&D Basic Rules 2014: Shield",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Shield.")
+        raise
+
+
+def darkness_2014() -> "TimedSelfBuffAction":
+    """Build 2014 Darkness as a timed self-buff that creates a darkness zone."""
+    from app.domain.timed_self_buffs import TimedSelfBuffAction
+    try:
+        return TimedSelfBuffAction(
+            id="darkness", name="Darkness", action_cost="action",
+            resource_id="darkness", resource_cost=1, duration_rounds=100,
+            expiry_timing="source_turn_end", concentration=True,
+            animation="darkness",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Darkness.")
+        raise

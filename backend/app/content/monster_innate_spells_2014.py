@@ -16,7 +16,9 @@ from app.content.shared_control_spells_2014 import (
     blindness_deafness_2014,
     hold_monster_2014,
 )
-from app.content.cleric_2014_level1_spells import cure_wounds_2014, guiding_bolt_2014, inflict_wounds_2014
+from app.content.cleric_2014_level1_spells import bless_2014, cure_wounds_2014, guiding_bolt_2014, inflict_wounds_2014, shield_of_faith_2014
+from app.content.shared_spells_2014 import sanctuary_2014, shield_2014
+from app.domain.spells import DefensiveSpellAction
 from app.content.shared_spells_2014 import spiritual_weapon_2014
 from app.domain.healing_actions import HealingAction
 from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
@@ -349,4 +351,25 @@ def innate_persistent_spell_attack_actions_2014(monster: SourceMonster2014) -> l
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 innate persistent spell attacks for %s.", monster.name)
+        raise
+
+
+def innate_defensive_spell_actions_2014(monster: SourceMonster2014) -> list[DefensiveSpellAction]:
+    """Bind printed innate defensive spells to existing DefensiveSpellAction primitives."""
+    try:
+        actions: list[DefensiveSpellAction] = []
+        dc = _dc(monster)
+        for spell in _spells(monster):
+            spell_id = str(spell.get("id") or "")
+            if spell_id == "bless":
+                actions.append(bless_2014())
+            elif spell_id == "shield-of-faith":
+                actions.append(shield_of_faith_2014())
+            elif spell_id == "shield":
+                actions.append(shield_2014())
+            elif spell_id == "sanctuary" and dc is not None:
+                actions.append(sanctuary_2014(dc))
+        return actions
+    except Exception:
+        logger.exception("Failed to compile 2014 innate defensive spells for %s.", monster.name)
         raise

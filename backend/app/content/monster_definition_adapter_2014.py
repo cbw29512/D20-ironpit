@@ -37,6 +37,7 @@ from app.content.monster_innate_spells_2014 import (
     innate_persistent_save_zone_actions_2014,
     innate_healing_spell_actions_2014,
     innate_persistent_spell_attack_actions_2014,
+    innate_defensive_spell_actions_2014,
     innate_spell_save_actions_2014,
 )
 from app.content.monster_prepared_spells_2014 import (
@@ -45,6 +46,7 @@ from app.content.monster_prepared_spells_2014 import (
     prepared_healing_spell_actions_2014,
     prepared_persistent_spell_attack_actions_2014,
     prepared_timed_self_buffs_2014,
+    prepared_defensive_spell_actions_2014,
     prepared_spell_attack_actions_2014,
     prepared_spell_save_actions_2014,
 )
@@ -240,6 +242,10 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *condition_auras_from_source(monster.source_traits, "2014"),
             *contextual_save_defenses_2014(monster)[0], *leadership_actions_2014(monster),
             *recharge_self_buff_actions_2014(monster)],
+        defensive_spell_actions=[
+            *innate_defensive_spell_actions_2014(monster),
+            *prepared_defensive_spell_actions_2014(monster),
+        ],
         healing_actions=[
             *healing_actions_2014(monster),
             *innate_healing_spell_actions_2014(monster),

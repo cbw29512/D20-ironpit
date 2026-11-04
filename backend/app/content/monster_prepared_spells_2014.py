@@ -8,10 +8,12 @@ from app.content.shared_control_spells_2014 import (
     blindness_deafness_2014,
     hold_monster_2014,
 )
-from app.content.cleric_2014_level1_spells import cure_wounds_2014, guiding_bolt_2014, inflict_wounds_2014
+from app.content.cleric_2014_level1_spells import bless_2014, cure_wounds_2014, guiding_bolt_2014, inflict_wounds_2014, shield_of_faith_2014
+from app.content.shared_spells_2014 import sanctuary_2014, shield_2014, darkness_2014
 from app.content.shared_spells_2014 import spiritual_weapon_2014
 from app.domain.healing_actions import HealingAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
+from app.domain.spells import DefensiveSpellAction
 from app.domain.movement import MovementModeGrant
 from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
 from app.content.shared_damage_spells_2014 import (
@@ -358,6 +360,8 @@ def supports_prepared_spellcasting_2014(monster: SourceMonster2014) -> bool:
             action.id for action in prepared_persistent_spell_attack_actions_2014(monster)
         } | {
             action.id for action in prepared_timed_self_buffs_2014(monster)
+        } | {
+            action.id for action in prepared_defensive_spell_actions_2014(monster)
         } | ARENA_NEUTRAL_PREPARED_SPELLS_2014
         # Arena-neutral prepared spells stay unbound by design.
         return known <= bound
@@ -429,7 +433,30 @@ def prepared_timed_self_buffs_2014(monster: SourceMonster2014) -> list[TimedSelf
                     resource_id="mirror-image", resource_cost=1, duration_rounds=10,
                     expiry_timing="source_turn_end", animation="mirror-image",
                 ))
+            elif spell_id == "darkness":
+                actions.append(darkness_2014())
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 prepared timed self-buffs for %s.", monster.name)
+        raise
+
+
+def prepared_defensive_spell_actions_2014(monster: SourceMonster2014) -> list[DefensiveSpellAction]:
+    """Bind printed prepared defensive spells to existing DefensiveSpellAction primitives."""
+    try:
+        actions: list[DefensiveSpellAction] = []
+        dc = _save_dc(monster)
+        for spell in _prepared_spells(monster):
+            spell_id = str(spell.get("id") or "")
+            if spell_id == "bless":
+                actions.append(bless_2014())
+            elif spell_id == "shield-of-faith":
+                actions.append(shield_of_faith_2014())
+            elif spell_id == "shield":
+                actions.append(shield_2014())
+            elif spell_id == "sanctuary" and dc is not None:
+                actions.append(sanctuary_2014(dc))
+        return actions
+    except Exception:
+        logger.exception("Failed to compile 2014 prepared defensive spells for %s.", monster.name)
         raise
