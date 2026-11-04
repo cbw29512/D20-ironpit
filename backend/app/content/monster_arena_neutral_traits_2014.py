@@ -183,7 +183,9 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             # Equipment durability and cumulative weapon penalties are not modeled
             # in the Iron Pit. Strict source match fails closed on mutation.
             from app.content.monster_source_sections_2014 import source_sections_2014
-            printed = source_sections_2014(source).get("Corrode Metal", "")
+            printed = source_sections_2014(
+                source, include_continuations=True
+            ).get("Corrode Metal", "")
             normalized = " ".join(printed.casefold().replace("’", "'").replace("−", "-").split())
             expected = (
                 "any nonmagical weapon made of metal that hits the ooze corrodes. "
