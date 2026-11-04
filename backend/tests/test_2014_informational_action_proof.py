@@ -3,6 +3,10 @@ from __future__ import annotations
 
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_informational_action_proofs_2014 import verified_nonactionable_action_2014
+from app.content.monster_save_capabilities_2014 import (
+    supports_recharge_rules_2014,
+    unsupported_source_actions_2014,
+)
 from app.content.monster_source_2014 import load_monster_source_2014
 
 
@@ -61,3 +65,33 @@ def test_unknown_or_missing_source_action_is_not_exempt() -> None:
         "source_actions": (sprite.source_actions or "").replace("<strong>Heart Sight.</strong>", "<strong>Other.</strong>")
     })
     assert not verified_nonactionable_action_2014(no_heading, "Heart Sight")
+
+
+def test_create_food_and_water_is_source_verified_nonactionable() -> None:
+    spectator = next(row for row in load_monster_source_2014() if row.id == "spectator")
+    before = spectator.model_dump_json()
+    assert verified_nonactionable_action_2014(spectator, "Create Food and Water")
+    assert "Create Food and Water" in spectator.action_names
+    assert "sustain itself for 24 hours" in (spectator.source_actions or "")
+    unresolved = unsupported_source_actions_2014(
+        spectator,
+        recharge_supported=supports_recharge_rules_2014(spectator),
+    )
+    assert "Create Food and Water" in unresolved
+    assert "Eye Rays" in unresolved
+    # The generic source-name gate exempts only the proven nonactionable clause.
+    # Eye Rays is still an independent, outcome-changing extra Action, so the
+    # complete card must remain blocked rather than being falsely admitted.
+    assert "source:extra-action" in basic_blockers_2014(spectator)
+    assert spectator.model_dump_json() == before
+
+
+def test_create_food_and_water_mutation_fails_closed() -> None:
+    spectator = next(row for row in load_monster_source_2014() if row.id == "spectator")
+    original = spectator.source_actions
+    assert original is not None
+    mutant = spectator.model_copy(update={
+        "source_actions": original.replace("24 hours", "1 hour and grants temporary hit points")
+    })
+    assert not verified_nonactionable_action_2014(mutant, "Create Food and Water")
+    assert "source:extra-action" in basic_blockers_2014(mutant)
