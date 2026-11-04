@@ -46,6 +46,7 @@ ARENA_NEUTRAL_PREPARED_SPELLS_2014 = frozenset({
     "alarm",
     "animal-friendship",
     "animal-messenger",
+    "animate-dead",
     "arcane-lock",
     "arcanists-magic-aura",
     "augury",
@@ -67,12 +68,15 @@ ARENA_NEUTRAL_PREPARED_SPELLS_2014 = frozenset({
     "detect-magic",
     "detect-poison-and-disease",
     "detect-thoughts",
+    "dimension-door",
     "disguise-self",
     "divination",
     "dream",
     "druidcraft",
     "earthquake",
+    "enlarge-reduce",
     "fabricate",
+    "feather-fall",
     "feign-death",
     "find-the-path",
     "find-traps",
@@ -89,10 +93,12 @@ ARENA_NEUTRAL_PREPARED_SPELLS_2014 = frozenset({
     "legend-lore",
     "leomunds-secret-chest",
     "leomunds-tiny-hut",
+    "levitate",
     "light",
     "locate-animals-or-plants",
     "locate-creature",
     "locate-object",
+    "longstrider",
     "mage-hand",
     "magic-mouth",
     "magnificent-mansion",
@@ -100,9 +106,11 @@ ARENA_NEUTRAL_PREPARED_SPELLS_2014 = frozenset({
     "meld-into-stone",
     "mending",
     "message",
+    "mind-blank",
     "minor-illusion",
     "mirage-arcane",
     "mislead",
+    "misty-step",
     "mordenkainens-magnificent-mansion",
     "mordenkainens-private-sanctum",
     "move-earth",
@@ -114,15 +122,21 @@ ARENA_NEUTRAL_PREPARED_SPELLS_2014 = frozenset({
     "plant-growth",
     "prestidigitation",
     "private-sanctum",
+    "produce-flame",
     "programmed-illusion",
     "project-image",
+    "protection-from-poison",
     "purify-food-and-drink",
+    "raise-dead",
     "rarys-telepathic-bond",
+    "remove-curse",
+    "resurrection",
     "rope-trick",
     "scrying",
     "secret-chest",
     "seeming",
     "sending",
+    "shillelagh",
     "silence",
     "silent-image",
     "spare-the-dying",
@@ -131,9 +145,13 @@ ARENA_NEUTRAL_PREPARED_SPELLS_2014 = frozenset({
     "speak-with-plants",
     "spike-growth",
     "stone-shape",
+    "stoneskin",
     "symbol",
+    "telekinesis",
     "telepathy",
+    "teleport",
     "thaumaturgy",
+    "time-stop",
     "tiny-hut",
     "tongues",
     "transmute-rock",
@@ -143,8 +161,11 @@ ARENA_NEUTRAL_PREPARED_SPELLS_2014 = frozenset({
     "wall-of-thorns",
     "water-breathing",
     "water-walk",
+    "wind-walk",
     "wish",
     "zone-of-truth",
+    "})",
+})",
 })
 
 # Conservative cantrip scaling for monsters (no character level on prepared cards).
@@ -270,6 +291,57 @@ def prepared_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSa
                         expiry_timing="source_turn_end",
                     ),
                     concentration=True, duration_minutes=1, animation="banishment",
+                ))
+            elif spell_id == "entangle":
+                actions.append(SpellSaveAction(
+                    id="entangle", name="Entangle", level=1, action_cost="action",
+                    range_ft=90, save_ability="strength", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="restrained", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    concentration=True, duration_minutes=1, animation="entangle",
+                ))
+            elif spell_id == "faerie-fire":
+                actions.append(SpellSaveAction(
+                    id="faerie-fire", name="Faerie Fire", level=1, action_cost="action",
+                    range_ft=60, save_ability="dexterity", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="outlined", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    concentration=True, duration_minutes=1, animation="faerie-fire",
+                ))
+            elif spell_id == "power-word-stun":
+                actions.append(SpellSaveAction(
+                    id="power-word-stun", name="Power Word Stun", level=8, action_cost="action",
+                    range_ft=60, save_ability="constitution", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="stunned", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    animation="power-word-stun",
+                ))
+            elif spell_id == "dominate-person":
+                actions.append(SpellSaveAction(
+                    id="dominate-person", name="Dominate Person", level=5, action_cost="action",
+                    range_ft=60, save_ability="wisdom", dc=dc,
+                    required_target_creature_types=["humanoid"],
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="charmed", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    concentration=True, duration_minutes=1, animation="dominate-person",
+                ))
+            elif spell_id == "confusion":
+                actions.append(SpellSaveAction(
+                    id="confusion", name="Confusion", level=4, action_cost="action",
+                    range_ft=90, save_ability="wisdom", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="confused", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    concentration=True, duration_minutes=1, animation="confusion",
                 ))
             elif spell_id == "blindness-deafness":
                 actions.append(blindness_deafness_2014(dc))

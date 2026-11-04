@@ -270,6 +270,57 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
                     ),
                     concentration=True, duration_minutes=1, animation="banishment",
                 ))
+            elif spell_id == "entangle":
+                actions.append(SpellSaveAction(
+                    id="entangle", name="Entangle", level=1, action_cost="action",
+                    range_ft=90, save_ability="strength", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="restrained", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    concentration=True, duration_minutes=1, animation="entangle",
+                ))
+            elif spell_id == "faerie-fire":
+                actions.append(SpellSaveAction(
+                    id="faerie-fire", name="Faerie Fire", level=1, action_cost="action",
+                    range_ft=60, save_ability="dexterity", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="outlined", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    concentration=True, duration_minutes=1, animation="faerie-fire",
+                ))
+            elif spell_id == "power-word-stun":
+                actions.append(SpellSaveAction(
+                    id="power-word-stun", name="Power Word Stun", level=8, action_cost="action",
+                    range_ft=60, save_ability="constitution", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="stunned", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    animation="power-word-stun",
+                ))
+            elif spell_id == "dominate-person":
+                actions.append(SpellSaveAction(
+                    id="dominate-person", name="Dominate Person", level=5, action_cost="action",
+                    range_ft=60, save_ability="wisdom", dc=dc,
+                    required_target_creature_types=["humanoid"],
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="charmed", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    concentration=True, duration_minutes=1, animation="dominate-person",
+                ))
+            elif spell_id == "confusion":
+                actions.append(SpellSaveAction(
+                    id="confusion", name="Confusion", level=4, action_cost="action",
+                    range_ft=90, save_ability="wisdom", dc=dc,
+                    failed_save_timed_effect=FailedSaveTimedEffect(
+                        effect_id="confused", duration_rounds=10,
+                        expiry_timing="source_turn_end",
+                    ),
+                    concentration=True, duration_minutes=1, animation="confusion",
+                ))
             elif spell_id == "dominate-person":
                 actions.append(SpellSaveAction(
                     id="dominate-person",
