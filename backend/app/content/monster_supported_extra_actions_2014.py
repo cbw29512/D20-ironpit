@@ -26,6 +26,9 @@ from app.content.monster_source_limited_audible_conditions_2014 import (
 )
 from app.content.monster_visual_disguise_2014 import visual_disguise_action_2014
 from app.content.monster_grapple_swallow_source_2014 import source_grapple_swallow_2014
+from app.content.monster_lycanthrope_form_multiattack_2014 import (
+    verified_lycanthrope_form_gated_multiattack_2014,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -71,6 +74,11 @@ def source_supported_extra_action_labels_2014(monster: SourceMonster2014) -> set
                 _label(zone.name)
                 for zone in (fetid_cloud_zone_2014(monster),)
                 if zone is not None
+            }
+            | {
+                _label(name)
+                for name in monster.action_names
+                if verified_lycanthrope_form_gated_multiattack_2014(monster, name)
             }
         )
         # An illusion is NOT arena-neutral. Accept it only when the full printed
