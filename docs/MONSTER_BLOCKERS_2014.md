@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 55 |
+| `source:trait` | 54 |
 | `source:extra-action` | 35 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 15 |
@@ -31,12 +31,13 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**4** monsters have exactly one remaining blocker category.
+**5** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
+| `attack:incomplete` | Gray Ooze | 1 |
 | `multiattack:complex` | Werebear | 1 |
 | `source:extra-action` | Werewolf | 1 |
 
@@ -75,7 +76,7 @@ the underlying ability is already implemented or trivial.
 | Giant Spider | attack:complex, attack:damage-type, mechanic:recharge | — |
 | Gibbering Mouther | multiattack:complex, source:trait | Aberrant Ground, Gibbering |
 | Glabrezu | mechanic:spellcasting, source:trait | Innate Spellcasting |
-| Gray Ooze | attack:incomplete, source:trait | Corrode Metal |
+| Gray Ooze | attack:incomplete | — |
 | Green Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Guardian Naga | mechanic:spellcasting, source:extra-action, source:trait | Spellcasting |
 | Gynosphinx | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
