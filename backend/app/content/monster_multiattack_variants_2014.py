@@ -11,6 +11,9 @@ from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.domain.attack_action_definitions import AttackActionSlot, AttackActionVariant
 logger = logging.getLogger(__name__)
 _NUMBERS = {"one": 1, "two": 2, "three": 3}
+_FORM_QUALIFIED_MULTIATTACK = re.compile(
+    r"multiattack\.? \(humanoid or hybrid form only\)", re.I,
+)
 _MODE_SOURCE = re.compile(
     r"The (.+?) makes (?:either )?(\w+) melee attacks"
     r"(?:: (.+?)\. Or the \1 makes |--(.+?)--or | or )"
@@ -27,6 +30,22 @@ def source_multiattack_text_2014(monster) -> str:
         if name.casefold().startswith("multiattack"):
             return sections.get(name, "")
     return ""
+
+
+def source_form_qualified_multiattack_labels_2014(monster) -> set[str]:
+    """Return exact printed form-gated Multiattack headings.
+
+    The heading is source data, not a runtime dispatch key.  This proof is
+    deliberately narrow: an edited form gate stays unsupported until its
+    semantics are audited instead of inheriting this classification.
+    """
+    sections = source_sections_2014(monster.source_actions)
+    return {
+        name.strip().casefold()
+        for name in monster.action_names
+        if _FORM_QUALIFIED_MULTIATTACK.fullmatch(name.strip())
+        and bool(sections.get(name, "").strip())
+    }
 
 
 def _printed_attack_name(attack) -> str:

@@ -10,7 +10,11 @@ from collections import Counter
 from pathlib import Path
 
 from app.content.monster_multiattack_2014 import multiattack_blockers_2014
-from app.content.monster_multiattack_variants_2014 import source_multiattack_text_2014
+from app.content.monster_multiattack_variants_2014 import (
+    source_form_qualified_multiattack_labels_2014,
+    source_multiattack_text_2014,
+)
+from app.content.monster_save_source_audit_2014 import unsupported_source_actions_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
@@ -25,6 +29,7 @@ def report() -> dict[str, object]:
     counts: Counter[str] = Counter()
     missing: list[dict[str, object]] = []
     policy_family: list[dict[str, object]] = []
+    qualified_heading_family: list[dict[str, object]] = []
     for card in monsters:
         # Source cards without Multiattack have no sequence to bind.
         printed = source_multiattack_text_2014(card) or None
@@ -52,6 +57,28 @@ def report() -> dict[str, object]:
             })
         else:
             counts["bound"] += 1
+        qualified_labels = source_form_qualified_multiattack_labels_2014(card)
+        if qualified_labels:
+            runtime = None
+            browser_action: dict[str, object] = {}
+            if not reasons:
+                runtime = compile_combatant(adapt_monster_mechanics_2014(card))
+                browser_action = template_row(runtime).get("attack_action", {})
+            unresolved_actions = {
+                action.casefold() for action in unsupported_source_actions_2014(card)
+            }
+            source_classified = qualified_labels.isdisjoint(unresolved_actions)
+            python_wired = bool(runtime and runtime.attack_action)
+            browser_wired = bool(browser_action.get("slots") or browser_action.get("variants"))
+            qualified_heading_family.append({
+                "monster": card.id,
+                "labels": sorted(qualified_labels),
+                "source_classified": source_classified,
+                "python_wired": python_wired,
+                "browser_wired": browser_wired,
+                "wired": source_classified and python_wired and browser_wired,
+                "reasons": reasons + ([] if source_classified else ["source:extra-action"]),
+            })
         if isinstance(card.multiattack_policy, dict) and (
             "at_most_once_attack_ids" in card.multiattack_policy
             or "same_attack_as_previous_slots" in card.multiattack_policy
@@ -87,6 +114,7 @@ def report() -> dict[str, object]:
     if len(monsters) != 327:
         raise ValueError("Expected 327 distinct 2014 monster cards")
     family_remaining = [item for item in policy_family if not item["wired"]]
+    heading_remaining = [item for item in qualified_heading_family if not item["wired"]]
     return {
         "source_monsters": 327,
         "counts": dict(sorted(counts.items())),
@@ -98,6 +126,18 @@ def report() -> dict[str, object]:
             "remaining": len(family_remaining),
             "exceptions": family_remaining,
             "cards": policy_family,
+        },
+        "form_qualified_heading_family": {
+            "applicable": len(qualified_heading_family),
+            "source_classified": sum(
+                bool(item["source_classified"]) for item in qualified_heading_family
+            ),
+            "wired_python": sum(bool(item["python_wired"]) for item in qualified_heading_family),
+            "wired_browser": sum(bool(item["browser_wired"]) for item in qualified_heading_family),
+            "wired": len(qualified_heading_family) - len(heading_remaining),
+            "remaining": len(heading_remaining),
+            "exceptions": heading_remaining,
+            "cards": qualified_heading_family,
         },
         "unresolved": missing,
     }
