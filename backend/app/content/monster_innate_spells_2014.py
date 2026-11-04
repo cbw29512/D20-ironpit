@@ -15,6 +15,7 @@ from app.content.shared_control_spells_2014 import (
     blindness_deafness_2014,
     hold_monster_2014,
 )
+from app.content.cleric_2014_level1_spells import guiding_bolt_2014, inflict_wounds_2014
 from app.content.shared_damage_spells_2014 import (
     blight_2014, cloudkill_2014, disintegrate_2014, finger_of_death_2014,
     flame_strike_2014, harm_2014, ice_storm_2014, sacred_flame_2014, thunderwave_2014,
@@ -89,6 +90,10 @@ def innate_spell_attack_actions_2014(monster: SourceMonster2014) -> list[SpellAt
                     source="D&D Basic Rules 2014: Ray of Enfeeblement",
                 ))
             elif spell_id == "fire-bolt" and attack_bonus is not None:
+                actions.append(guiding_bolt_2014(int(attack_bonus)))
+            elif spell_id == "inflict-wounds":
+                actions.append(inflict_wounds_2014(int(attack_bonus)))
+            elif spell_id == "fire-bolt":
                 actions.append(fire_bolt_2014(int(attack_bonus), _MONSTER_CANTRIP_LEVEL))
             elif spell_id == "ray-of-frost" and attack_bonus is not None:
                 actions.append(ray_of_frost_2014(int(attack_bonus), _MONSTER_CANTRIP_LEVEL))

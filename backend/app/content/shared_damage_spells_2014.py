@@ -159,3 +159,4 @@ def sacred_flame_2014(save_dc: int) -> SpellSaveAction:
     except Exception:
         logger.exception("Failed to build shared 2014 Sacred Flame.")
         raise
+

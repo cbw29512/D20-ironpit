@@ -7,6 +7,7 @@ from app.content.shared_control_spells_2014 import (
     blindness_deafness_2014,
     hold_monster_2014,
 )
+from app.content.cleric_2014_level1_spells import guiding_bolt_2014, inflict_wounds_2014
 from app.content.shared_damage_spells_2014 import (
     blight_2014, cloudkill_2014, disintegrate_2014, finger_of_death_2014,
     flame_strike_2014, harm_2014, ice_storm_2014, sacred_flame_2014, thunderwave_2014,
@@ -120,6 +121,10 @@ def prepared_spell_attack_actions_2014(monster: SourceMonster2014) -> list[Spell
         for spell in _prepared_spells(monster):
             spell_id = str(spell.get("id") or "")
             if spell_id == "fire-bolt":
+                actions.append(guiding_bolt_2014(int(attack_bonus)))
+            elif spell_id == "inflict-wounds":
+                actions.append(inflict_wounds_2014(int(attack_bonus)))
+            elif spell_id == "fire-bolt":
                 actions.append(fire_bolt_2014(int(attack_bonus), _MONSTER_CANTRIP_LEVEL))
             elif spell_id == "ray-of-frost":
                 actions.append(ray_of_frost_2014(int(attack_bonus), _MONSTER_CANTRIP_LEVEL))
