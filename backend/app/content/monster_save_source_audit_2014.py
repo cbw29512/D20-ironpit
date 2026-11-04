@@ -25,6 +25,9 @@ from app.content.monster_source_limited_audible_conditions_2014 import (
     source_proven_limited_audible_conditions_2014,
 )
 from app.content.monster_source_visual_save_bindings_2014 import source_proven_visual_saves_2014
+from app.content.monster_multiattack_variants_2014 import (
+    source_form_qualified_multiattack_labels_2014,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -72,6 +75,12 @@ def unsupported_source_actions_2014(
             or monster.multiattack_binding is not None
         ):
             allowed.add("multiattack")
+            # Import here to avoid the multiattack -> save-capability audit
+            # cycle.  A qualified heading is accepted only when the complete
+            # source-declared sequence already compiles without blockers.
+            from app.content.monster_multiattack_2014 import multiattack_blockers_2014
+            if not multiattack_blockers_2014(monster):
+                allowed.update(source_form_qualified_multiattack_labels_2014(monster))
         if recharge_supported is None:
             recharge_supported = supports_recharge_rules_2014(monster)
         if recharge_supported:
