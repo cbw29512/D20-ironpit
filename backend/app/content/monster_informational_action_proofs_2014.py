@@ -29,12 +29,57 @@ _NONCOMBAT_ACTION_CLAUSES_2014 = {
 
 
 def verified_nonactionable_action_2014(monster: SourceMonster2014, action_name: str) -> bool:
-    """Allow a source Action only if its *entire* effect is proven informational."""
+    """Allow a source Action only if its *entire* effect is proven informational or arena-inert under locked Pit rules."""
     try:
-        if action_name not in monster.action_names:
+        if action_name not in monster.action_names and action_name != "Shapechanger":
             return False
         if verified_arena_inert_equipment_action_2014(monster, action_name):
             return True
+        # Lycanthrope Shapechanger action: polymorph with no combat-stat change
+        # beyond already-printed AC/size under locked Pit rules. Exact source match.
+        if action_name == "Shapechanger" and monster.id in (
+            "werewolf", "werebear", "wererat", "wereboar", "weretiger",
+        ):
+            from app.content.monster_source_sections_2014 import source_sections_2014 as sections
+            printed = sections(monster.source_traits or "", include_continuations=True).get("Shapechanger", "")
+            expected = {
+                "werewolf": (
+                    "The werewolf can use its action to polymorph into a wolf-humanoid "
+                    "hybrid or into a wolf, or back into its true form, which is humanoid. "
+                    "Its statistics, other than its AC, are the same in each form. "
+                    "Any equipment it is wearing or carrying isn't transformed. "
+                    "It reverts to its true form if it dies."
+                ),
+                "werebear": (
+                    "The werebear can use its action to polymorph into a Large bear-humanoid "
+                    "hybrid or into a Large bear, or back into its true form, which is humanoid. "
+                    "Its statistics, other than its size and AC, are the same in each form. "
+                    "Any equipment it is wearing or carrying isn't transformed. "
+                    "It reverts to its true form if it dies."
+                ),
+                "wererat": (
+                    "The wererat can use its action to polymorph into a rat-humanoid "
+                    "hybrid or into a giant rat, or back into its true form, which is humanoid. "
+                    "Its statistics, other than its size, are the same in each form. "
+                    "Any equipment it is wearing or carrying isn't transformed. "
+                    "It reverts to its true form if it dies."
+                ),
+                "wereboar": (
+                    "The wereboar can use its action to polymorph into a boar-humanoid "
+                    "hybrid or into a boar, or back into its true form, which is humanoid. "
+                    "Its statistics, other than its AC, are the same in each form. "
+                    "Any equipment it is wearing or carrying isn't transformed. "
+                    "It reverts to its true form if it dies."
+                ),
+                "weretiger": (
+                    "The weretiger can use its action to polymorph into a tiger-humanoid "
+                    "hybrid or into a tiger, or back into its true form, which is humanoid. "
+                    "Its statistics, other than its size, are the same in each form. "
+                    "Any equipment it is wearing or carrying isn't transformed. "
+                    "It reverts to its true form if it dies."
+                ),
+            }
+            return printed == expected.get(monster.id, "")
         expected = _NONCOMBAT_ACTION_CLAUSES_2014.get(action_name)
         if expected is None:
             return False
