@@ -13,6 +13,7 @@ Earth Glide, Tunneler, and Treasure Sense stay listed: the Pit has no destructib
 earth/rock or hidden metal/treasure for those traits to act on.
 Immutable Form stays listed while the supported combat surface has no hostile form-alter
 effect. Existing replacement-form support changes only the acting combatant's own form.
+Corrode Metal stays source-proven inert: the Pit does not model nonmagical weapon/ammunition durability or cumulative damage penalties.
 """
 from __future__ import annotations
 
@@ -178,6 +179,20 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "detect magic",
                 "isn't itself magical",
             ))
+        if trait_name == "Corrode Metal":
+            # Equipment durability and cumulative weapon penalties are not modeled
+            # in the Iron Pit. Strict source match fails closed on mutation.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(source).get("Corrode Metal", "")
+            normalized = " ".join(printed.casefold().replace("’", "'").replace("−", "-").split())
+            expected = (
+                "any nonmagical weapon made of metal that hits the ooze corrodes. "
+                "after dealing damage, the weapon takes a permanent and cumulative -1 penalty to damage rolls. "
+                "if its penalty drops to -5, the weapon is destroyed. "
+                "nonmagical ammunition made of metal that hits the ooze is destroyed after dealing damage. "
+                "the ooze can eat through 2-inch-thick, nonmagical metal in 1 round."
+            )
+            return normalized == expected
         # Pinned source must prove both the printed trait and its
         # arena-inert semantics. Other effects remain blocked independently.
         additional_inert_clauses = {
