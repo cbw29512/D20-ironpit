@@ -1,0 +1,84 @@
+{
+  "applicable_card_count": 4,
+  "applicable_cards": [
+    "cloaker",
+    "darkmantle",
+    "mimic",
+    "stirge"
+  ],
+  "bindings": [
+    {
+      "browser_wired": false,
+      "card_id": "cloaker",
+      "card_name": "Cloaker",
+      "parameters": [],
+      "python_wired": false,
+      "semantic_source_match": true,
+      "wired_attack_ids": []
+    },
+    {
+      "browser_wired": false,
+      "card_id": "darkmantle",
+      "card_name": "Darkmantle",
+      "parameters": [],
+      "python_wired": false,
+      "semantic_source_match": true,
+      "wired_attack_ids": []
+    },
+    {
+      "browser_wired": false,
+      "card_id": "mimic",
+      "card_name": "Mimic",
+      "parameters": [],
+      "python_wired": false,
+      "semantic_source_match": true,
+      "wired_attack_ids": []
+    },
+    {
+      "browser_wired": true,
+      "card_id": "stirge",
+      "card_name": "Stirge",
+      "parameters": [
+        {
+          "action_removable": true,
+          "action_removal_range_ft": 5,
+          "attack_id": "blood-drain",
+          "auto_end_after_hp_loss": 10,
+          "blocks_source_attacks": true,
+          "damage_dice": "1d4+3",
+          "periodic_effect_kind": "direct_hp_loss",
+          "source_detach_movement_ft": 5,
+          "source_name": "Blood Drain",
+          "tick_timing": "source_turn_start"
+        }
+      ],
+      "python_wired": true,
+      "semantic_source_match": true,
+      "wired_attack_ids": [
+        "blood-drain"
+      ]
+    }
+  ],
+  "exceptions": [
+    {
+      "card_id": "cloaker",
+      "reason": "conditional_control_attachment_profile_not_supported"
+    },
+    {
+      "card_id": "darkmantle",
+      "reason": "conditional_control_attachment_profile_not_supported"
+    },
+    {
+      "card_id": "mimic",
+      "reason": "grapple_or_restrained_link_uses_shared_grapple_family"
+    }
+  ],
+  "remaining_card_count": 3,
+  "source_cards_scanned": 327,
+  "status": "complete_with_routed_exceptions",
+  "wired_browser_card_count": 1,
+  "wired_cards": [
+    "stirge"
+  ],
+  "wired_python_card_count": 1
+}

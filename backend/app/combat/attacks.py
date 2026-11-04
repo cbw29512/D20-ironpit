@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from app.combat.owner_action_expiry import expire_on_owner_event
+from app.combat.attachment_attack_gate import source_attacks_blocked
+from app.combat.attachment_on_hit import attached_hit_receipts
 from app.combat.undead_fortitude import consume_survival_save_log
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 import logging
@@ -42,6 +44,8 @@ def resolve_attack(
             raise ValueError("An incapacitated or dead creature cannot attack.")
         if spend_action and not is_available(attacker, "action"):
             raise ValueError("Action is not available for an attack.")
+        if source_attacks_blocked(reaction_setup, actor_event_id or attacker.template.id):
+            raise ValueError("Source-declared attachment prevents another attack while linked.")
         weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id
         attacker_event_id = actor_event_id or attacker.template.id
         if not attack_allowed_against(attack, attacker_event_id, defender, affected_states):
@@ -182,6 +186,7 @@ def resolve_attack(
             target_id=actual_event_id, target_name=actual_defender.template.name, attack_name=weapon.name, target_ac=target_ac,
             attack_roll=attack_roll, saving_throw_roll=save_roll, save_ability=save_ability, save_dc=save_dc, save_succeeded=save_succeeded,
             damage_roll=damage_roll, damage_components=damage_components, applied_condition_ids=applied_conditions,
+            attachment_changes=(attached_hit_receipts(attack, attacker_event_id, actual_event_id, reaction_setup) if hit else []),
             ability_check_roll=contested_movement.target_roll if contested_movement else None,
             check_ability=contested_movement.target_ability if contested_movement else None,
             check_dc=contested_movement.source_roll.total if contested_movement and contested_movement.source_roll else None,

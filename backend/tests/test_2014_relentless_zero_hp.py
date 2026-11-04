@@ -87,9 +87,12 @@ def test_relentless_does_not_fire_above_threshold_or_on_non_damage_zero_hp(
     assert resource_state(non_damage, "relentless").current_uses == 1
 
 
-def test_wereboar_loses_only_the_relentless_portion_of_its_trait_blocker() -> None:
+def test_wereboar_traits_clear_after_shapechanger_source_proof() -> None:
     monster = _source("wereboar")
     unsupported = set(unsupported_traits_2014(monster))
     assert _RELENTLESS not in unsupported
-    assert "Shapechanger" in unsupported
+    assert "Shapechanger" not in unsupported
+    assert unsupported == set()
+    # Its independent form-qualified Multiattack and extra-action obligations
+    # still fail closed; clearing traits does not admit the whole card.
     assert basic_blockers_2014(monster)
