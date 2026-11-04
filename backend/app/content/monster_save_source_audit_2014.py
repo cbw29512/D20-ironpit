@@ -25,6 +25,7 @@ from app.content.monster_source_limited_audible_conditions_2014 import (
     source_proven_limited_audible_conditions_2014,
 )
 from app.content.monster_source_visual_save_bindings_2014 import source_proven_visual_saves_2014
+from app.content.monster_multiattack_2014 import multiattack_blockers_2014
 
 logger = logging.getLogger(__name__)
 
@@ -72,6 +73,14 @@ def unsupported_source_actions_2014(
             or monster.multiattack_binding is not None
         ):
             allowed.add("multiattack")
+            # Form-qualified Multiattack names (e.g. "Multiattack (Humanoid or Hybrid Form Only)")
+            # are the same supported multiattack when no complex blocker remains.
+            # Form gates are arena-neutral under locked Shapechanger policy.
+            if not multiattack_blockers_2014(monster):
+                for name in monster.action_names:
+                    label = action_label_2014(name)
+                    if label.startswith("multiattack"):
+                        allowed.add(label)
         if recharge_supported is None:
             recharge_supported = supports_recharge_rules_2014(monster)
         if recharge_supported:
