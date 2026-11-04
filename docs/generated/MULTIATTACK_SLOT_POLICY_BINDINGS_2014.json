@@ -1,0 +1,212 @@
+{
+  "counts": {
+    "blocked": 5,
+    "bound": 141,
+    "not_applicable": 181
+  },
+  "policy_family": {
+    "applicable": 6,
+    "cards": [
+      {
+        "browser_wired": true,
+        "monster": "vampire",
+        "python_wired": true,
+        "reasons": [],
+        "source_policy": {
+          "at_most_once_attack_ids": [
+            "bite-bat-or-vampire-form-only"
+          ]
+        },
+        "wired": true
+      },
+      {
+        "browser_wired": true,
+        "monster": "vampire-spawn",
+        "python_wired": true,
+        "reasons": [],
+        "source_policy": {
+          "at_most_once_attack_ids": [
+            "bite"
+          ]
+        },
+        "wired": true
+      },
+      {
+        "browser_wired": true,
+        "monster": "werebear",
+        "python_wired": true,
+        "reasons": [],
+        "source_policy": {
+          "same_attack_as_previous_slots": [
+            1
+          ]
+        },
+        "wired": true
+      },
+      {
+        "browser_wired": true,
+        "monster": "wereboar",
+        "python_wired": true,
+        "reasons": [],
+        "source_policy": {
+          "at_most_once_attack_ids": [
+            "tusks-boar-or-hybrid-form-only"
+          ]
+        },
+        "wired": true
+      },
+      {
+        "browser_wired": true,
+        "monster": "wererat",
+        "python_wired": true,
+        "reasons": [],
+        "source_policy": {
+          "at_most_once_attack_ids": [
+            "bite-rat-or-hybrid-form-only"
+          ]
+        },
+        "wired": true
+      },
+      {
+        "browser_wired": true,
+        "monster": "weretiger",
+        "python_wired": true,
+        "reasons": [],
+        "source_policy": {
+          "same_attack_as_previous_slots": [
+            1
+          ]
+        },
+        "wired": true
+      }
+    ],
+    "exceptions": [],
+    "remaining": 0,
+    "wired": 6,
+    "wired_browser": 6,
+    "wired_python": 6
+  },
+  "source_monsters": 327,
+  "unresolved": [
+    {
+      "monster": "chuul",
+      "printed_multiattack": "The chuul makes two pincer attacks. If the chuul is grappling a creature, the chuul can also use its tentacles once.",
+      "reasons": [
+        "multiattack:complex"
+      ],
+      "source_binding": {
+        "slots": [
+          {
+            "action_ids": [
+              "pincer"
+            ]
+          },
+          {
+            "action_ids": [
+              "pincer"
+            ]
+          },
+          {
+            "action_ids": [
+              "tentacles"
+            ],
+            "optional": true,
+            "requirement": "source_has_grappled_target"
+          }
+        ]
+      },
+      "source_policy": null,
+      "source_slots": []
+    },
+    {
+      "monster": "gibbering-mouther",
+      "printed_multiattack": "The gibbering mouther makes one bite attack and, if it can, uses its Blinding Spittle.",
+      "reasons": [
+        "multiattack:complex"
+      ],
+      "source_binding": {
+        "slots": [
+          {
+            "action_ids": [
+              "bite"
+            ]
+          },
+          {
+            "action_ids": [
+              "blinding-spittle"
+            ],
+            "optional": true,
+            "requirement": "action_available"
+          }
+        ]
+      },
+      "source_policy": null,
+      "source_slots": []
+    },
+    {
+      "monster": "kraken",
+      "printed_multiattack": "The kraken makes three tentacle attacks, each of which it can replace with one use of Fling.",
+      "reasons": [
+        "multiattack:complex"
+      ],
+      "source_binding": {
+        "slots": [
+          {
+            "action_ids": [
+              "tentacle",
+              "fling"
+            ]
+          },
+          {
+            "action_ids": [
+              "tentacle",
+              "fling"
+            ]
+          },
+          {
+            "action_ids": [
+              "tentacle",
+              "fling"
+            ]
+          }
+        ]
+      },
+      "source_policy": null,
+      "source_slots": []
+    },
+    {
+      "monster": "lamia",
+      "printed_multiattack": "The lamia makes two attacks: one with its claws and one with its dagger or Intoxicating Touch.",
+      "reasons": [
+        "multiattack:complex"
+      ],
+      "source_binding": {
+        "slots": [
+          {
+            "action_ids": [
+              "claws"
+            ]
+          },
+          {
+            "action_ids": [
+              "dagger",
+              "intoxicating-touch"
+            ]
+          }
+        ]
+      },
+      "source_policy": null,
+      "source_slots": []
+    },
+    {
+      "monster": "stone-giant",
+      "printed_multiattack": "The giant makes two greatclub attacks. Greatclub. Melee Weapon Attack: +9 to hit, reach 15 ft., one target. Hit: 19 (3d8 + 6) bludgeoning damage.",
+      "reasons": [
+        "multiattack:source-unbound"
+      ],
+      "source_binding": null,
+      "source_policy": null,
+      "source_slots": []
+    }
+  ]
+}
