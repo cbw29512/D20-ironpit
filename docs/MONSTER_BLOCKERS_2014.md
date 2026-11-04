@@ -11,7 +11,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Blocker | Monsters |
 |---|---:|
 | `source:trait` | 55 |
-| `source:extra-action` | 35 |
+| `source:extra-action` | 34 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 15 |
 | `multiattack:complex` | 10 |
@@ -90,7 +90,7 @@ the underlying ability is already implemented or trivial.
 | Mimic | attack:incomplete, source:trait | Shapechanger, Adhesive (Object Form Only), False Appearance (Object Form Only), Grappler |
 | Mummy Lord | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Night Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
-| Oni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
+| Oni | attack:incomplete, mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Planetar | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Priest | mechanic:spellcasting, source:trait | Divine Eminence, Spellcasting |
 | Purple Worm | attack:complex, mechanic:swallow | — |
