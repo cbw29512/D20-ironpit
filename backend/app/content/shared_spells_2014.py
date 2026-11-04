@@ -205,3 +205,36 @@ def darkness_2014() -> "TimedSelfBuffAction":
     except Exception:
         logger.exception("Failed to build 2014 Darkness.")
         raise
+
+
+def mage_armor_2014() -> DefensiveSpellAction:
+    """Build 2014 Mage Armor: base AC 13 + Dex."""
+    try:
+        return DefensiveSpellAction(
+            id="mage-armor", name="Mage Armor", level=1, action_cost="action",
+            range_ft=5, duration_minutes=480, target_policy="friendly",
+            modifier_effects=[SpellModifierEffect(kind="armor-class-minimum", minimum_value=13)],
+            priority=15, animation="mage-armor",
+            source=f"{_SOURCE}: Mage Armor",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Mage Armor.")
+        raise
+
+
+def freedom_of_movement_2014() -> DefensiveSpellAction:
+    """Build 2014 Freedom of Movement: immune to restrained/paralyzed/grappled."""
+    try:
+        return DefensiveSpellAction(
+            id="freedom-of-movement", name="Freedom of Movement", level=4, action_cost="action",
+            range_ft=5, duration_minutes=60, target_policy="friendly",
+            modifier_effects=[
+                SpellModifierEffect(kind="condition-immunity", condition_id="restrained"),
+                SpellModifierEffect(kind="condition-immunity", condition_id="paralyzed"),
+            ],
+            priority=25, animation="freedom-of-movement",
+            source=f"{_SOURCE}: Freedom of Movement",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Freedom of Movement.")
+        raise

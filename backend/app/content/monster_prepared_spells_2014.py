@@ -9,7 +9,10 @@ from app.content.shared_control_spells_2014 import (
     hold_monster_2014,
 )
 from app.content.cleric_2014_level1_spells import bless_2014, cure_wounds_2014, guiding_bolt_2014, inflict_wounds_2014, shield_of_faith_2014
-from app.content.shared_spells_2014 import sanctuary_2014, shield_2014, darkness_2014
+from app.content.shared_spells_2014 import sanctuary_2014, shield_2014, darkness_2014, mage_armor_2014, freedom_of_movement_2014, lesser_restoration_2014
+from app.content.shared_restoration_spells_2014 import greater_restoration_2014
+from app.content.druid_2014_level2_spells import barkskin_2014
+from app.domain.actions import ConditionRemovalAction
 from app.content.shared_spells_2014 import spiritual_weapon_2014
 from app.domain.healing_actions import HealingAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
@@ -434,6 +437,8 @@ def supports_prepared_spellcasting_2014(monster: SourceMonster2014) -> bool:
             action.id for action in prepared_timed_self_buffs_2014(monster)
         } | {
             action.id for action in prepared_defensive_spell_actions_2014(monster)
+        } | {
+            action.id for action in prepared_condition_removal_actions_2014(monster)
         } | ARENA_NEUTRAL_PREPARED_SPELLS_2014
         # Arena-neutral prepared spells stay unbound by design.
         return known <= bound
@@ -528,7 +533,29 @@ def prepared_defensive_spell_actions_2014(monster: SourceMonster2014) -> list[De
                 actions.append(shield_2014())
             elif spell_id == "sanctuary" and dc is not None:
                 actions.append(sanctuary_2014(dc))
+            elif spell_id == "barkskin":
+                actions.append(barkskin_2014())
+            elif spell_id == "mage-armor":
+                actions.append(mage_armor_2014())
+            elif spell_id == "freedom-of-movement":
+                actions.append(freedom_of_movement_2014())
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 prepared defensive spells for %s.", monster.name)
+        raise
+
+
+def prepared_condition_removal_actions_2014(monster: SourceMonster2014) -> list[ConditionRemovalAction]:
+    """Bind printed prepared restoration spells."""
+    try:
+        actions: list[ConditionRemovalAction] = []
+        for spell in _prepared_spells(monster):
+            spell_id = str(spell.get("id") or "")
+            if spell_id == "lesser-restoration":
+                actions.append(lesser_restoration_2014())
+            elif spell_id == "greater-restoration":
+                actions.append(greater_restoration_2014())
+        return actions
+    except Exception:
+        logger.exception("Failed to compile 2014 prepared condition removal for %s.", monster.name)
         raise
