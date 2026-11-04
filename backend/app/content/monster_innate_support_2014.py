@@ -11,6 +11,8 @@ from app.content.monster_innate_spells_2014 import (
     innate_auto_hit_spell_actions_2014,
     innate_spell_attack_actions_2014,
     innate_persistent_save_zone_actions_2014,
+    innate_healing_spell_actions_2014,
+    innate_persistent_spell_attack_actions_2014,
     innate_spell_save_actions_2014,
 )
 from app.domain.actions import ConditionRemovalAction
@@ -203,6 +205,10 @@ def supports_innate_spellcasting_2014(monster) -> bool:
             action.id for action in innate_timed_self_buffs_2014(monster)
         } | {
             action.id for action in innate_persistent_save_zone_actions_2014(monster)
+        } | {
+            action.id for action in innate_healing_spell_actions_2014(monster)
+        } | {
+            action.id for action in innate_persistent_spell_attack_actions_2014(monster)
         }
         return known <= bound
     except Exception:

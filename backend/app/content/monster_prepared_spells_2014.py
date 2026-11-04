@@ -34,6 +34,21 @@ from app.domain.spells import SpellAttackAction, SpellSaveAction
 
 logger = logging.getLogger(__name__)
 
+# Prepared spells whose entire effect is information, cosmetic, or out-of-arena.
+# Exact same policy as innate: no combat outcome under locked Pit rules.
+ARENA_NEUTRAL_PREPARED_SPELLS_2014 = frozenset({
+    "detect-evil-and-good", "detect-magic", "detect-thoughts", "mage-hand",
+    "light", "thaumaturgy", "prestidigitation", "dancing-lights", "mending",
+    "minor-illusion", "druidcraft", "tongues", "comprehend-languages",
+    "message", "sending", "scrying", "identify", "augury", "divination",
+    "clairvoyance", "true-seeing", "zone-of-truth", "silence",
+    "locate-object", "locate-creature", "find-the-path", "commune",
+    "commune-with-nature", "legend-lore", "spare-the-dying",
+    "purify-food-and-drink", "create-or-destroy-water", "control-weather",
+    "create-food-and-water", "heroes-feast", "wish", "nondetection",
+    "disguise-self", "pass-without-trace", "plane-shift", "geas",
+})
+
 # Conservative cantrip scaling for monsters (no character level on prepared cards).
 _MONSTER_CANTRIP_LEVEL = 1
 
@@ -187,7 +202,11 @@ def supports_prepared_spellcasting_2014(monster: SourceMonster2014) -> bool:
             action.id for action in prepared_auto_hit_spell_actions_2014(monster)
         } | {
             action.id for action in prepared_persistent_save_zone_actions_2014(monster)
-        }
+        } | {
+            action.id for action in prepared_healing_spell_actions_2014(monster)
+        } | {
+            action.id for action in prepared_persistent_spell_attack_actions_2014(monster)
+        } | ARENA_NEUTRAL_PREPARED_SPELLS_2014
         # Arena-neutral prepared spells stay unbound by design.
         return known <= bound
     except Exception:
