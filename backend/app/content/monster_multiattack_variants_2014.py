@@ -18,6 +18,9 @@ _MODE_SOURCE = re.compile(
 
 
 def source_variants_2014(monster):
+    form_vars = form_conditional_variants_2014(monster)
+    if form_vars:
+        return form_vars
     try:
         policy = monster.multiattack_policy
         text = source_sections_2014(monster.source_actions).get("Multiattack", "")
@@ -89,4 +92,40 @@ def attack_unavailable_reason_2014(monster, attack):
         return None
     except Exception:
         logger.exception("Failed fixed equipment legality for %s / %s.", monster.id, attack.id)
+        raise
+
+_FORM_MULTIATTACK = re.compile(
+    r"In bear form, the (.+?) makes two claw attacks\. "
+    r"In humanoid form, it makes two greataxe attacks\. "
+    r"In hybrid form, it can attack like a bear or a humanoid\.", re.I)
+
+def form_conditional_variants_2014(monster):
+    """Source-prove form-gated Multiattack alternatives without name dispatch."""
+    try:
+        text = source_sections_2014(monster.source_actions).get("Multiattack", "")
+        if not _FORM_MULTIATTACK.fullmatch(text.strip()):
+            return []
+        policy = monster.multiattack_policy or {}
+        if policy != {"same_attack_as_previous_slots": [1]}:
+            return []
+        attacks = {attack.id: attack for attack in monster.attacks}
+        slots = monster.multiattack_slots
+        if len(slots) != 2 or slots[0] != slots[1]:
+            return []
+        claw = next((i for i in slots[0] if "claw" in i), None)
+        axe = next((i for i in slots[0] if "greataxe" in i), None)
+        if not claw or not axe or claw not in attacks or axe not in attacks:
+            return []
+        return [
+            AttackActionVariant(
+                id=f"2014-{monster.id}-multiattack-bear",
+                slots=[AttackActionSlot(attack_ids=[attack_id_2014(monster, claw)]) for _ in range(2)],
+            ),
+            AttackActionVariant(
+                id=f"2014-{monster.id}-multiattack-humanoid",
+                slots=[AttackActionSlot(attack_ids=[attack_id_2014(monster, axe)]) for _ in range(2)],
+            ),
+        ]
+    except Exception:
+        logger.exception("Failed form-conditional Multiattack proof for %s.", monster.id)
         raise
