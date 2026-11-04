@@ -5874,13 +5874,13 @@
       "attack:none": 1,
       "mechanic:legendary": 9,
       "mechanic:recharge": 6,
-      "mechanic:spellcasting": 33,
+      "mechanic:spellcasting": 31,
       "mechanic:swallow": 2,
       "multiattack:complex": 10,
       "source:extra-action": 35,
       "source:legendary": 9,
       "source:reaction": 2,
-      "source:trait": 55
+      "source:trait": 54
     },
     "unresolved_printed_abilities": [
       {
@@ -6018,7 +6018,7 @@
         "printed_name": "Ignited Illumination"
       },
       {
-        "demand_count": 20,
+        "demand_count": 18,
         "monsters": [
           "Cloud Giant",
           "Couatl",
@@ -6030,14 +6030,12 @@
           "Dust Mephit",
           "Efreeti",
           "Glabrezu",
-          "Green Hag",
           "Ice Mephit",
           "Lamia",
           "Magma Mephit",
           "Night Hag",
           "Oni",
           "Planetar",
-          "Rakshasa",
           "Solar",
           "Storm Giant"
         ],

@@ -10,9 +10,9 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 55 |
+| `source:trait` | 54 |
 | `source:extra-action` | 35 |
-| `mechanic:spellcasting` | 33 |
+| `mechanic:spellcasting` | 31 |
 | `attack:incomplete` | 15 |
 | `multiattack:complex` | 10 |
 | `mechanic:legendary` | 9 |
@@ -31,14 +31,15 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**4** monsters have exactly one remaining blocker category.
+**6** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
+| `source:extra-action` | Green Hag, Werewolf | 2 |
 | `arena:neutral` | Frog | 1 |
 | `arena:removed` | Stirge | 1 |
 | `multiattack:complex` | Werebear | 1 |
-| `source:extra-action` | Werewolf | 1 |
+| `source:trait` | Rakshasa | 1 |
 
 ## Every blocked monster
 
@@ -76,7 +77,7 @@ the underlying ability is already implemented or trivial.
 | Gibbering Mouther | multiattack:complex, source:trait | Aberrant Ground, Gibbering |
 | Glabrezu | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Gray Ooze | attack:incomplete, source:trait | Corrode Metal |
-| Green Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
+| Green Hag | source:extra-action | — |
 | Guardian Naga | mechanic:spellcasting, source:extra-action, source:trait | Spellcasting |
 | Gynosphinx | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Ice Devil | mechanic:recharge, source:extra-action | — |
@@ -94,7 +95,7 @@ the underlying ability is already implemented or trivial.
 | Planetar | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Priest | mechanic:spellcasting, source:trait | Divine Eminence, Spellcasting |
 | Purple Worm | attack:complex, mechanic:swallow | — |
-| Rakshasa | mechanic:spellcasting, source:trait | Limited Magic Immunity, Innate Spellcasting |
+| Rakshasa | source:trait | Limited Magic Immunity |
 | Roper | source:extra-action, source:trait | Grasping Tendrils |
 | Rug of Smothering | attack:none, source:extra-action, source:trait | Damage Transfer |
 | Shambling Mound | mechanic:swallow, source:extra-action | — |
