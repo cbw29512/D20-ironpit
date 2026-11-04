@@ -6,7 +6,9 @@ import logging
 from app.combat.action_economy import claim_voluntary_activity, is_available, spend
 from app.combat.attachments import detach_link
 from app.combat.encounter_targeting import combatant_distance
+from app.domain.attachment_receipts import AttachmentChange
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.events import BattleEvent
 
 logger = logging.getLogger(__name__)
 
@@ -64,4 +66,55 @@ def detach_attachment_with_movement(
         return True
     except Exception:
         logger.exception("Source movement detachment failed for %s.", actor.combatant_id)
+        raise
+
+
+def resolve_blocked_source_movement_detachment(
+    sequence: int,
+    round_number: int,
+    actor: EncounterCombatant,
+    setup: EncounterSetup,
+) -> BattleEvent | None:
+    """Use a legal printed movement detach before an attack-locked source gives up its turn."""
+    try:
+        candidates = sorted(
+            (
+                row
+                for row in setup.attachments
+                if row.source_id == actor.combatant_id
+                and row.blocks_source_attacks
+                and row.source_detach_movement_ft > 0
+            ),
+            key=lambda row: (row.source_detach_movement_ft, row.effect_id, row.target_id),
+        )
+        for row in candidates:
+            movement_before = actor.state.movement_remaining_ft
+            if not detach_attachment_with_movement(setup, actor, row.effect_id):
+                continue
+            spent = movement_before - actor.state.movement_remaining_ft
+            return BattleEvent(
+                sequence=sequence,
+                round_number=round_number,
+                event_type="feature",
+                actor_id=actor.combatant_id,
+                actor_name=actor.state.template.name,
+                target_id=row.target_id,
+                feature_id=row.source_name,
+                movement_ft=spent,
+                animation="movement",
+                attachment_changes=[AttachmentChange(
+                    operation="detach",
+                    source_id=row.source_id,
+                    target_id=row.target_id,
+                    effect_id=row.effect_id,
+                    source_name=row.source_name,
+                )],
+                description=(
+                    f"{actor.state.template.name} spends {spent} feet of movement "
+                    f"to detach {row.source_name}."
+                ),
+            )
+        return None
+    except Exception:
+        logger.exception("Blocked-source movement detachment failed for %s.", actor.combatant_id)
         raise

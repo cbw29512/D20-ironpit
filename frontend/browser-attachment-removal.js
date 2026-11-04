@@ -47,5 +47,40 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_ATTACHMENT_REMOVAL = { removeByAction, detachWithMovement };
+  function resolveBlockedSource(sequence, round, setup, source) {
+    try {
+      const candidates = (setup.attachments || [])
+        .filter((link) => link.source_id === source.combatant_id
+          && link.blocks_source_attacks && link.source_detach_movement_ft > 0)
+        .sort((left, right) => left.source_detach_movement_ft - right.source_detach_movement_ft
+          || left.effect_id.localeCompare(right.effect_id)
+          || left.target_id.localeCompare(right.target_id));
+      for (const link of candidates) {
+        const movementBefore = source.state.movement_remaining_ft || 0;
+        if (!detachWithMovement(setup, source, link.effect_id)) continue;
+        const spent = movementBefore - source.state.movement_remaining_ft;
+        return {
+          sequence, round_number: round, event_type: "feature",
+          actor_id: source.combatant_id, actor_name: source.state.template.name,
+          target_id: link.target_id, feature_id: link.source_name,
+          movement_ft: spent, animation: "movement",
+          attachment_changes: [{
+            operation: "detach", source_id: link.source_id, target_id: link.target_id,
+            effect_id: link.effect_id, source_name: link.source_name,
+          }],
+          description: `${source.state.template.name} spends ${spent} feet of movement to detach ${link.source_name}.`,
+        };
+      }
+      return null;
+    } catch (error) {
+      console.error("Blocked-source movement detachment failed", {
+        source: source.combatant_id, error,
+      });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_ATTACHMENT_REMOVAL = {
+    removeByAction, detachWithMovement, resolveBlockedSource,
+  };
 })();

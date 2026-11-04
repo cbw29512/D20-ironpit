@@ -3,7 +3,11 @@ from __future__ import annotations
 
 from app.combat.attachment_on_hit import apply_attack_hit_attachment
 from app.combat.attachment_attack_gate import source_attacks_blocked
-from app.combat.attachment_removal import remove_attachment_by_action, detach_attachment_with_movement
+from app.combat.attachment_removal import (
+    detach_attachment_with_movement,
+    remove_attachment_by_action,
+    resolve_blocked_source_movement_detachment,
+)
 from app.combat.attachment_turn_events import resolve_attachment_turn_start_events
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
@@ -131,6 +135,23 @@ def test_target_can_use_action_and_source_can_spend_movement_to_detach():
     assert detach_attachment_with_movement(setup, attacker, "attached-blood-drain")
     assert attacker.state.movement_remaining_ft == 5
     assert setup.attachments == []
+
+
+def test_attack_locked_source_turn_resolves_printed_movement_detach_with_receipt():
+    _, attack, attacker, victim, setup = _combat()
+    assert apply_attack_hit_attachment(
+        attack, attacker.combatant_id, victim.combatant_id, victim.state, setup,
+    )
+    attacker.state.movement_remaining_ft = 10
+    event = resolve_blocked_source_movement_detachment(7, 3, attacker, setup)
+    assert event is not None
+    assert event.sequence == 7 and event.round_number == 3
+    assert event.feature_id == "Blood Drain"
+    assert event.movement_ft == 5
+    assert attacker.state.movement_remaining_ft == 5
+    assert setup.attachments == []
+    assert [change.operation for change in event.attachment_changes] == ["detach"]
+    assert not source_attacks_blocked(setup, attacker.combatant_id)
 
 
 

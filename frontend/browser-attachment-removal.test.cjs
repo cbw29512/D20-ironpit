@@ -22,7 +22,10 @@ window.IRON_PIT_BROWSER_STATE = {
 };
 const member = (id, position_ft) => ({
   combatant_id: id, position_ft,
-  state: { action_available: true, is_alive: true, is_dead: false, movement_remaining_ft: 30 },
+  state: {
+    template: { name: id }, action_available: true, is_alive: true, is_dead: false,
+    movement_remaining_ft: 30,
+  },
 });
 const newSetup = (distance = 5) => {
   const source = member("source", 0), victim = member("victim", distance);
@@ -59,6 +62,16 @@ const newSetup = (distance = 5) => {
   assert.equal(R.detachWithMovement(setup, source, "feed"), true);
   assert.equal(source.state.movement_remaining_ft, 25);
   assert.deepEqual(setup.attachments, []);
+}
+{
+  const { setup, source } = newSetup();
+  const event = R.resolveBlockedSource(9, 4, setup, source);
+  assert.equal(event.sequence, 9);
+  assert.equal(event.feature_id, "Printed Drain");
+  assert.equal(event.movement_ft, 5);
+  assert.equal(source.state.movement_remaining_ft, 25);
+  assert.deepEqual(event.attachment_changes.map((row) => row.operation), ["detach"]);
+  assert.equal(A.sourceAttacksBlocked(setup, source.combatant_id), false);
 }
 {
   const { setup, source } = newSetup();

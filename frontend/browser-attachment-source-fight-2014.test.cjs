@@ -85,6 +85,9 @@ if (!ownerDrains.length) {
   });
 }
 assert.ok(ownerDrains.length, "Owner turn must drain HP through the production scheduler.");
+assert.ok(battle.events.some(event => event.movement_ft === 5
+  && (event.attachment_changes || []).some(row => row.operation === "detach")),
+"Attack-locked source must reach its printed movement detach in the production scheduler.");
 assert.ok(changes.some(row => row.operation === "detach"), "Fight must include attachment expiry.");
 assert.ok(battle.events.some(event => event.event_type === "victory" || event.event_type === "draw"));
 assert.deepEqual(battle.setup.attachments, [], "No dead-source/target linked status survives fight.");

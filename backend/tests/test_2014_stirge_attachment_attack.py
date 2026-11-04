@@ -5,11 +5,13 @@ from app.combat.attacks import resolve_attack
 from app.combat.attachment_decision import resolve_attachment_removal_action
 from app.combat.attachment_on_hit import apply_attack_hit_attachment
 from app.combat.dice import FixedDiceProvider
+from app.combat.encounter_combat_turn import resolve_combat_turn
 from app.combat.state import build_combatant_state
 from app.content.capability_attack_compiler import compile_attack
 from app.content.monster_definition_adapter_2014 import _attack
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monsters import build_commoner
+from app.content.monster_roster_2014 import build_basic_2014_monsters
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 
@@ -73,3 +75,31 @@ def test_generic_removal_action_reports_detach_receipt_and_spends_action():
         ("detach", "Blood Drain"),
     ]
     assert setup.attachments == []
+
+
+def test_live_turn_spends_printed_movement_before_resuming_attacks():
+    attack, _, victim, _ = _combat()
+    stirge_template = next(
+        row for row in build_basic_2014_monsters() if row.id == "2014-stirge"
+    )
+    attacker = EncounterCombatant(
+        combatant_id="stirge", side="monsters", position_ft=0,
+        state=build_combatant_state(stirge_template),
+    )
+    setup = EncounterSetup(
+        heroes=[victim], monsters=[attacker], hero_total_levels=1,
+        monster_total_cr="1/8", ruleset="2014",
+    )
+    assert apply_attack_hit_attachment(
+        attack, attacker.combatant_id, victim.combatant_id, victim.state, setup,
+    )
+    events, _ = resolve_combat_turn(
+        1, 2, attacker, victim, setup, FixedDiceProvider([1, 18, 1]),
+    )
+    detach = next(
+        event for event in events
+        if any(change.operation == "detach" for change in event.attachment_changes)
+        and event.movement_ft == 5
+    )
+    assert detach.feature_id == "Blood Drain"
+    assert any(event.event_type == "attack" for event in events[events.index(detach) + 1:])
