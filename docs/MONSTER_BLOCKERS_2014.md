@@ -11,7 +11,7 @@ Blocker categories overlap: a monster may require several fixes.
 | Blocker | Monsters |
 |---|---:|
 | `source:trait` | 55 |
-| `source:extra-action` | 34 |
+| `source:extra-action` | 35 |
 | `mechanic:spellcasting` | 33 |
 | `attack:incomplete` | 15 |
 | `multiattack:complex` | 10 |
@@ -100,7 +100,7 @@ the underlying ability is already implemented or trivial.
 | Shambling Mound | mechanic:swallow, source:extra-action | — |
 | Shield Guardian | source:reaction, source:trait | Bound, Spell Storing |
 | Solar | attack:incomplete, mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Innate Spellcasting |
-| Spectator | source:reaction | — |
+| Spectator | source:extra-action, source:reaction | — |
 | Spirit Naga | mechanic:spellcasting, source:trait | Spellcasting |
 | Stirge | arena:removed | — |
 | Storm Giant | mechanic:spellcasting, source:trait | Innate Spellcasting |
