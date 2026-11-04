@@ -72,6 +72,15 @@ def unsupported_source_actions_2014(
             or monster.multiattack_binding is not None
         ):
             allowed.add("multiattack")
+            # Form-qualified Multiattack names (e.g. "Multiattack (Humanoid or Hybrid Form Only)")
+            # are the same supported multiattack when slots exist and no complex blocker.
+            # Form gates are arena-neutral under locked Shapechanger policy.
+            from app.content.monster_multiattack_2014 import multiattack_blockers_2014
+            if not multiattack_blockers_2014(monster):
+                for name in monster.action_names:
+                    label = action_label_2014(name)
+                    if label.startswith("multiattack"):
+                        allowed.add(label)
         if recharge_supported is None:
             recharge_supported = supports_recharge_rules_2014(monster)
         if recharge_supported:
