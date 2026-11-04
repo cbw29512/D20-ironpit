@@ -115,3 +115,22 @@ def test_modified_form_qualified_multiattack_heading_fails_closed(monster_id):
     except Exception:
         logger.exception("%s edited Multiattack heading must fail closed", monster_id)
         raise
+
+
+def test_form_qualified_family_clears_only_proven_multiattack_obligation():
+    """Three cards admit; Weretiger keeps its unrelated printed Pounce blocker."""
+    try:
+        assert {monster_id: basic_blockers_2014(_monster(monster_id)) for monster_id in (
+            "werewolf", "wereboar", "wererat", "weretiger",
+        )} == {
+            "werewolf": (),
+            "wereboar": (),
+            "wererat": (),
+            "weretiger": ("source:trait",),
+        }
+        assert unsupported_traits_2014(_monster("weretiger")) == (
+            "Pounce (Tiger or Hybrid Form Only)",
+        )
+    except Exception:
+        logger.exception("Qualified Multiattack must not clear unrelated obligations")
+        raise
