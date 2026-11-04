@@ -73,6 +73,59 @@ def source_charm_actions_2014(monster: SourceMonster2014) -> list[SaveCapability
                         ),
                         animation="moan",
                     ))
+            elif name.startswith("Whirlwind") and monster.id == "air-elemental":
+                if "dc 13 strength" in n and "prone" in n:
+                    actions.append(SaveCapabilityDefinition(
+                        id="whirlwind", name="Whirlwind", save_ability="strength", dc=13,
+                        range_ft=0,
+                        failed_save_timed_effect=FailedSaveTimedEffect(
+                            effect_id="prone", duration_rounds=1,
+                            expiry_timing="target_turn_end",
+                        ),
+                        animation="whirlwind",
+                    ))
+            elif name == "Create Whirlwind" and monster.id == "djinni":
+                if "dc 18 strength" in n:
+                    actions.append(SaveCapabilityDefinition(
+                        id="create-whirlwind", name="Create Whirlwind",
+                        save_ability="strength", dc=18, range_ft=120,
+                        animation="whirlwind",
+                    ))
+            elif name == "Engulf" and monster.id == "gelatinous-cube":
+                if "dc 12 dexterity" in n:
+                    actions.append(SaveCapabilityDefinition(
+                        id="engulf", name="Engulf", save_ability="dexterity", dc=12,
+                        range_ft=0,
+                        failed_save_timed_effect=FailedSaveTimedEffect(
+                            effect_id="restrained", duration_rounds=10,
+                            expiry_timing="source_turn_end",
+                        ),
+                        animation="engulf",
+                    ))
+            elif name == "Engulf" and monster.id == "shambling-mound":
+                if "dc 14 constitution" in n and "restrained" in n:
+                    actions.append(SaveCapabilityDefinition(
+                        id="engulf", name="Engulf", save_ability="constitution", dc=14,
+                        range_ft=0,
+                        failed_save_timed_effect=FailedSaveTimedEffect(
+                            effect_id="restrained", duration_rounds=10,
+                            expiry_timing="source_turn_end",
+                        ),
+                        animation="engulf",
+                    ))
+            elif name.startswith("Phantasms") and monster.id == "cloaker":
+                if "illusory duplicates" in n:
+                    actions.append(SaveCapabilityDefinition(
+                        id="phantasms", name="Phantasms", save_ability="wisdom", dc=0,
+                        range_ft=0, animation="phantasms",
+                    ))
+            elif name.startswith("Darkness Aura") and monster.id == "darkmantle":
+                if "magical darkness" in n:
+                    actions.append(SaveCapabilityDefinition(
+                        id="darkness-aura", name="Darkness Aura",
+                        save_ability="wisdom", dc=0, range_ft=15,
+                        animation="darkness",
+                    ))
         return actions
     except Exception:
         logger.exception("Failed to bind 2014 charm/enslave/moan for %s.", monster.name)
