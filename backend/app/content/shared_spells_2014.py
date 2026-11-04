@@ -313,3 +313,169 @@ def calm_emotions_2014(save_dc: int) -> "SpellSaveAction":
     except Exception:
         logger.exception("Failed to build 2014 Calm Emotions.")
         raise
+
+
+def insect_plague_2014(save_dc: int) -> "SpellSaveAction":
+    from app.domain.spells import SpellSaveAction
+    try:
+        return SpellSaveAction(
+            id="insect-plague", name="Insect Plague", level=5, action_cost="action",
+            range_ft=300, save_ability="constitution", dc=save_dc,
+            damage_dice_count=4, damage_dice_size=10, damage_type="piercing",
+            success_damage="half", animation="insect-plague",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Insect Plague.")
+        raise
+
+
+def blade_barrier_2014(save_dc: int) -> "SpellSaveAction":
+    from app.domain.spells import SpellSaveAction
+    try:
+        return SpellSaveAction(
+            id="blade-barrier", name="Blade Barrier", level=6, action_cost="action",
+            range_ft=90, save_ability="dexterity", dc=save_dc,
+            damage_dice_count=6, damage_dice_size=10, damage_type="slashing",
+            success_damage="half", animation="blade-barrier",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Blade Barrier.")
+        raise
+
+
+def acid_arrow_2014(attack_bonus: int) -> "SpellAttackAction":
+    from app.domain.spells import SpellAttackAction
+    try:
+        return SpellAttackAction(
+            id="acid-arrow", name="Acid Arrow", level=2, action_cost="action",
+            attack_kind="ranged", range_ft=90, attack_bonus=attack_bonus,
+            damage_dice_count=4, damage_dice_size=4, damage_type="acid",
+            animation="acid-arrow",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Acid Arrow.")
+        raise
+
+
+def bestow_curse_2014(save_dc: int) -> "SpellSaveAction":
+    from app.domain.spells import SpellSaveAction
+    from app.domain.save_effects import FailedSaveTimedEffect
+    try:
+        return SpellSaveAction(
+            id="bestow-curse", name="Bestow Curse", level=3, action_cost="action",
+            range_ft=5, save_ability="wisdom", dc=save_dc,
+            failed_save_timed_effect=FailedSaveTimedEffect(
+                effect_id="cursed", duration_rounds=10, expiry_timing="source_turn_end",
+            ),
+            concentration=True, duration_minutes=1, animation="bestow-curse",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Bestow Curse.")
+        raise
+
+
+def dominate_monster_2014(save_dc: int) -> "SpellSaveAction":
+    from app.domain.spells import SpellSaveAction
+    from app.domain.save_effects import FailedSaveTimedEffect
+    try:
+        return SpellSaveAction(
+            id="dominate-monster", name="Dominate Monster", level=8, action_cost="action",
+            range_ft=60, save_ability="wisdom", dc=save_dc,
+            failed_save_timed_effect=FailedSaveTimedEffect(
+                effect_id="charmed", duration_rounds=10, expiry_timing="source_turn_end",
+            ),
+            concentration=True, duration_minutes=1, animation="dominate-monster",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Dominate Monster.")
+        raise
+
+
+def heat_metal_2014(save_dc: int) -> "SpellSaveAction":
+    from app.domain.spells import SpellSaveAction
+    try:
+        return SpellSaveAction(
+            id="heat-metal", name="Heat Metal", level=2, action_cost="action",
+            range_ft=60, save_ability="constitution", dc=save_dc,
+            damage_dice_count=2, damage_dice_size=8, damage_type="fire",
+            success_damage="none", animation="heat-metal",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Heat Metal.")
+        raise
+
+
+def power_word_kill_2014() -> "SpellSaveAction":
+    from app.domain.spells import SpellSaveAction
+    try:
+        return SpellSaveAction(
+            id="power-word-kill", name="Power Word Kill", level=9, action_cost="action",
+            range_ft=60, save_ability="constitution", dc=0,
+            damage_dice_count=0, damage_dice_size=6, damage_type="necrotic",
+            success_damage="none", animation="power-word-kill",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Power Word Kill.")
+        raise
+
+
+def wall_of_force_2014() -> "TimedSelfBuffAction":
+    from app.domain.timed_self_buffs import TimedSelfBuffAction
+    try:
+        return TimedSelfBuffAction(
+            id="wall-of-force", name="Wall of Force", level=5, action_cost="action",
+            resource_id="wall-of-force", resource_cost=1, duration_rounds=100,
+            expiry_timing="source_turn_end", concentration=True, animation="wall-of-force",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Wall of Force.")
+        raise
+
+
+def fire_shield_2014() -> "TimedSelfBuffAction":
+    from app.domain.timed_self_buffs import TimedSelfBuffAction
+    try:
+        return TimedSelfBuffAction(
+            id="fire-shield", name="Fire Shield", level=4, action_cost="action",
+            resource_id="fire-shield", resource_cost=1, duration_rounds=100,
+            expiry_timing="source_turn_end", animation="fire-shield",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Fire Shield.")
+        raise
+
+
+def flaming_sphere_2014(save_dc: int) -> "PersistentSpellAttackAction":
+    from app.domain.spells import SpellAttackAction
+    from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
+    try:
+        attack = SpellAttackAction(
+            id="flaming-sphere", name="Flaming Sphere", level=2, action_cost="bonus_action",
+            attack_kind="melee", range_ft=60, attack_bonus=0,
+            damage_dice_count=2, damage_dice_size=6, damage_type="fire",
+            animation="flaming-sphere",
+        )
+        return PersistentSpellAttackAction(
+            id="flaming-sphere", name="Flaming Sphere", attack=attack,
+            duration_rounds=10, move_ft=30, attack_reach_ft=5,
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Flaming Sphere.")
+        raise
+
+
+def contagion_2014(save_dc: int) -> "SpellSaveAction":
+    from app.domain.spells import SpellSaveAction
+    from app.domain.save_effects import FailedSaveTimedEffect
+    try:
+        return SpellSaveAction(
+            id="contagion", name="Contagion", level=5, action_cost="action",
+            range_ft=5, save_ability="constitution", dc=save_dc,
+            failed_save_timed_effect=FailedSaveTimedEffect(
+                effect_id="poisoned", duration_rounds=10, expiry_timing="source_turn_end",
+            ),
+            animation="contagion",
+        )
+    except Exception:
+        logger.exception("Failed to build 2014 Contagion.")
+        raise

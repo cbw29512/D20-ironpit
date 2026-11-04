@@ -17,6 +17,7 @@ from app.content.shared_control_spells_2014 import (
     hold_monster_2014,
 )
 from app.content.cleric_2014_level1_spells import bless_2014, cure_wounds_2014, guiding_bolt_2014, inflict_wounds_2014, shield_of_faith_2014
+from app.content.shared_spells_2014 import insect_plague_2014, blade_barrier_2014, bestow_curse_2014, dominate_monster_2014, heat_metal_2014, contagion_2014
 from app.content.shared_spells_2014 import (
     sanctuary_2014, shield_2014, mage_armor_2014, freedom_of_movement_2014,
     counterspell_2014, gaseous_form_2014, globe_of_invulnerability_2014, fog_cloud_2014,
@@ -304,6 +305,18 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
                     ),
                     animation="power-word-stun",
                 ))
+            elif spell_id == "insect-plague":
+                actions.append(insect_plague_2014(dc))
+            elif spell_id == "blade-barrier":
+                actions.append(blade_barrier_2014(dc))
+            elif spell_id == "bestow-curse":
+                actions.append(bestow_curse_2014(dc))
+            elif spell_id == "dominate-monster":
+                actions.append(dominate_monster_2014(dc))
+            elif spell_id == "heat-metal":
+                actions.append(heat_metal_2014(dc))
+            elif spell_id == "contagion":
+                actions.append(contagion_2014(dc))
             elif spell_id == "dominate-person":
                 actions.append(SpellSaveAction(
                     id="dominate-person", name="Dominate Person", level=5, action_cost="action",
@@ -325,6 +338,18 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
                     ),
                     concentration=True, duration_minutes=1, animation="confusion",
                 ))
+            elif spell_id == "insect-plague":
+                actions.append(insect_plague_2014(dc))
+            elif spell_id == "blade-barrier":
+                actions.append(blade_barrier_2014(dc))
+            elif spell_id == "bestow-curse":
+                actions.append(bestow_curse_2014(dc))
+            elif spell_id == "dominate-monster":
+                actions.append(dominate_monster_2014(dc))
+            elif spell_id == "heat-metal":
+                actions.append(heat_metal_2014(dc))
+            elif spell_id == "contagion":
+                actions.append(contagion_2014(dc))
             elif spell_id == "dominate-person":
                 actions.append(SpellSaveAction(
                     id="dominate-person",

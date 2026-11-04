@@ -3,7 +3,8 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
-from app.content.shared_control_spells_2014 import hold_person_2014
+from app.content.shared_control_spells_2014 import hold_person_2014, spirit_guardians_2014
+from app.content.cleric_2014_level4_spells import guardian_of_faith_2014
 from app.content.shared_control_spells_2014 import (
     blindness_deafness_2014,
     hold_monster_2014,
@@ -12,7 +13,10 @@ from app.content.cleric_2014_level1_spells import bless_2014, cure_wounds_2014, 
 from app.content.shared_spells_2014 import (
     sanctuary_2014, shield_2014, darkness_2014, mage_armor_2014, freedom_of_movement_2014,
     lesser_restoration_2014, counterspell_2014, gaseous_form_2014, globe_of_invulnerability_2014,
-    fog_cloud_2014, calm_emotions_2014,
+    fog_cloud_2014, calm_emotions_2014, insect_plague_2014, blade_barrier_2014,
+    acid_arrow_2014, bestow_curse_2014, dominate_monster_2014, heat_metal_2014,
+    power_word_kill_2014, wall_of_force_2014, fire_shield_2014, flaming_sphere_2014,
+    contagion_2014,
 )
 from app.content.shared_restoration_spells_2014 import greater_restoration_2014
 from app.content.druid_2014_level2_spells import barkskin_2014
@@ -247,6 +251,20 @@ def prepared_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSa
                 dc = _save_dc(monster)
                 if dc is not None:
                     actions.append(calm_emotions_2014(dc))
+            elif spell_id == "insect-plague":
+                actions.append(insect_plague_2014(dc))
+            elif spell_id == "blade-barrier":
+                actions.append(blade_barrier_2014(dc))
+            elif spell_id == "bestow-curse":
+                actions.append(bestow_curse_2014(dc))
+            elif spell_id == "dominate-monster":
+                actions.append(dominate_monster_2014(dc))
+            elif spell_id == "heat-metal":
+                actions.append(heat_metal_2014(dc))
+            elif spell_id == "power-word-kill":
+                actions.append(power_word_kill_2014())
+            elif spell_id == "contagion":
+                actions.append(contagion_2014(dc))
             elif spell_id == "hold-monster":
                 actions.append(hold_monster_2014(dc))
             elif spell_id == "hold-person":
@@ -377,6 +395,8 @@ def prepared_spell_attack_actions_2014(monster: SourceMonster2014) -> list[Spell
                 actions.append(guiding_bolt_2014(int(attack_bonus)))
             elif spell_id == "inflict-wounds":
                 actions.append(inflict_wounds_2014(int(attack_bonus)))
+            elif spell_id == "acid-arrow":
+                actions.append(acid_arrow_2014(int(attack_bonus)))
             elif spell_id == "fire-bolt":
                 actions.append(fire_bolt_2014(int(attack_bonus), _MONSTER_CANTRIP_LEVEL))
             elif spell_id == "ray-of-frost":
@@ -528,6 +548,14 @@ def prepared_timed_self_buffs_2014(monster: SourceMonster2014) -> list[TimedSelf
                 actions.append(globe_of_invulnerability_2014())
             elif spell_id == "fog-cloud":
                 actions.append(fog_cloud_2014())
+            elif spell_id == "wall-of-force":
+                actions.append(wall_of_force_2014())
+            elif spell_id == "fire-shield":
+                actions.append(fire_shield_2014())
+            elif spell_id == "spirit-guardians":
+                dc = _save_dc(monster)
+                if dc is not None:
+                    actions.append(spirit_guardians_2014(dc))
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 prepared timed self-buffs for %s.", monster.name)
