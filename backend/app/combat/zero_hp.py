@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 from typing import Literal
+from app.combat.visual_disguise_death_lifecycle import end_visual_disguise_if_dead
 from app.combat.turn_damage import note_turn_damage_and_trigger
 from app.combat.turn_damage_source import note_damage_source
 from app.combat.self_buff_lifecycle import sync_hp_ended_self_buffs
@@ -35,6 +36,7 @@ def _mark_dead(state: CombatantState) -> ZeroHpOutcome:
     state.current_hp = 0
     state.is_alive = False
     state.is_dead = True
+    end_visual_disguise_if_dead(state)
     state.is_unconscious = False
     state.is_stable = False
     state.active_effect_ids = [effect for effect in state.active_effect_ids if effect != DODGE_EFFECT_ID]

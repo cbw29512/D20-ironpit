@@ -141,5 +141,11 @@
       description: `${member.state.template.name} dismisses ${action.name} using ${action.dismissalCost === "bonus_action" ? "a Bonus Action" : "an Action"}; its true form is now visible to eligible observers.`,
     };
   }
-  window.IRON_PIT_BROWSER_PRECOMBAT_BUFFS = { choose, prepare, resolve, timedChoice, dismissFirstTurn };
+  function endIfOwnerDead(state) {
+    const rule = state.template.visualDisguiseAction;
+    if (!state.is_dead || !rule?.endsIfOwnerDead || !state.magical_visual_disguise_active) return false;
+    state.magical_visual_disguise_active = false;
+    return true;
+  }
+  window.IRON_PIT_BROWSER_PRECOMBAT_BUFFS = { choose, prepare, resolve, timedChoice, dismissFirstTurn, endIfOwnerDead };
 })();
