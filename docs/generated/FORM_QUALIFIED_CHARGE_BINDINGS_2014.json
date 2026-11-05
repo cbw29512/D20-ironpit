@@ -1,0 +1,50 @@
+{
+  "applicable_card_count": 2,
+  "applicable_cards": [
+    "wereboar",
+    "weretiger"
+  ],
+  "bindings": [
+    {
+      "browser_wired": true,
+      "card_id": "wereboar",
+      "card_name": "Wereboar",
+      "parameters": {
+        "follow_up_action_cost": "free",
+        "follow_up_attack_id": null,
+        "minimum_move_ft": 15,
+        "prone_save_ability": "strength",
+        "prone_save_dc": 13,
+        "trigger_attack_id": "2014-wereboar-tusks-boar-or-hybrid-form-only"
+      },
+      "python_wired": true,
+      "source_text": "If the wereboar moves at least 15 feet straight toward a target and then hits it with its tusks on the same turn, the target takes an extra 7 (2d6) slashing damage. If the target is a creature, it must succeed on a DC 13 Strength saving throw or be knocked prone.",
+      "source_trait": "Charge (Boar or Hybrid Form Only)"
+    },
+    {
+      "browser_wired": true,
+      "card_id": "weretiger",
+      "card_name": "Weretiger",
+      "parameters": {
+        "follow_up_action_cost": "bonus_action",
+        "follow_up_attack_id": "2014-weretiger-bite-tiger-or-hybrid-form-only",
+        "minimum_move_ft": 15,
+        "prone_save_ability": "strength",
+        "prone_save_dc": 14,
+        "trigger_attack_id": "2014-weretiger-claw-tiger-or-hybrid-form-only"
+      },
+      "python_wired": true,
+      "source_text": "If the weretiger moves at least 15 feet straight toward a creature and then hits it with a claw attack on the same turn, that target must succeed on a DC 14 Strength saving throw or be knocked prone. If the target is prone, the weretiger can make one bite attack against it as a bonus action.",
+      "source_trait": "Pounce (Tiger or Hybrid Form Only)"
+    }
+  ],
+  "exceptions": [],
+  "remaining_card_count": 0,
+  "source_cards_scanned": 327,
+  "wired_browser_card_count": 2,
+  "wired_cards": [
+    "wereboar",
+    "weretiger"
+  ],
+  "wired_python_card_count": 2
+}

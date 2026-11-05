@@ -5864,7 +5864,7 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 66,
+    "blocked_monster_count": 65,
     "blocker_categories": {
       "arena:neutral": 1,
       "attack:complex": 4,
@@ -5879,7 +5879,7 @@
       "source:extra-action": 31,
       "source:legendary": 9,
       "source:reaction": 2,
-      "source:trait": 55
+      "source:trait": 54
     },
     "unresolved_printed_abilities": [
       {
@@ -6069,13 +6069,6 @@
           "Gelatinous Cube"
         ],
         "printed_name": "Ooze Cube"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Weretiger"
-        ],
-        "printed_name": "Pounce (Tiger or Hybrid Form Only)"
       },
       {
         "demand_count": 1,

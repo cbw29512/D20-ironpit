@@ -118,7 +118,7 @@ def test_modified_form_qualified_multiattack_heading_fails_closed(monster_id):
 
 
 def test_form_qualified_family_clears_only_proven_multiattack_obligation():
-    """Three cards admit; Weretiger keeps its unrelated printed Pounce blocker."""
+    """All four cards admit once their distinct source families are proven."""
     try:
         assert {monster_id: basic_blockers_2014(_monster(monster_id)) for monster_id in (
             "werewolf", "wereboar", "wererat", "weretiger",
@@ -126,11 +126,9 @@ def test_form_qualified_family_clears_only_proven_multiattack_obligation():
             "werewolf": (),
             "wereboar": (),
             "wererat": (),
-            "weretiger": ("source:trait",),
+            "weretiger": (),
         }
-        assert unsupported_traits_2014(_monster("weretiger")) == (
-            "Pounce (Tiger or Hybrid Form Only)",
-        )
+        assert unsupported_traits_2014(_monster("weretiger")) == ()
     except Exception:
         logger.exception("Qualified Multiattack must not clear unrelated obligations")
         raise
