@@ -24,6 +24,36 @@ def test_2014_frog_is_arena_neutral_not_missing_engine_work() -> None:
     assert "2014-frog" not in {item.id for item in build_basic_2014_monsters()}
 
 
+def test_2014_arena_neutral_source_scan_finds_only_frog() -> None:
+    matches = {
+        monster.id
+        for monster in load_monster_source_2014()
+        if is_arena_neutral_monster_2014(monster)
+    }
+
+    assert len(load_monster_source_2014()) == 327
+    assert matches == {"frog"}
+
+
+def test_2014_frog_arena_neutral_fails_closed_on_source_mutation() -> None:
+    frog = _source("frog")
+    mutated = frog.model_copy(
+        update={
+            "source_traits": (frog.source_traits or "").replace("10 feet", "15 feet"),
+        }
+    )
+
+    assert is_arena_neutral_monster_2014(mutated) is False
+    assert "arena:neutral" not in basic_blockers_2014(mutated)
+
+
+def test_2014_arena_neutral_source_proof_ignores_card_identity() -> None:
+    frog = _source("frog")
+    renamed = frog.model_copy(update={"id": "renamed-neutral-card", "name": "Renamed"})
+
+    assert is_arena_neutral_monster_2014(renamed) is True
+
+
 def test_stirge_attaches_instead_of_being_excluded_from_arena() -> None:
     stirge = _source("stirge")
 

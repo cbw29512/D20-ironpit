@@ -1,5 +1,11 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Source-semantic no-action arena-neutral classification — 2014 family
+
+- **Full source scan:** all 327 immutable cards scanned. Exactly one card has no attacks, Actions, Reactions, Legendary Actions, spellcasting or other callable combat surface and contains only the complete printed Amphibious plus Standing Leap payload: Frog.
+- **Classification:** the shared source classifier now proves the complete breathing/jump-only clause instead of dispatching on card ID or name. Renaming preserves the result; changing printed jump distance or adding any callable combat surface fails closed.
+- **Accounting:** Frog remains intentionally arena-neutral and excluded from runnable source admission. This removes an identity-based classification branch but does not claim a newly playable monster, automated fight, or webpage certification. Current generated roster remains 262/327 admitted and 65 blocked until the next combat-active family lands.
+
 ## Form-qualified Charge / Pounce source headings — 2014 family
 
 - **Full source scan:** all 327 immutable cards scanned semantically; two applicable declarations: Wereboar `Charge (Boar or Hybrid Form Only)` and Weretiger `Pounce (Tiger or Hybrid Form Only)`.
