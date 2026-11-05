@@ -546,8 +546,8 @@ def prepared_timed_self_buffs_2014(monster: SourceMonster2014) -> list[TimedSelf
                 actions.append(fog_cloud_2014())
             elif spell_id == "wall-of-force":
                 actions.append(wall_of_force_2014())
-            elif spell_id == "fire-shield":
-                actions.append(fire_shield_2014())
+            # Fire Shield must use the shared resistance/retaliation variants
+            # with source-legal spell slots; the empty placeholder is not a cast.
             elif spell_id == "spirit-guardians":
                 dc = _save_dc(monster)
                 if dc is not None:
