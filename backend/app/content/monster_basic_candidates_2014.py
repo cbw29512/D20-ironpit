@@ -31,7 +31,6 @@ _MODELED_2014_TRAITS = {
 }
 _CHARGE_TRAIT_NAMES = frozenset({"Charge", "Pounce", "Trampling Charge"})
 _PIT_REMOVED_MONSTER_IDS_2014 = frozenset()
-_PIT_ARENA_NEUTRAL_MONSTER_IDS_2014 = frozenset({"frog"})
 def _supported_charge(monster: SourceMonster2014) -> bool:
     return any(
         attack.charge_profile is not None
@@ -109,7 +108,36 @@ def modeled_combat_traits_2014(monster: SourceMonster2014) -> list[CombatTrait]:
         traits.append(CombatTrait.REACTION_EACH_TURN)
     return traits
 def is_arena_neutral_monster_2014(monster: SourceMonster2014) -> bool:
-    return monster.id in _PIT_ARENA_NEUTRAL_MONSTER_IDS_2014
+    try:
+        # A source card is arena-neutral only when it has no callable combat
+        # surface and its complete printed trait payload is the pinned
+        # breathing/jump-only shape. Card identity is never a classifier.
+        if (
+            monster.attacks
+            or monster.action_names
+            or monster.reaction_names
+            or monster.legendary_action_names
+            or monster.swallow_actions
+            or monster.saving_throw_actions
+            or monster.death_trigger_actions
+            or monster.healing_actions
+            or monster.innate_spellcasting
+            or monster.spellcasting
+            or set(monster.trait_names) != {"Amphibious", "Standing Leap"}
+        ):
+            return False
+        source = (monster.source_traits or "").casefold()
+        return (
+            "amphibious" in source
+            and "breathe air and water" in source
+            and "standing leap" in source
+            and "long jump is up to 10 feet" in source
+            and "high jump is up to 5 feet" in source
+            and not unsupported_traits_2014(monster)
+        )
+    except Exception:
+        logger.exception("Failed to classify arena-neutral status for %s.", monster.name)
+        raise
 def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     if monster.id in _PIT_REMOVED_MONSTER_IDS_2014:
         return ("arena:removed",)
