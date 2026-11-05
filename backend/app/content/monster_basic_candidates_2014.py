@@ -31,6 +31,47 @@ _MODELED_2014_TRAITS = {
 _CHARGE_TRAIT_NAMES = frozenset({"Charge", "Pounce", "Trampling Charge"})
 _PIT_REMOVED_MONSTER_IDS_2014 = frozenset()
 _PIT_ARENA_NEUTRAL_MONSTER_IDS_2014 = frozenset({"frog"})
+
+def verified_form_qualified_charge_trait_2014(monster: SourceMonster2014, trait_name: str) -> bool:
+    """Source-prove a form-qualified charge/pounce trait matches an existing charge_profile.
+
+    Strict full-paragraph match. Mutation of printed text or profile numbers fails closed.
+    No monster-name or ability-name dispatch in the combat engine.
+    """
+    try:
+        if "Pounce" not in trait_name or "Form Only" not in trait_name:
+            return False
+        from app.content.monster_source_sections_2014 import source_sections_2014
+        printed = source_sections_2014(
+            monster.source_traits, include_continuations=True
+        ).get(trait_name, "")
+        # Exact pinned Weretiger Pounce wording (only current form-qualified charge).
+        expected = (
+            "If the weretiger moves at least 15 feet straight toward a creature "
+            "and then hits it with a claw attack on the same turn, that target "
+            "must succeed on a DC 14 Strength saving throw or be knocked prone. "
+            "If the target is prone, the weretiger can make one bite attack "
+            "against it as a bonus action."
+        )
+        if " ".join(printed.split()) != " ".join(expected.split()):
+            return False
+        # Confirm the bound claw attack carries the matching charge_profile.
+        for attack in monster.attacks:
+            profile = attack.charge_profile
+            if (
+                isinstance(profile, dict)
+                and profile.get("minimum_move_ft") == 15
+                and profile.get("prone_save_ability") == "strength"
+                and profile.get("prone_save_dc") == 14
+                and profile.get("follow_up_attack_id") == "bite-tiger-or-hybrid-form-only"
+                and supports_charge_profile_2014(profile)
+            ):
+                return True
+        return False
+    except Exception:
+        logger.exception("Form-qualified charge trait proof failed for %s.", monster.name)
+        return False
+
 def _supported_charge(monster: SourceMonster2014) -> bool:
     return any(
         attack.charge_profile is not None
@@ -51,6 +92,11 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
         certified.update(f"{attack.name} Regrowth" for attack in monster.attacks if attack.id in bound_ammo)
         if _supported_charge(monster):
             certified.update(_CHARGE_TRAIT_NAMES)
+        # Source-verified form-qualified charge traits (e.g. Weretiger Pounce).
+        # Exact paragraph match + matching charge_profile numbers; no name dispatch.
+        for trait_name in monster.trait_names:
+            if verified_form_qualified_charge_trait_2014(monster, trait_name):
+                certified.add(trait_name)
         return tuple(
             name for name in monster.trait_names
             if name not in certified and not is_arena_neutral_bonus_action(name)

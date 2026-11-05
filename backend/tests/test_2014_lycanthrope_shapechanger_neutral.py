@@ -118,7 +118,7 @@ def test_modified_form_qualified_multiattack_heading_fails_closed(monster_id):
 
 
 def test_form_qualified_family_clears_only_proven_multiattack_obligation():
-    """Three cards admit; Weretiger keeps its unrelated printed Pounce blocker."""
+    """Three cards admit; Weretiger Pounce is independently source-verified."""
     try:
         assert {monster_id: basic_blockers_2014(_monster(monster_id)) for monster_id in (
             "werewolf", "wereboar", "wererat", "weretiger",
@@ -126,11 +126,45 @@ def test_form_qualified_family_clears_only_proven_multiattack_obligation():
             "werewolf": (),
             "wereboar": (),
             "wererat": (),
-            "weretiger": ("source:trait",),
+            "weretiger": (),
         }
-        assert unsupported_traits_2014(_monster("weretiger")) == (
-            "Pounce (Tiger or Hybrid Form Only)",
-        )
+        assert unsupported_traits_2014(_monster("weretiger")) == ()
     except Exception:
         logger.exception("Qualified Multiattack must not clear unrelated obligations")
+        raise
+
+
+def test_weretiger_pounce_is_source_verified_charge():
+    try:
+        from app.content.monster_basic_candidates_2014 import verified_form_qualified_charge_trait_2014
+        monster = _monster("weretiger")
+        original = monster.model_dump_json()
+        assert verified_form_qualified_charge_trait_2014(
+            monster, "Pounce (Tiger or Hybrid Form Only)"
+        )
+        assert "Pounce (Tiger or Hybrid Form Only)" not in unsupported_traits_2014(monster)
+        assert "source:trait" not in basic_blockers_2014(monster)
+        assert monster.model_dump_json() == original
+    except Exception:
+        logger.exception("Weretiger Pounce source proof failed")
+        raise
+
+
+def test_modified_weretiger_pounce_fails_closed():
+    try:
+        from app.content.monster_basic_candidates_2014 import verified_form_qualified_charge_trait_2014
+        monster = _monster("weretiger")
+        old = "DC 14 Strength saving throw"
+        new = "DC 15 Strength saving throw"
+        assert old in (monster.source_traits or "")
+        altered = monster.model_copy(update={
+            "source_traits": monster.source_traits.replace(old, new),
+        })
+        assert not verified_form_qualified_charge_trait_2014(
+            altered, "Pounce (Tiger or Hybrid Form Only)"
+        )
+        assert "Pounce (Tiger or Hybrid Form Only)" in unsupported_traits_2014(altered)
+        assert "source:trait" in basic_blockers_2014(altered)
+    except Exception:
+        logger.exception("Weretiger Pounce mutation must fail closed")
         raise
