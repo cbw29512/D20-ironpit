@@ -79,8 +79,8 @@ def innate_timed_self_buffs_2014(monster) -> list[TimedSelfBuffAction]:
                     movement_mode_grants=[MovementModeGrant(mode="fly", fixed_speed_ft=60)],
                     animation="fly",
                 ))
-            elif spell_id == "counterspell":
-                actions.append(counterspell_2014())
+            # Counterspell has a Reaction trigger and cannot be represented
+            # by the timed Action/Bonus Action self-buff primitive.
             elif spell_id == "gaseous-form":
                 actions.append(gaseous_form_2014())
             elif spell_id == "globe-of-invulnerability":
