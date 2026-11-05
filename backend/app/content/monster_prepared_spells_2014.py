@@ -175,8 +175,6 @@ ARENA_NEUTRAL_PREPARED_SPELLS_2014 = frozenset({
     "wind-walk",
     "wish",
     "zone-of-truth",
-    "})",
-})",
 })
 
 # Conservative cantrip scaling for monsters (no character level on prepared cards).
