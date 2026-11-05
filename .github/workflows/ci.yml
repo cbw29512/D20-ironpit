@@ -67,6 +67,8 @@ jobs:
         run: python scripts/report_attachment_bindings_2014.py --check
       - name: Audit 327-card repeated-choice Multiattack coverage
         run: python scripts/report_monster_multiattack_2014.py --check
+      - name: Audit 327-card form-qualified Charge coverage
+        run: python scripts/report_form_qualified_charge_bindings_2014.py --check
       - name: Audit 327-card surprise-opening source coverage
         run: python scripts/report_surprise_opening_bindings_2014.py --check
       - name: Audit 327-card audible maintained control coverage
@@ -653,6 +655,7 @@ jobs:
           node frontend/browser-manticore-ammunition-2014.test.cjs
           node frontend/browser-werebear-multiattack-2014.test.cjs
           node frontend/browser-form-qualified-multiattack-2014.test.cjs
+          node frontend/browser-weretiger-pounce-2014.test.cjs
           node frontend/browser-veteran-multiattack.test.cjs
           node frontend/browser-grick-sequence.test.cjs
           node frontend/browser-fungus-sequence.test.cjs

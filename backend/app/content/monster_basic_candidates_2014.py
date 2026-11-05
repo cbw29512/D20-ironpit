@@ -7,6 +7,7 @@ from app.content.monster_informational_action_proofs_2014 import verified_nonact
 from app.content.monster_arena_unavailable_reactions_2014 import arena_unavailable_reaction_names_2014
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
 from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
+from app.content.monster_form_qualified_charge_2014 import source_proven_form_qualified_charge_traits_2014
 from app.content.monster_legendary_bindings_2014 import supports_legendary_actions_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_mechanic_family_blockers_2014 import attack_blockers_2014, mechanic_family_blockers_2014
@@ -41,6 +42,7 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     try:
         certified = set(ARENA_NEUTRAL_TRAITS_2014) | set(_MODELED_2014_TRAITS)
         certified.update(bound_trait_names_2014(monster))
+        certified.update(source_proven_form_qualified_charge_traits_2014(monster))
         certified.update(variable_head_trait_names_2014(monster))
         if supports_death_triggers_2014(monster):
             certified.update(action.name for action in death_trigger_actions_2014(monster))
@@ -53,7 +55,11 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
             certified.update(_CHARGE_TRAIT_NAMES)
         return tuple(
             name for name in monster.trait_names
-            if name not in certified and not is_arena_neutral_bonus_action(name)
+            if name not in certified
+            and not (
+                is_arena_neutral_bonus_action(name)
+                and name.split(" (", 1)[0] not in _CHARGE_TRAIT_NAMES
+            )
             and not verified_arena_inert_trait_2014(monster, name)
         )
     except Exception:

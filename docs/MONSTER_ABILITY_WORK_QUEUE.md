@@ -1,5 +1,11 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Form-qualified Charge / Pounce source headings — 2014 family
+
+- **Full source scan:** all 327 immutable cards scanned semantically; two applicable declarations: Wereboar `Charge (Boar or Hybrid Form Only)` and Weretiger `Pounce (Tiger or Hybrid Form Only)`.
+- **Universal binding:** both source headings compile through the existing declarative Charge/Pounce profile and shared Python/browser runtime. Printed movement, triggering attack, save DC/ability, bonus damage, Prone rider, follow-up attack and Bonus Action cost are source-proved. Monster/card identity is not a runtime switch; renamed-card proof retains behavior and source mutations fail closed.
+- **Coverage:** `docs/generated/FORM_QUALIFIED_CHARGE_BINDINGS_2014.json` records 327 scanned, 2 applicable, 2 Python wired, 2 browser wired, 0 remaining and 0 exceptions. Wereboar remains covered; Weretiger becomes source-admitted and is covered by deterministic direct, 1v1 and 6v6 browser fights. Exact-head CI and merge remain required before merged certification; production stays locked.
+
 ## Shared on-hit single-save damage + timed condition — Quasit poison family
 
 - **Verified source:** 2014 Quasit Claws (Bite in Beast Form): melee +4, 1d4+3 Piercing; one DC 10 Constitution saving throw after hit. Failed save applies **both** 2d4 Poison damage and Poisoned for ten rounds, with end-of-target-turn repeat saves; success negates both. The pinned typed row already contains these parameters.

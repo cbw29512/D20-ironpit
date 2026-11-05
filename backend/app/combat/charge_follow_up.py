@@ -67,7 +67,11 @@ def resolve_charge_follow_up(
             )
         if profile.follow_up_action_cost == "bonus_action":
             spend(attacker.state, "bonus_action")
-        distance = combatant_distance(attacker, actual_target)
+        # The opener already hit in melee after the abstracted pre-contact run-up.
+        # Iron Pit preserves grid positions for that abstraction, so the immediate
+        # source follow-up inherits the proven melee contact instead of re-reading
+        # the unchanged pre-contact grid distance.
+        distance = min(combatant_distance(attacker, actual_target), attack.weapon.reach_ft)
         if setup is None:
             event = resolve_encounter_attack(
                 sequence, round_number, attacker, actual_target, attack,
