@@ -29,6 +29,9 @@ _MODELED_2014_TRAITS = {
     "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
 }
 _CHARGE_TRAIT_NAMES = frozenset({"Charge", "Pounce", "Trampling Charge"})
+def _is_charge_trait_name(name: str) -> bool:
+    """Match exact or form-qualified charge/pounce/trampling trait names."""
+    return name.split(" (", 1)[0] in _CHARGE_TRAIT_NAMES
 _PIT_REMOVED_MONSTER_IDS_2014 = frozenset()
 _PIT_ARENA_NEUTRAL_MONSTER_IDS_2014 = frozenset({"frog"})
 def _supported_charge(monster: SourceMonster2014) -> bool:
@@ -50,6 +53,7 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
         bound_ammo = attack_ammunition_2014(monster)
         certified.update(f"{attack.name} Regrowth" for attack in monster.attacks if attack.id in bound_ammo)
         if _supported_charge(monster):
+            certified.update(name for name in monster.trait_names if _is_charge_trait_name(name))
             certified.update(_CHARGE_TRAIT_NAMES)
         return tuple(
             name for name in monster.trait_names
