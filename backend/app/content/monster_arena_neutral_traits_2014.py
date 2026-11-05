@@ -125,6 +125,25 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 ),
             }
             return section == expected[monster.id]
+
+        # Weretiger Pounce form gate: exact source match. Charge profile already
+        # bound on claw (15 ft move, DC 14 Str prone, bonus bite). Form gate is
+        # inert under locked lycanthrope policy (no form-gated combat options).
+        # Mutation fails closed. No name dispatch.
+        if trait_name == "Pounce (Tiger or Hybrid Form Only)" and monster.id == "weretiger":
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(
+                monster.source_traits, include_continuations=True
+            ).get(trait_name, "")
+            expected = (
+                "If the weretiger moves at least 15 feet straight toward a creature "
+                "and then hits it with a claw attack on the same turn, that target "
+                "must succeed on a DC 14 Strength saving throw or be knocked prone. "
+                "If the target is prone, the weretiger can make one bite attack against "
+                "it as a bonus action."
+            )
+            return printed == expected
+
         source = monster.source_traits or ""
         # Context-driven exclusion: this trait only operates underwater, a
         # context absent from the standard Iron Pit. Keep the printed trait.
@@ -159,7 +178,7 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             # its own printed Fire immunity is separate and remains active.
             from app.content.monster_source_sections_2014 import source_sections_2014
             printed = source_sections_2014(source).get(trait_name, "")
-            normalized = " ".join(printed.casefold().replace("’", "'").split())
+            normalized = " ".join(printed.casefold().replace(“’”, "'").split())
             return normalized == (
                 "the nightmare can grant resistance to fire damage "
                 "to anyone riding it."
@@ -171,7 +190,7 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             from app.content.monster_source_sections_2014 import source_sections_2014
 
             printed = source_sections_2014(source).get("Sense Magic", "")
-            normalized = printed.casefold().replace("’", "'")
+            normalized = printed.casefold().replace(“’”, "'")
             return all(clause in normalized for clause in (
                 "senses magic within 120 feet",
                 "at will",
