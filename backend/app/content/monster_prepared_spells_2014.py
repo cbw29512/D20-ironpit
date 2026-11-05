@@ -20,6 +20,7 @@ from app.content.shared_spells_2014 import (
 )
 from app.content.shared_restoration_spells_2014 import greater_restoration_2014
 from app.content.druid_2014_level2_spells import barkskin_2014
+from app.content.shared_blur_spells_2014 import blur_2014
 from app.domain.actions import ConditionRemovalAction
 from app.content.shared_spells_2014 import spiritual_weapon_2014
 from app.domain.healing_actions import HealingAction
@@ -533,19 +534,6 @@ def prepared_timed_self_buffs_2014(monster: SourceMonster2014) -> list[TimedSelf
                     movement_mode_grants=[MovementModeGrant(mode="fly", fixed_speed_ft=60)],
                     animation="fly",
                 ))
-            elif spell_id == "blur":
-                actions.append(TimedSelfBuffAction(
-                    id="blur", name="Blur", action_cost="action",
-                    resource_id="blur", resource_cost=1, duration_rounds=10,
-                    expiry_timing="source_turn_end", concentration=True,
-                    modifier_effects=[], animation="blur",
-                ))
-            elif spell_id == "mirror-image":
-                actions.append(TimedSelfBuffAction(
-                    id="mirror-image", name="Mirror Image", action_cost="action",
-                    resource_id="mirror-image", resource_cost=1, duration_rounds=10,
-                    expiry_timing="source_turn_end", animation="mirror-image",
-                ))
             elif spell_id == "darkness":
                 actions.append(darkness_2014())
             elif spell_id == "counterspell":
@@ -577,7 +565,9 @@ def prepared_defensive_spell_actions_2014(monster: SourceMonster2014) -> list[De
         dc = _save_dc(monster)
         for spell in _prepared_spells(monster):
             spell_id = str(spell.get("id") or "")
-            if spell_id == "bless":
+            if spell_id == "blur":
+                actions.append(blur_2014())
+            elif spell_id == "bless":
                 actions.append(bless_2014())
             elif spell_id == "shield-of-faith":
                 actions.append(shield_of_faith_2014())
