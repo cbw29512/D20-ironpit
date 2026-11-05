@@ -6,6 +6,7 @@ import logging
 from app.content.monster_innate_support_2014 import innate_timed_self_buffs_2014
 from app.content.monster_prepared_spells_2014 import (
     prepared_defensive_spell_actions_2014,
+    prepared_spell_save_actions_2014,
     prepared_timed_self_buffs_2014,
     supports_prepared_spellcasting_2014,
 )
@@ -112,4 +113,19 @@ def test_shield_reaction_does_not_use_defensive_spell_action() -> None:
         assert supports_prepared_spellcasting_2014(source) is False
     except Exception:
         logger.exception("Shield reaction fail-closed regression failed.")
+        raise
+
+def test_power_word_kill_is_not_fabricated_as_a_save_spell() -> None:
+    try:
+        source = _synthetic_prepared("power-word-kill")
+        spellcasting = dict(source.spellcasting)
+        spellcasting["spells"] = [
+            {"id": "power-word-kill", "name": "Power Word Kill", "level": 9},
+        ]
+        spellcasting["slots"] = {"9": 1}
+        source = source.model_copy(update={"spellcasting": spellcasting})
+        assert prepared_spell_save_actions_2014(source) == []
+        assert supports_prepared_spellcasting_2014(source) is False
+    except Exception:
+        logger.exception("Power Word Kill threshold-vs-save regression failed.")
         raise
