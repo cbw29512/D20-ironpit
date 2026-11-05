@@ -4,6 +4,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_source_sections_2014 import source_sections_2014
 from app.content.monster_ally_immunity_2014 import visible_ally_immunity_grants_2014
 from app.content.monster_contextual_save_defenses import contextual_save_defenses_2014
 from app.domain.progression import SavingThrowAdvantageGrant
@@ -19,12 +20,33 @@ _DARK_DEVOTION = "Dark Devotion"
 _BRAVE = "Brave"
 _GNOME_CUNNING = "Gnome Cunning"
 _FEY_ANCESTRY = "Fey Ancestry"
-_DUERGAR_RESILIENCE = "Duergar Resilience"
 _AGGRESSIVE = "Aggressive"
+_DUERGAR_RESILIENCE = "Duergar Resilience"
 _TWO_HEAD_TRAITS = frozenset({"Two-Headed", "Two Heads"})
 _TWO_HEAD_SAVE_TAGS = (
     "blinded", "charm", "charmed", "deafened", "frightened", "stunned", "unconscious",
 )
+_DUERGAR_TAGS = ("poison", "spell", "illusion", "charm", "paralyzed")
+
+
+def _source_proves_duergar_resilience(monster: SourceMonster2014) -> bool:
+    """Source-verify the printed Duergar Resilience clauses before binding."""
+    try:
+        body = source_sections_2014(monster.source_traits).get(_DUERGAR_RESILIENCE)
+        if not body:
+            return False
+        normalized = body.casefold().replace("’", "'")
+        required = (
+            "advantage on saving throws against poison",
+            "spells",
+            "illusions",
+            "charmed",
+            "paralyzed",
+        )
+        return all(clause in normalized for clause in required)
+    except Exception:
+        logger.exception("Duergar Resilience source proof failed for %s", monster.id)
+        return False
 
 
 def conditional_immunity_grants_2014(monster: SourceMonster2014) -> list[PassiveModifierGrant]:
@@ -76,16 +98,10 @@ def saving_throw_advantage_grants_2014(monster: SourceMonster2014) -> list[Savin
             ))
         if _FEY_ANCESTRY in monster.trait_names:
             grants.extend(_condition_save_advantage("fey-ancestry", _FEY_ANCESTRY, ("charm",)))
-        if _DUERGAR_RESILIENCE in monster.trait_names:
-            # Source-verified: advantage on saves against poison, spells, and illusions,
-            # and to resist being charmed or paralyzed. Bind to existing grant primitives.
-            grants.append(SavingThrowAdvantageGrant(
-                source_id="duergar-resilience-magical",
-                source_name=_DUERGAR_RESILIENCE,
-                abilities=list(_ALL_SAVE_ABILITIES),
-                requires_magical_effect=True,
+        if _source_proves_duergar_resilience(monster):
+            grants.extend(_condition_save_advantage(
+                "duergar-resilience", _DUERGAR_RESILIENCE, _DUERGAR_TAGS,
             ))
-            grants.extend(_condition_save_advantage("duergar-resilience", _DUERGAR_RESILIENCE, ("poison", "charm", "paralyzed")))
         for trait_name in monster.trait_names:
             if trait_name not in _TWO_HEAD_TRAITS:
                 continue
@@ -136,10 +152,10 @@ def bound_passive_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]
             bound.add(_GNOME_CUNNING)
         if _FEY_ANCESTRY in monster.trait_names:
             bound.add(_FEY_ANCESTRY)
-        if _DUERGAR_RESILIENCE in monster.trait_names:
-            bound.add(_DUERGAR_RESILIENCE)
         if _AGGRESSIVE in monster.trait_names:
             bound.add(_AGGRESSIVE)
+        if _source_proves_duergar_resilience(monster):
+            bound.add(_DUERGAR_RESILIENCE)
         bound.update(name for name in monster.trait_names if name in _TWO_HEAD_TRAITS)
         return frozenset(bound)
     except Exception:
