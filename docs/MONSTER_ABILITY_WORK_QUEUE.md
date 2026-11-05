@@ -1,5 +1,11 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Source-semantic communication-only traits — 2014 family
+
+- **Full source scan:** all 327 immutable cards scanned. Four complete printed communication-only clauses (Succubus/Incubus Telepathic Bond, Homunculus Telepathic Bond, Otyugh Limited Telepathy, Pseudodragon Limited Telepathy) contain no combat targeting, location reveal, action, save, damage or condition.
+- **Classification:** the shared informational source proof now accepts only the complete printed clause sets. Renaming preserves the result; mutating any required source token fails closed. No browser runtime is fabricated.
+- **Accounting:** these traits are source-proven arena-inert and drop from unresolved printed abilities. Succubus/Incubus retains its source:extra-action blocker; Homunculus, Otyugh and Pseudodragon keep their other independent obligations. Admission stays 262/327 until exact-head CI. No automated fight or webpage certification is claimed.
+
 ## Source-semantic no-action arena-neutral classification — 2014 family
 
 - **Full source scan:** all 327 immutable cards scanned. Exactly one card has no attacks, Actions, Reactions, Legendary Actions, spellcasting or other callable combat surface and contains only the complete printed Amphibious plus Standing Leap payload: Frog.
