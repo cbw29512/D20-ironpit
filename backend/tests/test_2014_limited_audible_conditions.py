@@ -97,6 +97,19 @@ def test_complete_327_card_scan_and_source_mutation_fail_closed() -> None:
             ),
         })
         assert source_proven_limited_audible_conditions_2014(changed) == []
+
+        # A source parameter change updates the generic binding; a monster
+        # identity is never consulted for the save DC.
+        clause = "DC 14 Constitution saving throw"
+        assert clause in source_text
+        varied = original.model_copy(update={
+            "source_actions": source_text.replace(
+                clause, "DC 15 Constitution saving throw", 1
+            ),
+        })
+        varied_action, = source_proven_limited_audible_conditions_2014(varied)
+        assert varied_action.dc == 15
+        assert varied_action.target_scope == "all-other-creatures"
         assert original.source_actions == source_text
     except Exception:
         logger.exception("Limited audible complete-source proof failed.")
