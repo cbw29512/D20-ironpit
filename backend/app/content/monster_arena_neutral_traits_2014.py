@@ -97,6 +97,16 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
                 "detect magic",
                 "isn't itself magical",
             ))
+        if trait_name == "Water Susceptibility":
+            # Standard Pit has no water terrain or splashable water. Printed
+            # cold damage only activates in that absent context. Exact pinned
+            # paragraph required; any other wording fails closed.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+            printed = source_sections_2014(source).get(trait_name, "")
+            normalized = " ".join(printed.casefold().replace("’", "'").split())
+            return normalized == (
+                "for every 5 feet the elemental moves in water, or for every gallon of water splashed on it, it takes 1 cold damage."
+            )
         # Pinned source must prove both the printed trait and its
         # arena-inert semantics. Other effects remain blocked independently.
         additional_inert_clauses = {
