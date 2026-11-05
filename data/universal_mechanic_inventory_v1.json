@@ -5879,7 +5879,7 @@
       "source:extra-action": 31,
       "source:legendary": 9,
       "source:reaction": 2,
-      "source:trait": 54
+      "source:trait": 53
     },
     "unresolved_printed_abilities": [
       {
@@ -6078,11 +6078,8 @@
         "printed_name": "Reflective Carapace"
       },
       {
-        "demand_count": 4,
+        "demand_count": 1,
         "monsters": [
-          "Doppelganger",
-          "Mimic",
-          "Succubus/Incubus",
           "Vampire"
         ],
         "printed_name": "Shapechanger"

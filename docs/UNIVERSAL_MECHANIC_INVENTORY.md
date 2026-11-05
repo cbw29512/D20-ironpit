@@ -457,7 +457,7 @@ Blocked monsters: **65**. These are grouped by printed ability name so the roste
 | Misty Escape | Vampire | 1 |
 | Ooze Cube | Gelatinous Cube | 1 |
 | Reflective Carapace | Tarrasque | 1 |
-| Shapechanger | Doppelganger, Mimic, Succubus/Incubus, Vampire | 4 |
+| Shapechanger | Vampire | 1 |
 | Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
 | Telepathic Bond | Succubus/Incubus | 1 |
@@ -471,7 +471,7 @@ Blocked monsters: **65**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 54 |
+| `source:trait` | 53 |
 | `mechanic:spellcasting` | 33 |
 | `source:extra-action` | 31 |
 | `attack:incomplete` | 15 |
