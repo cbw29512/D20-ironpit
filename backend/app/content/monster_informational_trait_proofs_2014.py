@@ -21,6 +21,11 @@ _INFORMATIONAL_CLAUSES = {
         "learns the creature's greatest desires",
         "aboleth can see the creature",
     ),
+     "Telepathic Bond": (
+        "ignores the range restriction on its telepathy",
+        "creature it has charmed",
+        "same plane of existence",
+    ),
     "Inscrutable": (
         "immune to any effect",
         "sense its emotions",

@@ -61,3 +61,23 @@ def test_informational_proof_cannot_apply_to_missing_printed_trait(
         "trait_names": [name for name in card.trait_names if name != trait],
     })
     assert not verified_arena_inert_trait_2014(altered, trait)
+
+
+def test_telepathic_bond_is_source_proven_nonactionable() -> None:
+    card = next(m for m in load_monster_source_2014() if m.id == "succubus-incubus")
+    before = card.model_dump_json()
+    assert "ignores the range restriction on its telepathy" in (card.source_traits or "")
+    assert verified_arena_inert_trait_2014(card, "Telepathic Bond")
+    assert "Telepathic Bond" not in unsupported_traits_2014(card)
+    assert card.model_dump_json() == before
+
+
+def test_telepathic_bond_fails_closed_on_source_mutation() -> None:
+    card = next(m for m in load_monster_source_2014() if m.id == "succubus-incubus")
+    mutated = card.model_copy(update={
+        "source_traits": (card.source_traits or "").replace(
+            "ignores the range restriction on its telepathy", "missing source proof",
+        ),
+    })
+    assert not verified_arena_inert_trait_2014(mutated, "Telepathic Bond")
+    assert "Telepathic Bond" in unsupported_traits_2014(mutated)
