@@ -445,8 +445,8 @@ def innate_defensive_spell_actions_2014(monster: SourceMonster2014) -> list[Defe
                 actions.append(bless_2014())
             elif spell_id == "shield-of-faith":
                 actions.append(shield_of_faith_2014())
-            elif spell_id == "shield":
-                actions.append(shield_2014())
+            # Shield requires a triggered Reaction; do not cast it as
+            # an on-turn defensive spell until the interrupt engine is wired.
             elif spell_id == "sanctuary" and dc is not None:
                 actions.append(sanctuary_2014(dc))
             elif spell_id == "barkskin":
