@@ -536,8 +536,8 @@ def prepared_timed_self_buffs_2014(monster: SourceMonster2014) -> list[TimedSelf
                 ))
             elif spell_id == "darkness":
                 actions.append(darkness_2014())
-            elif spell_id == "counterspell":
-                actions.append(counterspell_2014())
+            # Counterspell is a Reaction, not a timed Action self-buff.
+            # Leave it unbound until a generic spell-interrupt runtime is certified.
             elif spell_id == "gaseous-form":
                 actions.append(gaseous_form_2014())
             elif spell_id == "globe-of-invulnerability":
