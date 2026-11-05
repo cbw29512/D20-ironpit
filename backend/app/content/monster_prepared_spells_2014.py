@@ -260,8 +260,8 @@ def prepared_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSa
                 actions.append(dominate_monster_2014(dc))
             elif spell_id == "heat-metal":
                 actions.append(heat_metal_2014(dc))
-            elif spell_id == "power-word-kill":
-                actions.append(power_word_kill_2014())
+            # Power Word Kill uses HP-threshold instant death, not a save.
+            # Do not admit until monster definitions carry the universal action.
             elif spell_id == "contagion":
                 actions.append(contagion_2014(dc))
             elif spell_id == "hold-monster":
