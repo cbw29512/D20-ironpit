@@ -571,8 +571,8 @@ def prepared_defensive_spell_actions_2014(monster: SourceMonster2014) -> list[De
                 actions.append(bless_2014())
             elif spell_id == "shield-of-faith":
                 actions.append(shield_of_faith_2014())
-            elif spell_id == "shield":
-                actions.append(shield_2014())
+            # Shield is a triggered Reaction, not an on-turn defense.
+            # Preserve the source spell and leave admission blocked.
             elif spell_id == "sanctuary" and dc is not None:
                 actions.append(sanctuary_2014(dc))
             elif spell_id == "barkskin":
