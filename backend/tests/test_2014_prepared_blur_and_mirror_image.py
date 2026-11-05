@@ -86,3 +86,12 @@ def test_partial_prepared_blur_cannot_hide_unimplemented_mirror_image() -> None:
     except Exception:
         logger.exception("Partial prepared caster admission regression failed.")
         raise
+
+def test_counterspell_remains_unbound_until_reaction_runtime_exists() -> None:
+    try:
+        source = _synthetic_prepared("counterspell")
+        assert prepared_timed_self_buffs_2014(source) == []
+        assert supports_prepared_spellcasting_2014(source) is False
+    except Exception:
+        logger.exception("Counterspell reaction fail-closed regression failed.")
+        raise
