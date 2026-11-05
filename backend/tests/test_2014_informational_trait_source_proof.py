@@ -61,3 +61,37 @@ def test_informational_proof_cannot_apply_to_missing_printed_trait(
         "trait_names": [name for name in card.trait_names if name != trait],
     })
     assert not verified_arena_inert_trait_2014(altered, trait)
+
+
+@pytest.mark.parametrize("monster_id,trait,clause", [
+    ("succubus-incubus", "Telepathic Bond", "range restriction on its telepathy"),
+    ("homunculus", "Telepathic Bond", "communicate telepathically"),
+    ("otyugh", "Limited Telepathy", "simple messages and images"),
+    ("pseudodragon", "Limited Telepathy", "simple ideas, emotions, and images"),
+])
+def test_communication_only_traits_are_source_proven_inert(
+    monster_id: str, trait: str, clause: str,
+) -> None:
+    card = next(m for m in load_monster_source_2014() if m.id == monster_id)
+    before = card.model_dump_json()
+    assert clause in (card.source_traits or "")
+    assert verified_arena_inert_trait_2014(card, trait)
+    assert trait not in unsupported_traits_2014(card)
+    assert card.model_dump_json() == before
+
+
+@pytest.mark.parametrize("monster_id,trait,clause", [
+    ("succubus-incubus", "Telepathic Bond", "range restriction on its telepathy"),
+    ("homunculus", "Telepathic Bond", "communicate telepathically"),
+    ("otyugh", "Limited Telepathy", "simple messages and images"),
+    ("pseudodragon", "Limited Telepathy", "simple ideas, emotions, and images"),
+])
+def test_communication_only_proof_fails_closed_on_source_mutation(
+    monster_id: str, trait: str, clause: str,
+) -> None:
+    card = next(m for m in load_monster_source_2014() if m.id == monster_id)
+    mutated = card.model_copy(update={
+        "source_traits": (card.source_traits or "").replace(clause, "missing source proof"),
+    })
+    assert not verified_arena_inert_trait_2014(mutated, trait)
+    assert trait in unsupported_traits_2014(mutated)

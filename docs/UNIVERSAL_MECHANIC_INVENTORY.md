@@ -460,7 +460,6 @@ Blocked monsters: **65**. These are grouped by printed ability name so the roste
 | Shapechanger | Vampire | 1 |
 | Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
-| Telepathic Bond | Succubus/Incubus | 1 |
 | Transparent | Gelatinous Cube | 1 |
 | Vampire Weaknesses | Vampire, Vampire Spawn | 2 |
 | Variable Illumination | Will-o'-Wisp | 1 |
@@ -471,7 +470,7 @@ Blocked monsters: **65**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 53 |
+| `source:trait` | 52 |
 | `mechanic:spellcasting` | 33 |
 | `source:extra-action` | 31 |
 | `attack:incomplete` | 15 |
