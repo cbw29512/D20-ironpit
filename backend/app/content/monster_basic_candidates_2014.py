@@ -1,1 +1,132 @@
-PLACEHOLDER
+from __future__ import annotations
+from collections import Counter
+import logging
+from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
+from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014, verified_arena_inert_trait_2014
+from app.content.monster_informational_action_proofs_2014 import verified_nonactionable_action_2014
+from app.content.monster_arena_unavailable_reactions_2014 import arena_unavailable_reaction_names_2014
+from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
+from app.content.monster_charge_source_corrections_2014 import corrected_charge_profile_2014
+from app.content.monster_legendary_bindings_2014 import supports_legendary_actions_2014
+from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_mechanic_family_blockers_2014 import attack_blockers_2014, mechanic_family_blockers_2014
+from app.content.monster_rock_catching_2014 import supports_rock_catching_reaction_2014
+from app.content.monster_reactive_2014 import supports_reaction_each_turn_2014
+from app.content.monster_unnerving_mask_2014 import supports_unnerving_mask_reaction_2014
+from app.content.monster_multiattack_2014 import multiattack_blockers_2014
+from app.content.monster_death_triggers_2014 import death_trigger_actions_2014, supports_death_triggers_2014
+from app.content.monster_supported_extra_actions_2014 import source_supported_extra_action_labels_2014
+from app.content.monster_save_capabilities_2014 import supports_recharge_rules_2014, unsupported_source_actions_2014
+from app.content.monster_source_opening_area_saves_2014 import source_proven_opening_area_saves_2014
+from app.content.monster_trait_bindings_2014 import bound_trait_names_2014, supports_reckless_2014
+from app.content.monster_variable_heads_2014 import variable_head_trait_names_2014
+from app.domain.traits import CombatTrait
+logger = logging.getLogger(__name__)
+_MODELED_2014_TRAITS = {
+    "Pack Tactics": CombatTrait.PACK_TACTICS,
+    "Sure-Footed": CombatTrait.SURE_FOOTED,
+    "Swarm": CombatTrait.SWARM,
+    "Undead Fortitude": CombatTrait.UNDEAD_FORTITUDE,
+}
+_CHARGE_TRAIT_NAMES = frozenset({"Charge", "Pounce", "Trampling Charge"})
+_PIT_REMOVED_MONSTER_IDS_2014 = frozenset()
+_PIT_ARENA_NEUTRAL_MONSTER_IDS_2014 = frozenset({"frog"})
+def _supported_charge(monster: SourceMonster2014) -> bool:
+    return any(
+        attack.charge_profile is not None
+        and supports_charge_profile_2014(corrected_charge_profile_2014(monster, attack))
+        for attack in monster.attacks
+    )
+def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
+    try:
+        certified = set(ARENA_NEUTRAL_TRAITS_2014) | set(_MODELED_2014_TRAITS)
+        certified.update(bound_trait_names_2014(monster))
+        certified.update(variable_head_trait_names_2014(monster))
+        if supports_death_triggers_2014(monster):
+            certified.update(action.name for action in death_trigger_actions_2014(monster))
+        if source_proven_opening_area_saves_2014(monster):
+            certified.add("Standing Leap")
+        from app.content.monster_attack_ammunition_2014 import attack_ammunition_2014
+        bound_ammo = attack_ammunition_2014(monster)
+        certified.update(f"{attack.name} Regrowth" for attack in monster.attacks if attack.id in bound_ammo)
+        if _supported_charge(monster):
+            certified.update(_CHARGE_TRAIT_NAMES)
+            for name in monster.trait_names:
+                base = name.split(" (")[0]
+                if base in _CHARGE_TRAIT_NAMES:
+                    certified.add(name)
+        return tuple(
+            name for name in monster.trait_names
+            if name not in certified and not is_arena_neutral_bonus_action(name)
+            and not verified_arena_inert_trait_2014(monster, name)
+        )
+    except Exception:
+        logger.exception("Failed to identify unsupported 2014 traits for %s.", monster.name)
+        raise
+def supports_parry_reaction_2014(monster: SourceMonster2014) -> bool:
+    try:
+        return monster.reaction_names == ["Parry"] and monster.parry_ac_bonus is not None
+    except Exception:
+        logger.exception("Failed to classify 2014 Parry support for %s.", monster.name)
+        raise
+def _source_name_blockers(
+    monster: SourceMonster2014, *, recharge_supported: bool,
+) -> list[str]:
+    extras = unsupported_source_actions_2014(
+        monster, recharge_supported=recharge_supported,
+    )
+    allowed_extras = source_supported_extra_action_labels_2014(monster)
+    extras = [
+        name for name in extras
+        if action_label_from_name(name) not in allowed_extras
+        and not verified_nonactionable_action_2014(monster, name)
+    ]
+    blockers = []
+    if extras:
+        blockers.append("source:extra-action")
+    if unsupported_traits_2014(monster):
+        blockers.append("source:trait")
+    if (set(monster.reaction_names) - arena_unavailable_reaction_names_2014(monster) or monster.parry_ac_bonus is not None) and not (supports_parry_reaction_2014(monster) or supports_rock_catching_reaction_2014(monster) or supports_unnerving_mask_reaction_2014(monster)):
+        blockers.append("source:reaction")
+    if monster.legendary_action_names and not supports_legendary_actions_2014(monster):
+        blockers.append("source:legendary")
+    return blockers
+def action_label_from_name(name: str) -> str:
+    from app.content.monster_save_capabilities_2014 import action_label_2014
+    return action_label_2014(name).split(" (", 1)[0]
+def modeled_combat_traits_2014(monster: SourceMonster2014) -> list[CombatTrait]:
+    traits = [
+        runtime_trait for source_name, runtime_trait in _MODELED_2014_TRAITS.items()
+        if source_name in monster.trait_names
+    ]
+    if _supported_charge(monster):
+        traits.append(CombatTrait.CHARGE)
+    if supports_reckless_2014(monster):
+        traits.append(CombatTrait.RECKLESS)
+    if supports_reaction_each_turn_2014(monster):
+        traits.append(CombatTrait.REACTION_EACH_TURN)
+    return traits
+def is_arena_neutral_monster_2014(monster: SourceMonster2014) -> bool:
+    return monster.id in _PIT_ARENA_NEUTRAL_MONSTER_IDS_2014
+def basic_blockers_2014(monster: SourceMonster2014) -> tuple[str, ...]:
+    if monster.id in _PIT_REMOVED_MONSTER_IDS_2014:
+        return ("arena:removed",)
+    if is_arena_neutral_monster_2014(monster):
+        return ("arena:neutral",)
+    blockers: list[str] = []
+    blockers.extend(attack_blockers_2014(monster))
+    blockers.extend(multiattack_blockers_2014(monster))
+    # One source-classification decision feeds both action and resource checks.
+    recharge_supported = supports_recharge_rules_2014(monster)
+    blockers.extend(_source_name_blockers(monster, recharge_supported=recharge_supported))
+    blockers.extend(mechanic_family_blockers_2014(monster, recharge_supported=recharge_supported))
+    # Attack-free cards use the universal Dodge fallback only when every printed
+    # mechanic is otherwise supported. Preserve attack:none on incompatible cards
+    # so the roster-wide report keeps the missing source shape visible.
+    if not monster.attacks and blockers:
+        blockers.append("attack:none")
+    return tuple(sorted(set(blockers)))
+def is_basic_candidate_2014(monster: SourceMonster2014) -> bool:
+    return not basic_blockers_2014(monster)
+def blocker_counts_2014(monsters: tuple[SourceMonster2014, ...]) -> Counter[str]:
+    return Counter(blocker for monster in monsters for blocker in basic_blockers_2014(monster))
