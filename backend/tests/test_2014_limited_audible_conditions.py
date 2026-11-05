@@ -32,6 +32,7 @@ def test_vrock_stunning_screech_uses_generic_limited_audible_control() -> None:
         assert action.save_ability == "constitution"
         assert action.dc == 14
         assert action.range_ft == 20
+        assert action.target_scope == "all-other-creatures"
         assert action.requires_target_hearing is True
         assert action.excluded_target_creature_types == ["demon"]
         assert action.resource_id == "stunning-screech"
@@ -64,4 +65,39 @@ def test_vrock_limited_audible_control_uses_shared_resource_and_clears_extra_act
         assert "source:extra-action" not in blockers
     except Exception:
         logger.exception("Vrock limited-audible blocker regression failed.")
+        raise
+
+
+def test_complete_327_card_scan_and_source_mutation_fail_closed() -> None:
+    """A source heading, not a monster identity, controls the universal binding."""
+    try:
+        cards = load_monster_source_2014()
+        assert len(cards) == 327
+        applicable = [
+            card.id for card in cards
+            if source_proven_limited_audible_conditions_2014(card)
+        ]
+        assert applicable == ["vrock"]
+        original = _vrock()
+        renamed = original.model_copy(update={
+            "id": "synthetic-hearing-wave",
+            "name": "Synthetic Hearing Wave",
+        })
+        renamed_action, = source_proven_limited_audible_conditions_2014(renamed)
+        source_action, = source_proven_limited_audible_conditions_2014(original)
+        assert renamed_action == source_action
+        assert renamed_action.target_scope == "all-other-creatures"
+
+        source_text = original.source_actions
+        assert isinstance(source_text, str)
+        assert "Each creature within " in source_text
+        changed = original.model_copy(update={
+            "source_actions": source_text.replace(
+                "Each creature within ", "Each enemy within ", 1
+            ),
+        })
+        assert source_proven_limited_audible_conditions_2014(changed) == []
+        assert original.source_actions == source_text
+    except Exception:
+        logger.exception("Limited audible complete-source proof failed.")
         raise
