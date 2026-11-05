@@ -95,3 +95,12 @@ def test_counterspell_remains_unbound_until_reaction_runtime_exists() -> None:
     except Exception:
         logger.exception("Counterspell reaction fail-closed regression failed.")
         raise
+
+def test_fire_shield_placeholder_is_not_treated_as_implemented() -> None:
+    try:
+        source = _synthetic_prepared("fire-shield")
+        assert prepared_timed_self_buffs_2014(source) == []
+        assert supports_prepared_spellcasting_2014(source) is False
+    except Exception:
+        logger.exception("Fire Shield fail-closed regression failed.")
+        raise
