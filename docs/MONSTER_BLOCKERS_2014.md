@@ -82,7 +82,7 @@ the underlying ability is already implemented or trivial.
 | Mage | mechanic:spellcasting, source:trait | Spellcasting |
 | Magma Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Magmin | attack:incomplete, source:trait | Ignited Illumination |
-| Mimic | attack:incomplete, source:trait | Adhesive (Object Form Only), False Appearance (Object Form Only), Grappler |
+| Mimic | attack:incomplete, source:trait | Adhesive (Object Form Only), Grappler |
 | Mummy Lord | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Night Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Oni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
