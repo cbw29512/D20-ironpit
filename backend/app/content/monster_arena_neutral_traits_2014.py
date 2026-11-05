@@ -107,6 +107,7 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             "Ethereal Sight": ("ethereal plane",),
             "Telepathic Bond": ("telepathically",),
             "Limited Telepathy": ("telepathically",),
+            "False Appearance (Object Form Only)": ("motionless", "indistinguishable", "ordinary object"),
         }
         if trait_name in additional_inert_clauses:
             heading = f"<strong>{trait_name}.</strong>"
