@@ -58,11 +58,11 @@ def test_modified_imp_form_effects_fail_closed(old, new):
         raise
 
 
-def test_unrelated_shapechanger_cannot_inherit_imp_exception():
+def test_other_supported_shapechanger_uses_the_same_semantic_proof():
     try:
         monster = next(row for row in load_monster_source_2014() if row.id == "mimic")
-        assert not verified_arena_inert_trait_2014(monster, "Shapechanger")
-        assert "Shapechanger" in unsupported_traits_2014(monster)
+        assert verified_arena_inert_trait_2014(monster, "Shapechanger")
+        assert "Shapechanger" not in unsupported_traits_2014(monster)
     except Exception:
-        logger.exception("Shapechanger source isolation failed")
+        logger.exception("Shared Shapechanger source proof failed")
         raise

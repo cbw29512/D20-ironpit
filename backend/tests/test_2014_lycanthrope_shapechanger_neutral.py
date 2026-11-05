@@ -73,13 +73,13 @@ def test_modified_lycanthrope_shapechanger_fails_closed(monster_id, old, new):
         raise
 
 
-def test_unrelated_shapechanger_does_not_inherit_lycanthrope_exception():
+def test_other_supported_shapechanger_uses_the_same_semantic_proof():
     try:
         monster = next(row for row in load_monster_source_2014() if row.id == "mimic")
-        assert not verified_arena_inert_trait_2014(monster, "Shapechanger")
-        assert "Shapechanger" in unsupported_traits_2014(monster)
+        assert verified_arena_inert_trait_2014(monster, "Shapechanger")
+        assert "Shapechanger" not in unsupported_traits_2014(monster)
     except Exception:
-        logger.exception("Lycanthrope Shapechanger isolation failed")
+        logger.exception("Shared Shapechanger source proof failed")
         raise
 
 

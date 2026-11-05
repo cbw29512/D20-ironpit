@@ -6,6 +6,12 @@
 - **Classification:** the shared source classifier now proves the complete breathing/jump-only clause instead of dispatching on card ID or name. Renaming preserves the result; changing printed jump distance or adding any callable combat surface fails closed.
 - **Accounting:** Frog remains intentionally arena-neutral and excluded from runnable source admission. This removes an identity-based classification branch but does not claim a newly playable monster, automated fight, or webpage certification. Current generated roster remains 262/327 admitted and 65 blocked until the next combat-active family lands.
 
+## Source-semantic Shapechanger classification — 2014 family
+
+- **Full source scan:** all 327 immutable cards scanned; 11 contain a printed Shapechanger clause. Ten complete clauses are arena-inert under locked Pit rules because the optional Action changes only appearance, size, AC or listed movement while preserving all other statistics. Vampire is the single explicit exception: its mist form changes actions, saves, space passage and damage immunity and still requires a combat-active form runtime.
+- **Universal source proof:** one identity-independent full-clause validator replaces the prior Imp, Quasit and lycanthrope card-ID branches and also binds Doppelganger, Mimic and Succubus/Incubus. Renamed cards retain classification; any changed printed value fails closed. No browser runtime is fabricated for an arena-inert optional Action.
+- **Coverage:** `docs/generated/SHAPECHANGER_CLASSIFICATION_2014.json` records 327 scanned, 11 applicable, 10 classified, 1 remaining and 1 explicit exception. The generated unresolved Shapechanger demand falls from four cards to Vampire alone and `source:trait` blockers fall from 54 to 53. Unrelated Actions, attacks and traits remain blocked; admission stays 262/327 and no automated fight or webpage certification is inferred.
+
 ## Form-qualified Charge / Pounce source headings — 2014 family
 
 - **Full source scan:** all 327 immutable cards scanned semantically; two applicable declarations: Wereboar `Charge (Boar or Hybrid Form Only)` and Weretiger `Pounce (Tiger or Hybrid Form Only)`.

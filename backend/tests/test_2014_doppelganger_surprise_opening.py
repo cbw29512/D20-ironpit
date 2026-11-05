@@ -33,7 +33,7 @@ def test_source_semantics_bind_ambusher_and_surprise_attack_without_identity_rou
     before = source.model_dump_json()
     assert opening_initiative_advantage_source_2014(source) == "Ambusher"
     assert opening_initiative_damage_source_2014(source) == "Surprise Attack"
-    assert unsupported_traits_2014(source) == ("Shapechanger",)
+    assert unsupported_traits_2014(source) == ()
     template = compile_combatant(adapt_monster_mechanics_2014(source))
     slam = template.weapon_attack
     assert [(row.trigger, row.source_name, row.dice_count, row.dice_size)

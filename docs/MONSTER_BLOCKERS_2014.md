@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 54 |
+| `source:trait` | 53 |
 | `mechanic:spellcasting` | 33 |
 | `source:extra-action` | 31 |
 | `attack:incomplete` | 15 |
@@ -30,11 +30,12 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**1** monsters have exactly one remaining blocker category.
+**2** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
 | `arena:neutral` | Frog | 1 |
+| `source:extra-action` | Doppelganger | 1 |
 
 ## Every blocked monster
 
@@ -54,7 +55,7 @@ the underlying ability is already implemented or trivial.
 | Darkmantle | attack:incomplete, source:extra-action | — |
 | Deva | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Djinni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
-| Doppelganger | source:extra-action, source:trait | Shapechanger |
+| Doppelganger | source:extra-action | — |
 | Drider | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Drow | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Druid | mechanic:spellcasting, source:trait | Spellcasting |
@@ -83,7 +84,7 @@ the underlying ability is already implemented or trivial.
 | Mage | mechanic:spellcasting, source:trait | Spellcasting |
 | Magma Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Magmin | attack:incomplete, source:trait | Ignited Illumination |
-| Mimic | attack:incomplete, source:trait | Shapechanger, Adhesive (Object Form Only), False Appearance (Object Form Only), Grappler |
+| Mimic | attack:incomplete, source:trait | Adhesive (Object Form Only), False Appearance (Object Form Only), Grappler |
 | Mummy Lord | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Night Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Oni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
@@ -99,7 +100,7 @@ the underlying ability is already implemented or trivial.
 | Spectator | source:extra-action, source:reaction | — |
 | Spirit Naga | mechanic:spellcasting, source:trait | Spellcasting |
 | Storm Giant | mechanic:spellcasting, source:trait | Innate Spellcasting |
-| Succubus/Incubus | source:extra-action, source:trait | Telepathic Bond, Shapechanger |
+| Succubus/Incubus | source:extra-action, source:trait | Telepathic Bond |
 | Tarrasque | mechanic:legendary, source:legendary, source:trait | Reflective Carapace |
 | Vampire | attack:incomplete, mechanic:legendary, source:extra-action, source:legendary, source:trait | Shapechanger, Misty Escape, Vampire Weaknesses |
 | Vampire Spawn | attack:incomplete, source:trait | Vampire Weaknesses |
