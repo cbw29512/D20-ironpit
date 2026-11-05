@@ -131,8 +131,6 @@ ARENA_NEUTRAL_INNATE_SPELLS_2014 = frozenset({
     "wind-walk",
     "wish",
     "zone-of-truth",
-    "})",
-})",
 })
 PIT_BANNED_INNATE_SPELLS_2014 = frozenset({
     "teleport",
