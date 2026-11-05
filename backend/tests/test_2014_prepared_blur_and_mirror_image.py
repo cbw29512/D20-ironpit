@@ -104,3 +104,12 @@ def test_fire_shield_placeholder_is_not_treated_as_implemented() -> None:
     except Exception:
         logger.exception("Fire Shield fail-closed regression failed.")
         raise
+
+def test_shield_reaction_does_not_use_defensive_spell_action() -> None:
+    try:
+        source = _synthetic_prepared("shield")
+        assert prepared_defensive_spell_actions_2014(source) == []
+        assert supports_prepared_spellcasting_2014(source) is False
+    except Exception:
+        logger.exception("Shield reaction fail-closed regression failed.")
+        raise
