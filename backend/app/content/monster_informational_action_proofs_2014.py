@@ -13,6 +13,9 @@ from app.content.monster_equipment_only_action_2014 import (
 )
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_sections_2014 import source_sections_2014
+from app.content.monster_read_thoughts_neutral_2014 import (
+    source_proven_noncombat_read_thoughts_2014,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +40,8 @@ def verified_nonactionable_action_2014(monster: SourceMonster2014, action_name: 
         if action_name not in monster.action_names:
             return False
         if verified_arena_inert_equipment_action_2014(monster, action_name):
+            return True
+        if source_proven_noncombat_read_thoughts_2014(monster, action_name):
             return True
         expected = _NONCOMBAT_ACTION_CLAUSES_2014.get(action_name)
         if expected is None:

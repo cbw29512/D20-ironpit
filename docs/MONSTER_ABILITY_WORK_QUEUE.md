@@ -1,5 +1,11 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Source-semantic Read Thoughts classification — 2014 family
+
+- **Full source scan:** all 327 immutable cards scanned by the Action's semantic outcome rather than card or Action name. Exactly one clause reads surface thoughts and grants only Wisdom (Insight) and Charisma (Deception, Intimidation, Persuasion) check Advantage: Doppelganger.
+- **Universal source proof:** one identity-independent full-clause validator classifies the Action as nonactionable in standard Pit combat because those social/information checks have no combat outcome. Renaming the card and Action retains classification; changing range, barrier values, or adding attack Advantage fails closed. The printed Action remains immutable and visible.
+- **Coverage:** `docs/generated/READ_THOUGHTS_CLASSIFICATION_2014.json` records 327 scanned, 1 applicable, 1 source-classified, 0 remaining and 0 exceptions. This clears Doppelganger's last generated blocker and advances source admission from 262/327 to 263/327. The classification adds no fight-local runtime mechanic; a separate browser regression verifies the newly admitted immutable card and deterministic 1v1/6v6 fights with its already-supported printed combat kit. No real-webpage certification is claimed.
+
 ## Source-semantic no-action arena-neutral classification — 2014 family
 
 - **Full source scan:** all 327 immutable cards scanned. Exactly one card has no attacks, Actions, Reactions, Legendary Actions, spellcasting or other callable combat surface and contains only the complete printed Amphibious plus Standing Leap payload: Frog.
