@@ -74,6 +74,16 @@ load("browser-catalog.js");
   assert.equal(visage.targetScope, "all-other-creatures");
   assert.equal(visage.requiresTargetToSeeSource, true);
   assert.equal(visage.failedSaveTimedEffect?.repeatSaveDisadvantageWhileSourceVisible, true);
+  // Python 2014 source-binding and browser export must agree on friendly-fire scope.
+  const vrock = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-vrock"];
+  assert.ok(vrock, "2014 Vrock remains source-admitted");
+  const screech = vrock.saving_throw_actions.find((action) => action.id === "stunning-screech");
+  assert.ok(screech, "The printed Stunning Screech Action must be exported");
+  assert.equal(screech.targetScope, "all-other-creatures");
+  assert.equal(screech.requiresTargetHearing, true);
+  assert.deepEqual(screech.excludedTargetCreatureTypes, ["demon"]);
+  assert.equal(screech.dc, 14);
+  assert.equal(screech.area?.radius_ft, 20);
   const skeleton = catalog.monsters.find((card) => card.runnable_template_id === "2014-skeleton");
   assert.equal(skeleton?.creature_type?.toLowerCase(), "undead");
   console.log("2014 catalog exposes six complete canonical 1-20 progressions including Life Cleric, with monster creature types preserved.");
