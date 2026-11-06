@@ -108,9 +108,9 @@
         && !concentrationGrantOnly(action)
         && (!action.concentration || !member.state.concentration)
         && !(action.resourceId && String(action.resourceId).startsWith("spell-slot-")
-          && setup && window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.verbalBlocked(member, setup))
+          && !action.expendSlotWithoutCast && setup && window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.verbalBlocked(member, setup))
         && !(action.resourceId && String(action.resourceId).startsWith("spell-slot-")
-          && turnKey && window.IRON_PIT_BROWSER_SPELLCASTING
+          && !action.expendSlotWithoutCast && turnKey && window.IRON_PIT_BROWSER_SPELLCASTING
           && !window.IRON_PIT_BROWSER_SPELLCASTING.slotSpellAvailable(member.state, turnKey))
         && friendlyAuraRelevant(member, action, setup)
         && hostileAuraRelevant(member, action, setup));
