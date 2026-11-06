@@ -16,6 +16,7 @@ from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.content.monster_legendary_resistance_2014 import legendary_resistance_trait_name_2014
 from app.content.monster_passive_grants_2014 import bound_passive_trait_names_2014, saving_throw_advantage_grants_2014
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
+from app.content.monster_slot_melee_weapon_bonus_2014 import bound_slot_melee_weapon_bonus_traits_2014
 from app.content.monster_reactive_2014 import supports_reaction_each_turn_2014
 from app.content.monster_heated_body_2014 import heated_body_retaliation_2014, corrosive_form_retaliation_2014
 from app.content.monster_range_trait_bindings_2014 import supports_poor_depth_perception_2014
@@ -176,6 +177,7 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(gaze.source_name)
         if supports_regeneration_2014(monster):
             bound.add("Regeneration")
+        bound.update(bound_slot_melee_weapon_bonus_traits_2014(monster))
         if supports_reaction_each_turn_2014(monster):
             bound.add("Reactive")
         resistance = legendary_resistance_trait_name_2014(monster)
