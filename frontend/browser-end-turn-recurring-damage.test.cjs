@@ -115,7 +115,7 @@ try {
   const fresh = fight();
   setDice([1]);
   const missed = Attack.resolveAttack(
-    1, 1, fresh.attacker, fresh.target, fresh.attack, 20,
+    1, 1, fresh.attacker, fresh.target, fresh.attack, 5,
     { spendAction: false, setup: fresh.setup },
   );
   assert.equal(missed.hit, false);
