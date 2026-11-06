@@ -19,7 +19,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
-from app.content.monster_ignited_illumination_2014 import source_proves_ignited_illumination_2014
+from app.content.monster_ignited_illumination_2014 import source_proves_light_only_2014
 from app.content.monster_informational_trait_proofs_2014 import verified_nonactionable_information_2014
 from app.content.monster_arena_inert_trait_proofs_2014 import verified_approved_inert_trait_2014
 from app.content.monster_shapechanger_neutral_2014 import source_proven_arena_inert_shapechanger_2014
@@ -45,8 +45,8 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             return True
         if trait_name == "Shapechanger":
             return source_proven_arena_inert_shapechanger_2014(monster)
-        if trait_name == "Ignited Illumination":
-            return source_proves_ignited_illumination_2014(monster)
+        if trait_name in {"Ignited Illumination", "Variable Illumination"}:
+            return source_proves_light_only_2014(monster, trait_name)
         source = monster.source_traits or ""
         # Context-driven exclusion: this trait only operates underwater, a
         # context absent from the standard Iron Pit. Keep the printed trait.
