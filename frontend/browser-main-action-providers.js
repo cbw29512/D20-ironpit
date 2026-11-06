@@ -170,7 +170,13 @@
       id: "standard-attack", category: C().STANDARD_ATTACK, rulesets: BOTH,
       discover: ({ member, setup, opportunityProfile }) => {
         if (opportunityProfile !== "actionSurgeAttack" && !E().available(member.state, "action")) return null;
-        const control = F().chooseLimitedBreakableControlAttack(member, setup);
+        const declared = (member.state.template.attacks || []).some((attack) =>
+          attack.kind === "ranged" && attack.resourceId && attack.fixedDamage === 0
+          && attack.controlEffect?.conditionId && attack.controlEffect.breakableObject);
+        const chooseControl = F().chooseLimitedBreakableControlAttack;
+        if (declared && typeof chooseControl !== "function")
+          throw new Error("Declared breakable control needs the shared formation chooser.");
+        const control = typeof chooseControl === "function" ? chooseControl(member, setup) : null;
         const choice = control || F().chooseStandardAttack(member, setup);
         return choice ? { payload: { targetId: choice.target.combatant_id, attackId: choice.attack.id, distance: choice.distance, delivery: choice.attack.kind,
           controlPriority: Boolean(control), expectedDamage: F().weaponMeanDamage(choice.attack) } } : null;
