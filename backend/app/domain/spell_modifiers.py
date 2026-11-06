@@ -26,6 +26,7 @@ class SpellModifierEffect(BaseModel):
     flat_bonus: int = 0
     multiplier: float = Field(default=1.0, gt=0.0, le=4.0)
     required_attack_ability: AbilityName | None = None
+    required_weapon_attack_kind: Literal["melee", "ranged"] | None = None
     minimum_value: int = Field(default=0, ge=0, le=100)
     dice_count: int = Field(default=0, ge=0, le=20)
     dice_size: int = Field(default=0, ge=0, le=100)
@@ -63,6 +64,8 @@ class SpellModifierEffect(BaseModel):
                 raise ValueError("Minimum AC effects require a positive minimum and no flat bonus.")
         elif self.minimum_value:
             raise ValueError(f"{self.kind} does not accept a minimum value.")
+        if self.required_weapon_attack_kind is not None and self.kind != "bonus-damage":
+            raise ValueError("Weapon-kind eligibility is only supported by bonus-damage effects.")
         if self.kind == "bonus-damage" and self.damage_type is None:
             raise ValueError("Bonus damage requires a damage type.")
         if self.kind != "bonus-damage" and self.damage_type is not None:
