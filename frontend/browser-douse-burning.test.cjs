@@ -49,22 +49,22 @@ try {
   }
   {
     const { victim, helper, setup } = scene();
-    assert.equal(D.choose(helper, setup), victim);
-    const result = P.resolve(1, 1, helper, setup, "1:helper");
+    assert.equal(D.choose(victim, setup), victim);
+    const result = P.resolve(1, 1, victim, setup, "1:burned");
     assert.ok(result.events.some(event => event.feature_id === "douse-fire"));
     assert.deepEqual(victim.state.timed_effects, []);
-    assert.equal(E.available(helper.state, "action"), false);
+    assert.equal(E.available(victim.state, "action"), false);
   }
   {
     const { victim, helper, setup } = scene();
     victim.state.timed_effects[0].allowed_removal_action_ids = [];
     assert.equal(D.choose(helper, setup), null);
-    assert.throws(() => D.resolve(1, 1, helper, victim), /no source-authorized/);
+    assert.throws(() => D.resolve(1, 1, helper, victim), /Helper dousing/);
     assert.equal(E.available(helper.state, "action"), true);
     victim.state.timed_effects[0].allowed_removal_action_ids = ["douse-fire"];
-    helper.state.action_available = false;
-    assert.equal(D.choose(helper, setup), null);
-    assert.throws(() => D.resolve(1, 1, helper, victim), /available Action/);
+    victim.state.action_available = false;
+    assert.equal(D.choose(victim, setup), null);
+    assert.throws(() => D.resolve(1, 1, victim, victim), /available Action/);
   }
   console.log("Universal browser douse action and support integration passed");
 } catch (error) {
