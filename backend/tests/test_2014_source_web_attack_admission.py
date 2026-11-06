@@ -163,3 +163,27 @@ def test_size_restricted_restrained_rider_uses_generic_hit_condition_gate():
     except Exception:
         logger.exception("Generic size restriction failed for an on-hit condition.")
         raise
+
+
+def test_real_python_web_hit_logs_restrained_without_fabricating_grapple():
+    try:
+        from app.combat.attacks import resolve_attack
+        from app.combat.dice import FixedDiceProvider
+
+        template = compile_combatant(adapt_basic_monster_2014(_card("giant-spider")))
+        web = next(a for a in [template.weapon_attack, *template.alternate_weapon_attacks]
+                   if a and a.weapon.name == "Web")
+        attacker = build_combatant_state(template)
+        defender = build_combatant_state(template)
+        event = resolve_attack(
+            1, 1, attacker, defender, web, 25, FixedDiceProvider([18]),
+            actor_event_id="web-source", target_event_id="web-target",
+        )
+        assert event.hit is True
+        assert "is Restrained." in event.description
+        assert "Restrained while Grappled" not in event.description
+        assert "grappled" not in defender.active_effect_ids
+        assert "restrained" in defender.active_effect_ids
+    except Exception:
+        logger.exception("Source-true Python Web attack event/logging failed.")
+        raise
