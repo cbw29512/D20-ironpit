@@ -92,6 +92,7 @@ jobs:
           pytest -q backend/tests/test_2014_chain_devil_grapple_periodic.py
           pytest -q backend/tests/test_2014_source_grapple_capacity.py
           pytest -q backend/tests/test_2014_inline_grapple_capacity.py
+          pytest -q backend/tests/test_2014_chuul_tentacles_source.py backend/tests/test_2014_chuul_tentacles_fight.py
           pytest -q backend/tests/test_2014_grapple_owner_save_source.py backend/tests/test_grapple_owned_save_targeting.py
           pytest -q backend/tests/test_2014_source_etherealness_inert.py
           PYTHONPATH=.:backend pytest -q backend/tests/test_2014_imp_invisibility.py
@@ -703,6 +704,7 @@ jobs:
           node frontend/browser-once-per-turn-hit-damage.test.cjs
           node frontend/browser-chain-grapple-periodic.test.cjs
           node frontend/browser-source-grapple-capacity.test.cjs
+          node frontend/browser-2014-chuul-combat.test.cjs
           node frontend/browser-otyugh-grapple-slam.test.cjs
           node frontend/browser-attachments.test.cjs
           node frontend/browser-attachment-turn.test.cjs
