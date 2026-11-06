@@ -63,6 +63,12 @@
       sequence, round, member, setup, turnKey, turnEvents: [...events], events: [],
     });
     events.push(...cleanup.events); sequence = cleanup.sequence;
+    if ((member.state.timed_effects || []).some((item) => item.end_of_turn_dice_count > 0)) {
+      const recurring = window.IRON_PIT_BROWSER_END_TURN_RECURRING_DAMAGE;
+      if (!recurring?.resolve) throw new Error("End-turn recurring damage runtime not loaded.");
+      const tick = recurring.resolve(sequence, round, member, setup);
+      events.push(...tick.events); sequence = tick.sequence;
+    }
     return { events, sequence };
   }
 
