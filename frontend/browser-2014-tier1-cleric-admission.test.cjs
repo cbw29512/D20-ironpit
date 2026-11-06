@@ -22,6 +22,27 @@ try {
   );
   assert.ok(hero, "A certified 2014 Fighter is required for real browser combat");
 
+  // Independently prove the source-backed monster can select a real cantrip
+  // with its generic spell engine after its three leveled slots are exhausted.
+  const State = window.IRON_PIT_BROWSER_STATE;
+  const Policy = window.IRON_PIT_BROWSER_SPELL_POLICY;
+  assert.ok(State && Policy, "The universal state/spell policy must be loaded");
+  const actor = {
+    combatant_id: "source-cleric", side: "monsters", position_ft: 0,
+    state: State.buildState(structuredClone(caster)),
+  };
+  const target = {
+    combatant_id: "fighter", side: "heroes", position_ft: 5,
+    state: State.buildState(structuredClone(hero)),
+  };
+  const scene = { heroes: [target], monsters: [actor] };
+  State.beginTurn(actor.state);
+  actor.state.resources["spell-slot-1"] = 0;
+  const spell = Policy.choose(actor, scene, "1:source-cleric");
+  assert.ok(spell, "The generic spell policy must find a legal spell Action");
+  assert.equal(spell.action.id, "sacred-flame");
+  assert.equal(spell.slotLevel, 0, "A cantrip must not spend a depleted spell slot");
+
   for (const count of [1, 3]) {
     const selection = {
       ruleset: "2014",
