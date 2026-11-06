@@ -9,6 +9,8 @@ from app.content.monster_arena_neutral_traits_2014 import verified_arena_inert_t
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014, unsupported_traits_2014
 from app.content.monster_equipment_only_traits_2014 import source_proves_equipment_only_trait_2014
 from app.content.monster_source_2014 import load_monster_source_2014
+from app.content.monster_source_zero_hp_finisher_2014 import source_proven_zero_hp_finisher_2014
+from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +23,7 @@ def _wisp():
         raise
 
 
-def test_equipment_only_ability_is_unique_and_other_combat_blocks_remain():
+def test_equipment_only_ability_is_unique_without_suppressing_other_combat():
     try:
         roster = load_monster_source_2014()
         matched = [
@@ -34,9 +36,12 @@ def test_equipment_only_ability_is_unique_and_other_combat_blocks_remain():
         old = source.model_dump_json()
         assert verified_arena_inert_trait_2014(source, "Ephemeral")
         assert "Ephemeral" not in unsupported_traits_2014(source)
-        assert "Consume Life" in unsupported_traits_2014(source)
-        assert "source:trait" in basic_blockers_2014(source)
-        assert "source:extra-action" in basic_blockers_2014(source)
+        # Ephemeral is arena-neutral, but source-proven Consume Life and
+        # Invisibility must be independently bound to actual combat.
+        assert unsupported_traits_2014(source) == ()
+        assert source_proven_zero_hp_finisher_2014(source)
+        assert source_invisibility_action_2014(source)
+        assert basic_blockers_2014(source) == ()
         assert source.model_dump_json() == old
         # Card identity is not an ability dispatch rule.
         renamed = source.model_copy(update={
