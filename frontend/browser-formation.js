@@ -158,9 +158,12 @@
   }
   function chooseLimitedBreakableControlAttack(member, setup) {
     try {
+      const profiles = attacks(member.state.template).filter((attack) =>
+        attack.kind === "ranged" && attack.resourceId && attack.fixedDamage === 0
+        && attack.controlEffect?.conditionId && attack.controlEffect.breakableObject);
+      if (!profiles.length) return null;
       const predicate = window.IRON_PIT_BROWSER_BREAKABLE_CONDITION_OBJECT?.preferFreshLimitedControl;
-      if (!predicate) throw new Error("Generic breakable-control policy runtime is missing.");
-      const profiles = attacks(member.state.template).filter((attack) => attack.kind === "ranged");
+      if (!predicate) throw new Error("Declared breakable control requires its shared policy runtime.");
       for (const target of targetOrder(member, setup)) {
         const eligible = profiles.filter((attack) => predicate(member, target, attack)).map((attack) => attack.id);
         if (eligible.length) {
