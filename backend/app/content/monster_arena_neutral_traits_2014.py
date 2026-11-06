@@ -25,6 +25,7 @@ from app.content.monster_equipment_only_traits_2014 import source_proves_equipme
 from app.content.monster_informational_trait_proofs_2014 import verified_nonactionable_information_2014
 from app.content.monster_arena_inert_trait_proofs_2014 import verified_approved_inert_trait_2014
 from app.content.monster_shapechanger_neutral_2014 import source_proven_arena_inert_shapechanger_2014
+from app.content.monster_amulet_dependency_2014 import source_proven_amulet_only_trait_2014
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +45,10 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
         if trait_name not in monster.trait_names:
             return False
         if verified_approved_inert_trait_2014(monster, trait_name):
+            return True
+        # An absent external control amulet makes these strictly proven effects
+        # impossible without touching ordinary attacks, defenses or regeneration.
+        if source_proven_amulet_only_trait_2014(monster, trait_name):
             return True
         # Equipment-only corrosion is excluded by the locked Pit policy.
         # Require the full printed trait, including continuation clauses.
