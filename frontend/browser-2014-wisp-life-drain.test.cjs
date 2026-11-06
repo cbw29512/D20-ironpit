@@ -113,6 +113,25 @@ try {
     assert.equal(window.IRON_PIT_BROWSER_SAVES.legalAction(life, victim, 5, source.combatant_id, source), true);
     assert.equal(window.IRON_PIT_BROWSER_SAVES.legalAction(life, victim, 10, source.combatant_id, source), false);
   }
+  {
+    // A normal Action may reduce a character from 1 HP to 0 HP before this
+    // checkpoint. The retained Bonus Action must then become selectable.
+    const { source, victim, scene } = setup();
+    victim.state.current_hp = 1;
+    assert.equal(window.IRON_PIT_BROWSER_BONUS_SAVE_ACTIONS.choose(source, scene), null);
+    source.state.action_available = false;
+    victim.state.current_hp = 0;
+    rolled([1, 2, 3, 4]);
+    const hooks = window.IRON_PIT_BROWSER_ABILITY_HOOKS;
+    const result = hooks.runPhase(hooks.PHASES.BONUS_ACTION_WINDOW, {
+      sequence: 3, round: 1, member: source, setup: scene,
+      turnKey: "1:wisp", bonusActionCheckpoint: "postAction", events: [],
+    });
+    assert.equal(result.events[0]?.feature_id, "consume-life");
+    assert.equal(victim.state.is_dead, true);
+    assert.equal(source.state.current_hp, 17);
+    assert.equal(source.state.bonus_action_available, false);
+  }
   console.log("2014 Will-o'-Wisp Consume Life and Invisibility browser parity passed.");
 } catch (error) {
   console.error("2014 Wisp browser parity failed:", error);
