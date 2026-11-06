@@ -30,6 +30,9 @@ def compile_attack_control(
             repeat_save_dc=effect.repeat_save_dc,
             repeat_save_timing=effect.repeat_save_timing,
             allowed_removal_action_ids=effect.allowed_removal_action_ids,
+            escape_check_ability=effect.escape_check_ability,
+            escape_check_dc=effect.escape_check_dc,
+            breakable_object=effect.breakable_object,
         )
     except Exception:
         logger.exception("Failed to compile attack control effect.")
