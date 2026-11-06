@@ -12,6 +12,7 @@ from app.combat.post_action_bonus_save import resolve_post_action_bonus_save
 from app.combat.condition_counter_policy import choose_condition_counter_spell
 from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
+from app.combat.douse_burning import choose_douse_target, resolve_douse_action
 from app.combat.effect_removal import choose_effect_removal_action, resolve_effect_removal
 from app.combat.d20_bonus_dice import resolve_d20_bonus_die_grant
 from app.combat.d20_bonus_die_support import choose_d20_bonus_die_action
