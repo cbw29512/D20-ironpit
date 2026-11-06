@@ -428,14 +428,13 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **61**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **60**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
 | Aberrant Ground | Gibbering Mouther | 1 |
 | Adhesive (Object Form Only) | Mimic | 1 |
 | Air Form | Air Elemental | 1 |
-| Bound | Shield Guardian | 1 |
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
 | Duergar Resilience | Duergar | 1 |
 | False Appearance (Object Form Only) | Mimic | 1 |
@@ -453,7 +452,6 @@ Blocked monsters: **61**. These are grouped by printed ability name so the roste
 | Ooze Cube | Gelatinous Cube | 1 |
 | Reflective Carapace | Tarrasque | 1 |
 | Shapechanger | Vampire | 1 |
-| Spell Storing | Shield Guardian | 1 |
 | Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
 | Telepathic Bond | Succubus/Incubus | 1 |
 | Transparent | Gelatinous Cube | 1 |
@@ -465,7 +463,7 @@ Blocked monsters: **61**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 50 |
+| `source:trait` | 49 |
 | `mechanic:spellcasting` | 33 |
 | `source:extra-action` | 27 |
 | `attack:incomplete` | 13 |
@@ -476,6 +474,6 @@ Blocked monsters: **61**. These are grouped by printed ability name so the roste
 | `multiattack:complex` | 3 |
 | `attack:damage-type` | 2 |
 | `mechanic:swallow` | 2 |
-| `source:reaction` | 2 |
 | `arena:neutral` | 1 |
 | `attack:none` | 1 |
+| `source:reaction` | 1 |

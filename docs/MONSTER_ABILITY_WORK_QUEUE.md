@@ -1,11 +1,17 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Magmin recurring fire — self-dousing integrated, helper range unresolved (PR #1181)
+## Shield Guardian — amulet-wearer-only source clauses (fresh PR pending)
+
+- **Scope:** source-complete 2014 Bound, Spell Storing and Shield reaction require an external wearer of the guardian's control amulet. The standard Pit has no such wearer/amulet action surface; these printed clauses remain visible but are strictly proven arena-neutral. The creature's ordinary Fist, Multiattack, Regeneration and defenses remain combat-active through existing shared primitives.
+- **Identity-neutral source proof:** classify complete printed trait/reaction paragraphs, not monster ID or printed ability name in the runtime. Scan all 327 immutable sources, reject any change or unheaded extra combat clause, and prove a renamed card has equivalent result. No source modifications or new gear mechanics.
+- **Generated branch evidence:** the artifact-sync workflow regenerated authoritative outputs and now reports **267/327 source-admitted, 60 blocked**, with Shield Guardian absent from the generated blocker list. This remains **provisional** until all five exact-head workflows pass and the PR merges. The prior CI run used unsynchronized artifacts and was not certification. Branch `feat/2014-amulet-dependency-source-neutral` replaces obsolete unmerged #1149; actual manual webpage fights remain separate from automated 1v1/3v3 browser regressions.
+
+## Magmin recurring fire — self-dousing merged, helper range unresolved (PR #1181)
 
 - **Combat-active source:** strict full 327-card scan identifies Magmin Touch as the single printed on-hit nonstacking, end-of-target-turn 1d6 Fire source. PR #1173 already merged hit/tick behavior.
 - **Shared source-owned schema:** immutable `OnHitRecurringDamage.removal_action_ids` binds printed Douse Action; the Python/browser hit path stores permissions in a fight-local `TimedEffect`. The generic Douse resolver spends one ordinary Action and uses the existing condition-lifecycle removal primitive. The printed Touch source label is retained in battle logs.
 - **No invented helper range:** the printed source says another creature may use an Action but provides no targeting reach. The affected creature can extinguish its **own** burning; helpers fail closed until their range is resolved. Neither infinite reach nor a guessed 5-ft rule is allowed.
-- **Status:** branch PR #1181 tests self-douse, end-turn damage prevention, permission rejection, Action exhaustion and browser/Python parity; exact-final-head CI/merge pending. **Magmin remains `attack:incomplete` and is NOT source-admitted or webpage-fight certified**. Never hand-edit generated report to hide the helper blocker. Stale draft PR #1178 is superseded by #1181 after certification.
+- **Status:** all five exact-head workflows passed for PR #1181 head `e6df4f5271ac752403bcfa0b5f6794512eee2088`; merged to main `29ea172ae66f4fdf26b0f600bd4b2a700ed62b36`. Draft #1178 was closed as superseded. **Magmin remains `attack:incomplete` and is NOT source-admitted or webpage-fight certified** until helper-target geometry is resolved. Never hand-edit generated blocker reports.
 
 ## Chuul — merged universal Pincer, Tentacles and conditional Multiattack (PRs #1179, #1180)
 

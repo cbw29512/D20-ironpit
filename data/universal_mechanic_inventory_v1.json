@@ -5864,7 +5864,7 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 61,
+    "blocked_monster_count": 60,
     "blocker_categories": {
       "arena:neutral": 1,
       "attack:complex": 4,
@@ -5878,8 +5878,8 @@
       "multiattack:complex": 3,
       "source:extra-action": 27,
       "source:legendary": 9,
-      "source:reaction": 2,
-      "source:trait": 50
+      "source:reaction": 1,
+      "source:trait": 49
     },
     "unresolved_printed_abilities": [
       {
@@ -5902,13 +5902,6 @@
           "Air Elemental"
         ],
         "printed_name": "Air Form"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Shield Guardian"
-        ],
-        "printed_name": "Bound"
       },
       {
         "demand_count": 2,
@@ -6048,13 +6041,6 @@
           "Vampire"
         ],
         "printed_name": "Shapechanger"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Shield Guardian"
-        ],
-        "printed_name": "Spell Storing"
       },
       {
         "demand_count": 13,

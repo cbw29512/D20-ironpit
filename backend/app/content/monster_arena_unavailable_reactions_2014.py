@@ -5,6 +5,7 @@ import re
 
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_audible_alert_2014 import arena_inert_audible_alert_reactions_2014
+from app.content.monster_amulet_dependency_2014 import source_proven_amulet_only_reactions_2014
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,7 @@ def arena_unavailable_reaction_names_2014(monster: SourceMonster2014) -> frozens
     try:
         source = monster.source_reactions or ""
         inert = set(arena_inert_audible_alert_reactions_2014(monster))
+        inert.update(source_proven_amulet_only_reactions_2014(monster))
         if _SPLIT_OFFSPRING.search(source) and _SPLIT_TRIGGER.search(source):
             inert.update(
                 name for name in monster.reaction_names
