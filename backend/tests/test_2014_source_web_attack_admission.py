@@ -135,3 +135,27 @@ def test_breakable_web_condition_uses_fresh_state_and_existing_condition_cleanup
     except Exception:
         logger.exception("Shared breakable condition lifecycle failed.")
         raise
+
+
+def test_size_restricted_restrained_rider_uses_generic_hit_condition_gate():
+    """Ordinary attack mechanics may still hit; printed oversized targets get no rider."""
+    try:
+        from app.combat.conditions import apply_hit_conditions
+        from app.domain.size import CreatureSize
+
+        card = _card("ettercap")
+        template = compile_combatant(adapt_basic_monster_2014(card))
+        web = next(a for a in [template.weapon_attack, *template.alternate_weapon_attacks]
+                   if a and a.weapon.name == "Web")
+        huge = build_combatant_state(template.model_copy(update={"size": CreatureSize.HUGE}))
+        applied = apply_hit_conditions(web, huge, "source", round_number=1, source_template=template)
+        assert applied == []
+        assert not huge.timed_effects
+        assert "restrained" not in huge.active_effect_ids
+        medium = build_combatant_state(template)
+        assert "restrained" in apply_hit_conditions(
+            web, medium, "source", round_number=1, source_template=template,
+        )
+    except Exception:
+        logger.exception("Generic size restriction failed for an on-hit condition.")
+        raise
