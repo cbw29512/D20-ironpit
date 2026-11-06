@@ -50,6 +50,7 @@ def test_source_complete_ranged_web_compiles_without_special_resolver(monster_id
         )
         assert (attack.weapon.normal_range_ft, attack.weapon.long_range_ft) == (30, 60)
         assert attack.resource_id == "web"
+        assert (attack.target_max_size.value if attack.target_max_size else None) == max_size
         assert attack.control_effect.condition_id == "restrained"
         assert attack.control_effect.escape_check_dc == dc
         assert attack.control_effect.breakable_object.hit_points == 5
@@ -148,6 +149,9 @@ def test_size_restricted_restrained_rider_uses_generic_hit_condition_gate():
         web = next(a for a in [template.weapon_attack, *template.alternate_weapon_attacks]
                    if a and a.weapon.name == "Web")
         huge = build_combatant_state(template.model_copy(update={"size": CreatureSize.HUGE}))
+        from app.combat.attack_legality import attack_allowed_against
+        assert not attack_allowed_against(web, "source", huge)
+        assert attack_allowed_against(web, "source", build_combatant_state(template))
         applied = apply_hit_conditions(web, huge, "source", round_number=1, source_template=template)
         assert applied == []
         assert not huge.timed_effects
