@@ -88,6 +88,7 @@ from app.domain.capabilities import CombatantDefinition
 from app.domain.capability_attacks import AttackCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
 from app.content.monster_multiattack_variants_2014 import attack_unavailable_reason_2014
+from app.content.monster_source_end_turn_recurring_2014 import source_end_turn_recurring_damage_2014
 from app.domain.character_builds import AbilityScores
 from app.domain.reactions import ParryReaction
 from app.domain.size import CreatureSize
@@ -107,6 +108,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
     })
     charge_source = corrected_charge_profile_2014(monster, attack)
     normal_range_ft, long_range_ft = corrected_attack_range_2014(monster, attack)
+    recurring_damage = source_end_turn_recurring_damage_2014(monster, attack)
     kwargs = {
         "id": attack_id_2014(monster, attack.id),
         "weapon_id": attack_id_2014(monster, attack.id),
@@ -129,6 +131,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "grapple_target_policy": attack.grapple_target_policy,
         "unavailable_reason": attack_unavailable_reason_2014(monster, attack),
         "damage_source_qualifiers": weapon_damage_source_qualifiers_2014(monster),
+        "on_hit_recurring_damage": recurring_damage,
     }
     if printed_attack.damage_dice_count:
         kwargs["damage"] = DiceSpec(
