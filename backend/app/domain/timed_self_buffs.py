@@ -49,6 +49,7 @@ class TimedSelfBuffAction(BaseModel):
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=200)
     expend_slot_without_cast: bool = False
+    opening_eligible: bool = True
     duration_rounds: int | None = Field(default=None, ge=1, le=600)
     condition_ids: list[ConditionName] = Field(default_factory=list)
     magical_effect: bool = False
