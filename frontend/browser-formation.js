@@ -76,6 +76,7 @@
   function targetAllowed(member, target, attack, setup = null) {
     try {
       if (attack.unavailableReason != null || target.state.swallowed != null) return false;
+      if (attack.targetMaxSize && !S().sizeAtMost(target, attack.targetMaxSize)) return false;
       const restrictedFollowUps = attacks(member.state.template).map((item) => item.charge)
         .filter((charge) => charge?.followUpAttackId === attack.id && charge.followUpRequiredTargetCondition);
       if (restrictedFollowUps.length && !restrictedFollowUps.some((charge) =>
