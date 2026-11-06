@@ -1,5 +1,13 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Chuul complete fight — Tentacles and conditional Multiattack (PR pending)
+
+- **Pincer is merged:** PR #1179 (`f7490d41`) wired the 10-foot +6/2d6+4 Bludgeoning hit, Grappled escape DC 14, Large-or-smaller size limit and maximum two held creatures through shared Python/browser grapple logic.
+- **Tentacles source:** one creature grappled by the source makes a DC 13 Constitution save. Failure applies *Poisoned* for 1 minute and *Paralyzed* only while that poison is active; one Constitution repeat save at the end of each of the target's turns ends both together. These bind to the existing owner-grapple save filter, grouped timed effects, condition immunity, expiry and repeat-save primitives; no monster-specific runtime.
+- **Multiattack:** exactly two ordered Pincer attacks, then if a creature is actually grappled at that instant, at most one Tentacles save. Source-owned complete Multiattack clause and exact `multiattack_binding` must agree; the generic Python/browser sequence already rechecks grapple ownership live after each hit.
+- **Certification:** full 327-card source scan, mutation and renaming proof, Python compiled/live sequence and linked-condition repeat-save test, browser actual combat test. Generator-owned admission reports must sync and five exact-head workflows must pass before merge. Do not mark completed while PR is open; no production Netlify deployment.
+
+
 ## Chuul Pincer — shared inline grapple capacity (PR #1179; exact-head CI pending)
 
 - **2014 source:** Pincer +6 melee at 10 ft., 2d6+4 Bludgeoning. On a hit, a Large-or-smaller creature is Grappled (escape DC 14) only while the attacker has fewer than two other creatures grappled. Both size and capacity come from the complete printed clause, not a creature-name handler.
@@ -270,7 +278,7 @@ Checked against main `72fe95258db3793c5aba4d86ba5487217c03da51`, including close
 | Bearded Devil | `attack:incomplete`, `source:trait` | Steadfast | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
 | Behir | `mechanic:recharge`, `source:extra-action` | — | Bind the card's recharge trigger/dice and resource to a universal Action or save effect. |
 | Bulette | `source:extra-action` | — | **Updated Chris rule 2026-10-19:** Deadly Leap is **opener only** when the Bulette wins round-one initiative (strictly ahead of every enemy). It replaces the first Bite Action, with no modeled jump/movement prerequisite and no use after that opening. If initiative is lost/tied, or in all subsequent turns, use ordinary Bite melee. Area: 2×2; each affected other creature (including allies, excluding the Bulette itself) chooses STR/DEX DC16; 3d6+4 Bludgeoning + 3d6+4 Slashing; half each on success, Prone on failure, no push. Preserve printed source text; reusable opening-only area/save primitives, never name dispatch. PR #966 pending final tests/merge. |
-| Chuul | `multiattack:complex`, `source:extra-action` (Pincer `attack:incomplete` resolved on branch, pending CI) | — | Pincer now compiles its full source-owned +6/10-ft/2d6+4 hit, Large-or-smaller cap-two Grapple via existing Python/browser engine. Next wire Tentacles DC13 Constitution Poisoned+Paralyzed and conditional third Multiattack slot. |
+| Chuul | `multiattack:complex`, `source:extra-action` (candidate resolution in active branch) | — | Pincer fully merged #1179. Tentacles DC13 Constitution grouped Poisoned/Paralyzed and exact conditional third Multiattack slot now bound to existing universal engine; source mutants must fail closed. Exact-head CI/merge pending; do not mark cleared yet. |
 | Clay Golem | `mechanic:recharge`, `source:extra-action` | — | Bind the card's recharge trigger/dice and resource to a universal Action or save effect. |
 | Cloaker | `attack:incomplete`, `source:extra-action`, `source:trait` | Damage Transfer, Light Sensitivity | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
 | Cloud Giant | `mechanic:spellcasting`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
