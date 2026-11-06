@@ -15,6 +15,7 @@ from app.content.monsters import build_commoner
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 EXPECTED = {
+    "chuul": (2, False),
     "giant-crab": (2, False),
     "giant-scorpion": (2, False),
     "glabrezu": (2, False),
@@ -107,3 +108,38 @@ def test_generic_two_target_grapple_and_release_reset_for_fresh_target():
         attack, targets[2].state, source.combatant_id, setup=setup,
     ) == ["grappled", "restrained"]
     assert source_grapple_count(setup, source.combatant_id) == 2
+
+
+def test_inline_size_and_capacity_are_source_proven_and_identity_neutral():
+    import logging
+    logger = logging.getLogger(__name__)
+    try:
+        card = next(c for c in load_monster_source_2014() if c.id == "chuul")
+        source_attack = card.attacks[0]
+        original = card.model_dump_json()
+        bound = source_completed_limited_grapple_2014(card, source_attack)
+        assert not source_attack.source_complete and bound.source_complete
+        assert bound.control_effect["max_target_size"] == "large"
+        assert bound.control_effect["max_active_grapples"] == 2
+        assert bound.control_effect["grapple_escape_dc"] == 14
+        assert card.model_dump_json() == original
+        renamed = card.model_copy(update={"id": "homebrew-holding-beast",
+                                          "name": "Holding Beast"})
+        assert source_completed_limited_grapple_2014(
+            renamed, source_attack
+        ).control_effect == bound.control_effect
+        for prior, changed_text in [
+            ("Large or smaller", "Huge or smaller"),
+            ("two other creatures", "three other creatures"),
+            ("escape DC 14", "escape DC 16"),
+            ("other creatures grappled.", "other creatures grappled and restrained."),
+        ]:
+            changed_card = card.model_copy(update={
+                "source_actions": card.source_actions.replace(prior, changed_text),
+            })
+            assert not source_completed_limited_grapple_2014(
+                changed_card, source_attack
+            ).source_complete
+    except Exception:
+        logger.exception("Inline universal grapple capacity source proof failed")
+        raise
