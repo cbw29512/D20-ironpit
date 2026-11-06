@@ -40,7 +40,7 @@ def test_source_proven_families_and_admission():
         assert action.target_scope == "all-other-creatures"
         assert action.magical_effect and action.requires_target_sight
         assert (action.dc, action.range_ft, action.heal_source_on_kill_dice_count,
-                action.heal_source_on_kill_dice_size) == (10, 20, 3, 6)
+                action.heal_source_on_kill_dice_size) == (10, 5, 3, 6)
         invisibility, = source_invisibility_action_2014(card)
         assert invisibility.id == "invisibility"
         assert invisibility.condition_ids == ["invisible"]
@@ -60,7 +60,7 @@ def test_source_proven_families_and_admission():
 
 @pytest.mark.parametrize("old,new", [
     ("As a bonus action", "As an action"),
-    ("within 20 feet", "within line of sight"),
+    ("within 5 feet", "within line of sight"),
     ("has 0 hit points and is still alive", "has 1 hit point"),
     ("DC 10 Constitution", "DC 20 Wisdom"),
     ("or die.", "or become frightened."),
@@ -84,16 +84,16 @@ def test_altered_printed_finisher_does_not_bind(old: str, new: str):
 def test_printed_range_is_compiled_from_source_not_monster_identity():
     try:
         source = _wisp()
-        assert "within 20 feet" in source.source_traits
+        assert "within 5 feet" in source.source_traits
         # Synthetic homebrew demonstrates universal mechanics consume card values.
         alternate = source.model_copy(update={
             "id": "renamed-source",
-            "source_traits": source.source_traits.replace("within 20 feet", "within 5 feet"),
+            "source_traits": source.source_traits.replace("within 5 feet", "within 20 feet"),
         })
         action, = source_proven_zero_hp_finisher_2014(alternate)
-        assert action.range_ft == 5
+        assert action.range_ft == 20
         actual, = source_proven_zero_hp_finisher_2014(source)
-        assert actual.range_ft == 20
+        assert actual.range_ft == 5
     except Exception:
         logger.exception("Printed zero-HP finisher range was hard-coded.")
         raise
