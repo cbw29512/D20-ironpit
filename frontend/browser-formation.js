@@ -156,6 +156,24 @@
   function meleeCanLandNow(member, setup) {
     return chooseStandardAttack(member, setup)?.attack.kind === "melee";
   }
+  function chooseLimitedBreakableControlAttack(member, setup) {
+    try {
+      const predicate = window.IRON_PIT_BROWSER_BREAKABLE_CONDITION_OBJECT?.preferFreshLimitedControl;
+      if (!predicate) throw new Error("Generic breakable-control policy runtime is missing.");
+      const profiles = attacks(member.state.template).filter((attack) => attack.kind === "ranged");
+      for (const target of targetOrder(member, setup)) {
+        const eligible = profiles.filter((attack) => predicate(member, target, attack)).map((attack) => attack.id);
+        if (eligible.length) {
+          const choice = chooseAttack(member, setup, eligible, "ranged", false, target.combatant_id);
+          if (choice) return choice;
+        }
+      }
+      return null;
+    } catch (error) {
+      console.error("Generic breakable-control attack choice failed.", { combatant: member.combatant_id, error });
+      throw error;
+    }
+  }
   function chooseStandardAttack(member, setup) {
     const ids = attacks(member.state.template).map((attack) => attack.id);
     return chooseAttack(member, setup, ids, "melee") || chooseAttack(member, setup, ids, "ranged");
@@ -186,5 +204,6 @@
     activeTargetPolicy, targetOrder, alliedFrontlineActive, targetAllowed, automaticHit,
     attackDistance, saveDistance, weaponMeanDamage, chooseAttack, chooseStandardAttack, meleeCanLandNow,
     flexibleSlotHasBoth, flexibleAttackMode, chooseSlotAttack, backlineHoldsPosition,
+    chooseLimitedBreakableControlAttack,
   };
 })();
