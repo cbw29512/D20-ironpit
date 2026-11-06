@@ -1,5 +1,19 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Will-o'-Wisp — generic zero-HP Bonus Action finisher + Invisible exit (PR #1177, certification pending)
+
+- **Printed source:** Consume Life is a Bonus Action, one **visible living target at 0 HP within 5 feet**, DC 10 Constitution save; failure causes terminal death, then if actual death occurred owner heals **3d6 HP**. No healing on success, prevented death, or invalid target. Target legality applies the same generic save range, visibility, saving throws, effects and instant-death prevention used elsewhere.
+- **Shared schema / Python / browser:** `requires_target_zero_hp_alive`, `instant_death_on_failed_save`, `heal_source_on_kill_dice_count/size` feed universal Bonus Action selection, saving-throw resolution, terminal death, conditional healing, and logs; the same generic Bonus Action save selector runs before and after a main Action so an attack that newly downs a target can trigger a still-available legal finisher; no creature-name runtime branches. Printed Invisibility is an Action/Concentration self-buff ending on an attack, use of declared `consume-life`, or concentration loss. The printed light becomes Invisible with its owner. Its independent equipment-only Ephemeral rule uses exact source proof and the locked no-gear rule.
+- **Full 2014 roster proof:** full clauses from all 327 immutable source cards, mutation rejection and renamed-card equivalence; independent browser and Python live save/HP/concentration/turn-economy tests. Generator-owned artifacts must be synchronized by workflow, not manually edited. Do not count as finished or source-admitted until exact-head gates pass, the PR merges, and generated status is refreshed; actual webpage fights remain separately unverified.
+
+
+## Will-o'-Wisp Ephemeral — 2014 equipment-only source proof (staged)
+
+- **Semantics:** printed Ephemeral only says the creature cannot wear/carry items, with no combat state effect in the fixed-loadout arena. No equipment inventory/durability mechanics are added and no other Will-o'-Wisp rule is suppressed.
+- **Source proof:** one exact complete-clause verifier, including unheaded continuations, runs over all 327 immutable 2014 cards. The sole matching card is Will-o'-Wisp; renamed identical source is accepted, while changed source or appended damage/conditions fail closed. `Consume Life` and attack/`consume-life`-ending `Invisibility` are now source-bound separately in PR #1177; this historical Ephemeral-only isolation is superseded.
+- **Status:** historical equipment-only proof carried into current-main PR #1177 after #1175 merged. PR #1176 was closed as superseded. Final merge still requires all five exact-head workflow gates. No webpage battle or production Netlify publish.
+
+
 ## Equipment corrosion/destruction universally omitted — 2026-11-05 user decision
 
 - **Active family:** 2014 equipment-only effects, branch `feat/2014-equipment-corrosion-arena-neutral-family`. Full pinned 327-card source scan identifies exactly three relevant printed sources: Black Pudding, Gray Ooze and Rust Monster. No equipment wear, breakage, destruction, corrosion penalties, or material/durability inventory in Python or browser fights. Same product policy applies to 2024 after separate source proof.
@@ -43,7 +57,7 @@
 ## Generic source-owned Invisible self-buff exits — 2014 family
 
 - **Implementation branch:** `feat/2014-source-invisibility-expiry-family` (ACTIVE). Same existing Invisible/concentration buff in Python/browser; printed source decides attack exit and optional spell-cast exit. No monster-name runtime decision or new condition.
-- **Full 327-card source scan:** two fully supported source clauses: Sprite (attack or spell cast) and Imp (attack only). Quasit (using Scare) and Will-o'-Wisp (using Consume Life) remain unbound pending an exact generic named-action exit primitive; their clauses must never be weakened to spell casting.
+- **Full 327-card source scan:** two fully supported source clauses: Sprite (attack or spell cast) and Imp (attack only). Quasit (using Scare) was subsequently wired via named-action expiry; Will-o'-Wisp's Consume Life is now bound through that same generic exit on PR #1177. This paragraph records the earlier historical stage, not an active blocker.
 - **Proof:** positive/negative source-mutating cases, renamed source, actual compiled Imp state and browser non-spell expiry regression. Generator-owned blocker and inventory artifacts synchronized on branch: Imp's `source:extra-action` is cleared; independent `source:trait` Shapechanger remains. **254/327** source-admitted and **73** blocked. Full exact-head CI still required; production locked.
 
 ## Source-only Etherealness movement — 2014 cross-roster family
@@ -337,7 +351,7 @@ Checked against main `72fe95258db3793c5aba4d86ba5487217c03da51`, including close
 | Wererat | `multiattack:complex`, `source:extra-action`, `source:trait` | Shapechanger | Compile printed conditional Multiattack selection/slots into existing action sequence grammar. |
 | Weretiger | `multiattack:complex`, `source:extra-action`, `source:trait` | Shapechanger, Pounce (Tiger or Hybrid Form Only) | Compile printed conditional Multiattack selection/slots into existing action sequence grammar. |
 | Werewolf | `source:extra-action`, `source:trait` | Shapechanger | Compile printed Action into universal attack/save/AoE/control/resource action; verify AI selection and turn timing. |
-| Will-o'-Wisp | `source:extra-action`, `source:trait` | Consume Life, Ephemeral | Full-clause Variable Illumination classified lighting-only under standard Pit rules, with mutation tests. Consume Life, Ephemeral and Invisibility action remain independently blocked; verify their combat effects separately. |
+| Will-o'-Wisp | formerly `source:extra-action`, `source:trait`; source-admitted on PR #1177 | Consume Life, Invisibility, Ephemeral | Consume Life shared living-zero-HP Bonus Action **5-ft** DC10 Constitution save/death/3d6 heal, and Invisibility Action/Concentration/named exit are code-bound in Python/browser. Ephemeral is source-proven equipment-only; Variable Illumination lighting-only. Await exact-head Python/browser CI and merge; no webpage-tested claim. |
 
 ### Shared blocker-family fix reference (applies across rows)
 

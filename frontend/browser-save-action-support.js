@@ -10,6 +10,8 @@
       const S = window.IRON_PIT_BROWSER_STATE;
       const timed = window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS;
       const shared = window.IRON_PIT_BROWSER_SAVE_IMMUNITY;
+      if (action.requiresTargetZeroHpAlive
+        && !(target.state.current_hp === 0 && target.state.is_alive && !target.state.is_dead)) return false;
       if (action.requiredTargetCondition
         && !Q.has(target.state, action.requiredTargetCondition)) return false;
       if (action.requiresTargetGrappledBySource) {

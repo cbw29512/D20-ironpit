@@ -428,7 +428,7 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **63**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **62**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
@@ -436,10 +436,8 @@ Blocked monsters: **63**. These are grouped by printed ability name so the roste
 | Adhesive (Object Form Only) | Mimic | 1 |
 | Air Form | Air Elemental | 1 |
 | Bound | Shield Guardian | 1 |
-| Consume Life | Will-o'-Wisp | 1 |
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
 | Duergar Resilience | Duergar | 1 |
-| Ephemeral | Will-o'-Wisp | 1 |
 | False Appearance (Object Form Only) | Mimic | 1 |
 | Fire Aura | Balor | 1 |
 | Fire Form | Fire Elemental | 1 |
@@ -467,9 +465,9 @@ Blocked monsters: **63**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 51 |
+| `source:trait` | 50 |
 | `mechanic:spellcasting` | 33 |
-| `source:extra-action` | 29 |
+| `source:extra-action` | 28 |
 | `attack:incomplete` | 14 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |

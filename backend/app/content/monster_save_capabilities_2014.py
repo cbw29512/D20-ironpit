@@ -5,6 +5,7 @@ import logging
 from app.content.monster_arena_action_policy_2014 import action_label_2014, arena_unavailable_recharge_ids_2014
 from app.content.monster_save_control_2014 import compile_failed_save_control_2014
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_source_zero_hp_finisher_2014 import source_proven_zero_hp_finisher_2014
 from app.content.monster_source_scare_2014 import source_scare_2014
 from app.content.monster_source_save_outcome_bindings_2014 import source_proven_asymmetric_saves_2014
 from app.content.monster_source_visual_save_bindings_2014 import source_proven_visual_saves_2014
@@ -79,6 +80,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
                 animation=str(action.get("animation", "save-effect")),
             ))
         result.extend(source_scare_2014(monster))
+        result.extend(source_proven_zero_hp_finisher_2014(monster))
         result.extend(source_proven_asymmetric_saves_2014(monster))
         result.extend(source_proven_visual_saves_2014(monster))
         result.extend(source_proven_conditioned_saves_2014(monster))

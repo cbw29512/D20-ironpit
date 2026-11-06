@@ -144,6 +144,12 @@ class SavingThrowAction(BaseModel):
     damage_type: DamageTypeName | None = None
     success_damage: Literal["none", "half"] = "none"
     failure_sets_zero_hp: bool = Field(default=False, exclude_if=lambda value: not value)
+    # Generic typed finisher: a living 0-HP creature saves or dies; healing
+    # occurs only if that death actually completes (prevention may apply).
+    requires_target_zero_hp_alive: bool = False
+    instant_death_on_failed_save: bool = False
+    heal_source_on_kill_dice_count: int = Field(default=0, ge=0, le=40)
+    heal_source_on_kill_dice_size: int = Field(default=6, ge=2, le=100)
     damage_only_on_success: bool = Field(default=False, exclude_if=lambda value: not value)
     damage_components: list[SaveDamageComponent] = Field(default_factory=list)
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
@@ -187,6 +193,13 @@ class SavingThrowAction(BaseModel):
             raise ValueError("Success-only damage requires printed typed damage.")
         if self.failure_sets_zero_hp and has_damage and not self.damage_only_on_success:
             raise ValueError("Direct zero-HP failure cannot also apply normal failure damage.")
+        if self.instant_death_on_failed_save:
+            if not self.requires_target_zero_hp_alive or not self.heal_source_on_kill_dice_count:
+                raise ValueError("Instant-death finisher requires a living zero-HP target and healing dice.")
+            if has_damage or self.failure_sets_zero_hp:
+                raise ValueError("Instant-death finisher cannot deal ordinary damage.")
+        elif self.requires_target_zero_hp_alive or self.heal_source_on_kill_dice_count:
+            raise ValueError("Incomplete zero-HP instant-death finisher contract.")
         target_filters = [
             *self.required_target_creature_types,
             *self.prohibited_target_source_effect_ids,

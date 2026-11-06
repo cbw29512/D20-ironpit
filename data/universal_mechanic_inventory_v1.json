@@ -5864,7 +5864,7 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 63,
+    "blocked_monster_count": 62,
     "blocker_categories": {
       "arena:neutral": 1,
       "attack:complex": 4,
@@ -5876,10 +5876,10 @@
       "mechanic:spellcasting": 33,
       "mechanic:swallow": 2,
       "multiattack:complex": 4,
-      "source:extra-action": 29,
+      "source:extra-action": 28,
       "source:legendary": 9,
       "source:reaction": 2,
-      "source:trait": 51
+      "source:trait": 50
     },
     "unresolved_printed_abilities": [
       {
@@ -5911,13 +5911,6 @@
         "printed_name": "Bound"
       },
       {
-        "demand_count": 1,
-        "monsters": [
-          "Will-o'-Wisp"
-        ],
-        "printed_name": "Consume Life"
-      },
-      {
         "demand_count": 2,
         "monsters": [
           "Cloaker",
@@ -5931,13 +5924,6 @@
           "Duergar"
         ],
         "printed_name": "Duergar Resilience"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Will-o'-Wisp"
-        ],
-        "printed_name": "Ephemeral"
       },
       {
         "demand_count": 1,

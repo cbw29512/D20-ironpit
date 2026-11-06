@@ -37,7 +37,16 @@
           }
           continue;
         }
-        for (const target of F().targetOrder(member, setup)) {
+        const eligibleTargets = action.requiresTargetZeroHpAlive
+          ? [...setup.heroes, ...setup.monsters]
+            .filter((target) => target.combatant_id !== member.combatant_id
+              && (action.targetScope === "all-other-creatures" || target.side !== member.side)
+              && target.state.current_hp === 0 && target.state.is_alive && !target.state.is_dead)
+            .sort((left, right) => (left.side === member.side) - (right.side === member.side)
+              || F().saveDistance(member, left, action.range) - F().saveDistance(member, right, action.range)
+              || left.combatant_id.localeCompare(right.combatant_id))
+          : F().targetOrder(member, setup);
+        for (const target of eligibleTargets) {
           const distance = F().saveDistance(member, target, action.range);
           if (V().legalAction(action, target, distance, member.combatant_id, member)) {
             candidates.push({ action, placement: null, target, distance });
@@ -102,7 +111,13 @@
         id: "bonus-save-action",
         priority: 40,
         rulesets: ["2014", "2024"],
-        appliesTo: (_member, ctx) => ctx.bonusActionCheckpoint === "beforeEscape",
+        // The Action can make a zero-HP finisher newly eligible; never
+        // spend a post-Action Bonus Action from an incapacitated actor.
+        appliesTo: (member, ctx) => ctx.bonusActionCheckpoint === "beforeEscape"
+          || (ctx.bonusActionCheckpoint === "postAction"
+            && member.state.is_alive && !member.state.is_dead
+            && member.state.current_hp > 0
+            && !window.IRON_PIT_BROWSER_CONDITION_RULES?.incapacitated(member.state)),
         resolve: ({ sequence, round, member, setup }) => {
           const result = resolve(sequence, round, member, setup);
           return result ? { ...result, claimed: true } : null;
