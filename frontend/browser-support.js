@@ -47,6 +47,8 @@
     if (removal) {
       events.push(C().resolve(sequence++, round, member, removal.target, removal.action, removal.conditions, turnKey));
     }
+    const douseTarget = D()?.choose(member, setup);
+    if (douseTarget) events.push(D().resolve(sequence++, round, member, douseTarget));
     bonusBefore = member.state.bonus_action_available;
     healing = H()?.chooseAction(member, setup, turnKey);
     // Protect ally rescue: only a competing self-heal yields to an emergency form.
