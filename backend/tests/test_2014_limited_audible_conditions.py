@@ -101,10 +101,16 @@ def test_complete_327_card_scan_and_source_mutation_fail_closed() -> None:
         # A source parameter change updates the generic binding; a monster
         # identity is never consulted for the save DC.
         clause = "DC 14 Constitution saving throw"
-        assert clause in source_text
+        heading = "Stunning Screech (1/Day)"
+        prefix, separator, screech_paragraph = source_text.partition(heading)
+        assert separator and clause in screech_paragraph
+        # A different printed Action can share the same DC/save phrase.
+        # Restrict mutation to the intended source heading and its following text.
         varied = original.model_copy(update={
-            "source_actions": source_text.replace(
-                clause, "DC 15 Constitution saving throw", 1
+            "source_actions": (
+                prefix + separator + screech_paragraph.replace(
+                    clause, "DC 15 Constitution saving throw", 1
+                )
             ),
         })
         varied_action, = source_proven_limited_audible_conditions_2014(varied)
