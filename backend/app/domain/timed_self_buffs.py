@@ -48,6 +48,7 @@ class TimedSelfBuffAction(BaseModel):
     target_policy: Literal["normal", "nearest_visible_creature"] = "normal"
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=200)
+    expend_slot_without_cast: bool = False
     duration_rounds: int | None = Field(default=None, ge=1, le=600)
     condition_ids: list[ConditionName] = Field(default_factory=list)
     magical_effect: bool = False
@@ -108,6 +109,10 @@ class TimedSelfBuffAction(BaseModel):
                 raise ValueError("Start-turn roll triggers require both die size and minimum roll.")
             if self.start_turn_roll_die_size is not None and self.start_turn_roll_minimum > self.start_turn_roll_die_size:
                 raise ValueError("Start-turn roll minimum cannot exceed die size.")
+            if self.expend_slot_without_cast and (
+                self.resource_id is None or not self.resource_id.startswith("spell-slot-")
+            ):
+                raise ValueError("Non-spell slot expenditure requires a spell-slot resource.")
             if self.action_cost == "reaction":
                 raise ValueError("Timed self-buff Actions currently require an on-turn Action or Bonus Action.")
             if len(set(self.condition_ids)) != len(self.condition_ids):
