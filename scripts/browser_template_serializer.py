@@ -868,6 +868,8 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["concentration"] = True
     if action.expend_slot_without_cast:
         row["expendSlotWithoutCast"] = True
+    if not action.opening_eligible:
+        row["openingEligible"] = False
     if action.modifier_effects:
         row["modifierEffects"] = [_modifier_effect(effect) for effect in action.modifier_effects]
     if action.start_turn_emanation_damage is not None:
