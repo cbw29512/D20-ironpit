@@ -1,20 +1,16 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Chuul complete fight — Tentacles and conditional Multiattack (PR pending)
+## Magmin recurring fire — self-dousing integrated, helper range unresolved (PR #1181)
 
-- **Pincer is merged:** PR #1179 (`f7490d41`) wired the 10-foot +6/2d6+4 Bludgeoning hit, Grappled escape DC 14, Large-or-smaller size limit and maximum two held creatures through shared Python/browser grapple logic.
-- **Tentacles source:** one creature grappled by the source makes a DC 13 Constitution save. Failure applies *Poisoned* for 1 minute and *Paralyzed* only while that poison is active; one Constitution repeat save at the end of each of the target's turns ends both together. These bind to the existing owner-grapple save filter, grouped timed effects, condition immunity, expiry and repeat-save primitives; no monster-specific runtime.
-- **Multiattack:** exactly two ordered Pincer attacks, then if a creature is actually grappled at that instant, at most one Tentacles save. Source-owned complete Multiattack clause and exact `multiattack_binding` must agree; the generic Python/browser sequence already rechecks grapple ownership live after each hit.
-- **Generated branch status:** canonical artifact sync confirms **266/327 source-admitted and 61 blocked** (previously 265/327 and 62 blocked), with Chuul absent from outstanding blockers; `source:extra-action` 28→27 and `multiattack:complex` 4→3. This is provisional until exact-head CI and merge, not a verified manual webpage battle.
-- **Certification:** full 327-card source scan, mutation and renaming proof, Python compiled/live sequence and linked-condition repeat-save test, browser actual combat test. Generator-owned artifacts were synchronized by the owning workflow; all five exact-head workflows must pass before merge. No production Netlify deployment.
+- **Combat-active source:** strict full 327-card scan identifies Magmin Touch as the single printed on-hit nonstacking, end-of-target-turn 1d6 Fire source. PR #1173 already merged hit/tick behavior.
+- **Shared source-owned schema:** immutable `OnHitRecurringDamage.removal_action_ids` binds printed Douse Action; the Python/browser hit path stores permissions in a fight-local `TimedEffect`. The generic Douse resolver spends one ordinary Action and uses the existing condition-lifecycle removal primitive. The printed Touch source label is retained in battle logs.
+- **No invented helper range:** the printed source says another creature may use an Action but provides no targeting reach. The affected creature can extinguish its **own** burning; helpers fail closed until their range is resolved. Neither infinite reach nor a guessed 5-ft rule is allowed.
+- **Status:** branch PR #1181 tests self-douse, end-turn damage prevention, permission rejection, Action exhaustion and browser/Python parity; exact-final-head CI/merge pending. **Magmin remains `attack:incomplete` and is NOT source-admitted or webpage-fight certified**. Never hand-edit generated report to hide the helper blocker. Stale draft PR #1178 is superseded by #1181 after certification.
 
+## Chuul — merged universal Pincer, Tentacles and conditional Multiattack (PRs #1179, #1180)
 
-## Chuul Pincer — shared inline grapple capacity (PR #1179; exact-head CI pending)
-
-- **2014 source:** Pincer +6 melee at 10 ft., 2d6+4 Bludgeoning. On a hit, a Large-or-smaller creature is Grappled (escape DC 14) only while the attacker has fewer than two other creatures grappled. Both size and capacity come from the complete printed clause, not a creature-name handler.
-- **Wiring:** Existing universal `GrappleEffectDefinition` compiles the source-derived `max_target_size: large` and `max_active_grapples: 2` into Python/browser on-hit hit-control state. Ordinary damage, grapple release, cap exhaustion, fresh-fight reset and Huge-target rejection stay with the shared engine. Source cards stay immutable.
-- **Scope/status:** Generated branch report confirms Chuul's Pincer `attack:incomplete` obligation is removed (total category 14→13; 265/327 source-admitted remains unchanged); exact-head CI and merge are still pending. Its separate Tentacles conditional held-target save and conditional Multiattack remain blocked; do not declare Chuul fully playable yet. No equipment durability, new monster-specific resolver or production deployment.
-
+- **Completed wiring:** #1179 merged Pincer +6, 10-ft., 2d6+4 Bludgeoning, Grappled escape DC14, Large-or-smaller, maximum two targets. #1180 merged held-target Tentacles DC13 Constitution save; failed save applies grouped Poisoned/Paralyzed for up to one minute and a target-turn-end repeat save ends both. Ordered Multiattack contains two Pincers plus one optional Tentacles only while a creature remains grappled by this source.
+- **Certification:** all five required exact-head GitHub workflows passed for #1180 head `b996d5009a0deea81d97184b8d3f298da2a8df4d`; squash merged to main `adf4c2523e5c92b1011b4900fc06b8cac68c8a87`. Generator source admission increased from 265/327 to **266/327**, 61 remaining blocked. Do not claim independent manual webpage fight certification. Chuul source-blocker work is crossed off; follow up only for actual webpage evidence.
 
 ## Will-o'-Wisp — merged generic zero-HP Bonus Action finisher + Invisible exit (PR #1177, merge ab466988)
 
