@@ -2,10 +2,10 @@
 
 ## Acolyte — merged shared Cleric combat family (PR #1183)
 
-- **Pinned 2014 source:** complete six-spell Spellcasting clause: Light, Sacred Flame, Thaumaturgy, Bless, Cure Wounds and Sanctuary; Wisdom spell DC 12, spell attack +4, three first-level slots. Only the utility Light/Thaumaturgy are arena-neutral.
+- **Pinned 2014 source:** complete six-spell Spellcasting clause: Light, Sacred Flame, Thaumaturgy, Bless, Cure Wounds and Sanctuary; Wisdom spell DC 12, spell attack +4, three first-level slots. **Thaumaturgy is arena-neutral; Light is combat-relevant under the locked 2014 rules** (ordinary illumination, darkness-dependent visibility and relevant bright-light interactions; not a counter to magical Darkness).
 - **Reusable wiring:** four combat spells are built from the existing shared Cleric and Sanctuary constructors; ordinary spell-slot resources, save resolution, healing, Action/Bonus Action economy, buffs and concentration remain universal. Full source paragraph and typed spell list are verified without monster-name dispatch.
 - **Evidence:** source proof scans all 327 cards and rejects altered spell text/data and hidden riders; Python compiler and deterministic 1v1/3v3 browser tests passed alongside all five exact-final-head GitHub workflows. Generated outputs were synchronized by the owning workflow.
-- **Merged admission:** PR #1183 merged as `ac5c9857c6c06c135a7267690f7404c94956340c`; current main reports **268/327 source-admitted, 59 blocked**. Acolyte's source blockers are cleared. Live webpage fight certification remains outstanding; stale Acolyte #1092 is superseded and production Netlify stays locked.
+- **Merged admission, not complete source fidelity:** PR #1183 merged as `ac5c9857c6c06c135a7267690f7404c94956340c`; current generator reports **268/327 source-admitted, 59 blocked**. Four combat spells and slot resources are wired, but the generator's Acolyte clearance overlooks the locked Light requirement. The issue stays OPEN in [#682](https://github.com/cbw29512/D20-ironpit/issues/682) until universal Light visibility/illumination is built and tested. The reported admission count is the current classifier output, not proof that Light works. Independent webpage fight certification remains outstanding; stale Acolyte #1092 is superseded and production Netlify stays locked.
 
 ## Shield Guardian — merged and source-admitted (#1182)
 
