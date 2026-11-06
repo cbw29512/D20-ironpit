@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.barrier_line_of_effect import clear_line_between_members
+from app.combat.breakable_condition_object import prefer_fresh_limited_breakable_control
 from app.combat.attack_legality import attack_allowed_against
 from app.combat.attachment_attack_gate import source_attacks_blocked
 from app.combat.encounter_targeting import active_target_policy, combatant_distance, living_opponents, living_targets
@@ -126,6 +127,34 @@ def choose_attack(
     except Exception as exc:
         logger.exception("Pit attack selection failed for %s.", attacker.combatant_id)
         raise RuntimeError("Pit attack selection could not be evaluated.") from exc
+
+
+def choose_limited_breakable_control_attack(
+    attacker: EncounterCombatant, setup: EncounterSetup,
+) -> tuple[EncounterCombatant, WeaponAttack, int] | None:
+    """Prefer an unused finite breakable control hit, using normal legal attacks."""
+    try:
+        profiles = _attack_profiles(
+            attacker, [attack.id for attack in [
+                attacker.state.template.weapon_attack,
+                *attacker.state.template.alternate_weapon_attacks,
+            ] if attack is not None], WeaponAttackKind.RANGED,
+        )
+        for target in target_order(attacker, setup):
+            eligible = [attack.id for attack in profiles if prefer_fresh_limited_breakable_control(
+                attacker.state, target.state, attack,
+            )]
+            if eligible:
+                choice = choose_attack(
+                    attacker, setup, eligible, kind=WeaponAttackKind.RANGED,
+                    target_id=target.combatant_id,
+                )
+                if choice is not None:
+                    return choice
+        return None
+    except Exception:
+        logger.exception("Limited breakable control choice failed for %s.", attacker.combatant_id)
+        raise
 
 
 def choose_standard_attack(
