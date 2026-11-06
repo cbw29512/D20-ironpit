@@ -87,7 +87,7 @@ the underlying ability is already implemented or trivial.
 | Night Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Oni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Planetar | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
-| Priest | mechanic:spellcasting, source:trait | Divine Eminence, Spellcasting |
+| Priest | mechanic:spellcasting, source:trait | Spellcasting |
 | Purple Worm | attack:complex, mechanic:swallow | — |
 | Rakshasa | mechanic:spellcasting, source:trait | Limited Magic Immunity, Innate Spellcasting |
 | Roper | source:extra-action, source:trait | Grasping Tendrils |
