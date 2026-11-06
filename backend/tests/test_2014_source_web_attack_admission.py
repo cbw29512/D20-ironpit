@@ -201,7 +201,7 @@ def test_actual_python_monster_turn_chooses_source_web_before_melee(monster_id):
         from app.domain.models import EncounterSelection
 
         setup = build_encounter_setup(EncounterSelection(
-            hero_ids=["karnok-stoneward-l1"],
+            hero_ids=["karnok-stoneward-2014-l1"],
             monster_ids=[f"2014-{monster_id}"],
             ruleset="2014",
         ))
