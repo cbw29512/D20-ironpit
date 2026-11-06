@@ -52,7 +52,7 @@ def test_roster_and_source_owned_poison_save_are_complete():
         snapshot = card.model_dump_json()
         assert source_proves_grapple_followup_multiattack_2014(card, {"tentacles"})
         assert multiattack_blockers_2014(card) == []
-        assert basic_blockers_2014(card) == []
+        assert basic_blockers_2014(card) == ()
         template = compile_combatant(adapt_monster_mechanics_2014(card))
         assert template.attack_action is not None
         assert [slot.attack_ids for slot in template.attack_action.slots] == [
