@@ -187,3 +187,41 @@ def test_real_python_web_hit_logs_restrained_without_fabricating_grapple():
     except Exception:
         logger.exception("Source-true Python Web attack event/logging failed.")
         raise
+
+
+@pytest.mark.parametrize("monster_id", ["giant-spider", "ettercap"])
+def test_actual_python_monster_turn_chooses_source_web_before_melee(monster_id):
+    """The canonical automated fight must really spend the one-use Web."""
+    try:
+        from app.combat.dice import FixedDiceProvider
+        from app.combat.encounter_combat_turn import resolve_combat_turn
+        from app.combat.landing_offense_policy import decide_post_move_offense
+        from app.combat.pit_policy import choose_limited_breakable_control_attack
+        from app.combat.encounter_setup import build_encounter_setup
+        from app.domain.models import EncounterSelection
+
+        setup = build_encounter_setup(EncounterSelection(
+            hero_ids=["karnok-stoneward-l1"],
+            monster_ids=[f"2014-{monster_id}"],
+            ruleset="2014",
+        ))
+        monster, hero = setup.monsters[0], setup.heroes[0]
+        selected = choose_limited_breakable_control_attack(monster, setup)
+        assert selected is not None and selected[1].weapon.name == "Web"
+        decision = decide_post_move_offense(
+            monster, setup, f"1:{monster.combatant_id}",
+        )
+        assert decision.family == "standard-attack"
+        assert decision.payload[1].weapon.name == "Web"
+        events, _ = resolve_combat_turn(
+            1, 1, monster, hero, setup, FixedDiceProvider([18] * 48),
+        )
+        web_events = [event for event in events if event.attack_name == "Web"]
+        assert len(web_events) == 1, [event.description for event in events]
+        assert web_events[0].hit is True
+        assert "restrained" in hero.state.active_effect_ids
+        assert next(resource for resource in monster.state.resources if resource.id == "web").current_uses == 0
+        assert choose_limited_breakable_control_attack(monster, setup) is None
+    except Exception:
+        logger.exception("Canonical 2014 %s Web turn did not use shared control.", monster_id)
+        raise
