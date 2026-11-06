@@ -53,6 +53,7 @@ class CombatModifier(BaseModel):
     flat_bonus: int = 0
     multiplier: float = Field(default=1.0, gt=0.0, le=4.0)
     required_attack_ability: AbilityName | None = None
+    required_weapon_attack_kind: Literal["melee", "ranged"] | None = None
     minimum_value: int = Field(default=0, ge=0, le=100)
     dice_count: int = Field(default=0, ge=0, le=20)
     dice_size: int = Field(default=0, ge=0, le=100)
