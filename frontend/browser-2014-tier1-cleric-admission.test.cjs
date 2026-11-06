@@ -15,7 +15,7 @@ try {
     ["bless", "sanctuary"],
   );
   assert.deepEqual((caster.healingActions || []).map(a => a.id), ["cure-wounds"]);
-  assert.ok(caster.resources.some(r => r.id === "spell-slot-1" && r.max_uses === 3));
+  assert.equal(caster.resources["spell-slot-1"], 3, "Slot counts must match the printed 2014 source");
   assert.ok(caster.attacks.some(a => a.name === "Club"));
   const hero = Object.values(window.IRON_PIT_BROWSER_HEROES).find(
     h => h.ruleset === "2014" && h.class_id === "fighter" && h.level === 5
