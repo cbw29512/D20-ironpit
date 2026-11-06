@@ -56,3 +56,41 @@ def source_end_turn_recurring_damage_2014(
     except Exception:
         logger.exception("2014 recurring hit-effect source proof failed for %s.", monster.id)
         raise
+
+def source_completed_recurring_attack_2014(
+    monster: SourceMonster2014, attack: SourceAttack2014,
+) -> SourceAttack2014:
+    """Admit a previously partial hit only when normal damage AND douse are proven."""
+    try:
+        if attack.source_complete or attack.kind != "melee":
+            return attack
+        if (attack.on_hit_damage or attack.on_hit_save_effect
+                or attack.control_effect or attack.ongoing_damage_effect
+                or attack.conditional_damage):
+            return attack
+        if source_end_turn_recurring_damage_2014(monster, attack) is None:
+            return attack
+        section = source_sections_2014(
+            monster.source_actions, include_continuations=True,
+        ).get(attack.name, "")
+        marker = " If the target is a creature"
+        if section.count(marker) != 1:
+            return attack
+        prefix, _ = section.split(marker, 1)
+        hit = _BASE.fullmatch(prefix)
+        if hit is None:
+            return attack
+        damage = attack.damage
+        if (
+            int(hit["bonus"]) != attack.attack_bonus
+            or int(hit["reach"]) != attack.reach_ft
+            or (int(hit["average"]), int(hit["count"]), int(hit["sides"]),
+                int(hit["flat"] or 0), hit["type"].lower())
+            != (damage.average, damage.dice_count, damage.dice_size,
+                damage.bonus, damage.type)
+        ):
+            return attack
+        return attack.model_copy(update={"source_complete": True})
+    except Exception:
+        logger.exception("Strict recurring-hit attack proof failed for %s.", monster.id)
+        raise
