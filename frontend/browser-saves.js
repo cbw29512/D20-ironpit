@@ -97,7 +97,12 @@
         round,
         { setup: options.setup || null },
       );
-      return events.build(
+      const finisher = window.IRON_PIT_BROWSER_SAVE_FINISHER;
+      if (action.instantDeathOnFailedSave && !finisher?.resolve) {
+        throw new Error("Source-declared instant-death finisher runtime is missing.");
+      }
+      const terminal = finisher?.resolve(actor, target, action, attempt.save.succeeded, options.setup) || null;
+      const event = events.build(
         sequence,
         round,
         actor,
@@ -108,6 +113,13 @@
         effectResult,
         snapshot,
       );
+      if (terminal && action.instantDeathOnFailedSave) {
+        event.healing_roll = terminal.healingRoll;
+        event.description += terminal.died
+          ? ` ${target.state.template.name} dies; ${actor.state.template.name} regains ${terminal.healed} HP from ${action.name}.`
+          : attempt.save.succeeded ? "" : " Instant death was prevented; no HP restored.";
+      }
+      return event;
     } catch (error) {
       console.error("Browser save-action resolution failed", {
         actionId: action?.id,
