@@ -132,11 +132,13 @@
         throw new Error("Source-limited grapple requires a live shared query and encounter.");
       const belowCapacity = capacity == null || alreadyHeld || G().sourceGrappleCount(extra.setup, attacker.combatant_id) < capacity;
       if (living && control?.grappleEscapeDc && belowCapacity && (!control.maxTargetSize || S().sizeAtMost(actualTarget, control.maxTargetSize)) && (!control.grappleRequiresSourceFree || !G().sourceHasActiveGrapple(extra.setup, attacker.combatant_id))) applied.push(...G().apply(actualTarget.state, attacker.combatant_id, control.grappleEscapeDc, attack.reach || 5, Boolean(control.restrainsWhileGrappled), false, control.grapplePeriodicDamage || null));
-      if (living && control?.conditionId) {
+      if (living && control?.conditionId && (!control.maxTargetSize || S().sizeAtMost(actualTarget, control.maxTargetSize))) {
         const timed = T().apply(actualTarget.state, control.conditionId, attacker.combatant_id, { sourceEffectId: attack.id, appliedRound: round,
           expiresAtStartOfSourceTurn: Boolean(control.expiresAtStartOfSourceTurn), expiryTiming: control.expiryTiming || null,
           repeatSaveAbility: control.repeatSaveAbility || null, repeatSaveDc: control.repeatSaveDc || null,
-          repeatSaveTiming: control.repeatSaveTiming || null, allowedRemovalActionIds: control.allowedRemovalActionIds || [], sourceTemplate: attacker.state.template });
+          repeatSaveTiming: control.repeatSaveTiming || null, allowedRemovalActionIds: control.allowedRemovalActionIds || [],
+          escapeCheckAbility: control.escapeCheckAbility || null, escapeCheckDc: control.escapeCheckDc ?? null,
+          breakableObject: control.breakableObject || null, sourceTemplate: attacker.state.template });
         if (timed) applied.push(timed);
       }
       if (living) M().applyHitEffects?.(actualTarget.state, attacker.combatant_id, attack);
