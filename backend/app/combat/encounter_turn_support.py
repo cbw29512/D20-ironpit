@@ -8,6 +8,7 @@ from app.combat.area_save_actions import choose_area_save, resolve_area_save
 from app.combat.barbarian import finalize_rage_turn
 from app.combat.bonus_action_follow_up import resolve_bonus_action_follow_up, resolve_bonus_action_follow_up_movement
 from app.combat.bonus_attacks import resolve_bonus_attack_grant
+from app.combat.post_action_bonus_save import resolve_post_action_bonus_save
 from app.combat.condition_counter_policy import choose_condition_counter_spell
 from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
@@ -84,6 +85,12 @@ def finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key,
             sequence, round_number, attacker, setup, dice, turn_key,
         )
         events.extend(frenzy_events)
+        # A main Action can create a newly legal target for a remaining Bonus
+        # Action save. The same generic selector enforces its source card.
+        post_save, sequence = resolve_post_action_bonus_save(
+            sequence, round_number, attacker, setup, dice,
+        )
+        events.extend(post_save)
         rage_event, sequence = finalize_rage_turn(
             sequence, round_number, attacker.state, attacker.combatant_id,
         )
