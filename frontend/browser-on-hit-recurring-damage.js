@@ -20,6 +20,7 @@
         source_effect_id: attack.id,
         source_name: attack.name,
         ends_if_source_dead: Boolean(spec.endsIfSourceDead),
+        allowed_removal_action_ids: [...(spec.removalActionIds || [])],
         expires_at_start_of_source_turn: false,
         end_of_turn_dice_count: spec.diceCount,
         end_of_turn_dice_size: spec.diceSize,
