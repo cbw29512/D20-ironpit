@@ -438,6 +438,8 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
         row["multiplier"] = effect.multiplier
     if effect.required_attack_ability is not None:
         row["requiredAttackAbility"] = effect.required_attack_ability
+    if effect.required_weapon_attack_kind is not None:
+        row["requiredWeaponAttackKind"] = effect.required_weapon_attack_kind
     if effect.minimum_value:
         row["minimumValue"] = effect.minimum_value
     if effect.debuff_counter is not None:
