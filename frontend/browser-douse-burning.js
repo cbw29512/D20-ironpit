@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  // Universal source-authorized timed effect removal. No name-based creature dispatch.
+  // Self-douse only; source lacks range for a helper to target fire.
   const ID = "douse-fire";
   const E = () => window.IRON_PIT_ACTION_ECONOMY;
   const T = () => window.IRON_PIT_BROWSER_TIMED;
@@ -13,13 +13,13 @@
   function choose(actor, setup) {
     try {
       if (!E().available(actor.state, "action")) return null;
-      const members = actor.side === "heroes" ? setup.heroes : setup.monsters;
-      const ordered = [actor, ...members.filter(m => m.combatant_id !== actor.combatant_id)];
-      return ordered.find(target => target.state.is_alive && !target.state.is_dead && effects(target).length) || null;
+      return actor.state.is_alive && !actor.state.is_dead && effects(actor).length ? actor : null;
     } catch (error) { console.error("Douse choice failed", error); throw error; }
   }
   function resolve(sequence, round, actor, target) {
     try {
+      if (actor.combatant_id !== target.combatant_id)
+        throw new Error("Helper dousing requires an unspecified target range.");
       const chosen = effects(target);
       if (!chosen.length || !target.state.is_alive || target.state.is_dead)
         throw new Error("Target has no source-authorized douseable effect.");
