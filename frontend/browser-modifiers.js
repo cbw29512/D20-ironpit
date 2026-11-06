@@ -167,8 +167,9 @@
       total: roll.total + exhaustion + bonusRolls.reduce((a, b) => a + b, 0) };
   }
 
-  const bonusDamage = (state, targetId) => (state.active_modifiers || []).filter((item) => item.kind === "bonus-damage"
-    && (!item.target_id || item.target_id === targetId));
+  const bonusDamage = (state, targetId, attack = null) => (state.active_modifiers || []).filter((item) => item.kind === "bonus-damage"
+    && (!item.target_id || item.target_id === targetId)
+    && (!item.required_weapon_attack_kind || (attack && attack.kind === item.required_weapon_attack_kind)));
 
   window.IRON_PIT_BROWSER_MODIFIERS = {
     add, applyD20Bonus, applyHitEffects, attackRollFlat, attacksAgainstAdvantage, bonusDamage, consumeAttacksAgainstAdvantage, d20TestAdvantage,
