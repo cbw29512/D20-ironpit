@@ -40,6 +40,7 @@ def source_completed_mixed_attack_2014(
 ) -> SourceAttack2014:
     """Upgrade a parser-incomplete attack only when both source hit dice are proven."""
     attack = source_completed_limited_grapple_2014(monster, attack)
+    attack = source_completed_recurring_attack_2014(monster, attack)
     attack = source_completed_healing_block_2014(monster, attack)
     attack = source_completed_magic_cured_condition_2014(monster, attack)
     attack = source_completed_persistent_save_2014(monster, attack)
