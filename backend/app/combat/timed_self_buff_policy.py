@@ -181,12 +181,14 @@ def choose_timed_self_buff_action(
                 and not (
                     action.resource_id
                     and action.resource_id.startswith("spell-slot-")
+                    and not action.expend_slot_without_cast
                     and setup is not None
                     and verbal_casting_blocked(member, setup)
                 )
                 and not (
                     action.resource_id
                     and action.resource_id.startswith("spell-slot-")
+                    and not action.expend_slot_without_cast
                     and turn_key is not None
                     and not slot_spell_available(member.state, turn_key)
                 )
