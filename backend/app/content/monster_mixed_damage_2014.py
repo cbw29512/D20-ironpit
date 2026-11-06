@@ -20,6 +20,7 @@ from app.content.monster_source_start_turn_damage_condition_2014 import (
 )
 from app.content.monster_source_staged_disease_2014 import source_bound_staged_disease_2014
 from app.content.monster_source_grapple_capacity_2014 import source_completed_limited_grapple_2014
+from app.content.monster_source_end_turn_recurring_2014 import source_completed_recurring_attack_2014
 from app.domain.weapons_base import DamageType
 
 _PATTERN = re.compile(
