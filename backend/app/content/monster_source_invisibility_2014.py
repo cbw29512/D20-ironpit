@@ -26,6 +26,16 @@ _PRINTED_INVISIBILITY = re.compile(
 )
 
 
+# Independent complete printed form: invisibility includes the owner's light
+# rather than gear, and ends on the source-named non-spell Bonus Action.
+_LIGHT_INVISIBILITY = re.compile(
+    r"^The (?P<owner>[a-z][a-z'\-]*) and its light magically become invisible "
+    r"until it attacks or uses its (?P<action>[A-Z][a-zA-Z ]+), or until its "
+    r"concentration ends \(as if concentrating on a spell\)\.$",
+    re.IGNORECASE,
+)
+
+
 def source_invisibility_action_2014(monster: SourceMonster2014) -> list[TimedSelfBuffAction]:
     """Admit only the full, unaltered 2014 action as a shared self-buff."""
     try:
@@ -34,15 +44,23 @@ def source_invisibility_action_2014(monster: SourceMonster2014) -> list[TimedSel
         printed = source_sections_2014(monster.source_actions).get("Invisibility")
         if printed is None:
             return []
-        match = _PRINTED_INVISIBILITY.fullmatch(" ".join(printed.replace("’", "'").split()))
-        if match is None:
+        normalized = " ".join(printed.replace("’", "'").split())
+        match = _PRINTED_INVISIBILITY.fullmatch(normalized)
+        light_match = _LIGHT_INVISIBILITY.fullmatch(normalized) if match is None else None
+        if match is None and light_match is None:
             return []
+        named = match or light_match
+        named_action = named.group("action")
+        action_ids = (
+            [re.sub(r"\\s+", "-", named_action.strip().casefold())]
+            if named_action else []
+        )
         return [TimedSelfBuffAction(
             id="invisibility", name="Invisibility", action_cost="action",
             condition_ids=["invisible"], magical_effect=True,
             concentration=True, ends_on_owner_attack=True,
-            ends_on_owner_spell_cast=match.group("spell") == " or casts a spell",
-            ends_on_owner_action_ids=([match.group("action").strip().casefold()] if match.group("action") else []), priority=70,
+            ends_on_owner_spell_cast=(match is not None and match.group("spell") == " or casts a spell"),
+            ends_on_owner_action_ids=action_ids, priority=70,
             duration_rounds=None, expiry_timing=None, animation="invisibility",
         )]
     except Exception:
