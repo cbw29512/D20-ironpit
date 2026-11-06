@@ -22,6 +22,7 @@ class TimedEffect(BaseModel):
     effect_id: str
     source_id: str
     source_effect_id: str | None = None
+    source_name: str | None = None
     applied_round: int | None = Field(default=None, ge=0)
     expires_round: int | None = Field(default=None, ge=1)
     expires_target_turn_count: int | None = Field(default=None, ge=1)
@@ -72,6 +73,9 @@ class TimedEffect(BaseModel):
     return_damage_bonus: int = 0
     return_damage_type: DamageType | None = None
     return_damage_excluded_creature_types: list[str] = Field(default_factory=list)
+    end_of_turn_dice_count: int = Field(default=0, ge=0, le=40)
+    end_of_turn_dice_size: int = Field(default=6, ge=2, le=100)
+    end_of_turn_damage_type: DamageType | None = None
     start_of_turn_dice_count: int = Field(default=0, ge=0, le=40)
     start_of_turn_dice_size: int = Field(default=6, ge=2, le=100)
     start_of_turn_damage_type: DamageType | None = None
