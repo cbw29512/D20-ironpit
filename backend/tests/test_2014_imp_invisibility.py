@@ -34,7 +34,7 @@ def test_full_327_card_source_audit_is_parameter_driven(cards):
             for card in cards.values()
             if source_invisibility_action_2014(card)
         }
-        assert set(matches) == {"sprite", "imp", "quasit"}
+        assert set(matches) == {"sprite", "imp", "quasit", "will-o-wisp"}
         sprite, imp = matches["sprite"][0], matches["imp"][0]
         assert sprite.ends_on_owner_attack and sprite.ends_on_owner_spell_cast
         assert imp.ends_on_owner_attack and not imp.ends_on_owner_spell_cast
@@ -48,7 +48,9 @@ def test_full_327_card_source_audit_is_parameter_driven(cards):
         quasit = matches["quasit"][0]
         assert quasit.ends_on_owner_action_ids == ["scare"]
         assert quasit.ends_on_owner_attack and not quasit.ends_on_owner_spell_cast
-        assert not source_invisibility_action_2014(cards["will-o-wisp"])
+        wisp = matches["will-o-wisp"][0]
+        assert wisp.ends_on_owner_action_ids == ["consume-life"]
+        assert wisp.ends_on_owner_attack and not wisp.ends_on_owner_spell_cast
     except Exception:
         logger.exception("2014 invisibility source scan failed.")
         raise
