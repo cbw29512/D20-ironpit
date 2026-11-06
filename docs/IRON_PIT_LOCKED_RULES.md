@@ -123,9 +123,14 @@ Authority: `docs/IRON_PIT_RULES_CONTRACT.md` §1.2, Attack natural 1 / 20, §11,
 
 Authority: `docs/VTT_CARD_BATTLEFIELD_CONTRACT.md`; `docs/IRON_PIT_RULES_CONTRACT.md` §28; `AGENTS.md` Netlify lock.
 
-## Parked blockers
+## Equipment durability excluded from the Iron Pit — user override (2026-11-05)
 
-- **Rust Monster Antennae (2014):** independent equipment-corrosion Action; #819 approves Rust Metal's neutral trait policy only. No Antennae decision was found. Clarification requested; keep `source:extra-action` until its policy and source proof are resolved. The approved trait bindings do not admit the whole monster. Trait policy authority: `docs/IRON_PIT_RULES_CONTRACT.md` §25.
+- **Universal arena rule:** attacks, traits and Actions that only corrode, rust, degrade, break or destroy **weapons, ammunition, armor, shields or other equipment** do not alter fight state. No cumulative item-damage penalties, attack/damage/AC penalties from equipment deterioration, item destruction, repair, or equipment-material/durability tracking. Gear remains usable at its printed combat values throughout the encounter.
+- **Preserve independent combat effects:** a mixed attack still rolls its printed attack, all ordered typed damage, creature saves, conditions and other non-equipment riders. Only the item-specific consequence is arena-neutral. Entire equipment-only Actions (including Rust Monster Antennae) cannot be selected as fight actions.
+- **Source proof must fail closed:** retain immutable printed 2014 and 2024 cards; accept arena-neutral clauses only when all source text is verified. Added HP damage/condition riders never inherit a corrosion exemption. Generic corrosion helper code may remain as unbound utilities but must not be activated in the Pit.
+- **Explicitly supersedes:** Gray Ooze's prior fight-only corrosion decision #784 and the old parked Rust Monster Antennae clarification. This is now a settled user decision; do not reopen these as coding tasks. Apply to any matching creature in either edition, with source-specific verification.
+
+## Parked blockers
 
 Standing instruction: park, record, continue. Revisit this list after the rest of the current family is finished. Folded from the short-lived `docs/PARKED_BLOCKERS.md` working list after #602/#603/#604.
 

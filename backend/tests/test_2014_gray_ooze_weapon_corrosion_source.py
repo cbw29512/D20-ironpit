@@ -1,4 +1,4 @@
-"""Prove the pinned Gray Ooze Corrode Metal clause before engine wiring."""
+"""Prove equipment corrosion is arena-neutral, preserving the printed card."""
 from __future__ import annotations
 
 import pytest
@@ -21,8 +21,8 @@ def test_full_printed_corrode_metal_trait_proves_immutable_weapon_profile():
     assert profile.damage_penalty_per_hit == 1
     assert profile.unusable_at_penalty == 5
     assert profile.requires_nonmagical_metal_weapon
-    # Admission still requires a universal hit hook and the Pseudopod armor rider.
-    assert "source:trait" in basic_blockers_2014(source)
+    # Only object deterioration is neutral; attack damage remains sourced.
+    assert "source:trait" not in basic_blockers_2014(source)
     assert source.model_dump_json() == before
 
 

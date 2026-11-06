@@ -20,6 +20,7 @@ import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_ignited_illumination_2014 import source_proves_light_only_2014
+from app.content.monster_source_weapon_corrosion_2014 import source_weapon_corrosion_2014
 from app.content.monster_informational_trait_proofs_2014 import verified_nonactionable_information_2014
 from app.content.monster_arena_inert_trait_proofs_2014 import verified_approved_inert_trait_2014
 from app.content.monster_shapechanger_neutral_2014 import source_proven_arena_inert_shapechanger_2014
@@ -43,6 +44,10 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             return False
         if verified_approved_inert_trait_2014(monster, trait_name):
             return True
+        # Equipment-only corrosion is excluded by the locked Pit policy.
+        # Require the full printed trait, including continuation clauses.
+        if trait_name == "Corrode Metal":
+            return source_weapon_corrosion_2014(monster) is not None
         if trait_name == "Shapechanger":
             return source_proven_arena_inert_shapechanger_2014(monster)
         if trait_name in {"Ignited Illumination", "Variable Illumination"}:

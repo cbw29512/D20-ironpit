@@ -4,6 +4,7 @@ from __future__ import annotations
 import pytest
 
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_armor_corrosion_2014 import (
     source_on_hit_armor_corrosion_2014,
@@ -14,7 +15,7 @@ def _gray():
     return next(m for m in load_monster_source_2014() if m.id == "gray-ooze")
 
 
-def test_pinned_pseudopod_armor_effect_is_exact_and_not_prematurely_admitted():
+def test_pinned_pseudopod_armor_effect_is_neutral_and_both_damage_types_remain():
     source = _gray()
     before = source.model_dump_json()
     assert len(source.attacks) == 1
@@ -27,8 +28,12 @@ def test_pinned_pseudopod_armor_effect_is_exact_and_not_prematurely_admitted():
     assert profile.penalty_per_hit == 1
     assert profile.destroys_at_armor_ac == 10
     assert profile.fight_only is True
-    assert not attack.source_complete
-    assert "attack:incomplete" in basic_blockers_2014(source)
+    assert not attack.source_complete  # Original printed source remains immutable.
+    corrected = source_completed_mixed_attack_2014(source, attack)
+    assert corrected.source_complete
+    assert corrected.damage == attack.damage
+    assert corrected.on_hit_damage == attack.on_hit_damage
+    assert "attack:incomplete" not in basic_blockers_2014(source)
     assert source.model_dump_json() == before
 
 

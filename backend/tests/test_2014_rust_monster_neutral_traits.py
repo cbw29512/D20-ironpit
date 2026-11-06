@@ -69,7 +69,7 @@ def test_unheaded_continuation_cannot_hide_a_combat_rider():
         raise
 
 
-def test_missing_source_and_unrelated_gray_ooze_remain_blocked():
+def test_missing_source_and_full_gray_ooze_clause_are_checked_independently():
     try:
         source = _source()
         for changed in (
@@ -79,8 +79,13 @@ def test_missing_source_and_unrelated_gray_ooze_remain_blocked():
             for name in ("Iron Scent", "Rust Metal"):
                 assert not verified_arena_inert_trait_2014(changed, name)
         gray_ooze = _source("gray-ooze")
-        assert not verified_arena_inert_trait_2014(gray_ooze, "Corrode Metal")
-        assert "Corrode Metal" in unsupported_traits_2014(gray_ooze)
+        assert verified_arena_inert_trait_2014(gray_ooze, "Corrode Metal")
+        assert "Corrode Metal" not in unsupported_traits_2014(gray_ooze)
+        mutated = gray_ooze.model_copy(update={"source_traits": gray_ooze.source_traits.replace(
+            "Nonmagical ammunition made of metal", "Magical ammunition made of metal",
+        )})
+        assert not verified_arena_inert_trait_2014(mutated, "Corrode Metal")
+        assert "Corrode Metal" in unsupported_traits_2014(mutated)
     except Exception:
         logger.exception("A missing or unrelated source was classified under another trait's policy.")
         raise

@@ -814,6 +814,7 @@ jobs:
           node frontend/browser-2014-charge.test.cjs
           node frontend/browser-2014-druid-level10.test.cjs
           node frontend/browser-2014-mvp.test.cjs
+          node frontend/browser-2014-equipment-corrosion-policy.test.cjs
           node frontend/browser-salamander-grapple-2014.test.cjs
           PYTHONPATH=backend:. python scripts/generate_form_runtime_parity_fixture.py
           node frontend/browser-form-cross-kind-parity.test.cjs
