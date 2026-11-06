@@ -55,6 +55,16 @@ def _control(effect: Any) -> dict[str, Any] | None:
             row["repeatSaveTiming"] = effect.repeat_save_timing
         if effect.allowed_removal_action_ids:
             row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
+        if effect.escape_check_ability is not None:
+            row["escapeCheckAbility"] = effect.escape_check_ability
+            row["escapeCheckDc"] = effect.escape_check_dc
+        if effect.breakable_object is not None:
+            spec = effect.breakable_object
+            row["breakableObject"] = {
+                "armorClass": spec.armor_class, "hitPoints": spec.hit_points,
+                "damageVulnerabilities": [item.value for item in spec.damage_vulnerabilities],
+                "damageImmunities": [item.value for item in spec.damage_immunities],
+            }
     return row or None
 
 
