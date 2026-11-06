@@ -65,8 +65,8 @@
       });
     }
   }
-  function modifierDamageComponents(attacker, targetId, critical) {
-    return M().bonusDamage(attacker, targetId).map((modifier) => {
+  function modifierDamageComponents(attacker, targetId, critical, attack) {
+    return M().bonusDamage(attacker, targetId, attack).map((modifier) => {
       const count = modifier.dice_count * (critical ? 2 : 1);
       const rolls = D().rollMany(count, modifier.dice_size);
       return {
@@ -159,7 +159,7 @@
     );
     const rolled = [
       ...base.components,
-      ...modifierDamageComponents(attacker, options.targetId || null, critical),
+      ...modifierDamageComponents(attacker, options.targetId || null, critical, attack),
     ];
     rolled.push(...naturalTwentyDamageComponents(attacker, attack, options.naturalRoll, rolled));
     const smite = P()?.divineSmiteComponent(attacker, defender, attack, critical) || null;
