@@ -70,3 +70,14 @@ def test_variable_illumination_requires_printed_heading_and_no_hidden_rider():
     })
     assert not source_proves_light_only_2014(with_rider, "Variable Illumination")
     assert "Variable Illumination" in unsupported_traits_2014(with_rider)
+
+
+def test_light_only_proof_rejects_unrelated_combat_traits():
+    """A lighting source cannot classify a combat ability as arena-neutral."""
+    try:
+        assert not source_proves_light_only_2014(_wisp(), "Consume Life")
+        assert not source_proves_light_only_2014(_wisp(), "Ephemeral")
+        assert not source_proves_light_only_2014(_wisp(), "not-a-printed-trait")
+    except Exception:
+        logger.exception("Unrelated combat trait was considered lighting-only.")
+        raise
