@@ -6,6 +6,7 @@ import logging
 import pytest
 
 from app.combat.bonus_save_actions import choose_bonus_save_action
+from app.combat.encounter_turn_support import finish_turn
 from app.combat.dice import FixedDiceProvider
 from app.combat.saving_throw_legality import legal_save_action
 from app.combat.saving_throws import resolve_save_action
@@ -116,4 +117,28 @@ def test_dead_or_positive_hp_target_never_qualifies():
             resolve_save_action(1, 1, actor, victim, action, 10, FixedDiceProvider([1]), setup=setup)
     except Exception:
         logger.exception("Zero-HP finisher target legality failed.")
+        raise
+
+
+def test_post_action_bonus_save_uses_newly_downed_target():
+    try:
+        actor, victim, setup, action, _ = _encounter()
+        victim.state.current_hp = 1
+        assert choose_bonus_save_action(actor, setup) is None
+        # Simulate the immediately preceding ordinary Attack Action.
+        actor.state.action_available = False
+        victim.state.current_hp = 0
+        events, next_sequence = finish_turn(
+            [], 2, 1, actor, setup, FixedDiceProvider([1, 2, 3, 4]),
+            "1:wisp", allow_surge=False,
+        )
+        consumed = [event for event in events if event.feature_id == action.id]
+        assert len(consumed) == 1 and next_sequence > 2
+        assert consumed[0].save_succeeded is False
+        assert consumed[0].healing_roll.total == 9
+        assert victim.state.is_dead
+        assert actor.state.current_hp == 17
+        assert actor.state.bonus_action_available is False
+    except Exception:
+        logger.exception("Post-action generic Bonus Action finisher did not resolve.")
         raise
