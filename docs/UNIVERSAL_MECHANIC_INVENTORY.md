@@ -428,7 +428,7 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **60**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **59**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
@@ -452,7 +452,7 @@ Blocked monsters: **60**. These are grouped by printed ability name so the roste
 | Ooze Cube | Gelatinous Cube | 1 |
 | Reflective Carapace | Tarrasque | 1 |
 | Shapechanger | Vampire | 1 |
-| Spellcasting | Acolyte, Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 13 |
+| Spellcasting | Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 12 |
 | Telepathic Bond | Succubus/Incubus | 1 |
 | Transparent | Gelatinous Cube | 1 |
 | Vampire Weaknesses | Vampire, Vampire Spawn | 2 |
@@ -463,8 +463,8 @@ Blocked monsters: **60**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 49 |
-| `mechanic:spellcasting` | 33 |
+| `source:trait` | 48 |
+| `mechanic:spellcasting` | 32 |
 | `source:extra-action` | 27 |
 | `attack:incomplete` | 13 |
 | `mechanic:legendary` | 9 |
